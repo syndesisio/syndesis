@@ -81,13 +81,20 @@ class AggregateMetadataHandler implements StepMetadataHandler {
         Optional<DataShape> singleElementShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_ELEMENT);
 
         if (singleElementShape.isPresent()) {
-            return singleElementShape.get();
+            if (dataShape.equals(singleElementShape.get())) {
+                return singleElementShape.get();
+            } else {
+                return new DataShape.Builder()
+                        .createFrom(singleElementShape.get())
+                        .addAllVariants(extractVariants(dataShape, singleElementShape.get(), VARIANT_ELEMENT))
+                        .build();
+            }
         }
 
         DataShape collectionShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_COLLECTION).orElse(dataShape);
 
         if (collectionShape.getKind().equals(DataShapeKinds.JSON_SCHEMA)) {
-            String specification = dataShape.getSpecification();
+            String specification = collectionShape.getSpecification();
             JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
 
             if (schema.isArraySchema()) {
@@ -98,16 +105,18 @@ class AggregateMetadataHandler implements StepMetadataHandler {
                     return new DataShape.Builder().createFrom(collectionShape)
                                                         .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
                                                         .specification(Json.writer().writeValueAsString(itemSchema))
+                                                        .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
                                                         .build();
                 }
             }
         } else if (collectionShape.getKind().equals(DataShapeKinds.JSON_INSTANCE)) {
-            String specification = dataShape.getSpecification();
+            String specification = collectionShape.getSpecification();
             List<Object> items = Json.reader().forType(List.class).readValue(specification);
             if (!items.isEmpty()) {
                 return new DataShape.Builder().createFrom(collectionShape)
                                                         .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
                                                         .specification(Json.writer().writeValueAsString(items.get(0)))
+                                                        .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
                                                         .build();
             }
         }
@@ -119,13 +128,19 @@ class AggregateMetadataHandler implements StepMetadataHandler {
         Optional<DataShape> collectionShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_COLLECTION);
 
         if (collectionShape.isPresent()) {
-            return collectionShape.get();
+            if (dataShape.equals(collectionShape.get())) {
+                return collectionShape.get();
+            } else {
+                return new DataShape.Builder().createFrom(collectionShape.get())
+                        .addAllVariants(extractVariants(dataShape, collectionShape.get(), VARIANT_COLLECTION))
+                        .build();
+            }
         }
 
         DataShape singleElementShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_ELEMENT).orElse(dataShape);
 
         if (singleElementShape.getKind().equals(DataShapeKinds.JSON_SCHEMA)) {
-            String specification = dataShape.getSpecification();
+            String specification = singleElementShape.getSpecification();
             JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
 
             ArraySchema collectionSchema = new ArraySchema();
@@ -136,12 +151,14 @@ class AggregateMetadataHandler implements StepMetadataHandler {
             return new DataShape.Builder().createFrom(singleElementShape)
                                             .putMetadata(VARIANT_METADATA_KEY, VARIANT_COLLECTION)
                                             .specification(Json.writer().writeValueAsString(collectionSchema))
+                                            .addAllVariants(extractVariants(dataShape, singleElementShape, VARIANT_ELEMENT))
                                             .build();
         } else if (singleElementShape.getKind().equals(DataShapeKinds.JSON_INSTANCE)) {
-            String specification = dataShape.getSpecification();
+            String specification = singleElementShape.getSpecification();
             return new DataShape.Builder().createFrom(singleElementShape)
                                             .putMetadata(VARIANT_METADATA_KEY, VARIANT_COLLECTION)
                                             .specification("[" + specification + "]")
+                                            .addAllVariants(extractVariants(dataShape, singleElementShape, VARIANT_ELEMENT))
                                             .build();
         }
 

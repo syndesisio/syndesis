@@ -37,6 +37,7 @@ public class StepActionHandlerTest {
     private DataShape elementShape = new DataShape.Builder()
                                         .kind(DataShapeKinds.JAVA)
                                         .specification("person-element-spec")
+                                        .description("person")
                                         .type(Person.class.getName())
                                         .putMetadata("variant", "element")
                                     .build();
@@ -44,6 +45,7 @@ public class StepActionHandlerTest {
     private DataShape collectionShape = new DataShape.Builder()
                                         .kind(DataShapeKinds.JAVA)
                                         .specification("person-collection-spec")
+                                        .description("person-collection")
                                         .collectionType("List")
                                         .type(Person.class.getName())
                                         .collectionClassName(List.class.getName())
@@ -71,7 +73,32 @@ public class StepActionHandlerTest {
 
         final StepDescriptor descriptor = meta.getValue();
         assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
-        assertThat(descriptor.getOutputDataShape()).contains(elementShape);
+        assertThat(descriptor.getOutputDataShape()).isPresent();
+        assertThat(descriptor.getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(elementShape)
+                .addVariant(dummyShape())
+                .addVariant(collectionShape)
+                .build());
+    }
+
+    @Test
+    public void shouldKeepElementVariantForSplitStep() {
+        final DynamicActionMetadata givenMetadata = new DynamicActionMetadata.Builder()
+                .outputShape(new DataShape.Builder()
+                        .createFrom(elementShape)
+                        .addVariant(collectionShape)
+                        .addVariant(dummyShape())
+                        .build())
+                .build();
+
+        final Response response = handler.enrichStepMetadata(StepKind.split.name(), givenMetadata);
+
+        @SuppressWarnings("unchecked")
+        final Meta<StepDescriptor> meta = (Meta<StepDescriptor>) response.getEntity();
+
+        final StepDescriptor descriptor = meta.getValue();
+        assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
+        assertThat(descriptor.getOutputDataShape()).contains(givenMetadata.outputShape());
     }
 
     @Test
@@ -91,7 +118,33 @@ public class StepActionHandlerTest {
 
         final StepDescriptor descriptor = meta.getValue();
         assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
-        assertThat(descriptor.getOutputDataShape()).contains(collectionShape);
+        assertThat(descriptor.getOutputDataShape()).isPresent();
+        assertThat(descriptor.getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(collectionShape)
+                .addVariant(dummyShape())
+                .addVariant(elementShape)
+                .build());
+    }
+
+    @Test
+    public void shouldKeepCollectionVariantForAggregateStep() {
+        final DynamicActionMetadata givenMetadata = new DynamicActionMetadata.Builder()
+                .outputShape(new DataShape.Builder()
+                            .createFrom(collectionShape)
+                            .addVariant(elementShape)
+                            .addVariant(dummyShape())
+                        .build())
+                .build();
+
+        final Response response = handler.enrichStepMetadata(StepKind.aggregate.name(), givenMetadata);
+
+        @SuppressWarnings("unchecked")
+        final Meta<StepDescriptor> meta = (Meta<StepDescriptor>) response.getEntity();
+
+        final StepDescriptor descriptor = meta.getValue();
+        assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
+        assertThat(descriptor.getOutputDataShape()).isPresent();
+        assertThat(descriptor.getOutputDataShape()).contains(givenMetadata.outputShape());
     }
 
     @Test
@@ -120,6 +173,8 @@ public class StepActionHandlerTest {
                 .createFrom(elementShape)
                 .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
                 .putMetadata("compressed", "false")
+                .addVariant(dummyShape())
+                .addVariant(collectionShape)
                 .build());
     }
 
@@ -198,7 +253,8 @@ public class StepActionHandlerTest {
         return new DataShape.Builder()
                 .kind(DataShapeKinds.JAVA)
                 .specification("{}")
-                .putMetadata("something", "else")
+                .description("dummyShape")
+                .putMetadata(StepMetadataHandler.VARIANT_METADATA_KEY, "dummy")
                 .build();
     }
 }

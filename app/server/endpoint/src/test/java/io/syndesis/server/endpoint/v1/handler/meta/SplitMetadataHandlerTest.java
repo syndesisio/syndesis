@@ -43,6 +43,7 @@ public class SplitMetadataHandlerTest {
                 .outputShape(new DataShape.Builder()
                         .kind(DataShapeKinds.JAVA)
                         .specification(getSpecification("person-list-spec.json"))
+                        .description("person-list")
                         .collectionType("List")
                         .type(Person.class.getName())
                         .collectionClassName(List.class.getName())
@@ -64,7 +65,10 @@ public class SplitMetadataHandlerTest {
         Assert.assertEquals(DataShapeKinds.JAVA, enrichedMetadata.outputShape().getKind());
         Assert.assertEquals("element", enrichedMetadata.outputShape().getMetadata("variant").orElse(""));
         Assert.assertEquals(getSpecification("person-spec.json"), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(0, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(StepMetadataHandler.VARIANT_METADATA_KEY));
+        Assert.assertEquals(StepMetadataHandler.VARIANT_COLLECTION, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(StepMetadataHandler.VARIANT_METADATA_KEY));
+        Assert.assertEquals("person-list", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
     }
 
     @Test
@@ -74,6 +78,7 @@ public class SplitMetadataHandlerTest {
                 .outputShape(new DataShape.Builder()
                         .kind(DataShapeKinds.JSON_SCHEMA)
                         .specification(getSpecification("person-list-schema.json"))
+                        .description("person-list-schema")
                         .collectionType("List")
                         .type(Person.class.getName())
                         .collectionClassName(List.class.getName())
@@ -95,7 +100,10 @@ public class SplitMetadataHandlerTest {
         Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
         Assert.assertEquals("element", enrichedMetadata.outputShape().getMetadata("variant").orElse(""));
         Assert.assertEquals(getSpecification("person-schema.json"), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(0, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(StepMetadataHandler.VARIANT_METADATA_KEY));
+        Assert.assertEquals(StepMetadataHandler.VARIANT_COLLECTION, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(StepMetadataHandler.VARIANT_METADATA_KEY));
+        Assert.assertEquals("person-list-schema", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
     }
 
     @Test
@@ -105,6 +113,7 @@ public class SplitMetadataHandlerTest {
                 .outputShape(new DataShape.Builder()
                         .kind(DataShapeKinds.JSON_SCHEMA)
                         .specification(getSpecification("person-list-schema.json"))
+                        .description("person-list-schema")
                         .collectionType("List")
                         .type(Person.class.getName())
                         .collectionClassName(List.class.getName())
@@ -118,7 +127,10 @@ public class SplitMetadataHandlerTest {
         Assert.assertNotNull(enrichedMetadata.outputShape());
         Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
         Assert.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-schema.json")), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(1, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(StepMetadataHandler.VARIANT_METADATA_KEY));
+        Assert.assertEquals(StepMetadataHandler.VARIANT_COLLECTION, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(StepMetadataHandler.VARIANT_METADATA_KEY));
+        Assert.assertEquals("person-list-schema", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
     }
 
     @Test
@@ -128,6 +140,7 @@ public class SplitMetadataHandlerTest {
                 .outputShape(new DataShape.Builder()
                         .kind(DataShapeKinds.JSON_INSTANCE)
                         .specification(getSpecification("person-list-instance.json"))
+                        .description("person-list-instance")
                         .collectionType("List")
                         .type(Person.class.getName())
                         .collectionClassName(List.class.getName())
@@ -149,7 +162,10 @@ public class SplitMetadataHandlerTest {
         Assert.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.outputShape().getKind());
         Assert.assertEquals("element", enrichedMetadata.outputShape().getMetadata("variant").orElse(""));
         Assert.assertEquals(getSpecification("person-instance.json"), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(0, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(StepMetadataHandler.VARIANT_METADATA_KEY));
+        Assert.assertEquals(StepMetadataHandler.VARIANT_COLLECTION, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(StepMetadataHandler.VARIANT_METADATA_KEY));
+        Assert.assertEquals("person-list-instance", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
     }
 
     @Test
@@ -159,6 +175,7 @@ public class SplitMetadataHandlerTest {
                 .outputShape(new DataShape.Builder()
                         .kind(DataShapeKinds.JSON_INSTANCE)
                         .specification(getSpecification("person-list-instance.json"))
+                        .description("person-list-instance")
                         .collectionType("List")
                         .type(Person.class.getName())
                         .collectionClassName(List.class.getName())
@@ -172,14 +189,18 @@ public class SplitMetadataHandlerTest {
         Assert.assertNotNull(enrichedMetadata.outputShape());
         Assert.assertEquals(DataShapeKinds.JSON_INSTANCE, enrichedMetadata.outputShape().getKind());
         Assert.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-instance.json")), enrichedMetadata.outputShape().getSpecification());
-        Assert.assertEquals(1, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals(2, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(StepMetadataHandler.VARIANT_METADATA_KEY));
+        Assert.assertEquals(StepMetadataHandler.VARIANT_COLLECTION, enrichedMetadata.outputShape().getVariants().get(1).getMetadata().get(StepMetadataHandler.VARIANT_METADATA_KEY));
+        Assert.assertEquals("person-list-instance", enrichedMetadata.outputShape().getVariants().get(1).getDescription());
     }
 
     private DataShape dummyShape(DataShapeKinds kind) {
         return new DataShape.Builder()
                 .kind(kind)
                 .specification("{}")
-                .putMetadata("something", "else")
+                .description("dummyShape")
+                .putMetadata(StepMetadataHandler.VARIANT_METADATA_KEY, "dummy")
                 .build();
     }
 

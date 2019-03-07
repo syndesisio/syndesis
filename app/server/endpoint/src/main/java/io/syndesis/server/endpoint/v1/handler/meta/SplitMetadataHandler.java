@@ -55,16 +55,26 @@ class SplitMetadataHandler implements StepMetadataHandler {
                 Optional<DataShape> singleElementShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_ELEMENT);
 
                 if (singleElementShape.isPresent()) {
-                    return new DynamicActionMetadata.Builder()
-                            .createFrom(metadata)
-                            .outputShape(singleElementShape.get())
-                            .build();
+                    if (dataShape.equals(singleElementShape.get())) {
+                        return new DynamicActionMetadata.Builder()
+                                        .createFrom(metadata)
+                                        .outputShape(singleElementShape.get())
+                                .build();
+                    } else {
+                        return new DynamicActionMetadata.Builder()
+                                .createFrom(metadata)
+                                .outputShape(new DataShape.Builder()
+                                        .createFrom(singleElementShape.get())
+                                        .addAllVariants(extractVariants(dataShape, singleElementShape.get(), VARIANT_ELEMENT))
+                                        .build())
+                                .build();
+                    }
                 }
 
                 DataShape collectionShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_COLLECTION).orElse(dataShape);
 
                 if (collectionShape.getKind().equals(DataShapeKinds.JSON_SCHEMA)) {
-                    String specification = dataShape.getSpecification();
+                    String specification = collectionShape.getSpecification();
                     JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
 
                     if (schema.isArraySchema()) {
@@ -77,12 +87,13 @@ class SplitMetadataHandler implements StepMetadataHandler {
                                     .outputShape(new DataShape.Builder().createFrom(collectionShape)
                                                                         .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
                                                                         .specification(Json.writer().writeValueAsString(itemSchema))
+                                                                        .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
                                                                         .build())
                                     .build();
                         }
                     }
                 } else if (collectionShape.getKind().equals(DataShapeKinds.JSON_INSTANCE)) {
-                    String specification = dataShape.getSpecification();
+                    String specification = collectionShape.getSpecification();
                     List<Object> items = Json.reader().forType(List.class).readValue(specification);
                     if (!items.isEmpty()) {
                         return new DynamicActionMetadata.Builder()
@@ -90,6 +101,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                                 .outputShape(new DataShape.Builder().createFrom(collectionShape)
                                                                         .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
                                                                         .specification(Json.writer().writeValueAsString(items.get(0)))
+                                                                        .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
                                                                         .build())
                                 .build();
                     }
