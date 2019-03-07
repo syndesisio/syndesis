@@ -9,7 +9,6 @@ import {
   VirtListView,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
-import * as H from 'history';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
@@ -67,11 +66,6 @@ export default class VirtualizationsPage extends React.Component {
     return virt.keng__id !== undefined;
   }
 
-  public handleCreateVirt(virtName: H.LocationDescriptor) {
-    // TODO: implement handleCreateVirt
-    alert('Create virtualization ' + virtName);
-  }
-
   public handleImportVirt(virtName: string) {
     // TODO: implement handleImportVirt
     alert('Import virtualization ' + virtName);
@@ -99,7 +93,8 @@ export default class VirtualizationsPage extends React.Component {
 
   public render() {
     return (
-      <WithVirtualizationHelpers>
+      // TODO need to retrieve real here
+      <WithVirtualizationHelpers username="developer">
         {({ deleteVirtualization }) => {
           const handleDelete = async (virualizationName: string) => {
             await deleteVirtualization(virualizationName);
@@ -162,7 +157,6 @@ export default class VirtualizationsPage extends React.Component {
                               'virtualization.virtualizationsPageTitle'
                             )}
                             linkCreateHRef={resolvers.virtualizations.create()}
-                            onCreate={this.handleCreateVirt}
                             onImport={this.handleImportVirt}
                           >
                             <WithLoader
@@ -185,7 +179,11 @@ export default class VirtualizationsPage extends React.Component {
                                     <VirtListItem
                                       key={index}
                                       virtName={virt.keng__id}
-                                      virtDescription={virt.tko__description}
+                                      virtDescription={
+                                        virt.tko__description
+                                          ? virt.tko__description
+                                          : ''
+                                      }
                                       i18nCancelText={t('shared:Cancel')}
                                       i18nDelete={t('shared:Delete')}
                                       i18nDeleteModalMessage={t(

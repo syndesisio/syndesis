@@ -2,6 +2,7 @@
   "virtualization": {
     "createDataVirtualization": "Create $t(shared:DataVirtualization)",
     "createDataVirtualizationTip": "Create a data virtualization",
+    "createDataVirtualizationTitle": "Create New $t(shared:DataVirtualization)",
     "deleteModalMessage": "Are you sure you want to delete the \"{{name}}\" virtualization?",
     "deleteModalTitle": "Confirm Delete?",
     "draftDataVirtualizationTip": "The data virtualization is in Draft state",
@@ -11,6 +12,9 @@
     "importVirtualizationTip": "Import a data virtualization",
     "publishedDataVirtualization": "Published",
     "publishedDataVirtualizationTip": "The data virtualization is in Published state",
+    "requiredPropertyText": "This property is required",
+    "virtualizationDescriptionDisplay": "Description",
+    "virtualizationNameDisplay": "Virtualization Name",
     "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",
     "virtualizationsPageTitle": "$t(shared:DataVirtualizations)"
   }

@@ -1,12 +1,20 @@
+import { RestDataService } from '@syndesis/models';
 import * as React from 'react';
 import { ApiContext, IApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 
+const WORKSPACE_ROOT = '/tko:komodo/tko:workspace/';
+
 export interface IWithVirtualizationHelpersChildrenProps {
+  createVirtualization(
+    virtualizationName: string,
+    virtualizationDescription?: string
+  ): Promise<void>;
   deleteVirtualization(virtualizationName: string): Promise<void>;
 }
 
 export interface IWithVirtualizationHelpersProps {
+  username: string;
   children(props: IWithVirtualizationHelpersChildrenProps): any;
 }
 
@@ -15,7 +23,36 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
 > {
   constructor(props: IWithVirtualizationHelpersProps & IApiContext) {
     super(props);
+    this.createVirtualization = this.createVirtualization.bind(this);
     this.deleteVirtualization = this.deleteVirtualization.bind(this);
+  }
+
+  /**
+   * Creates a virtualization with the specified name and description
+   * @param virtName the name of the virtualization to create
+   * @param virtDesc the description (optional) of the virtualization to create
+   */
+  public async createVirtualization(
+    virtName: string,
+    virtDesc?: string
+  ): Promise<void> {
+    const newVirtualization = {
+      keng__dataPath: `${WORKSPACE_ROOT}${this.props.username}/${virtName}`,
+      keng__id: `${virtName}`,
+      tko__description: virtDesc ? `${virtDesc}` : '',
+    } as RestDataService;
+
+    const response = await callFetch({
+      body: newVirtualization,
+      headers: {},
+      method: 'POST',
+      url: `${this.props.dvApiUri}workspace/dataservices/${virtName}`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return Promise.resolve();
   }
 
   /**
@@ -38,6 +75,7 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
 
   public render() {
     return this.props.children({
+      createVirtualization: this.createVirtualization,
       deleteVirtualization: this.deleteVirtualization,
     });
   }
