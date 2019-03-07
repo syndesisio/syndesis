@@ -59,10 +59,10 @@ jobs:
     docker:
       - image: circleci/node:10.13
     steps:
+      - checkout
       - add_ssh_keys:
           fingerprints:
             - "ca:3d:54:75:4d:b1:66:e3:7f:00:b1:70:03:f4:b4:e7"
-      - checkout
       - attach_workspace:
           at: doc
       - run:
