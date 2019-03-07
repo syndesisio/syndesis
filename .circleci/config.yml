@@ -22,8 +22,6 @@ jobs:
     steps:
       - checkout
 
-      - add_ssh_keys
-
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -52,19 +50,44 @@ jobs:
           name: Build docs
           command: yarn build-storybook
 
+      - persist_to_workspace:
+          root: doc
+          paths:
+            - '*'
+
+  doc-deploy:
+    docker:
+      - image: circleci/node:10.13
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "5e:e6:01:8d:15:8c:df:f6:d6:0c:bd:48:08:78:d9:7a"
+      - checkout
+      - attach_workspace:
+          at: doc
       - run:
-          name: Deploy docs to gh-pages branch
+          name: Install and configure dependencies
           command: |
             sudo npm install -g --silent gh-pages@2.0.1
             git config user.email "circleci@syndesis.io"
             git config user.name "CircleCI"
-            gh-pages --dotfiles --message "[skip ci] Updates" --dist doc --dest ${CIRCLE_PR_NUMBER}
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: |
+            gh-pages --dotfiles --message "[skip ci] Updates" --dist doc
 
 workflows:
   version: 2
   build:
     jobs:
       - build:
+          filters:
+            branches:
+              ignore:
+                - gh-pages
+      - doc-deploy:
+          requires:
+            - build
           filters:
             branches:
               ignore:
