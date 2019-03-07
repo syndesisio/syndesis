@@ -76,6 +76,16 @@ jobs:
           command: |
             gh-pages --dotfiles --message "[skip ci] Updates" --dist doc
 
+  doc-artifact:
+    docker:
+      - image: circleci/node:10.13
+    steps:
+      - checkout
+      - attach_workspace:
+          at: doc
+      - store_artifacts:
+          path: doc
+
 workflows:
   version: 2
   build:
@@ -86,6 +96,13 @@ workflows:
               ignore:
                 - gh-pages
       - doc-deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+      - doc-artifact:
           requires:
             - build
           filters:
