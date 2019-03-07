@@ -3,13 +3,14 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2
+
 jobs:
   build:
     docker:
-    # specify the version you desire here
-    - image: circleci/node:10.13-browsers
-      environment:
-        CHROME_BIN: "/usr/bin/google-chrome"
+      # specify the version you desire here
+      - image: circleci/node:10.13-browsers
+        environment:
+          CHROME_BIN: "/usr/bin/google-chrome"
 
     # Specify service dependencies here if necessary
     # CircleCI maintains a library of pre-built images
@@ -19,21 +20,75 @@ jobs:
     working_directory: ~/repo
 
     steps:
-    - checkout
+      - checkout
 
-    # Download and cache dependencies
-    - restore_cache:
-        keys:
-        - v1-dependencies-{{ checksum "package.json" }}
-        # fallback to using the latest cache if no exact match is found
-        - v1-dependencies-
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
-    - run: yarn install
+      - run:
+          name: Install dependencies
+          command: yarn install
 
-    - save_cache:
-        paths:
-        - node_modules
-        key: v1-dependencies-{{ checksum "package.json" }}
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
 
-    - run: yarn build
-    - run: yarn test
+      - run:
+          name: Build project
+          command: yarn build
+
+      - run:
+          name: Run tests
+          command: yarn test
+
+      - run:
+          name: Build docs
+          command: yarn build-storybook
+
+      - persist_to_workspace:
+          root: doc
+          paths:
+            - '*'
+
+  doc-deploy:
+    docker:
+      - image: circleci/node:10.13
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "ca:3d:54:75:4d:b1:66:e3:7f:00:b1:70:03:f4:b4:e7"
+      - checkout
+      - attach_workspace:
+          at: doc
+      - run:
+          name: Install and configure dependencies
+          command: |
+            sudo npm install -g --silent gh-pages@2.0.1
+            git config user.email "circleci@syndesis.io"
+            git config user.name "CircleCI"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: |
+            gh-pages --dotfiles --message "[skip ci] Updates" --dist doc --dest ${CIRCLE_PR_NUMBER}
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - gh-pages
+      - doc-deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - gh-pages
