@@ -2,10 +2,12 @@ package operation
 
 import (
 	"context"
+
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"sigs.k8s.io/controller-runtime/pkg/client"
 )
@@ -20,20 +22,27 @@ func AttachSyndesisToResource(ctx context.Context, scheme *runtime.Scheme, cl cl
 
 	for _, selector := range selectors {
 		for _, metaType := range resTypes {
-
-			options := &client.ListOptions{Namespace: syndesis.Namespace}
-			if err := options.SetFieldSelector(selector); err != nil {
+			options := client.ListOptions{
+				Namespace: syndesis.Namespace,
+				Raw: &metav1.ListOptions{
+					TypeMeta: metaType,
+				},
+			}
+			if err := options.SetLabelSelector(selector); err != nil {
 				return err
 			}
-			list := metav1.List{
-				TypeMeta: metaType,
+			list := unstructured.UnstructuredList{
+				Object: map[string]interface{}{
+					"apiVersion": metaType.APIVersion,
+					"kind":       metaType.Kind,
+				},
 			}
-			if err := cl.List(ctx, options, &list); err != nil {
+			if err := cl.List(ctx, &options, &list); err != nil {
 				return err
 			}
 
 			for _, obj := range list.Items {
-				res, err := util.LoadResourceFromYaml(scheme, obj.Raw)
+				res, err := util.RuntimeObjectFromUnstructured(scheme, &obj)
 				if err != nil {
 					return err
 				}
@@ -50,7 +59,7 @@ func AttachSyndesisToResource(ctx context.Context, scheme *runtime.Scheme, cl cl
 }
 
 func getAllManagerSelectors() []string {
-	return []string {
+	return []string{
 		"syndesis.io/app=syndesis,syndesis.io/type=infrastructure",
 		"syndesis.io/app=todo,app=syndesis",
 	}
