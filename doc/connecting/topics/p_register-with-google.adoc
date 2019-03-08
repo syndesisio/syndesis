@@ -24,6 +24,16 @@ need rather than all three APIs. At a later time, if you need to create connecti
 to the applications whose APIs you did not enable, you can return here and 
 follow the instructions to enable their APIs. 
 
+[CAUTION]
+Be careful if you choose to use the Google client ID and Google client 
+secret that you are using for some other, non-{prodname}, OAuth client. 
+{prodname} requires offline access that is requested on the first OAuth 
+exchange. If another OAuth client already entered the OAuth exchange 
+and did not request offline access, then {prodname} cannot obtain 
+offline access on subsequent OAuth exchanges. If you are unsure 
+whether offline access was requested on the first exchange, 
+create a new Google client ID and secret for {prodname}.
+
 .Prerequisite
 You must be able to sign in to the Google account that you want to
 use to register {prodname} as a Google client application.
@@ -42,8 +52,12 @@ and do the following:
 .. Confirm that you are signed in to the Google account that you want to
 use to register {prodname} as a Google client application.
 Or, choose a different Google account and sign in to that account.
-.. Ensure that you want to use the current Google project to grant
-authorization to {prodname}. Or, choose or create another project.
++
+The name of the current Google project appears at the top of the Google APIs page.
+
+.. To use the current project to grant authorization to {prodname}, 
+continue to the next step. To grant authorization to {prodname} in another 
+Google project, choose or create that project. 
 If this Google account does not already
 have a project, you must create one. For information about Google projects
 and how you might want to organize your use of projects, click the Google help

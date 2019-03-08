@@ -68,7 +68,7 @@ the connection passes a collection of row objects or a collection of
 column objects to the next step in the integration. 
 Select *Yes* to enable the connection to split the returned data 
 according to the setting of *Major Dimension*. For example, if 
-*Major Dimension* is set to *ROWS* then the connection returns row
+*Major Dimension* is set to *Rows* then the connection returns row
 objects. Each row object triggers a separate execution of the integration. 
 That is, {prodname} executes the integration once for each returned row
 object. For example, if the poll returns 5 rows then {prodname} executes
@@ -99,7 +99,7 @@ in the integration, add any other connections that you want in the
 integration. Then, after the connection that obtains sheet values, 
 add a data mapper step. In the data mapper, {prodname} displays 
 source fields according to how you configure the *Get sheet values* action. 
-That is, if the major dimension is *ROWS*, then the data mapper lists 
+That is, if the major dimension is *Rows*, then the data mapper lists 
 the column names as fields that you can map to the target. If the major 
 dimension is *COLUMNS*, then the data mapper lists row indexes as 
 fields that you can map to the target.

@@ -6,7 +6,7 @@
 = Connecting to Google applications
 :context: google
 
-An integration can connect to Gmail, Google Calendar, and Google Sheets. 
+An integration can connect to these Google applications: Gmail, Calendar, Sheets.
 To create a connection to a Google application, you must register your
 {prodname} environment as a Google client application and enable the 
 Google API for each application that you want integrations to connect to. 
