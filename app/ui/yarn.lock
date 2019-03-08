@@ -1849,13 +1849,9 @@ codelyzer@4.0.2:
     source-map "^0.5.6"
     sprintf-js "^1.0.3"
 
-codemirror@5.42.2:
+codemirror@5.42.2, codemirror@^5.22.2:
   version "5.42.2"
   resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.42.2.tgz#801ab715a7a7e1c7ed4162b78e9d8138b98de8f0"
-
-codemirror@^5.22.2:
-  version "5.40.0"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.40.0.tgz#2f5ed47366e514f41349ba0fe34daaa39be4e257"
 
 collection-visit@^1.0.0:
   version "1.0.0"
