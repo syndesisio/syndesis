@@ -30,7 +30,8 @@
                 "multiple": true,
                 "required": false,
                 "secret": false,
-                "type": "select"
+                "type": "select",
+                "order": "2"
               },
               "id": {
                 "deprecated": false,
@@ -41,7 +42,8 @@
                 "labelHint": "The resource id, e.g. \"123\"",
                 "required": false,
                 "secret": false,
-                "type": "string"
+                "type": "string",
+                "order": "3"
               },
               "resourceType": {
                 "deprecated": false,
@@ -52,7 +54,8 @@
                 "labelHint": "The resource type e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
                 "required": true,
                 "secret": false,
-                "type": "select"
+                "type": "select",
+                "order": "1"
               },
               "version": {
                 "deprecated": false,
@@ -63,7 +66,8 @@
                 "labelHint": "The version e.g \"123\" (used with Id only)",
                 "required": false,
                 "secret": false,
-                "type": "string"
+                "type": "string",
+                "order": "4"
               }
             }
           }
@@ -105,7 +109,8 @@
                 "labelHint": "The query, e.g. \"given=Vincent&family=Freeman\"",
                 "required": false,
                 "secret": false,
-                "type": "string"
+                "type": "string",
+                "order": "2"
               },
               "resourceType": {
                 "deprecated": false,
@@ -116,7 +121,8 @@
                 "labelHint": "The resource type to query",
                 "required": true,
                 "secret": false,
-                "type": "select"
+                "type": "select",
+                "order": "1"
               }
             }
           }
@@ -160,7 +166,8 @@
                 "labelHint": "The resource id, e.g. \"123\"",
                 "required": false,
                 "secret": false,
-                "type": "string"
+                "type": "string",
+                "order": "2"
               },
               "resourceType": {
                 "deprecated": false,
@@ -171,7 +178,8 @@
                 "labelHint": "The resource type, e.g \"Patient\", checkout http://hl7.org/implement/standards/fhir/resourcelist.html",
                 "required": true,
                 "secret": false,
-                "type": "String"
+                "type": "String",
+                "order": "1"
               },
               "version": {
                 "deprecated": false,
@@ -182,7 +190,8 @@
                 "labelHint": "The optional version e.g \"123\"",
                 "required": false,
                 "secret": false,
-                "type": "String"
+                "type": "String",
+                "order": "3"
               }
             }
           }
@@ -226,7 +235,8 @@
                 "multiple": true,
                 "required": false,
                 "secret": false,
-                "type": "select"
+                "type": "select",
+                "order": "2"
               },
               "resourceType": {
                 "deprecated": false,
@@ -237,7 +247,8 @@
                 "labelHint": "The resource type to update",
                 "required": true,
                 "secret": false,
-                "type": "String"
+                "type": "String",
+                "order": "1"
               }
             }
           }
@@ -280,7 +291,8 @@
                 "labelHint": "The resource Id",
                 "required": false,
                 "secret": false,
-                "type": "String"
+                "type": "String",
+                "order": "3"
               },
               "operationNumber": {
                 "defaultValue": 1,
@@ -292,7 +304,8 @@
                 "labelHint": "The number of operations to be defined in the patch.",
                 "required": true,
                 "secret": false,
-                "type": "number"
+                "type": "number",
+                "order": "2"
               },
               "patch": {
                 "deprecated": false,
@@ -304,7 +317,8 @@
                 "placeholder": "e.g. [{ \"op\":\"replace\", \"path\":\"active\", \"value\":true }]",
                 "required": false,
                 "secret": false,
-                "type": "textarea"
+                "type": "textarea",
+                "order": "4"
               },
               "resourceType": {
                 "deprecated": false,
@@ -315,7 +329,8 @@
                 "labelHint": "The resource type to query",
                 "required": true,
                 "secret": false,
-                "type": "select"
+                "type": "select",
+                "order": "1"
               }
             }
           }
@@ -359,7 +374,8 @@
                 "multiple": true,
                 "required": false,
                 "secret": false,
-                "type": "select"
+                "type": "select",
+                "order": "2"
               },
               "resourceType": {
                 "deprecated": false,
@@ -370,7 +386,8 @@
                 "labelHint": "The resource type to create",
                 "required": true,
                 "secret": false,
-                "type": "String"
+                "type": "String",
+                "order": "1"
               }
             }
           }
@@ -412,7 +429,8 @@
                 "multiple": "true",
                 "required": true,
                 "secret": false,
-                "type": "select"
+                "type": "select",
+                "order": "1"
               }
             }
           }
