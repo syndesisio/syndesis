@@ -15,12 +15,7 @@
  */
 package io.syndesis.server.controller.integration.online;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
-
 import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.Labels;
 import io.syndesis.server.controller.integration.BaseHandler;
 import io.syndesis.server.controller.integration.IntegrationPublishValidator;
@@ -28,35 +23,18 @@ import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
 import io.syndesis.server.openshift.OpenShiftService;
 
+import java.util.HashMap;
+import java.util.Map;
+
 abstract class BaseOnlineHandler extends BaseHandler {
     protected BaseOnlineHandler(OpenShiftService openShiftService, IntegrationDao integrationDao, IntegrationDeploymentDao integrationDeploymentDao, IntegrationPublishValidator validator) {
         super(openShiftService, integrationDao, integrationDeploymentDao, validator);
     }
-
-    protected void deactivatePreviousDeployments(IntegrationDeployment integrationDeployment) {
-        String id = integrationDeployment.getId().orElseThrow(() -> new IllegalArgumentException("internal: No id given"));
-        IntegrationDeploymentDao dao = getIntegrationDeploymentDao();
-        Set<String> ids = dao.fetchIdsByPropertyValue("integrationId", id);
-        ids.retainAll(dao.fetchIdsByPropertyValue("targetState", IntegrationDeploymentState.Published.name()));
-
-        ids.stream()
-            .map(dao::fetch)
-            .filter(r -> r.getVersion() != integrationDeployment.getVersion())
-            .map(IntegrationDeployment::unpublishing)
-            .forEach(dao::update);
-    }
-
 
     protected boolean isRunning(IntegrationDeployment integrationDeployment) {
         Map<String, String> labels = new HashMap<>();
         labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationDeployment.getIntegrationId().get()));
         labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
         return getOpenShiftService().isScaled(integrationDeployment.getSpec().getName(), 1, labels);
-    }
-
-
-    protected void updateDeploymentState(IntegrationDeployment integrationDeployment, IntegrationDeploymentState state) {
-        IntegrationDeployment d = getIntegrationDeploymentDao().fetch(integrationDeployment.getId().get());
-        getIntegrationDeploymentDao().update(d.withCurrentState(state));
     }
 }

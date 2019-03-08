@@ -41,11 +41,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CamelKPublishHandlerTest {
 
-    @BeforeClass
-    public static void testInit(){
-
-    }
-
     // ****************************
     //
     // Resources
@@ -145,6 +140,7 @@ public class CamelKPublishHandlerTest {
         ProjectGenerator generator = new ProjectGenerator(new ProjectGeneratorConfiguration(), manager, new MavenProperties());
         IntegrationDeployment deployment = new IntegrationDeployment.Builder()
             .userId("user")
+            .id("idId")
             .spec(integration)
             .build();
 

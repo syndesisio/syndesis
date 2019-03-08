@@ -56,7 +56,7 @@
 
     <jackson.version>2.9.8</jackson.version>
     <json-patch.version>1.9</json-patch.version>
-    <kubernetes.client.version>3.1.4.fuse-710001</kubernetes.client.version>
+    <kubernetes.client.version>3.1.12.fuse-730020</kubernetes.client.version>
 
     <spring.version>4.3.18.RELEASE</spring.version>
     <spring-boot.version>1.5.16.RELEASE</spring-boot.version>
@@ -76,7 +76,7 @@
 
     <!-- Global camel version used everywhere -->
     <camel.version>2.21.0.fuse-730054</camel.version>
-    <camel-k.version>0.2.1</camel-k.version>
+    <camel-k.version>0.3.0</camel-k.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
     <dep.plugin.pmd.version>3.10.0</dep.plugin.pmd.version>

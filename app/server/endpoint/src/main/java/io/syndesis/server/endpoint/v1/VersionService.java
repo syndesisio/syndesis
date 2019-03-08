@@ -55,7 +55,7 @@ public final class VersionService {
     }
 
     public String getCamelkVersion() {
-        return Optional.ofNullable(detail.get("version")).orElseThrow(() -> new IllegalStateException("camelkversion must be found in a MANIFEST.MF!"));
+        return Optional.ofNullable(detail.get("camelkversion")).orElseThrow(() -> new IllegalStateException("camelkversion must be found in a MANIFEST.MF!"));
     }
 
     static void putManifestValueTo(final Map<String, String> detail, final String key, final String... attributes) {

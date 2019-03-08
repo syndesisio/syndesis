@@ -15,20 +15,6 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.fabric8.kubernetes.api.model.Secret;
@@ -69,6 +55,19 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Component
 @Qualifier("camel-k")
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
@@ -103,15 +102,15 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
     }
 
     @Override
+    @SuppressWarnings("PMD.NPathComplexity")
     public StateUpdate execute(IntegrationDeployment integrationDeployment) {
+        //
+        // Validation
+        //
         StateUpdate updateViaValidation = getValidator().validate(integrationDeployment);
         if (updateViaValidation != null) {
             return updateViaValidation;
         }
-
-        //
-        // Validation
-        //
 
         if (!integrationDeployment.getUserId().isPresent()) {
             throw new IllegalStateException("Couldn't find the user of the integration");
@@ -120,27 +119,48 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             throw new IllegalStateException("IntegrationDeployment should have an integrationId");
         }
 
+        //get CRD
         CustomResourceDefinition integrationCRD = getCustomResourceDefinition();
+        io.syndesis.server.controller.integration.camelk.crd.Integration camelkIntegration = getCamelkIntegration(integrationDeployment, integrationCRD);
 
-        if (isBuildFailed(integrationDeployment, integrationCRD)) {
+        //update integration version and deactivate previous deployment for being checked
+        setVersion(integrationDeployment);
+        deactivatePreviousDeployments(integrationDeployment);
+
+        if(camelkIntegration == null) {
+            //if we reach here it means the camel k integration CR has not yet been created
+            return createIntegration(integrationDeployment, integrationCRD);
+        }
+
+        //check if build failed
+        if (CamelKSupport.isBuildFailed(camelkIntegration)) {
             logInfo(integrationDeployment, "Build Failed");
             return new StateUpdate(IntegrationDeploymentState.Error, Collections.emptyMap(), "Build Failed");
         }
-        if (isBuildStarted(integrationDeployment, integrationCRD)) {
+
+        //check other states
+        if (camelkIntegration.getStatus() == null) {
+            //Camelk Integration CR has been created but not yet picked up by camelk operator
+            logInfo(integrationDeployment, "Build not yet started");
+            return new StateUpdate(IntegrationDeploymentState.Pending, Collections.emptyMap(), "Build not yet started");
+        }
+        if (CamelKSupport.isBuildStarted(camelkIntegration)) {
             logInfo(integrationDeployment, "Build Started");
             return new StateUpdate(IntegrationDeploymentState.Pending, Collections.emptyMap(), "Build Started");
         }
-        if (isRunning(integrationDeployment, integrationCRD)) {
+        if (CamelKSupport.isRunning(camelkIntegration)) {
             logInfo(integrationDeployment, "Running");
+            //update integrationDeployment state on DB
+            updateDeploymentState(integrationDeployment, IntegrationDeploymentState.Published);
             return new StateUpdate(IntegrationDeploymentState.Published, Collections.emptyMap(), "Running");
         }
 
-        return createIntegration(integrationDeployment, integrationCRD);
+        //we should not reach here
+        return new StateUpdate(IntegrationDeploymentState.Error, Collections.emptyMap(), "Unknown state try to handle from "+integrationDeployment.getCurrentState()+" to "+integrationDeployment.getTargetState()+" for integration is: "+integrationDeployment.getIntegrationId().orElse("Unknown id"));
     }
 
     @SuppressWarnings({"unchecked"})
     protected StateUpdate createIntegration(IntegrationDeployment integrationDeployment, CustomResourceDefinition integrationCRD) {
-        Map<String, String> stepsDone = new HashMap<>(integrationDeployment.getStepsDone());
 
         logInfo(integrationDeployment,"Creating Camel-K resource");
 
@@ -155,10 +175,8 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             IntegrationList.class,
             DoneableIntegration.class,
             camelkIntegration);
-        stepsDone.put("deploy", "camel-k");
-        logInfo(integrationDeployment,"Camel-K resource created");
-
-        return new StateUpdate(IntegrationDeploymentState.Pending, stepsDone);
+        logInfo(integrationDeployment,"Camel-K resource created "+camelkIntegration.getMetadata().getName());
+        return new StateUpdate(IntegrationDeploymentState.Pending, Collections.emptyMap());
     }
 
     protected Secret createIntegrationSecret(IntegrationDeployment integrationDeployment) {
@@ -183,19 +201,25 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         String username = integrationDeployment.getUserId().get();
         String integrationId = integrationDeployment.getIntegrationId().get();
         String version = Integer.toString(integrationDeployment.getVersion());
+        String integrationDeploymentId = integrationDeployment.getId().get();
 
         io.syndesis.server.controller.integration.camelk.crd.Integration result = new io.syndesis.server.controller.integration.camelk.crd.Integration();
         //add CR metadata
         result.getMetadata().setName(Names.sanitize(integrationId));
 //        result.getMetadata().setResourceVersion(String.valueOf(integrationDeployment.getVersion()));
         result.getMetadata().setLabels(new HashMap<>());
-        result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationId));
+        result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationId));
         result.getMetadata().getLabels().put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version);
         result.getMetadata().getLabels().put(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username));
+        result.getMetadata().getLabels().put(OpenShiftService.COMPONENT_LABEL, "integration");
+        result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_NAME_LABEL, Labels.sanitize(integration.getName()));
+        result.getMetadata().getLabels().put("syndesis.io/type", "integration");
+        result.getMetadata().getLabels().put("syndesis.io/app", "syndesis");
         result.getMetadata().setAnnotations(new HashMap<>());
         result.getMetadata().getAnnotations().put(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName());
         result.getMetadata().getAnnotations().put(OpenShiftService.INTEGRATION_ID_LABEL, integrationId);
         result.getMetadata().getAnnotations().put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version);
+        result.getMetadata().getAnnotations().put("syndesis.io/deploy-id", integrationDeploymentId);
 
         ImmutableIntegrationSpec.Builder integrationSpecBuilder = new IntegrationSpec.Builder();
 
@@ -209,25 +233,32 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             .value(Names.sanitize(integration.getId().get()))
             .build());
         integrationSpecBuilder.putTraits(
+            "jolokia",
+            new IntegrationTraitSpec.Builder()
+                .putConfiguration("enabled", "true")
+                .build());
+//        integrationSpecBuilder.putTraits(
+//            "prometheus",
+//            new IntegrationTraitSpec.Builder()
+//                .putConfiguration("enabled", "true")
+//                .build());
+        integrationSpecBuilder.putTraits(
             "camel",
             new IntegrationTraitSpec.Builder()
                 .putConfiguration("version", versionService.getCamelVersion())
                 .putConfiguration("runtime-version", versionService.getCamelkVersion())
-                .build()
-        );
-
-        //
-        // CR operation seems to lack the option to cascade delete all the
-        // resources associates to the cr (those that have ownerReference
-        // set to the cr itself) so it leaves the integration running as
-        // the deployment is not deleted.
-        //
-        // As workaround, let use finalizers
-        //
-        // TODO: this need to be replaced by a proper impl that support
-        //       cascading
-        //
-        result.getMetadata().setFinalizers(Arrays.asList("finalizer.integration.camel.apache.org"));
+                .build());
+        integrationSpecBuilder.putTraits(
+            "owner",
+            new IntegrationTraitSpec.Builder()
+                .putConfiguration("target-labels", OpenShiftService.COMPONENT_LABEL+","
+                                                    +OpenShiftService.INTEGRATION_ID_LABEL+","
+                                                    +OpenShiftService.DEPLOYMENT_VERSION_LABEL+","
+                                                    +OpenShiftService.USERNAME_LABEL+","
+                                                    +OpenShiftService.INTEGRATION_NAME_LABEL+","
+                                                    +"syndesis.io/type"+","
+                                                    +"syndesis.io/app")
+                .build());
 
         //add dependencies
         getDependencies(integration).forEach( gav -> integrationSpecBuilder.addDependencies("mvn:"+gav.getId()));
@@ -267,7 +298,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
 
     private void prepareDeployment(IntegrationDeployment integrationDeployment) {
         setVersion(integrationDeployment);
-//        deactivatePreviousDeployments(integrationDeployment);
+        deactivatePreviousDeployments(integrationDeployment);
     }
 
     // ************************************

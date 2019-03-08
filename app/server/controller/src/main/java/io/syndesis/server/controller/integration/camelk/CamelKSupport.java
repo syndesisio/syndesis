@@ -15,19 +15,12 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.Collection;
-import java.util.Properties;
-import java.util.zip.GZIPOutputStream;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.fabric8.kubernetes.api.model.Secret;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.Names;
@@ -35,6 +28,19 @@ import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
 import io.syndesis.server.openshift.OpenShiftService;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.zip.GZIPOutputStream;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public final class CamelKSupport {
     //    // IntegrationPhaseInitial --
@@ -69,6 +75,30 @@ public final class CamelKSupport {
                 "Running" );
 
     public static final String CAMEL_K_INTEGRATION_CRD_NAME = "integrations.camel.apache.org";
+    public static final String CAMEL_K_INTEGRATION_CRD_GROUP = "camel.apache.org";
+    public static final String CAMEL_K_INTEGRATION_CRD_APIVERSION = "camel.apache.org/v1alpha1";
+    public static final String CAMEL_K_INTEGRATION_CRD_VERSION = "v1alpha1";
+
+    public static final CustomResourceDefinition CAMEL_K_INTEGRATION_CRD = new CustomResourceDefinitionBuilder()
+            .withApiVersion(CAMEL_K_INTEGRATION_CRD_APIVERSION)
+            .withKind("Integration")
+            .withNewMetadata()
+                .withName(CamelKSupport.CAMEL_K_INTEGRATION_CRD_NAME)
+            .endMetadata()
+            .withNewSpec()
+                .withGroup(CamelKSupport.CAMEL_K_INTEGRATION_CRD_GROUP)
+                .withScope("Namespaced")
+                .withVersion(CAMEL_K_INTEGRATION_CRD_VERSION)
+                .withNewNames()
+                    .withKind("Integration")
+                    .withListKind("IntegrationList")
+                    .withPlural("integrations")
+                    .withShortNames(ImmutableList.of("it"))
+                    .withSingular("integration")
+                .endNames()
+            .endSpec()
+            .withStatus(new CustomResourceDefinitionStatusBuilder().build())
+        .build();
 
     private CamelKSupport() {
     }
@@ -132,21 +162,30 @@ public final class CamelKSupport {
     @SuppressWarnings("unchecked")
     public static io.syndesis.server.controller.integration.camelk.crd.Integration getIntegrationCR(
             OpenShiftService openShiftService,
-            io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition integrationCRD,
+            CustomResourceDefinition integrationCRD,
             IntegrationDeployment integrationDeployment) {
 
-        return (io.syndesis.server.controller.integration.camelk.crd.Integration)openShiftService.getCR(
+        return openShiftService.getCR(
             integrationCRD,
             io.syndesis.server.controller.integration.camelk.crd.Integration.class,
             IntegrationList.class,
             DoneableIntegration.class,
             Names.sanitize(integrationDeployment.getIntegrationId().get())
-        ).get();
+        );
     }
 
-    public static io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition getCustomResourceDefinition(OpenShiftService openShiftService) {
-        return openShiftService.getCRD(CamelKSupport.CAMEL_K_INTEGRATION_CRD_NAME).orElseThrow(
-            () -> new IllegalArgumentException("No Camel-k Integration CRD found for name: " + CamelKSupport.CAMEL_K_INTEGRATION_CRD_NAME)
+    @SuppressWarnings("unchecked")
+    public static List<io.syndesis.server.controller.integration.camelk.crd.Integration> getIntegrationCRbyLabels(
+        OpenShiftService openShiftService,
+        CustomResourceDefinition integrationCRD,
+        Map<String,String> labels) {
+
+        return openShiftService.getCRBylabel(
+            integrationCRD,
+            io.syndesis.server.controller.integration.camelk.crd.Integration.class,
+            IntegrationList.class,
+            DoneableIntegration.class,
+            labels
         );
     }
 
@@ -164,7 +203,7 @@ public final class CamelKSupport {
     }
 
     public static boolean isInPhase(io.syndesis.server.controller.integration.camelk.crd.Integration integration, Collection<String> phases) {
-        return integration != null && phases.contains(integration.getStatus().getPhase());
+        return integration != null && integration.getStatus() != null && phases.contains(integration.getStatus().getPhase());
     }
 
     public static IntegrationDeploymentState getState(io.syndesis.server.controller.integration.camelk.crd.Integration integration) {

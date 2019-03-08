@@ -1,13 +1,13 @@
 apiVersion: camel.apache.org/v1alpha1
 kind: CamelCatalog
 metadata:
-  name: camel-catalog-2.21.0.fuse-730042
+  name: camel-catalog-2.21.0.fuse-730054
   labels:
     app: camel-k
-    camel.apache.org/catalog.version: 2.21.0.fuse-730042
-    camel.apache.org/catalog.loader.version: 2.21.0.fuse-730042
+    camel.apache.org/catalog.version: 2.21.0.fuse-730054
+    camel.apache.org/catalog.loader.version: 2.21.0.fuse-730054
 spec:
-  version: 2.21.0.fuse-730042
+  version: 2.21.0.fuse-730054
   artifacts:
     camel-ahc:
       groupId: org.apache.camel

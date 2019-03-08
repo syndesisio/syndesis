@@ -15,15 +15,19 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
-
+import io.fabric8.kubernetes.client.Watch;
+import io.syndesis.common.model.ChangeEvent;
+import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.EventBus;
+import io.syndesis.common.util.Labels;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.StateChangeHandlerProvider;
 import io.syndesis.server.controller.integration.BaseIntegrationController;
+import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
+import io.syndesis.server.controller.integration.camelk.crd.Integration;
+import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
@@ -31,6 +35,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class tracks changes to Integrations and attempts to process them so that
@@ -40,6 +51,7 @@ import org.springframework.stereotype.Service;
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
 public class CamelKIntegrationController extends BaseIntegrationController {
     private static final Logger LOG = LoggerFactory.getLogger(CamelKIntegrationController.class);
+    private Watch watcher;
 
     @Autowired
     public CamelKIntegrationController(
@@ -53,9 +65,22 @@ public class CamelKIntegrationController extends BaseIntegrationController {
 
     @PostConstruct
     @Override
+    @SuppressWarnings("unchecked")
     public void start() {
         LOG.info("Starting IntegrationController (camel-k)");
         super.doStart();
+        watcher = getOpenShiftService().watchCR( CamelKSupport.CAMEL_K_INTEGRATION_CRD,
+            Integration.class,
+            IntegrationList.class,
+            DoneableIntegration.class,
+            (action, integration) -> {
+                LOG.debug("CamelKIntegrationController watching "+CamelKSupport.CAMEL_K_INTEGRATION_CRD.getMetadata().getName()+" received action: "+action+" and integration:"+integration);
+                if( integration != null && integration.getMetadata() != null && integration.getMetadata().getAnnotations() != null ){
+                    String deploymentId = integration.getMetadata().getAnnotations().get("syndesis.io/deploy-id");
+                    getEventBus().broadcast(EventBus.Type.CHANGE_EVENT,
+                            ChangeEvent.of("", Kind.IntegrationDeployment.getModelName(), deploymentId).toJson());
+                }
+            });
     }
 
     @PreDestroy
@@ -63,25 +88,46 @@ public class CamelKIntegrationController extends BaseIntegrationController {
     public void stop() {
         LOG.info("Stopping IntegrationController (camel-k)");
         super.doStop();
+        if(watcher != null){
+            watcher.close();
+        }
     }
 
     @Override
     protected IntegrationDeploymentState determineState(IntegrationDeployment integrationDeployment) {
-        io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition crd = CamelKSupport.getCustomResourceDefinition(getOpenShiftService());
-        io.syndesis.server.controller.integration.camelk.crd.Integration cr = CamelKSupport.getIntegrationCR(getOpenShiftService(), crd, integrationDeployment);
+        io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition crd = CamelKSupport.CAMEL_K_INTEGRATION_CRD;
 
-        if (cr != null) {
-            if (CamelKSupport.isBuildFailed(cr)) {
-                return IntegrationDeploymentState.Error;
-            }
-            if (CamelKSupport.isBuildStarted(cr)) {
-                return IntegrationDeploymentState.Pending;
-            }
-            if (CamelKSupport.isRunning(cr)) {
-                return IntegrationDeploymentState.Published;
-            }
+        Map<String, String> labels = new HashMap<>();
+        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationDeployment.getIntegrationId().get()));
+        labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
+        List<Integration> integrations = CamelKSupport.getIntegrationCRbyLabels(getOpenShiftService(), crd, labels);
+
+        if(integrations.size()==1){
+            //it is still deployed, delete it
+            Integration cr = integrations.get(0);
+
+            return CamelKSupport.getState(cr);
+        }else if(integrations.size()>1){
+            throw new IllegalStateException("There are more than one Camel k Integrations CR with labels: "+labels);
         }
 
         return IntegrationDeploymentState.Unpublished;
+    }
+
+    @SuppressWarnings("FutureReturnValueIgnored")
+    @Override
+    protected void reschedule(String integrationDeploymentId, String checkKey) {
+        LOG.debug("Remove from ScheduledChecks checkKey: {}, keys: {}", checkKey, getScheduledChecks());
+        getScheduledChecks().remove(checkKey);
+        LOG.debug("Reschedule IntegrationDeployment check, id:{}, keys: {}", integrationDeploymentId, getScheduledChecks());
+        getScheduler().schedule(() -> {
+                LOG.debug("Trigger checkIntegrationStatus, id:{}", integrationDeploymentId);
+                //checkIntegrationStatus(i);
+                getEventBus().broadcast(EventBus.Type.CHANGE_EVENT,
+                    ChangeEvent.of("", Kind.IntegrationDeployment.getModelName(), integrationDeploymentId).toJson());
+            },
+            getProperties().getIntegrationStateCheckInterval(),
+            TimeUnit.SECONDS
+        );
     }
 }

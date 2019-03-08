@@ -148,9 +148,29 @@
   <build>
     <plugins>
       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>analyze</id>
+            <goals>
+              <goal>analyze-only</goal>
+            </goals>
+            <configuration>
+
+              <ignoredDependencies>
+                <ignoredDependency>io.syndesis.connector</ignoredDependency>
+              </ignoredDependencies>
+
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
           <groupId>org.apache.camel.k</groupId>
           <artifactId>camel-k-maven-plugin</artifactId>
           <version>${camel-k.version}</version>
+        <!--<version>0.3.1-SNAPSHOT</version>-->
           <executions>
               <execution>
                   <id>generate-catalog</id>
@@ -178,6 +198,16 @@
   <profiles>
     <profile>
       <id>dependency-prepare</id>
+      <dependencies>
+        <dependency>
+          <groupId>io.syndesis.connector</groupId>
+          <artifactId>connector-timer</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>io.syndesis.connector</groupId>
+          <artifactId>connector-log</artifactId>
+        </dependency>
+      </dependencies>
       <build>
         <plugins>
           <!--This is to generate dependencies folder
@@ -227,6 +257,36 @@
                   <goal>install-file</goal>
                 </goals>
                 <phase>package</phase>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>analyze</id>
+                <goals>
+                  <goal>analyze-only</goal>
+                </goals>
+                <configuration>
+                  <failOnWarning>false</failOnWarning>
+
+                  <!-- ignore jsr305 for both "used but undeclared" and "declared but unused" -->
+                  <ignoredDependencies>
+                    <ignoredDependency>io.syndesis.connector</ignoredDependency>
+                  </ignoredDependencies>
+
+                  <!-- ignore annotations for "used but undeclared" warnings -->
+                  <ignoredUsedUndeclaredDependencies>
+                    <ignoredUsedUndeclaredDependency>io.syndesis.connector</ignoredUsedUndeclaredDependency>
+                  </ignoredUsedUndeclaredDependencies>
+
+                  <!-- ignore annotations for "unused but declared" warnings -->
+                  <ignoredUnusedDeclaredDependencies>
+                    <ignoredUnusedDeclaredDependency>io.syndesis.connector</ignoredUnusedDeclaredDependency>
+                  </ignoredUnusedDeclaredDependencies>
+                </configuration>
               </execution>
             </executions>
           </plugin>

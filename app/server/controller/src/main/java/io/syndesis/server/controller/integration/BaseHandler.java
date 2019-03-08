@@ -17,12 +17,15 @@ package io.syndesis.server.controller.integration;
 
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.Names;
 import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Set;
 
 @SuppressWarnings("PMD.LoggerIsNotStaticFinal")
 public class BaseHandler {
@@ -96,5 +99,23 @@ public class BaseHandler {
         String id = integrationDeployment.getIntegrationId()
                                          .orElseThrow(() -> new IllegalArgumentException("No id given in IntegrationDeployment"));
         getIntegrationDao().updateVersion(id, integrationDeployment.getVersion());
+    }
+
+    protected void updateDeploymentState(IntegrationDeployment integrationDeployment, IntegrationDeploymentState state) {
+        IntegrationDeployment d = getIntegrationDeploymentDao().fetch(integrationDeployment.getId().get());
+        getIntegrationDeploymentDao().update(d.withCurrentState(state));
+    }
+
+    protected void deactivatePreviousDeployments(IntegrationDeployment integrationDeployment) {
+        String id = integrationDeployment.getId().orElseThrow(() -> new IllegalArgumentException("internal: No id given"));
+        IntegrationDeploymentDao dao = getIntegrationDeploymentDao();
+        Set<String> ids = dao.fetchIdsByPropertyValue("integrationId", id);
+        ids.retainAll(dao.fetchIdsByPropertyValue("targetState", IntegrationDeploymentState.Published.name()));
+
+        ids.stream()
+            .map(dao::fetch)
+            .filter(r -> r.getVersion() != integrationDeployment.getVersion())
+            .map(IntegrationDeployment::unpublishing)
+            .forEach(dao::update);
     }
 }

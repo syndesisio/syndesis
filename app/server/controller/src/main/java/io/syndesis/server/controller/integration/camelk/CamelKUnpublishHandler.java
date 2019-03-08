@@ -15,15 +15,15 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
-import java.util.Collections;
-import java.util.Set;
-
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.util.Labels;
+import io.syndesis.common.util.Names;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
 import io.syndesis.server.controller.integration.IntegrationPublishValidator;
 import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
+import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
 import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
@@ -31,6 +31,12 @@ import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @Component
 @Qualifier("camel-k")
@@ -65,17 +71,33 @@ public class CamelKUnpublishHandler extends BaseCamelKHandler implements StateCh
         }
 
         io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition crd = getCustomResourceDefinition();
-        io.syndesis.server.controller.integration.camelk.crd.Integration cr = CamelKSupport.getIntegrationCR(getOpenShiftService(), crd, integrationDeployment);
 
-        boolean deleted = getOpenShiftService().deleteCR(
-            crd,
-            io.syndesis.server.controller.integration.camelk.crd.Integration.class,
-            IntegrationList.class,
-            DoneableIntegration.class,
-            cr);
+        Map<String, String> labels = new HashMap<>();
+        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationDeployment.getIntegrationId().get()));
+        labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
+        List<Integration> integrations = CamelKSupport.getIntegrationCRbyLabels(getOpenShiftService(), crd, labels);
 
-        return deleted
-            ? new StateUpdate(IntegrationDeploymentState.Unpublished, Collections.emptyMap())
-            : new StateUpdate(CamelKSupport.getState(cr), Collections.emptyMap());
+        if(integrations.size()==1){
+            //it is still deployed, delete it
+            Integration cr = integrations.get(0);
+
+            boolean deleted = getOpenShiftService().deleteCR(
+                crd,
+                Integration.class,
+                IntegrationList.class,
+                DoneableIntegration.class,
+                Names.sanitize(integrationDeployment.getIntegrationId().get()),
+                true);
+
+            logInfo(integrationDeployment,"Deleted Integration: "+Names.sanitize(integrationDeployment.getIntegrationId().get()));
+            return deleted
+                ? new StateUpdate(IntegrationDeploymentState.Unpublished, Collections.emptyMap())
+                : new StateUpdate(CamelKSupport.getState(cr), Collections.emptyMap(), "Unpublished for good!");
+        }else if(integrations.size()>1){
+            throw new IllegalStateException("There are more than one Camel k Integrations CR with labels: "+labels);
+        }
+
+        //there were no Camel k Integration CR, they have already been deleted
+        return new StateUpdate(IntegrationDeploymentState.Unpublished, Collections.emptyMap(), "Already unpublished");
     }
 }

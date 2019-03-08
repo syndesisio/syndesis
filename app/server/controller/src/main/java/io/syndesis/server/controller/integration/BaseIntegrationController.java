@@ -15,16 +15,6 @@
  */
 package io.syndesis.server.controller.integration;
 
-import java.io.IOException;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
-
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.integration.IntegrationDeployment;
@@ -40,6 +30,16 @@ import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
 
 /**
  * This class tracks changes to Integrations and attempts to process them so that
@@ -88,6 +88,10 @@ public abstract class BaseIntegrationController implements BackendController {
         return properties;
     }
 
+    protected Set<String> getScheduledChecks() { return scheduledChecks; }
+
+    protected ScheduledExecutorService getScheduler() { return scheduler; }
+
     @SuppressWarnings("FutureReturnValueIgnored")
     protected void doStart() {
         executor = Executors.newSingleThreadExecutor(threadFactory("Integration Controller"));
@@ -124,7 +128,7 @@ public abstract class BaseIntegrationController implements BackendController {
     private EventBus.Subscription getChangeEventSubscription() {
         return (event, data) -> {
             // Never do anything that could block in this callback!
-            if ("change-event".equals(event)) {
+            if (EventBus.Type.CHANGE_EVENT.equals(event)) {
                 try {
                     ChangeEvent changeEvent = Json.reader().forType(ChangeEvent.class).readValue(data);
                     if (changeEvent != null) {
@@ -211,7 +215,8 @@ public abstract class BaseIntegrationController implements BackendController {
 
             try {
                 final String integrationId = integrationDeployment.getIntegrationId().get();
-                LOG.info("Integration {} : Start processing integration: {}, version: {} with handler: {}", integrationId, integrationId, integrationDeployment.getVersion(), handler.getClass().getSimpleName());
+                final int deploymentVersion = integrationDeployment.getVersion();
+                LOG.info("IntegrationDeploymentId {} Integration {} : Start processing integration: {}, version: {} with handler: {}", integrationDeploymentId, integrationId, integrationId, deploymentVersion, handler.getClass().getSimpleName());
                 handler.execute(integrationDeployment, update->{
                     if (LOG.isInfoEnabled()) {
                         LOG.info("{} : Setting status to {}{}",
@@ -228,7 +233,9 @@ public abstract class BaseIntegrationController implements BackendController {
                         .currentState(update.getState())
                         .stepsDone(update.getStepsPerformed())
                         .build();
+                    LOG.trace("Updated {} , Current {}", updated, current);
                     if (!updated.equals(current)) {
+                        LOG.debug("IntegrationDeploymentId {} Integration {} , version: {} : jsonDB state update from {} to {}", integrationDeploymentId, integrationId, deploymentVersion, current.getCurrentState(), updated.getCurrentState());
                         dataManager.update(updated.builder().updatedAt(System.currentTimeMillis()).build());
                     }
                 });
@@ -245,14 +252,14 @@ public abstract class BaseIntegrationController implements BackendController {
 
             } finally {
                 // Add a next check for the next interval
-                reschedule(integrationDeploymentId);
+                reschedule(integrationDeploymentId, checkKey);
             }
 
         });
     }
 
     @SuppressWarnings("FutureReturnValueIgnored")
-    private void reschedule(String integrationId) {
+    protected void reschedule(String integrationId, String checkKey) {
         LOG.debug("Reschedule IntegrationDeployment check, id:{}, keys: {}", integrationId, scheduledChecks);
         scheduler.schedule(() -> {
                 IntegrationDeployment i = dataManager.fetch(IntegrationDeployment.class, integrationId);
