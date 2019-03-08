@@ -53,13 +53,13 @@ now. Then return to these instructions.
 just before the connection that adds a pivot table to a sheet.
 . Click *Data Mapper*.
 +
-In the data mapper, map source properties or source fields to the target 
+In the data mapper, map source properties, source fields, or source constants to the target 
 Google Sheets connection, which is adding a pivot table. The following instructions
-assume that there is a source field or a source property that contains the 
+assume that there is a source field, source property, or source constant that contains the 
 value that you want to map to each target field. 
 +
-If there is no source field or
-property that contains the required value, then create a source property
+If there is no source
+for the required value, then create a source property
 in the data mapper by clicking the + sign that is to the right of the 
 *Properties* folder. In the *Create Property* dialog, give the property
 a name that makes it easy to map to the correct target field, for example, 
@@ -77,12 +77,19 @@ table to a sheet in this same spreadsheet. The source data and the pivot
 table can be in two different sheets in the same spreadsheet but they
 cannot be in two different spreadsheets. 
 .. Identify the sheet to add the pivot table to by mapping an integer to the 
-*sheetId* field. This value is the index of the 
-sheet to add the pivot table to. The default is `0`, which adds the pivot
-table to the first sheet in the spreadsheet.  
+*sheetId* field. The default is `0`, which identifies the first sheet
+in the spreadsheet, 
+For subsequent sheets, the sheet ID is at the end of the URL when the 
+sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
+`\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
+
 .. Identify the sheet that provides the data for generating the pivot table by mapping 
-an integer to the target *sourceSheetId* field. This value is the index 
-of the sheet that provides the data.  If you do not map a value to *sourceSheetId*, 
+an integer to the target *sourceSheetId* field. ``0` identifies the first 
+sheet in the spreadsheet. 
+For subsequent sheets, the sheet ID is at the end of the URL when the 
+sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
+`\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
+If you do not map a value to *sourceSheetId*, 
 the connection uses the *sheetId* value, or `0` if no value is mapped
 to *sheetId*. 
 .. Set the source data range for generating the pivot table 

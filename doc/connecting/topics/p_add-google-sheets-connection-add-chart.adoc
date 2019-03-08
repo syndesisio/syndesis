@@ -60,13 +60,13 @@ Then return to these instructions.
 just before the connection that adds a chart.
 . Click *Data Mapper*.
 +
-In the data mapper, map source properties or source fields to the target 
+In the data mapper, map source properties, source fields, or source constants to the target 
 Google Sheets connection, which is adding a chart. The following instructions
-assume that there is a source field or a source property that contains the 
+assume that there is a source field, a source property, or a source constant that contains the 
 value that you want to map to each target field. 
 +
-If there is no source field or
-property that contains the required value, then create a source property
+If there is no source for
+the required value, then create a source property
 in the data mapper by clicking the + sign that is to the right of the 
 *Properties* folder. In the *Create Property* dialog, give the property
 a name that makes it easy to map to the correct target field, for example, 
@@ -83,8 +83,8 @@ When you configured the *Add charts* action, you might have specified
 a value for the spreadsheet ID, the chart title, and/or the chart subtitle. 
 If you did, then do not map a value to that field. 
 
-. To add a chart to a sheet, map source properties or fields to 
-target fields as follows: 
+. To add a chart to a sheet, map source properties, source fields
+or source constants to target fields as follows: 
 +
 .. Set the location of the chart by mapping an A1 notation value that 
 identifies a cell to the *overlayPosition* target field. An end position 
@@ -104,13 +104,19 @@ this string as the title of the chart.
 .. Set a chart subtitle by mapping to the target *subtitle* field. The connection inserts
 this string as a chart subtitle. 
 .. Identify the sheet to add the chart to by mapping an integer to the 
-*sheetId* field. This value is the index of the 
-sheet to add the chart to. The default is that the connection creates a new 
-sheet and adds the chart to the new sheet. 
+*sheetId* field. The default is that the connection creates a new sheet 
+and adds the chart to the new sheet. 
+0 identifies the first sheet in the spreadsheet. 
+For subsequent sheets, the sheet ID is at the end of the URL when the 
+sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
+`\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
+
 .. Identify the sheet that provides the data for the chart by mapping 
-an integer to the target *sourceSheetId* field. This value is the index 
-of the sheet that provides the data for the chart. The default is `0`, which is the 
-first sheet in the spreadsheet. 
+an integer to the target *sourceSheetId* field. The default is `0`, 
+which identifies the first sheet in the spreadsheet, 
+For subsequent sheets, the sheet ID is at the end of the URL when the 
+sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
+`\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
 + 
 You can add a basic chart or a pie chart. Follow one of the following
 sets of instructions according to the kind of chart that you want to add.
