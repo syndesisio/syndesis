@@ -176,7 +176,7 @@ export class ExtensionListItem extends React.Component<
               </div>
             ) : null
           }
-          stacked={false}
+          stacked={true}
         />
       </>
     );

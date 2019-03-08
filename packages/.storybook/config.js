@@ -2,6 +2,7 @@ import { addDecorator, addParameters } from '@storybook/react';
 import { withInfo } from '@storybook/addon-info';
 import { withA11y } from '@storybook/addon-a11y';
 import { withKnobs } from '@storybook/addon-knobs';
+import { withLinks } from '@storybook/addon-links';
 import { withNotes } from '@storybook/addon-notes';
 import { create } from '@storybook/theming';
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport';
@@ -32,6 +33,9 @@ addDecorator(withA11y);
 
 /* load the knobs addon */
 addDecorator(withKnobs);
+
+/* load the links addon */
+addDecorator(withLinks);
 
 /* load the notes addon */
 addDecorator(withNotes);

@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import { ApiConnectorDetail } from '../../src';
 
@@ -16,7 +15,8 @@ const storyNotes = '- Verify something here';
 
 stories.add(
   apiConnectorDetailsStory,
-  withNotes(storyNotes)(() => (
+  () => (
     <ApiConnectorDetail description={description} icon={icon} name={name} />
-  ))
+  ),
+  { notes: storyNotes }
 );

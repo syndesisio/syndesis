@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import ApiConnectorsPage from './pages/ApiConnectorsPage';
 import ExtensionDetailsPage from './pages/ExtensionDetailsPage';
+import ExtensionImportPage from './pages/ExtensionImportPage';
 import ExtensionsPage from './pages/ExtensionsPage';
 import routes from './routes';
 
@@ -24,6 +25,12 @@ export default class CustomizationApp extends React.Component {
           exact={true}
           component={ExtensionsPage}
         />
+        <Route
+          path={routes.extensions.import}
+          exact={true}
+          component={ExtensionImportPage}
+        />
+        // **This route must appear after import page**
         <Route
           path={routes.extensions.extension}
           exact={true}

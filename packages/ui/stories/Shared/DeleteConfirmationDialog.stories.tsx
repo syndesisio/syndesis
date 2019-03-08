@@ -1,4 +1,3 @@
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import { Button } from 'patternfly-react';
 import * as React from 'react';
@@ -60,15 +59,13 @@ const noDetailsMessageStoryNotes =
   '- Verify clicking the "X" button in the title closes the dialog\n';
 
 stories
-  .add(
-    'no details',
-    withNotes(noDetailsMessageStoryNotes)(() => <ConfirmationDialog />)
-  )
+  .add('no details', () => <ConfirmationDialog />, {
+    notes: noDetailsMessageStoryNotes,
+  })
   .add(
     'with details',
-    withNotes(detailsMessageStoryNotes)(() => (
-      <ConfirmationDialog includeDetailsMessage={true} />
-    ))
+    () => <ConfirmationDialog includeDetailsMessage={true} />,
+    { notes: detailsMessageStoryNotes }
   );
 
 interface IConfirmationDialogProps {
@@ -108,7 +105,11 @@ class ConfirmationDialog extends React.Component<
   public render() {
     return (
       <>
-        <Button onClick={this.showModal} bsStyle="primary">
+        <Button
+          onClick={this.showModal}
+          bsStyle="primary"
+          style={{ height: '10%', margin: '50px', width: '50%' }}
+        >
           {this.props.includeDetailsMessage
             ? showDetailsMessageDialogButtonText
             : showNoDetailsMessageDialogButtonText}

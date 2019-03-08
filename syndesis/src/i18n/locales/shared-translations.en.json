@@ -9,6 +9,7 @@
       "integrations": {}
     },
     "shared": {
+      "Actions": "Actions",
       "Connection": "Connection",
       "Connections": "Connections",
       "Connector": "Connector",
@@ -26,6 +27,7 @@
       "Extensions": "Extensions",
       "filterByNamePlaceholder": "Filter by Name",
       "Home": "Home",
+      "ID": "ID",
       "Import": "Import",
       "Integrations": "Integrations",
       "Library": "Library",
@@ -40,11 +42,13 @@
       "Settings": "Settings",
       "Status": "Status",
       "Step": "Step",
+      "Steps": "Steps",
       "Total": "Total",
       "Type": "Type",
       "Unpublish": "Unpublish",
       "Unpublished": "Stopped",
       "Update": "Update",
+      "uploadFileFailureMessage": "<span>File '<strong>{{fileName}}</strong>' could not be uploaded</span>",
       "viewLogs": "View Logs",
       "links": {
         "contactus": "//access.redhat.com/support/cases/#/case/new",

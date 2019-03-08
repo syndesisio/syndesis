@@ -103,7 +103,7 @@ export class ApiConnectorListItem extends React.Component<
             </div>
           ) : null
         }
-        stacked={false}
+        stacked={true}
       />
     );
   }

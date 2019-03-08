@@ -1,12 +1,11 @@
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
 import { linkTo } from '@storybook/addon-links';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ExtensionListItem, ExtensionListView } from '../../src';
-import { extensionImportStory } from './ExtensionImport.stories';
+import { extensionImportStory } from './ExtensionImportCard.stories';
 
 const description =
   'Extensions provide custom features for use in integrations. Find out more at Syndesis Help.';
@@ -130,7 +129,7 @@ const noExtensionsTestNotes =
 stories
   .add(
     'no extensions',
-    withNotes(noExtensionsTestNotes)(() => (
+    () => (
       <Router>
         <ExtensionListView
           activeFilters={[]}
@@ -172,11 +171,12 @@ stories
           i18nTitle={text('i18nTitle', title)}
         />
       </Router>
-    ))
+    ),
+    { notes: noExtensionsTestNotes }
   )
   .add(
     'has extensions',
-    withNotes(hasExtensionsTestNotes)(() => (
+    () => (
       <Router>
         <ExtensionListView
           activeFilters={[]}
@@ -223,5 +223,6 @@ stories
           children={extensions}
         />
       </Router>
-    ))
+    ),
+    { notes: hasExtensionsTestNotes }
   );

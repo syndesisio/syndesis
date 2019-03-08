@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { action } from '@storybook/addon-actions';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import { ExtensionListItem } from '../../src';
 
@@ -108,7 +107,7 @@ const notUsedTestNotes =
 stories
   .add(
     'in use',
-    withNotes(inUseTestNotes)(() => (
+    () => (
       <Router>
         <ExtensionListItem
           detailsPageLink={'/extensions/' + extensionId}
@@ -134,11 +133,12 @@ stories
           usedBy={usedByFive}
         />
       </Router>
-    ))
+    ),
+    { notes: inUseTestNotes }
   )
   .add(
     'not used',
-    withNotes(notUsedTestNotes)(() => (
+    () => (
       <Router>
         <ExtensionListItem
           detailsPageLink={'/extensions/' + extensionId}
@@ -159,5 +159,6 @@ stories
           usedBy={usedByZero}
         />
       </Router>
-    ))
+    ),
+    { notes: notUsedTestNotes }
   );
