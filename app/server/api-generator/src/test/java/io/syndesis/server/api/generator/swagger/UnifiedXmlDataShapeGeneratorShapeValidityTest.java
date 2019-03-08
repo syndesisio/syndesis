@@ -73,7 +73,15 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
         }
     };
 
-    private static final Validator VALIDATOR = createValidator();
+    private static final SchemaFactory SCHEMA_FACTORY;
+
+    private static final Validator VALIDATOR;
+
+    static {
+        SCHEMA_FACTORY = SchemaFactory.newInstance(Languages.W3C_XML_SCHEMA_NS_URI);
+        SCHEMA_FACTORY.setResourceResolver(new LocalResolver());
+        VALIDATOR = createValidator();
+    }
 
     @Parameter(0)
     public ObjectNode json;
@@ -103,7 +111,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
 
         @Override
         public LSResourceResolver getResourceResolver() {
-            return null;
+            return new LocalResolver();
         }
 
         @Override
@@ -158,7 +166,7 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
             return;
         }
 
-        final Validator validator = Validator.forLanguage(Languages.W3C_XML_SCHEMA_NS_URI);
+        final Validator validator = createValidator();
         try (InputStream in = UnifiedXmlDataShapeGenerator.class.getResourceAsStream("/swagger/atlas-xml-schemaset-model-v2.xsd")) {
             validator.setSchemaSource(new StreamSource(in));
             final String outputSpecification = output.getSpecification();
@@ -173,10 +181,10 @@ public class UnifiedXmlDataShapeGeneratorShapeValidityTest {
     }
 
     public static Validator createValidator() {
-        final SchemaFactory schemaFactory = SchemaFactory.newInstance(Languages.W3C_XML_SCHEMA_NS_URI);
+
         final Schema schema;
         try {
-            schema = schemaFactory.newSchema(UnifiedXmlDataShapeGenerator.class.getResource("/swagger/atlas-xml-schemaset-model-v2.xsd"));
+            schema = SCHEMA_FACTORY.newSchema(UnifiedXmlDataShapeGenerator.class.getResource("/swagger/atlas-xml-schemaset-model-v2.xsd"));
         } catch (final SAXException e) {
             throw new ExceptionInInitializerError(e);
         }
