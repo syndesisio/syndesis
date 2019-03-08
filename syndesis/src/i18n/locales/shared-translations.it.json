@@ -9,6 +9,7 @@
       "integrations": {}
     },
     "shared": {
+      "Actions": "Azioni",
       "Connection": "Connessione",
       "Connections": "Connessioni",
       "Connector": "Connettore",
@@ -26,6 +27,7 @@
       "Extensions": "Estensioni",
       "filterByNamePlaceholder": "Filtra per Nome",
       "Home": "Casa",
+      "ID": "ID",
       "Import": "Importare",
       "Integrations": "Integrazioni",
       "Library": "Libreria",
@@ -40,11 +42,13 @@
       "Settings": "Impostazioni",
       "Status": "Stato",
       "Step": "Passo",
+      "Steps": "Passi",
       "Total": "Totale",
       "Type": "Tipo",
       "Unpublish": "Non Pubblicato",
       "Unpublished": "Fermato",
       "Update": "Aggiornare",
+      "uploadFileFailureMessage": "<span>Il file '<strong>{{fileName}}</strong>' non può essere caricato</span>",
       "viewLogs": "Visualizza i Registri",
       "links": {
         "contactus": "//access.redhat.com/support/cases/#/case/new",

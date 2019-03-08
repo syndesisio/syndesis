@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
 import { linkTo } from '@storybook/addon-links';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
@@ -80,7 +79,7 @@ stories
 
   .add(
     'in use',
-    withNotes(inUseTestNotes)(() => (
+    () => (
       <ApiConnectorListItem
         apiConnectorId={text('apiConnectorId', apiConnectorId)}
         apiConnectorDescription={text(
@@ -97,11 +96,12 @@ stories
         onDetails={linkTo('Customization', apiConnectorDetailsStory)}
         usedBy={usedByFive}
       />
-    ))
+    ),
+    { notes: inUseTestNotes }
   )
   .add(
     'not used',
-    withNotes(notUsedTestNotes)(() => (
+    () => (
       <ApiConnectorListItem
         apiConnectorId={text('apiConnectorId', apiConnectorId)}
         apiConnectorName={text('apiConnectorName', apiName)}
@@ -113,5 +113,6 @@ stories
         onDetails={linkTo('Customization', apiConnectorDetailsStory)}
         usedBy={usedByZero}
       />
-    ))
+    ),
+    { notes: notUsedTestNotes }
   );
