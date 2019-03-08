@@ -7,11 +7,11 @@
 
 *Alert name*
 
-FuseOnlineDatabaseHighRollbackRate
+FuseOnlineDatabaseInstanceDown
 
 *Description*
 
-The syndesis-db pod is not running or is not serving requests.
+The postgresql container within the syndesis-db pod is not running or is not serving requests.
 
 **Process steps**
 
@@ -25,12 +25,37 @@ The syndesis-db pod is not running or is not serving requests.
 
 [source,bash,options="nowrap"]
 ----
-oc logs syndesis-db-1-7nwh9 > syndesis-db.log
+oc logs syndesis-db-1-7nwh9 -c postgresql > postgresql.log
 ----
 
 5) Capture a snapshot of the 'Fuse Online - Infrastructure - DB' Grafana dashboard. The metrics can be useful for identifying errors and performance bottlenecks.
 
 6) Start or restart syndesis-db.
+
+=== FuseOnlinePostgresExporterDown
+
+*Alert name*
+
+FuseOnlinePostgresExporterDown
+
+*Description*
+
+The syndesis-db-metrics container within the syndesis-db pod is not running or is not serving requests.
+
+**Process steps**
+
+1) Log in to the OpenShift cluster.
+
+2) Switch to project namespace where Fuse Online is installed.
+
+3) If the syndesis-db pod is still running, capture logs for analysis.
+
+[source,bash,options="nowrap"]
+----
+oc logs syndesis-db-1-7nwh9 -c syndesis-db-metrics > syndesis-db-metrics.log
+----
+
+4) Start or restart the syndesis-db pod.
 
 == Syndesis Infrastructure - REST API Alerts
 
