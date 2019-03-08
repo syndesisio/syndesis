@@ -1,7 +1,7 @@
 import { Button, Grid, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 
-export interface IIntegrationDetailHistoryListViewProps {
+export interface IIntegrationDetailTabProps {
   integrationIsDraft: boolean;
   i18nTextBtnEdit?: string;
   i18nTextBtnPublish?: string;
@@ -10,7 +10,7 @@ export interface IIntegrationDetailHistoryListViewProps {
 }
 
 export class IntegrationDetailTab extends React.PureComponent<
-  IIntegrationDetailHistoryListViewProps
+  IIntegrationDetailTabProps
 > {
   public render() {
     return (
