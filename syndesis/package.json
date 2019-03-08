@@ -34,7 +34,7 @@
     "test": "craco test --react-scripts ../node_modules/react-scripts",
     "eject": "react-scripts eject",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public",
+    "build-storybook": "build-storybook -s public -o ../doc/syndesis",
     "minishift:setup": "./scripts/minishift-setup.sh",
     "minishift:restore": "./scripts/minishift-restore.sh"
   },
@@ -44,6 +44,7 @@
     "@storybook/addon-actions": "^5.0.0",
     "@storybook/addon-info": "^5.0.0",
     "@storybook/addon-knobs": "^5.0.0",
+    "@storybook/addon-links": "^5.0.0",
     "@storybook/addon-notes": "^5.0.0",
     "@storybook/addon-options": "^5.0.0",
     "@storybook/addon-viewport": "^5.0.0",

@@ -3,13 +3,14 @@
 # Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2
+
 jobs:
   build:
     docker:
-    # specify the version you desire here
-    - image: circleci/node:10.13-browsers
-      environment:
-        CHROME_BIN: "/usr/bin/google-chrome"
+      # specify the version you desire here
+      - image: circleci/node:10.13-browsers
+        environment:
+          CHROME_BIN: "/usr/bin/google-chrome"
 
     # Specify service dependencies here if necessary
     # CircleCI maintains a library of pre-built images
@@ -19,21 +20,101 @@ jobs:
     working_directory: ~/repo
 
     steps:
-    - checkout
+      - checkout
 
-    # Download and cache dependencies
-    - restore_cache:
-        keys:
-        - v1-dependencies-{{ checksum "package.json" }}
-        # fallback to using the latest cache if no exact match is found
-        - v1-dependencies-
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
 
-    - run: yarn install
+      - run:
+          name: Install dependencies
+          command: yarn install
 
-    - save_cache:
-        paths:
-        - node_modules
-        key: v1-dependencies-{{ checksum "package.json" }}
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
 
-    - run: yarn build
-    - run: yarn test
+      - run:
+          name: Build project
+          command: yarn build
+
+      - run:
+          name: Run tests
+          command: yarn test
+
+      - run:
+          name: Build docs
+          command: yarn build-storybook
+
+      - persist_to_workspace:
+          root: doc
+          paths:
+            - '*'
+
+  doc-deploy:
+    docker:
+      - image: circleci/node:10.13
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "5e:e6:01:8d:15:8c:df:f6:d6:0c:bd:48:08:78:d9:7a"
+      - checkout
+      - attach_workspace:
+          at: doc
+      - run:
+          name: Install and configure dependencies
+          command: |
+            sudo npm install -g --silent gh-pages@2.0.1
+            git config user.email "circleci@syndesis.io"
+            git config user.name "CircleCI"
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: |
+            gh-pages --dotfiles --message "[skip ci] Updates" --dist doc
+
+  doc-artifact:
+    docker:
+      - image: circleci/node:10.13
+    steps:
+      - checkout
+      - attach_workspace:
+          at: doc
+      - store_artifacts:
+          path: doc
+      - run:
+          name: Post artifact link on GH issue
+          command: |
+            ARTIFACT_URL="https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/home/circleci/project/doc/index.html"
+
+            curl \
+              -d "{\"pull_request\": \"$CIRCLE_PULL_REQUEST\", \"template\": \"PR Storybook available [here]($ARTIFACT_URL)\"}" \
+              -H "Content-Type: application/json" \
+              -X POST https://ghcommentbot.herokuapp.com/comment
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore:
+                - gh-pages
+      - doc-deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only:
+                - master
+      - doc-artifact:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - gh-pages

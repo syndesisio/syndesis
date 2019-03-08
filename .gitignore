@@ -1,5 +1,10 @@
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
+# ignore built storybook
+doc/syndesis
+doc/auto-form
+doc/ui
+
 # @syndesis/syndesis
 syndesis/public/config.json
 syndesis/public/config.json.bak
