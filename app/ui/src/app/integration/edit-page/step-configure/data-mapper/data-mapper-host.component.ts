@@ -54,22 +54,31 @@ const MAPPING_KEY = 'atlasmapping';
 @Component({
   selector: 'syndesis-data-mapper-host',
   template: `
-    <div *ngIf="outstandingTasks == 0" class="data-mapper-host">
+    <div
+      *ngIf="outstandingTasks == 0"
+      [ngClass]="
+        currentFlowService.isApiProvider()
+          ? 'api-provider-data-mapper-host'
+          : 'data-mapper-host'
+      "
+    >
       <data-mapper #dataMapperComponent></data-mapper>
     </div>
   `,
   styles: [
     `
+      /* The host height for an API provider flow */
+      .api-provider-data-mapper-host {
+        height: calc(100vh - 265px);
+      }
+
+      /* The host height for a regular flow */
       .data-mapper-host {
-        /* TODO probably a better way to set this height to the viewport */
-        height: calc(100vh - 140px);
+        height: calc(100vh - 195px);
       }
     `,
   ],
   providers: [
-    // @FIXME - This overrides the provider singletons from this point on down the component subtree,
-    //          which might lead to data inconsistencies in non-immutable service members.
-    //          Track down dependency injection map and remove this after moving providers to CoreModule.
     InitializationService,
     MappingManagementService,
     ErrorHandlerService,
