@@ -258,7 +258,6 @@ stories
           )}
           i18nResultsCount={text('i18nResultsCount', '0 Results')}
           i18nTitle={text('i18nTitle', title)}
-          onCreate={action(createVirt)}
           onImport={action(importText)}
           children={[]}
         />
@@ -315,7 +314,6 @@ stories
             virtItems.length + ' Results'
           )}
           i18nTitle={text('i18nTitle', title)}
-          onCreate={action(createVirt)}
           onImport={action(importText)}
           children={virtItems}
         />

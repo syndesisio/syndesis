@@ -24,7 +24,6 @@ export interface IVirtsListViewProps extends IListViewToolbarProps {
   i18nNameFilterPlaceholder: string;
   i18nTitle: string;
   linkCreateHRef: H.LocationDescriptor;
-  onCreate: (name: string) => void;
   onImport: (name: string) => void;
 }
 
