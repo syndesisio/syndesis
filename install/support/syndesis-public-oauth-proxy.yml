@@ -73,7 +73,7 @@ objects:
   subjects:
   - kind: ServiceAccount
     name: syndesis-public-oauthproxy
-    namespace: ${NAMESPACE}
+    namespace: ${OPENSHIFT_PROJECT}
   roleRef:
     kind: ClusterRole
     name: system:auth-delegator
