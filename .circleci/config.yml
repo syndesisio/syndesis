@@ -85,6 +85,15 @@ jobs:
           at: doc
       - store_artifacts:
           path: doc
+      - run:
+          name: Post artifact link on GH issue
+          command: |
+            ARTIFACT_URL="https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/home/circleci/project/doc/index.html"
+
+            curl \
+              -d "{\"pull_request\": \"$CIRCLE_PULL_REQUEST\", \"template\": \"PR Storybook available [here]($ARTIFACT_URL)\"}" \
+              -H "Content-Type: application/json" \
+              -X POST https://ghcommentbot.herokuapp.com/comment
 
 workflows:
   version: 2
