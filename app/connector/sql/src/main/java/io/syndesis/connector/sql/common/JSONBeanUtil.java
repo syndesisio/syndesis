@@ -176,7 +176,7 @@ public final class JSONBeanUtil {
     public static List<String> toJSONBeans(Message in) {
         final List<String> jsonBeans = new ArrayList<>();
 
-        if (in.getBody(List.class) != null) {
+        if (in.getBody() instanceof List) {
             @SuppressWarnings("unchecked")
             final List<Map<String, Object>> maps = in.getBody(List.class);
 
@@ -186,7 +186,7 @@ public final class JSONBeanUtil {
                     jsonBeans.add(bean);
                 }
             }
-        } else {
+        } else if (in.getBody() instanceof Map) {
             @SuppressWarnings("unchecked")
             final Map<String, Object> singleMap = in.getBody(Map.class);
 
