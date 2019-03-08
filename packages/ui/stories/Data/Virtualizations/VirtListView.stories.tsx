@@ -370,7 +370,6 @@ stories
             virtItem.length + ' Results'
           )}
           i18nTitle={text('i18nTitle', title)}
-          onCreate={action(createVirt)}
           onImport={action(importText)}
           children={virtItem}
         />
