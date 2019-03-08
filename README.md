@@ -2,6 +2,8 @@
 
 Syndesis is a single page application built with React.
 
+[Storybook](https://syndesisio.github.io/syndesis-react-poc/)
+
 ## Table of Contents
 
 - [Syndesis](#syndesis)
