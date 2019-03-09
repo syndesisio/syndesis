@@ -97,14 +97,19 @@ final class TestResourceManager implements IntegrationResourceManager {
 
     Integration newIntegration(Step... steps) {
         for (int i = 0; i < steps.length; i++) {
-            steps[i].getConnection().filter(r -> r.getId().isPresent()).ifPresent(
-                resource -> this.put(resource.getId().get(), resource)
-            );
-            steps[i].getAction().filter(ConnectorAction.class::isInstance).map(ConnectorAction.class::cast).filter(r -> r.getId().isPresent()).ifPresent(
-                resource -> this.put(resource.getId().get(), resource)
-            );
-            steps[i].getExtension().filter(r -> r.getId().isPresent()).ifPresent(
-                resource -> this.put(resource.getId().get(), resource)
+            steps[i].getConnection()
+                    .filter(r -> r.getId().isPresent())
+                    .ifPresent(r -> this.put(r.getId().get(), r));
+
+            steps[i].getAction()
+                    .filter(ConnectorAction.class::isInstance)
+                    .map(ConnectorAction.class::cast)
+                    .filter(r -> r.getId().isPresent())
+                    .ifPresent(r -> this.put(r.getId().get(), r));
+
+            steps[i].getExtension()
+                    .filter(r -> r.getId().isPresent())
+                    .ifPresent(r -> this.put(r.getId().get(), r)
             );
 
             steps[i] = new Step.Builder().createFrom(steps[i]).build();

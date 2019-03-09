@@ -77,7 +77,6 @@ import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.a
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addTarEntry;
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.compile;
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.mandatoryDecrypt;
-import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.sanitize;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class ProjectGenerator implements IntegrationProjectGenerator {
@@ -107,7 +106,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
     @Override
     @SuppressWarnings("resource")
     public InputStream generate(final Integration integrationDefinition) throws IOException {
-        final Integration integration = sanitize(integrationDefinition, resourceManager);
+        final Integration integration = resourceManager.sanitize(integrationDefinition);
         final PipedInputStream is = new PipedInputStream();
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final PipedOutputStream os = new PipedOutputStream(is);
@@ -120,7 +119,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
     @SuppressWarnings("PMD")
     @Override
     public Properties generateApplicationProperties(final Integration integrationDefinition) {
-        final Integration integration = sanitize(integrationDefinition, resourceManager);
+        final Integration integration = resourceManager.sanitize(integrationDefinition);
         final Properties properties = new Properties();
 
         properties.putAll(integration.getConfiguredProperties());
@@ -143,7 +142,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 // Check if a step has the required options
                 if(step.getAction().filter(ConnectorAction.class::isInstance).isPresent() && step.getConnection().isPresent()) {
                     final Connection connection = step.getConnection().get();
-                    final ConnectorAction action = ConnectorAction.class.cast(step.getAction().get());
+                    final ConnectorAction action = (ConnectorAction) step.getAction().get();
                     final ConnectorDescriptor descriptor = action.getDescriptor();
                     final Connector connector = resourceManager.loadConnector(connection).orElseThrow(
                         () -> new IllegalArgumentException("No connector with id: " + connection.getConnectorId())

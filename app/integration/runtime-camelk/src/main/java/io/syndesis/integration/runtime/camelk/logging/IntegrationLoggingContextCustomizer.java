@@ -43,10 +43,12 @@ public class IntegrationLoggingContextCustomizer implements ContextCustomizer {
         }
         runtimeRegistry.bind("activityTracker", activityTracker);
         runtimeRegistry.bind("bodyLogger", new BodyLogger.Default());
-        runtimeRegistry.bind("integrationLoggingInterceptStrategy", new ActivityTrackingInterceptStrategy(activityTracker));
+        ActivityTrackingInterceptStrategy atis = new ActivityTrackingInterceptStrategy(activityTracker);
+        runtimeRegistry.bind("integrationLoggingInterceptStrategy", atis);
 
         // Log listener
         camelContext.addLogListener(new IntegrationLoggingListener(activityTracker));
+        camelContext.addInterceptStrategy(atis);
 
         LOGGER.info("Added IntegrationLoggingListener with {} to CamelContext.", activityTracker.getClass());
     }

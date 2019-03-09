@@ -22,10 +22,12 @@ import io.syndesis.common.util.Optionals;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.openshift.DeploymentData;
 import io.syndesis.server.openshift.Exposure;
+import org.springframework.stereotype.Component;
 
 /**
  * Sets the right exposure (e.g. HTTP routes) into the deployment data.
  */
+@Component
 public final class ExposureDeploymentDataCustomizer implements DeploymentDataCustomizer {
 
     private final boolean exposeVia3scale;

@@ -33,4 +33,11 @@ public class IntegrationJsonDbDao extends JsonDbDao<Integration> implements Inte
         super(jsondb);
     }
 
+    @Override
+    public void updateVersion(String id, int version) {
+        Integration integration = fetch(id);
+        if (integration != null) {
+            update(new Integration.Builder().createFrom(integration).version(version).build());
+        }
+    }
 }

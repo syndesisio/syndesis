@@ -22,8 +22,7 @@ endpoints:
     enabled: true
 
 controllers:
-  integration:
-    enabled: 'noop'
+  integration: 'noop'
   dblogging:
     enabled: false
 

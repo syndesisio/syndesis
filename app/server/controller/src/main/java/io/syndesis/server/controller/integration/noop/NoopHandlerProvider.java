@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.controller.integration;
+package io.syndesis.server.controller.integration.noop;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,15 +21,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.server.controller.StateChangeHandler;
+import io.syndesis.server.controller.StateChangeHandlerProvider;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
-import io.syndesis.server.controller.StateChangeHandler;
-import io.syndesis.server.controller.StateChangeHandlerProvider;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
-
 @Component
-@ConditionalOnProperty(value = "controllers.integration.enabled", havingValue = "noop")
+@ConditionalOnProperty(value = "controllers.integration", havingValue = "noop")
 public class NoopHandlerProvider implements StateChangeHandler, StateChangeHandlerProvider {
 
     @Override

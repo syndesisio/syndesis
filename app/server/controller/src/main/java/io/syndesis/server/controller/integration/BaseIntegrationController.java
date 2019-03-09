@@ -15,17 +15,23 @@
  */
 package io.syndesis.server.controller.integration;
 
+import io.syndesis.common.model.ChangeEvent;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.util.EventBus;
+import io.syndesis.common.util.Exceptions;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.backend.BackendController;
+import io.syndesis.server.controller.ControllersConfigurationProperties;
+import io.syndesis.server.controller.StateChangeHandler;
+import io.syndesis.server.controller.StateChangeHandlerProvider;
+import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import javax.annotation.PreDestroy;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,28 +41,12 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
-import io.syndesis.common.model.ChangeEvent;
-import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
-import io.syndesis.common.util.EventBus;
-import io.syndesis.common.util.Exceptions;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.Labels;
-import io.syndesis.common.util.backend.BackendController;
-import io.syndesis.server.controller.ControllersConfigurationProperties;
-import io.syndesis.server.controller.StateChangeHandler;
-import io.syndesis.server.controller.StateChangeHandlerProvider;
-import io.syndesis.server.dao.manager.DataManager;
-import io.syndesis.server.openshift.OpenShiftService;
-
 /**
  * This class tracks changes to Integrations and attempts to process them so that
  * their current status matches their desired status.
  */
-@Service
-public class IntegrationController implements BackendController {
-    private static final Logger LOG = LoggerFactory.getLogger(IntegrationController.class);
+public abstract class BaseIntegrationController implements BackendController {
+    private static final Logger LOG = LoggerFactory.getLogger(BaseIntegrationController.class);
 
     private static final String EVENT_BUS_ID = "integration-deployment-controller";
     private final OpenShiftService openShiftService;
@@ -69,8 +59,8 @@ public class IntegrationController implements BackendController {
     private ExecutorService executor;
     private ScheduledExecutorService scheduler;
 
-    @Autowired
-    public IntegrationController(OpenShiftService openShiftService,DataManager dataManager, EventBus eventBus, StateChangeHandlerProvider handlerFactory, ControllersConfigurationProperties properties) {
+    protected BaseIntegrationController(OpenShiftService openShiftService, DataManager dataManager, EventBus eventBus,
+                                     StateChangeHandlerProvider handlerFactory, ControllersConfigurationProperties properties) {
         this.openShiftService = openShiftService;
         this.dataManager = dataManager;
         this.eventBus = eventBus;
@@ -82,10 +72,28 @@ public class IntegrationController implements BackendController {
         this.properties = properties;
     }
 
-    @PostConstruct
+    protected OpenShiftService getOpenShiftService() {
+        return openShiftService;
+    }
+
+    protected DataManager getDataManager() {
+        return dataManager;
+    }
+
+    protected EventBus getEventBus() {
+        return eventBus;
+    }
+
+    protected ControllersConfigurationProperties getProperties() {
+        return properties;
+    }
+
+    protected Set<String> getScheduledChecks() { return scheduledChecks; }
+
+    protected ScheduledExecutorService getScheduler() { return scheduler; }
+
     @SuppressWarnings("FutureReturnValueIgnored")
-    @Override
-    public void start() {
+    protected void doStart() {
         executor = Executors.newSingleThreadExecutor(threadFactory("Integration Controller"));
         scheduler = Executors.newScheduledThreadPool(2, threadFactory("Integration Controller Scheduler"));
 
@@ -93,9 +101,7 @@ public class IntegrationController implements BackendController {
         eventBus.subscribe(EVENT_BUS_ID, getChangeEventSubscription());
     }
 
-    @PreDestroy
-    @Override
-    public void stop() {
+    protected void doStop() {
         eventBus.unsubscribe(EVENT_BUS_ID);
 
         scheduler.shutdownNow();
@@ -122,7 +128,7 @@ public class IntegrationController implements BackendController {
     private EventBus.Subscription getChangeEventSubscription() {
         return (event, data) -> {
             // Never do anything that could block in this callback!
-            if (event!=null && "change-event".equals(event)) {
+            if (EventBus.Type.CHANGE_EVENT.equals(event)) {
                 try {
                     ChangeEvent changeEvent = Json.reader().forType(ChangeEvent.class).readValue(data);
                     if (changeEvent != null) {
@@ -142,7 +148,7 @@ public class IntegrationController implements BackendController {
         };
     }
 
-    private void checkIntegrationStatusIfNotAlreadyInProgress(String id) {
+    protected void checkIntegrationStatusIfNotAlreadyInProgress(String id) {
         executor.execute(() -> {
             IntegrationDeployment integrationDeployment = dataManager.fetch(IntegrationDeployment.class, id);
             if( integrationDeployment != null) {
@@ -163,10 +169,9 @@ public class IntegrationController implements BackendController {
 
     private void scanIntegrationsForWork() {
         LOG.info("Checking integrations for their status.");
-        executor.execute(() -> {
-            dataManager.fetchIds(IntegrationDeployment.class).forEach(id -> {
-                checkIntegrationStatusIfNotAlreadyInProgress(id);});
-        });
+        executor.execute(
+            () -> dataManager.fetchIds(IntegrationDeployment.class).forEach(this::checkIntegrationStatusIfNotAlreadyInProgress)
+        );
     }
 
     private void checkIntegrationStatus(IntegrationDeployment integrationDeployment) {
@@ -210,7 +215,8 @@ public class IntegrationController implements BackendController {
 
             try {
                 final String integrationId = integrationDeployment.getIntegrationId().get();
-                LOG.info("Integration {} : Start processing integration: {}, version: {} with handler:{}", integrationId, integrationId, integrationDeployment.getVersion(), handler.getClass().getSimpleName());
+                final int deploymentVersion = integrationDeployment.getVersion();
+                LOG.info("IntegrationDeploymentId {} Integration {} : Start processing integration: {}, version: {} with handler: {}", integrationDeploymentId, integrationId, integrationId, deploymentVersion, handler.getClass().getSimpleName());
                 handler.execute(integrationDeployment, update->{
                     if (LOG.isInfoEnabled()) {
                         LOG.info("{} : Setting status to {}{}",
@@ -227,7 +233,9 @@ public class IntegrationController implements BackendController {
                         .currentState(update.getState())
                         .stepsDone(update.getStepsPerformed())
                         .build();
+                    LOG.trace("Updated {} , Current {}", updated, current);
                     if (!updated.equals(current)) {
+                        LOG.debug("IntegrationDeploymentId {} Integration {} , version: {} : jsonDB state update from {} to {}", integrationDeploymentId, integrationId, deploymentVersion, current.getCurrentState(), updated.getCurrentState());
                         dataManager.update(updated.builder().updatedAt(System.currentTimeMillis()).build());
                     }
                 });
@@ -244,14 +252,14 @@ public class IntegrationController implements BackendController {
 
             } finally {
                 // Add a next check for the next interval
-                reschedule(integrationDeploymentId);
+                reschedule(integrationDeploymentId, checkKey);
             }
 
         });
     }
 
     @SuppressWarnings("FutureReturnValueIgnored")
-    private void reschedule(String integrationId) {
+    protected void reschedule(String integrationId, String checkKey) {
         LOG.debug("Reschedule IntegrationDeployment check, id:{}, keys: {}", integrationId, scheduledChecks);
         scheduler.schedule(() -> {
                 IntegrationDeployment i = dataManager.fetch(IntegrationDeployment.class, integrationId);
@@ -279,17 +287,7 @@ public class IntegrationController implements BackendController {
     }
 
 
-    private IntegrationDeploymentState determineState(IntegrationDeployment integrationDeployment) {
-        Map<String, String> labels = new HashMap<>();
-        labels.put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.validate(integrationDeployment.getIntegrationId().get()));
-        labels.put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, String.valueOf(integrationDeployment.getVersion()));
-
-        if (!openShiftService.exists(integrationDeployment.getSpec().getName()) || !openShiftService.isScaled(integrationDeployment.getSpec().getName(), 1, labels)) {
-            return IntegrationDeploymentState.Unpublished;
-        } else {
-            return IntegrationDeploymentState.Published;
-        }
-    }
+    protected abstract IntegrationDeploymentState determineState(IntegrationDeployment integrationDeployment);
 
     /**
      * Re-conciliates the state of the deployment between the database and Openshift.
@@ -303,7 +301,7 @@ public class IntegrationController implements BackendController {
         if (actualState == IntegrationDeploymentState.Unpublished && actualState != integrationDeployment.getCurrentState()) {
             return integrationDeployment.unpublished();
         } else {
-          return integrationDeployment.withCurrentState(actualState);
+            return integrationDeployment.withCurrentState(actualState);
         }
     }
 }

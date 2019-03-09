@@ -15,11 +15,11 @@
  */
 package io.syndesis.server.controller;
 
-import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
-
 import java.util.Set;
 import java.util.function.Consumer;
+
+import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
 
 public interface StateChangeHandler {
 

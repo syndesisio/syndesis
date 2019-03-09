@@ -15,6 +15,12 @@
  */
 package io.syndesis.integration.runtime.camelk;
 
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.Set;
+
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
@@ -25,20 +31,13 @@ import org.apache.camel.k.Source;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.Set;
-
 public class IntegrationRouteLoader implements RoutesLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationRouteLoader.class);
 
     private ActivityTracker activityTracker;
     private Set<IntegrationStepHandler> integrationStepHandlers;
 
-    IntegrationRouteLoader(){
-        // access for test
+    public IntegrationRouteLoader() {
     }
 
     public IntegrationRouteLoader(ActivityTracker activityTracker, Set<IntegrationStepHandler> integrationStepHandlers) {
@@ -65,7 +64,7 @@ public class IntegrationRouteLoader implements RoutesLoader {
         if(integrationStepHandlers == null){
             LOGGER.info("Loading IntegrationStepHandlers with ServiceLoader.");
             integrationStepHandlers = new HashSet<>();
-            ServiceLoader.load(IntegrationStepHandler.class).forEach(ish -> integrationStepHandlers.add(ish));
+            ServiceLoader.load(IntegrationStepHandler.class).forEach(integrationStepHandlers::add);
             LOGGER.info("{} IntegrationStepHandlers loaded.", integrationStepHandlers.size());
         }
 
