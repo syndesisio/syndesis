@@ -4,7 +4,7 @@
 [id='add-split-step_{context}']
 = Adding a split step
 
-In a flow, when a connection returns a collection of objects, 
+During execution of a flow, when a connection returns a collection of objects, 
 {prodname} executes subsequent steps once for the collection.
 If you want to execute subsequent steps once for each object 
 that is in the collection, add a split step. For example, a
@@ -23,3 +23,16 @@ add a split step to the flow, click the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
 . Click *Split*. This step does not require any configuration. 
+
+.Additional information 
+
+Typically, you want to add any split steps and aggregate steps 
+before you add data mapper steps. This is because 
+whether the data is a collection or individual objects affects
+the mappings. If you add a data mapper step and then add a split 
+step, you usually need to redo the mappings. Likewise, if you 
+remove a split or aggregate step, then you would need to redo
+any mappings. 
+
+If there is nothing to split, the flow continues to process the
+single object as if the split step were not in the flow. 

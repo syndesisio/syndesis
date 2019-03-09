@@ -18,7 +18,7 @@ the OpenAPI schema that the API provider integration is based on. To do this,
 click *View/Edit API Definition* in the upper right of a page in which
 you are editing your API provider integration. This displays your schema
 in the Apicurito editor. In your OpenAPI schema 
-definition, as long as each operation has a unqiue `operationId` property, 
+definition, as long as each operation has a unique `operationId` property, 
 you can save your updates in Apicurito and {prodname} can synchronize the
 API provider integration's schema to have your updates. 
 
@@ -122,13 +122,6 @@ operations according to criteria that you choose.
 +
 Repeat this procedure to edit another operation's 
 flow.
-
-[NOTE]
-==== 
-In this release, in an operation flow, a connection to a SQL database 
-that executes a `SELECT` statement returns only the first record 
-in the result set.
-====
 
 .Next steps
 When an API provider integration 

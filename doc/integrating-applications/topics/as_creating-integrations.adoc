@@ -23,19 +23,20 @@ an integration:
 
 * xref:preparing-to-create-an-integration_{context}[]
 * xref:procedure-for-creating-an-integration_{context}[]
+* xref:how-to-process-a-collection-in-a-flow_{context}[]
 * xref:about-adding-steps_{context}[]
 * xref:add-data-mapping-step_{context}[]
 * xref:add-basic-filter-step_{context}[]
 * xref:add-advanced-filter-step_{context}[]
 * xref:add-log-step_{context}[]
 * xref:add-template-step_{context}[]
-* xref:add-split-step_{context}[]
-* xref:add-aggregate-step_{context}[]
 * xref:add-custom-step_{context}[]
 
 include::c_preparing-to-create-an-integration.adoc[leveloffset=+1]
 
 include::p_procedure-for-creating-an-integration.adoc[leveloffset=+1]
+
+include::as_how-to-process-a-collection-in-a-flow.adoc[leveloffset=+1]
 
 include::c_about-adding-steps.adoc[leveloffset=+1]
 
@@ -48,10 +49,6 @@ include::p_add-advanced-filter-step.adoc[leveloffset=+1]
 include::p_add-log-step.adoc[leveloffset=+1]
 
 include::p_add-template-step.adoc[leveloffset=+1]
-
-include::p_add-split-step.adoc[leveloffset=+1]
-
-include::p_add-aggregate-step.adoc[leveloffset=+1]
 
 include::p_add-custom-step.adoc[leveloffset=+1]
 

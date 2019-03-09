@@ -15,7 +15,7 @@ OpenAPI document defines has its own flow, which {prodname} automatically
 creates. For each operation, you can edit its flow by:
    
 * Adding connections to the applications that need to process the data.
-* Adding steps between connections, including data mapping steps.
+* Adding steps between connections, including split, aggregate, and data mapping steps.
 * Altering the return code in the HTTP response that finishes the flow. The 
 response goes to the application that invoked the call that triggered
 execution of the integration. 

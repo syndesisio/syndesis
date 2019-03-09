@@ -4,8 +4,10 @@
 [id='add-aggregate-step_{context}']
 = Adding an aggregate step
 
-In a flow, {prodname} can create a collection from individual objects. 
-Instead of executing subsequent steps once for each object, {prodname} 
+In a flow, add an aggregate step where you want {prodname} 
+to create a collection from individual objects. 
+During execution, after an aggregate step, 
+instead of executing subsequent steps once for each object, {prodname} 
 executes subsequent steps once for the collection. 
 
 .Prerequisites
@@ -20,3 +22,16 @@ add an aggregate step to the flow, click the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
 . Click *Aggregate*. This step does not require any configuration. 
+
+.Additional information 
+
+Typically, you want to add any split and aggregate steps 
+before you add data mapper steps. This is because 
+whether the data is a collection or individual objects affects
+the mappings. If you add a data mapper step and then add an
+aggregate step, you usually need to redo the mappings. Likewise, if you 
+remove an aggregate step, then you would need to redo
+any mappings. 
+
+If there is nothing to aggregate, the flow continues to process the
+single object as if the aggregate step were not in the flow. 
