@@ -185,10 +185,12 @@ do_camel_k() {
     echo "Building camel-k"
     echo "=============================================================================="
 
+    set +u
     if [ -z "$GOPATH" ]; then
         echo "ERROR: \$GOPATH has to be set for camel-k build"
         exit 1
     fi
+    set -u
 
     local camel_k_root=$GOPATH/src/github.com/apache/camel-k
     if [ ! -e $camel_k_root ]; then
