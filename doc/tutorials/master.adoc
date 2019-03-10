@@ -2,11 +2,11 @@
 include::topics/shared/attributes.adoc[]
 
 :prodname: Syndesis
-:prodversion: 7.2
+:prodversion: 7.3
 :imagesdir: topics
 :prodnameinurl: fuse-ignite
 :productpkg: red_hat_fuse
-:version: 7.2
+:version: 7.3
 :parent-context: tutorials
 :location: upstream
 
@@ -18,21 +18,17 @@ application or service, operate on that data if you need to, and then send the
 data to a completely different application or service. You can do all this
 without writing code.
 
-Explore {prodname} by creating these
-sample integrations:
+Explore {prodname} by creating sample integrations. 
+A <<comparison-of-sample-integrations_{context},comparison table>>
+can help you decide which of these integrations to create first: 
 
 * <<twitter-to-salesforce_{context}>>
 * <<salesforce-to-db_{context}>>
 * <<amq-to-rest-api_{context}>>
 
-See this <<comparison-of-sample-integrations_{context},comparison table>>
-to decide which integration to create first.
-
 See also: link:{LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}]
 
 include::topics/r_comparison-of-sample-integrations.adoc[leveloffset=+1]
-
-// include::topics/shared/log_in.adoc[leveloffset=+1]
 
 include::topics/as_t2sf-intro.adoc[leveloffset=+1]
 

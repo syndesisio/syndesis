@@ -15,10 +15,9 @@ Salesforce contact fields.
 
 .Procedure
 
-. In {prodname}, in the left panel, hover over the plus sign between the filter
-step and the finish connection to display a pop-up in which
-you click *Add a Step*.
-. Click *Data Mapper* and wait a few moments. When the data fields
+. In {prodname}, in the visualization panel on the left, click the plus sign that is between the filter
+step and the finish connection.
+. On the *Choose a Step* page, click *Data Mapper* and wait a few moments. When the data fields
 appear, the *Sources* panel on the left displays the Twitter fields
 and the *Target* panel on the right displays the Salesforce fields.
 . Map the Twitter `name` field to the Salesforce
@@ -30,8 +29,8 @@ to display the search field and enter `*name*`.
 .. In the *Target* panel, scroll down and click *FirstName*. The
 data mapper displays a line from the source *name* field to the
 target *FirstName* field. 
-.. In the *Target* panel, scroll down, hover over *LastName*, and press 
-*CTRL-Mouse1* (*CMD-Mouse1* on MacOS) to select *LastName*. 
+.. In the *Target* panel, scroll down, hover over *LastName*, press 
+*CTRL-Mouse1* (*CMD-Mouse1* on MacOS) and select *LastName*. 
 The data mapper displays another line from the Twitter
 *name* field, but this time it goes to the Salesforce *LastName* field.
 The blue lines indicate the current focus.
@@ -49,7 +48,7 @@ mapping. Then click the trash can icon in the top right of the data mapper.
 
 . Map the Twitter `screenName` field to the Salesforce
 `Title` field:
-.. In the *Sources* panel, scroll down to click
+.. In the *Sources* panel, click
 the *screenName* field.
 .. On the right, at the top of the *Target* panel,
 click the magnifying

@@ -14,5 +14,5 @@ and identifies any items that were damaged when they were received.
 
 .Procedure
 
-. In {prodname}, in the center, click *Add a Step*.
+. In {prodname}, in the visualization panel on the left, click the plus sign.
 . On the *Choose a Step* page, click *Damage Reporter*.
