@@ -86,13 +86,19 @@ If you did, then do not map a value to that field.
 . To add a chart to a sheet, map source properties, source fields
 or source constants to target fields as follows: 
 +
-.. Set the location of the chart by mapping an A1 notation value that 
-identifies a cell to the *overlayPosition* target field. An end position 
-is not required and it is ignored if present. The mapped value identifies 
-the cell where Google Sheets places the chart. This cell is the upper 
-left corner of the chart display. If you do not map a value to 
-the *overlayPosition* field, the default behavior is that Google Sheets 
-creates a new sheet and places the chart in A1.
+.. Set the location of the chart by mapping an A1 notation value, 
+which identifies a cell, to the *overlayPosition* target field. 
+An end position is not required and it is ignored if present. 
+The mapped value identifies the cell where Google Sheets places 
+the chart. This cell is the upper left corner of the chart display. 
++
+If you do not map a value to the *overlayPosition* field, 
+and you also do not map a value to the *sheetId* field, which identifies 
+the sheet that you want to add the chart to, then the default behavior 
+is that Google Sheets creates a new sheet and places the chart in A1.
++
+You must map a value to the *overlayPosition* field if you plan to map 
+a value to the *sheetId* field.
  
 .. Map a source *spreadsheetId* field to the target *spreadsheetId* field. 
 The connection uses source data in this spreadsheet to add the chart
@@ -102,24 +108,32 @@ cannot be in two different spreadsheets.
 .. Set a chart title by mapping to the target *title* field. The connection inserts
 this string as the title of the chart.
 .. Set a chart subtitle by mapping to the target *subtitle* field. The connection inserts
-this string as a chart subtitle. 
-.. Identify the sheet to add the chart to by mapping an integer to the 
-*sheetId* field. The default is that the connection creates a new sheet 
-and adds the chart to the new sheet. 
+this string as a chart subtitle.
+
+.. Identify the sheet to add the chart to by mapping an integer to the *sheetId* field. 
++
+If you map a value to the *sheetId* field then you must also map a value to the *overlayPosition* field. 
++
+If you do not map a value to the *sheetId* field and you also do not map a value to 
+the *overlayPosition* field, then the connection creates a new sheet and adds 
+the chart to the new sheet. 
++
+If you do not map a value to the *sheetId* field but you do map 
+a value to the *overlayPosition* field, then the connection places 
+the chart on the sheet identified by the *sourceSheetId* field. 
+This is the sheet that provides the data for the chart. 
++ 
 0 identifies the first sheet in the spreadsheet. 
 For subsequent sheets, the sheet ID is at the end of the URL when the 
 sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
 `\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
 
 .. Identify the sheet that provides the data for the chart by mapping 
-an integer to the target *sourceSheetId* field. The default is `0`, 
-which identifies the first sheet in the spreadsheet, 
-For subsequent sheets, the sheet ID is at the end of the URL when the 
-sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
-`\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
+an integer to the target *sourceSheetId* field. The default is `0`.
 + 
 You can add a basic chart or a pie chart. Follow one of the following
 sets of instructions according to the kind of chart that you want to add.
+
 .. To add basic chart, in the target panel, expand the *basicChart* folder
 and map source fields to target fields that are in the *basicChart* folder:
 

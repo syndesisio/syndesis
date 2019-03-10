@@ -84,11 +84,7 @@ sheet is visible in a browser. In the following URL, the sheet ID is `206589330`
 `\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
 
 .. Identify the sheet that provides the data for generating the pivot table by mapping 
-an integer to the target *sourceSheetId* field. ``0` identifies the first 
-sheet in the spreadsheet. 
-For subsequent sheets, the sheet ID is at the end of the URL when the 
-sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
-`\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
+an integer to the target *sourceSheetId* field.  
 If you do not map a value to *sourceSheetId*, 
 the connection uses the *sheetId* value, or `0` if no value is mapped
 to *sheetId*. 
