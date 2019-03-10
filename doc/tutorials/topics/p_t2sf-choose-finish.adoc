@@ -24,5 +24,5 @@ defined in this connection to connect to Salesforce.
 . On the *New record* page, click in the *Object name* field
 and select *Contact* as the
 Salesforce record to create.
-. Click  *Done* to add the finish
+. Click  *Next* to add the finish
 connection to the integration.

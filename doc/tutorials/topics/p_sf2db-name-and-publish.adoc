@@ -21,7 +21,9 @@ integration. For example, `*Salesforce to Database Sample Integration*`.
 . In the upper right corner, click *Publish*.
 
 +
-{prodname} displays the integration summary page with a progress
+{prodname} starts to deploy the integration and then displays the list of 
+integrations in this environment. The entry for your Salesforce to 
+database integration displays a progress
 indicator that shows the publishing stages. 
 {prodname} is generating the runtime for the integration and
 will start it when the runtime is ready. This takes a few minutes.

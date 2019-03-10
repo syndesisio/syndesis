@@ -15,7 +15,8 @@ continues only if that content is present.
 
 .Procedure
 
-. In the main panel, click *Add a step*.
+. In the visualization panel on the left, click the plus sign, which
+displays the steps that you can add to the integration. 
 . Click *Basic Filter*.
 
 . In the first field (*The data you want to evaluate*), start to enter 
@@ -25,7 +26,8 @@ filter for is in the Twitter `text` field, which contains the text of the tweet.
 
 . Accept *contains* as the condition to be met for the integration to
 continue.
-. In the last field, enter `*#RedHatIsGreat*` or some other text you choose.
+. In the last field, enter `*#RedHatIsGreat*` or some other text 
+that you choose for the value to check for.
 A tweet that mentions you must contain the text you enter here for
 the integration to continue operating on this data.
 . Click *Done* to complete the basic filter step.

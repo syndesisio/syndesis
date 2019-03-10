@@ -7,7 +7,8 @@
 
 :context: sf2db-create
 To create and deploy an integration that uses the Salesforce
-connection and the database connection, the main steps are:
+connection that you created and the database connection that is
+provided with {prodname}, the main steps are:
 
 * xref:sf2db-choose-start-connection_{context}[]
 * xref:sf2db-choose-finish-connection_{context}[]

@@ -13,10 +13,8 @@ fields in the sample database.
 * The integration's finish connection is to the PostgresDB sample database. 
 
 .Procedure
-. In {prodname}, in the left panel, hover over the plus sign immediately after the
-start connection to display a pop-up in which you click *Add a Step*.
-
-. Click *Data Mapper* and wait a few moments. When the data fields
+. In {prodname}, in the visualization panel on the left, click the plus sign. 
+. On the *Choose a Step* page, click *Data Mapper* and wait a few moments. When the data fields
 appear, the *Sources* panel on the left displays the Salesforce fields
 and the *Target* panel on the right displays the database fields.
 

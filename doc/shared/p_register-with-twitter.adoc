@@ -34,7 +34,7 @@ image:images/CopyCallback.png[Copy Callback URL] to
 copy the callback URL for your installation of {prodname} to the clipboard. 
 You will need this URL later in this procedure. 
 .. To the right of the *Twitter* entry,
-click *Register* to display the *Consumer Key* and *Consumer Secret* fields.
+click *Register* to display the *Consumer API Key* and *ConsumerAPI Secret Key* fields.
 . In another browser tab, go to your
 https://developer.twitter.com/apps[Twitter developer account], sign in if you
 need to, and do the following: 
@@ -50,8 +50,8 @@ of this procedure and remove `api/v1/credentials/callback` from the end
 of the URL.
 .. Select *Enable Sign in with Twitter*. 
 .. In the *Callback URLs* field, paste the URL again. It should be
-something like this:
-`\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
+something like this: 
+`\https://app-proj912876.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
 .. A 100-character description of how you plan to use this app is required. 
 For convenience, you can copy and paste: 
 `This is a demo application so that I can evaluate how to integrate Twitter 
@@ -60,12 +60,12 @@ with my enterprise applications.`
 .. Click *Create* again to confirm that you reviewed the developer terms. 
 .. At the top of the page for the app you just created, click 
 the *Keys and tokens* tab. 
-.. Copy the API key. 
+.. Copy the consumer API key. 
 
 . Return to your {prodname} *Settings* page and paste the Twitter
-consumer API key into the {prodname} Twitter *Consumer Key* field.
+consumer API key into the {prodname} Twitter *Consumer API Key* field.
 . Return to the Twitter *Keys and tokens* tab and copy the consumer API secret key. 
 . Return to your {prodname} *Settings* page and paste the Twitter
 consumer API secret key into the {prodname} Twitter
-*Consumer Secret* field.
+*Consumer API Secret Key* field.
 . Click *Save* and then click *Ok*.

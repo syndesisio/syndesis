@@ -65,7 +65,7 @@ https://help.salesforce.com/articleView?id=connected_app_create.htm[Create a Con
 .. In the *Callback URL* field, paste your
 {prodname} URL, which you copied at the beginning of this procedure.
 For example:
-`\https://app-proj9128.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
+`\https://app-proj912876.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
 .. For *OAuth Scopes*, add:
 ** *Access and manage your data (api)*
 ** *Allow access to your unique identifier (openid)*

@@ -33,7 +33,7 @@ extension.
 ID, name, description, and type, and lists *Damage Reporter* as the custom step
 that the extension defines.
 . Click *Import Extension*. {prodname} makes the custom step available and displays
-the extension details page.
+the list of extensions that have been imported. 
 
 .Additional resources
 For information about coding an extension and creating its `.jar` file, see: 

@@ -14,14 +14,19 @@ can deploy it and see how it works.
 * You just added a data mapping step to the integration. 
 
 .Procedure
-. In {prodname}, at the top of the left panel, in the *Integration Name* field,
+. In the upper right corner, click *Publish*.
+. In the *Integration Name* field,
 enter a name of your choice that distinguishes this integration
 from any other integrations. For
 example: `*Twitter to Salesforce Sample Integration*`.
+. In the *Description* field, optionally enter some information
+about the integration.
 . In the upper right corner, click *Publish*.
 
 +
-{prodname} displays the integration summary page with a progress
+{prodname} starts to deploy the integration and then displays the list 
+of integrations in this environment. In the entry for your Twitter to 
+Salesforce integration, you can see a progress
 indicator that shows the publishing stages. 
 {prodname} is generating the runtime for the integration and
 will start it when the runtime is ready. This takes a few minutes.

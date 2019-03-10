@@ -20,7 +20,7 @@ Salesforce connection. If you specified the example name,
 you would click *SF Connect 1*.
 . On the *Choose an Action* page, click *On create*.
 . In the *Object name* field, select *Lead*.
-. Click *Done* to add the start connection to the integration.
+. Click *Next* to add the start connection to the integration.
 
 .Next step
 When the integration is running, after connecting to Salesforce, 
