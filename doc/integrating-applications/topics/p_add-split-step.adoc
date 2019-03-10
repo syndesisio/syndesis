@@ -12,6 +12,9 @@ Google Sheets connection returns a collection of row objects.
 To execute subsequent steps once for each row, add a 
 split step after the Google Sheets connection. 
 
+A split step cannot operate on XML. If a split step get XML input, 
+the step passes the data to the next step in the operation. 
+
 .Prerequisites
 * You are creating or editing a flow.
 * The flow already has all the connections that it requires.

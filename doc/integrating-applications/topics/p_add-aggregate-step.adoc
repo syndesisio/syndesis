@@ -10,6 +10,12 @@ During execution, after an aggregate step,
 instead of executing subsequent steps once for each object, {prodname} 
 executes subsequent steps once for the collection. 
 
+When deciding whether to add an aggregate step to a flow, consider the 
+connections in the flow. After a split step, for each subsequent 
+connection, Syndesis connects to that application once for each element 
+in the flow’s data. For some connections, it might be preferable to 
+connect once rather than multiple times. 
+
 .Prerequisites
 * You are creating or editing a flow.
 * The flow already has all the connections that it requires.
