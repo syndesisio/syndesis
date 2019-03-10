@@ -1,0 +1,88 @@
+// This module is included in these assemblies:
+// as_how-to-process-collection-in-a-flow.adoc
+
+[id='example-processing-collection_{context}']
+= Example of processing a collection in a flow
+
+This simple integration obtains a collection of tasks from the sample 
+database provided with {prodname}. The flow splits the 
+collection into individual task objects and then filters
+these objects to find the tasks that have been done. 
+The flow then aggregates the completed tasks in a
+collection, maps the fields in that collection to fields
+in a spreadsheet, and finishes by adding a list of completed 
+tasks to a spreadsheet. 
+
+The procedure below provides instructions for creating
+this simple integration. 
+
+.Prerequisites
+* You created a Google Sheets connection
+* In the account that the Google Sheets connection accesses, there is 
+a spreadsheet for receiving the database records.
+* In the spreadsheet, the value in cell A1 is *ID* and the 
+value in cell B1 is *Name*. 
+
+.Procedure
+
+. Click *Create Integration*. 
+. Add the start connection: 
+.. On the *Choose a Start Connection* page, click *PostgresDB*. 
+.. On the *Choose an Action* page, click *Periodic SQL Invocation*. 
+.. In the *SQL Statement* field, enter `*select * from todo*` and click *Next*. 
+
++
+This connection returns a collection of task objects. 
+. Add the finish connection: 
+.. On the *Choose a Finish Connection* page, click your Google Sheets connection. 
+.. On the *Choose an Action* page, click *Append values to a sheet*. 
+.. In the *SpreadsheetId* field, enter the ID of the spreadsheet 
+to add the list of tasks to, and click *Next*.
+
++
+The Google Sheets connection finishes the flow by adding each element
+in a collection to a spreadsheet. 
+. Add a split step to the flow: 
+.. In the visualization panel, click the plus sign. 
+.. Click *Split*. 
+
++
+After the flow executes the split step, the result is a 
+set of individual task objects. 
+. Add a filter step to the flow: 
+.. In the visualization panel, after the split step, click 
+the plus sign. 
+.. Click *Basic Filter* and configure the filter as follows:
+... In the first field, specify `*completed*`, which is the name of the 
+field that contains the data that you want to evaluate. 
+... In the second field, select *equals* as the condition that 
+the *completed* field value must satisfy. 
+... In the third field, specify `*1*` as the value that must be in 
+the *completed* field. `1` indicates that the task has been completed. 
+.. Click *Done*.
+
++
+During execution, the flow executes the filter step once for each task
+object. The result set contains individual task objects for only the completed tasks. 
+. Add an aggregate step to the flow: 
+.. In the visualization panel, after the filter step, click the plus sign. 
+.. Click *Aggregate*. 
+
++
+Now the result set contains one collection, which contains an
+element for each completed task. 
+. Add a data mapper step to the flow: 
+.. In the visualization panel, after the aggregate step, click the plus sign. 
+.. Click *Data Mapper* and map the following fields from the SQL 
+result source collection to the Google Sheets target collection:
++
+* *id* to *ID*
+* *task* to *Name*
+
+.. Click *Done*. 
+
+. Click *Publish*. 
+
+.Results
+When the integration is running, it obtains tasks from the sample database 
+every minute and then adds the completed tasks to the first sheet in the spreadsheet. 

@@ -2,7 +2,7 @@
 // as_monitoring-integrations.adoc
 
 [id='viewing-integration-history_{context}']
-= View integration history
+= Viewing integration history
 
 {prodname} maintains each version of an integration. You can always view a list
 of the versions of each integration. 
@@ -23,4 +23,4 @@ For each version, you can also see the date on which it was last started.
 
 To edit, start, or stop a particular version, click the
 image:shared/images/ThreeVerticalDotsKebab.png[Kebab] to the right of the
-version's entry. Select the operation you want to perform.
+version's entry. Select the operation that you want to perform.

@@ -2,7 +2,7 @@
 // as_copying-integrations-to-other-environments.adoc
 
 [id="exporting-integrations_{context}"]
-= Export integrations
+= Exporting integrations
 
 When {prodname} exports an integration it downloads a zip file
 to your local `Downloads` folder. This zip file

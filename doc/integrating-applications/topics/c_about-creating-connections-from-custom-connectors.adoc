@@ -22,7 +22,7 @@ for creating connections to Yammer. You would need to register your
 {prodname} environment by creating a new application within Yammer. 
 Registration provides a
 Yammer client ID for {prodname}
-and a Yammer client secret value for {prodname}
+and a Yammer client secret value for {prodname}. 
 A connection from your {prodname} environment to Yammer
 must provide these two values. 
 

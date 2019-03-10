@@ -2,7 +2,7 @@
 // as_mapping-data.adoc
 
 [id='map-one-source-field-to-one-target-field_{context}']
-= Map one source field to one target field
+= Mapping one source field to one target field
 
 The default mapping behavior maps one source field to one target field.
 For example, map the `Name` field to the `CustomerName` field.
@@ -11,7 +11,7 @@ For example, map the `Name` field to the `CustomerName` field.
 
 . In the *Sources* panel, click the data field that you want to map from.
 +
-You might need to expand an integration step to see the data fields that it
+You might need to expand a step to see the data fields that it
 provides.
 +
 When there are many source fields, you can search for the
@@ -30,8 +30,8 @@ a type conversion.
 image:shared/images/EditorSettings.png[Editor settings] and select 
 *Show Mapping Preview* to display a text input field on the source
 field and a read-only result field on the target field. 
-.. In the source field's data input field, enter text. Click somewhere 
-outside this text box to display
+.. In the source field's data input field, enter text. 
+.. Click somewhere outside this text box to display
 the mapping result in the read-only field on the target field.
 .. Optionally, to see the result of a transformation, add a transformation
 in the *Mapping Details* panel. 

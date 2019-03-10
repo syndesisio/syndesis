@@ -2,7 +2,7 @@
 // as_adding-extensions.adoc
 
 [id='updating-extensions_{context}']
-= Update extensions
+= Updating extensions
 
 When a developer updates an extension, you can upload the updated `.jar`
 file to implement the updates in your integrations. 

@@ -4,21 +4,19 @@
 [id='about-api-provider-urls_{context}']
 = About API provider URLs
 
-After you publish an API provider integration, {prodname} displays 
-the external URL for your REST API
-service. This is where {prodname} publishes your REST API service. This 
+After you publish an API provider integration, in the integration's
+summary page, {prodname} displays the external URL for your REST API service.
+This is where {prodname} publishes your REST API service. This 
 external URL is the base URL for calls from REST clients to your REST API 
 service URLs. 
-{prodname} displays this URL in the integration's summary page.
 Examples of REST clients are the `curl` utility, a web browser, the Postman app, 
 and other applications that make REST calls. 
 
-
-In an integration, each operation that the OpenAPI document defines has its own 
-integration flow. Consequently, each operation can also have its own 
+In an API provider integration, there is a flow for each operation that 
+the OpenAPI document defines. Consequently, each operation can also have its own 
 REST API service URL. Each URL is defined by the base URL 
-and optionally by a subpath. REST API calls that trigger execution of a particular 
-integration flow specify that operation's URL. 
+and optionally by a subpath. REST API calls specify an operation's 
+URL to trigger execution of the flow for that operation. 
 
 Your OpenAPI document determines which HTTP verbs (such as 
 `GET`, `POST`, `DELETE` and so on) you can specify
@@ -29,10 +27,10 @@ link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[i
 The following diagram shows an API provider integration that processes data
 about people. An external REST API client invokes the REST API URLs that are 
 deployed by the API provider integration. Invocation of a URL triggers
-execution of the integration 
+execution of the  
 flow for one REST operation. This API provider integration has 3 flows. 
-Each integration flow can use any connection or step that 
-is available in {prodname}. The REST API along with its integration flows 
-is one {prodname} integration, which is deployed in one OpenShift container/pod.
+Each flow can use any connection or step that 
+is available in {prodname}. The REST API along with its flows 
+is one {prodname} API provider integration, which is deployed in one OpenShift container/pod.
 
 image:images/api-provider.png[API provider integration with 3 flows]

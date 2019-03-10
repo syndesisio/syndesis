@@ -22,7 +22,12 @@ register your {prodname} environment as a client of the REST API.
 This authorizes your {prodname} environment to access the REST API. As part
 of registration, you provide the {prodname} callback URL. 
 The details for doing this are described in
-link:{LinkFuseOnlineConnectorGuide}#register-with-rest-apis_rest[{NameOfFuseOnlineConnectorGuide}, Register with REST APIs].
+link:{LinkFuseOnlineConnectorGuide}#register-with-rest-apis_rest[{NameOfFuseOnlineConnectorGuide}, Registering with REST APIs].
+
+The OpenAPI schema for a REST API client connector cannot have cyclic schema 
+references. For example, a JSON schema that specifies a request or 
+response body cannot reference itself as a whole nor reference any 
+part of itself through any number of intermediate schemas.
 
 {prodname} cannot create connectors for REST APIs that support the HTTP 2.0
 protocol.

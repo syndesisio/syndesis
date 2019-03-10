@@ -3,7 +3,7 @@
 
 :context: manage
 [id='copying-integrations-to-other-environments_{context}']
-= Copy an integration to another environment
+= Copying an integration to another environment
 :context: copy
 
 To run integrations across development, staging and
@@ -12,9 +12,9 @@ The environments can all be on a single OpenShift cluster,
 or they can be spread out across multiple OpenShift clusters.
 See the following topics:
 
-* <<about-copying-integrations_{context}>>
-* <<exporting-integrations_{context}>>
-* <<importing-integrations_{context}>>
+* xref:about-copying-integrations_{context}[]
+* xref:exporting-integrations_{context}[]
+* xref:importing-integrations_{context}[]
 
 include::c_about-copying-integrations.adoc[leveloffset=+1]
 

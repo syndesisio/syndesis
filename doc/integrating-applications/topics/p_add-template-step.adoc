@@ -2,42 +2,40 @@
 // as_creating-integrations.adoc
 
 [id='add-template-step_{context}']
-= Add a template step
+= Adding a template step
 
-In an integration, a template step takes data from a source and
+In a flow, a template step takes data from a source and
 inserts it into the format that is defined in a template that you upload to {prodname}.
 The benefit of a template step is that it provides data output in a
 consistent format that you specify.
 
 In the template, you define placeholders and specify static text.
-When you create the integration, you add a template step, map source fields
+When you create the flow, you add a template step, map source fields
 to the template placeholders, and then map template content to the next step
-in the integration. When the integration executes, {prodname}
+in the flow. When {prodname} executes the flow, it 
 inserts the values that are in the mapped source fields into an
-instance of the template and passes the result to the next step in the integration.
+instance of the template and passes the result to the next step in the flow.
 
-If an integration includes a template step then it is most likely the only
-template step in the integration. However, more than one template step in an
-integration is allowed.
+If a flow includes a template step then it is most likely the only
+template step in that flow. However, more than one template step in a
+flow is allowed.
 
-{prodname} supports 
+{prodname} supports the following kinds of templates: 
 link:https://freemarker.apache.org[Freemarker], 
-link:https://mustache.github.io[Mustache], and
-link:https://velocity.apache.org[Velocity] templates. 
-
+link:https://mustache.github.io[Mustache], 
+link:https://velocity.apache.org[Velocity].
 
 .Prerequisites
-* You must be creating or editing an integration.
-* If you are creating an
+* You must be creating or editing a flow.
+* If you are creating a simple
 integration then it must already have its start and finish connections.
 
 .Procedure
 
-. In the integration visualization panel on the left, hover over the
+. In the visualization panel on the left, click the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
 at the location where you want to add a template step.
-. In the popup, click *Add a Step*.
-. On the *Choose a Step* page, click *Template*. The
+. Click *Template*. The
 *Upload Template* page opens.
 . Specify the template type, which is Freemarker, Mustache, or Velocity. 
 
@@ -67,7 +65,7 @@ image:images/RedCircleXError.png[a red error indicator] to the left of
 a line that contains a syntax error. Hovering over a red indicator displays hints
 about how to resolve the error.
 
-. Click *Done* to add the template step to the integration.
+. Click *Done* to add the template step to the flow.
 +
 If the *Done* button is not enabled then there is at least one syntax error
 that you must correct.
@@ -76,9 +74,9 @@ Input to a template step must be in the form of a JSON object. Consequently,
 you must add
 a data mapping step before a template step.
 . To add a data mapper step before the template step:
-.. In the left panel, hover over the
+.. In the left panel, click the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is
-immediately before the template step that you just added and then click *Add a Step*.
+immediately before the template step that you just added.
 .. On the *Choose a Step* page, click *Data Mapper*.
 .. In the data mapper, map a source field to each template placeholder field.
 +
@@ -89,25 +87,24 @@ to each of these template fields:
 * `name`
 * `text`
 .. In the upper right, click *Done* to add the data mapper step to the
-integration.
+flow.
 
 +
 Output from a template step is always a JSON object. Consequently, you must
 add a data mapper step after a template step.
 . To add a data mapper step after the template step:
-.. In the left panel, hover over the
+.. In the left panel, click the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is
-immediately after the template step you just added and then click *Add a Step*.
+immediately after the template step that you just added.
 .. On the *Choose a Step* page, click *Data Mapper*.
 .. In the data mapper, map the template's *message* field, which
 always contains the result of inserting source fields into the
 template, to a target field. For example, suppose that a Gmail connection is
-next in the integration and you want to send the result of the template step
+next in the flow and you want to send the result of the template step
 as the content of a Gmail message. To do this, you would map the *message*
 source field to the *text* target field.
 .. In the upper right, click *Done*.
 
-
 .Additional resources
 
-For details about mapping fields, see link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Map integration data to fields for the next connection in the integration].
+For details about mapping fields, see link:{LinkFuseOnlineIntegrationGuide}#mapping-data_map[Mapping integration data to fields for the next connection in the flow].

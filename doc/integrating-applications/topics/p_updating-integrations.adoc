@@ -2,7 +2,7 @@
 // as_managing-integrations.adoc
 
 [id='updating-integrations_{context}']
-= Update integrations
+= Updating integrations
 
 After you create an integration, you might need to update it to
 add, edit or remove a step.
@@ -19,19 +19,22 @@ you want to update.
 . On the integration's summary page, in the upper right corner, click
 *Edit Integration*.
 +
-In the left panel, you can see that each step in the integration is 
-represented by an icon that indicates whether it is a connection or a 
-data operation between connections. 
+If this is a simple integration, the left panel displays the
+integration's flow.  If this is an API provider integration, {prodname}
+displays the operations list. To update the flow for a particular
+operation, click the operation to display its flow. 
 
-. Update the integration as needed:
+. Update the flow as needed:
 +
-* To add a step, in the left panel, hover over the plus
+* To add a step, in the left panel, click the plus
 sign that is in the location where you want to add it.
-Click *Add a Connection* or *Add a Step*.
+Then click the card that represents the step that you want to add.
 
 * To delete a step, in the left panel, click
 image:images/TrashIcon.png[title='Delete']
 to the right of the step that you want to delete.
+You might need to expand the width of the visualization panel
+to see these icons. 
 
 * To change the configuration of a step, in the left panel,
 click the step that you want to update. In the

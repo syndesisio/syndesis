@@ -2,7 +2,7 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='configure-publish-api-provider-quickstart_{context}']
-= Configure and publish the API provider quickstart integration
+= Configuring and publishing an API provider quickstart integration
 
 {prodname} provides an API provider quickstart integration that you can 
 import into your {prodname} environment. This quickstart includes 
@@ -16,10 +16,10 @@ The API provider quickstart helps you quickly learn how to configure, publish, a
 test an API provider integration. But it is not a real-world example of 
 how useful an API provider integration can be. For a real-world
 example, suppose that you already
-used {prodname} to publish several integrations. You could define an OpenAPI
+used {prodname} to publish several simple integrations. You could define an OpenAPI
 document for triggering execution of those integrations. To do this, you
-would edit the integration flow for each OpenAPI operation to be almost the
-same as the integrations you already published. 
+would edit the flow for each OpenAPI operation to be almost the
+same as the simple integrations that you already published. 
 
 https://www.youtube.com/watch?v=RAa1qy3WnWQ&feature=youtu.be[A video of configuring and publishing this quickstart is also available.] 
 
@@ -45,62 +45,72 @@ indicates that configuration is required.
 .. Click the *Task API* entry to display the integration summary. 
 .. In the upper right, click *Edit Integration* to display a list
 of the operations that this API provides. 
-.. To configure the integration flow for the *Create Task* operation: 
-... Click the *Create Task* entry to display a page that prompts you to
-add a connection or add a step. 
+.. To configure the flow for the *Create Task* operation: 
+... Click the *POST* entry for the *Create Task* operation to display a 
+page that prompts you to add to the integration. 
 +
 Connections and steps have already been
-added to this integration flow. In the integration flow visualization panel
+added to this flow. In the operation flow visualization panel
 on the left, move your cursor over the icons to see what they represent. Click a 
-step or connection to view its configuration. When you are done
+step to view its configuration. When you are done
 examining one, click another one to examine it. When you click 
 a database connection, you can see the SQL statement that it executes. 
-... In the integration flow visualization panel on the left, click the 
+... In the operation flow visualization panel on the left, click the 
 image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
 at the bottom. You might have to scroll down to see it. When you hover 
 over it, {prodname} displays *Provided API Return Path*. 
-... Click in the *Return Code* input field and scroll to select 
+... If you need to, scroll up on the right, click in the 
+*Return Code* input field and scroll to select 
 *201 Created*. 
-... Click *Done*.
-... In the upper right, click *Save as Draft* and then *Go to Operation List*.
-.. To configure the integration flow for the *Delete Task for ID* operation:
-... Click the *Delete Task for ID* entry to display a page that prompts you to
-add a connection or add a step. 
+... Click *Next*.
+... In the upper right, click *Save*.
+... At the top, to the right of *Operations*, click the down arrow
+and then click *Go to Operations List*. 
+.. To configure the flow for the *Delete Task for ID* operation:
+... Click the *DELETE* entry for the *Delete Task for ID* operation 
+to display a page that prompts you to add to the integration. 
 +
-This integration flow has a data mapper step and a connection to the
+This operation flow has a data mapper step and a connection to the
 sample database that is provided with {prodname}. 
-In the integration flow visualization panel, 
+In the operation flow visualization panel, 
 click the database connection to view the SQL statement that it executes. 
-... In the integration flow visualization panel, click the 
+... In the operation flow visualization panel, click the 
 image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
 at the bottom. 
 ... Click in the *Return Code* input field and scroll to select 
 *200 OK*. 
-... Click *Done*.
-... In the upper right, click *Save as Draft* and then *Go to Operation List*.
-.. To configure the integration flow for the *Get Task by ID* operation:
-... Click the *Get Task by ID* entry to display a page that prompts you to
-add a connection or add a step. 
+... Click *Next*.
+... In the upper right, click *Save*.
+
+.. To configure the flow for the *Get Task by ID* operation:
+
+... At the top of the page, to the right of *Operations*, click the down arrow
+and then click *Get Task by ID*. 
 +
-This integration flow has two data mapper steps, a connection to the
+This operation flow has two data mapper steps, a connection to the
 sample database that is provided with {prodname}, and a log step. 
-In the integration flow visualization panel, click an icon for a step
+
+... In the operation flow visualization panel, click an icon for a step
 or connection to view its configuration. When you are done examining one,
 click another one. 
-... In the integration flow visualization panel, click the 
+
+... In the operation flow visualization panel, click the 
 image:images/ApiProviderReturnIcon.png[Provided API Return Path] icon
 at the bottom. 
 ... Click in the *Return Code* input field and scroll to select 
 *200 OK*. 
-... Click *Done*.
+... Click *Next*.
 
 . In the upper right, click *Publish*.
 +
-{prodname} displays the integration summary page and shows 
+{prodname} displays the integrations list page and shows 
 publication progress as it assemblies, builds, deploys, and 
-starts the integration. The integration summary page also provides 
-the external URL for the
-API provider service, which looks something like this: 
+starts the integration. 
+
+. When the entry for the *Task API* integration displays *Running*, 
+click the entry to display the summary page for the integration, which provides 
+the external URL for the Task API service. 
+It looks something like this: 
 +
 `\https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api/`
 +

@@ -2,7 +2,7 @@
 // as_adding-extensions.adoc
 
 [id='making-extensions-available_{context}']
-= Make custom features available
+= Making custom features available
 
 To make a custom feature available for use in an integration, upload
 the extension to {prodname}.
@@ -59,6 +59,6 @@ custom step(s) available and displays the extension's details page.
 
 .Additional resources
 
-* link:{LinkFuseOnlineIntegrationGuide}#creating-connections-from-custom-connectors_connections[Create a connection from a custom connectors].
-* link:{LinkFuseOnlineIntegrationGuide}#add-custom-step_create[Add a custom step]
-* link:{LinkFuseOnlineConnectorGuide}#connecting-to-proprietary-databases_db[Connect to a proprietary database]
+* link:{LinkFuseOnlineIntegrationGuide}#creating-connections-from-custom-connectors_connections[Creating a connection from a custom connectors].
+* link:{LinkFuseOnlineIntegrationGuide}#add-custom-step_create[Adding a custom step]
+* link:{LinkFuseOnlineConnectorGuide}#connecting-to-proprietary-databases_db[Connecting to a proprietary database]

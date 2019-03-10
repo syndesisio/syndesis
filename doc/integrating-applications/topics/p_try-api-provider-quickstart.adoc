@@ -2,16 +2,16 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='try-api-provider-quickstart_{context}']
-= Execute the API provider quickstart integration
+= Executing the API provider quickstart integration
 
 When the {prodname} Task API quickstart integration is running, you can
 invoke `curl` utility commands that send HTTP requests to the Task API service.
-How you specify the HTTP request determines which integration flow the call
+How you specify the HTTP request determines the flow that the call
 triggers.  
 
 .Prerequisite
 
-{prodname} indicates that the Task API is *Running*. 
+{prodname} indicates that the Task API integration is *Running*. 
 
 .Procedure
 
@@ -20,11 +20,12 @@ triggers.
 . Copy the integration's external URL. 
 . In a terminal, invoke a command such as the following to assign the
 integration's external URL to the `externalURL` environment variable.
-Be sure to replace the URL in this sample command with the URL you copied: 
+Be sure to replace the URL in this sample command with the URL you copied 
+and add `/api` to the end. 
 +
 `export externalURL="https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api"`
 
-. Invoke a `curl` command that triggers execution of the integration
+. Invoke a `curl` command that triggers execution of the 
 flow for the *Create Task* operation: 
 +
 ----
@@ -41,8 +42,8 @@ content is `{ "task":"my new task!"}`.
 
 +
 This command sends an HTTP `POST` request to the Task API service, which
-triggers execution of the *Create Task* operation's integration flow. The
-integration flow adds a new task to the sample database and returns a message
+triggers execution of the *Create Task* operation's flow. Flow
+execution adds a new task to the sample database and returns a message
 such as the following to indicate what it did:
 
 +
@@ -50,7 +51,7 @@ such as the following to indicate what it did:
 {"completed":false,"id":1,"task":"my new task!"}
 ----
 
-. Invoke a `curl` command that triggers execution of the integration
+. Invoke a `curl` command that triggers execution of the 
 flow for the *Get Task by ID* operation:
 +
 ----
@@ -61,7 +62,7 @@ To obtain a task, the `curl` command needs to specify only the URL. The
 HTTP `GET` command is the default request. The last part of the URL
 specifies the ID of the task to get. 
 
-. Invoke a `curl` command that triggers execution of the integration
+. Invoke a `curl` command that triggers execution of the 
 flow for the *Delete Task for ID* operation:
 +
 ----

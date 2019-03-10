@@ -12,9 +12,9 @@ integration can help you create integrations that meet your needs.
 The following topics provide information for getting ready to create 
 integrations. 
 
-* <<plan_{context}>>
-* <<workflow-overview_{context}>>
-* <<workflow-example_{context}>>
+* xref:plan_{context}[]
+* xref:workflow-overview_{context}[]
+* xref:workflow-example_{context}[]
 
 include::c_plan-integrations.adoc[leveloffset=+1]
 

@@ -2,7 +2,7 @@
 // as_developing-rest-api-client-connectors.adoc
 
 [id='guidelines-for-openapi-documents_{context}']
-= Guidelines for OpenAPI documents
+= Guidelines for OpenAPI schemas for REST API client connectors
 
 When {prodname} creates a REST API client connector, it maps each resource
 operation in the OpenAPI document to a connection action. The action name
@@ -23,7 +23,7 @@ OpenAPI document, ensure that there is a JSON schema that specifies
 each operation's request and response types.
 
 After you upload the schema, {prodname} gives you an opportunity 
-to review and edit it in Apicurio Studio, which is a visual editor for 
+to review and edit it in Apicurito, which is a visual editor for 
 designing APIs based on the OpenAPI document. You can add more detail, 
 save  your updates, and {prodname} creates an API client connector hat 
 incorporates your updates. 

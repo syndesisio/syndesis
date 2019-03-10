@@ -12,7 +12,7 @@ When you create a connection to an OAuth application,
 authorization is in place. At any time, you can validate the connection again to
 ensure that authorization is still in place.
 
-Some OAuth applications grant access tokens that have an expiration data. 
+Some OAuth applications grant access tokens that have an expiration date. 
 If the access token expires, you can reconnect to the application to
 obtain a new access token.
 

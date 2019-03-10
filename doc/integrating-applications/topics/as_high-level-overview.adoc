@@ -14,10 +14,10 @@ required to accomplish this.
 
 The following topics provide a high-level overview of {prodname}:
 
-* <<how-it-works_{context}>>
-* <<user-types_{context}>>
-* <<benefits_{context}>>
-* <<description-of-constructs_{context}>>
+* xref:how-it-works_{context}[]
+* xref:user-types_{context}[]
+* xref:benefits_{context}[]
+* xref:description-of-constructs_{context}[]
 
 include::c_how-it-works.adoc[leveloffset=+1]
 

@@ -2,7 +2,7 @@
 // as_putting-integrations-into-service.adoc
 
 [id='restarting-older-integration-versions_{context}']
-= Restart older integration versions
+= Restarting older integration versions
 
 You might publish an integration that does not work the way you want it to.
 In this situation, you can stop the incorrect version
@@ -26,7 +26,8 @@ image:shared/images/ThreeVerticalDotsKebab.png[Kebab] and select
 . Click *OK* to confirm that you want to stop running this version.
 . Wait for *Stopped* to appear to the right of the integration name near
 the top of the page.
-. To publish the older version as is, skip to the next step. Or, before you publish the older version, you can update it: 
+. To publish the older version as is, skip to the next step. Or, 
+before you publish the older version, you can update it: 
 .. In the entry for the integration version that you want to update, 
 at the far right, click  
 image:shared/images/ThreeVerticalDotsKebab.png[Kebab] and select *Replace Draft*.

@@ -1,0 +1,25 @@
+// Module included in the following assemblies:
+// as_trigger-integrations-with-api-calls.adoc
+
+[id='requirements-for-api-provider-integrations_{context}']
+= Requirements for API provider integrations 
+
+After you specify an OpenAPI 2.0 schema for your API provider 
+integration, you can update the schema as needed while you define
+the execution flows for the API operations. To do this, click
+*View/Edit API Definition* in the upper right of a page in
+which you are editing the API provider integration. This displays
+your OpenAPI schema in the Apicurito editor. You can edit the 
+schema and save it. Any updates you make are reflected in
+{prodname}.
+
+To keep your OpenAPI schema synchronized between the Apicurito 
+editor and the {prodname} integration editor, your OpenAPI schema 
+must define a unique `operationId` property for each defined 
+operation. 
+
+An OpenAPI schema for an API provider integration cannot have cyclic 
+schema references. 
+For example, a JSON schema that specifies a request or response 
+body cannot reference itself as a whole nor reference any part 
+of itself through any number of intermediate schemas.

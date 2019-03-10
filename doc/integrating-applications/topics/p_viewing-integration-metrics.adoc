@@ -2,7 +2,7 @@
 // as_monitoring-integrations.adoc
 
 [id='viewing-integration-metrics_{context}']
-= View metrics for a particular integration
+= Viewing metrics for a particular integration
 
 {prodname} provides the following metrics for each integration:
 

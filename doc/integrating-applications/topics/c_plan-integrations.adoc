@@ -2,7 +2,7 @@
 // as_how-to-get-ready.adoc
 
 [id='plan_{context}']
-= Plan your integrations
+= Considerations for planning your integrations
 
 Consider the following questions before you create an integration.
 
@@ -17,31 +17,39 @@ For example, an integration that starts by obtaining data from
 Twitter might trigger on a Twitter mention.
 ** What are the data fields of interest?
 ** What credentials does {prodname} use to access this application?
-
-To finish the integration:
+* Do you want to publish a REST API service so that a client can invoke
+a REST API call that triggers execution of the flow for an operation?
+** Is the OpenAPI schema for the service already defined?
+** If not, what operations will the service will define?
+ 
+To finish a simple integration:
 
 * Which application receives the data?
 * In that application, what action does the integration perform?
 * What are the data fields of interest?
 * What credentials does {prodname} use to access this application?
 
-Between the start and finish applications:
+In a flow's set of steps:
 
 * Do you need to access any other applications? For any other
-applications the integration accesses:
+applications that need to be accessed:
 +
-** Which application does the integration need to connect to?
-** What action should the integration perform?
+** Which application does the flow need to connect to?
+** What action should the connection perform?
 ** What are the data fields of interest?
-** What credentials should the integration use to connect to this application?
+** What credentials should the connection use to connect to this application?
 
-* Does the integration need to operate on the data between connections?
+* Does the flow need to operate on the data between connections?
 For example:
 +
-** Should the integration filter the data it operates on?
+** Should the flow filter the data it operates on?
 ** Do field names differ between source and target applications? If they
 do then data mapping is required.
+** Does the flow operate on a collection? If it does, can the 
+flow use the data mapper to process the collection or does the flow 
+need to split a collection into 
+individual records? Does the flow need to aggregate records into a collection?
 ** Would a template be helpful for outputting data in a consistent form?
 ** Do you want to send information about messages being processed to the
 integration's log?
-** Does the integration need to operate on the data in some customized way?
+** Does the flow need to operate on the data in some customized way?

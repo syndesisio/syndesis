@@ -4,7 +4,8 @@
 [id='about-adding-connections-to-integrations_{context}']
 = About adding connections to integrations
 
-When you add a connection to an integration, {prodname} displays a list
+When you add a connection to a simple integration or to 
+an operation flow, {prodname} displays a list
 of the actions that the connection can perform when it connects to the
 application. You must select exactly one action. In a running integration,
 each connection performs only the action you choose. For example, when you
