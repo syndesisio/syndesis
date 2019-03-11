@@ -9,6 +9,7 @@ doc/ui
 syndesis/public/config.json
 syndesis/public/config.json.bak
 syndesis/public/atlasmap/
+syndesis/tapes/ht*
 
 # @syndesis/models
 packages/models/src/models.d.ts
