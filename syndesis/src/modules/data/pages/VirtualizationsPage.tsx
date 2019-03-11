@@ -4,9 +4,9 @@ import {
   IActiveFilter,
   IFilterType,
   ISortType,
+  VirtualizationList,
   VirtualizationListItem,
   VirtualizationListSkeleton,
-  VirtualizationList,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
