@@ -2200,21 +2200,11 @@
   <repositories>
     <repository>
       <id>jboss-fuse</id>
-      <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
+      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
     </repository>
     <repository>
       <id>mrrc-redhat</id>
       <url>https://maven.repository.redhat.com/ga</url>
-    </repository>
-    <repository>
-      <id>apache.snapshots</id>
-      <url>https://repository.apache.org/content/repositories/snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
     </repository>
   </repositories>
 
@@ -2224,22 +2214,12 @@
       <snapshots />
       <id>jboss_origin</id>
       <name>jboss_origin</name>
-      <url>https://origin-repository.jboss.org/nexus/content/groups/ea</url>
+      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
     </pluginRepository>
     <pluginRepository>
       <id>redhat.ga</id>
       <name>Red Hat General Availability Repository</name>
       <url>https://maven.repository.redhat.com/ga</url>
-    </pluginRepository>
-    <pluginRepository>
-      <id>apache.snapshots</id>
-      <url>https://repository.apache.org/content/repositories/snapshots/</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
     </pluginRepository>
   </pluginRepositories>
 
