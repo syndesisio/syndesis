@@ -444,7 +444,7 @@ public class PublicApiHandler {
         final Connection connection = getResource(Connection.class, connectionId);
 
         updateConnection(connection, properties);
-        return connectionHandler.get(connectionId);
+        return connectionHandler.get(connection.getId().get());
     }
 
     /**
