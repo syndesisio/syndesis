@@ -16,7 +16,9 @@
 package io.syndesis.connector.support.maven;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.security.AccessController;
@@ -25,18 +27,6 @@ import java.security.PrivilegedExceptionAction;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import com.fasterxml.jackson.core.PrettyPrinter;
-import io.atlasmap.core.DefaultAtlasConversionService;
-import io.atlasmap.java.inspect.ClassInspectionService;
-import io.atlasmap.java.v2.JavaClass;
-import io.atlasmap.v2.CollectionType;
-import io.syndesis.common.model.DataShape;
-import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.util.Json;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -47,6 +37,25 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.shared.utils.StringUtils;
+import com.fasterxml.jackson.core.PrettyPrinter;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonschema.core.exceptions.ProcessingException;
+import com.github.fge.jsonschema.core.load.Dereferencing;
+import com.github.fge.jsonschema.core.load.configuration.LoadingConfiguration;
+import com.github.fge.jsonschema.core.report.ProcessingMessage;
+import com.github.fge.jsonschema.core.report.ProcessingReport;
+import com.github.fge.jsonschema.main.JsonSchema;
+import com.github.fge.jsonschema.main.JsonSchemaFactory;
+import io.atlasmap.core.DefaultAtlasConversionService;
+import io.atlasmap.java.inspect.ClassInspectionService;
+import io.atlasmap.java.v2.JavaClass;
+import io.atlasmap.v2.CollectionType;
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.util.Json;
 
 @Mojo(
     name = "generate-connector-inspections",
@@ -56,6 +65,8 @@ import org.apache.maven.shared.utils.StringUtils;
 public class GenerateConnectorInspectionsMojo extends AbstractMojo {
     private static final String CONNECTORS_META_PATH = "META-INF/syndesis/connector/";
 
+    private static final String CONNECTOR_SCHEMA_FILE = "connector-schema.json";
+
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
 
@@ -64,6 +75,44 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project.build.directory}/classes/META-INF/syndesis")
     private File inspectionsOutputDir;
+
+    private JsonSchema jsonSchema;
+
+    public GenerateConnectorInspectionsMojo() throws MojoExecutionException {
+        initJsonSchema();
+    }
+
+    private void initJsonSchema() throws MojoExecutionException {
+        if (jsonSchema != null) {
+            return; // already initialised
+        }
+
+        InputStream schemaStream = null;
+        try {
+            schemaStream = getClass().getResourceAsStream("/" + CONNECTOR_SCHEMA_FILE);
+            if (schemaStream == null) {
+                throw new IOException("Schema Initialisation Error: file not available");
+            }
+
+            LoadingConfiguration loadingConfiguration = LoadingConfiguration.newBuilder()
+                .dereferencing(Dereferencing.INLINE).freeze();
+            JsonSchemaFactory factory = JsonSchemaFactory.newBuilder()
+                .setLoadingConfiguration(loadingConfiguration).freeze();
+
+            JsonNode schemaObject = Json.reader().readTree(schemaStream);
+            jsonSchema = factory.getJsonSchema(schemaObject);
+        } catch (IOException | ProcessingException ex) {
+            throw new MojoExecutionException("Schema Initialisation Error", ex);
+        } finally {
+            if (schemaStream != null) {
+                try {
+                    schemaStream.close();
+                } catch (IOException e) {
+                    getLog().error(e);
+                }
+            }
+        }
+    }
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -80,7 +129,9 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
                 }
 
                 for (File file: files) {
-                    Connector connector = Json.reader().forType(Connector.class).readValue(file);
+                    JsonNode jsonNode = validateWithSchema(file);
+
+                    Connector connector = Json.convertValue(jsonNode, Connector.class);
                     if (!connector.getId().isPresent()) {
                         continue;
                     }
@@ -99,6 +150,47 @@ public class GenerateConnectorInspectionsMojo extends AbstractMojo {
             }
         } catch (ClassNotFoundException | DependencyResolutionRequiredException | IOException e) {
             throw new MojoExecutionException("Unable to generate inspections", e);
+        }
+    }
+
+    /**
+     * Validate the given file against the connection schema
+     *
+     * @param jsonStream {@link InputStream} of the file to validate.
+     *                                          Method will close the stream after use.
+     * @return the {@link JsonNode} of the file content or throw exception if an error
+     * @throws MojoExecutionException
+     */
+    public JsonNode validateWithSchema(File jsonFile) throws MojoExecutionException {
+        InputStream jsonStream = null;
+        try {
+            jsonStream = new FileInputStream(jsonFile);
+
+            // Will parse and therefore check for well-formedness
+            JsonNode jsonNode = Json.reader().readTree(jsonStream);
+
+            // Validate against the loaded connection-schema
+            ProcessingReport report = jsonSchema.validate(jsonNode, true);
+
+            if (! report.isSuccess()) {
+                for (final ProcessingMessage processingMessage : report) {
+                    getLog().warn(processingMessage.toString());
+                }
+
+                throw new MojoExecutionException("Validation of json file " + jsonFile.getName() + " failed, see previous logs");
+            }
+
+            return jsonNode;
+        } catch (IOException | ProcessingException ex) {
+            throw new MojoExecutionException("Failure to validate json file " + jsonFile.getName(), ex);
+        } finally {
+            if (jsonStream != null) {
+                try {
+                    jsonStream.close();
+                } catch (IOException e) {
+                    getLog().error(e);
+                }
+            }
         }
     }
 

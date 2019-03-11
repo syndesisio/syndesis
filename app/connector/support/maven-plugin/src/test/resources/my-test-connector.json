@@ -1,0 +1,265 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Read a resource from the server",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "read"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.test.customizer.MyTestReadCustomizer"
+        ],
+        "connectorFactory": "io.syndesis.connector.test.component.MyTestComponentFactory",
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+        {
+            "description": "Enhance the service url with a resource path and query",
+            "name": "Resource Path and Query Options",
+            "properties": {
+              "keyPredicate": {
+                "deprecated": false,
+                "displayName": "Entity Key Predicate",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Parameter to refine the collection to a single entity, eg. People(<i><b>UserName='Bob'</i></b>) or Categories(<i><b>1</b></i>). Note: the property must be a key.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be queried, eg. an <i><b>EntitySetName</b></i> or <i><b>EntityFunctionImportCall</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "queryParams": {
+                "deprecated": false,
+                "displayName": "Query Options",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Enter the full query to be applied to the collection in MyTest query syntax.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:test-read-connector",
+      "name": "Read",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Delete an entity from a server resource",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "delete"
+        },
+        "connectorFactory": "io.syndesis.connector.test.component.MyTestComponentFactory",
+        "connectorCustomizers": [
+          "io.syndesis.connector.test.customizer.MyTestDeleteCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "type": "java.lang.String"
+        },
+        "outputDataShape": {
+          "kind": "json-instance"
+        },
+        "propertyDefinitionSteps": [
+        {
+            "description": "Provide the resource information from which to remove data",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be modified, eg. an <i><b>EntitySetName</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:test-delete-connector",
+      "name": "Delete",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Create an entity on a server resource",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "create"
+        },
+        "connectorFactory": "io.syndesis.connector.test.component.MyTestComponentFactory",
+        "connectorCustomizers": [
+          "io.syndesis.connector.test.customizer.MyTestCreateCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+        {
+            "description": "Provide the resource on which to create data",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be modified, eg. an <i><b>EntitySetName</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:test-create-connector",
+      "name": "Create",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Update an entity on a server resource",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "patch"
+        },
+        "connectorFactory": "io.syndesis.connector.test.component.MyTestComponentFactory",
+        "connectorCustomizers": [
+          "io.syndesis.connector.test.customizer.MyTestPatchCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Provide the resource on which to update the data",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be modified, eg. an <i><b>EntitySetName</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:test-patch-connector",
+      "name": "Update",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Communicate with an MyTest service",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDMwMCAzMDAiPgogIDxnIGlkPSJsYXllcjEiPgogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNmZThiMDAiIC8+CgogICAgPHJlY3QgeD0iMjYiIHk9IjMwIiB3aWR0aD0iMTExIiBoZWlnaHQ9IjI4IiBmaWxsPSJ3aGl0ZSIgLz4KICAgIDxyZWN0IHg9IjI2IiB5PSI4NiIgd2lkdGg9IjExMSIgaGVpZ2h0PSIyOCIgZmlsbD0id2hpdGUiIC8+CiAgICA8cmVjdCB4PSIyNiIgeT0iMTQyIiB3aWR0aD0iMTExIiBoZWlnaHQ9IjI4IiBmaWxsPSJ3aGl0ZSIgLz4KICAgIDxjaXJjbGUgY3g9IjgxLjUiIGN5PSIyMzAiIHI9IjQ4IiBmaWxsPSJ3aGl0ZSIgLz4KCiAgICA8cmVjdCB4PSIxNjMiIHk9IjMwIiB3aWR0aD0iMTExIiBoZWlnaHQ9IjI4IiBmaWxsPSJ3aGl0ZSIgLz4KICAgIDxyZWN0IHg9IjE2MyIgeT0iODYiIHdpZHRoPSIxMTEiIGhlaWdodD0iMjgiIGZpbGw9IndoaXRlIiAvPgogICAgPHJlY3QgeD0iMTYzIiB5PSIxNDIiIHdpZHRoPSIxMTEiIGhlaWdodD0iMjgiIGZpbGw9IndoaXRlIiAvPgogICAgPHJlY3QgeD0iMTYzIiB5PSIxOTgiIHdpZHRoPSIxMTEiIGhlaWdodD0iMjgiIGZpbGw9IndoaXRlIiAvPgogICAgCiAgPC9nPgo8L3N2Zz4K",
+  "id": "test",
+  "name": "MyTest",
+  "properties": {
+    "basicPassword": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "labelHint": "Specify a password for basic authentication of the test service url, if required.",
+      "order": "3",
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "basicUserName": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User Name",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "labelHint": "Specify a user name for basic authentication of the test service url, if required.",
+      "order": "2",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "serviceUri": {
+      "deprecated": false,
+      "displayName": "Service Root URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The service root URL of your MyTest server",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

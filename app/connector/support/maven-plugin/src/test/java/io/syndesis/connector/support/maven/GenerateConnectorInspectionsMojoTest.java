@@ -15,22 +15,27 @@
  */
 package io.syndesis.connector.support.maven;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.junit.Assert.assertNotNull;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.zip.GZIPInputStream;
-
+import org.apache.commons.io.IOUtils;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.junit.Test;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.atlasmap.java.v2.JavaClass;
 import io.atlasmap.v2.CollectionType;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
-import org.apache.commons.io.IOUtils;
-import org.junit.Test;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class GenerateConnectorInspectionsMojoTest {
 
@@ -123,6 +128,47 @@ public class GenerateConnectorInspectionsMojoTest {
         assertThat(enriched.findVariantByMeta("variant", "collection")).isPresent();
         assertThat(enriched.findVariantByMeta("variant", "collection")).get().hasFieldOrPropertyWithValue("name", "collection");
         assertThat(enriched.findVariantByMeta("variant", "collection")).get().extracting("specification").isNotEmpty();
+    }
+
+    private File getFile(String fileName) throws Exception {
+        URL resourcePath = getClass().getResource(fileName);
+        assertNotNull(resourcePath);
+        URI resourceURI = resourcePath.toURI();
+
+        return new File(resourceURI);
+    }
+
+    @Test
+    public void validFileAgainstSchema() throws Exception {
+        GenerateConnectorInspectionsMojo mojo = new GenerateConnectorInspectionsMojo();
+
+        JsonNode jsonNode = mojo.validateWithSchema(getFile("/my-test-connector.json"));
+        assertNotNull(jsonNode);
+    }
+
+    @Test
+    public void unformedFileAgainstSchema() throws Exception {
+        GenerateConnectorInspectionsMojo mojo = new GenerateConnectorInspectionsMojo();
+
+        String unformedConnectorFile = "my-unformed-connector.json";
+        assertThatExceptionOfType(MojoExecutionException.class)
+            .isThrownBy(() -> {
+                mojo.validateWithSchema(getFile("/" + unformedConnectorFile));
+            })
+            .withCauseInstanceOf(JsonParseException.class)
+            .withStackTraceContaining("line: 9, column: 12");
+    }
+
+    @Test
+    public void invalidFileAgainstSchema() throws Exception {
+        GenerateConnectorInspectionsMojo mojo = new GenerateConnectorInspectionsMojo();
+        String invalidConnectorFile = "my-invalid-connector.json";
+
+        assertThatExceptionOfType(MojoExecutionException.class)
+            .isThrownBy(() -> {
+                mojo.validateWithSchema(getFile("/" + invalidConnectorFile));
+            })
+            .withMessageContaining("Validation of json file " + invalidConnectorFile + " failed, see previous logs");
     }
 
     // ******************
