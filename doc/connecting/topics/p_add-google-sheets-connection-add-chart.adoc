@@ -123,13 +123,19 @@ a value to the *overlayPosition* field, then the connection places
 the chart on the sheet identified by the *sourceSheetId* field. 
 This is the sheet that provides the data for the chart. 
 + 
-0 identifies the first sheet in the spreadsheet. 
+`0` identifies the first sheet in the spreadsheet. 
 For subsequent sheets, the sheet ID is at the end of the URL when the 
-sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
-`\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
+sheet is visible in a browser. For example, at the end of the following
+URL, you can see `gid=206589330`: 
++
+`\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`
++
+This indicates that the sheet ID is `206589330` and that is the value 
+that you would map to *sheetId*. 
 
 .. Identify the sheet that provides the data for the chart by mapping 
-an integer to the target *sourceSheetId* field. The default is `0`.
+its integer sheet ID to the target *sourceSheetId* field. 
+The default is `0`, which identifies the first sheet in the spreadsheet.
 + 
 You can add a basic chart or a pie chart. Follow one of the following
 sets of instructions according to the kind of chart that you want to add.
