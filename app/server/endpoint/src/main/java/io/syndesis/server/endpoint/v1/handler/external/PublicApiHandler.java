@@ -444,7 +444,7 @@ public class PublicApiHandler {
         final Connection connection = getResource(Connection.class, connectionId);
 
         updateConnection(connection, properties);
-        return connectionHandler.get(connectionId);
+        return connectionHandler.get(connection.getId().get());
     }
 
     /**
@@ -486,7 +486,7 @@ public class PublicApiHandler {
 
         // find current deployment
         final IntegrationDeployment deployment = deploymentHandler.get(integration.getId().get(), integration.getVersion());
-        if (deployment != null && deployment.getCurrentState() != IntegrationDeploymentState.Published) {
+        if (deployment != null && deployment.getCurrentState() == IntegrationDeploymentState.Published) {
             deploymentHandler.updateTargetState(integration.getId().get(), integration.getVersion(), targetState);
         } else {
             throw new ClientErrorException("Integration " + integrationId + " is not published", Response.Status.FORBIDDEN);
