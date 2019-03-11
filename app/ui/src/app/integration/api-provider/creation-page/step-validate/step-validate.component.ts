@@ -11,4 +11,10 @@ export class StepValidateComponent {
   @Output() onDone = new EventEmitter<boolean>();
   @Output() onEdit = new EventEmitter<boolean>();
   @Output() onCancel = new EventEmitter<boolean>();
+
+  hasErrors() {
+    const errors = this.validationResponse.errors;
+
+    return typeof(errors) !== 'undefined' && errors.length > 0;
+  }
 }
