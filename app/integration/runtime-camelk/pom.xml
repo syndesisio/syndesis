@@ -63,6 +63,13 @@
       <artifactId>camel-core</artifactId>
     </dependency>
 
+    <!-- set atlasmap as always required runtime dependency-->
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>camel-atlasmap</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- camel-k -->
     <dependency>
       <groupId>org.apache.camel.k</groupId>
@@ -79,11 +86,6 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>io.atlasmap</groupId>
-      <artifactId>camel-atlasmap</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
