@@ -1,4 +1,4 @@
-import { Grid, Icon } from 'patternfly-react';
+import { Grid, Icon, ListViewIcon } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationStepsHorizontalViewProps {
@@ -12,12 +12,12 @@ export class IntegrationStepsHorizontalView extends React.Component<
   public render() {
     return (
       <>
-        <Grid fluid={true}>
+        <Grid fluid={true} xs={4}>
           <Grid.Row className="show-grid">
             <Grid.Col xs={6} md={4}>
               {this.props.steps && this.props.steps[0] ? (
                 <>
-                  <img src={this.props.steps[0].icon} />
+                  <ListViewIcon name={'cube'} />
                   <span>
                     <p>{this.props.steps[0].name}</p>
                   </span>
@@ -32,7 +32,7 @@ export class IntegrationStepsHorizontalView extends React.Component<
                   </Grid.Col>
                   <Grid.Col xsHidden={true} md={4}>
                     <span>
-                      <img src={opt.icon} />
+                      <ListViewIcon name={'cube'} />
                       <p key={index}>{opt.name}</p>
                     </span>
                   </Grid.Col>
