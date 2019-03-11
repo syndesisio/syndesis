@@ -370,18 +370,6 @@
           </execution>
         </executions>
       </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <configuration>
-              <ignoredDependencies>
-                <ignoredDependency>org.apache.camel:camel-olingo4*:jar:*</ignoredDependency>
-              </ignoredDependencies>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
 </project>
