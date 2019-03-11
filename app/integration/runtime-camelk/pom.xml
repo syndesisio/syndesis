@@ -21,7 +21,7 @@
   <parent>
     <groupId>io.syndesis.integration</groupId>
     <artifactId>integration-parent</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -148,25 +148,6 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>analyze</id>
-            <goals>
-              <goal>analyze-only</goal>
-            </goals>
-            <configuration>
-
-              <ignoredDependencies>
-                <ignoredDependency>io.syndesis.connector</ignoredDependency>
-              </ignoredDependencies>
-
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
           <groupId>org.apache.camel.k</groupId>
           <artifactId>camel-k-maven-plugin</artifactId>
           <version>${camel-k.version}</version>
@@ -257,36 +238,6 @@
                   <goal>install-file</goal>
                 </goals>
                 <phase>package</phase>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>analyze</id>
-                <goals>
-                  <goal>analyze-only</goal>
-                </goals>
-                <configuration>
-                  <failOnWarning>false</failOnWarning>
-
-                  <!-- ignore jsr305 for both "used but undeclared" and "declared but unused" -->
-                  <ignoredDependencies>
-                    <ignoredDependency>io.syndesis.connector</ignoredDependency>
-                  </ignoredDependencies>
-
-                  <!-- ignore annotations for "used but undeclared" warnings -->
-                  <ignoredUsedUndeclaredDependencies>
-                    <ignoredUsedUndeclaredDependency>io.syndesis.connector</ignoredUsedUndeclaredDependency>
-                  </ignoredUsedUndeclaredDependencies>
-
-                  <!-- ignore annotations for "unused but declared" warnings -->
-                  <ignoredUnusedDeclaredDependencies>
-                    <ignoredUnusedDeclaredDependency>io.syndesis.connector</ignoredUnusedDeclaredDependency>
-                  </ignoredUnusedDeclaredDependencies>
-                </configuration>
               </execution>
             </executions>
           </plugin>

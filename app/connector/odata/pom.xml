@@ -19,7 +19,7 @@
   <parent>
     <groupId>io.syndesis.connector</groupId>
     <artifactId>connector-parent</artifactId>
-    <version>1.6-SNAPSHOT</version>
+    <version>1.7-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -367,18 +367,6 @@
             <goals>
               <goal>generate-connector-inspections</goal>
             </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <executions>
-          <execution>
-            <configuration>
-              <ignoredDependencies>
-                <ignoredDependency>org.apache.camel:camel-olingo4*:jar:*</ignoredDependency>
-              </ignoredDependencies>
-            </configuration>
           </execution>
         </executions>
       </plugin>
