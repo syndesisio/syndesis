@@ -3,13 +3,13 @@
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
 
-export interface IVirtListSkeletonProps {
+export interface IVirtualizationListSkeletonProps {
   width: number;
   style?: any;
 }
 
-export const VirtListSkeleton: React.FunctionComponent<
-  IVirtListSkeletonProps
+export const VirtualizationListSkeleton: React.FunctionComponent<
+  IVirtualizationListSkeletonProps
 > = ({ width, style }) => (
   <ContentLoader
     height={356}

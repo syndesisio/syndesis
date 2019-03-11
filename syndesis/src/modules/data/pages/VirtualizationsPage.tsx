@@ -4,9 +4,9 @@ import {
   IActiveFilter,
   IFilterType,
   ISortType,
-  VirtListItem,
-  VirtListSkeleton,
-  VirtListView,
+  VirtualizationListItem,
+  VirtualizationListSkeleton,
+  VirtualizationList,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -14,28 +14,35 @@ import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 import resolvers from '../resolvers';
 
-function getFilteredAndSortedVirts(
-  virts: RestDataService[],
+function getFilteredAndSortedVirtualizations(
+  virtualizations: RestDataService[],
   activeFilters: IActiveFilter[],
   currentSortType: string,
   isSortAscending: boolean
 ) {
-  let filteredAndSorted = virts;
+  let filteredAndSorted = virtualizations;
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
-    filteredAndSorted = filteredAndSorted.filter((virt: RestDataService) =>
-      virt.keng__id.toLowerCase().includes(valueToLower)
+    filteredAndSorted = filteredAndSorted.filter(
+      (virtualization: RestDataService) =>
+        virtualization.keng__id.toLowerCase().includes(valueToLower)
     );
   });
 
-  filteredAndSorted = filteredAndSorted.sort((thisVirt, thatVirt) => {
-    if (isSortAscending) {
-      return thisVirt.keng__id.localeCompare(thatVirt.keng__id);
-    }
+  filteredAndSorted = filteredAndSorted.sort(
+    (thisVirtualization, thatVirtualization) => {
+      if (isSortAscending) {
+        return thisVirtualization.keng__id.localeCompare(
+          thatVirtualization.keng__id
+        );
+      }
 
-    // sort descending
-    return thatVirt.keng__id.localeCompare(thisVirt.keng__id);
-  });
+      // sort descending
+      return thatVirtualization.keng__id.localeCompare(
+        thisVirtualization.keng__id
+      );
+    }
+  );
 
   return filteredAndSorted;
 }
@@ -62,13 +69,13 @@ export function getVirtualizationsHref(baseUrl: string): string {
 }
 
 export default class VirtualizationsPage extends React.Component {
-  public filterUndefinedId(virt: RestDataService): boolean {
-    return virt.keng__id !== undefined;
+  public filterUndefinedId(virtualization: RestDataService): boolean {
+    return virtualization.keng__id !== undefined;
   }
 
-  public handleImportVirt(virtName: string) {
+  public handleImportVirt(virtualizationName: string) {
     // TODO: implement handleImportVirt
-    alert('Import virtualization ' + virtName);
+    alert('Import virtualization ' + virtualizationName);
   }
 
   public handleEditVirtualization() {
@@ -108,7 +115,7 @@ export default class VirtualizationsPage extends React.Component {
                   defaultSortType={sortByName}
                 >
                   {helpers => {
-                    const filteredAndSorted = getFilteredAndSortedVirts(
+                    const filteredAndSorted = getFilteredAndSortedVirtualizations(
                       data,
                       helpers.activeFilters,
                       helpers.currentSortType,
@@ -118,16 +125,16 @@ export default class VirtualizationsPage extends React.Component {
                     return (
                       <Translation ns={['data', 'shared']}>
                         {t => (
-                          <VirtListView
+                          <VirtualizationList
                             filterTypes={filterTypes}
                             sortTypes={sortTypes}
                             {...this.state}
                             resultsCount={filteredAndSorted.length}
                             {...helpers}
-                            i18nCreateDataVirt={t(
+                            i18nCreateDataVirtualization={t(
                               'virtualization.createDataVirtualization'
                             )}
-                            i18nCreateDataVirtTip={t(
+                            i18nCreateDataVirtualizationTip={t(
                               'virtualization.createDataVirtualizationTip'
                             )}
                             i18nDescription={t(
@@ -143,7 +150,7 @@ export default class VirtualizationsPage extends React.Component {
                             i18nImportTip={t(
                               'virtualization.importVirtualizationTip'
                             )}
-                            i18nLinkCreateVirt={t(
+                            i18nLinkCreateVirtualization={t(
                               'virtualization.createDataVirtualization'
                             )}
                             i18nName={t('shared:Name')}
@@ -163,7 +170,7 @@ export default class VirtualizationsPage extends React.Component {
                               error={error}
                               loading={!hasData}
                               loaderChildren={
-                                <VirtListSkeleton
+                                <VirtualizationListSkeleton
                                   width={800}
                                   style={{
                                     backgroundColor: '#FFF',
@@ -175,20 +182,25 @@ export default class VirtualizationsPage extends React.Component {
                             >
                               {() =>
                                 filteredAndSorted.map(
-                                  (virt: RestDataService, index: number) => (
-                                    <VirtListItem
+                                  (
+                                    virtualization: RestDataService,
+                                    index: number
+                                  ) => (
+                                    <VirtualizationListItem
                                       key={index}
-                                      virtName={virt.keng__id}
-                                      virtDescription={
-                                        virt.tko__description
-                                          ? virt.tko__description
+                                      virtualizationName={
+                                        virtualization.keng__id
+                                      }
+                                      virtualizationDescription={
+                                        virtualization.tko__description
+                                          ? virtualization.tko__description
                                           : ''
                                       }
                                       i18nCancelText={t('shared:Cancel')}
                                       i18nDelete={t('shared:Delete')}
                                       i18nDeleteModalMessage={t(
                                         'virtualization.deleteModalMessage',
-                                        { name: virt.keng__id }
+                                        { name: virtualization.keng__id }
                                       )}
                                       i18nDeleteModalTitle={t(
                                         'virtualization.deleteModalTitle'
@@ -226,7 +238,7 @@ export default class VirtualizationsPage extends React.Component {
                                 )
                               }
                             </WithLoader>
-                          </VirtListView>
+                          </VirtualizationList>
                         )}
                       </Translation>
                     );

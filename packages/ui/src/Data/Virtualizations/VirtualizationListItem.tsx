@@ -11,7 +11,7 @@ import {
 import * as React from 'react';
 import { DeleteConfirmationDialog } from '../../Shared';
 
-export interface IVirtListItemProps {
+export interface IVirtualizationListItemProps {
   i18nCancelText: string;
   i18nDelete: string;
   i18nDeleteModalMessage: string;
@@ -27,24 +27,24 @@ export interface IVirtListItemProps {
   i18nPublish: string;
   icon?: string;
   isPublished: boolean;
-  onDelete: (virtName: string) => void;
-  onEdit: (virtName: string) => void;
-  onExport: (virtName: string) => void;
-  onPublish: (virtName: string) => void;
-  onUnpublish: (virtName: string) => void;
-  virtName: string;
-  virtDescription: string;
+  onDelete: (virtualizationName: string) => void;
+  onEdit: (virtualizationName: string) => void;
+  onExport: (virtualizationName: string) => void;
+  onPublish: (virtualizationName: string) => void;
+  onUnpublish: (virtualizationName: string) => void;
+  virtualizationName: string;
+  virtualizationDescription: string;
 }
 
-export interface IVirtListItemState {
+export interface IVirtualizationListItemState {
   showDeleteDialog: boolean;
 }
 
-export class VirtListItem extends React.Component<
-  IVirtListItemProps,
-  IVirtListItemState
+export class VirtualizationListItem extends React.Component<
+  IVirtualizationListItemProps,
+  IVirtualizationListItemState
 > {
-  public constructor(props: IVirtListItemProps) {
+  public constructor(props: IVirtualizationListItemProps) {
     super(props);
     this.state = {
       showDeleteDialog: false, // initial visibility of delete dialog
@@ -88,32 +88,32 @@ export class VirtListItem extends React.Component<
     });
 
     // TODO: disable components while delete is processing
-    if (this.props.virtName) {
-      this.props.onDelete(this.props.virtName);
+    if (this.props.virtualizationName) {
+      this.props.onDelete(this.props.virtualizationName);
     }
   }
 
   public handleEdit() {
-    if (this.props.virtName) {
-      this.props.onEdit(this.props.virtName);
+    if (this.props.virtualizationName) {
+      this.props.onEdit(this.props.virtualizationName);
     }
   }
 
   public handleExport() {
-    if (this.props.virtName) {
-      this.props.onExport(this.props.virtName);
+    if (this.props.virtualizationName) {
+      this.props.onExport(this.props.virtualizationName);
     }
   }
 
   public handlePublish() {
-    if (this.props.virtName) {
-      this.props.onPublish(this.props.virtName);
+    if (this.props.virtualizationName) {
+      this.props.onPublish(this.props.virtualizationName);
     }
   }
 
   public handleUnpublish() {
-    if (this.props.virtName) {
-      this.props.onUnpublish(this.props.virtName);
+    if (this.props.virtualizationName) {
+      this.props.onUnpublish(this.props.virtualizationName);
     }
   }
 
@@ -155,7 +155,9 @@ export class VirtListItem extends React.Component<
                 </Button>
               </OverlayTrigger>
               <DropdownKebab
-                id={`virtualization-${this.props.virtName}-action-menu`}
+                id={`virtualization-${
+                  this.props.virtualizationName
+                }-action-menu`}
                 pullRight={true}
               >
                 <MenuItem onClick={this.showDeleteDialog}>
@@ -178,9 +180,11 @@ export class VirtListItem extends React.Component<
               </DropdownKebab>
             </div>
           }
-          heading={this.props.virtName}
+          heading={this.props.virtualizationName}
           description={
-            this.props.virtDescription ? this.props.virtDescription : ''
+            this.props.virtualizationDescription
+              ? this.props.virtualizationDescription
+              : ''
           }
           hideCloseIcon={true}
           leftContent={
@@ -188,7 +192,7 @@ export class VirtListItem extends React.Component<
               <div className="blank-slate-pf-icon">
                 <img
                   src={this.props.icon}
-                  alt={this.props.virtName}
+                  alt={this.props.virtualizationName}
                   width={46}
                 />
               </div>

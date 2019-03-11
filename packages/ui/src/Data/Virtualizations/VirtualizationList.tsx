@@ -10,16 +10,16 @@ import * as React from 'react';
 import { ButtonLink, Container } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
-export interface IVirtsListViewProps extends IListViewToolbarProps {
-  i18nCreateDataVirt: string;
-  i18nCreateDataVirtTip?: string;
+export interface IVirtualizationListProps extends IListViewToolbarProps {
+  i18nCreateDataVirtualization: string;
+  i18nCreateDataVirtualizationTip?: string;
   i18nDescription: string;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
   i18nImport: string;
   i18nImportTip: string;
-  i18nLinkCreateVirt: string;
-  i18nLinkCreateVirtTip?: string;
+  i18nLinkCreateVirtualization: string;
+  i18nLinkCreateVirtualizationTip?: string;
   i18nName: string;
   i18nNameFilterPlaceholder: string;
   i18nTitle: string;
@@ -27,23 +27,25 @@ export interface IVirtsListViewProps extends IListViewToolbarProps {
   onImport: (name: string) => void;
 }
 
-export class VirtListView extends React.Component<IVirtsListViewProps> {
-  public constructor(props: IVirtsListViewProps) {
+export class VirtualizationList extends React.Component<
+  IVirtualizationListProps
+> {
+  public constructor(props: IVirtualizationListProps) {
     super(props);
     this.handleImport = this.handleImport.bind(this);
   }
 
-  public getCreateVirtTooltip() {
+  public getCreateVirtualizationTooltip() {
     return (
       <Tooltip id="createTip">
-        {this.props.i18nLinkCreateVirtTip
-          ? this.props.i18nLinkCreateVirtTip
-          : this.props.i18nLinkCreateVirt}
+        {this.props.i18nLinkCreateVirtualizationTip
+          ? this.props.i18nLinkCreateVirtualizationTip
+          : this.props.i18nLinkCreateVirtualization}
       </Tooltip>
     );
   }
 
-  public getImportVirtTooltip() {
+  public getImportVirtualizationTooltip() {
     return (
       <Tooltip id="importTip">
         {this.props.i18nImportTip
@@ -67,7 +69,7 @@ export class VirtListView extends React.Component<IVirtsListViewProps> {
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <OverlayTrigger
-              overlay={this.getImportVirtTooltip()}
+              overlay={this.getImportVirtualizationTooltip()}
               placement="top"
             >
               <Button
@@ -79,11 +81,11 @@ export class VirtListView extends React.Component<IVirtsListViewProps> {
               </Button>
             </OverlayTrigger>
             <OverlayTrigger
-              overlay={this.getCreateVirtTooltip()}
+              overlay={this.getCreateVirtualizationTooltip()}
               placement="top"
             >
               <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
-                {this.props.i18nLinkCreateVirt}
+                {this.props.i18nLinkCreateVirtualization}
               </ButtonLink>
             </OverlayTrigger>
           </div>
@@ -99,11 +101,11 @@ export class VirtListView extends React.Component<IVirtsListViewProps> {
             <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
             <EmptyState.Action>
               <OverlayTrigger
-                overlay={this.getCreateVirtTooltip()}
+                overlay={this.getCreateVirtualizationTooltip()}
                 placement="top"
               >
                 <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
-                  {this.props.i18nLinkCreateVirt}
+                  {this.props.i18nLinkCreateVirtualization}
                 </ButtonLink>
               </OverlayTrigger>
             </EmptyState.Action>
