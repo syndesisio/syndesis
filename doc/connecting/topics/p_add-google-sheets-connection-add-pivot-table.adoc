@@ -78,16 +78,21 @@ table can be in two different sheets in the same spreadsheet but they
 cannot be in two different spreadsheets. 
 .. Identify the sheet to add the pivot table to by mapping an integer to the 
 *sheetId* field. The default is `0`, which identifies the first sheet
-in the spreadsheet, 
+in the spreadsheet. 
 For subsequent sheets, the sheet ID is at the end of the URL when the 
-sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
+sheet is visible in a browser. For example, at the end of the following URL, 
+you can `gid=206589330`: 
++
 `\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
++
+This indicates that the sheet ID is `206589330` and that is the value 
+that you would map to *sheetId*. 
 
 .. Identify the sheet that provides the data for generating the pivot table by mapping 
-an integer to the target *sourceSheetId* field.  
+its integer sheet ID to the target *sourceSheetId* field.  
 If you do not map a value to *sourceSheetId*, 
 the connection uses the *sheetId* value, or `0` if no value is mapped
-to *sheetId*. 
+to *sheetId*. `0` identifies the first sheet in the spreadsheet.
 .. Set the source data range for generating the pivot table 
 by mapping an A1 notation value to the target *sourceRange* field. 
 For example, *A2:D5*. 
