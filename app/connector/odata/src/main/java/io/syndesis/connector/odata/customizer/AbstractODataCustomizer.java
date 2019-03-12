@@ -70,13 +70,13 @@ public abstract class AbstractODataCustomizer implements ComponentProxyCustomize
     }
 
     protected void convertMessageToJson(Message in) throws JsonProcessingException {
-        if (in.getBody(ClientItem.class) == null) {
+        if (in.getBody(Object.class) == null) {
             in.setBody(Collections.emptyList());
             return;
         }
 
         List<String> resultList = new ArrayList<>();
-        ClientItem item = in.getBody(ClientItem.class);
+        Object item = in.getBody(Object.class);
         if (item instanceof ClientEntitySet) {
             //
             // If the results have not been split and returned as a

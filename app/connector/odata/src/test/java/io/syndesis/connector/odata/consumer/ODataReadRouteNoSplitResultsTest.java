@@ -202,6 +202,57 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
     }
 
     @Test
+    public void testReferenceODataRouteIssue4791_1() throws Exception {
+        String resourcePath = "Airports";
+        String keyPredicate = "KLAX";
+
+        context = new SpringCamelContext(applicationContext);
+
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, REF_SERVICE_URI)
+                                                            .property(KEY_PREDICATE, keyPredicate));
+
+        Step odataStep = createODataStep(odataConnector, resourcePath);
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
+
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setMinimumExpectedMessageCount(1);
+        result.setResultWaitTime(360000);
+
+        context.start();
+
+        result.assertIsSatisfied();
+        testListResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX);
+    }
+
+    @Test
+    public void testReferenceODataRouteIssue4791_2() throws Exception {
+        String resourcePath = "Airports";
+        String keyPredicate = "('KLAX')/Location";
+
+        context = new SpringCamelContext(applicationContext);
+
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, REF_SERVICE_URI)
+                                                            .property(KEY_PREDICATE, keyPredicate));
+
+        Step odataStep = createODataStep(odataConnector, resourcePath);
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
+
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setMinimumExpectedMessageCount(1);
+
+        context.start();
+
+        result.assertIsSatisfied();
+        testListResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX_LOC);
+    }
+
+    @Test
     public void testODataRouteWithSimpleQuery() throws Exception {
         String queryParams = "$filter=ID eq 1";
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
