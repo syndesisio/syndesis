@@ -1,5 +1,4 @@
 import { action } from '@storybook/addon-actions';
-import { boolean } from '@storybook/addon-knobs';
 import { text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
@@ -8,8 +7,8 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import {
   ViewListItem,
-  VirtualizationListItem,
   VirtualizationList,
+  VirtualizationListItem,
 } from '../../../src';
 
 const stories = storiesOf('Data/Virtualizations/VirtualizationList', module);
@@ -28,22 +27,19 @@ const editText = 'Edit';
 const editTip1 = 'Edit ' + virtualizationName1 + ' virtualization';
 const editTip2 = 'Edit ' + virtualizationName2 + ' virtualization';
 const draftText = 'Draft';
-const draftTip1 =
-  'The virtualization ' + virtualizationName1 + ' has not been published';
-const draftTip2 =
-  'The virtualization ' + virtualizationName2 + ' has not been published';
 const publishedText = 'Published';
-const publishedTip1 =
-  'The virtualization ' + virtualizationName1 + ' is published';
-const publishedTip2 =
-  'The virtualization ' + virtualizationName2 + ' is published';
 const deleteText = 'Delete';
+const errorText = 'Error';
 const exportText = 'Export';
 const unpublishText = 'Unpublish';
 const publishText = 'Publish';
 const deleteModalTitle = 'Confirm Delete?';
 const deleteModalMessage =
   'Are you sure you want to delete the virtualization?';
+const publishInProgressText = 'Publish In Progress';
+const publishLogUrlText = 'View Logs';
+const currentStatusPublished = 'RUNNING';
+const currentStatusDraft = 'NOTFOUND';
 
 const viewItems = [
   <ViewListItem
@@ -80,20 +76,22 @@ const virtItem = [
     i18nDeleteModalMessage={deleteModalMessage}
     i18nDeleteModalTitle={deleteModalTitle}
     i18nDraft={draftText}
-    i18nDraftTip={draftTip1}
     i18nEdit={editText}
     i18nEditTip={editTip1}
+    i18nError={errorText}
     i18nExport={exportText}
     i18nPublished={publishedText}
-    i18nPublishedTip={publishedTip1}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
+    i18nPublishInProgress={publishInProgressText}
+    i18nPublishLogUrlText={publishLogUrlText}
     onDelete={action(deleteText)}
     onEdit={action(editText)}
     onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
-    isPublished={boolean(publishText, true)}
+    currentPublishedState={currentStatusDraft}
+    publishLogUrl=""
     children={viewItems}
   />,
 ];
@@ -108,20 +106,22 @@ const virtualizationItems = [
     i18nDeleteModalMessage={deleteModalMessage}
     i18nDeleteModalTitle={deleteModalTitle}
     i18nDraft={draftText}
-    i18nDraftTip={draftTip1}
     i18nEdit={editText}
     i18nEditTip={editTip1}
+    i18nError={errorText}
     i18nExport={exportText}
     i18nPublished={publishedText}
-    i18nPublishedTip={publishedTip1}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
+    i18nPublishInProgress={publishInProgressText}
+    i18nPublishLogUrlText={publishLogUrlText}
     onDelete={action(deleteText)}
     onEdit={action(editText)}
     onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
-    isPublished={boolean(publishText, true)}
+    currentPublishedState={currentStatusDraft}
+    publishLogUrl=""
   />,
   <VirtualizationListItem
     key="virtualizationListItem2"
@@ -132,20 +132,22 @@ const virtualizationItems = [
     i18nDeleteModalMessage={deleteModalMessage}
     i18nDeleteModalTitle={deleteModalTitle}
     i18nDraft={draftText}
-    i18nDraftTip={draftTip2}
     i18nEdit={editText}
     i18nEditTip={editTip2}
+    i18nError={errorText}
     i18nExport={exportText}
     i18nPublished={publishedText}
-    i18nPublishedTip={publishedTip2}
     i18nUnpublish={unpublishText}
     i18nPublish={publishText}
+    i18nPublishInProgress={publishInProgressText}
+    i18nPublishLogUrlText={publishLogUrlText}
     onDelete={action(deleteText)}
     onEdit={action(editText)}
     onExport={action(exportText)}
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
-    isPublished={boolean(publishText, false)}
+    currentPublishedState={currentStatusPublished}
+    publishLogUrl=""
   />,
 ];
 
