@@ -1,0 +1,10 @@
+{
+    "Name":"Los Angeles International Airport",
+    "IcaoCode":"KLAX",
+    "IataCode":"LAX",
+    "Location":[
+        "{Address:\"1 World Way, Los Angeles, CA, 90045\"}",
+        "{Loc:\"GEOGRAPHY'SRID=4326;Point(-118.408055555556 33.9425)'\"}",
+        "{City:[\"{Name:\\\"Los Angeles\\\"}\",\"{CountryRegion:\\\"United States\\\"}\",\"{Region:\\\"California\\\"}\"]}"
+    ]
+}

@@ -37,6 +37,8 @@ public abstract class AbstractODataReadRouteTest extends AbstractODataRouteTest 
     protected static final String REF_SERVER_PEOPLE_DATA_1 = "ref-server-people-data-1.json";
     protected static final String REF_SERVER_PEOPLE_DATA_2 = "ref-server-people-data-2.json";
     protected static final String REF_SERVER_PEOPLE_DATA_3 = "ref-server-people-data-3.json";
+    protected static final String REF_SERVER_PEOPLE_DATA_KLAX = "ref-server-data-klax.json";
+    protected static final String REF_SERVER_PEOPLE_DATA_KLAX_LOC = "ref-server-data-klax-location.json";
     protected static final String TEST_SERVER_DATA_EMPTY = "test-server-data-empty.json";
 
     private final boolean splitResult;
