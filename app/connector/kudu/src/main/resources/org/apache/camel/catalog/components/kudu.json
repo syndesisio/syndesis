@@ -16,7 +16,7 @@
     "firstVersion": "2.23.0",
     "groupId": "camelinaction.component",
     "artifactId": "connector-kudu",
-    "version": "1.6-SNAPSHOT"
+    "version": "@project.version@"
   },
   "componentProperties": {
     "resolvePropertyPlaceholders": { "kind": "property", "displayName": "Resolve Property Placeholders", "group": "advanced", "label": "advanced", "required": false, "type": "boolean", "javaType": "boolean", "deprecated": false, "secret": false, "defaultValue": true, "description": "Whether the component should resolve property placeholders on itself when starting. Only properties which are of String type can use property placeholders." }
