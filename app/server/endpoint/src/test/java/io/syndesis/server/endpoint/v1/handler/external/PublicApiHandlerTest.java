@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Stream;
 import javax.ws.rs.ClientErrorException;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
@@ -37,11 +38,15 @@ import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.integration.ContinuousDeliveryEnvironment;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.monitoring.MonitoringProvider;
 import io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationDeploymentHandler;
+import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
 
 import static org.hamcrest.CoreMatchers.hasItem;
@@ -49,6 +54,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.notNull;
 import static org.mockito.Mockito.doAnswer;
@@ -67,10 +73,12 @@ public class PublicApiHandlerTest {
     private static final String ENVIRONMENT = "environment";
     public static final String ENVIRONMENT2 = "new-" + ENVIRONMENT;
     private static final String NAME_PROPERTY = "name";
+    private static final String INTEGRATION_ID_PROPERTY = "integrationId";
 
     private final DataManager dataManager = mock(DataManager.class);
     private final IntegrationSupportHandler supportHandler = mock(IntegrationSupportHandler.class);
     private final EncryptionComponent encryptionComponent = mock(EncryptionComponent.class);
+    private final IntegrationHandler integrationHandler = mock(IntegrationHandler.class);
     private final IntegrationDeploymentHandler deploymentHandler = mock(IntegrationDeploymentHandler.class);
     private final ConnectionHandler connectionHandler = mock(ConnectionHandler.class);
     private final MonitoringProvider monitoringProvider = mock(MonitoringProvider.class);
@@ -78,6 +86,7 @@ public class PublicApiHandlerTest {
     // initialized after mock objects in setup
     private PublicApiHandler handler;
     private Integration integration;
+    private IntegrationDeploymentState targetState;
 
     @Before
     public void setUp() throws Exception {
@@ -93,6 +102,8 @@ public class PublicApiHandlerTest {
         doAnswer(invocation -> integration).when(dataManager).fetch(Integration.class, INTEGRATION_ID);
         doAnswer(invocation -> Optional.of(integration)).when(dataManager).fetchByPropertyValue(Integration.class,
                 NAME_PROPERTY, INTEGRATION_NAME);
+        doAnswer(invocation -> Stream.of(integration)).when(dataManager).fetchAllByPropertyValue(Integration.class,
+                NAME_PROPERTY, INTEGRATION_NAME);
         doAnswer(invocation -> ListResult.of(integration)).when(dataManager).fetchAll(eq(Integration.class));
         doAnswer(invocation -> ListResult.of(integration)).when(dataManager).fetchAll(eq(Integration.class), any());
         doAnswer(invocation -> integration = invocation.getArgument(0)).when(dataManager).update(any(Integration.class));
@@ -102,8 +113,24 @@ public class PublicApiHandlerTest {
         importResult.put(INTEGRATION_ID, Collections.singletonList(integration));
         when(supportHandler.importIntegration(any(), any())).thenReturn(importResult);
 
+        targetState = IntegrationDeploymentState.Unpublished;
+        doAnswer(invocation -> new IntegrationOverview.Builder()
+                .id(INTEGRATION_ID)
+                .currentState(IntegrationDeploymentState.Unpublished)
+                .targetState(targetState)
+                .deploymentVersion(1)
+                .build()).when(integrationHandler).get(any());
+
+        final IntegrationDeployment deployment = new IntegrationDeployment.Builder()
+                .integrationId(Optional.of(INTEGRATION_ID))
+                .targetState(IntegrationDeploymentState.Published)
+                .build();
+        doAnswer(invocation -> Optional.of(deployment)).when(dataManager).fetchByPropertyValue(IntegrationDeployment.class,
+                INTEGRATION_ID_PROPERTY, INTEGRATION_ID);
+        when(deploymentHandler.update(any(), eq(INTEGRATION_ID))).thenReturn(deployment);
+
         handler = new PublicApiHandler(dataManager, supportHandler,
-                encryptionComponent, deploymentHandler, connectionHandler, monitoringProvider);
+                encryptionComponent, integrationHandler, deploymentHandler, connectionHandler, monitoringProvider);
     }
 
     @Test
@@ -173,7 +200,7 @@ public class PublicApiHandlerTest {
         assertThat(continuousDeliveryEnvironment.get(ENVIRONMENT).getLastTaggedAt().after(now), is(true));
 
         verify(dataManager).update(notNull());
-        verify(dataManager).fetchByPropertyValue(Integration.class, NAME_PROPERTY, INTEGRATION_NAME);
+        verify(dataManager).fetchAllByPropertyValue(Integration.class, NAME_PROPERTY, INTEGRATION_NAME);
     }
 
     @Test
@@ -236,10 +263,7 @@ public class PublicApiHandlerTest {
         final Response response = handler.exportResources(ENVIRONMENT, false);
 
         // import it back
-        final SecurityContext security = mock(SecurityContext.class);
-        final Principal principal = mock(Principal.class);
-        when(security.getUserPrincipal()).thenReturn(principal);
-        when(principal.getName()).thenReturn("user");
+        final SecurityContext security = getSecurityContext();
 
         PublicApiHandler.ImportFormDataInput formInput = new PublicApiHandler.ImportFormDataInput();
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -264,10 +288,7 @@ public class PublicApiHandlerTest {
         final Response response = handler.exportResources(ENVIRONMENT, false);
 
         // import it back
-        final SecurityContext security = mock(SecurityContext.class);
-        final Principal principal = mock(Principal.class);
-        when(security.getUserPrincipal()).thenReturn(principal);
-        when(principal.getName()).thenReturn("user");
+        final SecurityContext security = getSecurityContext();
 
         PublicApiHandler.ImportFormDataInput formInput = new PublicApiHandler.ImportFormDataInput();
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -289,4 +310,35 @@ public class PublicApiHandlerTest {
 
     }
 
+    public SecurityContext getSecurityContext() {
+        final SecurityContext security = mock(SecurityContext.class);
+        final Principal principal = mock(Principal.class);
+        when(security.getUserPrincipal()).thenReturn(principal);
+        when(principal.getName()).thenReturn("user");
+        return security;
+    }
+
+    @Test
+    public void testGetIntegrationState() {
+        final PublicApiHandler.IntegrationState integrationState = handler.getIntegrationState(getSecurityContext(),
+                INTEGRATION_NAME);
+        assertThat(integrationState, is(notNullValue()));
+        assertThat(integrationState.getCurrentState(), is(IntegrationDeploymentState.Unpublished));
+    }
+
+    @Test
+    public void testPublishIntegration() {
+        final IntegrationDeployment deployment = handler.publishIntegration(getSecurityContext(), INTEGRATION_NAME);
+
+        assertThat(deployment, is(notNullValue()));
+        assertThat(deployment.getTargetState(), is(IntegrationDeploymentState.Published));
+    }
+
+    @Test
+    public void testStopIntegration() {
+        targetState = IntegrationDeploymentState.Published;
+        handler.stopIntegration(getSecurityContext(), INTEGRATION_NAME);
+
+        verify(deploymentHandler).updateTargetState(eq(INTEGRATION_ID), eq(1), argThat(targetState -> targetState.getTargetState() == IntegrationDeploymentState.Unpublished));
+    }
 }
