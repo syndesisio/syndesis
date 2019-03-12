@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.openshift;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -27,13 +29,11 @@ import io.fabric8.openshift.client.OpenShiftConfigBuilder;
 @Validated
 public class OpenShiftConfigurationProperties {
 
-    public static final String SERVICE_CA_CERT_FILE = "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt";
+    public String serviceCaCertFile = "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt";
 
     private boolean enabled;
 
-    private String openShiftHost = "https://openshift.default.svc";
-
-    private final OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(openShiftHost).withCaCertFile(SERVICE_CA_CERT_FILE).build();
+    private String openShiftHost = "https://kubernetes.default.svc";
 
     private String builderImageStreamTag = "s2i-java:2.0";
 
@@ -80,7 +80,12 @@ public class OpenShiftConfigurationProperties {
     }
 
     public OpenShiftConfig getOpenShiftClientConfiguration() {
-        return openShiftClientConfig;
+        OpenShiftConfigBuilder builder = new OpenShiftConfigBuilder();
+        builder.withMasterUrl(openShiftHost);
+        if( Files.exists(Paths.get(serviceCaCertFile)) ) {
+            builder = builder.withCaCertFile(serviceCaCertFile);
+        }
+        return builder.build();
     }
 
     public String getBuilderImageStreamTag() {
@@ -170,4 +175,13 @@ public class OpenShiftConfigurationProperties {
     public void setBuildNodeSelector(Map<String, String> buildNodeSelector) {
         this.buildNodeSelector = buildNodeSelector;
     }
+
+    public String getServiceCaCertFile() {
+        return serviceCaCertFile;
+    }
+
+    public void setServiceCaCertFile(String serviceCaCertFile) {
+        this.serviceCaCertFile = serviceCaCertFile;
+    }
+
 }
