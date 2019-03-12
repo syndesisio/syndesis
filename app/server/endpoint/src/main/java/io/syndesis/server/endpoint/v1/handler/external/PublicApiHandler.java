@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.ClientErrorException;
@@ -65,12 +66,14 @@ import io.syndesis.common.model.integration.ContinuousDeliveryImportResults;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.model.integration.IntegrationOverview;
 import io.syndesis.common.model.monitoring.IntegrationDeploymentStateDetails;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.monitoring.MonitoringProvider;
 import io.syndesis.server.endpoint.v1.handler.connection.ConnectionHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationDeploymentHandler;
+import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.endpoint.v1.handler.integration.support.IntegrationSupportHandler;
 
 @Api("public-api")
@@ -85,14 +88,16 @@ public class PublicApiHandler {
     private final DataManager dataMgr;
     private final IntegrationSupportHandler handler;
     private final EncryptionComponent encryptionComponent;
+    private final IntegrationHandler integrationHandler;
     private final IntegrationDeploymentHandler deploymentHandler;
     private final ConnectionHandler connectionHandler;
     private final MonitoringProvider monitoringProvider;
 
-    protected PublicApiHandler(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
+    protected PublicApiHandler(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationHandler integrationHandler, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
         this.dataMgr = dataMgr;
         this.handler = handler;
         this.encryptionComponent = encryptionComponent;
+        this.integrationHandler = integrationHandler;
         this.deploymentHandler = deploymentHandler;
         this.connectionHandler = connectionHandler;
         this.monitoringProvider = monitoringProvider;
@@ -441,7 +446,7 @@ public class PublicApiHandler {
                                            @NotNull @ApiParam(required = true) Map<String, String> properties) {
 
         validateParam("connectionId", connectionId);
-        final Connection connection = getResource(Connection.class, connectionId);
+        final Connection connection = getResource(Connection.class, connectionId, c -> c.hasId());
 
         updateConnection(connection, properties);
         return connectionHandler.get(connection.getId().get());
@@ -456,9 +461,8 @@ public class PublicApiHandler {
     @Consumes(MediaType.APPLICATION_JSON)
     public IntegrationState getIntegrationState(@Context SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) String integrationId) {
         final Integration integration = getIntegration(integrationId);
-        final IntegrationDeployment deployment = deploymentHandler.get(integration.getId().get(), integration.getVersion());
-        return new IntegrationState(deployment != null ? deployment.getCurrentState() : IntegrationDeploymentState.Unpublished,
-                monitoringProvider.getIntegrationStateDetails(integration.getId().get()));
+        final IntegrationOverview integrationOverview = this.integrationHandler.get(integration.getId().get());
+        return new IntegrationState(integrationOverview.getCurrentState(), monitoringProvider.getIntegrationStateDetails(integration.getId().get()));
     }
 
     /**
@@ -480,14 +484,15 @@ public class PublicApiHandler {
     public void stopIntegration(@Context final SecurityContext sec, @NotNull @PathParam("id") @ApiParam(required = true) final String integrationId) {
 
         final Integration integration = getIntegration(integrationId);
-        IntegrationDeploymentHandler.TargetStateRequest targetState = new IntegrationDeploymentHandler
-                .TargetStateRequest();
+        IntegrationDeploymentHandler.TargetStateRequest targetState = new IntegrationDeploymentHandler.TargetStateRequest();
         targetState.setTargetState(IntegrationDeploymentState.Unpublished);
 
         // find current deployment
-        final IntegrationDeployment deployment = deploymentHandler.get(integration.getId().get(), integration.getVersion());
-        if (deployment != null && deployment.getCurrentState() == IntegrationDeploymentState.Published) {
-            deploymentHandler.updateTargetState(integration.getId().get(), integration.getVersion(), targetState);
+        final String id = integration.getId().get();
+        final IntegrationDeployment deployment = dataMgr.fetchByPropertyValue(IntegrationDeployment.class,
+                PROPERTY_INTEGRATION_ID, id).filter(d -> d.getTargetState() == IntegrationDeploymentState.Published).orElse(null);
+        if (deployment != null) {
+            deploymentHandler.updateTargetState(id, deployment.getVersion(), targetState);
         } else {
             throw new ClientErrorException("Integration " + integrationId + " is not published", Response.Status.FORBIDDEN);
         }
@@ -521,12 +526,14 @@ public class PublicApiHandler {
 
     private Integration getIntegration(String integrationId) {
         validateParam(PROPERTY_INTEGRATION_ID, integrationId);
-        return getResource(Integration.class, integrationId);
+        return getResource(Integration.class, integrationId, i -> !i.isDeleted());
     }
 
-    private <T extends WithId<T> & WithName> T getResource(Class<T> resourceClass, String nameOrId) {
+    private <T extends WithId<T> & WithName> T getResource(Class<T> resourceClass, String nameOrId, Predicate<? super T> operator) {
         // try fetching by name first, then by id
-        final T resource = dataMgr.fetchByPropertyValue(resourceClass, "name", nameOrId)
+        final T resource = dataMgr.fetchAllByPropertyValue(resourceClass, "name", nameOrId)
+                .filter(operator)
+                .findFirst()
                 .orElse(dataMgr.fetch(resourceClass, nameOrId));
         if (resource == null) {
             throw new ClientErrorException(
