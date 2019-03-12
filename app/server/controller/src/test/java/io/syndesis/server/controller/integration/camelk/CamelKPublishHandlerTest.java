@@ -17,7 +17,6 @@ package io.syndesis.server.controller.integration.camelk;
 
 import java.util.Properties;
 
-import com.jcabi.manifests.Manifests;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -34,7 +33,6 @@ import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
 import io.syndesis.server.endpoint.v1.VersionService;
 import io.syndesis.server.openshift.OpenShiftServiceNoOp;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -159,5 +157,6 @@ public class CamelKPublishHandlerTest {
         assertThat(i.getSpec().getSources()).isNotEmpty();
         assertThat(i.getSpec().getDependencies()).isNotEmpty();
         assertThat(i.getSpec().getResources()).isNotEmpty();
+        assertThat(i.getSpec().getResources()).anyMatch(r -> "mapping-flow-0-step-1.json".equals(r.getName()));
     }
 }
