@@ -8,7 +8,7 @@ In order to use the Syndesis Camel-k runtime (i.e. this project) at the moment a
 * Have the Camel-K environment running somewhere (follow the instructions in https://github.com/apache/camel-k#installation[Camel-k readme], or use `-camel-k` option of `syndesis install` command) and `kamel` CLI in your path. It is IMPORTANT to run Camel-k install with the following options:
   - `--repository https://repository.jboss.org/nexus/content/groups/ea`
   - `--camel-version  <camel.version>`
-  - `--runtime-version <camel-k.version>`
+  - `--runtime-version <camel-k-runtime.version>`
 * Import the syndesis specific camel version generated Camel-k catalog in ocp:
   - `oc create -f app/integration/runtime-camelk/src/main/resources/META-INF/catalog/camel-catalog-<camel.version>.yaml`
 * Create `target/dependencies` folder with all useful dependencies in a maven repo like structure with: `mvn clean install -Pdependency-prepare`

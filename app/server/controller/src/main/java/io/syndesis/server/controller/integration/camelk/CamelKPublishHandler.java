@@ -246,7 +246,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             "camel",
             new IntegrationTraitSpec.Builder()
                 .putConfiguration("version", versionService.getCamelVersion())
-                .putConfiguration("runtime-version", versionService.getCamelkVersion())
+                .putConfiguration("runtime-version", versionService.getCamelkRuntimeVersion())
                 .build());
         integrationSpecBuilder.putTraits(
             "owner",
