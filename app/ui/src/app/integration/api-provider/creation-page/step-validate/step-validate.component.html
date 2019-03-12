@@ -24,7 +24,7 @@
                 </syndesis-button>
               </fieldset>
               <fieldset>
-                <syndesis-button (click)="onDone.emit()" type="button" theme="primary">
+                <syndesis-button (click)="onDone.emit()" [disabled]="hasErrors()" type="button" theme="primary">
                   {{ 'shared.next' | synI18n }}
                 </syndesis-button>
 
