@@ -138,7 +138,8 @@
   "resolutions": {
     "ngx-bootstrap": "3.1.4",
     "bootstrap": "~3.4",
-    "bootstrap-select": "1.13.6"
+    "bootstrap-select": "1.13.6",
+    "codemirror": "5.42.2"
   },
   "snyk": true
 }
