@@ -8,10 +8,12 @@
 :context: calendar
 
 To trigger integration execution when a poll returns an update to a
-Google calendar, add a Google Calendar connection to an integration 
+Google calendar, add a Google Calendar connection to a simple integration 
 as its start connection. To add an event to a calendar or update an
-event in a calendar, add a Google Calendar connection to an integration 
-as the integration's middle or finish connection. 
+event in a calendar, you can do either of the following: 
+
+* Add a Google Calendar connection to the middle of a flow.
+* Add a Google Calendar connection to finish a simple integration.  
 
 Details for connecting to Google Calendar are in the following topics:
 

@@ -7,8 +7,8 @@
 :context: ftp
 
 In an integration, you can connect to an FTP or SFTP server to download or 
-upload files. To do this, create an FTP or SFTP connection. You can then add this 
-connection to any number of integrations. The following topics provide details:
+upload files. To do this, create an FTP or SFTP connection and then add  
+it to an integration flow. The following topics provide details:
 
 * xref:creating-ftp-connections_{context}[]
 * xref:adding-ftp-start-connection_{context}[]

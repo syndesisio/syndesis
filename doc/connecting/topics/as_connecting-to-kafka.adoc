@@ -11,7 +11,7 @@ obtain and publish data.
 In an integration, you can subscribe for data from a Kafka topic 
 that you specify or publish data to a Kafka topic that you specify.  
 To do this, create a connection to Kafka and then add that connection to an 
-integration. Details are in the following topics:
+integration flow. Details are in the following topics:
 
 * xref:creating-kafka-connections_{context}[]
 * xref:adding-kafka-connection-start_{context}[]
