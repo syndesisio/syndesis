@@ -14,14 +14,14 @@ spec:
       artifactId: camel-ahc
       schemes:
       - id: ahc
-        http: false
+        http: true
         passive: false
     camel-ahc-ws:
       groupId: org.apache.camel
       artifactId: camel-ahc-ws
       schemes:
       - id: ahc-ws
-        http: false
+        http: true
         passive: false
       - id: ahc-wss
         http: false
@@ -64,7 +64,7 @@ spec:
       artifactId: camel-atmosphere-websocket
       schemes:
       - id: atmosphere-websocket
-        http: false
+        http: true
         passive: false
     camel-atom:
       groupId: org.apache.camel
@@ -319,51 +319,51 @@ spec:
       schemes:
       - id: bean
         http: false
-        passive: false
+        passive: true
       - id: binding
         http: false
-        passive: false
+        passive: true
       - id: browse
         http: false
-        passive: false
+        passive: true
       - id: class
         http: false
-        passive: false
+        passive: true
       - id: controlbus
         http: false
-        passive: false
+        passive: true
       - id: dataformat
         http: false
-        passive: false
+        passive: true
       - id: dataset
         http: false
-        passive: false
+        passive: true
       - id: direct
         http: false
-        passive: false
+        passive: true
       - id: direct-vm
         http: false
-        passive: false
+        passive: true
       - id: file
         http: false
         passive: false
       - id: language
         http: false
-        passive: false
+        passive: true
       - id: log
         http: false
-        passive: false
+        passive: true
       - id: mock
         http: false
-        passive: false
+        passive: true
       - id: properties
         http: false
-        passive: false
+        passive: true
       - id: ref
         http: false
-        passive: false
+        passive: true
       - id: rest
-        http: false
+        http: true
         passive: false
       - id: rest-api
         http: false
@@ -376,22 +376,22 @@ spec:
         passive: false
       - id: seda
         http: false
-        passive: false
+        passive: true
       - id: stub
         http: false
-        passive: false
+        passive: true
       - id: test
         http: false
-        passive: false
+        passive: true
       - id: timer
         http: false
         passive: false
       - id: validator
         http: false
-        passive: false
+        passive: true
       - id: vm
         http: false
-        passive: false
+        passive: true
       - id: xslt
         http: false
         passive: false
@@ -452,10 +452,10 @@ spec:
       artifactId: camel-cxf
       schemes:
       - id: cxf
-        http: false
+        http: true
         passive: false
       - id: cxfrs
-        http: false
+        http: true
         passive: false
     camel-digitalocean:
       groupId: org.apache.camel
@@ -727,7 +727,7 @@ spec:
       artifactId: camel-grpc
       schemes:
       - id: grpc
-        http: false
+        http: true
         passive: false
     camel-gson:
       groupId: org.apache.camel
@@ -975,7 +975,7 @@ spec:
       artifactId: camel-jetty9
       schemes:
       - id: jetty
-        http: false
+        http: true
         passive: false
     camel-jgroups:
       groupId: org.apache.camel
@@ -1070,6 +1070,32 @@ spec:
       artifactId: camel-jxpath
       languages:
       - jxpath
+    camel-k-runtime-groovy:
+      groupId: org.apache.camel.k
+      artifactId: camel-k-runtime-groovy
+      dependencies:
+      - groupId: org.apache.camel
+        artifactId: camel-groovy
+    camel-k-runtime-health:
+      groupId: org.apache.camel.k
+      artifactId: camel-k-runtime-health
+      dependencies:
+      - groupId: org.apache.camel
+        artifactId: camel-netty4-http
+    camel-k-runtime-jvm:
+      groupId: org.apache.camel.k
+      artifactId: camel-k-runtime-jvm
+      dependencies:
+      - groupId: org.apache.camel
+        artifactId: camel-core
+      - groupId: org.apache.camel.k
+        artifactId: camel-k-adapter-camel-2
+    camel-k-runtime-kotlin:
+      groupId: org.apache.camel.k
+      artifactId: camel-k-runtime-kotlin
+    camel-k-runtime-yaml:
+      groupId: org.apache.camel.k
+      artifactId: camel-k-runtime-yaml
     camel-kafka:
       groupId: org.apache.camel
       artifactId: camel-kafka
@@ -1084,6 +1110,16 @@ spec:
       - id: kestrel
         http: false
         passive: false
+    camel-knative:
+      groupId: org.apache.camel.k
+      artifactId: camel-knative
+      schemes:
+      - id: knative
+        http: true
+        passive: false
+      dependencies:
+      - groupId: org.apache.camel
+        artifactId: camel-netty4-http
     camel-krati:
       groupId: org.apache.camel
       artifactId: camel-krati
@@ -1333,7 +1369,7 @@ spec:
       artifactId: camel-netty-http
       schemes:
       - id: netty-http
-        http: false
+        http: true
         passive: false
     camel-netty4:
       groupId: org.apache.camel
@@ -1347,7 +1383,7 @@ spec:
       artifactId: camel-netty4-http
       schemes:
       - id: netty4-http
-        http: false
+        http: true
         passive: false
     camel-ognl:
       groupId: org.apache.camel
@@ -1498,7 +1534,7 @@ spec:
       artifactId: camel-restlet
       schemes:
       - id: restlet
-        http: false
+        http: true
         passive: false
     camel-rmi:
       groupId: org.apache.camel
@@ -1573,7 +1609,7 @@ spec:
       artifactId: camel-servlet
       schemes:
       - id: servlet
-        http: false
+        http: true
         passive: false
     camel-sip:
       groupId: org.apache.camel
@@ -1661,7 +1697,7 @@ spec:
       artifactId: camel-spark-rest
       schemes:
       - id: spark-rest
-        http: false
+        http: true
         passive: false
     camel-splunk:
       groupId: org.apache.camel
@@ -1712,7 +1748,7 @@ spec:
       artifactId: camel-spring-ws
       schemes:
       - id: spring-ws
-        http: false
+        http: true
         passive: false
     camel-sql:
       groupId: org.apache.camel
@@ -1828,7 +1864,7 @@ spec:
       artifactId: camel-undertow
       schemes:
       - id: undertow
-        http: false
+        http: true
         passive: false
     camel-univocity-parsers:
       groupId: org.apache.camel
@@ -1863,7 +1899,7 @@ spec:
       artifactId: camel-websocket
       schemes:
       - id: websocket
-        http: false
+        http: true
         passive: false
     camel-wordpress:
       groupId: org.apache.camel

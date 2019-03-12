@@ -206,7 +206,7 @@
           <archive>
             <manifestEntries>
               <camelversion>${camel.version}</camelversion>
-              <camelkversion>${camel-k.version}</camelkversion>
+              <camelkruntimeversion>${camel-k-runtime.version}</camelkruntimeversion>
             </manifestEntries>
           </archive>
         </configuration>
