@@ -15,6 +15,19 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.fabric8.kubernetes.api.model.Secret;
@@ -54,19 +67,6 @@ import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Component
 @Qualifier("camel-k")
@@ -341,7 +341,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
                         builder.addResources(
                             new ResourceSpec.Builder()
                                 .compression(compress)
-                                .name(Names.sanitize(name))
+                                .name(name)
                                 .content(content)
                                 .type("data")
                             .build()
