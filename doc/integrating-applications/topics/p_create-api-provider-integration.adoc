@@ -35,25 +35,25 @@ creating the API provider integration.
 +
 * Drag and drop the document that contains the schema. 
 * Click *Choose File* to navigate to and select the file that contains the
-schema. 
-* Click *Use a URL* and enter the URL for a document that contains the schema. 
+document. 
+* Click *Use a URL* and enter the URL for a document. 
 
 +
-Or, if you need to define the schema, select *Create from scratch*. 
+Or, if you need to define the OpenAPI 2.0 document, select *Create from scratch*. 
 
 . Click *Next*. 
 +
-* If you uploaded a document, you can review or edit the schema: 
+* If you uploaded a document, you can review or edit the document: 
 +
 .. Click *Review/Edit* to open the Apicurito editor.
 .. Review and edit as needed.
 .. In the upper right, click *Save* or *Cancel* to close the editor.
 .. Click *Next* and go to step 6 in this procedure. 
 
-* If you are creating a schema then in the Apicurito editor 
+* If you are creating a document then in the Apicurito editor 
 that {prodname} opens:
 +
-.. Define the OpenAPI schema.
+.. Define the OpenAPI document.
 .. In the upper right, click *Save*, which closes the editor. 
 .. Click *Next*. 
 
