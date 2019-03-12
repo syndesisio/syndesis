@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Moduls with running pods
+# Modules with running pods
 POD_MODULES="meta server ui operator"
 
 call_maven() {
@@ -20,9 +20,20 @@ call_maven() {
       ./mvnw -N --batch-mode install -Pflash
       for module in $maven_modules; do
         echo "=============================================================================="
-        echo "./mvnw $args -f $module ### Processing module $module"
-        echo "=============================================================================="
-        ./mvnw -f $module $args
+        if [ "${module//:/}" != "${module}" ]; then
+            # build submodule defined with [groupId]:artifactId
+            if [ "$(hasflag --dependencies -d)" ]; then
+                args="-am ${args}"
+            fi
+
+            echo "./mvnw -pl $module $args ### Processing submodule $module"
+            echo "=============================================================================="
+            ./mvnw -pl $module $args
+        else
+            echo "./mvnw -f $module $args ### Processing module $module"
+            echo "=============================================================================="
+            ./mvnw -f $module $args
+        fi
       done
     fi
 }
