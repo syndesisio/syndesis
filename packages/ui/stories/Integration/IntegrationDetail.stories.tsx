@@ -11,12 +11,6 @@ const i18nTextBtnEdit = 'Edit';
 const i18nTextBtnPublish = 'Publish';
 const i18nTextDraft = 'Draft';
 const i18nTextHistory = 'History';
-/***
-const i18nTextHistoryMenuReplaceDraft = 'Replace Draft';
-const i18nTextHistoryMenuUnpublish = 'Unpublish';
-const i18nTextLastPublished = 'Last published on ';
-const i18nTextVersion = 'Version';
-**/
 
 const integration = {
   currentState: 'Unpublished',

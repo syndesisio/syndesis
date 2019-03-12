@@ -17,7 +17,6 @@ export interface IIntegrationDetailTabProps {
   i18nTextHistory?: string;
   steps?: any;
 }
-
 export class IntegrationDetailTab extends React.PureComponent<
   IIntegrationDetailTabProps
 > {
