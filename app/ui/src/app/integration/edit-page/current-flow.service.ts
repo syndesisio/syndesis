@@ -654,7 +654,12 @@ export class CurrentFlowService {
       outstanding = outstanding + 1;
       switch (step.stepKind) {
         case ENDPOINT:
-          if (step.action !== undefined) {
+          // Update metadata but the connection needs to be configured
+          if (
+            typeof step.connection !== 'undefined' &&
+            typeof step.action !== 'undefined' &&
+            typeof step.configuredProperties !== 'undefined'
+          ) {
             const sub = this.integrationSupportService
               .fetchMetadata(
                 step.connection,
