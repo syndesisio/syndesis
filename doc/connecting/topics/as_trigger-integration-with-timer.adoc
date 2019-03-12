@@ -6,10 +6,10 @@
 = Triggering integration execution with a timer
 :context: timer
 
-To trigger execution of an integration according to a schedule that
-you specify, add a timer connection as an integration's start
+To trigger execution of a simple integration according to a schedule that
+you specify, add a timer connection as a simple integration's start
 connection. {prodname} provides a timer connection, which you can use
-to start as many integrations as you like. You do not need to create
+to start as many simple integrations as you like. You do not need to create
 a timer connection unless you inadvertently delete the provided
 timer connection. Details are in the following topics:
 

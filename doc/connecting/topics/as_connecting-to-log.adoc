@@ -7,7 +7,8 @@
 
 :context: connect-to-log
 
-For each integration step, {prodname} provides the following activity 
+For each execution of an integration, 
+for each step in a flow, {prodname} provides the following activity 
 information:
 
 * The date and time that the step was executed
@@ -21,7 +22,7 @@ link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_m
 
 To obtain further details about integration execution, you can 
 log information about the messages that an integration processes by 
-adding a log step and/or a log connection to an integration. 
+adding a log step and/or a log connection to an integration flow. 
 
 * xref:comparison-log-step-connection_{context}[]
 * xref:add-log-connection_{context}[]

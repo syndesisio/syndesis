@@ -7,10 +7,12 @@
 :context: gmail
 
 To trigger execution of an integration when a particular Gmail
-account receives an email, add a Gmail connection to an integration as its
+account receives an email, add a Gmail connection to a simple integration as its
 start connection. In an integration, to send an email from a
-particular Gmail account, add a Gmail connection as the integration's
-finish connection, or as a middle connection. 
+particular Gmail account, you can do either of the following: 
+
+* Add a Gmail connection to the middle of a flow.
+* Add a Gmail connection to finish a simple integration.
 
 The general steps for connecting to Gmail in an integration are:
 
@@ -19,7 +21,7 @@ The general steps for connecting to Gmail in an integration are:
 the connection is authorized to access.
 . If your integration sends an email from a Gmail account, 
 decide how to populate an email to send.
-. Adding a Gmail connection to an integration.
+. Adding a Gmail connection to an integration flow.
 . For a Gmail connection that sends an email, optionally mapping integration
 data to the email fields. 
 
