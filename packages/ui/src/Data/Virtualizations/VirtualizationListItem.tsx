@@ -10,28 +10,40 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 import { DeleteConfirmationDialog } from '../../Shared';
+import {
+  BUILDING,
+  CONFIGURING,
+  DEPLOYING,
+  RUNNING,
+  SUBMITTED,
+  VirtualizationPublishState,
+} from './models';
+import { VirtualizationPublishStatus } from './VirtualizationPublishStatus';
+import { VirtualizationPublishStatusDetail } from './VirtualizationPublishStatusDetail';
 
 export interface IVirtualizationListItemProps {
+  currentPublishedState: VirtualizationPublishState;
   i18nCancelText: string;
   i18nDelete: string;
   i18nDeleteModalMessage: string;
   i18nDeleteModalTitle: string;
   i18nDraft: string;
-  i18nDraftTip: string;
   i18nEdit: string;
   i18nEditTip?: string;
+  i18nError: string;
   i18nExport: string;
   i18nPublished: string;
-  i18nPublishedTip: string;
+  i18nPublishLogUrlText: string;
+  i18nPublishInProgress: string;
   i18nUnpublish: string;
   i18nPublish: string;
   icon?: string;
-  isPublished: boolean;
   onDelete: (virtualizationName: string) => void;
   onEdit: (virtualizationName: string) => void;
   onExport: (virtualizationName: string) => void;
   onPublish: (virtualizationName: string) => void;
   onUnpublish: (virtualizationName: string) => void;
+  publishLogUrl?: string;
   virtualizationName: string;
   virtualizationDescription: string;
 }
@@ -62,16 +74,6 @@ export class VirtualizationListItem extends React.Component<
     return (
       <Tooltip id="detailsTip">
         {this.props.i18nEditTip ? this.props.i18nEditTip : this.props.i18nEdit}
-      </Tooltip>
-    );
-  }
-
-  public getPublishedTooltip() {
-    return (
-      <Tooltip id="detailsTip">
-        {this.props.isPublished
-          ? this.props.i18nPublishedTip
-          : this.props.i18nDraftTip}
       </Tooltip>
     );
   }
@@ -124,7 +126,15 @@ export class VirtualizationListItem extends React.Component<
   }
 
   public render() {
-    const publishStyle = this.props.isPublished ? 'success' : 'default';
+    const isPublished =
+      this.props.currentPublishedState === RUNNING ? true : false;
+    const isInProgress =
+      this.props.currentPublishedState === BUILDING ||
+      this.props.currentPublishedState === CONFIGURING ||
+      this.props.currentPublishedState === DEPLOYING ||
+      this.props.currentPublishedState === SUBMITTED
+        ? true
+        : false;
     return (
       <>
         <DeleteConfirmationDialog
@@ -139,16 +149,20 @@ export class VirtualizationListItem extends React.Component<
         <ListViewItem
           actions={
             <div className="form-group">
-              <OverlayTrigger
-                overlay={this.getPublishedTooltip()}
-                placement="top"
-              >
-                <Button bsStyle={publishStyle} variant={publishStyle}>
-                  {this.props.isPublished
-                    ? this.props.i18nPublished
-                    : this.props.i18nDraft}
-                </Button>
-              </OverlayTrigger>
+              {isInProgress ? (
+                <VirtualizationPublishStatusDetail
+                  logUrl={this.props.publishLogUrl}
+                  i18nPublishInProgress={this.props.i18nPublishInProgress}
+                  i18nLogUrlText={this.props.i18nPublishLogUrlText}
+                />
+              ) : (
+                <VirtualizationPublishStatus
+                  currentState={this.props.currentPublishedState}
+                  i18nPublished={this.props.i18nPublished}
+                  i18nUnpublished={this.props.i18nDraft}
+                  i18nError={this.props.i18nError}
+                />
+              )}
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
                 <Button bsStyle="default" onClick={this.handleEdit}>
                   {this.props.i18nEdit}
@@ -168,12 +182,10 @@ export class VirtualizationListItem extends React.Component<
                 </MenuItem>
                 <MenuItem
                   onClick={
-                    this.props.isPublished
-                      ? this.handleUnpublish
-                      : this.handlePublish
+                    isPublished ? this.handleUnpublish : this.handlePublish
                   }
                 >
-                  {this.props.isPublished
+                  {isPublished
                     ? this.props.i18nUnpublish
                     : this.props.i18nPublish}
                 </MenuItem>

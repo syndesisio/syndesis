@@ -1,6 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { boolean } from '@storybook/addon-knobs';
-import { text } from '@storybook/addon-knobs';
+import { select, text } from '@storybook/addon-knobs';
 import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
@@ -19,19 +18,19 @@ const virtualizationIconData =
 const editText = 'Edit';
 const editTip = 'Edit ' + virtualizationName + ' virtualization';
 const draftText = 'Draft';
-const draftTip =
-  'The virtualization ' + virtualizationName + ' has not been published';
 const publishedText = 'Published';
-const publishedTip =
-  'The virtualization ' + virtualizationName + ' is published';
 const confirmDeleteTitle = 'Confirm Delete?';
 const confirmDeleteMessage =
   'Are you sure you want to delete the virtualization?';
 const cancelText = 'Cancel';
 const deleteText = 'Delete';
+const errorText = 'Error';
 const exportText = 'Export';
 const unpublishText = 'Unpublish';
 const publishText = 'Publish';
+const publishInProgressText = 'Publish in Progress';
+const publishLogUrl = 'testUrl';
+const publishLogUrlText = 'View Logs';
 
 const publishedVirtualizationNotes =
   '- Verify the custom virtualization icon is showing on the left\n' +
@@ -49,9 +48,6 @@ const publishedVirtualizationNotes =
   '"\n' +
   '- Verify the published button is labeled "' +
   publishedText +
-  '"\n' +
-  '- Verify the published button tooltip is "' +
-  publishedTip +
   '"\n' +
   '- Verify the dropdown menu contains "' +
   deleteText +
@@ -73,11 +69,6 @@ const publishedVirtualizationNotes =
   '" button label was changed to "' +
   draftText +
   '"\n' +
-  '-- >  Verify the "' +
-  draftText +
-  '" button tooltip was changed to "' +
-  draftTip +
-  '"\n' +
   '-- >  Verify the dropdown menu contains "' +
   publishText +
   '"\n';
@@ -93,21 +84,36 @@ stories.add(
       i18nDeleteModalMessage={confirmDeleteMessage}
       i18nDeleteModalTitle={confirmDeleteTitle}
       i18nDraft={draftText}
-      i18nDraftTip={draftTip}
+      i18nError={errorText}
       icon={text('icon', virtualizationIconData)}
       i18nEdit={editText}
       i18nEditTip={editTip}
       i18nExport={'Export'}
       i18nPublished={publishedText}
-      i18nPublishedTip={publishedTip}
       i18nUnpublish={unpublishText}
       i18nPublish={publishText}
+      i18nPublishInProgress={publishInProgressText}
+      i18nPublishLogUrlText={publishLogUrlText}
       onDelete={action(deleteText)}
       onEdit={action(editText)}
       onExport={action(exportText)}
       onUnpublish={action(unpublishText)}
       onPublish={action(publishText)}
-      isPublished={boolean('Published', true)}
+      currentPublishedState={select(
+        'currentState',
+        [
+          'BUILDING',
+          'CANCELLED',
+          'CONFIGURING',
+          'DEPLOYING',
+          'FAILED',
+          'NOTFOUND',
+          'RUNNING',
+          'SUBMITTED',
+        ],
+        'NOTFOUND'
+      )}
+      publishLogUrl={text('publishLogUrl', publishLogUrl)}
     />
   ))
 );

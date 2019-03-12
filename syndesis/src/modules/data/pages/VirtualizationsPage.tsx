@@ -206,19 +206,14 @@ export default class VirtualizationsPage extends React.Component {
                                         'virtualization.deleteModalTitle'
                                       )}
                                       i18nDraft={t('shared:Draft')}
-                                      i18nDraftTip={t(
-                                        'virtualization.draftDataVirtualizationTip'
-                                      )}
                                       i18nEdit={t('shared:Edit')}
                                       i18nEditTip={t(
                                         'virtualization.editDataVirtualizationTip'
                                       )}
+                                      i18nError={t('shared:Error')}
                                       i18nExport={t('shared:Export')}
                                       i18nPublished={t(
                                         'virtualization.publishedDataVirtualization'
-                                      )}
-                                      i18nPublishedTip={t(
-                                        'virtualization.publishedDataVirtualizationTip'
                                       )}
                                       i18nUnpublish={t('shared:Unpublish')}
                                       i18nPublish={t('shared:Publish')}
@@ -231,8 +226,16 @@ export default class VirtualizationsPage extends React.Component {
                                       onPublish={
                                         this.handlePublishVirtualization
                                       }
-                                      // TODO: modify komodo service call to add published state
-                                      isPublished={false}
+                                      currentPublishedState={
+                                        virtualization.publishedState
+                                      }
+                                      publishLogUrl={''} // TODO set the generated url for the pod
+                                      i18nPublishInProgress={t(
+                                        'virtualization.publishInProgress'
+                                      )}
+                                      i18nPublishLogUrlText={t(
+                                        'shared:viewLogs'
+                                      )}
                                     />
                                   )
                                 )

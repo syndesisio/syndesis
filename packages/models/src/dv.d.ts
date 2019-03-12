@@ -8,6 +8,15 @@ export interface RestDataService {
   keng__hasChildren: boolean;
   keng__id: string;
   keng__kType: string;
+  publishedState:
+    | 'BUILDING'
+    | 'CANCELLED'
+    | 'CONFIGURING'
+    | 'DEPLOYING'
+    | 'FAILED'
+    | 'NOTFOUND'
+    | 'RUNNING'
+    | 'SUBMITTED';
   serviceVdbName: string;
   serviceVdbVersion: string;
   serviceViewDefinitions: string[];
