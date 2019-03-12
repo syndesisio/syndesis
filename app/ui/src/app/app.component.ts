@@ -200,17 +200,31 @@ export class AppComponent implements OnInit, AfterViewInit {
   }
 
   /**
-   * Expands the help dropdown menu within the masthead.
+   * Toggles the help dropdown menu within the masthead
    */
-  expandHelpDropdown(): void {
+  toggleHelpDropdown(): void {
     this.helpExpanded = this.helpExpanded ? false : true;
   }
 
   /**
-   * Expands the logout dropdown menu within the masthead.
+   * Closes the help dropdown menu when clicking outside
    */
-  userMenuDropdown(): void {
+  closeHelpDropdown(): void {
+    this.helpExpanded = false;
+  }
+
+  /**
+   * Toggles the logout dropdown menu within the masthead
+   */
+  toggleUserMenuDropdown(): void {
     this.userMenuExpanded = this.userMenuExpanded ? false : true;
+  }
+
+  /**
+   * Closes the logout dropdown when clicking outside
+   */
+  closeUserMenuDropdown(): void {
+    this.userMenuExpanded = false;
   }
 
   /**
