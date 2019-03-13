@@ -4,22 +4,30 @@
 [id='requirements-for-api-provider-integrations_{context}']
 = Requirements for API provider integrations 
 
-After you specify an OpenAPI 2.0 schema for your API provider 
-integration, you can update the schema as needed while you define
+After you specify an OpenAPI 2.0 document for your API provider 
+integration, you can update the document as needed while you define
 the execution flows for the API operations. To do this, click
 *View/Edit API Definition* in the upper right of a page in
 which you are editing the API provider integration. This displays
-your OpenAPI schema in the Apicurito editor. You can edit the 
-schema and save it. Any updates you make are reflected in
+your OpenAPI document in the Apicurito editor. You can edit the 
+document and save it. Any updates you make are reflected in
 {prodname}.
 
-To keep your OpenAPI schema synchronized between the Apicurito 
-editor and the {prodname} integration editor, your OpenAPI schema 
+To keep your OpenAPI document synchronized between the Apicurito 
+editor and the {prodname} integration editor, your OpenAPI document 
 must define a unique `operationId` property for each defined 
-operation. 
+operation. If you do not assign an `operationId` property then
+{prodname} generates one for each operation.
 
-An OpenAPI schema for an API provider integration cannot have cyclic 
+In each operation's definition, you can supply a JSON schema that
+defines the operation's request and response. When you do then
+{prodname} uses the JSON schema:
+
+* As the basis for the operation's input and output data shapes
+* To display operation fields in the data mapper
+
+A JSON schema for an API provider integration operation cannot have cyclic 
 schema references. 
 For example, a JSON schema that specifies a request or response 
 body cannot reference itself as a whole nor reference any part 
-of itself through any number of intermediate schemas.
+of itself through any number of intermediate JSON schemas.
