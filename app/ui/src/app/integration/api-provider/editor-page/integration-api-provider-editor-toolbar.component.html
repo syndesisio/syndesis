@@ -111,7 +111,7 @@
               </button>
               <button
                 class="btn btn-default"
-                (click)="save()"
+                (click)="save([])"
                 *ngIf="!flowPageService.showDone"
                 [disabled]="
                   (currentFlowService.currentFlowErrors$ | async).length ||

@@ -36,6 +36,7 @@ export const INTEGRATION_SET_DATASHAPE = 'integration-set-datashape';
 export const INTEGRATION_SET_CONNECTION = 'integration-set-connection';
 export const INTEGRATION_SET_PROPERTY = 'integration-set-property';
 export const INTEGRATION_SAVE = 'integration-save';
+export const INTEGRATION_SAVED = 'integration-saved';
 
 // UI actions
 export const INTEGRATION_CANCEL_CLICKED = 'integration-cancel-clicked';
