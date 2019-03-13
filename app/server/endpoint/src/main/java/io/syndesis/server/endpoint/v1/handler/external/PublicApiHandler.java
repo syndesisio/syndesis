@@ -499,8 +499,10 @@ public class PublicApiHandler {
 
         // find current deployment
         final String id = integration.getId().get();
-        final IntegrationDeployment deployment = dataMgr.fetchByPropertyValue(IntegrationDeployment.class,
-                PROPERTY_INTEGRATION_ID, id).filter(d -> d.getTargetState() == IntegrationDeploymentState.Published).orElse(null);
+        final IntegrationDeployment deployment = dataMgr.fetchAllByPropertyValue(IntegrationDeployment.class, PROPERTY_INTEGRATION_ID, id)
+                .filter(d -> d.getTargetState() == IntegrationDeploymentState.Published)
+                .findFirst()
+                .orElse(null);
         if (deployment != null) {
             deploymentHandler.updateTargetState(id, deployment.getVersion(), targetState);
         } else {
