@@ -126,7 +126,7 @@ public class PublicApiHandlerTest {
                 .integrationId(Optional.of(INTEGRATION_ID))
                 .targetState(IntegrationDeploymentState.Published)
                 .build();
-        doAnswer(invocation -> Optional.of(deployment)).when(dataManager).fetchByPropertyValue(IntegrationDeployment.class,
+        doAnswer(invocation -> Stream.of(deployment)).when(dataManager).fetchAllByPropertyValue(IntegrationDeployment.class,
                 INTEGRATION_ID_PROPERTY, INTEGRATION_ID);
         when(deploymentHandler.update(any(), eq(INTEGRATION_ID))).thenReturn(deployment);
 
