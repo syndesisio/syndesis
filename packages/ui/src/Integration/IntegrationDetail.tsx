@@ -3,12 +3,14 @@ import * as React from 'react';
 import { Container } from '../Layout';
 import { IntegrationStepsHorizontalView } from './IntegrationStepsHorizontalView';
 
+/***
 export interface IntegrationDetailProps {
   activity: JSX.Element;
   details: JSX.Element;
   integrationName: string;
   metrics: JSX.Element;
 }
+**/
 
 export class IntegrationDetail extends React.PureComponent {
   public render() {
