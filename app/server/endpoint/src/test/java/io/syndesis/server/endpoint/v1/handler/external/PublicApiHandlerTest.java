@@ -17,6 +17,7 @@ package io.syndesis.server.endpoint.v1.handler.external;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Collections;
 import java.util.Date;
@@ -71,7 +72,7 @@ public class PublicApiHandlerTest {
     private static final String INTEGRATION_ID = "integration-id";
     private static final String INTEGRATION_NAME = "integration-name";
     private static final String ENVIRONMENT = "environment";
-    public static final String ENVIRONMENT2 = "new-" + ENVIRONMENT;
+    private static final String ENVIRONMENT2 = "new-" + ENVIRONMENT;
     private static final String NAME_PROPERTY = "name";
     private static final String INTEGRATION_ID_PROPERTY = "integrationId";
 
@@ -134,7 +135,7 @@ public class PublicApiHandlerTest {
     }
 
     @Test
-    public void testGetReleaseEnvironments() throws Exception {
+    public void testGetReleaseEnvironments() {
         final List<String> environments = handler.getReleaseEnvironments();
 
         assertThat(environments, is(notNullValue()));
@@ -182,8 +183,13 @@ public class PublicApiHandlerTest {
     }
 
     @Test(expected = ClientErrorException.class)
-    public void testInvalidTagForRelease() throws Exception {
+    public void testEmptyTagForRelease() {
         handler.putTagsForRelease(INTEGRATION_ID, Collections.singletonList(""));
+    }
+
+    @Test(expected = ClientErrorException.class)
+    public void testInvalidTagForRelease() {
+        handler.putTagsForRelease(INTEGRATION_ID, Collections.singletonList("%test}"));
     }
 
     @Test
@@ -257,7 +263,6 @@ public class PublicApiHandlerTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void importResources() throws Exception {
         // export integration
         final Response response = handler.exportResources(ENVIRONMENT, false);
@@ -269,7 +274,7 @@ public class PublicApiHandlerTest {
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         ((StreamingOutput)response.getEntity()).write(bytes);
         formInput.setData(new ByteArrayInputStream(bytes.toByteArray()));
-        formInput.setProperties(new ByteArrayInputStream("test-connection.prop=value".getBytes("UTF-8")));
+        formInput.setProperties(new ByteArrayInputStream("test-connection.prop=value".getBytes(StandardCharsets.UTF_8)));
         formInput.setEnvironment(ENVIRONMENT);
         formInput.setDeploy(Boolean.TRUE);
 
@@ -282,7 +287,6 @@ public class PublicApiHandlerTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void importResourcesNewEnvironment() throws Exception {
         // export integration
         final Response response = handler.exportResources(ENVIRONMENT, false);
@@ -294,7 +298,7 @@ public class PublicApiHandlerTest {
         final ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         ((StreamingOutput)response.getEntity()).write(bytes);
         formInput.setData(new ByteArrayInputStream(bytes.toByteArray()));
-        formInput.setProperties(new ByteArrayInputStream("test-connection.prop=value".getBytes("UTF-8")));
+        formInput.setProperties(new ByteArrayInputStream("test-connection.prop=value".getBytes(StandardCharsets.UTF_8)));
         formInput.setEnvironment(ENVIRONMENT2);
         formInput.setDeploy(Boolean.TRUE);
 
@@ -310,7 +314,7 @@ public class PublicApiHandlerTest {
 
     }
 
-    public SecurityContext getSecurityContext() {
+    private SecurityContext getSecurityContext() {
         final SecurityContext security = mock(SecurityContext.class);
         final Principal principal = mock(Principal.class);
         when(security.getUserPrincipal()).thenReturn(principal);
