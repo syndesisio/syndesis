@@ -15,6 +15,10 @@
     "virtualizationDescriptionDisplay": "Description",
     "virtualizationNameDisplay": "Virtualization Name",
     "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",
-    "virtualizationsPageTitle": "$t(shared:DataVirtualizations)"
+    "virtualizationsPageTitle": "$t(shared:DataVirtualizations)",
+    "virtualizationDetailPageTitle": "$t(shared:DataVirtualization)",
+    "views": "views)",
+    "sqlClient": "SQL Client)",
+    "metrics": "metrics)"
   }
 }

@@ -1,5 +1,6 @@
+import * as H from 'history';
 import {
-  Button,
+  //  Button,
   DropdownKebab,
   ListView,
   ListViewIcon,
@@ -9,6 +10,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
+import { ButtonLink } from '../../Layout';
 import { DeleteConfirmationDialog } from '../../Shared';
 import {
   BUILDING,
@@ -23,14 +25,16 @@ import { VirtualizationPublishStatusDetail } from './VirtualizationPublishStatus
 
 export interface IVirtualizationListItemProps {
   currentPublishedState: VirtualizationPublishState;
+  detailsPageLink: H.LocationDescriptor;
   i18nCancelText: string;
   i18nDelete: string;
   i18nDeleteModalMessage: string;
   i18nDeleteModalTitle: string;
   i18nDraft: string;
+  i18nError: string;
+  i18nDraftTip: string;
   i18nEdit: string;
   i18nEditTip?: string;
-  i18nError: string;
   i18nExport: string;
   i18nPublished: string;
   i18nPublishLogUrlText: string;
@@ -63,7 +67,6 @@ export class VirtualizationListItem extends React.Component<
     };
     this.handleCancel = this.handleCancel.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleEdit = this.handleEdit.bind(this);
     this.handleExport = this.handleExport.bind(this);
     this.handleUnpublish = this.handleUnpublish.bind(this);
     this.handlePublish = this.handlePublish.bind(this);
@@ -100,7 +103,6 @@ export class VirtualizationListItem extends React.Component<
       this.props.onEdit(this.props.virtualizationName);
     }
   }
-
   public handleExport() {
     if (this.props.virtualizationName) {
       this.props.onExport(this.props.virtualizationName);
@@ -164,9 +166,9 @@ export class VirtualizationListItem extends React.Component<
                 />
               )}
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
-                <Button bsStyle="default" onClick={this.handleEdit}>
+                <ButtonLink href={this.props.detailsPageLink} as={'primary'}>
                   {this.props.i18nEdit}
-                </Button>
+                </ButtonLink>
               </OverlayTrigger>
               <DropdownKebab
                 id={`virtualization-${
