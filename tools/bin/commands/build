@@ -367,8 +367,8 @@ extract_modules() {
 order_modules() {
     # Fix order
     local modules="$1"
-    local toplevel
-    local submodules
+    local toplevel=""
+    local submodules=""
 
     for module in ${modules}; do
       # Check if module is one of our top level modules
