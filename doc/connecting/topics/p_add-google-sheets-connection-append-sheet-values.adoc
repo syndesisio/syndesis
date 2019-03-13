@@ -5,19 +5,17 @@
 = Appending data to a sheet
 
 You can append data to a sheet 
-in the middle of the integration or to finish the integration.
-To do this, add a Google Sheets connection to the middle of an integration
-or as the integration's finish connection.
+in the middle of a flow or to finish a simple integration.
+To do this, add a Google Sheets connection to the middle of a flow
+or as a simple integration's finish connection.
 
 .Prerequisites
 * You created a Google Sheets connection that is authorized to access the 
 Google spreadsheet in which you want to append data.
 * You have access to the ID for the spreadsheet in which
 you want to append data. 
-* You are creating or editing an integration and {prodname} is prompting you
-to choose the finish connection or to select the step that you want to add
-to the middle of the integration.
-
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
 . Click a Google Sheets connection that is authorized to access
@@ -29,7 +27,7 @@ the spreadsheet in which you want to append data.
 +
 * Enter the ID of the spreadsheet that you want to append values to. 
 * Leave the field blank. In this case, after you add this connection 
-to the integration, you must add a data mapper step
+to the flow, you must add a data mapper step
 before this connection. In the data mapper step, map the spreadsheet ID from 
 a previous connection to this connection. The previous connection must 
 access the spreadsheet that you want to append data to in this connection.
@@ -62,7 +60,7 @@ which defaults to *User entered*.
 * *Raw* does nothing. Google Sheets inserts the input data as is.
 * *User entered* enables automatic conversion of recognizable data. 
 
-.. Click *Done* to add the connection to the integration.
+.. Click *Done* to add the connection to the flow.
 The connection appears in the integration visualization flow in the
 location where you added it.
 +
@@ -70,12 +68,12 @@ The values that you specify to configure the *Append values to a sheet*
 action determine the fields that the data mapper displays for mapping
 to or from this connection.
 
-. If you want to add any other connections to the integration, add them now
+. If you want to add any other connections to the flow, add them now
 and then return to these instructions. 
-. After the integration has all desired connections, 
+. After the flow has all desired connections, 
 in the integration visualization flow, click the plus sign that is
 just before the Google Sheets connection that appends data to a sheet.
-. Click the *Data Mapper* card to add a data mapping step to the integration. 
+. Click the *Data Mapper* card to add a data mapping step to the flow. 
 
 . In the data mapper: 
 

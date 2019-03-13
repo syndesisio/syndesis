@@ -10,7 +10,7 @@ MQ Telemetry Transport (MQTT) is a lightweight,
 machine-to-machine, internet of things, connectivity protocol. 
 In an integration, you can obtain messages from or publish messages to
 an MQTT broker. To do this, create a connection to the MQTT broker
-of interest and then add that connection to an integration.
+of interest and then add that connection to an integration flow.
 Details are in the following topics:
 
 * xref:creating-mqtt-connections_{context}[]

@@ -2,10 +2,10 @@
 // as_connecting-to-amqp.adoc
 
 [id='adding-amqp-connection-finish_{context}']
-= Finishing an integration by publishing AMQP messages
+= Publishing AMQP messages to finish an integration
 
 To finish an integration by publishing messages to an AMQP broker,
-add an AMQP connection as the finish connection. 
+add an AMQP connection as the integration's finish connection. 
 
 .Prerequisites
 * You created an AMQP connection to the broker that you want to publish
@@ -18,7 +18,7 @@ messages to.
 . On the *Choose a Finish Connection* page, click the AMQP connection that
 you want to use to finish the integration. 
 . On the *Choose an Action* page, click *Publish messages* to
-publish messages to the queue or topic you specify. 
+publish messages to the queue or topic that you specify. 
 . In the *Destination Name* field, enter the name of the queue or 
 topic to send messages to. 
 . For the *Destination Type*, accept *Queue* or select *Topic*. 
@@ -63,5 +63,4 @@ you hover over the step that processes this type.
 . Click *Done*. 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears at the end of the integration flow. 

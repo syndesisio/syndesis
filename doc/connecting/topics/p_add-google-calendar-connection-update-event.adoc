@@ -5,9 +5,9 @@
 = Updating an event in a Google calendar 
 
 In an integration, you can update an event in a Google calendar
-in the middle of the integration or to finish the integration.  
-To do this, add a Google Calendar connection to the middle of an integration 
-or as the integration's finish connection. 
+in the middle of a flow or to finish a simple integration.  
+To do this, add a Google Calendar connection to the middle of a flow 
+or as a simple integration's finish connection. 
 
 [IMPORTANT]
 ====
@@ -23,11 +23,10 @@ insert a data mapper step between the two Google Calendar connections.
 * A Google Calendar connection is available and this connection
 is authorized to access the Google calendar that has the event that
 you want to update.
-* In the integration, there is an earlier connection to Google Calendar 
+* In the flow, there is an earlier connection to Google Calendar 
 and that connection obtains the event that you want to update. 
-* You are creating or editing an integration and {prodname} is prompting you 
-to add a finish connection or select the connection that you want to add
-in the middle of an integration. 
+* You are creating or editing a flow and {prodname} is prompting you 
+to choose a step. Or, {prodname} is prompting you to choose a finish connection.  
 
 .Procedure
 . Click a Google Calendar connection that is authorized to access
@@ -40,7 +39,7 @@ the calendar that has the event that you want to update.
 Do not enter content in an event field when you want the content 
 in that field to remain unchanged. 
 
-. Click *Done* to add the connection to the integration. 
+. Click *Done* to add the connection to the flow. 
 The connection appears in the integration visualization flow in the 
 location where you added it. 
 . In the integration visualization flow, click the plus sign that is 

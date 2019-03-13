@@ -4,12 +4,12 @@
 [id='add-google-sheets-connection-add-pivot-table_{context}']
 = Adding a pivot table to a sheet
 
-In the middle of an integration, or to finish an integration, 
+In the middle of a flow, or to finish a simple integration, 
 you can add a pivot table to a Google Sheets spreadsheet.
 A pivot table lets you aggregate, sort, or apply a function to 
 spreadsheet data and display the results in the same spreadsheet. 
-To add a pivot table, add a Google Sheets connection to the middle of an integration
-or as the integration's finish connection. Then add a data mapping
+To add a pivot table, add a Google Sheets connection to the middle of a flow 
+or as a simple integration's finish connection. Then add a data mapping
 step before the connection. In the data mapping step, you set 
 options that determine the location, properties, and content of the 
 pivot table. 
@@ -21,15 +21,14 @@ added in a future release. As a workaround, you can add multiple
 Google Sheets connections that add pivot tables based on the same
 source spreadsheet. 
 
-
 .Prerequisites
 * You created a Google Sheets connection that is authorized to access
 the Google spreadsheet that you want to add a pivot table to.
 * You have access to the ID for the spreadsheet that contains the source
 data for the pivot table. 
-* You are creating or editing an integration and {prodname} is prompting you
-to choose the finish connection or to select the step that you want to add
-to the middle of the integration.
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step.  Or, {prodname} is prompting you to choose the finish
+connection for a simple integration. 
 
 .Procedure
 . Click a Google Sheets connection that is authorized to access
@@ -39,15 +38,15 @@ the spreadsheet that you want to add the pivot table to.
 *SpreadsheetId* field, do one of the following: 
 +
 * Enter the ID of the spreadsheet that you want to add a pivot table to. 
-* Leave the field blank. In the data mapper step that will be just
-before this connection, map the spreadsheet ID from 
+* Leave the field blank. In the data mapper step that you will add just
+before this connection, you will map the spreadsheet ID from 
 a previous connection to this connection. The previous connection must 
 access the spreadsheet that you want to add a pivot table to in this connection.
 
-. Click *Done* to add the connection to the integration.
+. Click *Done* to add the connection to the flow.
 The connection appears in the integration visualization flow in the
 location where you added it.
-. If you want to add any other connections to this integration, add them 
+. If you want to add any other connections to this flow, add them 
 now. Then return to these instructions. 
 . In the integration visualization flow, click the plus sign that is
 just before the connection that adds a pivot table to a sheet.
@@ -78,16 +77,21 @@ table can be in two different sheets in the same spreadsheet but they
 cannot be in two different spreadsheets. 
 .. Identify the sheet to add the pivot table to by mapping an integer to the 
 *sheetId* field. The default is `0`, which identifies the first sheet
-in the spreadsheet, 
+in the spreadsheet. 
 For subsequent sheets, the sheet ID is at the end of the URL when the 
-sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
+sheet is visible in a browser. For example, at the end of the following URL, 
+you can `gid=206589330`: 
++
 `\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
++
+This indicates that the sheet ID is `206589330` and that is the value 
+that you would map to *sheetId*. 
 
 .. Identify the sheet that provides the data for generating the pivot table by mapping 
-an integer to the target *sourceSheetId* field.  
+its integer sheet ID to the target *sourceSheetId* field.  
 If you do not map a value to *sourceSheetId*, 
 the connection uses the *sheetId* value, or `0` if no value is mapped
-to *sheetId*. 
+to *sheetId*. `0` identifies the first sheet in the spreadsheet.
 .. Set the source data range for generating the pivot table 
 by mapping an A1 notation value to the target *sourceRange* field. 
 For example, *A2:D5*. 

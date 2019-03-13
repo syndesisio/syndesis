@@ -8,9 +8,7 @@ To log information about the messages that an integration processes,
 you can add one or more log steps to an integration and/or you can
 add one or more log connections to an integration. 
 
-A log connection cannot be an integration’s start connection. 
-Typically, a log connection is most useful as an integration’s 
-finish connection. 
+A log connection cannot be a simple integration’s start connection. 
 
 The following
 table indicates whether a log step or a log connection 
@@ -44,8 +42,8 @@ can do what you want.
 |image:images/CheckMark.png[Yes]
 |
 
-|Finish an integration.
-|
+|Finish a simple integration.
+|image:images/CheckMark.png[Yes]
 |image:images/CheckMark.png[Yes]
 
 
@@ -56,5 +54,5 @@ can do what you want.
 |====
 
 .Additional resources
-* link:{LinkFuseOnlineIntegrationGuide}#add-log-step_create[Add a log step to an integration] in {NameOfFuseOnlineIntegrationGuide}.
-* link:{LinkFuseOnlineConnectorGuide}#add-log-connection_connect-to-log[Add a log connection to an integration]
+* link:{LinkFuseOnlineIntegrationGuide}#add-log-step_create[Adding a log step to an integration] in {NameOfFuseOnlineIntegrationGuide}.
+* link:{LinkFuseOnlineConnectorGuide}#add-log-connection_connect-to-log[Adding a log connection to an integration]

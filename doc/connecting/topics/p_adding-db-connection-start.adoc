@@ -22,7 +22,7 @@ database connection that you want to use to start an integration.
 * *Periodic SQL invocation* obtains data by periodically invoking the
 SQL query you specify.
 * *Periodic stored procedure invocation* obtains data by periodically invoking
-the stored procedure you specify or select.
+the stored procedure that you specify or select.
 . If you selected *Periodic SQL invocation*, in the *Query* field,
 enter a SQL `SELECT` statement to obtain one or more records. For 
 example: `*SELECT * from my_db_table*`.

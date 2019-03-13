@@ -23,5 +23,5 @@ link:{LinkFuseOnlineConnectorGuide}#create-database-connection[Creating database
 
 . In an integration, you add the connection to your database. 
 See 
-link:{LinkFuseOnlineConnectorGuide}#adding-db-connection-start_db[Start an integration by accessing a database] or 
-link:{LinkFuseOnlineConnectorGuide}#adding-db-connection-finish-middle_db[Access a database in the middle of an integration or to finish an integration]. 
+link:{LinkFuseOnlineConnectorGuide}#adding-db-connection-start_db[Starting an integration by accessing a database] or 
+link:{LinkFuseOnlineConnectorGuide}#adding-db-connection-finish-middle_db[Accessing a database in the middle of an integration or to finish an integration]. 

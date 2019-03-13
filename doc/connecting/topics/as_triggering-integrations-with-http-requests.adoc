@@ -6,7 +6,7 @@
 = Triggering integration execution with an HTTP request (Webhook)
 :context: webhook
 
-You can trigger execution of an integration by sending an HTTP `GET` or `POST`
+You can trigger execution of a simple integration by sending an HTTP `GET` or `POST`
 request to an HTTP endpoint that {prodname} exposes. The following topics
 provide details: 
 

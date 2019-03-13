@@ -4,34 +4,32 @@
 [id='adding-sf-connections_{context}']
 = Adding a Salesforce connection to an integration
 
-In an integration, you can connect to Salesforce to start or finish the
-integration, or in the middle of an integration. To connect to Salesforce,
+In an integration, you can connect to Salesforce in the middle of 
+a flow or to start or finish a simple integration. To do this,
 add a Salesforce connection to the integration.
 
 .Prerequisites
 * You created a Salesforce connection. 
-* You are creating or updating an integration. If you need to, see the 
-link:{LinkFuseOnlineIntegrationGuide}#procedure-for-creating-an-integration_create[general procedure for creating an integration]
-or see link:{LinkFuseOnlineIntegrationGuide}#updating-integrations_manage[updating integrations].
-* {prodname} is prompting you to select a start connection, a
-finish connection or a middle connection.
+* You are creating or updating an integration. 
+* {prodname} is prompting you to choose a start connection, or to choose a 
+finish connection, or to choose a step.
 
 .Procedure
 
-. On the page that displays available connections, click the Salesforce
-connection that you want to add to the integration. When the integration
-uses the connection you select to connect to Salesforce, {prodname}
+. Click the Salesforce
+connection that you want to add to the flow. When the integration
+uses the connection that you select to connect to Salesforce, {prodname}
 uses the credentials defined in that connection.
 
 . Click the action that you want the selected connection to perform.  Each
 Salesforce connection
-that you add to an integration performs only the action you choose.
+that you add to a flow performs only the action you choose.
 
 . Specify the Salesforce object that the action operates on, for example, it
 might be a contact, lead or price book entry. Click in the *Object* field
 to select from a list of Salesforce objects or enter the name of the object.
 
-. Click *Done* to add the connection to the integration.
+. Click *Done* to add the connection to the flow.
 
 .Result
 The connection appears in the integration flow 

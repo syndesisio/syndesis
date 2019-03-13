@@ -5,9 +5,9 @@
 = Sending an email from a Gmail account
 
 In an integration, you can send an email from a Gmail account either
-in the middle of the integration or to finish the integration.  
-To do this, add a Gmail connection to the middle of an integration or as the 
-integration's finish connection. 
+in the middle of a flow or to finish a simple integration.  
+To do this, add a Gmail connection to the middle of a flow or as 
+a simple integration's finish connection. 
 
 .Prerequisites
 
@@ -15,25 +15,13 @@ integration's finish connection.
 * You are familiar with the
 link:{LinkFuseOnlineConnectorGuide}#alternative-for-populating-email-to-send_gmail[alternatives for populating an email to send]
 and you have a plan for populating such emails. 
+* {prodname} is prompting you to choose a step or to choose the finish 
+connection for a simple integration. 
  
 .Procedure
-
-. Start creating the integration.
-. Add and configure the start connection.
-. On the *Choose a Finish Connection* page, do one of the following:
-+
-* To finish an integration by sending an email from a Gmail
-account, click the Gmail connection that is authorized to access
-the Gmail account that you want to send the email from. 
-* To send an email in the middle of an integration:
-+
-.. Click the connection that you want to use to finish the integration. 
-.. Configure that connection. 
-.. When the finish connection is part of the integration, in the left panel, 
-hover over the plus sign where you want to add a Gmail connection and click
-*Add a connection*. 
-.. Click the Gmail connection that you want to use
-to send an email in the middle of an integration. 
+ 
+. Click the Gmail connection that you want to use
+to send an email. 
 
 . On the *Choose an Action* page, click *Send Email*. 
 . On the *Configure Send Email* page, do one of the following:
@@ -63,7 +51,7 @@ blank in the action configuration. Enter values in other action fields as needed
 A value that you specify in a *Send Email* action configuration field
 has precedence over a value that is mapped from a previous step. 
 
-. Click *Done* to add the connection to the integration. 
+. Click *Done* to add the connection to the flow. 
 
 .Result and next steps
 

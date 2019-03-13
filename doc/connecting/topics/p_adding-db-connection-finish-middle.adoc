@@ -4,26 +4,25 @@
 [id='adding-db-connection-finish-middle_{context}']
 = Accessing a database in the middle or to complete an integration
 
-To finish an integration by accessing a database, add a database
-connection as the finish connection. To access 
-a database in the middle of an integration, add a database connection
-between the start and finish connections.
+In an integration, you can access a database in the 
+middle of a flow or to finish a simple integration. To do this, add 
+a database connection to the middle of a flow or as a simple 
+integration's finish connection. 
 
 .Prerequisites
 * You created a database connection.
-* You are creating or editing an integration.
-* You are on the {prodname} *Choose a Finish Connection* page or the
-*Choose a Connection* page.
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
 
-. Click the database connection for the database you want to access.
+. Click the database connection for the database that you want to access.
 . On the *Choose an Action* page, click one of the following:
 +
 * *Invoke SQL* operates on data by executing the
 SQL statement you specify.
 * *Invoke stored procedure* operates on data by invoking
-the stored procedure you specify or select.
+the stored procedure that you specify or select.
 . If you selected *Invoke SQL*, in the *SQL Statement* field:
 ** For a middle connection, enter a SQL `SELECT` statement that obtains
 one or more records or enter a SQL `INSERT`, `UPDATE`, or
@@ -52,12 +51,12 @@ in queries.
 checking that a specified SQL query is syntactically correct and
 confirming that the query or stored procedure target data exists. If
 verification is successful then {prodname} adds the connection to
-the integration. If verification fails then {prodname} displays a message
+the flow. If verification fails then {prodname} displays a message
 about the problem. Update your input as needed and try again.
 
 .Specifying parameters in queries
 
-When you access a database in the middle of an integration or to complete
+When you access a database in the middle of a flow or to finish
 an integration, you can specify placeholder parameters in the SQL query 
 or there can be placeholders in the stored procedure. For example: 
 
@@ -68,7 +67,7 @@ DELETE FROM TODO WHERE task LIKE :#param_3
 ----
 
 To specify the values of these placeholders, add a data mapping step
-to your integration before the database connection. In the data mapping
+to the flow before the database connection. In the data mapping
 step, map the appropriate source data fields to the target data
 fields, for example, map source data to the `:#param_1`, `:#param_2`, and
 `:#param_3` target fields. See
