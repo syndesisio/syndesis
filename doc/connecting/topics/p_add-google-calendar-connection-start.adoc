@@ -5,7 +5,8 @@
 = Triggering an integration when polling returns an event from a Google calendar
 
 To trigger execution of an integration upon obtaining events from 
-a Google Calendar that you specify, add a Google Calendar connection to an integration as 
+a Google Calendar that you specify, add a Google Calendar connection to a 
+simple integration as 
 its start connection. When the integration is running, the Google Calendar
 connection checks the Google calendar for events at intervals that you
 control. When the connection finds events that comply with the way that

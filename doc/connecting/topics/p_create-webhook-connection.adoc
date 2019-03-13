@@ -5,7 +5,7 @@
 = Using the Webhook connection 
 
 {prodname} provides a Webhook connection that you can use in 
-any number of integrations as the start connection. Each time you 
+any number of simple integrations as the start connection. Each time you 
 add this Webhook connection to an integration, {prodname} provides a new 
 random token for use with that integration. You paste this token at the 
 end of your `GET` or `POST` request. You do not need to create  

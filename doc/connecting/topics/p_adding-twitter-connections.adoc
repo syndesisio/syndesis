@@ -2,7 +2,7 @@
 // as_connecting-to-twitter.adoc
 
 [id='adding-twitter-connections_{context}']
-= Adding a Twitter connection to an integration
+= Adding a Twitter connection to trigger integration execution
 
 In an integration, a connection to Twitter can trigger execution of
 an integration when a tweet contains your Twitter handle or when 
@@ -16,7 +16,7 @@ prompting you to choose the start connection.
 
 .Procedure
 
-. On the page that displays available connections, click the Twitter
+. Click the Twitter
 connection that you want to add to the integration. When the integration
 uses the selected connection to connect to Twitter, {prodname} uses the
 credentials defined in that connection.
@@ -24,7 +24,7 @@ credentials defined in that connection.
 . Click the action that you want the selected connection to perform.
 A Twitter connection that you add to an integration performs only
 the action you choose.
-
++
 *  *Mention* triggers execution of the integration when a tweet contains
 your handle.
 * *Search* triggers execution of the integration when a tweet contains
@@ -37,5 +37,4 @@ how often to search and keywords to search for.
 . Click *Done* to add the connection to the integration.
 
 .Result
-The connection appears in the integration flow 
-as the start connection. 
+The connection appears at the beginning of the integration flow. 

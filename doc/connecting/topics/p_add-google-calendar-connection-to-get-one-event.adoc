@@ -5,16 +5,16 @@
 = Obtaining a particular event from a Google calendar
 
 In an integration, you can obtain a particular Google calendar event
-in the middle of an integration. Obtaining a particular event is 
+in the middle of a follows. Obtaining a particular event is 
 useful, for example, when you want to:
 
 * Update the event in a subsequent Google Calendar connection.
 * Announce the event by using a subsequent Twitter connection. 
 
-To obtain one event, add a Google Calendar connection in the middle of 
-an integration.
+To obtain one event, add a Google Calendar connection to the middle of 
+a flow.
 
-NOTE: In this release, while obtaining a specific event in an integration's 
+NOTE: In this release, while obtaining a specific event in a simple integration's 
 finish connection is supported, it is not particularly useful. This is 
 expected to change in a future release.
 
@@ -23,9 +23,8 @@ expected to change in a future release.
 is authorized to access the Google calendar that has the event that
 that you want to get.
 
-* You are creating or editing an integration and {prodname} is prompting you 
-to select the connection that you want to add
-in the middle of an integration. 
+* You are creating or editing a flow and {prodname} is prompting you 
+to choose a step. 
 
 .Procedure
 
@@ -49,6 +48,6 @@ image:shared/images/ThreeVerticalDotsKebab.png[Options] and select
 follows *`eid=`*. For example, an event ID looks something like this: 
 `p1pva2a4t504gbsha12di9ch6k_20181107T150000Z*`.
 
-. Click *Done* to add the connection to the integration. 
-The connection appears in the integration flow in the location 
+. Click *Done* to add the connection to the flow. 
+The connection appears in the flow in the location 
 where you added it. 

@@ -2,10 +2,10 @@
 // as_connecting-to-amazon-s3.adoc
 
 [id='adding-s3-connection-finish_{context}']
-= Finishing an integration by adding data to Amazon S3
+= Adding data to Amazon S3 to finish an integration
 
 To finish an integration by copying data to Amazon S3, 
-add an Amazon S3 connection as the finish connection in an integration. 
+add an Amazon S3 connection as a simple integration's finish connection. 
 
 .Prerequisite
 You created an Amazon S3 connection.
@@ -18,7 +18,8 @@ You created an Amazon S3 connection.
 you want to use to finish the integration. 
 
 . Click the action that you want the connection to perform:
-.. *Copy Object* adds one or more objects to the bucket. 
++
+* *Copy Object* adds one or more objects to the bucket. 
 +
 To add one file to the bucket, you can enter its name in the *File Name* field.
 +
@@ -30,7 +31,7 @@ If you used the poll action
 to obtain multiple files and you specify a file name then the *Copy Object*
 action adds only the last file that was received from the poll action. 
 
-.. *Delete Object* deletes an object from the bucket. In the
+* *Delete Object* deletes an object from the bucket. In the
 *File Name* field, specify the name of the object that you want to delete.
 If the specified file is not in the bucket, the integration continues 
 with no error. 
@@ -73,5 +74,4 @@ distinguish this type. This description appears in the data mapper when
 you hover over the step that processes this type. 
 . Click *Done*. 
 
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears at the end of the integration flow. 

@@ -4,21 +4,20 @@
 [id='add-slack-connection-middle-finish_{context}']
 = Adding a Slack connection to send a message to a Slack channel or user
 
-In an integration, you can send a message to a Slack channel or Slack user to
-finish an integration or in the middle of an integration. 
+In an integration, you can send a message to a Slack channel or Slack user
+in the middle of a flow or to finish a simple integration. To do this, add 
+a Slack connection to the middle of a flow or as a simple integration's 
+finish connection.   
 
 .Prerequisites
 
 * You created a Slack connection.
-* You are creating or editing an integration. If you are creating an integration, then
-{prodname} might be prompting you to choose a finish connection. 
-To add a middle connection, hover over the plus
-sign in the left panel in the location where you want to add the
-connection and select *Add a connection*. 
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
 
-. Click the Slack connection that you want to add to the integration. 
+. Click the Slack connection that you want to add to the flow. 
 . Select the action that you want the connection to perform.
 +
 * Click *Username* to send a message to one user. To configure this action,
@@ -28,9 +27,9 @@ to.
 this action, in the *Channel* field, specify the channel to publish 
 the message to. 
 
-. Click *Done* to add the connection to the integration. 
-. Optionally, add additional connections to the integration. Whether 
-additional connections are needed depends on what you want the integration
+. Click *Done* to add the connection to the flow. 
+. Optionally, add additional connections to the flow. Whether 
+additional connections are needed depends on what you want the flow
 to do. The important point is to add all connections before you 
 continue. 
 . Add a data mapping step just before the Slack connection that you added

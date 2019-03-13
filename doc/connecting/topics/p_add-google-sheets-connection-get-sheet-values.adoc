@@ -5,7 +5,7 @@
 = Triggering an integration when polling returns spreadsheet data
 
 To trigger execution of an integration upon obtaining data from a
-Google Sheets spreadsheet, add a Google Sheets connection to an integration 
+Google Sheets spreadsheet, add a Google Sheets connection to a simple integration 
 as its start connection. When the integration is running, the Google Sheets 
 connection polls the spreadsheet at the interval that you specified, obtains
 the data that you identified, and passes the data to the next step in the 
@@ -65,17 +65,22 @@ where each column object contains a value for each desired row.
 select *Yes*. A setting of *No* configures the action to
 return data as a collection of values. That is,
 the connection passes a collection of row objects or a collection of
-column objects to the next step in the integration. 
+column objects to the next step in the flow. 
 Select *Yes* to enable the connection to split the returned data 
 according to the setting of *Major Dimension*. For example, if 
 *Major Dimension* is set to *Rows* then the connection returns row
-objects. Each row object triggers a separate execution of the integration. 
-That is, {prodname} executes the integration once for each returned row
+objects. Each row object triggers a separate execution of the flow. 
+That is, {prodname} executes the flow once for each returned row
 object. For example, if the poll returns 5 rows then {prodname} executes
-the integration 5 times.
+the flow 5 times.
 +
 {prodname} also provides discrete *Split* and *Aggregate* steps, which 
-you can add to an integration. 
+you can add to a flow. 
+If you want to process individual objects in one or more steps and 
+then aggregate the row or column objects, do not split the Google Sheets 
+connection result. Instead, accept the default, *No*, and then add a 
+split step to the flow after this connection. A split step is 
+required if you want an aggregate step in the flow. 
 
 .. In the *Delay* field, accept the default of 30 seconds or
 specify how often you want the connection to obtain spreadsheet data.

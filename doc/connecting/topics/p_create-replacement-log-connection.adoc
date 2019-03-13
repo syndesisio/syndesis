@@ -4,7 +4,7 @@
 [id='create-replacement-log-connection_{context}']
 = Creating a replacement log connection
 
-{prodname} provides a log connection that you can add to an integration to
+{prodname} provides a log connection that you can add to a flow to
 log information about each message that an integration processes. If you 
 inadvertently delete the provided log connection, then you can create a 
 new log connection from the *Log* connector that {prodname} provides.  

@@ -2,7 +2,7 @@
 // as_connecting-to-dropbox.adoc
 
 [id='adding-dropbox-connection-start_{context}']
-= Starting an integration by obtaining files from Dropbox
+= Obtaining files from Dropbox to trigger integration execution
 
 To start an integration by downloading files from Dropbox, 
 add a Dropbox connection as the start connection.
@@ -61,5 +61,4 @@ you hover over the step that processes this type.
 . Click *Done*. 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears at the beginning of the integration flow. 
