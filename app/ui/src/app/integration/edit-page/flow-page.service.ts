@@ -8,6 +8,8 @@ import {
   INTEGRATION_SAVE,
   INTEGRATION_CANCEL_CLICKED,
   INTEGRATION_DONE_CLICKED,
+  INTEGRATION_UPDATED,
+  INTEGRATION_SAVED,
 } from './edit-page.models';
 
 @Injectable()
@@ -22,13 +24,23 @@ export class FlowPageService {
   constructor(
     public currentFlowService: CurrentFlowService,
     public router: Router
-  ) {}
+  ) {
+    this.currentFlowService.events.subscribe(event => {
+      // Reset this service's state when the integration is fetched
+      switch (event.kind) {
+        case INTEGRATION_UPDATED:
+        case INTEGRATION_SAVED:
+          this.initialize();
+          break;
+        default:
+      }
+    });
+  }
 
   initialize() {
     this.errorMessage = undefined;
     this.saveInProgress = false;
     this.publishInProgress = false;
-    this.showDone = false;
   }
 
   get integrationName() {
@@ -94,7 +106,6 @@ export class FlowPageService {
     if (
       !this.currentFlowService.validateFlowAndMaybeRedirect(route, this.router)
     ) {
-      this.initialize();
       return;
     }
     if (
@@ -104,45 +115,43 @@ export class FlowPageService {
       this.router.navigate(['..', 'integration-basics'], {
         relativeTo: route,
       });
-      this.initialize();
       return;
     }
     this.currentFlowService.events.emit({
       kind: INTEGRATION_SAVE,
       publish: this.publishInProgress,
       action: (i: Integration) => {
-        if (this.saveInProgress) {
-          this.initialize();
-          if (targetRoute) {
-            this.router.navigate(targetRoute, { relativeTo: route });
-          }
+        // If the user just clicked save and not publish
+        // go to the supplied route, ideally it should be
+        // the same page the user is on or the save or add
+        // step page
+        if (this.saveInProgress && targetRoute) {
+          this.router.navigate(targetRoute, { relativeTo: route });
           return;
         }
-        const target = i.id ? ['/integrations', i.id] : ['/integrations'];
+        // If we get an integration object and it has an ID
+        // set, go to the detail page, otherwise fall back
+        // to the list page
+        const target =
+          i && typeof i.id !== 'undefined'
+            ? ['/integrations', i.id]
+            : ['/integrations'];
         this.router.navigate(target);
       },
       error: reason => {
+        // reset state, then set the error
+        this.initialize();
         this.errorMessage = reason;
-        this.saveInProgress = false;
-        //
-        // Error occurred while publishing
-        // so reset publish progress flag
-        //
-        if (this.publishInProgress) {
-          this.publishInProgress = false;
-        }
       },
     });
   }
 
   save(route: ActivatedRoute, targetRoute?: Array<string>) {
-    this.initialize();
     this.saveInProgress = true;
     this.doSave(route, targetRoute);
   }
 
   publish(route: ActivatedRoute) {
-    this.initialize();
     this.publishInProgress = true;
     this.doSave(route);
   }
