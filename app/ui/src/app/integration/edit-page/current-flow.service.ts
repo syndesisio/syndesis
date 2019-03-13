@@ -42,6 +42,7 @@ import {
   INTEGRATION_SAVE,
   INTEGRATION_SET_DATASHAPE,
   INTEGRATION_SET_CONNECTION,
+  INTEGRATION_SAVED,
 } from '@syndesis/ui/integration/edit-page';
 import {
   setIntegrationProperty,
@@ -88,7 +89,7 @@ const category = getCategory('CurrentFlow');
 
 function executeEventAction(func: any, ...args: any[]) {
   if (func && typeof func === 'function') {
-    func.call(func, args);
+    func.call(func, ...args);
   }
 }
 
@@ -596,12 +597,13 @@ export class CurrentFlowService {
         const integration = prepareIntegrationForSaving(
           this.getIntegrationClone()
         );
+        // This gets executed when the save or publish operation succeeds
         const finishUp = (i: Integration, subscription: Subscription) => {
           this.dirty$.next(false);
           executeEventAction(event.action, i);
+          this.events.emit({ kind: INTEGRATION_SAVED });
           sub.unsubscribe();
         };
-
         const sub = this.integrationStore.updateOrCreate(integration).subscribe(
           (i: Integration) => {
             if (!this._integration.id) {
