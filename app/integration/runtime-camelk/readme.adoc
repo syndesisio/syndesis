@@ -6,7 +6,7 @@ In order to use the Syndesis Camel-k runtime (i.e. this project) at the moment a
 
 * Place the Json format of your integrations in a file with `.syndesis` extension (a very simple example cna be found at `src/test/resources/syndesis/integration/integration.syndesis`).
 * Have the Camel-K environment running somewhere (follow the instructions in https://github.com/apache/camel-k#installation[Camel-k readme], or use `-camel-k` option of `syndesis install` command) and `kamel` CLI in your path. It is IMPORTANT to run Camel-k install with the following options:
-  - `--repository https://origin-repository.jboss.org/nexus/content/groups/ea`
+  - `--repository https://repository.jboss.org/nexus/content/groups/ea`
   - `--camel-version  <camel.version>`
   - `--runtime-version <camel-k.version>`
 * Import the syndesis specific camel version generated Camel-k catalog in ocp:

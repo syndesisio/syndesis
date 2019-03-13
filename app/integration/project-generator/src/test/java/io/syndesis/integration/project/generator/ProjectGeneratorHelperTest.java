@@ -15,17 +15,9 @@
  */
 package io.syndesis.integration.project.generator;
 
-import java.util.Optional;
-
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Scheduler;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

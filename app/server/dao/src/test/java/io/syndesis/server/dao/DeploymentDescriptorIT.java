@@ -306,9 +306,9 @@ public class DeploymentDescriptorIT {
         final DefaultMavenArtifactProvider mavenArtifactProvider = new DefaultMavenArtifactProvider();
         mavenArtifactProvider.setLog(true);
 
-        mavenArtifactProvider.addMavenRepository("maven.central", "https://repo1.maven.org/maven2");
-        mavenArtifactProvider.addMavenRepository("redhat.ga", "https://maven.repository.redhat.com/ga");
-        mavenArtifactProvider.addMavenRepository("jboss.ea", "https://repository.jboss.org/nexus/content/groups/ea");
+        mavenArtifactProvider.addMavenRepository("central", "https://repo.maven.apache.org/maven2/");
+        mavenArtifactProvider.addMavenRepository("redhat-ga", "https://maven.repository.redhat.com/ga/");
+        mavenArtifactProvider.addMavenRepository("jboss-ea", "https://repository.jboss.org/nexus/content/groups/ea/");
 
         return mavenArtifactProvider;
     }

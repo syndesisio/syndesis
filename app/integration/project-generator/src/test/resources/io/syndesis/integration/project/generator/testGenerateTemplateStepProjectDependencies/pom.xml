@@ -28,18 +28,33 @@
 
   <repositories>
     <repository>
-      <id>jboss.ea</id>
-      <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+      <id>central</id>
+      <url>https://repo.maven.apache.org/maven2/</url>
     </repository>
     <repository>
-      <id>maven.central</id>
-      <url>https://repo1.maven.org/maven2</url>
+      <id>jboss-ea</id>
+      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
     </repository>
     <repository>
-      <id>redhat.ga</id>
-      <url>https://maven.repository.redhat.com/ga</url>
+      <id>redhat-ga</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
     </repository>
   </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>central</id>
+      <url>https://repo.maven.apache.org/maven2/</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>jboss-ea</id>
+      <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+    </pluginRepository>
+    <pluginRepository>
+      <id>redhat-ga</id>
+      <url>https://maven.repository.redhat.com/ga/</url>
+    </pluginRepository>
+  </pluginRepositories>
 
   <dependencyManagement>
     <dependencies>

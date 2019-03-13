@@ -228,11 +228,11 @@
 {{#Productized}}
       maven:
         repositories:
-          01_maven_central: https://repo1.maven.org/maven2
-{{#EarlyAccess}}          02_redhat_ea_repository: https://maven.repository.redhat.com/earlyaccess/all
-          03_jboss_ea: https://repository.jboss.org/nexus/content/groups/ea{{/EarlyAccess}}{{^EarlyAccess}}
-          02_redhat_ea_repository: https://maven.repository.redhat.com/ga/
-          03_jboss_ea: https://repository.jboss.org/{{/EarlyAccess}}
+          central: https://repo.maven.apache.org/maven2/
+{{#EarlyAccess}}          redhat-ea: https://maven.repository.redhat.com/earlyaccess/all/
+          jboss-ea: https://repository.jboss.org/nexus/content/groups/ea/{{/EarlyAccess}}{{^EarlyAccess}}
+          redhat-ga: https://maven.repository.redhat.com/ga/
+          jboss-ga: https://repository.jboss.org/{{/EarlyAccess}}
 {{/Productized}}      openshift:
         apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
         namespace: ${NAMESPACE}
