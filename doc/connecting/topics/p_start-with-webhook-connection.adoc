@@ -35,7 +35,7 @@ that helps you distinguish this data type.
 .. Click *Done*. 
 . Add the finish connection to the integration. 
 . Add any other needed connections.
+. Add any other needed steps.
 . Immediately after the start connection, add a data mapper step. 
-. Add any other needed steps. 
 . Click *Publish*, give the integration a name and optionally, a description, 
 and click *Publish* again. 

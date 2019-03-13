@@ -2,9 +2,9 @@
 // as_connecting-to-kafka.adoc
 
 [id='adding-kafka-connection-start_{context}']
-= Obtaining data from a Kafka broker
+= Obtaining data from a Kafka broker to trigger integration execution
 
-To trigger execution of an integration based on receiving data
+To trigger execution of an integration upon receiving data
 from a Kafka broker, add a Kafka connection as the start connection. When 
 the integration is running, the Kafka connection continuously watches for data
 in the Kafka topic that you specify. When the connection finds new data,
@@ -61,5 +61,4 @@ you hover over the step that processes this type.
 . Click *Done*. 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears at the beginning of the integration flow. 

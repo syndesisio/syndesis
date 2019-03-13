@@ -2,9 +2,9 @@
 // as_connecting-to-amq.adoc
 
 [id='adding-amq-connection-start_{context}']
-= Starting an integration based on receiving AMQ messages
+= Adding an AMQ connection to trigger integration execution upon receiving messages
 
-To trigger execution of an integration based on receiving a message
+To trigger execution of an integration upon receiving a message
 from a Red Hat AMQ broker, add a Red Hat AMQ connection as the start connection.
 
 .Prerequisite
@@ -18,7 +18,7 @@ messages from.
 . On the *Choose a Start Connection* page, click the Red Hat AMQ connection that
 you want to use to start the integration. 
 . On the *Choose an Action* page, click the *Subscribe for messages* action
-to receive messages from the queue or topic you specify. 
+to receive messages from the queue or topic that you specify. 
 . To configure the action:
 .. In the *Destination Name* field, enter the name of the queue or topic 
 to receive data from. 
@@ -40,7 +40,7 @@ The message consumer receives only those messages whose headers and
 properties match the message selector expression. A message selector cannot select messages on 
 the basis of the content of the message body.
 
-.  Click *Next* to specify the action's output type. 
+. Click *Next* to specify the action's output type. 
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
@@ -78,5 +78,4 @@ you hover over the step that processes this type.
 . Click *Done*. 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears at the beginning of the integration flow.

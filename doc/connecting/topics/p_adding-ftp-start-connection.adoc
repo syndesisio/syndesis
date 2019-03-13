@@ -34,7 +34,7 @@ poll. The connection watches this directory for any content and downloads
 all files when it finds any content.
 . In the *Milliseconds before polling starts* field, accept the default 
 of *1000* milliseconds or change the number of milliseconds.
-. In the *Milliseconds before the next poll* field, accept the default
+. In the *Milliseconds before the next poll* field, accept the default 
 of *500* milliseconds or change the number of milliseconds. This is the
 interval between polls. 
 . In the *Delete after download* field, accept the default of *No*
@@ -77,5 +77,4 @@ you hover over the step that processes this type.
 . Click *Done*. 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears at the beginning of the integration flow. 

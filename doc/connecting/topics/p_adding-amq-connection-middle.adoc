@@ -5,29 +5,22 @@
 = Publishing AMQ messages in the middle of an integration
 
 In the middle of an integration, to publish messages to a Red Hat AMQ broker, 
-add a Red Hat AMQ connection between the start and
-finish connections. 
+add a Red Hat AMQ connection to the middle of a flow. 
 
 .Prerequisites
 * You created a connection to the Red Hat AMQ broker that you want to publish messages to.
-* You are creating or editing an integration.
-* The integration's start and finish connections have already been
-added. 
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step. Or, {prodname} is prompting you to choose a finish connection.  
 
 .Procedure
 
-. In the integration visualization panel on the left, click the plus sign
-that is in the location where you want to add the connection.
-. Click *Add a connection*. 
-
-. On the *Choose a Connection* page, click the Red Hat AMQ connection that you
-want the integration to use after the start connection and before
-the finish connection.
+. Click the Red Hat AMQ connection that you
+want in the middle of the flow.
 
 . On the *Choose an Action* page, select one of the following actions:
 +
 * *Publish messages* action to
-publish messages to the queue or topic you specify. To configure this
+publish messages to the queue or topic that you specify. To configure this
 action:
 .. In the *Destination Name* field, enter the name of the queue or 
 topic to send messages to. 
@@ -35,7 +28,7 @@ topic to send messages to.
 .. Select *Persistent* to guarantee message delivery even if
 a connection fails. 
 +
-* *Request response using messages* to send messages to the JMS destination
+* *Request response using messages* to send messages to the JMS destination that 
 you specify and receive a response. To configure this action:
 
 .. In the *Destination Name* field, enter the name of the queue or topic 
@@ -67,7 +60,6 @@ The default is 5000 milliseconds (5 seconds).
 
 . Click *Next* to specify the action's input type and then the action's
 output type. 
-
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 

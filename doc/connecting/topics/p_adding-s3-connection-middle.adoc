@@ -5,22 +5,20 @@
 = Adding data to Amazon S3 in the middle of an integration
 
 In the middle of an integration, to add data to Amazon S3, 
-add an Amazon S3 connection between the start and
-finish connections of an integration.
+add an Amazon S3 connection to the middle of a flow.
 
 .Prerequisite
-You created an Amazon S3 connection.
+* You created an Amazon S3 connection.
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step. 
 
 .Procedure
 
-. Add the start and finish connections.
-. In the left panel, hover over the plus sign that is in the location
-where you want to add the Amazon S3 connection.
-. In the pop-up, click *Add a Connection*.
-. Click the Amazon S3 connection that you want to use as a middle
-connection in the integration.
+. Click the Amazon S3 connection that you want to use in the middle
+of a flow.
 . Click the action that you want the connection to perform:
-.. *Copy Object* adds one or more objects to the bucket. 
++
+* *Copy Object* adds one or more objects to the bucket. 
 +
 To add one file to the bucket, you can enter its name in the *File Name* field.
 +
@@ -32,7 +30,7 @@ If you used the poll action
 to obtain multiple files and you specify a file name then the *Copy Object*
 action adds only the last file that was received from the poll action. 
 
-.. *Delete Object* deletes an object from the bucket. In the
+* *Delete Object* deletes an object from the bucket. In the
 *File Name* field, specify the name of the object that you want to delete.
 If the specified file is not in the bucket, the integration continues 
 with no error. 

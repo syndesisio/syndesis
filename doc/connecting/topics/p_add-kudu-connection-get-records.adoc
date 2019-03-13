@@ -5,7 +5,7 @@
 = Triggering an integration when scanning returns records from a Kudu table
 
 To trigger execution of an integration upon obtaining data from a 
-Kudu table, add a Kudu connection to an integration as its start 
+Kudu table, add a Kudu connection to a simple integration as its start 
 connection. When the integration is running, the Kudu connection 
 scans the table that you specified at the interval that you specified, 
 obtains all records in the table, and passes a collection of the
@@ -45,7 +45,7 @@ When the integration contains all the connections that are needed,
 consider whether you need to split the collection of records that
 the Kudu connection returns. If you want to execute integration steps 
 for each record that you obtained from the Kudu table, then after the
-Kudu connection, add a Split step. Also, 
+Kudu connection, add a split step. Also, 
 you probably need to follow the Kudu connection with a data 
 mapping step that maps data obtained from Kudu to fields in
 subsequent connections in the integration. 

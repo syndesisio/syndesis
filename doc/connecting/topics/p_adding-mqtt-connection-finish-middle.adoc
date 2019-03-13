@@ -4,29 +4,20 @@
 [id='adding-mqtt-connection-finish-middle_{context}']
 = Publishing a message to an MQTT broker
 
-In an integration, you can publish a message to an MQTT broker to finish
-an integration. To do this, add an MQTT connection as the integration's 
-finish connection. To publish a message to an MQTT broker in the
-middle of integration, add an MQTT connection to an integration after
-the start connection and before the finish connection. 
+In an integration, you can publish a message to an MQTT broker 
+in the middle of a flow or to finish a simple integration. 
+To do this, add an MQTT connection to the middle of a flow or
+as the integration's finish connection.  
 
 .Prerequisites
 * You created an MQTT connection.
-* You are creating or editing an integration and the integration
-already has a start connection. 
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step. Or, {prodname} is prompting you to choose a finish connection.  
 
 .Procedure
 
-. On the *Choose a Finish Connection* page, do one of the following:
-+
-* To finish an integration by publishing a message, click the MQTT connection 
-that you want to use. 
-* To publish a message in the middle of an integration, click the connection that you
-want to use to finish the integration. Configure that connection. When the
-finish connection is part of the integration, in the left panel, hover over
-the plus sign where you want to add an MQTT connection and click
-*Add a connection*. Click the MQTT connection that you want to use
-to publish a message in the middle of an integration. 
+. Click the MQTT connection that you want to use
+to publish a message. 
 
 . On the *Choose an Action* page, click *Publish*. 
 . In the *MQTT queue/topic name* field, specify the name of the queue or

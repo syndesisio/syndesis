@@ -4,22 +4,17 @@
 [id='adding-dropbox-connection-middle_{context}']
 = Accessing Dropbox in the middle of an integration
 
-To upload a file to Dropbox in the middle of an integration,
-add a Dropbox connection between the start and 
-finish connections. 
+To upload a file to Dropbox in the middle of a flow,
+add a Dropbox connection to the middle of the flow. 
 
 .Prerequisites
 * You created a Dropbox connection.
-* You are creating or editing an integration.
-* The integration already has its start and finish connections.
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step.
 
 .Procedure
 
-. In the integration visualization panel on the left, 
-hover over the plus sign that is in the location
-where you want to add a Dropbox connection.
-. In the popup, click *Add a connection*.
-. On the *Choose a Connection* page, click the Dropbox connection that you 
+. Click the Dropbox connection that you 
 want the integration to use. 
 
 . On the *Choose an Action* page, click *Upload* to 
@@ -27,9 +22,9 @@ add the current integration data to the
 Dropbox account that this connection accesses. To configure this
 action:
 .. In the *Remote Path* field, specify the local path and 
-file name of the file you want to upload. Dropbox stores the file with the 
+file name of the file that you want to upload. Dropbox stores the file with the 
 same path and name. In this release, you can upload only a single file. 
-.. For the *Upload mode*, 
+.. For the *Upload mode*:
 +
 ** Select *Add* to upload a file only when a file with the same name is not already
 in the same Dropbox folder. If a file with the same name is already

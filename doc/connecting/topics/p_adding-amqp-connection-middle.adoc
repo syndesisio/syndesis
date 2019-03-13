@@ -2,33 +2,25 @@
 // as_connecting-to-amqp.adoc
 
 [id='adding-amqp-connection-middle_{context}']
-= Publishing messages to AMQP in the middle of an integration
+= Publishing messages to AMQP in the middle of a flow
 
-In the middle of an integration, to publish messages to an AMQP broker,
-add an AMQP connection between the start and 
-finish connections. 
+In the middle of a flow, to publish messages to an AMQP broker,
+add an AMQP connection to the middle of the flow. 
 
 .Prerequisites
 * You created a connection to the AMQP broker that you want to publish 
 messages to.
-* You are creating or editing an integration. 
-* You already added the start and finish connections to the
-integration.
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step.
 
 .Procedure
 
-. In the integration visualization panel on the left, click the plus
-sign in the location where you want to add the connection. 
-. Click *Add a connection*. 
-
-. On the *Choose a Connection* page, click the AMQP connection that you 
-want the integration to use after the start connection and before 
-the finish connection. 
+. Click the AMQP connection that you want to use to publish messages. 
 
 . On the *Choose an Action* page, select one of the following actions:
 +
 * *Publish messages* to
-publish messages to the queue or topic you specify. To configure this
+publish messages to the queue or topic that you specify. To configure this
 action:
 .. In the *Destination Name* field, enter the name of the queue or 
 topic to send messages to. 
