@@ -649,7 +649,6 @@ export class CurrentFlowService {
         then();
       }
     };
-
     this.currentFlow.steps.forEach((step, position) => {
       outstanding = outstanding + 1;
       switch (step.stepKind) {
@@ -660,27 +659,7 @@ export class CurrentFlowService {
             typeof step.action !== 'undefined' &&
             typeof step.configuredProperties !== 'undefined'
           ) {
-            const sub = this.integrationSupportService
-              .fetchMetadata(
-                step.connection,
-                step.action,
-                step.configuredProperties
-              )
-              .subscribe(
-                descriptor => {
-                  this.events.emit({
-                    kind: INTEGRATION_SET_DESCRIPTOR,
-                    position,
-                    descriptor,
-                    skipReconcile: true,
-                    onSave: decrementCount,
-                  });
-                },
-                _ => {
-                  sub.unsubscribe();
-                  decrementCount();
-                }
-              );
+            this.fetchStepMetadata(step, position, decrementCount);
           } else {
             decrementCount();
           }
@@ -715,42 +694,83 @@ export class CurrentFlowService {
     then: (step: Step) => void
   ): any {
     switch (step.stepKind) {
-      case SPLIT:
-      case AGGREGATE:
-        // A split step needs the data shape of the previous thing with a data shape
-        const prev = this.getPreviousStepWithDataShape(position);
-        const subsequent = this.getSubsequentStepWithDataShape(position);
-        const subsequentDataShape =
-          subsequent !== undefined
-            ? subsequent.action.descriptor.inputDataShape
-            : undefined;
-        const sub = this.integrationSupportService
-          .getStepDescriptor(step.stepKind, {
-            inputShape:
-              step.stepKind === AGGREGATE
-                ? subsequentDataShape
-                : prev.action.descriptor.inputDataShape,
-            outputShape: prev.action.descriptor.outputDataShape,
-          })
-          .subscribe(
-            descriptor => {
-              step = {
-                ...step,
-                action: { actionType: 'step', descriptor } as Action,
-              };
-              sub.unsubscribe();
-              then(step);
-            },
-            err => {
-              // we'll just pass through
-              sub.unsubscribe();
-              then(step);
-            }
-          );
+      case SPLIT: {
+        // A split step uses the data shape of the previous step, the
+        // backend converts the output data shape to a collection
+        const previous = this.getPreviousStepWithDataShape(position);
+        this.fetchStepDescriptor(
+          step,
+          previous.action.descriptor.inputDataShape,
+          previous.action.descriptor.outputDataShape,
+          then
+        );
         break;
+      }
+      case AGGREGATE: {
+        // An aggregate step uses the output data shape of the previous step
+        // and the input data shape of the subsequent step, backend will
+        // convert the input data shape of the aggregate step to a collection
+        const previous = this.getPreviousStepWithDataShape(position);
+        const subsequent = this.getSubsequentStepWithDataShape(position);
+        this.fetchStepDescriptor(
+          step,
+          previous.action.descriptor.outputDataShape,
+          subsequent.action.descriptor.inputDataShape,
+          then
+        );
+        break;
+      }
       default:
         setTimeout(() => then(step), 1);
     }
+  }
+
+  fetchStepDescriptor(
+    step: Step,
+    inputDataShape: DataShape,
+    outputDataShape: DataShape,
+    then: (step: Step) => void
+  ) {
+    const sub = this.integrationSupportService
+      .getStepDescriptor(step.stepKind, {
+        inputShape: inputDataShape,
+        outputShape: outputDataShape,
+      })
+      .subscribe(
+        descriptor => {
+          step = {
+            ...step,
+            action: { actionType: 'step', descriptor } as Action,
+          };
+          sub.unsubscribe();
+          then(step);
+        },
+        err => {
+          // we'll just pass through
+          sub.unsubscribe();
+          then(step);
+        }
+      );
+  }
+
+  fetchStepMetadata(step: Step, position: number, then: () => void) {
+    const sub = this.integrationSupportService
+      .fetchMetadata(step.connection, step.action, step.configuredProperties)
+      .subscribe(
+        descriptor => {
+          this.events.emit({
+            kind: INTEGRATION_SET_DESCRIPTOR,
+            position,
+            descriptor,
+            skipReconcile: true,
+            onSave: then,
+          });
+        },
+        _ => {
+          sub.unsubscribe();
+          then();
+        }
+      );
   }
 
   isApiProvider() {
