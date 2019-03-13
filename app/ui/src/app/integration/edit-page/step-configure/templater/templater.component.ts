@@ -22,7 +22,6 @@ import {
 import {
   CurrentFlowService,
   INTEGRATION_SET_ACTION,
-  INTEGRATION_SET_DATASHAPE,
 } from '@syndesis/ui/integration/edit-page';
 import { FileLikeObject, FileUploader } from '@syndesis/ui/vendor';
 import {
@@ -200,6 +199,7 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
       return;
     }
 
+    const inShapeSpec = this.createSpecification(symbols);
     //
     // Creates the action in the step
     // and only does this once since the id
@@ -213,6 +213,11 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
         actionType: 'step',
         name: 'Templater',
         descriptor: {
+          inputDataShape: {
+            kind: DataShapeKinds.JSON_SCHEMA,
+            name: 'Template JSON Schema',
+            specification: inShapeSpec,
+          } as DataShape,
           outputDataShape: {
             kind: DataShapeKinds.JSON_SCHEMA,
             name: 'Template JSON Schema',
@@ -220,28 +225,6 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
           },
         } as ActionDescriptor,
       } as Action,
-    });
-
-    const inShapeSpec = this.createSpecification(symbols);
-
-    //
-    // Set the action of the step defining both the
-    // input and output data shapes. Both are JSON.
-    //
-    // The input JSON is dynamically created based on
-    // the templates symbols.
-    // The ouput JSON merely puts the resulting text
-    // into an object with a single property of 'message'.
-    //
-    this.currentFlowService.events.emit({
-      kind: INTEGRATION_SET_DATASHAPE,
-      position: this.position,
-      isInput: true,
-      dataShape: {
-        kind: DataShapeKinds.JSON_SCHEMA,
-        name: 'Template JSON Schema',
-        specification: inShapeSpec,
-      } as DataShape,
     });
 
     const formattedProperties: any = {
