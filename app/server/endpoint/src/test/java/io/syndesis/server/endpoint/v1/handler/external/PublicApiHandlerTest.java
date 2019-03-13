@@ -252,6 +252,7 @@ public class PublicApiHandlerTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void exportResources() throws Exception {
         final Response response = handler.exportResources(ENVIRONMENT, false);
         assertThat(response, is(notNullValue()));
