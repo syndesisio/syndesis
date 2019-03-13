@@ -17,7 +17,7 @@ To keep your OpenAPI document synchronized between the Apicurito
 editor and the {prodname} integration editor, your OpenAPI document 
 must define a unique `operationId` property for each defined 
 operation. If you do not assign an `operationId` property then
-Apicurito generates one for each operation.
+{prodname} generates one for each operation.
 
 In each operation's definition, you can supply a JSON schema that
 defines the operation's request and response. When you do then
