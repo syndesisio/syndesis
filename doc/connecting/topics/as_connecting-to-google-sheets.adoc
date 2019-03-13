@@ -9,11 +9,14 @@
 
 To trigger execution of an integration when a Google Sheets connection
 returns spreadsheet data or spreadsheet properties, add a Google Sheets 
-connection to an integration as its start connection. To finish an
-integration, you can add a Google Sheets connection that updates
-spreadsheet data or properties, or that inserts a chart or pivot table
-into a spreadsheet. In the middle of an integration, you can add a
-Google Sheets connection that obtains, creates or updates a spreadsheet, 
+connection to a simple integration as its start connection. To finish a
+simple integration by updating
+spreadsheet values or properties, or by inserting a chart or pivot table
+into a spreadsheet, add a Google Sheets connection to a simple 
+integration as its finish connection. 
+
+In the middle of a flow, you can add a
+Google Sheets connection that obtains, creates or updates values in a spreadsheet, 
 or that inserts a chart or pivot table into a spreadsheet. 
 
 Details for connecting to Google Sheets are in the following topics:

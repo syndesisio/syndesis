@@ -4,25 +4,25 @@
 [id='add-google-sheets-connection-add-chart_{context}']
 = Adding a chart to a sheet 
 
-In the middle of an integration, or to finish an integration, 
+In the middle of a flow, or to finish a simple integration, 
 you can add a basic chart or a pie chart to a Google Sheets spreadsheet.
-To do this, add a Google Sheets connection to the middle of an integration
-or as the integration's finish connection. Then add a data mapping
+To do this, add a Google Sheets connection to the middle of a flow
+or as a simple integration's finish connection. Then add a data mapping
 step just before the connection. In the data mapping step, set 
 options that determine the location, properties, and content of the chart. 
 
 When {prodname} prompts you to configure the *Add charts* 
 action, you can leave some or all fields blank. If you leave a field blank,
-you can map a value to that field in the data mapper step that is
-just before this connection. 
+you can map a value to that field in the data mapper step that you 
+will add just before this connection. 
 
 .Prerequisites
 * You created a Google Sheets connection that is authorized to access
 the Google spreadsheet that you want to add a chart to.
 * You have access to the ID for the spreadsheet that you want to add a chart to.
-* You are creating or editing an integration and {prodname} is prompting you
-to choose the finish connection or to select the step that you want to add
-to the middle of the integration.
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step. Or, {prodname} is prompting you to choose the finish 
+connection for a simple integration. 
 
 .Procedure
 
@@ -51,10 +51,10 @@ Alternatively, leave the field blank. In the data mapper step that is
 just before this connection, map the chart subtitle from a source field or 
 property to the `subtitle` target field. 
 
-. Click *Done* to add the connection to the integration.
+. Click *Done* to add the connection to the flow.
 The connection appears in the integration visualization flow in the
 location where you added it.
-. If you want to add any other connections to the integration, add them now. 
+. If you want to add any other connections to the flow, add them now. 
 Then return to these instructions. 
 . In the integration visualization flow, click the plus sign that is
 just before the connection that adds a chart.
@@ -123,13 +123,19 @@ a value to the *overlayPosition* field, then the connection places
 the chart on the sheet identified by the *sourceSheetId* field. 
 This is the sheet that provides the data for the chart. 
 + 
-0 identifies the first sheet in the spreadsheet. 
+`0` identifies the first sheet in the spreadsheet. 
 For subsequent sheets, the sheet ID is at the end of the URL when the 
-sheet is visible in a browser. In the following URL, the sheet ID is `206589330`: 
-`\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`. 
+sheet is visible in a browser. For example, at the end of the following
+URL, you can see `gid=206589330`: 
++
+`\https://docs.google.com/spreadsheets/d/1pa...ngQbKkM/edit#gid=206589330`
++
+This indicates that the sheet ID is `206589330` and that is the value 
+that you would map to *sheetId*. 
 
 .. Identify the sheet that provides the data for the chart by mapping 
-an integer to the target *sourceSheetId* field. The default is `0`.
+its integer sheet ID to the target *sourceSheetId* field. 
+The default is `0`, which identifies the first sheet in the spreadsheet.
 + 
 You can add a basic chart or a pie chart. Follow one of the following
 sets of instructions according to the kind of chart that you want to add.

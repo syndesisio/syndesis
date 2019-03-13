@@ -2,10 +2,10 @@
 // as_connecting-to-amazon-s3.adoc
 
 [id='adding-s3-connection-start_{context}']
-= Starting an integration by obtaining data from Amazon S3
+= Obtaining data from Amazon S3 to trigger integration execution
 
 To start an integration by obtaining data from an Amazon S3 bucket, 
-add an Amazon S3 connection as the start connection in an integration.
+add an Amazon S3 connection as a simple integration's start connection.
 
 .Prerequisite
 You created an Amazon S3 connection.
@@ -18,6 +18,7 @@ You created an Amazon S3 connection.
 you want to use to start the integration.
 . On the *Choose an Action* page, click the action that you
 want the connection to perform:
++
 * *Get Object* obtains a file from the bucket that the connection
 accesses. In the *File Name* field, enter the name of the file that you want
 to obtain. If the specified file is not in the bucket, it is a runtime error.
@@ -46,7 +47,6 @@ only when its name starts with that string.
 *Obtain files and then delete them from the bucket*.
 
 . After you configure the action, click *Done* to specify the action's output type. 
-
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
@@ -83,5 +83,4 @@ distinguish this type. This description appears in the data mapper when
 you hover over the step that processes this type. 
 . Click *Done*. 
 
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears at the beginning of the integration flow. 

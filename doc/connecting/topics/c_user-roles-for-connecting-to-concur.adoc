@@ -25,7 +25,7 @@ role would do the following:
 * One set for access to the SAP Concur implementation site
 * Another set for access to the SAP Concur production site
 
-. Configure the SAP Connector for access to appropriate SAP Concur site. 
+. Configure the SAP Concur connector for access to the appropriate SAP Concur site. 
 . Create a SAP Concur connection. 
 
 A business user can then create an integration that uses the 

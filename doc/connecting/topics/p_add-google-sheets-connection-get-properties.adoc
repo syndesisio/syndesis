@@ -5,7 +5,7 @@
 = Triggering an integration when polling returns spreadsheet properties
 
 To trigger execution of an integration upon obtaining properties from
-a Google Sheets spreadsheet, add a Google Sheets connection to an integration as
+a Google Sheets spreadsheet, add a Google Sheets connection to a simple integration as
 its start connection. When the integration is running, the Google Sheets
 connection polls the spreadsheet at the interval that you specified, 
 obtains the spreadsheet properties, and passes the result to the 
@@ -39,4 +39,4 @@ specify how often you want the connection to obtain properties.
 
 . Click *Done* to add this Google Sheets connection as the integration's
 start connection. In the integration visualization panel, the connection 
-appears as the first step in the integration.
+appears as the first step in the integration's flow.

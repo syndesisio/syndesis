@@ -14,7 +14,7 @@ databases:
 * PostgreSQL
 
 You create a connection to the database that you want to access in an integration
-and then you add that connection to an integration. 
+and then you add that connection to an integration following. 
 
 To connect to other types of databases, you must upload a JDBC driver for
 that database. 

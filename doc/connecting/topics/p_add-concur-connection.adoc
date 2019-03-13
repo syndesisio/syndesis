@@ -4,37 +4,32 @@
 [id='add-concur-connection_{context}']
 = Adding a SAP Concur connection to an integration
 
-In an integration, a connection to SAP Concur is a middle or finish
-connection and not a start connection. A connection to SAP Concur can perform
-any one of 85 actions.  
+You can add a SAP Concur connection to the middle of a flow or
+as the finish connection in a simple integration. 
+A connection to SAP Concur can perform any one of 85 actions.  
 
 .Prerequisites
 * You created a SAP Concur connection.
-
-* You are creating an integration or updating an integration to
-add a connection to that integration. If you need to, see the 
-link:{LinkFuseOnlineIntegrationGuide}#procedure-for-creating-an-integration_create[general procedure for creating an integration]
-or see link:{LinkFuseOnlineIntegrationGuide}#updating-integrations_manage[updating integrations].
+* You are creating or editing a flow. 
+* {prodname} is prompting you to choose a step, or to choose the
+finish connection in a simple integration.
 
 .Procedure
-The instructions below
-assume that {prodname} is prompting you to select a
-finish connection or a middle connection.
 
-. On the page that displays available connections, click the SAP Concur
-connection that you want to add to the integration. When the integration
+. Click the SAP Concur
+connection that you want to add to the flow. When the integration
 uses the connection that you select to connect to SAP Concur, {prodname}
 uses the credentials defined in that connection.
 
 . Click the action that you want the selected connection to perform.  Each
-SAP Concur connection that you add to an integration performs only the action 
+SAP Concur connection that you add to a flow performs only the action 
 you choose.
 +
 For details about SAP Concur actions, visit the 
 https://developer.concur.com/api-explorer/[SAP Concur developer center]
 and expand *v3.0*.
 
-. Click *Done* to add the connection to the integration.
+. Click *Done* to add the connection to the flow.
 
 .Result
 The connection appears in the integration flow 

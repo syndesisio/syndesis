@@ -4,23 +4,22 @@
 [id='add-google-sheets-connection-create-spreadsheet_{context}']
 = Creating a spreadsheet
 
-To create a new spreadsheet in the middle of an integration, 
+To create a new spreadsheet in the middle of a flow, 
 add a Google Sheets connection between the start and finish connections. 
-While you can also finish an integration with a Google Sheets 
+While you can also finish a simple integration with a Google Sheets 
 connection that creates a spreadsheet, you cannot add data to a 
 new spreadsheet in the same connection. Therefore, when you want to 
 create a spreadsheet and add data to the spreadsheet in the same
-integration, the integration requires two Google Sheets connections.
-One connection creates the spreadsheet and then a subsequent spreadsheet
+flow, the flow requires two Google Sheets connections.
+One connection creates the spreadsheet and then a subsequent connection
 adds data to the spreadsheet. 
 
 .Prerequisites
 * You created a Google Sheets connection that is authorized to
 access the Google account in which you want to create the 
 spreadsheet. 
-* You are creating or editing an integration and {prodname} is prompting you
-to select the step that you want to add to the middle of the integration,
-or that you want to add to finish the integration. 
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
 
@@ -35,12 +34,12 @@ new spreadsheet should use, for example, `India Standard Time`, or `Tokyo`.
 .. In the *Locale* field, enter the locale of the 
 new spreadsheet, for example, `Canada`, or `Hong Kong`.
 
-. Click *Done* to add the connection to the integration.
+. Click *Done* to add the connection to the flow.
 The connection appears in the integration visualization flow in the
 location where you added it.
 
 .Result
 A connection that creates a spreadsheet returns the spreadsheet ID for 
-the new spreadsheet. In subsequent integration steps, you can map 
+the new spreadsheet. In subsequent steps, you can map 
 this spreadsheet ID to the spreadsheet ID in a connection 
 that accesses the new spreadsheet, for example, to update it. 

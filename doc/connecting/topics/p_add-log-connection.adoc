@@ -6,24 +6,21 @@
 
 To log information about the messages that an integration processes, 
 add one or more log connections to the integration. A log connection takes
-each input message from the previous step in the integration, sends 
+each input message from the previous step in the flow, sends 
 the details that you specify to the integration's log, and passes the message
-to the next step in the integration. 
+to the next step in the flow. 
 
 {prodname} provides a log connection that you can add to any number
-of integrations, and that you can add any number of times to the same
-integration. You do not need to create a log connection unless you
+of flows, and that you can add any number of times to the same
+flow. You do not need to create a log connection unless you
 inadvertently delete the provided log connection. 
 
 .Prerequisites
 * You have chosen to add a log connection rather than a log step to an
 integration. For help with this, see 
 link:{LinkFuseOnlineConnectorGuide}#comparison-log-step-connection_connect-to-log[Comparison of log step and log connection].
-* You must be creating or editing an integration. If you are creating an
-integration then the integration must already have its start connection. 
-* {prodname} is prompting you to choose a new integration's finish connection 
-or is prompting you to choose the
-connection that you want to add to an integration.
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
 
@@ -87,7 +84,7 @@ there was one. This is comparable to the information that {prodname}
 provides for each integration step, which you can view in the 
 *Activity* tab of the integration summary. 
 
-. Click *Done* to add the log connection to the integration. 
+. Click *Done* to add the log connection to the flow. 
 
 .Additional resource
 

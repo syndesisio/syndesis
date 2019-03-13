@@ -2,7 +2,7 @@
 // as_connecting-to-mqtt.adoc
 
 [id='adding-mqtt-connection-start_{context}']
-= Obtaining a message from an MQTT broker
+= Obtaining a message from an MQTT broker to trigger integration execution
 
 To trigger execution of an integration based on receiving a message
 from an MQTT broker, add an MQTT connection as the start connection. When 
@@ -25,7 +25,6 @@ to receive messages from the queue or topic that you specify.
 . In the *MQTT queue/topic name* field, enter the name of the queue or topic 
 to subscribe to in order to receive data. 
 . Click *Next* to specify the action's output type. 
-
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
@@ -63,5 +62,4 @@ you hover over the step that processes this type.
 . Click *Done*. 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears at the beginning of the integration flow. 

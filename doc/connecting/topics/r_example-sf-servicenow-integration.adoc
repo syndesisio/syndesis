@@ -4,7 +4,7 @@
 [id='example-sf-servicenow-integration_{context}']
 = Example Salesforce to ServiceNow integrations
 
-This example describes two integrations:
+This example describes two simple integrations:
 
 * One integration obtains new
 cases from Salesforce and adds them as incidents to ServiceNow. 

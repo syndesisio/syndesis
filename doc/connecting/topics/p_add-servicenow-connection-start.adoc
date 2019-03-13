@@ -2,10 +2,10 @@
 // as_connecting-to-servicenow.adoc
 
 [id='add-servicenow-connection-start_{context}']
-= Starting an integration by obtaining records from ServiceNow
+= Obtaining records from ServiceNow to trigger integration execution
 
-To start an integration by obtaining records from ServiceNow,
-add a ServiceNow connection to an integration as the start connection.
+To trigger execution of an integration upon receiving records from ServiceNow,
+add a ServiceNow connection to a simple integration as its start connection.
 
 .Prerequisites
 * You created a ServiceNow connection. 
@@ -15,7 +15,6 @@ records from.
 only the records that you want.
 You can find information about ServiceNow queries here:
 https://docs.servicenow.com/bundle/jakarta-platform-user-interface/page/use/using-lists/concept/c_EncodedQueryStrings.html[ServiceNow encoded queries]. 
-
 
 .Procedure
 
@@ -36,7 +35,7 @@ incidents (`state=1`) that have a medium impact (`impact=2`).
 If you do not enter a query and the records in the table do not change,  
 then the connection obtains the same records every time. 
 .. In the *Limit of elements per page* field, enter the maximum number of
-records that you want the connection to obtain.  In this release, 
+records that you want the connection to obtain. In this release, 
 you must enter a value, the recommendation is to enter `1000` or less, 
 and pagination is not supported. 
 .. In the *Period* field, indicate how often you want to obtain records.

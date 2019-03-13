@@ -94,14 +94,14 @@ JDBC driver for that database.
 a Telegram chat bot.
 
 |link:{LinkFuseOnlineConnectorGuide}#triggering-integrations-with-timers_connectors[Timer]
-| Set a simple timer or a `cron` timer to trigger integration execution.
+| Set a simple timer or a `cron` timer to trigger execution of a simple integration.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-twitter_connectors[Twitter]
-|Trigger execution of an integration upon tweets that mention you or that
-contain data you specify.
+|Trigger execution of a simple integration upon tweets that mention you or that
+contain data that you specify.
 
 |link:{LinkFuseOnlineConnectorGuide}#triggering-integrations-with-http-requests_connectors[Webhook]
-|Trigger integrations with HTTP `GET` or `POST` requests.
+|Trigger execution of simple integrations with HTTP `GET` or `POST` requests.
 
 |===
 
