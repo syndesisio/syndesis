@@ -17,14 +17,15 @@
 <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+
   <profiles>
     <profile>
-      <id>fusesource.repo</id>
+      <id>additional-repositories</id>
       <repositories>
         <repository>
-          <id>maven.central</id>
+          <id>central</id>
           <name>Maven Central</name>
-          <url>https://repo1.maven.org/maven2</url>
+          <url>https://repo.maven.apache.org/maven2/</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -34,9 +35,9 @@
           </releases>
         </repository>
         <repository>
-          <id>redhat.ga</id>
+          <id>redhat-ga</id>
           <name>Red Hat General Availability Repository</name>
-          <url>https://maven.repository.redhat.com/ga</url>
+          <url>https://maven.repository.redhat.com/ga/</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -46,9 +47,9 @@
           </releases>
         </repository>
         <repository>
-          <id>jboss.ea</id>
+          <id>jboss-ea</id>
           <name>JBoss Community Early Access Release Repository</name>
-          <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+          <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -60,9 +61,9 @@
       </repositories>
       <pluginRepositories>
         <pluginRepository>
-          <id>maven.central</id>
+          <id>central</id>
           <name>Maven Central</name>
-          <url>https://repo1.maven.org/maven2</url>
+          <url>https://repo.maven.apache.org/maven2/</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -72,9 +73,9 @@
           </releases>
         </pluginRepository>
         <pluginRepository>
-          <id>redhat.ga</id>
+          <id>redhat-ga</id>
           <name>Red Hat General Availability Repository</name>
-          <url>https://maven.repository.redhat.com/ga</url>
+          <url>https://maven.repository.redhat.com/ga/</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -84,9 +85,9 @@
           </releases>
         </pluginRepository>
         <pluginRepository>
-          <id>jboss.ea</id>
+          <id>jboss-ea</id>
           <name>JBoss Community Early Access Release Repository</name>
-          <url>https://repository.jboss.org/nexus/content/groups/ea</url>
+          <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
           <snapshots>
             <enabled>false</enabled>
           </snapshots>
@@ -99,16 +100,8 @@
     </profile>
   </profiles>
 
-  <mirrors>
-    <mirror>
-      <id>internal.mirror</id>
-      <url>${mavenMirror}</url>
-      <mirrorOf>${mavenMirrorOf}</mirrorOf>
-    </mirror>
-  </mirrors>
-
   <activeProfiles>
-    <activeProfile>fusesource.repo</activeProfile>
+    <activeProfile>additional-repositories</activeProfile>
   </activeProfiles>
 
 </settings>

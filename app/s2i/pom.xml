@@ -38,16 +38,6 @@
     <license.dir>${project.basedir}/src/main/resources/licenses</license.dir>
     <license.output.dir>${project.build.directory}/licenses</license.output.dir>
   </properties>
-  <repositories>
-    <repository>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <id>sonatype-snapshots</id>
-      <name>sonatype</name>
-      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-    </repository>
-  </repositories>
 
   <dependencies>
     <dependency>

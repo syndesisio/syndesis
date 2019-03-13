@@ -35,6 +35,15 @@
     </repository>
     {{/mavenRepositories}}
   </repositories>
+
+  <pluginRepositories>
+    {{#mavenRepositories}}
+    <pluginRepository>
+      <id>{{key}}</id>
+      <url>{{value}}</url>
+    </pluginRepository>
+    {{/mavenRepositories}}
+  </pluginRepositories>
   {{/mavenRepositories.empty}}
 
   <dependencyManagement>
