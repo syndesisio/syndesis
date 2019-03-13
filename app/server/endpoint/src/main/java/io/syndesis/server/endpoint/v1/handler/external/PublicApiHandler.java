@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import javax.validation.constraints.NotNull;
 import javax.ws.rs.ClientErrorException;
@@ -84,6 +85,7 @@ public class PublicApiHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(PublicApiHandler.class);
     private static final String PROPERTY_INTEGRATION_ID = "integrationId";
+    private static final Pattern UNSAFE_CHARS = Pattern.compile("[<>\"#%{}|\\\\^~\\[\\]`;/?:@=&]");
 
     private final DataManager dataMgr;
     private final IntegrationSupportHandler handler;
@@ -124,7 +126,7 @@ public class PublicApiHandler {
     @Path("environments/{env}")
     public void deleteEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment) {
 
-        validateParam("environment", environment);
+        validateEnvironment("environment", environment);
 
         // get and update list of integrations with this environment
         final List<Integration> integrations = dataMgr.fetchAll(Integration.class)
@@ -150,6 +152,14 @@ public class PublicApiHandler {
 
     }
 
+    private void validateEnvironment(String name, String value) {
+        validateParam(name, value);
+        // make sure it's a valid HTTP url path key
+        if (UNSAFE_CHARS.matcher(value).find()) {
+            throw new ClientErrorException(String.format("Invalid parameter %s:%s", name, value), Response.Status.NOT_FOUND);
+        }
+    }
+
     /**
      * Rename an environment across all integrations.
      */
@@ -159,8 +169,8 @@ public class PublicApiHandler {
     public void renameEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment,
                                   @NotNull @ApiParam(required = true) String newEnvironment) {
 
-        validateParam("environment", environment);
-        validateParam("newEnvironment", newEnvironment);
+        validateEnvironment("environment", environment);
+        validateEnvironment("newEnvironment", newEnvironment);
 
         // ignore request if names are the same
         if (environment.equals(newEnvironment)) {
@@ -215,7 +225,7 @@ public class PublicApiHandler {
     public void deleteReleaseTag(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId, @NotNull @PathParam("env") @ApiParam(required = true) String environment) {
 
         final Integration integration = getIntegration(integrationId);
-        validateParam("environment", environment);
+        validateEnvironment("environment", environment);
         final Map<String, ContinuousDeliveryEnvironment> deliveryState = new HashMap<>(integration.getContinuousDeliveryState());
         if (null == deliveryState.remove(environment)) {
             throw new ClientErrorException("Missing environment tag " + environment, Response.Status.NOT_FOUND);
@@ -255,7 +265,7 @@ public class PublicApiHandler {
             throw new ClientErrorException("Missing parameter environments", Response.Status.BAD_REQUEST);
         }
         // validate individual environment names
-        environments.forEach(e -> validateParam("environment", e));
+        environments.forEach(e -> validateEnvironment("environment", e));
 
         // fetch integration
         final Integration integration = getIntegration(integrationId);
@@ -303,7 +313,7 @@ public class PublicApiHandler {
                                     @QueryParam("all") @ApiParam boolean exportAll) throws IOException {
 
         // validate environment
-        validateParam("environment", environment);
+        validateEnvironment("environment", environment);
 
         // lookup integrations to export for this environment
         final ListResult<Integration> integrations;
@@ -380,7 +390,7 @@ public class PublicApiHandler {
         }
 
         final String environment = formInput.getEnvironment();
-        validateParam("environment", environment);
+        validateEnvironment("environment", environment);
         final boolean deploy = Boolean.TRUE.equals(formInput.getDeploy());
 
         try {
@@ -446,7 +456,7 @@ public class PublicApiHandler {
                                            @NotNull @ApiParam(required = true) Map<String, String> properties) {
 
         validateParam("connectionId", connectionId);
-        final Connection connection = getResource(Connection.class, connectionId, c -> c.hasId());
+        final Connection connection = getResource(Connection.class, connectionId, WithResourceId::hasId);
 
         updateConnection(connection, properties);
         return connectionHandler.get(connection.getId().get());
