@@ -1,6 +1,9 @@
 import { Nav } from 'patternfly-react';
 import * as React from 'react';
 import { Container } from '../Layout';
+import { IntegrationDetailHistoryListView } from './IntegrationDetailHistoryListView';
+import { IntegrationDetailHistoryListViewItem } from './IntegrationDetailHistoryListViewItem';
+import { IntegrationDetailTab } from './IntegrationDetailTab';
 import { IntegrationStepsHorizontalView } from './IntegrationStepsHorizontalView';
 
 /***
