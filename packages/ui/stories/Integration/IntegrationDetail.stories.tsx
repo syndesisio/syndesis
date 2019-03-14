@@ -13,11 +13,8 @@ const i18nTextDraft = 'Draft';
 const i18nTextHistory = 'History';
 
 const integration = {
-  currentState: 'Unpublished',
   description: 'An example integration that is running.',
-  id: 'i-LYmlhVFB6pKKaBQVSyez',
   isDraft: true,
-  name: 'Test Unpublished Integration',
   steps: [
     {
       icon:
@@ -32,9 +29,6 @@ const integration = {
       pattern: 'To',
     },
   ],
-  targetState: 'Unpublished',
-  updatedAt: 'Feb 25, 2019, 11:42:21',
-  version: 1,
 };
 
 stories.add(

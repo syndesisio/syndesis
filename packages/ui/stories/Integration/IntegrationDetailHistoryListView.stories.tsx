@@ -23,22 +23,12 @@ const i18nTextLastPublished = 'Last published on ';
 const i18nTextVersion = 'Version';
 
 const integrationPublished = {
-  id: 'i-LYmlhVFB6pKKaBQVSyez',
-  version: 1,
-  updatedAt: 'Feb 24, 2019, 04:27:49',
-  currentState: 'Unpublished',
-  targetState: 'Unpublished',
-  name: 'Test Published Integration',
   isDraft: false,
+  updatedAt: 'Feb 24, 2019, 04:27:49',
+  version: 1,
 };
 
 const integrationUnpublished = {
-  id: 'i-LYmlhVFB6pKKaBQVSyez',
-  version: 1,
-  updatedAt: 'Feb 25, 2019, 11:42:21',
-  currentState: 'Unpublished',
-  targetState: 'Unpublished',
-  name: 'Test Unpublished Integration',
   isDraft: true,
 };
 
