@@ -53,6 +53,7 @@ import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
 import io.syndesis.server.controller.integration.IntegrationPublishValidator;
 import io.syndesis.server.controller.integration.camelk.crd.ConfigurationSpec;
+import io.syndesis.server.controller.integration.camelk.crd.DataSpec;
 import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
 import io.syndesis.server.controller.integration.camelk.crd.ImmutableIntegrationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
@@ -206,7 +207,6 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         io.syndesis.server.controller.integration.camelk.crd.Integration result = new io.syndesis.server.controller.integration.camelk.crd.Integration();
         //add CR metadata
         result.getMetadata().setName(Names.sanitize(integrationId));
-//        result.getMetadata().setResourceVersion(String.valueOf(integrationDeployment.getVersion()));
         result.getMetadata().setLabels(new HashMap<>());
         result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationId));
         result.getMetadata().getLabels().put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version);
@@ -220,13 +220,29 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         result.getMetadata().getAnnotations().put(OpenShiftService.INTEGRATION_ID_LABEL, integrationId);
         result.getMetadata().getAnnotations().put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version);
         result.getMetadata().getAnnotations().put("syndesis.io/deploy-id", integrationDeploymentId);
+        result.getMetadata().getAnnotations().put("prometheus.io/port", "9779");
+        result.getMetadata().getAnnotations().put("prometheus.io/scrape", "true");
 
         ImmutableIntegrationSpec.Builder integrationSpecBuilder = new IntegrationSpec.Builder();
 
         //add customizers
+        //TODO: make all this configurable, where makes sense
         integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
             .type("property")
             .value("camel.k.customizer=metadata,logging")
+            .build());
+        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
+            .type("env")
+            .value("AB_JMX_EXPORTER_CONFIG=/etc/camel/resources/prometheus-config.yml")
+            .build());
+        integrationSpecBuilder.addResources(new ResourceSpec.Builder()
+            .dataSpec(new DataSpec.Builder()
+                .name("prometheus-config.yml")
+                .contentRef("syndesis-prometheus-agent-config")
+                .contentKey("prometheus-config.yml")
+                .build())
+            .mountPath("/etc/camel/resources")
+            .type("data")
             .build());
         integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
             .type("secret")
@@ -236,12 +252,15 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             "jolokia",
             new IntegrationTraitSpec.Builder()
                 .putConfiguration("enabled", "true")
+                .putConfiguration("port", "8778")
                 .build());
-//        integrationSpecBuilder.putTraits(
-//            "prometheus",
-//            new IntegrationTraitSpec.Builder()
-//                .putConfiguration("enabled", "true")
-//                .build());
+        integrationSpecBuilder.putTraits(
+            "prometheus",
+            new IntegrationTraitSpec.Builder()
+                .putConfiguration("enabled", "true")
+                .putConfiguration("port", "9779")
+                .putConfiguration("service-monitor", "false")
+                .build());
         integrationSpecBuilder.putTraits(
             "camel",
             new IntegrationTraitSpec.Builder()
@@ -258,6 +277,8 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
                                                     +OpenShiftService.INTEGRATION_NAME_LABEL+","
                                                     +"syndesis.io/type"+","
                                                     +"syndesis.io/app")
+                .putConfiguration("target-annotations", "prometheus.io/port"+","
+                                                    +"prometheus.io/scrape")
                 .build());
 
         //add dependencies
@@ -315,10 +336,12 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         logInfo(integration,"integration.json: {}", content);
 
         builder.addSources(new SourceSpec.Builder()
-            .compression(compress)
-            .content(content)
+            .dataSpec(new DataSpec.Builder()
+                .compression(compress)
+                .content(content)
+                .name(Names.sanitize(name))
+            .build())
             .language("syndesis")
-            .name(Names.sanitize(name))
             .build());
     }
 
@@ -340,9 +363,11 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
                     if (content != null) {
                         builder.addResources(
                             new ResourceSpec.Builder()
-                                .compression(compress)
-                                .name(name)
-                                .content(content)
+                                .dataSpec(new DataSpec.Builder()
+                                    .compression(compress)
+                                    .name(name)
+                                    .content(content)
+                                .build())
                                 .type("data")
                             .build()
                         );
@@ -377,9 +402,11 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
 
         builder.addResources(
             new ResourceSpec.Builder()
-                .compression(compress)
-                .name(Names.sanitize(name))
-                .content(content)
+                .dataSpec(new DataSpec.Builder()
+                    .compression(compress)
+                    .name(Names.sanitize(name))
+                    .content(content)
+                .build())
                 .type("openapi")
                 .build()
         );

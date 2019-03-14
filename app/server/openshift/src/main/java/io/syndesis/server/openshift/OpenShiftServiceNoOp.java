@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.openshift;
 
+import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
@@ -149,5 +150,10 @@ public class OpenShiftServiceNoOp implements OpenShiftService {
     @Override
     public void createOrReplaceSecret(Secret secret) {
         // ... to make PMD happy
+    }
+
+    @Override
+    public ConfigMap createOrReplaceConfigMap(ConfigMap configMap) {
+        return null;
     }
 }
