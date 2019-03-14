@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-9239-g21fde8d51,</span>
+<span id="revnumber">version 1.1.3-9242-g1503ebfaf,</span>
 <span id="revdate">2019-03-14</span>
 </div>
 <div id="toc" class="toc2">
@@ -897,12 +897,13 @@ Usage: syndesis build [... options ...]
 
 Options for build:
     -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
-        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade, camel-k
         --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
                                    and create images
-        --infra-images             Build only infrastructure modules with Docker images (operator, upgrade) and create images
+        --infra-images             Build only infrastructure modules with Docker images (operator, camel-k, upgrade) and create images
     -m  --module &lt;m1&gt;,&lt;m2&gt;, ..     Build modules
-                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, upgrade
+                                   Top level modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camel-k, upgrade
+                                   Submodules: defined with [groupId]:artifactId (e.g. :connector-sql)
     -d  --dependencies             Build also all project the specified module depends on
         --skip-tests               Skip unit and system test execution
         --skip-checks              Disable all checks
@@ -911,6 +912,7 @@ Options for build:
         --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
         --multi-stage              Multi-stage Dockerfile support for operator build (experimental)
     -p  --project &lt;project&gt;        Specifies the project / namespace to create images
+    -g  --goals &lt;g1&gt;,&lt;g2&gt;, ..      Use custom Maven goals to execute for the build. Default goal is <code>install</code>
     -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
     -l  --local                    If building the operator, use a locally installed go
                                    Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
@@ -933,21 +935,22 @@ Options for build:
 <h4 id="syndesis-build-modules">2.1.2. Modules</h4>
 <div class="paragraph">
 <p>A plain <code>build</code> command without any options performs a plain <code>mvn install</code> for all Java and UI modules.
-Plus it also builds the infrastructure operator via Go (see <a href="#below">syndesis-build-operator</a> for details)</p>
+Plus it also builds the infrastructure operator via Go (see <a href="#below">syndesis-build-operator</a> for details).
+The goal <code>install</code> is the default but you can customize the Maven goals with <code>--goals</code> (short: <code>-g</code>) option.</p>
 </div>
 <div class="paragraph">
-<p>This compiles all Java and Javascript artefacts and also runs all tests and code checks for the application modules.</p>
+<p>This compiles all Java and Javascript artifacts and also runs all tests and code checks for the application modules.</p>
 </div>
 <div class="paragraph">
 <p>You restrict the build to certain modules, which are divided into two categories: <em>application modules</em> which are the modules building up Syndesis.
 And <em>infrastructure modules</em> which help in managing the application itself.</p>
 </div>
 <div class="paragraph">
-<p>You can individually select specific modules by using the <code>--module</code> (short: <code>-m</code>) option with a comma-separated list of modules, but there
-are also option to combine modules</p>
+<p>You can individually select specific modules by using the <code>--module</code> (short: <code>-m</code>) option with a comma-separated list of modules. Modules are either top level
+modules that combine a set of Maven submodules in a logical unit or individual submodules defined with <code>[groupId]:artifactId</code>.</p>
 </div>
 <div class="paragraph">
-<p>The following modules are available:</p>
+<p>The following top level modules are available:</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -1047,7 +1050,13 @@ are also option to combine modules</p>
 <p>All option ending with <code>-images</code> will also build the corresponding Docker image.</p>
 </div>
 <div class="paragraph">
-<p>When you build individual modules you you can provide the option <code>--image</code> (short: <code>-i</code>) to create also the Docker image in the build, when the module is associated with a Docker image.</p>
+<p>In addition to using top level modules that combine to a set of submodules you can also specify a very specific submodule using
+its groupId and/or artifactId. For instance the module name for the SQL connector module would be <code>io.syndesis.connector:connector-sql</code>
+or simply <code>:connector-sql</code>. In case you skip the groupId the leading colon in the module name is very important because this identifies
+the module to be a submodule rather that a top level module.</p>
+</div>
+<div class="paragraph">
+<p>When you build individual modules you can provide the option <code>--image</code> (short: <code>-i</code>) to create also the Docker image in the build, when the module is associated with a Docker image.</p>
 </div>
 <div class="paragraph">
 <p>By default images are build via S2I against a running Minishift.
@@ -1107,6 +1116,11 @@ The following table shows these options, and also how long a full clean build ov
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>--maven-mirror &lt;url&gt;</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Use a maven mirror, e.g. a maven repo proxy in OpenShift with cached dependencies. See also [setting up a maven mirror](<a href="https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html" class="bare">https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html</a>).</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>--goals &lt;goal&gt;</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use custom Maven goals to execute for the build. Default goal is <code>install</code>.</p></td>
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 </tbody>
@@ -3368,8 +3382,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-9239-g21fde8d51<br>
-Last updated 2019-03-14 14:31:20 UTC
+Version 1.1.3-9242-g1503ebfaf<br>
+Last updated 2019-03-14 16:43:47 UTC
 </div>
 </div>
 </body>
