@@ -18,6 +18,6 @@ go get -u github.com/spf13/cobra github.com/spf13/pflag github.com/hoisie/mustac
 cd $dir
 
 echo "$MESSAGE" > ${targetdir}/syndesis.yml
-go run syndesis-template.go --name=syndesis $* >> ${targetdir}/syndesis.yml
+go run syndesis-template.go --name=syndesis --prometheus-rules-file=../../app/integration/project-generator/src/main/resources/io/syndesis/integration/project/generator/templates/prometheus-config.yml $* >> ${targetdir}/syndesis.yml
 
 # For re-enabling plain Docker images, use --with-docker-images when generating the template
