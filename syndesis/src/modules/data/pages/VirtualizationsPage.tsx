@@ -88,23 +88,25 @@ export default class VirtualizationsPage extends React.Component {
     alert('Export virtualization ');
   }
 
-  public handleUnpublishVirtualization() {
-    // TODO: implement handleUnpublishVirtualization
-    alert('Unpublish virtualization ');
-  }
-
-  public handlePublishVirtualization() {
-    // TODO: implement handlePublishVirtualization
-    alert('Publish virtualization ');
-  }
-
   public render() {
     return (
       // TODO need to retrieve real here
       <WithVirtualizationHelpers username="developer">
-        {({ deleteVirtualization }) => {
-          const handleDelete = async (virualizationName: string) => {
-            await deleteVirtualization(virualizationName);
+        {({
+          deleteVirtualization,
+          publishVirtualization,
+          unpublishServiceVdb,
+        }) => {
+          const handleDelete = async (virtualizationName: string) => {
+            await deleteVirtualization(virtualizationName);
+            // TODO: post toast notification
+          };
+          const handlePublish = async (virtualizationName: string) => {
+            await publishVirtualization(virtualizationName);
+            // TODO: post toast notification
+          };
+          const handleUnpublish = async (serviceVdbName: string) => {
+            await unpublishServiceVdb(serviceVdbName);
             // TODO: post toast notification
           };
           return (
@@ -196,6 +198,9 @@ export default class VirtualizationsPage extends React.Component {
                                           ? virtualization.tko__description
                                           : ''
                                       }
+                                      serviceVdbName={
+                                        virtualization.serviceVdbName
+                                      }
                                       i18nCancelText={t('shared:Cancel')}
                                       i18nDelete={t('shared:Delete')}
                                       i18nDeleteModalMessage={t(
@@ -220,12 +225,8 @@ export default class VirtualizationsPage extends React.Component {
                                       onDelete={handleDelete}
                                       onEdit={this.handleEditVirtualization}
                                       onExport={this.handleExportVirtualization}
-                                      onUnpublish={
-                                        this.handleUnpublishVirtualization
-                                      }
-                                      onPublish={
-                                        this.handlePublishVirtualization
-                                      }
+                                      onUnpublish={handleUnpublish}
+                                      onPublish={handlePublish}
                                       currentPublishedState={
                                         virtualization.publishedState
                                       }

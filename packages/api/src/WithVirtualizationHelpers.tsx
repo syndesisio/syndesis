@@ -11,6 +11,8 @@ export interface IWithVirtualizationHelpersChildrenProps {
     virtualizationDescription?: string
   ): Promise<void>;
   deleteVirtualization(virtualizationName: string): Promise<void>;
+  publishVirtualization(virtualizationName: string): Promise<void>;
+  unpublishServiceVdb(vdbName: string): Promise<void>;
 }
 
 export interface IWithVirtualizationHelpersProps {
@@ -25,6 +27,8 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
     super(props);
     this.createVirtualization = this.createVirtualization.bind(this);
     this.deleteVirtualization = this.deleteVirtualization.bind(this);
+    this.publishVirtualization = this.publishVirtualization.bind(this);
+    this.unpublishServiceVdb = this.unpublishServiceVdb.bind(this);
   }
 
   /**
@@ -73,10 +77,55 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
     return Promise.resolve();
   }
 
+  /**
+   * Publish the virtualization with the specified name.
+   * @param virtualizationName the name of the virtualization being published
+   */
+  public async publishVirtualization(
+    virtualizationName: string
+  ): Promise<void> {
+    const pubVirtualization = {
+      name: `${virtualizationName}`,
+    };
+
+    const response = await callFetch({
+      body: pubVirtualization,
+      headers: {},
+      method: 'POST',
+      url: `${this.props.dvApiUri}metadata/publish`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return Promise.resolve();
+  }
+
+  /**
+   * Unpublish the Service VDB with the specified name.
+   * @param vdbName the name of the vdb associated with the service
+   */
+  public async unpublishServiceVdb(vdbName: string): Promise<void> {
+    const response = await callFetch({
+      headers: {},
+      method: 'DELETE',
+      url: `${this.props.dvApiUri}metadata/publish/${vdbName}`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return Promise.resolve();
+  }
+
   public render() {
     return this.props.children({
       createVirtualization: this.createVirtualization,
       deleteVirtualization: this.deleteVirtualization,
+      publishVirtualization: this.publishVirtualization,
+      unpublishServiceVdb: this.unpublishServiceVdb,
     });
   }
 }
