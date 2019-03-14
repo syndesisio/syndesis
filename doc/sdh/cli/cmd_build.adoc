@@ -15,12 +15,13 @@ Usage: syndesis build [... options ...]
 
 Options for build:
     -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
-        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade, camel-k
         --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
                                    and create images
-        --infra-images             Build only infrastructure modules with Docker images (operator, upgrade) and create images
+        --infra-images             Build only infrastructure modules with Docker images (operator, camel-k, upgrade) and create images
     -m  --module <m1>,<m2>, ..     Build modules
-                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, upgrade
+                                   Top level modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camel-k, upgrade
+                                   Submodules: defined with [groupId]:artifactId (e.g. :connector-sql)
     -d  --dependencies             Build also all project the specified module depends on
         --skip-tests               Skip unit and system test execution
         --skip-checks              Disable all checks
@@ -29,6 +30,7 @@ Options for build:
         --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
         --multi-stage              Multi-stage Dockerfile support for operator build (experimental)
     -p  --project <project>        Specifies the project / namespace to create images
+    -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
     -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
     -l  --local                    If building the operator, use a locally installed go
                                    Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
@@ -49,18 +51,18 @@ Options for build:
 [[syndesis-build-modules]]
 === Modules
 A plain `build` command without any options performs a plain `mvn install` for all Java and UI modules.
-Plus it also builds the infrastructure operator via Go (see <<below,syndesis-build-operator>> for details)
+Plus it also builds the infrastructure operator via Go (see <<below,syndesis-build-operator>> for details).
+The goal `install` is the default but you can customize the Maven goals with `--goals` (short: `-g`) option.
 
-This compiles all Java and Javascript artefacts and also runs all tests and code checks for the application modules.
+This compiles all Java and Javascript artifacts and also runs all tests and code checks for the application modules.
 
 You restrict the build to certain modules, which are divided into two categories: _application modules_ which are the modules building up Syndesis.
 And _infrastructure modules_ which help in managing the application itself.
 
-You can individually select specific modules by using the `--module` (short: `-m`) option with a comma-separated list of modules, but there
-are also option to combine modules
+You can individually select specific modules by using the `--module` (short: `-m`) option with a comma-separated list of modules. Modules are either top level
+modules that combine a set of Maven submodules in a logical unit or individual submodules defined with `[groupId]:artifactId`.
 
-
-The following modules are available:
+The following top level modules are available:
 
 [cols="5,10,2,2,2,2", options="header"]
 |===
@@ -132,7 +134,12 @@ The following modules are available:
 
 All option ending with `-images` will also build the corresponding Docker image.
 
-When you build individual modules you you can provide the option `--image` (short: `-i`) to create also the Docker image in the build, when the module is associated with a Docker image.
+In addition to using top level modules that combine to a set of submodules you can also specify a very specific submodule using
+its groupId and/or artifactId. For instance the module name for the SQL connector module would be `io.syndesis.connector:connector-sql`
+or simply `:connector-sql`. In case you skip the groupId the leading colon in the module name is very important because this identifies
+the module to be a submodule rather that a top level module.
+
+When you build individual modules you can provide the option `--image` (short: `-i`) to create also the Docker image in the build, when the module is associated with a Docker image.
 
 By default images are build via S2I against a running Minishift.
 This is the recommended way for developing as this automatically will trigger a redeployment after the build.
@@ -168,13 +175,17 @@ The following table shows these options, and also how long a full clean build ov
 | Skip sanity checks like for correct license headers and
 |
 
-
 | `--flash`
 | Fastest mode with skipping all checks and tests and with even some other aggressive optimizations
 |
 
 |`--maven-mirror <url>`
 | Use a maven mirror, e.g. a maven repo proxy in OpenShift with cached dependencies. See also [setting up a maven mirror](https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html).
+|
+
+
+|`--goals <goal>`
+| Use custom Maven goals to execute for the build. Default goal is `install`.
 |
 
 | `--camel-snapshot <version>`

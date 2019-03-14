@@ -12,7 +12,8 @@ build::usage() {
                                    and create images
         --infra-images             Build only infrastructure modules with Docker images (operator, camel-k, upgrade) and create images
     -m  --module <m1>,<m2>, ..     Build modules
-                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camelk, upgrade
+                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camel-k, upgrade
+                                   Submodules: defined with [groupId]:artifactId (e.g. :connector-sql)
     -d  --dependencies             Build also all project the specified module depends on
         --skip-tests               Skip unit and system test execution
         --skip-checks              Disable all checks
@@ -21,6 +22,7 @@ build::usage() {
         --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
         --multi-stage              Multi-stage Dockerfile support for operator build (experimental)
     -p  --project <project>        Specifies the project / namespace to create images
+    -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
     -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
     -l  --local                    If building the operators, use a locally installed go
                                    Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
@@ -55,10 +57,16 @@ build::run() {
 
     local top_dir="$(appdir .)"
 
-    # All Maven modules (all modules minus operator)
+    # All Maven modules (all modules minus operator, camel-k, upgrade)
     local maven_modules=$(pick_module "$MAVEN_MODULES" "$modules")
     if [ -z "$modules" ] || [ -n "$maven_modules" ]; then
         call_maven "$(maven_args)" "$maven_modules"
+    fi
+
+    # All individual Maven submodules defined with [groupId]:artifactId (e.g. :connector-sql)
+    local submodules=$(pick_submodule "$ALL_MODULES" "$modules")
+    if [ -n "$modules" ] && [ -n "$submodules" ]; then
+        call_maven "$(maven_args)" "$submodules"
     fi
 
     # Build operator if requested
@@ -144,7 +152,7 @@ maven_args() {
         args="$args clean"
     fi
 
-    local goals="$(readopt --goals)"
+    local goals="$(readopt --goals -g)"
     if [ -n "${goals}" ]; then
         args="$args ${goals//,/ }"
     else
@@ -311,7 +319,6 @@ MODULES=(
   "test:common extension integration connector server s2i"
 )
 
-
 extract_modules() {
     local modules=""
 
@@ -360,19 +367,35 @@ extract_modules() {
 order_modules() {
     # Fix order
     local modules="$1"
-    # All modules in the proper order
-    local ret=$ALL_MODULES
-    for cm in "${MODULES[@]}"; do
-      local check_module=${cm%%:*}
-      # Check if $check_module is in the module list
-      if [ -n "${modules##*${check_module}*}" ]; then
-        # No, so remove it from the return value
-        ret=${ret//$check_module/}
+    local toplevel=""
+    local submodules=""
+
+    for module in ${modules}; do
+      # Check if module is one of our top level modules
+      if [ "${ALL_MODULES//$module}" != "${ALL_MODULES}" ]; then
+        toplevel="${toplevel} $module"
+      else
+        submodules="${submodules} $module"
       fi
     done
 
+    # All modules in the proper order
+    local ordered=$ALL_MODULES
+    for cm in "${MODULES[@]}"; do
+      local check_module=${cm%%:*}
+      # Check if $check_module is in the list of unordered top level modules
+      if [ -z "${toplevel}" ] || [ -n "${toplevel##*${check_module}*}" ]; then
+        # No, so remove it from the return value
+        ordered=${ordered//$check_module/}
+      fi
+    done
+
+    if [ -n "$submodules" ]; then
+        ordered="$ordered $submodules"
+    fi
+
     # Normalize return value
-    echo $ret | awk '$1=$1'
+    echo $ordered | awk '$1=$1'
 }
 
 pick_module() {
@@ -382,6 +405,19 @@ pick_module() {
     local res=""
     for module in $modules; do
         if [ "${pick_list//$module/}" != "${pick_list}" ]; then
+            res="$res $module"
+        fi
+    done
+    echo $res | awk '$1=$1'
+}
+
+pick_submodule() {
+    local toplevel="$1"
+    local modules="$2"
+
+    local res=""
+    for module in $modules; do
+        if [ "${toplevel//$module/}" == "${toplevel}" ]; then
             res="$res $module"
         fi
     done
