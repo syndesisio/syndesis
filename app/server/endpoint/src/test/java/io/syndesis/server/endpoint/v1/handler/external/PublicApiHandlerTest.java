@@ -122,13 +122,20 @@ public class PublicApiHandlerTest {
                 .deploymentVersion(1)
                 .build()).when(integrationHandler).get(any());
 
-        final IntegrationDeployment deployment = new IntegrationDeployment.Builder()
+        final IntegrationDeployment.Builder deploymentBuilder = new IntegrationDeployment.Builder()
                 .integrationId(Optional.of(INTEGRATION_ID))
-                .targetState(IntegrationDeploymentState.Published)
-                .build();
-        doAnswer(invocation -> Optional.of(deployment)).when(dataManager).fetchByPropertyValue(IntegrationDeployment.class,
-                INTEGRATION_ID_PROPERTY, INTEGRATION_ID);
-        when(deploymentHandler.update(any(), eq(INTEGRATION_ID))).thenReturn(deployment);
+                .currentState(IntegrationDeploymentState.Unpublished)
+                .targetState(IntegrationDeploymentState.Unpublished);
+        IntegrationDeployment[] deployments = new IntegrationDeployment[] {
+                deploymentBuilder.targetState(IntegrationDeploymentState.Unpublished).version(1).build(),
+                deploymentBuilder.version(2).targetState(IntegrationDeploymentState.Published).build()
+        };
+
+        doAnswer(invocation -> Stream.of(deployments))
+                .when(dataManager)
+                .fetchAllByPropertyValue(IntegrationDeployment.class, INTEGRATION_ID_PROPERTY, INTEGRATION_ID);
+        doAnswer(invocation -> deploymentBuilder.targetState(targetState = IntegrationDeploymentState.Published).build())
+                .when(deploymentHandler).update(any(), any());
 
         handler = new PublicApiHandler(dataManager, supportHandler,
                 encryptionComponent, integrationHandler, deploymentHandler, connectionHandler, monitoringProvider);
@@ -343,6 +350,6 @@ public class PublicApiHandlerTest {
         targetState = IntegrationDeploymentState.Published;
         handler.stopIntegration(getSecurityContext(), INTEGRATION_NAME);
 
-        verify(deploymentHandler).updateTargetState(eq(INTEGRATION_ID), eq(1), argThat(targetState -> targetState.getTargetState() == IntegrationDeploymentState.Unpublished));
+        verify(deploymentHandler).updateTargetState(eq(INTEGRATION_ID), eq(2), argThat(targetState -> targetState.getTargetState() == IntegrationDeploymentState.Unpublished));
     }
 }
