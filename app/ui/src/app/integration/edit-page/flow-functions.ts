@@ -669,7 +669,7 @@ export function getSubsequentSteps(
     // TODO following semantics for now, this should throw an error
     return undefined;
   }
-  return flow.steps.slice(position);
+  return flow.steps.slice(position + 1);
 }
 
 /**
