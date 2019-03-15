@@ -1,12 +1,6 @@
-import {
-  Button,
-  Grid,
-  Icon,
-  ListView,
-  ListViewIcon,
-  ListViewItem,
-} from 'patternfly-react';
+import { Button, Grid, Icon, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
+import { IntegrationStepsHorizontalView } from './IntegrationStepsHorizontalView';
 
 export interface IIntegrationDetailTabProps {
   description?: string;
@@ -24,34 +18,7 @@ export class IntegrationDetailTab extends React.PureComponent<
     return (
       <>
         <div>
-          <Grid fluid={true} xs={4}>
-            <Grid.Row className="show-grid">
-              <Grid.Col xs={6} md={4}>
-                {this.props.steps && this.props.steps[0] ? (
-                  <>
-                    <ListViewIcon name={'cube'} />
-                    <span>
-                      <p>{this.props.steps[0].name}</p>
-                    </span>
-                  </>
-                ) : null}
-              </Grid.Col>
-              {this.props.steps &&
-                this.props.steps.slice(1).map((opt: any, index: any) => (
-                  <>
-                    <Grid.Col xs={6} md={4}>
-                      <Icon name={'angle-right'} />
-                    </Grid.Col>
-                    <Grid.Col xsHidden={true} md={4}>
-                      <span>
-                        <ListViewIcon name={'cube'} />
-                        <p key={index}>{opt.name}</p>
-                      </span>
-                    </Grid.Col>
-                  </>
-                ))}
-            </Grid.Row>
-          </Grid>
+          <IntegrationStepsHorizontalView steps={this.props.steps} />
           <div>
             {this.props.description ? (
               <p>
