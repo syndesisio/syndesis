@@ -16,8 +16,8 @@ between connections.
 As you add to operation flows, you might find that you need to update
 the OpenAPI document that the API provider integration is based on. To do this, 
 click *View/Edit API Definition* in the upper right of a page in which
-you are editing your API provider integration. This displays your schema
-in the Apicurito editor. In your OpenAPI schema 
+you are editing your API provider integration. This displays your document
+in the Apicurito editor. In your OpenAPI 
 definition, as long as each operation has a unique `operationId` property, 
 you can save your updates in Apicurito and {prodname} can synchronize the
 API provider integration's flow definitions to have your updates. 

@@ -2,7 +2,7 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='requirements-for-api-provider-integrations_{context}']
-= Requirements for API provider integrations 
+= Requirements and recommendations for API provider integrations 
 
 After you specify an OpenAPI 2.0 document for your API provider 
 integration, you can update the document as needed while you define
