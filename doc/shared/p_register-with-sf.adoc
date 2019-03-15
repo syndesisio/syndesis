@@ -45,7 +45,7 @@ email message that welcomed you to the Red Hat Fuse Online Evaluation program.
 .. In the left panel, click *Settings*.
 .. On the *Settings* page, near the top, to the right of the callback URL, 
 click 
-image:shared/images/CopyCallback.png[Copy Callback URL] to 
+image:images/CopyCallback.png[Copy Callback URL] to 
 copy the callback URL for your {prodname} environment to the clipboard. 
 You will need this URL toward the end of this procedure. 
 .. To the right of the *Salesforce* entry,
@@ -73,7 +73,7 @@ For example:
 .. Select *Configure ID token* and then *Include Standard Claims*.
 .. Scroll down and click *Save*.
 .. Scroll up to see that Salesforce indicates a short wait:
-image:shared/images/SF-message-to-wait-a-few-minutes.png[title="Short Wait"]
+image:images/SF-message-to-wait-a-few-minutes.png[title="Short Wait"]
 .. Click *Continue*.
 .. Copy the consumer key that Salesforce provides.
 . Return to your {prodname} *Settings* page and paste the
