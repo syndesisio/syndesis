@@ -600,6 +600,96 @@ get_template_name() {
     echo $template
 }
 
+CAMEL_K_DEFAULT_VERSION="0.2.0"
+
+# Deploy Camel-K operator
+deploy_camel_k_operator() {
+  local version=${1:-$CAMEL_K_DEFAULT_VERSION}
+  local project=${2:-}
+  local opts=${3:-}
+  local extra_opts=""
+  if [ -n "$project" ]; then
+    extra_opts="--namespace $project"
+  fi
+  if [ -n "$opts" ]; then
+    extra_opts="$extra_opts $opts"
+  fi
+  local kamel=$(get_camel_k_bin "$version")
+  $kamel install --skip-cluster-setup --context jvm $extra_opts
+}
+
+# Install Camel-K CRD
+install_camel_k_crds() {
+  local version=${1:-$CAMEL_K_DEFAULT_VERSION}
+  local kamel=$(get_camel_k_bin "$version")
+  $kamel install --cluster-setup
+}
+
+# Syndesis config dir holding state across builds
+syndesis_config_dir() {
+  local dir="$HOME/.syndesis";
+  [ -d $dir ] || mkdir $dir;
+  echo $dir
+}
+
+isMacOs() {
+    if [ -z "${OSTYPE}" ]; then
+        if [ $(uname) == "Darwin" ]; then
+            echo "true"
+        fi
+    elif [ "${OSTYPE#darwin}" != "${OSTYPE}" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+isWindows() {
+    if [ -z "${OSTYPE}" ]; then
+        if [ $(uname) == "Windows" ]; then
+            echo "true"
+        fi
+    elif [ "${OSTYPE#windows}" != "${OSTYPE}" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+# Download `kamel` cli
+get_camel_k_bin() {
+  local version=${1:-$CAMEL_K_DEFAULT_VERSION}
+
+  # If its already downloaded, skip download
+  local config_dir=$(syndesis_config_dir)
+  [ -d $config_dir/bin ] || mkdir $config_dir/bin
+  local kamel_command="$config_dir/bin/kamel-${version}"
+  if [ -e $kamel_command ]; then
+    echo $kamel_command
+    return
+  fi
+
+  # Check for proper operating system
+  local os="linux"
+  if $(isMacOs); then
+    os="mac"
+  elif $(isWindows); then
+    os="windows"
+  fi
+  local download_url="https://github.com/apache/camel-k/releases/download/$version/camel-k-client-$version-$os-64bit.tar.gz"
+  local archive=$(mktemp $config_dir/camel-k-${version}.tar-XXXX)
+  # Download from Camel-K site
+  curl -sL -o $archive $download_url
+  local tmp_dir=$(mktemp -d $config_dir/camel-k-${version}-XXXX)
+  pushd $tmp_dir >/dev/null
+  tar xf $archive
+  rm $archive
+  mv ./kamel $kamel_command
+  popd >/dev/null
+  [ -n "$tmp_dir" ] && [ -d "$tmp_dir" ] && rm -rf $tmp_dir
+  echo $kamel_command
+}
+
 # ============================================================== (end-of-legacy)
 
 if [ $(hasflag --help -h) ]; then
@@ -620,6 +710,11 @@ if [ $(hasflag -s --setup) ]; then
     echo "Installing Syndesis CRD"
     result=$(install_syndesis_crd)
     check_error "$result"
+    if [ $(hasflag --camel-k) ]; then
+        echo "Installing Camel-K CRDs"
+        local result=$(install_camel_k_crds "$(readopt --camel-k)")
+        check_error "$result"
+    fi
     prep_only="true"
 fi
 
@@ -657,6 +752,13 @@ oc get syndesis >/dev/null 2>&1
 if [ $? -ne 0 ]; then
     check_error "ERROR: No CRD Syndesis installed or no permissions to read them. Please run --setup and/or --grant as cluster-admin. Please use '--help' for more information."
 fi
+
+if [ $(hasflag --camel-k) ]; then
+    oc get integration >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        check_error "ERROR: Camel-K installation requested but no Camel-K CRDs accessible. Please run --setup --camel-k to register the proper CRDs."
+    fi
+fi
 set -e
 
 # Deploy operator and wait until its up
@@ -666,6 +768,12 @@ check_error "$result"
 
 if [ $(hasflag --operator-only) ]; then
     exit 0
+fi
+
+if [ $(hasflag --camel-k) ]; then
+    echo "Deploying Camel-K operator"
+    result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)" "$(readopt --camel-k-options)")
+    check_error "$result"
 fi
 
 # Wait for the deployments to come up

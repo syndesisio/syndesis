@@ -99,7 +99,6 @@ install_syndesis_crd() {
 
 # Deploy operator
 deploy_syndesis_operator() {
-    local project="${1}"
     local operator_installed=$(oc get dc -o name | grep syndesis-operator)
     if [ -n "$operator_installed" ]; then
         local result=$(delete_openshift_resource "install/operator/deploy/syndesis-operator.yml")

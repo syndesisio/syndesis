@@ -95,7 +95,7 @@ install::run() {
 
     # Deploy operator and wait until its up
     echo "Deploying Syndesis operator"
-    result=$(deploy_syndesis_operator "$(oc project -q)")
+    result=$(deploy_syndesis_operator)
     check_error "$result"
 
     if [ $(hasflag --camel-k) ]; then
