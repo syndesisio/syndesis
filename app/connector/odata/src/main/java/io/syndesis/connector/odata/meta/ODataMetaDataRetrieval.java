@@ -90,10 +90,16 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                 // - In has NO shape
                 // - Out has the json entity schema
                 //
+                boolean isSplit = isSplit(properties);
                 inDataShapeBuilder.kind(DataShapeKinds.NONE);
                 outDataShapeBuilder.type(entitySchema.getTitle());
                 if (entitySchema.getProperties().isEmpty()) {
                     outDataShapeBuilder.kind(DataShapeKinds.NONE);
+                } else if (isSplit) {
+                    //
+                    // A split will mean that the schema is no longer an array schema
+                    //
+                    applySchemaSpecification(entitySchema,  outDataShapeBuilder);
                 } else {
                     ArraySchema collectionSchema = new ArraySchema();
                     collectionSchema.set$schema("http://json-schema.org/schema#");
@@ -164,6 +170,11 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
             }
 
             return new SyndesisMetadata(enrichedProperties, inDataShape, outDataShape);
+    }
+
+    private boolean isSplit(Map<String, Object> properties) {
+        Object splitProp = properties.get(SPLIT_RESULT);
+        return splitProp != null && Boolean.parseBoolean(splitProp.toString());
     }
 
     private void applySchemaSpecification(ContainerTypeSchema schema, DataShape.Builder dataShapeBuilder) {
