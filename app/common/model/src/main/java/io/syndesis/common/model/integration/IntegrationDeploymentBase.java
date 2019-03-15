@@ -19,6 +19,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.syndesis.common.model.WithModificationTimestamps;
 import io.syndesis.common.model.WithResourceId;
 import io.syndesis.common.model.WithVersion;
@@ -44,4 +45,11 @@ public interface IntegrationDeploymentBase extends WithResourceId, WithVersion, 
     }
 
     Optional<String> getStatusMessage();
+
+    IntegrationDeploymentError getError();
+
+    @JsonIgnore
+    default boolean hasError() {
+        return getError() != null;
+    }
 }

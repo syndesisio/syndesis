@@ -26,11 +26,12 @@ public interface IntegrationProjectGenerator {
      * Generate the project files in form of tar input stream
      *
      * @param integration the Integration
+     * @param errorHandler the error handler is provided with potential async errors raised during project generation
      * @return an {@link InputStream} which holds a tar archive and which can be directly used for
      * an S2I build
      * @throws IOException if generating fails
      */
-    InputStream generate(Integration integration) throws IOException;
+    InputStream generate(Integration integration, IntegrationErrorHandler errorHandler) throws IOException;
 
     Properties generateApplicationProperties(Integration deployment);
 

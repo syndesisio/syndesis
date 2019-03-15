@@ -48,7 +48,15 @@
                   <ng-container *ngSwitchCase="'Unpublished'">
                   </ng-container>
                   <ng-container *ngSwitchCase="'Error'">
-                    <span class="pficon pficon-error"></span>
+                    <span class="pficon pficon-error-circle-o"></span>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+
+              <ng-container *ngIf="deployment.version !== integration.deploymentVersion">
+                <ng-container [ngSwitch]="deployment.currentState">
+                  <ng-container *ngSwitchCase="'Error'">
+                    <span class="pficon pficon-error-circle-o"></span>
                   </ng-container>
                 </ng-container>
               </ng-container>
