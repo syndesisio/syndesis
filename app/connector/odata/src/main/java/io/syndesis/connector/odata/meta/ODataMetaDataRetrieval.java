@@ -101,10 +101,16 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                     //
                     applySchemaSpecification(entitySchema,  outDataShapeBuilder);
                 } else {
-                    ArraySchema collectionSchema = new ArraySchema();
-                    collectionSchema.set$schema("http://json-schema.org/schema#");
-                    collectionSchema.setItemsSchema(entitySchema);
-                    applySchemaSpecification(collectionSchema, outDataShapeBuilder);
+                    Object givenSplitResult = properties.get(ODataConstants.SPLIT_RESULT);
+                    boolean shouldSplit = Boolean.parseBoolean(String.valueOf(givenSplitResult));
+                    if (shouldSplit) {
+                        applySchemaSpecification(entitySchema, outDataShapeBuilder);
+                    } else {
+                        ArraySchema collectionSchema = new ArraySchema();
+                        collectionSchema.set$schema("http://json-schema.org/schema#");
+                        collectionSchema.setItemsSchema(entitySchema);
+                        applySchemaSpecification(collectionSchema, outDataShapeBuilder);
+                    }
                 }
 
                 inDataShape = inDataShapeBuilder.build();
