@@ -18,9 +18,16 @@ When {prodname} publishes an API provider integration, it annotates the API
 service definition for use with Red Hat 3scale. 3scale is Red Hat's API
 management solution. 3scale enforces API access policies, centralizes 
 API control, provides high availability for your API, and integrates with 
-Red Hat Fuse. For more information, see the API Gateway 
+Red Hat Fuse. Without 3scale, there is no access control. Anyone with 
+network access to the integration endpoint can trigger execution of 
+the integration.For more information, see the API Gateway 
 documentation that is available from 
 https://access.redhat.com/documentation/en-us/red_hat_3scale/2.3/[the Red Hat 3scale documentation page.]
+
+If you are running {prodname} on OCP on premise, the default 
+behavior is that APIs are not exposed for automatic discovery in 
+3scale. To expose APIs for automatic discovery in 3scale, see 
+link:{LinkFuseOnlineIntegrationGuide}#expose-apis_ocp[Expose APIs in 3scale for API provider integrations].
 
 The following topics provide information and 
 instructions for creating API provider integrations: 
