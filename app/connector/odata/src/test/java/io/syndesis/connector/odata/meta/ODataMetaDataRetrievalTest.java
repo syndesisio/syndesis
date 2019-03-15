@@ -133,6 +133,50 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
     }
 
     @Test
+    public void testReadMetaDataRetrievalWithSplit() throws Exception {
+        CamelContext context = new DefaultCamelContext();
+        ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();
+
+        String resourcePath = "Products";
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(METHOD_NAME, Methods.READ.id());
+        parameters.put(SERVICE_URI, defaultTestServer.servicePlainUri());
+        parameters.put(RESOURCE_PATH, resourcePath);
+        parameters.put(SPLIT_RESULT, true);
+
+        String componentId = "odata";
+        String actionId = "io.syndesis:" + Methods.READ.connectorId();
+
+        SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
+        assertNotNull(metadata);
+
+        Map<String, List<PropertyPair>> properties = metadata.properties;
+        assertFalse(properties.isEmpty());
+
+        //
+        // The method names are important for collecting prior
+        // to the filling in of the integration step (values such as resource etc...)
+        //
+        List<PropertyPair> resourcePaths = properties.get(RESOURCE_PATH);
+        assertNotNull(resourcePaths);
+        assertFalse(resourcePaths.isEmpty());
+
+        PropertyPair pair = resourcePaths.get(0);
+        assertNotNull(pair);
+        assertEquals(resourcePath, pair.getValue());
+
+        //
+        // The out data shape is defined after the integration step has
+        // been populated and should be a dynamic json-schema based
+        // on the contents of the OData Edm metadata object.
+        //
+        // Split causes it to be an ObjectSchema rather than an ArraySchema
+        //
+        checkTestServerSchemaMap(checkShape(metadata.outputShape, ObjectSchema.class));
+    }
+
+    @Test
     public void testCreateMetaDataRetrieval() throws Exception {
         CamelContext context = new DefaultCamelContext();
         ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();

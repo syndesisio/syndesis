@@ -23,7 +23,6 @@ import org.apache.camel.CamelContextAware;
 import org.apache.camel.Message;
 import org.apache.olingo.client.api.domain.ClientEntity;
 import org.apache.olingo.client.api.domain.ClientEntitySet;
-import org.apache.olingo.client.api.domain.ClientItem;
 import org.apache.olingo.client.api.domain.ClientValue;
 import org.apache.olingo.client.core.domain.ClientPrimitiveValueImpl;
 import org.apache.olingo.client.core.domain.ClientPropertyImpl;
@@ -70,13 +69,13 @@ public abstract class AbstractODataCustomizer implements ComponentProxyCustomize
     }
 
     protected void convertMessageToJson(Message in) throws JsonProcessingException {
-        if (in.getBody(ClientItem.class) == null) {
+        if (in.getBody(Object.class) == null) {
             in.setBody(Collections.emptyList());
             return;
         }
 
         List<String> resultList = new ArrayList<>();
-        ClientItem item = in.getBody(ClientItem.class);
+        Object item = in.getBody(Object.class);
         if (item instanceof ClientEntitySet) {
             //
             // If the results have not been split and returned as a
