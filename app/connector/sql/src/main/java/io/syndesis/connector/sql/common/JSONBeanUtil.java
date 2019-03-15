@@ -186,6 +186,7 @@ public final class JSONBeanUtil {
                     jsonBeans.add(bean);
                 }
             }
+            return jsonBeans;
         } else if (in.getBody() instanceof Map) {
             @SuppressWarnings("unchecked")
             final Map<String, Object> singleMap = in.getBody(Map.class);
@@ -194,8 +195,10 @@ public final class JSONBeanUtil {
                 final String bean = JSONBeanUtil.toJSONBean(singleMap);
                 jsonBeans.add(bean);
             }
+            return jsonBeans;
+        } else {
+            return null;
         }
 
-        return jsonBeans;
     }
 }
