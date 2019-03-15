@@ -45,6 +45,10 @@ with options:
 
 -p --project <project>        Install into this project. The project will be deleted
                               if it already exists. By default, install into the current project (without deleting)
+   --camel-k <version>        Install the Camel-K operator with version <version>
+                              (version is optional)
+   --camel-k-options "opts"   Options used when installing the camel-k operator.
+                              Use quotes and start with a space before appending the options.
 -w --watch                    Wait until the installation has completed
 -o --open                     Open Syndesis after installation (implies --watch)
    --help                     This help message
