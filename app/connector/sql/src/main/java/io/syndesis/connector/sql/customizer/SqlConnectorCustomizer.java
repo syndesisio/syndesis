@@ -18,8 +18,8 @@ package io.syndesis.connector.sql.customizer;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import io.syndesis.connector.sql.common.JSONBeanUtil;
@@ -51,14 +51,16 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
         if (body != null && !jdbcTypeMap.isEmpty()) {
             final Map<String, SqlParameterValue> sqlParametersValues = JSONBeanUtil.parseSqlParametersFromJSONBean(body, jdbcTypeMap);
             exchange.getIn().setBody(sqlParametersValues);
-        } else {
-            exchange.getIn().setBody(Collections.emptyMap());
         }
     }
 
     private void doAfterProducer(Exchange exchange) {
         final Message in = exchange.getIn();
-        in.setBody(JSONBeanUtil.toJSONBeans(in));
+        //converting SQL Map or List results to JSON Beans
+        List<String> list = JSONBeanUtil.toJSONBeans(in);
+        if (list != null) {
+            in.setBody(list);
+        }
     }
 
     private void initJdbcMap(Map<String, Object> options) {
