@@ -44,6 +44,7 @@ export interface IVirtualizationListItemProps {
   onPublish: (virtualizationName: string) => void;
   onUnpublish: (virtualizationName: string) => void;
   publishLogUrl?: string;
+  serviceVdbName: string;
   virtualizationName: string;
   virtualizationDescription: string;
 }
@@ -114,8 +115,8 @@ export class VirtualizationListItem extends React.Component<
   }
 
   public handleUnpublish() {
-    if (this.props.virtualizationName) {
-      this.props.onUnpublish(this.props.virtualizationName);
+    if (this.props.serviceVdbName) {
+      this.props.onUnpublish(this.props.serviceVdbName);
     }
   }
 
