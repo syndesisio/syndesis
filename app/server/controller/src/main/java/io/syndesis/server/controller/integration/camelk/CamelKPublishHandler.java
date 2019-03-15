@@ -133,6 +133,14 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             return createIntegration(integrationDeployment, integrationCRD);
         }
 
+        //check if it was unpublished
+        if (camelkIntegration.getMetadata()!=null &&
+            camelkIntegration.getMetadata().getLabels()!=null &&
+            integrationDeployment.getVersion()!= Integer.parseInt(camelkIntegration.getMetadata().getLabels().get(OpenShiftService.DEPLOYMENT_VERSION_LABEL))) {
+            logInfo(integrationDeployment, "Unpublished");
+            return new StateUpdate(IntegrationDeploymentState.Unpublished, Collections.emptyMap(), "Unpublished");
+        }
+
         //check if build failed
         if (CamelKSupport.isBuildFailed(camelkIntegration)) {
             logInfo(integrationDeployment, "Build Failed");
@@ -206,7 +214,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
 
         io.syndesis.server.controller.integration.camelk.crd.Integration result = new io.syndesis.server.controller.integration.camelk.crd.Integration();
         //add CR metadata
-        result.getMetadata().setName(Names.sanitize(integrationId));
+        result.getMetadata().setName(Names.sanitize(integration.getName()));
         result.getMetadata().setLabels(new HashMap<>());
         result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_ID_LABEL, Labels.sanitize(integrationId));
         result.getMetadata().getLabels().put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version);

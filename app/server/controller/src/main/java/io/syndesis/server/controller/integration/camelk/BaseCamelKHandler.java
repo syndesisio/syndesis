@@ -43,7 +43,7 @@ abstract class BaseCamelKHandler extends BaseHandler {
             io.syndesis.server.controller.integration.camelk.crd.Integration.class,
             IntegrationList.class,
             DoneableIntegration.class,
-            Names.sanitize(integrationDeployment.getIntegrationId().get())
+            Names.sanitize(integrationDeployment.getSpec().getName())
         );
     }
 }
