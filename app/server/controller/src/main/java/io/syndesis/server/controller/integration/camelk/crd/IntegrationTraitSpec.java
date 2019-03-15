@@ -18,10 +18,12 @@ package io.syndesis.server.controller.integration.camelk.crd;
 import java.util.Collections;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 @Value.Immutable
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonDeserialize(builder = IntegrationTraitSpec.Builder.class)
 // Immutables generates code that fails these checks
 @SuppressWarnings({ "ArrayEquals", "ArrayHashCode", "ArrayToString" })

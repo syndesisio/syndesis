@@ -170,6 +170,22 @@
 {{/WithDockerImages}}
     - type: ConfigChange
 
+# workaround camel-k metrics
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    annotations:
+      io.syndesis/upgrade-mode: keep
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
+    name: syndesis-prometheus-agent-config
+  data:
+    prometheus-config.yml: |-
+{{ PrometheusRules }}
+
 - apiVersion: v1
   kind: ConfigMap
   metadata:

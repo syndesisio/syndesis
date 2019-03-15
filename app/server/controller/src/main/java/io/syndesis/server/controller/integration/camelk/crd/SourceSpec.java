@@ -15,12 +15,15 @@
  */
 package io.syndesis.server.controller.integration.camelk.crd;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
 
 import javax.annotation.Nullable;
 
 @Value.Immutable
+@JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonDeserialize(builder = SourceSpec.Builder.class)
 // Immutables generates code that fails these checks
 @SuppressWarnings({ "ArrayEquals", "ArrayHashCode", "ArrayToString" })
@@ -29,20 +32,9 @@ public interface SourceSpec {
 //        DataSpec
 //        Language Language `json:"language,omitempty"`
 //    }
-//type DataSpec struct {
-//        Name        string `json:"name,omitempty"`
-//        Content     string `json:"content,omitempty"`
-//        ContentRef  string `json:"contentRef,omitempty"`
-//        Compression bool   `json:"compression,omitempty"`
-//    }
+    @JsonUnwrapped
     @Nullable
-    String getName();
-    @Nullable
-    String getContent();
-    @Nullable
-    String getContentRef();
-    @Nullable
-    Boolean getCompression();
+    DataSpec getDataSpec();
     @Nullable
     String getLanguage();
 
