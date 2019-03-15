@@ -99,6 +99,7 @@
       "published": "Running",
       "unpublished": "Stopped",
       "pending": "Pending",
+      "error": "Error",
       "cicd-modal": {
         "title": "Mark Integration for Continuous Integration/Continuous Deployment",
         "body": "Tag this integration for release in one or more of the following environments.",
