@@ -346,7 +346,7 @@ public class ExtensionsITCase extends BaseITCase {
                     .build())
                 .build());
 
-        await().atMost(10, TimeUnit.SECONDS).pollInterval(250, TimeUnit.MILLISECONDS).untilAsserted(() -> {
+        await().atMost(30, TimeUnit.SECONDS).pollInterval(250, TimeUnit.MILLISECONDS).untilAsserted(() -> {
             // Get extension details again, we need to use RAW here as Jackson will not be able
             // to write the `uses` property (access = READ_ONLY)
             final ResponseEntity<Map<String, Object>> got = get("/api/v1/extensions/" + id,
