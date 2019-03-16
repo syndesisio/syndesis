@@ -12,12 +12,20 @@ Google Sheets connection returns a collection of row objects.
 To execute subsequent steps once for each row, add a 
 split step after the Google Sheets connection. 
 
-A split step cannot operate on XML. If a split step get XML input, 
-the step passes the data to the next step in the operation. 
+Ensure that the input to a split step is always a collection. 
+If a split step gets a source document that is not a collection type, 
+the step splits the input at each space. For example, {prodname} splits 
+“Hello world!” input into two elements: “Hello” and “world!”, and 
+passes those two elements to the next step in the flow. In particular, 
+XML data is not a collection type.
+ 
 
 .Prerequisites
 * You are creating or editing a flow.
 * The flow already has all the connections that it requires.
+* In the flow visualization, the connection that obtains the source data 
+indicates that the data is a *(Collection)*. 
+
 
 .Procedure
 
@@ -36,6 +44,3 @@ the mappings. If you add a data mapper step and then add a split
 step, you usually need to redo the mappings. Likewise, if you 
 remove a split or aggregate step, then you would need to redo
 any mappings. 
-
-If there is nothing to split, the flow continues to process the
-single object as if the split step were not in the flow. 
