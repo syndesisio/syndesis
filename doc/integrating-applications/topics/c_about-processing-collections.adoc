@@ -14,7 +14,8 @@ Between the database connection and the Google Sheets
 connection, a data mapper step maps the database fields 
 to the Google Sheets fields. Since both the 
 source and the target are collections, when {prodname}
-executes the flow, it iterates
+executes the flow, it calls the Google Sheets connection once. 
+In that call, {prodname} iterates 
 through the records and correctly populates the spreadsheet. 
 
 In some flows, you might need to split a collection into 
