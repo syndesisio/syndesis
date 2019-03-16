@@ -22,7 +22,7 @@ provided sample database.
 . On the *Choose an Action* page, click *Invoke stored procedure*,
 which passes data to a stored procedure.
 
-. In the *Procedure Name* field, click and select *add_lead*, which is the
+. In the *Procedure Name* field, accept *add_lead*, which is the
 provided stored procedure to run in the sample database.
 The selected procedure determines the requirements for additional
 steps in the integration, for example, which Salesforce data fields
