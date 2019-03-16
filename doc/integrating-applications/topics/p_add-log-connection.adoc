@@ -17,8 +17,7 @@ inadvertently delete the provided log connection.
 
 .Prerequisites
 * You have chosen to add a log connection rather than a log step to an
-integration. For help with this, see 
-link:{LinkFuseOnlineConnectorGuide}#comparison-log-step-connection_connect-to-log[Comparison of log step and log connection].
+integration. 
 * You are creating or editing a flow and {prodname} is prompting you
 to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
 
@@ -63,9 +62,9 @@ the behavior for each log level.
 
 |*OFF*
 | No logging. After creating and testing an integration, you might no 
-longer need the logging provided by the log connection. Edit the 
-integration, edit its log connection to select *OFF*, and re-publish 
-the integration. 
+longer need the logging provided by the log connection. To turn it off, 
+edit the integration, edit its log connection configuration to select *OFF*, 
+and re-publish the integration. 
 
 |====
 
@@ -88,4 +87,4 @@ provides for each integration step, which you can view in the
 
 .Additional resource
 
-* link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[View integration activity]
+See also xref:viewing-integration-activity-information_monitor[View integration activity].
