@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.openshift;
 
+import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
@@ -252,4 +253,6 @@ public interface OpenShiftService {
     <T extends HasMetadata, L extends KubernetesResourceList<T>, D extends Doneable<T>> Watch watchCR(CustomResourceDefinition crd, Class<T> resourceType, Class<L> resourceListType, Class<D> doneableResourceType, BiConsumer<Watcher.Action,T> watcher);
 
     void createOrReplaceSecret(Secret secret);
+
+    ConfigMap createOrReplaceConfigMap(ConfigMap configMap);
 }

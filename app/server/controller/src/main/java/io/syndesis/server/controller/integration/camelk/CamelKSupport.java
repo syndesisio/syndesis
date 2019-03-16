@@ -21,9 +21,7 @@ import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
-import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
-import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
@@ -159,20 +157,20 @@ public final class CamelKSupport {
         return properties;
     }
 
-    @SuppressWarnings("unchecked")
-    public static io.syndesis.server.controller.integration.camelk.crd.Integration getIntegrationCR(
-            OpenShiftService openShiftService,
-            CustomResourceDefinition integrationCRD,
-            IntegrationDeployment integrationDeployment) {
-
-        return openShiftService.getCR(
-            integrationCRD,
-            io.syndesis.server.controller.integration.camelk.crd.Integration.class,
-            IntegrationList.class,
-            DoneableIntegration.class,
-            Names.sanitize(integrationDeployment.getIntegrationId().get())
-        );
-    }
+//    @SuppressWarnings("unchecked")
+//    public static io.syndesis.server.controller.integration.camelk.crd.Integration getIntegrationCR(
+//            OpenShiftService openShiftService,
+//            CustomResourceDefinition integrationCRD,
+//            IntegrationDeployment integrationDeployment) {
+//
+//        return openShiftService.getCR(
+//            integrationCRD,
+//            io.syndesis.server.controller.integration.camelk.crd.Integration.class,
+//            IntegrationList.class,
+//            DoneableIntegration.class,
+//            Names.sanitize(integrationDeployment.getIntegrationId().get())
+//        );
+//    }
 
     @SuppressWarnings("unchecked")
     public static List<io.syndesis.server.controller.integration.camelk.crd.Integration> getIntegrationCRbyLabels(

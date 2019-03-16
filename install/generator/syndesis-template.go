@@ -83,6 +83,7 @@ type Context struct {
 	Images           images
 	Tags             tags
 	Debug            bool
+	PrometheusRules  string
 }
 
 // TODO: Could be added from a local configuration file
@@ -146,6 +147,8 @@ var productContext = Context{
 }
 
 var context = syndesisContext
+var prometheusRulesFile = ""
+const  prometheusRulesFileIndent = "      "
 
 func init() {
 	flags := installCommand.PersistentFlags()
@@ -160,6 +163,7 @@ func init() {
 	flags.BoolVar(&context.EarlyAccess, "early-access", false, "Point repositories to early-access repos")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
 	flags.BoolVar(&context.Debug, "debug", false, "Enable debug support")
+    flags.StringVar(&prometheusRulesFile, "prometheus-rules-file", "", "Prometheus Rules file to copy as content of a configmap")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
 
@@ -181,6 +185,11 @@ func install(cmd *cobra.Command, args []string) {
 	sort.Slice(files, func(i, j int) bool {
 		return files[i].Name() < files[j].Name()
 	})
+
+    prometheusRules, err := ioutil.ReadFile(prometheusRulesFile)
+    check(err)
+
+    context.PrometheusRules = strings.Replace(prometheusRulesFileIndent+string(prometheusRules),"\n","\n"+prometheusRulesFileIndent,-1)
 
 	for _, f := range files {
 		if strings.HasSuffix(f.Name(), ".yml.mustache") {

@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.openshift;
 
+import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.HasMetadata;
@@ -576,5 +577,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
     @Override
     public void createOrReplaceSecret(Secret secret) {
         openShiftClient.secrets().createOrReplace(secret);
+    }
+
+    @Override
+    public ConfigMap createOrReplaceConfigMap(ConfigMap configMap){
+        return openShiftClient.configMaps().createOrReplace(configMap);
     }
 }

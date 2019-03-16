@@ -157,6 +157,6 @@ public class CamelKPublishHandlerTest {
         assertThat(i.getSpec().getSources()).isNotEmpty();
         assertThat(i.getSpec().getDependencies()).isNotEmpty();
         assertThat(i.getSpec().getResources()).isNotEmpty();
-        assertThat(i.getSpec().getResources()).anyMatch(r -> "mapping-flow-0-step-1.json".equals(r.getName()));
+        assertThat(i.getSpec().getResources()).anyMatch(r -> "mapping-flow-0-step-1.json".equals(r.getDataSpec().getName()));
     }
 }

@@ -23,21 +23,30 @@ import javax.annotation.Nullable;
 
 @Value.Immutable
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonDeserialize(builder = Failure.Builder.class)
+@JsonDeserialize(builder = DataSpec.Builder.class)
 // Immutables generates code that fails these checks
 @SuppressWarnings({ "ArrayEquals", "ArrayHashCode", "ArrayToString" })
-public interface Failure {
-//    type Failure struct {
-//        Reason   string          `json:"reason"`
-//        Time     metav1.Time     `json:"time"`
-//        Recovery FailureRecovery `json:"recovery"`
-    @Nullable
-    String getReason();
-    @Nullable
-    String getTime();
-    @Nullable
-    FailureRecovery getRecovery();
+public interface DataSpec {
+//    // DataSpec --
+//    type DataSpec struct {
+//        Name        string `json:"name,omitempty"`
+//        Content     string `json:"content,omitempty"`
+//        ContentRef  string `json:"contentRef,omitempty"`
+//        ContentKey  string `json:"contentKey,omitempty"`
+//        Compression bool   `json:"compression,omitempty"`
+//    }
 
-    class Builder extends ImmutableFailure.Builder {
+    @Nullable
+    String getName();
+    @Nullable
+    String getContent();
+    @Nullable
+    String getContentRef();
+    @Nullable
+    String getContentKey();
+    @Nullable
+    Boolean getCompression();
+
+    class Builder extends ImmutableDataSpec.Builder {
     }
 }

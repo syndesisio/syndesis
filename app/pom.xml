@@ -76,7 +76,7 @@
 
     <!-- Global camel version used everywhere -->
     <camel.version>2.21.0.fuse-730054</camel.version>
-    <camel-k.version>0.3.0</camel-k.version>
+    <camel-k-runtime.version>0.3.1</camel-k-runtime.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
     <dep.plugin.pmd.version>3.10.0</dep.plugin.pmd.version>
