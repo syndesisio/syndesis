@@ -22,6 +22,14 @@ can do what you want.
 |Add a log step
 |Add a log connection
 
+|Send information to the OpenShift pod that is running the integration.
+|
+|image:images/CheckMark.png[Yes]
+
+|Send information to the {prodname} integration *Activity* page
+|image:images/CheckMark.png[Yes]
+|
+
 |Log the ID of each message. (Internally, this ID is the exchange ID.) 
 |
 |image:images/CheckMark.png[Yes]
@@ -52,7 +60,3 @@ can do what you want.
 |image:images/CheckMark.png[Yes]
 
 |====
-
-.Additional resources
-* link:{LinkFuseOnlineIntegrationGuide}#add-log-step_create[Adding a log step to an integration] in {NameOfFuseOnlineIntegrationGuide}.
-* link:{LinkFuseOnlineConnectorGuide}#add-log-connection_connect-to-log[Adding a log connection to an integration]
