@@ -31,7 +31,7 @@ which takes you to a Google sign-in page.
 If *Connect Google Sheets* does not appear, then your {prodname} environment
 is not registered as a Google client application with the Google Sheets API
 enabled. See
-link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Register with Google].
+link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering with Google].
 When your environment is not registered with
 Google, then when you try to create a Google Sheets connection, {prodname} displays
 multiple fields that prompt for authorization information. While you can
