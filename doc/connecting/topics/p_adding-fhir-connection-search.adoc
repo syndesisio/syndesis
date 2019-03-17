@@ -1,0 +1,44 @@
+// This module is included in the following assemblies:
+// as_connecting-to-fhir.adoc
+
+[id='adding-fhir-connection-search_{context}']
+= Querying a FHIR server for particular records 
+
+In an integration, you can query a FHIR server to obtain 
+instances of a particular FHIR resource that satisfy a query 
+that you specify. For example, suppose you want to ensure that all 
+patients who are 65 and older received a pneumonia vaccination. 
+You can specify a query that obtains the records for patients
+who were born before 1955. To do this, 
+add a FHIR connection to the middle of a flow. 
+
+.Prerequisites
+* You created a connection to a FHIR server.
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step.  
+
+.Procedure
+
+. Click the FHIR connection that you want to use
+to query a FHIR server. 
+. On the *Choose an Action* page, click *Search*. 
+. Click in the *Resource Type* field to display a list
+of FHIR resource types. Select or enter the resource type 
+of the records that you want. 
+. In the *Query* field, specify a FHIR query or leave this 
+field blank to map the query from a previous step. 
+For details about forming a FHIR query, see 
+link:http://hl7.org/fhir/STU3/search.html[FHIR Release 3 Search].
+.  Click *Next* to add this connection to the flow. 
+
+.Result
+The connection appears in the integration flow 
+in the location where you added it. During execution, this 
+connection returns a list of records that satisfy the query 
+that you specified. {prodname} treats this list as a collection. 
+
+.Next steps
+If you did not specify a query, then add a data mapper step before 
+this step and map the query to this connection. 
+To operate on individual returned records, rather than on the 
+returned collection, after this connection, add a split step. 

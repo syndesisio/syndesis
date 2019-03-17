@@ -26,6 +26,9 @@ publish messages to an AMQP broker.
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-dropbox_connectors[Dropbox]
 |Download files from Dropbox or upload files to Dropbox.
 
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-fhir_connectors[FHIR]
+|Obtain resources from a FHIR server or update resources on a FHIR server. 
+
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-ftp_connectors[FTP/SFTP]
 |Download files from an FTP or SFTP server or upload files to an
 FTP or SFTP server.
