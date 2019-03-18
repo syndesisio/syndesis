@@ -3,8 +3,9 @@ package syndesis
 import (
 	"context"
 	"reflect"
+    "time"
 
-	"k8s.io/apimachinery/pkg/api/errors"
+    "k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
@@ -122,7 +123,11 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 		}
 	}
 
-	return reconcile.Result{}, nil
+	// Requeuing because actions expect this behaviour
+	return reconcile.Result{
+	    Requeue: true,
+	    RequeueAfter: 15 * time.Second,
+    }, nil
 }
 
 func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *syndesisv1alpha1.Syndesis) (bool, error) {
