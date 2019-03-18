@@ -19,6 +19,10 @@ import {
   INTEGRATION_CANCEL_CLICKED,
   INTEGRATION_DONE_CLICKED,
 } from '@syndesis/ui/integration/edit-page';
+import {
+  INTEGRATION_BUTTON_ENABLE_DONE,
+  INTEGRATION_BUTTON_DISABLE_DONE,
+} from '../edit-page.models';
 
 @Component({
   selector: 'syndesis-integration-step-configure',
@@ -71,20 +75,24 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
 
   continue(data: any = {}) {
     const step = this.step;
-    if (step.stepKind === DATA_MAPPER) {
-      this.customProperties = {
-        atlasmapping: this.mappings,
-      };
-    }
     if (this.stepStore.isCustomStep(step)) {
+      if (step.stepKind === DATA_MAPPER) {
+        this.customProperties = {
+          atlasmapping: this.mappings,
+        };
+      }
       data = this.customProperties;
     } else {
       data = this.formGroup ? this.formGroup.value : {};
     }
+    const properties = this.formFactory.sanitizeValues(
+      { ...data },
+      this.formConfig
+    );
     this.currentFlowService.events.emit({
       kind: INTEGRATION_SET_PROPERTIES,
       position: this.position,
-      properties: this.formFactory.sanitizeValues({ ...data }, this.formConfig),
+      properties,
       onSave: () => {
         // flag that this step is configured too for consistency
         // with how connections are configured
@@ -105,6 +113,15 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
 
   setMappings(mappings: string) {
     this.mappings = mappings;
+    if (typeof this.mappings !== 'undefined') {
+      this.currentFlowService.events.emit({
+        kind: INTEGRATION_BUTTON_ENABLE_DONE,
+      });
+    } else {
+      this.currentFlowService.events.emit({
+        kind: INTEGRATION_BUTTON_DISABLE_DONE,
+      });
+    }
   }
 
   getToolbarClass() {

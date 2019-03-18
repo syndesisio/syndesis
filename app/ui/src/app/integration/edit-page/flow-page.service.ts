@@ -10,6 +10,8 @@ import {
   INTEGRATION_DONE_CLICKED,
   INTEGRATION_UPDATED,
   INTEGRATION_SAVED,
+  INTEGRATION_BUTTON_DISABLE_DONE,
+  INTEGRATION_BUTTON_ENABLE_DONE,
 } from './edit-page.models';
 
 @Injectable()
@@ -20,6 +22,7 @@ export class FlowPageService {
   publishInProgress = false;
   showDone = false;
   showCancel = true;
+  doneDisabled = false;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -31,6 +34,12 @@ export class FlowPageService {
         case INTEGRATION_UPDATED:
         case INTEGRATION_SAVED:
           this.initialize();
+          break;
+        case INTEGRATION_BUTTON_DISABLE_DONE:
+          this.doneDisabled = true;
+          break;
+        case INTEGRATION_BUTTON_ENABLE_DONE:
+          this.doneDisabled = false;
           break;
         default:
       }
