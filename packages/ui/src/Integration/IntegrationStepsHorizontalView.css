@@ -1,3 +1,27 @@
 .integration-steps-horizontal-view {
   max-width: 300px;
+  text-align: center;
+}
+
+.integration-steps-horizontal-view .step-icon {
+  border-radius: 100px;
+  width: 55px;
+  height: 55px;
+  margin: 0 auto 5px;
+  background-color: #fff;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 3px solid #0088ce;
+}
+
+.integration-steps-horizontal-view .step-arrow {
+  position: absolute;
+  top: 28px;
+  -webkit-transform: translate(50%,-50%);
+  transform: translate(50%,-50%);
+  font-size: 2em;
+  line-height: 1;
+  color: #72767b;
 }

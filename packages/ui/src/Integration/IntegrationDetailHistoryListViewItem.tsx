@@ -31,7 +31,7 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
             </span>
           }
           actions={
-            <DropdownKebab id="action2kebab" pullRight={true}>
+            <DropdownKebab id="historyactions" pullRight={true}>
               <MenuItem>{this.props.i18nTextHistoryMenuReplaceDraft}</MenuItem>
               <MenuItem>{this.props.i18nTextHistoryMenuUnpublish}</MenuItem>
             </DropdownKebab>
@@ -46,7 +46,7 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
             <ListView.Icon
               type="pf"
               name="ok"
-              size="xs"
+              size="sm"
               className="list-view-pf-icon-success"
             />
           }

@@ -1,6 +1,8 @@
 import { Button, Grid, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 
+import './IntegrationDetailHistoryListView.css';
+
 export interface IIntegrationDetailHistoryListViewProps {
   integrationIsDraft: boolean;
   i18nTextBtnEdit?: string;
@@ -14,10 +16,14 @@ export class IntegrationDetailHistoryListView extends React.Component<
 > {
   public render() {
     return (
-      <Grid fluid={true} key={1}>
+      <Grid
+        fluid={true}
+        key={1}
+        className="integration-detail-history-list-view"
+      >
         {this.props.integrationIsDraft ? (
           <Grid.Row className="show-grid">
-            <Grid.Col xs={2} md={2}>
+            <Grid.Col xs={2} md={2} className="list-description">
               {this.props.i18nTextDraft}:
             </Grid.Col>
             <Grid.Col xs={10} md={10}>
@@ -38,7 +44,7 @@ export class IntegrationDetailHistoryListView extends React.Component<
 
         {this.props.children ? (
           <Grid.Row className="show-grid">
-            <Grid.Col xs={2} md={2}>
+            <Grid.Col xs={2} md={2} className="list-description">
               {<span>{this.props.i18nTextHistory}:</span>}
             </Grid.Col>
             <Grid.Col xs={10} md={10}>

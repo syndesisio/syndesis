@@ -1,0 +1,12 @@
+.integration-detail-history-list-view {
+    background-color: white;
+}
+
+.integration-detail-history-list-view .list-description {
+    font-weight: bold;
+    padding-top: 20px;
+}
+
+.list-view-pf-view {
+    margin-top: 0;
+}
