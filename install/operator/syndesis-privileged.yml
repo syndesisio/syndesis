@@ -1164,6 +1164,15 @@ objects:
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
+    name: syndesis-default
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-infrastructure
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
     name: syndesis-server
     labels:
       app: syndesis
