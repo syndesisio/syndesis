@@ -15,6 +15,16 @@
  */
 package io.syndesis.server.controller.integration;
 
+import java.io.IOException;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.TimeUnit;
+
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.integration.IntegrationDeployment;
@@ -30,16 +40,6 @@ import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.TimeUnit;
 
 /**
  * This class tracks changes to Integrations and attempts to process them so that
@@ -181,7 +181,7 @@ public abstract class BaseIntegrationController implements BackendController {
         IntegrationDeployment reconciled = reconcileDeployment(integrationDeployment);
         IntegrationDeploymentState desiredState = reconciled.getTargetState();
         IntegrationDeploymentState currentState = reconciled.getCurrentState();
-        if (!currentState.equals(desiredState)) {
+        if (currentState != IntegrationDeploymentState.Error && currentState != desiredState) {
                 reconciled.getId().ifPresent(integrationDeploymentId -> {
                     StateChangeHandler statusChangeHandler = handlers.get(desiredState);
                     if (statusChangeHandler != null) {
@@ -191,10 +191,10 @@ public abstract class BaseIntegrationController implements BackendController {
                     }
                 });
         } else if (reconciled.getCurrentState() !=  integrationDeployment.getCurrentState()) {
-          dataManager.update(reconciled);
-          scheduledChecks.remove(getIntegrationMarkerKey(reconciled));
+            dataManager.update(reconciled);
+            scheduledChecks.remove(getIntegrationMarkerKey(reconciled));
         } else {
-          scheduledChecks.remove(getIntegrationMarkerKey(reconciled));
+            scheduledChecks.remove(getIntegrationMarkerKey(reconciled));
         }
     }
 
@@ -217,7 +217,7 @@ public abstract class BaseIntegrationController implements BackendController {
                 final String integrationId = integrationDeployment.getIntegrationId().get();
                 final int deploymentVersion = integrationDeployment.getVersion();
                 LOG.info("IntegrationDeploymentId {} Integration {} : Start processing integration: {}, version: {} with handler: {}", integrationDeploymentId, integrationId, integrationId, deploymentVersion, handler.getClass().getSimpleName());
-                handler.execute(integrationDeployment, update->{
+                handler.execute(integrationDeployment, update-> {
                     if (LOG.isInfoEnabled()) {
                         LOG.info("{} : Setting status to {}{}",
                             getLabel(integrationDeployment),
@@ -231,6 +231,7 @@ public abstract class BaseIntegrationController implements BackendController {
                     final IntegrationDeployment updated = current.builder()
                         .statusMessage(Optional.ofNullable(update.getStatusMessage()))
                         .currentState(update.getState())
+                        .error(update.getError())
                         .stepsDone(update.getStepsPerformed())
                         .build();
                     LOG.trace("Updated {} , Current {}", updated, current);
@@ -297,7 +298,17 @@ public abstract class BaseIntegrationController implements BackendController {
     private IntegrationDeployment reconcileDeployment(IntegrationDeployment integrationDeployment) {
         IntegrationDeploymentState actualState = determineState(integrationDeployment);
         LOG.debug("Actual state: {}, Persisted state: {}, Desired state: {}", actualState, integrationDeployment.getCurrentState(), integrationDeployment.getTargetState());
-        //We also need to compare with current state to make sure we only call the unpublished() once. Calling it multiple times, might loose the steps perfromed, causing an infinite loop.
+
+        // Make sure to not loose error state, only overwrite when actual state in Openshift is published for some reason
+        if (integrationDeployment.getCurrentState() == IntegrationDeploymentState.Error) {
+            if (actualState == IntegrationDeploymentState.Published) {
+                return integrationDeployment.withCurrentState(actualState);
+            } else {
+                return integrationDeployment;
+            }
+        }
+
+        //We also need to compare with current state to make sure we only call the unpublished() once. Calling it multiple times, might loose the steps performed, causing an infinite loop.
         if (actualState == IntegrationDeploymentState.Unpublished && actualState != integrationDeployment.getCurrentState()) {
             return integrationDeployment.unpublished();
         } else {

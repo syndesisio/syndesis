@@ -31,6 +31,8 @@ export class IntegrationStatusComponent {
         return 'primary';
       case 'Unpublished':
         return 'inactive';
+      case 'Error':
+        return 'danger';
       default:
         return currentState;
     }

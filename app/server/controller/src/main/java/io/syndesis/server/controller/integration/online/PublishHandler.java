@@ -22,14 +22,17 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
 
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentError;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.Labels;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.integration.api.IntegrationErrorHandler;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
@@ -72,7 +75,6 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
 
     @Override
     public StateUpdate execute(final IntegrationDeployment integrationDeployment) {
-
         StateUpdate updateViaValidation = getValidator().validate(integrationDeployment);
         if (updateViaValidation != null) {
             return updateViaValidation;
@@ -84,8 +86,9 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
         BuildStepOncePerformer stepOncePerformer = new BuildStepOncePerformer(integrationDeployment);
         logInfo(integrationDeployment, "Steps performed so far: " + stepOncePerformer.getStepsPerformed());
 
-        if (isBuildFailed(integrationDeployment)){
-            return new StateUpdate(IntegrationDeploymentState.Error, stepOncePerformer.getStepsPerformed(), "Error");
+        if (hasError(integrationDeployment) || isBuildFailed(integrationDeployment)){
+            logError(integrationDeployment, "[ERROR] Build is in failed state");
+            return new StateUpdate(IntegrationDeploymentState.Error, stepOncePerformer.getStepsPerformed(), "Error", integrationDeployment.getError());
         }
 
         final Integration integration = integrationOf(integrationDeployment);
@@ -97,15 +100,21 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
             String buildLabel = "buildv" + deploymentData.getVersion();
             stepOncePerformer.perform(buildLabel, this::build, deploymentData);
 
-            deploymentData = new DeploymentData.Builder().createFrom(deploymentData).withImage(stepOncePerformer.stepsPerformed.get(buildLabel)).build();
+            if (stepOncePerformer.hasError()) {
+                logError(integrationDeployment, "[ERROR] Build failed with {} - {}",
+                        stepOncePerformer.getError().getType(), stepOncePerformer.getError().getMessage());
+                return new StateUpdate(IntegrationDeploymentState.Error, stepOncePerformer.getStepsPerformed(), "Error", stepOncePerformer.getError());
+            }
+
             if (hasPublishedDeployments(integrationDeployment)) {
                 return new StateUpdate(IntegrationDeploymentState.Unpublished, integrationDeployment.getStepsDone(), "Integration has still active deployments. Will retry shortly");
             }
 
+            deploymentData = new DeploymentData.Builder().createFrom(deploymentData).withImage(stepOncePerformer.stepsPerformed.get(buildLabel)).build();
             stepOncePerformer.perform("deploy", this::deploy, deploymentData);
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             logError(integrationDeployment, "[ERROR] Activation failure", e);
-            // Setting a message to update means implicitly thats in an error state (for the UI)
+            // Setting a message to update means implicitly that the deployment is in an error state (for the UI)
             return new StateUpdate(IntegrationDeploymentState.Pending, stepOncePerformer.getStepsPerformed(), e.getMessage());
         }
 
@@ -157,8 +166,8 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
     // =============================================================================
     // Various steps to perform:
 
-    private String build(IntegrationDeployment integration, DeploymentData data) throws IOException  {
-        InputStream tarInputStream = createProjectFiles(integration.getSpec());
+    private String build(IntegrationDeployment integration, DeploymentData data, IntegrationErrorHandler errorHandler)  {
+        InputStream tarInputStream = createProjectFiles(integration.getSpec(), errorHandler);
         logInfo(integration, "Created project files and starting build");
         try {
             return getOpenShiftService().build(integration.getSpec().getName(), data, tarInputStream);
@@ -167,7 +176,7 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
         }
     }
 
-    private String deploy(IntegrationDeployment integration, DeploymentData data) throws IOException {
+    private String deploy(IntegrationDeployment integration, DeploymentData data) {
         logInfo(integration, "Starting deployment");
         String revision = getOpenShiftService().deploy(integration.getSpec().getName(), data);
         logInfo(integration, "Deployment done");
@@ -176,6 +185,12 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
 
 
     // =================================================================================
+
+    private boolean hasError(IntegrationDeployment integrationDeployment) {
+        return integrationDeployment.getCurrentState() == IntegrationDeploymentState.Error ||
+                integrationDeployment.hasError() ||
+                getIntegrationDeploymentDao().hasError(integrationDeployment.getId().get());
+    }
 
     private boolean isBuildStarted(IntegrationDeployment integrationDeployment) {
         return getOpenShiftService().isBuildStarted(integrationDeployment.getSpec().getName());
@@ -226,9 +241,9 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
                                           .count() > 0;
     }
 
-    private InputStream createProjectFiles(Integration integrationDeployment) {
+    private InputStream createProjectFiles(Integration integration, IntegrationErrorHandler errorHandler) {
         try {
-            return projectGenerator.generate(integrationDeployment);
+            return projectGenerator.generate(integration, errorHandler);
         } catch (IOException e) {
             throw SyndesisServerException.launderThrowable(e);
         }
@@ -238,25 +253,58 @@ public class PublishHandler extends BaseOnlineHandler implements StateChangeHand
     // Some helper method to conditional execute certain steps
     @FunctionalInterface
     public interface IoCheckedFunction<T> {
-        String apply(T t, DeploymentData data) throws IOException;
+        String apply(T t, DeploymentData data);
+    }
+
+    @FunctionalInterface
+    public interface IoCheckedErrorHandlingFunction<T> {
+        String apply(T t, DeploymentData data, IntegrationErrorHandler errorHandler);
     }
 
     private class BuildStepOncePerformer {
         private final Map<String, String> stepsPerformed;
         private final IntegrationDeployment integrationDeployment;
+        private IntegrationDeploymentError error;
 
         BuildStepOncePerformer(IntegrationDeployment integrationDeployment) {
             this.integrationDeployment = integrationDeployment;
             this.stepsPerformed = new HashMap<>(integrationDeployment.getStepsDone());
         }
 
-        void perform(String step, IoCheckedFunction<IntegrationDeployment> callable, DeploymentData data) throws IOException {
+        void perform(String step, IoCheckedFunction<IntegrationDeployment> callable, DeploymentData data) {
             if (!stepsPerformed.containsKey(step)) {
-                    stepsPerformed.put(step, callable.apply(integrationDeployment, data));
-                } else {
-                    logInfo(integrationDeployment, "Skipped step {} because already performed", step);
-                }
+                stepsPerformed.put(step, callable.apply(integrationDeployment, data));
+            } else {
+                logInfo(integrationDeployment, "Skipped step {} because already performed", step);
             }
+        }
+
+        void perform(String step, IoCheckedErrorHandlingFunction<IntegrationDeployment> callable, DeploymentData data) {
+            if (!stepsPerformed.containsKey(step)) {
+                stepsPerformed.put(step, callable.apply(integrationDeployment, data,
+                        (throwable) -> {
+                        logError(integrationDeployment, "Error for step {}: {} {}",
+                                step,
+                                throwable.getClass().getName(),
+                                Optional.ofNullable(throwable.getMessage()).orElse(""));
+
+                        error = new IntegrationDeploymentError.Builder()
+                                        .type(throwable.getClass().getName())
+                                        .message(throwable.getMessage())
+                                        .build();
+                    }));
+            } else {
+                logInfo(integrationDeployment, "Skipped step {} because already performed", step);
+            }
+        }
+
+        boolean hasError() {
+            return error != null;
+        }
+
+        IntegrationDeploymentError getError() {
+            return error;
+        }
 
         Map<String, String> getStepsPerformed() {
             return stepsPerformed;

@@ -15,9 +15,6 @@
  */
 package io.syndesis.integration.project.generator;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.junit.Assert.assertEquals;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,24 +26,14 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Properties;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
+import java.util.concurrent.TimeUnit;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.Dependency;
@@ -68,6 +55,24 @@ import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.rules.TestName;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.ExcessiveMethodLength" })
 @RunWith(Parameterized.class)
@@ -79,6 +84,8 @@ public class ProjectGeneratorTest {
 
     private final String basePath;
     private final List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources;
+
+    private final List<Throwable> errors;
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
@@ -100,6 +107,7 @@ public class ProjectGeneratorTest {
     public ProjectGeneratorTest(String basePath, List<ProjectGeneratorConfiguration.Templates.Resource> additionalResources) {
         this.basePath = basePath;
         this.additionalResources = additionalResources;
+        this.errors = new ArrayList<>();
     }
 
     // ***************************
@@ -212,8 +220,39 @@ public class ProjectGeneratorTest {
         assertThat(runtimeDir.resolve("extensions/my-extension-2.jar")).exists();
         assertThat(runtimeDir.resolve("extensions/my-extension-3.jar")).exists();
         assertThat(runtimeDir.resolve("src/main/resources/mapping-flow-0-step-1.json")).exists();
+        assertThat(errors).isEmpty();
     }
 
+    @Test
+    public void testGenerateProjectErrorHandling() throws Exception {
+        TestResourceManager resourceManager = new TestResourceManager();
+
+        Integration integration = resourceManager.newIntegration(
+                new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .connection(new Connection.Builder()
+                                .id("timer-connection")
+                                .connector(TestConstants.TIMER_CONNECTOR)
+                                .build())
+                        .putConfiguredProperty("period", "5000")
+                        .action(TestConstants.PERIODIC_TIMER_ACTION)
+                        .build(),
+                new Step.Builder()
+                        .stepKind(StepKind.log)
+                        .build()
+        );
+
+        ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
+        configuration.getTemplates().setOverridePath(this.basePath);
+        configuration.getTemplates().getAdditionalResources().addAll(this.additionalResources);
+        configuration.getTemplates().getAdditionalResources().add(
+                new ProjectGeneratorConfiguration.Templates.Resource("file-that-does-not-exist.yml", "deployment.yml"));
+        configuration.setSecretMaskingEnabled(true);
+
+        generate(integration, configuration, resourceManager);
+        await().atMost(5000L, TimeUnit.MILLISECONDS).until(() -> !errors.isEmpty());
+        assertThat(errors.get(0)).isExactlyInstanceOf(IllegalArgumentException.class);
+    }
 
     @Test
     public void testGenerateApplicationProperties() throws IOException {
@@ -405,6 +444,7 @@ public class ProjectGeneratorTest {
 
         assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRoute.java"), "RestRoute.java");
         assertFileContents(configuration, runtimeDir.resolve("src/main/java/io/syndesis/example/RestRouteConfiguration.java"), "RestRouteConfiguration.java");
+        assertThat(errors).isEmpty();
     }
 
     // *****************************
@@ -512,6 +552,7 @@ public class ProjectGeneratorTest {
         Path runtimeDir = generate(integration, configuration, resourceManager);
 
         assertFileContents(configuration, runtimeDir.resolve("pom.xml"), "pom.xml");
+        assertThat(errors).isEmpty();
     }
 
     private Path generate(Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
@@ -578,10 +619,10 @@ public class ProjectGeneratorTest {
     // Tests
     // ***************************
 
-    protected static void generate(Path destination, Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
+    private void generate(Path destination, Integration integration, ProjectGeneratorConfiguration generatorConfiguration, TestResourceManager resourceManager) throws IOException {
         final IntegrationProjectGenerator generator = new ProjectGenerator(generatorConfiguration, resourceManager,TestConstants.MAVEN_PROPERTIES);
 
-        try (InputStream is = generator.generate(integration)) {
+        try (InputStream is = generator.generate(integration, errors::add)) {
             try (TarArchiveInputStream tis = new TarArchiveInputStream(is)) {
                 TarArchiveEntry tarEntry = tis.getNextTarEntry();
 
@@ -602,6 +643,6 @@ public class ProjectGeneratorTest {
                     tarEntry = tis.getNextTarEntry();
                 }
             }
-        };
+        }
     }
 }

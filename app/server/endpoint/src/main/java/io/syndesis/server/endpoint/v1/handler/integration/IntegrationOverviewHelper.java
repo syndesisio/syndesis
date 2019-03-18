@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
@@ -84,48 +86,50 @@ final class IntegrationOverviewHelper {
                 .collect(Collectors.toList()));
         }
 
-        IntegrationDeployment deployed = null;
+        final ListResult<IntegrationDeployment> deployments = dataManager.fetchAll(IntegrationDeployment.class,
+                new IdPrefixFilter<>(id + ":"), ReverseFilter.getInstance());
+
         final List<IntegrationDeployment> activeDeployments = new ArrayList<>();
-        for (final IntegrationDeployment deployment : dataManager.fetchAll(IntegrationDeployment.class,
-            new IdPrefixFilter<>(id + ":"), ReverseFilter.getInstance())) {
+        for (final IntegrationDeployment deployment : deployments) {
             builder.addDeployment(IntegrationDeploymentOverview.of(deployment));
 
-            final IntegrationDeploymentState currentState = deployment.getCurrentState();
-            if (currentState == IntegrationDeploymentState.Published) {
-                deployed = deployment;
-                builder.deploymentVersion(deployment.getVersion());
-            }
-
-            if (currentState != IntegrationDeploymentState.Unpublished) {
-                // the bet is that any integration that the user wanted to
-                // publish
-                // will have it's status != Unpublished, the reason why we can't
-                // look at the last deployment is because users can choose to
-                // deploy
-                // previous deployments, so we bet that all the Unpublished
-                // integrations are not the ones that the user don't hold the
-                // current state
-                builder.targetState(deployment.getTargetState());
-                builder.currentState(currentState);
+            if (deployment.getCurrentState() == IntegrationDeploymentState.Pending ||
+                deployment.getCurrentState() == IntegrationDeploymentState.Published) {
                 activeDeployments.add(deployment);
             }
         }
 
-        if (deployed != null) {
-            builder.isDraft(computeDraft(integration, deployed.getSpec()));
+        Optional<IntegrationDeployment> maybePublished = activeDeployments.stream()
+                  .filter(deployment -> deployment.getCurrentState() == IntegrationDeploymentState.Published)
+                  .findFirst();
+
+        IntegrationDeployment exposedDeployment = null;
+        if (maybePublished.isPresent()) {
+            IntegrationDeployment published = maybePublished.get();
+            builder.isDraft(computeDraft(integration, published.getSpec()));
+            builder.version(published.getVersion());
+            exposedDeployment = published;
+        } else if (activeDeployments.size() == 1) {
+            exposedDeployment = activeDeployments.get(0);
         }
 
         // Set the URL of the integration deployment if present
-        IntegrationDeployment exposedDeployment = deployed;
-        if (exposedDeployment == null && activeDeployments.size() == 1) {
-            exposedDeployment = activeDeployments.get(0);
-        }
-        if (exposedDeployment != null && exposedDeployment.getId().isPresent()) {
-            final IntegrationEndpoint endpoint = dataManager.fetch(IntegrationEndpoint.class,
-                exposedDeployment.getId().get());
-            if (endpoint != null) {
-                builder.url(endpoint.getUrl());
+        if (exposedDeployment != null) {
+            builder.deploymentVersion(exposedDeployment.getVersion());
+            builder.targetState(exposedDeployment.getTargetState());
+            builder.currentState(exposedDeployment.getCurrentState());
+
+            if (exposedDeployment.getId().isPresent()) {
+                final IntegrationEndpoint endpoint = dataManager.fetch(IntegrationEndpoint.class,
+                                                                    exposedDeployment.getId().get());
+                if (endpoint != null) {
+                    builder.url(endpoint.getUrl());
+                }
             }
+        } else if (!deployments.getItems().isEmpty()) {
+            // set overview status to latest deployment because there is no active deployment
+            builder.targetState(deployments.getItems().get(0).getTargetState());
+            builder.currentState(deployments.getItems().get(0).getCurrentState());
         }
 
         return builder.build();

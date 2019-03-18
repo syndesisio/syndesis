@@ -46,7 +46,7 @@
                 {{ 'integrations.unpublished' | synI18n }}
               </ng-container>
               <ng-container *ngSwitchCase="'Error'">
-                <span class="pficon pficon-error"></span> {{ 'integrations.' + integration.currentState | synI18n }}<span *ngIf="integration.deploymentVersion"> version {{ integration.deploymentVersion }}</span>
+                <span class="pficon pficon-error-circle-o"></span> {{ 'integrations.' + integration.currentState | synI18n }}<span *ngIf="integration.deploymentVersion"> version {{ integration.deploymentVersion }}</span>
               </ng-container>
             </ng-container>
           </div>
