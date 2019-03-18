@@ -30,6 +30,7 @@
               <button
                 class="btn btn-primary"
                 (click)="flowPageService.done()"
+                [disabled]="flowPageService.doneDisabled"
                 *ngIf="flowPageService.showDone"
               >
                 Done

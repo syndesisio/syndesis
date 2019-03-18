@@ -44,3 +44,6 @@ export const INTEGRATION_DONE_CLICKED = 'integration-done-clicked';
 export const INTEGRATION_DELETE_PROMPT = 'integration-delete-prompt';
 export const INTEGRATION_SIDEBAR_EXPAND = 'integration-sidebar-expand';
 export const INTEGRATION_SIDEBAR_COLLAPSE = 'integration-sidebar-collapse';
+export const INTEGRATION_BUTTON_DISABLE_DONE =
+  'integration-button-disable-done';
+export const INTEGRATION_BUTTON_ENABLE_DONE = 'integration-button-enable-done';
