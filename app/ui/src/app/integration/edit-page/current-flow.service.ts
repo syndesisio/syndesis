@@ -660,6 +660,7 @@ export class CurrentFlowService {
             typeof step.connection !== 'undefined' &&
             typeof step.action !== 'undefined' &&
             typeof step.configuredProperties !== 'undefined' &&
+            typeof step.action.tags !== 'undefined' &&
             typeof step.action.tags.find(tag => tag === 'dynamic') !==
               'undefined'
           ) {
