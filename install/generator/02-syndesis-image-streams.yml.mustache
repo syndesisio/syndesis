@@ -64,7 +64,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{Images.OAuthProxyImagePrefix}}/{{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}
+        name: {{Images.OAuthProxyImagePrefix}}/{{ Images.Support.OAuthProxyImage }}:{{ Tags.OAuthProxy }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.OAuthProxy }}"
