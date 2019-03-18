@@ -15,8 +15,6 @@
  */
 package io.syndesis.server.openshift;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Map;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -29,11 +27,11 @@ import io.fabric8.openshift.client.OpenShiftConfigBuilder;
 @Validated
 public class OpenShiftConfigurationProperties {
 
-    public String serviceCaCertFile = "/var/run/secrets/kubernetes.io/serviceaccount/service-ca.crt";
-
     private boolean enabled;
 
-    private String openShiftHost = "https://kubernetes.default.svc";
+    private String masterUrlHost = "https://kubernetes.default.svc";
+
+    private OpenShiftConfig openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(masterUrlHost).build();
 
     private String builderImageStreamTag = "s2i-java:2.0";
 
@@ -72,20 +70,19 @@ public class OpenShiftConfigurationProperties {
     }
 
     public String getOpenShiftHost() {
-        return openShiftHost;
+        return masterUrlHost;
     }
 
     public void setOpenShiftHost(String openShiftHost) {
-        this.openShiftHost = openShiftHost;
+        this.masterUrlHost = openShiftHost;
+
+        if (!masterUrlHost.equals(openShiftHost)) {
+            openShiftClientConfig = new OpenShiftConfigBuilder().withMasterUrl(masterUrlHost).build();
+        }
     }
 
     public OpenShiftConfig getOpenShiftClientConfiguration() {
-        OpenShiftConfigBuilder builder = new OpenShiftConfigBuilder();
-        builder.withMasterUrl(openShiftHost);
-        if( Files.exists(Paths.get(serviceCaCertFile)) ) {
-            builder = builder.withCaCertFile(serviceCaCertFile);
-        }
-        return builder.build();
+        return openShiftClientConfig;
     }
 
     public String getBuilderImageStreamTag() {
@@ -175,13 +172,4 @@ public class OpenShiftConfigurationProperties {
     public void setBuildNodeSelector(Map<String, String> buildNodeSelector) {
         this.buildNodeSelector = buildNodeSelector;
     }
-
-    public String getServiceCaCertFile() {
-        return serviceCaCertFile;
-    }
-
-    public void setServiceCaCertFile(String serviceCaCertFile) {
-        this.serviceCaCertFile = serviceCaCertFile;
-    }
-
 }
