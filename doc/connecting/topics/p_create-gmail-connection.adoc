@@ -28,7 +28,7 @@ which takes you to a *Sign in with Gmail* page.
 +
 If *Connect Gmail* does not appear, then your {prodname} environment
 is not registered as a Google client application. See
-link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Register with Google].
+link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering with Google].
 When you try to create a Gmail connection and your {prodname} environment 
 is not registered as a Google client application, then {prodname} displays
 multiple fields that prompt for authorization information. While you can

@@ -23,6 +23,8 @@ email message that welcomed you to the Red Hat Fuse Online Evaluation program.
 * {prodname} is open in a web browser. 
 * You must have already registered your {prodname} environment as an
 application that can access Salesforce. 
+* You added the Salesforce client ID and client secret that you received
+after registration to the {prodname} *Settings* page. 
 +
 ifeval::["{context}" == "t2sf"]
 If you did not already register {prodname}, see 
@@ -47,6 +49,15 @@ or more connections.
 . Click the *Salesforce* connector.
 . Click *Connect Salesforce* to display a Salesforce authorization page.
 You might need to log in to Salesforce before you see the authorization page.
++
+If *Connect Salesforce* does not appear, then your {prodname} environment
+is not registered as a Salesforce client application. See
+link:{LinkFuseOnlineConnectorGuide}#register-with-sf_salesforce[Registering with Salesforce].
+When you try to create a Salesforce connection and your {prodname} environment 
+is not registered as a Salesforce client application, then {prodname} displays
+multiple fields that prompt for authorization information. While you can
+create a Salesforce connection by entering values in these fields, 
+it is not recommended. 
 +
 [NOTE]
 ====
