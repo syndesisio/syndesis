@@ -7,6 +7,8 @@
 = How to process a collection in a flow
 :context: collection
 
+Sometimes, a connection returns a collection, which contains 
+multiple values that are all the same type. 
 When a connection returns a collection, the flow can 
 operate on the collection in a number of ways, including:
 
