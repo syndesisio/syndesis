@@ -37,6 +37,7 @@ import { ActionReducerError } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
   INTEGRATION_CANCEL_CLICKED,
+  INTEGRATION_REMOVE_STEP,
 } from '../../edit-page';
 
 @Component({
@@ -63,6 +64,7 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
   integrationDescription$: Observable<string>;
   creationError$: Observable<ActionReducerError>;
   flowSubscription: Subscription;
+  doingRedirect = false;
 
   @ViewChild('cancelModalTemplate') cancelModalTemplate: TemplateRef<any>;
   private cancelModalId = 'api-provider-create-cancellation-modal';
@@ -179,10 +181,22 @@ export class ApiProviderSpecComponent implements OnInit, OnDestroy {
     }
     this.modalService.unregisterModal(this.cancelModalId);
     this.apiProviderStore.dispatch(ApiProviderActions.createCancel());
-    this.nav.show();
+    // If the user canceled out of the wizard we're still in the editor
+    if (!this.doingRedirect) {
+      this.nav.show();
+    }
   }
 
   private redirectBack(): void {
-    this.router.navigate(['/integrations']);
+    this.doingRedirect = true;
+    // Remove the start connection that enables the API provider wizard
+    // and go back to the regular editor
+    this.currentFlowService.events.emit({
+      kind: INTEGRATION_REMOVE_STEP,
+      position: 0,
+      onSave: () => {
+        this.router.navigate(['/integrations/create/save-or-add-step']);
+      },
+    });
   }
 }
