@@ -10,8 +10,8 @@ workflow for creating an API provider integration is as follows:
 . Create the connections that you want to add to operation flows. 
 . Click *Create Integration* and to start the integration choose the 
 *API Provider* card.
-. Provide an OpenAPI 2.0 schema that defines your API service. 
-. Optionally, edit the schema. 
+. Provide an OpenAPI 2.0 document that defines your API service. 
+. Optionally, edit the document. 
 . Give the integration a name and save it. 
 . For one or more API operations, add to that operation's 
 flow. You can add any connection or other processing

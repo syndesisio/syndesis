@@ -30,7 +30,7 @@ to add to an operation's flow.
 . On the *Choose a Start Connection* page, click the *API Provider* card. 
 . On the *Start integration with an API call* page, if you have an OpenAPI 2.0
 document that defines the REST API operations then upload it in one of the 
-following ways. You can edit this schema as needed while you are 
+following ways. You can edit this document as needed while you are 
 creating the API provider integration.
 +
 * Drag and drop the document that contains the schema. 

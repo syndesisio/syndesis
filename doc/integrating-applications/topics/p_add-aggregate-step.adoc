@@ -38,6 +38,3 @@ the mappings. If you add a data mapper step and then add an
 aggregate step, you usually need to redo the mappings. Likewise, if you 
 remove an aggregate step, then you would need to redo
 any mappings. 
-
-If there is nothing to aggregate, the flow continues to process the
-single object as if the aggregate step were not in the flow. 

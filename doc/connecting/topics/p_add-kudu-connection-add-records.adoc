@@ -4,28 +4,23 @@
 [id='add-kudu-connection-add-records_{context}']
 = Inserting records into a Kudu table
 
-In an integration, you can add records to a Kudu table to finish
-an integration. To do this, add a Kudu connection as the integration's 
+In an integration, you can add records to a Kudu table in the middle 
+of a flow or to finish
+a simple integration. To do this, add a Kudu connection to the middle of 
+a flow or as a simple integration's 
 finish connection. 
 
 .Prerequisites
 * You created a Kudu connection.
 * You are creating or editing an integration and {prodname} is
-prompting you to choose the finish connection. 
+prompting you to choose a step. Or, {prodname} is 
+prompting you to choose a finish connection.  
 * The table that you want to add records to exists. 
 
 .Procedure
 
-. On the *Choose a Finish Connection* page, 
-click the Kudu connection that you want to use to complete 
-the integration. 
-//* To add a record to a Kudu table in the middle of 
-//an integration, click the connection that you
-//want to use to finish the integration. Configure that connection. When the
-//finish connection is part of the integration, in the left panel, hover over
-//the plus sign where you want to add a Kudu connection and click
-//*Add a connection*. Click the Kudu connection that you want to use
-//to add a record to a Kudu table in the middle of an integration. 
+. Click the Kudu connection that you want to use. Note that when 
+a Kudu connection inserts data, the connection does not return anything.  
 
 . On the *Choose an Action* page, click *Insert data into a Kudu table*. 
 . To configure the action, in the *Table* field, specify the name of the 
@@ -40,13 +35,13 @@ is already in the table, the Kudu connection does not add that record.
 . Click *Done*. 
 
 .Result
-The connection appears in the integration flow at the end of the 
-integration. 
+The connection appears in the integration flow in the location where
+you added it. 
 
 .Next steps
 Consider whether you need to split a collection of records  
 into individual records that a Kudu connection can add to a table.
-To do this, add a Split step to the integration. The Split step 
+To do this, add a split step to the integration. The split step 
 executes the subsequent steps in the integration once for each record. 
 Also, you probably need a data mapper step before a Kudu 
 connection that adds records to a table. 

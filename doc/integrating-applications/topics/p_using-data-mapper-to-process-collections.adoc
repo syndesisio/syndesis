@@ -19,6 +19,11 @@ image:images/data-type-collection.png[Data Type: SQL Result (Collection)]
 Add a data mapper step after the step that provides the collection and 
 before the step that needs the mappings. Exactly where in the flow this 
 data mapper step needs to be depends on the other steps in the flow. 
+Mapping a source collection to a target collections looks
+like this: 
+
+image:images/map-collections.png[mapping collection]
+
 In the source and target panels, the data mapper displays 
 image:images/collection-icon.png[this icon] to indicate
 a collection. Expand the collection container to see the
@@ -29,13 +34,13 @@ the flow, it iterates over the source collection to
 populate each element in the target collection 
 according to how you mapped the fields. 
 
-Mapping a source collection to a target collections looks
-like this: 
-image:images/map-collections.png[mapping collection]. 
-
 If you map fields in a source collection to a target that is 
 not a collection, then when {prodname} executes the flow, 
 it assigns values from only the first element in the source 
 collection. Any other elements in the collection are ignored. 
+However, any subsequent mapping steps can access all elements in 
+the collection. 
 
-In the data mapper, XML is always treated as one element and not a collection. 
+The data mapper can usually process JSON and Java source documents 
+as collections. The data mapper cannot process an XML source 
+document as a collection.  
