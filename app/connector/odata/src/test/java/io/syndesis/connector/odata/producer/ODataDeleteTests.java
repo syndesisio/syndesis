@@ -32,6 +32,7 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -88,6 +89,9 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
                         .putConfiguredProperty(METHOD_NAME, Methods.DELETE.id())
                         .addConnectorCustomizer(ODataDeleteCustomizer.class.getName())
                         .connectorFactory(ODataComponentFactory.class.getName())
+                        .inputDataShape(new DataShape.Builder()
+                                        .kind(DataShapeKinds.JSON_SCHEMA)
+                                        .build())
                         .outputDataShape(new DataShape.Builder()
                                          .kind(DataShapeKinds.JSON_INSTANCE)
                                          .build())
@@ -119,7 +123,10 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
                                                             .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
 
         String resourcePath = defaultTestServer.resourcePath();
-        String keyPredicate = "1";
+
+        ObjectNode keyPredicateJson = OBJECT_MAPPER.createObjectNode();
+        keyPredicateJson.put(KEY_PREDICATE, "1");
+
         Step odataStep = createODataStep(odataConnector, resourcePath);
         Step mockStep = createMockStep();
         Integration odataIntegration = createIntegration(directStep, odataStep, mockStep);
@@ -134,7 +141,8 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
         ProducerTemplate template = context.createProducerTemplate();
 
         context.start();
-        template.sendBody(directEndpoint, keyPredicate);
+        String inputJson = OBJECT_MAPPER.writeValueAsString(keyPredicateJson);
+        template.sendBody(directEndpoint, inputJson);
 
         result.assertIsSatisfied();
 
@@ -156,7 +164,10 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
 
 
         String resourcePath = defaultTestServer.resourcePath();
-        String keyPredicate = "ID=2";
+
+        ObjectNode keyPredicateJson = OBJECT_MAPPER.createObjectNode();
+        keyPredicateJson.put(KEY_PREDICATE, "ID=2");
+
         Step odataStep = createODataStep(odataConnector, resourcePath);
         Step mockStep = createMockStep();
         Integration odataIntegration = createIntegration(directStep, odataStep, mockStep);
@@ -171,7 +182,8 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
         ProducerTemplate template = context.createProducerTemplate();
 
         context.start();
-        template.sendBody(directEndpoint, keyPredicate);
+        String inputJson = OBJECT_MAPPER.writeValueAsString(keyPredicateJson);
+        template.sendBody(directEndpoint, inputJson);
 
         result.assertIsSatisfied();
 
@@ -208,7 +220,10 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
 
         context.start();
         for (int i = 1; i <= initialResultCount; ++i) {
-            template.sendBody(directEndpoint, String.valueOf(i));
+            ObjectNode keyPredicateJson = OBJECT_MAPPER.createObjectNode();
+            keyPredicateJson.put(KEY_PREDICATE, String.valueOf(i));
+            String inputJson = OBJECT_MAPPER.writeValueAsString(keyPredicateJson);
+            template.sendBody(directEndpoint, inputJson);
         }
 
         result.assertIsSatisfied();

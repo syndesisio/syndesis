@@ -17,10 +17,12 @@ package io.syndesis.connector.odata.customizer;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
 import org.apache.camel.Message;
+import org.apache.olingo.client.api.domain.ClientCollectionValue;
 import org.apache.olingo.client.api.domain.ClientEntity;
 import org.apache.olingo.client.api.domain.ClientEntitySet;
 import org.apache.olingo.client.api.domain.ClientValue;
@@ -42,6 +44,8 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 public abstract class AbstractODataCustomizer implements ComponentProxyCustomizer, CamelContextAware, ODataConstants {
 
     protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    private boolean split;
 
     static {
         SimpleModule module =
@@ -68,19 +72,27 @@ public abstract class AbstractODataCustomizer implements ComponentProxyCustomize
         return this.camelContext;
     }
 
+    public boolean isSplit() {
+        return this.split;
+    }
+
+    protected void setSplit(boolean split) {
+        this.split = split;
+    }
+
     protected void convertMessageToJson(Message in) throws JsonProcessingException {
         if (in.getBody(Object.class) == null) {
             in.setBody(Collections.emptyList());
             return;
         }
 
-        List<String> resultList = new ArrayList<>();
         Object item = in.getBody(Object.class);
         if (item instanceof ClientEntitySet) {
             //
             // If the results have not been split and returned as a
             // ClientEntitySet then split it up into a recognisable list
             //
+            List<String> resultList = new ArrayList<>();
             ClientEntitySet entitySet = (ClientEntitySet) item;
             List<ClientEntity> entities = entitySet.getEntities();
             for (ClientEntity entity : entities) {
@@ -95,12 +107,39 @@ public abstract class AbstractODataCustomizer implements ComponentProxyCustomize
                 }
 
                 resultList.add(OBJECT_MAPPER.writeValueAsString(entity));
+                in.setBody(resultList);
             }
+        } else if (item instanceof ClientValue && ((ClientValue) item).isCollection()) {
+            //
+            // If the results have not been split and returned as a
+            // ClientValueCollection then split it up into a recognisable list
+            //
+            List<String> resultList = new ArrayList<>();
+            ClientValue value = (ClientValue) item;
+            ClientCollectionValue<ClientValue> collection = value.asCollection();
+            Iterator<ClientValue> clientValIter = collection.iterator();
+            while(clientValIter.hasNext()) {
+                resultList.add(OBJECT_MAPPER.writeValueAsString(clientValIter.next()));
+            }
+            in.setBody(resultList);
         }
         else {
-            resultList.add(OBJECT_MAPPER.writeValueAsString(item));
+            //
+            // Need to keep aligned with the json-schema presented
+            // by ODataMetadataRetrieval.
+            // - If split option set to true then json-schema will be entity
+            // - If split option set to false then json-schema will be array
+            //
+            // Therefore, return the data in equivalent json structures.
+            //
+            String itemJson = OBJECT_MAPPER.writeValueAsString(item);
+            if (isSplit()) {
+                in.setBody(itemJson);
+            } else {
+                List<String> resultList = new ArrayList<>();
+                resultList.add(itemJson);
+                in.setBody(resultList);
+            }
         }
-
-        in.setBody(resultList);
     }
 }
