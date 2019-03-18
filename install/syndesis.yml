@@ -13,7 +13,7 @@ metadata:
 # Syndesis Tag: latest
 # Prometheus Tag: v2.1.0
 # Postgresql Tag: 9.5
-# OAuthProxy Tag: v1.1.0
+# OAuthProxy Tag: v4.0.0
 #
   labels:
     app: syndesis
@@ -233,10 +233,10 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:v1.1.0
+        name: quay.io/openshift/origin-oauth-proxy:v4.0.0
       importPolicy:
         scheduled: true
-      name: "v1.1.0"
+      name: "v4.0.0"
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -322,7 +322,7 @@ objects:
   stringData:
     syndesis: "latest"
     postgresql: "9.5"
-    oauthproxy: "v1.1.0"
+    oauthproxy: "v4.0.0"
     prometheus: "v2.1.0"
     params: |-
       ROUTE_HOSTNAME=${ROUTE_HOSTNAME}
@@ -1077,7 +1077,7 @@ objects:
         - syndesis-oauthproxy
         from:
           kind: ImageStreamTag
-          name: oauth-proxy:v1.1.0
+          name: oauth-proxy:v4.0.0
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
 
@@ -1264,14 +1264,14 @@ objects:
       #
       # Copyright (C) 2016 Red Hat, Inc.
       #
-      # Licensed under the Apache License, Version 2.0 (the &#34;License&#34;);
+      # Licensed under the Apache License, Version 2.0 (the "License");
       # you may not use this file except in compliance with the License.
       # You may obtain a copy of the License at
       #
       #     http://www.apache.org/licenses/LICENSE-2.0
       #
       # Unless required by applicable law or agreed to in writing, software
-      # distributed under the License is distributed on an &#34;AS IS&#34; BASIS,
+      # distributed under the License is distributed on an "AS IS" BASIS,
       # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
       # See the License for the specific language governing permissions and
       # limitations under the License.
@@ -1279,24 +1279,24 @@ objects:
       
       startDelaySecs: 5
       ssl: false
-      blacklistObjectNames: [&#34;java.lang:*&#34;]
+      blacklistObjectNames: ["java.lang:*"]
       rules:
       # Syndesis Camel Context
-        - pattern: &#39;io.syndesis.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;LastExchangeCompletedTimestamp&#39;
+        - pattern: 'io.syndesis.camel<context=([^,]+), type=context, name=([^,]+)><>LastExchangeCompletedTimestamp'
           name: io.syndesis.camel.LastExchangeCompletedTimestamp
           help: Last Exchange Completed Timestamp
           type: COUNTER
           labels:
             context: $1
             type: context
-        - pattern: &#39;io.syndesis.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;LastExchangeFailureTimestamp&#39;
+        - pattern: 'io.syndesis.camel<context=([^,]+), type=context, name=([^,]+)><>LastExchangeFailureTimestamp'
           name: io.syndesis.camel.LastExchangeFailureTimestamp
           help: Last Exchange Failure Timestamp
           type: COUNTER
           labels:
             context: $1
             type: context
-        - pattern: &#39;io.syndesis.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;StartTimestamp&#39;
+        - pattern: 'io.syndesis.camel<context=([^,]+), type=context, name=([^,]+)><>StartTimestamp'
           name: io.syndesis.camel.StartTimestamp
           help: Start Timestamp
           type: COUNTER
@@ -1304,84 +1304,84 @@ objects:
             context: $1
             type: context
       # Context level
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;ExchangesCompleted&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>ExchangesCompleted'
           name: org.apache.camel.ExchangesCompleted
           help: Exchanges Completed
           type: COUNTER
           labels:
             context: $1
             type: context
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;ExchangesFailed&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>ExchangesFailed'
           name: org.apache.camel.ExchangesFailed
           help: Exchanges Failed
           type: COUNTER
           labels:
             context: $1
             type: context
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;ExchangesInflight&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>ExchangesInflight'
           name: org.apache.camel.ExchangesInflight
           help: Exchanges Inflight
           type: COUNTER
           labels:
             context: $1
             type: context
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;ExchangesTotal&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>ExchangesTotal'
           name: org.apache.camel.ExchangesTotal
           help: Exchanges Total
           type: COUNTER
           labels:
             context: $1
             type: context
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;FailuresHandled&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>FailuresHandled'
           name: org.apache.camel.FailuresHandled
           help: Failures Handled
           labels:
               context: $1
               type: context
           type: COUNTER
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;ExternalRedeliveries&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>ExternalRedeliveries'
           name: org.apache.camel.ExternalRedeliveries
           help: External Redeliveries
           labels:
               context: $1
               type: context
           type: COUNTER
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;MaxProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>MaxProcessingTime'
           name: org.apache.camel.MaxProcessingTime
           help: Maximum Processing Time
           labels:
               context: $1
               type: context
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;MeanProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>MeanProcessingTime'
           name: org.apache.camel.MeanProcessingTime
           help: Mean Processing Time
           labels:
               context: $1
               type: context
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;MinProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>MinProcessingTime'
           name: org.apache.camel.MinProcessingTime
           help: Minimum Processing Time
           labels:
               context: $1
               type: context
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;Redeliveries&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>Redeliveries'
           name: org.apache.camel.Redeliveries
           help: Redeliveries
           labels:
               context: $1
               type: context
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=context, name=([^,]+)&gt;&lt;&gt;TotalProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=context, name=([^,]+)><>TotalProcessingTime'
           name: org.apache.camel.TotalProcessingTime
           help: Total Processing Time
           labels:
               context: $1
               type: context
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=consumers, name=([^,]+)&gt;&lt;&gt;InflightExchanges&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=consumers, name=([^,]+)><>InflightExchanges'
           name: org.apache.camel.InflightExchanges
           help: Inflight Exchanges
           labels:
@@ -1391,7 +1391,7 @@ objects:
       
       
       # Route level
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;ExchangesCompleted&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>ExchangesCompleted'
           name: org.apache.camel.ExchangesCompleted
           help: Exchanges Completed
           type: COUNTER
@@ -1399,7 +1399,7 @@ objects:
             context: $1
             route: $2
             type: routes
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;ExchangesFailed&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>ExchangesFailed'
           name: org.apache.camel.ExchangesFailed
           help: Exchanges Failed
           type: COUNTER
@@ -1407,7 +1407,7 @@ objects:
             context: $1
             route: $2
             type: routes
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;ExchangesInflight&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>ExchangesInflight'
           name: org.apache.camel.ExchangesInflight
           help: Exchanges Inflight
           type: COUNTER
@@ -1415,7 +1415,7 @@ objects:
             context: $1
             route: $2
             type: routes
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;ExchangesTotal&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>ExchangesTotal'
           name: org.apache.camel.ExchangesTotal
           help: Exchanges Total
           type: COUNTER
@@ -1423,7 +1423,7 @@ objects:
             context: $1
             route: $2
             type: routes
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;FailuresHandled&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>FailuresHandled'
           name: org.apache.camel.FailuresHandled
           help: Failures Handled
           labels:
@@ -1431,7 +1431,7 @@ objects:
               route: $2
               type: routes
           type: COUNTER
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;ExternalRedeliveries&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>ExternalRedeliveries'
           name: org.apache.camel.ExternalRedeliveries
           help: External Redeliveries
           labels:
@@ -1439,7 +1439,7 @@ objects:
               route: $2
               type: routes
           type: COUNTER
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;MaxProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>MaxProcessingTime'
           name: org.apache.camel.MaxProcessingTime
           help: Maximum Processing Time
           labels:
@@ -1447,7 +1447,7 @@ objects:
               route: $2
               type: routes
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;MeanProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>MeanProcessingTime'
           name: org.apache.camel.MeanProcessingTime
           help: Mean Processing Time
           labels:
@@ -1455,7 +1455,7 @@ objects:
               route: $2
               type: routes
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;MinProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>MinProcessingTime'
           name: org.apache.camel.MinProcessingTime
           help: Minimum Processing Time
           labels:
@@ -1463,7 +1463,7 @@ objects:
               route: $2
               type: routes
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;Redeliveries&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>Redeliveries'
           name: org.apache.camel.Redeliveries
           help: Redeliveries
           labels:
@@ -1471,7 +1471,7 @@ objects:
               route: $2
               type: routes
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;TotalProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>TotalProcessingTime'
           name: org.apache.camel.TotalProcessingTime
           help: Total Processing Time
           labels:
@@ -1479,7 +1479,7 @@ objects:
               route: $2
               type: routes
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=routes, name=([^,]+)&gt;&lt;&gt;InflightExchanges&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>InflightExchanges'
           name: org.apache.camel.InflightExchanges
           help: Inflight Exchanges
           labels:
@@ -1489,7 +1489,7 @@ objects:
           type: GAUGE
       
       # Processor level
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;ExchangesCompleted&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>ExchangesCompleted'
           name: org.apache.camel.ExchangesCompleted
           help: Exchanges Completed
           type: COUNTER
@@ -1497,7 +1497,7 @@ objects:
             context: $1
             processor: $2
             type: processors
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;ExchangesFailed&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>ExchangesFailed'
           name: org.apache.camel.ExchangesFailed
           help: Exchanges Failed
           type: COUNTER
@@ -1505,7 +1505,7 @@ objects:
             context: $1
             processor: $2
             type: processors
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;ExchangesInflight&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>ExchangesInflight'
           name: org.apache.camel.ExchangesInflight
           help: Exchanges Inflight
           type: COUNTER
@@ -1513,7 +1513,7 @@ objects:
             context: $1
             processor: $2
             type: processors
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;ExchangesTotal&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>ExchangesTotal'
           name: org.apache.camel.ExchangesTotal
           help: Exchanges Total
           type: COUNTER
@@ -1521,7 +1521,7 @@ objects:
             context: $1
             processor: $2
             type: processors
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;FailuresHandled&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>FailuresHandled'
           name: org.apache.camel.FailuresHandled
           help: Failures Handled
           labels:
@@ -1529,7 +1529,7 @@ objects:
               processor: $2
               type: processors
           type: COUNTER
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;ExternalRedeliveries&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>ExternalRedeliveries'
           name: org.apache.camel.ExternalRedeliveries
           help: External Redeliveries
           labels:
@@ -1537,7 +1537,7 @@ objects:
               processor: $2
               type: processors
           type: COUNTER
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;MaxProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>MaxProcessingTime'
           name: org.apache.camel.MaxProcessingTime
           help: Maximum Processing Time
           labels:
@@ -1545,7 +1545,7 @@ objects:
               processor: $2
               type: processors
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;MeanProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>MeanProcessingTime'
           name: org.apache.camel.MeanProcessingTime
           help: Mean Processing Time
           labels:
@@ -1553,7 +1553,7 @@ objects:
               processor: $2
               type: processors
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;MinProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>MinProcessingTime'
           name: org.apache.camel.MinProcessingTime
           help: Minimum Processing Time
           labels:
@@ -1561,7 +1561,7 @@ objects:
               processor: $2
               type: processors
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;Redeliveries&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>Redeliveries'
           name: org.apache.camel.Redeliveries
           help: Redeliveries
           labels:
@@ -1569,7 +1569,7 @@ objects:
               processor: $2
               type: processors
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;TotalProcessingTime&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>TotalProcessingTime'
           name: org.apache.camel.TotalProcessingTime
           help: Total Processing Time
           labels:
@@ -1577,7 +1577,7 @@ objects:
               processor: $2
               type: processors
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=processors, name=([^,]+)&gt;&lt;&gt;InflightExchanges&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>InflightExchanges'
           name: org.apache.camel.InflightExchanges
           help: Inflight Exchanges
           labels:
@@ -1587,7 +1587,7 @@ objects:
           type: COUNTER
       
       # Consumers
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=consumers, name=([^,]+)&gt;&lt;&gt;InflightExchanges&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=consumers, name=([^,]+)><>InflightExchanges'
           name: org.apache.camel.InflightExchanges
           help: Inflight Exchanges
           labels:
@@ -1597,7 +1597,7 @@ objects:
           type: GAUGE
       
       # Services
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=services, name=([^,]+)&gt;&lt;&gt;MaxDuration&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>MaxDuration'
           name: org.apache.camel.MaxDuration
           help: Maximum Duration
           labels:
@@ -1605,7 +1605,7 @@ objects:
               service: $2
               type: services
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=services, name=([^,]+)&gt;&lt;&gt;MeanDuration&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>MeanDuration'
           name: org.apache.camel.MeanDuration
           help: Mean Duration
           labels:
@@ -1613,7 +1613,7 @@ objects:
               service: $2
               type: services
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=services, name=([^,]+)&gt;&lt;&gt;MinDuration&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>MinDuration'
           name: org.apache.camel.MinDuration
           help: Minimum Duration
           labels:
@@ -1621,7 +1621,7 @@ objects:
               service: $2
               type: services
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=services, name=([^,]+)&gt;&lt;&gt;TotalDuration&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>TotalDuration'
           name: org.apache.camel.TotalDuration
           help: Total Duration
           labels:
@@ -1629,7 +1629,7 @@ objects:
               service: $2
               type: services
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=services, name=([^,]+)&gt;&lt;&gt;ThreadsBlocked&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>ThreadsBlocked'
           name: org.apache.camel.ThreadsBlocked
           help: Threads Blocked
           labels:
@@ -1637,7 +1637,7 @@ objects:
               service: $2
               type: services
           type: GAUGE
-        - pattern: &#39;org.apache.camel&lt;context=([^,]+), type=services, name=([^,]+)&gt;&lt;&gt;ThreadsInterrupted&#39;
+        - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>ThreadsInterrupted'
           name: org.apache.camel.ThreadsInterrupted
           help: Threads Interrupted
           labels:
@@ -1645,7 +1645,7 @@ objects:
               service: $2
               type: services
           type: GAUGE
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)&gt;&lt;&gt;NumLogicalRuntimeFaults&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)><>NumLogicalRuntimeFaults'
           name: org.apache.cxf.NumLogicalRuntimeFaults
           help: Number of logical runtime faults
           type: GAUGE
@@ -1655,7 +1655,7 @@ objects:
               service: $3
               port: $4
               operation: $5
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)&gt;&lt;&gt;NumLogicalRuntimeFaults&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)><>NumLogicalRuntimeFaults'
           name: org.apache.cxf.NumLogicalRuntimeFaults
           help: Number of logical runtime faults
           type: GAUGE
@@ -1664,7 +1664,7 @@ objects:
              type: $2
              service: $3
              port: $4
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)&gt;&lt;&gt;AvgResponseTime&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)><>AvgResponseTime'
           name: org.apache.cxf.AvgResponseTime
           help: Average Response Time
           type: GAUGE
@@ -1674,7 +1674,7 @@ objects:
              service: $3
              port: $4
              operation: $5
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)&gt;&lt;&gt;AvgResponseTime&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)><>AvgResponseTime'
           name: org.apache.cxf.AvgResponseTime
           help: Average Response Time
           type: GAUGE
@@ -1683,7 +1683,7 @@ objects:
                 type: $2
                 service: $3
                 port: $4
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)&gt;&lt;&gt;NumInvocations&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)><>NumInvocations'
           name: org.apache.cxf.NumInvocations
           help: Number of invocations
           type: GAUGE
@@ -1693,7 +1693,7 @@ objects:
               service: $3
               port: $4
               operation: $5
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)&gt;&lt;&gt;NumInvocations&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)><>NumInvocations'
           name: org.apache.cxf.NumInvocations
           help: Number of invocations
           type: GAUGE
@@ -1702,7 +1702,7 @@ objects:
               type: $2
               service: $3
               port: $4
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)&gt;&lt;&gt;MaxResponseTime&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)><>MaxResponseTime'
           name: org.apache.cxf.MaxResponseTime
           help: Maximum Response Time
           type: GAUGE
@@ -1712,7 +1712,7 @@ objects:
               service: $3
               port: $4
               operation: $5
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)&gt;&lt;&gt;MaxResponseTime&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)><>MaxResponseTime'
           name: org.apache.cxf.MaxResponseTime
           help: Maximum Response Time
           type: GAUGE
@@ -1721,7 +1721,7 @@ objects:
               type: $2
               service: $3
               port: $4
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)&gt;&lt;&gt;MinResponseTime&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)><>MinResponseTime'
           name: org.apache.cxf.MinResponseTime
           help: Minimum Response Time
           type: GAUGE
@@ -1731,7 +1731,7 @@ objects:
               service: $3
               port: $4
               operation: $5
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)&gt;&lt;&gt;MinResponseTime&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)><>MinResponseTime'
           name: org.apache.cxf.MinResponseTime
           help: Minimum Response Time
           type: GAUGE
@@ -1740,7 +1740,7 @@ objects:
               type: $2
               service: $3
               port: $4
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)&gt;&lt;&gt;TotalHandlingTime&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)><>TotalHandlingTime'
           name: org.apache.cxf.TotalHandlingTime
           help: Total Handling Time
           type: GAUGE
@@ -1750,7 +1750,7 @@ objects:
               service: $3
               port: $4
               operation: $5
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)&gt;&lt;&gt;TotalHandlingTime&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)><>TotalHandlingTime'
           name: org.apache.cxf.TotalHandlingTime
           help: Total Handling Time
           type: GAUGE
@@ -1759,7 +1759,7 @@ objects:
               type: $2
               service: $3
               port: $4
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)&gt;&lt;&gt;NumRuntimeFaults&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)><>NumRuntimeFaults'
           name: org.apache.cxf.NumRuntimeFaults
           help: Number of runtime faults
           type: GAUGE
@@ -1769,7 +1769,7 @@ objects:
               service: $3
               port: $4
               operation: $5
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)&gt;&lt;&gt;NumRuntimeFaults&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)><>NumRuntimeFaults'
           name: org.apache.cxf.NumRuntimeFaults
           help: Number of runtime faults
           type: GAUGE
@@ -1778,7 +1778,7 @@ objects:
               type: $2
               service: $3
               port: $4
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)&gt;&lt;&gt;NumUnCheckedApplicationFaults&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)><>NumUnCheckedApplicationFaults'
           name: org.apache.cxf.NumUnCheckedApplicationFaults
           help: Number of unchecked application faults
           type: GAUGE
@@ -1788,7 +1788,7 @@ objects:
               service: $3
               port: $4
               operation: $5
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)&gt;&lt;&gt;NumUnCheckedApplicationFaults&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)><>NumUnCheckedApplicationFaults'
           name: org.apache.cxf.NumUnCheckedApplicationFaults
           help: Number of unchecked application faults
           type: GAUGE
@@ -1797,7 +1797,7 @@ objects:
               type: $2
               service: $3
               port: $4
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)&gt;&lt;&gt;NumCheckedApplicationFaults&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+), operation=([^,]+)><>NumCheckedApplicationFaults'
           name: org.apache.cxf.NumCheckedApplicationFaults
           help: Number of checked application faults
           type: GAUGE
@@ -1807,7 +1807,7 @@ objects:
               service: $3
               port: $4
               operation: $5
-        - pattern: &#39;org.apache.cxf&lt;bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)&gt;&lt;&gt;NumCheckedApplicationFaults&#39;
+        - pattern: 'org.apache.cxf<bus.id=([^,]+), type=([^,]+), service=([^,]+), port=([^,]+)><>NumCheckedApplicationFaults'
           name: org.apache.cxf.NumCheckedApplicationFaults
           help: Number of checked application faults
           type: GAUGE
