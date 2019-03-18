@@ -346,6 +346,15 @@ objects:
       PROMETHEUS_MEMORY_LIMIT=${PROMETHEUS_MEMORY_LIMIT}
       PROMETHEUS_VOLUME_CAPACITY=${PROMETHEUS_VOLUME_CAPACITY}
 - apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: syndesis-default
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-infrastructure
+- apiVersion: v1
   kind: Service
   metadata:
     name: syndesis-ui
@@ -399,6 +408,7 @@ objects:
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-ui
       spec:
+        serviceAccountName: syndesis-default
         containers:
         - name: syndesis-ui
           image: ' '
@@ -661,6 +671,7 @@ objects:
           syndesis.io/app: syndesis
           syndesis.io/component: syndesis-db
       spec:
+        serviceAccountName: syndesis-default
         containers:
         - capabilities: {}
           env:
@@ -1006,6 +1017,7 @@ objects:
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-oauthproxy
       spec:
+        serviceAccountName: syndesis-default
         containers:
         - name: syndesis-oauthproxy
           image: ' '
