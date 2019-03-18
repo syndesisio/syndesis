@@ -62,6 +62,7 @@ import io.syndesis.common.util.Names;
 import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.Predicates;
 import io.syndesis.common.util.openapi.OpenApiHelper;
+import io.syndesis.integration.api.IntegrationErrorHandler;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.integration.project.generator.mvn.MavenGav;
@@ -105,13 +106,13 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
 
     @Override
     @SuppressWarnings("resource")
-    public InputStream generate(final Integration integrationDefinition) throws IOException {
+    public InputStream generate(final Integration integrationDefinition, IntegrationErrorHandler errorHandler) throws IOException {
         final Integration integration = resourceManager.sanitize(integrationDefinition);
         final PipedInputStream is = new PipedInputStream();
         final ExecutorService executor = Executors.newSingleThreadExecutor();
         final PipedOutputStream os = new PipedOutputStream(is);
 
-        executor.execute(generateAddProjectTarEntries(integration, os));
+        executor.execute(generateAddProjectTarEntries(integration, os, errorHandler));
 
         return is;
     }
@@ -256,7 +257,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
             }
             if (resource == null) {
                 throw new IllegalArgumentException(
-                    String.format("Unable to find te required additional resource (overridePath=%s, source=%s)"
+                    String.format("Unable to find the required additional resource (overridePath=%s, source=%s)"
                         , overridePath
                         , additionalResource.getSource()
                     )
@@ -272,7 +273,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
     }
 
     @SuppressWarnings("PMD.DoNotUseThreads")
-    private Runnable generateAddProjectTarEntries(Integration integration, OutputStream os) {
+    private Runnable generateAddProjectTarEntries(Integration integration, OutputStream os, IntegrationErrorHandler errorHandler) {
         return () -> {
             try (
                 TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
@@ -296,7 +297,8 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 addAdditionalResources(tos);
 
                 LOGGER.info("Integration [{}]: Project files written to output stream", Names.sanitize(integration.getName()));
-            } catch (IOException e) {
+            } catch (Exception e) {
+                errorHandler.accept(e);
                 if (LOGGER.isErrorEnabled()) {
                     LOGGER.error("Exception while creating runtime build tar for deployment {} : {}", integration.getName(), e.toString(), e);
                 }

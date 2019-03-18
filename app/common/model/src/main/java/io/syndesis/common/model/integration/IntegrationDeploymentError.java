@@ -13,17 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.dao;
+package io.syndesis.common.model.integration;
 
-import io.syndesis.server.dao.manager.DataAccessObject;
-import io.syndesis.common.model.integration.IntegrationDeployment;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.immutables.value.Value;
 
-public interface IntegrationDeploymentDao extends DataAccessObject<IntegrationDeployment> {
+@Value.Immutable
+@JsonDeserialize(builder = IntegrationDeploymentError.Builder.class)
+@SuppressWarnings("immutables")
+public interface IntegrationDeploymentError {
 
-    boolean hasError(String id);
+    String getType();
 
-    @Override
-    default Class<IntegrationDeployment> getType() {
-        return IntegrationDeployment.class;
+    String getMessage();
+
+    class Builder extends ImmutableIntegrationDeploymentError.Builder {
+        // allow access to ImmutableIntegrationDeploymentError.Builder
     }
 }

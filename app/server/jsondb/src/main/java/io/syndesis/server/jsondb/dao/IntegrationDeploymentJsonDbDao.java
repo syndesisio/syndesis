@@ -15,9 +15,9 @@
  */
 package io.syndesis.server.jsondb.dao;
 
+import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
 import io.syndesis.server.jsondb.JsonDB;
-import io.syndesis.common.model.integration.IntegrationDeployment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
@@ -33,4 +33,9 @@ public class IntegrationDeploymentJsonDbDao extends JsonDbDao<IntegrationDeploym
         super(jsondb);
     }
 
+    @Override
+    public boolean hasError(String id) {
+        IntegrationDeployment integrationDeployment = fetch(id);
+        return integrationDeployment.hasError();
+    }
 }

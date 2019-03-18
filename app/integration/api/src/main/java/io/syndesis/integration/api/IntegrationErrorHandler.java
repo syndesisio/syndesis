@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.dao;
 
-import io.syndesis.server.dao.manager.DataAccessObject;
-import io.syndesis.common.model.integration.IntegrationDeployment;
+package io.syndesis.integration.api;
 
-public interface IntegrationDeploymentDao extends DataAccessObject<IntegrationDeployment> {
+import java.util.function.Consumer;
 
-    boolean hasError(String id);
-
-    @Override
-    default Class<IntegrationDeployment> getType() {
-        return IntegrationDeployment.class;
-    }
+/**
+ * @author Christoph Deppisch
+ */
+@FunctionalInterface
+public interface IntegrationErrorHandler extends Consumer<Throwable> {
 }

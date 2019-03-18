@@ -19,11 +19,13 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 
+import io.syndesis.common.model.integration.IntegrationDeploymentError;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 
 public class StateUpdate {
 
     private final IntegrationDeploymentState state;
+    private final IntegrationDeploymentError error;
     private final String statusMessage;
     private final Map<String, String> stepsPerformed;
 
@@ -37,9 +39,14 @@ public class StateUpdate {
     }
 
     public StateUpdate(IntegrationDeploymentState state, Map<String, String> stepsPerformed, String statusMessage) {
+        this(state, stepsPerformed, statusMessage, null);
+    }
+
+    public StateUpdate(IntegrationDeploymentState state, Map<String, String> stepsPerformed, String statusMessage, IntegrationDeploymentError error) {
         this.state = state;
         this.stepsPerformed = Optional.ofNullable(stepsPerformed).orElseGet(Collections::emptyMap);
         this.statusMessage = statusMessage;
+        this.error = error;
     }
 
     public IntegrationDeploymentState getState() {
@@ -52,5 +59,9 @@ public class StateUpdate {
 
     public Map<String, String> getStepsPerformed() {
         return stepsPerformed;
+    }
+
+    public IntegrationDeploymentError getError() {
+        return error;
     }
 }
