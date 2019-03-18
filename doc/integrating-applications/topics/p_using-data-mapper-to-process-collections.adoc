@@ -5,8 +5,8 @@
 [id='using-data-mapper-to-process-collections_{context}']
 = Using the data mapper to process collections
 
-In a flow, when a step outputs a collection and when the 
-next connection expects a collection as the input, you can 
+In a flow, when a step outputs a collection and when a
+subsequent connection that is in the flow expects a collection as the input, you can 
 use the data mapper to specify how you want the flow to 
 process the collection.  You just need to map fields in 
 the source collection to fields in the target collection. 
@@ -41,6 +41,7 @@ collection. Any other elements in the collection are ignored.
 However, any subsequent mapping steps can access all elements in 
 the collection. 
 
-The data mapper can usually process JSON and Java source documents 
-as collections. The data mapper cannot process an XML source 
-document as a collection.  
+When a connection returns a collection that is defined in a 
+JSON or Java document, the data mapper can usually process 
+the source document as a collection. The data mapper cannot 
+process an XML source document as a collection.  
