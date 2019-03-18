@@ -20,6 +20,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.olingo4.internal.Olingo4Constants;
 import org.apache.camel.util.ObjectHelper;
+import com.fasterxml.jackson.databind.JsonNode;
 
 public class ODataDeleteCustomizer extends AbstractProducerCustomizer {
 
@@ -27,8 +28,12 @@ public class ODataDeleteCustomizer extends AbstractProducerCustomizer {
     protected void beforeProducer(Exchange exchange) throws IOException {
         Message in = exchange.getIn();
 
-        String keyPredicate = in.getBody(String.class);
-        if (! ObjectHelper.isEmpty(keyPredicate)) {
+        String body = in.getBody(String.class);
+        JsonNode node = OBJECT_MAPPER.readTree(body);
+        JsonNode keyPredicateNode = node.get(KEY_PREDICATE);
+
+        if (! ObjectHelper.isEmpty(keyPredicateNode)) {
+            String keyPredicate = keyPredicateNode.asText();
             in.setHeader(Olingo4Constants.PROPERTY_PREFIX + KEY_PREDICATE, keyPredicate);
         }
 

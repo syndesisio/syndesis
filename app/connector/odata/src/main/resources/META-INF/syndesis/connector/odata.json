@@ -170,9 +170,7 @@
         ],
         "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "inputDataShape": {
-          "kind": "java",
-          "name": "ODataEntityID",
-          "type": "java.lang.String"
+          "kind": "json-schema"
         },
         "outputDataShape": {
           "kind": "json-instance"
