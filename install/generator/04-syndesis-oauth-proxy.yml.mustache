@@ -68,6 +68,7 @@
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-oauthproxy
       spec:
+        serviceAccountName: syndesis-default
         containers:
         - name: syndesis-oauthproxy
 {{^WithDockerImages}}
