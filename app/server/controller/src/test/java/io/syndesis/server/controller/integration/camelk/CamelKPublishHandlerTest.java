@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
+import java.util.Collections;
 import java.util.Properties;
 
 import io.fabric8.kubernetes.api.model.Secret;
@@ -103,7 +104,8 @@ public class CamelKPublishHandlerTest {
             generator,
             null,
             manager,
-            new VersionService());
+            new VersionService(),
+            Collections.emptyList());
 
         Secret secret = handler.createIntegrationSecret(deployment);
 
@@ -149,7 +151,8 @@ public class CamelKPublishHandlerTest {
             generator,
             null,
             manager,
-            new VersionService());
+            new VersionService(),
+            Collections.emptyList());
 
 
         io.syndesis.server.controller.integration.camelk.crd.Integration i = handler.createIntegrationCR(deployment);

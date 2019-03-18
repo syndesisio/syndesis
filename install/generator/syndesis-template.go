@@ -39,6 +39,7 @@ var installCommand = &cobra.Command{
 type supportImages struct {
 	Postgresql       string
 	OAuthProxy       string
+	OAuthProxyImage  string
 	Prometheus       string
 	PostgresExporter string
 }
@@ -90,12 +91,13 @@ type Context struct {
 var syndesisContext = Context{
 	Images: images{
 		SyndesisImagesPrefix:        "syndesis",
-		OAuthProxyImagePrefix:       "openshift",
+		OAuthProxyImagePrefix:       "quay.io/openshift",
 		PrometheusImagePrefix:       "prom",
 		PostgresExporterImagePrefix: "wrouesnel",
 		Support: supportImages{
 			Postgresql:       "postgresql",
 			OAuthProxy:       "oauth-proxy",
+			OAuthProxyImage:  "origin-oauth-proxy",
 			Prometheus:       "prometheus",
 			PostgresExporter: "postgres_exporter",
 		},
@@ -109,7 +111,7 @@ var syndesisContext = Context{
 	},
 	Tags: tags{
 		Postgresql:       "9.5",
-		OAuthProxy:       "v1.1.0",
+		OAuthProxy:       "v4.0.0",
 		Prometheus:       "v2.1.0",
 		PostgresExporter: "v0.4.7",
 	},

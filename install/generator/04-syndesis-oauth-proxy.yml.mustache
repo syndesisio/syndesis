@@ -72,7 +72,7 @@
         - name: syndesis-oauthproxy
 {{^WithDockerImages}}
           image: ' '{{/WithDockerImages}}{{#WithDockerImages}}
-          image: ${SYNDESIS_REGISTRY}/{{Images.OAuthProxyImagePrefix}}/{{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}{{/WithDockerImages}}
+          image: {{Images.OAuthProxyImagePrefix}}/{{ Images.Support.OAuthProxyImage }}:{{ Tags.OAuthProxy }}{{/WithDockerImages}}
           args:
             - --provider=openshift
             - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
