@@ -718,8 +718,8 @@ export class CurrentFlowService {
         const subsequent = this.getSubsequentStepWithDataShape(position);
         this.fetchStepDescriptor(
           step,
-          previous.action.descriptor.outputDataShape,
           subsequent.action.descriptor.inputDataShape,
+          previous.action.descriptor.outputDataShape,
           then
         );
         break;
