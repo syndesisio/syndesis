@@ -9,6 +9,7 @@ rules:
   resources:
   - pods
   - services
+  - serviceAccounts
   - endpoints
   - persistentvolumeclaims
   - events

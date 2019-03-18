@@ -426,6 +426,7 @@ objects:
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-ui
       spec:
+        serviceAccountName: syndesis-default
         containers:
         - name: syndesis-ui
           image: ' '
@@ -562,6 +563,7 @@ objects:
           prometheus.io/scrape: "true"
           prometheus.io/port: "9187"
       spec:
+        serviceAccountName: syndesis-default
         containers:
         - capabilities: {}
           env:
@@ -778,6 +780,7 @@ objects:
           syndesis.io/app: syndesis
           syndesis.io/component: syndesis-db
       spec:
+        serviceAccountName: syndesis-default
         containers:
         - capabilities: {}
           env:
@@ -1154,6 +1157,15 @@ objects:
       type: ImageChange
 
     - type: ConfigChange
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: syndesis-default
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-infrastructure
 - apiVersion: v1
   kind: ServiceAccount
   metadata:
@@ -2467,6 +2479,7 @@ objects:
           syndesis.io/type: infrastructure
           syndesis.io/component: syndesis-grafana
       spec:
+        serviceAccountName: syndesis-default
         containers:
         - name: grafana
           image: ' '
