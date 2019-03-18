@@ -130,7 +130,7 @@ export class CurrentFlowService {
   }
 
   isValid(): boolean {
-    // TODO more validations on the integration
+    // TODO: more validations on the integration
     return this.integration.name && this.integration.name.length > 0;
   }
 
@@ -655,11 +655,13 @@ export class CurrentFlowService {
       outstanding = outstanding + 1;
       switch (step.stepKind) {
         case ENDPOINT:
-          // Update metadata but the connection needs to be configured
+          // Update metadata but the connection needs to be configured and the action needs to be tagged as dynamic
           if (
             typeof step.connection !== 'undefined' &&
             typeof step.action !== 'undefined' &&
-            typeof step.configuredProperties !== 'undefined'
+            typeof step.configuredProperties !== 'undefined' &&
+            typeof step.action.tags.find(tag => tag === 'dynamic') !==
+              'undefined'
           ) {
             this.fetchStepMetadata(step, position, decrementCount);
           } else {
