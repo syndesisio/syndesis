@@ -36,7 +36,7 @@ body.cards-pf {
 .pf-c-page__main {
   z-index: 100;
   .pf-c-page__main-section {
-    background-color: #ededed;
+    background-color: $color-pf-custom-gray;
     margin-top: 76px;
     overflow: auto;
     padding-top: 0;
