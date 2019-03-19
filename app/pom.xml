@@ -114,6 +114,7 @@
     <json-schema-core.version>1.2.8</json-schema-core.version>
     <json-schema-validator.version>2.2.8</json-schema-validator.version>
     <junit.version>4.12</junit.version>
+    <powermock.version>2.0.0</powermock.version>
 
     <spring-security.version>4.2.6.RELEASE</spring-security.version>
     <resteasy.version>3.6.1.Final</resteasy.version>
@@ -683,6 +684,7 @@
               <ignoredResourcePattern>draftv3/schema</ignoredResourcePattern>
               <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
               <ignoredResourcePattern>git.properties</ignoredResourcePattern>
+              <ignoredResourcePattern>mockito-extensions/org\.mockito\.plugins\.MockMaker</ignoredResourcePattern>
             </ignoredResourcePatterns>
             <exceptions>
               <exception>
@@ -1922,6 +1924,34 @@
         <groupId>org.mockito</groupId>
         <artifactId>mockito-core</artifactId>
         <version>2.19.0</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-api-mockito2</artifactId>
+        <version>${powermock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>${powermock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-core</artifactId>
+        <version>${powermock.version}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.powermock</groupId>
+        <artifactId>powermock-module-junit4</artifactId>
+        <version>2.0</version>
         <scope>test</scope>
       </dependency>
 

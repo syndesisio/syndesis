@@ -69,7 +69,7 @@
               </div>
             </div>
             <div class="list-pf-additional-content">
-              <span *ngIf="deployment.updatedAt">{{ 'last-published-on' | synI18n }} {{ deployment.updatedAt | synDate:'medium' }}</span>
+              <span *ngIf="deployment.updatedAt">{{ 'last-published-on' | synI18n }} {{ deployment.createdAt | synDate:'medium' }}</span>
               <span>{{ deployment.timesUsed | i18nPlural:usesMapping }} </span>
             </div>
           </ng-template>
