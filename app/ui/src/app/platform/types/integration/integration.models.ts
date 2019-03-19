@@ -237,3 +237,6 @@ export interface DescriptorRequest {
   inputShape: DataShape;
   outputShape: DataShape;
 }
+
+export const HIDE_FROM_STEP_SELECT = 'hide-from-step-select';
+export const HIDE_FROM_CONNECTION_PAGES = 'hide-from-connection-pages';

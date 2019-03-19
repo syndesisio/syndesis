@@ -14,6 +14,7 @@ import {
   ConfigurationProperty,
   createConnectionStep,
   StepOrConnection,
+  HIDE_FROM_STEP_SELECT,
 } from '@syndesis/ui/platform';
 import {
   ENDPOINT,
@@ -160,10 +161,23 @@ export function filterStepsByPosition(
     // safety net
     return steps;
   }
-  // If we're looking at the start of the integration
-  if (position === 0) {
-    return steps.filter(step => {
-      // TODO at the moment only endpoints can be at the start
+  const atStart = position === 0;
+  const atEnd = getLastPosition(integration, flowId) === position;
+  return steps.filter((step: any) => {
+    // Hide steps that are marked as such, and specifically the log connection
+    if (
+      (typeof step.connection !== 'undefined' &&
+        typeof step.connection.metadata !== 'undefined' &&
+        step.connection.metadata[HIDE_FROM_STEP_SELECT]) ||
+      (typeof step.metadata !== 'undefined' &&
+        step.metadata[HIDE_FROM_STEP_SELECT]) ||
+      step.connectorId === 'log'
+    ) {
+      return false;
+    }
+    // Special handling for the beginning of a flow
+    if (atStart) {
+      // At the moment only endpoints can be at the start
       if ('stepKind' in step) {
         return false;
       }
@@ -174,11 +188,8 @@ export function filterStepsByPosition(
       return step.connector.actions.some(action => {
         return action.pattern === 'From';
       });
-    });
-  }
-  // If we're any place else in the integration
-  const atEnd = getLastPosition(integration, flowId) === position;
-  return steps.filter((step: any) => {
+    }
+    // Special handling for the end of a flow
     if (atEnd) {
       // Several step kinds aren't usable at the end of a flow
       switch ((step as Step).stepKind) {

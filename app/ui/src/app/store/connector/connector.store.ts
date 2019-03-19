@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { Connectors, Connector } from '@syndesis/ui/platform';
+import {
+  Connectors,
+  Connector,
+  HIDE_FROM_CONNECTION_PAGES,
+} from '@syndesis/ui/platform';
 
 import { AbstractStore } from '@syndesis/ui/store/entity/entity.store';
 import { EventsService } from '@syndesis/ui/store/entity/events.service';
@@ -32,6 +36,8 @@ export class ConnectorStore extends AbstractStore<
   }
 
   get listVisible() {
-    return this.list.map(lst => lst.filter(c => !c.metadata || !c.metadata['hide-from-connection-pages']));
+    return this.list.map(lst =>
+      lst.filter(c => !c.metadata || !c.metadata[HIDE_FROM_CONNECTION_PAGES])
+    );
   }
 }
