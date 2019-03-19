@@ -2,43 +2,42 @@
 // as_connecting-to-fhir.adoc
 
 [id='adding-fhir-connection-read_{context}']
-= Obtaining records from a FHIR server
+= Obtaining a resource from a FHIR server
 
-In an integration, you can obtain one or more instances of a particular
-FHIR resource from a FHIR server. For example, you can obtain records 
-for one or more patients. To do this, add a FHIR connection 
+In an integration, you can obtain one resource that is of the type 
+that you specify. To do this, add a FHIR connection 
 to the middle of a flow. 
 
 .Prerequisites
-* You created a connection to a FHIR server.
+* You created a connection to the FHIR server that has the resource 
+that you want to obtain.
 * You are creating or editing a flow and {prodname} is prompting you
 to choose a step.  
 
 .Procedure
 
-. Click the FHIR connection that you want to use
-to obtain records from a FHIR server. 
+. Click the FHIR connection that can access the resource that you want to obtain. 
 . On the *Choose an Action* page, click *Read*. 
 . Click in the *Resource Type* field to display a list
-of FHIR resource types. Select or enter the resource type 
-of the records that you want. 
+of FHIR resource types. Select or enter the type of resource that you 
+want to obtain. 
 . In the *Contained Resource Types* field, if the resource type 
-of the records that you want contains other resource types, select 
+that you want contains other resource types, select 
 them. Use the *Ctrl* key if you need to select more than one. 
-. In the *Resource Id* field, if you want to obtain a particular 
-record, enter its resource ID. Or, leave this field blank if you 
-plan to map it from an earlier step in the integration. 
-. In the *Resource version* field, if you specified a resource 
-ID, then specification of a resource version is required. 
+. In the *Resource Id* field, enter the ID of the resource that you want. 
+Or, leave this field blank if you 
+plan to map it from an earlier step that is in the flow. 
+. In the *Resource version* field, optionally specify a version ID
+for the resource. Leave this field blank to obtain 
+the most recent version of the resource or to map the version ID of 
+the resource that you want from a previous step. 
 .  Click *Next* to add this connection to the flow. 
 
 .Result
 The connection appears in the integration flow 
 in the location where you added it. During execution, this 
-connection returns a list of records, which {prodname} treats
-as a collection. 
+connection returns one resource. 
 
 .Next steps
-Add a data mapper step before this step and map the resource ID. 
-To operate on individual returned records, rather than on the 
-returned collection, after this connection, add a split step. 
+To map a value to the *Resource Id* field or the *Resource version* field, add a data mapper step 
+before this connection.  
