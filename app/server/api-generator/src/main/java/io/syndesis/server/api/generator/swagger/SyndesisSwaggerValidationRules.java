@@ -61,6 +61,7 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
             rules.add(SyndesisSwaggerValidationRules::validateScheme);
             rules.add(SyndesisSwaggerValidationRules::validateUniqueOperationIds);
             rules.add(SyndesisSwaggerValidationRules::validateCyclicReferences);
+            rules.add(SyndesisSwaggerValidationRules::validateOperationsGiven);
             return;
         case PROVIDED_API:
             rules.add(SyndesisSwaggerValidationRules::validateResponses);
@@ -68,6 +69,7 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
             rules.add(SyndesisSwaggerValidationRules::validateUniqueOperationIds);
             rules.add(SyndesisSwaggerValidationRules::validateNoMissingOperationIds);
             rules.add(SyndesisSwaggerValidationRules::validateCyclicReferences);
+            rules.add(SyndesisSwaggerValidationRules::validateOperationsGiven);
             return;
         case NONE:
             return;
@@ -134,7 +136,7 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
 
     static SwaggerModelInfo validateNoMissingOperationIds(final SwaggerModelInfo info) {
         final Swagger swagger = info.getModel();
-        if (swagger == null) {
+        if (swagger == null || swagger.getPaths() == null) {
             return info;
         }
 
@@ -153,6 +155,31 @@ public final class SyndesisSwaggerValidationRules implements Function<SwaggerMod
             .message("Some operations (" + countNoOpId + ") have no operationId").build());
 
         return withWarnings.build();
+    }
+
+    static SwaggerModelInfo validateOperationsGiven(final SwaggerModelInfo swaggerModelInfo) {
+        final Swagger swagger = swaggerModelInfo.getModel();
+        if (swagger == null) {
+            return swaggerModelInfo;
+        }
+
+        final SwaggerModelInfo.Builder withErrors = new SwaggerModelInfo.Builder().createFrom(swaggerModelInfo);
+        final Map<String, Path> paths = swagger.getPaths();
+        if (paths == null || paths.isEmpty()) {
+            withErrors.addError(new Violation.Builder()
+                .property("paths")
+                .error("missing-paths")
+                .message("No paths defined")
+                .build());
+        } else if (paths.values().stream().allMatch(p -> p.getOperations() == null || p.getOperations().isEmpty())) {
+            withErrors.addError(new Violation.Builder()
+                .property("")
+                .error("missing-operations")
+                .message("No operations defined")
+                .build());
+        }
+
+        return withErrors.build();
     }
 
     /**
