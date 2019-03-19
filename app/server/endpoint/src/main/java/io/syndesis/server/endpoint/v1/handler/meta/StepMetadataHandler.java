@@ -77,4 +77,13 @@ interface StepMetadataHandler {
             return variants;
         }
     }
+
+    /**
+     * Checks specification to be a proper Json array instance specification.
+     * @param specification
+     * @return
+     */
+    default boolean isJsonInstanceArraySpec(String specification) {
+        return specification.trim().startsWith("[") && specification.trim().endsWith("]");
+    }
 }

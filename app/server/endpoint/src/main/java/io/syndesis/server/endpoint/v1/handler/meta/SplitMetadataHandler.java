@@ -29,6 +29,7 @@ import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Json;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 /**
  * @author Christoph Deppisch
@@ -73,37 +74,54 @@ class SplitMetadataHandler implements StepMetadataHandler {
 
                 DataShape collectionShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_COLLECTION).orElse(dataShape);
 
-                if (collectionShape.getKind().equals(DataShapeKinds.JSON_SCHEMA)) {
-                    String specification = collectionShape.getSpecification();
-                    JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
+                String specification = collectionShape.getSpecification();
+                if (StringUtils.hasText(specification)) {
+                    if (collectionShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
+                        JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
 
-                    if (schema.isArraySchema()) {
-                        ArraySchema.Items items = ((ArraySchema) schema).getItems();
-                        JsonSchema itemSchema = items.asSingleItems().getSchema();
-                        itemSchema.set$schema(schema.get$schema());
-                        if (items.isSingleItems()) {
+                        if (schema.isArraySchema()) {
+                            ArraySchema.Items items = ((ArraySchema) schema).getItems();
+                            JsonSchema itemSchema = items.asSingleItems().getSchema();
+                            itemSchema.set$schema(schema.get$schema());
+                            if (items.isSingleItems()) {
+                                return new DynamicActionMetadata.Builder()
+                                        .createFrom(metadata)
+                                        .outputShape(new DataShape.Builder().createFrom(collectionShape)
+                                                .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                                                .specification(Json.writer().writeValueAsString(itemSchema))
+                                                .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
+                                                .build())
+                                        .build();
+                            }
+                        } else {
                             return new DynamicActionMetadata.Builder()
                                     .createFrom(metadata)
                                     .outputShape(new DataShape.Builder().createFrom(collectionShape)
-                                                                        .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
-                                                                        .specification(Json.writer().writeValueAsString(itemSchema))
-                                                                        .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
-                                                                        .build())
+                                            .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                                            .build())
                                     .build();
                         }
-                    }
-                } else if (collectionShape.getKind().equals(DataShapeKinds.JSON_INSTANCE)) {
-                    String specification = collectionShape.getSpecification();
-                    List<Object> items = Json.reader().forType(List.class).readValue(specification);
-                    if (!items.isEmpty()) {
-                        return new DynamicActionMetadata.Builder()
-                                .createFrom(metadata)
-                                .outputShape(new DataShape.Builder().createFrom(collectionShape)
-                                                                        .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
-                                                                        .specification(Json.writer().writeValueAsString(items.get(0)))
-                                                                        .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
-                                                                        .build())
-                                .build();
+                    } else if (collectionShape.getKind() == DataShapeKinds.JSON_INSTANCE) {
+                        if (isJsonInstanceArraySpec(specification)) {
+                            List<Object> items = Json.reader().forType(List.class).readValue(specification);
+                            if (!items.isEmpty()) {
+                                return new DynamicActionMetadata.Builder()
+                                        .createFrom(metadata)
+                                        .outputShape(new DataShape.Builder().createFrom(collectionShape)
+                                                .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                                                .specification(Json.writer().writeValueAsString(items.get(0)))
+                                                .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
+                                                .build())
+                                        .build();
+                            }
+                        } else {
+                            return new DynamicActionMetadata.Builder()
+                                    .createFrom(metadata)
+                                    .outputShape(new DataShape.Builder().createFrom(collectionShape)
+                                            .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                                            .build())
+                                    .build();
+                        }
                     }
                 }
             }
