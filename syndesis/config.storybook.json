@@ -1,17 +1,14 @@
 {
-  "commment":"This config should for testing against a minishift using the syndesis-dev application templates.",
-  "apiBase": "https://syndesis.192.168.64.2.nip.io",
+  "commment": "This config should for running against a localy running Syndesis server on port 8080.",
+  "apiBase": "http://localhost:9009",
   "apiEndpoint": "/api/v1",
   "mapperEndpoint": "/mapper/v1",
   "metricsPollingInterval": 5000,
-  "consoleUrl": "https://192.168.64.2:8443/console",
+  "consoleUrl": "http://localhost/console",
   "project": "syndesis",
   "branding": {
-    "logoWhiteBg": "assets/images/syndesis-logo-svg-white.svg",
-    "logoDarkBg": "assets/images/syndesis-logo-svg-white.svg",
+    "logoDarkBg": "assets/images/syndesis_logo_icon_darkbkg.png",
     "productBuild": false,
-    "iconWhiteBg": "assets/images/glasses_logo_square.png",
-    "iconDarkBg": "assets/images/glasses_logo_square.png",
     "appName": "Syndesis",
     "favicon32": "/favicon-32x32.png",
     "favicon16": "/favicon-16x16.png",
@@ -44,7 +41,7 @@
   "datavirt": {
     "dvUrl": "/vdb-builder/v1/"
   },
-  "features" : {
+  "features": {
     "logging": false
   }
 }

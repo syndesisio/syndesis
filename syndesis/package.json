@@ -28,7 +28,7 @@
   },
   "scripts": {
     "lint": "tslint -c ../tslint.json --project .",
-    "start:mocks:setup": "cp config.json.mocks public/config.json",
+    "start:mocks:setup": "cp config.mocks.json public/config.json",
     "start:mocks:record": "yarn start:mocks:setup; MOCKS_RECORD=1 BACKEND_COOKIE=`./scripts/get-login-cookie.js $BACKEND` yarn start",
     "start:mocks:replay": "yarn start:mocks:setup; yarn start",
     "start:minishift": "yarn minishift:setup; yarn start",
