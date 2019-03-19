@@ -86,7 +86,7 @@ public class CamelKUnpublishHandler extends BaseCamelKHandler implements StateCh
                 Integration.class,
                 IntegrationList.class,
                 DoneableIntegration.class,
-                Names.sanitize(integrationDeployment.getSpec().getName()),
+                CamelKSupport.integrationName(integrationDeployment.getSpec().getName()),
                 true);
 
             logInfo(integrationDeployment,"Deleted Integration: "+Names.sanitize(integrationDeployment.getIntegrationId().get()));
