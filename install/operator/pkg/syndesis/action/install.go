@@ -97,30 +97,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		return err
 	}
 
-	for _, res := range list {
-		if _, isSyndesisRoute := isSyndesisRoute(res); isSyndesisRoute {
-			// Syndesis route already installed
-			continue
-		}
-
-		operation.SetNamespaceAndOwnerReference(res, syndesis)
-
-		// Link the service accounts to the image pull secret if it exists
-		if secret != nil {
-			if sa, ok := isServiceAccount(res); ok {
-				sa.ImagePullSecrets = append(sa.ImagePullSecrets, corev1.LocalObjectReference{
-					Name: SyndesisPullSecret,
-				})
-			}
-		}
-
-		err = createOrReplace(ctx, a.client, res)
-		if err != nil && !k8serrors.IsAlreadyExists(err) {
-			return err
-		}
-	}
-
-	// Link the builder service account to the image pull secret if it exists
+	// Link the builder service account to the image pull/push secret if it exists
 	if secret != nil {
 		builder := &corev1.ServiceAccount{}
 		err = a.client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "builder"}, builder)
@@ -131,6 +108,35 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			Name: SyndesisPullSecret,
 		})
 		builder.Secrets = append(builder.Secrets, corev1.ObjectReference{Namespace: syndesis.Namespace, Name: SyndesisPullSecret})
+		err = a.client.Update(ctx, builder)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Link the syndesis service accounts to the image pull secret if it exists
+	if secret != nil {
+		for _, res := range list {
+			if sa, ok := isServiceAccount(res); ok {
+				sa.ImagePullSecrets = append(sa.ImagePullSecrets, corev1.LocalObjectReference{
+					Name: SyndesisPullSecret,
+				})
+			}
+		}
+	}
+
+	for _, res := range list {
+		if _, isSyndesisRoute := isSyndesisRoute(res); isSyndesisRoute {
+			// Syndesis route already installed
+			continue
+		}
+
+		operation.SetNamespaceAndOwnerReference(res, syndesis)
+
+		err = createOrReplace(ctx, a.client, res)
+		if err != nil && !k8serrors.IsAlreadyExists(err) {
+			return err
+		}
 	}
 
 	// Install addons
