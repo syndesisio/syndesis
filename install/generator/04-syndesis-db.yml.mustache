@@ -124,11 +124,6 @@
       port: 5432
       protocol: TCP
       targetPort: 5432
-    - name: metrics
-      nodePort: 0
-      port: 9187
-      protocol: TCP
-      targetPort: 9187
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -257,7 +252,7 @@
             initialDelaySeconds: 30
           ports:
           - containerPort: 9187
-            name: prometheus
+            name: metrics
           resources:
             limits:
               memory: 256Mi

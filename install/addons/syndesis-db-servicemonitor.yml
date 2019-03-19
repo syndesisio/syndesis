@@ -11,7 +11,7 @@ metadata:
   name: syndesis-db-metrics
 spec:
   endpoints:
-  - port: metrics
+  - targetPort: metrics
   selector:
     matchLabels:
       syndesis.io/component: syndesis-db

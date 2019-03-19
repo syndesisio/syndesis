@@ -603,11 +603,6 @@ objects:
       port: 5432
       protocol: TCP
       targetPort: 5432
-    - name: metrics
-      nodePort: 0
-      port: 9187
-      protocol: TCP
-      targetPort: 9187
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -733,7 +728,7 @@ objects:
             initialDelaySeconds: 30
           ports:
           - containerPort: 9187
-            name: prometheus
+            name: metrics
           resources:
             limits:
               memory: 256Mi
@@ -791,10 +786,6 @@ objects:
       protocol: TCP
       targetPort: 8080
       name: http
-    - port: 8181
-      protocol: TCP
-      targetPort: 8181
-      name: prometheus
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -875,6 +866,8 @@ objects:
           - containerPort: 8080
             name: http
             protocol: TCP
+          - containerPort: 8181
+            name: metrics
           - containerPort: 9779
             name: prometheus
             protocol: TCP
@@ -1115,10 +1108,6 @@ objects:
       protocol: TCP
       targetPort: 8080
       name: http
-    - port: 8181
-      protocol: TCP
-      targetPort: 8181
-      name: prometheus
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -1212,6 +1201,8 @@ objects:
           ports:
           - containerPort: 8080
             name: http
+          - containerPort: 8181
+            name: metrics
           - containerPort: 9779
             name: prometheus
           - containerPort: 8778

@@ -31,10 +31,6 @@
       protocol: TCP
       targetPort: 8080
       name: http
-    - port: 8181
-      protocol: TCP
-      targetPort: 8181
-      name: prometheus
     selector:
       app: syndesis
       syndesis.io/app: syndesis
@@ -134,6 +130,8 @@
           ports:
           - containerPort: 8080
             name: http
+          - containerPort: 8181
+            name: metrics
           - containerPort: 9779
             name: prometheus
           - containerPort: 8778
