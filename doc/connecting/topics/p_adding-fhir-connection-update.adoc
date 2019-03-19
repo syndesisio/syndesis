@@ -2,40 +2,44 @@
 // as_connecting-to-fhir.adoc
 
 [id='adding-fhir-connection-update_{context}']
-= Updating records on a FHIR server
+= Updating all fields in a resource on a FHIR server
 
-In an integration, you can update records that are on a FHIR server.
-Each updated record is the resource type that you specify. The 
-connection updates each field, except the resource ID, in each record. 
-If the FHIR server does not already have a record that has the 
-resource ID of one of the records to be updated, then the connection 
-creates a new record with that resource ID. Thi is the only way 
-to add a new record that has a resource ID that you choose. 
-To update records on a FHIR server, or to create records that 
-have resource IDs that you choose, add a FHIR connection to the 
+In an integration, you can update a resource that is on a FHIR server.
+The connection updates each resource field, except the resource ID. 
+If the connection's data does not provide a particular resource 
+field then the action deletes that field from the updated resource. 
+
+If the FHIR server does not already have a resource that has the 
+resource ID for the resource to be updated, then the connection 
+creates a new resource with that resource ID. This is the only way 
+to add a new resource that has a resource ID that you choose. 
+
+To update or create a resource, add a FHIR connection to the 
 middle of a flow, or as a simple integration's finish connection. 
 
 .Prerequisites
-* You created a connection to a FHIR server.
+* You created a connection to the FHIR server on which you want to 
+update or create a resource. 
 * You are creating or editing a flow and {prodname} is prompting you
 to choose a step.  Or, {prodname} is prompting you to  add a finish connection. 
 
 .Procedure
 
 . Click the FHIR connection that you want to use
-to update records on a FHIR server. 
+to update a resource on a FHIR server. 
 . On the *Choose an Action* page, click *Update*. 
 . Click in the *Resource Type* field to display a list
-of FHIR resource types. Select or enter the resource type 
-of the records that you want to update or create.
+of FHIR resource types. Select or enter the type of resource 
+that you want to update or create.
 . In the *Contained Resource Types* field, if the resource type 
-of the records that you want to update contains other resource types, select 
+that you want to update or create contains other resource types, select 
 them. Use the *Ctrl* key if you need to select more than one. 
 . Click *Next* to add this connection to the flow. 
 
 .Result
 The connection appears in the integration flow 
 in the location where you added it. During execution, the connection 
-updates or creates records on the FHIR server and returns a collection 
-of objects. Each object represents an updated or created record. 
-The only field in each object is the resource ID for that record. 
+updates or creates a resource on the FHIR server and returns a 
+*MethodOutcome* resource, which includes the resource ID for 
+the updated/created resource, which you might want to map 
+to a subsequent step in the flow. 

@@ -2,59 +2,86 @@
 // as_connecting-to-fhir.adoc
 
 [id='adding-fhir-connection-patch_{context}']
-= Updating record fields on a FHIR server
+= Updating specified fields in a resource on a FHIR server
 
 In an integration, you can update individual fields in 
-records that are on a FHIR server. All records that 
-this connection updates must be of the same resource type. 
+a resource that is on a FHIR server.  
 To do this, add a FHIR connection to the middle of a flow
 or as a simple integration's finish connection. 
 
 .Prerequisites
-* You created a connection to a FHIR server.
+* You created a connection to the FHIR server that has the 
+resource that you want to update.
 * You are creating or editing a flow and {prodname} is prompting you
 to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
 
 . Click the FHIR connection that you want to use
-to update individual fields in records that are on a FHIR server. 
+to update the resource. 
 . On the *Choose an Action* page, click *Patch*. 
 . Click in the *Resource Type* field to display a list
-of FHIR resource types. Select or enter the resource type 
-of the records whose fields you want to update. You can specify 
-only one resource type. 
+of FHIR resource types. Select or enter the type of the 
+resource whose fields you want to update. 
 . In the *Number of Operations* field, specify the number of fields
 that you want to update. 
 . Leave the *Resource id* field blank if you want to map the value
 from a previous step in the flow, which is typically what you want 
 to do. Otherwise, specify the resource 
-ID of the record whose fields you want to update. Each time this 
-integration is executed, this connection updates the same record. 
-. Leave the *JSON Patch* field blank if you want to map the value 
-from a previous step in the flow. Otherwise, specify a JSON document  
-that updates individual fields. The JSON document must have the 
-format described in 
+ID of the resource whose fields you want to update.  
+. Specify a JSON patch that describes the updates. 
+The JSON patch must have the format described in 
 link:http://jsonpatch.com/[What is a JSON Patch?]. 
+For some updates, you must specify the JSON patch when you 
+configure the *Patch* action. For example, if you want to copy the 
+value of a resource field to another field. For other updates, 
+you can leave the *JSON Patch* field blank and instead map values 
+that define each update.  
 . Click *Done* to add this connection to the flow. 
-. Optionally, add a data mapper step before this connection if
-you want to map values for the resource ID and for the JSON patch:
+. If you did not specify a JSON patch and/or a resource ID, then 
+add a data mapper step:
+
 .. In the flow visualization panel, click the plus sign that is
 before the FHIR connection that you just added. 
 .. On the *Choose a Step* page, click *Data Mapper*. 
-In the *Target* panel, expand the folder to display three fields 
++
+The *Target* panel displays a numbered folder for each field 
+that you want to update. When you configured the *Patch* action, 
+you specified how many fields to update. The data mapper 
+displays this number of folders in the *Target* panel. For example, 
+if you specified 3 as the number of fields to update, you would see 
+three target folders with the labels `1`, `2`, and `3`. 
+
+.. For each field that you want to update, map to the fields 
+in one target folder:
+
+... In the *Target* panel, expand a folder to display three fields 
 for `op`, `path`, and `value`.
-.. Map ??? to the target `op` field, which defaults to `replace`.
-.. Map ??? to the target `path` field. The path identifies the field 
+
+... Map a source field, constant, or property to the target 
+`path` field. The path identifies the resource field 
 that you want to update. In a path value, a number indicates the 
 index of a list field, and a slash leads to a child field. For 
 example, map this path `/name/1/given/1/value` to update the value 
 of the given name field. 
-.. Map ??? to the target `value`. This is the new value that you 
-want the field to have. 
-.. Click *Done* to add the data mapper step to the flow. 
 
+... Accept the default update operation, which replaces the current value
+of the field, or map a source field, constant, or property to the 
+`op` field to indicate how you want to update the field. 
+For details about possible operations, see 
+link:ttp://jsonpatch.com/#operations[JSON patch operations].
+... If you are updating a field to have a new value, then map a 
+source field, constant, or property to the target `value`. 
+This is the new value that you want the field to contain. 
+
+.. If you did not specify a resource ID when you configured the 
+*Patch* action, then map the resource ID to the target *id* field. 
+
+.. Click *Done* to add the data mapper step to the flow. 
 
 .Result
 The connection appears in the integration flow 
-in the location where you added it.  
+in the location where you added it. During execution, 
+the connection updates the specified resource field(s)
+and returns a *MethodOutcome* resource that contains 
+the ID of the resource that was updated. 

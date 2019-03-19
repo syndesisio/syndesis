@@ -2,17 +2,18 @@
 // as_connecting-to-fhir.adoc
 
 [id='adding-fhir-connection-transaction_{context}']
-= Creating records of different resource types on a FHIR server
+= Creating resources of different types on a FHIR server
 
-In an integration, you can create two or more records on a 
-FHIR server and each record can be of a different resource type. 
-For example, you can add a new patient record and a new provider
-record in one connection to a FHIR server. To do this, 
+In an integration, you can create two or more resources on a 
+FHIR server and each resource can be of a different type. 
+For example, you can add a new patient resource and a new provider
+resource in one connection to a FHIR server. To do this, 
 add a FHIR connection to the middle of a flow, or as a 
 simple integration's finish connection. 
 
 .Prerequisites
-* You created a connection to a FHIR server.
+* You created a connection to the FHIR server that you want to
+add resources to. 
 * You are creating or editing a flow and {prodname} is prompting you
 to choose a step. Or, {prodname} is prompting you to choose a 
 finish connection. 
@@ -20,16 +21,27 @@ finish connection.
 .Procedure
 
 . Click the FHIR connection that you want to use
-to create and add new records to a FHIR server. 
+to create and add new resources to a FHIR server. 
 . On the *Choose an Action* page, click *Transaction*. 
 . In the *Included Resource Types* field, select the  
-resource types that this connection can create. 
+resource types that this connection creates. 
 Use the *Ctrl* key to select multiple resource types. 
-.  Click *Next* to add this connection to the flow. 
+. Click *Next* to add this connection to the flow. 
+. To populate fields in the new resources, add 
+a data mapper step before this connection: 
+
+.. In the flow visualization on the left, click the plus sign 
+that is before the connection that you just added. 
+.. Click *Data Mapper*. 
+.. In the data mapper, map source fields to the target 
+resource fields. 
+.. Click *Done* to add the data mapper step to the flow. 
   
 .Result
 The connection appears in the integration flow 
 in the location where you added it. During execution, the connection 
-adds records to the FHIR server and returns a collection 
-of objects. Each object represents a created record. 
-The only field in each object is the resource ID for that record. 
+adds all resources to the FHIR server or, if there is an error, 
+the connection does not add any resources to the FHIR server. A successful 
+action returns a transaction resource, which contains the resource ID
+for each new resource. You can map these resource IDs to subsequent
+steps in the flow.  

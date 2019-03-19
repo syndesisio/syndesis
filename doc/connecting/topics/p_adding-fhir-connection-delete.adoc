@@ -2,15 +2,15 @@
 // as_connecting-to-fhir.adoc
 
 [id='adding-fhir-connection-delete_{context}']
-= Deleting records from a FHIR server
+= Deleting a resource from a FHIR server
 
-In an integration, you can delete records from a FHIR server.
-Each deleted record is the resource type that you specify. 
+In an integration, you can delete a resource from a FHIR server. 
 To do this, add a FHIR connection to the middle of a flow
 or as a simple integration's finish connection. 
 
 .Prerequisites
-* You created a connection to a FHIR server.
+* You created a connection to the FHIR server that has the resource 
+that you want to delete.
 * You are creating or editing a flow and {prodname} is prompting you
 to choose a step. Or, {prodname} is prompting you to select a 
 finish connection. 
@@ -18,18 +18,28 @@ finish connection.
 .Procedure
 
 . Click the FHIR connection that you want to use
-to delete records from a FHIR server. 
+to delete the resource.  
 . On the *Choose an Action* page, click *Delete*. 
 . Click in the *Resource Type* field to display a list
-of FHIR resource types. Select or enter the resource type 
-of the records that you want to delete. 
-. In the *Resource Id* field, if you want to obtain a particular 
-record, enter its resource ID. Or, leave this field blank if you 
-plan to map it from an earlier step in the integration. 
-. In the *Resource version* field, if you specified a resource 
-ID, then specification of a resource version is required. 
+of FHIR resource types. Select or enter the type 
+of resource that you want to delete. 
+. In the *Resource Id* field, specify the resource ID of 
+the resource that you want to delete or leave this field blank if you 
+plan to map the resource ID from an earlier step in the integration. 
+. In the *Resource version* field, optionally specify a version ID
+for the resource. Leave this field blank to delete 
+the most recent version of the resource or to map the version ID of 
+the resource that you want to delete from a previous step.  
 .  Click *Done* to add this connection to the flow. 
+. 
 
 .Result
 The connection appears in the integration flow 
-in the location where you added it.  
+in the location where you added it. During execution, the connection 
+deletes the specified resource on the FHIR server and returns a 
+*MethodOutcome* resource, which includes the resource ID for 
+the deleted resource.
+
+.Next steps
+To map a value to the *Resource Id* field or the *Resource version* field, add a data mapper step 
+before this connection.  
