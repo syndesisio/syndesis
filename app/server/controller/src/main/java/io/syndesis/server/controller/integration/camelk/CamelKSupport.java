@@ -22,6 +22,7 @@ import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
@@ -218,5 +219,9 @@ public final class CamelKSupport {
         }
 
         return IntegrationDeploymentState.Unpublished;
+    }
+
+    public static String integrationName(String integrationName) {
+        return Names.sanitize("i-" + integrationName);
     }
 }

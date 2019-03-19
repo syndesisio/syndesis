@@ -17,7 +17,6 @@ package io.syndesis.server.controller.integration.camelk;
 
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.common.util.Names;
 import io.syndesis.server.controller.integration.BaseHandler;
 import io.syndesis.server.controller.integration.IntegrationPublishValidator;
 import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
@@ -43,7 +42,7 @@ abstract class BaseCamelKHandler extends BaseHandler {
             io.syndesis.server.controller.integration.camelk.crd.Integration.class,
             IntegrationList.class,
             DoneableIntegration.class,
-            Names.sanitize(integrationDeployment.getSpec().getName())
+            CamelKSupport.integrationName(integrationDeployment.getSpec().getName())
         );
     }
 }
