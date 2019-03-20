@@ -387,7 +387,8 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
         ),
         debounceTime(500)
       )
-      .subscribe((saveHandler: Function) => {
+      .subscribe(async (saveHandler: Function) => {
+        await this.cfg.mappingService.saveCurrentMapping();
         const json = this.cfg.mappingService.serializeMappingsToJSON();
         this.mappings.emit(JSON.stringify(json));
         this.cfg.mappingService.handleMappingSaveSuccess(saveHandler);
