@@ -39,6 +39,7 @@ import io.syndesis.extension.converter.ExtensionConverter;
 import io.syndesis.server.endpoint.v1.handler.exception.RestError;
 
 import org.apache.commons.io.IOUtils;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.core.io.InputStreamResource;
@@ -311,6 +312,7 @@ public class ExtensionsITCase extends BaseITCase {
     }
 
     @Test
+    @Ignore
     public void testListExtensionDetails() throws IOException {
         // Create one extension
         ResponseEntity<Extension> created = post("/api/v1/extensions", multipartBody(extensionData(1)),
