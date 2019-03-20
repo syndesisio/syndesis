@@ -16,6 +16,10 @@ that periodically triggers a FHIR connection.
 * You must know the URL for the FHIR server that you want to connect to. 
 * You must have authorization credentials for accessing the FHIR server. 
 You should obtain these from the FHIR server administrator. 
+Rarely, a FHIR server does not require authentication and you can 
+create a connection without specifying credentials. For example, 
+a public FHIR server or a FHIR server in a private network might 
+not require authentication.
 
 .Procedure
 
