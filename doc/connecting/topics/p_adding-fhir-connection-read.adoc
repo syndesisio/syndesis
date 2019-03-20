@@ -24,6 +24,13 @@ want to obtain.
 . In the *Contained Resource Types* field, if the resource type 
 that you want contains other resource types, select 
 them. Use the *Ctrl* key if you need to select more than one. 
++
+Identifying contained resource types lets the data mapper display 
+the fields that are in the contained resources. If you do not specify 
+a contained resource type then you cannot map from any fields that are 
+in the contained resource. There is no harm in selecting a resource 
+that is not actually contained. 
+
 . In the *Resource Id* field, enter the ID of the resource that you want. 
 Or, leave this field blank if you 
 plan to map it from an earlier step that is in the flow. 

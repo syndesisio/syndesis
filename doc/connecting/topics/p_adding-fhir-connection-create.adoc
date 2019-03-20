@@ -12,6 +12,14 @@ To create a resource,
 add a FHIR connection to the middle of a flow, or as a simple 
 integration's finish connection. 
 
+To populate the values in the new resource, add a data mapper 
+step to the flow just before the FHIR connection that you are 
+adding in this procedure. It is expected that previous steps 
+in the flow provide the data that you want the new resource to 
+contain. Map fields in previous steps to fields in the target 
+resource that this FHIR connection is creating. The new resource 
+contains only the fields that you map to. 
+
 When a connection performs the *Create* action to create a new resource on a FHIR server, 
 the new resource has an automatically-generated FHIR resource ID. 
 If you want to specify the resource 
@@ -34,9 +42,30 @@ that you want to create.
 . In the *Contained Resource Types* field, if the resource type 
 that you want to create contains other resource types, select 
 them. Use the *Ctrl* key if you need to select more than one. 
++
+Identifying contained resource types lets the data mapper display 
+the fields that are in the contained resources. If you do not specify 
+a contained resource type then you cannot map to or from any fields that are 
+in the contained resource. There is no harm in selecting a resource 
+that is not actually contained. 
+
 .  Click *Next* to add this connection to the flow. 
 
 .Result
 The connection appears in the integration flow 
 in the location where you added it. During execution, the connection 
 creates a new resource on the FHIR server.  
+The connection returns a *MethodOutcome* resource that includes 
+the new resource’s resource ID, which you might want to map to a 
+subsequent step in the flow.
+
+.Next steps
+If this flow needs additional steps to obtain the data that you want 
+the new resource to contain, add them before this FHIR connection. 
+After those steps are in place, 
+add a data mapper step to the flow just before the FHIR connection 
+that creates a new resource. In the data mapper step, map to the 
+fields in the resource to be created. Without a data mapper step just 
+before a FHIR connection that creates a new resource, the connection 
+tries to create an empty resource. Depending on the FHIR server configuration,
+this might or might not work.  

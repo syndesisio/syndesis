@@ -26,6 +26,8 @@ to create and add new resources to a FHIR server.
 . In the *Included Resource Types* field, select the  
 resource types that this connection creates. 
 Use the *Ctrl* key to select multiple resource types. 
+The connection creates one resource of each type that you select. 
+
 . Click *Next* to add this connection to the flow. 
 . To populate fields in the new resources, add 
 a data mapper step before this connection: 

@@ -34,12 +34,31 @@ that you want to update or create.
 . In the *Contained Resource Types* field, if the resource type 
 that you want to update or create contains other resource types, select 
 them. Use the *Ctrl* key if you need to select more than one. 
++
+Identifying contained resource types lets the data mapper display the fields 
+that are in the contained resources. If you do not specify a contained resource 
+type then you cannot map to or from any fields that are in the contained 
+resource. There is no harm in selecting a resource that is not actually contained.
+
 . Click *Next* to add this connection to the flow. 
+
+. If this flow needs additional steps to obtain the data that you want the 
+updated resource to contain, add them before this FHIR connection. 
+. In the integration visualization panel, click the plus sign that is 
+before the FHIR connection that updates a resource.
+. Click *Data Mapper*. 
+. In the data mapper: 
+.. Map a resource ID to the target resource ID. This is the only way 
+to specify the resource ID for a new resource. 
+.. Map to each resource field that you want the updated or new 
+resource to contain. Be sure to map fields whose values are not 
+changing, as well as fields whose values need to be updated. 
+.. Click Done to add the data mapper step to the flow. 
 
 .Result
 The connection appears in the integration flow 
 in the location where you added it. During execution, the connection 
 updates or creates a resource on the FHIR server and returns a 
-*MethodOutcome* resource, which includes the resource ID for 
-the updated/created resource, which you might want to map 
+*MethodOutcome* resource that includes the updated/created 
+resource's resource ID, which you might want to map 
 to a subsequent step in the flow. 
