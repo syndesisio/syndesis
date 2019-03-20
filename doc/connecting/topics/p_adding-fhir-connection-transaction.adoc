@@ -36,7 +36,8 @@ a data mapper step before this connection:
 that is before the connection that you just added. 
 .. Click *Data Mapper*. 
 .. In the data mapper, map source fields to the target 
-resource fields. 
+resource fields. The new resources contain only the 
+target fields that you map to.
 .. Click *Done* to add the data mapper step to the flow. 
   
 .Result
