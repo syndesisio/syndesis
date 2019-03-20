@@ -214,6 +214,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         return secret;
     }
 
+    @SuppressWarnings({"PMD.ExcessiveMethodLength"})
     protected io.syndesis.server.controller.integration.camelk.crd.Integration createIntegrationCR(IntegrationDeployment integrationDeployment) {
         final Integration integration = integrationDeployment.getSpec();
 
@@ -300,8 +301,9 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
                 .build());
 
         //add dependencies
-        getDependencies(integration).forEach( gav -> integrationSpecBuilder.addDependencies("mvn:"+gav.getId()));
-        integrationSpecBuilder.addDependencies("mvn:io.syndesis.integration:integration-runtime-camelk:"+versionService.getVersion());
+        integrationSpecBuilder.addDependencies("bom:io.syndesis.integration/integration-bom-camel-k/pom/"+versionService.getVersion());
+        integrationSpecBuilder.addDependencies("mvn:io.syndesis.integration/integration-runtime-camelk");
+        getDependencies(integration).forEach(gav -> integrationSpecBuilder.addDependencies("mvn:"+gav.getGroupId() + "/" + gav.getArtifactId()));
 
         try {
             addMappingRules(integration, integrationSpecBuilder);
