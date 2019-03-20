@@ -105,7 +105,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			return err
 		}
 		linked := linkImagePullSecret(builder, SyndesisPullSecret)
-		linked = linked || linkSecret(builder, SyndesisPullSecret)
+		linked = linkSecret(builder, SyndesisPullSecret) || linked
 		if linked {
 			err = a.client.Update(ctx, builder)
 			if err != nil {
