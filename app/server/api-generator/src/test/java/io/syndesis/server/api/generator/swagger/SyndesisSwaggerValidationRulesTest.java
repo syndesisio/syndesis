@@ -40,6 +40,18 @@ public class SyndesisSwaggerValidationRulesTest {
     }
 
     @Test
+    public void shouldNotGenerateErrorWhenOperationsArePresent() {
+        final Swagger swagger = new Swagger()
+            .path("/test", new Path().get(new Operation()));
+
+        final SwaggerModelInfo info = new SwaggerModelInfo.Builder().model(swagger).build();
+
+        final SwaggerModelInfo validated = SyndesisSwaggerValidationRules.validateOperationsGiven(info);
+        final List<Violation> errors = validated.getErrors();
+        assertThat(errors).isEmpty();
+    }
+
+    @Test
     public void shouldNotReportIssuesForNonCyclicSchemaReferences() {
         final Swagger swagger = new Swagger();
         swagger.path("/api", new Path()
@@ -79,6 +91,22 @@ public class SyndesisSwaggerValidationRulesTest {
     }
 
     @Test
+    public void shouldValidateOperationsArePresent() {
+        final Swagger swagger = new Swagger()
+            .path("/test", new Path());
+
+        final SwaggerModelInfo info = new SwaggerModelInfo.Builder().model(swagger).build();
+
+        final SwaggerModelInfo validated = SyndesisSwaggerValidationRules.validateOperationsGiven(info);
+        final List<Violation> errors = validated.getErrors();
+        assertThat(errors).containsExactly(new Violation.Builder()
+            .property("")
+            .error("missing-operations")
+            .message("No operations defined")
+            .build());
+    }
+
+    @Test
     public void shouldValidateOperationUniqueness() {
         final Swagger swagger = new Swagger()
             .path("/path", new Path().get(new Operation().operationId("o1")).post(new Operation().operationId("o2")))
@@ -93,5 +121,20 @@ public class SyndesisSwaggerValidationRulesTest {
         assertThat(nonUniqueWarning.error()).isEqualTo("non-unique-operation-ids");
         assertThat(nonUniqueWarning.property()).isNull();
         assertThat(nonUniqueWarning.message()).isEqualTo("Found operations with non unique operationIds: o2, o3");
+    }
+
+    @Test
+    public void shouldValidatePathsArePresent() {
+        final Swagger swagger = new Swagger();
+
+        final SwaggerModelInfo info = new SwaggerModelInfo.Builder().model(swagger).build();
+
+        final SwaggerModelInfo validated = SyndesisSwaggerValidationRules.validateOperationsGiven(info);
+        final List<Violation> errors = validated.getErrors();
+        assertThat(errors).containsExactly(new Violation.Builder()
+            .property("paths")
+            .error("missing-paths")
+            .message("No paths defined")
+            .build());
     }
 }
