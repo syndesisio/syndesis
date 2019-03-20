@@ -9,9 +9,12 @@ import { IntegrationStepsHorizontalView } from './IntegrationStepsHorizontalView
 
 export interface IIntegrationDetailProps {
   // activity: JSX.Element;
+  content: JSX.Element;
   // details: JSX.Element;
+  header: JSX.Element;
   integrationName: string;
   // metrics: JSX.Element;
+  sidebar?: JSX.Element;
 }
 
 export class IntegrationDetail extends React.PureComponent<
