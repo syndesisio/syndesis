@@ -46,13 +46,11 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         return new ODataMetaDataExtension(context);
     }
 
-    @SuppressWarnings({"unchecked", "PMD"})
+    @SuppressWarnings({"PMD"})
     @Override
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
             ODataMetadata odataMetadata = (ODataMetadata) metadata.getPayload();
             Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
-            DataShape inDataShape = null;
-            DataShape outDataShape = null;
 
             if (odataMetadata.hasEntityNames()) {
                 List<PropertyPair> resourcesResult = new ArrayList<>();
@@ -62,114 +60,51 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                 enrichedProperties.put(RESOURCE_PATH, resourcesResult);
             }
 
-            ObjectSchema entitySchema = new ObjectSchema();
-            entitySchema.setTitle("ODATA_ENTITY_PROPERTIES");
-            entitySchema.set$schema("http://json-schema.org/schema#");
-
-            if (odataMetadata.hasEntityProperties()) {
-                for (PropertyMetadata entityProperty : odataMetadata.getEntityProperties()) {
-                    JsonSchema propSchema = schemaFor(entityProperty);
-                    boolean required = propSchema.getRequired();
-                    entitySchema.putProperty(entityProperty.getName(), propSchema);
-                    //
-                    // Workaround oddity where ObjectSchema#putProperty sets required to true
-                    //
-                    propSchema.setRequired(required);
-                }
-            }
-
-            DataShape.Builder inDataShapeBuilder = new DataShape.Builder();
-            DataShape.Builder outDataShapeBuilder = new DataShape.Builder();
-
             //
             // Do things differently depending on which action is being sought
             //
             if (actionId.endsWith(Methods.READ.connectorId())) {
-                //
-                // READ
-                // - In has NO shape
-                // - Out has the json entity schema
-                //
-                boolean isSplit = isSplit(properties);
-                inDataShapeBuilder.kind(DataShapeKinds.NONE);
-                outDataShapeBuilder.type(entitySchema.getTitle());
-                if (entitySchema.getProperties().isEmpty()) {
-                    outDataShapeBuilder.kind(DataShapeKinds.NONE);
-                } else if (isSplit) {
-                    //
-                    // A split will mean that the schema is no longer an array schema
-                    //
-                    applySchemaSpecification(entitySchema,  outDataShapeBuilder);
-                } else {
-                    ArraySchema collectionSchema = new ArraySchema();
-                    collectionSchema.set$schema("http://json-schema.org/schema#");
-                    collectionSchema.setItemsSchema(entitySchema);
-                    applySchemaSpecification(collectionSchema, outDataShapeBuilder);
-                }
-
-                inDataShape = inDataShapeBuilder.build();
-                outDataShape = outDataShapeBuilder.build();
+                return genReadDataShape(odataMetadata, properties, enrichedProperties);
             } else if(actionId.endsWith(Methods.CREATE.connectorId())) {
-                //
-                // CREATE
-                // - In has the json entity schema
-                // - Out has the same json entity schema (since create returns the new entity)
-                //
-                inDataShapeBuilder.type(entitySchema.getTitle());
-                outDataShapeBuilder.type(entitySchema.getTitle());
-                if (entitySchema.getProperties().isEmpty()) {
-                    inDataShapeBuilder.kind(DataShapeKinds.NONE);
-                    outDataShapeBuilder.kind(DataShapeKinds.NONE);
-                } else {
-                    applySchemaSpecification(entitySchema,  inDataShapeBuilder);
-                    applySchemaSpecification(entitySchema, outDataShapeBuilder);
-                }
-
-                inDataShape = inDataShapeBuilder.build();
-                outDataShape = outDataShapeBuilder.build();
+                return genCreateDataShape(odataMetadata, enrichedProperties);
             } else if (actionId.endsWith(Methods.DELETE.connectorId())) {
-                //
-                // DELETE
-                // - In has the java object ODataDeleteResource
-                // - Out has the json instance representing a status outcome
-                //
-                inDataShape = inDataShapeBuilder
-                    .kind(DataShapeKinds.JAVA)
-                    .type(String.class.getName())
-                    .description("OData " + actionId)
-                    .name(actionId).build();
-                outDataShape = outDataShapeBuilder
-                    .kind(DataShapeKinds.JSON_INSTANCE)
-                    .description("OData " + actionId)
-                    .name(actionId).build();
+                return genDeleteDataShape(enrichedProperties, actionId);
             } else if (actionId.endsWith(Methods.PATCH.connectorId())) {
-                //
-                // PATCH
-                // - In has the json entity schema
-                // - Out has the json instance representing a status outcome
-                //
-
-                //
-                // Need to add a KEY_PREDICATE to the json schema to allow identification
-                // of the entity to be patched.
-                //
-                entitySchema.putProperty(KEY_PREDICATE, factory.stringSchema());
-
-                inDataShapeBuilder.type(entitySchema.getTitle());
-                if (entitySchema.getProperties().isEmpty()) {
-                    inDataShapeBuilder.kind(DataShapeKinds.NONE);
-                } else {
-                    applySchemaSpecification(entitySchema,  inDataShapeBuilder);
-                }
-
-                inDataShape = inDataShapeBuilder.build();
-                outDataShape = outDataShapeBuilder
-                    .kind(DataShapeKinds.JSON_INSTANCE)
-                    .description("OData " + actionId)
-                    .name(actionId).build();
+                return genPatchDataShape(odataMetadata, enrichedProperties, actionId);
             }
 
-            return new SyndesisMetadata(enrichedProperties, inDataShape, outDataShape);
+            return SyndesisMetadata.of(enrichedProperties);
+    }
+
+    private SyndesisMetadata createSyndesisMetadata(
+                                       Map<String, List<PropertyPair>> enrichedProperties,
+                                       DataShape.Builder inDataShapeBuilder,
+                                       DataShape.Builder outDataShapeBuilder) {
+        return new SyndesisMetadata(enrichedProperties,
+                                    inDataShapeBuilder.build(), outDataShapeBuilder.build());
+    }
+
+    private ObjectSchema createEntitySchema() {
+        ObjectSchema entitySchema = new ObjectSchema();
+        entitySchema.setTitle("ODATA_ENTITY_PROPERTIES");
+        entitySchema.set$schema("http://json-schema.org/schema#");
+        return entitySchema;
+    }
+
+    private void populateEntitySchema(ODataMetadata odataMetadata, ObjectSchema entitySchema) {
+        if (! odataMetadata.hasEntityProperties()) {
+            return;
+        }
+
+        for (PropertyMetadata entityProperty : odataMetadata.getEntityProperties()) {
+            JsonSchema propSchema = schemaFor(entityProperty);
+            boolean required = propSchema.getRequired();
+            entitySchema.putProperty(entityProperty.getName(), propSchema);
+            //
+            // Workaround oddity where ObjectSchema#putProperty sets required to true
+            //
+            propSchema.setRequired(required);
+        }
     }
 
     private boolean isSplit(Map<String, Object> properties) {
@@ -177,15 +112,19 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         return splitProp != null && Boolean.parseBoolean(splitProp.toString());
     }
 
-    private void applySchemaSpecification(ContainerTypeSchema schema, DataShape.Builder dataShapeBuilder) {
-        final String specification;
+    private String serializeSpecification(ContainerTypeSchema schema) {
         try {
-            specification = Json.writer().writeValueAsString(schema);
+            return Json.writer().writeValueAsString(schema);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize schema", e);
         }
+    }
 
-        dataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
+    private void applyEntitySchemaSpecification(ContainerTypeSchema schema, DataShape.Builder dataShapeBuilder) {
+        final String specification = serializeSpecification(schema);
+
+        dataShapeBuilder
+                .kind(DataShapeKinds.JSON_SCHEMA)
                 .name("Entity Schema")
                 .description("Schema of OData result entities")
                 .specification(specification);
@@ -225,5 +164,126 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
 
         schema.setRequired(propertyMetadata.isRequired());
         return schema;
+    }
+
+    /*
+     * READ
+     * - In has NO shape
+     * - Out has the json entity schema
+     */
+    private SyndesisMetadata genReadDataShape(ODataMetadata odataMetadata,
+                                              Map<String, Object> basicProperties,
+                                              Map<String, List<PropertyPair>> enrichedProperties) {
+        ObjectSchema entitySchema = createEntitySchema();
+        DataShape.Builder inDataShapeBuilder = new DataShape.Builder()
+            .kind(DataShapeKinds.NONE);
+        DataShape.Builder outDataShapeBuilder = new DataShape.Builder()
+            .kind(DataShapeKinds.NONE)
+            .type(entitySchema.getTitle());
+
+        populateEntitySchema(odataMetadata, entitySchema);
+        boolean isSplit = isSplit(basicProperties);
+
+        if (! entitySchema.getProperties().isEmpty()) {
+            if (isSplit) {
+                //
+                // A split will mean that the schema is no longer an array schema
+                //
+                applyEntitySchemaSpecification(entitySchema,  outDataShapeBuilder);
+            } else {
+                ArraySchema collectionSchema = new ArraySchema();
+                collectionSchema.set$schema("http://json-schema.org/schema#");
+                collectionSchema.setItemsSchema(entitySchema);
+                applyEntitySchemaSpecification(collectionSchema, outDataShapeBuilder);
+            }
+        }
+        return createSyndesisMetadata(enrichedProperties, inDataShapeBuilder, outDataShapeBuilder);
+    }
+
+    /*
+     *CREATE
+     * - In has the json entity schema
+     * - Out has the same json entity schema (since create returns the new entity)
+     */
+    private SyndesisMetadata genCreateDataShape(ODataMetadata odataMetadata,
+                                                Map<String, List<PropertyPair>> enrichedProperties) {
+        ObjectSchema entitySchema = createEntitySchema();
+        populateEntitySchema(odataMetadata, entitySchema);
+
+        DataShape.Builder inDataShapeBuilder = new DataShape.Builder()
+            .kind(DataShapeKinds.NONE)
+            .type(entitySchema.getTitle());
+        DataShape.Builder outDataShapeBuilder = new DataShape.Builder()
+            .kind(DataShapeKinds.NONE)
+            .type(entitySchema.getTitle());
+
+        if (! entitySchema.getProperties().isEmpty()) {
+            applyEntitySchemaSpecification(entitySchema,  inDataShapeBuilder);
+            applyEntitySchemaSpecification(entitySchema, outDataShapeBuilder);
+        }
+
+        return createSyndesisMetadata(enrichedProperties, inDataShapeBuilder, outDataShapeBuilder);
+    }
+
+    /*
+     * PATCH
+     * - In has the json entity schema
+     * - Out has the json instance representing a status outcome
+     */
+    private SyndesisMetadata genPatchDataShape(ODataMetadata odataMetadata,
+                                               Map<String, List<PropertyPair>> enrichedProperties,
+                                               String actionId) {
+        ObjectSchema entitySchema = createEntitySchema();
+        populateEntitySchema(odataMetadata, entitySchema);
+
+        //
+        // Need to add a KEY_PREDICATE to the json schema to allow identification
+        // of the entity to be patched.
+        //
+        entitySchema.putProperty(KEY_PREDICATE, factory.stringSchema());
+
+        DataShape.Builder inDataShapeBuilder = new DataShape.Builder()
+            .kind(DataShapeKinds.NONE)
+            .type(entitySchema.getTitle())
+            .name("Entity Properties");
+
+        if (! entitySchema.getProperties().isEmpty()) {
+            applyEntitySchemaSpecification(entitySchema,  inDataShapeBuilder);
+        }
+
+        DataShape.Builder outDataShapeBuilder = new DataShape.Builder()
+            .kind(DataShapeKinds.JSON_INSTANCE)
+            .description("OData " + actionId)
+            .name(actionId);
+
+        return createSyndesisMetadata(enrichedProperties, inDataShapeBuilder, outDataShapeBuilder);
+    }
+
+    /*
+     * DELETE
+     * - In has the json object with the key predicate in it
+     * - Out has the json instance representing a status outcome
+     */
+    private SyndesisMetadata genDeleteDataShape(Map<String, List<PropertyPair>> enrichedProperties,
+                                                String actionId) {
+        //
+        // Need to add a KEY_PREDICATE to the json schema to allow identification
+        // of the entity to be patched.
+        //
+        ObjectSchema entitySchema = createEntitySchema();
+        entitySchema.putProperty(KEY_PREDICATE, factory.stringSchema());
+
+        DataShape.Builder inDataShapeBuilder = new DataShape.Builder()
+            .kind(DataShapeKinds.JSON_SCHEMA)
+            .type(entitySchema.getTitle())
+            .name("Entity Properties")
+            .specification(serializeSpecification(entitySchema));
+
+        DataShape.Builder outDataShapeBuilder = new DataShape.Builder()
+            .kind(DataShapeKinds.JSON_INSTANCE)
+            .description("OData " + actionId)
+            .name(actionId);
+
+        return createSyndesisMetadata(enrichedProperties, inDataShapeBuilder, outDataShapeBuilder);
     }
 }

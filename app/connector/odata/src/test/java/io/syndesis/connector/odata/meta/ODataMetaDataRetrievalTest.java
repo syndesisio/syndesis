@@ -218,6 +218,89 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         checkTestServerSchemaMap(checkShape(metadata.outputShape, ObjectSchema.class));
     }
 
+    @Test
+    public void testDeleteMetaDataRetrieval() throws Exception {
+        CamelContext context = new DefaultCamelContext();
+        ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();
+
+        String resourcePath = "Products";
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(METHOD_NAME, Methods.DELETE.id());
+        parameters.put(SERVICE_URI, defaultTestServer.servicePlainUri());
+        parameters.put(RESOURCE_PATH, resourcePath);
+
+        String componentId = "odata";
+        String actionId = "io.syndesis:" + Methods.DELETE.connectorId();
+
+        SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
+        assertNotNull(metadata);
+
+        Map<String, List<PropertyPair>> properties = metadata.properties;
+        assertFalse(properties.isEmpty());
+
+        //
+        // The method names are important for collecting prior
+        // to the filling in of the integration step (values such as resource etc...)
+        //
+        List<PropertyPair> resourcePaths = properties.get(RESOURCE_PATH);
+        assertNotNull(resourcePaths);
+        assertFalse(resourcePaths.isEmpty());
+
+        PropertyPair pair = resourcePaths.get(0);
+        assertNotNull(pair);
+        assertEquals(resourcePath, pair.getValue());
+
+        DataShape inputShape = metadata.inputShape;
+        Map<String, JsonSchema> schemaMap = checkShape(inputShape, ObjectSchema.class);
+        assertNotNull(schemaMap.get(KEY_PREDICATE));
+
+        DataShape outputShape = metadata.outputShape;
+        assertEquals(DataShapeKinds.JSON_INSTANCE, outputShape.getKind());
+    }
+
+    @Test
+    public void testUpdateMetaDataRetrieval() throws Exception {
+        CamelContext context = new DefaultCamelContext();
+        ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();
+    
+        String resourcePath = "Products";
+    
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(METHOD_NAME, Methods.PATCH.id());
+        parameters.put(SERVICE_URI, defaultTestServer.servicePlainUri());
+        parameters.put(RESOURCE_PATH, resourcePath);
+    
+        String componentId = "odata";
+        String actionId = "io.syndesis:" + Methods.PATCH.connectorId();
+    
+        SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
+        assertNotNull(metadata);
+    
+        Map<String, List<PropertyPair>> properties = metadata.properties;
+        assertFalse(properties.isEmpty());
+    
+        //
+        // The method names are important for collecting prior
+        // to the filling in of the integration step (values such as resource etc...)
+        //
+        List<PropertyPair> resourcePaths = properties.get(RESOURCE_PATH);
+        assertNotNull(resourcePaths);
+        assertFalse(resourcePaths.isEmpty());
+    
+        PropertyPair pair = resourcePaths.get(0);
+        assertNotNull(pair);
+        assertEquals(resourcePath, pair.getValue());
+    
+        DataShape inputShape = metadata.inputShape;
+        Map<String, JsonSchema> schemaMap = checkShape(inputShape, ObjectSchema.class);
+        checkTestServerSchemaMap(schemaMap);
+        assertNotNull(schemaMap.get(KEY_PREDICATE));
+    
+        DataShape outputShape = metadata.outputShape;
+        assertEquals(DataShapeKinds.JSON_INSTANCE, outputShape.getKind());
+    }
+
     /**
      * Needs to supply server certificate since the server is unknown to the default
      * certificate authorities that is loaded into the keystore by default
