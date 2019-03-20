@@ -52,8 +52,8 @@ For example, if you select *JSON schema* then you would paste the content of
 a JSON schema file, which has a media type of `application/schema+json`.
 
 . In the *Data Type Name* field, enter a name that you choose for the
-data type. For example, suppose you are specifying a JSON schema for
-vendors. You can specify `*Vendor*` as the data type name. 
+data type. For example, if you are specifying a JSON schema for
+vendors, then you might specify `*Vendor*` as the data type name. 
 +
 You will see this data type name when you are creating 
 or editing an integration that uses the connection
