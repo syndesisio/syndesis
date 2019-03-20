@@ -431,14 +431,14 @@
                 "type": "string"
               },
               "maxResults": {
-                "defaultValue": "25",
+                "defaultValue": "0",
                 "deprecated": false,
                 "displayName": "Max results",
                 "group": "producer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "producer",
-                "labelHint": "Maximum number of values to return.",
+                "labelHint": "Maximum number of values to return (value of '0' meaning results are unbounded).",
                 "order": "6",
                 "required": false,
                 "secret": false,
