@@ -5,7 +5,10 @@ import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import { ExtensionListItem } from '../../src';
 
-const stories = storiesOf('Customization/ExtensionListItem', module);
+const stories = storiesOf(
+  'Customization/Extensions/Component/ExtensionListItem',
+  module
+);
 
 const extensionDescription = 'Add a loop';
 const extensionIcon =
