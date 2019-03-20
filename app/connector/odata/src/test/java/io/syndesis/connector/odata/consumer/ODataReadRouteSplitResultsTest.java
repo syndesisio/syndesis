@@ -84,9 +84,9 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, TEST_SERVER_DATA_1);
-        testListResult(result, 1, TEST_SERVER_DATA_2);
-        testListResult(result, 2, TEST_SERVER_DATA_3);
+        testResult(result, 0, TEST_SERVER_DATA_1);
+        testResult(result, 1, TEST_SERVER_DATA_2);
+        testResult(result, 2, TEST_SERVER_DATA_3);
     }
 
     @Test
@@ -110,9 +110,9 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, TEST_SERVER_DATA_1);
-        testListResult(result, 1, TEST_SERVER_DATA_2);
-        testListResult(result, 2, TEST_SERVER_DATA_3);
+        testResult(result, 0, TEST_SERVER_DATA_1);
+        testResult(result, 1, TEST_SERVER_DATA_2);
+        testResult(result, 2, TEST_SERVER_DATA_3);
     }
 
     /**
@@ -137,9 +137,9 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, TEST_SERVER_DATA_1);
-        testListResult(result, 1, TEST_SERVER_DATA_2);
-        testListResult(result, 2, TEST_SERVER_DATA_3);
+        testResult(result, 0, TEST_SERVER_DATA_1);
+        testResult(result, 1, TEST_SERVER_DATA_2);
+        testResult(result, 2, TEST_SERVER_DATA_3);
     }
 
     /**
@@ -169,9 +169,9 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, TEST_SERVER_DATA_1);
-        testListResult(result, 1, TEST_SERVER_DATA_2);
-        testListResult(result, 2, TEST_SERVER_DATA_3);
+        testResult(result, 0, TEST_SERVER_DATA_1);
+        testResult(result, 1, TEST_SERVER_DATA_2);
+        testResult(result, 2, TEST_SERVER_DATA_3);
     }
 
     @Test
@@ -197,7 +197,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, REF_SERVER_PEOPLE_DATA_1);
+        testResult(result, 0, REF_SERVER_PEOPLE_DATA_1);
     }
 
     /**
@@ -227,7 +227,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, REF_SERVER_PEOPLE_DATA_1);
+        testResult(result, 0, REF_SERVER_PEOPLE_DATA_1);
     }
 
     @Test
@@ -253,7 +253,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX);
+        testResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX);
     }
 
     @Test
@@ -278,7 +278,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX_LOC);
+        testResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX_LOC);
     }
 
     @Test
@@ -300,7 +300,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, TEST_SERVER_DATA_1);
+        testResult(result, 0, TEST_SERVER_DATA_1);
     }
 
     @SuppressWarnings( "unchecked" )
@@ -322,10 +322,10 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
-        assertEquals(1, json.size());
+        String json = extractJsonFromExchgMsg(result, 0, String.class);
+        assertNotNull(json);
         String expected = testData(TEST_SERVER_DATA_1_WITH_COUNT);
-        JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
     }
 
     @SuppressWarnings( "unchecked" )
@@ -348,15 +348,15 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        List<String> json = extractJsonFromExchgMsg(result, 0, List.class);
-        assertEquals(1, json.size());
+        String json = extractJsonFromExchgMsg(result, 0, String.class);
+        assertNotNull(json);
         String expected = testData(TEST_SERVER_DATA_2);
-        JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
 
-        json = extractJsonFromExchgMsg(result, 1, List.class);
-        assertEquals(1, json.size());
+        json = extractJsonFromExchgMsg(result, 1, String.class);
+        assertNotNull(json);
         expected = testData(TEST_SERVER_DATA_1);
-        JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+        JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
     }
 
     @Test
@@ -377,7 +377,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, TEST_SERVER_DATA_1);
+        testResult(result, 0, TEST_SERVER_DATA_1);
     }
 
     @Test
@@ -398,7 +398,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, TEST_SERVER_DATA_1);
+        testResult(result, 0, TEST_SERVER_DATA_1);
     }
 
     @Test
@@ -422,9 +422,9 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, TEST_SERVER_DATA_1);
-        testListResult(result, 1, TEST_SERVER_DATA_2);
-        testListResult(result, 2, TEST_SERVER_DATA_3);
+        testResult(result, 0, TEST_SERVER_DATA_1);
+        testResult(result, 1, TEST_SERVER_DATA_2);
+        testResult(result, 2, TEST_SERVER_DATA_3);
 
         Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
@@ -462,29 +462,29 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         result.assertIsSatisfied();
 
         for (int i = 0; i < expectedMsgCount; ++i) {
-            List<String> json = extractJsonFromExchgMsg(result, i, List.class);
-            assertEquals(1, json.size());
+            String json = extractJsonFromExchgMsg(result, i, String.class);
+            assertNotNull(json);
 
             String expected;
             switch (i) {
                 case 0:
                     expected = testData(TEST_SERVER_DATA_1);
-                    JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
                     break;
                 case 1:
                     expected = testData(TEST_SERVER_DATA_2);
-                    JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
                     break;
                 case 2:
                     expected = testData(TEST_SERVER_DATA_3);
-                    JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
                     break;
                 default:
                     //
                     // Subsequent polling messages should be empty
                     //
                     expected = testData(TEST_SERVER_DATA_EMPTY);
-                    JSONAssert.assertEquals(expected, json.get(0), JSONCompareMode.LENIENT);
+                    JSONAssert.assertEquals(expected, json, JSONCompareMode.LENIENT);
             }
         }
 

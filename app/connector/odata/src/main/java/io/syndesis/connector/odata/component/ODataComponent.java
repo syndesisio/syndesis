@@ -32,7 +32,7 @@ import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.integration.component.proxy.ComponentDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
-final class ODataComponent extends ComponentProxyComponent implements ODataConstants {
+public final class ODataComponent extends ComponentProxyComponent implements ODataConstants {
 
     private static final Pattern NUMBER_ONLY_PATTERN = Pattern.compile("-?\\d+");
 
