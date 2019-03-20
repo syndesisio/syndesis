@@ -128,7 +128,6 @@ export default class ExtensionsPage extends React.Component {
                             <ExtensionListView
                               filterTypes={filterTypes}
                               sortTypes={sortTypes}
-                              {...this.state}
                               linkImportExtension={resolvers.extensions.import()}
                               resultsCount={filteredAndSorted.length}
                               {...helpers}

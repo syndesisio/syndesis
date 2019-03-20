@@ -72,7 +72,10 @@ const extensions = [
   />,
 ];
 
-const stories = storiesOf('Customization/ExtensionListView', module);
+const stories = storiesOf(
+  'Customization/Extensions/Component/ExtensionListView',
+  module
+);
 
 const hasExtensionsTestNotes =
   '- Verify page title is "' +
