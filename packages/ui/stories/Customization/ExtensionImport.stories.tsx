@@ -5,7 +5,10 @@ import { ExtensionImport } from '../../src';
 
 export const extensionImportStory = 'story-tbd';
 
-const stories = storiesOf('Customization/ExtensionImport', module);
+const stories = storiesOf(
+  'Customization/Extensions/Component/ExtensionImport',
+  module
+);
 const storyNotes = '- Verify something here';
 
 stories.add(

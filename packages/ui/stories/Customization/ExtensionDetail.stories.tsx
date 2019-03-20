@@ -11,7 +11,10 @@ import {
 
 export const extensionDetailStory = 'step extension in use';
 
-const stories = storiesOf('Customization/ExtensionDetail', module);
+const stories = storiesOf(
+  'Customization/Extensions/Component/ExtensionDetail',
+  module
+);
 
 const integrations = [
   {
