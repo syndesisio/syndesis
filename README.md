@@ -3,7 +3,7 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.syndesis/syndesis-parent/badge.svg?style=flat-square)](https://search.maven.org/search?q=g:io.syndesis)
 [![CircleCI](https://circleci.com/gh/syndesisio/syndesis/tree/master.svg?style=svg)](https://circleci.com/gh/syndesisio/syndesis/tree/master)
 
-A flexible, customizable, open source platform that provides core integration capabilities as a service.
+A flexible and customizable, open source platform that provides core integration capabilities as a service.
 
 All developer related documentation can be found at the [Syndesis Developer Handbook](https://doc.syndesis.io).
 
