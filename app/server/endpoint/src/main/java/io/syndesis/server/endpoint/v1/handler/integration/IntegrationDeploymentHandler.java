@@ -124,6 +124,7 @@ public final class IntegrationDeploymentHandler extends BaseHandler {
         final IntegrationDeployment deployment = new IntegrationDeployment.Builder()
             .id(IntegrationDeployment.compositeId(id, version)).spec(integration).version(version)
             .userId(sec.getUserPrincipal().getName())
+            .createdAt(System.currentTimeMillis())
             .statusMessage(validationStatus).build();
 
         return getDataManager().create(deployment);
