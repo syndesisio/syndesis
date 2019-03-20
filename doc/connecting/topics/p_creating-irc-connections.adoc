@@ -23,8 +23,9 @@ display any available connections.
 {prodname} connectors.
 . Click the *IRC* connector.
 . In the *Hostname* field, enter an IRC hostname. You can 
-specify an IP address or a name, for example, `*chat.freenode*`.
-. In the *Port* field, enter the port that the IRC server is listening on.
+specify an IP address or a name, for example, `*chat.freenode.net*`.
+. In the *Port* field, enter the port that the IRC server is listening on,
+for example, `*6665*`.
 . In the *Password* field, if the IRC server requires a password, 
 enter it here. 
 . Click *Validate*. {prodname} immediately tries to validate the 
