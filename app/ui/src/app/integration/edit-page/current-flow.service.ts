@@ -716,7 +716,7 @@ export class CurrentFlowService {
         const subsequent = this.getSubsequentStepWithDataShape(position);
         this.fetchStepDescriptor(
           step,
-          subsequent.action.descriptor.inputDataShape,
+          typeof subsequent !== 'undefined' ? subsequent.action.descriptor.inputDataShape : undefined,
           previous.action.descriptor.outputDataShape,
           then
         );
