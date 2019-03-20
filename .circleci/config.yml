@@ -23,6 +23,11 @@ job_default: &job_defaults
   working_directory: /workspace
   docker:
     - image: openjdk:8-jdk
+  filters:
+    branches:
+      only:
+        - master
+        - /\d+\.\d+\.x/
 
 push_images: &push_images
   deploy:
