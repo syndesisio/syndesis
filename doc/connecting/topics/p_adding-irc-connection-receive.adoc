@@ -1,28 +1,34 @@
 // This module is included in the following assemblies:
-// as_connecting-to-mqtt.adoc
+// as_connecting-to-irc.adoc
 
-[id='adding-mqtt-connection-finish-middle_{context}']
-= Publishing a message to an MQTT broker
+[id='adding-irc-connections-receive_{context}']
+= Adding an IRC connection to trigger integration execution upon receiving messages
 
-In an integration, you can publish a message to an MQTT broker 
-in the middle of a flow or to finish a simple integration. 
-To do this, add an MQTT connection to the middle of a flow or
-as the integration's finish connection.  
+An IRC connection that starts an integration triggers execution of the 
+integration when the connection finds messages that are sent to an 
+IRC nickname that you specify. 
 
 .Prerequisites
-* You created an MQTT connection.
-* You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a finish connection.  
+
+* You created an IRC connection. 
+* You have an IRC nickname for receiving and sending messages. 
+* You are creating a simple integration and {prodname} is prompting you to 
+choose how you want to start the integration. 
 
 .Procedure
 
-. Click the MQTT connection that you want to use
-to publish a message. 
-
-. On the *Choose an Action* page, click *Publish*. 
-. In the *MQTT queue/topic name* field, specify the name of the queue or
-topic to publish the message to. 
-. Click *Next* to specify the action's input type. 
+. Click the IRC connection that you want to use to start the integration. 
+. Click the *IRC Receive Private Message* action.  
+. In the *Channels* field, optionally specify one or more IRC channels 
+separated with commas. 
+. In the *Nickname* field, specify the IRC nickname that the 
+integration uses. For any channels that you specify, this 
+nickname joins the channel. During execution, the integration 
+retrieves messages that are sent to this nickname and passes them
+to the next step in the integration. 
+. In the *NickServ Password* field, if the specified nickname has 
+a password, enter it. 
+. Click *Next* to specify the action's output type. 
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
@@ -57,8 +63,7 @@ in the integration visualization panel and in the data mapper.
 . In the *Data Type Description* field, provide information that helps you
 distinguish this type. This description appears in the data mapper when 
 you hover over the step that processes this type. 
-. Click *Done*. 
+. Click *Done* to add the connection to the flow. 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears at the beginning of the integration flow. 
