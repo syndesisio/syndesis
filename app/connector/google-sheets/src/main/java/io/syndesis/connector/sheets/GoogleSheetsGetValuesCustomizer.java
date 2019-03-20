@@ -68,14 +68,11 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
     private void beforeConsumer(Exchange exchange) throws JsonProcessingException {
         final Message in = exchange.getIn();
 
-        final List<String> jsonBeans;
         if (splitResults) {
-            jsonBeans = createModelFromSplitValues(in);
+            in.setBody(createModelFromSplitValues(in));
         } else {
-            jsonBeans = createModelFromValueRange(in);
+            in.setBody(createModelFromValueRange(in));
         }
-
-        in.setBody(jsonBeans);
     }
 
     private List<String> createModelFromValueRange(Message in) throws JsonProcessingException {
@@ -120,9 +117,11 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
         return jsonBeans;
     }
 
-    private List<String> createModelFromSplitValues(Message in) throws JsonProcessingException {
-        final List<String> jsonBeans = new ArrayList<>();
+    private String createModelFromSplitValues(Message in) throws JsonProcessingException {
         final List<?> values = in.getBody(List.class);
+
+        final Map<String, Object> model = new HashMap<>();
+        model.put("spreadsheetId", spreadsheetId);
 
         if (values != null) {
             if (ObjectHelper.isNotEmpty(in.getHeader(GoogleSheetsStreamConstants.RANGE))) {
@@ -135,28 +134,21 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
             }
 
             if (ObjectHelper.equal(RangeCoordinate.DIMENSION_ROWS, majorDimension)) {
-                final Map<String, Object> model = new HashMap<>();
-                model.put("spreadsheetId", spreadsheetId);
                 int columnIndex = rangeCoordinate.getColumnStartIndex();
                 for (Object value : values) {
                     model.put(CellCoordinate.getColumnName(columnIndex), value);
                     columnIndex++;
                 }
-                jsonBeans.add(Json.writer().writeValueAsString(model));
-
             } else if (ObjectHelper.equal(RangeCoordinate.DIMENSION_COLUMNS, majorDimension)) {
-                final Map<String, Object> model = new HashMap<>();
-                model.put("spreadsheetId", spreadsheetId);
                 int rowIndex = rangeCoordinate.getRowStartIndex() + 1;
                 for (Object value : values) {
                     model.put(ROW_PREFIX + rowIndex, value);
                     rowIndex++;
                 }
-                jsonBeans.add(Json.writer().writeValueAsString(model));
             }
         }
 
-        return jsonBeans;
+        return Json.writer().writeValueAsString(model);
     }
 
 }
