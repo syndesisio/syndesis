@@ -168,6 +168,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 
 func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis) (string, error) {
 	sa := newSyndesisServiceAccount()
+	linkImagePullSecret(sa, SyndesisPullSecret)
 	operation.SetNamespaceAndOwnerReference(sa, syndesis)
 	// We don't replace the service account if already present, to let Kubernetes generate its tokens
 	err := cl.Create(ctx, sa)
