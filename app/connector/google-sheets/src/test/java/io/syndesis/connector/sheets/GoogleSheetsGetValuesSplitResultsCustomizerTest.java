@@ -97,9 +97,7 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
         Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
         Assert.assertEquals("get", options.get("methodName"));
 
-        @SuppressWarnings("unchecked")
-        List<String> model = inbound.getIn().getBody(List.class);
-        Assert.assertEquals(1, model.size());
-        JSONAssert.assertEquals(String.format(expectedValueModel, getSpreadsheetId()), model.get(0), JSONCompareMode.STRICT);
+        String model = inbound.getIn().getBody(String.class);
+        JSONAssert.assertEquals(String.format(expectedValueModel, getSpreadsheetId()), model, JSONCompareMode.STRICT);
     }
 }
