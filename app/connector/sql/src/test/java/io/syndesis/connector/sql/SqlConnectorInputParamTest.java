@@ -16,20 +16,19 @@
 package io.syndesis.connector.sql;
 
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.common.SqlParam;
 import io.syndesis.connector.sql.common.SqlStatementParser;
-import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
-import io.syndesis.common.model.integration.Step;
 import org.assertj.core.api.Assertions;
-import org.junit.After;
 import org.junit.Test;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
@@ -38,26 +37,16 @@ public class SqlConnectorInputParamTest extends SqlConnectorTestSupport {
         "(charType, varcharType, numericType, decimalType, smallType) VALUES " +
         "(:#CHARVALUE, :#VARCHARVALUE, :#NUMERICVALUE, :#DECIMALVALUE, :#SMALLINTVALUE)";
 
-    // **************************
-    // Set up
-    // **************************
-
     @Override
-    protected void doPreSetup() throws Exception {
-        try (Statement stmt = db.connection.createStatement()) {
-            stmt.executeUpdate(
-                "CREATE TABLE ALLTYPES (charType CHAR, varcharType VARCHAR(255), " +
-                    "numericType NUMERIC, decimalType DECIMAL, smallType SMALLINT," +
-                    "dateType DATE, timeType TIME )"
-            );
-        }
+    protected List<String> setupStatements() {
+        return Collections.singletonList("CREATE TABLE ALLTYPES (charType CHAR, varcharType VARCHAR(255), " +
+                "numericType NUMERIC, decimalType DECIMAL, smallType SMALLINT," +
+                "dateType DATE, timeType TIME )");
     }
 
-    @After
-    public void after() throws SQLException {
-        try (Statement stmt = db.connection.createStatement()) {
-            stmt.executeUpdate("DROP TABLE ALLTYPES");
-        }
+    @Override
+    protected List<String> cleanupStatements() {
+        return Collections.singletonList("DROP TABLE ALLTYPES");
     }
 
     @Override
@@ -94,7 +83,7 @@ public class SqlConnectorInputParamTest extends SqlConnectorTestSupport {
         String result = template.requestBody("direct:start", JSONBeanUtil.toJSONBean(values), String.class);
 
         Assertions.assertThat(result).isNotNull();
-        
+
         try (Statement stmt = db.connection.createStatement()) {
             stmt.execute("SELECT * FROM ALLTYPES");
             ResultSet resultSet = stmt.getResultSet();
