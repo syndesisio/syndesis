@@ -8,6 +8,7 @@ import {
   IntegrationDetailEditableName,
   IntegrationDetailHistoryListView,
   IntegrationDetailHistoryListViewItem,
+  IntegrationDetailInfo,
   IntegrationStepsHorizontalView,
   TabBar,
   TabBarItem,
@@ -45,11 +46,7 @@ storiesOf('Integration/Detail', module)
             background: '#fff',
           }}
         >
-          <div className="integration-info">
-            <IntegrationDetailEditableName name={'This is my name'} />
-            <span className="pficon pficon-ok" />
-            &nbsp;Published version 1
-          </div>
+          <IntegrationDetailInfo name={'Integration name'} version={1} />
           <TabBar>
             <TabBarItem label={'Details'} to={'#details'} />
             <TabBarItem label={'Activity'} to={'#activity'} />

@@ -12,10 +12,10 @@ export class IntegrationDetailEditableName extends React.PureComponent<
     return (
       <>
         {this.props.name ? (
-          <p>
-            {this.props.name}&nbsp;
+          <>
+            <h1>{this.props.name}&nbsp;</h1>
             <Icon name={'pencil'} />
-          </p>
+          </>
         ) : null}
       </>
     );
