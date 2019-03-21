@@ -4,10 +4,12 @@ import * as React from 'react';
 
 import { IntegrationStepsHorizontalView } from '../../src';
 
-const stories = storiesOf('Integration/IntegrationStepsHorizontalView', module);
+const stories = storiesOf(
+  'Integration/Detail/Components/IntegrationStepsHorizontalView',
+  module
+);
 
 const integrationRunning = {
-  description: 'An example integration that is running.',
   steps: [
     {
       name: 'SQL',
@@ -23,9 +25,6 @@ const integrationRunning = {
 stories.add(
   'running',
   withNotes('Verify the integration is running')(() => (
-    <IntegrationStepsHorizontalView
-      description={integrationRunning.description}
-      steps={integrationRunning.steps}
-    />
+    <IntegrationStepsHorizontalView steps={integrationRunning.steps} />
   ))
 );

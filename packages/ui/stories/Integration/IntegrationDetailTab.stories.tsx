@@ -13,23 +13,26 @@ import {
 
 const steps = [];
 
-storiesOf('Integration/DetailTab', module).add('integration published', () => (
-  <Router>
-    <>
-      <Container
-        style={{
-          background: '#fff',
-        }}
-      >
-        <TabBar>
-          <TabBarItem label={'Details'} to={'#details'} />
-          <TabBarItem label={'Activity'} to={'#activity'} />
-          <TabBarItem label={'Metrics'} to={'#metrics'} />
-        </TabBar>
-      </Container>
-      <IntegrationStepsHorizontalView steps={steps} />
-      <IntegrationDetailDescription description={'This is my description.'} />
-      <IntegrationDetailHistoryListView integrationIsDraft={false} />
-    </>
-  </Router>
-));
+storiesOf('Integration/Detail/DetailTab', module).add(
+  'integration published',
+  () => (
+    <Router>
+      <>
+        <Container
+          style={{
+            background: '#fff',
+          }}
+        >
+          <TabBar>
+            <TabBarItem label={'Details'} to={'#details'} />
+            <TabBarItem label={'Activity'} to={'#activity'} />
+            <TabBarItem label={'Metrics'} to={'#metrics'} />
+          </TabBar>
+        </Container>
+        <IntegrationStepsHorizontalView steps={steps} />
+        <IntegrationDetailDescription description={'This is my description.'} />
+        <IntegrationDetailHistoryListView integrationIsDraft={false} />
+      </>
+    </Router>
+  )
+);

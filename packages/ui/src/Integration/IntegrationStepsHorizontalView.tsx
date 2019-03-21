@@ -4,7 +4,6 @@ import * as React from 'react';
 import './IntegrationStepsHorizontalView.css';
 
 export interface IIntegrationStepsHorizontalViewProps {
-  description?: string;
   steps?: any;
 }
 
@@ -42,14 +41,6 @@ export class IntegrationStepsHorizontalView extends React.Component<
               ))}
           </Grid.Row>
         </Grid>
-        <div>
-          {this.props.description ? (
-            <p>
-              {this.props.description}&nbsp;
-              <Icon name={'pencil'} />
-            </p>
-          ) : null}
-        </div>
       </div>
     );
   }
