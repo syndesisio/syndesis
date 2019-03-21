@@ -354,12 +354,17 @@ public class IntegrationSupportHandler {
         Map<String, String> renamedIds = new HashMap<>();
 
         // Import the extensions..
-        importModels(new JsonDbDao<Extension>(given) {
+        final JsonDbDao<Extension> extensionDao = new JsonDbDao<Extension>(given) {
             @Override
             public Class<Extension> getType() {
                 return Extension.class;
             }
-        }, RENAME_EXTENSION, renamedIds, result);
+        };
+
+        // undelete existing deleted extensions that were referenced in the model
+        undeleteImportedExtensions(extensionDao, result);
+
+        importModels(extensionDao, RENAME_EXTENSION, renamedIds, result);
 
         // NOTE: connectors are imported without renaming and ignoring renamed ids
         // as a matter of fact, the lambda should never be called
@@ -399,6 +404,25 @@ public class IntegrationSupportHandler {
         }, result);
 
         return result;
+    }
+
+    private void undeleteImportedExtensions(JsonDbDao<Extension> extensionDao, Map<String, List<WithResourceId>> result) {
+
+        for (String id : extensionDao.fetchIds()) {
+            final Extension extension = dataManager.fetch(Extension.class, id);
+            if (extension != null) {
+                final Optional<Extension.Status> status = extension.getStatus();
+                if (status.isPresent() && status.get() == Extension.Status.Deleted) {
+                    // undelete the extension
+                    final Extension updated = new Extension.Builder()
+                            .createFrom(extension)
+                            .status(Extension.Status.Installed)
+                            .build();
+                    dataManager.update(updated);
+                    addImportedItemResult(result, updated);
+                }
+            }
+        }
     }
 
     private void importIntegrations(SecurityContext sec, JsonDbDao<Integration> export, Map<String, String> renamedIds, Map<String, List<WithResourceId>> result) {
