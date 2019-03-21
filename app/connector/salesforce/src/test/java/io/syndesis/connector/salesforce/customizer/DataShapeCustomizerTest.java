@@ -143,6 +143,19 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
     }
 
     @Test
+    public void shouldUnmarshallToSpecifiedInputTypeWithoutConversion() throws Exception {
+        final ComponentProxyComponent component = setUpComponent("salesforce-delete-sobject");
+        final Exchange exchange = new DefaultExchange(context);
+        final Message in = exchange.getIn();
+        in.setBody(new SalesforceIdentifier("test"));
+
+        component.getBeforeProducer().process(exchange);
+
+        Assertions.assertThat(in.getBody()).isInstanceOf(SalesforceIdentifier.class);
+        Assertions.assertThat(in.getBody()).hasFieldOrPropertyWithValue("id", "test");
+    }
+
+    @Test
     public void shouldUnmarshallToSpecifiedOutputType() throws Exception {
         final ComponentProxyComponent component = setUpComponent("salesforce-create-sobject");
         final Exchange exchange = new DefaultExchange(context);
