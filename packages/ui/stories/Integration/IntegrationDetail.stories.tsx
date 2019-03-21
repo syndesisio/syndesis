@@ -13,9 +13,8 @@ import {
 
 const steps = [];
 
-storiesOf('Integration/Detail/DetailTab', module).add(
-  'integration published',
-  () => (
+storiesOf('Integration/Detail', module)
+  .add('Details Tab Page', () => (
     <Router>
       <>
         <Container
@@ -34,5 +33,6 @@ storiesOf('Integration/Detail/DetailTab', module).add(
         <IntegrationDetailHistoryListView integrationIsDraft={false} />
       </>
     </Router>
-  )
-);
+  ))
+  .add('Activity Tab Page', () => <></>)
+  .add('Metrics Tab Page', () => <></>);
