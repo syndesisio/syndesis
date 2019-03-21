@@ -6,10 +6,23 @@ import {
   Container,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
+  IntegrationDetailHistoryListViewItem,
   IntegrationStepsHorizontalView,
   TabBar,
   TabBarItem,
 } from '../../src';
+
+const integrationPublishedHistoryItems = [
+  <IntegrationDetailHistoryListViewItem
+    key={0}
+    integrationUpdatedAt={'Feb 24, 2019, 04:27:49'}
+    integrationVersion={1}
+    i18nTextHistoryMenuReplaceDraft={'Replace draft'}
+    i18nTextHistoryMenuUnpublish={'Unpublish'}
+    i18nTextLastPublished={'Last published on '}
+    i18nTextVersion={'Version'}
+  />,
+];
 
 const steps = [
   {
@@ -39,7 +52,12 @@ storiesOf('Integration/Detail', module)
         </Container>
         <IntegrationStepsHorizontalView steps={steps} />
         <IntegrationDetailDescription description={'This is my description.'} />
-        <IntegrationDetailHistoryListView integrationIsDraft={false} />
+        <IntegrationDetailHistoryListView
+          integrationIsDraft={false}
+          children={integrationPublishedHistoryItems}
+          i18nTextDraft={'Draft'}
+          i18nTextHistory={'History'}
+        />
       </>
     </Router>
   ))

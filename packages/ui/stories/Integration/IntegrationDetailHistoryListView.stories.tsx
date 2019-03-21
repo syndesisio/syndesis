@@ -9,7 +9,7 @@ import {
 } from '../../src';
 
 const stories = storiesOf(
-  'Integration/Detail/Components/IntegrationDetailHistoryListView',
+  'Integration/IntegrationDetailHistoryListView',
   module
 );
 
