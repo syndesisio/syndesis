@@ -5,11 +5,14 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import {
   Container,
   IntegrationDetailHistoryListView,
+  IntegrationStepsHorizontalView,
   TabBar,
   TabBarItem,
 } from '../../src';
 
-storiesOf('Integration/Detail', module).add('integration published', () => (
+const steps = [];
+
+storiesOf('Integration/DetailTab', module).add('integration published', () => (
   <Router>
     <>
       <Container
@@ -23,6 +26,8 @@ storiesOf('Integration/Detail', module).add('integration published', () => (
           <TabBarItem label={'Metrics'} to={'#metrics'} />
         </TabBar>
       </Container>
+      <IntegrationStepsHorizontalView steps={steps} />
+
       <IntegrationDetailHistoryListView integrationIsDraft={false} />
     </>
   </Router>
