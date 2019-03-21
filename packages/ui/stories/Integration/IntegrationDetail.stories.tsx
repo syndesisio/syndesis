@@ -34,5 +34,39 @@ storiesOf('Integration/Detail', module)
       </>
     </Router>
   ))
-  .add('Activity Tab Page', () => <></>)
-  .add('Metrics Tab Page', () => <></>);
+  .add('Activity Tab Page', () => (
+    <Router>
+      <>
+        <Container
+          style={{
+            background: '#fff',
+          }}
+        >
+          <TabBar>
+            <TabBarItem label={'Details'} to={'#details'} />
+            <TabBarItem label={'Activity'} to={'#activity'} />
+            <TabBarItem label={'Metrics'} to={'#metrics'} />
+          </TabBar>
+        </Container>
+        <p>Activity Tab</p>
+      </>
+    </Router>
+  ))
+  .add('Metrics Tab Page', () => (
+    <Router>
+      <>
+        <Container
+          style={{
+            background: '#fff',
+          }}
+        >
+          <TabBar>
+            <TabBarItem label={'Details'} to={'#details'} />
+            <TabBarItem label={'Activity'} to={'#activity'} />
+            <TabBarItem label={'Metrics'} to={'#metrics'} />
+          </TabBar>
+        </Container>
+        <p>Metrics Tab</p>
+      </>
+    </Router>
+  ));
