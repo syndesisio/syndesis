@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import {
   Container,
   IntegrationDetailDescription,
+  IntegrationDetailEditableName,
   IntegrationDetailHistoryListView,
   IntegrationDetailHistoryListViewItem,
   IntegrationStepsHorizontalView,
@@ -44,6 +45,11 @@ storiesOf('Integration/Detail', module)
             background: '#fff',
           }}
         >
+          <div className="integration-info">
+            <IntegrationDetailEditableName name={'This is my name'} />
+            <span className="pficon pficon-ok" />
+            &nbsp;Published version 1
+          </div>
           <TabBar>
             <TabBarItem label={'Details'} to={'#details'} />
             <TabBarItem label={'Activity'} to={'#activity'} />
@@ -69,6 +75,7 @@ storiesOf('Integration/Detail', module)
             background: '#fff',
           }}
         >
+          <IntegrationDetailEditableName name={'This is my name'} />
           <TabBar>
             <TabBarItem label={'Details'} to={'#details'} />
             <TabBarItem label={'Activity'} to={'#activity'} />
@@ -87,6 +94,7 @@ storiesOf('Integration/Detail', module)
             background: '#fff',
           }}
         >
+          <IntegrationDetailEditableName name={'This is my name'} />
           <TabBar>
             <TabBarItem label={'Details'} to={'#details'} />
             <TabBarItem label={'Activity'} to={'#activity'} />
