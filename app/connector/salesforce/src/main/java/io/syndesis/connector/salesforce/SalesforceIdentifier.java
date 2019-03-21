@@ -23,6 +23,9 @@ public final class SalesforceIdentifier {
     @JsonProperty("Id")
     private String id;
 
+    public SalesforceIdentifier() {
+    }
+
     @JsonCreator
     public SalesforceIdentifier(@JsonProperty("Id") final String id) {
         this.id = id;
