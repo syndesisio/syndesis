@@ -18,6 +18,7 @@ package io.syndesis.connector.salesforce.customizer;
 import java.util.Collections;
 import java.util.List;
 
+import com.fasterxml.jackson.core.JsonParseException;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
@@ -140,6 +141,45 @@ public class DataShapeCustomizerTest extends SalesforceTestSupport {
         component.getBeforeProducer().process(exchange);
 
         Assertions.assertThat(in.getBody()).isInstanceOf(SalesforceIdentifier.class);
+    }
+
+    @Test
+    public void shouldUnmarshallToSpecifiedInputTypeWithoutConversion() throws Exception {
+        final ComponentProxyComponent component = setUpComponent("salesforce-delete-sobject");
+        final Exchange exchange = new DefaultExchange(context);
+        final Message in = exchange.getIn();
+        in.setBody(new SalesforceIdentifier("test"));
+
+        component.getBeforeProducer().process(exchange);
+
+        Assertions.assertThat(in.getBody()).isInstanceOf(SalesforceIdentifier.class);
+        Assertions.assertThat(in.getBody()).hasFieldOrPropertyWithValue("id", "test");
+    }
+
+    @Test
+    public void shouldFailToUnmarshallToSpecifiedInputTypeFromString() throws Exception {
+        final ComponentProxyComponent component = setUpComponent("salesforce-delete-sobject");
+        final Exchange exchange = new DefaultExchange(context);
+        final Message in = exchange.getIn();
+        in.setBody("invalid");
+
+        component.getBeforeProducer().process(exchange);
+
+        Assertions.assertThat(exchange.isFailed()).isTrue();
+        Assertions.assertThat(exchange.getException()).isInstanceOf(JsonParseException.class);
+    }
+
+    @Test
+    public void shouldFailToUnmarshallToSpecifiedInputType() throws Exception {
+        final ComponentProxyComponent component = setUpComponent("salesforce-delete-sobject");
+        final Exchange exchange = new DefaultExchange(context);
+        final Message in = exchange.getIn();
+        in.setBody(new Object());
+
+        component.getBeforeProducer().process(exchange);
+
+        Assertions.assertThat(exchange.isFailed()).isTrue();
+        Assertions.assertThat(exchange.getException()).isInstanceOf(JsonParseException.class);
     }
 
     @Test
