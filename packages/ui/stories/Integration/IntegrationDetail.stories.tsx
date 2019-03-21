@@ -18,11 +18,9 @@ storiesOf('Integration/Detail', module).add('integration published', () => (
         }}
       >
         <TabBar>
-          <TabBarItem
-            label={'integrationDetailTitle'}
-            to={'#integration-detail'}
-          />
-          <TabBarItem label={'integrationDetailTitle'} to={'#detail'} />
+          <TabBarItem label={'Details'} to={'#details'} />
+          <TabBarItem label={'Activity'} to={'#activity'} />
+          <TabBarItem label={'Metrics'} to={'#metrics'} />
         </TabBar>
       </Container>
       <IntegrationDetailHistoryListView integrationIsDraft={false} />
