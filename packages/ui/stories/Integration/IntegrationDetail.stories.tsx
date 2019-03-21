@@ -11,7 +11,16 @@ import {
   TabBarItem,
 } from '../../src';
 
-const steps = [];
+const steps = [
+  {
+    name: 'SQL',
+    pattern: 'From',
+  },
+  {
+    name: 'Salesforce',
+    pattern: 'To',
+  },
+];
 
 storiesOf('Integration/Detail', module)
   .add('Details Tab Page', () => (
