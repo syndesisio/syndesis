@@ -5,7 +5,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import {
   Container,
   IntegrationDetailDescription,
-  IntegrationDetailEditableName,
   IntegrationDetailHistoryListView,
   IntegrationDetailHistoryListViewItem,
   IntegrationDetailInfo,
@@ -37,68 +36,29 @@ const steps = [
   },
 ];
 
-storiesOf('Integration/Detail', module)
-  .add('Details Tab Page', () => (
-    <Router>
-      <>
-        <Container
-          style={{
-            background: '#fff',
-          }}
-        >
-          <IntegrationDetailInfo name={'Integration name'} version={1} />
-          <TabBar>
-            <TabBarItem label={'Details'} to={'#details'} />
-            <TabBarItem label={'Activity'} to={'#activity'} />
-            <TabBarItem label={'Metrics'} to={'#metrics'} />
-          </TabBar>
-        </Container>
-        <IntegrationStepsHorizontalView steps={steps} />
-        <IntegrationDetailDescription description={'This is my description.'} />
-        <IntegrationDetailHistoryListView
-          integrationIsDraft={false}
-          children={integrationPublishedHistoryItems}
-          i18nTextDraft={'Draft'}
-          i18nTextHistory={'History'}
-        />
-      </>
-    </Router>
-  ))
-  .add('Activity Tab Page', () => (
-    <Router>
-      <>
-        <Container
-          style={{
-            background: '#fff',
-          }}
-        >
-          <IntegrationDetailEditableName name={'This is my name'} />
-          <TabBar>
-            <TabBarItem label={'Details'} to={'#details'} />
-            <TabBarItem label={'Activity'} to={'#activity'} />
-            <TabBarItem label={'Metrics'} to={'#metrics'} />
-          </TabBar>
-        </Container>
-        <p>Activity Tab</p>
-      </>
-    </Router>
-  ))
-  .add('Metrics Tab Page', () => (
-    <Router>
-      <>
-        <Container
-          style={{
-            background: '#fff',
-          }}
-        >
-          <IntegrationDetailEditableName name={'This is my name'} />
-          <TabBar>
-            <TabBarItem label={'Details'} to={'#details'} />
-            <TabBarItem label={'Activity'} to={'#activity'} />
-            <TabBarItem label={'Metrics'} to={'#metrics'} />
-          </TabBar>
-        </Container>
-        <p>Metrics Tab</p>
-      </>
-    </Router>
-  ));
+storiesOf('Integration/Detail', module).add('Details Tab Page', () => (
+  <Router>
+    <>
+      <Container
+        style={{
+          background: '#fff',
+        }}
+      >
+        <IntegrationDetailInfo name={'Integration name'} version={1} />
+        <TabBar>
+          <TabBarItem label={'Details'} to={'#details'} />
+          <TabBarItem label={'Activity'} to={'#activity'} />
+          <TabBarItem label={'Metrics'} to={'#metrics'} />
+        </TabBar>
+      </Container>
+      <IntegrationStepsHorizontalView steps={steps} />
+      <IntegrationDetailDescription description={'This is my description.'} />
+      <IntegrationDetailHistoryListView
+        integrationIsDraft={false}
+        children={integrationPublishedHistoryItems}
+        i18nTextDraft={'Draft'}
+        i18nTextHistory={'History'}
+      />
+    </>
+  </Router>
+));
