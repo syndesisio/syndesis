@@ -4,6 +4,7 @@ import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import {
   Container,
+  IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
   IntegrationStepsHorizontalView,
   TabBar,
@@ -27,7 +28,7 @@ storiesOf('Integration/DetailTab', module).add('integration published', () => (
         </TabBar>
       </Container>
       <IntegrationStepsHorizontalView steps={steps} />
-
+      <IntegrationDetailDescription description={'This is my description.'} />
       <IntegrationDetailHistoryListView integrationIsDraft={false} />
     </>
   </Router>
