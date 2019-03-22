@@ -27,7 +27,6 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelContextAware;
 import org.apache.camel.Exchange;
-import org.apache.camel.Message;
 import org.apache.camel.Processor;
 import org.apache.camel.processor.Pipeline;
 
@@ -106,16 +105,15 @@ public class DataShapeCustomizer implements ComponentProxyCustomizer, CamelConte
                 return;
             }
 
-            final Message message = exchange.getIn();
-            final String bodyAsString = message.getBody(String.class);
-
-            if (bodyAsString == null) {
+            final Object body = exchange.getIn().getBody(type);
+            if (body != null) {
                 return;
             }
 
             try {
+                final String bodyAsString = exchange.getIn().getBody(String.class);
                 final Object output = Json.reader().forType(type).readValue(bodyAsString);
-                message.setBody(output);
+                exchange.getIn().setBody(output);
             } catch (final IOException e) {
                 exchange.setException(e);
             }
