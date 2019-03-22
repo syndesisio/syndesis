@@ -40,23 +40,26 @@ export class StepStore {
         description: 'Map fields from the input type to the output type.',
         stepKind: DATA_MAPPER,
         properties: {},
-        configuredProperties: undefined
+        configuredProperties: undefined,
       },
       true,
       false
     ),
-    StepStore.requiresOutputDataShape({
-      id: undefined,
-      connection: undefined,
-      action: undefined,
-      name: 'Basic Filter',
-      description:
-        'Continue the integration only if criteria you specify in simple input fields are met. Suitable for' +
-        ' most integrations.',
-      stepKind: BASIC_FILTER,
-      properties: undefined,
-      configuredProperties: undefined
-    }),
+    StepStore.requiresOutputDataShape(
+      {
+        id: undefined,
+        connection: undefined,
+        action: undefined,
+        name: 'Basic Filter',
+        description:
+          'Continue the integration only if criteria you specify in simple input fields are met. Suitable for' +
+          ' most integrations.',
+        stepKind: BASIC_FILTER,
+        properties: undefined,
+        configuredProperties: undefined,
+      },
+      true
+    ),
     StepStore.requiresOutputDataShape({
       id: undefined,
       connection: undefined,
@@ -66,9 +69,9 @@ export class StepStore {
       description:
         'Upload or create a Freemarker, Mustache or Velocity template to define consistent output data.',
       configuredProperties: undefined,
-      properties: undefined
+      properties: undefined,
     }),
-    {
+    StepStore.noCollectionSupport({
       id: undefined,
       connection: undefined,
       action: undefined,
@@ -86,11 +89,11 @@ $\{in.header.type\} == 'widget' // Evaluates true when type = widget
 $\{in.body.title\} // Evaluates true when body contains title.
 `,
           required: true,
-          rows: 10
-        }
+          rows: 10,
+        },
       },
-      configuredProperties: undefined
-    },
+      configuredProperties: undefined,
+    }),
     {
       id: undefined,
       connection: undefined,
@@ -103,18 +106,18 @@ $\{in.body.title\} // Evaluates true when body contains title.
         contextLoggingEnabled: {
           type: 'boolean',
           displayName: 'Message Context',
-          required: false
+          required: false,
         },
         bodyLoggingEnabled: {
           type: 'boolean',
           displayName: 'Message Body',
-          required: false
+          required: false,
         },
         customText: {
           type: 'string',
           displayName: 'Custom Text',
-          required: false
-        }
+          required: false,
+        },
         /*
         loggingLevel: {
           type: 'select',
@@ -129,7 +132,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
             {value: 'TRACE', label: 'TRACE'}],
         },
         */
-      }
+      },
     },
     StepStore.requiresOutputDataShape({
       id: undefined,
@@ -139,7 +142,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
       description: 'Process each item in a set of data individually',
       stepKind: SPLIT,
       properties: {},
-      configuredProperties: undefined
+      configuredProperties: undefined,
     }),
     StepStore.requiresConsistentSplitAggregate({
       id: undefined,
@@ -149,8 +152,8 @@ $\{in.body.title\} // Evaluates true when body contains title.
       description: 'End processing items in a foreach',
       stepKind: AGGREGATE,
       properties: {},
-      configuredProperties: undefined
-    })
+      configuredProperties: undefined,
+    }),
     /*
     {
       id: undefined,
@@ -255,7 +258,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
               properties: properties,
               extension: extension,
               action: action,
-              configuredProperties: undefined
+              configuredProperties: undefined,
             });
           }
         }
@@ -327,13 +330,13 @@ $\{in.body.title\} // Evaluates true when body contains title.
           []
             .concat(previousSteps)
             .reverse()
-            .find(s => StepStore.dataShapeExists(s))
+            .find(s => StepStore.dataShapeExists(s)),
         ];
       }
       if (!anySubsequent) {
         // only test the next subsequent step that has a data shape
         subsequentSteps = [
-          subsequentSteps.find(s => StepStore.dataShapeExists(s, true))
+          subsequentSteps.find(s => StepStore.dataShapeExists(s, true)),
         ];
       }
       return (
@@ -362,14 +365,57 @@ $\{in.body.title\} // Evaluates true when body contains title.
     }
   }
 
-  static requiresOutputDataShape(obj: StepKind): StepKind {
+  static hasPrecedingCollection(previousSteps: Step[]) {
+    const previousDataShape = []
+      .concat(previousSteps)
+      .reverse()
+      .find(s => StepStore.dataShapeExists(s));
+    return (
+      previousDataShape &&
+      previousDataShape.action &&
+      previousDataShape.action.description &&
+      previousDataShape.action.descriptor.outputDataShape &&
+      previousDataShape.action.descriptor.outputDataShape.metadata &&
+      previousDataShape.action.descriptor.outputDataShape.metadata.variant ===
+        'collection'
+    );
+  }
+
+  static noCollectionSupport(obj: StepKind) {
     obj.visible = (
       position: number,
       previousSteps: Array<Step>,
       subsequentSteps: Array<Step>
     ) => {
-      return StepStore.stepsHaveOutputDataShape(previousSteps);
+      return !StepStore.hasPrecedingCollection(previousSteps);
     };
+    return obj;
+  }
+
+  static requiresOutputDataShape(
+    obj: StepKind,
+    noCollectionSupport = false
+  ): StepKind {
+    if (noCollectionSupport) {
+      obj.visible = (
+        position: number,
+        previousSteps: Array<Step>,
+        subsequentSteps: Array<Step>
+      ) => {
+        return (
+          StepStore.stepsHaveOutputDataShape(previousSteps) &&
+          !StepStore.hasPrecedingCollection(previousSteps)
+        );
+      };
+    } else {
+      obj.visible = (
+        position: number,
+        previousSteps: Array<Step>,
+        subsequentSteps: Array<Step>
+      ) => {
+        return StepStore.stepsHaveOutputDataShape(previousSteps);
+      };
+    }
     return obj;
   }
 
@@ -379,21 +425,31 @@ $\{in.body.title\} // Evaluates true when body contains title.
       previousSteps: Array<Step>,
       subsequentSteps: Array<Step>
     ) => {
-      const countPreviousSplit = previousSteps.filter(s => s.stepKind == SPLIT).length;
-      const countPreviousAggregate = previousSteps.filter(s => s.stepKind == AGGREGATE).length;
+      const countPreviousSplit = previousSteps.filter(s => s.stepKind == SPLIT)
+        .length;
+      const countPreviousAggregate = previousSteps.filter(
+        s => s.stepKind == AGGREGATE
+      ).length;
 
       if (countPreviousSplit <= countPreviousAggregate) {
         return false;
       }
 
-      const positionNextSplit = subsequentSteps.findIndex(s => s.stepKind == SPLIT);
-      const positionNextAggregate = subsequentSteps.findIndex(s => s.stepKind == AGGREGATE);
+      const positionNextSplit = subsequentSteps.findIndex(
+        s => s.stepKind == SPLIT
+      );
+      const positionNextAggregate = subsequentSteps.findIndex(
+        s => s.stepKind == AGGREGATE
+      );
 
       if (positionNextSplit === -1) {
         return positionNextAggregate === -1;
       }
 
-      return positionNextAggregate === -1 || positionNextSplit < positionNextAggregate;
+      return (
+        positionNextAggregate === -1 ||
+        positionNextSplit < positionNextAggregate
+      );
     };
     return obj;
   }
