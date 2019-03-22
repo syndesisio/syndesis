@@ -4,7 +4,7 @@
 [id='creating-irc-connections_{context}']
 = Creating an IRC connection
 
-In an integration, an irc connection can retrieve messages 
+In an integration, an IRC connection can retrieve messages 
 that are sent to an IRC nickname that you specify 
 or send messages to a nickname on a channel. 
 You can use the same IRC connection in any number of integrations. 
