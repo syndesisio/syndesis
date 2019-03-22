@@ -1,0 +1,45 @@
+{
+    meta: {
+        createdAt: '2019-03-22T08:18:43.498Z',
+        host: 'https://syndesis.192.168.64.23.nip.io',
+    },
+    req: {
+        url: '/api/v1/event/streams/fa85c51b-192c-41f3-b449-963a45cd95f6',
+        method: 'GET',
+        headers: {
+            'accept-language': 'it,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
+            'accept-encoding': 'gzip, deflate, br',
+            referer: 'http://localhost:3000/connections',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+            accept: 'text/event-stream',
+            connection: 'close',
+            'x-forwarded-access-token': 'supersecret',
+            'x-forwarded-origin': 'for=127.0.0.1;host=localhost:3000;proto=https',
+        },
+        body: '',
+    },
+    res: {
+        status: 404,
+        headers: {
+            'content-length': [
+                '0',
+            ],
+            date: [
+                'Thu, 21 Mar 2019 07:18:54 GMT',
+            ],
+            'gap-auth': [
+                'developer@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'syndesis-server',
+            ],
+            'content-type': [
+                'text/plain; charset=utf-8',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: '',
+    },
+}

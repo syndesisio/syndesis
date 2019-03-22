@@ -1,0 +1,68 @@
+{
+    meta: {
+        createdAt: '2019-03-22T08:18:44.123Z',
+        host: 'https://syndesis.192.168.64.23.nip.io',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/api/v1/monitoring/integrations',
+        method: 'GET',
+        headers: {
+            'accept-language': 'it,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
+            'accept-encoding': 'gzip, deflate, br',
+            'content-type': 'application/json; charset=utf-8',
+            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
+            'syndesis-xsrf-token': 'awesome',
+            accept: 'application/json,text/plain,*/*',
+            connection: 'close',
+            'x-forwarded-access-token': 'supersecret',
+            'x-forwarded-origin': 'for=127.0.0.1;host=localhost:3000;proto=https',
+        },
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'cache-control': [
+                'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
+            ],
+            'content-length': [
+                '2',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Thu, 21 Mar 2019 07:18:55 GMT',
+            ],
+            'gap-auth': [
+                'developer@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'syndesis-server',
+            ],
+            'strict-transport-security': [
+                'max-age=31536000 ; includeSubDomains',
+            ],
+            'syndesis-xsrf-token': [
+                'awesome',
+            ],
+            'x-application-context': [
+                'application',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-xss-protection': [
+                '1; mode=block',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: [],
+    },
+}
