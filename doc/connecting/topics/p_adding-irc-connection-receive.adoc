@@ -5,7 +5,7 @@
 = Adding an IRC connection to trigger integration execution upon receiving messages
 
 An IRC connection that starts an integration triggers execution of the 
-integration when the connection finds messages that are sent to an 
+integration when the connection finds private messages that are sent to an 
 IRC nickname that you specify. 
 
 .Prerequisites
