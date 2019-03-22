@@ -15,13 +15,13 @@ import { ApiModule } from '@syndesis/ui/api';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { TypeFactory } from '@syndesis/ui/model';
 import {
-  EventsService,
   IntegrationStore,
   IntegrationService,
   StepStore,
 } from '@syndesis/ui/store';
 import { CurrentFlowService } from '@syndesis/ui/integration/edit-page';
 import { ConfigService } from '@syndesis/ui/config.service';
+import { EVENTS_SERVICE_MOCK_PROVIDER } from '@syndesis/ui/store/entity/events.service.spec';
 
 describe('CurrentFlow', () => {
   beforeEach(() => {
@@ -35,7 +35,7 @@ describe('CurrentFlow', () => {
         CurrentFlowService,
         IntegrationStore,
         IntegrationService,
-        EventsService,
+        EVENTS_SERVICE_MOCK_PROVIDER,
         ConfigService,
         StepStore,
       ],

@@ -8,6 +8,7 @@ import { SyndesisStoreModule } from '@syndesis/ui/store';
 
 import { DashboardMetricsComponent } from '@syndesis/ui/dashboard/dashboard_metrics/dashboard-metrics.component';
 import { ApiModule } from '@syndesis/ui/api';
+import { EVENTS_SERVICE_MOCK_PROVIDER } from '@syndesis/ui/store/entity/events.service.spec';
 
 describe('DashboardMetricsComponent', () => {
   let component: DashboardMetricsComponent;
@@ -20,10 +21,10 @@ describe('DashboardMetricsComponent', () => {
         CoreModule.forRoot(),
         PlatformModule.forRoot(),
         SyndesisCommonModule.forRoot(),
-        SyndesisStoreModule
+        SyndesisStoreModule,
       ],
-      providers: [ConfigService],
-      declarations: [DashboardMetricsComponent]
+      providers: [ConfigService, EVENTS_SERVICE_MOCK_PROVIDER],
+      declarations: [DashboardMetricsComponent],
     }).compileComponents();
   }));
 
@@ -39,9 +40,9 @@ describe('DashboardMetricsComponent', () => {
         summary: {
           start: 0,
           messages: 24,
-          errors: 13
-        }
-      }
+          errors: 13,
+        },
+      },
     } as IntegrationState;
 
     fixture.detectChanges();

@@ -8,18 +8,23 @@ import { StoreModule as NgRxStoreModule } from '@ngrx/store';
 import { AppComponent } from '@syndesis/ui/app.component';
 import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
 import { NavigationService } from '@syndesis/ui/common/navigation.service';
-import { UserService, ApiHttpService, platformReducer } from '@syndesis/ui/platform';
+import {
+  UserService,
+  ApiHttpService,
+  platformReducer,
+} from '@syndesis/ui/platform';
 import { ConfigService } from '@syndesis/ui/config.service';
 import { SyndesisStoreModule } from '@syndesis/ui/store/store.module';
 import { TestSupportService } from '@syndesis/ui/store/test-support.service';
 import { ERROR_HANDLER_PROVIDERS } from '@syndesis/ui/error-handler';
+import { EVENTS_SERVICE_MOCK_PROVIDER } from './store/entity/events.service.spec';
 
 describe('AppComponent', () => {
   const APP_NAME = 'Syndesis';
 
   beforeEach(() => {
     const configServiceStub = {
-      getSettings: (...params) => APP_NAME
+      getSettings: (...params) => APP_NAME,
     };
 
     TestBed.configureTestingModule({
@@ -30,7 +35,7 @@ describe('AppComponent', () => {
         SyndesisCommonModule.forRoot(),
         RouterTestingModule.withRoutes([]),
         NotificationModule,
-        NgRxStoreModule.forRoot(platformReducer)
+        NgRxStoreModule.forRoot(platformReducer),
       ],
       providers: [
         ERROR_HANDLER_PROVIDERS,
@@ -39,9 +44,10 @@ describe('AppComponent', () => {
         TestSupportService,
         NavigationService,
         ApiHttpService,
-        { provide: ConfigService, useValue: configServiceStub }
+        { provide: ConfigService, useValue: configServiceStub },
+        EVENTS_SERVICE_MOCK_PROVIDER,
       ],
-      declarations: [AppComponent]
+      declarations: [AppComponent],
     });
     TestBed.compileComponents();
   });

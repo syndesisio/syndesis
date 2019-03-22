@@ -16,9 +16,10 @@ import { ConnectionsModule } from '@syndesis/ui/connections/connections.module';
 import { VendorModule } from '@syndesis/ui/vendor';
 import {
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
 } from '@syndesis/ui/integration/edit-page';
 import { PlatformModule } from '@syndesis/ui/platform';
+import { EVENTS_SERVICE_MOCK_PROVIDER } from '@syndesis/ui/store/entity/events.service.spec';
 
 describe('FlowViewComponent', () => {
   let component: FlowViewComponent;
@@ -37,19 +38,19 @@ describe('FlowViewComponent', () => {
         IntegrationSupportModule,
         SyndesisStoreModule,
         PlatformModule.forRoot(),
-        CoreModule.forRoot(),
-        VendorModule
+        VendorModule,
       ],
       declarations: [
         FlowViewComponent,
         FlowViewStepComponent,
-        FlowViewMultiFlowComponent
+        FlowViewMultiFlowComponent,
       ],
       providers: [
         CurrentFlowService,
         FlowPageService,
-        IntegrationService
-      ]
+        IntegrationService,
+        EVENTS_SERVICE_MOCK_PROVIDER,
+      ],
     }).compileComponents();
   }));
 

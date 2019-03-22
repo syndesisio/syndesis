@@ -9,24 +9,24 @@ import { CoreModule } from '@syndesis/ui/core';
 import {
   PlatformModule,
   ActionDescriptor,
-  ActionDescriptorStep
+  ActionDescriptorStep,
 } from '@syndesis/ui/platform';
 
 import { ApiModule } from '@syndesis/ui/api';
 import { ConfigService } from '@syndesis/ui/config.service';
 import {
-  EventsService,
   IntegrationStore,
   IntegrationService,
-  StepStore
+  StepStore,
 } from '@syndesis/ui/store';
 
 import {
   CurrentFlowService,
-  FlowPageService
+  FlowPageService,
 } from '@syndesis/ui/integration/edit-page';
 import { IntegrationSupportModule } from '@syndesis/ui/integration/integration-support.module';
 import { IntegrationConfigureActionComponent } from '@syndesis/ui/integration/edit-page/action-configure/action-configure.component';
+import { EVENTS_SERVICE_MOCK_PROVIDER } from '@syndesis/ui/store/entity/events.service.spec';
 
 describe('IntegrationConfigureActionComponent', () => {
   let component: IntegrationConfigureActionComponent;
@@ -42,7 +42,7 @@ describe('IntegrationConfigureActionComponent', () => {
         DynamicFormsCoreModule.forRoot(),
         CoreModule.forRoot(),
         ApiModule.forRoot(),
-        PlatformModule.forRoot()
+        PlatformModule.forRoot(),
       ],
       declarations: [IntegrationConfigureActionComponent],
       providers: [
@@ -51,10 +51,10 @@ describe('IntegrationConfigureActionComponent', () => {
         CurrentFlowService,
         IntegrationStore,
         IntegrationService,
-        EventsService,
-        StepStore
+        EVENTS_SERVICE_MOCK_PROVIDER,
+        StepStore,
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA]
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   }));
 
@@ -65,15 +65,18 @@ describe('IntegrationConfigureActionComponent', () => {
   });
 
   xit('should create', () => {
-      expect(component).toBeTruthy();
+    expect(component).toBeTruthy();
   });
 
   // aka oscerd's use case
   xit('no properties found', () => {
-      const step: ActionDescriptorStep = { configuredProperties: {} } as ActionDescriptorStep;
-      const propertyDefinitionSteps: Array<ActionDescriptorStep> = [step];
-      const descriptor: ActionDescriptor = { propertyDefinitionSteps } as ActionDescriptor;
-      expect(component.hasNoActionPropertiesToDisplay(descriptor)).toBeFalsy();
+    const step: ActionDescriptorStep = {
+      configuredProperties: {},
+    } as ActionDescriptorStep;
+    const propertyDefinitionSteps: Array<ActionDescriptorStep> = [step];
+    const descriptor: ActionDescriptor = {
+      propertyDefinitionSteps,
+    } as ActionDescriptor;
+    expect(component.hasNoActionPropertiesToDisplay(descriptor)).toBeFalsy();
   });
-
 });

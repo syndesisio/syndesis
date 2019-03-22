@@ -9,6 +9,7 @@ import { SyndesisCommonModule } from '@syndesis/ui/common/common.module';
 import { ConnectionsListComponent } from '@syndesis/ui/connections/list/list.component';
 import { TestApiModule } from '@syndesis/ui/api/testing';
 import { PlatformModule } from '@syndesis/ui/platform';
+import { EVENTS_SERVICE_MOCK_PROVIDER } from '@syndesis/ui/store/entity/events.service.spec';
 
 describe('ConnectionsListComponent', () => {
   let component: ConnectionsListComponent;
@@ -24,9 +25,10 @@ describe('ConnectionsListComponent', () => {
         SyndesisStoreModule,
         PlatformModule.forRoot(),
         CoreModule.forRoot(),
-        VendorModule
+        VendorModule,
       ],
-      declarations: [ConnectionsListComponent]
+      declarations: [ConnectionsListComponent],
+      providers: [EVENTS_SERVICE_MOCK_PROVIDER],
     }).compileComponents();
   }));
 

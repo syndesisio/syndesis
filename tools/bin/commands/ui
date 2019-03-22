@@ -6,11 +6,11 @@ ui::description() {
 
 ui::usage() {
   cat <<"EOT"
-    By default the 'ui' command will build the Syndesis UI code unless --serve or --watch-tests
-    is provided
+    By default the 'ui' does nothing unless you pass one or more of the following parameters:
 
     --install           Install UI package dependencies
     --lint              Run lint task
+    --build             Build the UI code
     --run-tests         Run the tests task
     --watch-tests       Run the tests and watch for changes
     --serve             Serve the UI (defaults to staging, use --minishift or --local to change this) and watch for changes
@@ -81,7 +81,10 @@ do_things() {
       check_error "Error running lint task"
       return 1
     fi
+  fi
 
+  if [ $(hasflag --build) ]; then
+    yarn build:ci
   fi
 
   if [ $(hasflag --run-tests) ]; then
@@ -135,22 +138,18 @@ do_things() {
     if [ $(hasflag --local) ]; then
       echo -e "\nRunning against a local syndesis server"
       yarn start:local &
-      cat
-      return 0
-    fi
-    if [ $(hasflag --minishift) ]; then
+    elif [ $(hasflag --minishift) ]; then
       echo -e "\nRunning against minishift"
       yarn start:minishift &
-      cat
-      return 0
+    else
+      echo -e "\nRunning against the staging environment"
+      export BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com
+      yarn start:staging &
     fi
-    echo -e "\nRunning against the staging environment"
-    export BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com
-    yarn start:staging &
+    # block
     cat
-    return 0
   fi
 
-  # By default we'll just build the UI code I guess
-  yarn build:ci
+  echo "Done!"
+  return 0;
 }
