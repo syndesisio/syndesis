@@ -3,8 +3,13 @@ import * as React from 'react';
 
 import './IntegrationStepsHorizontalView.css';
 
+export interface IIntegrationSteps {
+  name: string;
+  pattern: string;
+}
+
 export interface IIntegrationStepsHorizontalViewProps {
-  steps?: any;
+  steps: IIntegrationSteps[];
 }
 
 export class IntegrationStepsHorizontalView extends React.Component<
