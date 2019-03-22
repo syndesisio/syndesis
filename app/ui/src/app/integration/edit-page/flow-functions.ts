@@ -42,10 +42,19 @@ function setStepId(step: Step) {
 
 /**
  * Validate and add/correct items in a flow's step array
+ *  * Sets step IDs
+ *  * Strips out invalid/unconfigured steps
  * @param flow
  */
 function validateFlowSteps(flow: Flow) {
-  return { ...flow, ...{ steps: (flow.steps || []).map(setStepId) } };
+  return {
+    ...flow,
+    ...{
+      steps: (flow.steps || [])
+        .map(setStepId)
+        .filter(s => typeof s.stepKind !== 'undefined'),
+    },
+  };
 }
 
 /**
