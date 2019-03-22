@@ -205,7 +205,7 @@ public class SqlStatementParser {
 
     List<String> splitSqlStatement(String sql) {
         List<String> sqlArray = new ArrayList<>();
-        String[] segments = sql.split("=|\\,|\\s|\\(|\\)", -1);
+        String[] segments = sql.split("!=|=|<=|>=|<|>|,|\\s|\\(|\\)", -1);
         for (String segment : segments) {
             if (!"".equals(segment)) {
                 sqlArray.add(segment);
@@ -264,6 +264,12 @@ public class SqlStatementParser {
                 String column = sqlArray.get(i-1);
                 if ("LIKE".equalsIgnoreCase(column)) {
                     column = sqlArray.get(i-2);
+                }
+                if ("BETWEEN".equalsIgnoreCase(column)) {
+                    column = sqlArray.get(i-2);
+                }
+                if ("AND".equalsIgnoreCase(column)) {
+                    column = sqlArray.get(i-4);
                 }
                 if (column.startsWith(":#") || "VALUES".equalsIgnoreCase(column) || values.contains(column)) {
                     param.setColumnPos(values.indexOf(word));

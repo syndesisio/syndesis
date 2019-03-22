@@ -105,7 +105,7 @@ public class SqlParserTest {
         Assert.assertEquals("lastname", info.getInParams().get(1).getName());
         Assert.assertEquals(String.class, info.getInParams().get(1).getTypeValue().getClazz());
     }
-    
+
     @Test
     public void parseInsertWithSpecifiedColumnNames() throws SQLException {
         final SqlStatementParser parser = new SqlStatementParser(db.connection,
@@ -130,6 +130,87 @@ public class SqlParserTest {
         Assert.assertEquals(1, info.getInParams().size());
         Assert.assertEquals("id", info.getInParams().get(0).getName());
         Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
+    }
+
+    @Test
+    public void parseSelectMultiValuePredicate() throws SQLException {
+        final SqlStatementParser parser = new SqlStatementParser(db.connection,
+            "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE ID=:#id AND FIRSTNAME LIKE :#name");
+        final SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(2, info.getInParams().size());
+        Assert.assertEquals("id", info.getInParams().get(0).getName());
+        Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
+        Assert.assertEquals("name", info.getInParams().get(1).getName());
+        Assert.assertEquals("FIRSTNAME", info.getInParams().get(1).getColumn());
+    }
+
+    @Test
+    public void parseSelectWithNotEquals() throws SQLException {
+        final SqlStatementParser parser = new SqlStatementParser(db.connection,
+                "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE ID!=:#id");
+        final SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(1, info.getInParams().size());
+        Assert.assertEquals("id", info.getInParams().get(0).getName());
+        Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
+    }
+
+    @Test
+    public void parseSelectWithGreaterThan() throws SQLException {
+        final SqlStatementParser parser = new SqlStatementParser(db.connection,
+                "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE ID>:#id");
+        final SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(1, info.getInParams().size());
+        Assert.assertEquals("id", info.getInParams().get(0).getName());
+        Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
+    }
+
+    @Test
+    public void parseSelectWithGreaterThanEquals() throws SQLException {
+        final SqlStatementParser parser = new SqlStatementParser(db.connection,
+                "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE ID>=:#id");
+        final SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(1, info.getInParams().size());
+        Assert.assertEquals("id", info.getInParams().get(0).getName());
+        Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
+    }
+
+    @Test
+    public void parseSelectWithLowerThan() throws SQLException {
+        final SqlStatementParser parser = new SqlStatementParser(db.connection,
+                "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE ID<:#id");
+        final SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(1, info.getInParams().size());
+        Assert.assertEquals("id", info.getInParams().get(0).getName());
+        Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
+    }
+
+    @Test
+    public void parseSelectWithLowerThanEquals() throws SQLException {
+        final SqlStatementParser parser = new SqlStatementParser(db.connection,
+                "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE ID<:#id");
+        final SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(1, info.getInParams().size());
+        Assert.assertEquals("id", info.getInParams().get(0).getName());
+        Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
+    }
+
+    @Test
+    public void parseSelectWithInBetween() throws SQLException {
+        final SqlStatementParser parser = new SqlStatementParser(db.connection,
+                "SELECT FIRSTNAME, LASTNAME FROM NAME0 WHERE ID BETWEEN :#from AND :#to");
+        final SqlStatementMetaData info = parser.parse();
+        Assert.assertEquals("NAME0", info.getTableNames().get(0));
+        Assert.assertEquals(2, info.getInParams().size());
+        Assert.assertEquals("from", info.getInParams().get(0).getName());
+        Assert.assertEquals("ID", info.getInParams().get(0).getColumn());
+        Assert.assertEquals("to", info.getInParams().get(1).getName());
+        Assert.assertEquals("ID", info.getInParams().get(1).getColumn());
     }
 
     @Test
@@ -179,7 +260,7 @@ public class SqlParserTest {
         Assert.assertEquals(1, info.getInParams().get(0).getColumnPos());
         Assert.assertEquals("LASTNAME", info.getInParams().get(0).getColumn());
     }
-    
+
     @Test(expected=SQLException.class)
     public void parseSelectFromNoneExistingTable() throws SQLException {
         final SqlStatementParser parser = new SqlStatementParser(db.connection,

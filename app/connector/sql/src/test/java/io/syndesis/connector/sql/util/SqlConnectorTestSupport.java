@@ -15,6 +15,11 @@
  */
 package io.syndesis.connector.sql.util;
 
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Collections;
+import java.util.List;
+import java.util.Properties;
 import java.util.function.Consumer;
 
 import io.syndesis.common.model.action.ConnectorAction;
@@ -24,11 +29,43 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.sql.common.SqlConnectionRule;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.ClassRule;
 
 public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
     @ClassRule
     public static SqlConnectionRule db = new SqlConnectionRule();
+
+    protected List<String> setupStatements() {
+        return Collections.emptyList();
+    }
+
+    protected List<String> cleanupStatements() {
+        return Collections.emptyList();
+    }
+
+    // **************************
+    // Set up
+    // **************************
+
+    @Override
+    protected void doPreSetup() throws Exception {
+        try (Statement stmt = db.connection.createStatement()) {
+            for (String sql : setupStatements()) {
+                stmt.executeUpdate(sql);
+            }
+        }
+    }
+
+    @After
+    public void after() throws SQLException {
+        try (Statement stmt = db.connection.createStatement()) {
+            for (String sql : cleanupStatements()) {
+                stmt.executeUpdate(sql);
+            }
+        }
+    }
 
     // **************************
     // Helpers
@@ -73,5 +110,13 @@ public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
         stepConsumer.accept(builder);
 
         return builder.build();
+    }
+
+    protected void validateProperty(List<Properties> jsonBeans, String propertyName, String ... expectedValues) {
+        Assert.assertEquals(expectedValues.length, jsonBeans.size());
+
+        for (int i = 0; i < expectedValues.length; i++) {
+            Assert.assertEquals(expectedValues[i], jsonBeans.get(i).get(propertyName).toString());
+        }
     }
 }
