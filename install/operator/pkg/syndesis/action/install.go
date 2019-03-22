@@ -91,35 +91,18 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		})
 	}
 
+	// Check if an image secret exist, to be used to connect to registries that require authentication
 	secret := &corev1.Secret{}
 	err = a.client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: SyndesisPullSecret}, secret)
-	if err != nil && !k8serrors.IsNotFound(err) {
-		return err
-	}
-
-	// Link the builder service account to the image pull/push secret if it exists
-	if secret != nil {
-		builder := &corev1.ServiceAccount{}
-		err = a.client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "builder"}, builder)
-		if err != nil {
+	if err != nil {
+		if !k8serrors.IsNotFound(err) {
 			return err
 		}
-		linked := linkImagePullSecret(builder, SyndesisPullSecret)
-		linked = linkSecret(builder, SyndesisPullSecret) || linked
-		if linked {
-			err = a.client.Update(ctx, builder)
-			if err != nil {
-				return err
-			}
-		}
-	}
-
-	// Link the syndesis service accounts to the image pull secret if it exists
-	if secret != nil {
-		for _, res := range list {
-			if sa, ok := isServiceAccount(res); ok {
-				linkImagePullSecret(sa, SyndesisPullSecret)
-			}
+	} else {
+		// Link the image secret
+		err = linkImageSecretToServiceAccounts(ctx, a.client, syndesis, list)
+		if err != nil {
+			return err
 		}
 	}
 
@@ -279,6 +262,32 @@ func isServiceAccount(resource runtime.Object) (*corev1.ServiceAccount, bool) {
 		return sa, true
 	}
 	return nil, false
+}
+
+func linkImageSecretToServiceAccounts(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, resources []runtime.Object) error {
+	// Link the builder service account to the image pull/push secret if it exists
+	builder := &corev1.ServiceAccount{}
+	err := cl.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "builder"}, builder)
+	if err != nil {
+		return err
+	}
+	linked := linkImagePullSecret(builder, SyndesisPullSecret)
+	linked = linkSecret(builder, SyndesisPullSecret) || linked
+	if linked {
+		err = cl.Update(ctx, builder)
+		if err != nil {
+			return err
+		}
+	}
+
+	// Link the Syndesis service accounts to the image pull secret if it exists
+	for _, res := range resources {
+		if sa, ok := isServiceAccount(res); ok {
+			linkImagePullSecret(sa, SyndesisPullSecret)
+		}
+	}
+
+	return nil
 }
 
 func linkImagePullSecret(sa *corev1.ServiceAccount, secret string) bool {
