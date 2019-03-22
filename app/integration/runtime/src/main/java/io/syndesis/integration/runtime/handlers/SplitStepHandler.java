@@ -15,16 +15,27 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import java.io.IOException;
 import java.util.Optional;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.DataShapeMetaData;
+import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
+import org.apache.camel.Exchange;
 import org.apache.camel.Expression;
 import org.apache.camel.builder.Builder;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.spi.Language;
+import org.apache.camel.support.ExpressionAdapter;
 import org.apache.camel.util.ObjectHelper;
 
 public class SplitStepHandler implements IntegrationStepHandler {
@@ -38,16 +49,13 @@ public class SplitStepHandler implements IntegrationStepHandler {
     public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String flowIndex, String stepIndex) {
         ObjectHelper.notNull(route, "route");
 
+        SplitExpression splitExpression;
         String languageName = step.getConfiguredProperties().get("language");
         String expressionDefinition = step.getConfiguredProperties().get("expression");
-        AggregateStepHandler.AggregationOption aggregation = Optional.ofNullable(step.getConfiguredProperties().get("aggregationStrategy"))
-                                                        .map(AggregateStepHandler.AggregationOption::valueOf)
-                                                        .orElse(AggregateStepHandler.AggregationOption.body);
 
-        if (ObjectHelper.isEmpty(languageName) && ObjectHelper.isEmpty(expressionDefinition)) {
-            route = route.split(Builder.body()).aggregationStrategy(aggregation.getStrategy(step.getConfiguredProperties()));
+        if (hasUnifiedJsonSchemaOutputShape(step)) {
+            splitExpression = new SplitExpression(new UnifiedJsonBodyExpression(Builder.body()));
         } else if (ObjectHelper.isNotEmpty(expressionDefinition)) {
-
             if (ObjectHelper.isEmpty(languageName)) {
                 languageName = "simple";
             }
@@ -60,12 +68,110 @@ public class SplitStepHandler implements IntegrationStepHandler {
             }
 
             final Language language = builder.getContext().resolveLanguage(languageName);
-            final Expression expression = language.createExpression(expressionDefinition);
-
-            route = route.split(expression).aggregationStrategy(aggregation.getStrategy(step.getConfiguredProperties()));
+            splitExpression = new SplitExpression(language.createExpression(expressionDefinition));
+        } else {
+            splitExpression = new SplitExpression(Builder.body());
         }
+
+        AggregateStepHandler.AggregationOption aggregation = Optional.ofNullable(step.getConfiguredProperties().get("aggregationStrategy"))
+                .map(AggregateStepHandler.AggregationOption::valueOf)
+                .orElse(AggregateStepHandler.AggregationOption.body);
+
+        route = route.split(splitExpression).aggregationStrategy(aggregation.getStrategy(step.getConfiguredProperties()));
 
         return Optional.of(route);
     }
 
+    /**
+     * Evaluates if step output shape is a Json schema that is marked to be a unified specification. This means
+     * that we have to split the nested unified body property by default. See 'UnifiedJsonDataShapeGenerator'
+     * for details.
+     *
+     * @param step
+     * @return
+     */
+    private boolean hasUnifiedJsonSchemaOutputShape(Step step) {
+        Optional<StepAction> stepAction = step.getActionAs(StepAction.class);
+        if (stepAction.isPresent()) {
+            Optional<DataShape> outputShape = stepAction.get().getOutputDataShape();
+            if (outputShape.isPresent() && outputShape.get().getKind() == DataShapeKinds.JSON_SCHEMA) {
+                return outputShape.get().getMetadata()
+                        .entrySet()
+                        .stream()
+                        .anyMatch(entry -> entry.getKey().equals(DataShapeMetaData.UNIFIED));
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Split expression that is aware of special list of Json beans representation provided by some connectors such as
+     * SQL. Also handles Json array String representation and splits its array elements accordingly.
+     *
+     * Expression receives a delegate expression that usually evaluates the part of the body or header that should be split. By
+     * default this is a simple body expression.
+     *
+     * When delegate expression evaluates to something else that a Json array or list of Json beans nothing is performed on top of
+     * the delegate expression.
+     */
+    private static class SplitExpression extends ExpressionAdapter {
+        private final Expression delegate;
+
+        SplitExpression(Expression delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Object evaluate(Exchange exchange) {
+            Object value = delegate.evaluate(exchange, Object.class);
+
+            if (value instanceof String && JsonUtils.isJson(value.toString())) {
+                try {
+                    JsonNode json = Json.reader().readTree(value.toString());
+                    if (json.isArray()) {
+                        return JsonUtils.arrayToJsonBeans(json);
+                    }
+                } catch (IOException e) {
+                    throw SyndesisServerException.launderThrowable(e);
+                }
+            }
+
+            return value;
+        }
+    }
+
+    /**
+     * Expression extracts body property from unified Json schema typed input. The unified Json holds the actual body in
+     * a nested property. This property is extracted and set as expression result so follow up expressions can operate on the body.
+     *
+     * Expression receives a delegate expression that usually evaluates the part of the body or header that should be
+     * treated as unified Json. By default this is a simple body expression.
+     */
+    private static class UnifiedJsonBodyExpression extends ExpressionAdapter {
+        private final Expression delegate;
+
+        UnifiedJsonBodyExpression(Expression delegate) {
+            this.delegate = delegate;
+        }
+
+        @Override
+        public Object evaluate(Exchange exchange) {
+            Object value = delegate.evaluate(exchange, Object.class);
+
+            if (value instanceof String && JsonUtils.isJson(value.toString())) {
+                try {
+                    JsonNode json = Json.reader().readTree(value.toString());
+                    JsonNode body = json.get("body");
+                    if (body != null) {
+                        return Json.writer().writeValueAsString(body);
+                    }
+                } catch (IOException e) {
+                    throw SyndesisServerException.launderThrowable(e);
+                }
+            }
+
+            return value;
+        }
+    }
 }

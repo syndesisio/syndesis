@@ -39,7 +39,7 @@ public class DataShapeBuilderTest {
     @Test
     public void shouldNotCompressBasedOnMetadata() {
         DataShape.Builder shape = new DataShape.Builder()
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "false")
+                .putMetadata(DataShapeMetaData.COMPRESSION, "false")
                 .specification(specification);
 
         Assert.assertEquals(specification, shape.build().getSpecification());
@@ -49,7 +49,7 @@ public class DataShapeBuilderTest {
     @Test
     public void shouldCompressBasedOnMetadata() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                 .specification(specification);
 
         Assert.assertEquals(specification, shape.build().getSpecification());
@@ -60,7 +60,7 @@ public class DataShapeBuilderTest {
     @Test
     public void shouldDecompressBasedOnMetadata() {
         DataShape.Builder shape = new DataShape.Builder()
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                 .specification(compressedSpecification);
 
         Assert.assertEquals(specification, shape.decompress().build().getSpecification());
@@ -69,7 +69,7 @@ public class DataShapeBuilderTest {
     @Test
     public void shouldNotCompressMultipleTimes() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                 .specification(specification);
 
         assertCompressedSpecification(specification, shape.compress().compress().build().getSpecification());
@@ -78,7 +78,7 @@ public class DataShapeBuilderTest {
     @Test
     public void shouldNotDecompressMultipleTimes() {
         DataShape.Builder shape = new DataShape.Builder()
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                 .specification(compressedSpecification);
 
         Assert.assertEquals(specification, shape.decompress().decompress().build().getSpecification());
@@ -87,10 +87,10 @@ public class DataShapeBuilderTest {
     @Test
     public void shouldCompressVariants() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                 .specification(specification)
                 .addVariant(new DataShape.Builder()
-                                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                                 .specification(variantSpecification)
                                 .build());
 
@@ -105,10 +105,10 @@ public class DataShapeBuilderTest {
     @Test
     public void shouldDecompressVariants() {
         DataShape.Builder shape = new DataShape.Builder()
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                 .specification(compressedSpecification)
                 .addVariant(new DataShape.Builder()
-                                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                                 .specification(compressedVariantSpecification)
                                 .build());
 
@@ -119,10 +119,10 @@ public class DataShapeBuilderTest {
     @Test
     public void shouldNotCompressVariantsBasedOnMetadata() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                 .specification(specification)
                 .addVariant(new DataShape.Builder()
-                                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "false")
+                                .putMetadata(DataShapeMetaData.COMPRESSION, "false")
                                 .specification(variantSpecification)
                                 .build());
 
@@ -138,7 +138,7 @@ public class DataShapeBuilderTest {
         DataShape.Builder shape = new DataShape.Builder()
                 .specification(specification)
                 .addVariant(new DataShape.Builder()
-                                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                                 .specification(variantSpecification)
                                 .build())
                 .addVariant(new DataShape.Builder()
@@ -157,10 +157,10 @@ public class DataShapeBuilderTest {
     @Test
     public void shouldNotCompressAlreadyCompressedVariants() throws IOException {
         DataShape.Builder shape = new DataShape.Builder()
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                 .specification(specification)
                 .addVariant(new DataShape.Builder()
-                        .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                        .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                         .specification(variantSpecification)
                         .compress()
                         .build());
@@ -172,10 +172,10 @@ public class DataShapeBuilderTest {
     @Test
     public void shouldNotDecompressAlreadyDecompressedVariants() {
         DataShape.Builder shape = new DataShape.Builder()
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                 .specification(compressedSpecification)
                 .addVariant(new DataShape.Builder()
-                        .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                        .putMetadata(DataShapeMetaData.COMPRESSION, "true")
                         .specification(variantSpecification)
                         .compress()
                         .build());

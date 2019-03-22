@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.StepKind;
 
@@ -28,10 +29,6 @@ import io.syndesis.common.model.integration.StepKind;
  * @author Christoph Deppisch
  */
 interface StepMetadataHandler {
-
-    String VARIANT_METADATA_KEY = "variant";
-    String VARIANT_ELEMENT = "element";
-    String VARIANT_COLLECTION = "collection";
 
     /**
      * Adapt dynamic meta data for given step descriptor;
@@ -60,7 +57,7 @@ interface StepMetadataHandler {
         if (original.equals(variant)) {
             return Collections.singletonList(new DataShape.Builder()
                     .createFrom(original)
-                    .putMetadata(StepMetadataHandler.VARIANT_METADATA_KEY, variantMeta)
+                    .putMetadata(DataShapeMetaData.VARIANT, variantMeta)
                     .variants(Collections.emptyList())
                     .build());
         } else {
@@ -76,14 +73,5 @@ interface StepMetadataHandler {
 
             return variants;
         }
-    }
-
-    /**
-     * Checks specification to be a proper Json array instance specification.
-     * @param specification
-     * @return
-     */
-    default boolean isJsonInstanceArraySpec(String specification) {
-        return specification.trim().startsWith("[") && specification.trim().endsWith("]");
     }
 }

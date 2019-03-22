@@ -24,6 +24,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -51,7 +52,7 @@ public class JsonInstanceInspector implements Inspector {
         final List<String> paths = new ArrayList<>();
         try {
             Map<String, Object> json;
-            if (isArray(specification)) {
+            if (JsonUtils.isJsonArray(specification)) {
                 List<Object> items = Json.reader().forType(List.class).readValue(specification);
                 // add collection specific paths
                 paths.addAll(COLLECTION_PATHS);
@@ -109,10 +110,6 @@ public class JsonInstanceInspector implements Inspector {
         } else {
             paths.add(context);
         }
-    }
-
-    private static boolean isArray(String specification) {
-        return specification.trim().startsWith("[") && specification.trim().endsWith("]");
     }
 
     @Override

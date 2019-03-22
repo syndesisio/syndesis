@@ -100,19 +100,16 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
     class Builder extends ImmutableDataShape.Builder {
 
-        public static final String COMPRESSION_METADATA_KEY = "compression";
-        private static final String COMPRESSED_METADATA_KEY = "compressed";
-
         public Builder decompress() {
             DataShape currentShape = build();
-            if ("true".equals(currentShape.getMetadata().get(COMPRESSION_METADATA_KEY)) &&
-                    currentShape.getMetadata().getOrDefault(COMPRESSED_METADATA_KEY, "true").equals("true")) {
+            if ("true".equals(currentShape.getMetadata().get(DataShapeMetaData.COMPRESSION)) &&
+                    currentShape.getMetadata().getOrDefault(DataShapeMetaData.COMPRESSED, "true").equals("true")) {
                 byte[] decoded = Base64.getDecoder().decode(currentShape.getSpecification().getBytes(StandardCharsets.UTF_8));
                 try (ByteArrayInputStream zipped = new ByteArrayInputStream(decoded);
                      GZIPInputStream is = new GZIPInputStream(zipped)) {
                     return new DataShape.Builder()
                             .createFrom(currentShape)
-                            .putMetadata(COMPRESSED_METADATA_KEY, "false")
+                            .putMetadata(DataShapeMetaData.COMPRESSED, "false")
                             .variants(currentShape.getVariants()
                                       .stream()
                                       .map(variant -> new DataShape.Builder()
@@ -124,7 +121,7 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
                 } catch (IOException e) {
                     throw new IllegalStateException("Failed to decompress data shape", e);
                 }
-            } else if (currentShape.getVariants().stream().anyMatch(variant -> "true".equals(variant.getMetadata().get(COMPRESSION_METADATA_KEY)))) {
+            } else if (currentShape.getVariants().stream().anyMatch(variant -> "true".equals(variant.getMetadata().get(DataShapeMetaData.COMPRESSION)))) {
                 return new DataShape.Builder()
                         .createFrom(currentShape)
                         .variants(currentShape.getVariants()
@@ -141,8 +138,8 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
         public Builder compress() {
             DataShape currentShape = build();
-            if ("true".equals(currentShape.getMetadata().get(COMPRESSION_METADATA_KEY)) &&
-                    currentShape.getMetadata().getOrDefault(COMPRESSED_METADATA_KEY, "false").equals("false")) {
+            if ("true".equals(currentShape.getMetadata().get(DataShapeMetaData.COMPRESSION)) &&
+                    currentShape.getMetadata().getOrDefault(DataShapeMetaData.COMPRESSED, "false").equals("false")) {
                 try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
                      GZIPOutputStream os = new GZIPOutputStream(zipped)) {
                     os.write(currentShape.getSpecification().getBytes(StandardCharsets.UTF_8));
@@ -150,7 +147,7 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
                     return new DataShape.Builder()
                             .createFrom(currentShape)
-                            .putMetadata(COMPRESSED_METADATA_KEY, "true")
+                            .putMetadata(DataShapeMetaData.COMPRESSED, "true")
                             .variants(currentShape.getVariants()
                                       .stream()
                                       .map(variant -> new DataShape.Builder()
@@ -162,7 +159,7 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
                 } catch (IOException e) {
                     throw new IllegalStateException("Failed to compress data shape", e);
                 }
-            } else if (currentShape.getVariants().parallelStream().anyMatch(variant -> "true".equals(variant.getMetadata().get(COMPRESSION_METADATA_KEY)))) {
+            } else if (currentShape.getVariants().parallelStream().anyMatch(variant -> "true".equals(variant.getMetadata().get(DataShapeMetaData.COMPRESSION)))) {
                 return new DataShape.Builder()
                         .createFrom(currentShape)
                         .variants(currentShape.getVariants()
