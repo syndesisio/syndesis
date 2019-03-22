@@ -47,7 +47,18 @@ func (a *installAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	a.log.Info("Installing Syndesis resource", "name", syndesis.Name)
 
-	token, err := installServiceAccount(ctx, a.client, syndesis)
+	// Check if an image secret exists, to be used to connect to registries that require authentication
+	secret := &corev1.Secret{}
+	err := a.client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: SyndesisPullSecret}, secret)
+	if err != nil {
+		if k8serrors.IsNotFound(err) {
+			secret = nil
+		} else {
+			return err
+		}
+	}
+
+	token, err := installServiceAccount(ctx, a.client, syndesis, secret)
 	if err != nil {
 		return err
 	}
@@ -91,16 +102,9 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		})
 	}
 
-	// Check if an image secret exist, to be used to connect to registries that require authentication
-	secret := &corev1.Secret{}
-	err = a.client.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: SyndesisPullSecret}, secret)
-	if err != nil {
-		if !k8serrors.IsNotFound(err) {
-			return err
-		}
-	} else {
-		// Link the image secret
-		err = linkImageSecretToServiceAccounts(ctx, a.client, syndesis, list)
+	// Link the image secret to service accounts
+	if secret != nil {
+		err = linkImageSecretToServiceAccounts(ctx, a.client, syndesis, list, secret)
 		if err != nil {
 			return err
 		}
@@ -149,9 +153,11 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	return a.client.Update(ctx, target)
 }
 
-func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis) (string, error) {
+func installServiceAccount(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, secret *corev1.Secret) (string, error) {
 	sa := newSyndesisServiceAccount()
-	linkImagePullSecret(sa, SyndesisPullSecret)
+	if secret != nil {
+		linkImagePullSecret(sa, secret)
+	}
 	operation.SetNamespaceAndOwnerReference(sa, syndesis)
 	// We don't replace the service account if already present, to let Kubernetes generate its tokens
 	err := cl.Create(ctx, sa)
@@ -264,15 +270,15 @@ func isServiceAccount(resource runtime.Object) (*corev1.ServiceAccount, bool) {
 	return nil, false
 }
 
-func linkImageSecretToServiceAccounts(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, resources []runtime.Object) error {
+func linkImageSecretToServiceAccounts(ctx context.Context, cl client.Client, syndesis *v1alpha1.Syndesis, resources []runtime.Object, secret *corev1.Secret) error {
 	// Link the builder service account to the image pull/push secret if it exists
 	builder := &corev1.ServiceAccount{}
 	err := cl.Get(ctx, types.NamespacedName{Namespace: syndesis.Namespace, Name: "builder"}, builder)
 	if err != nil {
 		return err
 	}
-	linked := linkImagePullSecret(builder, SyndesisPullSecret)
-	linked = linkSecret(builder, SyndesisPullSecret) || linked
+	linked := linkImagePullSecret(builder, secret)
+	linked = linkSecret(builder, secret.Name) || linked
 	if linked {
 		err = cl.Update(ctx, builder)
 		if err != nil {
@@ -283,17 +289,17 @@ func linkImageSecretToServiceAccounts(ctx context.Context, cl client.Client, syn
 	// Link the Syndesis service accounts to the image pull secret if it exists
 	for _, res := range resources {
 		if sa, ok := isServiceAccount(res); ok {
-			linkImagePullSecret(sa, SyndesisPullSecret)
+			linkImagePullSecret(sa, secret)
 		}
 	}
 
 	return nil
 }
 
-func linkImagePullSecret(sa *corev1.ServiceAccount, secret string) bool {
+func linkImagePullSecret(sa *corev1.ServiceAccount, secret *corev1.Secret) bool {
 	exist := false
 	for _, s := range sa.ImagePullSecrets {
-		if s.Name == secret {
+		if s.Name == secret.Name {
 			exist = true
 			break
 		}
@@ -301,7 +307,7 @@ func linkImagePullSecret(sa *corev1.ServiceAccount, secret string) bool {
 
 	if !exist {
 		sa.ImagePullSecrets = append(sa.ImagePullSecrets, corev1.LocalObjectReference{
-			Name: SyndesisPullSecret,
+			Name: secret.Name,
 		})
 		return true
 	}
