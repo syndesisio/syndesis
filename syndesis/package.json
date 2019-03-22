@@ -28,16 +28,18 @@
   },
   "scripts": {
     "lint": "tslint -c ../tslint.json --project .",
-    "start:mocks:setup": "cp config.mocks.json public/config.json",
-    "start:mocks:record": "yarn start:mocks:setup; MOCKS_RECORD=1 BACKEND_COOKIE=`./scripts/get-login-cookie.js $BACKEND` yarn start",
-    "start:mocks:replay": "yarn start:mocks:setup; yarn start",
+    "mock-server": "./scripts/mock-server.js",
+    "start:proxy:setup": "./scripts/proxy-setup.sh",
+    "start:proxy": "yarn start:proxy:setup; BACKEND_COOKIE=`./scripts/get-login-cookie.js $BACKEND` yarn start",
     "start:minishift": "yarn minishift:setup; yarn start",
+    "record:dev-server": "yarn start:proxy:setup; BACKEND_COOKIE=`./scripts/get-login-cookie.js $BACKEND` BACKEND=http://localhost:8556 yarn start",
+    "record": "npm-run-all -p record:dev-server \"mock-server -- record {1} $BACKEND\" --",
+    "replay:dev-server": "BACKEND=http://localhost:8556 yarn start:proxy:setup; BACKEND=http://localhost:8556 PROXY_NO_WS=true yarn start",
+    "replay": "npm-run-all -p replay:dev-server \"mock-server -- {1}\" --",
     "start": "BROWSER=false HOST=0.0.0.0 craco start --react-scripts ../node_modules/react-scripts",
     "build": "craco build --react-scripts ../node_modules/react-scripts",
     "test": "craco test --react-scripts ../node_modules/react-scripts",
     "eject": "react-scripts eject",
-    "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public -o ../doc/syndesis",
     "minishift:setup": "./scripts/minishift-setup.sh",
     "minishift:restore": "./scripts/minishift-restore.sh"
   },
@@ -78,7 +80,8 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.1.1"
+    "typescript": "^3.1.1",
+    "yargs": "^13.2.2"
   },
   "browserslist": [
     ">0.2%",

@@ -21,7 +21,7 @@
     "test": "npm-run-all -s test:*",
     "build": "lerna run --stream build",
     "postbuild": "cpr packages/atlasmap-assembly/dist/atlasmap syndesis/public/atlasmap -d",
-    "watch:app": "lerna run --stream --scope @syndesis/syndesis start",
+    "watch:app": "lerna run --stream --scope @syndesis/syndesis start:minishift",
     "watch:packages": "lerna run --stream --parallel dev",
     "watch": "npm-run-all --parallel watch:*",
     "minishift:setup": "lerna run --scope @syndesis/syndesis minishift:setup",

@@ -8,7 +8,7 @@ cd "$( dirname "${BASH_SOURCE[0]}" )"
 cd ..
 
 mv -f public/config.json public/config.json.bak || true
-cp config.mocks.json public/config.json
+cp config.proxy.json public/config.json
 
 sed -i.bu "s#PLACEHOLDER#${BACKEND}#" public/config.json
 sed -i.bu "s/Syndesis/Syndesis - DEVELOPMENT/" public/config.json
