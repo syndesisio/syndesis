@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -30,6 +29,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
@@ -47,6 +47,9 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
 
     private static final String ATLASMAP_MODEL_VERSION = "v2";
     static final String ATLASMAP_JSON_DATA_SOURCE = "io.atlasmap.json." + ATLASMAP_MODEL_VERSION + ".JsonDataSource";
+
+    /** Exchange property key marks that source body has been converted before mapping  */
+    static final String DATA_MAPPER_AUTO_CONVERSION = "Syndesis.DATA_MAPPER_AUTO_CONVERSION";
 
     @Override
     public boolean canHandle(Step step) {
@@ -143,7 +146,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
             // When only on single source document is provided Atlasmap will always use the current exchange message as source document.
             if (overallSourceDocCount == 1) {
                 Message message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
-                convertMessageJsonTypeBody(message);
+                convertMessageJsonTypeBody(exchange, message);
             }
 
             for (String sourceId : jsonTypeSourceIds) {
@@ -153,7 +156,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
                     message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
                 }
 
-                convertMessageJsonTypeBody(message);
+                convertMessageJsonTypeBody(exchange, message);
             }
         }
 
@@ -161,10 +164,13 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
          * Convert list typed message body to Json array String representation.
          * @param message
          */
-        private void convertMessageJsonTypeBody(Message message) {
+        private void convertMessageJsonTypeBody(Exchange exchange, Message message) {
             if (message != null && message.getBody() instanceof List) {
                 List<?> jsonBeans = message.getBody(List.class);
-                message.setBody("[" + jsonBeans.stream().map(Object::toString).collect(Collectors.joining(",")) + "]");
+                message.setBody(JsonUtils.jsonBeansToArray(jsonBeans));
+
+                // mark auto conversion so we can reconvert after data mapper is done
+                exchange.setProperty(DATA_MAPPER_AUTO_CONVERSION, true);
             }
         }
     }
@@ -175,22 +181,18 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
     static class JsonTypeTargetProcessor implements Processor {
         @Override
         public void process(Exchange exchange) throws Exception {
-            final Message message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
+            if (exchange.removeProperty(DATA_MAPPER_AUTO_CONVERSION) != null) {
+                final Message message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
 
-            if (message != null && message.getBody(String.class) != null) {
-                try {
-                    JsonNode json = Json.reader().readTree(message.getBody(String.class));
-                    if (json.isArray()) {
-                        List<String> jsonBeans = new ArrayList<>();
-                        Iterator<JsonNode> it = json.elements();
-                        while (it.hasNext()) {
-                            jsonBeans.add(Json.writer().writeValueAsString(it.next()));
+                if (message != null && message.getBody(String.class) != null) {
+                    try {
+                        JsonNode json = Json.reader().readTree(message.getBody(String.class));
+                        if (json.isArray()) {
+                            message.setBody(JsonUtils.arrayToJsonBeans(json));
                         }
-
-                        message.setBody(jsonBeans);
+                    } catch (JsonParseException e) {
+                        LOG.warn("Unable to convert json array type String to required format", e);
                     }
-                } catch (JsonParseException e) {
-                    LOG.warn("Unable to convert json array type String to required format", e);
                 }
             }
         }

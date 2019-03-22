@@ -24,9 +24,11 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -53,7 +55,14 @@ class SplitMetadataHandler implements StepMetadataHandler {
                                             .decompress()
                                             .build();
 
-                Optional<DataShape> singleElementShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_ELEMENT);
+                if (isUnifiedJsonSchemaShape(dataShape)) {
+                    dataShape = new DataShape.Builder()
+                                        .createFrom(dataShape)
+                                        .specification(extractUnifiedJsonBodySpec(dataShape.getSpecification()))
+                                        .build();
+                }
+
+                Optional<DataShape> singleElementShape = dataShape.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT);
 
                 if (singleElementShape.isPresent()) {
                     if (dataShape.equals(singleElementShape.get())) {
@@ -66,13 +75,13 @@ class SplitMetadataHandler implements StepMetadataHandler {
                                 .createFrom(metadata)
                                 .outputShape(new DataShape.Builder()
                                         .createFrom(singleElementShape.get())
-                                        .addAllVariants(extractVariants(dataShape, singleElementShape.get(), VARIANT_ELEMENT))
+                                        .addAllVariants(extractVariants(dataShape, singleElementShape.get(), DataShapeMetaData.VARIANT_ELEMENT))
                                         .build())
                                 .build();
                     }
                 }
 
-                DataShape collectionShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_COLLECTION).orElse(dataShape);
+                DataShape collectionShape = dataShape.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION).orElse(dataShape);
 
                 String specification = collectionShape.getSpecification();
                 if (StringUtils.hasText(specification)) {
@@ -80,16 +89,16 @@ class SplitMetadataHandler implements StepMetadataHandler {
                         JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
 
                         if (schema.isArraySchema()) {
-                            ArraySchema.Items items = ((ArraySchema) schema).getItems();
-                            JsonSchema itemSchema = items.asSingleItems().getSchema();
-                            itemSchema.set$schema(schema.get$schema());
+                            ArraySchema.Items items = schema.asArraySchema().getItems();
                             if (items.isSingleItems()) {
+                                JsonSchema itemSchema = items.asSingleItems().getSchema();
+                                itemSchema.set$schema(schema.get$schema());
                                 return new DynamicActionMetadata.Builder()
                                         .createFrom(metadata)
                                         .outputShape(new DataShape.Builder().createFrom(collectionShape)
-                                                .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                                                .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                                                 .specification(Json.writer().writeValueAsString(itemSchema))
-                                                .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
+                                                .addAllVariants(extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
                                                 .build())
                                         .build();
                             }
@@ -97,20 +106,20 @@ class SplitMetadataHandler implements StepMetadataHandler {
                             return new DynamicActionMetadata.Builder()
                                     .createFrom(metadata)
                                     .outputShape(new DataShape.Builder().createFrom(collectionShape)
-                                            .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                                            .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                                             .build())
                                     .build();
                         }
                     } else if (collectionShape.getKind() == DataShapeKinds.JSON_INSTANCE) {
-                        if (isJsonInstanceArraySpec(specification)) {
+                        if (JsonUtils.isJsonArray(specification)) {
                             List<Object> items = Json.reader().forType(List.class).readValue(specification);
                             if (!items.isEmpty()) {
                                 return new DynamicActionMetadata.Builder()
                                         .createFrom(metadata)
                                         .outputShape(new DataShape.Builder().createFrom(collectionShape)
-                                                .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                                                .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                                                 .specification(Json.writer().writeValueAsString(items.get(0)))
-                                                .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
+                                                .addAllVariants(extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
                                                 .build())
                                         .build();
                             }
@@ -118,7 +127,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                             return new DynamicActionMetadata.Builder()
                                     .createFrom(metadata)
                                     .outputShape(new DataShape.Builder().createFrom(collectionShape)
-                                            .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                                            .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                                             .build())
                                     .build();
                         }
@@ -130,5 +139,50 @@ class SplitMetadataHandler implements StepMetadataHandler {
         }
 
         return DynamicActionMetadata.NOTHING;
+    }
+
+    /**
+     * Checks if given shape is a unified Json schema shape.
+     * @param dataShape
+     * @return
+     */
+    private boolean isUnifiedJsonSchemaShape(DataShape dataShape) {
+        if (dataShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
+            return dataShape.getMetadata()
+                    .entrySet()
+                    .stream()
+                    .anyMatch(entry -> entry.getKey().equals(DataShapeMetaData.UNIFIED));
+        }
+
+        return false;
+    }
+
+    /**
+     * Extract unified Json body specification from data shape specification. Unified Json schema specifications hold
+     * the actual body specification in a property. This method extracts this property as new body specification.
+     *
+     * @param specification
+     * @return
+     * @throws IOException
+     */
+    private String extractUnifiedJsonBodySpec(String specification) throws IOException {
+        JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
+        if (schema.isObjectSchema()) {
+            JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");
+            if (bodySchema != null) {
+                if (bodySchema.isArraySchema()) {
+                    ArraySchema.Items items = bodySchema.asArraySchema().getItems();
+                    if (items.isSingleItems()) {
+                        JsonSchema itemSchema = items.asSingleItems().getSchema();
+                        itemSchema.set$schema(schema.get$schema());
+                        return Json.writer().writeValueAsString(itemSchema);
+                    }
+                } else {
+                    return Json.writer().writeValueAsString(bodySchema);
+                }
+            }
+        }
+
+        return specification;
     }
 }

@@ -18,8 +18,13 @@ package io.syndesis.integration.runtime.handlers;
 import java.util.Arrays;
 import java.util.List;
 
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.KeyGenerator;
@@ -176,6 +181,163 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
 
             verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
             verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+        } finally {
+            context.stop();
+        }
+    }
+
+    @Test
+    public void testSplitJsonArrayStep() throws Exception {
+        final DefaultCamelContext context = new DefaultCamelContext();
+
+        try {
+            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
+                    new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .action(new ConnectorAction.Builder()
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                .componentScheme("direct")
+                                .putConfiguredProperty("name", "expression")
+                                .build())
+                            .build())
+                        .build(),
+                    new Step.Builder()
+                        .stepKind(StepKind.split)
+                        .build(),
+                    new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .action(new ConnectorAction.Builder()
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                .componentScheme("mock")
+                                .putConfiguredProperty("name", "expression")
+                                .build())
+                            .build())
+                        .build()
+            );
+
+            // Set up the camel context
+            context.setUuidGenerator(KeyGenerator::createKey);
+            context.addLogListener(new IntegrationLoggingListener(activityTracker));
+            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
+            context.addRoutes(routes);
+
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
+            final String body = "[{\"id\": 1, \"name\": \"a\"},{\"id\": 2, \"name\": \"b\"},{\"id\": 3, \"name\": \"c\"}]";
+
+            result.expectedMessageCount(3);
+            result.expectedBodiesReceived("{\"id\":1,\"name\":\"a\"}", "{\"id\":2,\"name\":\"b\"}", "{\"id\":3,\"name\":\"c\"}");
+
+            template.sendBody("direct:expression", body);
+
+            result.assertIsSatisfied();
+
+            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+        } finally {
+            context.stop();
+        }
+    }
+
+    @Test
+    public void testSplitUnifiedJsonStep() throws Exception {
+        final DefaultCamelContext context = new DefaultCamelContext();
+
+        try {
+            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
+                    new Step.Builder()
+                            .stepKind(StepKind.endpoint)
+                            .action(new ConnectorAction.Builder()
+                                    .descriptor(new ConnectorDescriptor.Builder()
+                                            .componentScheme("direct")
+                                            .putConfiguredProperty("name", "expression")
+                                            .build())
+                                    .build())
+                            .build(),
+                    new Step.Builder()
+                            .stepKind(StepKind.split)
+                            .action(new StepAction.Builder()
+                                    .descriptor(new StepDescriptor.Builder()
+                                            .outputDataShape(new DataShape.Builder()
+                                                    .kind(DataShapeKinds.JSON_SCHEMA)
+                                                    .putMetadata(DataShapeMetaData.UNIFIED, "true")
+                                                    .specification("{" +
+                                                            "\"$schema\": \"http://json-schema.org/schema#\"," +
+                                                            "\"id\": \"io:syndesis:webhook\"," +
+                                                            "\"type\": \"object\"," +
+                                                            "\"properties\": {" +
+                                                                "\"parameters\": {" +
+                                                                    " \"type\": \"object\"," +
+                                                                    " \"properties\": {" +
+                                                                        "\"a\":{\"type\":\"string\",\"required\":true}" +
+                                                                        "\"b\":{\"type\":\"string\",\"required\":true}" +
+                                                                    "}" +
+                                                                "}," +
+                                                                "\"body\": {" +
+                                                                    "\"type\": \"object\"," +
+                                                                    "\"properties\": {" +
+                                                                        "\"id\":{\"type\":\"string\",\"required\":true}" +
+                                                                        "\"name\":{\"type\":\"string\",\"required\":true}" +
+                                                                    "}" +
+                                                                "}" +
+                                                            "}" +
+                                                        "}")
+                                                    .build())
+                                            .build())
+                                    .build())
+                            .build(),
+                    new Step.Builder()
+                            .stepKind(StepKind.endpoint)
+                            .action(new ConnectorAction.Builder()
+                                    .descriptor(new ConnectorDescriptor.Builder()
+                                            .componentScheme("mock")
+                                            .putConfiguredProperty("name", "expression")
+                                            .build())
+                                    .build())
+                            .build()
+            );
+
+            // Set up the camel context
+            context.setUuidGenerator(KeyGenerator::createKey);
+            context.addLogListener(new IntegrationLoggingListener(activityTracker));
+            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
+            context.addRoutes(routes);
+
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
+            final String body = "{" +
+                        "\"parameters\": {" +
+                            "\"a\": \"value\"," +
+                            "\"b\": \"other value\"" +
+                        "}," +
+                        "\"body\": [" +
+                            "{\"id\":1,\"name\":\"a\"}," +
+                            "{\"id\":2,\"name\":\"b\"}," +
+                            "{\"id\":3,\"name\":\"c\"}" +
+                        "]" +
+                    "}";
+
+            result.expectedMessageCount(3);
+            result.expectedBodiesReceived("{\"id\":1,\"name\":\"a\"}", "{\"id\":2,\"name\":\"b\"}", "{\"id\":3,\"name\":\"c\"}");
+
+            template.sendBody("direct:expression", body);
+
+            result.assertIsSatisfied();
+
+            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
             verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
         } finally {
             context.stop();
