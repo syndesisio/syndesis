@@ -15,26 +15,31 @@
  */
 package io.syndesis.integration.runtime.util;
 
+import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
+import org.apache.camel.impl.DefaultExchange;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 
 public class SyndesisHeaderStrategyTest {
 
-    private static final Exchange NOT_USED = null;
+    CamelContext camelContext = mock(CamelContext.class);
+
+    Exchange exchange = new DefaultExchange(camelContext);
 
     @Test
     public void shouldFilterOutEverythingButInwardContentTypeHeader() {
         final SyndesisHeaderStrategy headerStrategy = new SyndesisHeaderStrategy();
 
-        assertThat(headerStrategy.applyFilterToCamelHeaders("Content-Type", "", NOT_USED)).isTrue();
-        assertThat(headerStrategy.applyFilterToExternalHeaders("Content-Type", "", NOT_USED)).isFalse();
+        assertThat(headerStrategy.applyFilterToCamelHeaders("Content-Type", "", exchange)).isTrue();
+        assertThat(headerStrategy.applyFilterToExternalHeaders("Content-Type", "", exchange)).isFalse();
 
-        assertThat(headerStrategy.applyFilterToCamelHeaders("Host", "", NOT_USED)).isTrue();
-        assertThat(headerStrategy.applyFilterToExternalHeaders("Host", "", NOT_USED)).isTrue();
+        assertThat(headerStrategy.applyFilterToCamelHeaders("Host", "", exchange)).isTrue();
+        assertThat(headerStrategy.applyFilterToExternalHeaders("Host", "", exchange)).isTrue();
 
-        assertThat(headerStrategy.applyFilterToCamelHeaders("Forward", "", NOT_USED)).isTrue();
-        assertThat(headerStrategy.applyFilterToExternalHeaders("Forward", "", NOT_USED)).isTrue();
+        assertThat(headerStrategy.applyFilterToCamelHeaders("Forward", "", exchange)).isTrue();
+        assertThat(headerStrategy.applyFilterToExternalHeaders("Forward", "", exchange)).isTrue();
     }
 }

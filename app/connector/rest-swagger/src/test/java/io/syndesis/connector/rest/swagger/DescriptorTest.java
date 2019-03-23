@@ -17,6 +17,8 @@ package io.syndesis.connector.rest.swagger;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -59,6 +61,9 @@ public class DescriptorTest {
     public void descriptorShouldConformToExpected() throws IOException {
         final Connector expected = new Connector.Builder()
             .id("rest-swagger")
+            .actions(new ArrayList<>())
+            .icon("")
+            .description( "rest-swagger TODO:change this")
             .name("OpenAPI client")
             .componentScheme("rest-swagger")
             .putProperty("accessToken", new ConfigurationProperty.Builder()

@@ -31,7 +31,6 @@
   <packaging>jar</packaging>
 
   <dependencies>
-
     <dependency>
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-component-proxy</artifactId>
@@ -42,6 +41,16 @@
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-processor</artifactId>
       <scope>provided</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-util</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-core</artifactId>
     </dependency>
 
     <dependency>
@@ -62,6 +71,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-rest-swagger</artifactId>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -83,6 +93,27 @@
       <groupId>com.github.spotbugs</groupId>
       <artifactId>spotbugs-annotations</artifactId>
     </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+    </dependency>
+
 
     <!-- testing -->
 
