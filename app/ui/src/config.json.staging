@@ -1,6 +1,7 @@
 {
   "commment":"This config should for testing against a minishift using the syndesis-dev application templates.",
-  "apiBase": "https://syndesis-staging.b6ff.rh-idev.openshiftapps.com",
+  "backendBase": "https://syndesis-staging.b6ff.rh-idev.openshiftapps.com",
+  "apiBase": "https://localhost:4200",
   "apiEndpoint": "/api/v1",
   "mapperEndpoint": "/mapper/v1",
   "metricsPollingInterval": 5000,

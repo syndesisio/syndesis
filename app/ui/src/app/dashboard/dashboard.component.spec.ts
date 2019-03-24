@@ -6,7 +6,7 @@ import {
   ActionModule,
   ListModule,
   ToastNotificationListModule as NotificationModule,
-  DonutChartModule as ChartModule
+  DonutChartModule as ChartModule,
 } from 'patternfly-ng';
 
 import { PlatformModule } from '@syndesis/ui/platform';
@@ -22,6 +22,7 @@ import { DashboardIntegrationsComponent } from '@syndesis/ui/dashboard/dashboard
 import { DashboardMetricsComponent } from '@syndesis/ui/dashboard/dashboard_metrics';
 import { ModalService } from '@syndesis/ui/common/modal';
 import { ConfigService } from '@syndesis/ui/config.service';
+import { EVENTS_SERVICE_MOCK_PROVIDER } from '../store/entity/events.service.spec';
 
 xdescribe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -43,15 +44,15 @@ xdescribe('DashboardComponent', () => {
         RouterTestingModule.withRoutes([]),
         NotificationModule,
         IntegrationListModule,
-        SyndesisStoreModule
+        SyndesisStoreModule,
       ],
       declarations: [
         DashboardMetricsComponent,
         DashboardComponent,
         DashboardConnectionsComponent,
-        DashboardIntegrationsComponent
+        DashboardIntegrationsComponent,
       ],
-      providers: [ConfigService, ModalService]
+      providers: [ConfigService, ModalService, EVENTS_SERVICE_MOCK_PROVIDER],
     };
     TestBed.configureTestingModule(moduleConfig).compileComponents();
   }));

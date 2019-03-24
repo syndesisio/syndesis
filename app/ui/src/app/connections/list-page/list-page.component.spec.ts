@@ -11,6 +11,7 @@ import { PatternflyUIModule } from '@syndesis/ui/common/ui-patternfly/ui-pattern
 import { ConnectionsListPage } from '@syndesis/ui/connections/list-page/list-page.component';
 import { ConnectionsListComponent } from '@syndesis/ui/connections/list/list.component';
 import { PlatformModule } from '@syndesis/ui/platform';
+import { EVENTS_SERVICE_MOCK_PROVIDER } from '@syndesis/ui/store/entity/events.service.spec';
 
 describe('ConnectionListPage', () => {
   let component: ConnectionsListPage;
@@ -26,9 +27,10 @@ describe('ConnectionListPage', () => {
         SyndesisStoreModule,
         RouterTestingModule.withRoutes([]),
         VendorModule,
-        PatternflyUIModule
+        PatternflyUIModule,
       ],
-      declarations: [ConnectionsListPage, ConnectionsListComponent]
+      declarations: [ConnectionsListPage, ConnectionsListComponent],
+      providers: [EVENTS_SERVICE_MOCK_PROVIDER],
     }).compileComponents();
   }));
 
