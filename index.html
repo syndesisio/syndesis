@@ -521,8 +521,8 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-9346-g9dec653ec,</span>
-<span id="revdate">2019-03-22</span>
+<span id="revnumber">version 1.1.3-9349-ga9547c5fc,</span>
+<span id="revdate">2019-03-24</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Syndesis Developer Handbook</div>
@@ -539,7 +539,11 @@ table.CodeRay td.code>pre{padding:0}
 <li><a href="#_examples">2.1.5. Examples</a></li>
 </ul>
 </li>
-<li><a href="#syndesis-ui">2.2. syndesis ui</a></li>
+<li><a href="#syndesis-ui">2.2. syndesis ui</a>
+<ul class="sectlevel3">
+<li><a href="#syndesis-ui-usage">2.2.1. Usage</a></li>
+</ul>
+</li>
 <li><a href="#syndesis-minishift">2.3. syndesis minishift</a>
 <ul class="sectlevel3">
 <li><a href="#syndesis-minishift-usage">2.3.1. Usage</a></li>
@@ -1279,12 +1283,30 @@ syndesis build --clean --camel-snapshot 2.21.0-SNAPSHOT</code></pre>
 </div>
 <div class="sect2">
 <h3 id="syndesis-ui">2.2. syndesis ui</h3>
-<div class="sidebarblock">
-<div class="content">
-<div class="title">"syndesis ui" is not implemented yet</div>
 <div class="paragraph">
-<p>This is just a placeholder, still in the planning phased.
-Nevertheless we already start to document the feature for an "UX first" approach.</p>
+<p>Commands useful for Syndesis UI development, a wrapper around typical <code>yarn</code> tasks</p>
+</div>
+<div class="sect3">
+<h4 id="syndesis-ui-usage">2.2.1. Usage</h4>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>Syndesis UI tasks
+
+Usage: syndesis ui [... options ...]
+
+Options for ui:
+    By default the 'ui' does nothing unless you pass one or more of the following parameters:
+
+    --install           Install UI package dependencies
+    --lint              Run lint task
+    --build             Build the UI code
+    --run-tests         Run the tests task
+    --watch-tests       Run the tests and watch for changes
+    --serve             Serve the UI (defaults to staging, use --minishift or --local to change this) and watch for changes
+    --local             When serving, run against a local Syndesis server
+    --minishift         Involve minishift as needed
+-p  --project           Use the specified openshift project
+    --nuke-everything   Use with --minishift, start or reset the minishift VM</code></pre>
 </div>
 </div>
 </div>
@@ -3382,8 +3404,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-9346-g9dec653ec<br>
-Last updated 2019-03-22 18:14:39 UTC
+Version 1.1.3-9349-ga9547c5fc<br>
+Last updated 2019-03-24 19:05:36 UTC
 </div>
 </div>
 </body>
