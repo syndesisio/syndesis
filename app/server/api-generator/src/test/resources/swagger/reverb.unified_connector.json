@@ -21,6 +21,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"},\"query\":{\"type\":\"string\",\"title\":\"query\",\"description\":\"What's being searched for\"},\"exclude_featured\":{\"type\":\"integer\",\"title\":\"exclude_featured\",\"description\":\"Number of featured articles to exclude\"}}}}}"
         },
         "outputDataShape": {
@@ -56,6 +59,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -91,6 +97,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -126,6 +135,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"uuid\":{\"type\":\"string\",\"title\":\"uuid\"}}}}}"
         },
         "outputDataShape": {
@@ -161,6 +173,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"product_type\":{\"type\":\"string\",\"title\":\"product_type\"},\"category\":{\"type\":\"string\",\"title\":\"category\"}}}}}"
         },
         "outputDataShape": {
@@ -196,6 +211,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -231,6 +249,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -266,6 +287,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"},\"condition\":{\"type\":\"string\",\"title\":\"condition\",\"description\":\"Condition of the listing\"},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"}}}}}"
         },
         "outputDataShape": {
@@ -301,6 +325,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -336,6 +363,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\",\"description\":\"ID of the comparison shopping page\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\",\"description\":\"Slug of the comparison shopping page\"}}}}}"
         },
         "outputDataShape": {
@@ -371,6 +401,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -406,6 +439,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"conversation_id\":{\"type\":\"string\",\"title\":\"conversation_id\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"price\":{\"type\":\"object\",\"properties\":{\"amount\":{\"type\":\"string\",\"description\":\"The amount of money being expressed, as a POSIX-compliant decimal number\"},\"currency\":{\"type\":\"string\",\"description\":\"The currency the money will be expressed in\",\"enum\":[\"USD\",\"CAD\",\"EUR\",\"GBP\",\"AUD\",\"JPY\",\"NZD\",\"MXN\"]}},\"required\":[\"amount\",\"currency\"]},\"shipping_price\":{\"type\":\"object\",\"description\":\"Shipping price (sellers only)\",\"properties\":{\"amount\":{\"type\":\"string\",\"description\":\"The amount of money being expressed, as a POSIX-compliant decimal number\"},\"currency\":{\"type\":\"string\",\"description\":\"The currency the money will be expressed in\",\"enum\":[\"USD\",\"CAD\",\"EUR\",\"GBP\",\"AUD\",\"JPY\",\"NZD\",\"MXN\"]}},\"required\":[\"amount\",\"currency\"]},\"offer_items\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"price\":{\"type\":\"string\"},\"shipping_price\":{\"type\":\"string\"},\"listing_id\":{\"type\":\"string\"}},\"required\":[\"listing_id\",\"price\",\"shipping_price\"]}},\"country_code\":{\"type\":\"string\"},\"region_code\":{\"type\":\"string\"},\"message\":{\"type\":\"string\",\"description\":\"Message to include with counter offer\"}}}}}"
         },
         "outputDataShape": {
@@ -441,6 +477,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -476,6 +515,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -511,6 +553,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -546,6 +591,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -581,6 +629,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"feedback_id\":{\"type\":\"string\",\"title\":\"feedback_id\"}}}}}"
         },
         "outputDataShape": {
@@ -616,6 +667,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"},\"query\":{\"type\":\"string\",\"title\":\"query\",\"description\":\"Search query.\"},\"auction_price_max\":{\"type\":\"number\",\"title\":\"auction_price_max\",\"description\":\"Maximum current auction price\"},\"category\":{\"type\":\"string\",\"title\":\"category\",\"description\":\"Category slug from /api/categories\"},\"product_type\":{\"type\":\"string\",\"title\":\"product_type\",\"description\":\"Product type slug from /api/categories\"},\"conditions\":{\"type\":\"array\",\"title\":\"conditions\",\"description\":\"Condition: all,new,b-stock,used,non-functioning\",\"items\":{\"type\":\"string\"}},\"decade\":{\"type\":\"string\",\"title\":\"decade\",\"description\":\"Decade: e.g. 1970s, early 70s\"},\"finish\":{\"type\":\"string\",\"title\":\"finish\",\"description\":\"Visual finish of the item, common for guitars\"},\"handmade\":{\"type\":\"boolean\",\"title\":\"handmade\",\"description\":\"Handmade items only\"},\"item_city\":{\"type\":\"string\",\"title\":\"item_city\",\"description\":\"City where item is located\"},\"item_country\":{\"type\":\"string\",\"title\":\"item_country\",\"description\":\"DEPRECATED - Country code where item is located\"},\"item_region\":{\"type\":\"string\",\"title\":\"item_region\",\"description\":\"Country code where item is located\"},\"item_state\":{\"type\":\"string\",\"title\":\"item_state\",\"description\":\"State or region code where item is located\"},\"make\":{\"type\":\"array\",\"title\":\"make\",\"description\":\"Make(s)/brand of item (e.g. Fender). Can take a single value or an array.\",\"items\":{\"type\":\"string\"}},\"model\":{\"type\":\"string\",\"title\":\"model\",\"description\":\"Model of item (e.g. Stratocaster)\"},\"must_not\":{\"type\":\"string\",\"title\":\"must_not\",\"description\":\"Search term negation. If you want to exclude a term, add it here\"},\"price_max\":{\"type\":\"number\",\"title\":\"price_max\",\"description\":\"Maximum price of search results (USD)\"},\"price_min\":{\"type\":\"number\",\"title\":\"price_min\",\"description\":\"Minimum price of search results (USD)\"},\"currency\":{\"type\":\"string\",\"title\":\"currency\",\"description\":\"The currency to be used for the price filters\"},\"year_max\":{\"type\":\"integer\",\"title\":\"year_max\",\"description\":\"Maximum year of manufacture\"},\"year_min\":{\"type\":\"integer\",\"title\":\"year_min\",\"description\":\"Minumum year of manufacture\"},\"accepts_gift_cards\":{\"type\":\"boolean\",\"title\":\"accepts_gift_cards\",\"description\":\"If true, include only items that accept gift cards\"},\"preferred_seller\":{\"type\":\"boolean\",\"title\":\"preferred_seller\",\"description\":\"If true, include only items by Reverb Preferred Sellers\"},\"shop\":{\"type\":\"string\",\"title\":\"shop\",\"description\":\"Slug of shop to search\"},\"shop_id\":{\"type\":\"string\",\"title\":\"shop_id\",\"description\":\"ID of shop to search\"},\"listing_type\":{\"type\":\"string\",\"title\":\"listing_type\",\"description\":\"Type of listing: auctions,offers\"},\"ships_to\":{\"type\":\"string\",\"title\":\"ships_to\",\"description\":\"Limit search to items that ship to this country code\"},\"exclude_auctions\":{\"type\":\"boolean\",\"title\":\"exclude_auctions\",\"description\":\"If true, exclude auctions\"},\"accepts_payment_plans\":{\"type\":\"boolean\",\"title\":\"accepts_payment_plans\",\"description\":\"If true, only show items that can be purchased with a payment plan\"},\"watchers_count_min\":{\"type\":\"integer\",\"title\":\"watchers_count_min\",\"description\":\"Minimum number of watchers (used to find popular items)\"},\"not_ids\":{\"type\":\"array\",\"title\":\"not_ids\",\"description\":\"Listing ID negation. If you want to exclude a listing, add it here.\",\"items\":{\"type\":\"string\"}},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"}}}}}"
         },
         "outputDataShape": {
@@ -651,6 +705,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -686,6 +743,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"query\":{\"type\":\"string\",\"title\":\"query\",\"description\":\"Search query.\"},\"auction_price_max\":{\"type\":\"number\",\"title\":\"auction_price_max\",\"description\":\"Maximum current auction price\"},\"category\":{\"type\":\"string\",\"title\":\"category\",\"description\":\"Category slug from /api/categories\"},\"product_type\":{\"type\":\"string\",\"title\":\"product_type\",\"description\":\"Product type slug from /api/categories\"},\"conditions\":{\"type\":\"array\",\"title\":\"conditions\",\"description\":\"Condition: all,new,b-stock,used,non-functioning\",\"items\":{\"type\":\"string\"}},\"decade\":{\"type\":\"string\",\"title\":\"decade\",\"description\":\"Decade: e.g. 1970s, early 70s\"},\"finish\":{\"type\":\"string\",\"title\":\"finish\",\"description\":\"Visual finish of the item, common for guitars\"},\"handmade\":{\"type\":\"boolean\",\"title\":\"handmade\",\"description\":\"Handmade items only\"},\"item_city\":{\"type\":\"string\",\"title\":\"item_city\",\"description\":\"City where item is located\"},\"item_country\":{\"type\":\"string\",\"title\":\"item_country\",\"description\":\"DEPRECATED - Country code where item is located\"},\"item_region\":{\"type\":\"string\",\"title\":\"item_region\",\"description\":\"Country code where item is located\"},\"item_state\":{\"type\":\"string\",\"title\":\"item_state\",\"description\":\"State or region code where item is located\"},\"make\":{\"type\":\"array\",\"title\":\"make\",\"description\":\"Make(s)/brand of item (e.g. Fender). Can take a single value or an array.\",\"items\":{\"type\":\"string\"}},\"model\":{\"type\":\"string\",\"title\":\"model\",\"description\":\"Model of item (e.g. Stratocaster)\"},\"must_not\":{\"type\":\"string\",\"title\":\"must_not\",\"description\":\"Search term negation. If you want to exclude a term, add it here\"},\"price_max\":{\"type\":\"number\",\"title\":\"price_max\",\"description\":\"Maximum price of search results (USD)\"},\"price_min\":{\"type\":\"number\",\"title\":\"price_min\",\"description\":\"Minimum price of search results (USD)\"},\"currency\":{\"type\":\"string\",\"title\":\"currency\",\"description\":\"The currency to be used for the price filters\"},\"year_max\":{\"type\":\"integer\",\"title\":\"year_max\",\"description\":\"Maximum year of manufacture\"},\"year_min\":{\"type\":\"integer\",\"title\":\"year_min\",\"description\":\"Minumum year of manufacture\"},\"accepts_gift_cards\":{\"type\":\"boolean\",\"title\":\"accepts_gift_cards\",\"description\":\"If true, include only items that accept gift cards\"},\"preferred_seller\":{\"type\":\"boolean\",\"title\":\"preferred_seller\",\"description\":\"If true, include only items by Reverb Preferred Sellers\"},\"shop\":{\"type\":\"string\",\"title\":\"shop\",\"description\":\"Slug of shop to search\"},\"shop_id\":{\"type\":\"string\",\"title\":\"shop_id\",\"description\":\"ID of shop to search\"},\"listing_type\":{\"type\":\"string\",\"title\":\"listing_type\",\"description\":\"Type of listing: auctions,offers\"},\"ships_to\":{\"type\":\"string\",\"title\":\"ships_to\",\"description\":\"Limit search to items that ship to this country code\"},\"exclude_auctions\":{\"type\":\"boolean\",\"title\":\"exclude_auctions\",\"description\":\"If true, exclude auctions\"},\"accepts_payment_plans\":{\"type\":\"boolean\",\"title\":\"accepts_payment_plans\",\"description\":\"If true, only show items that can be purchased with a payment plan\"},\"watchers_count_min\":{\"type\":\"integer\",\"title\":\"watchers_count_min\",\"description\":\"Minimum number of watchers (used to find popular items)\"},\"not_ids\":{\"type\":\"array\",\"title\":\"not_ids\",\"description\":\"Listing ID negation. If you want to exclude a listing, add it here.\",\"items\":{\"type\":\"string\"}},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"}}}}}"
         },
         "outputDataShape": {
@@ -721,6 +781,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"listing_id\":{\"type\":\"string\",\"title\":\"listing_id\"},\"budget_type\":{\"type\":\"string\",\"title\":\"budget_type\"}}}}}"
         },
         "outputDataShape": {
@@ -756,6 +819,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"make\":{\"type\":\"string\",\"description\":\"ex: Fender, Gibson\"},\"model\":{\"type\":\"string\",\"description\":\"ex: Stratocaster, SG\"},\"publish\":{\"type\":\"boolean\",\"description\":\"Publish your listing if draft\"},\"categories\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"uuid\":{\"type\":\"string\",\"description\":\"UUID of the category for this listing.\"}}}},\"sold_as_is\":{\"type\":\"boolean\",\"description\":\"This item is sold As-Is and cannot be returned\"},\"photos\":{\"type\":\"array\",\"description\":\"An array of image URLs. Ex: ['http://my.site.com/image.jpg']\",\"items\":{\"type\":\"string\"}},\"condition\":{\"type\":\"object\",\"description\":\"Condition\",\"properties\":{\"uuid\":{\"type\":\"string\",\"description\":\"Condition UUID\",\"enum\":[\"fbf35668-96a0-4baa-bcde-ab18d6b1b329\",\"6a9dfcad-600b-46c8-9e08-ce6e5057921e\",\"98777886-76d0-44c8-865e-bb40e669e934\",\"f7a3f48c-972a-44c6-b01a-0cd27488d3f6\",\"ae4d9114-1bd7-4ec5-a4ba-6653af5ac84d\",\"df268ad1-c462-4ba6-b6db-e007e23922ea\",\"ac5b9c1e-dc78-466d-b0b3-7cf712967a48\",\"6db7df88-293b-4017-a1c1-cdb5e599fa1a\",\"9225283f-60c2-4413-ad18-1f5eba7a856f\",\"7c3f45de-2ae0-4c81-8400-fdb6b1d74890\"]}},\"required\":[\"uuid\"]},\"has_inventory\":{\"type\":\"boolean\",\"description\":\"Set true if selling more than one\"},\"inventory\":{\"type\":\"integer\",\"description\":\"Number of items available for sale. Reverb will increment and decrement automatically.\"},\"storage_location\":{\"type\":\"string\",\"description\":\"Internal note used by sellers to back reference their catalog system when entering a listing\"},\"description\":{\"type\":\"string\",\"description\":\"Product description. Please keep formatting to a minimum.\"},\"finish\":{\"type\":\"string\",\"description\":\"Finish, e.g. 'Sunburst'\"},\"title\":{\"type\":\"string\",\"description\":\"Title of your listing\"},\"year\":{\"type\":\"string\",\"description\":\"Supports many formats. Ex: 1979, mid-70s, late 90s\"},\"sku\":{\"type\":\"string\",\"description\":\"Unique identifier for product\"},\"upc\":{\"type\":\"string\",\"description\":\"Valid UPC code\"},\"upc_does_not_apply\":{\"type\":\"string\",\"description\":\"True if a brand new product has no UPC code, ie for a handmade or custom item\"},\"offers_enabled\":{\"type\":\"boolean\",\"description\":\"Whether the listing accepts negotiated offers (default: true)\"},\"shipping_profile_id\":{\"type\":\"string\",\"description\":\"id of a shop's shipping profile\"},\"shipping_profile_name\":{\"type\":\"string\",\"description\":\"DEPRECATED, please use shipping_profile_id. Name of a shipping profile\"},\"location\":{\"type\":\"object\",\"properties\":{\"locality\":{\"type\":\"string\",\"description\":\"Ex: Chicago\"},\"region\":{\"type\":\"string\",\"description\":\"Ex: IL\"},\"country_code\":{\"type\":\"string\",\"description\":\"Ex: US\"}}},\"origin_country_code\":{\"type\":\"string\",\"description\":\"Country of origin/manufacture, ISO code (e.g: US)\"},\"shipping\":{\"type\":\"object\",\"properties\":{\"local\":{\"type\":\"boolean\",\"description\":\"True if you offer local pickup\"},\"rates\":{\"type\":\"array\",\"description\":\"List of shipping rates. Set to null to clear rates.\",\"items\":{\"type\":\"object\",\"properties\":{\"region_code\":{\"type\":\"string\",\"description\":\"Country code or subregion/superregion code. Full list of codes at /api/shipping/regions\"},\"rate\":{\"type\":\"object\",\"properties\":{\"amount\":{\"type\":\"string\",\"description\":\"The amount of money being expressed, as a POSIX-compliant decimal number\"},\"currency\":{\"type\":\"string\",\"description\":\"The currency the money will be expressed in\",\"enum\":[\"USD\",\"CAD\",\"EUR\",\"GBP\",\"AUD\",\"JPY\",\"NZD\",\"MXN\"]}},\"required\":[\"amount\",\"currency\"]}}}}}},\"seller\":{\"type\":\"object\",\"properties\":{\"paypal_email\":{\"type\":\"string\"}}},\"seller_cost\":{\"type\":\"string\",\"description\":\"Cost of goods in your currency as a POSIX-compliant decimal number (internal use only, not shown to buyers)\"},\"tax_exempt\":{\"type\":\"boolean\",\"description\":\"Listing is exempt from taxes / VAT\"},\"price\":{\"type\":\"object\",\"properties\":{\"amount\":{\"type\":\"string\",\"description\":\"The amount of money being expressed, as a POSIX-compliant decimal number\"},\"currency\":{\"type\":\"string\",\"description\":\"The currency the money will be expressed in\",\"enum\":[\"USD\",\"CAD\",\"EUR\",\"GBP\",\"AUD\",\"JPY\",\"NZD\",\"MXN\"]}},\"required\":[\"amount\",\"currency\"]},\"exclusive_channel\":{\"type\":\"string\",\"description\":\"Currently for users of seller sites only, this allows you to have a listing available only to your seller site by setting this to 'seller_site'\",\"enum\":[\"seller_site\"]}}}}}"
         },
         "outputDataShape": {
@@ -791,6 +857,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -826,6 +895,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"query\":{\"type\":\"string\",\"title\":\"query\",\"description\":\"Search query.\"},\"auction_price_max\":{\"type\":\"number\",\"title\":\"auction_price_max\",\"description\":\"Maximum current auction price\"},\"category\":{\"type\":\"string\",\"title\":\"category\",\"description\":\"Category slug from /api/categories\"},\"product_type\":{\"type\":\"string\",\"title\":\"product_type\",\"description\":\"Product type slug from /api/categories\"},\"conditions\":{\"type\":\"array\",\"title\":\"conditions\",\"description\":\"Condition: all,new,b-stock,used,non-functioning\",\"items\":{\"type\":\"string\"}},\"decade\":{\"type\":\"string\",\"title\":\"decade\",\"description\":\"Decade: e.g. 1970s, early 70s\"},\"finish\":{\"type\":\"string\",\"title\":\"finish\",\"description\":\"Visual finish of the item, common for guitars\"},\"handmade\":{\"type\":\"boolean\",\"title\":\"handmade\",\"description\":\"Handmade items only\"},\"item_city\":{\"type\":\"string\",\"title\":\"item_city\",\"description\":\"City where item is located\"},\"item_country\":{\"type\":\"string\",\"title\":\"item_country\",\"description\":\"DEPRECATED - Country code where item is located\"},\"item_region\":{\"type\":\"string\",\"title\":\"item_region\",\"description\":\"Country code where item is located\"},\"item_state\":{\"type\":\"string\",\"title\":\"item_state\",\"description\":\"State or region code where item is located\"},\"make\":{\"type\":\"array\",\"title\":\"make\",\"description\":\"Make(s)/brand of item (e.g. Fender). Can take a single value or an array.\",\"items\":{\"type\":\"string\"}},\"model\":{\"type\":\"string\",\"title\":\"model\",\"description\":\"Model of item (e.g. Stratocaster)\"},\"must_not\":{\"type\":\"string\",\"title\":\"must_not\",\"description\":\"Search term negation. If you want to exclude a term, add it here\"},\"price_max\":{\"type\":\"number\",\"title\":\"price_max\",\"description\":\"Maximum price of search results (USD)\"},\"price_min\":{\"type\":\"number\",\"title\":\"price_min\",\"description\":\"Minimum price of search results (USD)\"},\"currency\":{\"type\":\"string\",\"title\":\"currency\",\"description\":\"The currency to be used for the price filters\"},\"year_max\":{\"type\":\"integer\",\"title\":\"year_max\",\"description\":\"Maximum year of manufacture\"},\"year_min\":{\"type\":\"integer\",\"title\":\"year_min\",\"description\":\"Minumum year of manufacture\"},\"accepts_gift_cards\":{\"type\":\"boolean\",\"title\":\"accepts_gift_cards\",\"description\":\"If true, include only items that accept gift cards\"},\"preferred_seller\":{\"type\":\"boolean\",\"title\":\"preferred_seller\",\"description\":\"If true, include only items by Reverb Preferred Sellers\"},\"shop\":{\"type\":\"string\",\"title\":\"shop\",\"description\":\"Slug of shop to search\"},\"shop_id\":{\"type\":\"string\",\"title\":\"shop_id\",\"description\":\"ID of shop to search\"},\"listing_type\":{\"type\":\"string\",\"title\":\"listing_type\",\"description\":\"Type of listing: auctions,offers\"},\"ships_to\":{\"type\":\"string\",\"title\":\"ships_to\",\"description\":\"Limit search to items that ship to this country code\"},\"exclude_auctions\":{\"type\":\"boolean\",\"title\":\"exclude_auctions\",\"description\":\"If true, exclude auctions\"},\"accepts_payment_plans\":{\"type\":\"boolean\",\"title\":\"accepts_payment_plans\",\"description\":\"If true, only show items that can be purchased with a payment plan\"},\"watchers_count_min\":{\"type\":\"integer\",\"title\":\"watchers_count_min\",\"description\":\"Minimum number of watchers (used to find popular items)\"},\"not_ids\":{\"type\":\"array\",\"title\":\"not_ids\",\"description\":\"Listing ID negation. If you want to exclude a listing, add it here.\",\"items\":{\"type\":\"string\"}},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"}}}}}"
         },
         "outputDataShape": {
@@ -861,6 +933,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -896,6 +971,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"listing_id\":{\"type\":\"string\",\"title\":\"listing_id\"},\"image_id\":{\"type\":\"string\",\"title\":\"image_id\"}}}}}"
         },
         "outputDataShape": {
@@ -931,6 +1009,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -966,6 +1047,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"listing_id\":{\"type\":\"string\",\"title\":\"listing_id\"},\"for_seller\":{\"type\":\"boolean\",\"title\":\"for_seller\",\"description\":\"Pass to see non-live bundles as the seller\"}}}}}"
         },
         "outputDataShape": {
@@ -1001,6 +1085,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}},\"body\":{\"type\":\"object\",\"required\":[\"reason\"],\"properties\":{\"reason\":{\"type\":\"string\",\"description\":\"Valid reasons: 'Sexuality/nudity', 'Hateful or inappropriate speech', 'Item not as described or potential fraud', 'Trademark infringement', 'Other'\"}}}}}"
         },
         "outputDataShape": {
@@ -1036,6 +1123,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -1071,6 +1161,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -1106,6 +1199,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -1141,6 +1237,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}},\"body\":{\"type\":\"object\",\"required\":[\"price\"],\"properties\":{\"price\":{\"type\":\"string\",\"description\":\"Offer price\"},\"shipping_price\":{\"type\":\"string\",\"description\":\"Shipping price (sellers only)\"},\"message\":{\"type\":\"string\",\"description\":\"Message to include with counter offer\"}}}}}"
         },
         "outputDataShape": {
@@ -1176,6 +1275,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -1211,6 +1313,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"listing_id\":{\"type\":\"string\",\"title\":\"listing_id\"}}}}}"
         },
         "outputDataShape": {
@@ -1246,6 +1351,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"listing_id\":{\"type\":\"string\",\"title\":\"listing_id\"}}},\"body\":{\"type\":\"object\",\"required\":[\"body\"],\"properties\":{\"body\":{\"type\":\"string\"}}}}}"
         },
         "outputDataShape": {
@@ -1281,6 +1389,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"publish\":{\"type\":\"boolean\",\"description\":\"Publish your listing if draft\"},\"make\":{\"type\":\"string\",\"description\":\"ex: Fender, Gibson\"},\"model\":{\"type\":\"string\",\"description\":\"ex: Stratocaster, SG\"},\"categories\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"uuid\":{\"type\":\"string\",\"description\":\"UUID of the category for this listing.\"}}}},\"sold_as_is\":{\"type\":\"boolean\",\"description\":\"This item is sold As-Is and cannot be returned\"},\"photos\":{\"type\":\"array\",\"description\":\"An array of image URLs. Ex: ['http://my.site.com/image.jpg']\",\"items\":{\"type\":\"string\"}},\"condition\":{\"type\":\"object\",\"description\":\"Condition\",\"properties\":{\"uuid\":{\"type\":\"string\",\"description\":\"Condition UUID\",\"enum\":[\"fbf35668-96a0-4baa-bcde-ab18d6b1b329\",\"6a9dfcad-600b-46c8-9e08-ce6e5057921e\",\"98777886-76d0-44c8-865e-bb40e669e934\",\"f7a3f48c-972a-44c6-b01a-0cd27488d3f6\",\"ae4d9114-1bd7-4ec5-a4ba-6653af5ac84d\",\"df268ad1-c462-4ba6-b6db-e007e23922ea\",\"ac5b9c1e-dc78-466d-b0b3-7cf712967a48\",\"6db7df88-293b-4017-a1c1-cdb5e599fa1a\",\"9225283f-60c2-4413-ad18-1f5eba7a856f\",\"7c3f45de-2ae0-4c81-8400-fdb6b1d74890\"]}},\"required\":[\"uuid\"]},\"has_inventory\":{\"type\":\"boolean\",\"description\":\"Set true if selling more than one\"},\"inventory\":{\"type\":\"integer\",\"description\":\"Number of items available for sale. Reverb will increment and decrement automatically.\"},\"storage_location\":{\"type\":\"string\",\"description\":\"Internal note used by sellers to back reference their catalog system when entering a listing\"},\"description\":{\"type\":\"string\",\"description\":\"Product description. Please keep formatting to a minimum.\"},\"finish\":{\"type\":\"string\",\"description\":\"Finish, e.g. 'Sunburst'\"},\"title\":{\"type\":\"string\",\"description\":\"Title of your listing\"},\"year\":{\"type\":\"string\",\"description\":\"Supports many formats. Ex: 1979, mid-70s, late 90s\"},\"sku\":{\"type\":\"string\",\"description\":\"Unique identifier for product\"},\"upc\":{\"type\":\"string\",\"description\":\"Valid UPC code\"},\"upc_does_not_apply\":{\"type\":\"string\",\"description\":\"True if a brand new product has no UPC code, ie for a handmade or custom item\"},\"offers_enabled\":{\"type\":\"boolean\",\"description\":\"Whether the listing accepts negotiated offers (default: true)\"},\"shipping_profile_id\":{\"type\":\"string\",\"description\":\"id of a shop's shipping profile\"},\"shipping_profile_name\":{\"type\":\"string\",\"description\":\"DEPRECATED, please use shipping_profile_id. Name of a shipping profile\"},\"location\":{\"type\":\"object\",\"properties\":{\"locality\":{\"type\":\"string\",\"description\":\"Ex: Chicago\"},\"region\":{\"type\":\"string\",\"description\":\"Ex: IL\"},\"country_code\":{\"type\":\"string\",\"description\":\"Ex: US\"}}},\"origin_country_code\":{\"type\":\"string\",\"description\":\"Country of origin/manufacture, ISO code (e.g: US)\"},\"shipping\":{\"type\":\"object\",\"properties\":{\"local\":{\"type\":\"boolean\",\"description\":\"True if you offer local pickup\"},\"rates\":{\"type\":\"array\",\"description\":\"List of shipping rates. Set to null to clear rates.\",\"items\":{\"type\":\"object\",\"properties\":{\"region_code\":{\"type\":\"string\",\"description\":\"Country code or subregion/superregion code. Full list of codes at /api/shipping/regions\"},\"rate\":{\"type\":\"object\",\"properties\":{\"amount\":{\"type\":\"string\",\"description\":\"The amount of money being expressed, as a POSIX-compliant decimal number\"},\"currency\":{\"type\":\"string\",\"description\":\"The currency the money will be expressed in\",\"enum\":[\"USD\",\"CAD\",\"EUR\",\"GBP\",\"AUD\",\"JPY\",\"NZD\",\"MXN\"]}},\"required\":[\"amount\",\"currency\"]}}}}}},\"seller\":{\"type\":\"object\",\"properties\":{\"paypal_email\":{\"type\":\"string\"}}},\"seller_cost\":{\"type\":\"string\",\"description\":\"Cost of goods in your currency as a POSIX-compliant decimal number (internal use only, not shown to buyers)\"},\"tax_exempt\":{\"type\":\"boolean\",\"description\":\"Listing is exempt from taxes / VAT\"},\"price\":{\"type\":\"object\",\"properties\":{\"amount\":{\"type\":\"string\",\"description\":\"The amount of money being expressed, as a POSIX-compliant decimal number\"},\"currency\":{\"type\":\"string\",\"description\":\"The currency the money will be expressed in\",\"enum\":[\"USD\",\"CAD\",\"EUR\",\"GBP\",\"AUD\",\"JPY\",\"NZD\",\"MXN\"]}},\"required\":[\"amount\",\"currency\"]},\"exclusive_channel\":{\"type\":\"string\",\"description\":\"Currently for users of seller sites only, this allows you to have a listing available only to your seller site by setting this to 'seller_site'\",\"enum\":[\"seller_site\"]}}}}}"
         },
         "outputDataShape": {
@@ -1316,6 +1427,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"listing_id\":{\"type\":\"string\",\"title\":\"listing_id\"}}}}}"
         },
         "outputDataShape": {
@@ -1351,6 +1465,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -1386,6 +1503,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"listing_id\":{\"type\":\"string\",\"title\":\"listing_id\"}}}}}"
         },
         "outputDataShape": {
@@ -1421,6 +1541,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"message\":{\"type\":\"string\",\"description\":\"Message to include with accepted offer\"}}}}}"
         },
         "outputDataShape": {
@@ -1456,6 +1579,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -1491,6 +1617,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"price\":{\"type\":\"object\",\"properties\":{\"amount\":{\"type\":\"string\",\"description\":\"The amount of money being expressed, as a POSIX-compliant decimal number\"},\"currency\":{\"type\":\"string\",\"description\":\"The currency the money will be expressed in\",\"enum\":[\"USD\",\"CAD\",\"EUR\",\"GBP\",\"AUD\",\"JPY\",\"NZD\",\"MXN\"]}},\"required\":[\"amount\",\"currency\"]},\"shipping_price\":{\"type\":\"object\",\"description\":\"Shipping price (sellers only)\",\"properties\":{\"amount\":{\"type\":\"string\",\"description\":\"The amount of money being expressed, as a POSIX-compliant decimal number\"},\"currency\":{\"type\":\"string\",\"description\":\"The currency the money will be expressed in\",\"enum\":[\"USD\",\"CAD\",\"EUR\",\"GBP\",\"AUD\",\"JPY\",\"NZD\",\"MXN\"]}},\"required\":[\"amount\",\"currency\"]},\"offer_items\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"price\":{\"type\":\"string\"},\"shipping_price\":{\"type\":\"string\"},\"listing_id\":{\"type\":\"string\"}},\"required\":[\"listing_id\",\"price\",\"shipping_price\"]}},\"country_code\":{\"type\":\"string\"},\"region_code\":{\"type\":\"string\"},\"message\":{\"type\":\"string\",\"description\":\"Message to include with counter offer\"}}}}}"
         },
         "outputDataShape": {
@@ -1526,6 +1655,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -1561,6 +1693,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"product_id\":{\"type\":\"string\",\"title\":\"product_id\"}}}}}"
         },
         "outputDataShape": {
@@ -1596,6 +1731,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"follow_id\":{\"type\":\"string\",\"title\":\"follow_id\"}}}}}"
         },
         "outputDataShape": {
@@ -1631,6 +1769,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -1666,6 +1807,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"follow_id\":{\"type\":\"string\",\"title\":\"follow_id\"}}}}}"
         },
         "outputDataShape": {
@@ -1701,6 +1845,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"address_id\":{\"type\":\"string\",\"title\":\"address_id\"}}}}}"
         },
         "outputDataShape": {
@@ -1736,6 +1883,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -1771,6 +1921,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}},\"body\":{\"type\":\"object\",\"required\":[\"reason\"],\"properties\":{\"reason\":{\"type\":\"string\",\"description\":\"The reason this listing is being ended. Valid reasons: [\\\"not_sold\\\", \\\"reverb_sale\\\"].\",\"enum\":[\"not_sold\",\"reverb_sale\"]}}}}}"
         },
         "outputDataShape": {
@@ -1806,6 +1959,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -1841,6 +1997,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"identifier\":{\"type\":\"string\",\"title\":\"identifier\"}}}}}"
         },
         "outputDataShape": {
@@ -1876,6 +2035,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -1911,6 +2073,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -1946,6 +2111,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"description\":\"Search query.\"},\"auction_price_max\":{\"type\":\"number\",\"format\":\"float\",\"description\":\"Maximum current auction price\"},\"category\":{\"type\":\"string\",\"description\":\"Category slug from /api/categories\"},\"product_type\":{\"type\":\"string\",\"description\":\"Product type slug from /api/categories\"},\"conditions\":{\"type\":\"array\",\"description\":\"Condition: all,new,b-stock,used,non-functioning\",\"items\":{\"type\":\"string\"}},\"decade\":{\"type\":\"string\",\"description\":\"Decade: e.g. 1970s, early 70s\"},\"finish\":{\"type\":\"string\",\"description\":\"Visual finish of the item, common for guitars\"},\"handmade\":{\"type\":\"boolean\",\"description\":\"Handmade items only\"},\"item_city\":{\"type\":\"string\",\"description\":\"City where item is located\"},\"item_country\":{\"type\":\"string\",\"description\":\"DEPRECATED - Country code where item is located\"},\"item_region\":{\"type\":\"string\",\"description\":\"Country code where item is located\"},\"item_state\":{\"type\":\"string\",\"description\":\"State or region code where item is located\"},\"make\":{\"type\":\"array\",\"description\":\"Make(s)/brand of item (e.g. Fender). Can take a single value or an array.\",\"items\":{\"type\":\"string\"}},\"model\":{\"type\":\"string\",\"description\":\"Model of item (e.g. Stratocaster)\"},\"must_not\":{\"type\":\"string\",\"description\":\"Search term negation. If you want to exclude a term, add it here\"},\"price_max\":{\"type\":\"number\",\"format\":\"float\",\"description\":\"Maximum price of search results (USD)\"},\"price_min\":{\"type\":\"number\",\"format\":\"float\",\"description\":\"Minimum price of search results (USD)\"},\"currency\":{\"type\":\"string\",\"description\":\"The currency to be used for the price filters\",\"enum\":[\"USD\",\"CAD\",\"EUR\",\"GBP\",\"AUD\",\"JPY\",\"NZD\",\"MXN\"]},\"year_max\":{\"type\":\"integer\",\"description\":\"Maximum year of manufacture\"},\"year_min\":{\"type\":\"integer\",\"description\":\"Minumum year of manufacture\"},\"accepts_gift_cards\":{\"type\":\"boolean\",\"description\":\"If true, include only items that accept gift cards\"},\"preferred_seller\":{\"type\":\"boolean\",\"description\":\"If true, include only items by Reverb Preferred Sellers\"},\"shop\":{\"type\":\"string\",\"description\":\"Slug of shop to search\"},\"shop_id\":{\"type\":\"string\",\"description\":\"ID of shop to search\"},\"listing_type\":{\"type\":\"string\",\"description\":\"Type of listing: auctions,offers\",\"enum\":[\"auctions\",\"offers\"]},\"ships_to\":{\"type\":\"string\",\"description\":\"Limit search to items that ship to this country code\"},\"exclude_auctions\":{\"type\":\"boolean\",\"description\":\"If true, exclude auctions\"},\"accepts_payment_plans\":{\"type\":\"boolean\",\"description\":\"If true, only show items that can be purchased with a payment plan\"},\"watchers_count_min\":{\"type\":\"integer\",\"description\":\"Minimum number of watchers (used to find popular items)\"},\"not_ids\":{\"type\":\"array\",\"description\":\"Listing ID negation. If you want to exclude a listing, add it here.\",\"items\":{\"type\":\"integer\"}}}}}}"
         },
         "outputDataShape": {
@@ -1981,6 +2149,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -2016,6 +2187,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"category\":{\"type\":\"string\",\"title\":\"category\"},\"subcategory\":{\"type\":\"string\",\"title\":\"subcategory\"}}}}}"
         },
         "outputDataShape": {
@@ -2051,6 +2225,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -2086,6 +2263,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"identifier\":{\"type\":\"string\",\"title\":\"identifier\"}}}}}"
         },
         "outputDataShape": {
@@ -2121,6 +2301,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -2156,6 +2339,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -2191,6 +2377,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2226,6 +2415,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -2261,6 +2453,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"category\":{\"type\":\"string\",\"title\":\"category\"},\"subcategory\":{\"type\":\"string\",\"title\":\"subcategory\"}}}}}"
         },
         "outputDataShape": {
@@ -2296,6 +2491,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"}}}}}"
         },
         "outputDataShape": {
@@ -2331,6 +2529,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"}}}}}"
         },
         "outputDataShape": {
@@ -2366,6 +2567,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2401,6 +2605,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2436,6 +2643,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2471,6 +2681,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"search\":{\"type\":\"string\",\"title\":\"search\",\"description\":\"Query string to search conversations by\"},\"unread_only\":{\"type\":\"boolean\",\"title\":\"unread_only\",\"description\":\"Show unread conversations only\"},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"}}}}}"
         },
         "outputDataShape": {
@@ -2506,6 +2719,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2541,6 +2757,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2576,6 +2795,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2611,6 +2833,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"created_start_date\":{\"type\":\"string\",\"title\":\"created_start_date\",\"description\":\"Filter by date created in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"created_end_date\":{\"type\":\"string\",\"title\":\"created_end_date\",\"description\":\"Filter by date created in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"updated_start_date\":{\"type\":\"string\",\"title\":\"updated_start_date\",\"description\":\"Filter by date modified in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"updated_end_date\":{\"type\":\"string\",\"title\":\"updated_end_date\",\"description\":\"Filter by date modified in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"}}}}}"
         },
         "outputDataShape": {
@@ -2646,6 +2871,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2681,6 +2909,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -2716,6 +2947,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -2751,6 +2985,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"},\"created_start_date\":{\"type\":\"string\",\"title\":\"created_start_date\",\"description\":\"Filter by date created in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"created_end_date\":{\"type\":\"string\",\"title\":\"created_end_date\",\"description\":\"Filter by date created in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"updated_start_date\":{\"type\":\"string\",\"title\":\"updated_start_date\",\"description\":\"Filter by date modified in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"updated_end_date\":{\"type\":\"string\",\"title\":\"updated_end_date\",\"description\":\"Filter by date modified in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"order_id\":{\"type\":\"string\",\"title\":\"order_id\",\"description\":\"Look up payments by order id\"}}}}}"
         },
         "outputDataShape": {
@@ -2786,6 +3023,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"created_start_date\":{\"type\":\"string\",\"title\":\"created_start_date\",\"description\":\"Filter by date created in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"created_end_date\":{\"type\":\"string\",\"title\":\"created_end_date\",\"description\":\"Filter by date created in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"updated_start_date\":{\"type\":\"string\",\"title\":\"updated_start_date\",\"description\":\"Filter by date modified in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"updated_end_date\":{\"type\":\"string\",\"title\":\"updated_end_date\",\"description\":\"Filter by date modified in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"}}}}}"
         },
         "outputDataShape": {
@@ -2821,6 +3061,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"created_start_date\":{\"type\":\"string\",\"title\":\"created_start_date\",\"description\":\"Filter by date created in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"created_end_date\":{\"type\":\"string\",\"title\":\"created_end_date\",\"description\":\"Filter by date created in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"updated_start_date\":{\"type\":\"string\",\"title\":\"updated_start_date\",\"description\":\"Filter by date modified in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"updated_end_date\":{\"type\":\"string\",\"title\":\"updated_end_date\",\"description\":\"Filter by date modified in ISO8601 format - e.g: 2015-04-09T10:52:23-00:00\"},\"page\":{\"type\":\"integer\",\"title\":\"page\",\"default\":\"1\"},\"per_page\":{\"type\":\"integer\",\"title\":\"per_page\",\"default\":\"24\"},\"offset\":{\"type\":\"integer\",\"title\":\"offset\"}}}}}"
         },
         "outputDataShape": {
@@ -2856,6 +3099,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2891,6 +3137,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"order_id\":{\"type\":\"string\",\"title\":\"order_id\"}}}}}"
         },
         "outputDataShape": {
@@ -2926,6 +3175,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2961,6 +3213,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -2996,6 +3251,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -3031,6 +3289,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"read\":{\"type\":\"boolean\",\"description\":\"Should the conversation be marked as read\"}}}}}"
         },
         "outputDataShape": {
@@ -3066,6 +3327,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"date\":{\"type\":\"string\",\"description\":\"Date the item was picked up.\"}}}}}"
         },
         "outputDataShape": {
@@ -3101,6 +3365,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -3136,6 +3403,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}},\"body\":{\"type\":\"object\",\"required\":[\"provider\",\"send_notification\",\"tracking_number\"],\"properties\":{\"provider\":{\"type\":\"string\",\"description\":\"Shipping provider: One of UPS, USPS, FedEx, DHL, DHLExpress, DHLGlobalMail, DHL Germany, Canada Post, Royal Mail, PostNL, Australia Post, EMS, La Poste, China Post, GLS, Parcelforce, Purolator, Interlogistica, Correos España, Ukraine Post, DPD, Other\"},\"tracking_number\":{\"type\":\"string\",\"description\":\"Tracking number provided by the shipping provider\"},\"send_notification\":{\"type\":\"boolean\",\"description\":\"Should we send an email notification to the buyer\"}}}}}"
         },
         "outputDataShape": {
@@ -3171,6 +3441,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"product_id\":{\"type\":\"string\",\"title\":\"product_id\"}}}}}"
         },
         "outputDataShape": {
@@ -3206,6 +3479,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"follow_id\":{\"type\":\"string\",\"title\":\"follow_id\"}}}}}"
         },
         "outputDataShape": {
@@ -3241,6 +3517,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -3276,6 +3555,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -3311,6 +3593,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"query\":{\"type\":\"string\",\"title\":\"query\",\"description\":\"Search query.\"},\"auction_price_max\":{\"type\":\"number\",\"title\":\"auction_price_max\",\"description\":\"Maximum current auction price\"},\"category\":{\"type\":\"string\",\"title\":\"category\",\"description\":\"Category slug from /api/categories\"},\"product_type\":{\"type\":\"string\",\"title\":\"product_type\",\"description\":\"Product type slug from /api/categories\"},\"conditions\":{\"type\":\"array\",\"title\":\"conditions\",\"description\":\"Condition: all,new,b-stock,used,non-functioning\",\"items\":{\"type\":\"string\"}},\"decade\":{\"type\":\"string\",\"title\":\"decade\",\"description\":\"Decade: e.g. 1970s, early 70s\"},\"finish\":{\"type\":\"string\",\"title\":\"finish\",\"description\":\"Visual finish of the item, common for guitars\"},\"handmade\":{\"type\":\"boolean\",\"title\":\"handmade\",\"description\":\"Handmade items only\"},\"item_city\":{\"type\":\"string\",\"title\":\"item_city\",\"description\":\"City where item is located\"},\"item_country\":{\"type\":\"string\",\"title\":\"item_country\",\"description\":\"DEPRECATED - Country code where item is located\"},\"item_region\":{\"type\":\"string\",\"title\":\"item_region\",\"description\":\"Country code where item is located\"},\"item_state\":{\"type\":\"string\",\"title\":\"item_state\",\"description\":\"State or region code where item is located\"},\"make\":{\"type\":\"array\",\"title\":\"make\",\"description\":\"Make(s)/brand of item (e.g. Fender). Can take a single value or an array.\",\"items\":{\"type\":\"string\"}},\"model\":{\"type\":\"string\",\"title\":\"model\",\"description\":\"Model of item (e.g. Stratocaster)\"},\"must_not\":{\"type\":\"string\",\"title\":\"must_not\",\"description\":\"Search term negation. If you want to exclude a term, add it here\"},\"price_max\":{\"type\":\"number\",\"title\":\"price_max\",\"description\":\"Maximum price of search results (USD)\"},\"price_min\":{\"type\":\"number\",\"title\":\"price_min\",\"description\":\"Minimum price of search results (USD)\"},\"currency\":{\"type\":\"string\",\"title\":\"currency\",\"description\":\"The currency to be used for the price filters\"},\"year_max\":{\"type\":\"integer\",\"title\":\"year_max\",\"description\":\"Maximum year of manufacture\"},\"year_min\":{\"type\":\"integer\",\"title\":\"year_min\",\"description\":\"Minumum year of manufacture\"},\"accepts_gift_cards\":{\"type\":\"boolean\",\"title\":\"accepts_gift_cards\",\"description\":\"If true, include only items that accept gift cards\"},\"preferred_seller\":{\"type\":\"boolean\",\"title\":\"preferred_seller\",\"description\":\"If true, include only items by Reverb Preferred Sellers\"},\"shop\":{\"type\":\"string\",\"title\":\"shop\",\"description\":\"Slug of shop to search\"},\"shop_id\":{\"type\":\"string\",\"title\":\"shop_id\",\"description\":\"ID of shop to search\"},\"listing_type\":{\"type\":\"string\",\"title\":\"listing_type\",\"description\":\"Type of listing: auctions,offers\"},\"ships_to\":{\"type\":\"string\",\"title\":\"ships_to\",\"description\":\"Limit search to items that ship to this country code\"},\"exclude_auctions\":{\"type\":\"boolean\",\"title\":\"exclude_auctions\",\"description\":\"If true, exclude auctions\"},\"accepts_payment_plans\":{\"type\":\"boolean\",\"title\":\"accepts_payment_plans\",\"description\":\"If true, only show items that can be purchased with a payment plan\"},\"watchers_count_min\":{\"type\":\"integer\",\"title\":\"watchers_count_min\",\"description\":\"Minimum number of watchers (used to find popular items)\"},\"not_ids\":{\"type\":\"array\",\"title\":\"not_ids\",\"description\":\"Listing ID negation. If you want to exclude a listing, add it here.\",\"items\":{\"type\":\"string\"}},\"state\":{\"type\":\"string\",\"title\":\"state\",\"description\":\"Available: [\\\"all\\\", \\\"draft\\\", \\\"ended\\\", \\\"live\\\", \\\"ordered\\\", \\\"sold_out\\\", \\\"suspended\\\", \\\"seller_unavailable\\\"]. Defaults to 'live'\",\"default\":\"live\"},\"sku\":{\"type\":\"string\",\"title\":\"sku\",\"description\":\"Find a listing by sku\"}}}}}"
         },
         "outputDataShape": {
@@ -3346,6 +3631,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"query\":{\"type\":\"string\",\"title\":\"query\",\"description\":\"Search query.\"},\"auction_price_max\":{\"type\":\"number\",\"title\":\"auction_price_max\",\"description\":\"Maximum current auction price\"},\"category\":{\"type\":\"string\",\"title\":\"category\",\"description\":\"Category slug from /api/categories\"},\"product_type\":{\"type\":\"string\",\"title\":\"product_type\",\"description\":\"Product type slug from /api/categories\"},\"conditions\":{\"type\":\"array\",\"title\":\"conditions\",\"description\":\"Condition: all,new,b-stock,used,non-functioning\",\"items\":{\"type\":\"string\"}},\"decade\":{\"type\":\"string\",\"title\":\"decade\",\"description\":\"Decade: e.g. 1970s, early 70s\"},\"finish\":{\"type\":\"string\",\"title\":\"finish\",\"description\":\"Visual finish of the item, common for guitars\"},\"handmade\":{\"type\":\"boolean\",\"title\":\"handmade\",\"description\":\"Handmade items only\"},\"item_city\":{\"type\":\"string\",\"title\":\"item_city\",\"description\":\"City where item is located\"},\"item_country\":{\"type\":\"string\",\"title\":\"item_country\",\"description\":\"DEPRECATED - Country code where item is located\"},\"item_region\":{\"type\":\"string\",\"title\":\"item_region\",\"description\":\"Country code where item is located\"},\"item_state\":{\"type\":\"string\",\"title\":\"item_state\",\"description\":\"State or region code where item is located\"},\"make\":{\"type\":\"array\",\"title\":\"make\",\"description\":\"Make(s)/brand of item (e.g. Fender). Can take a single value or an array.\",\"items\":{\"type\":\"string\"}},\"model\":{\"type\":\"string\",\"title\":\"model\",\"description\":\"Model of item (e.g. Stratocaster)\"},\"must_not\":{\"type\":\"string\",\"title\":\"must_not\",\"description\":\"Search term negation. If you want to exclude a term, add it here\"},\"price_max\":{\"type\":\"number\",\"title\":\"price_max\",\"description\":\"Maximum price of search results (USD)\"},\"price_min\":{\"type\":\"number\",\"title\":\"price_min\",\"description\":\"Minimum price of search results (USD)\"},\"currency\":{\"type\":\"string\",\"title\":\"currency\",\"description\":\"The currency to be used for the price filters\"},\"year_max\":{\"type\":\"integer\",\"title\":\"year_max\",\"description\":\"Maximum year of manufacture\"},\"year_min\":{\"type\":\"integer\",\"title\":\"year_min\",\"description\":\"Minumum year of manufacture\"},\"accepts_gift_cards\":{\"type\":\"boolean\",\"title\":\"accepts_gift_cards\",\"description\":\"If true, include only items that accept gift cards\"},\"preferred_seller\":{\"type\":\"boolean\",\"title\":\"preferred_seller\",\"description\":\"If true, include only items by Reverb Preferred Sellers\"},\"shop\":{\"type\":\"string\",\"title\":\"shop\",\"description\":\"Slug of shop to search\"},\"shop_id\":{\"type\":\"string\",\"title\":\"shop_id\",\"description\":\"ID of shop to search\"},\"listing_type\":{\"type\":\"string\",\"title\":\"listing_type\",\"description\":\"Type of listing: auctions,offers\"},\"ships_to\":{\"type\":\"string\",\"title\":\"ships_to\",\"description\":\"Limit search to items that ship to this country code\"},\"exclude_auctions\":{\"type\":\"boolean\",\"title\":\"exclude_auctions\",\"description\":\"If true, exclude auctions\"},\"accepts_payment_plans\":{\"type\":\"boolean\",\"title\":\"accepts_payment_plans\",\"description\":\"If true, only show items that can be purchased with a payment plan\"},\"watchers_count_min\":{\"type\":\"integer\",\"title\":\"watchers_count_min\",\"description\":\"Minimum number of watchers (used to find popular items)\"},\"not_ids\":{\"type\":\"array\",\"title\":\"not_ids\",\"description\":\"Listing ID negation. If you want to exclude a listing, add it here.\",\"items\":{\"type\":\"string\"}}}}}}"
         },
         "outputDataShape": {
@@ -3381,6 +3669,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -3416,6 +3707,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -3451,6 +3745,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -3486,6 +3783,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -3521,6 +3821,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -3556,6 +3859,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -3591,6 +3897,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"buyer_id\":{\"type\":\"string\",\"title\":\"buyer_id\"}}}}}"
         },
         "outputDataShape": {
@@ -3626,6 +3935,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -3661,6 +3973,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"conversation_id\":{\"type\":\"string\",\"title\":\"conversation_id\"}}},\"body\":{\"type\":\"object\",\"required\":[\"body\"],\"properties\":{\"body\":{\"type\":\"string\"}}}}}"
         },
         "outputDataShape": {
@@ -3696,6 +4011,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}},\"body\":{\"type\":\"object\",\"required\":[\"category_uuids\"],\"properties\":{\"category_uuids\":{\"type\":\"string\"}}}}}"
         },
         "outputDataShape": {
@@ -3731,6 +4049,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}},\"body\":{\"type\":\"object\",\"required\":[\"body\"],\"properties\":{\"recipient_id\":{\"type\":\"integer\",\"description\":\"The id of the user you are trying to contact\"},\"listing_id\":{\"type\":\"integer\",\"description\":\"The id of the listing being discussed\"},\"shop_id\":{\"type\":\"string\",\"description\":\"The id of the shop you are trying to contact\"},\"body\":{\"type\":\"string\",\"description\":\"The body of the message\"},\"cloudinary_photos\":{\"type\":\"array\",\"description\":\"An array of cloudinary data hashes (Reverb internal use only).\",\"items\":{\"type\":\"string\"}}}}}}"
         },
         "outputDataShape": {
@@ -3766,6 +4087,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -3801,6 +4125,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"identifier\":{\"type\":\"string\",\"title\":\"identifier\"}}}}}"
         },
         "outputDataShape": {
@@ -3836,6 +4163,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -3871,6 +4201,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -3906,6 +4239,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -3941,6 +4277,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"category\":{\"type\":\"string\",\"title\":\"category\"},\"subcategory\":{\"type\":\"string\",\"title\":\"subcategory\"}}}}}"
         },
         "outputDataShape": {
@@ -3976,6 +4315,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -4011,6 +4353,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"first_name\":{\"type\":\"string\",\"description\":\"The first name of the account holder\"},\"last_name\":{\"type\":\"string\",\"description\":\"The last name of the account holder\"},\"currency\":{\"type\":\"string\",\"description\":\"The currency preference for the account\"},\"shipping_region_code\":{\"type\":\"string\",\"description\":\"The shipping region preference for the account\"}}}}}"
         },
         "outputDataShape": {
@@ -4046,6 +4391,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"address_id\":{\"type\":\"string\",\"title\":\"address_id\"}}}}}"
         },
         "outputDataShape": {
@@ -4081,6 +4429,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4116,6 +4467,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4151,6 +4505,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"order_id\":{\"type\":\"string\",\"title\":\"order_id\"}}}}}"
         },
         "outputDataShape": {
@@ -4186,6 +4543,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"order_id\":{\"type\":\"string\",\"title\":\"order_id\"}}}}}"
         },
         "outputDataShape": {
@@ -4221,6 +4581,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"order_id\":{\"type\":\"string\",\"title\":\"order_id\"}}}}}"
         },
         "outputDataShape": {
@@ -4256,6 +4619,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"order_id\":{\"type\":\"string\",\"title\":\"order_id\"}}}}}"
         },
         "outputDataShape": {
@@ -4291,6 +4657,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4326,6 +4695,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"},\"condition\":{\"type\":\"string\",\"title\":\"condition\",\"default\":\"used\"}}}}}"
         },
         "outputDataShape": {
@@ -4361,6 +4733,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"},\"number_of_months\":{\"type\":\"integer\",\"title\":\"number_of_months\",\"default\":\"3\"},\"condition\":{\"type\":\"string\",\"title\":\"condition\",\"default\":\"used\"}}}}}"
         },
         "outputDataShape": {
@@ -4396,6 +4771,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -4431,6 +4809,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -4466,6 +4847,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"rating\":{\"type\":\"integer\",\"description\":\"Rating from 1 to 5\"},\"body\":{\"type\":\"string\",\"description\":\"Content of the review\"},\"title\":{\"type\":\"string\",\"description\":\"Title for the review\"}}}}}"
         },
         "outputDataShape": {
@@ -4501,6 +4885,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -4536,6 +4923,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -4571,6 +4961,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"sale_id\":{\"type\":\"string\",\"title\":\"sale_id\"}}}}}"
         },
         "outputDataShape": {
@@ -4606,6 +4999,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -4641,6 +5037,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"sale_id\":{\"type\":\"string\",\"title\":\"sale_id\"}}}}}"
         },
         "outputDataShape": {
@@ -4676,6 +5075,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4711,6 +5113,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4746,6 +5151,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4781,6 +5189,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4816,6 +5227,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4851,6 +5265,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4886,6 +5303,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4921,6 +5341,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4956,6 +5379,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -4991,6 +5417,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -5026,6 +5455,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"description\":{\"type\":\"string\"},\"name\":{\"type\":\"string\"},\"currency\":{\"type\":\"string\",\"enum\":[\"USD\",\"CAD\",\"EUR\",\"GBP\",\"AUD\",\"JPY\",\"NZD\",\"MXN\"]},\"payment_policy\":{\"type\":\"string\"},\"return_policy\":{\"type\":\"string\"},\"shipping_policy\":{\"type\":\"string\"},\"website\":{\"type\":\"string\"},\"legal_country_code\":{\"type\":\"string\",\"enum\":[\"AD\",\"AE\",\"AF\",\"AG\",\"AI\",\"AL\",\"AM\",\"AO\",\"AR\",\"AS\",\"AT\",\"AU\",\"AW\",\"AX\",\"AZ\",\"BA\",\"BB\",\"BD\",\"BE\",\"BF\",\"BG\",\"BH\",\"BI\",\"BJ\",\"BL\",\"BM\",\"BN\",\"BO\",\"BQ\",\"BR\",\"BS\",\"BT\",\"BV\",\"BW\",\"BY\",\"BZ\",\"CA\",\"CC\",\"CD\",\"CF\",\"CG\",\"CH\",\"CI\",\"CK\",\"CL\",\"CM\",\"CN\",\"CO\",\"CR\",\"CU\",\"CV\",\"CW\",\"CX\",\"CY\",\"CZ\",\"DE\",\"DJ\",\"DK\",\"DM\",\"DO\",\"DZ\",\"EC\",\"EE\",\"EG\",\"EH\",\"ER\",\"ES\",\"ET\",\"FI\",\"FJ\",\"FK\",\"FM\",\"FO\",\"FR\",\"GA\",\"GB\",\"GD\",\"GE\",\"GF\",\"GG\",\"GH\",\"GI\",\"GL\",\"GM\",\"GN\",\"GP\",\"GQ\",\"GR\",\"GS\",\"GT\",\"GU\",\"GW\",\"GY\",\"HK\",\"HM\",\"HN\",\"HR\",\"HT\",\"HU\",\"ID\",\"IE\",\"IL\",\"IM\",\"IN\",\"IO\",\"IQ\",\"IR\",\"IS\",\"IT\",\"JE\",\"JM\",\"JO\",\"JP\",\"KE\",\"KG\",\"KH\",\"KI\",\"KM\",\"KN\",\"KP\",\"KR\",\"KW\",\"KY\",\"KZ\",\"LA\",\"LB\",\"LC\",\"LI\",\"LK\",\"LR\",\"LS\",\"LT\",\"LU\",\"LV\",\"LY\",\"MA\",\"MC\",\"MD\",\"ME\",\"MF\",\"MG\",\"MH\",\"MK\",\"ML\",\"MM\",\"MN\",\"MO\",\"MP\",\"MQ\",\"MR\",\"MS\",\"MT\",\"MU\",\"MV\",\"MW\",\"MX\",\"MY\",\"MZ\",\"NA\",\"NC\",\"NE\",\"NF\",\"NG\",\"NI\",\"NL\",\"NO\",\"NP\",\"NR\",\"NU\",\"NZ\",\"OM\",\"PA\",\"PE\",\"PF\",\"PG\",\"PH\",\"PK\",\"PL\",\"PM\",\"PN\",\"PS\",\"PT\",\"PW\",\"PY\",\"QA\",\"RE\",\"RO\",\"RS\",\"RU\",\"RW\",\"SA\",\"SB\",\"SC\",\"SD\",\"SE\",\"SG\",\"SH\",\"SI\",\"SJ\",\"SK\",\"SL\",\"SM\",\"SN\",\"SO\",\"SR\",\"SS\",\"ST\",\"SV\",\"SX\",\"SY\",\"SZ\",\"TC\",\"TD\",\"TF\",\"TG\",\"TH\",\"TJ\",\"TK\",\"TL\",\"TM\",\"TN\",\"TO\",\"TR\",\"TT\",\"TV\",\"TW\",\"TZ\",\"UA\",\"UG\",\"UM\",\"US\",\"UY\",\"UZ\",\"VA\",\"VC\",\"VE\",\"VG\",\"VI\",\"VN\",\"VU\",\"WF\",\"WS\",\"YE\",\"YT\",\"ZA\",\"ZM\",\"ZW\"]},\"legal_country_code_confirmed\":{\"type\":\"boolean\"},\"address\":{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\"},\"street_address\":{\"type\":\"string\"},\"extended_address\":{\"type\":\"string\"},\"locality\":{\"type\":\"string\"},\"region\":{\"type\":\"string\"},\"postal_code\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"country_code\":{\"type\":\"string\"}}}}}}}"
         },
         "outputDataShape": {
@@ -5061,6 +5493,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"},\"include_listing_count\":{\"type\":\"boolean\",\"title\":\"include_listing_count\",\"description\":\"Include the live listing count in the response.\"}}}}}"
         },
         "outputDataShape": {
@@ -5096,6 +5531,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -5131,6 +5569,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -5166,6 +5607,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"slug\":{\"type\":\"string\",\"title\":\"slug\"}}}}}"
         },
         "outputDataShape": {
@@ -5201,6 +5645,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"shop_id\":{\"type\":\"string\",\"title\":\"shop_id\"}}}}}"
         },
         "outputDataShape": {
@@ -5236,6 +5683,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -5271,6 +5721,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -5306,6 +5759,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -5341,6 +5797,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {
@@ -5376,6 +5835,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}}}}"
         },
         "outputDataShape": {
@@ -5411,6 +5873,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"}}},\"body\":{\"type\":\"object\",\"required\":[\"topic\",\"url\"],\"properties\":{\"url\":{\"type\":\"string\"},\"topic\":{\"type\":\"string\",\"description\":\"Valid values: listings/update, listings/publish, listings/bumps-ran-out, orders/create, orders/update, payments/create, payments/update, app/uninstalled\",\"enum\":[\"listings/update\",\"listings/publish\",\"listings/bumps-ran-out\",\"orders/create\",\"orders/update\",\"payments/create\",\"payments/update\",\"app/uninstalled\"]}}}}}"
         },
         "outputDataShape": {
@@ -5446,6 +5911,9 @@
           "description": "API request payload",
           "kind": "json-schema",
           "name": "Request",
+          "metadata": {
+            "unified": "true"
+          },
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"Accept-Version\":{\"type\":\"string\",\"title\":\"Accept-Version\",\"default\":\"3.0\"},\"id\":{\"type\":\"string\",\"title\":\"id\"}}}}}"
         },
         "outputDataShape": {

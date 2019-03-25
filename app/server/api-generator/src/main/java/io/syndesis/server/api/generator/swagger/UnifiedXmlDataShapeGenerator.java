@@ -24,9 +24,7 @@ import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static java.util.Objects.requireNonNull;
-import static java.util.Optional.ofNullable;
-
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.models.ArrayModel;
 import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
@@ -43,16 +41,16 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 import io.syndesis.server.api.generator.swagger.util.XmlSchemaHelper;
-
 import org.apache.commons.lang3.ClassUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
+import static java.util.Objects.requireNonNull;
+import static java.util.Optional.ofNullable;
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 @SuppressWarnings("PMD.GodClass")
@@ -140,6 +138,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
             .name("Request")//
             .description("API request payload")//
             .specification(xmlSchemaSet)//
+            .putMetadata(DataShapeMetaData.UNIFIED, "true")
             .build();
     }
 
@@ -177,6 +176,7 @@ public class UnifiedXmlDataShapeGenerator extends BaseDataShapeGenerator {
             .description("API response payload")//
             .kind(DataShapeKinds.XML_SCHEMA)//
             .specification(xmlSchemaSet)//
+            .putMetadata(DataShapeMetaData.UNIFIED, "true")
             .build();
     }
 

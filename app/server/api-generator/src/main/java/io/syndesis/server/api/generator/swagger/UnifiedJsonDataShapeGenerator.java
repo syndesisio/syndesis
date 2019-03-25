@@ -37,6 +37,7 @@ import io.swagger.models.properties.Property;
 import io.swagger.models.properties.StringProperty;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.util.Json;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
 
@@ -306,6 +307,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
             .description(description)//
             .kind(DataShapeKinds.JSON_SCHEMA)//
             .specification(JsonSchemaHelper.serializeJson(unifiedSchema))//
+            .putMetadata(DataShapeMetaData.UNIFIED, "true")
             .build();
     }
 

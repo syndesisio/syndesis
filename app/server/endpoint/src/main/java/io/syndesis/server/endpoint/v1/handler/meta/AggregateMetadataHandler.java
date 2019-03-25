@@ -24,9 +24,11 @@ import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -83,7 +85,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
     }
 
     DataShape adaptInputShape(DataShape dataShape) throws IOException {
-        Optional<DataShape> singleElementShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_ELEMENT);
+        Optional<DataShape> singleElementShape = dataShape.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT);
 
         if (singleElementShape.isPresent()) {
             if (dataShape.equals(singleElementShape.get())) {
@@ -91,12 +93,12 @@ class AggregateMetadataHandler implements StepMetadataHandler {
             } else {
                 return new DataShape.Builder()
                         .createFrom(singleElementShape.get())
-                        .addAllVariants(extractVariants(dataShape, singleElementShape.get(), VARIANT_ELEMENT))
+                        .addAllVariants(extractVariants(dataShape, singleElementShape.get(), DataShapeMetaData.VARIANT_ELEMENT))
                         .build();
             }
         }
 
-        DataShape collectionShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_COLLECTION).orElse(dataShape);
+        DataShape collectionShape = dataShape.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION).orElse(dataShape);
 
         String specification = collectionShape.getSpecification();
         if (StringUtils.hasText(specification)) {
@@ -104,34 +106,34 @@ class AggregateMetadataHandler implements StepMetadataHandler {
                 JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
 
                 if (schema.isArraySchema()) {
-                    ArraySchema.Items items = ((ArraySchema) schema).getItems();
-                    JsonSchema itemSchema = items.asSingleItems().getSchema();
-                    itemSchema.set$schema(schema.get$schema());
+                    ArraySchema.Items items = schema.asArraySchema().getItems();
                     if (items.isSingleItems()) {
+                        JsonSchema itemSchema = items.asSingleItems().getSchema();
+                        itemSchema.set$schema(schema.get$schema());
                         return new DataShape.Builder().createFrom(collectionShape)
-                                .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                                .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                                 .specification(Json.writer().writeValueAsString(itemSchema))
-                                .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
+                                .addAllVariants(extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
                                 .build();
                     }
                 } else {
                     return new DataShape.Builder().createFrom(collectionShape)
-                            .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                            .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                             .build();
                 }
             } else if (collectionShape.getKind() == DataShapeKinds.JSON_INSTANCE) {
-                if (isJsonInstanceArraySpec(specification)) {
+                if (JsonUtils.isJsonArray(specification)) {
                     List<Object> items = Json.reader().forType(List.class).readValue(specification);
                     if (!items.isEmpty()) {
                         return new DataShape.Builder().createFrom(collectionShape)
-                                .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                                .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                                 .specification(Json.writer().writeValueAsString(items.get(0)))
-                                .addAllVariants(extractVariants(dataShape, collectionShape, VARIANT_COLLECTION))
+                                .addAllVariants(extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
                                 .build();
                     }
                 } else {
                     return new DataShape.Builder().createFrom(collectionShape)
-                            .putMetadata(VARIANT_METADATA_KEY, VARIANT_ELEMENT)
+                            .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                             .build();
                 }
             }
@@ -141,19 +143,19 @@ class AggregateMetadataHandler implements StepMetadataHandler {
     }
 
     DataShape adaptOutputShape(DataShape dataShape) throws IOException {
-        Optional<DataShape> collectionShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_COLLECTION);
+        Optional<DataShape> collectionShape = dataShape.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION);
 
         if (collectionShape.isPresent()) {
             if (dataShape.equals(collectionShape.get())) {
                 return collectionShape.get();
             } else {
                 return new DataShape.Builder().createFrom(collectionShape.get())
-                        .addAllVariants(extractVariants(dataShape, collectionShape.get(), VARIANT_COLLECTION))
+                        .addAllVariants(extractVariants(dataShape, collectionShape.get(), DataShapeMetaData.VARIANT_COLLECTION))
                         .build();
             }
         }
 
-        DataShape singleElementShape = dataShape.findVariantByMeta(VARIANT_METADATA_KEY, VARIANT_ELEMENT).orElse(dataShape);
+        DataShape singleElementShape = dataShape.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT).orElse(dataShape);
         String specification = singleElementShape.getSpecification();
         if (StringUtils.hasText(specification)) {
             if (singleElementShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
@@ -161,7 +163,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
 
                 if (schema.isArraySchema()) {
                     return new DataShape.Builder().createFrom(singleElementShape)
-                            .putMetadata(VARIANT_METADATA_KEY, VARIANT_COLLECTION)
+                            .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
                             .build();
                 }
 
@@ -171,20 +173,20 @@ class AggregateMetadataHandler implements StepMetadataHandler {
                 schema.set$schema(null);
 
                 return new DataShape.Builder().createFrom(singleElementShape)
-                        .putMetadata(VARIANT_METADATA_KEY, VARIANT_COLLECTION)
+                        .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
                         .specification(Json.writer().writeValueAsString(collectionSchema))
-                        .addAllVariants(extractVariants(dataShape, singleElementShape, VARIANT_ELEMENT))
+                        .addAllVariants(extractVariants(dataShape, singleElementShape, DataShapeMetaData.VARIANT_ELEMENT))
                         .build();
             } else if (singleElementShape.getKind() == DataShapeKinds.JSON_INSTANCE) {
-                if (isJsonInstanceArraySpec(specification)) {
+                if (JsonUtils.isJsonArray(specification)) {
                     return new DataShape.Builder().createFrom(singleElementShape)
-                            .putMetadata(VARIANT_METADATA_KEY, VARIANT_COLLECTION)
+                            .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
                             .build();
                 } else {
                     return new DataShape.Builder().createFrom(singleElementShape)
-                            .putMetadata(VARIANT_METADATA_KEY, VARIANT_COLLECTION)
+                            .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
                             .specification("[" + specification + "]")
-                            .addAllVariants(extractVariants(dataShape, singleElementShape, VARIANT_ELEMENT))
+                            .addAllVariants(extractVariants(dataShape, singleElementShape, DataShapeMetaData.VARIANT_ELEMENT))
                             .build();
                 }
             }
