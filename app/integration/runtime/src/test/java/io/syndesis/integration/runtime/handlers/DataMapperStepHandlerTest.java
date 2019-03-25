@@ -301,6 +301,12 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
         exchange.getIn().setBody("[{\"name\": \"Bernadette\", \"age\": 27},{\"name\": \"Penny\", \"age\": 29}]");
 
         new DataMapperStepHandler.JsonTypeTargetProcessor().process(exchange);
+        assertThat(exchange.getIn().getBody(String.class)).isEqualTo("[{\"name\": \"Bernadette\", \"age\": 27},{\"name\": \"Penny\", \"age\": 29}]");
+
+        exchange.setProperty(DataMapperStepHandler.DATA_MAPPER_AUTO_CONVERSION, true);
+        exchange.getIn().setBody("[{\"name\": \"Bernadette\", \"age\": 27},{\"name\": \"Penny\", \"age\": 29}]");
+
+        new DataMapperStepHandler.JsonTypeTargetProcessor().process(exchange);
 
         List<String> jsonBeans = exchange.getIn().getBody(List.class);
         assertThat(jsonBeans).isEqualTo(Arrays.asList("{\"name\":\"Bernadette\",\"age\":27}", "{\"name\":\"Penny\",\"age\":29}"));
@@ -312,8 +318,15 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
         exchange.getIn().setBody("[]");
 
         new DataMapperStepHandler.JsonTypeTargetProcessor().process(exchange);
+        assertThat(exchange.getIn().getBody(String.class)).isEqualTo("[]");
 
-        assertThat(0).isEqualTo(exchange.getIn().getBody(List.class).size());
+        exchange.setProperty(DataMapperStepHandler.DATA_MAPPER_AUTO_CONVERSION, true);
+        exchange.getIn().setBody("[]");
+
+        new DataMapperStepHandler.JsonTypeTargetProcessor().process(exchange);
+
+        List<?> processedBody = exchange.getIn().getBody(List.class);
+        assertThat(processedBody).hasSize(0);
     }
 
     @Test
@@ -321,6 +334,11 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.getIn().setBody("{\"name\": \"Leonard\", \"age\": 30}");
 
+        new DataMapperStepHandler.JsonTypeTargetProcessor().process(exchange);
+
+        assertThat(exchange.getIn().getBody(String.class)).isEqualTo("{\"name\": \"Leonard\", \"age\": 30}");
+
+        exchange.setProperty(DataMapperStepHandler.DATA_MAPPER_AUTO_CONVERSION, true);
         new DataMapperStepHandler.JsonTypeTargetProcessor().process(exchange);
 
         assertThat(exchange.getIn().getBody(String.class)).isEqualTo("{\"name\": \"Leonard\", \"age\": 30}");
@@ -334,6 +352,11 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
         new DataMapperStepHandler.JsonTypeTargetProcessor().process(exchange);
 
         assertThat(exchange.getIn().getBody(String.class)).isEqualTo("something completely different");
+
+        exchange.setProperty(DataMapperStepHandler.DATA_MAPPER_AUTO_CONVERSION, true);
+        new DataMapperStepHandler.JsonTypeTargetProcessor().process(exchange);
+
+        assertThat(exchange.getIn().getBody(String.class)).isEqualTo("something completely different");
     }
 
     @Test
@@ -341,6 +364,11 @@ public class DataMapperStepHandlerTest extends IntegrationTestSupport {
         Exchange exchange = new DefaultExchange(camelContext);
         exchange.getIn().setBody(100L);
 
+        new DataMapperStepHandler.JsonTypeTargetProcessor().process(exchange);
+
+        assertThat(exchange.getIn().getBody(Long.class)).isEqualTo(Long.valueOf(100L));
+
+        exchange.setProperty(DataMapperStepHandler.DATA_MAPPER_AUTO_CONVERSION, true);
         new DataMapperStepHandler.JsonTypeTargetProcessor().process(exchange);
 
         assertThat(exchange.getIn().getBody(Long.class)).isEqualTo(Long.valueOf(100L));

@@ -20,6 +20,7 @@ import java.util.List;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.StepKind;
@@ -154,7 +155,7 @@ public class StepActionHandlerTest {
                         .createFrom(collectionShape)
                         .addVariant(new DataShape.Builder()
                                 .createFrom(elementShape)
-                                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                                .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
                                 .compress()
                                 .build())
                         .addVariant(dummyShape())
@@ -171,7 +172,7 @@ public class StepActionHandlerTest {
         assertThat(descriptor.getOutputDataShape()).isPresent();
         assertThat(descriptor.getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
                 .createFrom(elementShape)
-                .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+                .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
                 .putMetadata("compressed", "false")
                 .addVariant(dummyShape())
                 .addVariant(collectionShape)
@@ -254,7 +255,7 @@ public class StepActionHandlerTest {
                 .kind(DataShapeKinds.JAVA)
                 .specification("{}")
                 .description("dummyShape")
-                .putMetadata(StepMetadataHandler.VARIANT_METADATA_KEY, "dummy")
+                .putMetadata(DataShapeMetaData.VARIANT, "dummy")
                 .build();
     }
 }

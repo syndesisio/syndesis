@@ -27,6 +27,7 @@ import io.atlasmap.java.v2.JavaClass;
 import io.atlasmap.v2.CollectionType;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.DataShapeMetaData;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
@@ -77,7 +78,7 @@ public class GenerateConnectorInspectionsMojoTest {
         DataShape source2 = new DataShape.Builder()
             .type(MyShape.class.getTypeName())
             .kind(DataShapeKinds.JAVA)
-            .putMetadata(DataShape.Builder.COMPRESSION_METADATA_KEY, "true")
+            .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
             .build();
 
         DataShape enriched1 = GenerateConnectorInspectionsMojo.generateInspections(new URL[0], source1);
@@ -104,25 +105,25 @@ public class GenerateConnectorInspectionsMojoTest {
             .name("collection")
             .collectionType(CollectionType.LIST.value())
             .collectionClassName(ArrayList.class.getName())
-            .putMetadata("variant", "collection")
+            .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
             .addVariant(
                 new DataShape.Builder()
                     .type(MyShapeVariant.class.getTypeName())
                     .kind(DataShapeKinds.JAVA)
                     .name("element")
-                    .putMetadata("variant", "element")
+                    .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                     .build())
             .build();
 
         DataShape enriched = GenerateConnectorInspectionsMojo.generateInspections(new URL[0], source);
 
         assertThat(enriched.getSpecification()).isNotEmpty();
-        assertThat(enriched.findVariantByMeta("variant", "element")).isPresent();
-        assertThat(enriched.findVariantByMeta("variant", "element")).get().hasFieldOrPropertyWithValue("name", "element");
-        assertThat(enriched.findVariantByMeta("variant", "element")).get().extracting("specification").isNotEmpty();
-        assertThat(enriched.findVariantByMeta("variant", "collection")).isPresent();
-        assertThat(enriched.findVariantByMeta("variant", "collection")).get().hasFieldOrPropertyWithValue("name", "collection");
-        assertThat(enriched.findVariantByMeta("variant", "collection")).get().extracting("specification").isNotEmpty();
+        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)).isPresent();
+        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)).get().hasFieldOrPropertyWithValue("name", "element");
+        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)).get().extracting("specification").isNotEmpty();
+        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)).isPresent();
+        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)).get().hasFieldOrPropertyWithValue("name", "collection");
+        assertThat(enriched.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)).get().extracting("specification").isNotEmpty();
     }
 
     // ******************
