@@ -4,6 +4,25 @@
 [id='mapping-between-collections-and-non-collections_{context}']
 = Mapping between collections and non-collections
 
+In the data mapper *Source* and *Target* panels: 
+
+* image:images/collection-icon.png[Collection icon]
+indicates an expandable container that is a collection. 
+A collection contains multiple values that are all the same type.
+You cannot map a collection container itself. You can map only 
+the fields that are in the collection. 
+
+* image:images/folder.png[Folder icon] indicates an 
+expandable container that is a complex type. A complex
+type contains multiple values of different types. 
+You cannot map a complex type container itself. You can map 
+only the fields that are in the complex type. 
+
+To toggle the display of data types, such as `*(COMPLEX)*`, 
+`*STRING*`, `*INTEGER*`, in the upper right of the data mapper, click 
+image:shared/images/EditorSettings.png[settings] and click 
+*Show Types*. 
+
 It is possible to map a field that is in an element in a 
 collection to a field that is not in a collection. 
 The following table shows the default behavior when 
@@ -33,17 +52,17 @@ If a source collection contains fields that you do not map,
 those fields are still available to subsequent steps that
 are in the flow. 
 
-.Mapping a collection field to a non-collection field
+.Changing default behavior when mapping from a collection field 
 When you map from a collection field to a non-collection 
 field, the default is that the target field gets the 
 value for the mapped field that is in the last element of the collection. 
 You can change the default behavior in the following 
 ways: 
 
-* To map the value that you choose, apply the *ItemAt* 
+* To map the value that you choose, apply the *Item At* 
 transformation to the source and specify an 
 index. For example, to map the *name* field 
-value that is in the 1st element that is in the collection, then 
+value that is in the first element that is in the collection, 
 specify `0` for the index. 
 
 * For a particular field, to map all values that are in 
@@ -64,7 +83,7 @@ is *Tokyo*.
 During execution, the data mapper populates the target
 field with `Boston Paris Tokyo`. 
 
-.Mapping a non-collection field to a collection field
+.Changing default behavior when mapping from a non-collection field
 When you map from a non-collection field to a collection 
 field, the default is that the target collection contains
 one element that has one field. You can change the default behavior 

@@ -43,5 +43,4 @@ the collection.
 
 When a connection returns a collection that is defined in a 
 JSON or Java document, the data mapper can usually process 
-the source document as a collection. The data mapper cannot 
-process an XML source document as a collection.  
+the source document as a collection.  
