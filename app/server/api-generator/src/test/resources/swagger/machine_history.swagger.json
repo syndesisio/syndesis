@@ -1,0 +1,67 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "title" : "Machine History",
+    "version" : "1.0.0"
+  },
+  "paths" : {
+    "/machines" : {
+      "get" : {
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "The list of machine ID's",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "integer"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/machines/{id}" : {
+      "get" : {
+        "summary" : "Gets the machine state",
+        "responses" : {
+          "200" : {
+            "description" : "The current machine state",
+            "schema" : {
+              "$ref" : "#/definitions/MachineState"
+            }
+          }
+        }
+      },
+      "parameters" : [ {
+        "name" : "id",
+        "in" : "path",
+        "description" : "The machine id",
+        "required" : true,
+        "type" : "integer"
+      } ]
+    }
+  },
+  "definitions" : {
+    "MachineState" : {
+      "description" : "The representation of the current state of a machine",
+      "required" : [ "id", "name", "health" ],
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "description" : "The machine ID",
+          "type" : "integer"
+        },
+        "name" : {
+          "description" : "The machine name",
+          "type" : "string"
+        },
+        "health" : {
+          "format" : "int64",
+          "description" : "The machine health",
+          "type" : "integer"
+        }
+      }
+    }
+  }
+}
