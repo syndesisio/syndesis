@@ -46,6 +46,10 @@ data, create charts, or create pivot tables in a spreadsheet that you specify.
 |Connect to an HTTP or HTTPS endpoint and execute the
 `GET`, `PUT`, `POST`, `DELETE`, `HEAD`, `OPTIONS`, `TRACE`, OR `PATCH` method.
 
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-irc_connectors[IRC]
+|Receive messages that are sent to an IRC nickname or channel, or 
+send messages to an IRC nickname on a particular channel.
+
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-kafka_connectors[Kafka]
 |Obtain streams of records from
 or publish streams of records to a Kafka topic that you specify.
