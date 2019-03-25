@@ -102,14 +102,13 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
         public Builder decompress() {
             DataShape currentShape = build();
-            if ("true".equals(currentShape.getMetadata().get(DataShapeMetaData.COMPRESSION)) &&
-                    currentShape.getMetadata().getOrDefault(DataShapeMetaData.COMPRESSED, "true").equals("true")) {
+            if (shouldDecompress(currentShape.getMetadata())) {
                 byte[] decoded = Base64.getDecoder().decode(currentShape.getSpecification().getBytes(StandardCharsets.UTF_8));
                 try (ByteArrayInputStream zipped = new ByteArrayInputStream(decoded);
                      GZIPInputStream is = new GZIPInputStream(zipped)) {
                     return new DataShape.Builder()
                             .createFrom(currentShape)
-                            .putMetadata(DataShapeMetaData.COMPRESSED, "false")
+                            .putMetadata(DataShapeMetaData.IS_COMPRESSED, Boolean.FALSE.toString())
                             .variants(currentShape.getVariants()
                                       .stream()
                                       .map(variant -> new DataShape.Builder()
@@ -121,7 +120,7 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
                 } catch (IOException e) {
                     throw new IllegalStateException("Failed to decompress data shape", e);
                 }
-            } else if (currentShape.getVariants().stream().anyMatch(variant -> "true".equals(variant.getMetadata().get(DataShapeMetaData.COMPRESSION)))) {
+            } else if (shouldCompressAnyVariant(currentShape.getVariants())) {
                 return new DataShape.Builder()
                         .createFrom(currentShape)
                         .variants(currentShape.getVariants()
@@ -138,8 +137,7 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
         public Builder compress() {
             DataShape currentShape = build();
-            if ("true".equals(currentShape.getMetadata().get(DataShapeMetaData.COMPRESSION)) &&
-                    currentShape.getMetadata().getOrDefault(DataShapeMetaData.COMPRESSED, "false").equals("false")) {
+            if (shouldCompress(currentShape.getMetadata())) {
                 try (ByteArrayOutputStream zipped = new ByteArrayOutputStream();
                      GZIPOutputStream os = new GZIPOutputStream(zipped)) {
                     os.write(currentShape.getSpecification().getBytes(StandardCharsets.UTF_8));
@@ -147,7 +145,7 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
 
                     return new DataShape.Builder()
                             .createFrom(currentShape)
-                            .putMetadata(DataShapeMetaData.COMPRESSED, "true")
+                            .putMetadata(DataShapeMetaData.IS_COMPRESSED, Boolean.TRUE.toString())
                             .variants(currentShape.getVariants()
                                       .stream()
                                       .map(variant -> new DataShape.Builder()
@@ -159,7 +157,7 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
                 } catch (IOException e) {
                     throw new IllegalStateException("Failed to compress data shape", e);
                 }
-            } else if (currentShape.getVariants().parallelStream().anyMatch(variant -> "true".equals(variant.getMetadata().get(DataShapeMetaData.COMPRESSION)))) {
+            } else if (shouldCompressAnyVariant(currentShape.getVariants())) {
                 return new DataShape.Builder()
                         .createFrom(currentShape)
                         .variants(currentShape.getVariants()
@@ -172,6 +170,20 @@ public interface DataShape extends Serializable, WithName, WithMetadata {
             }
 
             return this;
+        }
+
+        private static boolean shouldCompress(Map<String, String> metadata) {
+            return Boolean.parseBoolean(metadata.get(DataShapeMetaData.SHOULD_COMPRESS)) &&
+                    !Boolean.parseBoolean(metadata.getOrDefault(DataShapeMetaData.IS_COMPRESSED, Boolean.FALSE.toString()));
+        }
+
+        private static boolean shouldDecompress(Map<String, String> metadata) {
+            return Boolean.parseBoolean(metadata.get(DataShapeMetaData.SHOULD_COMPRESS)) &&
+                    Boolean.parseBoolean(metadata.getOrDefault(DataShapeMetaData.IS_COMPRESSED, Boolean.TRUE.toString()));
+        }
+
+        private static boolean shouldCompressAnyVariant(List<DataShape> variants) {
+            return variants.stream().anyMatch(variant -> Boolean.parseBoolean(variant.getMetadata().get(DataShapeMetaData.SHOULD_COMPRESS)));
         }
     }
 }

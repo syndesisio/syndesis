@@ -85,7 +85,7 @@ public class GenerateConnectorInspectionsMojoTest {
         DataShape source2 = new DataShape.Builder()
             .type(MyShape.class.getTypeName())
             .kind(DataShapeKinds.JAVA)
-            .putMetadata(DataShapeMetaData.COMPRESSION, "true")
+            .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
             .build();
 
         DataShape enriched1 = GenerateConnectorInspectionsMojo.generateInspections(new URL[0], source1);

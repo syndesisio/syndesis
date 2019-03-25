@@ -155,7 +155,7 @@ public class StepActionHandlerTest {
                         .createFrom(collectionShape)
                         .addVariant(new DataShape.Builder()
                                 .createFrom(elementShape)
-                                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
+                                .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
                                 .compress()
                                 .build())
                         .addVariant(dummyShape())
@@ -172,7 +172,7 @@ public class StepActionHandlerTest {
         assertThat(descriptor.getOutputDataShape()).isPresent();
         assertThat(descriptor.getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
                 .createFrom(elementShape)
-                .putMetadata(DataShapeMetaData.COMPRESSION, "true")
+                .putMetadata(DataShapeMetaData.SHOULD_COMPRESS, "true")
                 .putMetadata("compressed", "false")
                 .addVariant(dummyShape())
                 .addVariant(collectionShape)

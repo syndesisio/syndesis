@@ -19,7 +19,7 @@ package io.syndesis.common.util.json;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.StringJoiner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -106,6 +106,10 @@ public final class JsonUtils {
      * @return
      */
     public static String jsonBeansToArray(List<?> jsonBeans) {
-        return "[" + jsonBeans.stream().map(Object::toString).collect(Collectors.joining(",")) + "]";
+        final StringJoiner joiner = new StringJoiner(",", "[", "]");
+        for (Object jsonBean : jsonBeans) {
+            joiner.add(String.valueOf(jsonBean));
+        }
+        return joiner.toString();
     }
 }
