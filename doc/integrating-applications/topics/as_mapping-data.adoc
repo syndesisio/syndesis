@@ -24,6 +24,7 @@ Details for mapping data fields are in the following topics:
 * xref:transform-target-data_{context}[]
 * xref:view-mappings-in-a-step_{context}[]
 * xref:available-transformations_{context}[]
+* xref:troubleshooting-data-mapping_{context}[]
 
 include::p_identify-where-data-mapping-is-needed.adoc[leveloffset=+1]
 
@@ -44,5 +45,7 @@ include::p_transform-target-data.adoc[leveloffset=+1]
 include::p_view-mappings-in-a-step.adoc[leveloffset=+1]
 
 include::r_available-transformations.adoc[leveloffset=+1]
+
+include::r_troubleshooting-data-mapping.adoc[leveloffset=+1]
 
 :context: ug
