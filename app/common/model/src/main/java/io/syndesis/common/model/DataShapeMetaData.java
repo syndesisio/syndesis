@@ -27,8 +27,8 @@ public final class DataShapeMetaData {
 
     public static final String UNIFIED = "unified";
 
-    public static final String COMPRESSION = "compression";
-    public static final String COMPRESSED = "compressed";
+    public static final String SHOULD_COMPRESS = "compression";
+    public static final String IS_COMPRESSED = "compressed";
 
     /**
      * Prevent instantiation of utility class.
