@@ -1,0 +1,84 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='mapping-between-collections-and-non-collections_{context}']
+= Mapping between collections and non-collections
+
+It is possible to map a field that is in an element in a 
+collection to a field that is not in a collection. 
+The following table shows the default behavior when 
+mapping between collection fields and non-collection fields. 
+
+[options="header"]
+[cols="1,1,1"]
+|===
+|When you map from this source
+|To this target
+|During execution
+
+|A field that is in an element that is in a collection. 
+|A field that is not in a collection.
+|The data mapper maps the value that is in the mapped source field of the 
+last element that is in the collection to the target field. 
+
+|A field that is not in a collection. 
+|A field that is in an element that is in a collection.
+|The data mapper maps the value that is in the mapped source 
+field to the target field in the first (and only) element
+in the collection. 
+
+|===
+
+If a source collection contains fields that you do not map, 
+those fields are still available to subsequent steps that
+are in the flow. 
+
+.Mapping a collection field to a non-collection field
+When you map from a collection field to a non-collection 
+field, the default is that the target field gets the 
+value for the mapped field that is in the last element of the collection. 
+You can change the default behavior in the following 
+ways: 
+
+* To map the value that you choose, apply the *ItemAt* 
+transformation to the source and specify an 
+index. For example, to map the *name* field 
+value that is in the 1st element that is in the collection, then 
+specify `0` for the index. 
+
+* For a particular field, to map all values that are in 
+all elements that are in a 
+source collection, apply the *Concatenate* transformation 
+to the source field and optionally specify a delimiter.
+The default delimiter is a space. For example, 
+consider this source collection: 
+
+** In the first element, the value in the *city* field
+is *Boston*. 
+** In the second element, the value in the *city* field 
+is *Paris*.
+** In the third element, the value in the *city* field 
+is *Tokyo*. 
+
++
+During execution, the data mapper populates the target
+field with `Boston Paris Tokyo`. 
+
+.Mapping a non-collection field to a collection field
+When you map from a non-collection field to a collection 
+field, the default is that the target collection contains
+one element that has one field. You can change the default behavior 
+when the source field contains a series of values that are 
+separated by the same delimiter. For example, consider a 
+non-collection, source *cities* field that contains: 
+
+`Boston Paris Tokyo`
+
+You would map this to a target field that is in a collection. 
+On the source *cities* field, add the *Split* transformation. 
+During execution, the data mapper splits the value of the 
+*cities* field at the space delimiter. The result is a 
+collection that contains three elements. In the first 
+element, the value of the *city* field is `Boston`. In the 
+second element, the value of the *city* field is `Paris`. 
+In the third element, the value of the *city* field is `Tokyo`. 
