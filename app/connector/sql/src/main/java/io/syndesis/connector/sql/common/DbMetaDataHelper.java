@@ -169,14 +169,6 @@ public final class DbMetaDataHelper {
         while (resultSet.next()) {
 
             ColumnMetaData columnMetaData = new ColumnMetaData();
-//            ResultSetMetaData rsmd = resultSet.getMetaData();
-//            int columnCount = rsmd.getColumnCount();
-
-//            // The column count starts from 1
-//            for (int i = 1; i <= columnCount; i++ ) {
-//               String name = rsmd.getColumnName(i);
-//               System.out.println("Name " + name + " - " + resultSet.getString(name));
-//            }
 
             columnMetaData.setName(resultSet.getString("COLUMN_NAME"));
             columnMetaData.setType(JDBCType.valueOf(resultSet.getInt("DATA_TYPE")));
