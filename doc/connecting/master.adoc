@@ -30,7 +30,6 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-google_{context}>>
 * <<connecting-to-http_{context}>>
 * <<connecting-to-irc_{context}>>
-* <<connecting-to-log_{context}>>
 * <<connecting-to-kafka_{context}>>
 * <<connecting-to-kudu_{context}>>
 * <<connecting-to-mqtt_{context}>>
@@ -63,8 +62,6 @@ include::topics/as_connecting-to-google.adoc[leveloffset=+1]
 include::topics/as_connecting-to-http.adoc[leveloffset=+1]
 
 include::topics/as_connecting-to-irc.adoc[leveloffset=+1]
-
-include::topics/as_connecting-to-log.adoc[leveloffset=+1]
 
 include::topics/as_connecting-to-kafka.adoc[leveloffset=+1]
 

@@ -28,7 +28,6 @@ an integration:
 * xref:add-data-mapping-step_{context}[]
 * xref:add-basic-filter-step_{context}[]
 * xref:add-advanced-filter-step_{context}[]
-* xref:add-log-step_{context}[]
 * xref:add-template-step_{context}[]
 * xref:add-custom-step_{context}[]
 
@@ -45,8 +44,6 @@ include::p_add-data-mapping-step.adoc[leveloffset=+1]
 include::p_add-basic-filter-step.adoc[leveloffset=+1]
 
 include::p_add-advanced-filter-step.adoc[leveloffset=+1]
-
-include::p_add-log-step.adoc[leveloffset=+1]
 
 include::p_add-template-step.adoc[leveloffset=+1]
 
