@@ -1,6 +1,6 @@
 #!/bin/bash
 
-CAMEL_K_OPERATOR_DEFAULT_VERSION="0.3.0"
+CAMEL_K_OPERATOR_DEFAULT_VERSION="0.3.2"
 
 # Deploy Camel-K operator
 deploy_camel_k_operator() {
