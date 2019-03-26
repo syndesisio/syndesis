@@ -4,36 +4,20 @@
 [id='workflow-api-providers_{context}']
 = General workflow for creating integrations that are triggered by API calls
 
-In {prodname}, the *general* 
-workflow for creating an API provider integration is as follows: 
+The *general* workflow for creating an API provider integration is shown 
+in the following diagram: 
 
-. Create the connections that you want to add to operation flows. 
-. Click *Create Integration* and to start the integration choose the 
-*API Provider* card.
-. Provide an OpenAPI 2.0 document that defines your API service. 
-. Optionally, edit the document. 
-. Give the integration a name and save it. 
-. For one or more API operations, add to that operation's 
-flow. You can add any connection or other processing
-step that is available in {prodname}. At the end of an operation's
-flow, specify the flow's return code. 
-+
-You do not need to add steps to the flow for every operation 
-before you publish the integration. You can add steps to one or 
-more flows and then publish. You can add steps to more flows 
-at a later time and republish the integration. 
+image::images/ApiProviderCreateIntegrationWorkflow.png[General workflow for creating an API provider integration]
 
-. Publish the integration. 
-+
+When you publish the integration, 
 {prodname} provides the URL where your REST API service is available.
 
-. Optionally, use the `curl` utility to test the integration's flows. 
-+
+To test the integration's flows, you can use the `curl` utility. 
 For example, suppose that the following `curl` command triggers execution of the 
 flow for the *Get Task by ID* operation. The HTTP `GET` command is the
 default request so there is no requirement to specify `GET`. 
 The last part of the URL specifies the ID of the task to get:
-+
+
 ----
 curl -k https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api/todo/1 
 ----
