@@ -4,13 +4,13 @@ In order to use the Syndesis Camel-k runtime (i.e. this project) at the moment a
 
 == Running a Syndesis integrations in Camel-k
 
-* Place the Json format of your integrations in a file with `.syndesis` extension (a very simple example cna be found at `src/test/resources/syndesis/integration/integration.syndesis`).
+* Place the Json format of your integrations in a file with `.syndesis` extension (a very simple example can be found at `src/test/resources/syndesis/integration/integration.syndesis`).
 * Have the Camel-K environment running somewhere (follow the instructions in https://github.com/apache/camel-k#installation[Camel-k readme], or use `-camel-k` option of `syndesis install` command) and `kamel` CLI in your path. It is IMPORTANT to run Camel-k install with the following options:
   - `--repository https://repository.jboss.org/nexus/content/groups/ea`
-  - `--camel-version  <camel.version>`
+  - `--camel-version <camel.version>`
   - `--runtime-version <camel-k-runtime.version>`
 * Import the syndesis specific camel version generated Camel-k catalog in ocp:
-  - `oc create -f app/integration/runtime-camelk/src/main/resources/META-INF/catalog/camel-catalog-<camel.version>.yaml`
+  - `oc create -f app/integration/runtime-camelk/target/camel-catalog-<camel.version>.yaml`
 * Create `target/dependencies` folder with all useful dependencies in a maven repo like structure with: `mvn clean install -Pdependency-prepare`
 * Get the pod id in which Camel-k operator is running: `oc get pod --selector=name=camel-k-operator -o jsonpath='{.items[*].metadata.name}'`.
 * Sync the dependencies folder with the local maven repo inside Camel-k operator container: `oc rsync ./target/dependencies/ <camel_k_operator_pod_id>:/tmp/artifacts/m2/`. This is needed to quickly have snapshot local artifacts available to the Camel-k operator.
