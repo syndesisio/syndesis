@@ -1,15 +1,3 @@
-package io.syndesis.connector.sql.common;
-
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import io.syndesis.connector.sql.db.Db;
-import io.syndesis.connector.sql.db.DbDerby;
-import io.syndesis.connector.sql.db.DbMysql;
-import io.syndesis.connector.sql.db.DbOracle;
-import io.syndesis.connector.sql.db.DbPostgresql;
-import io.syndesis.connector.sql.db.DbStandard;
-
 /*
  * Copyright (C) 2016 Red Hat, Inc.
  *
@@ -25,6 +13,18 @@ import io.syndesis.connector.sql.db.DbStandard;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.syndesis.connector.sql.common;
+
+import java.sql.Connection;
+import java.sql.SQLException;
+
+import io.syndesis.connector.sql.db.Db;
+import io.syndesis.connector.sql.db.DbDerby;
+import io.syndesis.connector.sql.db.DbMysql;
+import io.syndesis.connector.sql.db.DbOracle;
+import io.syndesis.connector.sql.db.DbPostgresql;
+import io.syndesis.connector.sql.db.DbStandard;
+
 public class DbAdapter {
 
     private Db db;
