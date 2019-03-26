@@ -24,7 +24,8 @@ body.cards-pf {
 }
 
 .pf-c-page__header {
-  background-color: #292e34;
+  --pf-c-page__header-brand--md--BackgroundColor: #151515;
+  background-color: var(--pf-c-page__header-brand--md--BackgroundColor);
   position: fixed;
   top: 0;
   left: 0;
