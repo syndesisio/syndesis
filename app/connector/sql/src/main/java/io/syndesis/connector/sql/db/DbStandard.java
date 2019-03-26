@@ -49,6 +49,14 @@ public class DbStandard implements Db {
                 adaptPattern(procedurePattern));
     }
 
+    @Override
+    public String getAutoIncrementGrammar() {
+        return "NUMBER GENERATED ALWAYS AS IDENTITY";
+    }
 
+    @Override
+    public String getName() {
+        return "Standard";
+    }
 
 }

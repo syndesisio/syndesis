@@ -28,4 +28,13 @@ public class DbDerby extends DbStandard {
         }
     }
 
+    @Override
+    public String getAutoIncrementGrammar() {
+        return "INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)";
+    }
+
+    @Override
+    public String getName() {
+        return "Derby";
+    }
 }

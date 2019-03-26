@@ -24,4 +24,8 @@ public class DbOracle extends DbStandard {
         return dbUser.toUpperCase(Locale.US);
     }
 
+    @Override
+    public String getName() {
+        return "Oracle";
+    }
 }

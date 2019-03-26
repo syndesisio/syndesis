@@ -24,4 +24,14 @@ public class DbMysql extends DbStandard {
         }
         return pattern;
     }
+
+    @Override
+    public String getAutoIncrementGrammar() {
+        return "INT NOT NULL AUTO_INCREMENT PRIMARY KEY";
+    }
+
+    @Override
+    public String getName() {
+        return "Mysql";
+    }
 }

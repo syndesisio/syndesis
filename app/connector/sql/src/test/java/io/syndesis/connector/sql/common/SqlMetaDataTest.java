@@ -15,7 +15,6 @@
  */
 package io.syndesis.connector.sql.common;
 
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -45,7 +44,6 @@ public class SqlMetaDataTest {
         final SqlStatementParser sqlParser = new SqlStatementParser(db.connection, select);
         final SqlStatementMetaData paramInfo = sqlParser.parse();
 
-        final DatabaseMetaData meta = db.connection.getMetaData();
         final List<SqlParam> inputParams = new DbMetaDataHelper(db.connection).getJDBCInfoByColumnNames(null, db.schema,
             paramInfo.getTableNames().get(0), paramInfo.getInParams());
         // information for input
