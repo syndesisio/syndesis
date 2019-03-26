@@ -4,7 +4,7 @@
 [id='identify-where-data-mapping-is-needed_{context}']
 = Identifying where data mapping is needed
 
-{prodname} displays warning icons to indicate where an integration
+{prodname} displays warning icons to indicate where a flow 
 requires data mapping. 
 
 .Prerequisites
@@ -18,3 +18,8 @@ image:shared/images/WarningIcon.png[Warning] icons.
 
 . Click the icon to see the message. A *Data Type Mismatch* notification
 indicates that you need to add a data mapper step before that connection. 
+
+. In the flow visualization panel, click the plus sign that appears 
+before the connection that has the data type mismatch notification. 
+
+. In the page that prompts you to choose a step, click *Data Mapper*. 
