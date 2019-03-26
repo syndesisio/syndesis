@@ -64,7 +64,8 @@ to perform. The available actions vary for each connection.
 +
 As an alternative to connecting to an application, a finish connection can
 send information to the integration's log about the messages that the
-integration processed. 
+integration processed. To do this, select *Log* when {prodname} prompts
+you to choose the finish connection. 
 
 . Optionally, add one or more connections between the start connection and
 the finish connection. For each connection, choose its action and enter
@@ -97,7 +98,7 @@ In the {prodname} *Integrations* page, you can see your new integration
 in the list of integrations. If you published the integration, then you
 can see that {prodname} is in the process of publishing it. It may take 
 a few moments for the status of the integration to become *Running*. 
-If you saved the LinkFuseOnlineIntegrationGuide, then
+If you saved the integration, then
 *Stopped* appears on the integration's entry.
 
 Click the integration's entry to see a summary of the integration, 

@@ -24,7 +24,7 @@ integrations:
 
 * xref:about-integration-lifecycle-handling_{context}[]
 * xref:putting-integrations-into-service_{context}[]
-* xref:logging-integration-execution-information_{context}[]
+* xref:add-log-step_{context}[]
 * xref:monitoring-integrations_{context}[]
 * xref:testing-integrations_{context}[]
 * xref:troubleshooting-integration-execution_{context}[]
@@ -36,7 +36,7 @@ include::c_about-integration-lifecycle-handling.adoc[leveloffset=+1]
 
 include::as_putting-integrations-into-service.adoc[leveloffset=+1]
 
-include::as_logging-integration-execution-information.adoc[leveloffset=+1]
+include::p_add-log-step.adoc[leveloffset=+1]
 
 include::as_monitoring-integrations.adoc[leveloffset=+1]
 

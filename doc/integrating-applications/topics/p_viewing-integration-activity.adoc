@@ -39,6 +39,4 @@ If you add a log step, then it appears as one of the integration's
 steps when you expand the integration execution that you want to view activity
 information for. You view {prodname} information for a log step in the 
 same way that you view {prodname} information for any other step. See
-link:{LinkFuseOnlineIntegrationGuide}#add-log-step_create[Add a log step].
-* To finish an integration by logging message information, see 
-link:{LinkFuseOnlineConnectorGuide}#connecting-to-log_connect-to-log[Add a log connection].
+link:{LinkFuseOnlineIntegrationGuide}#add-log-step_create[Logging information about integration execution].
