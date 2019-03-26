@@ -25,9 +25,9 @@ import static org.mockito.Mockito.mock;
 
 public class SyndesisHeaderStrategyTest {
 
-    CamelContext camelContext = mock(CamelContext.class);
+    private final CamelContext camelContext = mock(CamelContext.class);
 
-    Exchange exchange = new DefaultExchange(camelContext);
+    private final Exchange exchange = new DefaultExchange(camelContext);
 
     @Test
     public void shouldFilterOutEverythingButInwardContentTypeHeader() {

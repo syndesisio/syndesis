@@ -18,7 +18,6 @@ package io.syndesis.connector.rest.swagger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -35,22 +34,6 @@ import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/*
- * Copyright (C) 2016 Red Hat, Inc.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 public class DescriptorTest {
 
     private static final String CAMEL_VERSION = CamelContext.class.getPackage().getImplementationVersion();
@@ -63,7 +46,7 @@ public class DescriptorTest {
             .id("rest-swagger")
             .actions(new ArrayList<>())
             .icon("")
-            .description( "rest-swagger TODO:change this")
+            .description("rest-swagger TODO:change this")
             .name("OpenAPI client")
             .componentScheme("rest-swagger")
             .putProperty("accessToken", new ConfigurationProperty.Builder()
@@ -107,7 +90,8 @@ public class DescriptorTest {
                 .build())
             .putProperty("basePath", new ConfigurationProperty.Builder()
                 .displayName("Base path")
-                .description("API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI document.")
+                .description(
+                    "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI document.")
                 .type("string")
                 .javaType("java.lang.String")
                 .order(11)
@@ -131,7 +115,8 @@ public class DescriptorTest {
                 .build())
             .putProperty("host", new ConfigurationProperty.Builder()
                 .displayName("Host")
-                .description("Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port.")
+                .description(
+                    "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port.")
                 .type("string")
                 .javaType("java.lang.String")
                 .required(Boolean.TRUE)
@@ -172,7 +157,8 @@ public class DescriptorTest {
                 .build())
             .putProperty("refreshTokenRetryStatuses", new ConfigurationProperty.Builder()
                 .displayName("HTTP statuses for refreshing OAuth token")
-                .description("Comma separated list of HTTP statuses for which to refresh the OAuth access token using the refresh token.")
+                .description(
+                    "Comma separated list of HTTP statuses for which to refresh the OAuth access token using the refresh token.")
                 .type("hidden")
                 .javaType("java.lang.String")
                 .build())
@@ -219,7 +205,8 @@ public class DescriptorTest {
             .build();
 
         final Connector defined;
-        try (InputStream stream = DescriptorTest.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
+        try (InputStream stream = DescriptorTest.class
+            .getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
             defined = Json.readFromStream(stream, Connector.class);
         }
 
