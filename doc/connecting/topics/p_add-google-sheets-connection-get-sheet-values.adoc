@@ -92,6 +92,12 @@ For example, suppose that the *Major Dimension* is columns and that
 *Max Results* is 25. The poll returns a column object for each column
 that the range setting includes. Each column object contains no more than 
 25 row values. 
++
+In this release, it is a known problem that the setting for *Max Results* 
+is observed only when *Split Results* is set to *Yes*. When *Split Results* 
+is set to *No*, the setting of *Max Results* is ignored. In the next release, 
+observance of the *Max Results* setting will not depend on the *Split Results* 
+setting. 
 
 . Click *Done* to add this Google Sheets connection as the integration's
 start connection. In the integration visualization panel, the connection 
