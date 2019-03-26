@@ -31,10 +31,11 @@ import io.swagger.models.Swagger;
 import io.swagger.models.parameters.AbstractSerializableParameter;
 import io.swagger.models.parameters.BodyParameter;
 import io.swagger.models.parameters.Parameter;
+import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.MapProperty;
 import io.swagger.models.properties.ObjectProperty;
 import io.swagger.models.properties.Property;
-import io.swagger.models.properties.StringProperty;
+import io.swagger.models.properties.RefProperty;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
@@ -51,6 +52,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
+@SuppressWarnings("PMD.GodClass")
 public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -145,6 +147,30 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
         return createSchemaFor(serializableParameters);
     }
 
+    private static ObjectNode createPropertySchema(final String name, final Property schema) {
+        final ObjectNode jsonSchema = JsonNodeFactory.instance.objectNode();
+        final String format = schema.getFormat();
+        if (format != null) {
+            jsonSchema.put("format", format);
+        }
+        final String type = schema.getType();
+        if (type != null) {
+            jsonSchema.put("type", type);
+        }
+        final String title = schema.getName();
+        if (title != null) {
+            jsonSchema.put("title", title);
+        } else {
+            jsonSchema.put("title", name);
+        }
+        final String description = schema.getDescription();
+        if (description != null) {
+            jsonSchema.put("description", description);
+        }
+
+        return jsonSchema;
+    }
+
     private static ObjectNode createSchemaFor(final List<AbstractSerializableParameter<?>> serializableParameters) {
         final ObjectNode schema = JsonSchemaHelper.newJsonObjectSchema();
         final ObjectNode properties = schema.putObject("properties");
@@ -224,25 +250,15 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
             } catch (final JsonProcessingException e) {
                 throw new IllegalStateException("Unable to serialize/read given JSON specification in response schema: " + schema, e);
             }
-        } else if (schema instanceof StringProperty) {
-            final ObjectNode jsonSchema = JsonNodeFactory.instance.objectNode();
-            final String format = schema.getFormat();
-            if (format != null) {
-                jsonSchema.put("format", format);
-            }
-            final String type = schema.getType();
-            if (type != null) {
-                jsonSchema.put("type", type);
-            }
+        } else if (schema instanceof RefProperty || schema instanceof ArrayProperty) {
+            final String reference = JsonSchemaHelper.determineSchemaReference(schema);
 
-            return jsonSchema;
+            final String title = determineTitleOf(name, schema);
+
+            return JsonSchemaHelper.resolveSchemaForReference(json, title, reference);
         }
 
-        final String reference = JsonSchemaHelper.determineSchemaReference(schema);
-
-        final String title = determineTitleOf(name, schema);
-
-        return JsonSchemaHelper.resolveSchemaForReference(json, title, reference);
+        return createPropertySchema(name, schema);
     }
 
     private static String determineTitleOf(final String name, final Model schema) {
