@@ -52,7 +52,7 @@ public final class WithSyndesisHeaderFilterStrategy extends HttpComponent {
             // false | true | false => global has precedence over rest
             // true | false | true => global has precedence over rest
             // true | true | true => both agree header should be filtered out
-            return globalWouldFilter || globalWouldFilter && !restWouldFilter;
+            return globalWouldFilter || (globalWouldFilter && !restWouldFilter);
         }
 
         @Override
@@ -65,7 +65,7 @@ public final class WithSyndesisHeaderFilterStrategy extends HttpComponent {
             // false | true | false => global has precedence over rest
             // true | false | true => global has precedence over rest
             // true | true | true => both agree header should be filtered out
-            return globalWouldFilter || globalWouldFilter && !restWouldFilter;
+            return globalWouldFilter || (globalWouldFilter && !restWouldFilter);
         }
 
     }
