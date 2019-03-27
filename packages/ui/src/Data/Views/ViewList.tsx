@@ -6,10 +6,13 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../../Layout';
+import { ButtonLink, Container } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
-export interface IViewsListViewProps extends IListViewToolbarProps {
+export interface IViewsListProps extends IListViewToolbarProps {
+  i18nCreateView: string;
+  i18nCreateViewTip?: string;
+  i18nDescription: string;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
   i18nImportView: string;
@@ -18,11 +21,14 @@ export interface IViewsListViewProps extends IListViewToolbarProps {
   i18nLinkCreateViewTip?: string;
   i18nName: string;
   i18nNameFilterPlaceholder: string;
-  linkCreateView: string;
   onImportView: (name: string) => void;
 }
 
-export class ViewListView extends React.Component<IViewsListViewProps> {
+export class ViewList extends React.Component<IViewsListProps> {
+  public constructor(props: IViewsListProps) {
+    super(props);
+  }
+
   public render() {
     return (
       <>
@@ -44,33 +50,38 @@ export class ViewListView extends React.Component<IViewsListViewProps> {
               overlay={this.getCreateViewTooltip()}
               placement="top"
             >
-              <ButtonLink href={this.props.linkCreateView} as={'primary'}>
-                {this.props.i18nLinkCreateView}
+              <ButtonLink href={this.props.i18nLinkCreateView} as={'primary'}>
+                {this.props.i18nCreateView}
               </ButtonLink>
             </OverlayTrigger>
           </div>
         </ListViewToolbar>
-        {this.props.children ? (
-          <ListView>{this.props.children}</ListView>
-        ) : (
-          <EmptyState>
-            <EmptyState.Icon />
-            <EmptyState.Title>
-              {this.props.i18nEmptyStateTitle}
-            </EmptyState.Title>
-            <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
-            <EmptyState.Action>
-              <OverlayTrigger
-                overlay={this.getCreateViewTooltip()}
-                placement="top"
-              >
-                <ButtonLink href={this.props.linkCreateView} as={'primary'}>
-                  {this.props.i18nLinkCreateView}
-                </ButtonLink>
-              </OverlayTrigger>
-            </EmptyState.Action>
-          </EmptyState>
-        )}
+        <Container>
+          {this.props.children ? (
+            <ListView>{this.props.children}</ListView>
+          ) : (
+            <EmptyState>
+              <EmptyState.Icon />
+              <EmptyState.Title>
+                {this.props.i18nEmptyStateTitle}
+              </EmptyState.Title>
+              <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
+              <EmptyState.Action>
+                <OverlayTrigger
+                  overlay={this.getCreateViewTooltip()}
+                  placement="top"
+                >
+                  <ButtonLink
+                    href={this.props.i18nLinkCreateView}
+                    as={'primary'}
+                  >
+                    {this.props.i18nCreateView}
+                  </ButtonLink>
+                </OverlayTrigger>
+              </EmptyState.Action>
+            </EmptyState>
+          )}
+        </Container>
       </>
     );
   }

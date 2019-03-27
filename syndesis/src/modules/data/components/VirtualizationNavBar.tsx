@@ -14,7 +14,7 @@ import routes from '../routes';
 export default class VirtualizationNavBar extends React.Component {
   public render() {
     return (
-      <Translation ns={['virtualizations', 'shared']}>
+      <Translation ns={['data', 'shared']}>
         {t => (
           <Container
             style={{
@@ -23,15 +23,19 @@ export default class VirtualizationNavBar extends React.Component {
           >
             <TabBar>
               <TabBarItem
-                label={t('virtualization.views')}
+                label={t('data:virtualization.views')}
                 to={routes.virtualizations.virtualization.views}
               />
               <TabBarItem
-                label={t('virtualization.sqlClient')}
+                label={t('data:virtualization.relationship')}
+                to={routes.virtualizations.virtualization.relationship}
+              />
+              <TabBarItem
+                label={t('data:virtualization.sqlClient')}
                 to={routes.virtualizations.virtualization.sqlQuery}
               />
               <TabBarItem
-                label={t('virtualization.metrics')}
+                label={t('data:virtualization.metrics')}
                 to={routes.virtualizations.virtualization.metrics}
               />
             </TabBar>

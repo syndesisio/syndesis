@@ -8,6 +8,7 @@ export default include('/data', {
     list: '',
     virtualization: include(':virtualizationId', {
       views: 'views',
+      relationship: 'relationship',
       metrics: 'metrics',
       sqlQuery: 'sqlQuery',
       root: '',

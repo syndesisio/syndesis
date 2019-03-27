@@ -32,7 +32,6 @@ export interface IVirtualizationListItemProps {
   i18nDeleteModalTitle: string;
   i18nDraft: string;
   i18nError: string;
-  i18nDraftTip: string;
   i18nEdit: string;
   i18nEditTip?: string;
   i18nExport: string;

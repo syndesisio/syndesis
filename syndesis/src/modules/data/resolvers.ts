@@ -6,8 +6,19 @@ import routes from './routes';
 // TODO: unit test every single one of these resolvers 😫
 export default {
   virtualizations: {
-    virtualization: makeResolver<{ virtualization: RestDataService }>(
-      routes.virtualizations.virtualization,
+    views: makeResolver<{ virtualization: RestDataService }>(
+      routes.virtualizations.virtualization.views,
+      ({ virtualization }) => ({
+        params: {
+          virtualizationId: virtualization.keng__id,
+        },
+        state: {
+          virtualization,
+        },
+      })
+    ),
+    relationship: makeResolver<{ virtualization: RestDataService }>(
+      routes.virtualizations.virtualization.relationship,
       ({ virtualization }) => ({
         params: {
           virtualizationId: virtualization.keng__id,

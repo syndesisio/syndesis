@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import VirtualizationCreatePage from './pages/VirtualizationCreatePage';
-import VirtualizationDetailsPage from './pages/VirtualizationDetailsPage';
+import VirtualizationViewsPage from './pages/VirtualizationViewsPage';
+import VirtualizationRelationshipPage from './pages/VirtualizationRelationshipPage';
+import VirtualizationSqlQueryPage from './pages/VirtualizationSqlQueryPage';
+import VirtualizationMetricsPage from './pages/VirtualizationMetricsPage';
 import VirtualizationsPage from './pages/VirtualizationsPage';
 import routes from './routes';
 
@@ -30,14 +33,14 @@ export default class DataApp extends React.Component {
           component={VirtualizationCreatePage}
         />
         <Route
-          path={routes.virtualizations.virtualization}
-          exact={true}
-          component={VirtualizationDetailsPage}
-        />
-        <Route
           path={routes.virtualizations.virtualization.views}
           exact={true}
           component={VirtualizationViewsPage}
+        />
+        <Route
+          path={routes.virtualizations.virtualization.relationship}
+          exact={true}
+          component={VirtualizationRelationshipPage}
         />
         <Route
           path={routes.virtualizations.virtualization.sqlQuery}
