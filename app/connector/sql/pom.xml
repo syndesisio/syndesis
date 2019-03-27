@@ -203,7 +203,7 @@
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>mariadb</artifactId>
-      <scope>runtime</scope>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
