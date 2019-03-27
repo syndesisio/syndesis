@@ -19,6 +19,7 @@ interface IButtonLinkProps {
     | 'danger'
     | 'link';
   size?: 'lg' | 'sm' | 'xs';
+  [key: string]: any;
 }
 
 export const ButtonLink: React.FunctionComponent<IButtonLinkProps> = ({
@@ -29,6 +30,7 @@ export const ButtonLink: React.FunctionComponent<IButtonLinkProps> = ({
   as = 'default',
   size,
   children,
+  ...props
 }) => {
   className = classnames('btn', `btn-${as}`, className, {
     'btn-lg': size === 'lg',
@@ -36,7 +38,7 @@ export const ButtonLink: React.FunctionComponent<IButtonLinkProps> = ({
     'btn-xs': size === 'xs',
   });
   return href ? (
-    <Link to={href} onClick={onClick} className={className}>
+    <Link to={href} onClick={onClick} className={className} {...props}>
       {children}
     </Link>
   ) : (
