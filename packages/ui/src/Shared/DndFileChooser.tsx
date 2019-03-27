@@ -94,11 +94,6 @@ interface INotificationType {
  */
 export interface IDndFileChooserState {
   /**
-   * Indicates if multiple files can be added. Defaults to `false`.
-   */
-  allowMultiple: boolean;
-
-  /**
    * The files that were uploaded successfully. Defaults to an empty array.
    */
   files: File[];
@@ -108,11 +103,6 @@ export interface IDndFileChooserState {
    * from the array.
    */
   notifications: INotificationType[];
-
-  /**
-   * The number of milliseconds that toast notifications will be displayed. Defaults to `4000`.
-   */
-  notificationTimerDelay: number;
 }
 
 /**
@@ -123,18 +113,18 @@ export class DndFileChooser extends React.Component<
   IDndFileChooserProps,
   IDndFileChooserState
 > {
+  // setup default prop values
+  public static defaultProps = {
+    allowMultiple: false,
+    notificationTimerDelay: 4000, // 4 seconds
+  };
+
   public constructor(props: IDndFileChooserProps) {
     super(props);
 
     // set up initial state
     this.state = {
-      allowMultiple: this.props.allowMultiple
-        ? this.props.allowMultiple
-        : false,
       files: [],
-      notificationTimerDelay: this.props.notificationTimerDelay
-        ? this.props.notificationTimerDelay
-        : 4000,
       notifications: [],
     };
 
@@ -167,7 +157,7 @@ export class DndFileChooser extends React.Component<
   }
 
   /**
-   * Obtains an element that indicates the upload was successful.
+   * Obtains an element that indicates the if the upload was successful.
    */
   public getUploadMessage(): JSX.Element {
     if (this.props.i18nUploadSuccessMessage) {
@@ -239,7 +229,7 @@ export class DndFileChooser extends React.Component<
       <Dropzone
         accept={this.props.fileExtensions}
         disabled={this.props.disableDropzone}
-        multiple={this.state.allowMultiple}
+        multiple={this.props.allowMultiple}
         onDropAccepted={this.handleAcceptedFiles}
         onDropRejected={this.handleRejectedFiles}
       >
@@ -255,7 +245,7 @@ export class DndFileChooser extends React.Component<
                     this,
                     notification
                   )}
-                  timerdelay={this.state.notificationTimerDelay}
+                  timerdelay={this.props.notificationTimerDelay}
                 >
                   <Container
                     dangerouslySetInnerHTML={{

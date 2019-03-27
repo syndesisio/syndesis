@@ -110,7 +110,7 @@ export class ExtensionImportReview extends React.Component<
     }
 
     return (
-      <Container>
+      <Container data-testid="actions-container">
         {this.props.actions
           ? this.props.actions.map((action, index) =>
               index === 0 ? (
@@ -150,45 +150,80 @@ export class ExtensionImportReview extends React.Component<
   public render() {
     return (
       <Grid className="extension-import-review__container">
-        <Grid.Row className="extension-import-review__title">
+        <Grid.Row
+          data-testid="title"
+          className="extension-import-review__title"
+        >
           {this.props.i18nTitle}
         </Grid.Row>
         <Grid.Row>
-          <Grid.Col xs={2} className="extension-import-review__propertyLabel">
+          <Grid.Col
+            data-testid="id-label"
+            xs={2}
+            className="extension-import-review__propertyLabel"
+          >
             {this.props.i18nIdLabel}
           </Grid.Col>
-          <Grid.Col className="extension-import-review__propertyValue">
+          <Grid.Col
+            data-testid="id-value"
+            className="extension-import-review__propertyValue"
+          >
             {this.props.extensionId}
           </Grid.Col>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Col xs={2} className="extension-import-review__propertyLabel">
+          <Grid.Col
+            data-testid="name-label"
+            xs={2}
+            className="extension-import-review__propertyLabel"
+          >
             {this.props.i18nNameLabel}
           </Grid.Col>
-          <Grid.Col className="extension-import-review__propertyValue">
+          <Grid.Col
+            data-testid="name-value"
+            className="extension-import-review__propertyValue"
+          >
             {this.props.extensionName}
           </Grid.Col>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Col xs={2} className="extension-import-review__propertyLabel">
+          <Grid.Col
+            data-testid="description-label"
+            xs={2}
+            className="extension-import-review__propertyLabel"
+          >
             {this.props.i18nDescriptionLabel}
           </Grid.Col>
-          <Grid.Col className="extension-import-review__propertyValue">
+          <Grid.Col
+            data-testid="description-value"
+            className="extension-import-review__propertyValue"
+          >
             {this.props.extensionDescription
               ? this.props.extensionDescription
               : null}
           </Grid.Col>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Col xs={2} className="extension-import-review__propertyLabel">
+          <Grid.Col
+            data-testid="type-label"
+            xs={2}
+            className="extension-import-review__propertyLabel"
+          >
             {this.props.i18nTypeLabel}
           </Grid.Col>
-          <Grid.Col className="extension-import-review__propertyValue">
+          <Grid.Col
+            data-testid="type-value"
+            className="extension-import-review__propertyValue"
+          >
             {this.props.i18nExtensionTypeMessage}
           </Grid.Col>
         </Grid.Row>
         <Grid.Row>
-          <Grid.Col xs={2} className="extension-import-review__propertyLabel">
+          <Grid.Col
+            data-testid="actions-label"
+            xs={2}
+            className="extension-import-review__propertyLabel"
+          >
             {this.props.i18nActionsLabel}
           </Grid.Col>
           {this.getActions()}
@@ -198,10 +233,15 @@ export class ExtensionImportReview extends React.Component<
             <Grid.Row>
               <Grid.Col>
                 <Container className="extension-import-review__buttonBar">
-                  <Button bsStyle="primary" onClick={this.handleImport}>
+                  <Button
+                    data-testid="import-button"
+                    bsStyle="primary"
+                    onClick={this.handleImport}
+                  >
                     {this.props.i18nImport}
                   </Button>
                   <ButtonLink
+                    data-testid="cancel-button"
                     className="extension-import-review__cancelButton"
                     href={this.props.cancelLink}
                     as={'default'}
