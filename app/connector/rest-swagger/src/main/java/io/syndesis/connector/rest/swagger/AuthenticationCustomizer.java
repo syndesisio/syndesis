@@ -37,6 +37,10 @@ public class AuthenticationCustomizer implements ComponentProxyCustomizer {
             final CamelContext context = component.getCamelContext();
             final Configuration configuration = new Configuration(this, context, options);
 
+            if (component instanceof SwaggerProxyComponent) {
+                ((SwaggerProxyComponent) component).setConfiguration(configuration);
+            }
+
             if (authenticationType == AuthenticationType.oauth2) {
                 OAuth.setup(component, configuration);
             } else if (authenticationType == AuthenticationType.basic) {

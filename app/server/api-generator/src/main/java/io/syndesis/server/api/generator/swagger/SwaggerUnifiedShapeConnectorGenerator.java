@@ -19,6 +19,7 @@ import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.Connector;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -26,7 +27,8 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
 
     private final DataShapeGenerator dataShapeGenerator;
 
-    public SwaggerUnifiedShapeConnectorGenerator() {
+    public SwaggerUnifiedShapeConnectorGenerator(final Connector restSwaggerConnector) {
+        super(restSwaggerConnector);
         dataShapeGenerator = new UnifiedDataShapeGenerator();
     }
 
@@ -41,8 +43,6 @@ public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConn
         actionDescriptor.outputDataShape(outputDataShape);
 
         actionDescriptor.putConfiguredProperty("operationId", operation.getOperationId());
-
-        actionDescriptor.addConnectorCustomizer("io.syndesis.connector.rest.swagger.ResponseCustomizer");
 
         return actionDescriptor;
     }

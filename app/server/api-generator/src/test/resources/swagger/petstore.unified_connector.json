@@ -12,17 +12,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"category\": {\"properties\": {\"id\": { \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Category\"}}, \"id\": { \"type\": \"integer\"}, \"name\": {\"example\": \"doggie\", \"type\": \"string\"}, \"photoUrls\": {\"items\": {\"type\": \"string\"}, \"type\": \"array\", \"xml\": {\"name\": \"photoUrl\", \"wrapped\": true}}, \"status\": {\"description\": \"pet status in the store\", \"enum\": [ \"available\", \"pending\", \"sold\" ], \"type\": \"string\"}, \"tags\": {\"items\": {\"properties\": {\"id\": { \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Tag\"}}, \"type\": \"array\", \"xml\": {\"name\": \"tag\", \"wrapped\": true}}}, \"required\": [ \"name\", \"photoUrls\" ], \"type\": \"object\", \"xml\": {\"name\": \"Pet\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updatePet",
+      "id": "_id_:updatePet",
       "name": "Update an existing pet",
       "pattern": "To",
       "tags": [
@@ -41,17 +41,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\" : {\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"], \"type\" : \"string\"}},\"xml\":{\"name\":\"Pet\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:addPet",
+      "id": "_id_:addPet",
       "name": "Add a new pet to the store",
       "pattern": "To",
       "tags": [
@@ -70,23 +70,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"status\": {\"description\": \"Status values that need to be considered for filter\", \"items\": {\"enum\": [ \"available\", \"pending\", \"sold\" ], \"type\" : \"string\"}, \"title\": \"status\", \"type\": \"array\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
+          "name": "Response",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\",  \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"type\":\"object\",\"xml\":{\"name\":\"Pet\"}},\"type\":\"array\" }}, \"type\":\"object\" }"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByStatus",
+      "id": "_id_:findPetsByStatus",
       "name": "Finds Pets by status",
       "pattern": "To",
       "tags": [
@@ -105,23 +105,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"tags\": {\"description\": \"Tags to filter by\", \"items\": {\"type\": \"string\"}, \"title\": \"tags\", \"type\": \"array\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
+          "name": "Response",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\",  \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"type\":\"object\",\"xml\":{\"name\":\"Pet\"}},\"type\":\"array\"}},\"type\":\"object\"}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByTags",
+      "id": "_id_:findPetsByTags",
       "name": "Finds Pets by tags",
       "pattern": "To",
       "tags": [
@@ -140,23 +140,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"petId\": {\"description\": \"ID of pet to return\", \"title\": \"petId\", \"type\": \"integer\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
+          "name": "Response",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"}}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getPetById",
+      "id": "_id_:getPetById",
       "name": "Find pet by ID",
       "pattern": "To",
       "tags": [
@@ -175,17 +175,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"name\": {\"description\": \"Updated name of the pet\", \"title\": \"name\", \"type\": \"string\"}, \"petId\": {\"description\": \"ID of pet that needs to be updated\", \"title\": \"petId\", \"type\": \"integer\"}, \"status\": {\"description\": \"Updated status of the pet\", \"title\": \"status\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updatePetWithForm",
+      "id": "_id_:updatePetWithForm",
       "name": "Updates a pet in the store with form data",
       "pattern": "To",
       "tags": [
@@ -204,17 +204,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"api_key\": {\"title\": \"api_key\", \"type\": \"string\"}, \"petId\": {\"description\": \"Pet id to delete\", \"title\": \"petId\", \"type\": \"integer\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deletePet",
+      "id": "_id_:deletePet",
       "name": "Deletes a pet",
       "pattern": "To",
       "tags": [
@@ -233,23 +233,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"additionalMetadata\": {\"description\": \"Additional data to pass to server\", \"title\": \"additionalMetadata\", \"type\": \"string\"}, \"petId\": {\"description\": \"ID of pet to update\", \"title\": \"petId\", \"type\": \"integer\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
+          "name": "Response",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"type\":{\"type\":\"string\"},\"message\":{\"type\":\"string\"}}}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:uploadFile",
+      "id": "_id_:uploadFile",
       "name": "uploads an image",
       "pattern": "To",
       "tags": [
@@ -271,14 +271,14 @@
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
+          "name": "Response",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"integer\"}}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getInventory",
+      "id": "_id_:getInventory",
       "name": "Returns pet inventories by status",
       "pattern": "To",
       "tags": [
@@ -297,23 +297,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"complete\": {\"default\": false, \"type\": \"boolean\"}, \"id\": { \"type\": \"integer\"}, \"petId\": { \"type\": \"integer\"}, \"quantity\": { \"type\": \"integer\"}, \"shipDate\": {\"format\": \"date-time\", \"type\": \"string\"}, \"status\": {\"description\": \"Order Status\", \"enum\": [ \"placed\", \"approved\", \"delivered\" ], \"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Order\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
+          "name": "Response",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"}}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:placeOrder",
+      "id": "_id_:placeOrder",
       "name": "Place an order for a pet",
       "pattern": "To",
       "tags": [
@@ -332,23 +332,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"orderId\": {\"description\": \"ID of pet that needs to be fetched\", \"title\": \"orderId\", \"type\": \"integer\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
+          "name": "Response",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"}}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getOrderById",
+      "id": "_id_:getOrderById",
       "name": "Find purchase order by ID",
       "pattern": "To",
       "tags": [
@@ -367,17 +367,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"orderId\": {\"description\": \"ID of the order that needs to be deleted\", \"title\": \"orderId\", \"type\": \"integer\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deleteOrder",
+      "id": "_id_:deleteOrder",
       "name": "Delete purchase order by ID",
       "pattern": "To",
       "tags": [
@@ -396,17 +396,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": { \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\",  \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"User\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUser",
+      "id": "_id_:createUser",
       "name": "Create user",
       "pattern": "To",
       "tags": [
@@ -425,17 +425,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"User\"}},\"type\":\"array\"}},\"type\":\"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUsersWithArrayInput",
+      "id": "_id_:createUsersWithArrayInput",
       "name": "Creates list of users with given input array",
       "pattern": "To",
       "tags": [
@@ -454,17 +454,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"User\"}},\"type\":\"array\"}},\"type\":\"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUsersWithListInput",
+      "id": "_id_:createUsersWithListInput",
       "name": "Creates list of users with given input array",
       "pattern": "To",
       "tags": [
@@ -483,23 +483,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"password\": {\"description\": \"The password for login in clear text\", \"title\": \"password\", \"type\": \"string\"}, \"username\": {\"description\": \"The user name for login\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
+          "name": "Response",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:loginUser",
+      "id": "_id_:loginUser",
       "name": "Logs user into the system",
       "pattern": "To",
       "tags": [
@@ -522,7 +522,7 @@
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:logoutUser",
+      "id": "_id_:logoutUser",
       "name": "Logs out current logged in user session",
       "pattern": "To",
       "tags": [
@@ -541,23 +541,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"username\": {\"description\": \"The name that needs to be fetched. Use user1 for testing.\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
+          "name": "Response",
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"username\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"type\":\"integer\",\"description\":\"User Status\"}},\"xml\":{\"name\":\"User\"}}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getUserByName",
+      "id": "_id_:getUserByName",
       "name": "Get user by user name",
       "pattern": "To",
       "tags": [
@@ -576,17 +576,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": { \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\",  \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}},\"type\": \"object\", \"xml\": {\"name\": \"User\"}}, \"parameters\": {\"properties\": {\"username\": {\"description\": \"name that need to be updated\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updateUser",
+      "id": "_id_:updateUser",
       "name": "Updated user",
       "pattern": "To",
       "tags": [
@@ -604,17 +604,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
+          "name": "Request",
           "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"parameters\": {\"properties\": {\"username\": {\"description\": \"The name that needs to be deleted\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deleteUser",
+      "id": "_id_:deleteUser",
       "name": "Delete user",
       "pattern": "To",
       "tags": [
@@ -622,18 +622,40 @@
       ]
     }
   ],
+  "componentScheme": "rest-swagger",
   "configuredProperties": {
     "authenticationType": "oauth2",
     "authorizationEndpoint": "http://petstore.swagger.io/oauth/dialog",
     "basePath": "/v2",
     "host": "http://petstore.swagger.io",
-    "oauthScopes": "write:pets read:pets",
+    "oauthScopes": "read:pets write:pets",
     "specification": "{\"swagger\":\"2.0\",\"host\":\"petstore.swagger.io\",\"basePath\":\"/v2\",\"schemes\":[\"http\"],\"paths\":{\"/pet\":{\"post\":{\"operationId\":\"addPet\",\"consumes\":[\"application/json\",\"application/xml\"],\"produces\":[\"application/xml\",\"application/json\"]},\"put\":{\"operationId\":\"updatePet\",\"consumes\":[\"application/json\",\"application/xml\"],\"produces\":[\"application/xml\",\"application/json\"]}},\"/pet/findByStatus\":{\"get\":{\"operationId\":\"findPetsByStatus\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"status\",\"in\":\"query\",\"items\":{\"type\":\"string\",\"default\":\"available\",\"enum\":[\"available\",\"pending\",\"sold\"]},\"collectionFormat\":\"multi\"}]}},\"/pet/findByTags\":{\"get\":{\"operationId\":\"findPetsByTags\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"tags\",\"in\":\"query\",\"items\":{\"type\":\"string\"},\"collectionFormat\":\"multi\"}],\"deprecated\":true}},\"/pet/{petId}\":{\"get\":{\"operationId\":\"getPetById\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}]},\"post\":{\"operationId\":\"updatePetWithForm\",\"consumes\":[\"application/x-www-form-urlencoded\"],\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}]},\"delete\":{\"operationId\":\"deletePet\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}]}},\"/pet/{petId}/uploadImage\":{\"post\":{\"operationId\":\"uploadFile\",\"consumes\":[\"multipart/form-data\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}]}},\"/store/inventory\":{\"get\":{\"operationId\":\"getInventory\",\"produces\":[\"application/json\"]}},\"/store/order\":{\"post\":{\"operationId\":\"placeOrder\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/store/order/{orderId}\":{\"get\":{\"operationId\":\"getOrderById\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"orderId\",\"in\":\"path\",\"maximum\":1E+1,\"minimum\":1}]},\"delete\":{\"operationId\":\"deleteOrder\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"orderId\",\"in\":\"path\",\"minimum\":1}]}},\"/user\":{\"post\":{\"operationId\":\"createUser\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/createWithArray\":{\"post\":{\"operationId\":\"createUsersWithArrayInput\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/createWithList\":{\"post\":{\"operationId\":\"createUsersWithListInput\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/login\":{\"get\":{\"operationId\":\"loginUser\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"query\"},{\"name\":\"password\",\"in\":\"query\"}]}},\"/user/logout\":{\"get\":{\"operationId\":\"logoutUser\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/{username}\":{\"get\":{\"operationId\":\"getUserByName\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]},\"put\":{\"operationId\":\"updateUser\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]},\"delete\":{\"operationId\":\"deleteUser\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]}}}}"
   },
+  "connectorCustomizers": [
+    "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
+    "io.syndesis.connector.rest.swagger.AuthenticationCustomizer",
+    "io.syndesis.connector.rest.swagger.RequestCustomizer",
+    "io.syndesis.connector.rest.swagger.ResponseCustomizer"
+  ],
+  "connectorFactory": "io.syndesis.connector.rest.swagger.ConnectorFactory",
   "connectorGroup": {
     "id": "swagger-connector-template"
   },
   "connectorGroupId": "swagger-connector-template",
+  "dependencies": [
+    {
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
+      "type": "MAVEN"
+    },
+    {
+      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
+      "type": "MAVEN"
+    },
+    {
+      "id": "org.apache.camel:camel-http4:@camel.version@",
+      "type": "MAVEN"
+    }
+  ],
   "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
   "name": "Swagger Petstore",
   "properties": {
@@ -774,7 +796,7 @@
     },
     "oauthScopes": {
       "componentProperty": true,
-      "defaultValue": "write:pets read:pets",
+      "defaultValue": "read:pets write:pets",
       "deprecated": false,
       "description": "URL to fetch the OAuth Access token",
       "displayName": "OAuth Scopes",

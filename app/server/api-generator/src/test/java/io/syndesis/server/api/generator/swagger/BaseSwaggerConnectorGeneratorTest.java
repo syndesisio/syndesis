@@ -44,7 +44,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorTest {
 
-    private final BaseSwaggerConnectorGenerator generator = new BaseSwaggerConnectorGenerator() {
+    private final BaseSwaggerConnectorGenerator generator = new BaseSwaggerConnectorGenerator(new Connector.Builder()
+        .addTags("from-connector")
+        .build()) {
         @Override
         ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Swagger swagger, final Operation operation) {
             return new ConnectorDescriptor.Builder();

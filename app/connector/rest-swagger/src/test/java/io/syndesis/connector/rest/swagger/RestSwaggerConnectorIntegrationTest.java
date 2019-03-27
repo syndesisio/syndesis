@@ -53,6 +53,7 @@ import com.github.tomakehurst.wiremock.client.BasicCredentials;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import com.github.tomakehurst.wiremock.stubbing.Scenario;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -63,6 +64,7 @@ import static com.github.tomakehurst.wiremock.client.WireMock.ok;
 import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.put;
 import static com.github.tomakehurst.wiremock.client.WireMock.putRequestedFor;
+import static com.github.tomakehurst.wiremock.client.WireMock.status;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 public class RestSwaggerConnectorIntegrationTest {
@@ -111,8 +113,9 @@ public class RestSwaggerConnectorIntegrationTest {
             .willReturn(ok(DOGGIE)
                 .withHeader("Content-Type", "application/json")));
 
-        assertThat(context.createProducerTemplate().requestBody("direct:getPetById", "{\"parameters\":{\"petId\":\"123\"}}", String.class))
-            .isEqualTo(DOGGIE);
+        assertThat(context.createProducerTemplate().requestBody("direct:getPetById",
+            "{\"parameters\":{\"petId\":\"123\"}}", String.class))
+                .isEqualTo(DOGGIE);
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/123"))
             .withHeader("Accept", equalTo("application/json"))
@@ -125,7 +128,8 @@ public class RestSwaggerConnectorIntegrationTest {
             .willReturn(ok(DOGGIE)
                 .withHeader("Content-Type", "application/json")));
 
-        assertThat(context.createProducerTemplate().requestBodyAndHeaders("direct:getPetById", "{\"parameters\":{\"petId\":\"123\"}}",
+        assertThat(context.createProducerTemplate().requestBodyAndHeaders("direct:getPetById",
+            "{\"parameters\":{\"petId\":\"123\"}}",
             Collections.singletonMap(Exchange.HTTP_URI, "bogus"), String.class))
                 .isEqualTo(DOGGIE);
 
@@ -147,8 +151,9 @@ public class RestSwaggerConnectorIntegrationTest {
         headers.put("Cookie", "cupcake=chocolate");
         headers.put("Authorization", "Bearer supersecret");
 
-        assertThat(context.createProducerTemplate().requestBodyAndHeaders("direct:getPetById", "{\"parameters\":{\"petId\":\"123\"}}", headers, String.class))
-            .isEqualTo(DOGGIE);
+        assertThat(context.createProducerTemplate().requestBodyAndHeaders("direct:getPetById",
+            "{\"parameters\":{\"petId\":\"123\"}}", headers, String.class))
+                .isEqualTo(DOGGIE);
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/123"))
             .withHeader("Host", equalTo("localhost:" + wiremock.port()))
@@ -165,8 +170,10 @@ public class RestSwaggerConnectorIntegrationTest {
             .willReturn(ok(DOGGIE)
                 .withHeader("Content-Type", "application/json")));
 
-        assertThat(context.createProducerTemplate().requestBody("direct:unifiedResponse", "{\"parameters\":{\"petId\":\"123\"}}", String.class))
-            .isEqualTo("{\"parameters\":{\"Status\":200,\"Content-Type\":\"application/json\"},\"body\":" + DOGGIE + "}");
+        assertThat(context.createProducerTemplate().requestBody("direct:unifiedResponse",
+            "{\"parameters\":{\"petId\":\"123\"}}", String.class))
+                .isEqualTo(
+                    "{\"parameters\":{\"Status\":200,\"Content-Type\":\"application/json\"},\"body\":" + DOGGIE + "}");
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/123"))
             .withHeader("Accept", equalTo("application/json"))
@@ -209,8 +216,9 @@ public class RestSwaggerConnectorIntegrationTest {
             .willReturn(ok(doggieArray)
                 .withHeader("Content-Type", "application/json")));
 
-        assertThat(context.createProducerTemplate().requestBody("direct:findPetsByStatus", "{\"parameters\":{\"status\":\"available\"}}", String.class))
-            .isEqualTo(doggieArray);
+        assertThat(context.createProducerTemplate().requestBody("direct:findPetsByStatus",
+            "{\"parameters\":{\"status\":\"available\"}}", String.class))
+                .isEqualTo(doggieArray);
 
         wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/findByStatus?status=available"))
             .withQueryParam("status", equalTo("available"))
@@ -251,6 +259,44 @@ public class RestSwaggerConnectorIntegrationTest {
             .withRequestBody(WireMock.equalTo("")));
     }
 
+    @Test
+    public void shouldRefreshOAuthTokenOnHttpStatus() throws Exception {
+        wiremock.givenThat(post("/oauth/authorize").inScenario("oauth-retry")
+            .withRequestBody(equalTo("refresh_token=refresh-token&grant_type=refresh_token"))
+            .willReturn(ok()
+                .withBody("{\"access_token\":\"refreshed-token\"}"))
+            .whenScenarioStateIs(Scenario.STARTED)
+            .willSetStateTo("Expecting request"));
+
+        wiremock.givenThat(get("/v2/pet/123").inScenario("oauth-retry")
+            .withHeader("Authorization", equalTo("Bearer refreshed-token"))
+            .willReturn(status(401))
+            .whenScenarioStateIs("Expecting request")
+            .willSetStateTo("Expecting retry"));
+
+        wiremock.givenThat(post("/oauth/authorize").inScenario("oauth-retry")
+            .withRequestBody(equalTo("refresh_token=refresh-token&grant_type=refresh_token"))
+            .willReturn(ok()
+                .withBody("{\"access_token\":\"new-token\"}"))
+            .whenScenarioStateIs("Expecting retry")
+            .willSetStateTo("Retried"));
+
+        wiremock.givenThat(get("/v2/pet/123").inScenario("oauth-retry")
+            .withHeader("Authorization", equalTo("Bearer new-token"))
+            .willReturn(ok(DOGGIE)
+                .withHeader("Content-Type", "application/json"))
+            .whenScenarioStateIs("Retried"));
+
+        assertThat(context.createProducerTemplate().requestBody("direct:oauth-retry",
+            "{\"parameters\":{\"petId\":\"123\"}}", String.class))
+                .isEqualTo(
+                    "{\"parameters\":{\"Status\":200,\"Content-Type\":\"application/json\"},\"body\":" + DOGGIE + "}");
+
+        wiremock.verify(getRequestedFor(urlEqualTo("/v2/user/logout"))
+            .withHeader("Authorization", equalTo("Bearer new-token"))
+            .withRequestBody(WireMock.equalTo("")));
+    }
+
     @After
     public void teardown() throws Exception {
         context.stop();
@@ -283,6 +329,7 @@ public class RestSwaggerConnectorIntegrationTest {
                 .specification("{\"$id\":\"io:syndesis:wrapped\"}")
                 .build()))
             .addFlow(oAuthRefreshFlow())
+            .addFlow(oAuthRetryFlow())
             .build();
     }
 
@@ -300,6 +347,10 @@ public class RestSwaggerConnectorIntegrationTest {
                 properties.put("flow-6.rest-swagger-1.clientSecret", "client-secret");
                 properties.put("flow-6.rest-swagger-1.accessToken", "access-token");
                 properties.put("flow-6.rest-swagger-1.refreshToken", "refresh-token");
+
+                properties.put("flow-7.rest-swagger-1.clientSecret", "client-secret");
+                properties.put("flow-7.rest-swagger-1.accessToken", "access-token");
+                properties.put("flow-7.rest-swagger-1.refreshToken", "refresh-token");
 
                 final PropertiesComponent propertiesComponent = new PropertiesComponent();
                 propertiesComponent.setInitialProperties(properties);
@@ -343,12 +394,34 @@ public class RestSwaggerConnectorIntegrationTest {
                 .putConfiguredProperty("clientSecret", "ENC:_client_secret_")
                 .putConfiguredProperty("refreshToken", "ENC:_refresh_token_")
                 .putConfiguredProperty("accessTokenExpiresAt", String.valueOf(System.currentTimeMillis()))
-                .putConfiguredProperty("authorizationEndpoint", "http://localhost:" + wiremock.port() + "/oauth/authorize")
+                .putConfiguredProperty("authorizationEndpoint",
+                    "http://localhost:" + wiremock.port() + "/oauth/authorize")
                 .build())
             .build();
 
         return new Flow.Builder()
             .addStep(direct("oauth-refresh"))
+            .addStep(apiWithOauth)
+            .build();
+    }
+
+    private Flow oAuthRetryFlow() {
+        final Step apiWithOauth = operation("getPetById", JSON_SCHEMA_SHAPE, JSON_SCHEMA_SHAPE).builder()
+            .connection(connection.builder()
+                .putConfiguredProperty("authenticationType", AuthenticationType.oauth2.name())
+                .putConfiguredProperty("accessToken", "ENC:_access_token_")
+                .putConfiguredProperty("clientId", "client-id")
+                .putConfiguredProperty("clientSecret", "ENC:_client_secret_")
+                .putConfiguredProperty("refreshToken", "ENC:_refresh_token_")
+                .putConfiguredProperty("refreshTokenRetryStatuses", "401")
+                .putConfiguredProperty("accessTokenExpiresAt", String.valueOf(Long.MAX_VALUE))
+                .putConfiguredProperty("authorizationEndpoint",
+                    "http://localhost:" + wiremock.port() + "/oauth/authorize")
+                .build())
+            .build();
+
+        return new Flow.Builder()
+            .addStep(direct("oauth-retry"))
             .addStep(apiWithOauth)
             .build();
     }
@@ -373,7 +446,8 @@ public class RestSwaggerConnectorIntegrationTest {
         return testFlow(operationId, operationId, inputDataShape, outputDataShape);
     }
 
-    private Flow testFlow(final String operationId, final String triggerName, final DataShape inputDataShape, final DataShape outputDataShape) {
+    private Flow testFlow(final String operationId, final String triggerName, final DataShape inputDataShape,
+        final DataShape outputDataShape) {
         return new Flow.Builder()
             .addStep(direct(triggerName))
             .addStep(operation(operationId, inputDataShape, outputDataShape))
@@ -393,7 +467,8 @@ public class RestSwaggerConnectorIntegrationTest {
     }
 
     private static Connector loadConnector() {
-        try (InputStream json = RestSwaggerConnectorIntegrationTest.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
+        try (InputStream json = RestSwaggerConnectorIntegrationTest.class
+            .getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
             return Json.readFromStream(json, Connector.class);
         } catch (final IOException e) {
             throw new AssertionError(e);

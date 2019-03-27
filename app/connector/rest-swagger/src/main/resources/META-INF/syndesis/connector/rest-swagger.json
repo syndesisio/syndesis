@@ -10,6 +10,7 @@
     "io.syndesis.connector.rest.swagger.RequestCustomizer",
     "io.syndesis.connector.rest.swagger.ResponseCustomizer"
   ],
+  "connectorFactory": "io.syndesis.connector.rest.swagger.ConnectorFactory",
   "dependencies": [
     {
       "id": "@project.groupId@:@project.artifactId@:@project.version@",

@@ -19,14 +19,14 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Optional;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithProperties;
 
 import org.immutables.value.Value;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = ConnectorTemplate.Builder.class)
@@ -41,13 +41,11 @@ public interface ConnectorTemplate extends WithId<ConnectorTemplate>, WithName, 
         return new Builder().createFrom(this);
     }
 
-    String getCamelConnectorGAV();
-
-    String getCamelConnectorPrefix();
-
     Optional<ConnectorGroup> getConnectorGroup();
 
     Map<String, ConfigurationProperty> getConnectorProperties();
+
+    String getConnectorScheme();
 
     String getDescription();
 

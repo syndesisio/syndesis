@@ -44,6 +44,7 @@ public class DescriptorTest {
     public void descriptorShouldConformToExpected() throws IOException {
         final Connector expected = new Connector.Builder()
             .id("rest-swagger")
+            .connectorFactory(ConnectorFactory.class.getName())
             .actions(new ArrayList<>())
             .icon("")
             .description("rest-swagger TODO:change this")

@@ -19,17 +19,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import io.syndesis.common.model.api.APISummary;
-import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.api.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.model.action.ActionsSummary;
+import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
+import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.server.api.generator.swagger.SwaggerUnifiedShapeConnectorGenerator;
 import io.syndesis.server.runtime.BaseITCase;
-
-import okio.Okio;
 
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
@@ -49,6 +47,8 @@ import org.springframework.util.MultiValueMap;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import okio.Okio;
+
 @ContextConfiguration
 public class CustomSwaggerConnectorITCase extends BaseITCase {
 
@@ -64,7 +64,9 @@ public class CustomSwaggerConnectorITCase extends BaseITCase {
 
         @Bean(TEMPLATE_ID)
         public ConnectorGenerator swaggerConnectorGenerator() {
-            return new SwaggerUnifiedShapeConnectorGenerator();
+            return new SwaggerUnifiedShapeConnectorGenerator(new Connector.Builder()
+                .addTags("from-connector")
+                .build());
         }
     }
 

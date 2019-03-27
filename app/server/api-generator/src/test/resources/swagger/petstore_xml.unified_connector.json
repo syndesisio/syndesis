@@ -2,16 +2,8 @@
   "actions": [
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send POST request to /pet",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "addPet"
         },
@@ -19,17 +11,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "xml-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema targetNamespace=\"http://syndesis.io/v1/swagger-connector-template/request\" elementFormDefault=\"qualified\"><xsd:element name=\"request\"><xsd:complexType><xsd:sequence><xsd:element name=\"body\"><xsd:complexType><xsd:sequence><xsd:element ref=\"Pet\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema><d:AdditionalSchemas><xsd:schema><xsd:element name=\"Pet\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"Category\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"name\" type=\"xsd:string\"/><xsd:element name=\"photoUrl\"><xsd:complexType><xsd:sequence><xsd:element name=\"photoUrl\" type=\"xsd:string\" maxOccurs=\"unbounded\" minOccurs=\"0\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"tag\"><xsd:complexType><xsd:sequence><xsd:element name=\"Tag\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"status\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:AdditionalSchemas></d:SchemaSet>"
+          "name": "Request",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema targetNamespace=\"http://syndesis.io/v1/swagger-connector-template/request\" elementFormDefault=\"qualified\"><xsd:element name=\"request\"><xsd:complexType><xsd:sequence><xsd:element name=\"body\"><xsd:complexType><xsd:sequence><xsd:element ref=\"Pet\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema><d:AdditionalSchemas><xsd:schema><xsd:element name=\"Pet\"><xsd:complexType><xsd:sequence><xsd:element name=\"Category\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/><xsd:element name=\"photoUrl\"><xsd:complexType><xsd:sequence><xsd:element name=\"photoUrl\" type=\"xsd:string\" maxOccurs=\"unbounded\" minOccurs=\"0\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"status\" type=\"xsd:string\"/><xsd:element name=\"tag\"><xsd:complexType><xsd:sequence><xsd:element name=\"Tag\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:AdditionalSchemas></d:SchemaSet>"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:addPet",
+      "id": "_id_:addPet",
       "name": "Add a new pet to the store",
       "pattern": "To",
       "tags": [
@@ -38,16 +30,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send DELETE request to /pet/{petId}",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "deletePet"
         },
@@ -55,17 +39,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"api_key\":{\"type\":\"string\",\"title\":\"api_key\"},\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"Pet id to delete\"}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"api_key\":{\"type\":\"string\",\"title\":\"api_key\"},\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"Pet id to delete\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deletePet",
+      "id": "_id_:deletePet",
       "name": "Deletes a pet",
       "pattern": "To",
       "tags": [
@@ -74,16 +58,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Returns a single pet",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "getPetById"
         },
@@ -91,23 +67,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet to return\"}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet to return\"}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "xml-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"Pet\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"Category\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"name\" type=\"xsd:string\"/><xsd:element name=\"photoUrl\"><xsd:complexType><xsd:sequence><xsd:element name=\"photoUrl\" type=\"xsd:string\" maxOccurs=\"unbounded\" minOccurs=\"0\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"tag\"><xsd:complexType><xsd:sequence><xsd:element name=\"Tag\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"status\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
+          "name": "Response",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"Pet\"><xsd:complexType><xsd:sequence><xsd:element name=\"Category\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/><xsd:element name=\"photoUrl\"><xsd:complexType><xsd:sequence><xsd:element name=\"photoUrl\" type=\"xsd:string\" maxOccurs=\"unbounded\" minOccurs=\"0\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"status\" type=\"xsd:string\"/><xsd:element name=\"tag\"><xsd:complexType><xsd:sequence><xsd:element name=\"Tag\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getPetById",
+      "id": "_id_:getPetById",
       "name": "Find pet by ID",
       "pattern": "To",
       "tags": [
@@ -116,16 +92,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Multiple status values can be provided with comma separated strings",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "findPetsByStatus"
         },
@@ -133,23 +101,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"array\",\"title\":\"status\",\"description\":\"Status values that need to be considered for filter\",\"items\":{\"type\":\"string\",\"enum\":[\"available\",\"pending\",\"sold\"]}}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"status\":{\"type\":\"array\",\"title\":\"status\",\"description\":\"Status values that need to be considered for filter\",\"items\":{\"type\":\"string\",\"enum\":[\"available\",\"pending\",\"sold\"]}}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "xml-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"Pets\"><xsd:complexType><xsd:sequence><xsd:element name=\"Pet\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"Category\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"name\" type=\"xsd:string\"/><xsd:element name=\"photoUrl\"><xsd:complexType><xsd:sequence><xsd:element name=\"photoUrl\" type=\"xsd:string\" maxOccurs=\"unbounded\" minOccurs=\"0\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"tag\"><xsd:complexType><xsd:sequence><xsd:element name=\"Tag\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"status\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
+          "name": "Response",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"Pets\"><xsd:complexType><xsd:sequence><xsd:element name=\"Pet\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"Category\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/><xsd:element name=\"photoUrl\"><xsd:complexType><xsd:sequence><xsd:element name=\"photoUrl\" type=\"xsd:string\" maxOccurs=\"unbounded\" minOccurs=\"0\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"status\" type=\"xsd:string\"/><xsd:element name=\"tag\"><xsd:complexType><xsd:sequence><xsd:element name=\"Tag\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByStatus",
+      "id": "_id_:findPetsByStatus",
       "name": "Finds Pets by status",
       "pattern": "To",
       "tags": [
@@ -158,16 +126,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Muliple tags can be provided with comma separated strings. Use tag1, tag2, tag3 for testing.",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "findPetsByTags"
         },
@@ -175,23 +135,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"tags\":{\"type\":\"array\",\"title\":\"tags\",\"description\":\"Tags to filter by\",\"items\":{\"type\":\"string\"}}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"tags\":{\"type\":\"array\",\"title\":\"tags\",\"description\":\"Tags to filter by\",\"items\":{\"type\":\"string\"}}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "xml-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"Pet\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"Category\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"name\" type=\"xsd:string\"/><xsd:element name=\"photoUrl\"><xsd:complexType><xsd:sequence><xsd:element name=\"photoUrl\" type=\"xsd:string\" maxOccurs=\"unbounded\" minOccurs=\"0\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"tag\"><xsd:complexType><xsd:sequence><xsd:element name=\"Tag\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"status\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
+          "name": "Response",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"Pet\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"Category\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/><xsd:element name=\"photoUrl\"><xsd:complexType><xsd:sequence><xsd:element name=\"photoUrl\" type=\"xsd:string\" maxOccurs=\"unbounded\" minOccurs=\"0\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"status\" type=\"xsd:string\"/><xsd:element name=\"tag\"><xsd:complexType><xsd:sequence><xsd:element name=\"Tag\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByTags",
+      "id": "_id_:findPetsByTags",
       "name": "Finds Pets by tags",
       "pattern": "To",
       "tags": [
@@ -200,16 +160,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send PUT request to /pet",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "updatePet"
         },
@@ -217,17 +169,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "xml-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema targetNamespace=\"http://syndesis.io/v1/swagger-connector-template/request\" elementFormDefault=\"qualified\"><xsd:element name=\"request\"><xsd:complexType><xsd:sequence><xsd:element name=\"body\"><xsd:complexType><xsd:sequence><xsd:element ref=\"Pet\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema><d:AdditionalSchemas><xsd:schema><xsd:element name=\"Pet\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"Category\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"name\" type=\"xsd:string\"/><xsd:element name=\"photoUrl\"><xsd:complexType><xsd:sequence><xsd:element name=\"photoUrl\" type=\"xsd:string\" maxOccurs=\"unbounded\" minOccurs=\"0\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"tag\"><xsd:complexType><xsd:sequence><xsd:element name=\"Tag\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"status\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:AdditionalSchemas></d:SchemaSet>"
+          "name": "Request",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema targetNamespace=\"http://syndesis.io/v1/swagger-connector-template/request\" elementFormDefault=\"qualified\"><xsd:element name=\"request\"><xsd:complexType><xsd:sequence><xsd:element name=\"body\"><xsd:complexType><xsd:sequence><xsd:element ref=\"Pet\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema><d:AdditionalSchemas><xsd:schema><xsd:element name=\"Pet\"><xsd:complexType><xsd:sequence><xsd:element name=\"Category\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/><xsd:element name=\"photoUrl\"><xsd:complexType><xsd:sequence><xsd:element name=\"photoUrl\" type=\"xsd:string\" maxOccurs=\"unbounded\" minOccurs=\"0\"/></xsd:sequence></xsd:complexType></xsd:element><xsd:element name=\"status\" type=\"xsd:string\"/><xsd:element name=\"tag\"><xsd:complexType><xsd:sequence><xsd:element name=\"Tag\" maxOccurs=\"unbounded\" minOccurs=\"0\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"name\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:AdditionalSchemas></d:SchemaSet>"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updatePet",
+      "id": "_id_:updatePet",
       "name": "Update an existing pet",
       "pattern": "To",
       "tags": [
@@ -236,16 +188,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send POST request to /pet/{petId}",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "updatePetWithForm"
         },
@@ -253,17 +197,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet that needs to be updated\"},\"name\":{\"type\":\"string\",\"title\":\"name\",\"description\":\"Updated name of the pet\"},\"status\":{\"type\":\"string\",\"title\":\"status\",\"description\":\"Updated status of the pet\"}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet that needs to be updated\"},\"name\":{\"type\":\"string\",\"title\":\"name\",\"description\":\"Updated name of the pet\"},\"status\":{\"type\":\"string\",\"title\":\"status\",\"description\":\"Updated status of the pet\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updatePetWithForm",
+      "id": "_id_:updatePetWithForm",
       "name": "Updates a pet in the store with form data",
       "pattern": "To",
       "tags": [
@@ -272,16 +216,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send POST request to /pet/{petId}/uploadImage",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "uploadFile"
         },
@@ -289,23 +225,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet to update\"},\"additionalMetadata\":{\"type\":\"string\",\"title\":\"additionalMetadata\",\"description\":\"Additional data to pass to server\"}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"petId\":{\"type\":\"integer\",\"title\":\"petId\",\"description\":\"ID of pet to update\"},\"additionalMetadata\":{\"type\":\"string\",\"title\":\"additionalMetadata\",\"description\":\"Additional data to pass to server\"}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "xml-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element><xsd:complexType><xsd:sequence><xsd:element name=\"code\" type=\"xsd:integer\"/><xsd:element name=\"type\" type=\"xsd:string\"/><xsd:element name=\"message\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
+          "name": "Response",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element><xsd:complexType><xsd:sequence><xsd:element name=\"code\" type=\"xsd:integer\"/><xsd:element name=\"message\" type=\"xsd:string\"/><xsd:element name=\"type\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:uploadFile",
+      "id": "_id_:uploadFile",
       "name": "uploads an image",
       "pattern": "To",
       "tags": [
@@ -314,16 +250,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "For valid response try integer IDs with positive integer value. Negative or non-integer values will generate API errors",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "deleteOrder"
         },
@@ -331,17 +259,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"orderId\":{\"type\":\"integer\",\"title\":\"orderId\",\"description\":\"ID of the order that needs to be deleted\"}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"orderId\":{\"type\":\"integer\",\"title\":\"orderId\",\"description\":\"ID of the order that needs to be deleted\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deleteOrder",
+      "id": "_id_:deleteOrder",
       "name": "Delete purchase order by ID",
       "pattern": "To",
       "tags": [
@@ -350,16 +278,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "For valid response try integer IDs with value >= 1 and <= 10. Other values will generated exceptions",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "getOrderById"
         },
@@ -367,23 +287,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"orderId\":{\"type\":\"integer\",\"title\":\"orderId\",\"description\":\"ID of pet that needs to be fetched\"}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"orderId\":{\"type\":\"integer\",\"title\":\"orderId\",\"description\":\"ID of pet that needs to be fetched\"}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "xml-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"Order\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"petId\" type=\"xsd:integer\"/><xsd:element name=\"quantity\" type=\"xsd:integer\"/><xsd:element name=\"shipDate\" type=\"xsd:string\"/><xsd:element name=\"status\" type=\"xsd:string\"/><xsd:element name=\"complete\" type=\"xsd:boolean\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
+          "name": "Response",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"Order\"><xsd:complexType><xsd:sequence><xsd:element name=\"complete\" type=\"xsd:boolean\"/><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"petId\" type=\"xsd:integer\"/><xsd:element name=\"quantity\" type=\"xsd:integer\"/><xsd:element name=\"shipDate\" type=\"xsd:string\"/><xsd:element name=\"status\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getOrderById",
+      "id": "_id_:getOrderById",
       "name": "Find purchase order by ID",
       "pattern": "To",
       "tags": [
@@ -392,16 +312,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send POST request to /store/order",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "placeOrder"
         },
@@ -409,23 +321,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"complete\":{\"default\":false,\"type\":\"boolean\"},\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"format\":\"date-time\",\"type\":\"string\"},\"status\":{\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"],\"type\":\"string\"}},\"xml\":{\"name\":\"Order\"}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "xml-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"Order\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"petId\" type=\"xsd:integer\"/><xsd:element name=\"quantity\" type=\"xsd:integer\"/><xsd:element name=\"shipDate\" type=\"xsd:string\"/><xsd:element name=\"status\" type=\"xsd:string\"/><xsd:element name=\"complete\" type=\"xsd:boolean\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
+          "name": "Response",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"Order\"><xsd:complexType><xsd:sequence><xsd:element name=\"complete\" type=\"xsd:boolean\"/><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"petId\" type=\"xsd:integer\"/><xsd:element name=\"quantity\" type=\"xsd:integer\"/><xsd:element name=\"shipDate\" type=\"xsd:string\"/><xsd:element name=\"status\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:placeOrder",
+      "id": "_id_:placeOrder",
       "name": "Place an order for a pet",
       "pattern": "To",
       "tags": [
@@ -434,16 +346,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Returns a map of status codes to quantities",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "getInventory"
         },
@@ -455,7 +359,7 @@
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getInventory",
+      "id": "_id_:getInventory",
       "name": "Returns pet inventories by status",
       "pattern": "To",
       "tags": [
@@ -464,16 +368,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "This can only be done by the logged in user.",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "createUser"
         },
@@ -481,17 +377,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"username\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"type\":\"integer\",\"description\":\"User Status\"}},\"xml\":{\"name\":\"User\"}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"xml\":{\"name\":\"User\"}}}}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUser",
+      "id": "_id_:createUser",
       "name": "Create user",
       "pattern": "To",
       "tags": [
@@ -500,16 +396,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send POST request to /user/createWithArray",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "createUsersWithArrayInput"
         },
@@ -517,17 +405,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"items\":{\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"User\"}},\"type\":\"array\"}},\"type\":\"object\"}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"xml\":{\"name\":\"User\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUsersWithArrayInput",
+      "id": "_id_:createUsersWithArrayInput",
       "name": "Creates list of users with given input array",
       "pattern": "To",
       "tags": [
@@ -536,16 +424,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send POST request to /user/createWithList",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "createUsersWithListInput"
         },
@@ -553,17 +433,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"items\":{\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"User\"}},\"type\":\"array\"}},\"type\":\"object\"}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"xml\":{\"name\":\"User\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:createUsersWithListInput",
+      "id": "_id_:createUsersWithListInput",
       "name": "Creates list of users with given input array",
       "pattern": "To",
       "tags": [
@@ -572,16 +452,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "This can only be done by the logged in user.",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "deleteUser"
         },
@@ -589,17 +461,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"The name that needs to be deleted\"}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"The name that needs to be deleted\"}}}}}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:deleteUser",
+      "id": "_id_:deleteUser",
       "name": "Delete user",
       "pattern": "To",
       "tags": [
@@ -608,16 +480,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send GET request to /user/{username}",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "getUserByName"
         },
@@ -625,23 +489,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"The name that needs to be fetched. Use user1 for testing.\"}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"The name that needs to be fetched. Use user1 for testing.\"}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "xml-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
-          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"User\"><xsd:complexType><xsd:sequence><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"username\" type=\"xsd:string\"/><xsd:element name=\"firstName\" type=\"xsd:string\"/><xsd:element name=\"lastName\" type=\"xsd:string\"/><xsd:element name=\"email\" type=\"xsd:string\"/><xsd:element name=\"password\" type=\"xsd:string\"/><xsd:element name=\"phone\" type=\"xsd:string\"/><xsd:element name=\"userStatus\" type=\"xsd:integer\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
+          "name": "Response",
+          "specification": "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<d:SchemaSet xmlns:d=\"http://atlasmap.io/xml/schemaset/v2\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><xsd:schema><xsd:element name=\"User\"><xsd:complexType><xsd:sequence><xsd:element name=\"email\" type=\"xsd:string\"/><xsd:element name=\"firstName\" type=\"xsd:string\"/><xsd:element name=\"id\" type=\"xsd:integer\"/><xsd:element name=\"lastName\" type=\"xsd:string\"/><xsd:element name=\"password\" type=\"xsd:string\"/><xsd:element name=\"phone\" type=\"xsd:string\"/><xsd:element name=\"userStatus\" type=\"xsd:integer\"/><xsd:element name=\"username\" type=\"xsd:string\"/></xsd:sequence></xsd:complexType></xsd:element></xsd:schema></d:SchemaSet>"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getUserByName",
+      "id": "_id_:getUserByName",
       "name": "Get user by user name",
       "pattern": "To",
       "tags": [
@@ -650,16 +514,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send GET request to /user/logout",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "logoutUser"
         },
@@ -671,7 +527,7 @@
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:logoutUser",
+      "id": "_id_:logoutUser",
       "name": "Logs out current logged in user session",
       "pattern": "To",
       "tags": [
@@ -680,16 +536,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "Send GET request to /user/login",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "loginUser"
         },
@@ -697,23 +545,23 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"The user name for login\"},\"password\":{\"type\":\"string\",\"title\":\"password\",\"description\":\"The password for login in clear text\"}}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"The user name for login\"},\"password\":{\"type\":\"string\",\"title\":\"password\",\"description\":\"The password for login in clear text\"}}}}}"
         },
         "outputDataShape": {
           "description": "API response payload",
           "kind": "json-schema",
-          "name": "Response",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"string\"}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:loginUser",
+      "id": "_id_:loginUser",
       "name": "Logs user into the system",
       "pattern": "To",
       "tags": [
@@ -722,16 +570,8 @@
     },
     {
       "actionType": "connector",
-      "dependencies": [
-        {
-          "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-          "type": "MAVEN"
-        }
-      ],
       "description": "This can only be done by the logged in user.",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "updateUser"
         },
@@ -739,17 +579,17 @@
         "inputDataShape": {
           "description": "API request payload",
           "kind": "json-schema",
-          "name": "Request",
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\",\"$id\":\"io:syndesis:wrapped\",\"type\":\"object\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"name that need to be updated\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"username\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"type\":\"integer\",\"description\":\"User Status\"}},\"xml\":{\"name\":\"User\"}}}}"
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"username\":{\"type\":\"string\",\"title\":\"username\",\"description\":\"name that need to be updated\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"xml\":{\"name\":\"User\"}}}}"
         },
         "outputDataShape": {
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:updateUser",
+      "id": "_id_:updateUser",
       "name": "Updated user",
       "pattern": "To",
       "tags": [
@@ -757,19 +597,43 @@
       ]
     }
   ],
+  "componentScheme": "rest-swagger",
   "configuredProperties": {
     "authenticationType": "oauth2",
     "authorizationEndpoint": "http://petstore.swagger.io/oauth/dialog",
     "basePath": "/v2",
+    "componentName": "connector-rest-swagger-http4",
     "host": "http://petstore.swagger.io",
-    "oauthScopes": "write:pets read:pets",
+    "oauthScopes": "read:pets write:pets",
     "specification": "{\"swagger\":\"2.0\",\"host\":\"petstore.swagger.io\",\"basePath\":\"/v2\",\"schemes\":[\"http\"],\"paths\":{\"/pet\":{\"post\":{\"operationId\":\"addPet\",\"consumes\":[\"application/xml\"],\"produces\":[\"application/xml\"]},\"put\":{\"operationId\":\"updatePet\",\"consumes\":[\"application/xml\"],\"produces\":[\"application/xml\"]}},\"/pet/findByStatus\":{\"get\":{\"operationId\":\"findPetsByStatus\",\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"status\",\"in\":\"query\",\"items\":{\"type\":\"string\",\"default\":\"available\",\"enum\":[\"available\",\"pending\",\"sold\"]},\"collectionFormat\":\"multi\"}]}},\"/pet/findByTags\":{\"get\":{\"operationId\":\"findPetsByTags\",\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"tags\",\"in\":\"query\",\"items\":{\"type\":\"string\"},\"collectionFormat\":\"multi\"}],\"deprecated\":true}},\"/pet/{petId}\":{\"get\":{\"operationId\":\"getPetById\",\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}]},\"post\":{\"operationId\":\"updatePetWithForm\",\"consumes\":[\"application/x-www-form-urlencoded\"],\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}]},\"delete\":{\"operationId\":\"deletePet\",\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}]}},\"/pet/{petId}/uploadImage\":{\"post\":{\"operationId\":\"uploadFile\",\"consumes\":[\"multipart/form-data\"],\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}]}},\"/store/inventory\":{\"get\":{\"operationId\":\"getInventory\",\"produces\":[\"application/xml\"]}},\"/store/order\":{\"post\":{\"operationId\":\"placeOrder\",\"produces\":[\"application/xml\"]}},\"/store/order/{orderId}\":{\"get\":{\"operationId\":\"getOrderById\",\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"orderId\",\"in\":\"path\",\"maximum\":1E+1,\"minimum\":1}]},\"delete\":{\"operationId\":\"deleteOrder\",\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"orderId\",\"in\":\"path\",\"minimum\":1}]}},\"/user\":{\"post\":{\"operationId\":\"createUser\",\"produces\":[\"application/xml\"]}},\"/user/createWithArray\":{\"post\":{\"operationId\":\"createUsersWithArrayInput\",\"produces\":[\"application/xml\"]}},\"/user/createWithList\":{\"post\":{\"operationId\":\"createUsersWithListInput\",\"produces\":[\"application/xml\"]}},\"/user/login\":{\"get\":{\"operationId\":\"loginUser\",\"produces\":[\"text/plain\"],\"parameters\":[{\"name\":\"username\",\"in\":\"query\"},{\"name\":\"password\",\"in\":\"query\"}]}},\"/user/logout\":{\"get\":{\"operationId\":\"logoutUser\",\"produces\":[\"application/xml\"]}},\"/user/{username}\":{\"get\":{\"operationId\":\"getUserByName\",\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]},\"put\":{\"operationId\":\"updateUser\",\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]},\"delete\":{\"operationId\":\"deleteUser\",\"produces\":[\"application/xml\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]}}}}"
   },
+  "connectorCustomizers": [
+    "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
+    "io.syndesis.connector.rest.swagger.AuthenticationCustomizer",
+    "io.syndesis.connector.rest.swagger.RequestCustomizer",
+    "io.syndesis.connector.rest.swagger.ResponseCustomizer"
+  ],
+  "connectorFactory": "io.syndesis.connector.rest.swagger.ConnectorFactory",
   "connectorGroup": {
     "id": "swagger-connector-template"
   },
   "connectorGroupId": "swagger-connector-template",
+  "dependencies": [
+    {
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@",
+      "type": "MAVEN"
+    },
+    {
+      "id": "org.apache.camel:camel-rest-swagger:@camel.version@",
+      "type": "MAVEN"
+    },
+    {
+      "id": "org.apache.camel:camel-http4:@camel.version@",
+      "type": "MAVEN"
+    }
+  ],
   "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
+  "id": "_id_",
   "name": "Swagger Petstore",
   "properties": {
     "accessToken": {
@@ -909,7 +773,7 @@
     },
     "oauthScopes": {
       "componentProperty": true,
-      "defaultValue": "write:pets read:pets",
+      "defaultValue": "read:pets write:pets",
       "deprecated": false,
       "description": "URL to fetch the OAuth Access token",
       "displayName": "OAuth Scopes",

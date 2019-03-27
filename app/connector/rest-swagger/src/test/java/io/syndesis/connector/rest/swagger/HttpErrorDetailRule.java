@@ -15,11 +15,17 @@
  */
 package io.syndesis.connector.rest.swagger;
 
+import java.util.List;
+
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.http.common.HttpOperationFailedException;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.stubbing.ServeEvent;
+import com.google.common.base.Joiner;
 
 public final class HttpErrorDetailRule implements TestRule {
 
@@ -34,8 +40,11 @@ public final class HttpErrorDetailRule implements TestRule {
                     final Throwable cause = camelError.getCause();
                     if (cause instanceof HttpOperationFailedException) {
                         final HttpOperationFailedException httpError = (HttpOperationFailedException) cause;
+
+                        final List<ServeEvent> events = WireMock.getAllServeEvents();
                         final String message = "Received HTTP status: " + httpError.getStatusCode() + " " + httpError.getStatusText() + "\n\n"
-                            + httpError.getResponseBody();
+                            + httpError.getResponseBody() + "\nRequests received:\n"
+                            + Joiner.on('\n').join(events.stream().map(e -> e.getRequest()).iterator());
 
                         throw new AssertionError(message, httpError);
                     }

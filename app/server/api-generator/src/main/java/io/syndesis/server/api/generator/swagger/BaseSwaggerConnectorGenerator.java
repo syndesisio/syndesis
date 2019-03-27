@@ -27,10 +27,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.ofNullable;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import io.swagger.models.HttpMethod;
 import io.swagger.models.Info;
 import io.swagger.models.Operation;
@@ -59,27 +55,35 @@ import io.syndesis.server.api.generator.swagger.util.OperationDescription;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 import io.syndesis.server.api.generator.util.ActionComparator;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import static java.util.Optional.ofNullable;
+
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
     static final DataShape DATA_SHAPE_NONE = new DataShape.Builder().kind(DataShapeKinds.NONE).build();
 
-    static final ConfigurationProperty OPERATION_ID_PROPERTY = new ConfigurationProperty.Builder()//
-        .kind("property")//
-        .displayName("Operation ID")//
-        .group("producer")//
-        .label("producer")//
-        .required(true)//
-        .type("hidden")//
-        .javaType("java.lang.String")//
-        .deprecated(false)//
-        .secret(false)//
-        .componentProperty(false)//
-        .description("ID of operation to invoke")//
+    static final ConfigurationProperty OPERATION_ID_PROPERTY = new ConfigurationProperty.Builder()
+        .kind("property")
+        .displayName("Operation ID")
+        .group("producer")
+        .label("producer")
+        .required(true)
+        .type("hidden")
+        .javaType("java.lang.String")
+        .deprecated(false)
+        .secret(false)
+        .componentProperty(false)
+        .description("ID of operation to invoke")
         .build();
 
     static final String URL_EXTENSION = "x-syndesis-swagger-url";
+
+    BaseSwaggerConnectorGenerator(final Connector baseConnector) {
+        super(baseConnector);
+    }
 
     @Override
     public final Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
@@ -115,28 +119,27 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         if (paths == null) {
             tagCounts = Collections.emptyMap();
         } else {
-            tagCounts = paths.entrySet().stream()//
-                .flatMap(p -> p.getValue().getOperations().stream())//
-                .peek(o -> total.incrementAndGet())//
-                .flatMap(o -> SwaggerHelper.sanitizeTags(o.getTags()).distinct())//
-                .collect(//
-                    Collectors.groupingBy(//
-                        Function.identity(), //
-                        Collectors.reducing(0, (e) -> 1, Integer::sum)//
-                    ));
+            tagCounts = paths.entrySet().stream()
+                .flatMap(p -> p.getValue().getOperations().stream())
+                .peek(o -> total.incrementAndGet())
+                .flatMap(o -> SwaggerHelper.sanitizeTags(o.getTags()).distinct())
+                .collect(
+                    Collectors.groupingBy(
+                        Function.identity(),
+                        Collectors.reducing(0, (e) -> 1, Integer::sum)));
         }
 
-        final ActionsSummary actionsSummary = new ActionsSummary.Builder()//
-            .totalActions(total.intValue())//
-            .actionCountByTags(tagCounts)//
+        final ActionsSummary actionsSummary = new ActionsSummary.Builder()
+            .totalActions(total.intValue())
+            .actionCountByTags(tagCounts)
             .build();
 
-        return new APISummary.Builder()//
-            .createFrom(connector)//
-            .actionsSummary(actionsSummary)//
-            .errors(swaggerInfo.getErrors())//
-            .warnings(swaggerInfo.getWarnings())//
-            .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())//
+        return new APISummary.Builder()
+            .createFrom(connector)
+            .actionsSummary(actionsSummary)
+            .errors(swaggerInfo.getErrors())
+            .warnings(swaggerInfo.getWarnings())
+            .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())
             .build();
     }
 
@@ -188,8 +191,6 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         final Map<String, Path> paths = swagger.getPaths();
 
         final String connectorId = connector.getId().get();
-        final String connectorGav = connectorTemplate.getCamelConnectorGAV();
-        final String connectorScheme = connectorTemplate.getCamelConnectorPrefix();
 
         final List<ConnectorAction> actions = new ArrayList<>();
         final Map<String, Integer> operationIdCounts = new HashMap<>();
@@ -220,20 +221,18 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                     }
                 }
 
-                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedJsonGraph(), swagger, operation)//
-                    .camelConnectorGAV(connectorGav)//
-                    .camelConnectorPrefix(connectorScheme)//
-                    .connectorId(connectorId)//
+                final ConnectorDescriptor descriptor = createDescriptor(info.getResolvedJsonGraph(), swagger, operation)
+                    .connectorId(connectorId)
                     .build();
 
                 final OperationDescription description = SwaggerHelper.operationDescriptionOf(swagger, operation, (m, p) -> "Send " + m + " request to " + p);
 
-                final ConnectorAction action = new ConnectorAction.Builder()//
-                    .id(createActionId(connectorId, connectorGav, operation))//
-                    .name(description.name)//
-                    .description(description.description)//
-                    .pattern(Action.Pattern.To)//
-                    .descriptor(descriptor).tags(SwaggerHelper.sanitizeTags(operation.getTags()).distinct()::iterator)//
+                final ConnectorAction action = new ConnectorAction.Builder()
+                    .id(createActionId(connectorId, operation))
+                    .name(description.name)
+                    .description(description.description)
+                    .pattern(Action.Pattern.To)
+                    .descriptor(descriptor).tags(SwaggerHelper.sanitizeTags(operation.getTags()).distinct()::iterator)
                     .build();
 
                 actions.add(action);
@@ -299,8 +298,8 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         }
     }
 
-    static String createActionId(final String connectorId, final String connectorGav, final Operation operation) {
-        return connectorGav + ":" + connectorId + ":" + operation.getOperationId();
+    static String createActionId(final String connectorId, final Operation operation) {
+        return connectorId + ":" + operation.getOperationId();
     }
 
     static List<PropertyValue> createEnums(final List<String> enums) {
@@ -323,14 +322,14 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         final String description = trimToNull(parameter.getDescription());
         final boolean required = parameter.getRequired();
 
-        final ConfigurationProperty.Builder propertyBuilder = new ConfigurationProperty.Builder()//
-            .kind("property")//
-            .displayName(name)//
-            .description(description)//
-            .group("producer")//
-            .required(required)//
-            .componentProperty(false)//
-            .deprecated(false)//
+        final ConfigurationProperty.Builder propertyBuilder = new ConfigurationProperty.Builder()
+            .kind("property")
+            .displayName(name)
+            .description(description)
+            .group("producer")
+            .required(required)
+            .componentProperty(false)
+            .deprecated(false)
             .secret(false);
 
         final AbstractSerializableParameter<?> serializableParameter = (AbstractSerializableParameter<?>) parameter;

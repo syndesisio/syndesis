@@ -25,9 +25,6 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.ofNullable;
-
 import io.swagger.models.Scheme;
 import io.swagger.models.Swagger;
 import io.swagger.models.auth.AbstractSecuritySchemeDefinition;
@@ -38,6 +35,9 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 
 import org.apache.commons.lang3.StringUtils;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 
 @SuppressWarnings("PMD.GodClass")
 enum PropertyGenerators {
@@ -122,7 +122,7 @@ enum PropertyGenerators {
         @Override
         protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
             return (swagger, template) -> oauthProperty(swagger, template,
-                d -> d.getScopes().keySet().stream().collect(Collectors.joining(" ")));
+                d -> d.getScopes().keySet().stream().sorted().collect(Collectors.joining(" ")));
         }
     },
     password {

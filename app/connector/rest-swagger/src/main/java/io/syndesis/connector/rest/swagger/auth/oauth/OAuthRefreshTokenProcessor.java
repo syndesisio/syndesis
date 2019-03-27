@@ -88,8 +88,7 @@ class OAuthRefreshTokenProcessor implements Processor {
 
     @Override
     public void process(final Exchange exchange) throws Exception {
-        if ((isFirstTime.get() || accessTokenExpiresAt - AHEAD_OF_TIME_REFRESH_MILIS <= now())
-            && refreshToken != null) {
+        if (refreshToken != null && (isFirstTime.get() || accessTokenExpiresAt - AHEAD_OF_TIME_REFRESH_MILIS <= now())) {
             tryToRefreshAccessToken();
         }
 
