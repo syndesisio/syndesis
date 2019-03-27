@@ -13,18 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.sql.common;
+package io.syndesis.connector.sql.db;
 
-import java.sql.JDBCType;
+public class DbMysql extends DbStandard {
 
-import lombok.Data;
+    @Override
+    public String adaptPattern(final String pattern) {
+        if (pattern == null) {
+            return "%";
+        }
+        return pattern;
+    }
 
-@Data
-public class ColumnMetaData {
+    @Override
+    public String getAutoIncrementGrammar() {
+        return "INT NOT NULL AUTO_INCREMENT PRIMARY KEY";
+    }
 
-    private String name;
-    private JDBCType type;
-    private int position;
-    private boolean isAutoIncrement;
-
+    @Override
+    public String getName() {
+        return "Mysql";
+    }
 }

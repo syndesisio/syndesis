@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.sql.common;
+package io.syndesis.connector.sql.db;
 
-import java.sql.JDBCType;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
-import lombok.Data;
+public interface Db {
 
-@Data
-public class ColumnMetaData {
-
-    private String name;
-    private JDBCType type;
-    private int position;
-    private boolean isAutoIncrement;
-
+    String getDefaultSchema(String dbUser);
+    String adaptPattern(String pattern);
+    ResultSet fetchProcedureColumns(DatabaseMetaData meta, String catalog,
+        String schema, String procedureName) throws SQLException;
+    ResultSet fetchProcedures(DatabaseMetaData meta, String catalog,
+        String schemaPattern, String procedurePattern) throws SQLException;
+    String getAutoIncrementGrammar();
+    String getName();
 }

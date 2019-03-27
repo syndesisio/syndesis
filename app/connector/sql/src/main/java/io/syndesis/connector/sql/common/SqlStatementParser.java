@@ -16,7 +16,6 @@
 package io.syndesis.connector.sql.common;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,36 +42,38 @@ public class SqlStatementParser {
      */
     private final Connection connection;
     private String schema;
+    private DbMetaDataHelper dbHelper;
     private final SqlStatementMetaData statementInfo;
     private List<String> sqlArray = new ArrayList<>();
     private final List<String> sqlArrayUpperCase = new ArrayList<>();
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlStatementParser.class);
 
-    public SqlStatementParser(Connection connection, String sql) {
+    public SqlStatementParser(Connection connection, String sql) throws SQLException {
         super();
         statementInfo = new SqlStatementMetaData(sql.trim());
         this.connection = connection;
+        dbHelper = new DbMetaDataHelper(connection);
         getSchema(null);
     }
 
-    public SqlStatementParser(Connection connection, String schema, String sql) {
+    public SqlStatementParser(Connection connection, String schema, String sql) throws SQLException {
         super();
         statementInfo = new SqlStatementMetaData(sql.trim());
         this.connection = connection;
+        dbHelper = new DbMetaDataHelper(connection);
         this.schema = getSchema(schema);
     }
 
     public SqlStatementMetaData parseSelectOnly() throws SQLException {
 
-        DatabaseMetaData meta = connection.getMetaData();
-        statementInfo.setTablesInSchema(DatabaseMetaDataHelper.fetchTables(meta, null, schema, null));
+        statementInfo.setTablesInSchema(dbHelper.fetchTables(null, schema, null));
         sqlArray = splitSqlStatement(statementInfo.getSqlStatement());
         for (String word : sqlArray) {
             sqlArrayUpperCase.add(word.toUpperCase(Locale.US));
         }
 
         if ("SELECT".equals(sqlArrayUpperCase.get(0))) {
-            parseSelect(meta);
+            parseSelect();
             if (! statementInfo.getInParams().isEmpty()) {
                 throw new SQLException("Your statement is invalid and cannot contain input parameters");
             }
@@ -84,8 +85,7 @@ public class SqlStatementParser {
 
     public SqlStatementMetaData parse() throws SQLException {
 
-        DatabaseMetaData meta = connection.getMetaData();
-        statementInfo.setTablesInSchema(DatabaseMetaDataHelper.fetchTables(meta, null, schema, null));
+        statementInfo.setTablesInSchema(dbHelper.fetchTables(null, schema, null));
         sqlArray = splitSqlStatement(statementInfo.getSqlStatement());
         for (String word : sqlArray) {
             sqlArrayUpperCase.add(word.toUpperCase(Locale.US));
@@ -93,16 +93,16 @@ public class SqlStatementParser {
 
         switch (sqlArrayUpperCase.get(0)) {
             case "INSERT":
-                parseInsert(meta);
+                parseInsert();
                 break;
             case "UPDATE":
-                parseUpdate(meta);
+                parseUpdate();
                 break;
             case "DELETE":
-                parseDelete(meta);
+                parseDelete();
                 break;
             case "SELECT":
-                parseSelect(meta);
+                parseSelect();
                 break;
             default:
                 throw new SQLException("Your statement is invalid and should start with INSERT, UPDATE, SELECT or DELETE");
@@ -127,15 +127,15 @@ public class SqlStatementParser {
         }
         try {
             //finally try setting reasonable default
-            DatabaseMetaData meta = connection.getMetaData();
-            return DatabaseMetaDataHelper.getDefaultSchema(meta.getDatabaseProductName(), meta.getUserName());
+            DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
+            return dbHelper.getDefaultSchema(connection.getMetaData().getUserName());
         } catch (SQLException e) {
             LOGGER.error(e.getMessage(),e);
         }
         return null;
     }
 
-    private void parseInsert(DatabaseMetaData meta) throws SQLException {
+    private void parseInsert() throws SQLException {
         statementInfo.setStatementType(StatementType.INSERT);
         String tableNameInsert = statementInfo.addTable(sqlArrayUpperCase.get(2));
         if (! statementInfo.getTablesInSchema().contains(tableNameInsert)) {
@@ -145,17 +145,24 @@ public class SqlStatementParser {
             List<SqlParam> inputParams = findInsertParams(tableNameInsert);
             if (inputParams.get(0).getColumn() != null) {
                 statementInfo.setInParams(
-                        DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                                meta, null, schema, tableNameInsert, inputParams));
+                        dbHelper.getJDBCInfoByColumnNames(
+                                null, schema, tableNameInsert, inputParams));
             } else {
                 statementInfo.setInParams(
-                        DatabaseMetaDataHelper.getJDBCInfoByColumnOrder(
-                                meta, null, schema, tableNameInsert, inputParams));
+                        dbHelper.getJDBCInfoByColumnOrder(
+                                null, schema, tableNameInsert, inputParams));
             }
+        }
+        List<SqlParam> autoIncrementParamList = dbHelper.getAutoIncrementColumnList(
+                null, schema, tableNameInsert);
+        if (! autoIncrementParamList.isEmpty()) {
+            statementInfo.setOutParams(autoIncrementParamList);
+            //SQL only supports one auto increment column
+            statementInfo.setAutoIncrementColumnName(autoIncrementParamList.get(0).getName());
         }
     }
 
-    private void parseUpdate(DatabaseMetaData meta) throws SQLException  {
+    private void parseUpdate() throws SQLException  {
         statementInfo.setStatementType(StatementType.UPDATE);
         String tableNameUpdate = statementInfo.addTable(sqlArrayUpperCase.get(1));
         if (! statementInfo.getTablesInSchema().contains(tableNameUpdate)) {
@@ -164,12 +171,12 @@ public class SqlStatementParser {
         if (statementInfo.hasInputParams()) {
             List<SqlParam> inputParams = findInputParams(Collections.emptyList());
             statementInfo.setInParams(
-                    DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                            meta, null, schema, tableNameUpdate, inputParams));
+                    dbHelper.getJDBCInfoByColumnNames(
+                            null, schema, tableNameUpdate, inputParams));
         }
     }
 
-    private void parseDelete(DatabaseMetaData meta) throws SQLException  {
+    private void parseDelete() throws SQLException  {
         statementInfo.setStatementType(StatementType.DELETE);
         String tableNameDelete = statementInfo.addTable(sqlArrayUpperCase.get(2));
         if (! statementInfo.getTablesInSchema().contains(tableNameDelete)) {
@@ -178,12 +185,12 @@ public class SqlStatementParser {
         if (statementInfo.hasInputParams()) {
             List<SqlParam> inputParams = findInputParams(Collections.emptyList());
             statementInfo.setInParams(
-                    DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                            meta, null, schema, tableNameDelete, inputParams));
+                    dbHelper.getJDBCInfoByColumnNames(
+                            null, schema, tableNameDelete, inputParams));
         }
     }
 
-    private void parseSelect(DatabaseMetaData meta) throws SQLException  {
+    private void parseSelect() throws SQLException  {
         statementInfo.setStatementType(StatementType.SELECT);
         List<String> tableNamesSelect = findTablesInSelectStatement();
         if (! tableNamesSelect.isEmpty()) {
@@ -197,10 +204,10 @@ public class SqlStatementParser {
             List<SqlParam> inputParams = findInputParams(Collections.emptyList());
             statementInfo.setTableNames(findTablesInSelectStatement());
             statementInfo.setInParams(
-                    DatabaseMetaDataHelper.getJDBCInfoByColumnNames(
-                            meta, null, schema, statementInfo.getTableNames().get(0), inputParams));
+                    dbHelper.getJDBCInfoByColumnNames(
+                            null, schema, statementInfo.getTableNames().get(0), inputParams));
         }
-        statementInfo.setOutParams(DatabaseMetaDataHelper.getOutputColumnInfo(connection, statementInfo.getDefaultedSqlStatement()));
+        statementInfo.setOutParams(dbHelper.getOutputColumnInfo(statementInfo.getDefaultedSqlStatement()));
     }
 
     List<String> splitSqlStatement(String sql) {

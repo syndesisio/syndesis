@@ -15,7 +15,6 @@
  */
 package io.syndesis.connector.sql.common;
 
-import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
@@ -45,8 +44,7 @@ public class SqlMetaDataTest {
         final SqlStatementParser sqlParser = new SqlStatementParser(db.connection, select);
         final SqlStatementMetaData paramInfo = sqlParser.parse();
 
-        final DatabaseMetaData meta = db.connection.getMetaData();
-        final List<SqlParam> inputParams = DatabaseMetaDataHelper.getJDBCInfoByColumnNames(meta, null, db.schema,
+        final List<SqlParam> inputParams = new DbMetaDataHelper(db.connection).getJDBCInfoByColumnNames(null, db.schema,
             paramInfo.getTableNames().get(0), paramInfo.getInParams());
         // information for input
         Assert.assertEquals(1, inputParams.size());
@@ -56,7 +54,7 @@ public class SqlMetaDataTest {
         for (final SqlParam sqlParam : inputParams) {
             select = select.replace(":#" + sqlParam.getName(), "'" + sqlParam.getTypeValue().getSampleValue().toString() + "'");
         }
-        final List<SqlParam> outputParams = DatabaseMetaDataHelper.getOutputColumnInfo(db.connection, select);
+        final List<SqlParam> outputParams = new DbMetaDataHelper(db.connection).getOutputColumnInfo(select);
         Assert.assertEquals(7, outputParams.size());
         Assert.assertEquals(Character.class, outputParams.get(0).getTypeValue().getClazz());
     }
@@ -74,7 +72,7 @@ public class SqlMetaDataTest {
         final SqlStatementParser parser = new SqlStatementParser(db.connection, sqlStatement);
         final SqlStatementMetaData info = parser.parse();
 
-        final List<SqlParam> paramList = DatabaseMetaDataHelper.getJDBCInfoByColumnOrder(db.connection.getMetaData(), null, null, "NAME2",
+        final List<SqlParam> paramList = new DbMetaDataHelper(db.connection).getJDBCInfoByColumnOrder(null, null, "NAME2",
             info.getInParams());
         Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
         Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
@@ -95,11 +93,31 @@ public class SqlMetaDataTest {
         final SqlStatementParser parser = new SqlStatementParser(db.connection, sqlStatement);
         final SqlStatementMetaData info = parser.parse();
 
-        final List<SqlParam> paramList = DatabaseMetaDataHelper.getJDBCInfoByColumnNames(db.connection.getMetaData(), null, null, "NAME3",
+        final List<SqlParam> paramList = new DbMetaDataHelper(db.connection).getJDBCInfoByColumnNames(null, null, "NAME3",
             info.getInParams());
         Assert.assertEquals("INTEGER", paramList.get(0).getJdbcType().getName());
         Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
         Assert.assertEquals("VARCHAR", paramList.get(2).getJdbcType().getName());
+
+    }
+
+    @Test
+    public void parseInsertAutoIncrPK() throws SQLException {
+        try (Statement stmt = db.connection.createStatement()) {
+            final String createTable = "CREATE TABLE NAME4 (id2 INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1), firstName VARCHAR(255), " + "lastName VARCHAR(255))";
+            stmt.executeUpdate(createTable);
+            stmt.executeUpdate("INSERT INTO NAME4 (FIRSTNAME, LASTNAME) VALUES ('Joe', 'Jackson')");
+            stmt.executeUpdate("INSERT INTO NAME4 (FIRSTNAME, LASTNAME) VALUES ('Roger', 'Waters')");
+        }
+
+        final String sqlStatement = "INSERT INTO NAME4 (FIRSTNAME, LASTNAME) VALUES (:#first, :#last)";
+        final SqlStatementParser parser = new SqlStatementParser(db.connection, sqlStatement);
+        final SqlStatementMetaData info = parser.parse();
+
+        final List<SqlParam> paramList = new DbMetaDataHelper(db.connection).getJDBCInfoByColumnNames(null, null, "NAME4",
+            info.getInParams());
+        Assert.assertEquals("VARCHAR", paramList.get(0).getJdbcType().getName());
+        Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
 
     }
 
@@ -115,7 +133,7 @@ public class SqlMetaDataTest {
         final SqlStatementParser parser = new SqlStatementParser(db.connection, sqlStatement);
         final SqlStatementMetaData info = parser.parse();
 
-        final List<SqlParam> paramList = DatabaseMetaDataHelper.getOutputColumnInfo(db.connection, info.getDefaultedSqlStatement());
+        final List<SqlParam> paramList = new DbMetaDataHelper(db.connection).getOutputColumnInfo(info.getDefaultedSqlStatement());
         Assert.assertEquals("VARCHAR", paramList.get(0).getJdbcType().getName());
         Assert.assertEquals("VARCHAR", paramList.get(1).getJdbcType().getName());
     }

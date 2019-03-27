@@ -16,7 +16,6 @@
 package io.syndesis.connector.sql;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.JDBCType;
 import java.sql.ResultSet;
@@ -27,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.syndesis.connector.sql.common.DatabaseMetaDataHelper;
+import io.syndesis.connector.sql.common.DbMetaDataHelper;
 import io.syndesis.connector.sql.common.stored.ColumnMode;
 import io.syndesis.connector.sql.common.stored.StoredProcedureColumn;
 import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
@@ -50,8 +49,8 @@ public final class SqlSupport {
         final StoredProcedureMetadata storedProcedureMetadata = new StoredProcedureMetadata();
         storedProcedureMetadata.setName(procedureName);
         try {
-            final DatabaseMetaData meta = connection.getMetaData();
-            try (ResultSet columnSet = DatabaseMetaDataHelper.fetchProcedureColumns(meta, catalog, schema, procedureName)) {
+            final DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
+            try (ResultSet columnSet = dbHelper.fetchProcedureColumns(catalog, schema, procedureName)) {
                 final List<StoredProcedureColumn> columnList = new ArrayList<>();
                 while (columnSet.next()) {
                     final ColumnMode mode = ColumnMode.valueOf(columnSet.getInt("COLUMN_TYPE"));
@@ -82,14 +81,13 @@ public final class SqlSupport {
         try (Connection connection = DriverManager.getConnection(String.valueOf(parameters.get("url")),
             String.valueOf(parameters.get("user")), String.valueOf(parameters.get("password")));) {
 
-            final DatabaseMetaData meta = connection.getMetaData();
+            final DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
             final String catalog = (String) parameters.getOrDefault("catalog", null);
-            final String defaultSchema = DatabaseMetaDataHelper.getDefaultSchema(
-                meta.getDatabaseProductName(), String.valueOf(parameters.get("user")));
+            final String defaultSchema = dbHelper.getDefaultSchema(String.valueOf(parameters.get("user")));
             final String schemaPattern = (String) parameters.getOrDefault("schema-pattern", defaultSchema);
             final String procedurePattern = (String) parameters.getOrDefault("procedure-pattern", null);
 
-            try (ResultSet procedureSet = DatabaseMetaDataHelper.fetchProcedures(meta, catalog, schemaPattern, procedurePattern)) {
+            try (ResultSet procedureSet = dbHelper.fetchProcedures(catalog, schemaPattern, procedurePattern)) {
                 while (procedureSet.next()) {
                     final String name = procedureSet.getString("PROCEDURE_NAME");
                     final StoredProcedureMetadata storedProcedureMetadata = getStoredProcedureMetadata(connection,

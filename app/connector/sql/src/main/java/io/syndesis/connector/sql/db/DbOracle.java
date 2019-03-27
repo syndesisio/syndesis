@@ -13,18 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.sql.common;
+package io.syndesis.connector.sql.db;
 
-import java.sql.JDBCType;
+import java.util.Locale;
 
-import lombok.Data;
+public class DbOracle extends DbStandard {
 
-@Data
-public class ColumnMetaData {
+    @Override
+    public String getDefaultSchema(final String dbUser) {
+        return dbUser.toUpperCase(Locale.US);
+    }
 
-    private String name;
-    private JDBCType type;
-    private int position;
-    private boolean isAutoIncrement;
-
+    @Override
+    public String getName() {
+        return "Oracle";
+    }
 }

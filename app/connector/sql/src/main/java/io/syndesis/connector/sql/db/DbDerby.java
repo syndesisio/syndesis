@@ -13,18 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.sql.common;
+package io.syndesis.connector.sql.db;
 
-import java.sql.JDBCType;
+import java.util.Locale;
 
-import lombok.Data;
+public class DbDerby extends DbStandard {
 
-@Data
-public class ColumnMetaData {
+    @Override
+    public String getDefaultSchema(String dbUser) {
+        if (dbUser != null) {
+            return dbUser.toUpperCase(Locale.US);
+        } else {
+            return "NULL";
+        }
+    }
 
-    private String name;
-    private JDBCType type;
-    private int position;
-    private boolean isAutoIncrement;
+    @Override
+    public String getAutoIncrementGrammar() {
+        return "INTEGER NOT NULL GENERATED ALWAYS AS IDENTITY (START WITH 1, INCREMENT BY 1)";
+    }
 
+    @Override
+    public String getName() {
+        return "Derby";
+    }
 }

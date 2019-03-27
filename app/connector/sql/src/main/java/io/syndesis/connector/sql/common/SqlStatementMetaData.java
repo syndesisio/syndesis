@@ -36,6 +36,7 @@ public class SqlStatementMetaData {
     private Set<String> tablesInSchema;
     private String schema;
     private String defaultedSqlStatement;
+    private String autoIncrementColumnName;
 
     public SqlStatementMetaData(String sqlStatement) {
         super();

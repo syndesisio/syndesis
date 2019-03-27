@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import io.syndesis.connector.sql.common.DatabaseProduct;
+import io.syndesis.connector.sql.common.DbEnum;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
@@ -95,7 +95,7 @@ public class SqlConnectorVerifierExtension extends DefaultComponentVerifierExten
     }
 
     private static void unsupportedDatabase(ResultBuilder builder) {
-        String supportedDatabases = Arrays.stream(DatabaseProduct.values()).map(DatabaseProduct::name).collect(Collectors.joining(","));
+        String supportedDatabases = Arrays.stream(DbEnum.values()).map(DbEnum::name).collect(Collectors.joining(","));
         String msg = "Supported Databases are [" + supportedDatabases + "]";
 
         builder.error(

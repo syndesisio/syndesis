@@ -20,6 +20,7 @@ import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -28,6 +29,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.camel.Message;
+import org.apache.camel.component.sql.SqlConstants;
 import org.apache.camel.util.ObjectHelper;
 import org.springframework.jdbc.core.SqlParameterValue;
 
@@ -200,5 +202,26 @@ public final class JSONBeanUtil {
             return null;
         }
 
+    }
+
+    /**
+     * Converts Camel Generated Key output to a list of JSON Bean Strings.
+     *
+     * @param in
+     * @param the name of the auto increment column name
+     * @return List of JSON beans.
+     */
+    public static List<String> toJSONBeansFromHeader(Message in, String autoIncrementColumnName) {
+        final List<String> jsonBeans = new ArrayList<>();
+        @SuppressWarnings("unchecked")
+        List<Map<String, Object>> generatedKeys = in.getHeader(SqlConstants.SQL_GENERATED_KEYS_DATA, List.class);
+        Iterator<Map<String, Object>> iterator = generatedKeys.iterator();
+        while (iterator.hasNext()) {
+            final Map<String, Object> map = new HashMap<>();
+            map.put(autoIncrementColumnName, iterator.next().values().iterator().next());
+            final String bean = JSONBeanUtil.toJSONBean(map);
+            jsonBeans.add(bean);
+        }
+        return jsonBeans;
     }
 }

@@ -28,7 +28,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import com.fasterxml.jackson.databind.ObjectWriter;
-import io.syndesis.connector.sql.common.DatabaseProduct;
+import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
 import io.syndesis.common.util.Json;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -62,21 +62,21 @@ public class SqlMetadataAdapterTest {
             "LANGUAGE JAVA " +
             "EXTERNAL NAME 'io.syndesis.connector.SampleStoredProcedures.demo_add'";
 
-    private static Connection connection;
-    private static Properties properties = new Properties();
+    private static Connection conn;
+    private static Properties props = new Properties();
 
     @BeforeClass
     public static void setUpBeforeClass() throws IOException {
         try (InputStream is = SqlMetadataAdapterTest.class.getClassLoader().getResourceAsStream("test-options.properties")) {
-            properties.load(is);
-            String user     = String.valueOf(properties.get("sql-connector.user"));
-            String password = String.valueOf(properties.get("sql-connector.password"));
-            String url      = String.valueOf(properties.get("sql-connector.url"));
+            props.load(is);
+            String user     = String.valueOf(props.get("sql-connector.user"));
+            String password = String.valueOf(props.get("sql-connector.password"));
+            String url      = String.valueOf(props.get("sql-connector.url"));
 
-            connection = DriverManager.getConnection(url,user,password);
-            String databaseProductName = connection.getMetaData().getDatabaseProductName();
-            if (databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
-                try (Statement stmt = connection.createStatement()) {
+            conn = DriverManager.getConnection(url,user,password);
+            String dbProductName = conn.getMetaData().getDatabaseProductName();
+            if (DbEnum.APACHE_DERBY.equals(DbEnum.fromName(dbProductName))) {
+                try (Statement stmt = conn.createStatement()) {
                     stmt.execute(DERBY_DEMO_OUT_SQL);
                     stmt.execute(DERBY_DEMO_ADD_SQL);
                     stmt.execute(DERBY_DEMO_ADD2_SQL);
@@ -84,7 +84,7 @@ public class SqlMetadataAdapterTest {
                     fail("Exception during Stored Procedure Creation.", e);
                 }
             }
-            Statement stmt = connection.createStatement();
+            Statement stmt = conn.createStatement();
             String createTable = "CREATE TABLE NAME (ID INTEGER PRIMARY KEY, FIRSTNAME VARCHAR(255), " +
                     "LASTNAME VARCHAR(255))";
             stmt.executeUpdate(createTable);
@@ -95,10 +95,10 @@ public class SqlMetadataAdapterTest {
 
     @AfterClass
     public static void afterClass() throws SQLException {
-        if (connection!=null && !connection.isClosed()) {
-            Statement stmt = connection.createStatement();
+        if (conn!=null && !conn.isClosed()) {
+            Statement stmt = conn.createStatement();
             stmt.execute("DROP TABLE NAME");
-            connection.close();
+            conn.close();
         }
     }
 
@@ -107,8 +107,8 @@ public class SqlMetadataAdapterTest {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
-        for (final String name: properties.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), properties.getProperty(name));
+        for (final String name: props.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf('.') + 1), props.getProperty(name));
         }
         parameters.put("query", "SELECT * FROM NAME WHERE ID=:#id");
         Optional<MetaData> metadata = ext.meta(parameters);
@@ -127,8 +127,8 @@ public class SqlMetadataAdapterTest {
         CamelContext camelContext = new DefaultCamelContext();
         SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
-        for (final String name: properties.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf('.') + 1), properties.getProperty(name));
+        for (final String name: props.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf('.') + 1), props.getProperty(name));
         }
         parameters.put("query", "SELECT * FROM NAME");
         Optional<MetaData> metadata = ext.meta(parameters);
@@ -147,8 +147,8 @@ public class SqlMetadataAdapterTest {
         CamelContext camelContext = new DefaultCamelContext();
         SqlStoredConnectorMetaDataExtension ext = new SqlStoredConnectorMetaDataExtension(camelContext);
         Map<String,Object> parameters = new HashMap<>();
-        for (final String name: properties.stringPropertyNames()) {
-            parameters.put(name.substring(name.indexOf(".")+1), properties.getProperty(name));
+        for (final String name: props.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf(".")+1), props.getProperty(name));
         }
         Optional<MetaData> metadata = ext.meta(parameters);
 

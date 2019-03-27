@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.Properties;
 
 import io.syndesis.connector.sql.SqlSupport;
-import io.syndesis.connector.sql.common.DatabaseProduct;
+import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class SqlStoredCommon {
     public static void setupStoredProcedure(Connection connection, Properties properties) throws Exception {
 
         try {
-            String databaseProductName = connection.getMetaData().getDatabaseProductName();
+            String dbProductName = connection.getMetaData().getDatabaseProductName();
             Map<String,Object> parameters = new HashMap<>();
             for (final String name: properties.stringPropertyNames()) {
                 parameters.put(name.substring(name.indexOf('.') + 1), properties.getProperty(name));
@@ -45,7 +45,7 @@ public class SqlStoredCommon {
             Map<String,StoredProcedureMetadata> storedProcedures = SqlSupport.getStoredProcedures(parameters);
 
             if (!storedProcedures.keySet().contains("DEMO_ADD")
-                    && databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
+                    && DbEnum.APACHE_DERBY.equals(DbEnum.fromName(dbProductName))) {
                 try (Statement stmt = connection.createStatement()) {
                     stmt.execute(SampleStoredProcedures.DERBY_DEMO_ADD_SQL);
                     LOGGER.info("Created procedure {}", SampleStoredProcedures.DERBY_DEMO_ADD_SQL);
@@ -55,7 +55,7 @@ public class SqlStoredCommon {
                 }
             }
             if (!storedProcedures.keySet().contains("DEMO_OUT")
-                    && databaseProductName.equalsIgnoreCase(DatabaseProduct.APACHE_DERBY.nameWithSpaces())) {
+                    && DbEnum.APACHE_DERBY.equals(DbEnum.fromName(dbProductName))) {
                 try (Statement stmt = connection.createStatement()) {
                     //Create procedure
                     stmt.execute(SampleStoredProcedures.DERBY_DEMO_OUT_SQL);

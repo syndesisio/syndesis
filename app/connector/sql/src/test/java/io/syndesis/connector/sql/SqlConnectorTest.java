@@ -30,6 +30,7 @@ import java.util.Properties;
 import java.util.stream.Collectors;
 
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
 import org.junit.Assert;
@@ -53,7 +54,30 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
 
     @Override
     protected List<String> setupStatements() {
-        return Collections.singletonList("CREATE TABLE ADDRESS (street VARCHAR(255), number INTEGER)");
+        String dbProductName = null;
+        try {
+            dbProductName = db.connection.getMetaData().getDatabaseProductName();
+        } catch (SQLException e) {
+            Assert.assertFalse(true);
+            e.printStackTrace();
+        }
+        if (DbEnum.POSTGRESQL.equals(DbEnum.fromName(dbProductName))) {
+            return Collections.singletonList("CREATE TABLE ADDRESS ("
+                    + "ID SERIAL PRIMARY KEY, "
+                    + "street VARCHAR(255), nummer INTEGER)");
+        } else if (DbEnum.MYSQL.equals(DbEnum.fromName(dbProductName))) {
+            return Collections.singletonList("CREATE TABLE ADDRESS ("
+                    + "ID INT NOT NULL AUTO_INCREMENT PRIMARY KEY, "
+                    + "street VARCHAR(255), nummer INTEGER)");
+        } else if (DbEnum.APACHE_DERBY.equals(DbEnum.fromName(dbProductName))) {
+            return Collections.singletonList("CREATE TABLE ADDRESS (ID INTEGER NOT NULL "
+                    + "GENERATED ALWAYS AS IDENTITY (START WITH 2, INCREMENT BY 1), "
+                    + "street VARCHAR(255), number INTEGER)");
+        } else {
+            return Collections.singletonList("CREATE TABLE ADDRESS ("
+                    + "ID NUMBER GENERATED ALWAYS AS IDENTITY, "
+                    + "street VARCHAR(255), nummer INTEGER)");
+        }
     }
 
     @Override
@@ -87,9 +111,9 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
         parameters.put("street", "LaborInVain");
 
         return Arrays.asList(new Object[][] {
-                { "INSERT INTO ADDRESS VALUES ('East Davie Street', 100)", Arrays.asList(Collections.singletonMap("NUMBER", new String[] { "100" }),
+                { "INSERT INTO ADDRESS (street, number) VALUES ('East Davie Street', 100)", Arrays.asList(Collections.singletonMap("NUMBER", new String[] { "100" }),
                         Collections.singletonMap("STREET", new String[] { "East Davie Street" })), Collections.emptyMap()},
-                { "INSERT INTO ADDRESS VALUES (:#street, :#number)", Arrays.asList(Collections.singletonMap("NUMBER", new String[] { "14" }),
+                { "INSERT INTO ADDRESS (street, number) VALUES (:#street, :#number)", Arrays.asList(Collections.singletonMap("NUMBER", new String[] { "14" }),
                         Collections.singletonMap("STREET", new String[] { "LaborInVain" })), parameters}
         });
     }
@@ -111,6 +135,7 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
 
         try (Statement stmt = db.connection.createStatement()) {
             stmt.execute("SELECT * FROM ADDRESS");
+
             List<Properties> jsonBeans = resultSetToList(stmt.getResultSet())
                                                     .stream()
                                                     .map(raw -> {
