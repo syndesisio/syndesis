@@ -1,0 +1,33 @@
+// This assembly is included in the following assemblies:
+// Upstream: connecting/master.adoc  
+// Downstream: connecting-fuse-online-to-applications-and-services/master.adoc
+
+[id='connecting-to-odata_{context}']
+= Connecting to OData
+:context: odata
+
+Open Data Protocol (OData) is a standard for building and 
+consuming REST APIs. An OData server provides services to 
+clients, such as {prodname}, through OData-compliant 
+HTTP requests. A {prodname} integration can obtain 
+entities from an OData server, and can update, create, or
+delete entities on an OData server. To do this, create an 
+OData connection, and then add it to an integration. 
+Details are in the following topics:
+
+* xref:creating-odata-connections_{context}[]
+* xref:adding-odata-connections-read_{context}[]
+* xref:adding-odata-connections-write_{context}[]
+
+[NOTE]
+In this release, the OData connector is a Technology Preview 
+feature. 
+
+include::p_creating-odata-connections.adoc[leveloffset=+1]
+
+include::p_adding-odata-connections-read.adoc[leveloffset=+1]
+
+include::p_adding-odata-connections-write.adoc[leveloffset=+1]
+
+
+:context: connectors

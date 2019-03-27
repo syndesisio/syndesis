@@ -1,0 +1,54 @@
+// This module is included in the following assemblies:
+// as_connecting-to-odata.adoc
+
+[id='adding-odata-connections-write_{context}']
+= Updating data on an OData server 
+
+In an integration, you can update a collection on an OData server in the middle 
+of a flow or to finish
+a simple integration. To do this, add an OData connection to the middle of 
+a flow or as a simple integration's 
+finish connection. 
+
+.Prerequisites
+* You created an OData connection.
+* You are creating or editing an integration and {prodname} is
+prompting you to choose a step. Or, {prodname} is 
+prompting you to choose a finish connection.  
+
+.Procedure
+
+. Click the OData connection that you want to use. Note that when 
+an OData connection updates a collection, the connection does not return anything.  
+
+. On the *Choose an Action* page, click the action that you want the 
+connection to perform:  
++
+* *Create* adds an entity to an OData collection. 
+* *Delete* removes an entity from an OData collection. 
+* *Update* changes an entity that is in an OData collection. 
+
+. To configure the action, select the OData resource collection that
+you want to update. 
++
+
+It is important for you to have an understanding of how the 
+OData resource collection that you are updating is set up. For example, 
+a collection that you are adding entities to might have 
+a unique key. If you try to add an entity that contains a key value that
+is already in the collection, the OData connection does not add that entity. 
+
+. Click *Done*. 
+
+.Result
+The connection appears in the integration flow in the location where
+you added it. 
+
+.Next steps
+Consider whether you need to split a collection of entities  
+into individual entities that an OData connection can use to update 
+an OData resource collection.
+To do this, add a split step to the integration. The split step 
+executes the subsequent steps in the integration once for each entity. 
+Also, you probably need a data mapper step before an OData  
+connection that updates a resource collection. 

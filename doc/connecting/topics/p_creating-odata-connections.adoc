@@ -1,0 +1,48 @@
+// This module is included in the following assemblies:
+// as_connecting-to-odata.adoc
+
+[id='creating-odata-connections_{context}']
+= Creating a connection to an OData server
+
+In an integration, to obtain entities from an OData server, 
+or to update, create or delete
+entities on an OData server, you must first create a connection to 
+that OData server.
+
+.Prerequisite
+
+* You must know the base URL for the OData server that you want
+to connect to. 
+* If that server uses authentication then you must have the 
+required credentials, and, if required, an SSL certificate. 
+
+.Procedure
+
+. In {prodname}, in the left panel, click *Connections* to
+display any available connections.
+. In the upper right, click *Create Connection* to display
+connectors.  
+. Click the *OData* connector.
+. To configure the connection:
+.. In the *Service Root URL* field, enter the base URL for the 
+OData service that you want to access. 
+.. In the *User Name* field, if the server uses basic authentication, 
+then enter your user name.
+.. In the *Password* field, if the server uses basic authentication, 
+then enter your password. 
+.. In the *Server Certificate* field, paste the content of an SSL 
+certificate. 
+
+. Click *Next*.
+. In the *Connection Name* field, enter your choice of a name that
+helps you distinguish this connection from any other connections.
+For example, you might enter `OData North`.
+. In the *Description* field, optionally enter any information that
+is helpful to know about this connection. 
+. In the upper right, click *Create* to see that the connection you 
+created is now available. If you entered the example name, you would 
+see that *OData North* appears as a connection that you can 
+choose to add to an integration. 
+
+.Next step
+Add your OData connection to an integration. 

@@ -65,6 +65,9 @@ or add records to a table in a Kudu data store.
 |Obtain messages from an MQ Telemetry Transport broker or publish messages
 to an MQTT broker.
 
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-odata_connectors[OData]
+|Obtain entities from an OData server or update, create, or delete OData entities. 
+
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-rest-apis_connectors[REST APIs]
 |Create a custom REST API client connector by uploading an OpenAPI
 document. You can then create a connection to that REST API.
