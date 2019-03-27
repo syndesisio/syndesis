@@ -146,7 +146,6 @@ export class IntegrationsPage extends React.Component {
                             i18nResultsCount={t('shared:resultsCount', {
                               count: filteredAndSortedIntegrations.length,
                             })}
-                            data-testid={'test-page-content'}
                           >
                             <Integrations
                               error={error}

@@ -1,12 +1,8 @@
-import {
-  ApiContext,
-  WithServerEvents,
-  ServerEventsContext,
-} from '@syndesis/api';
+import { ApiContext, ServerEventsContext } from '@syndesis/api';
 import * as React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import { MemoryRouter } from 'react-router';
-import { render, waitForElement } from 'react-testing-library';
+import { render, wait } from 'react-testing-library';
 import path from 'path';
 import talkback from 'talkback';
 import { AppContext } from '../../../app';
@@ -26,10 +22,33 @@ const startServer = async session => {
       'cookie',
       'cache-control',
       'pragma',
+      'referer',
+      'origin',
+      'accept',
+      'accept-encoding',
+      'accept-language',
+      'user-agent',
+      'x-forwarded-access-token',
+      'x-forwarded-origin',
     ],
     silent: true,
     summary: false,
     debug: false,
+    responseDecorator: (tape, req) => {
+      if (tape.req.method === 'OPTIONS') {
+        tape.res.status = 200;
+        tape.res.body = null;
+        tape.res.headers = {
+          'Access-Control-Allow-Credentials': 'true',
+          'Access-Control-Allow-Headers': 'syndesis-xsrf-token',
+          'Access-Control-Allow-Methods':
+            tape.req.headers['access-control-request-method'],
+          'Access-Control-Allow-Origin': 'http://localhost',
+          'Content-Length': '0',
+        };
+      }
+      return tape;
+    },
   });
   await server.start();
   return server;
@@ -45,7 +64,7 @@ afterEach(() => {
   server.close();
 });
 
-export default describe('App', () => {
+export default describe('IntegrationsPage', () => {
   const testComponent = (
     <MemoryRouter>
       <I18nextProvider i18n={i18n}>
@@ -67,17 +86,16 @@ export default describe('App', () => {
                   headers: { 'SYNDESIS-XSRF-TOKEN': 'awesome' },
                 }}
               >
-                <ApiContext.Consumer>
-                  {({ apiUri, headers }) => (
-                    <WithServerEvents apiUri={apiUri} headers={headers}>
-                      {functions => (
-                        <ServerEventsContext.Provider value={functions}>
-                          <IntegrationsPage />
-                        </ServerEventsContext.Provider>
-                      )}
-                    </WithServerEvents>
-                  )}
-                </ApiContext.Consumer>
+                <ServerEventsContext.Provider
+                  value={{
+                    registerChangeListener: () => void 0,
+                    registerMessageListener: () => void 0,
+                    unregisterChangeListener: () => void 0,
+                    unregisterMessageListener: () => void 0,
+                  }}
+                >
+                  <IntegrationsPage />
+                </ServerEventsContext.Provider>
               </ApiContext.Provider>
             </AppContext.Provider>
           )}
@@ -87,20 +105,15 @@ export default describe('App', () => {
   );
 
   it('Should render', async () => {
-    const { getByText, getByTestId, queryByTestId } = render(testComponent);
-    //
-    // expect(getByTestId('navbar-link-/some-test-url')).toHaveAttribute(
-    //   'href',
-    //   '/some-test-url'
-    // );
-    //
-    // expect(getByText('Test route')).toBeTruthy();
-    //
-    const content = await waitForElement(() =>
-      getByTestId('test-page-content')
-    );
-    expect(content).toHaveTextContent('Integrations');
-    //
-    // expect(queryByTestId('test-unmatched-route-container')).toBeNull();
+    const { getByText, queryByTestId } = render(testComponent);
+    await wait(() => {
+      expect(
+        queryByTestId('integration-list-skeleton')
+      ).not.toBeInTheDocument();
+    });
+    expect(getByText('test')).toBeDefined();
+    expect(getByText('test2')).toBeDefined();
+    expect(getByText('test3')).toBeDefined();
+    expect(getByText('test 4')).toBeDefined();
   });
 });

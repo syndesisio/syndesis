@@ -42,17 +42,26 @@ export class IntegrationsListSkeleton extends React.PureComponent {
   public render() {
     return (
       <>
-        <div className={'list-group-item'}>
+        <div
+          className={'list-group-item'}
+          data-testid="integration-list-skeleton"
+        >
           <div>
             <ItemSkeleton />
           </div>
         </div>
-        <div className={'list-group-item'}>
+        <div
+          className={'list-group-item'}
+          data-testid="integration-list-skeleton"
+        >
           <div>
             <ItemSkeleton />
           </div>
         </div>
-        <div className={'list-group-item'}>
+        <div
+          className={'list-group-item'}
+          data-testid="integration-list-skeleton"
+        >
           <div>
             <ItemSkeleton />
           </div>
