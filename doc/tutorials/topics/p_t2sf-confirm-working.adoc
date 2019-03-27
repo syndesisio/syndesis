@@ -54,6 +54,4 @@ unexpected result or to learn more about integration execution:
 .. In {prodname}, in the left panel, click *Integrations*.
 .. Click the entry for your Twitter to Salesforce integration.
 .. In the integration's summary page, click the *Activity* tab.
-.. Optionally, enter date and/or keyword filters to limit the executions
-listed.
 .. Click the integration execution for which you want to view activity information.
