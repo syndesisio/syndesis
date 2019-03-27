@@ -1,0 +1,99 @@
+// This module is included in the following assemblies:
+// as_connecting-to-odata.adoc
+
+[id='adding-odata-connections-read_{context}']
+= Triggering an integration when polling returns data from an OData server
+
+To trigger execution of an integration upon obtaining data from an 
+OData server, add an OData connection to a simple integration as its start 
+connection. When the integration is running, the OData connection 
+polls the server at intervals that you specify. When the connection finds
+data that satisfies the connection configuration, the connection passes
+the data to the next step in the integration. 
+
+An OData connection can obtain data from only one resource collection.
+
+.Prerequisite
+You created an OData connection. 
+
+.Procedure
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click the OData connection that
+you want to use to start the integration. 
+. On the *Choose an Action* page, click the *Read* action.
+. To configure the *Read* action: 
+
+.. In the *Resource Collection* field, select the name of the OData collection  
+that you want to query. {prodname} fetches data from the 
+OData server to provide a list of available resource collections. 
+.. In the *Entity Key Predicate* field, to obtain a particular
+entity that you specify, enter something like `*UserName='Bob'*` or
+`*Categories(1)*`. The property must be a key.
+.. In the *Query Options* field, enter the query that you want to 
+apply to the collection. Use OData syntax. For example, 
+`$filter=startswith(name, 'N')` returns a message for each entity in the 
+collection that has a `name` field that starts with `N`. 
+.. Select the *Filter Old Results* checkbox to obtain a particular 
+message only once. 
+.. Select the *Split Results* checkbox if you want the 
+connection to return individual messages 
+rather than a collection of messages. 
+.. In the *Interval Before Polling Starts* field, accept the default of 
+1 second, or enter the length of time that you want to elapse before 
+the connection starts to poll the OData server. 
+.. In the *Delay* field, accept the default of 30 seconds, or enter
+the interval at which you want the connection to poll the OData server. 
+.. In the *Backoff Idle Threshold* field, accept the default of 1 or
+enter an integer that indicates the number of consecutive polls that 
+can return no data. After this number of polls, the connection 
+increases the interval before the next poll. 
+To determine the 
+length of the interval before the next poll, the connection multiplies the 
+*Backoff Idle Threshold* value by the *Backoff Multiplier* value. 
+The result is the number of seconds that the connection waits before 
+the next poll. 
++
+For example, suppose that the polling interval is the default of 
+30 seconds, *Backoff Idle Threshold* is set to `5`,
+and *Backoff Multiplier* is set to `12`. After 5 consecutive polls 
+that return no data, the connection waits 60 seconds (5 x 12) before polling again.
+The connection continues to poll every 60 seconds until a poll returns data or
+until there are, again, 5 consecutive polls that do not return data. 
++
+After a poll returns data, the connection resumes polling every 30 seconds.
+However, if there are again 5 consecutive polls that do not return data, then 
+the connection increases the interval again. 
+
+.. In the *Backoff Multiplier* field, accept the default of 1 or enter 
+an integer that indicates the multiplier for the setting of 
+*Backoff Idle Threshold*. 
++
+If you accept the default of 1 for both the *Backoff Idle Threshold*
+and the *Backoff Multiplier*, then the connection continues to poll 
+at the specified interval no matter how many consecutive polls return no results. 
+
++
+The values that you specify for *Delay*, *Backoff Idle Threshold*, and 
+*Backoff Multiplier* are useful for reducing CPU overhead since the 
+connection can automatically poll less often during quiet periods. 
+
+. Click *Done*. 
+
+.Result
+The connection appears in the integration flow as the 
+integration's start connection. 
+
+.Next steps
+Add the integration's finish connection and any other connections
+that you want to include in the integration. 
+When the integration contains all the connections that are needed, 
+if the OData connection returns a collection, 
+consider whether you need to split the collection of messages that
+the OData connection returns. If you want to execute integration steps 
+for each message that you obtained from the OData server, then after the
+OData connection, add a split step. Also, 
+you probably need to follow the OData connection with a data 
+mapping step that maps data obtained from the OData server to fields in
+subsequent connections in the integration. 
