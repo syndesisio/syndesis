@@ -212,6 +212,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                             parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                             parent = parent.endParent();
                         } else {
+                            parent = parent.setHeader(IntegrationLoggingConstants.STEP_ID, constant(stepId));
                             parent = parent.process(OutMessageCaptureProcessor.INSTANCE);
                         }
                     }
