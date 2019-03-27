@@ -13,6 +13,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 import CustomizationsNavBar from '../components/CustomizationsNavBar';
+import { getExtensionTypeName } from '../customizationsUtils';
 import resolvers from '../resolvers';
 
 function getFilteredAndSortedExtensions(
@@ -61,24 +62,6 @@ const sortTypes: ISortType[] = [sortByName];
 export default class ExtensionsPage extends React.Component {
   public filterUndefinedId(extension: Extension): boolean {
     return extension.id !== undefined;
-  }
-
-  public getTypeName(extension: Extension) {
-    const type = extension.extensionType;
-
-    if ('Steps' === type) {
-      return i18n.t('customizations:extension.StepExtension');
-    }
-
-    if ('Connectors' === type) {
-      return i18n.t('customizations:extension.ConnectorExtension');
-    }
-
-    if ('Libraries' === type) {
-      return i18n.t('customizations:extension.LibraryExtension');
-    }
-
-    return i18n.t('customizations:extension.unknownExtensionType');
   }
 
   public getUsedByMessage(extension: Extension): string {
@@ -203,7 +186,7 @@ export default class ExtensionsPage extends React.Component {
                                           i18nDetailsTip={t(
                                             'extension.detailsExtensionTip'
                                           )}
-                                          i18nExtensionType={this.getTypeName(
+                                          i18nExtensionType={getExtensionTypeName(
                                             extension
                                           )}
                                           i18nUpdate={t('shared:Update')}

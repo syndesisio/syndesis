@@ -1,7 +1,6 @@
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
 import { linkTo } from '@storybook/addon-links';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -105,7 +104,7 @@ stories
 
   .add(
     'no connectors',
-    withNotes(noApiConnectorsTestNotes)(() => (
+    () => (
       <Router>
         <ApiConnectorListView
           activeFilters={[]}
@@ -147,11 +146,12 @@ stories
           i18nTitle={text('i18nTitle', title)}
         />
       </Router>
-    ))
+    ),
+    { notes: noApiConnectorsTestNotes }
   )
   .add(
     'has api connectors',
-    withNotes(hasApiConnectorsTestNotes)(() => (
+    () => (
       <Router>
         <ApiConnectorListView
           activeFilters={[]}
@@ -196,5 +196,6 @@ stories
           children={connectors}
         />
       </Router>
-    ))
+    ),
+    { notes: hasApiConnectorsTestNotes }
   );

@@ -1,5 +1,4 @@
 import { action } from '@storybook/addon-actions';
-import { withNotes } from '@storybook/addon-notes';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import {
@@ -15,16 +14,6 @@ const stories = storiesOf(
   'Customization/Extensions/Component/ExtensionDetail',
   module
 );
-
-const integrations = [
-  {
-    description: "This is Integration 1's description",
-    name: 'Integration 1',
-  },
-  {
-    name: 'integration-2',
-  },
-];
 
 const extension = {
   name: 'Loop',
@@ -53,7 +42,7 @@ const extension = {
     } as IAction,
   ],
   extensionType: 'Steps',
-  uses: integrations.length,
+  uses: 2,
 };
 const notUsedExtension = {
   ...extension,
@@ -217,7 +206,7 @@ const notUsedTestNotes =
 stories
   .add(
     extensionDetailStory,
-    withNotes(inUseTestNotes)(() => (
+    () => (
       <ExtensionDetail
         extensionName={extension.name}
         extensionUses={extension.uses}
@@ -260,11 +249,12 @@ stories
           />
         }
       />
-    ))
+    ),
+    { notes: inUseTestNotes }
   )
   .add(
     'connector extension not in use',
-    withNotes(notUsedTestNotes)(() => (
+    () => (
       <ExtensionDetail
         extensionName={notUsedExtension.name}
         extensionUses={notUsedExtension.uses}
@@ -306,11 +296,12 @@ stories
           />
         }
       />
-    ))
+    ),
+    { notes: notUsedTestNotes }
   )
   .add(
     'library extension in use',
-    withNotes(libraryTypeTestNotes)(() => (
+    () => (
       <ExtensionDetail
         extensionName={libraryExtension.name}
         extensionUses={libraryExtension.uses}
@@ -351,5 +342,6 @@ stories
           />
         }
       />
-    ))
+    ),
+    { notes: libraryTypeTestNotes }
   );
