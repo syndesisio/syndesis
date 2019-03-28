@@ -3,13 +3,14 @@ import { MemoryRouter } from 'react-router';
 import { fireEvent, render } from 'react-testing-library';
 import {
   ExtensionImportReview,
+  IExtensionImportReviewProps,
   IImportAction,
-} from '../../src/Customization/ExtensionImportReview';
+} from '../../src/Customization';
 
 const mockOnImport = jest.fn();
 
 export default describe('ExtensionImportReview', () => {
-  const actions = [
+  const fourActions = [
     {
       name: 'Action 1',
       description: 'The description for action 1',
@@ -27,6 +28,8 @@ export default describe('ExtensionImportReview', () => {
       description: 'The description for action 4',
     } as IImportAction,
   ] as IImportAction[];
+
+  const oneAction = [fourActions[1]] as IImportAction[];
 
   const actionText = (name: string, description: string) => {
     return `${name} - ${description}`;
@@ -46,106 +49,245 @@ export default describe('ExtensionImportReview', () => {
   const typeLabel = 'Type';
   const typeMsg = 'Step Extension';
 
-  // description
-  const componentWithDescription = (
-    <MemoryRouter>
-      <ExtensionImportReview
-        actions={actions}
-        cancelLink={cancelLink}
-        extensionDescription={description}
-        extensionId={id}
-        extensionName={name}
-        i18nActionsLabel={stepsActionsLabel}
-        i18nCancel={cancelBtnText}
-        i18nDescriptionLabel={descriptionLabel}
-        i18nExtensionTypeMessage={typeMsg}
-        i18nIdLabel={idLabel}
-        i18nImport={importBtnText}
-        i18nNameLabel={nameLabel}
-        i18nTitle={title}
-        i18nTypeLabel={typeLabel}
-        i18nActionText={actionText}
-        onImport={mockOnImport}
-      />
-    </MemoryRouter>
-  );
+  const props = {
+    actions: fourActions,
+    cancelLink: cancelLink,
+    extensionDescription: description,
+    extensionId: id,
+    extensionName: name,
+    i18nActionsLabel: stepsActionsLabel,
+    i18nCancel: cancelBtnText,
+    i18nDescriptionLabel: descriptionLabel,
+    i18nExtensionTypeMessage: typeMsg,
+    i18nIdLabel: idLabel,
+    i18nImport: importBtnText,
+    i18nNameLabel: nameLabel,
+    i18nTitle: title,
+    i18nTypeLabel: typeLabel,
+    i18nActionText: actionText,
+    onImport: mockOnImport,
+  } as IExtensionImportReviewProps;
 
-  // description
-  const componentWithoutDescription = (
-    <MemoryRouter>
-      <ExtensionImportReview
-        actions={actions}
-        cancelLink={cancelLink}
-        extensionId={id}
-        extensionName={name}
-        i18nActionsLabel={stepsActionsLabel}
-        i18nCancel={cancelBtnText}
-        i18nDescriptionLabel={descriptionLabel}
-        i18nExtensionTypeMessage={typeMsg}
-        i18nIdLabel={idLabel}
-        i18nImport={importBtnText}
-        i18nNameLabel={nameLabel}
-        i18nTitle={title}
-        i18nTypeLabel={typeLabel}
-        i18nActionText={actionText}
-        onImport={mockOnImport}
-      />
-    </MemoryRouter>
-  );
+  const { extensionDescription, ...noDescriptionProps } = props;
 
-  it('Should show correct text content', () => {
-    const { getByTestId } = render(componentWithDescription);
-    expect(getByTestId('title')).toHaveTextContent(title);
-    expect(getByTestId('id-label')).toHaveTextContent(idLabel);
-    expect(getByTestId('id-value')).toHaveTextContent(id);
-    expect(getByTestId('name-label')).toHaveTextContent(nameLabel);
-    expect(getByTestId('name-value')).toHaveTextContent(name);
-    expect(getByTestId('description-label')).toHaveTextContent(
-      descriptionLabel
-    );
-    expect(getByTestId('description-value')).toHaveTextContent(description);
-    expect(getByTestId('type-label')).toHaveTextContent(typeLabel);
-    expect(getByTestId('type-value')).toHaveTextContent(typeMsg);
-    expect(getByTestId('actions-label')).toHaveTextContent(stepsActionsLabel);
-    expect(getByTestId('import-button')).toHaveTextContent(importBtnText);
-    expect(getByTestId('cancel-button')).toHaveTextContent(cancelBtnText);
-    expect(getByTestId('cancel-button').getAttribute('href')).toBe(cancelLink);
+  beforeEach(() => {
+    mockOnImport.mockReset();
   });
 
-  it('Should show correct text content when there is no description', () => {
-    const { getByTestId } = render(componentWithoutDescription);
-    expect(getByTestId('title')).toHaveTextContent(title);
-    expect(getByTestId('id-label')).toHaveTextContent(idLabel);
-    expect(getByTestId('id-value')).toHaveTextContent(id);
-    expect(getByTestId('name-label')).toHaveTextContent(nameLabel);
-    expect(getByTestId('name-value')).toHaveTextContent(name);
-    expect(getByTestId('description-label')).toHaveTextContent(
-      descriptionLabel
+  it('Should render correctly with description', () => {
+    const componentWithDescription = (
+      <MemoryRouter>
+        <ExtensionImportReview {...props} />
+      </MemoryRouter>
     );
-    expect(getByTestId('description-value')).toHaveTextContent('');
-    expect(getByTestId('type-label')).toHaveTextContent(typeLabel);
-    expect(getByTestId('type-value')).toHaveTextContent(typeMsg);
-    expect(getByTestId('actions-label')).toHaveTextContent(stepsActionsLabel);
-    expect(getByTestId('import-button')).toHaveTextContent(importBtnText);
-    expect(getByTestId('cancel-button')).toHaveTextContent(cancelBtnText);
-    expect(getByTestId('cancel-button').getAttribute('href')).toBe(cancelLink);
-  });
 
-  it('Should show all actions', () => {
-    const { getByTestId } = render(componentWithDescription);
-    expect(getByTestId('actions-container').childElementCount).toBe(
-      actions.length
+    const { getByText, queryAllByText, queryByText } = render(
+      componentWithDescription
     );
-    getByTestId('actions-container').childNodes.forEach((actionNode, index) => {
-      expect(actionNode).toHaveTextContent(
-        actionText(actions[index].name, actions[index].description)
-      );
+
+    // title
+    expect(queryAllByText(title)).toHaveLength(1);
+    expect(queryByText(title)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__title row"
+>
+  Import Review
+</div>
+`);
+
+    // id label
+    expect(queryAllByText(idLabel)).toHaveLength(1);
+    expect(queryByText(idLabel)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyLabel col-xs-2"
+>
+  ID
+</div>
+`);
+
+    // id value
+    expect(queryAllByText(id)).toHaveLength(1);
+    expect(queryByText(id)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyValue"
+>
+  io.syndesis.extensions:syndesis-extension-log
+</div>
+`);
+
+    // name label
+    expect(queryAllByText(nameLabel)).toHaveLength(1);
+    expect(queryByText(nameLabel)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyLabel col-xs-2"
+>
+  Name
+</div>
+`);
+
+    // name value
+    expect(queryAllByText(name)).toHaveLength(1);
+    expect(queryByText(name)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyValue"
+>
+  Log
+</div>
+`);
+
+    // description label
+    expect(queryAllByText(descriptionLabel)).toHaveLength(1);
+    expect(queryByText(descriptionLabel)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyLabel col-xs-2"
+>
+  Description
+</div>
+`);
+
+    // description value
+    expect(queryAllByText(description)).toHaveLength(1);
+    expect(queryByText(description)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyValue"
+>
+  An extension to Syndesis to do Logging
+</div>
+`);
+
+    // import button
+    expect(queryAllByText(importBtnText)).toHaveLength(1);
+    expect(queryByText(importBtnText)).toMatchInlineSnapshot(`
+<button
+  class="btn btn-primary"
+  type="button"
+>
+  Import Extension
+</button>
+`);
+    fireEvent.click(getByText(importBtnText));
+    expect(mockOnImport).toHaveBeenCalledTimes(1);
+
+    // cancel button
+    expect(queryAllByText(cancelBtnText)).toHaveLength(1);
+    expect(queryByText(cancelBtnText)).toMatchInlineSnapshot(`
+<a
+  class="btn btn-default extension-import-review__cancelButton"
+  href="/extensions"
+>
+  Cancel
+</a>
+`);
+    expect(queryByText(cancelBtnText)).toHaveAttribute('href', cancelLink);
+
+    // actions
+    fourActions.map(a => {
+      expect(queryByText(actionText(a.name, a.description))).toBeDefined();
     });
   });
 
-  it('Test import click event', () => {
-    const { getByTestId } = render(componentWithDescription);
-    fireEvent.click(getByTestId('import-button'));
-    expect(mockOnImport).toHaveBeenCalled();
+  it('Should render correctly without a description', () => {
+    const componentWithoutDescription = (
+      <MemoryRouter>
+        <ExtensionImportReview {...noDescriptionProps} actions={oneAction} />
+      </MemoryRouter>
+    );
+
+    const { getByText, queryAllByText, queryByText } = render(
+      componentWithoutDescription
+    );
+
+    // title
+    expect(queryAllByText(title)).toHaveLength(1);
+    expect(queryByText(title)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__title row"
+>
+  Import Review
+</div>
+`);
+
+    // id label
+    expect(queryAllByText(idLabel)).toHaveLength(1);
+    expect(queryByText(idLabel)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyLabel col-xs-2"
+>
+  ID
+</div>
+`);
+
+    // id value
+    expect(queryAllByText(id)).toHaveLength(1);
+    expect(queryByText(id)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyValue"
+>
+  io.syndesis.extensions:syndesis-extension-log
+</div>
+`);
+
+    // name label
+    expect(queryAllByText(nameLabel)).toHaveLength(1);
+    expect(queryByText(nameLabel)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyLabel col-xs-2"
+>
+  Name
+</div>
+`);
+
+    // name value
+    expect(queryAllByText(name)).toHaveLength(1);
+    expect(getByText(name)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyValue"
+>
+  Log
+</div>
+`);
+
+    // description label
+    expect(queryAllByText(descriptionLabel)).toHaveLength(1);
+    expect(queryByText(descriptionLabel)).toMatchInlineSnapshot(`
+<div
+  class="extension-import-review__propertyLabel col-xs-2"
+>
+  Description
+</div>
+`);
+
+    // description value
+    expect(queryByText(description)).toBeNull();
+
+    // import button
+    expect(queryAllByText(importBtnText)).toHaveLength(1);
+    expect(queryByText(importBtnText)).toMatchInlineSnapshot(`
+<button
+  class="btn btn-primary"
+  type="button"
+>
+  Import Extension
+</button>
+`);
+    fireEvent.click(getByText(importBtnText));
+    expect(mockOnImport).toHaveBeenCalledTimes(1);
+
+    // cancel button
+    expect(queryAllByText(cancelBtnText)).toHaveLength(1);
+    expect(queryByText(cancelBtnText)).toMatchInlineSnapshot(`
+<a
+  class="btn btn-default extension-import-review__cancelButton"
+  href="/extensions"
+>
+  Cancel
+</a>
+`);
+    expect(queryByText(cancelBtnText)).toHaveAttribute('href', cancelLink);
+
+    // actions
+    oneAction.map(a => {
+      expect(queryByText(actionText(a.name, a.description))).toBeDefined();
+    });
   });
 });

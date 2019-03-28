@@ -19,17 +19,19 @@ export class ExtensionSupports extends React.Component<
   public render() {
     return (
       <div className="extension-group">
-        <Row>
-          <div className="col-xs-offset-1 col-xs-11">
-            {this.props.extensionActions.map(
-              (action: IAction, index: number) => (
-                <div key={index}>
-                  <strong>{action.name}</strong> - {action.description}
-                </div>
-              )
-            )}
-          </div>
-        </Row>
+        {this.props.extensionActions.length !== 0 ? (
+          <Row>
+            <div className="col-xs-offset-1 col-xs-11">
+              {this.props.extensionActions.map(
+                (action: IAction, index: number) => (
+                  <div key={index}>
+                    <strong>{action.name}</strong> - {action.description}
+                  </div>
+                )
+              )}
+            </div>
+          </Row>
+        ) : null}
       </div>
     );
   }
