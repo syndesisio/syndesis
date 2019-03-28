@@ -14,7 +14,7 @@ export class IntegrationDetailInfo extends React.PureComponent<
 > {
   public render() {
     return (
-      <div className="integration-detail-info">
+      <div className="c-integration-detail-info">
         <IntegrationDetailEditableName name={this.props.name} />
         {this.props.version ? (
           <>
