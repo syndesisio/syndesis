@@ -11,7 +11,14 @@ export default include('/data', {
       relationship: 'relationship',
       root: '',
       sqlClient: 'sqlClient',
-      views: 'views',
+      views: include('views', {
+        importSource: include('importSource', {
+          root: '',
+          selectConnection: 'selectConnection',
+          selectViews: 'selectViews',
+        }),
+        root: '',
+      }),
     }),
   }),
 });

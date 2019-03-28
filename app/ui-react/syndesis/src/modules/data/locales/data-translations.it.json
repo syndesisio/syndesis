@@ -21,9 +21,13 @@
     "relationship": "Relationship",
     "sqlClient": "SQL Client",
     "metrics": "Metrics",
-    "createView": "Create View",
+    "createView": "Create a View",
     "createViewTip": "Create a new View for this virtualization",
+    "importDataSource": "Import Data Source",
+    "importDataSourceTip": "Import views from a data source",
+    "importDataSourceWizardStep1": "Select Connection",
+    "importDataSourceWizardStep2": "Select Views",
     "viewEmptyStateTitle": "Create New View",
-    "ViewEmptyStateInfo": "There are no views available. Please click on the button below to create one."
+    "viewEmptyStateInfo": "There are no views available. Please click on the button below to create one."
   }
 }

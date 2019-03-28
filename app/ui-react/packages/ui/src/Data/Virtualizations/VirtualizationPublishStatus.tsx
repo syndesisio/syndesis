@@ -29,7 +29,7 @@ export class VirtualizationPublishStatus extends React.Component<
         : this.props.currentState === RUNNING
         ? 'primary'
         : 'default';
-    let label = DEPLOYING; // default to deploying
+    let label = NOTFOUND; // default to not found
     switch (this.props.currentState) {
       case RUNNING:
         label = this.props.i18nPublished;

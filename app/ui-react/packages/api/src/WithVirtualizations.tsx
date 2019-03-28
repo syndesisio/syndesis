@@ -16,7 +16,7 @@ export class WithVirtualizations extends React.Component<
         url={'workspace/dataservices'}
         defaultValue={[]}
       >
-        {({ read, response }) => this.props.children(response)}
+        {({ response }) => this.props.children(response)}
       </DVFetch>
     );
   }

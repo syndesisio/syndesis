@@ -42,7 +42,6 @@ export interface IVirtualizationListItemProps {
   i18nPublish: string;
   icon?: string;
   onDelete: (virtualizationName: string) => void;
-  onEdit: (virtualizationName: string) => void;
   onExport: (virtualizationName: string) => void;
   onPublish: (virtualizationName: string) => void;
   onUnpublish: (virtualizationName: string) => void;
@@ -98,11 +97,6 @@ export class VirtualizationListItem extends React.Component<
     }
   }
 
-  public handleEdit() {
-    if (this.props.virtualizationName) {
-      this.props.onEdit(this.props.virtualizationName);
-    }
-  }
   public handleExport() {
     if (this.props.virtualizationName) {
       this.props.onExport(this.props.virtualizationName);
