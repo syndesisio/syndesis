@@ -6,7 +6,7 @@ import * as React from 'react';
 import { IntegrationDetailHistoryListViewItem } from '../../src';
 
 const stories = storiesOf(
-  'Integration/IntegrationDetailHistoryListViewItem',
+  'Integration/Detail/Components/IntegrationDetailHistoryListViewItem',
   module
 );
 
