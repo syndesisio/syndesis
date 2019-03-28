@@ -42,10 +42,10 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.odata.AbstractODataRouteTest;
-import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.connector.odata.component.ODataComponentFactory;
 import io.syndesis.connector.odata.consumer.ODataReadRouteSplitResultsTest;
 import io.syndesis.connector.odata.customizer.ODataCreateCustomizer;
+import io.syndesis.connector.support.util.PropertyBuilder;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)

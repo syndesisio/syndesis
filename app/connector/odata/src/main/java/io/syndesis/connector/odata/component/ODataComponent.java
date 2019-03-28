@@ -29,7 +29,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import io.syndesis.connector.odata.ODataConstants;
 import io.syndesis.connector.odata.ODataUtil;
-import io.syndesis.connector.odata.PropertyBuilder;
+import io.syndesis.connector.support.util.PropertyBuilder;
 import io.syndesis.integration.component.proxy.ComponentDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 

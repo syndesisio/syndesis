@@ -359,6 +359,11 @@
         <artifactId>jackson-databind</artifactId>
         <version>${jackson.databind.version}</version>
       </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-email</artifactId>
+        <version>${project.version}</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

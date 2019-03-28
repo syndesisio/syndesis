@@ -49,6 +49,7 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.odata.server.ODataTestServer;
 import io.syndesis.connector.odata.server.ODataTestServer.Options;
+import io.syndesis.connector.support.util.PropertyBuilder;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 
 public abstract class AbstractODataTest implements ODataConstants {

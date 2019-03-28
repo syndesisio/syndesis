@@ -1,0 +1,266 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Send messages to the email account that this connection is authorized to access.",
+      "descriptor": {
+        "connectorCustomizers": [
+          "io.syndesis.connector.email.customizer.EMailSendCustomizer"
+        ],
+        "connectorFactory": "io.syndesis.connector.email.component.EMailComponentFactory",
+        "inputDataShape": {
+          "kind": "java",
+          "name": "EmailMessage",
+          "type": "io.syndesis.connector.email.model.EMailMessageModel"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the emails that you want to obtain.",
+            "name": "Send messages to Email",
+            "properties": {
+              "bcc": {
+                "deprecated": false,
+                "displayName": "Email bcc",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "One or more comma-separated email addresses to send a blind copy of the email to.",
+                "order": "6",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "cc": {
+                "deprecated": false,
+                "displayName": "Email cc",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "One or more comma-separated email addresses to send a copy of the email to.",
+                "order": "5",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "from": {
+                "deprecated": false,
+                "displayName": "Email from",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Email address of the sender (must be valid email address to avoid sender verification failure)",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "priority": {
+                "deprecated": false,
+                "displayName": "Parameter Priority",
+                "enum": [
+                  {
+                    "label": "Input Values",
+                    "value": "inputValues"
+                  },
+                  {
+                    "label": "Consumed Data",
+                    "value": "consumedData"
+                  }
+                ],
+                "defaultValue": "injectedData",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Whether the input values above or the consumed data gets priority in being applied to the generated emails",
+                "order": "7",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "subject": {
+                "deprecated": false,
+                "displayName": "Email subject",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The text to insert in the subject line of the email.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "text": {
+                "deprecated": false,
+                "displayName": "Email text",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The email message that you want to send.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "textarea"
+              },
+              "to": {
+                "deprecated": false,
+                "displayName": "Email to",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "One or more comma-separated email addresses to send the email to.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:email-send-connector",
+      "name": "Send Email",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    }
+  ],
+  "componentScheme": "email-send",
+  "configuredProperties": {
+    "protocol": "smtp"
+  },
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Send email messages.",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjxzdmcgaWQ9IkxheWVyXzEiIHN0eWxlPSJlbmFibGUtYmFja2dyb3VuZDpuZXcgMCAwIDUwIDUwOyIgdmVyc2lvbj0iMS4xIiB2aWV3Qm94PSIwIDAgNTAgNTAiIHhtbDpzcGFjZT0icHJlc2VydmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxzdHlsZSB0eXBlPSJ0ZXh0L2NzcyI+Cgkuc3Qwe2ZpbGw6I0I3QzVGRDt9Cgkuc3Qxe2ZpbGw6IzlBQURGRDt9Cgkuc3Qye2ZpbGw6I0ZGRkZGRjt9Cgkuc3Qze2ZpbGw6IzM5NTVEMTt9Cgkuc3Q0e2ZpbGw6IzQ0NjZGQjt9Cgkuc3Q1e2ZpbGw6I0FBQkFGRDt9Cgkuc3Q2e2ZpbGw6Izc5OEZGRTt9Cgkuc3Q3e2ZpbGw6IzZCQjVGQjt9Cgkuc3Q4e2VuYWJsZS1iYWNrZ3JvdW5kOm5ldyAgICA7fQoJLnN0OXtmaWxsOiMxQjJBNEY7fQoJLnN0MTB7ZmlsbDp1cmwoIyk7fQoJLnN0MTF7ZmlsbDojMzg0RTg1O30KCS5zdDEye2ZpbGw6IzJFNDI3Nzt9Cgkuc3QxM3tmaWxsOiNEOURERjY7fQoJLnN0MTR7ZmlsbDojNTM1RDg4O30KCS5zdDE1e2ZpbGw6IzJCM0M2Nzt9Cgkuc3QxNntmaWxsOiM4RkNDRkY7fQoJLnN0MTd7ZmlsbDojOENBMUZEO30KCS5zdDE4e29wYWNpdHk6MC4zO30KCS5zdDE5e29wYWNpdHk6MC4zO2ZpbGw6IzQ0NjZGQjt9Cgkuc3QyMHtvcGFjaXR5OjAuMjt9Cjwvc3R5bGU+PGc+PGc+PGc+PGc+PHBvbHlnb24gY2xhc3M9InN0MCIgcG9pbnRzPSI0Mi44OTksMS42NDk3MSA0Mi45NzYxNiwyOC44NjU4MyA4LjE2MzQ4LDQ4Ljk2NTg0IDguMDg2MzIsMjEuNzQ5NzIgICAgICIvPjwvZz48Zz48cG9seWdvbiBjbGFzcz0ic3QxIiBwb2ludHM9IjQyLjg5MjA2LDEuNjUzNjIgNDEuODM2OCwxLjAzNDE2IDcuMDIzODQsMjEuMTI3MTkgNy4xMDQ3Nyw0OC4zNDMyNCA4LjE2MzQ3LDQ4Ljk2NDY3ICAgICAgIDguMDg2MzEsMjEuNzQ5NTkgICAgICIvPjwvZz48Zz48ZyBjbGFzcz0ic3Q4Ij48Zz48cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjI1LjQ4NDIyLDIyLjMyODY3IDQyLjk3NjE2LDI4Ljg2NTgzIDguMTYzNDgsNDguOTY1ODQgICAgICAgIi8+PC9nPjxnPjxwb2x5Z29uIGNsYXNzPSJzdDE3IiBwb2ludHM9IjI1LjQ3NzYyLDIwLjAwMDE3IDQyLjk3NjE2LDI4Ljg2NTgzIDI1LjQ4NDIyLDIyLjMyODY3IDguMTYzNDgsNDguOTY1ODQgNDIuOTM3NTgsMjguODY1ODMgICAgICAgICA4LjE2MzQ4LDQ4Ljk2NTg0ICAgICAgICIvPjwvZz48L2c+PC9nPjxnPjxnPjxwb2x5Z29uIGNsYXNzPSJzdDAiIHBvaW50cz0iNDIuODk5LDEuNjQ5NzEgMjUuNTc4MjcsMjguMjg2OTIgOC4wODYzMiwyMS43NDk3MiAgICAgICIvPjwvZz48Zz48cG9seWdvbiBjbGFzcz0ic3Q1IiBwb2ludHM9IjQyLjg5OSwxLjY0OTcxIDI1LjU4NDIxLDMwLjM4MjU1IDguMDg2MzIsMjEuNzQ5NzIgMjUuNTc4MjcsMjguMjg2OTIgICAgICAiLz48L2c+PC9nPjwvZz48Zz48Zz48cGF0aCBjbGFzcz0ic3Q3IiBkPSJNMzEuNzE0ODMsMi4xNzg2NmMtMS4zMTY4OS0wLjc3MDIxLTMuMTU1NDQtMC42NzA3My01LjE2NzkyLDAuNDk2OTQgICAgICBjLTQuMDAwMSwyLjMzNTQ5LTcuMjMwMTQsNy45MDA4Ny03LjIwNTI3LDEyLjUyMjExYzAsMi4yODU5LDAuNzk1MDgsMy45MDA3NywyLjExMTk2LDQuNjQ2MjZsLTEuMTI5MDctMC42NTY2MSAgICAgIGMtMS4zMTY3NC0wLjc0NTQ5LTIuMTExODEtMi4zNjAzNi0yLjExMTgxLTQuNjQ2MTFjLTAuMDI0ODctNC42MjEzOSwzLjIwNTAyLTEwLjE4Njc3LDcuMjA1MTItMTIuNTIyMjYgICAgICBjMi4wMzczNi0xLjE0MjgsMy44NTExOC0xLjI2NzE1LDUuMTY3OTItMC40OTY5NEwzMS43MTQ4MywyLjE3ODY2eiIvPjwvZz48Zz48Zz48ZWxsaXBzZSBjbGFzcz0ic3Q0IiBjeD0iMjYuNTgxMTUiIGN5PSIxMS4wMTI3NyIgcng9IjEwLjIxODk5IiByeT0iNS45MTkxMiIgdHJhbnNmb3JtPSJtYXRyaXgoMC41MDI0NSAtMC44NjQ2MSAwLjg2NDYxIDAuNTAyNDUgMy43MDM3MiAyOC40NjE2KSIvPjwvZz48Zz48Zz48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMjcuMTM2Nyw2Ljk3NjQxYzEuODU1OTItMS4wNzE1MiwzLjA5OTU1LTAuMTgyNzksMy4xMDUxNSwxLjc5MjI5ICAgICAgICBjMC4wMDQ5OSwxLjc2MTYyLTAuODY3MiwzLjE3MDI2LTEuNjkxNDUsMy42NDYxNGMtMC41NTE5MSwwLjMxODY0LTAuODY2OTksMC4wNTgzOS0wLjg5NzE4LTAuMzk5NTVsLTAuMDAwMjItMC4wNzY2OCAgICAgICAgYy0wLjM0MjksMC43NjI2MS0wLjkzMTQ2LDEuNTMyMTMtMS41NTkxMiwxLjg5NDUxYy0wLjkxNDQzLDAuNTI3OTUtMS41MDYzMywwLjEyMjM2LTEuNTA5NDMtMC45NzE5MSAgICAgICAgYy0wLjAwNDQ1LTEuNTcwOTUsMS4xNDI2Ny0zLjQ5OTUzLDIuMzAwNTktNC4xNjgwNmMwLjYzODQ4LTAuMzY4NjMsMS4wNzI0Ny0wLjIyMjY5LDEuMjYxNDIsMC4xNTM5N2wwLjEyNjA3LTAuNzc0NDQgICAgICAgIGwwLjY2NzM0LTAuMzg1MjlsLTAuNTUwNDQsMy4zODM4N2MtMC4wMTA2NCwwLjA3MjU3LTAuMDIxMTcsMC4xODAzNy0wLjAyMDk4LDAuMjQ4NzYgICAgICAgIGMwLjAwMTA2LDAuMzczMDUsMC4yMDkwOCwwLjQ2Njc2LDAuNDY1MTksMC4zMTg5YzAuMzgyMzctMC4yMjA3NiwxLjA2ODE0LTEuMTEyODMsMS4wNjM3Mi0yLjY3MTM0ICAgICAgICBjLTAuMDA1MjUtMS44NTI4MS0xLjExODI4LTIuNTU1MzctMi43OTAyMy0xLjU5MDA3Yy0xLjkwNDYyLDEuMDk5NjMtMy41MjA1OCwzLjk2NzMzLTMuNTE0Niw2LjA3OTIgICAgICAgIGMwLjAwNTEyLDEuODA1MTMsMS4xODg2MSwyLjUxMjcsMi44MTkwOCwxLjU3MTM1YzAuNjk4LTAuNDAyOTksMS4yOTYxLTAuOTk1MzQsMS44MjUyNy0xLjY4Njk3bDAuMTc3NTksMC4xOTIyNCAgICAgICAgYy0wLjYwODM0LDAuODAzNzctMS4zMTQ2MiwxLjQ3MTAzLTIuMDQxNDgsMS44OTA2OGMtMS43ODczOCwxLjAzMTk1LTMuMTE3NDMsMC4yNDkxNi0zLjEyMzA5LTEuNzQ4NzIgICAgICAgIEMyMy4yNDI5OCwxMS4yMzgwNiwyNS4wOTMyLDguMTU2MjIsMjcuMTM2Nyw2Ljk3NjQxeiBNMjcuNzQ4NTIsMTEuMjI1NDFsMC4yODA1Mi0xLjczMzQgICAgICAgIGMtMC4xMDc0MS0wLjI4ODgyLTAuNDMzNC0wLjU3NTk4LTEuMDE0MTctMC4yNDA2OGMtMC45ODExNywwLjU2NjQ4LTEuNzI0ODQsMi4wNjA3Ni0xLjcyMTc0LDMuMTU1MDQgICAgICAgIGMwLjAwMjA1LDAuNzIzMywwLjM2NjA4LDEuMDQ0NTUsMS4wMDQ1NiwwLjY3NTkzQzI2Ljk2NTAzLDEyLjY5NzAxLDI3LjQ2NDksMTEuODY0NTMsMjcuNzQ4NTIsMTEuMjI1NDEiLz48L2c+PC9nPjwvZz48L2c+PC9nPjwvZz48L3N2Zz4=",
+  "id": "email-send",
+  "name": "Send Email (smtp)",
+  "metadata": {
+    "tech-preview": true
+  },
+  "properties": {
+    "protocol": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Protocol",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "required": true,
+      "secret": false,
+      "type": "hidden"
+    },
+    "host": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The hostname of the email server.",
+      "displayName": "Email Host Name",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common",
+      "order": "2",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "port": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The port of the email server.",
+      "displayName": "Email Server Port Number",
+      "group": "common",
+      "javaType": "java.lang.Integer",
+      "kind": "parameter",
+      "label": "common",
+      "order": "3",
+      "required": true,
+      "secret": false,
+      "type": "integer"
+    },
+    "username": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User Name",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "labelHint": "Specify a user name for authentication of the email service url, if required.",
+      "order": "4",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "labelHint": "Specify a password for authentication of the email service, if required.",
+      "order": "5",
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "secure": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Secure (SSL)",
+      "group": "security",
+      "javaType": "java.lang.boolean",
+      "kind": "parameter",
+      "label": "security",
+      "labelHint": "Specify whether this is an imaps (ssl enabled) connection",
+      "order": "6",
+      "required": false,
+      "secret": false,
+      "type": "boolean"
+    },
+    "serverCertificate": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "If the SSL email server is internal and possesses a self-signed certificate then enable SSL by adding the certificate here.",
+      "displayName": "Server Certificate",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "common,security",
+      "order": "7",
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "secure",
+              "value": "true"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": false,
+      "type": "textarea"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

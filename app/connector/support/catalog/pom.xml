@@ -185,6 +185,11 @@
       <artifactId>connector-rest-swagger</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connector-email</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>

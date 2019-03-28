@@ -39,8 +39,8 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
-import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.connector.odata.server.ODataTestServer;
+import io.syndesis.connector.support.util.PropertyBuilder;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)

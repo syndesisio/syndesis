@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
@@ -119,6 +118,15 @@ public class ComponentProxyComponent extends DefaultComponent {
         }
     }
 
+    /**
+     * Allows the definition to be overridden if required by specific components
+     *
+     * @return definition
+     */
+    protected ComponentDefinition getDefinition() {
+        return definition;
+    }
+
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
     protected Endpoint createEndpoint(String uri, String remaining, Map<String, Object> parameters) throws Exception {
@@ -130,6 +138,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         // create the uri of the base component, DO NOT log the computed delegate
         final Map<String, String> endpointOptions = buildEndpointOptions(remaining, options);
         final String endpointScheme = componentSchemeAlias.orElse(componentScheme);
+        ComponentDefinition definition = getDefinition();
         final Endpoint delegate = createDelegateEndpoint(definition, endpointScheme, endpointOptions);
 
         LOGGER.info("Connector resolved: {} -> {}", URISupport.sanitizeUri(uri), URISupport.sanitizeUri(delegate.getEndpointUri()));
@@ -162,6 +171,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         this.remainingOptions.clear();
         this.remainingOptions.putAll(this.configuredOptions);
 
+        ComponentDefinition definition = getDefinition();
         Optional<Component> component = createDelegateComponent(definition, this.remainingOptions);
         if (component.isPresent()) {
 
@@ -359,7 +369,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         // Extract options from options that are supposed to be set at the endpoint
         // level, those options can be overridden and extended using by the query
         // parameters.
-        Collection<String> endpointProperties = definition.getEndpointProperties().keySet();
+        Collection<String> endpointProperties =getDefinition().getEndpointProperties().keySet();
         for (String key : endpointProperties) {
             Object val = options.get(key);
             if (val != null) {

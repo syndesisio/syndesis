@@ -15,33 +15,15 @@
  */
 package io.syndesis.connector.odata;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.nio.charset.Charset;
-import java.security.KeyManagementException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.util.Map;
 import java.util.Optional;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.camel.util.jsse.KeyManagersParameters;
-import org.apache.camel.util.jsse.KeyStoreParameters;
-import org.apache.camel.util.jsse.SSLContextParameters;
-import org.apache.camel.util.jsse.TrustManagersParameters;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
@@ -55,11 +37,10 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.olingo.client.api.http.HttpClientFactory;
 import org.apache.olingo.commons.api.http.HttpMethod;
+import io.syndesis.connector.support.util.KeyStoreHelper;
 
 @SuppressWarnings("PMD")
 public class ODataUtil implements ODataConstants {
-
-    private static final String DEFAULT_KEYSTORE_PASSWD = "changeit";
 
     public static class ODataHttpClientFactory implements HttpClientFactory {
 
@@ -100,34 +81,12 @@ public class ODataUtil implements ODataConstants {
         return scheme != null && scheme.equals("https");
     }
 
-    private static InputStream defaultKeyStore() throws FileNotFoundException {
-        return new FileInputStream(
-                                          System.getProperties()
-                                                .getProperty("java.home") + File.separator
-                                              + "lib" + File.separator + "security" + File.separator
-                                              + "cacerts");
-    }
-
-    private static KeyStore createKeyStore(Map<String, Object> options)
-        throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
-
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keyStore.load(defaultKeyStore(), DEFAULT_KEYSTORE_PASSWD.toCharArray());
-
+    private static KeyStore createKeyStore(Map<String, Object> options) throws Exception {
         String certContent = (String) options.get(SERVER_CERTIFICATE);
-        if (certContent != null) {
-            Certificate certificate = CertificateFactory.getInstance("X.509")
-                .generateCertificate(
-                                     new ByteArrayInputStream(certContent.getBytes(Charset.defaultCharset())));
-            keyStore.setCertificateEntry("odata", certificate);
-        }
-        return keyStore;
+        return KeyStoreHelper.createKeyStoreWithCustomCertificate("odata", certContent);
     }
 
-    public static SSLContext createSSLContext(Map<String, Object> options)
-                throws NoSuchAlgorithmException, KeyManagementException,
-                                KeyStoreException, IOException, CertificateException {
-
+    public static SSLContext createSSLContext(Map<String, Object> options) throws Exception {
         String serviceUrl = (String) options.get(SERVICE_URI);
         if (! isServiceSSL(serviceUrl)) {
             return null;
@@ -140,37 +99,6 @@ public class ODataUtil implements ODataConstants {
         SSLContext sslContext = SSLContext.getInstance("TLS");
         sslContext.init(null, tmf.getTrustManagers(), new SecureRandom());
         return sslContext;
-    }
-
-    public static SSLContextParameters createSSLContextParameters(Map<String, Object> options) {
-        String serviceUrl = (String) options.get(SERVICE_URI);
-        if (! isServiceSSL(serviceUrl)) {
-            return null;
-        }
-
-        SSLContextParameters sslContextParams = new SSLContextParameters();
-        KeyStoreParameters keystoreParams = new KeyStoreParameters() {
-            @Override
-            protected InputStream resolveResource(String resource) throws IOException {
-                return defaultKeyStore();
-            };
-
-            @Override
-            public String getPassword() {
-                return DEFAULT_KEYSTORE_PASSWD;
-            }
-        };
-
-        KeyManagersParameters keyManagersParams = new KeyManagersParameters();
-        keyManagersParams.setKeyStore(keystoreParams);
-
-        TrustManagersParameters trustManagersParams = new TrustManagersParameters();
-        trustManagersParams.setKeyStore(keystoreParams);
-
-        SSLContextParameters sslContextParameters = new SSLContextParameters();
-        sslContextParameters.setKeyManagers(keyManagersParams);
-        sslContextParameters.setTrustManagers(trustManagersParams);
-        return sslContextParams;
     }
 
     private static CredentialsProvider createCredentialProvider(Map<String, Object> options) {
@@ -193,17 +121,10 @@ public class ODataUtil implements ODataConstants {
      *
      * @return the new http client builder
      *
-     * @throws CertificateException
-     * @throws KeyStoreException
-     * @throws NoSuchAlgorithmException
-     * @throws KeyManagementException
-     * @throws IOException
-     * @throws UnrecoverableKeyException
      * @throws Exception
      */
     public static HttpClientBuilder createHttpClientBuilder(Map<String, Object> options)
-                                                       throws CertificateException, KeyManagementException,
-                                                                      NoSuchAlgorithmException, KeyStoreException, IOException, UnrecoverableKeyException {
+                                                       throws Exception {
         HttpClientBuilder builder = HttpClientBuilder.create();
 
         SSLContext sslContext = createSSLContext(options);
@@ -229,17 +150,10 @@ public class ODataUtil implements ODataConstants {
      *
      * @return the new http client builder
      *
-     * @throws CertificateException
-     * @throws KeyStoreException
-     * @throws NoSuchAlgorithmException
-     * @throws KeyManagementException
-     * @throws IOException
-     * @throws UnrecoverableKeyException
      * @throws Exception
      */
     public static HttpAsyncClientBuilder createHttpAsyncClientBuilder(Map<String, Object> options)
-                                                       throws CertificateException, KeyManagementException,
-                                                                      NoSuchAlgorithmException, KeyStoreException, IOException, UnrecoverableKeyException {
+                                                       throws Exception {
         HttpAsyncClientBuilder builder = HttpAsyncClientBuilder.create();
 
         SSLContext sslContext = createSSLContext(options);
@@ -264,17 +178,10 @@ public class ODataUtil implements ODataConstants {
      *
      * @return the new http(s) client
      *
-     * @throws CertificateException
-     * @throws KeyStoreException
-     * @throws NoSuchAlgorithmException
-     * @throws KeyManagementException
-     * @throws IOException
-     * @throws UnrecoverableKeyException
      * @throws Exception
      */
     public static CloseableHttpClient createHttpClient(Map<String, Object> options)
-                                                                   throws CertificateException, KeyManagementException,
-                                                                       NoSuchAlgorithmException, KeyStoreException, IOException, UnrecoverableKeyException {
+                                                                   throws Exception {
         return createHttpClientBuilder(options).build();
     }
 

@@ -319,7 +319,7 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
                             dataManager.update(dbConnection);
                         }
 
-                        if (connection.getId().isPresent()) {
+                        if (connection.getId().isPresent() && ! integration.isDeleted()) {
                             //
                             // Compare the connection in the draft integration's step
                             // with the connection from the data manager and log the
