@@ -1,11 +1,11 @@
 <div class="pf-c-page" id="page-layout-default-nav">
-
-    <pfng-toast-notification-list
-      [notifications]="notifications|async"
-      (onActionSelect)="handleAction($event)"
-      (onCloseSelect)="handleClose($event)"
-      [showClose]="showClose">
-    </pfng-toast-notification-list>
+  <pfng-toast-notification-list
+    [notifications]="notifications | async"
+    (onActionSelect)="handleAction($event)"
+    (onCloseSelect)="handleClose($event)"
+    [showClose]="showClose"
+  >
+  </pfng-toast-notification-list>
 
   <header *ngIf="!firstTime" role="banner" class="pf-c-page__header">
     <div class="pf-c-page__header-brand">
@@ -16,32 +16,165 @@
           id="syn-nav-toggle"
           aria-label="Toggle primary navigation"
           aria-expanded="true"
-          (click)="hamburgerToggle()">
+          (click)="hamburgerToggle()"
+        >
           <i class="fa fa-bars" aria-hidden="true"></i>
         </button>
       </div>
       <!-- Logo -->
       <a routerLink="/" class="pf-c-page__header-brand-link">
-        <svg *ngIf="!productBuild" id="appLogo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 265"><defs><style>.cls-1{fill:#9adde8;}.cls-2{fill:#49badc;}.cls-3{fill:#fff;}</style></defs><title>syndesis_logo_full_1280px_lightbkg</title><polygon class="cls-1" points="129.95 98.77 33.99 144.38 122.22 167.37 218.18 121.75 129.95 98.77"/><polygon class="cls-2" points="218.18 121.75 218.18 121.75 122.22 167.37 242.17 198.61 218.18 121.75"/><polygon class="cls-1" points="154.99 86.86 131 10 10 67.52 129.95 98.77 154.99 86.86"/><polygon class="cls-2" points="33.99 144.38 129.95 98.77 10 67.52 10 67.52 33.99 144.38"/><polygon class="cls-2" points="189.64 25.27 131 10 154.99 86.86 213.63 102.14 189.64 25.27"/><polygon class="cls-2" points="38.54 164 62.53 240.86 121.17 256.13 121.17 256.13 97.18 179.27 97.18 179.27 38.54 164"/><polygon class="cls-1" points="242.17 198.61 122.22 167.37 97.18 179.27 121.17 256.13 242.17 198.61"/><path class="cls-3" d="M358.91,210.23c-23.57,0-43.44-17.22-44.06-41.6H329.2c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.65-9.63,35.65-28.48,0-14.76-10.65-21.73-23.15-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.15,35.25H399.28c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C416.29,200.39,388.62,210.23,358.91,210.23Z"/><path class="cls-3" d="M484.32,143.22l-54.51-84h17l45.29,71.52L537.4,59.2h14.34l-54.1,83.61v64.34H484.32Z"/><path class="cls-3" d="M572.24,59.2H587.4L669,189.32h.41V59.2h13.32v148h-16.8L586,79.28h-.41V207.15H572.24Z"/><path class="cls-3" d="M760,59.2c48.56,0,76.23,25,76.23,74s-27.67,74-76.23,74H720V59.2Zm3.27,135.66c41.6,0,58.61-24.39,58.61-61.69,0-43.64-25.61-62.91-67.62-61.68h-20.9V194.86Z"/><path class="cls-3" d="M870.19,207.15V59.2H958.1V71.49H883.51v53.08h71.73v12.29H883.51v58h77.67v12.29Z"/><path class="cls-3" d="M1030.44,210.23c-23.56,0-43.44-17.22-44.05-41.6h14.34c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.66-9.63,35.66-28.48,0-14.76-10.66-21.73-23.16-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.16,35.25h-14.35c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C1087.82,200.39,1060.16,210.23,1030.44,210.23Z"/><path class="cls-3" d="M1121.63,207.15V58.58H1135V207.15Z"/><path class="cls-3" d="M1212.62,210.23c-23.56,0-43.44-17.22-44.06-41.6h14.35c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.66-9.63,35.66-28.48,0-14.76-10.66-21.73-23.16-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.16,35.25H1253c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C1270,200.39,1242.34,210.23,1212.62,210.23Z"/></svg>
-        <svg *ngIf="productBuild" id="appLogo" enable-background="new 0 0 197.5 12.5" version="1.1" viewBox="0 0 197.5 12.5" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-          <style type="text/css">.st0{fill:#FFFFFF;}</style>
-          <path class="st0" d="m6.5 12.2l-2-4h-1.3v4h-3.2v-11.9h5.3c0.7 0 1.3 0.1 1.9 0.2s1.1 0.4 1.5 0.7 0.7 0.7 0.9 1.2c0.3 0.5 0.4 1.1 0.4 1.8 0 0.9-0.2 1.6-0.6 2.2-0.4 0.5-0.9 1-1.6 1.3l2.4 4.6h-3.7zm-0.1-8.9c-0.2-0.2-0.6-0.3-1.2-0.3h-2v2.6h2c0.5 0 0.9-0.1 1.2-0.3 0.2-0.2 0.3-0.6 0.3-1s-0.1-0.7-0.3-1z"/>
-          <path class="st0" d="M12.2,12.2V0.3h9.1v2.8h-5.9v1.6H19v2.7h-3.5v2h6v2.8H12.2z"/>
-          <path class="st0" d="m33.5 9c-0.3 0.8-0.7 1.4-1.2 1.9s-1.2 0.8-2 1-1.7 0.3-2.8 0.3h-3.9v-11.9h4.2c0.9 0 1.8 0.1 2.5 0.3 0.8 0.2 1.4 0.5 1.9 1s0.9 1.1 1.2 1.8 0.4 1.7 0.4 2.8c0.1 1.1 0 2-0.3 2.8zm-3.1-4.2c-0.1-0.4-0.3-0.7-0.5-1-0.2-0.2-0.5-0.4-0.9-0.6-0.4-0.1-0.8-0.2-1.3-0.2h-0.8v6.3h0.7c0.5 0 0.9-0.1 1.3-0.2s0.7-0.3 0.9-0.5 0.4-0.6 0.5-1 0.2-0.9 0.2-1.5c0-0.4 0-0.9-0.1-1.3z"/>
-          <path class="st0" d="M48,12.2V7.5h-3.7v4.7h-3.4V0.3h3.4v4.4H48V0.3h3.4v11.9H48z"/>
-          <path class="st0" d="m61.5 12.2l-0.6-2.1h-3.6l-0.6 2.1h-3.5l4.3-11.9h3.3l4.3 11.9h-3.6zm-1.7-5.5c-0.1-0.4-0.2-0.7-0.3-1s-0.2-0.5-0.2-0.8c-0.1-0.2-0.1-0.4-0.2-0.6 0-0.2-0.1-0.4-0.1-0.6 0 0.2-0.1 0.4-0.1 0.6s-0.1 0.4-0.2 0.6-0.1 0.5-0.2 0.8-0.2 0.6-0.3 1l-0.2 0.8h2l-0.2-0.8z"/>
-          <path class="st0" d="M71.3,3.2v9.1H68V3.2h-3.3V0.3h10v2.9H71.3z"/>
-          <path class="st0" d="m78.6 1.9c-0.1 0.1-0.1 0.3-0.3 0.4-0.1 0.1-0.2 0.2-0.4 0.3-0.1 0.1-0.3 0.1-0.5 0.1s-0.3 0-0.5-0.1c-0.1-0.1-0.3-0.1-0.4-0.3-0.1-0.1-0.2-0.2-0.3-0.4-0.1-0.1-0.1-0.3-0.1-0.5s0-0.3 0.1-0.5c0.1-0.1 0.1-0.3 0.3-0.4 0.1-0.1 0.2-0.2 0.4-0.3 0.1-0.1 0.3-0.1 0.5-0.1s0.3 0 0.5 0.1c0.1 0.1 0.3 0.1 0.4 0.3 0.1 0.1 0.2 0.2 0.3 0.4 0.1 0.1 0.1 0.3 0.1 0.5s-0.1 0.4-0.1 0.5zm-0.2-0.8c0-0.1-0.1-0.2-0.2-0.3s-0.2-0.2-0.3-0.2-0.3-0.1-0.4-0.1-0.3 0-0.4 0.1-0.2 0.1-0.3 0.2-0.2 0.2-0.2 0.3c-0.1 0.1-0.1 0.3-0.1 0.4s0 0.3 0.1 0.4 0.1 0.2 0.2 0.3 0.2 0.2 0.3 0.2 0.3 0.1 0.4 0.1 0.3 0 0.4-0.1 0.2-0.1 0.3-0.2 0.2-0.2 0.2-0.3 0.1-0.3 0.1-0.4c0-0.2-0.1-0.3-0.1-0.4zm-0.5 0.3c-0.1 0.1-0.1 0.1-0.2 0.1l0.3 0.6h-0.3l-0.3-0.5h-0.3v0.5h-0.1v-1.3h0.6 0.2c0.1 0 0.1 0 0.1 0.1l0.1 0.1v0.2c0 0.1 0 0.2-0.1 0.2zm-0.2-0.4h-0.1-0.3v0.4h0.3 0.1l0.1-0.1c0-0.2 0-0.2-0.1-0.3z"/>
-          <path class="st0" d="M85.4,2.5v2.3H89v2.4h-3.6v5.1H83V0.1h8.6v2.4H85.4z"/>
-          <path class="st0" d="m102.1 11c-0.9 1-2.1 1.4-3.6 1.4-0.7 0-1.4-0.1-2-0.4-0.6-0.2-1.1-0.6-1.5-1.1s-0.8-1-1-1.7-0.4-1.5-0.4-2.3v-6.8h2.4v6.7c0 1 0.2 1.7 0.7 2.3 0.4 0.6 1 0.8 1.8 0.8s1.4-0.3 1.8-0.8 0.7-1.3 0.7-2.3v-6.7h2.4v6.7c0 1.9-0.4 3.2-1.3 4.2z"/>
-          <path class="st0" d="m115 10.1c-0.2 0.5-0.5 0.9-0.9 1.2s-0.9 0.6-1.5 0.8-1.3 0.3-2.1 0.3c-1 0-1.9-0.2-2.8-0.6s-1.5-0.9-1.9-1.6l1.7-1.6c0.4 0.5 0.9 0.8 1.4 1.1s1.1 0.3 1.7 0.3c0.7 0 1.3-0.1 1.6-0.3s0.5-0.5 0.5-1c0-0.2 0-0.4-0.1-0.5s-0.2-0.3-0.4-0.4-0.5-0.2-0.8-0.4c-0.4-0.1-0.8-0.2-1.4-0.4-0.6-0.1-1.1-0.3-1.5-0.4-0.5-0.2-0.9-0.4-1.2-0.7s-0.6-0.6-0.8-1-0.3-0.9-0.3-1.5 0.1-1 0.3-1.5c0.2-0.4 0.5-0.8 0.9-1.1s0.8-0.5 1.4-0.7c0.5-0.2 1.1-0.2 1.7-0.2 0.9 0 1.8 0.2 2.5 0.5s1.3 0.8 1.9 1.4l-1.7 1.7c-0.4-0.4-0.8-0.7-1.3-0.9s-0.9-0.3-1.5-0.3c-0.3 0-0.6 0-0.8 0.1s-0.4 0.1-0.5 0.2-0.1 0.3-0.2 0.4-0.1 0.3-0.1 0.4c0 0.2 0 0.4 0.1 0.5l0.4 0.4c0.2 0.1 0.4 0.2 0.7 0.3s0.7 0.2 1.2 0.3 1 0.2 1.4 0.4c0.5 0.2 0.9 0.4 1.3 0.6 0.4 0.3 0.7 0.6 0.9 1.1 0.2 0.4 0.4 1 0.4 1.6 0.1 0.5 0 1.1-0.2 1.5z"/>
-          <path class="st0" d="M117.9,12.2V0.1h8.4v2.4h-6v2.1h3.5v2.4h-3.5v2.9h6.2v2.4H117.9z"/>
-          <path class="st0" d="m143.7 8.8c-0.3 0.8-0.6 1.4-1.1 2-0.5 0.5-1 0.9-1.7 1.2s-1.4 0.4-2.2 0.4-1.5-0.1-2.2-0.4-1.2-0.7-1.7-1.2-0.8-1.2-1.1-2-0.4-1.6-0.4-2.6 0.1-1.9 0.4-2.6c0.3-0.8 0.6-1.4 1.1-2 0.5-0.5 1-0.9 1.7-1.2s1.4-0.4 2.2-0.4 1.5 0.1 2.1 0.4 1.2 0.7 1.7 1.2 0.8 1.2 1.1 2 0.4 1.6 0.4 2.6-0.1 1.8-0.3 2.6zm-2.9-5.4c-0.5-0.7-1.2-1-2.1-1s-1.5 0.3-2 1-0.8 1.6-0.8 2.8 0.3 2.2 0.8 2.8c0.5 0.7 1.2 1 2.1 1s1.5-0.3 2-1 0.8-1.6 0.8-2.8-0.3-2.2-0.8-2.8z"/>
-          <path class="st0" d="m154.1 12.2l-4.4-6.6c-0.2-0.2-0.3-0.5-0.5-0.7s-0.3-0.5-0.4-0.6v0.5 0.7 0.8 0.6 5.3h-2.4v-12.1h2.3l4.3 6.4c0.2 0.2 0.3 0.5 0.5 0.7 0.2 0.3 0.3 0.5 0.4 0.6v-0.5-0.7-0.8-0.6-5.1h2.4v12.1h-2.2z"/>
-          <path class="st0" d="M159.4,12.2V0.1h2.4v9.7h6.1v2.4H159.4z"/>
-          <path class="st0" d="M170.3,12.2V0.1h2.4v12.1H170.3z"/>
-          <path class="st0" d="m183.6 12.2l-4.4-6.6c-0.2-0.2-0.3-0.5-0.5-0.7-0.2-0.3-0.3-0.5-0.4-0.6v0.5 0.7 0.8 0.6 5.3h-2.3v-12.1h2.3l4.3 6.4c0.1 0.2 0.3 0.5 0.5 0.7 0.2 0.3 0.3 0.5 0.4 0.6v-0.5-0.7-0.8-0.6-5.1h2.4v12.1h-2.3z"/>
-          <path class="st0" d="M188.9,12.2V0.1h8.4v2.4h-6v2.1h3.5v2.4h-3.5v2.9h6.2v2.4H188.9z"/>
+        <svg
+          *ngIf="!productBuild"
+          id="appLogo"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 1280 265"
+        >
+          <defs>
+            <style>
+              .cls-1 {
+                fill: #9adde8;
+              }
+              .cls-2 {
+                fill: #49badc;
+              }
+              .cls-3 {
+                fill: #fff;
+              }
+            </style>
+          </defs>
+          <title>syndesis_logo_full_1280px_lightbkg</title>
+          <polygon
+            class="cls-1"
+            points="129.95 98.77 33.99 144.38 122.22 167.37 218.18 121.75 129.95 98.77"
+          />
+          <polygon
+            class="cls-2"
+            points="218.18 121.75 218.18 121.75 122.22 167.37 242.17 198.61 218.18 121.75"
+          />
+          <polygon
+            class="cls-1"
+            points="154.99 86.86 131 10 10 67.52 129.95 98.77 154.99 86.86"
+          />
+          <polygon
+            class="cls-2"
+            points="33.99 144.38 129.95 98.77 10 67.52 10 67.52 33.99 144.38"
+          />
+          <polygon
+            class="cls-2"
+            points="189.64 25.27 131 10 154.99 86.86 213.63 102.14 189.64 25.27"
+          />
+          <polygon
+            class="cls-2"
+            points="38.54 164 62.53 240.86 121.17 256.13 121.17 256.13 97.18 179.27 97.18 179.27 38.54 164"
+          />
+          <polygon
+            class="cls-1"
+            points="242.17 198.61 122.22 167.37 97.18 179.27 121.17 256.13 242.17 198.61"
+          />
+          <path
+            class="cls-3"
+            d="M358.91,210.23c-23.57,0-43.44-17.22-44.06-41.6H329.2c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.65-9.63,35.65-28.48,0-14.76-10.65-21.73-23.15-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.15,35.25H399.28c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C416.29,200.39,388.62,210.23,358.91,210.23Z"
+          />
+          <path
+            class="cls-3"
+            d="M484.32,143.22l-54.51-84h17l45.29,71.52L537.4,59.2h14.34l-54.1,83.61v64.34H484.32Z"
+          />
+          <path
+            class="cls-3"
+            d="M572.24,59.2H587.4L669,189.32h.41V59.2h13.32v148h-16.8L586,79.28h-.41V207.15H572.24Z"
+          />
+          <path
+            class="cls-3"
+            d="M760,59.2c48.56,0,76.23,25,76.23,74s-27.67,74-76.23,74H720V59.2Zm3.27,135.66c41.6,0,58.61-24.39,58.61-61.69,0-43.64-25.61-62.91-67.62-61.68h-20.9V194.86Z"
+          />
+          <path
+            class="cls-3"
+            d="M870.19,207.15V59.2H958.1V71.49H883.51v53.08h71.73v12.29H883.51v58h77.67v12.29Z"
+          />
+          <path
+            class="cls-3"
+            d="M1030.44,210.23c-23.56,0-43.44-17.22-44.05-41.6h14.34c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.66-9.63,35.66-28.48,0-14.76-10.66-21.73-23.16-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.16,35.25h-14.35c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C1087.82,200.39,1060.16,210.23,1030.44,210.23Z"
+          />
+          <path class="cls-3" d="M1121.63,207.15V58.58H1135V207.15Z" />
+          <path
+            class="cls-3"
+            d="M1212.62,210.23c-23.56,0-43.44-17.22-44.06-41.6h14.35c.41,22.74,17.21,29.3,37.09,29.3,16.6,0,35.66-9.63,35.66-28.48,0-14.76-10.66-21.73-23.16-25.82-24-8-60.45-15.58-60.45-47.55,0-25.82,23.77-40,47.13-40,19.47,0,44.88,6.77,48.16,35.25H1253c-.41-18.24-17-23-32.17-23-15.37,0-34.43,7.79-34.43,25.82,0,42,83.61,23,83.61,74C1270,200.39,1242.34,210.23,1212.62,210.23Z"
+          />
+        </svg>
+        <svg
+          *ngIf="productBuild"
+          id="appLogo"
+          class="product"
+          enable-background="new 0 0 197.5 12.5"
+          version="1.1"
+          viewBox="0 0 197.5 12.5"
+          xml:space="preserve"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <style type="text/css">
+            .st0 {
+              fill: #ffffff;
+            }
+          </style>
+          <path
+            class="st0"
+            d="m6.5 12.2l-2-4h-1.3v4h-3.2v-11.9h5.3c0.7 0 1.3 0.1 1.9 0.2s1.1 0.4 1.5 0.7 0.7 0.7 0.9 1.2c0.3 0.5 0.4 1.1 0.4 1.8 0 0.9-0.2 1.6-0.6 2.2-0.4 0.5-0.9 1-1.6 1.3l2.4 4.6h-3.7zm-0.1-8.9c-0.2-0.2-0.6-0.3-1.2-0.3h-2v2.6h2c0.5 0 0.9-0.1 1.2-0.3 0.2-0.2 0.3-0.6 0.3-1s-0.1-0.7-0.3-1z"
+          />
+          <path
+            class="st0"
+            d="M12.2,12.2V0.3h9.1v2.8h-5.9v1.6H19v2.7h-3.5v2h6v2.8H12.2z"
+          />
+          <path
+            class="st0"
+            d="m33.5 9c-0.3 0.8-0.7 1.4-1.2 1.9s-1.2 0.8-2 1-1.7 0.3-2.8 0.3h-3.9v-11.9h4.2c0.9 0 1.8 0.1 2.5 0.3 0.8 0.2 1.4 0.5 1.9 1s0.9 1.1 1.2 1.8 0.4 1.7 0.4 2.8c0.1 1.1 0 2-0.3 2.8zm-3.1-4.2c-0.1-0.4-0.3-0.7-0.5-1-0.2-0.2-0.5-0.4-0.9-0.6-0.4-0.1-0.8-0.2-1.3-0.2h-0.8v6.3h0.7c0.5 0 0.9-0.1 1.3-0.2s0.7-0.3 0.9-0.5 0.4-0.6 0.5-1 0.2-0.9 0.2-1.5c0-0.4 0-0.9-0.1-1.3z"
+          />
+          <path
+            class="st0"
+            d="M48,12.2V7.5h-3.7v4.7h-3.4V0.3h3.4v4.4H48V0.3h3.4v11.9H48z"
+          />
+          <path
+            class="st0"
+            d="m61.5 12.2l-0.6-2.1h-3.6l-0.6 2.1h-3.5l4.3-11.9h3.3l4.3 11.9h-3.6zm-1.7-5.5c-0.1-0.4-0.2-0.7-0.3-1s-0.2-0.5-0.2-0.8c-0.1-0.2-0.1-0.4-0.2-0.6 0-0.2-0.1-0.4-0.1-0.6 0 0.2-0.1 0.4-0.1 0.6s-0.1 0.4-0.2 0.6-0.1 0.5-0.2 0.8-0.2 0.6-0.3 1l-0.2 0.8h2l-0.2-0.8z"
+          />
+          <path class="st0" d="M71.3,3.2v9.1H68V3.2h-3.3V0.3h10v2.9H71.3z" />
+          <path
+            class="st0"
+            d="m78.6 1.9c-0.1 0.1-0.1 0.3-0.3 0.4-0.1 0.1-0.2 0.2-0.4 0.3-0.1 0.1-0.3 0.1-0.5 0.1s-0.3 0-0.5-0.1c-0.1-0.1-0.3-0.1-0.4-0.3-0.1-0.1-0.2-0.2-0.3-0.4-0.1-0.1-0.1-0.3-0.1-0.5s0-0.3 0.1-0.5c0.1-0.1 0.1-0.3 0.3-0.4 0.1-0.1 0.2-0.2 0.4-0.3 0.1-0.1 0.3-0.1 0.5-0.1s0.3 0 0.5 0.1c0.1 0.1 0.3 0.1 0.4 0.3 0.1 0.1 0.2 0.2 0.3 0.4 0.1 0.1 0.1 0.3 0.1 0.5s-0.1 0.4-0.1 0.5zm-0.2-0.8c0-0.1-0.1-0.2-0.2-0.3s-0.2-0.2-0.3-0.2-0.3-0.1-0.4-0.1-0.3 0-0.4 0.1-0.2 0.1-0.3 0.2-0.2 0.2-0.2 0.3c-0.1 0.1-0.1 0.3-0.1 0.4s0 0.3 0.1 0.4 0.1 0.2 0.2 0.3 0.2 0.2 0.3 0.2 0.3 0.1 0.4 0.1 0.3 0 0.4-0.1 0.2-0.1 0.3-0.2 0.2-0.2 0.2-0.3 0.1-0.3 0.1-0.4c0-0.2-0.1-0.3-0.1-0.4zm-0.5 0.3c-0.1 0.1-0.1 0.1-0.2 0.1l0.3 0.6h-0.3l-0.3-0.5h-0.3v0.5h-0.1v-1.3h0.6 0.2c0.1 0 0.1 0 0.1 0.1l0.1 0.1v0.2c0 0.1 0 0.2-0.1 0.2zm-0.2-0.4h-0.1-0.3v0.4h0.3 0.1l0.1-0.1c0-0.2 0-0.2-0.1-0.3z"
+          />
+          <path
+            class="st0"
+            d="M85.4,2.5v2.3H89v2.4h-3.6v5.1H83V0.1h8.6v2.4H85.4z"
+          />
+          <path
+            class="st0"
+            d="m102.1 11c-0.9 1-2.1 1.4-3.6 1.4-0.7 0-1.4-0.1-2-0.4-0.6-0.2-1.1-0.6-1.5-1.1s-0.8-1-1-1.7-0.4-1.5-0.4-2.3v-6.8h2.4v6.7c0 1 0.2 1.7 0.7 2.3 0.4 0.6 1 0.8 1.8 0.8s1.4-0.3 1.8-0.8 0.7-1.3 0.7-2.3v-6.7h2.4v6.7c0 1.9-0.4 3.2-1.3 4.2z"
+          />
+          <path
+            class="st0"
+            d="m115 10.1c-0.2 0.5-0.5 0.9-0.9 1.2s-0.9 0.6-1.5 0.8-1.3 0.3-2.1 0.3c-1 0-1.9-0.2-2.8-0.6s-1.5-0.9-1.9-1.6l1.7-1.6c0.4 0.5 0.9 0.8 1.4 1.1s1.1 0.3 1.7 0.3c0.7 0 1.3-0.1 1.6-0.3s0.5-0.5 0.5-1c0-0.2 0-0.4-0.1-0.5s-0.2-0.3-0.4-0.4-0.5-0.2-0.8-0.4c-0.4-0.1-0.8-0.2-1.4-0.4-0.6-0.1-1.1-0.3-1.5-0.4-0.5-0.2-0.9-0.4-1.2-0.7s-0.6-0.6-0.8-1-0.3-0.9-0.3-1.5 0.1-1 0.3-1.5c0.2-0.4 0.5-0.8 0.9-1.1s0.8-0.5 1.4-0.7c0.5-0.2 1.1-0.2 1.7-0.2 0.9 0 1.8 0.2 2.5 0.5s1.3 0.8 1.9 1.4l-1.7 1.7c-0.4-0.4-0.8-0.7-1.3-0.9s-0.9-0.3-1.5-0.3c-0.3 0-0.6 0-0.8 0.1s-0.4 0.1-0.5 0.2-0.1 0.3-0.2 0.4-0.1 0.3-0.1 0.4c0 0.2 0 0.4 0.1 0.5l0.4 0.4c0.2 0.1 0.4 0.2 0.7 0.3s0.7 0.2 1.2 0.3 1 0.2 1.4 0.4c0.5 0.2 0.9 0.4 1.3 0.6 0.4 0.3 0.7 0.6 0.9 1.1 0.2 0.4 0.4 1 0.4 1.6 0.1 0.5 0 1.1-0.2 1.5z"
+          />
+          <path
+            class="st0"
+            d="M117.9,12.2V0.1h8.4v2.4h-6v2.1h3.5v2.4h-3.5v2.9h6.2v2.4H117.9z"
+          />
+          <path
+            class="st0"
+            d="m143.7 8.8c-0.3 0.8-0.6 1.4-1.1 2-0.5 0.5-1 0.9-1.7 1.2s-1.4 0.4-2.2 0.4-1.5-0.1-2.2-0.4-1.2-0.7-1.7-1.2-0.8-1.2-1.1-2-0.4-1.6-0.4-2.6 0.1-1.9 0.4-2.6c0.3-0.8 0.6-1.4 1.1-2 0.5-0.5 1-0.9 1.7-1.2s1.4-0.4 2.2-0.4 1.5 0.1 2.1 0.4 1.2 0.7 1.7 1.2 0.8 1.2 1.1 2 0.4 1.6 0.4 2.6-0.1 1.8-0.3 2.6zm-2.9-5.4c-0.5-0.7-1.2-1-2.1-1s-1.5 0.3-2 1-0.8 1.6-0.8 2.8 0.3 2.2 0.8 2.8c0.5 0.7 1.2 1 2.1 1s1.5-0.3 2-1 0.8-1.6 0.8-2.8-0.3-2.2-0.8-2.8z"
+          />
+          <path
+            class="st0"
+            d="m154.1 12.2l-4.4-6.6c-0.2-0.2-0.3-0.5-0.5-0.7s-0.3-0.5-0.4-0.6v0.5 0.7 0.8 0.6 5.3h-2.4v-12.1h2.3l4.3 6.4c0.2 0.2 0.3 0.5 0.5 0.7 0.2 0.3 0.3 0.5 0.4 0.6v-0.5-0.7-0.8-0.6-5.1h2.4v12.1h-2.2z"
+          />
+          <path class="st0" d="M159.4,12.2V0.1h2.4v9.7h6.1v2.4H159.4z" />
+          <path class="st0" d="M170.3,12.2V0.1h2.4v12.1H170.3z" />
+          <path
+            class="st0"
+            d="m183.6 12.2l-4.4-6.6c-0.2-0.2-0.3-0.5-0.5-0.7-0.2-0.3-0.3-0.5-0.4-0.6v0.5 0.7 0.8 0.6 5.3h-2.3v-12.1h2.3l4.3 6.4c0.1 0.2 0.3 0.5 0.5 0.7 0.2 0.3 0.3 0.5 0.4 0.6v-0.5-0.7-0.8-0.6-5.1h2.4v12.1h-2.3z"
+          />
+          <path
+            class="st0"
+            d="M188.9,12.2V0.1h8.4v2.4h-6v2.1h3.5v2.4h-3.5v2.9h6.2v2.4H188.9z"
+          />
         </svg>
       </a>
     </div>
@@ -56,143 +189,208 @@
               aria-expanded="false"
               (click)="expandHelpDropdown()"
               (clickOutside)="expandHelpDropdown()"
-              [attachOutsideOnClick]=true>
-              <i class="pf-icon pf-icon-help pf-m-user pf-screen-reader" aria-hidden="true"></i>
-              <i class="pf-icon fa fa-ellipsis-v pf-m-mobile" aria-hidden="true"></i>
+              [attachOutsideOnClick]="true"
+            >
+              <i
+                class="pf-icon pf-icon-help pf-m-user pf-screen-reader"
+                aria-hidden="true"
+              ></i>
+              <i
+                class="pf-icon fa fa-ellipsis-v pf-m-mobile"
+                aria-hidden="true"
+              ></i>
             </button>
             <ul
               class="pf-c-dropdown__menu pf-m-align-right"
               aria-labelledby="helpDropdownButton"
-              *ngIf="helpExpanded">
-                <li>
-                  <a
-                    class="pf-c-dropdown__menu-item"
-                    [attr.href]="'links.tutorial' | synI18n"
-                    rel="nofollow"
-                    role="link"
-                    target="_blank">{{ 'header.helpmenu.sampletutorials' | synI18n }}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    [attr.href]="'links.userguide' | synI18n:' '"
-                    rel="nofollow"
-                    role="link"
-                    target="_blank"
-                    class="pf-c-dropdown__menu-item">{{ 'header.helpmenu.userguide' | synI18n }}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    [attr.href]="'links.connectorsguide' | synI18n:' '"
-                    rel="nofollow"
-                    role="link"
-                    target="_blank"
-                    class="pf-c-dropdown__menu-item">{{ 'header.helpmenu.connectorsguide' | synI18n }}
-                  </a>
-                </li>
-                <li>
-                  <a
-                    routerLink="/support"
-                    role="link"
-                    class="pf-c-dropdown__menu-item">{{ 'support' | synI18n }}
-                  </a>
-                </li>
-                <li>
-                  <a href="mailto:{{ 'email' | synI18n }}"
-                    rel="nofollow"
-                    role="link"
-                    target="_blank"
-                    class="pf-c-dropdown__menu-item">{{ 'contactus' | synI18n }}
-                  </a>
-                </li>
-                <li class="pf-c-dropdown__separator pf-m-mobile" role="separator"></li>
-                <li class="pf-m-mobile">
-                  <a
-                    (click)="logout()"
-                    class="pf-c-dropdown__menu-item"
-                    role="link">{{ 'header.usermenu.logout' | synI18n }}
-                  </a>
-                </li>
-              </ul>
+              *ngIf="helpExpanded"
+            >
+              <li>
+                <a
+                  class="pf-c-dropdown__menu-item"
+                  [attr.href]="'links.tutorial' | synI18n"
+                  rel="nofollow"
+                  role="link"
+                  target="_blank"
+                  >{{ 'header.helpmenu.sampletutorials' | synI18n }}
+                </a>
+              </li>
+              <li>
+                <a
+                  [attr.href]="'links.userguide' | synI18n: ' '"
+                  rel="nofollow"
+                  role="link"
+                  target="_blank"
+                  class="pf-c-dropdown__menu-item"
+                  >{{ 'header.helpmenu.userguide' | synI18n }}
+                </a>
+              </li>
+              <li>
+                <a
+                  [attr.href]="'links.connectorsguide' | synI18n: ' '"
+                  rel="nofollow"
+                  role="link"
+                  target="_blank"
+                  class="pf-c-dropdown__menu-item"
+                  >{{ 'header.helpmenu.connectorsguide' | synI18n }}
+                </a>
+              </li>
+              <li>
+                <a
+                  routerLink="/support"
+                  role="link"
+                  class="pf-c-dropdown__menu-item"
+                  >{{ 'support' | synI18n }}
+                </a>
+              </li>
+              <li>
+                <a
+                  href="mailto:{{ 'email' | synI18n }}"
+                  rel="nofollow"
+                  role="link"
+                  target="_blank"
+                  class="pf-c-dropdown__menu-item"
+                  >{{ 'contactus' | synI18n }}
+                </a>
+              </li>
+              <li
+                class="pf-c-dropdown__separator pf-m-mobile"
+                role="separator"
+              ></li>
+              <li class="pf-m-mobile">
+                <a
+                  (click)="logout()"
+                  class="pf-c-dropdown__menu-item"
+                  role="link"
+                  >{{ 'header.usermenu.logout' | synI18n }}
+                </a>
+              </li>
+            </ul>
           </div>
         </div>
       </div>
 
       <div class="pf-c-page__header-tools-group user-menu-group">
-          <div class="pf-m-user pf-screen-reader">
-            <div class="pf-c-dropdown">
-              <button
-                id="userMenuDropdownButton"
-                class="pf-c-dropdown__toggle pf-m-plain"
-                aria-expanded="false"
-                (click)="userMenuDropdown()"
-                (clickOutside)="userMenuDropdown()"
-                [attachOutsideOnClick]=true>
-                {{ ( user$ | async)?.username }}
-              </button>
-              <ul
-                class="pf-c-dropdown__menu pf-m-align-right"
-                aria-labelledby="userMenuDropdownButton"
-                *ngIf="userMenuExpanded">
-                <li>
-                  <a
-                    (click)="logout()"
-                    class="pf-c-dropdown__menu-item"
-                    role="link">{{ 'header.usermenu.logout' | synI18n }}
-                  </a>
-                </li>
-              </ul>
-            </div>
+        <div class="pf-m-user pf-screen-reader">
+          <div class="pf-c-dropdown">
+            <button
+              id="userMenuDropdownButton"
+              class="pf-c-dropdown__toggle pf-m-plain"
+              aria-expanded="false"
+              (click)="userMenuDropdown()"
+              (clickOutside)="userMenuDropdown()"
+              [attachOutsideOnClick]="true"
+            >
+              {{ (user$ | async)?.username }}
+            </button>
+            <ul
+              class="pf-c-dropdown__menu pf-m-align-right"
+              aria-labelledby="userMenuDropdownButton"
+              *ngIf="userMenuExpanded"
+            >
+              <li>
+                <a
+                  (click)="logout()"
+                  class="pf-c-dropdown__menu-item"
+                  role="link"
+                  >{{ 'header.usermenu.logout' | synI18n }}
+                </a>
+              </li>
+            </ul>
           </div>
-          <img class="pf-c-avatar" src="/assets/images/img_avatar.svg" alt="Avatar Image">
         </div>
+      </div>
+      <img
+        class="pf-c-avatar"
+        src="/assets/images/img_avatar.svg"
+        alt="Avatar Image"
+      />
     </div>
   </header>
 
-  <nav class="nav-pf-vertical hidden-icons-pf" role="navigation" [ngClass]="{'collapsed': menuExpanded}">
-      <ul class="list-group" role="list">
-        <li class="list-group-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-          <a routerLink="/" role="link">
-            <span class="fa fa-tachometer" data-toggle="tooltip" title="Dashboard"></span>
-            <span class="list-group-item-value">{{ 'menu.home' | synI18n }}</span>
-          </a>
-        </li>
-        <li class="list-group-item" routerLinkActive="active">
-          <a routerLink="integrations" role="link">
-            <span class="pficon pficon-topology" data-toggle="tooltip" title="Integrations"></span>
-            <span class="list-group-item-value">{{ 'menu.integrations' | synI18n }}</span>
-          </a>
-        </li>
-        <li class="list-group-item" routerLinkActive="active">
-          <a routerLink="connections" role="link">
-            <span class="pficon pficon-network" data-toggle="tooltip" title="Connections"></span>
-            <span class="list-group-item-value">{{ 'menu.connections' | synI18n }}</span>
-          </a>
-        </li>
-        <li class="list-group-item" routerLinkActive="active">
-          <a routerLink="customizations" role="link">
-            <span class="pficon pficon-network" data-toggle="tooltip" title="Customizations"></span>
-            <span class="list-group-item-value">{{ 'menu.customizations' | synI18n }}</span>
-          </a>
-        </li>
-        <li class="list-group-item" routerLinkActive="active">
-          <a routerLink="settings" role="link">
-            <span class="fa fa-lock" data-toggle="tooltip" title="Settings"></span>
-            <span class="list-group-item-value">{{ 'menu.settings' | synI18n }}</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  <main role="main" class="pf-c-page__main" [ngClass]="{'collapsed-nav': menuExpanded}">
+  <nav
+    class="nav-pf-vertical hidden-icons-pf"
+    role="navigation"
+    [ngClass]="{ collapsed: menuExpanded }"
+  >
+    <ul class="list-group" role="list">
+      <li
+        class="list-group-item"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+      >
+        <a routerLink="/" role="link">
+          <span
+            class="fa fa-tachometer"
+            data-toggle="tooltip"
+            title="Dashboard"
+          ></span>
+          <span class="list-group-item-value">{{ 'menu.home' | synI18n }}</span>
+        </a>
+      </li>
+      <li class="list-group-item" routerLinkActive="active">
+        <a routerLink="integrations" role="link">
+          <span
+            class="pficon pficon-topology"
+            data-toggle="tooltip"
+            title="Integrations"
+          ></span>
+          <span class="list-group-item-value">{{
+            'menu.integrations' | synI18n
+          }}</span>
+        </a>
+      </li>
+      <li class="list-group-item" routerLinkActive="active">
+        <a routerLink="connections" role="link">
+          <span
+            class="pficon pficon-network"
+            data-toggle="tooltip"
+            title="Connections"
+          ></span>
+          <span class="list-group-item-value">{{
+            'menu.connections' | synI18n
+          }}</span>
+        </a>
+      </li>
+      <li class="list-group-item" routerLinkActive="active">
+        <a routerLink="customizations" role="link">
+          <span
+            class="pficon pficon-network"
+            data-toggle="tooltip"
+            title="Customizations"
+          ></span>
+          <span class="list-group-item-value">{{
+            'menu.customizations' | synI18n
+          }}</span>
+        </a>
+      </li>
+      <li class="list-group-item" routerLinkActive="active">
+        <a routerLink="settings" role="link">
+          <span
+            class="fa fa-lock"
+            data-toggle="tooltip"
+            title="Settings"
+          ></span>
+          <span class="list-group-item-value">{{
+            'menu.settings' | synI18n
+          }}</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <main
+    role="main"
+    class="pf-c-page__main"
+    [ngClass]="{ 'collapsed-nav': menuExpanded }"
+  >
     <section class="pf-c-page__main-section">
       <router-outlet></router-outlet>
     </section>
   </main>
   <syndesis-modal id="importDb" title="Import Selection" [body]="importDbModal">
-      <ng-template #importDbModal let-modal="modal">
-          {{ 'import-db-txt' | synI18n }}
-        <input type="file" id="file-import" (change)="importDB($event, modal)">
-      </ng-template>
-    </syndesis-modal>
+    <ng-template #importDbModal let-modal="modal">
+      {{ 'import-db-txt' | synI18n }}
+      <input type="file" id="file-import" (change)="importDB($event, modal)" />
+    </ng-template>
+  </syndesis-modal>
 </div>
