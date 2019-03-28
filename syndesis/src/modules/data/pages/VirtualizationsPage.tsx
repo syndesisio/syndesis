@@ -167,6 +167,7 @@ export default class VirtualizationsPage extends React.Component {
                             )}
                             linkCreateHRef={resolvers.virtualizations.create()}
                             onImport={this.handleImportVirt}
+                            hasListData={data.length > 0}
                           >
                             <WithLoader
                               error={error}

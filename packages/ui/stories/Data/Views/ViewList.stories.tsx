@@ -166,6 +166,7 @@ stories
           i18nResultsCount={text('i18nResultsCount', '0 Results')}
           onImportView={action(importActionText)}
           children={[]}
+          hasListData={false}
         />
       </Router>
     ))
@@ -218,6 +219,7 @@ stories
           )}
           onImportView={action(importActionText)}
           children={viewItems}
+          hasListData={true}
         />
       </Router>
     ))
