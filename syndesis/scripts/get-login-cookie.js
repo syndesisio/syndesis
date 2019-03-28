@@ -7,6 +7,7 @@ const puppeteer = require('puppeteer');
 
   const browser = await puppeteer.launch({
     headless: false,
+    userDataDir: '.puppeteer_data',
     ignoreHTTPSErrors: true,
   });
   const page = await browser.newPage();
