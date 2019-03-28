@@ -19,11 +19,15 @@ export class IntegrationDetailHistoryListView extends React.Component<
       <Grid
         fluid={true}
         key={1}
-        className="integration-detail-history-list-view"
+        className="c-integration-detail-history-list-view"
       >
         {this.props.integrationIsDraft ? (
           <Grid.Row className="show-grid">
-            <Grid.Col xs={2} md={2} className="list-description">
+            <Grid.Col
+              xs={2}
+              md={2}
+              className="c-integration-detail-history-list-view__description"
+            >
               {this.props.i18nTextDraft}:
             </Grid.Col>
             <Grid.Col xs={10} md={10}>
@@ -44,7 +48,11 @@ export class IntegrationDetailHistoryListView extends React.Component<
 
         {this.props.children ? (
           <Grid.Row className="show-grid">
-            <Grid.Col xs={2} md={2} className="list-description">
+            <Grid.Col
+              xs={2}
+              md={2}
+              className="c-integration-detail-history-list-view__description"
+            >
               {<span>{this.props.i18nTextHistory}:</span>}
             </Grid.Col>
             <Grid.Col xs={10} md={10}>
