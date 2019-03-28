@@ -10,6 +10,7 @@ import { ButtonLink } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
 export interface IViewsListViewProps extends IListViewToolbarProps {
+  hasListData: boolean;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
   i18nImportView: string;
@@ -50,7 +51,7 @@ export class ViewListView extends React.Component<IViewsListViewProps> {
             </OverlayTrigger>
           </div>
         </ListViewToolbar>
-        {this.props.children ? (
+        {this.props.hasListData ? (
           <ListView>{this.props.children}</ListView>
         ) : (
           <EmptyState>

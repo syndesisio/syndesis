@@ -11,6 +11,7 @@ import { ButtonLink, Container } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
 export interface IVirtualizationListProps extends IListViewToolbarProps {
+  hasListData: boolean;
   i18nCreateDataVirtualization: string;
   i18nCreateDataVirtualizationTip?: string;
   i18nDescription: string;
@@ -90,7 +91,7 @@ export class VirtualizationList extends React.Component<
             </OverlayTrigger>
           </div>
         </ListViewToolbar>
-        {this.props.children ? (
+        {this.props.hasListData ? (
           <ListView>{this.props.children}</ListView>
         ) : (
           <EmptyState>
