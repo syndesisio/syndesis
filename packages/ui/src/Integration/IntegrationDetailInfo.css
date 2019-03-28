@@ -1,8 +1,8 @@
-.c-integration-detail-info {
+.integration-detail-info {
     display: flex;
 }
 
-.c-integration-detail-info .fa-pencil {
+.integration-detail-info .fa-pencil {
     font-weight: 400;
     color: #0088ce;
     border-radius: 0;
