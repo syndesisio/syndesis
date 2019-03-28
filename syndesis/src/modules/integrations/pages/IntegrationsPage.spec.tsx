@@ -4,7 +4,7 @@ import { render, wait } from 'react-testing-library';
 import { IntegrationsPage } from './IntegrationsPage';
 import { App } from '../../../app';
 
-describe('IntegrationsPage: ', () => {
+describe('IntegrationsPage', () => {
   beforeEach(async () => window.startMockServer('something'));
 
   afterEach(() => window.stopMockServer());
@@ -17,16 +17,13 @@ describe('IntegrationsPage: ', () => {
     </MemoryRouter>
   );
 
-  it('Should render', async () => {
-    const { getByText, queryByTestId } = render(testComponent);
+  it('Should fetch the data, show a loader and then render the integrations', async () => {
+    const { container, debug, queryByTestId } = render(testComponent);
     await wait(() => {
       expect(
         queryByTestId('integration-list-skeleton')
       ).not.toBeInTheDocument();
     });
-    expect(getByText('test')).toBeDefined();
-    expect(getByText('test2')).toBeDefined();
-    expect(getByText('test3')).toBeDefined();
-    expect(getByText('test 4')).toBeDefined();
+    expect(container).toMatchSnapshot();
   });
 });
