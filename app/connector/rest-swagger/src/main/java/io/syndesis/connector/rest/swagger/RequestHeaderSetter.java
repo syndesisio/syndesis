@@ -32,7 +32,7 @@ final class RequestHeaderSetter implements Processor {
 
     private final Map<String, String> httpHeaders = new HashMap<>();
 
-    RequestHeaderSetter(final Map<String, Object> options, final DataShape inputDataShape, final DataShape outputDataShape) {
+    RequestHeaderSetter(final DataShape inputDataShape, final DataShape outputDataShape) {
         httpHeaders.put("Content-Type", determineContentTypeOf(inputDataShape));
         httpHeaders.put("Accept", determineContentTypeOf(outputDataShape));
     }

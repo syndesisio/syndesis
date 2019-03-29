@@ -342,7 +342,6 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         Integration integration = resourceManager.sanitize(fullIntegration);
         ObjectWriter writer = Json.writer();
         try {
-
             return new String(writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration), UTF_8);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Cannot convert integration " + integration.getName() + " to JSON: " + e,e);

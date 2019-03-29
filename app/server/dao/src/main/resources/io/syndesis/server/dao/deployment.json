@@ -74,7 +74,7 @@
   },
   {
     "data": {
-      "connectorScheme": "rest-swagger",
+      "componentScheme": "rest-swagger",
       "connectorGroup": {
         "id": "swagger-connector-template"
       },

@@ -136,7 +136,7 @@ public class Application implements ApplicationRunner {
                             .build())
                         .action(new ConnectorAction.Builder()
                             .descriptor(new ConnectorDescriptor.Builder()
-                                .componentScheme(template.getConnectorScheme())
+                                .componentScheme(template.getComponentScheme())
                                 .build())
                             .build())
                         .build()

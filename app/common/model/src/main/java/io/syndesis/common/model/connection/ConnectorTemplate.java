@@ -41,11 +41,11 @@ public interface ConnectorTemplate extends WithId<ConnectorTemplate>, WithName, 
         return new Builder().createFrom(this);
     }
 
+    String getComponentScheme();
+
     Optional<ConnectorGroup> getConnectorGroup();
 
     Map<String, ConfigurationProperty> getConnectorProperties();
-
-    String getConnectorScheme();
 
     String getDescription();
 

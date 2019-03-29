@@ -53,7 +53,7 @@ public final class RequestCustomizer implements ComponentProxyCustomizer, InputD
             camelContext.addComponent(DELEGATE_COMPONENT_NAME, delegate);
         }
 
-        Processors.addBeforeProducer(component, new RequestHeaderSetter(options, inputDataShape, outputDataShape));
+        Processors.addBeforeProducer(component, new RequestHeaderSetter(inputDataShape, outputDataShape));
         Processors.addBeforeProducer(component, new RequestPayloadConverter(inputDataShape));
     }
 

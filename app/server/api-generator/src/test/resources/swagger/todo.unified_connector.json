@@ -4,8 +4,7 @@
       "actionType": "connector",
       "description": "Fetches all tasks from the database",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-0"
         },
@@ -34,8 +33,7 @@
       "actionType": "connector",
       "description": "Stores new task in the database",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentSchema": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-1"
         },
@@ -70,8 +68,7 @@
       "actionType": "connector",
       "description": "Fetches task by given identifier",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-2"
         },
@@ -106,8 +103,7 @@
       "actionType": "connector",
       "description": "Updates task by given identifier",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentSchema": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-3"
         },
@@ -142,8 +138,7 @@
       "actionType": "connector",
       "description": "Deletes task by given identifier",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentSchema": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-4"
         },

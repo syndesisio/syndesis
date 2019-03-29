@@ -432,7 +432,7 @@ public class RestSwaggerConnectorIntegrationTest {
             .action(new ConnectorAction.Builder()
                 .descriptor(new ConnectorDescriptor.Builder()
                     .putConfiguredProperty("operationId", operationId)
-                    .camelConnectorPrefix(REST_OPENAPI_CONNECTOR.getComponentScheme().get())
+                    .componentScheme(REST_OPENAPI_CONNECTOR.getComponentScheme().get())
                     .connectorId(REST_OPENAPI_CONNECTOR.getId().get())
                     .inputDataShape(inputDataShape)
                     .outputDataShape(outputDataShape)
