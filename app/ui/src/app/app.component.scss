@@ -21,6 +21,9 @@ main {
 
   #appLogo {
     width: 164px;
+    &.product {
+      width: 310px;
+    }
   }
 }
 
