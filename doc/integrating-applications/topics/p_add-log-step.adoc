@@ -22,7 +22,8 @@ adding a log step to an integration flow.
 For each message that an integration receives, a log step can provide
 one or more of the following:
 
-* The message's header, which provides metadata about the message.
+* The message's context, which provides metadata about the message, 
+including the message's header.
 * The message's body, which provides the content of the message.
 * Text that you specify either explicitly or through evaluation of an 
 http://camel.apache.org/simple.html[Apache Camel Simple language] expression. 
@@ -31,12 +32,7 @@ http://camel.apache.org/simple.html[Apache Camel Simple language] expression.
 ====
 The Log connection that was available in previous releases is no longer
 available to be added to integrations. Add a log step instead of a log 
-connection. A log step does not provide all logging that was provided
-by a log connection: 
-
-* A log step cannot log the ID of each message. (Internally, this ID is the exchange ID.) 
-
-* A log step does not let you specify the level (ERROR, WARN, INFO, DEBUG, TRACE)  of messages that you want to log. 
+connection. 
 ====
 
 .Prerequisites
@@ -47,7 +43,7 @@ to choose a step. Or, {prodname} is prompting you to choose a finish connection.
 
 . Click *Log*.
 . On the *Configure Log Step* page, select the content that you want
-to log. If you select *Custom text*, then in the text input field, 
+to log. If you select *Custom Text*, then in the text input field, 
 enter one of the following:
 * The text that you want to log
 * A Camel Simple language expression
