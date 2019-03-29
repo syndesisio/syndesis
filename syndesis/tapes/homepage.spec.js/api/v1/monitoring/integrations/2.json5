@@ -1,22 +1,14 @@
 {
     meta: {
-        createdAt: '2019-03-22T08:18:44.123Z',
-        host: 'https://syndesis.192.168.64.23.nip.io',
+        createdAt: '2019-03-29T17:49:31.214Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
         resHumanReadable: true,
     },
     req: {
         url: '/api/v1/monitoring/integrations',
         method: 'GET',
         headers: {
-            'accept-language': 'it,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
-            'accept-encoding': 'gzip, deflate, br',
-            'content-type': 'application/json; charset=utf-8',
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
-            'syndesis-xsrf-token': 'awesome',
-            accept: 'application/json,text/plain,*/*',
-            connection: 'close',
-            'x-forwarded-access-token': 'supersecret',
-            'x-forwarded-origin': 'for=127.0.0.1;host=localhost:3000;proto=https',
+            'syndesis-mock-session': 'homepage.spec.js',
         },
         body: '',
     },
@@ -33,10 +25,10 @@
                 'application/json',
             ],
             date: [
-                'Thu, 21 Mar 2019 07:18:55 GMT',
+                'Fri, 29 Mar 2019 17:54:29 GMT',
             ],
             'gap-auth': [
-                'developer@cluster.local',
+                'riccardo-forina@cluster.local',
             ],
             'gap-upstream-address': [
                 'syndesis-server',

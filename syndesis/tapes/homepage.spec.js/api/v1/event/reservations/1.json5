@@ -1,23 +1,14 @@
 {
     meta: {
-        createdAt: '2019-03-22T08:18:17.593Z',
-        host: 'https://syndesis.192.168.64.23.nip.io',
+        createdAt: '2019-03-29T17:49:30.834Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
         resHumanReadable: true,
     },
     req: {
         url: '/api/v1/event/reservations',
         method: 'POST',
         headers: {
-            'accept-language': 'it,en-GB;q=0.9,en-US;q=0.8,en;q=0.7',
-            'accept-encoding': 'gzip, deflate, br',
-            'content-type': 'application/json; charset=utf-8',
-            'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_3) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36',
-            'syndesis-xsrf-token': 'awesome',
-            origin: 'http://localhost:3000',
-            accept: 'application/json,text/plain,*/*',
-            connection: 'close',
-            'x-forwarded-access-token': 'supersecret',
-            'x-forwarded-origin': 'for=127.0.0.1;host=localhost:3000;proto=https',
+            'syndesis-mock-session': 'homepage.spec.js',
         },
         body: '',
     },
@@ -40,10 +31,10 @@
                 'application/json',
             ],
             date: [
-                'Thu, 21 Mar 2019 07:18:28 GMT',
+                'Fri, 29 Mar 2019 17:54:29 GMT',
             ],
             'gap-auth': [
-                'developer@cluster.local',
+                'riccardo-forina@cluster.local',
             ],
             'gap-upstream-address': [
                 'syndesis-server',
@@ -75,7 +66,7 @@
         },
         body: {
             event: 'uuid',
-            data: 'fa85c51b-192c-41f3-b449-963a45cd95f6',
+            data: '19d1fd67-c0ba-4ddd-8ac7-b6729851f2a1',
         },
     },
 }

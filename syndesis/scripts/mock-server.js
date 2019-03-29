@@ -11,18 +11,36 @@ const server = async argv => {
   const server = talkback({
     host: argv.host,
     port: argv.port,
-    path: path.join(argv.recordingsPath, argv.session),
-    record: argv.record,
+    path: path.join(argv.recordingsPath),
+    record: argv.record ? 'OVERWRITE' : 'DISABLED',
     ignoreHeaders: [
       'content-length',
       'host',
       'cookie',
       'cache-control',
       'pragma',
+      'referer',
+      'origin',
+      'accept',
+      'accept-encoding',
+      'accept-language',
+      'user-agent',
+      'x-forwarded-access-token',
+      'x-forwarded-origin',
+      'upgrade-insecure-requests',
+      'syndesis-xsrf-token',
+      'content-type',
+      'connection',
+      'proxy-connection',
     ],
     silent: argv.silent,
     summary: argv.summary,
     debug: argv.debug,
+    tapeNameGenerator: (tapeNumber, tape) => {
+      return path.normalize(
+        `${tape.req.headers[argv.sessionHeader]}/${tape.req.url}/${tapeNumber}`
+      );
+    },
   });
   await server.start();
   console.log(
@@ -30,7 +48,7 @@ const server = async argv => {
       ? `Mock recording started, proxing against ${
           argv.host
         }, recording session "${argv.session}"`
-      : `Replaying session "${argv.session}"`
+      : `Replaying sessions`
   );
 };
 
@@ -59,27 +77,16 @@ yargs
     describe: 'Enable verbose debug information.',
   })
   .command(
-    ['$0 <session>', 'replay <session>'],
-    'Replay the previously recorded <session>',
-    yargs =>
-      yargs
-        .positional('session', {
-          session: 'The name of the session to load and record the requests.',
-        })
-        .example(
-          '$0 dashboard',
-          'Replays a previously recorded session named dashboard'
-        ),
+    ['$0', 'replay'],
+    'Replay a previously recorded session',
+    yargs => yargs,
     server
   )
   .command(
-    'record <session> <host>',
-    'Record a <session> proxying request to <host>. If <session> already exists, it will be updated.',
+    'record <host>',
+    'Proxy and record requests to <host>',
     yargs =>
       yargs
-        .positional('session', {
-          session: 'The name of the session to load and record the requests.',
-        })
         .positional('host', {
           describe: 'The remote backend host',
         })
@@ -90,10 +97,12 @@ yargs
           }
           return `${parsedUrl.protocol}//${parsedUrl.host}`;
         })
-        .example(
-          '$0 record dashboard https://syndesis.192.168.64.1.nip.io',
-          'Replays a previously recorded session named dashboard'
-        ),
+        .option('session-header', {
+          session:
+            'The name of the header containing the session that should be replayed.',
+          default: 'syndesis-mock-session',
+        })
+        .example('$0 record https://syndesis.192.168.64.1.nip.io'),
     argv =>
       server({
         ...argv,
