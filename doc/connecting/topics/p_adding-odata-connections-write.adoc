@@ -2,9 +2,9 @@
 // as_connecting-to-odata.adoc
 
 [id='adding-odata-connections-write_{context}']
-= Updating data on an OData server 
+= Updating data that is managed by an OData service 
 
-In an integration, you can update a collection on an OData server in the middle 
+In an integration, you can update a collection that is managed by an OData service in the middle 
 of a flow or to finish
 a simple integration. To do this, add an OData connection to the middle of 
 a flow or as a simple integration's 

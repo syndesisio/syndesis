@@ -2,12 +2,12 @@
 // as_connecting-to-odata.adoc
 
 [id='adding-odata-connections-read_{context}']
-= Triggering an integration when polling returns data from an OData server
+= Triggering an integration when polling returns data from an OData service
 
 To trigger execution of an integration upon obtaining data from an 
-OData server, add an OData connection to a simple integration as its start 
+OData service, add an OData connection to a simple integration as its start 
 connection. When the integration is running, the OData connection 
-polls the server at intervals that you specify. When the connection finds
+polls the service at intervals that you specify. When the connection finds
 data that satisfies the connection configuration, the connection passes
 the data to the next step in the integration. 
 
@@ -27,10 +27,13 @@ you want to use to start the integration.
 
 .. In the *Resource Collection* field, select the name of the OData collection  
 that you want to query. {prodname} fetches data from the 
-OData server to provide a list of available resource collections. 
+OData service to provide a list of available resource collections. 
 .. In the *Entity Key Predicate* field, to obtain a particular
-entity that you specify, enter something like `*UserName='Bob'*` or
-`*Categories(1)*`. The property must be a key.
+entity, identify the entity that you want by specifying its key predicate. 
+For an entity with one key property, only the key value is required but 
+specification of the key property name is allowed. For example, specify 
+something like `*UserName='Bob'*` or
+`*Categories(1)*`. To obtain multiple entities, leave this field blank. 
 .. In the *Query Options* field, enter the query that you want to 
 apply to the collection. Use OData syntax. For example, 
 `$filter=startswith(name, 'N')` returns a message for each entity in the 
@@ -42,9 +45,9 @@ connection to return individual messages
 rather than a collection of messages. 
 .. In the *Interval Before Polling Starts* field, accept the default of 
 1 second, or enter the length of time that you want to elapse before 
-the connection starts to poll the OData server. 
+the connection starts to poll the OData service. 
 .. In the *Delay* field, accept the default of 30 seconds, or enter
-the interval at which you want the connection to poll the OData server. 
+the interval at which you want the connection to poll the OData service. 
 .. In the *Backoff Idle Threshold* field, accept the default of 1 or
 enter an integer that indicates the number of consecutive polls that 
 can return no data. After this number of polls, the connection 
@@ -92,8 +95,8 @@ When the integration contains all the connections that are needed,
 if the OData connection returns a collection, 
 consider whether you need to split the collection of messages that
 the OData connection returns. If you want to execute integration steps 
-for each message that you obtained from the OData server, then after the
+for each message that you obtained from the OData service, then after the
 OData connection, add a split step. Also, 
 you probably need to follow the OData connection with a data 
-mapping step that maps data obtained from the OData server to fields in
+mapping step that maps data obtained from the OData service to fields in
 subsequent connections in the integration. 

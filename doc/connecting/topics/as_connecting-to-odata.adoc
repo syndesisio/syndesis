@@ -7,11 +7,11 @@
 :context: odata
 
 Open Data Protocol (OData) is a standard for building and 
-consuming REST APIs. An OData server provides services to 
+consuming REST APIs. An OData service provides services to 
 clients, such as {prodname}, through OData-compliant 
 HTTP requests. A {prodname} integration can obtain 
-entities from an OData server, and can update, create, or
-delete entities on an OData server. To do this, create an 
+entities from an OData service, and can update, create, or
+delete entities managed by an OData service. To do this, create an 
 OData connection, and then add it to an integration. 
 Details are in the following topics:
 
@@ -19,9 +19,18 @@ Details are in the following topics:
 * xref:adding-odata-connections-read_{context}[]
 * xref:adding-odata-connections-write_{context}[]
 
-[NOTE]
-In this release, the OData connector is a Technology Preview 
-feature. 
+ifeval::["{location}" == "downstream"]
+[IMPORTANT]
+====
+The OData connector is a Technology Preview feature only. Technology Preview features are 
+not supported with Red Hat production service level agreements (SLAs) and might not be 
+functionally complete. Red Hat does not recommend using them in production. 
+These features provide early access to upcoming product features, enabling 
+customers to test functionality and provide feedback during the development process. 
+For more information about the support scope of Red Hat Technology Preview features, 
+see link:https://access.redhat.com/support/offerings/techpreview/. 
+====
+endif::[]
 
 include::p_creating-odata-connections.adoc[leveloffset=+1]
 
