@@ -1,5 +1,5 @@
 // This module is included in these assemblies:
-// as_how-to-process-collection-in-a-flow.adoc
+// as_how-to-process-a-collection-in-a-flow.adoc
 // as_mapping-data.adoc
 
 [id='using-data-mapper-to-process-collections_{context}']
