@@ -19,13 +19,10 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -151,9 +148,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
     private static ObjectNode createPropertySchema(final String name, final Property schema) {
         final ObjectNode jsonSchema = JsonNodeFactory.instance.objectNode();
         final String format = schema.getFormat();
-        if (format != null && Stream.of(JsonValueFormat.values())
-                                    .map(Objects::toString)
-                                    .anyMatch(jsonSchemaFormat -> jsonSchemaFormat.equals(format))) {
+        if (JsonSchemaHelper.isKnownFormat(format)) {
             jsonSchema.put("format", format);
         }
         final String type = schema.getType();

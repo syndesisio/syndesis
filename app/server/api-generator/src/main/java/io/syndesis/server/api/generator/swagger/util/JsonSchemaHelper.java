@@ -134,7 +134,7 @@ public final class JsonSchemaHelper {
 
     public static JsonNode sanitize(final JsonNode node) {
         if (node == null) {
-            return node;
+            return null;
         }
 
         if (node.isArray()) {
@@ -147,9 +147,7 @@ public final class JsonSchemaHelper {
             JsonNode formatNode = node.get("format");
             if (formatNode != null &&
                     formatNode.isTextual() &&
-                    Stream.of(JsonValueFormat.values())
-                            .map(Objects::toString)
-                            .noneMatch(jsonSchemaFormat -> jsonSchemaFormat.equals(formatNode.asText()))) {
+                    !isKnownFormat(formatNode.asText())) {
                 objectNode.remove("format");
             }
 
@@ -158,6 +156,12 @@ public final class JsonSchemaHelper {
         }
 
         return node;
+    }
+
+    public static boolean isKnownFormat(String format) {
+        return format != null && Stream.of(JsonValueFormat.values())
+                .map(Objects::toString)
+                .anyMatch(jsonSchemaFormat -> jsonSchemaFormat.equals(format));
     }
 
     static String javaTypeFor(final String type, final String format) {
