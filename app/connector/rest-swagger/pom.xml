@@ -34,13 +34,11 @@
     <dependency>
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-component-proxy</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-processor</artifactId>
-      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -71,7 +69,7 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-rest-swagger</artifactId>
-      <scope>provided</scope>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
