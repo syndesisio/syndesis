@@ -2,19 +2,21 @@
 // as_connecting-to-odata.adoc
 
 [id='creating-odata-connections_{context}']
-= Creating a connection to an OData server
+= Creating a connection to an OData service
 
-In an integration, to obtain entities from an OData server, 
+In an integration, to obtain entities from an OData service, 
 or to update, create or delete
-entities on an OData server, you must first create a connection to 
-that OData server.
+entities that are managed by an OData service, you must first create a connection to 
+that OData service.
 
 .Prerequisite
 
-* You must know the base URL for the OData server that you want
+* You must know the base URL for the OData service that you want
 to connect to. 
-* If that server uses authentication then you must have the 
+* If that service uses authentication then you must have the 
 required credentials, and, if required, an SSL certificate. 
+However, most OData services are public and do not require 
+authentication. 
 
 .Procedure
 
@@ -26,12 +28,25 @@ connectors.
 . To configure the connection:
 .. In the *Service Root URL* field, enter the base URL for the 
 OData service that you want to access. 
-.. In the *User Name* field, if the server uses basic authentication, 
+.. In the *User Name* field, if the service uses basic authentication, 
 then enter your user name.
-.. In the *Password* field, if the server uses basic authentication, 
+.. In the *Password* field, if the service uses basic authentication, 
 then enter your password. 
-.. In the *Server Certificate* field, paste the content of an SSL 
+.. In the *Server Certificate* field, if the service requires it, paste the content of an SSL 
 certificate. 
++
+Typically, a public OData service does not require a certificate in addition to the 
+certificates provided by the browser. However, for an internal OData service, 
+you might have created your own SSL certificate and self-signed it. Since this 
+certificate is not trusted by a certificate authority, connections to your OData 
+service would fail. To enable connections, paste the self-signed certificate here. 
++
+One way to get the certificate is to load the service in a browser. 
+The steps after that depend on which browser you are using, but it will be 
+something like the following: click the *Not secure* padlock symbol next to the 
+address bar, then click *View Certificate*, export the displayed certificate to 
+a file, copy the certificate, and paste it into this field. 
+
 
 . Click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
