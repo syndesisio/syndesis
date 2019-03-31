@@ -17,23 +17,26 @@ package io.syndesis.server.api.generator.swagger.util;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Stream;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonValueFormat;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.models.parameters.SerializableParameter;
 import io.swagger.models.properties.ArrayProperty;
 import io.swagger.models.properties.Property;
 import io.swagger.models.properties.RefProperty;
 import io.syndesis.common.util.Json;
-
-import org.apache.commons.lang3.StringUtils;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import me.andrz.jackson.JsonContext;
 import me.andrz.jackson.JsonReferenceException;
 import me.andrz.jackson.JsonReferenceProcessor;
+import org.apache.commons.lang3.StringUtils;
 
 public final class JsonSchemaHelper {
 
@@ -107,6 +110,8 @@ public final class JsonSchemaHelper {
                     return json;
                 }
             }, json);
+
+            sanitize(resolved);
         } catch (JsonReferenceException | IOException e) {
             throw new IllegalStateException("Unable to process JSON references", e);
         }
@@ -125,6 +130,38 @@ public final class JsonSchemaHelper {
         } catch (final JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize JSON schema", e);
         }
+    }
+
+    public static JsonNode sanitize(final JsonNode node) {
+        if (node == null) {
+            return null;
+        }
+
+        if (node.isArray()) {
+            ArrayNode arrayNode = (ArrayNode) node;
+            Iterator<JsonNode> elements = arrayNode.elements();
+            elements.forEachRemaining(JsonSchemaHelper::sanitize);
+        } else if (node.isObject()) {
+            ObjectNode objectNode = (ObjectNode) node;
+
+            JsonNode formatNode = node.get("format");
+            if (formatNode != null &&
+                    formatNode.isTextual() &&
+                    !isKnownFormat(formatNode.asText())) {
+                objectNode.remove("format");
+            }
+
+            Iterator<Map.Entry<String, JsonNode>> fields = objectNode.fields();
+            fields.forEachRemaining(field -> sanitize(field.getValue()));
+        }
+
+        return node;
+    }
+
+    public static boolean isKnownFormat(String format) {
+        return format != null && Stream.of(JsonValueFormat.values())
+                .map(Objects::toString)
+                .anyMatch(jsonSchemaFormat -> jsonSchemaFormat.equals(format));
     }
 
     static String javaTypeFor(final String type, final String format) {

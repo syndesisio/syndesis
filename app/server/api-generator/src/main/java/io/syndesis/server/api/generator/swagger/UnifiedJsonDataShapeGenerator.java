@@ -22,6 +22,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.swagger.models.ArrayModel;
 import io.swagger.models.Model;
 import io.swagger.models.ModelImpl;
@@ -41,14 +45,8 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.util.Json;
 import io.syndesis.server.api.generator.swagger.util.JsonSchemaHelper;
-
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.StringUtils;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.JsonNodeFactory;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static org.apache.commons.lang3.StringUtils.trimToNull;
 
@@ -150,7 +148,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
     private static ObjectNode createPropertySchema(final String name, final Property schema) {
         final ObjectNode jsonSchema = JsonNodeFactory.instance.objectNode();
         final String format = schema.getFormat();
-        if (format != null) {
+        if (JsonSchemaHelper.isKnownFormat(format)) {
             jsonSchema.put("format", format);
         }
         final String type = schema.getType();
@@ -235,6 +233,7 @@ public class UnifiedJsonDataShapeGenerator extends BaseDataShapeGenerator {
 
     private static ObjectNode createSchemaFromModelImpl(final String name, final Model model) {
         final ObjectNode schema = Json.convertValue(model, ObjectNode.class);
+        JsonSchemaHelper.sanitize(schema);
 
         final String title = determineTitleOf(name, model);
 
