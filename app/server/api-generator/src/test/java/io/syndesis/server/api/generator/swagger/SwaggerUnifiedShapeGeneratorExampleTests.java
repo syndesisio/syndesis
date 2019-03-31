@@ -18,12 +18,16 @@ package io.syndesis.server.api.generator.swagger;
 import java.io.IOException;
 import java.util.Arrays;
 
+import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGeneratorExampleTest {
@@ -36,6 +40,13 @@ public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGenerat
     @Override
     public void shouldGenerateAsExpected() throws IOException {
         super.shouldGenerateAsExpected();
+    }
+
+    @Test
+    public void specificationsShouldNotContainErrors() {
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.CONSUMED_API);
+
+        assertThat(info.getErrors()).isEmpty();
     }
 
     @Override
