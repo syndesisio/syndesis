@@ -15,6 +15,8 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import java.io.ByteArrayInputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 
@@ -235,6 +237,65 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
             result.expectedBodiesReceived("{\"id\":1,\"name\":\"a\"}", "{\"id\":2,\"name\":\"b\"}", "{\"id\":3,\"name\":\"c\"}");
 
             template.sendBody("direct:expression", body);
+
+            result.assertIsSatisfied();
+
+            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+        } finally {
+            context.stop();
+        }
+    }
+
+    @Test
+    public void testSplitJsonArrayInpuStream() throws Exception {
+        final DefaultCamelContext context = new DefaultCamelContext();
+
+        try {
+            final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
+                    new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .action(new ConnectorAction.Builder()
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                .componentScheme("direct")
+                                .putConfiguredProperty("name", "expression")
+                                .build())
+                            .build())
+                        .build(),
+                    new Step.Builder()
+                        .stepKind(StepKind.split)
+                        .build(),
+                    new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .action(new ConnectorAction.Builder()
+                            .descriptor(new ConnectorDescriptor.Builder()
+                                .componentScheme("mock")
+                                .putConfiguredProperty("name", "expression")
+                                .build())
+                            .build())
+                        .build()
+            );
+
+            // Set up the camel context
+            context.setUuidGenerator(KeyGenerator::createKey);
+            context.addLogListener(new IntegrationLoggingListener(activityTracker));
+            context.addInterceptStrategy(new ActivityTrackingInterceptStrategy(activityTracker));
+            context.addRoutes(routes);
+
+            context.start();
+
+            // Dump routes as XML for troubleshooting
+            dumpRoutes(context);
+
+            final ProducerTemplate template = context.createProducerTemplate();
+            final MockEndpoint result = context.getEndpoint("mock:expression", MockEndpoint.class);
+            final String body = "[{\"id\": 1, \"name\": \"a\"},{\"id\": 2, \"name\": \"b\"},{\"id\": 3, \"name\": \"c\"}]";
+
+            result.expectedMessageCount(3);
+            result.expectedBodiesReceived("{\"id\":1,\"name\":\"a\"}", "{\"id\":2,\"name\":\"b\"}", "{\"id\":3,\"name\":\"c\"}");
+
+            template.sendBody("direct:expression", new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8)));
 
             result.assertIsSatisfied();
 
