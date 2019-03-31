@@ -16,7 +16,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"category\": {\"properties\": {\"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Category\"}}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"name\": {\"example\": \"doggie\", \"type\": \"string\"}, \"photoUrls\": {\"items\": {\"type\": \"string\"}, \"type\": \"array\", \"xml\": {\"name\": \"photoUrl\", \"wrapped\": true}}, \"status\": {\"description\": \"pet status in the store\", \"enum\": [ \"available\", \"pending\", \"sold\" ], \"type\": \"string\"}, \"tags\": {\"items\": {\"properties\": {\"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Tag\"}}, \"type\": \"array\", \"xml\": {\"name\": \"tag\", \"wrapped\": true}}}, \"required\": [ \"name\", \"photoUrls\" ], \"type\": \"object\", \"xml\": {\"name\": \"Pet\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"category\": {\"properties\": {\"id\": { \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Category\"}}, \"id\": { \"type\": \"integer\"}, \"name\": {\"example\": \"doggie\", \"type\": \"string\"}, \"photoUrls\": {\"items\": {\"type\": \"string\"}, \"type\": \"array\", \"xml\": {\"name\": \"photoUrl\", \"wrapped\": true}}, \"status\": {\"description\": \"pet status in the store\", \"enum\": [ \"available\", \"pending\", \"sold\" ], \"type\": \"string\"}, \"tags\": {\"items\": {\"properties\": {\"id\": { \"type\": \"integer\"}, \"name\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Tag\"}}, \"type\": \"array\", \"xml\": {\"name\": \"tag\", \"wrapped\": true}}}, \"required\": [ \"name\", \"photoUrls\" ], \"type\": \"object\", \"xml\": {\"name\": \"Pet\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -45,7 +45,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\" : {\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"], \"type\" : \"string\"}},\"xml\":{\"name\":\"Pet\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\" : {\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"], \"type\" : \"string\"}},\"xml\":{\"name\":\"Pet\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -83,7 +83,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\",  \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"category\":{\"properties\":{\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"type\":\"object\",\"xml\":{\"name\":\"Pet\"}},\"type\":\"array\" }}, \"type\":\"object\" }"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\",  \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"type\":\"object\",\"xml\":{\"name\":\"Pet\"}},\"type\":\"array\" }}, \"type\":\"object\" }"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByStatus",
@@ -118,7 +118,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\",  \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"category\":{\"properties\":{\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"type\":\"object\",\"xml\":{\"name\":\"Pet\"}},\"type\":\"array\"}},\"type\":\"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\",  \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"category\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Category\"}},\"id\":{\"type\":\"integer\"},\"name\":{\"example\":\"doggie\",\"type\":\"string\"},\"photoUrls\":{\"items\":{\"type\":\"string\"},\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true}},\"status\":{\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"],\"type\":\"string\"},\"tags\":{\"items\":{\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"Tag\"}},\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true}}},\"required\":[\"name\",\"photoUrls\"],\"type\":\"object\",\"xml\":{\"name\":\"Pet\"}},\"type\":\"array\"}},\"type\":\"object\"}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:findPetsByTags",
@@ -153,7 +153,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"}}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"required\":[\"name\",\"photoUrls\"],\"properties\":{\"id\":{\"type\":\"integer\"},\"category\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Category\"}},\"name\":{\"type\":\"string\",\"example\":\"doggie\"},\"photoUrls\":{\"type\":\"array\",\"xml\":{\"name\":\"photoUrl\",\"wrapped\":true},\"items\":{\"type\":\"string\"}},\"tags\":{\"type\":\"array\",\"xml\":{\"name\":\"tag\",\"wrapped\":true},\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"name\":{\"type\":\"string\"}},\"xml\":{\"name\":\"Tag\"}}},\"status\":{\"type\":\"string\",\"description\":\"pet status in the store\",\"enum\":[\"available\",\"pending\",\"sold\"]}},\"xml\":{\"name\":\"Pet\"}}}}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getPetById",
@@ -246,7 +246,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\",\"format\":\"int32\"},\"type\":{\"type\":\"string\"},\"message\":{\"type\":\"string\"}}}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\"},\"type\":{\"type\":\"string\"},\"message\":{\"type\":\"string\"}}}}}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:uploadFile",
@@ -275,7 +275,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"integer\",\"format\":\"int32\"}}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"integer\"}}}}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getInventory",
@@ -301,7 +301,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"complete\": {\"default\": false, \"type\": \"boolean\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"petId\": {\"format\": \"int64\", \"type\": \"integer\"}, \"quantity\": {\"format\": \"int32\", \"type\": \"integer\"}, \"shipDate\": {\"format\": \"date-time\", \"type\": \"string\"}, \"status\": {\"description\": \"Order Status\", \"enum\": [ \"placed\", \"approved\", \"delivered\" ], \"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Order\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"complete\": {\"default\": false, \"type\": \"boolean\"}, \"id\": { \"type\": \"integer\"}, \"petId\": { \"type\": \"integer\"}, \"quantity\": { \"type\": \"integer\"}, \"shipDate\": {\"format\": \"date-time\", \"type\": \"string\"}, \"status\": {\"description\": \"Order Status\", \"enum\": [ \"placed\", \"approved\", \"delivered\" ], \"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"Order\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "description": "API response payload",
@@ -310,7 +310,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"petId\":{\"type\":\"integer\",\"format\":\"int64\"},\"quantity\":{\"type\":\"integer\",\"format\":\"int32\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"}}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"}}}}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:placeOrder",
@@ -345,7 +345,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"petId\":{\"type\":\"integer\",\"format\":\"int64\"},\"quantity\":{\"type\":\"integer\",\"format\":\"int32\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"}}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"petId\":{\"type\":\"integer\"},\"quantity\":{\"type\":\"integer\"},\"shipDate\":{\"type\":\"string\",\"format\":\"date-time\"},\"status\":{\"type\":\"string\",\"description\":\"Order Status\",\"enum\":[\"placed\",\"approved\",\"delivered\"]},\"complete\":{\"type\":\"boolean\",\"default\":false}},\"xml\":{\"name\":\"Order\"}}}}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getOrderById",
@@ -400,7 +400,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\", \"format\": \"int32\", \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"User\"}}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": { \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\",  \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}}, \"type\": \"object\", \"xml\": {\"name\": \"User\"}}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -429,7 +429,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"format\":\"int32\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"User\"}},\"type\":\"array\"}},\"type\":\"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"User\"}},\"type\":\"array\"}},\"type\":\"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -458,7 +458,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"format\":\"int64\",\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"format\":\"int32\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"User\"}},\"type\":\"array\"}},\"type\":\"object\"}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\":{\"body\":{\"items\":{\"properties\":{\"email\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"id\":{\"type\":\"integer\"},\"lastName\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"description\":\"User Status\",\"type\":\"integer\"},\"username\":{\"type\":\"string\"}},\"type\":\"object\",\"xml\":{\"name\":\"User\"}},\"type\":\"array\"}},\"type\":\"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
@@ -554,7 +554,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"format\":\"int64\"},\"username\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"type\":\"integer\",\"format\":\"int32\",\"description\":\"User Status\"}},\"xml\":{\"name\":\"User\"}}}}"
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"type\":\"object\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"username\":{\"type\":\"string\"},\"firstName\":{\"type\":\"string\"},\"lastName\":{\"type\":\"string\"},\"email\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"phone\":{\"type\":\"string\"},\"userStatus\":{\"type\":\"integer\",\"description\":\"User Status\"}},\"xml\":{\"name\":\"User\"}}}}"
         }
       },
       "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:getUserByName",
@@ -580,7 +580,7 @@
           "metadata": {
             "unified": "true"
           },
-          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": {\"format\": \"int64\", \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\", \"format\": \"int32\", \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}},\"type\": \"object\", \"xml\": {\"name\": \"User\"}}, \"parameters\": {\"properties\": {\"username\": {\"description\": \"name that need to be updated\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
+          "specification": "{\"$schema\": \"http://json-schema.org/schema#\", \"$id\": \"io:syndesis:wrapped\", \"properties\": {\"body\": {\"properties\": {\"email\": {\"type\": \"string\"}, \"firstName\": {\"type\": \"string\"}, \"id\": { \"type\": \"integer\"}, \"lastName\": {\"type\": \"string\"}, \"password\": {\"type\": \"string\"}, \"phone\": {\"type\": \"string\"}, \"userStatus\": {\"description\": \"User Status\",  \"type\": \"integer\"}, \"username\": {\"type\": \"string\"}},\"type\": \"object\", \"xml\": {\"name\": \"User\"}}, \"parameters\": {\"properties\": {\"username\": {\"description\": \"name that need to be updated\", \"title\": \"username\", \"type\": \"string\"}}, \"type\": \"object\"}}, \"type\": \"object\"}"
         },
         "outputDataShape": {
           "kind": "none"
