@@ -11,7 +11,7 @@ polls the service at intervals that you specify. When the connection finds
 data that satisfies the connection configuration, the connection passes
 the data to the next step in the integration. 
 
-An OData connection can obtain data from only one resource collection.
+An OData connection can obtain data from only one resource.
 
 .Prerequisite
 You created an OData connection. 
@@ -25,60 +25,61 @@ you want to use to start the integration.
 . On the *Choose an Action* page, click the *Read* action.
 . To configure the *Read* action: 
 
-.. In the *Resource Collection* field, select the name of the OData collection  
+.. In the *Resource Collection* field, select the name of the OData resource   
 that you want to query. {prodname} fetches data from the 
 OData service to provide a list of available resource collections. 
 .. In the *Entity Key Predicate* field, to obtain a particular
 entity, identify the entity that you want by specifying its key predicate. 
-For an entity with one key property, only the key value is required but 
-specification of the key property name is allowed. For example, specify 
-something like `*UserName='Bob'*` or
+For example, specify something like `*UserName='Bob'*` or
 `*Categories(1)*`. To obtain multiple entities, leave this field blank. 
-.. In the *Query Options* field, enter the query that you want to 
-apply to the collection. Use OData syntax. For example, 
+.. In the *Query Options* field, enter a query that you want to 
+apply to the resource. Use OData syntax. For example, 
 `$filter=startswith(name, 'N')` returns a message for each entity in the 
-collection that has a `name` field that starts with `N`. 
+resource that has a `name` field that starts with `N`. 
 .. Select the *Filter Old Results* checkbox to obtain a particular 
 message only once. 
 .. Select the *Split Results* checkbox if you want the 
 connection to return individual messages 
 rather than a collection of messages. 
++
+{prodname} also provides discrete *Split* and *Aggregate* steps, which 
+you can add to a flow. 
+If you want to process individual messages in one or more steps and 
+then aggregate the messages into a collection, do not split the OData
+connection result. Instead, leave the checkbox empty and then add a 
+*Split* step to the flow after this connection. A *Split* step is 
+required if you want an *Aggregate* step in the flow. 
+
 .. In the *Interval Before Polling Starts* field, accept the default of 
 1 second, or enter the length of time that you want to elapse before 
 the connection starts to poll the OData service. 
 .. In the *Delay* field, accept the default of 30 seconds, or enter
 the interval at which you want the connection to poll the OData service. 
-.. In the *Backoff Idle Threshold* field, accept the default of 1 or
-enter an integer that indicates the number of consecutive polls that 
-can return no data. After this number of polls, the connection 
-increases the interval before the next poll. 
-To determine the 
-length of the interval before the next poll, the connection multiplies the 
-*Backoff Idle Threshold* value by the *Backoff Multiplier* value. 
-The result is the number of seconds that the connection waits before 
-the next poll. 
+
+.. In the *Backoff Idle Threshold* field, accept the default of 1 
+or enter an integer that indicates the number of consecutive polls that 
+can return no data. After this number of polls, the connection increases 
+the interval between subsequent polls. The connection determines the new 
+length of the polling interval by multiplying the *Delay* value by the 
+*Backoff Multiplier* value. 
 +
-For example, suppose that the polling interval is the default of 
-30 seconds, *Backoff Idle Threshold* is set to `5`,
-and *Backoff Multiplier* is set to `12`. After 5 consecutive polls 
-that return no data, the connection waits 60 seconds (5 x 12) before polling again.
-The connection continues to poll every 60 seconds until a poll returns data or
-until there are, again, 5 consecutive polls that do not return data. 
-+
-After a poll returns data, the connection resumes polling every 30 seconds.
-However, if there are again 5 consecutive polls that do not return data, then 
-the connection increases the interval again. 
+For example, suppose that the polling interval (the *Delay* value) 
+is the default of 30 seconds, *Backoff Idle Threshold* is set to 5, and 
+*Backoff Multiplier* is set to 12. After 5 consecutive polls that return 
+no data, the connection waits 360 seconds (30 x 12) before polling again. 
+The connection continues to poll every 360 seconds until a poll 
+returns data. After a poll returns data, the connection resumes 
+polling every 30 seconds.
 
 .. In the *Backoff Multiplier* field, accept the default of 1 or enter 
-an integer that indicates the multiplier for the setting of 
-*Backoff Idle Threshold*. 
+an integer that indicates the multiplier for increasing the polling 
+interval if the value set for the  *Backoff Idle Threshold* is reached. 
 +
-If you accept the default of 1 for both the *Backoff Idle Threshold*
-and the *Backoff Multiplier*, then the connection continues to poll 
-at the specified interval no matter how many consecutive polls return no results. 
-
+If you accept the default of 1 for the *Backoff Multiplier*, then the 
+connection continues to poll at the specified interval no matter how 
+many consecutive polls return no results.
 +
-The values that you specify for *Delay*, *Backoff Idle Threshold*, and 
+The values that you specify for *Backoff Idle Threshold* and 
 *Backoff Multiplier* are useful for reducing CPU overhead since the 
 connection can automatically poll less often during quiet periods. 
 
@@ -88,15 +89,37 @@ connection can automatically poll less often during quiet periods.
 The connection appears in the integration flow as the 
 integration's start connection. 
 
+During execution, what the connection returns depends on what you specified 
+in the *Entity Key Predicate* and *Query Options* fields. The OData connection can return: 
+
+* A collection of entities or a collection of entity properties
++
+For example, this might be all *Person* entities in the resource, or 
+perhaps all *Age* properties for all *Person* entities. The connection 
+returns the collection in one message. {prodname} executes each subsequent 
+step in the flow once for the collection. However, when you configure the 
+*Read* action, if you select *Split Results*, then the connection returns 
+each entity or each property in its own message. {prodname} executes 
+each subsequent step in the flow once for each message. 
+
+* An entity or an entity property
+
+* For example, this might be the *Person* entity whose *UserName* property is 
+*Bob*, or perhaps the *Age* property for the *Person* entity whose *UserName* is 
+*Bob*. The connection returns the entity or the entity property in a 
+message that it passes to the next step in the flow. 
+
 .Next steps
-Add the integration's finish connection and any other connections
-that you want to include in the integration. 
-When the integration contains all the connections that are needed, 
-if the OData connection returns a collection, 
-consider whether you need to split the collection of messages that
-the OData connection returns. If you want to execute integration steps 
-for each message that you obtained from the OData service, then after the
-OData connection, add a split step. Also, 
-you probably need to follow the OData connection with a data 
-mapping step that maps data obtained from the OData service to fields in
-subsequent connections in the integration. 
+Add the integration’s finish connection and any other connections that you 
+want to include in the integration. When the integration contains all the 
+connections that are needed, if the OData connection returns a collection, 
+consider whether you need to add a *Split* step after the OData connection. 
+An integration usually needs to map the data returned by the OData connection 
+to fields that a subsequent connection in the flow can use. Sometimes you can 
+map a collection, but more often you need to split the collection in order 
+to map to the target fields. 
+
+After the OData connection, add a *Data Mapper* step to the flow. 
+Exactly where in the flow depends on what you want the flow to do.
+For example, after the OData connection, you might add a *Basic Filter* step 
+and then add a *Data Mapper* step.  
