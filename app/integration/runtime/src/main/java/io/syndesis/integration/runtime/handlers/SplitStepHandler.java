@@ -16,6 +16,7 @@
 package io.syndesis.integration.runtime.handlers;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -25,6 +26,7 @@ import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.IOStreams;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.common.util.json.JsonUtils;
@@ -126,15 +128,20 @@ public class SplitStepHandler implements IntegrationStepHandler {
         public Object evaluate(Exchange exchange) {
             Object value = delegate.evaluate(exchange, Object.class);
 
-            if (value instanceof String && JsonUtils.isJson(value.toString())) {
-                try {
+            try {
+                if (value instanceof InputStream) {
+                    //not able to split input stream. now it is time to read content and convert to string
+                    value = IOStreams.readText((InputStream) value);
+                }
+
+                if (value instanceof String && JsonUtils.isJson(value.toString())) {
                     JsonNode json = Json.reader().readTree(value.toString());
                     if (json.isArray()) {
                         return JsonUtils.arrayToJsonBeans(json);
                     }
-                } catch (IOException e) {
-                    throw SyndesisServerException.launderThrowable(e);
                 }
+            } catch (IOException e) {
+                throw SyndesisServerException.launderThrowable(e);
             }
 
             return value;
