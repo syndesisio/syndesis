@@ -25,7 +25,7 @@
       "type": "MAVEN"
     }
   ],
-  "description": "rest-swagger TODO:change this",
+  "description": "Meta connector to generate swagger client connectors",
   "icon": "",
   "id": "rest-swagger",
   "metadata": {
