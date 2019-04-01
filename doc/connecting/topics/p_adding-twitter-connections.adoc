@@ -4,15 +4,16 @@
 [id='adding-twitter-connections_{context}']
 = Adding a Twitter connection to trigger integration execution
 
-In an integration, a connection to Twitter can trigger execution of
-an integration when a tweet contains your Twitter handle or when 
-a tweet contains text that you have specified. A connection to 
-Twitter must be the integration's start connection. 
+In an integration, a connection to Twitter can retrieve the direct
+messages of the last 30 days, send a direct message, trigger execution of
+an integration when a tweet contains your Twitter handle or when
+a tweet contains text that you have specified. A connection to
+Twitter must be the integration's start connection.
 
 .Prerequisites
-* You created a Twitter connection. 
-* You must be creating or editing an integration and {prodname} is 
-prompting you to choose the start connection. 
+* You created a Twitter connection.
+* You must be creating or editing an integration and {prodname} is
+prompting you to choose the start connection.
 
 .Procedure
 
@@ -28,7 +29,9 @@ the action you choose.
 *  *Mention* triggers execution of the integration when a tweet contains
 your handle.
 * *Search* triggers execution of the integration when a tweet contains
-text that you specify. 
+text that you specify.
+* *Retrieve* get the direct messages of the last 30 days.
+* *Send* send a direct message to a twitter user.
 
 . Optionally, enter the configuration information that {prodname}
 prompts for. For example, the *Search* action prompts you to specify
@@ -37,4 +40,4 @@ how often to search and keywords to search for.
 . Click *Done* to add the connection to the integration.
 
 .Result
-The connection appears at the beginning of the integration flow. 
+The connection appears at the beginning of the integration flow.
