@@ -58,9 +58,6 @@ or publish streams of records to a Kafka topic that you specify.
 |Obtain records from a table in an Apache Kudu data store
 or add records to a table in a Kudu data store.
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-log_connectors[Log]
-|Send information about messages that an integration processes to the integration's log.
-
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-mqtt_connectors[MQTT]
 |Obtain messages from an MQ Telemetry Transport broker or publish messages
 to an MQTT broker.
