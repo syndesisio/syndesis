@@ -18,12 +18,16 @@ package io.syndesis.server.api.generator.swagger;
 import java.io.IOException;
 import java.util.Arrays;
 
+import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(Parameterized.class)
 public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGeneratorExampleTest {
@@ -38,6 +42,13 @@ public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGenerat
         super.shouldGenerateAsExpected();
     }
 
+    @Test
+    public void specificationsShouldNotContainErrors() {
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.CONSUMED_API);
+
+        assertThat(info.getErrors()).isEmpty();
+    }
+
     @Override
     ConnectorGenerator generator() {
         return new SwaggerUnifiedShapeConnectorGenerator();
@@ -45,7 +56,7 @@ public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGenerat
 
     @Parameters(name = "{0}")
     public static Iterable<String> parameters() {
-        return Arrays.asList("reverb", "petstore", "petstore_xml", "basic_auth", "todo", "complex_xml", "kie-server", "machine_history");
+        return Arrays.asList("reverb", "petstore", "petstore_xml", "basic_auth", "todo", "complex_xml", "kie-server", "machine_history", "damage_service");
     }
 
 }

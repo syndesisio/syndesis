@@ -1,0 +1,143 @@
+{
+  "definitions": {
+    "DamageEvent": {
+      "description": "The representation of a damage event.",
+      "properties": {
+        "damage": {
+          "type": "integer"
+        },
+        "machineId": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "damage",
+        "machineId"
+      ],
+      "type": "object"
+    },
+    "DamageRequest": {
+      "description": "Represents a request to apply damage to the state of a machine",
+      "properties": {
+        "confidencePercentage": {
+          "type": "number"
+        },
+        "damage": {
+          "type": "integer"
+        },
+        "downTimePrice": {
+          "type": "integer"
+        },
+        "machineId": {
+          "type": "number"
+        },
+        "machineInitialHealth": {
+          "type": "integer"
+        },
+        "sensorId": {
+          "type": "string"
+        },
+        "vibrationClass": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "confidencePercentage",
+        "damage",
+        "downTimePrice",
+        "machineId",
+        "machineInitialHealth",
+        "sensorId",
+        "vibrationClass"
+      ],
+      "type": "object"
+    },
+    "SensorEvent": {
+      "description": "The representation of a gesture event.",
+      "properties": {
+        "confidencePercentage": {
+          "type": "number"
+        },
+        "machineId": {
+          "type": "number"
+        },
+        "sensorId": {
+          "type": "string"
+        },
+        "vibrationClass": {
+          "type": "number"
+        }
+      },
+      "required": [
+        "vibrationClass",
+        "sensorId",
+        "machineId",
+        "confidencePercentage"
+      ],
+      "type": "object"
+    }
+  },
+  "info": {
+    "description": "A damage service api used to work with damage events.",
+    "title": "Damage Service",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/ApplyDamage": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/DamageRequest"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "204": {
+            "description": "Applies the damage event."
+          }
+        },
+        "summary": "Updates a machines health with the damage event."
+      }
+    },
+    "/SensorToDamage": {
+      "post": {
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/SensorEvent"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Converts a sensor to a damage event.",
+            "schema": {
+              "$ref": "#/definitions/DamageEvent"
+            }
+          }
+        },
+        "summary": "Converts a gesture event to a damage event."
+      }
+    }
+  },
+  "swagger": "2.0"
+}
