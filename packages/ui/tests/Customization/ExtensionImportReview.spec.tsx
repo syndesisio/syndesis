@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
+import renderer from 'react-test-renderer';
 import { fireEvent, render } from 'react-testing-library';
 import {
   ExtensionImportReview,
@@ -87,103 +88,42 @@ export default describe('ExtensionImportReview', () => {
 
     // title
     expect(queryAllByText(title)).toHaveLength(1);
-    expect(queryByText(title)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__title row"
->
-  Import Review
-</div>
-`);
 
     // id label
     expect(queryAllByText(idLabel)).toHaveLength(1);
-    expect(queryByText(idLabel)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyLabel col-xs-2"
->
-  ID
-</div>
-`);
 
     // id value
     expect(queryAllByText(id)).toHaveLength(1);
-    expect(queryByText(id)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyValue"
->
-  io.syndesis.extensions:syndesis-extension-log
-</div>
-`);
 
     // name label
     expect(queryAllByText(nameLabel)).toHaveLength(1);
-    expect(queryByText(nameLabel)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyLabel col-xs-2"
->
-  Name
-</div>
-`);
 
     // name value
     expect(queryAllByText(name)).toHaveLength(1);
-    expect(queryByText(name)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyValue"
->
-  Log
-</div>
-`);
 
     // description label
     expect(queryAllByText(descriptionLabel)).toHaveLength(1);
-    expect(queryByText(descriptionLabel)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyLabel col-xs-2"
->
-  Description
-</div>
-`);
 
     // description value
     expect(queryAllByText(description)).toHaveLength(1);
-    expect(queryByText(description)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyValue"
->
-  An extension to Syndesis to do Logging
-</div>
-`);
 
     // import button
     expect(queryAllByText(importBtnText)).toHaveLength(1);
-    expect(queryByText(importBtnText)).toMatchInlineSnapshot(`
-<button
-  class="btn btn-primary"
-  type="button"
->
-  Import Extension
-</button>
-`);
     fireEvent.click(getByText(importBtnText));
     expect(mockOnImport).toHaveBeenCalledTimes(1);
 
     // cancel button
     expect(queryAllByText(cancelBtnText)).toHaveLength(1);
-    expect(queryByText(cancelBtnText)).toMatchInlineSnapshot(`
-<a
-  class="btn btn-default extension-import-review__cancelButton"
-  href="/extensions"
->
-  Cancel
-</a>
-`);
     expect(queryByText(cancelBtnText)).toHaveAttribute('href', cancelLink);
 
     // actions
     fourActions.map(a => {
       expect(queryByText(actionText(a.name, a.description))).toBeDefined();
     });
+
+    // test snapshot
+    const snapshot = renderer.create(componentWithDescription).toJSON();
+    expect(snapshot).toMatchSnapshot();
   });
 
   it('Should render correctly without a description', () => {
@@ -199,95 +139,41 @@ export default describe('ExtensionImportReview', () => {
 
     // title
     expect(queryAllByText(title)).toHaveLength(1);
-    expect(queryByText(title)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__title row"
->
-  Import Review
-</div>
-`);
 
     // id label
     expect(queryAllByText(idLabel)).toHaveLength(1);
-    expect(queryByText(idLabel)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyLabel col-xs-2"
->
-  ID
-</div>
-`);
 
     // id value
     expect(queryAllByText(id)).toHaveLength(1);
-    expect(queryByText(id)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyValue"
->
-  io.syndesis.extensions:syndesis-extension-log
-</div>
-`);
 
     // name label
     expect(queryAllByText(nameLabel)).toHaveLength(1);
-    expect(queryByText(nameLabel)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyLabel col-xs-2"
->
-  Name
-</div>
-`);
 
     // name value
     expect(queryAllByText(name)).toHaveLength(1);
-    expect(getByText(name)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyValue"
->
-  Log
-</div>
-`);
 
     // description label
     expect(queryAllByText(descriptionLabel)).toHaveLength(1);
-    expect(queryByText(descriptionLabel)).toMatchInlineSnapshot(`
-<div
-  class="extension-import-review__propertyLabel col-xs-2"
->
-  Description
-</div>
-`);
 
     // description value
     expect(queryByText(description)).toBeNull();
 
     // import button
     expect(queryAllByText(importBtnText)).toHaveLength(1);
-    expect(queryByText(importBtnText)).toMatchInlineSnapshot(`
-<button
-  class="btn btn-primary"
-  type="button"
->
-  Import Extension
-</button>
-`);
     fireEvent.click(getByText(importBtnText));
     expect(mockOnImport).toHaveBeenCalledTimes(1);
 
     // cancel button
     expect(queryAllByText(cancelBtnText)).toHaveLength(1);
-    expect(queryByText(cancelBtnText)).toMatchInlineSnapshot(`
-<a
-  class="btn btn-default extension-import-review__cancelButton"
-  href="/extensions"
->
-  Cancel
-</a>
-`);
     expect(queryByText(cancelBtnText)).toHaveAttribute('href', cancelLink);
 
     // actions
     oneAction.map(a => {
       expect(queryByText(actionText(a.name, a.description))).toBeDefined();
     });
+
+    // test snapshot
+    const snapshot = renderer.create(componentWithoutDescription).toJSON();
+    expect(snapshot).toMatchSnapshot();
   });
 });

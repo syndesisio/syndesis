@@ -1,0 +1,292 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExtensionImportReview Should render correctly with description 1`] = `
+<div
+  className="extension-import-review__container container"
+>
+  <div
+    className="extension-import-review__title row"
+  >
+    Import Review
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-import-review__propertyLabel col-xs-2"
+    >
+      ID
+    </div>
+    <div
+      className="extension-import-review__propertyValue"
+    >
+      io.syndesis.extensions:syndesis-extension-log
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-import-review__propertyLabel col-xs-2"
+    >
+      Name
+    </div>
+    <div
+      className="extension-import-review__propertyValue"
+    >
+      Log
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-import-review__propertyLabel col-xs-2"
+    >
+      Description
+    </div>
+    <div
+      className="extension-import-review__propertyValue"
+    >
+      An extension to Syndesis to do Logging
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-import-review__propertyLabel col-xs-2"
+    >
+      Type
+    </div>
+    <div
+      className="extension-import-review__propertyValue"
+    >
+      Step Extension
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-import-review__propertyLabel col-xs-2"
+    >
+      Steps
+    </div>
+    <div
+      className="container-fluid"
+    >
+      <div
+        className=""
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "Action 1 - The description for action 1",
+          }
+        }
+      />
+      <div
+        className="row"
+      >
+        <div
+          className="col-xs-2"
+        />
+        <div
+          className=""
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Action 2 - The description for action 2",
+            }
+          }
+        />
+      </div>
+      <div
+        className="row"
+      >
+        <div
+          className="col-xs-2"
+        />
+        <div
+          className=""
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Action 3 - The description for action 3",
+            }
+          }
+        />
+      </div>
+      <div
+        className="row"
+      >
+        <div
+          className="col-xs-2"
+        />
+        <div
+          className=""
+          dangerouslySetInnerHTML={
+            Object {
+              "__html": "Action 4 - The description for action 4",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="col-xs-offset-2"
+    >
+      <div
+        className="row"
+      >
+        <div
+          className=""
+        >
+          <div
+            className="container-fluid extension-import-review__buttonBar"
+          >
+            <button
+              className="btn btn-primary"
+              disabled={false}
+              onClick={[Function]}
+              type="button"
+            >
+              Import Extension
+            </button>
+            <a
+              className="btn btn-default extension-import-review__cancelButton"
+              href="/extensions"
+              onClick={[Function]}
+            >
+              Cancel
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ExtensionImportReview Should render correctly without a description 1`] = `
+<div
+  className="extension-import-review__container container"
+>
+  <div
+    className="extension-import-review__title row"
+  >
+    Import Review
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-import-review__propertyLabel col-xs-2"
+    >
+      ID
+    </div>
+    <div
+      className="extension-import-review__propertyValue"
+    >
+      io.syndesis.extensions:syndesis-extension-log
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-import-review__propertyLabel col-xs-2"
+    >
+      Name
+    </div>
+    <div
+      className="extension-import-review__propertyValue"
+    >
+      Log
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-import-review__propertyLabel col-xs-2"
+    >
+      Description
+    </div>
+    <div
+      className="extension-import-review__propertyValue"
+    />
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-import-review__propertyLabel col-xs-2"
+    >
+      Type
+    </div>
+    <div
+      className="extension-import-review__propertyValue"
+    >
+      Step Extension
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-import-review__propertyLabel col-xs-2"
+    >
+      Steps
+    </div>
+    <div
+      className="container-fluid"
+    >
+      <div
+        className=""
+        dangerouslySetInnerHTML={
+          Object {
+            "__html": "Action 2 - The description for action 2",
+          }
+        }
+      />
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="col-xs-offset-2"
+    >
+      <div
+        className="row"
+      >
+        <div
+          className=""
+        >
+          <div
+            className="container-fluid extension-import-review__buttonBar"
+          >
+            <button
+              className="btn btn-primary"
+              disabled={false}
+              onClick={[Function]}
+              type="button"
+            >
+              Import Extension
+            </button>
+            <a
+              className="btn btn-default extension-import-review__cancelButton"
+              href="/extensions"
+              onClick={[Function]}
+            >
+              Cancel
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;

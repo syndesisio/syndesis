@@ -1,0 +1,123 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExtensionOverview Should render all properties correctly 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-overview__propertyLabel col-xs-2"
+    >
+      Name
+    </div>
+    <div
+      className="extension-overview__propertyValue"
+    >
+      Log
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-overview__propertyLabel col-xs-2"
+    >
+      Description
+    </div>
+    <div
+      className="extension-overview__propertyValue"
+    >
+      An extension to Syndesis to do Logging
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-overview__propertyLabel col-xs-2"
+    >
+      Type
+    </div>
+    <div
+      className="extension-overview__propertyValue"
+    >
+      Step Extension
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-overview__propertyLabel col-xs-2"
+    >
+      Last Update
+    </div>
+    <div
+      className="extension-overview__propertyValue"
+    >
+      Dec 10, 2018, 10:32:28 AM
+    </div>
+  </div>
+</div>
+`;
+
+exports[`ExtensionOverview Should render correctly when only required properties 1`] = `
+<div
+  className="container"
+>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-overview__propertyLabel col-xs-2"
+    >
+      Name
+    </div>
+    <div
+      className="extension-overview__propertyValue"
+    >
+      Log
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-overview__propertyLabel col-xs-2"
+    >
+      Description
+    </div>
+    <div
+      className="extension-overview__propertyValue"
+    />
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-overview__propertyLabel col-xs-2"
+    >
+      Type
+    </div>
+    <div
+      className="extension-overview__propertyValue"
+    >
+      Step Extension
+    </div>
+  </div>
+  <div
+    className="row"
+  >
+    <div
+      className="extension-overview__propertyLabel col-xs-2"
+    >
+      Last Update
+    </div>
+    <div
+      className="extension-overview__propertyValue"
+    />
+  </div>
+</div>
+`;

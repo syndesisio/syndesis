@@ -1,0 +1,208 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ExtensionDetail Should open delete confirmation modal 1`] = `
+<div
+  className="card-pf card-pf-match-height"
+>
+  <div
+    className="card-pf-heading"
+  >
+    <h2
+      className="card-pf-title"
+    >
+      <div
+        className="row"
+      >
+        <h1
+          className="col-sm-8 extension-detail__extensionTitle"
+        >
+          Loop
+          <span
+            className="extension-detail__extensionId"
+          >
+            (ID: io.syndesis.extensions:syndesis-extension-loop)
+          </span>
+        </h1>
+        <div
+          className="col-sm-4 text-right extension-detail__titleButtons"
+        >
+          <button
+            className="btn btn-primary"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[MockFunction]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+            type="button"
+          >
+            Update
+          </button>
+          <button
+            className="btn btn-default"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+            type="button"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </h2>
+  </div>
+  <div
+    className="card-pf-body"
+  >
+    <h3
+      className="extension-detail__sectionHeading"
+    >
+      Overview
+    </h3>
+    <div />
+    <h3
+      className="extension-detail__sectionHeading"
+    >
+      Supported Steps
+    </h3>
+    <div />
+    <h3
+      className="extension-detail__sectionHeading"
+    >
+      Usage
+    </h3>
+    <div />
+  </div>
+</div>
+`;
+
+exports[`ExtensionDetail Should render correctly 1`] = `
+<div
+  className="card-pf card-pf-match-height"
+>
+  <div
+    className="card-pf-heading"
+  >
+    <h2
+      className="card-pf-title"
+    >
+      <div
+        className="row"
+      >
+        <h1
+          className="col-sm-8 extension-detail__extensionTitle"
+        >
+          Loop
+          <span
+            className="extension-detail__extensionId"
+          >
+            (ID: io.syndesis.extensions:syndesis-extension-loop)
+          </span>
+        </h1>
+        <div
+          className="col-sm-4 text-right extension-detail__titleButtons"
+        >
+          <button
+            className="btn btn-primary"
+            disabled={false}
+            onBlur={[Function]}
+            onClick={
+              [MockFunction] {
+                "calls": Array [
+                  Array [
+                    Class {
+                      "_dispatchInstances": null,
+                      "_dispatchListeners": null,
+                      "_targetInst": null,
+                      "altKey": null,
+                      "bubbles": null,
+                      "button": null,
+                      "buttons": null,
+                      "cancelable": null,
+                      "clientX": null,
+                      "clientY": null,
+                      "ctrlKey": null,
+                      "currentTarget": [Function],
+                      "defaultPrevented": null,
+                      "detail": null,
+                      "dispatchConfig": null,
+                      "eventPhase": null,
+                      "getModifierState": [Function],
+                      "isDefaultPrevented": [Function],
+                      "isPropagationStopped": [Function],
+                      "isTrusted": null,
+                      "metaKey": null,
+                      "movementX": [Function],
+                      "movementY": [Function],
+                      "nativeEvent": null,
+                      "pageX": null,
+                      "pageY": null,
+                      "relatedTarget": [Function],
+                      "screenX": null,
+                      "screenY": null,
+                      "shiftKey": null,
+                      "target": null,
+                      "timeStamp": [Function],
+                      "type": null,
+                      "view": null,
+                    },
+                  ],
+                ],
+                "results": Array [
+                  Object {
+                    "isThrow": false,
+                    "value": undefined,
+                  },
+                ],
+              }
+            }
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+            type="button"
+          >
+            Update
+          </button>
+          <button
+            className="btn btn-default"
+            disabled={true}
+            onBlur={[Function]}
+            onClick={[Function]}
+            onFocus={[Function]}
+            onMouseOut={[Function]}
+            onMouseOver={[Function]}
+            type="button"
+          >
+            Delete
+          </button>
+        </div>
+      </div>
+    </h2>
+  </div>
+  <div
+    className="card-pf-body"
+  >
+    <h3
+      className="extension-detail__sectionHeading"
+    >
+      Overview
+    </h3>
+    <div />
+    <h3
+      className="extension-detail__sectionHeading"
+    >
+      Supported Steps
+    </h3>
+    <div />
+    <h3
+      className="extension-detail__sectionHeading"
+    >
+      Usage
+    </h3>
+    <div />
+  </div>
+</div>
+`;
