@@ -2,36 +2,48 @@
 // as_creating-integrations.adoc
 
 [id='add-log-step_{context}']
-= Adding a log step
+= Logging information about integration execution
 
-{prodname} provides information about each execution of an integration. 
-To learn what information is automatically provided,
-see link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[Viewing integration activity information].
+For each execution of an integration, 
+for each step in a flow, {prodname} provides the following activity 
+information:
 
-To obtain additional information, between any two steps, add a log step or a 
-log connection to a flow. See 
-link:{LinkFuseOnlineConnectorGuide}#comparison-log-step-connection_connect-to-log[Comparison of log step and log connection].
+* The date and time that the step was executed
+* How long it took to execute the step
+* Whether execution was successful
+* The error message if execution was not successful
 
+To view this information in {prodname}, display the integration's summary
+and then click the *Activity* tab. 
+
+To obtain further details about integration execution, you can 
+log information about the messages that an integration processes by 
+adding a log step to an integration flow. 
 For each message that an integration receives, a log step can provide
 one or more of the following:
 
-* The message's header, which provides metadata about the message.
+* The message's context, which provides metadata about the message, 
+including the message's header.
 * The message's body, which provides the content of the message.
 * Text that you specify either explicitly or through evaluation of an 
 http://camel.apache.org/simple.html[Apache Camel Simple language] expression. 
 
+[NOTE]
+====
+The Log connection that was available in previous releases is no longer
+available to be added to integrations. Add a log step instead of a log 
+connection. 
+====
+
 .Prerequisites
-* You are creating or editing a flow. 
-* In a simple integration, the flow already has its start and finish connections. 
+You are creating or editing a flow and {prodname} is prompting you
+to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
 
-. In the visualization panel on the left, click the
-image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
-at the location where you want to add a log step.
 . Click *Log*.
 . On the *Configure Log Step* page, select the content that you want
-to log. If you select *Custom text*, then in the text input field, 
+to log. If you select *Custom Text*, then in the text input field, 
 enter one of the following:
 * The text that you want to log
 * A Camel Simple language expression
@@ -45,10 +57,6 @@ to the flow.
 from the new log step.
 
 .Additional resources
-* To finish a simple integration by logging information about the messages that an
-integration processes, or to log message information at a particular log level, 
-link:{LinkFuseOnlineConnectorGuide}#add-log-connection_connect-to-log[add a log connection]
-instead of a log step.
-* After a flow that has a log step has been executed, output from
+After a flow that has a log step has been executed, output from
 the log step appears in the integration's *Activity* tab. See
-link:{LinkFuseOnlineIntegrationGuide}#viewing-integration-activity-information_monitor[Viewing integration activity information].
+xref:viewing-integration-activity-information_monitor[Viewing integration activity information].
