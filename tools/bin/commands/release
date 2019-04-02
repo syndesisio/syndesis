@@ -30,6 +30,8 @@ release::usage() {
                               to the git remote to which the currently checked out branch is attached to.
                               Works only when on a branch, not when checked out directly.
     --log <log-file>          Write full log to <log-file>, only print progress to screen
+    --skip-tests              Do not run tests
+    --no-strict-checksums     Do not insist on strict checksum policy for downloaded Maven artifacts
 EOT
 }
 
@@ -433,6 +435,14 @@ extract_maven_opts() {
     local settings_xml=$(readopt --settings-xml --settings)
     if [ -n "${settings_xml}" ]; then
         maven_opts="$maven_opts -s $settings_xml"
+    fi
+
+    if [ $(hasflag --skip-tests) ]; then
+        maven_opts="$maven_opts -DskipTests -DskipITs"
+    fi
+
+    if [ ! $(hasflag --no-strict-checksums) ]; then
+        maven_opts="$maven_opts -C"
     fi
 
     echo $maven_opts
