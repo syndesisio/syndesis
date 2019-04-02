@@ -7,27 +7,25 @@
 In the data mapper *Source* and *Target* panels: 
 
 * image:images/collection-icon.png[Collection icon]
-indicates an expandable container that is a collection. 
-A collection contains multiple values that are all the same type.
-You cannot map a collection container itself. You can map only 
-the fields that are in the collection. 
+indicates a collection. If the collection contains one primitive type, 
+then you can map directly from or to that collection. If the collection 
+contains two or more different types, then the data mapper 
+displays the collection’s child fields and you can map to or from the 
+collection’s fields.  
 
 * image:images/folder.png[Folder icon] indicates an 
-expandable container that is a complex type. A complex
-type contains multiple values of different types. 
-A field in a complex type can be a type that is a collection, such as an array. 
-You cannot map a complex type container itself. You can map 
-only the fields that are in the complex type. 
+expandable container that is a complex type. A complex type contains 
+multiple fields of different types. A field in a complex type can be a 
+type that is a collection, such as an array. You cannot map a complex 
+type container itself. You can map only the fields that are in the complex type. 
 
 To toggle the display of data types, such as `*(COMPLEX)*`, 
 `*STRING*`, `*INTEGER*`, in the upper right of the data mapper, click 
 image:shared/images/EditorSettings.png[settings] and click 
 *Show Types*. 
 
-It is possible to map a field that is in an element in a 
-collection to a field that is not in a collection. 
-The following table shows the default behavior when 
-mapping between collection fields and non-collection fields. 
+The following table shows the default behavior when mapping 
+between collection fields and non-collection fields. 
 
 [options="header"]
 [cols="1,1,1"]
@@ -36,16 +34,21 @@ mapping between collection fields and non-collection fields.
 |To this target
 |During execution
 
-|A field that is in an element that is in a collection. 
+|A collection. (No child fields appear in the data mapper.) 
 |A field that is not in a collection.
-|The data mapper maps the value that is in the mapped source field of the 
-last element that is in the collection to the target field. 
+|The data mapper maps the value that is in the last element in the source collection to the target field.
+
+|A field that is in a collection. 
+|A field that is not in a collection.
+|The data mapper maps the mapped field's value that is in the last element in the source collection to the target field.
+
+|A field that is not in a collection.
+|A collection. (No child fields appear in the data mapper.) 
+|The data mapper maps the value that is in the mapped source field to the first (and only) element in the collection. 
 
 |A field that is not in a collection. 
-|A field that is in an element that is in a collection.
-|The data mapper maps the value that is in the mapped source 
-field to the target field in the first (and only) element
-in the collection. 
+|A field that is in a collection.
+|The data mapper maps the value that is in the mapped source field to the first (and only) element in the collection.  
 
 |===
 
@@ -55,21 +58,21 @@ are in the flow.
 
 .Changing default behavior when mapping from a collection field 
 When you map from a collection field to a non-collection 
-field, the default is that the target field gets the 
-value for the mapped field that is in the last element of the collection. 
+field, the default is that the target field gets its 
+value from the last element in the source collection. 
 You can change the default behavior in the following 
 ways: 
 
-* To map the value that you choose, apply the *Item At* 
+* To map from the element that you choose, apply the *Item At* 
 transformation to the source and specify an 
-index. For example, to map the *name* field 
+index. For example, to map the 
 value that is in the first element that is in the collection, 
 specify `0` for the index. 
 
-* For a particular field, to map all values that are in 
+* To map all values that are in 
 all elements that are in a 
 source collection, apply the *Concatenate* transformation 
-to the source field and optionally specify a delimiter.
+to the source collection or source collection field and optionally specify a delimiter.
 The default delimiter is a space. For example, 
 consider this source collection: 
 
@@ -87,14 +90,16 @@ field with `Boston Paris Tokyo`.
 .Changing default behavior when mapping from a non-collection field
 When you map from a non-collection field to a collection 
 field, the default is that the target collection contains
-one element that has one field. You can change the default behavior 
+one element, which contains the non-collection, source field 
+value. You can change the default behavior 
 when the source field contains a series of values that are 
 separated by the same delimiter. For example, consider a 
 non-collection, source *cities* field that contains: 
 
 `Boston Paris Tokyo`
 
-You would map this to a target field that is in a collection. 
+You would map this to a target collection or to a 
+target field that is in a collection. 
 On the source *cities* field, add the *Split* transformation. 
 During execution, the data mapper splits the value of the 
 *cities* field at the space delimiter. The result is a 
