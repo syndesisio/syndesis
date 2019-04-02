@@ -42,7 +42,7 @@ You can specify both *Entity Key Predicate* and *Query Options*. If you do,
 the OData service obtains the specified entity and applies the query to 
 that entity. For example, suppose that you set *Entity Key Predicate* to 
 `*UserName='russellwhyte'*` and you set *Query Options* to 
-`*$filter=contains(it,'$example')*`. The connection creates a request 
+`*$filter=contains($it,'example')*`. The connection creates a request 
 that looks something like this: 
 +
 ----
