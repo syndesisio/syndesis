@@ -42,7 +42,7 @@ The second column, *B*, is for the task names.
 .. Accept the defaults for *Major Dimension* and for *Value Input Option*,
 and click *Next*. 
 
-+specify
++
 The Google Sheets connection finishes the flow by adding each element
 in a collection to a spreadsheet. 
 . Add a split step to the flow: 
