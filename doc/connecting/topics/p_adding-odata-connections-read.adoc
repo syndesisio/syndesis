@@ -32,10 +32,26 @@ OData service to provide a list of available resource collections.
 entity, identify the entity that you want by specifying its key predicate. 
 For example, specify something like `*UserName='Bob'*` or
 `*Categories(1)*`. To obtain multiple entities, leave this field blank. 
+
 .. In the *Query Options* field, enter a query that you want to 
 apply to the resource. Use OData syntax. For example, 
 `$filter=startswith(name, 'N')` returns a message for each entity in the 
 resource that has a `name` field that starts with `N`. 
++
+You can specify both *Entity Key Predicate* and *Query Options*. If you do, 
+the OData service obtains the specified entity and applies the query to 
+that entity. For example, suppose that you set *Entity Key Predicate* to 
+`*UserName='russellwhyte'*` and you set *Query Options* to 
+`*$filter=contains(it,'$example')*`. The connection creates a request 
+that looks something like this: 
++
+----
+https://services.odata.org/TripPinRESTierService/People(UserName='russellwhyte')/Emails?$filter=contains($it, 'example')
+----
++
+The service returns all email addresses for Russell Whyte that 
+contain the domain `example`. 
+
 .. Select the *Filter Old Results* checkbox to obtain a particular 
 message only once. 
 .. Select the *Split Results* checkbox if you want the 
@@ -103,8 +119,8 @@ each entity or each property in its own message. {prodname} executes
 each subsequent step in the flow once for each message. 
 
 * An entity or an entity property
-
-* For example, this might be the *Person* entity whose *UserName* property is 
++
+For example, this might be the *Person* entity whose *UserName* property is 
 *Bob*, or perhaps the *Age* property for the *Person* entity whose *UserName* is 
 *Bob*. The connection returns the entity or the entity property in a 
 message that it passes to the next step in the flow. 
