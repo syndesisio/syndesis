@@ -15,6 +15,9 @@
  */
 package io.syndesis.server.runtime;
 
+import java.util.Objects;
+import java.util.concurrent.Future;
+
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.ConnectorGenerator;
@@ -30,8 +33,11 @@ public class APIGeneratorConfiguration {
 
     private final DataManager dataManager;
 
-    public APIGeneratorConfiguration(final DataManager dataManager) {
+    private final Migrations migrations;
+
+    public APIGeneratorConfiguration(final DataManager dataManager, final Migrations migrations) {
         this.dataManager = dataManager;
+        this.migrations = migrations;
     }
 
     @Bean
@@ -40,9 +46,12 @@ public class APIGeneratorConfiguration {
     }
 
     @Bean("swagger-connector-template")
-    public ConnectorGenerator swaggerConnectorGenerator() {
-        final Connector restSwaggerConnector = dataManager.fetch(Connector.class, "rest-swagger");
+    public Future<ConnectorGenerator> swaggerConnectorGenerator() {
+        return migrations.migrationsDone().thenApply(v -> {
+            final Connector restSwaggerConnector = Objects.requireNonNull(dataManager.fetch(Connector.class, "rest-swagger"),
+                "No Connector with ID `rest-swagger` in the database");
 
-        return new SwaggerUnifiedShapeConnectorGenerator(restSwaggerConnector);
+            return new SwaggerUnifiedShapeConnectorGenerator(restSwaggerConnector);
+        });
     }
 }
