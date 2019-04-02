@@ -28,6 +28,7 @@ import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.google.api.services.sheets.v4.model.ValueRange;
 import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.sheets.meta.GoogleSheetsMetaDataHelper;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
@@ -84,7 +85,12 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
         if (in.getBody() instanceof List) {
             jsonBeans = in.getBody(List.class);
         } else if (in.getBody(String.class) != null) {
-            jsonBeans = Collections.singletonList(in.getBody(String.class));
+            String body = in.getBody(String.class);
+            if (JsonUtils.isJsonArray(body)) {
+                jsonBeans = JsonUtils.arrayToJsonBeans(Json.reader().readTree(body));
+            } else if (JsonUtils.isJson(body)) {
+                jsonBeans = Collections.singletonList(body);
+            }
         }
 
         ValueRange valueRange = new ValueRange();
