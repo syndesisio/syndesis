@@ -47,7 +47,7 @@ public class DescriptorTest {
             .connectorFactory(ConnectorFactory.class.getName())
             .actions(new ArrayList<>())
             .icon("")
-            .description("rest-swagger TODO:change this")
+            .description("Meta connector to generate swagger client connectors")
             .name("OpenAPI client")
             .componentScheme("rest-swagger")
             .putProperty("accessToken", new ConfigurationProperty.Builder()
