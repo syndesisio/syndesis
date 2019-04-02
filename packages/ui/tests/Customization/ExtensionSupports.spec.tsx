@@ -1,5 +1,4 @@
 import * as React from 'react';
-import renderer from 'react-test-renderer';
 import { render } from 'react-testing-library';
 import { ExtensionSupports, IAction } from '../../src/Customization';
 
@@ -36,9 +35,15 @@ export default describe('ExtensionSupports', () => {
 
   it('Should render correctly without actions', () => {
     const comp = <ExtensionSupports extensionActions={[]} />;
-
-    // test snapshot
-    const snapshot = renderer.create(comp).toJSON();
-    expect(snapshot).toMatchSnapshot();
+    const { baseElement } = render(comp);
+    expect(baseElement).toMatchInlineSnapshot(`
+<body>
+  <div>
+    <div
+      class="extension-group"
+    />
+  </div>
+</body>
+`);
   });
 });

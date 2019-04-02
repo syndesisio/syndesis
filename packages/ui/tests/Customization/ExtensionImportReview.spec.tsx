@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { MemoryRouter } from 'react-router';
-import renderer from 'react-test-renderer';
 import { fireEvent, render } from 'react-testing-library';
 import {
   ExtensionImportReview,
@@ -120,10 +119,6 @@ export default describe('ExtensionImportReview', () => {
     fourActions.map(a => {
       expect(queryByText(actionText(a.name, a.description))).toBeDefined();
     });
-
-    // test snapshot
-    const snapshot = renderer.create(componentWithDescription).toJSON();
-    expect(snapshot).toMatchSnapshot();
   });
 
   it('Should render correctly without a description', () => {
@@ -171,9 +166,5 @@ export default describe('ExtensionImportReview', () => {
     oneAction.map(a => {
       expect(queryByText(actionText(a.name, a.description))).toBeDefined();
     });
-
-    // test snapshot
-    const snapshot = renderer.create(componentWithoutDescription).toJSON();
-    expect(snapshot).toMatchSnapshot();
   });
 });

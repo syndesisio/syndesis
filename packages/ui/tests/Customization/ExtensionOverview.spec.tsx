@@ -1,5 +1,4 @@
 import * as React from 'react';
-import renderer from 'react-test-renderer';
 import { render } from 'react-testing-library';
 import {
   ExtensionOverview,
@@ -56,10 +55,6 @@ export default describe('ExtensionOverview', () => {
 
     // last update value
     expect(queryAllByText(lastUpdateDate)).toHaveLength(1);
-
-    // test snapshot
-    const snapshot = renderer.create(comp).toJSON();
-    expect(snapshot).toMatchSnapshot();
   });
 
   it('Should render correctly when only required properties', () => {
@@ -89,9 +84,5 @@ export default describe('ExtensionOverview', () => {
 
     // last update value
     expect(queryByText(lastUpdateDate)).toBeNull();
-
-    // test snapshot
-    const snapshot = renderer.create(comp).toJSON();
-    expect(snapshot).toMatchSnapshot();
   });
 });
