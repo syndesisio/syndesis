@@ -36,7 +36,7 @@ according to how you mapped the fields.
 
 If you map fields in a source collection to a target that is 
 not a collection, then when {prodname} executes the flow, 
-it assigns values from only the first element in the source 
+it assigns values from only the last element in the source 
 collection. Any other elements in the collection are ignored. 
 However, any subsequent mapping steps can access all elements in 
 the collection. 
