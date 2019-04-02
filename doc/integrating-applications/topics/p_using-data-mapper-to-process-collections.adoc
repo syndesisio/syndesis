@@ -8,8 +8,12 @@
 In a flow, when a step outputs a collection and when a
 subsequent connection that is in the flow expects a collection as the input, you can 
 use the data mapper to specify how you want the flow to 
-process the collection.  You just need to map fields in 
-the source collection to fields in the target collection. 
+process the collection. When both the source collection and the target 
+collection contain only primitive types, you just need to map the source 
+collection to the target collection. When a collection contains more 
+than one kind of primitive type or when it contains at least one complex 
+type then the data mapper displays the collection’s child fields. 
+You can map from/to each field. 
 
 When a step outputs a collection, the flow visualization panel 
 displays *Collection* in the details about the step. For example: 
@@ -19,27 +23,29 @@ image:images/data-type-collection.png[Data Type: SQL Result (Collection)]
 Add a data mapper step after the step that provides the collection and 
 before the step that needs the mappings. Exactly where in the flow this 
 data mapper step needs to be depends on the other steps in the flow. 
-Mapping a source collection to a target collections looks
-like this: 
+The following image shows mappings from source collection fields 
+to target collection fields: 
 
 image:images/map-collections.png[mapping collection]
 
 In the source and target panels, the data mapper displays 
 image:images/collection-icon.png[this icon] to indicate
-a collection. Expand the collection container to see the
-fields that are in each element that is in the collection. 
-When you map fields in a source collection to
-fields in a target collection, when {prodname} executes
-the flow, it iterates over the source collection to  
-populate each element in the target collection 
-according to how you mapped the fields. 
+a collection. If you map a collection to a collection, 
+when {prodname} executes the flow, it iterates over the source 
+collection elements to populate the target collection elements.
 
-If you map fields in a source collection to a target that is 
-not a collection, then when {prodname} executes the flow, 
-it assigns values from only the last element in the source 
-collection. Any other elements in the collection are ignored. 
-However, any subsequent mapping steps can access all elements in 
-the collection. 
+If you map one or more source collection fields to target collection 
+fields, when {prodname} executes the flow, it iterates over the source 
+collection elements to populate the target collection elements. 
+However, the target collection elements contain values for only 
+the mapped fields. 
+
+If you map a source collection or a field in a source collection 
+to a target field that is not in a collection, then when {prodname} 
+executes the flow, it assigns the value from only the last element 
+in the source collection. Any other elements in the collection are 
+ignored in that mapping step. However, any subsequent mapping steps 
+can access all elements in the source collection. 
 
 When a connection returns a collection that is defined in a 
 JSON or Java document, the data mapper can usually process 
