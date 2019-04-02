@@ -99,8 +99,10 @@ class OAuthRefreshTokenProcessor implements Processor {
     }
 
     boolean canProcessRefresh() {
-        return refreshToken != null && authorizationEndpoint != null
-            && (!authorizeUsingParameters || authorizeUsingParameters && clientId != null && clientSecret != null);
+        final boolean hasBasicRefreshOptions = refreshToken != null && authorizationEndpoint != null;
+        final boolean hasParametersIfNeeded = authorizeUsingParameters && clientId != null && clientSecret != null;
+
+        return hasBasicRefreshOptions && (!authorizeUsingParameters || hasParametersIfNeeded);
     }
 
     CloseableHttpClient createHttpClient() {
