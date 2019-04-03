@@ -287,4 +287,66 @@ public class GoogleSheetsUpdateValuesCustomizerTest extends AbstractGoogleSheets
         Assert.assertEquals("b2", valueRange.getValues().get(1).get(1));
         Assert.assertNull(valueRange.getValues().get(1).get(2));
     }
+
+    @Test
+    public void testBeforeProducerWithJsonArray() throws Exception {
+        Map<String, Object> options = new HashMap<>();
+        options.put("range", "A1:B2");
+
+        customizer.customize(getComponent(), options);
+
+        Exchange inbound = new DefaultExchange(createCamelContext());
+
+        String body = "[{" +
+                            "\"spreadsheetId\": \"" + getSpreadsheetId() + "\"," +
+                            "\"A\": \"a1\"," +
+                            "\"B\": \"b1\"" +
+                        "}," +
+                        "{" +
+                            "\"spreadsheetId\": \"" + getSpreadsheetId() + "\"," +
+                            "\"A\": \"a2\"," +
+                            "\"B\": \"b2\"" +
+                        "}]";
+        inbound.getIn().setBody(body);
+
+        getComponent().getBeforeProducer().process(inbound);
+
+        Assert.assertEquals("A1:B2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assert.assertEquals(RangeCoordinate.DIMENSION_ROWS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
+        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
+
+        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
+        Assert.assertEquals(2L, valueRange.getValues().size());
+        Assert.assertEquals(2L, valueRange.getValues().get(0).size());
+        Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
+        Assert.assertEquals("b1", valueRange.getValues().get(0).get(1));
+        Assert.assertEquals(2L, valueRange.getValues().get(1).size());
+        Assert.assertEquals("a2", valueRange.getValues().get(1).get(0));
+        Assert.assertEquals("b2", valueRange.getValues().get(1).get(1));
+    }
+
+    @Test
+    public void testBeforeProducerWithJsonObject() throws Exception {
+        Map<String, Object> options = new HashMap<>();
+        options.put("range", "A1:B2");
+
+        customizer.customize(getComponent(), options);
+
+        Exchange inbound = new DefaultExchange(createCamelContext());
+
+        String body = "{\"spreadsheetId\": \"" + getSpreadsheetId() + "\", \"A\": \"a1\", \"B\": \"b1\" }";
+        inbound.getIn().setBody(body);
+
+        getComponent().getBeforeProducer().process(inbound);
+
+        Assert.assertEquals("A1:B2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
+        Assert.assertEquals(RangeCoordinate.DIMENSION_ROWS, inbound.getIn().getHeader(GoogleSheetsStreamConstants.MAJOR_DIMENSION));
+        Assert.assertEquals("USER_ENTERED", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "valueInputOption"));
+
+        ValueRange valueRange = (ValueRange) inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "values");
+        Assert.assertEquals(1L, valueRange.getValues().size());
+        Assert.assertEquals(2L, valueRange.getValues().get(0).size());
+        Assert.assertEquals("a1", valueRange.getValues().get(0).get(0));
+        Assert.assertEquals("b1", valueRange.getValues().get(0).get(1));
+    }
 }
