@@ -20,6 +20,12 @@ parameters:
 - name: OPENSHIFT_OAUTH_CLIENT_SECRET
   description: OpenShift OAuth client secret
   required: true
+- name: OAUTH_PROXY_IMAGE_PREFIX
+  description: OpenShift OAuth proxy image prefix
+  value: 'openshift'
+- name: OAUTH_PROXY_IMAGE
+  description: OpenShift OAuth proxy image name
+  value: 'oauth-proxy'
 - name: OAUTH_PROXY_TAG
   description: OpenShift OAuth proxy image tag
   value: 'v1.1.0'
@@ -91,7 +97,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/openshift/oauth-proxy:${OAUTH_PROXY_TAG}
+        name: ${SYNDESIS_REGISTRY}/${OAUTH_PROXY_IMAGE_PREFIX}/${OAUTH_PROXY_IMAGE}:${OAUTH_PROXY_TAG}
       importPolicy:
         scheduled: true
       name: ${OAUTH_PROXY_TAG}
