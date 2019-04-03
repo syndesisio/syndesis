@@ -1,5 +1,9 @@
 import * as React from 'react';
-import { fireEvent, render, waitForElement } from 'react-testing-library';
+import {
+  fireEvent,
+  getByText as getDeleteButton,
+  render,
+} from 'react-testing-library';
 import {
   ExtensionDetail,
   IExtensionDetailProps,
@@ -83,22 +87,16 @@ export default describe('ExtensionDetail', () => {
   it('Should open delete confirmation modal', async () => {
     // need to set extensionUses to zero so that the delete button is enabled
     const comp = <ExtensionDetail {...props} extensionUses={0} />;
-    const { baseElement, getByText } = render(comp);
+    const { getByRole, getByText } = render(comp);
     const deleteButton = getByText(deleteLabel);
     expect(deleteButton).not.toHaveAttribute('disabled'); // delete should be enabled
 
     // click the delete button so that the delete confirmation dialog opens
     fireEvent.click(deleteButton);
 
-    // wait for the delete dialog to show by looking for the delete button
-    const elements = await waitForElement(() => {
-      // find the delete button
-      return baseElement.getElementsByClassName('btn btn-danger');
-    });
-    expect(elements).toHaveLength(1);
-
     // click the confirmation dialog delete button and make sure callback is called
-    fireEvent.click(elements[0]);
+    const dialog = getByRole('dialog');
+    fireEvent.click(getDeleteButton(dialog, deleteLabel));
     expect(mockOnDelete).toHaveBeenCalledTimes(1);
   });
 });
