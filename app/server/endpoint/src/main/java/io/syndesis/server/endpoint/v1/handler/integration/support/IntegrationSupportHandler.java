@@ -305,9 +305,11 @@ public class IntegrationSupportHandler {
 
         if( entry.getName().startsWith("extensions/") ) {
             for (WithResourceId extension : imported.getOrDefault("extensions", Collections.emptyList())) {
-                final String extensionId = extension.getId().get();
+                // use extension's correlation Id with extension ZipEntry
+                final String extensionId = ((Extension)extension).getExtensionId();
                 if( entry.getName().equals("extensions/" + Names.sanitize(extensionId) + ".jar") ) {
-                    String path = "/extensions/" + extensionId;
+                    // path in filestore uses id instead of extensionId
+                    String path = "/extensions/" + extension.getId().get();
                     InputStream existing = extensionDataManager.getExtensionDataAccess().read(path);
                     if( existing == null ) {
                         extensionDataManager.getExtensionDataAccess().write(path, zis);
