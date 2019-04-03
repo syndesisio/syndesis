@@ -1,0 +1,109 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='mapping-between-collections-and-non-collections_{context}']
+= Mapping between collections and non-collections
+
+In the data mapper *Source* and *Target* panels: 
+
+* image:images/collection-icon.png[Collection icon]
+indicates a collection. If the collection contains one primitive type, 
+then you can map directly from or to that collection. If the collection 
+contains two or more different types, then the data mapper 
+displays the collection’s child fields and you can map to or from the 
+collection’s fields.  
+
+* image:images/folder.png[Folder icon] indicates an 
+expandable container that is a complex type. A complex type contains 
+multiple fields of different types. A field in a complex type can be a 
+type that is a collection, such as an array. You cannot map a complex 
+type container itself. You can map only the fields that are in the complex type. 
+
+To toggle the display of data types, such as `*(COMPLEX)*`, 
+`*STRING*`, `*INTEGER*`, in the upper right of the data mapper, click 
+image:shared/images/EditorSettings.png[settings] and click 
+*Show Types*. 
+
+The following table shows the default behavior when mapping 
+between collection fields and non-collection fields. 
+
+[options="header"]
+[cols="1,1,1"]
+|===
+|When you map from this source
+|To this target
+|During execution
+
+|A collection. (No child fields appear in the data mapper.) 
+|A field that is not in a collection.
+|The data mapper maps the value that is in the last element in the source collection to the target field.
+
+|A field that is in a collection. 
+|A field that is not in a collection.
+|The data mapper maps the mapped field's value that is in the last element in the source collection to the target field.
+
+|A field that is not in a collection.
+|A collection. (No child fields appear in the data mapper.) 
+|The data mapper maps the value that is in the mapped source field to the first (and only) element in the collection. 
+
+|A field that is not in a collection. 
+|A field that is in a collection.
+|The data mapper maps the value that is in the mapped source field to the first (and only) element in the collection.  
+
+|===
+
+If a source collection contains fields that you do not map, 
+those fields are still available to subsequent steps that
+are in the flow. 
+
+.Changing default behavior when mapping from a collection field 
+When you map from a collection field to a non-collection 
+field, the default is that the target field gets its 
+value from the last element in the source collection. 
+You can change the default behavior in the following 
+ways: 
+
+* To map from the element that you choose, apply the *Item At* 
+transformation to the source and specify an 
+index. For example, to map the 
+value that is in the first element that is in the collection, 
+specify `0` for the index. 
+
+* To map all values that are in 
+all elements that are in a 
+source collection, apply the *Concatenate* transformation 
+to the source collection or source collection field and optionally specify a delimiter.
+The default delimiter is a space. For example, 
+consider this source collection: 
+
+** In the first element, the value in the *city* field
+is *Boston*. 
+** In the second element, the value in the *city* field 
+is *Paris*.
+** In the third element, the value in the *city* field 
+is *Tokyo*. 
+
++
+During execution, the data mapper populates the target
+field with `Boston Paris Tokyo`. 
+
+.Changing default behavior when mapping from a non-collection field
+When you map from a non-collection field to a collection 
+field, the default is that the target collection contains
+one element, which contains the non-collection, source field 
+value. You can change the default behavior 
+when the source field contains a series of values that are 
+separated by the same delimiter. For example, consider a 
+non-collection, source *cities* field that contains: 
+
+`Boston Paris Tokyo`
+
+You would map this to a target collection or to a 
+target field that is in a collection. 
+On the source *cities* field, add the *Split* transformation. 
+During execution, the data mapper splits the value of the 
+*cities* field at the space delimiter. The result is a 
+collection that contains three elements. In the first 
+element, the value of the *city* field is `Boston`. In the 
+second element, the value of the *city* field is `Paris`. 
+In the third element, the value of the *city* field is `Tokyo`. 
