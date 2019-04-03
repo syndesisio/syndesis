@@ -75,7 +75,7 @@
     <commons.compress.version>1.18</commons.compress.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.21.0.fuse-730054</camel.version>
+    <camel.version>2.21.0.fuse-730074</camel.version>
     <camel-k-runtime.version>0.3.1</camel-k-runtime.version>
 
     <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
