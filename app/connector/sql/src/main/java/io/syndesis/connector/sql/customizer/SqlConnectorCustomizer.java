@@ -65,7 +65,7 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
         //converting SQL Map or List results to JSON Beans
         List<String> list = null;
         if (isRetrieveGeneratedKeys) {
-            JSONBeanUtil.toJSONBeansFromHeader(in, autoIncrementColumnName);
+            list = JSONBeanUtil.toJSONBeansFromHeader(in, autoIncrementColumnName);
         } else {
             list = JSONBeanUtil.toJSONBeans(in);
         }
