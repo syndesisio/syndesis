@@ -1,17 +1,11 @@
+import { WithViews } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
 import { RestViewDefinition } from '@syndesis/models';
-//import { WithVirtualization } from '@syndesis/api';
-import { WithViews } from '@syndesis/api';
 import * as React from 'react';
-import VirtualizationNavBar from '../components/VirtualizationNavBar';
-import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import i18n from '../../../i18n';
+import HeaderView from '../components/HeaderView';
+import VirtualizationNavBar from '../components/VirtualizationNavBar';
 
-// import { Breadcrumb } from '@syndesis/ui';
-// import { Link } from 'react-router-dom';
-import { Translation } from 'react-i18next';
-import resolvers from '../resolvers';
-import { WithLoader, WithRouteData } from '@syndesis/utils';
 import {
   IActiveFilter,
   IFilterType,
@@ -20,6 +14,13 @@ import {
   ViewListItem,
   ViewListSkeleton,
 } from '@syndesis/ui';
+import {
+  WithListViewToolbarHelpers,
+  WithLoader,
+  WithRouteData,
+} from '@syndesis/utils';
+import { Translation } from 'react-i18next';
+import resolvers from '../resolvers';
 
 /**
  * @param virtualizationId - the ID of the virtualization whose details are being shown by this page.
@@ -111,107 +112,115 @@ export default class VirtualizationViewsPage extends React.Component<
       >>
         {({ virtualizationId }, { virtualization }, { history }) => {
           return (
-            <WithViews virtualizationId={virtualizationId}>
-              {({ data, hasData, error }) => (
-                <WithListViewToolbarHelpers
-                  defaultFilterType={filterByName}
-                  defaultSortType={sortByName}
-                >
-                  {helpers => {
-                    const filteredAndSorted = getFilteredAndSortedViews(
-                      data,
-                      helpers.activeFilters,
-                      helpers.currentSortType,
-                      helpers.isSortAscending
-                    );
-                    return (
-                      <Translation ns={['data', 'shared']}>
-                        {t => (
-                          <>
-                            <VirtualizationNavBar />
-                            <ViewList
-                              filterTypes={filterTypes}
-                              sortTypes={sortTypes}
-                              {...this.state}
-                              resultsCount={filteredAndSorted.length}
-                              {...helpers}
-                              i18nCreateView={t(
-                                'data:virtualization.createView'
-                              )}
-                              i18nCreateViewTip={t(
-                                'data:virtualization.createViewTip'
-                              )}
-                              i18nDescription={t(
-                                'data:virtualization.viewsPageDescription'
-                              )}
-                              i18nEmptyStateInfo={t(
-                                'data:virtualization.viewEmptyStateInfo'
-                              )}
-                              i18nEmptyStateTitle={t(
-                                'data:virtualization.viewEmptyStateTitle'
-                              )}
-                              i18nImportView={t('shared:Import')}
-                              i18nImportViewTip={t(
-                                'data:virtualization.importViewTip'
-                              )}
-                              i18nName={t('shared:Name')}
-                              i18nNameFilterPlaceholder={t(
-                                'shared:nameFilterPlaceholder'
-                              )}
-                              i18nResultsCount={t('shared:resultsCount', {
-                                count: filteredAndSorted.length,
-                              })}
-                              i18nLinkCreateView={resolvers.virtualizations.create()}
-                              onImportView={this.handleImportView}
-                            />
-                            <WithLoader
-                              error={error}
-                              loading={!hasData}
-                              loaderChildren={
-                                <ViewListSkeleton
-                                  width={800}
-                                  style={{
-                                    backgroundColor: '#FFF',
-                                    marginTop: 30,
-                                  }}
-                                />
-                              }
-                              errorChildren={<div>TODO</div>}
-                            >
-                              {() =>
-                                filteredAndSorted
-                                  .filter((view: RestViewDefinition) =>
-                                    this.filterUndefinedId(view)
-                                  )
-                                  .map(
-                                    (
-                                      view: RestViewDefinition,
-                                      index: number
-                                    ) => (
-                                      <ViewListItem
-                                        key={index}
-                                        viewName={view.keng__id}
-                                        viewDescription={
-                                          'Description goes here'
-                                        }
-                                        i18nDelete={t('shared:Delete')}
-                                        i18nEdit={t('shared:Edit')}
-                                        i18nEditTip={t('view.editViewTip')}
-                                        onDelete={this.handleDeleteView}
-                                        onEdit={this.handleEditView}
-                                      />
+            <div>
+              <HeaderView virtualizationId={virtualizationId} />
+              <WithViews virtualizationId={virtualizationId}>
+                {({ data, hasData, error }) => (
+                  <WithListViewToolbarHelpers
+                    defaultFilterType={filterByName}
+                    defaultSortType={sortByName}
+                  >
+                    {helpers => {
+                      const filteredAndSorted = getFilteredAndSortedViews(
+                        data,
+                        helpers.activeFilters,
+                        helpers.currentSortType,
+                        helpers.isSortAscending
+                      );
+                      return (
+                        <Translation ns={['data', 'shared']}>
+                          {t => (
+                            <>
+                              <VirtualizationNavBar />
+                              <ViewList
+                                filterTypes={filterTypes}
+                                sortTypes={sortTypes}
+                                {...this.state}
+                                resultsCount={filteredAndSorted.length}
+                                {...helpers}
+                                i18nCreateView={t(
+                                  'data:virtualization.createView'
+                                )}
+                                i18nLinkCreateView={t(
+                                  'data:virtualization.createView'
+                                )}
+                                i18nCreateViewTip={t(
+                                  'data:virtualization.createViewTip'
+                                )}
+                                i18nDescription={t(
+                                  'data:virtualization.viewsPageDescription'
+                                )}
+                                i18nEmptyStateInfo={t(
+                                  'data:virtualization.viewEmptyStateInfo'
+                                )}
+                                i18nEmptyStateTitle={t(
+                                  'data:virtualization.viewEmptyStateTitle'
+                                )}
+                                i18nImportView={t('shared:Import')}
+                                i18nImportViewTip={t(
+                                  'data:virtualization.importViewTip'
+                                )}
+                                i18nName={t('shared:Name')}
+                                i18nNameFilterPlaceholder={t(
+                                  'shared:nameFilterPlaceholder'
+                                )}
+                                i18nResultsCount={t('shared:resultsCount', {
+                                  count: filteredAndSorted.length,
+                                })}
+                                // TODO - Point to views.create when available
+                                linkCreateHRef={resolvers.virtualizations.create()}
+                                onImportView={this.handleImportView}
+                                hasListData={data.length > 0}
+                              />
+                              <WithLoader
+                                error={error}
+                                loading={!hasData}
+                                loaderChildren={
+                                  <ViewListSkeleton
+                                    width={800}
+                                    style={{
+                                      backgroundColor: '#FFF',
+                                      marginTop: 30,
+                                    }}
+                                  />
+                                }
+                                errorChildren={<div>TODO</div>}
+                              >
+                                {() =>
+                                  filteredAndSorted
+                                    .filter((view: RestViewDefinition) =>
+                                      this.filterUndefinedId(view)
                                     )
-                                  )
-                              }
-                            </WithLoader>
-                          </>
-                        )}
-                      </Translation>
-                    );
-                  }}
-                </WithListViewToolbarHelpers>
-              )}
-            </WithViews>
+                                    .map(
+                                      (
+                                        view: RestViewDefinition,
+                                        index: number
+                                      ) => (
+                                        <ViewListItem
+                                          key={index}
+                                          viewName={view.keng__id}
+                                          viewDescription={
+                                            'Description goes here'
+                                          }
+                                          i18nDelete={t('shared:Delete')}
+                                          i18nEdit={t('shared:Edit')}
+                                          i18nEditTip={t('view.editViewTip')}
+                                          onDelete={this.handleDeleteView}
+                                          onEdit={this.handleEditView}
+                                        />
+                                      )
+                                    )
+                                }
+                              </WithLoader>
+                            </>
+                          )}
+                        </Translation>
+                      );
+                    }}
+                  </WithListViewToolbarHelpers>
+                )}
+              </WithViews>
+            </div>
           );
         }}
       </WithRouteData>

@@ -1,17 +1,7 @@
 import { RestDataService } from '@syndesis/models';
-//import { WithVirtualization } from '@syndesis/api';
 import * as React from 'react';
-import VirtualizationNavBar from '../components/VirtualizationNavBar';
-// import { Breadcrumb } from '@syndesis/ui';
-// import { Link } from 'react-router-dom';
 import { Translation } from 'react-i18next';
-// import resolvers from '../resolvers';
-//import { WithLoader, WithRouteData } from '@syndesis/utils';
-// import {
-//   ViewListView,
-//   // ViewListItem,
-//   ViewListSkeleton
-// } from '@syndesis/ui';
+import VirtualizationNavBar from '../components/VirtualizationNavBar';
 
 /**
  * @param virtualizationId - the ID of the virtualization whose details are being shown by this page.
@@ -33,9 +23,6 @@ export interface IVirtualizationDetailRouteState {
 }
 
 export default class VirtualizationSqlQueryPage extends React.Component {
-  public handleVirtualizationSelected(virtualizationId: string) {
-    alert("TODO: Show integration '" + virtualizationId + "'");
-  }
   public render() {
     return (
       <Translation ns={['data', 'shared']}>

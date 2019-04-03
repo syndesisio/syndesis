@@ -28,6 +28,28 @@ export default {
         },
       })
     ),
+    sqlQuery: makeResolver<{ virtualization: RestDataService }>(
+      routes.virtualizations.virtualization.sqlQuery,
+      ({ virtualization }) => ({
+        params: {
+          virtualizationId: virtualization.keng__id,
+        },
+        state: {
+          virtualization,
+        },
+      })
+    ),
+    metrics: makeResolver<{ virtualization: RestDataService }>(
+      routes.virtualizations.virtualization.metrics,
+      ({ virtualization }) => ({
+        params: {
+          virtualizationId: virtualization.keng__id,
+        },
+        state: {
+          virtualization,
+        },
+      })
+    ),
     create: makeResolverNoParams(routes.virtualizations.create),
     import: makeResolverNoParams(routes.virtualizations.import),
     list: makeResolverNoParams(routes.virtualizations.list),

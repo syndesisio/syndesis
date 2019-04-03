@@ -158,6 +158,7 @@ stories
           i18nImportViewTip={importViewTip}
           i18nLinkCreateView={text('i18nLinkCreateView', createView)}
           i18nCreateView={text('i18nLinkCreateView', createView)}
+          linkCreateHRef={action('/data/view/create')}
           i18nLinkCreateViewTip={createViewTip}
           i18nDescription={text('i18nDescription', 'Name')}
           i18nName={text('i18nName', 'Name')}
@@ -167,6 +168,8 @@ stories
           )}
           i18nResultsCount={text('i18nResultsCount', '0 Results')}
           onImportView={action(importActionText)}
+          children={[]}
+          hasListData={false}
         />
       </Router>
     ))
@@ -209,6 +212,7 @@ stories
           i18nImportViewTip={importViewTip}
           i18nLinkCreateView={text('i18nLinkCreateView', createView)}
           i18nCreateView={text('i18nLinkCreateView', createView)}
+          linkCreateHRef={action('/data/view/create')}
           i18nName={text('i18nName', 'Name')}
           i18nDescription={text('i18nDescription', 'Name')}
           i18nNameFilterPlaceholder={text(
@@ -221,6 +225,7 @@ stories
           )}
           onImportView={action(importActionText)}
           children={viewItems}
+          hasListData={true}
         />
       </Router>
     ))

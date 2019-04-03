@@ -4,12 +4,13 @@ import { Translation } from 'react-i18next';
 import routes from '../routes';
 
 /**
- * A component that displays a nav bar with 2 items:
+ * A component that displays a nav bar with 4 items:
  *
- * 1. a link to the page that displays a list of API Connectors, and
- * 1. a link to the page that displays a list of virtualizations.
+ * 1. a link to the page that displays a list of Views
+ * 2. a link to the page that displays relationships
+ * 3. a link to the page that displays the SQL Query editor
+ * 4. a link to the page that dispays metrics
  *
- * @see [VirtualizationsPage]{@link ../pages/VirtualizationsPage}
  */
 export default class VirtualizationNavBar extends React.Component {
   public render() {

@@ -7,11 +7,11 @@ export default include('/data', {
     import: 'import',
     list: '',
     virtualization: include(':virtualizationId', {
-      views: 'views',
-      relationship: 'relationship',
       metrics: 'metrics',
-      sqlQuery: 'sqlQuery',
+      relationship: 'relationship',
       root: '',
+      sqlQuery: 'sqlQuery',
+      views: 'views',
     }),
   }),
 });

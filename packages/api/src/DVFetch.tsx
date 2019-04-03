@@ -15,7 +15,6 @@ export interface IDVFetchProps<T> {
 export class DVFetch<T> extends React.Component<IDVFetchProps<T>> {
   public render() {
     const { url, stream, ...props } = this.props;
-
     return (
       <ApiContext.Consumer>
         {({ apiUri, dvApiUri, headers }) => (

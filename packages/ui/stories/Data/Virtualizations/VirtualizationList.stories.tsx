@@ -284,6 +284,7 @@ stories
           i18nTitle={text('i18nTitle', title)}
           onImport={action(importText)}
           children={[]}
+          hasListData={false}
         />
       </Router>
     ))
@@ -346,6 +347,7 @@ stories
           i18nTitle={text('i18nTitle', title)}
           onImport={action(importText)}
           children={virtualizationItems}
+          hasListData={true}
         />
       </Router>
     ))
@@ -408,6 +410,7 @@ stories
           i18nTitle={text('i18nTitle', title)}
           onImport={action(importText)}
           children={virtItem}
+          hasListData={true}
         />
       </Router>
     ))

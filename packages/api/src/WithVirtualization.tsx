@@ -19,7 +19,7 @@ export class WithVirtualization extends React.Component<
   public render() {
     return (
       <DVFetch<RestDataService>
-        url={`'workspace/dataservices'/${this.props.virtualizationId}`}
+        url={`workspace/dataservices/${this.props.virtualizationId}`}
         defaultValue={{
           connections: 0,
           drivers: 0,
