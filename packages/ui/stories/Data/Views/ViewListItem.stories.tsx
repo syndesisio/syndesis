@@ -6,7 +6,7 @@ import * as React from 'react';
 
 import { ViewListItem } from '../../../src';
 
-const stories = storiesOf('Data/Views/ViewListItem', module);
+const stories = storiesOf('Data/Virtualizations/Views/ViewListItem', module);
 
 const viewName = 'CustomersView';
 const viewDescription = 'View description for CustomersView';

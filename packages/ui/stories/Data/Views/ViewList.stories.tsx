@@ -7,7 +7,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import { ViewListItem, ViewList } from '../../../src';
 
-const stories = storiesOf('Data/Views/ViewList', module);
+const stories = storiesOf('Data/Virtualizations/Views/ViewList', module);
 
 const viewName1 = 'CustomerInfo';
 const viewDescription1 = 'Description for CustomerInfo';
@@ -156,10 +156,8 @@ stories
           i18nEmptyStateTitle={text('i18nEmptyStateTitle', createView)}
           i18nImportView={importView}
           i18nImportViewTip={importViewTip}
-          i18nLinkCreateView={text('i18nLinkCreateView', createView)}
           i18nCreateView={text('i18nLinkCreateView', createView)}
           linkCreateHRef={action('/data/view/create')}
-          i18nLinkCreateViewTip={createViewTip}
           i18nDescription={text('i18nDescription', 'Name')}
           i18nName={text('i18nName', 'Name')}
           i18nNameFilterPlaceholder={text(
@@ -210,7 +208,6 @@ stories
           i18nEmptyStateTitle={text('i18nEmptyStateTitle', createView)}
           i18nImportView={importView}
           i18nImportViewTip={importViewTip}
-          i18nLinkCreateView={text('i18nLinkCreateView', createView)}
           i18nCreateView={text('i18nLinkCreateView', createView)}
           linkCreateHRef={action('/data/view/create')}
           i18nName={text('i18nName', 'Name')}

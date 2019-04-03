@@ -22,6 +22,7 @@
     "sqlClient": "SQL Client",
     "metrics": "Metrics",
     "createView": "Create View",
+    "createViewTip": "Create a new View for this virtualization",
     "viewEmptyStateTitle": "Create New View",
     "ViewEmptyStateInfo": "There are no views available. Please click on the button below to create one."
   }

@@ -7,21 +7,19 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../../../../Layout';
-import { IListViewToolbarProps, ListViewToolbar } from '../../../../Shared';
+import { ButtonLink } from '../../../Layout';
+import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
 
 export interface IViewsListProps extends IListViewToolbarProps {
-  i18nCreateView: string;
-  i18nCreateViewTip?: string;
-  i18nDescription: string;
   hasListData: boolean;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
   i18nImportView: string;
   i18nImportViewTip: string;
   linkCreateHRef: H.LocationDescriptor;
-  i18nLinkCreateView: string;
-  i18nLinkCreateViewTip?: string;
+  i18nCreateViewTip?: string;
+  i18nCreateView: string;
+  i18nDescription: string;
   i18nName: string;
   i18nNameFilterPlaceholder: string;
   onImportView: (name: string) => void;
@@ -74,7 +72,7 @@ export class ViewList extends React.Component<IViewsListProps> {
                 placement="top"
               >
                 <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
-                  {this.props.i18nLinkCreateView}
+                  {this.props.i18nCreateView}
                 </ButtonLink>
               </OverlayTrigger>
             </EmptyState.Action>
@@ -87,9 +85,9 @@ export class ViewList extends React.Component<IViewsListProps> {
   private getCreateViewTooltip() {
     return (
       <Tooltip id="createTip">
-        {this.props.i18nLinkCreateViewTip
-          ? this.props.i18nLinkCreateViewTip
-          : this.props.i18nLinkCreateView}
+        {this.props.i18nCreateViewTip
+          ? this.props.i18nCreateViewTip
+          : this.props.i18nCreateView}
       </Tooltip>
     );
   }

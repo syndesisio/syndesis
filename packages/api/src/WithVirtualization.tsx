@@ -4,7 +4,7 @@ import { DVFetch } from './DVFetch';
 import { IFetchState } from './Fetch';
 
 export interface IWithVirtualizationProps {
-  virtualizationId?: string;
+  virtualizationId: string;
   initialValue?: RestDataService;
   children(props: IFetchState<RestDataService>): any;
 }

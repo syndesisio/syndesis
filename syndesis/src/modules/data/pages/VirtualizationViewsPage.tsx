@@ -138,15 +138,6 @@ export default class VirtualizationViewsPage extends React.Component<
                                 {...this.state}
                                 resultsCount={filteredAndSorted.length}
                                 {...helpers}
-                                i18nCreateView={t(
-                                  'data:virtualization.createView'
-                                )}
-                                i18nLinkCreateView={t(
-                                  'data:virtualization.createView'
-                                )}
-                                i18nCreateViewTip={t(
-                                  'data:virtualization.createViewTip'
-                                )}
                                 i18nDescription={t(
                                   'data:virtualization.viewsPageDescription'
                                 )}
@@ -159,6 +150,10 @@ export default class VirtualizationViewsPage extends React.Component<
                                 i18nImportView={t('shared:Import')}
                                 i18nImportViewTip={t(
                                   'data:virtualization.importViewTip'
+                                )}
+                                i18nCreateView={t('shared:Create')}
+                                i18nCreateViewTip={t(
+                                  'data:virtualization.createViewTip'
                                 )}
                                 i18nName={t('shared:Name')}
                                 i18nNameFilterPlaceholder={t(
