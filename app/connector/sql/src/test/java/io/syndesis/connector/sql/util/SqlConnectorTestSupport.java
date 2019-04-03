@@ -27,6 +27,7 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.common.SqlConnectionRule;
 import io.syndesis.connector.support.test.ConnectorTestSupport;
 import org.junit.After;
@@ -112,11 +113,20 @@ public abstract class SqlConnectorTestSupport extends ConnectorTestSupport {
         return builder.build();
     }
 
-    protected void validateProperty(List<Properties> jsonBeans, String propertyName, String ... expectedValues) {
+    protected void validateProperty(List<Properties> propertyList, String propertyName, String ... expectedValues) {
+        Assert.assertEquals(expectedValues.length, propertyList.size());
+
+        for (int i = 0; i < expectedValues.length; i++) {
+            Assert.assertEquals(expectedValues[i], propertyList.get(i).get(propertyName).toString());
+        }
+    }
+    
+    protected void validateJson(List<String> jsonBeans, String propertyName, String ... expectedValues) {
         Assert.assertEquals(expectedValues.length, jsonBeans.size());
 
         for (int i = 0; i < expectedValues.length; i++) {
-            Assert.assertEquals(expectedValues[i], jsonBeans.get(i).get(propertyName).toString());
+            Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(jsonBeans.get(i));
+            Assert.assertEquals(expectedValues[i], properties.get(propertyName).toString());
         }
     }
 }
