@@ -24,6 +24,8 @@ import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -48,7 +50,8 @@ public interface Updater<T extends WithId<T>> extends Resource, WithDataManager 
     @PUT
     @Path(value = "/{id}")
     @Consumes(MediaType.APPLICATION_JSON)
-    default void update(@NotNull @PathParam("id") @ApiParam(required = true) String id, @NotNull @Valid T obj) {
+    default void update(@NotNull @PathParam("id") @ApiParam(required = true) String id,
+        @NotNull @Valid @ConvertGroup(from = Default.class, to = AllValidations.class) T obj) {
         getDataManager().update(obj);
     }
 
@@ -58,7 +61,7 @@ public interface Updater<T extends WithId<T>> extends Resource, WithDataManager 
     default void patch(@NotNull @PathParam("id") @ApiParam(required = true) String id, @NotNull JsonNode patchJson) throws IOException {
         Class<T> modelClass = resourceKind().getModelClass();
         final T existing = getDataManager().fetch(modelClass, id);
-        if( existing == null ) {
+        if (existing == null) {
             throw new EntityNotFoundException();
         }
 
