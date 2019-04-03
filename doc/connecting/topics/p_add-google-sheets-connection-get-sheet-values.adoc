@@ -79,8 +79,8 @@ you can add to a flow.
 If you want to process individual objects in one or more steps and 
 then aggregate the row or column objects, do not split the Google Sheets 
 connection result. Instead, accept the default, *No*, and then add a 
-split step to the flow after this connection. A split step is 
-required if you want an aggregate step in the flow. 
+*Split* step to the flow after this connection. A *Split* step is 
+required if you want an *Aggregate* step in the flow. 
 
 .. In the *Delay* field, accept the default of 30 seconds or
 specify how often you want the connection to obtain spreadsheet data.

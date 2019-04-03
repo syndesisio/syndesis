@@ -34,6 +34,7 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-kafka_{context}>>
 * <<connecting-to-kudu_{context}>>
 * <<connecting-to-mqtt_{context}>>
+* <<connecting-to-odata_{context}>>
 * <<connecting-to-rest-apis_{context}>>
 * <<connecting-to-sf_{context}>>
 * <<connecting-to-concur_{context}>>
@@ -71,6 +72,8 @@ include::topics/as_connecting-to-kafka.adoc[leveloffset=+1]
 include::topics/as_connecting-to-kudu.adoc[leveloffset=+1]
 
 include::topics/as_connecting-to-mqtt.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-odata.adoc[leveloffset=+1]
 
 include::topics/as_connecting-to-rest-apis.adoc[leveloffset=+1]
 
