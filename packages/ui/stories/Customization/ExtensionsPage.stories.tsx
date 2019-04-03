@@ -78,8 +78,8 @@ storiesOf('Customization/Extensions/ExtensionsPage', module)
             i18nUpdate={'Update'}
             i18nUpdateTip={'updateExtensionTip'}
             i18nUsedByMessage={'StepExtension'}
+            linkUpdateExtension={'uid'}
             onDelete={action('onDelete')}
-            onUpdate={action('onUpdate')}
             usedBy={0}
           />
         </ExtensionListView>

@@ -27,8 +27,13 @@ export interface IExtensionListItemProps {
   i18nUpdate: string;
   i18nUpdateTip?: string;
   i18nUsedByMessage: string;
+
+  /**
+   * An href to use when the extension is being updated.
+   */
+  linkUpdateExtension: H.LocationDescriptor;
+
   onDelete: (extensionId: string) => void;
-  onUpdate: (extensionId: string) => void;
   usedBy: number;
 }
 
@@ -50,7 +55,6 @@ export class ExtensionListItem extends React.Component<
     this.doCancel = this.doCancel.bind(this);
     this.doDelete = this.doDelete.bind(this);
     this.showDeleteDialog = this.showDeleteDialog.bind(this);
-    this.handleUpdate = this.handleUpdate.bind(this);
   }
 
   public doCancel() {
@@ -98,12 +102,6 @@ export class ExtensionListItem extends React.Component<
     );
   }
 
-  public handleUpdate() {
-    if (this.props.extensionId) {
-      this.props.onUpdate(this.props.extensionId);
-    }
-  }
-
   public showDeleteDialog() {
     this.setState({
       showDeleteDialog: true,
@@ -130,14 +128,17 @@ export class ExtensionListItem extends React.Component<
                 overlay={this.getDetailsTooltip()}
                 placement="top"
               >
-                <ButtonLink href={this.props.detailsPageLink} as={'primary'}>
+                <ButtonLink href={this.props.detailsPageLink} as={'default'}>
                   {this.props.i18nDetails}
                 </ButtonLink>
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
-                <Button bsStyle="default" onClick={this.handleUpdate}>
+                <ButtonLink
+                  href={this.props.linkUpdateExtension}
+                  as={'default'}
+                >
                   {this.props.i18nUpdate}
-                </Button>
+                </ButtonLink>
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
                 <Button

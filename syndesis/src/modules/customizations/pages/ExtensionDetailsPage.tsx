@@ -1,5 +1,5 @@
 import { WithExtension, WithExtensionHelpers } from '@syndesis/api';
-import { Action, Extension } from '@syndesis/models';
+import { Action, Extension, Integration } from '@syndesis/models';
 import {
   Breadcrumb,
   ExtensionDetail,
@@ -52,18 +52,20 @@ export default class ExtensionDetailsPage extends React.Component {
     return i18n.t('customizations:extension.unknownExtensionType');
   }
 
-  public handleIntegrationSelected(integrationId: string) {
-    alert("TODO: Show integration '" + integrationId + "'");
-  }
-
-  public handleUpdate(): void {
-    alert('TODO: Update extension');
-  }
-
   public render() {
     return (
       <WithRouteData<IExtensionDetailRouteParams, IExtensionDetailRouteState>>
         {({ extensionId }, { extension }, { history }) => {
+          const handleSelectIntegration = (selectedIntegrationId: string) => {
+            // redirect to the integration detail page
+            history.push(
+              resolvers.integrations.integration.details({
+                integration: {
+                  id: selectedIntegrationId,
+                } as Integration,
+              })
+            );
+          };
           return (
             <WithExtensionHelpers>
               {({ deleteExtension }) => {
@@ -155,12 +157,14 @@ export default class ExtensionDetailsPage extends React.Component {
                                         data.uses as number
                                       }
                                       onSelectIntegration={
-                                        this.handleIntegrationSelected
+                                        handleSelectIntegration
                                       }
                                     />
                                   }
+                                  linkUpdateExtension={resolvers.customizations.extensions.extension.update(
+                                    { extension: data }
+                                  )}
                                   onDelete={handleDelete}
-                                  onUpdate={this.handleUpdate}
                                   overviewSection={
                                     <ExtensionOverview
                                       extensionDescription={data.description}

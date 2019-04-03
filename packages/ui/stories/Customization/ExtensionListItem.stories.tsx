@@ -21,6 +21,7 @@ const deleteActionText = deleteText + ' ' + extensionId;
 const deleteTip = 'Delete this extension';
 const detailsText = 'Details';
 const detailsTip = 'View extension details';
+const uid = 'uid';
 const updateText = 'Update';
 const updateActionText = updateText + ' ' + extensionId;
 const updateTip = 'Update this extension';
@@ -128,8 +129,8 @@ stories
           i18nUpdate={updateText}
           i18nUpdateTip={updateTip}
           i18nUsedByMessage={usedByFiveMsg}
+          linkUpdateExtension={uid}
           onDelete={action(deleteActionText)}
-          onUpdate={action(updateActionText)}
           usedBy={usedByFive}
         />
       </Router>
@@ -154,8 +155,8 @@ stories
           i18nExtensionType={extensionType}
           i18nUpdate={updateText}
           i18nUsedByMessage={usedByZeroMsg}
+          linkUpdateExtension={uid}
           onDelete={action(deleteActionText)}
-          onUpdate={action(updateActionText)}
           usedBy={usedByZero}
         />
       </Router>

@@ -18,6 +18,10 @@ import resolvers from '../../resolvers';
 import { getExtensionTypeName } from '../customizationsUtils';
 import './ExtensionImportPage.css';
 
+export interface IExtensionImportRouteProps {
+  extensionId?: string;
+}
+
 export interface IExtensionImportPageState {
   /**
    * `true` if the dropzone should be disabled. Defaults to `false`. When the review component is being
@@ -36,7 +40,7 @@ export interface IExtensionImportPageState {
   dndUploadSuccessMessage?: string;
 
   /**
-   * The extension created by processing the uploaded file.
+   * The existing extension being updated or the extension created by processing the uploaded file.
    */
   extension?: Extension;
 
@@ -55,7 +59,7 @@ export default class ExtensionImportPage extends React.Component<
   {},
   IExtensionImportPageState
 > {
-  public constructor(props: {}) {
+  public constructor(props: IExtensionImportRouteProps) {
     super(props);
     this.state = { disableDropzone: false, loading: false };
   }
@@ -103,8 +107,8 @@ export default class ExtensionImportPage extends React.Component<
       });
     };
     return (
-      <WithRouteData<null, null>>
-        {(p, s, { history }) => (
+      <WithRouteData<IExtensionImportRouteProps, null>>
+        {({ extensionId }, _, { history }) => (
           <WithExtensionHelpers>
             {({ importExtension, uploadExtension }) => {
               const handleUpload = async (files: File[]) => {
@@ -119,9 +123,10 @@ export default class ExtensionImportPage extends React.Component<
                     loading: true,
                   });
 
-                  // make server call
-                  const uploaded = await uploadExtension(files[0]);
-
+                  // make server call to update existing or to create a new extension
+                  const uploaded = extensionId
+                    ? await uploadExtension(files[0], extensionId)
+                    : await uploadExtension(files[0]);
                   // set state based on successful upload
                   this.setState({
                     ...this.state,
@@ -146,9 +151,9 @@ export default class ExtensionImportPage extends React.Component<
                   });
                 }
               };
-              const handleImport = async (extensionId: string) => {
+              const handleImport = async (importExtensionId: string) => {
                 try {
-                  await importExtension(extensionId);
+                  await importExtension(importExtensionId);
                   history.push(resolvers.customizations.extensions.list());
                 } catch (e) {
                   // TODO: post notification
@@ -212,7 +217,9 @@ export default class ExtensionImportPage extends React.Component<
                         onDndUploadAccepted={handleUpload}
                         onDndUploadRejected={uploadFailedMessage}
                       />
-                      {this.state.extension && this.state.extension.id ? (
+                      {this.state.extension &&
+                      this.state.extension.id &&
+                      this.state.extension.extensionId ? (
                         <ExtensionImportReview
                           actions={this.state.extension.actions.map(
                             (action: Action) =>
@@ -225,8 +232,9 @@ export default class ExtensionImportPage extends React.Component<
                           extensionDescription={
                             this.state.extension.description
                           }
-                          extensionId={this.state.extension.id}
+                          extensionId={this.state.extension.extensionId}
                           extensionName={this.state.extension.name}
+                          extensionUid={this.state.extension.id}
                           i18nActionsLabel={this.getActionsLabel()}
                           i18nCancel={i18n.t('shared:Cancel')}
                           i18nDescriptionLabel={i18n.t('shared:Description')}

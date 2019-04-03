@@ -25,17 +25,30 @@ export default {
     list: makeResolverNoParams(routes.apiConnectors.list),
   },
   extensions: {
-    extension: makeResolver<{ extension: Extension }>(
-      routes.extensions.extension,
-      ({ extension }) => ({
-        params: {
-          extensionId: extension.id,
-        },
-        state: {
-          extension,
-        },
-      })
-    ),
+    extension: {
+      details: makeResolver<{ extension: Extension }>(
+        routes.extensions.extension.details,
+        ({ extension }) => ({
+          params: {
+            extensionId: extension.id,
+          },
+          state: {
+            extension,
+          },
+        })
+      ),
+      update: makeResolver<{ extension: Extension }>(
+        routes.extensions.extension.update,
+        ({ extension }) => ({
+          params: {
+            extensionId: extension.id,
+          },
+          state: {
+            extension,
+          },
+        })
+      ),
+    },
     import: makeResolverNoParams(routes.extensions.import),
     list: makeResolverNoParams(routes.extensions.list),
   },

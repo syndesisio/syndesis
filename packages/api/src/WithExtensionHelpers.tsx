@@ -60,7 +60,7 @@ export class WithExtensionHelpersWrapped extends React.Component<
   }
 
   /**
-   * Uploads the extension with the specified identifier or creates a new extension if there is no identifier.
+   * Updates the extension with the specified identifier or creates a new extension if there is no identifier.
    * @param extensionId the ID of the extension being uploaded
    */
   public async uploadExtension(
@@ -80,7 +80,7 @@ export class WithExtensionHelpersWrapped extends React.Component<
       includeContentType: false,
       includeReferrerPolicy: false,
       method: 'POST',
-      url: extensionId ? `${url}/${extensionId}` : url,
+      url: extensionId ? `${url}?updatedId=${extensionId}` : url,
     });
 
     if (!response.ok) {

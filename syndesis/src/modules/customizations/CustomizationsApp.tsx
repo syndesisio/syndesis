@@ -32,9 +32,14 @@ export default class CustomizationApp extends React.Component {
         />
         // **This route must appear after import page**
         <Route
-          path={routes.extensions.extension}
+          path={routes.extensions.extension.details}
           exact={true}
           component={ExtensionDetailsPage}
+        />
+        <Route
+          path={routes.extensions.extension.update}
+          exact={true}
+          component={ExtensionImportPage}
         />
       </Switch>
     );

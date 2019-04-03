@@ -1,3 +1,4 @@
+import * as H from 'history';
 import {
   Button,
   Card,
@@ -9,6 +10,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
+import { ButtonLink } from '../Layout';
 import { DeleteConfirmationDialog } from '../Shared';
 import './ExtensionDetail.css';
 
@@ -84,14 +86,14 @@ export interface IExtensionDetailProps {
   integrationsSection: JSX.Element;
 
   /**
+   * An href to use when the extension is being updated.
+   */
+  linkUpdateExtension: H.LocationDescriptor;
+
+  /**
    * The callback for when the delete button is clicked.
    */
   onDelete: () => void;
-
-  /**
-   * The callback for when the update button is clicked.
-   */
-  onUpdate: () => void;
 
   /**
    * The JSX element that displays the overview section.
@@ -192,9 +194,12 @@ export class ExtensionDetail extends React.Component<
                     overlay={this.getUpdateTooltip()}
                     placement="top"
                   >
-                    <Button bsStyle="primary" onClick={this.props.onUpdate}>
+                    <ButtonLink
+                      href={this.props.linkUpdateExtension}
+                      as={'primary'}
+                    >
                       {this.props.i18nUpdate}
-                    </Button>
+                    </ButtonLink>
                   </OverlayTrigger>
                   <OverlayTrigger
                     overlay={this.getDeleteTooltip()}

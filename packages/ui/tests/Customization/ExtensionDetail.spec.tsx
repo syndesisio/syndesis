@@ -1,8 +1,10 @@
 import * as React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import {
   fireEvent,
-  getByText as getDeleteButton,
+  getByText as getDialogButton,
   render,
+  wait,
 } from 'react-testing-library';
 import {
   ExtensionDetail,
@@ -11,7 +13,6 @@ import {
 
 export default describe('ExtensionDetail', () => {
   const mockOnDelete = jest.fn();
-  const mockOnUpdate = jest.fn();
 
   const cancelLabel = 'Cancel';
   const deleteLabel = 'Delete';
@@ -43,19 +44,23 @@ export default describe('ExtensionDetail', () => {
     i18nUpdateTip: updateTip,
     i18nUsageSectionTitle: usageLabel,
     integrationsSection: <div />,
+    linkUpdateExtension: '/extensions/update',
     onDelete: mockOnDelete,
-    onUpdate: mockOnUpdate,
     overviewSection: <div />,
     supportsSection: <div />,
   } as IExtensionDetailProps;
 
   beforeEach(() => {
     mockOnDelete.mockReset();
-    mockOnUpdate.mockReset();
   });
 
   it('Should render correctly', () => {
-    const comp = <ExtensionDetail {...props} />;
+    const comp = (
+      <Router>
+        <ExtensionDetail {...props} />
+      </Router>
+    );
+
     const { getByText, queryAllByText } = render(comp);
 
     // extension name
@@ -66,8 +71,6 @@ export default describe('ExtensionDetail', () => {
 
     // update button
     expect(queryAllByText(updateLabel)).toHaveLength(1);
-    fireEvent.click(getByText(updateLabel));
-    expect(mockOnUpdate).toHaveBeenCalledTimes(1);
 
     // delete button
     expect(queryAllByText(deleteLabel)).toHaveLength(1);
@@ -84,9 +87,16 @@ export default describe('ExtensionDetail', () => {
     expect(queryAllByText(usageLabel)).toHaveLength(1);
   });
 
-  it('Should open delete confirmation modal', async () => {
+  it('Should click delete button on the delete confirmation modal', () => {
     // need to set extensionUses to zero so that the delete button is enabled
-    const comp = <ExtensionDetail {...props} extensionUses={0} />;
+    const comp = (
+      <Router>
+        <>
+          <ExtensionDetail {...props} extensionUses={0} />;
+        </>
+      </Router>
+    );
+
     const { getByRole, getByText } = render(comp);
     const deleteButton = getByText(deleteLabel);
     expect(deleteButton).not.toHaveAttribute('disabled'); // delete should be enabled
@@ -96,7 +106,27 @@ export default describe('ExtensionDetail', () => {
 
     // click the confirmation dialog delete button and make sure callback is called
     const dialog = getByRole('dialog');
-    fireEvent.click(getDeleteButton(dialog, deleteLabel));
+    fireEvent.click(getDialogButton(dialog, deleteLabel));
     expect(mockOnDelete).toHaveBeenCalledTimes(1);
+  });
+
+  it('Should click cancel button on the delete confirmation modal', async () => {
+    // need to set extensionUses to zero so that the delete button is enabled
+    const comp = (
+      <Router>
+        <ExtensionDetail {...props} extensionUses={0} />
+      </Router>
+    );
+    const { getByRole, getByText, queryByRole } = render(comp);
+    const deleteButton = getByText(deleteLabel);
+    expect(deleteButton).not.toHaveAttribute('disabled'); // delete should be enabled
+
+    // click the delete button so that the delete confirmation dialog opens
+    fireEvent.click(deleteButton);
+
+    // click the confirmation dialog cancel button and make sure dialog disappears
+    const dialog = getByRole('dialog');
+    fireEvent.click(getDialogButton(dialog, cancelLabel));
+    await wait(() => expect(queryByRole('dialog')).toBeNull());
   });
 });
