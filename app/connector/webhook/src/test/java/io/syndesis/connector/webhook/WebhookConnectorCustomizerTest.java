@@ -20,6 +20,7 @@ import java.util.Collections;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.connector.support.processor.HttpMessageToDefaultMessageProcessor;
 import io.syndesis.connector.support.processor.HttpRequestWrapperProcessor;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
@@ -83,7 +84,9 @@ public class WebhookConnectorCustomizerTest {
         assertThat(beforeConsumer).isInstanceOf(Pipeline.class);
         final Pipeline pipeline = (Pipeline) beforeConsumer;
         final Collection<Processor> processors = pipeline.getProcessors();
-        assertThat(processors).hasSize(2).anySatisfy(p -> assertThat(p).isInstanceOf(HttpRequestWrapperProcessor.class));
+        assertThat(processors).hasSize(3);
+        assertThat(processors).anySatisfy(p -> assertThat(p).isInstanceOf(HttpRequestWrapperProcessor.class));
+        assertThat(processors).anySatisfy(p -> assertThat(p).isInstanceOf(HttpMessageToDefaultMessageProcessor.class));
 
         final HttpRequestWrapperProcessor wrapper = (HttpRequestWrapperProcessor) processors.stream().filter(p -> p instanceof HttpRequestWrapperProcessor)
             .findFirst().get();
@@ -100,6 +103,7 @@ public class WebhookConnectorCustomizerTest {
     @Test
     public void shouldDestroyAllOutput() throws Exception {
         final WebhookConnectorCustomizer customizer = new WebhookConnectorCustomizer();
+        customizer.setCamelContext(mock(CamelContext.class));
         customizer.customize(component, Collections.emptyMap());
 
         final Processor afterConsumer = component.getAfterConsumer();

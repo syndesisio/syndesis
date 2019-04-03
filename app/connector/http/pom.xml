@@ -79,7 +79,6 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-processor</artifactId>
-      <scope>runtime</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>

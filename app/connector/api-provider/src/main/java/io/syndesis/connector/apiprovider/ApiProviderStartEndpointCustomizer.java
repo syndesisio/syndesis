@@ -15,12 +15,21 @@
  */
 package io.syndesis.connector.apiprovider;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeAware;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
+import io.syndesis.connector.support.processor.HttpMessageToDefaultMessageProcessor;
 import io.syndesis.connector.support.processor.HttpRequestWrapperProcessor;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
@@ -31,14 +40,6 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Processor;
 import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.processor.Pipeline;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 public class ApiProviderStartEndpointCustomizer implements ComponentProxyCustomizer, CamelContextAware, DataShapeAware {
 
@@ -67,6 +68,8 @@ public class ApiProviderStartEndpointCustomizer implements ComponentProxyCustomi
                 throw new RuntimeCamelException(e);
             }
         }
+
+        beforeConsumers.add(new HttpMessageToDefaultMessageProcessor());
 
         // removes all non Syndesis.* headers, this is so the headers that might
         // influence HTTP components in the flow after this connector don't

@@ -86,6 +86,9 @@
       "description": "Periodically invoke an http endpoint URL",
       "descriptor": {
         "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Https4",
+        "connectorCustomizers": [
+          "io.syndesis.connector.http.HttpConnectorCustomizer"
+        ],
         "inputDataShape": {
           "kind": "none"
         },
