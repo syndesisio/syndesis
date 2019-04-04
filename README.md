@@ -1,53 +1,42 @@
-# Syndesis
+# Syndesis UI
 
-Syndesis is a single page application built with React.
+Syndesis UI is a single page application built with React.
 
 [Storybook](https://syndesisio.github.io/syndesis-react-poc/)
 
-## Table of Contents
+##### Table of Contents
 
-- [Syndesis](#syndesis)
-  - [Table of Contents](#table-of-contents)
-  - [Architecture](#architecture)
-    - [syndesis](#syndesis)
-      - [Development server](#development-server)
-    - [packages](#packages)
-      - [packages/api](#packagesapi)
-        - [Development server](#development-server-1)
-      - [packages/models](#packagesmodels)
-      - [packages/ui](#packagesui)
-        - [Development server](#development-server-2)
-        - [Storybook](#storybook)
-      - [packages/utils](#packagesutils)
-        - [Development server](#development-server-3)
-    - [typings](#typings)
-  - [Installation](#installation)
-        - [Development server](#development-server-4)
-  - [Building](#building)
-  - [Scripts](#scripts)
-  - [Internationalization](#internationalization)
-      - [Internationalizing a render method](#internationalizing-a-render-method)
-      - [Internationalizing text in a constant](#internationalizing-text-in-a-constant)
-      - [Translation Examples](#translation-examples)
-        - [Simple translation using default namespace](#simple-translation-using-default-namespace)
-        - [Translations using different namespaces](#translations-using-different-namespaces)
-        - [Translation with arguments](#translation-with-arguments)
-        - [Nested translation](#nested-translation)
-        - [Translation as an argument to another translation](#translation-as-an-argument-to-another-translation)
-        - [Adding plurals to a translation](#adding-plurals-to-a-translation)
-  - [Routing](#routing)
-    - [Introduction to routing](#introduction-to-routing)
-    - [App's routes and resolvers](#apps-routes-and-resolvers)
-    - [Routes and app state (AKA passing data between routes)](#routes-and-app-state-aka-passing-data-between-routes)
-      - [A simple example](#a-simple-example)
-      - [Urls as a single source of truth](#urls-as-a-single-source-of-truth)
-      - [Where we are going there ~~are no roads~~ is no app state](#where-we-are-going-there-are-no-roads-is-no-app-state)
-  - [License](#license)
+- [This repository](#this-repository)
+- [Setup and preparation](#setup-and-preparation)
+- [Development workflow](#development-workflow)
+    - [yarn build](#yarn-build)
+    - [yarn watch:app:minishift](#yarn-watchappminishift)
+    - [yarn watch:app:minishift:restore](#yarn-watchappminishiftrestore)
+    - [yarn watch:packages](#yarn-watchpackages)
+    - [yarn test](#yarn-test)
+    - [yarn storybook](#yarn-storybook)
+- [How to](#how-to)
+    - [Internationalization](#internationalization)
+        - [Internationalizing a render method](#internationalizing-a-render-method)
+        - [Internationalizing text in a constant](#internationalizing-text-in-a-constant)
+        - [Translation Examples](#translation-examples)
+            - [Simple translation using default namespace](#simple-translation-using-default-namespace)
+            - [Translations using different namespaces](#translations-using-different-namespaces)
+            - [Translation with arguments](#translation-with-arguments)
+            - [Nested translation](#nested-translation)
+            - [Translation as an argument to another translation](#translation-as-an-argument-to-another-translation)
+            - [Adding plurals to a translation](#adding-plurals-to-a-translation)
+    - [Routing](#routing)
+        - [Introduction to routing](#introduction-to-routing)
+        - [App's routes and resolvers](#apps-routes-and-resolvers)
+        - [Routes and app state (AKA passing data between routes)](#routes-and-app-state-aka-passing-data-between-routes)
+          - [A simple example](#a-simple-example)
+          - [Urls as a single source of truth](#urls-as-a-single-source-of-truth)
+          - [Where we are going there ~~are no roads~~ is no app state](#where-we-are-going-there-are-no-roads-is-no-app-state)        
+    - [Testing](#testing)        
+- [License](#license)
 
-## Architecture
-
-We use [Lerna](https://github.com/lerna/lerna) to streamline the development process; the most common operations,
-such as building the project or running the development mode can be done directly from the project root.
+## This repository 
 
 Code is split in many packages, organized as a monorepo using [Yarn's workspaces](https://yarnpkg.com/lang/en/docs/workspaces/).
 The workspace is configured like this:
@@ -58,159 +47,136 @@ The workspace is configured like this:
 "typings/*"
 ```
 
+We use [Lerna](https://github.com/lerna/lerna) to streamline the development process; the most common operations, such as building the project or running the development mode can be done directly from the project root.  
+Check the [development workflow](#development-workflow) section for a list of available commands.
+
 ### syndesis
 
 `syndesis` is the main application. It handles the authentication against Syndesis's OAuth Server, and provides the main
  app layout where "sub-apps" can be injected.
 
-![](doc/assets/syndesis-chrome.png)
-
 It's built with [create-react-app](https://github.com/facebook/create-react-app).
 
-#### Development server
-
-_Before you launch the dev server, ensure you've done the following;_
-
-- `minishift start` # ensure minishift is running
-- `eval $(minishift docker-env)` # set the docker environment variable
-- `eval $(minishift oc-env)` # set the openshift environment variable
-- `oc login -u developer` # login under the developer account
-- `oc project syndesis` # ensure you're using the correct project
-
-_Now, you should be ready to_
-
-```bash
-$ yarn watch:app
-```
-
-_Now run `oc get route syndesis  --template={{.spec.host}}` in your console and use the output from that as the URL for the app's development server._
-
-###  packages
-
-#### packages/api
+### packages/api
 
 This package contains a collection of React Components implementing the [render props pattern](https://reactjs.org/docs/render-props.html)
 to ease interacting with Syndesis's Backend.
 
-##### Development server
 
-```bash
-$ yarn watch:packages --scope @syndesis/api
-```
-
-#### packages/models
+### packages/models
 
 This package contains the TypeScript definitions of the models, as read from the backend.
 
+### packages/ui
 
-#### packages/ui
+This package contains a collection of UI elements that are common across the application. 
 
-This package contains a collection of UI elements that are common across the application.
-
-All the elements are written as React PureComponents or Stateless Functional Components. The idea is to decouple the
+All the elements are written as React PureComponents or Stateless Functional Components. The idea is to decouple the 
 presentation from the model that holds the data that needs to be presented to promote code reuse and easing the testing
-efforts.
+efforts. 
 
-##### Development server
-
-```bash
-$ yarn watch:packages --scope @syndesis/ui
-```
-
-##### Storybook
-
-This package provides a [Storybook](https://storybook.js.org) to develop and document the components in isolation.
-Storybook can be launched like this:
-
-```bash
-# From the package folder
-$ yarn storybook
-```
-
-A browser tab should eventually be opened pointing on [http://localhost:90001](http://localhost:90001).
-
-#### packages/utils
+### packages/utils
 
 This package contains commonly used components of function that don't fit any of the above packages.
-
-##### Development server
-
-```bash
-$ yarn watch:packages --scope @syndesis/utils
-```
 
 ### typings
 
 Extra typings for pure JavaScript dependencies that should eventually be pushed on [DefinitelyTyped](https://github.com/DefinitelyTyped/DefinitelyTyped/).
 
-## Installation
+## Setup and preparation 
 
 [Yarn](https://yarnpkg.com) is the package manager required to work on the project.
 
-To install all the dependencies:
-
-##### Development server
-
-```
-yarn install
-```
-
-## Building
-
-To build syndesis and all the packages:
 
 ```bash
+# install all the dependencies: 
+yarn install
+
+# build the project
 yarn build
 ```
 
-## Scripts
+## Development workflow
 
-To start the development server only for `syndesis`:
+### `yarn build`
 
+Builds the project for production.
+
+### `yarn watch:app:minishift` 
+
+Runs the app in the development mode. This should be used within [Syndesis local development environment](https://doc.syndesis.io/#dev-local).    
+
+Open the Syndesis UI in your browser from the command line by running:
 ```bash
-$ yarn watch:app
+# on macOS
+$ open https://$(oc get routes syndesis --template "{{.spec.host}}")
+
+# on linux
+$ xdg-open https://$(oc get routes syndesis --template "{{.spec.host}}")
+
+# on windows
+$ start https://$(oc get routes syndesis --template "{{.spec.host}}")
 ```
 
-_**IMPORTANT:** you must have successfully built all the packages _before_ running the watch command._<br>
-_**ALSO IMPORTANT:** this will change the `syndesis-ui` POD to point to your development server. To
-restore the POD to the original state, you will have to manually run `yarn minishift:restore`_
+**IMPORTANT**
 
-To start the development server only for the packages:
+* the app will also be available at [http://localhost:3000](http://localhost:3000), but the communication with the backend will not work this way. You should open the UI as stated above.   
+* you must have successfully built all the packages _before_ running the watch command to successfully 
+run this command. Changes to sources outside `syndesis` folder will not be detected; run the appropriate development mode in parallel with this if you need this.
+* this will change the `syndesis-ui` POD to point to your development server. To 
+restore the POD to the original state, you will have to manually run `yarn watch:app:minishift:restore`.
 
-```bash
-$ yarn watch:packages
-```
+### `yarn watch:app:minishift:restore`
 
-To start the development server for a specific package you can pass the package name to the previous command:
+Restores the `syndesis-ui` POD to the original state. 
+
+### `BACKEND=https://syndesis.192.168.64.1.nip.io yarn watch:app:proxy`
+
+Runs the app in the development mode. API calls will be proxied to the provided `BACKEND` URL.
+
+The proxy will require the session cookies to be able to properly work. The right cookies will be retrieved through an automated instance of Chromium, that will wait for the user to login. Once properly logged in - a condition recognized by the browser navigating back to the provided `BACKEND` url - the session cookies will be extracted and the Chromium instance will be closed. 
+
+**IMPORTANT**
+
+* the `BACKEND` URL should be the project URL as retrieved by Minishift/Openshift console.
+* doublecheck that the URL doesn't end with a '/'.
+* never close the automated Chromium browser manually; if it stays open probably after a successful login something went wrong and should be debugged.
+
+### `yarn watch:packages` 
+
+Watches 'packages' source files and rebuilds on any change.
+
+To watch a specific package you can pass the package name:
 
 ```bash
 $ yarn watch:packages --scope @syndesis/package-name
 ```
 
-To start the development server for `syndesis` and watch for changes in any of the packages:
+### `yarn test`
 
-```bash
-$ yarn watch
-```
-_**IMPORTANT:** you must have successfully built all the packages _before_ running the watch command to successfully
-run this command._<br>
-_**ALSO IMPORTANT:** just like `yarn watch:app`, this will change the `syndesis-ui` POD to point to your development server. To
-restore the POD to the original state, you will have to manually run `yarn minishift:restore`_<br>
-_**ALSO IMPORTANT:** yarn watch is known to cause `JavaScript heap out of memory` errors, probably better to watch the specific pkg(s) you're working on_
+Runs the test suite.
 
-To run the test suite:
-
-```bash
-$ yarn test
-```
-
-To run the test suite for a specific package you can pass the package name to the previous command:
+To run the test suite for a specific package you can pass the package name:
 
 ```bash
 $ yarn test --scope @syndesis/package-name
 ```
 
-## Internationalization
+### `yarn storybook`
+
+Some packages provides a [Storybook](https://storybook.js.org) to develop and document the components in isolation. This will launch all the available storybooks.   
+
+A browser tab per each storybook enabled package will be automatically opened.
+
+To open a specific storybook you can pass the package name:
+
+```bash
+$ yarn storybook --scope @syndesis/package-name
+```
+
+## How to
+
+### Internationalization
 
 We are using the [react-i18next library](https://github.com/i18next/react-i18next) for internationalization (i18n). You can find documentation about this library at [react.i18next.com](https://react.i18next.com).
 
@@ -381,9 +347,9 @@ Some examples taken from the [i18next.com](https://www.i18next.com/translation-f
 }
 ```
 
-## Routing
+### Routing
 
-### Introduction to routing
+#### Introduction to routing
 
 Routing is handled by the [React Router](https://github.com/ReactTraining/react-router) library.
 
@@ -483,7 +449,7 @@ Downsides are:
 - it's very verbose
 - if the URL changes and the resolver isn't updated accordingly, the resolver will not work. *As such, unit testing resolvers is very important.*
 
-### App's routes and resolvers
+#### App's routes and resolvers
 
 Before anything else, let's talk about _modules_. A module is a subsection into which the app is logically split (eg. integrations, customizations, ...) and its main use is to keep the code organized by concern. Modules can be found in the [syndesis/src/modules](syndesis/src/modules) folder.
 
@@ -494,12 +460,12 @@ Each module will take care of its own routes and pages, plus anything else that'
 
 These two files will then be re-exported by the main app [routes](syndesis/src/modules/routes.ts) and [resolvers](syndesis/src/modules/resolvers.ts) files, to somewhat reduce the coupling between modules.
 
-### Routes and app state (i.e. passing data between routes)
+#### Routes and app state (i.e. passing data between routes)
 
 Hard rule: a page must be able to render *regardless of the navigation history* that lead the user to it.\*
 _\* exceptions can be made for pages that act like an actual application, such as a wizard._
 
-#### A simple example
+##### A simple example  
 
 Consider this scenario:
 
@@ -514,7 +480,7 @@ Consider this scenario:
 
 One option would be to make the app stateful storing the object that the user clicked, allowing the details page to retrieve it and properly render. This can be achieved using [React's Context](https://reactjs.org/docs/context.html), or a state management solution like [redux](https://redux.js.org/).
 
-#### URLs as a single source of truth
+##### URLs as a single source of truth
 
 Let's assume that we have the object in the app state and the `IntegrationDetailsPage` is properly rendering. Everything is good and the problem appears to be solved, but what if the user decides to share the URL - which is `/integrations/detail` - with a colleague?
 
@@ -537,9 +503,9 @@ The colleague's experience would now be something like this:
 
 This is a big improvement, because the integration details page is now resilient to the history and app state's state.
 
-#### Where we are going there ~~are no roads~~ is no app state
-
-What is the source of truth, the URL or the app state?
+##### Where we are going there ~~are no roads~~ is no app state
+ 
+What is the source of truth, the URL or the app state?  
 
 We know that without the ID in the URL our app wouldn't work in some scenarios. But would it work without the app state?
 
@@ -653,6 +619,16 @@ export class IntegrationDetailPage extends React.Component {
 ```
 
 We now have a page that is resilient to page refreshes, can be shared with others, and uses the URL as a single source of truth. Plus, with a little help from the browser, we can use history state to improve the user experience.
+
+### Testing
+
+#### Unit testing
+
+TODO talk about jest, react-testing-library, point out to useful resources.
+
+#### Integration testing
+
+TODO talk about Cypress, the backend, the mock recorder/replayer, how to write an integration test
 
 ## License
 
