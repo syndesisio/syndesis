@@ -152,16 +152,6 @@
         <groupId>io.syndesis.common</groupId>
         <artifactId>common-util</artifactId>
         <version>${project.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>*</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>*</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
 
       <!-- extension -->
@@ -186,16 +176,6 @@
         <groupId>io.syndesis.integration</groupId>
         <artifactId>integration-runtime</artifactId>
         <version>${project.version}</version>
-        <exclusions>
-          <exclusion>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>*</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>com.fasterxml.jackson.datatype</groupId>
-            <artifactId>*</artifactId>
-          </exclusion>
-        </exclusions>
       </dependency>
       <dependency>
         <groupId>io.syndesis.integration</groupId>
