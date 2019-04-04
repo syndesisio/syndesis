@@ -1,6 +1,6 @@
 {
     meta: {
-        createdAt: '2019-03-29T17:49:30.834Z',
+        createdAt: '2019-04-04T11:56:33.515Z',
         host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
         resHumanReadable: true,
     },
@@ -9,6 +9,7 @@
         method: 'POST',
         headers: {
             'syndesis-mock-session': 'homepage.spec.js',
+            'syndesis-mock-request': '1',
         },
         body: '',
     },
@@ -31,7 +32,7 @@
                 'application/json',
             ],
             date: [
-                'Fri, 29 Mar 2019 17:54:29 GMT',
+                'Thu, 04 Apr 2019 11:56:33 GMT',
             ],
             'gap-auth': [
                 'riccardo-forina@cluster.local',
@@ -66,7 +67,7 @@
         },
         body: {
             event: 'uuid',
-            data: '19d1fd67-c0ba-4ddd-8ac7-b6729851f2a1',
+            data: '8ec09f85-f743-4c76-84c4-89548e92ddd9',
         },
     },
 }

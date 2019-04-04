@@ -135,7 +135,9 @@ export class IntegrationsPage extends React.Component {
                             linkToIntegrationCreation={
                               routes.create.start.selectConnection
                             }
-                            filterTypes={getFilterTypes(connectionsData.items)}
+                            filterTypes={getFilterTypes(
+                              connectionsData.connectionsForDisplay
+                            )}
                             sortTypes={sortTypes}
                             resultsCount={filteredAndSortedIntegrations.length}
                             {...helpers}

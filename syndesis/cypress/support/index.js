@@ -13,6 +13,8 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
+import { fetch } from 'whatwg-fetch';
+
 // Import commands.js using ES2015 syntax:
 import './commands';
 
@@ -20,11 +22,15 @@ import './commands';
 // require('./commands')
 
 Cypress.on('window:before:load', win => {
+  let requestNumber = 0;
   const originalFetch = win.fetch;
   win.fetch = function(url, options) {
     if (options && options.headers) {
+      requestNumber += 1;
       options.headers['syndesis-mock-session'] = Cypress.spec.name;
+      options.headers['syndesis-mock-request'] = requestNumber;
     }
+    console.log(url, options);
     return originalFetch(url, options);
   };
 });

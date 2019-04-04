@@ -131,32 +131,39 @@ export default () => (
                       linkToConnections={resolvers.connections.connections()}
                       linkToConnectionCreation={resolvers.connections.create.selectConnector()}
                       integrationsOverview={
-                        <AggregatedMetricCard
-                          title={t('titleTotalIntegrations', {
-                            count: integrationsData.totalCount,
-                          })}
-                          ok={
-                            integrationsData.totalCount -
-                            integrationStatesCount.Error
-                          }
-                          error={integrationStatesCount.Error}
-                        />
+                        <div data-testid="total-integrations">
+                          <AggregatedMetricCard
+                            title={t('titleTotalIntegrations', {
+                              count: integrationsData.totalCount,
+                            })}
+                            ok={
+                              integrationsData.totalCount -
+                              integrationStatesCount.Error
+                            }
+                            error={integrationStatesCount.Error}
+                          />
+                        </div>
                       }
                       connectionsOverview={
-                        <ConnectionsMetric
-                          i18nTitle={t('titleTotalConnections', {
-                            count: connectionsData.totalCount,
-                          })}
-                        />
+                        <div data-testid="total-connections">
+                          <ConnectionsMetric
+                            i18nTitle={t('titleTotalConnections', {
+                              count:
+                                connectionsData.connectionsForDisplay.length,
+                            })}
+                          />
+                        </div>
                       }
                       messagesOverview={
-                        <AggregatedMetricCard
-                          title={t('titleTotalMessages', {
-                            count: metricsData.messages,
-                          })}
-                          ok={metricsData.messages! - metricsData.errors!}
-                          error={metricsData.errors!}
-                        />
+                        <div data-testid="total-messages">
+                          <AggregatedMetricCard
+                            title={t('titleTotalMessages', {
+                              count: metricsData.messages,
+                            })}
+                            ok={metricsData.messages! - metricsData.errors!}
+                            error={metricsData.errors!}
+                          />
+                        </div>
                       }
                       uptimeOverview={
                         <UptimeMetric
