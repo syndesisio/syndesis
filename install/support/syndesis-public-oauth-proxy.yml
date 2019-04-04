@@ -2,6 +2,18 @@ apiVersion: template.openshift.io/v1
 kind: Template
 metadata:
   name: syndesis-public-oauthproxy
+  annotations:
+    openshift.io/display-name: "Syndesis Public API"
+    description: |-
+      This is the public API application for Syndesis.
+    openshift.io/long-description: |-
+      When this template is applied, an OAuth proxy is created to expose the Syndesis public API.
+      The API can then be accessed externally from CI/CD tools using a user provided service account secret token.
+    tags: "syndesis,public-api"
+    iconClass: icon-rh-integration
+    openshift.io/provider-display-name: "Red Hat, Inc."
+    openshift.io/documentation-url: "https://syndesis.io"
+    openshift.io/support-url: "https://access.redhat.com"
   labels:
     app: syndesis
     syndesis.io/app: syndesis
@@ -20,19 +32,9 @@ parameters:
 - name: OPENSHIFT_OAUTH_CLIENT_SECRET
   description: OpenShift OAuth client secret
   required: true
-- name: OAUTH_PROXY_IMAGE_PREFIX
-  description: OpenShift OAuth proxy image prefix
-  value: 'openshift'
-- name: OAUTH_PROXY_IMAGE
-  description: OpenShift OAuth proxy image name
-  value: 'oauth-proxy'
 - name: OAUTH_PROXY_TAG
   description: OpenShift OAuth proxy image tag
-  value: 'v1.1.0'
-- description: Registry from where to fetch Syndesis images
-  displayName: Syndesis Image Registry
-  name: SYNDESIS_REGISTRY
-  value: 'docker.io'
+  value: 'v4.0.0'
 - description: Namespace containing image streams
   displayName: Image Stream Namespace
   name: IMAGE_STREAM_NAMESPACE
@@ -84,24 +86,6 @@ objects:
     kind: ClusterRole
     name: system:auth-delegator
     apiGroup: rbac.authorization.k8s.io
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    name: syndesis-public-oauthproxy
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: infrastructure
-      syndesis.io/component: syndesis-oauthproxy
-  spec:
-    tags:
-    - from:
-        kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/${OAUTH_PROXY_IMAGE_PREFIX}/${OAUTH_PROXY_IMAGE}:${OAUTH_PROXY_TAG}
-      importPolicy:
-        scheduled: true
-      name: ${OAUTH_PROXY_TAG}
-      namespace: ${IMAGE_STREAM_NAMESPACE}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -233,7 +217,7 @@ objects:
         - syndesis-public-oauthproxy
         from:
           kind: ImageStreamTag
-          name: syndesis-public-oauthproxy:${OAUTH_PROXY_TAG}
+          name: oauth-proxy:${OAUTH_PROXY_TAG}
           namespace: ${IMAGE_STREAM_NAMESPACE}
       type: ImageChange
     - type: ConfigChange
