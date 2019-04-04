@@ -6,6 +6,12 @@ export default include('/data', {
     create: 'create',
     import: 'import',
     list: '',
-    virtualization: ':virtualizationId',
+    virtualization: include(':virtualizationId', {
+      metrics: 'metrics',
+      relationship: 'relationship',
+      root: '',
+      sqlQuery: 'sqlQuery',
+      views: 'views',
+    }),
   }),
 });

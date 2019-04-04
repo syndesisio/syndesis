@@ -5,9 +5,9 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { ViewListItem, ViewListView } from '../../../src';
+import { ViewListItem, ViewList } from '../../../src';
 
-const stories = storiesOf('Data/Views/ViewListView', module);
+const stories = storiesOf('Data/Virtualizations/Views/ViewList', module);
 
 const viewName1 = 'CustomerInfo';
 const viewDescription1 = 'Description for CustomerInfo';
@@ -125,7 +125,7 @@ stories
     'no Views',
     withNotes(noViewsTestNotes)(() => (
       <Router>
-        <ViewListView
+        <ViewList
           activeFilters={[]}
           currentFilterType={{
             filterType: 'text',
@@ -137,7 +137,7 @@ stories
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
-          linkCreateView={action('/data/create')}
+          //linkCreateView={action('/data/create')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -156,8 +156,9 @@ stories
           i18nEmptyStateTitle={text('i18nEmptyStateTitle', createView)}
           i18nImportView={importView}
           i18nImportViewTip={importViewTip}
-          i18nLinkCreateView={text('i18nLinkCreateView', createView)}
-          i18nLinkCreateViewTip={createViewTip}
+          i18nCreateView={text('i18nLinkCreateView', createView)}
+          linkCreateHRef={action('/data/view/create')}
+          i18nDescription={text('i18nDescription', 'Name')}
           i18nName={text('i18nName', 'Name')}
           i18nNameFilterPlaceholder={text(
             'i18nNameFilterPlaceholder',
@@ -176,7 +177,7 @@ stories
     'has Views',
     withNotes(hasViewsTestNotes)(() => (
       <Router>
-        <ViewListView
+        <ViewList
           activeFilters={[]}
           currentFilterType={{
             filterType: 'text',
@@ -188,7 +189,7 @@ stories
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
-          linkCreateView={action('/data/create')}
+          // linkCreateView={action('/data/create')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -207,8 +208,10 @@ stories
           i18nEmptyStateTitle={text('i18nEmptyStateTitle', createView)}
           i18nImportView={importView}
           i18nImportViewTip={importViewTip}
-          i18nLinkCreateView={text('i18nLinkCreateView', createView)}
+          i18nCreateView={text('i18nLinkCreateView', createView)}
+          linkCreateHRef={action('/data/view/create')}
           i18nName={text('i18nName', 'Name')}
+          i18nDescription={text('i18nDescription', 'Name')}
           i18nNameFilterPlaceholder={text(
             'i18nNameFilterPlaceholder',
             'Filter by Name...'

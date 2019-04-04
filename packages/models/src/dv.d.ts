@@ -23,3 +23,12 @@ export interface RestDataService {
   serviceViewModel: string;
   tko__description: string;
 }
+
+export interface RestViewDefinition {
+  keng__baseUri: string;
+  keng__id: string;
+  keng__dataPath: string;
+  keng__kType: string;
+  keng__hasChildren: boolean;
+  keng___links: [];
+}

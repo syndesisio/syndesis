@@ -96,6 +96,7 @@ stories.add(
       i18nPublish={publishText}
       i18nPublishInProgress={publishInProgressText}
       i18nPublishLogUrlText={publishLogUrlText}
+      detailsPageLink={''}
       onDelete={action(deleteText)}
       onEdit={action(editText)}
       onExport={action(exportText)}

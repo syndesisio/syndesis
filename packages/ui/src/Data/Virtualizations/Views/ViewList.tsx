@@ -1,3 +1,4 @@
+import * as H from 'history';
 import {
   Button,
   EmptyState,
@@ -6,24 +7,29 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../../Layout';
-import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
+import { ButtonLink } from '../../../Layout';
+import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
 
-export interface IViewsListViewProps extends IListViewToolbarProps {
+export interface IViewsListProps extends IListViewToolbarProps {
   hasListData: boolean;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
   i18nImportView: string;
   i18nImportViewTip: string;
-  i18nLinkCreateView: string;
-  i18nLinkCreateViewTip?: string;
+  linkCreateHRef: H.LocationDescriptor;
+  i18nCreateViewTip?: string;
+  i18nCreateView: string;
+  i18nDescription: string;
   i18nName: string;
   i18nNameFilterPlaceholder: string;
-  linkCreateView: string;
   onImportView: (name: string) => void;
 }
 
-export class ViewListView extends React.Component<IViewsListViewProps> {
+export class ViewList extends React.Component<IViewsListProps> {
+  public constructor(props: IViewsListProps) {
+    super(props);
+  }
+
   public render() {
     return (
       <>
@@ -45,8 +51,8 @@ export class ViewListView extends React.Component<IViewsListViewProps> {
               overlay={this.getCreateViewTooltip()}
               placement="top"
             >
-              <ButtonLink href={this.props.linkCreateView} as={'primary'}>
-                {this.props.i18nLinkCreateView}
+              <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
+                {this.props.i18nCreateView}
               </ButtonLink>
             </OverlayTrigger>
           </div>
@@ -65,8 +71,8 @@ export class ViewListView extends React.Component<IViewsListViewProps> {
                 overlay={this.getCreateViewTooltip()}
                 placement="top"
               >
-                <ButtonLink href={this.props.linkCreateView} as={'primary'}>
-                  {this.props.i18nLinkCreateView}
+                <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
+                  {this.props.i18nCreateView}
                 </ButtonLink>
               </OverlayTrigger>
             </EmptyState.Action>
@@ -79,9 +85,9 @@ export class ViewListView extends React.Component<IViewsListViewProps> {
   private getCreateViewTooltip() {
     return (
       <Tooltip id="createTip">
-        {this.props.i18nLinkCreateViewTip
-          ? this.props.i18nLinkCreateViewTip
-          : this.props.i18nLinkCreateView}
+        {this.props.i18nCreateViewTip
+          ? this.props.i18nCreateViewTip
+          : this.props.i18nCreateView}
       </Tooltip>
     );
   }

@@ -191,6 +191,9 @@ export default class VirtualizationsPage extends React.Component {
                                   ) => (
                                     <VirtualizationListItem
                                       key={index}
+                                      detailsPageLink={resolvers.virtualizations.views(
+                                        { virtualization }
+                                      )}
                                       virtualizationName={
                                         virtualization.keng__id
                                       }
