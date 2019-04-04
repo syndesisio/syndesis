@@ -6,6 +6,7 @@ import { App } from './App';
 import i18n from '../i18n';
 
 jest.unmock('./App');
+jest.mock('./WithConfig');
 
 export default describe('App', () => {
   const TestRoute = () => (
