@@ -7,7 +7,8 @@ const puppeteer = require('puppeteer');
 
   const browser = await puppeteer.launch({
     headless: false,
-    ignoreHTTPSErrors: true,
+    userDataDir: '.puppeteer_data',
+    ignoreHTTPSErrors: true
   });
   const page = await browser.newPage();
   await page.goto(url);
@@ -17,7 +18,7 @@ const puppeteer = require('puppeteer');
   await browser.waitForTarget(target => target.url() === `${url}/`);
 
   await page.waitForNavigation({
-    waitUntil: 'load',
+    waitUntil: 'load'
   });
   const cookies = await page.cookies();
   // Don't print anything else out of this file except the cookie value :-)
