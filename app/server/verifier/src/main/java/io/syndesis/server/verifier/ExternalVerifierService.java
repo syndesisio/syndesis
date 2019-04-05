@@ -67,7 +67,7 @@ public class ExternalVerifierService implements Verifier {
 
             resteasyJacksonProvider.setMapper(mapper);
 
-            final ResteasyProviderFactory providerFactory = ResteasyProviderFactory.getInstance();
+            final ResteasyProviderFactory providerFactory = new ResteasyProviderFactory();
             providerFactory.register(resteasyJacksonProvider);
 
             final Configuration configuration = new LocalResteasyProviderFactory(providerFactory);
