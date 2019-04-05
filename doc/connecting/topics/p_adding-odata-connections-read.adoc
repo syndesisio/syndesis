@@ -11,7 +11,12 @@ polls the service at intervals that you specify. When the connection finds
 data that satisfies the connection configuration, the connection passes
 the data to the next step in the integration. 
 
-An OData connection can obtain data from only one resource.
+An OData connection can obtain data from only one resource. As described in 
+the OData 4 specification, an OData resource is identified by a URL and it 
+defines a data model. For an example, see the resource at the following URL:
+
+link:https://services.odata.org/TripPinRESTierService/(S(yvqxbruqidpd1qecd35rwl5o))/$metadata[]
+
 
 .Prerequisite
 You created an OData connection. 
@@ -41,7 +46,7 @@ resource that has a `name` field that starts with `N`.
 You can specify both *Entity Key Predicate* and *Query Options*. If you do, 
 the OData service obtains the specified entity and applies the query to 
 that entity. For example, suppose that you set *Entity Key Predicate* to 
-`*UserName='russellwhyte'*` and you set *Query Options* to 
+`*UserName='russellwhyte'/Emails*` and you set *Query Options* to 
 `*$filter=contains($it,'example')*`. The connection creates a request 
 that looks something like this: 
 +
@@ -61,8 +66,8 @@ rather than a collection of messages.
 {prodname} also provides discrete *Split* and *Aggregate* steps, which 
 you can add to a flow. 
 If you want to process individual messages in one or more steps and 
-then aggregate the messages into a collection, do not split the OData
-connection result. Instead, leave the checkbox empty and then add a 
+then aggregate the messages into a collection, do not select the 
+*Split Results* checkbox. Instead, leave the checkbox empty and then add a 
 *Split* step to the flow after this connection. A *Split* step is 
 required if you want an *Aggregate* step in the flow. 
 

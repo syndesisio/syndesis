@@ -47,8 +47,11 @@ something like the following: click the *Not secure* padlock symbol next to the
 address bar, then click *View Certificate*, export the displayed certificate to 
 a file, copy the certificate, and paste it into this field. 
 
-
-. Click *Next*.
+. Click *Validate*. {prodname} immediately tries to validate the 
+connection and displays a message that indicates whether 
+validation is successful. If validation fails, revise the input 
+parameter(s) and try again.
+. If validation is successful, click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, you might enter `OData North`.
