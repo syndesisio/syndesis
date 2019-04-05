@@ -13,7 +13,7 @@ echo "Local IP is: ${LOCAL_IP}"
 
 # Let's also just back this up in case.
 mv -f public/config.json public/config.json.bak || true
-cp config.json.minishift public/config.json
+cp config.minishift.json public/config.json
 
 OS_HOST=$(oc status | head -n 1 | sed s/.*https/https/)
 

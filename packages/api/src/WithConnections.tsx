@@ -42,17 +42,39 @@ export function getConnectionsWithToAction(connections: ConnectionOverview[]) {
   });
 }
 
+export interface IConnectionsFetchResponse {
+  readonly items: ConnectionOverview[];
+  readonly totalCount: number;
+}
+
 export interface IConnectionsResponse {
   readonly connectionsForDisplay: ConnectionOverview[];
   readonly connectionsWithToAction: ConnectionOverview[];
   readonly connectionsWithFromAction: ConnectionOverview[];
-  readonly items: ConnectionOverview[];
+  readonly dangerouslyUnfilteredConnections: ConnectionOverview[];
   readonly totalCount: number;
 }
 
 export interface IWithConnectionsProps {
   disableUpdates?: boolean;
   children(props: IFetchState<IConnectionsResponse>): any;
+}
+
+export function transformResponse(
+  response: IFetchState<IConnectionsFetchResponse>
+): IFetchState<IConnectionsResponse> {
+  return {
+    ...response,
+    data: {
+      connectionsForDisplay: getConnectionsForDisplay(response.data.items),
+      connectionsWithFromAction: getConnectionsWithFromAction(
+        response.data.items
+      ),
+      connectionsWithToAction: getConnectionsWithToAction(response.data.items),
+      dangerouslyUnfilteredConnections: response.data.items,
+      totalCount: response.data.totalCount,
+    },
+  };
 }
 
 export class WithConnections extends React.Component<IWithConnectionsProps> {
@@ -62,19 +84,16 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
 
   public render() {
     return (
-      <SyndesisFetch<IConnectionsResponse>
+      <SyndesisFetch<IConnectionsFetchResponse>
         url={'/connections'}
         defaultValue={{
-          connectionsForDisplay: [],
-          connectionsWithFromAction: [],
-          connectionsWithToAction: [],
           items: [],
           totalCount: 0,
         }}
       >
         {({ read, response }) => {
           if (this.props.disableUpdates) {
-            return this.props.children(response);
+            return this.props.children(transformResponse(response));
           }
           return (
             <ServerEventsContext.Consumer>
@@ -85,23 +104,7 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
                   unregisterChangeListener={unregisterChangeListener}
                   filter={this.changeFilter}
                 >
-                  {() =>
-                    this.props.children({
-                      ...response,
-                      data: {
-                        ...response.data,
-                        connectionsForDisplay: getConnectionsForDisplay(
-                          response.data.items
-                        ),
-                        connectionsWithFromAction: getConnectionsWithFromAction(
-                          response.data.items
-                        ),
-                        connectionsWithToAction: getConnectionsWithToAction(
-                          response.data.items
-                        ),
-                      },
-                    })
-                  }
+                  {() => this.props.children(transformResponse(response))}
                 </WithChangeListener>
               )}
             </ServerEventsContext.Consumer>

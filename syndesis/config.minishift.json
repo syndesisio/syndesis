@@ -1,5 +1,5 @@
 {
-  "commment":"This config should for testing against a minishift using the syndesis-dev application templates.",
+  "commment": "This config should for testing against a minishift using the syndesis-dev application templates.",
   "apiBase": "https://syndesis.192.168.64.2.nip.io",
   "apiEndpoint": "/api/v1",
   "mapperEndpoint": "/mapper/v1",
@@ -44,7 +44,7 @@
   "datavirt": {
     "dvUrl": "/vdb-builder/v1/"
   },
-  "features" : {
+  "features": {
     "logging": false
   }
 }
