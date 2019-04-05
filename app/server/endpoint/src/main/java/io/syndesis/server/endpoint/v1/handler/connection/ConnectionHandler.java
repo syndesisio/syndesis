@@ -28,8 +28,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Validator;
 import javax.validation.constraints.NotNull;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -49,7 +47,6 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.ConnectionOverview;
 import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.dao.manager.DataManager;
@@ -145,7 +142,7 @@ public class ConnectionHandler
     }
 
     @Override
-    public Connection create(@Context SecurityContext sec, @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
+    public Connection create(@Context SecurityContext sec, final Connection connection) {
         final Date rightNow = new Date();
 
         // Lets make sure we store encrypt secrets.
@@ -191,7 +188,7 @@ public class ConnectionHandler
     }
 
     @Override
-    public void update(final String id, @ConvertGroup(from = Default.class, to = AllValidations.class) final Connection connection) {
+    public void update(final String id, final Connection connection) {
         // Lets make sure we store encrypt secrets.
         Map<String, String> configuredProperties = connection.getConfiguredProperties();
         Map<String, ConfigurationProperty> connectorProperties = getConnectorProperties(connection.getConnectorId());

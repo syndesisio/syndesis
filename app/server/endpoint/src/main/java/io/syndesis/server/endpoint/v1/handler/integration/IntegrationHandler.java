@@ -17,8 +17,6 @@ package io.syndesis.server.endpoint.v1.handler.integration;
 
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
-import javax.validation.groups.ConvertGroup;
-import javax.validation.groups.Default;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -42,7 +40,6 @@ import io.syndesis.common.model.filter.Op;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationOverview;
-import io.syndesis.common.model.validation.AllValidations;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
@@ -92,8 +89,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     }
 
     @Override
-    public Integration create(@Context final SecurityContext sec,
-        @ConvertGroup(from = Default.class, to = AllValidations.class) final Integration integration) {
+    public Integration create(@Context final SecurityContext sec, final Integration integration) {
         final Integration encryptedIntegration = encryptionSupport.encrypt(integration);
 
         final Integration updatedIntegration = new Integration.Builder().createFrom(encryptedIntegration)
@@ -208,8 +204,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     }
 
     @Override
-    public void update(final String id,
-        @ConvertGroup(from = Default.class, to = AllValidations.class) final Integration integration) {
+    public void update(final String id, final Integration integration) {
         final Integration existing = getIntegration(id);
 
         Integration updatedIntegration = new Integration.Builder().createFrom(encryptionSupport.encrypt(integration))

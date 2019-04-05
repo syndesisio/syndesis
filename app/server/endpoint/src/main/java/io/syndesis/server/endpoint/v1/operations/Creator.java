@@ -17,6 +17,8 @@ package io.syndesis.server.endpoint.v1.operations;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Produces;
@@ -26,13 +28,15 @@ import javax.ws.rs.core.SecurityContext;
 
 import io.syndesis.server.dao.manager.WithDataManager;
 import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.validation.AllValidations;
 
 public interface Creator<T extends WithId<T>> extends Resource, WithDataManager {
 
     @POST
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes("application/json")
-    default T create(@Context SecurityContext sec, @NotNull @Valid T obj) {
+    default T create(@Context SecurityContext sec,
+        @NotNull @Valid @ConvertGroup(from = Default.class, to = AllValidations.class) T obj) {
         return getDataManager().create(obj);
     }
 

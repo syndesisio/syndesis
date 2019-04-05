@@ -52,7 +52,7 @@
     <node.version>v10.15.1</node.version>
     <yarn.version>v1.13.0</yarn.version>
 
-    <hibernate.validator.version>5.3.5.Final</hibernate.validator.version>
+    <hibernate.validator.version>6.0.16.Final</hibernate.validator.version>
 
     <jackson.version>2.9.8</jackson.version>
     <json-patch.version>1.9</json-patch.version>
@@ -1467,6 +1467,18 @@
       </dependency>
 
       <dependency>
+        <groupId>org.jboss.resteasy</groupId>
+        <artifactId>resteasy-validator-provider-11</artifactId>
+        <version>${resteasy.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
         <groupId>io.undertow</groupId>
         <artifactId>undertow-servlet</artifactId>
         <version>1.4.26.Final</version>
@@ -1559,6 +1571,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-tomcat</artifactId>
           </exclusion>
+          <exclusion>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+          </exclusion>
         </exclusions>
       </dependency>
 
@@ -1631,9 +1647,21 @@
       </dependency>
 
       <dependency>
-        <groupId>org.hibernate</groupId>
+        <groupId>org.hibernate.validator</groupId>
         <artifactId>hibernate-validator</artifactId>
         <version>${hibernate.validator.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.hibernate.validator</groupId>
+        <artifactId>hibernate-validator-annotation-processor</artifactId>
+        <version>${hibernate.validator.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>2.0.1.Final</version>
       </dependency>
 
       <dependency>
@@ -1945,13 +1973,6 @@
         <groupId>org.powermock</groupId>
         <artifactId>powermock-core</artifactId>
         <version>${powermock.version}</version>
-        <scope>test</scope>
-      </dependency>
-
-      <dependency>
-        <groupId>org.powermock</groupId>
-        <artifactId>powermock-module-junit4</artifactId>
-        <version>2.0</version>
         <scope>test</scope>
       </dependency>
 
