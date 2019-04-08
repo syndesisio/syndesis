@@ -4,7 +4,7 @@ import VirtualizationCreatePage from './pages/VirtualizationCreatePage';
 import VirtualizationMetricsPage from './pages/VirtualizationMetricsPage';
 import VirtualizationRelationshipPage from './pages/VirtualizationRelationshipPage';
 import VirtualizationsPage from './pages/VirtualizationsPage';
-import VirtualizationSqlQueryPage from './pages/VirtualizationSqlQueryPage';
+import VirtualizationSqlClientPage from './pages/VirtualizationSqlClientPage';
 import VirtualizationViewsPage from './pages/VirtualizationViewsPage';
 import routes from './routes';
 
@@ -43,9 +43,9 @@ export default class DataApp extends React.Component {
           component={VirtualizationRelationshipPage}
         />
         <Route
-          path={routes.virtualizations.virtualization.sqlQuery}
+          path={routes.virtualizations.virtualization.sqlClient}
           exact={true}
-          component={VirtualizationSqlQueryPage}
+          component={VirtualizationSqlClientPage}
         />
         <Route
           path={routes.virtualizations.virtualization.metrics}

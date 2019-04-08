@@ -1,7 +1,7 @@
-import HeaderView from '../components/HeaderView';
 import * as React from 'react';
 import { RestDataService } from '@syndesis/models';
 import { Translation } from 'react-i18next';
+import HeaderView from '../components/HeaderView';
 import VirtualizationNavBar from '../components/VirtualizationNavBar';
 import { WithRouteData } from '@syndesis/utils';
 
@@ -22,7 +22,7 @@ export interface IVirtualizationDetailRouteState {
   virtualization: RestDataService;
 }
 
-export default class VirtualizationRelationshipPage extends React.Component<
+export default class VirtualizationSqlClientPage extends React.Component<
   IVirtualizationDetailRouteParams,
   IVirtualizationDetailRouteState
 > {
@@ -39,12 +39,12 @@ export default class VirtualizationRelationshipPage extends React.Component<
               <Translation ns={['data', 'shared']}>
                 {t => (
                   <VirtualizationNavBar
-                    virtualization={virtualization}
+                    virtualization={this.props.virtualization}
                     virtualizationId={this.props.virtualizationId}
                   />
                 )}
               </Translation>
-              <h3>Relationship page goes here.</h3>
+              <h3>SQL Client page goes here.</h3>
             </div>
           );
         }}

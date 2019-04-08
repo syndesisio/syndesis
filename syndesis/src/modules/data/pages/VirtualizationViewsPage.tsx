@@ -27,6 +27,7 @@ import resolvers from '../resolvers';
  */
 export interface IVirtualizationDetailRouteParams {
   virtualizationId: string;
+  virtualization: RestDataService;
 }
 
 /**
@@ -35,7 +36,7 @@ export interface IVirtualizationDetailRouteParams {
  */
 
 export interface IVirtualizationDetailRouteState {
-  virtualization?: RestDataService;
+  virtualization: RestDataService;
 }
 
 function getFilteredAndSortedViews(
@@ -131,7 +132,10 @@ export default class VirtualizationViewsPage extends React.Component<
                         <Translation ns={['data', 'shared']}>
                           {t => (
                             <>
-                              <VirtualizationNavBar />
+                              <VirtualizationNavBar
+                                virtualization={virtualization}
+                                virtualizationId={virtualizationId}
+                              />
                               <ViewList
                                 filterTypes={filterTypes}
                                 sortTypes={sortTypes}

@@ -44,7 +44,7 @@ export function callFetch({
   contentType = 'application/json; charset=utf-8',
   includeAccept = true,
   accept = 'application/json,text/plain,*/*',
-  includeReferrerPolicy = true,
+  includeReferrerPolicy = false,
 }: IFetch) {
   if (includeAccept) {
     const acceptId = 'Accept';

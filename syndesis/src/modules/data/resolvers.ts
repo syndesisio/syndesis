@@ -28,8 +28,8 @@ export default {
         },
       })
     ),
-    sqlQuery: makeResolver<{ virtualization: RestDataService }>(
-      routes.virtualizations.virtualization.sqlQuery,
+    sqlClient: makeResolver<{ virtualization: RestDataService }>(
+      routes.virtualizations.virtualization.sqlClient,
       ({ virtualization }) => ({
         params: {
           virtualizationId: virtualization.keng__id,
