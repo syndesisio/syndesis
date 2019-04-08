@@ -1,6 +1,6 @@
 import * as React from 'react';
 import Loadable from 'react-loadable';
-import { ModuleLoader } from '../../containers';
+import { ModuleLoader } from '../../shared';
 
 const LoadableDataApp = Loadable({
   loader: () => import(/* webpackChunkName: "Virtualizations" */ './DataApp'),

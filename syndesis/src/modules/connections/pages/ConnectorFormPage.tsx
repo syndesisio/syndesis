@@ -2,7 +2,7 @@ import { Connector } from '@syndesis/models';
 import { Container, Loader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { WithConnectorCreationForm } from '../containers';
+import { WithConnectorCreationForm } from '../shared';
 
 export interface IConnectorFormPageRouteParams {
   connectorId: string;

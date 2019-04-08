@@ -2,7 +2,7 @@ import { Breadcrumb } from '@syndesis/ui';
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
-import { WithClosedNavigation } from '../../containers';
+import { WithClosedNavigation } from '../../shared';
 import { create } from './pages';
 import resolvers from './resolvers';
 import routes from './routes';

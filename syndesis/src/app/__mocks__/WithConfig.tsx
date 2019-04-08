@@ -3,7 +3,7 @@ import { IWithConfigProps as mockIWithConfigProps } from '../WithConfig';
 export const WithConfig = ({ children }: mockIWithConfigProps) => {
   return children({
     config: {
-      apiBase: 'https://syndesis.192.168.64.17.nip.io',
+      apiBase: 'http://127.0.0.1:8556',
       apiEndpoint: '/api/v1',
       branding: {
         appName: 'Syndesis - DEVELOPMENT',
@@ -16,7 +16,7 @@ export const WithConfig = ({ children }: mockIWithConfigProps) => {
         productBuild: false,
         touchIcon: '/apple-touch-icon.png',
       },
-      consoleUrl: 'https://192.168.64.17:8443/console',
+      consoleUrl: 'https://console.address/console',
       datamapper: {
         baseJSONInspectionServiceUrl: '/api/v1/atlas/json/',
         baseJavaInspectionServiceUrl: '/api/v1/atlas/java/',

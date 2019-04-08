@@ -4,11 +4,14 @@
 doc/syndesis
 doc/auto-form
 doc/ui
+doc/app
 
 # @syndesis/syndesis
 syndesis/public/config.json
 syndesis/public/config.json.bak
 syndesis/public/atlasmap/
+syndesis/tapes/ht*
+.puppeteer_data
 
 # @syndesis/models
 packages/models/src/models.d.ts

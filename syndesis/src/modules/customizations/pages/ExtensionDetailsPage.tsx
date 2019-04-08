@@ -14,7 +14,7 @@ import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import i18n from '../../../i18n';
 import resolvers from '../../resolvers';
-import ExtensionIntegrations from '../components/ExtensionIntegrations';
+import ExtensionIntegrations from '../shared/ExtensionIntegrations';
 
 /**
  * @param extensionId - the ID of the extension whose details are being shown by this page.

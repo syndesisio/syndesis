@@ -1,8 +1,8 @@
-import HeaderView from '../components/HeaderView';
+import HeaderView from '../shared/HeaderView';
 import * as React from 'react';
 import { RestDataService } from '@syndesis/models';
 import { Translation } from 'react-i18next';
-import VirtualizationNavBar from '../components/VirtualizationNavBar';
+import VirtualizationNavBar from '../shared/VirtualizationNavBar';
 import { WithRouteData } from '@syndesis/utils';
 
 /**

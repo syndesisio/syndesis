@@ -4,7 +4,7 @@ import { Integration } from '@syndesis/models';
 import { IntegrationEditorForm, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { PageTitle } from '../../../../../../containers/PageTitle';
+import { PageTitle } from '../../../../../../shared';
 import { IntegrationCreatorBreadcrumbs } from '../../../../components';
 import resolvers from '../../../../resolvers';
 

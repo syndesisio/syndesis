@@ -25,18 +25,23 @@ jobs:
       # Download and cache dependencies
       - restore_cache:
           keys:
-            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-{{ checksum "yarn.lock" }}
             # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
 
       - run:
           name: Install dependencies
-          command: yarn install
+          command: yarn install --frozen-lockfile
 
       - save_cache:
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: Lint project
+          command: yarn lint
+
 
       - run:
           name: Build project
@@ -62,29 +67,77 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - "5e:e6:01:8d:15:8c:df:f6:d6:0c:bd:48:08:78:d9:7a"
+
       - checkout
+
       - attach_workspace:
           at: doc
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
       - run:
-          name: Install and configure dependencies
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+
+      - run:
+          name: Build packages
           command: |
-            sudo npm install -g --silent gh-pages@2.0.1
-            git config user.email "circleci@syndesis.io"
-            git config user.name "CircleCI"
+            yarn build --ignore @syndesis/syndesis
+
+      - run:
+          name: Build app for GH-Pages
+          command: |
+            PUBLIC_URL="https://syndesisio.github.io/syndesis-react-poc/app" yarn build --scope @syndesis/syndesis
+            cp -a syndesis/build doc/app
+            cp syndesis/config.staging.json doc/app/config.json
+
       - run:
           name: Deploy docs to gh-pages branch
           command: |
-            gh-pages --dotfiles --message "[skip ci] Updates" --dist doc
+            git config user.email "circleci@syndesis.io"
+            git config user.name "CircleCI"
+            yarn gh-pages-update
 
   doc-artifact:
     docker:
       - image: circleci/node:10.13
     steps:
+
       - checkout
+
       - attach_workspace:
           at: doc
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+
+      - run:
+          name: Build packages
+          command: |
+            yarn build --ignore @syndesis/syndesis
+
+      - run:
+          name: Build app for Circle CI artifacts
+          command: |
+            # 153815627 is GH project id, but it's not exposed as an env variable. TODO find a better way to handle it
+            PUBLIC_URL="https://$CIRCLE_BUILD_NUM-153815627-gh.circle-artifacts.com/0/home/circleci/project/doc/app" yarn build --scope @syndesis/syndesis
+            cp -a syndesis/build doc/app
+            cp syndesis/config.staging.json doc/app/config.json
+
       - store_artifacts:
           path: doc
+
       - run:
           name: Post artifact link on GH issue
           command: |

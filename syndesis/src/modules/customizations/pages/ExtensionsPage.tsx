@@ -12,9 +12,9 @@ import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
-import CustomizationsNavBar from '../components/CustomizationsNavBar';
 import { getExtensionTypeName } from '../customizationsUtils';
 import resolvers from '../resolvers';
+import CustomizationsNavBar from '../shared/CustomizationsNavBar';
 
 function getFilteredAndSortedExtensions(
   extensions: Extension[],
