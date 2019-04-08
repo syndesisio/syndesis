@@ -15,7 +15,7 @@ export interface IPageTitleProps {
  * visible in the browser's title bar, tab and history.
  * @see [title]{@link IPageTitleProps#title}
  */
-export class PageTitle extends React.Component<IPageTitleProps> {
+export class PageTitle extends React.PureComponent<IPageTitleProps> {
   public render() {
     return (
       <AppContext.Consumer>
