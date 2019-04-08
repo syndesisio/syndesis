@@ -2,7 +2,7 @@
 const proxy = require('http-proxy-middleware');
 
 module.exports = function(app) {
-  if (app.BACKEND) {
+  if (process.env.BACKEND) {
     app.use(
       proxy('/api', {
         target: process.env.BACKEND,
