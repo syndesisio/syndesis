@@ -150,7 +150,11 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                   i18nDescription={
                                     "Sorry, we can't display more information about this integration right now."
                                   }
-                                  rawObject={JSON.stringify(mi.integration)}
+                                  rawObject={JSON.stringify(
+                                    mi.integration,
+                                    null,
+                                    2
+                                  )}
                                 />
                               );
                             }
