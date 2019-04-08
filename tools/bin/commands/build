@@ -213,7 +213,7 @@ do_camel_k() {
 
     pushd $camel_k_root >/dev/null
 
-    local version=$(script/get_version.sh)
+    local version=$(grep -e "^VERSION[ :]" Makefile | tr "=" " " | awk '{print $(NF)}')
 
     local kamel_dir=~/.syndesis/bin
     echo "Building $kamel_dir/kamel-$version"
@@ -230,7 +230,7 @@ do_camel_k() {
 
     local camel_k_image="docker.io/apache/camel-k"
     echo "Building image $camel_k_image:$version"
-    ./script/images_build.sh
+    operator-sdk build $camel_k_image:$version
 
     echo "Tagging $camel_k_image:$version --> $camel_k_image:latest"
     docker tag $camel_k_image:$version $camel_k_image:latest
