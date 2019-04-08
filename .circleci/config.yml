@@ -96,16 +96,11 @@ jobs:
             cp syndesis/config.staging.json doc/app/config.json
 
       - run:
-          name: Install and configure dependencies
-          command: |
-            sudo yarn add --silent --non-interactive gh-pages@2.0.1
-            git config user.email "circleci@syndesis.io"
-            git config user.name "CircleCI"
-
-      - run:
           name: Deploy docs to gh-pages branch
           command: |
-            yarn run gh-pages --dotfiles --message "[skip ci] Updates" --dist doc
+            git config user.email "circleci@syndesis.io"
+            git config user.name "CircleCI"
+            yarn gh-pages-update
 
   doc-artifact:
     docker:
