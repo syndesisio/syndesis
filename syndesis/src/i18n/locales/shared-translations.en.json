@@ -60,6 +60,13 @@
       "project": {
         "name": "Syndesis",
         "version": "7.1"
+      },
+      "error": {
+        "title": "Something is wrong",
+        "info": "An error occurred while talking with the server.",
+        "help": "Please check your internet connection.",
+        "refreshButton": "Click to refresh",
+        "showErrorInfoButton": "Show error details"
       }
     }
   }
