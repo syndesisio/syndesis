@@ -13,7 +13,7 @@ import { IntegrationsModule } from './modules/integrations';
 import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
-  <Router basename={process.env.PUBLIC_URL}>
+  <Router>
     <I18nextProvider i18n={i18n}>
       <Translation ns={['shared']}>
         {t => (

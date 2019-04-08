@@ -17,8 +17,8 @@ import i18next from 'i18next';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
-import { WithErrorBoundary } from '../containers';
 import './App.css';
+import { WithErrorBoundary } from '../containers';
 import { AppContext } from './AppContext';
 import { IConfigFile, WithConfig } from './WithConfig';
 
