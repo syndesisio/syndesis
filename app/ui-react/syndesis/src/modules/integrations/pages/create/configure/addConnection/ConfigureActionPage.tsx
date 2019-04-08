@@ -1,4 +1,4 @@
-import { WithIntegrationHelpers } from '@syndesis/api';
+import { getStep, getSteps, WithIntegrationHelpers } from '@syndesis/api';
 import { ConnectionOverview, Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
@@ -62,7 +62,7 @@ export class ConfigureActionPage extends React.Component {
   public render() {
     return (
       <WithIntegrationHelpers>
-        {({ addConnection, getStep, getSteps, updateConnection }) => (
+        {({ addConnection, updateConnection }) => (
           <WithRouteData<
             IConfigureActionRouteParams,
             IConfigureActionRouteState

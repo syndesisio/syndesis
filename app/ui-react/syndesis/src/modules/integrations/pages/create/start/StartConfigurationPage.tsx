@@ -1,4 +1,8 @@
-import { WithIntegrationHelpers } from '@syndesis/api';
+import {
+  getEmptyIntegration,
+  getStep,
+  WithIntegrationHelpers,
+} from '@syndesis/api';
 import { ConnectionOverview, Integration } from '@syndesis/models';
 import {
   IntegrationEditorLayout,
@@ -61,7 +65,7 @@ export class StartConfigurationPage extends React.Component {
   public render() {
     return (
       <WithIntegrationHelpers>
-        {({ getEmptyIntegration, getStep, updateOrAddConnection }) => (
+        {({ updateOrAddConnection }) => (
           <WithRouteData<
             IStartConfigurationPageRouteParams,
             IStartConfigurationPageRouteState

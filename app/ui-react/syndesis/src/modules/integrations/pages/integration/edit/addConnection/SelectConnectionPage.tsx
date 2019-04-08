@@ -1,4 +1,4 @@
-import { WithConnections, WithIntegrationHelpers } from '@syndesis/api';
+import { getSteps, WithConnections } from '@syndesis/api';
 import { Integration } from '@syndesis/models';
 import {
   ButtonLink,
@@ -47,90 +47,86 @@ export class SelectConnectionPage extends React.Component {
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {({ position }, { integration }) => (
-          <>
-            <PageTitle title={'Choose a connection'} />
-            <IntegrationEditorLayout
-              header={<IntegrationEditorBreadcrumbs step={1} />}
-              sidebar={
-                <WithIntegrationHelpers>
-                  {({ getSteps }) => {
-                    const positionAsNumber = parseInt(position, 10);
-                    return (
-                      <IntegrationEditorSidebar
-                        steps={getSteps(integration, 0)}
-                        addAtIndex={positionAsNumber}
-                        addI18nTitle={`${positionAsNumber + 1}. Start`}
-                        addI18nTooltip={'Start'}
-                        addI18nDescription={'Choose a connection'}
-                      />
-                    );
-                  }}
-                </WithIntegrationHelpers>
-              }
-              content={
-                <WithConnections>
-                  {({ data, hasData, error }) => (
-                    <IntegrationEditorChooseConnection
-                      i18nTitle={'Choose a connection'}
-                      i18nSubtitle={
-                        'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
-                      }
-                    >
-                      <WithLoader
-                        error={error}
-                        loading={!hasData}
-                        loaderChildren={<IntegrationsListSkeleton />}
-                        errorChildren={<div>TODO</div>}
+        {({ position }, { integration }) => {
+          const positionAsNumber = parseInt(position, 10);
+          return (
+            <>
+              <PageTitle title={'Choose a connection'} />
+              <IntegrationEditorLayout
+                header={<IntegrationEditorBreadcrumbs step={1} />}
+                sidebar={
+                  <IntegrationEditorSidebar
+                    steps={getSteps(integration, 0)}
+                    addAtIndex={positionAsNumber}
+                    addI18nTitle={`${positionAsNumber + 1}. Start`}
+                    addI18nTooltip={'Start'}
+                    addI18nDescription={'Choose a connection'}
+                  />
+                }
+                content={
+                  <WithConnections>
+                    {({ data, hasData, error }) => (
+                      <IntegrationEditorChooseConnection
+                        i18nTitle={'Choose a connection'}
+                        i18nSubtitle={
+                          'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
+                        }
                       >
-                        {() => (
-                          <>
-                            {data.connectionsWithToAction.map((c, idx) => (
+                        <WithLoader
+                          error={error}
+                          loading={!hasData}
+                          loaderChildren={<IntegrationsListSkeleton />}
+                          errorChildren={<div>TODO</div>}
+                        >
+                          {() => (
+                            <>
+                              {data.connectionsWithToAction.map((c, idx) => (
+                                <IntegrationEditorConnectionsListItem
+                                  key={idx}
+                                  integrationName={c.name}
+                                  integrationDescription={
+                                    c.description || 'No description available.'
+                                  }
+                                  icon={
+                                    <img src={c.icon} width={24} height={24} />
+                                  }
+                                  actions={
+                                    <ButtonLink
+                                      href={resolvers.integration.edit.addConnection.selectAction(
+                                        {
+                                          connection: c,
+                                          integration,
+                                          position,
+                                        }
+                                      )}
+                                    >
+                                      Select
+                                    </ButtonLink>
+                                  }
+                                />
+                              ))}
                               <IntegrationEditorConnectionsListItem
-                                key={idx}
-                                integrationName={c.name}
-                                integrationDescription={
-                                  c.description || 'No description available.'
-                                }
-                                icon={
-                                  <img src={c.icon} width={24} height={24} />
-                                }
+                                integrationName={''}
+                                integrationDescription={''}
+                                icon={''}
                                 actions={
-                                  <ButtonLink
-                                    href={resolvers.integration.edit.addConnection.selectAction(
-                                      {
-                                        connection: c,
-                                        integration,
-                                        position,
-                                      }
-                                    )}
-                                  >
-                                    Select
+                                  <ButtonLink href={'#'}>
+                                    Create connection
                                   </ButtonLink>
                                 }
                               />
-                            ))}
-                            <IntegrationEditorConnectionsListItem
-                              integrationName={''}
-                              integrationDescription={''}
-                              icon={''}
-                              actions={
-                                <ButtonLink href={'#'}>
-                                  Create connection
-                                </ButtonLink>
-                              }
-                            />
-                          </>
-                        )}
-                      </WithLoader>
-                    </IntegrationEditorChooseConnection>
-                  )}
-                </WithConnections>
-              }
-              cancelHref={resolvers.integration.edit.index({ integration })}
-            />
-          </>
-        )}
+                            </>
+                          )}
+                        </WithLoader>
+                      </IntegrationEditorChooseConnection>
+                    )}
+                  </WithConnections>
+                }
+                cancelHref={resolvers.integration.edit.index({ integration })}
+              />
+            </>
+          );
+        }}
       </WithRouteData>
     );
   }

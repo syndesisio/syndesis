@@ -1,4 +1,11 @@
-import { WithIntegrationHelpers } from '@syndesis/api';
+import {
+  canActivate,
+  canDeactivate,
+  canEdit,
+  getFinishIcon,
+  getStartIcon,
+  WithIntegrationHelpers,
+} from '@syndesis/api';
 import { IntegrationWithMonitoring } from '@syndesis/models';
 import {
   IIntegrationAction,
@@ -28,7 +35,7 @@ export class Integrations extends React.Component<IIntegrationsProps> {
           <AppContext.Consumer>
             {({ config, getPodLogUrl }) => (
               <WithIntegrationHelpers>
-                {({ canActivate, canDeactivate, canEdit }) => (
+                {({}) => (
                   <IntegrationsList>
                     <WithLoader
                       error={this.props.error}
@@ -106,15 +113,14 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                     config,
                                     mi.monitoring
                                   )}
-                                  startConnectionIcon={
-                                    mi.integration.flows![0].steps![0]
-                                      .connection!.icon!
-                                  }
-                                  finishConnectionIcon={
-                                    mi.integration.flows![0].steps![
-                                      mi.integration.flows![0].steps!.length - 1
-                                    ].connection!.icon!
-                                  }
+                                  startConnectionIcon={getStartIcon(
+                                    config.apiEndpoint,
+                                    mi.integration
+                                  )}
+                                  finishConnectionIcon={getFinishIcon(
+                                    config.apiEndpoint,
+                                    mi.integration
+                                  )}
                                   actions={
                                     <IntegrationsListItemActions
                                       integrationId={mi.integration!.id!}
