@@ -98,14 +98,13 @@ jobs:
       - run:
           name: Install and configure dependencies
           command: |
-            sudo yarn global add --silent --non-interactive gh-pages@2.0.1
+            sudo yarn add --silent --non-interactive gh-pages@2.0.1
             git config user.email "circleci@syndesis.io"
             git config user.name "CircleCI"
 
       - run:
           name: Deploy docs to gh-pages branch
           command: |
-            gh-pages-clean
             gh-pages --dotfiles --message "[skip ci] Updates" --dist doc
 
   doc-artifact:
