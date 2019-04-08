@@ -17,7 +17,7 @@ import i18next from 'i18next';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
-import { WithErrorBoundary } from '../containers';
+import { PageNotFound, WithErrorBoundary } from '../shared';
 import './App.css';
 import { AppContext } from './AppContext';
 import { IConfigFile, WithConfig } from './WithConfig';
@@ -119,12 +119,6 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
     ));
   }
 
-  public renderRoutes() {
-    return this.props.routes.map(({ to, exact, component }, index) => (
-      <Route path={to} exact={exact} component={component} key={index} />
-    ));
-  }
-
   public render() {
     return (
       <Translation ns={['app', 'shared']}>
@@ -141,6 +135,7 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
                     i18nInfo={t('shared:error.info')}
                     i18nHelp={t('shared:error.help')}
                     i18nRefreshLabel={t('shared:error.refreshButton')}
+                    i18nReportIssue={t('shared:error.reportIssueButton')}
                     i18nShowErrorInfoLabel={t(
                       'shared:error.showErrorInfoButton'
                     )}
@@ -184,7 +179,22 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
                                   <WithRouter>
                                     {({ match }) => (
                                       <WithErrorBoundary key={match.url}>
-                                        <Switch>{this.renderRoutes()}</Switch>
+                                        <Switch>
+                                          {this.props.routes.map(
+                                            (
+                                              { to, exact, component },
+                                              index
+                                            ) => (
+                                              <Route
+                                                path={to}
+                                                exact={exact}
+                                                component={component}
+                                                key={index}
+                                              />
+                                            )
+                                          )}
+                                          <Route component={PageNotFound} />
+                                        </Switch>
                                       </WithErrorBoundary>
                                     )}
                                   </WithRouter>

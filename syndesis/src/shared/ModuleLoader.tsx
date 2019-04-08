@@ -15,6 +15,7 @@ export class ModuleLoader extends React.Component<LoadingComponentProps> {
               i18nInfo={t('error.info')}
               i18nHelp={t('error.help')}
               i18nRefreshLabel={t('error.refreshButton')}
+              i18nReportIssue={t('shared:error.reportIssueButton')}
               i18nShowErrorInfoLabel={t('error.showErrorInfoButton')}
               error={this.props.error}
             />

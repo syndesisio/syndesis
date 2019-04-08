@@ -3,7 +3,7 @@ import { Integration } from '@syndesis/models';
 import { Container, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { PageTitle } from '../../../../../../containers/PageTitle';
+import { PageTitle } from '../../../../../../shared';
 import {
   IntegrationEditorBreadcrumbs,
   IntegrationEditorStepAdder,

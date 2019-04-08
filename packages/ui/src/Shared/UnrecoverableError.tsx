@@ -8,7 +8,8 @@ export interface IUnrecoverableErrorProps {
   i18nInfo: string;
   i18nHelp: string;
   i18nRefreshLabel: string;
-  i18nShowErrorInfoLabel: string;
+  i18nReportIssue: string;
+  i18nShowErrorInfoLabel?: string;
   error?: Error;
   errorInfo?: React.ErrorInfo;
 }
@@ -18,6 +19,7 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
   i18nInfo,
   i18nHelp,
   i18nRefreshLabel,
+  i18nReportIssue,
   i18nShowErrorInfoLabel,
   error,
   errorInfo,
@@ -36,13 +38,21 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
             {i18nRefreshLabel}
           </ButtonLink>
         </EmptyState.Action>
-        {error && (
-          <EmptyState.Action secondary={true}>
+        <EmptyState.Action secondary={true}>
+          {error && (
             <ButtonLink onClick={toggleErrorInfo}>
               {i18nShowErrorInfoLabel}
             </ButtonLink>
-          </EmptyState.Action>
-        )}
+          )}
+          <a
+            className={'btn btn-default'}
+            href={
+              'https://github.com/syndesisio/syndesis/issues/new?template=simple.md&labels=cat/bug&title=Error%20report'
+            }
+          >
+            {i18nReportIssue}
+          </a>
+        </EmptyState.Action>
         {showErrorInfo && error && (
           <EmptyState.Help style={{ textAlign: 'left' }}>
             <p>

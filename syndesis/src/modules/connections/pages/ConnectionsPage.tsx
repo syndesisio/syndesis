@@ -1,7 +1,7 @@
 import { WithConnections } from '@syndesis/api';
 import { Connection } from '@syndesis/models';
 import * as React from 'react';
-import { ConnectionsWithToolbar } from '../containers';
+import { ConnectionsWithToolbar } from '../shared';
 
 function getConnectionHref(connection: Connection) {
   return '#todo';

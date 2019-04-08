@@ -39,6 +39,7 @@ export class WithErrorBoundary extends React.Component<
             i18nInfo={t('error.info')}
             i18nHelp={t('error.help')}
             i18nRefreshLabel={t('error.refreshButton')}
+            i18nReportIssue={t('shared:error.reportIssueButton')}
             i18nShowErrorInfoLabel={t('error.showErrorInfoButton')}
             error={this.state.error}
             errorInfo={this.state.errorInfo}
