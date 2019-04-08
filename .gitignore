@@ -4,6 +4,7 @@
 doc/syndesis
 doc/auto-form
 doc/ui
+doc/app
 
 # @syndesis/syndesis
 syndesis/public/config.json

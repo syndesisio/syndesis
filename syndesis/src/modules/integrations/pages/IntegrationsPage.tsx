@@ -9,8 +9,8 @@ import {
 import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { PageTitle } from '../../../containers/PageTitle';
 import i18n from '../../../i18n';
+import { PageTitle } from '../../../shared';
 import { Integrations } from '../components';
 import routes from '../routes';
 

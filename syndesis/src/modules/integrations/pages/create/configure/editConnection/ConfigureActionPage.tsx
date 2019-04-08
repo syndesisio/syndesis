@@ -3,16 +3,16 @@ import { Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { PageTitle } from '../../../../../../containers/PageTitle';
+import { PageTitle } from '../../../../../../shared';
 import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorSidebar,
 } from '../../../../components';
+import resolvers from '../../../../resolvers';
 import {
   IOnUpdatedIntegrationProps,
   WithConfigurationForm,
-} from '../../../../containers';
-import resolvers from '../../../../resolvers';
+} from '../../../../shared';
 
 /**
  * @param position - the zero-based position for the new step in the integration

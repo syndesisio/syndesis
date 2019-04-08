@@ -12,11 +12,12 @@ import {
   PfVerticalNavItem,
   UnrecoverableError,
 } from '@syndesis/ui';
-import { WithLoader } from '@syndesis/utils';
+import { WithLoader, WithRouter } from '@syndesis/utils';
 import i18next from 'i18next';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { PageNotFound, WithErrorBoundary } from '../shared';
 import './App.css';
 import { AppContext } from './AppContext';
 import { IConfigFile, WithConfig } from './WithConfig';
@@ -118,15 +119,9 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
     ));
   }
 
-  public renderRoutes() {
-    return this.props.routes.map(({ to, exact, component }, index) => (
-      <Route path={to} exact={exact} component={component} key={index} />
-    ));
-  }
-
   public render() {
     return (
-      <Translation ns={['app']}>
+      <Translation ns={['app', 'shared']}>
         {t => (
           <WithConfig>
             {({ config, loading, error }) => (
@@ -134,7 +129,18 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
                 loading={loading}
                 error={error}
                 loaderChildren={<Loader />}
-                errorChildren={<UnrecoverableError />}
+                errorChildren={
+                  <UnrecoverableError
+                    i18nTitle={t('shared:error.title')}
+                    i18nInfo={t('shared:error.info')}
+                    i18nHelp={t('shared:error.help')}
+                    i18nRefreshLabel={t('shared:error.refreshButton')}
+                    i18nReportIssue={t('shared:error.reportIssueButton')}
+                    i18nShowErrorInfoLabel={t(
+                      'shared:error.showErrorInfoButton'
+                    )}
+                  />
+                }
                 minWait={1000}
               >
                 {() => (
@@ -170,9 +176,28 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
                                   onNavigationCollapse={this.hideNavigation}
                                   onNavigationExpand={this.showNavigation}
                                 >
-                                  <React.Fragment>
-                                    <Switch>{this.renderRoutes()}</Switch>
-                                  </React.Fragment>
+                                  <WithRouter>
+                                    {({ match }) => (
+                                      <WithErrorBoundary key={match.url}>
+                                        <Switch>
+                                          {this.props.routes.map(
+                                            (
+                                              { to, exact, component },
+                                              index
+                                            ) => (
+                                              <Route
+                                                path={to}
+                                                exact={exact}
+                                                component={component}
+                                                key={index}
+                                              />
+                                            )
+                                          )}
+                                          <Route component={PageNotFound} />
+                                        </Switch>
+                                      </WithErrorBoundary>
+                                    )}
+                                  </WithRouter>
                                 </AppLayout>
                               </ServerEventsContext.Provider>
                             )}

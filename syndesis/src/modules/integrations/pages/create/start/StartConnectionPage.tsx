@@ -11,7 +11,7 @@ import {
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { PageTitle } from '../../../../../containers/PageTitle';
+import { PageTitle } from '../../../../../shared';
 import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import resolvers from '../../../resolvers';
 

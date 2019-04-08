@@ -1,7 +1,7 @@
 import { RestDataService } from '@syndesis/models';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import VirtualizationNavBar from '../components/VirtualizationNavBar';
+import VirtualizationNavBar from '../shared/VirtualizationNavBar';
 
 /**
  * @param virtualizationId - the ID of the virtualization whose details are being shown by this page.
