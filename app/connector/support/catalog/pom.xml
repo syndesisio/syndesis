@@ -165,6 +165,11 @@
       <artifactId>connector-odata</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>connector-box</artifactId>
+      <scope>provided</scope>
+    </dependency>
   </dependencies>
 
   <build>

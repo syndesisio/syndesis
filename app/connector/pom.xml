@@ -47,6 +47,7 @@
     <module>api-provider</module>
     <module>amqp</module>
     <module>aws-s3</module>
+    <module>box</module>
     <module>dropbox</module>
     <module>ftp</module>
     <module>fhir</module>
