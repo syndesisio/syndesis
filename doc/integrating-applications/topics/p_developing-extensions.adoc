@@ -13,6 +13,24 @@ you will need to accomplish.
 a connector or that provides an integration step that operates on data between connections
 - Experience programming
 
+[CAUTION]
+====
+An integration pod runs in a Java process with a flat classpath. 
+To avoid version clashes, make sure that the dependencies that an extension 
+uses are aligned with the imported bill of materials (BOM) from all of 
+these sources: 
+
+* `org.springframework.boot:spring-boot-dependencies:$SPRING_BOOT_VERSION`
+* `org.apache.camel:camel-spring-boot-dependencies:$CAMEL_VERSION` 
+* `io.syndesis.integration:integration-bom:$SYNDESIS_VERSION`
+
+If there are additional dependencies that are not part of the imported BOMs,
+you must:
+
+* Package them in the extension JAR file that is in the `lib` directory.
+* Omit them from the `dependencies` property of the extension's JSON descriptor file.
+====
+
 .Procedure
 . Obtain an understanding of what the extended feature must do. 
 Talk to your business colleague to understand the feature requirements.
