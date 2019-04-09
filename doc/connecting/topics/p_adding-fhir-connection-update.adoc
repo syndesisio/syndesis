@@ -4,18 +4,30 @@
 [id='adding-fhir-connection-update_{context}']
 = Updating all fields in a resource on a FHIR server
 
-In an integration, you can update a resource that is on a FHIR server.
-The connection updates each resource field, except the resource ID. 
-If the connection's data does not provide a particular resource 
-field then the action deletes that field from the updated resource. 
+In an integration, you can update a resource that is on a FHIR server. 
+To provide the updated values, add a data mapper step to the flow just before 
+a FHIR connection that updates a resource. It is expected that previous 
+steps in the flow provide the data that you want the updated resource 
+to contain. Map fields in previous steps to fields in the target 
+resource that this FHIR connection updates. 
 
-If the FHIR server does not already have a resource that has the 
-resource ID for the resource to be updated, then the connection 
-creates a new resource with that resource ID. This is the only way 
-to add a new resource that has a resource ID that you choose. 
+[CAUTION] 
+The updated resource contains only the fields that you map to. 
+In other words, in addition to mapping the fields whose values are 
+changing, you must map the fields that you want to be in the resource 
+and whose values are not changing. If you do not map a particular 
+resource field then the connection deletes that field from the 
+updated resource.
 
-To update or create a resource, add a FHIR connection to the 
-middle of a flow, or as a simple integration's finish connection. 
+Be sure to map the resource ID from a previous step to the resource ID 
+in this connection. This is the only resource field that the connection 
+does not change. If the FHIR server does not already have a resource 
+that has the resource ID for the resource to be updated, then the connection 
+creates a new resource with that resource ID. This is the only way to add 
+a new resource that has a resource ID that you choose.
+
+To update or create a resource, add a FHIR connection to the middle 
+of a flow, or as a simple integration’s finish connection.
 
 .Prerequisites
 * You created a connection to the FHIR server on which you want to 
@@ -53,7 +65,7 @@ to specify the resource ID for a new resource.
 .. Map to each resource field that you want the updated or new 
 resource to contain. Be sure to map fields whose values are not 
 changing, as well as fields whose values need to be updated. 
-.. Click Done to add the data mapper step to the flow. 
+.. Click *Done* to add the data mapper step to the flow. 
 
 .Result
 The connection appears in the integration flow 
