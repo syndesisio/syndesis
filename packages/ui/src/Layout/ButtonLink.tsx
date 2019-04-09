@@ -37,7 +37,7 @@ export const ButtonLink: React.FunctionComponent<IButtonLinkProps> = ({
     'btn-sm': size === 'sm',
     'btn-xs': size === 'xs',
   });
-  return href ? (
+  return href && !disabled ? (
     <Link to={href} onClick={onClick} className={className} {...props}>
       {children}
     </Link>
