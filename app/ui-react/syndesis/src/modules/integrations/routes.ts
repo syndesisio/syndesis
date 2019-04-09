@@ -42,7 +42,7 @@ export default include('/integrations', {
     root: '',
   }),
   integration: include(':integrationId', {
-    details: '',
+    details: ':integrationId/details',
     edit: include('edit', editorRoutes),
     root: '',
   }),
