@@ -65,7 +65,10 @@ the new resource to contain, add them before this FHIR connection.
 After those steps are in place, 
 add a data mapper step to the flow just before the FHIR connection 
 that creates a new resource. In the data mapper step, map to the 
-fields in the resource to be created. Without a data mapper step just 
+fields in the resource to be created. 
+
+[CAUTION]
+Without a data mapper step just 
 before a FHIR connection that creates a new resource, the connection 
 tries to create an empty resource. Depending on the FHIR server configuration,
 this might or might not work.  
