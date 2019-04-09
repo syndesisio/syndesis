@@ -3,8 +3,8 @@ import { RestDataService } from '@syndesis/models';
 import { RestViewDefinition } from '@syndesis/models';
 import * as React from 'react';
 import i18n from '../../../i18n';
-import HeaderView from '../shared/HeaderView';
-import VirtualizationNavBar from '../shared/VirtualizationNavBar';
+import { HeaderView } from '../shared';
+import { VirtualizationNavBar } from '../shared';
 
 import {
   IActiveFilter,
@@ -25,17 +25,18 @@ import resolvers from '../resolvers';
 /**
  * @param virtualizationId - the ID of the virtualization whose details are being shown by this page.
  */
-export interface IVirtualizationDetailRouteParams {
+export interface IVirtualizationViewsPageRouteParams {
   virtualizationId: string;
+  virtualization: RestDataService;
 }
 
 /**
  * @param virtualizationId - the virtualization whose details are being shown by this page. If
- * exists, it must equal to the [virtualizationId]{@link IVirtualizationDetailRouteParams#virtualizationId}.
+ * exists, it must equal to the [virtualizationId]{@link IVirtualizationViewsPageRouteParams#virtualizationId}.
  */
 
-export interface IVirtualizationDetailRouteState {
-  virtualization?: RestDataService;
+export interface IVirtualizationViewsPageRouteState {
+  virtualization: RestDataService;
 }
 
 function getFilteredAndSortedViews(
@@ -81,10 +82,7 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export default class VirtualizationViewsPage extends React.Component<
-  IVirtualizationDetailRouteParams,
-  IVirtualizationDetailRouteState
-> {
+export class VirtualizationViewsPage extends React.Component {
   public filterUndefinedId(view: RestViewDefinition): boolean {
     return view.keng__id !== undefined;
   }
@@ -107,14 +105,14 @@ export default class VirtualizationViewsPage extends React.Component<
   public render() {
     return (
       <WithRouteData<
-        IVirtualizationDetailRouteParams,
-        IVirtualizationDetailRouteState
+        IVirtualizationViewsPageRouteParams,
+        IVirtualizationViewsPageRouteState
       >>
         {({ virtualizationId }, { virtualization }, { history }) => {
           return (
             <div>
               <HeaderView virtualizationId={virtualizationId} />
-              <WithViews virtualizationId={virtualizationId}>
+              <WithViews serviceVdbName={virtualization.serviceVdbName}>
                 {({ data, hasData, error }) => (
                   <WithListViewToolbarHelpers
                     defaultFilterType={filterByName}
@@ -131,7 +129,9 @@ export default class VirtualizationViewsPage extends React.Component<
                         <Translation ns={['data', 'shared']}>
                           {t => (
                             <>
-                              <VirtualizationNavBar />
+                              <VirtualizationNavBar
+                                virtualization={virtualization}
+                              />
                               <ViewList
                                 filterTypes={filterTypes}
                                 sortTypes={sortTypes}

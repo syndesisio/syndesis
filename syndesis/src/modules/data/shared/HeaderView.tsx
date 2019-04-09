@@ -7,7 +7,7 @@ export interface IWithVirtualizationDetailHeaderProps {
   virtualizationId: string;
 }
 
-export default class HeaderView extends React.Component<
+export class HeaderView extends React.Component<
   IWithVirtualizationDetailHeaderProps
 > {
   public constructor(props: IWithVirtualizationDetailHeaderProps) {

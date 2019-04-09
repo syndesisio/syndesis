@@ -68,7 +68,7 @@ export function getVirtualizationsHref(baseUrl: string): string {
   return `${baseUrl}`;
 }
 
-export default class VirtualizationsPage extends React.Component {
+export class VirtualizationsPage extends React.Component {
   public filterUndefinedId(virtualization: RestDataService): boolean {
     return virtualization.keng__id !== undefined;
   }

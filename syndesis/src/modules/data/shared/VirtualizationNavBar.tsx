@@ -1,7 +1,17 @@
+import { RestDataService } from '@syndesis/models';
 import { Container, TabBar, TabBarItem } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import routes from '../routes';
+import resolvers from '../resolvers';
+
+/**
+ * @param virtualization - the virtualization whose details are being shown by this page. If
+ * exists, it must equal to the [virtualizationId]{@link IVirtualizationNavBarProps#virtualization}.
+ */
+
+export interface IVirtualizationNavBarProps {
+  virtualization: RestDataService;
+}
 
 /**
  * A component that displays a nav bar with 4 items:
@@ -12,8 +22,11 @@ import routes from '../routes';
  * 4. a link to the page that dispays metrics
  *
  */
-export default class VirtualizationNavBar extends React.Component {
+export class VirtualizationNavBar extends React.Component<
+  IVirtualizationNavBarProps
+> {
   public render() {
+    const virtualization = this.props.virtualization;
     return (
       <Translation ns={['data', 'shared']}>
         {t => (
@@ -25,19 +38,27 @@ export default class VirtualizationNavBar extends React.Component {
             <TabBar>
               <TabBarItem
                 label={t('data:virtualization.views')}
-                to={routes.virtualizations.virtualization.views}
+                to={resolvers.virtualizations.views({
+                  virtualization,
+                })}
               />
               <TabBarItem
                 label={t('data:virtualization.relationship')}
-                to={routes.virtualizations.virtualization.relationship}
+                to={resolvers.virtualizations.relationship({
+                  virtualization,
+                })}
               />
               <TabBarItem
                 label={t('data:virtualization.sqlClient')}
-                to={routes.virtualizations.virtualization.sqlQuery}
+                to={resolvers.virtualizations.sqlClient({
+                  virtualization,
+                })}
               />
               <TabBarItem
                 label={t('data:virtualization.metrics')}
-                to={routes.virtualizations.virtualization.metrics}
+                to={resolvers.virtualizations.metrics({
+                  virtualization,
+                })}
               />
             </TabBar>
           </Container>

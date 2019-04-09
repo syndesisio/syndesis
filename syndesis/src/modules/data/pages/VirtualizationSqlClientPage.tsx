@@ -8,26 +8,26 @@ import { VirtualizationNavBar } from '../shared';
 /**
  * @param virtualizationId - the ID of the virtualization whose details are being shown by this page.
  */
-export interface IVirtualizationMetricsPageRouteParams {
+export interface IVirtualizationSqlClientPageRouteParams {
   virtualizationId: string;
   virtualization: RestDataService;
 }
 
 /**
  * @param virtualizationId - the virtualization whose details are being shown by this page. If
- * exists, it must equal to the [virtualizationId]{@link IVirtualizationMetricsPageRouteParams#virtualizationId}.
+ * exists, it must equal to the [virtualizationId]{@link IVirtualizationSqlClientPageRouteParams#virtualizationId}.
  */
 
-export interface IVirtualizationMetricsPageRouteState {
+export interface IVirtualizationSqlClientPageRouteState {
   virtualization: RestDataService;
 }
 
-export class VirtualizationMetricsPage extends React.Component {
+export class VirtualizationSqlClientPage extends React.Component {
   public render() {
     return (
       <WithRouteData<
-        IVirtualizationMetricsPageRouteParams,
-        IVirtualizationMetricsPageRouteState
+        IVirtualizationSqlClientPageRouteParams,
+        IVirtualizationSqlClientPageRouteState
       >>
         {({ virtualizationId }, { virtualization }, { history }) => {
           return (
@@ -36,7 +36,7 @@ export class VirtualizationMetricsPage extends React.Component {
               <Translation ns={['data', 'shared']}>
                 {t => <VirtualizationNavBar virtualization={virtualization} />}
               </Translation>
-              <h3>Metrics page goes here.</h3>
+              <h3>SQL Client page goes here.</h3>
             </div>
           );
         }}

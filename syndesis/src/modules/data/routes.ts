@@ -10,7 +10,7 @@ export default include('/data', {
       metrics: 'metrics',
       relationship: 'relationship',
       root: '',
-      sqlQuery: 'sqlQuery',
+      sqlClient: 'sqlClient',
       views: 'views',
     }),
   }),

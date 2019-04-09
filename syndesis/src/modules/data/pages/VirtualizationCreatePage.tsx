@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 import i18n from '../../../i18n';
 import resolvers from '../../resolvers';
 
-export default class VirtualizationCreatePage extends React.Component {
+export class VirtualizationCreatePage extends React.Component {
   public render() {
     const formDefinition = {
       virtDescription: {
