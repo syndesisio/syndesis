@@ -27,16 +27,16 @@ not require authentication.
 display any available connections.
 . In the upper right, click *Create Connection* to display
 connectors.  
-. Click the *FHIR* connector.
-. In the *FHIR version* field, accept *DSTU3*, which is required.
-. In the *FHIR server URL* field, enter the URL for the FHIR server 
+. Click the *FHIR* connector and configure the connection as follows:
+.. In the *FHIR version* field, accept *DSTU3*, which is required.
+.. In the *FHIR server URL* field, enter the URL for the FHIR server 
 that you want to access. While creating an integration, you might
 accept the default test server `\http://fhirtest.uhn.ca/baseDstu3`.
-. In the *FHIR server username* field, enter your username. This 
+.. In the *FHIR server username* field, enter your username. This 
 is required by FHIR servers that use basic authentication. 
-. In the *FHIR server password* field, enter your password, which 
+.. In the *FHIR server password* field, enter your password, which 
 is also required by FHIR servers that use basic authentication.
-. In the *FHIR server bearer token* field, enter your token.
+.. In the *FHIR server bearer token* field, enter your token.
 This is required by FHIR servers that use OAuth authentication. 
 . Click *Validate*. {prodname} immediately tries to validate the 
 connection and displays a message that indicates whether 
