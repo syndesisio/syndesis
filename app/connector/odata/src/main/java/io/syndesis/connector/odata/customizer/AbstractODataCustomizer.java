@@ -56,7 +56,7 @@ public abstract class AbstractODataCustomizer implements ComponentProxyCustomize
             .addSerializer(new ClientPrimitiveValueSerializer())
             .addSerializer(new ClientEnumValueSerializer())
             .addSerializer(new ClientCollectionValueSerializer())
-            .addSerializer(new ClientComplexValueSerializer(OBJECT_MAPPER));
+            .addSerializer(new ClientComplexValueSerializer());
         OBJECT_MAPPER.registerModule(module);
     }
 

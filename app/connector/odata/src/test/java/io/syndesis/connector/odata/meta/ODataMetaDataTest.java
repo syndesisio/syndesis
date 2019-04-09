@@ -95,4 +95,21 @@ public class ODataMetaDataTest extends AbstractODataTest {
         assertThat(meta.get().getPayload()).isInstanceOf(ODataMetadata.class);
     }
 
+    @Test
+    public void testMetaDataExtensionRetrievalOnceResourcePathSet() throws Exception {
+        ODataMetaDataExtension extension = new ODataMetaDataExtension(context);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(SERVICE_URI, defaultTestServer.servicePlainUri());
+        parameters.put(RESOURCE_PATH, "Products");
+        Optional<MetaDataExtension.MetaData> meta = extension.meta(parameters);
+        assertThat(meta).isPresent();
+
+        Object payload = meta.get().getPayload();
+        assertThat(payload).isInstanceOf(ODataMetadata.class);
+        ODataMetadata odataMetadata = (ODataMetadata) payload;
+        assertThat(odataMetadata.getEntityNames().size()).isEqualTo(1);
+        assertThat(odataMetadata.getEntityNames().iterator().next()).isEqualTo(defaultTestServer.resourcePath());
+    }
+
 }
