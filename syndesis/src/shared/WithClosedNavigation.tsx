@@ -10,18 +10,14 @@ import { AppContext } from '../app';
  * lifecycle - like data fetching components - to avoid firing quick unmount/mount
  * events that will lead to a bad UX.
  */
-export class WithClosedNavigation extends React.Component {
-  public static contextType = AppContext;
+export const WithClosedNavigation: React.FunctionComponent = ({ children }) => {
+  const context = React.useContext(AppContext);
+  React.useEffect(() => {
+    context.hideNavigation();
 
-  public componentDidMount(): void {
-    this.context.hideNavigation();
-  }
-
-  public componentWillUnmount(): void {
-    this.context.showNavigation();
-  }
-
-  public render() {
-    return this.props.children;
-  }
-}
+    return () => {
+      context.showNavigation();
+    };
+  }, []);
+  return <>{children}</>;
+};
