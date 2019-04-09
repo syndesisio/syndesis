@@ -14,14 +14,13 @@ This part is similar to the DB migration, except that upgrade shell scripts are 
 
 ```
 /migration/resource/
-    1.3/
-      10-update-serverconfig.sh
-      20-update-uiconfig.sh
-    1.4/
+    10-update-serverconfig.sh
+    20-update-uiconfig.sh
       ...
 ```
 
-Again, as for JsonDB upgrades, these scripts are specific for a _target_ version.
+These update scripts will be always executed during the upgrade process.
+Hence, they need to be idempotent as if they detect that they already performed their update then they should be a no-op.
 In general, these upgrades scripts are used to add default values for new features (if not present) or change defaults.
 
 Within the scripts you are free to do what you want to do, but typically this will be tweaking of some scripts
@@ -31,9 +30,6 @@ NOTE: No resources from generated integration pods are upgraded. This needs to b
 After this, the upgrade of the new version with an `oc replace` for all other resource objects extracted <<step-create-upgrade-json, previously>>.
 This command will automatically spin up new versions (or the same if unchanged in this release) for all deployments.
 
-If you add to the special directory "always", then this update script will be always called.
-Hence, it needs to be idempotent as if it detects that it already performed its update then this
-should be a no-op.
 
 .Rollback
 Restore all the resource objects backuped in a previous step
@@ -143,21 +139,8 @@ run_update_scripts() {
 
     local resourcedir=${migrationdir}/resource
 
-    if [ -d ${resourcedir}/any ]; then
-        for script in $(ls ${resourcedir}/any/*); do
-            echo "      - Executing any/$(basename $script)"
-            source ${script}
-        done
-    fi
-
-    if [ ! -d ${resourcedir}/${tag} ]; then
-        echo "      - No update scripts found for ${tag} in ${resourcedir}"
-        return
-    fi
-
-    for script in $(ls ${resourcedir}/${tag}/*); do
-        echo "      - Executing $tag/$(basename $script)"
+    for script in $(ls ${resourcedir}/*.sh); do
+        echo "      - Executing $(basename $script)"
         source ${script}
     done
-
 }
