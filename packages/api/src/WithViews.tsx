@@ -4,7 +4,7 @@ import { DVFetch } from './DVFetch';
 import { IFetchState } from './Fetch';
 
 export interface IWithViewProps {
-  serviceVdb: string;
+  serviceVdbName: string;
   initialValue?: RestViewDefinition[];
   children(props: IFetchState<RestViewDefinition[]>): any;
 }
@@ -17,7 +17,7 @@ export class WithViews extends React.Component<IWithViewProps> {
   public render() {
     return (
       <DVFetch<RestViewDefinition[]>
-        url={`workspace/vdbs/${this.props.serviceVdb}/Models/views/Views`}
+        url={`workspace/vdbs/${this.props.serviceVdbName}/Models/views/Views`}
         defaultValue={[]}
         initialValue={this.props.initialValue}
       >

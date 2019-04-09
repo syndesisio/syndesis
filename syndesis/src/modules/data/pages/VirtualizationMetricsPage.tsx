@@ -22,10 +22,7 @@ export interface IVirtualizationMetricsPageRouteState {
   virtualization: RestDataService;
 }
 
-export class VirtualizationMetricsPage extends React.Component<
-  IVirtualizationMetricsPageRouteParams,
-  IVirtualizationMetricsPageRouteState
-> {
+export class VirtualizationMetricsPage extends React.Component {
   public render() {
     return (
       <WithRouteData<

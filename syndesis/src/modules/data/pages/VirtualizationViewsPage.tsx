@@ -82,10 +82,7 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export class VirtualizationViewsPage extends React.Component<
-  IVirtualizationViewsPageRouteParams,
-  IVirtualizationViewsPageRouteState
-> {
+export class VirtualizationViewsPage extends React.Component {
   public filterUndefinedId(view: RestViewDefinition): boolean {
     return view.keng__id !== undefined;
   }
@@ -115,7 +112,7 @@ export class VirtualizationViewsPage extends React.Component<
           return (
             <div>
               <HeaderView virtualizationId={virtualizationId} />
-              <WithViews serviceVdb={virtualization.serviceVdbName}>
+              <WithViews serviceVdbName={virtualization.serviceVdbName}>
                 {({ data, hasData, error }) => (
                   <WithListViewToolbarHelpers
                     defaultFilterType={filterByName}

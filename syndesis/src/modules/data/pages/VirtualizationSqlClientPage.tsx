@@ -22,10 +22,7 @@ export interface IVirtualizationSqlClientPageRouteState {
   virtualization: RestDataService;
 }
 
-export class VirtualizationSqlClientPage extends React.Component<
-  IVirtualizationSqlClientPageRouteParams,
-  IVirtualizationSqlClientPageRouteState
-> {
+export class VirtualizationSqlClientPage extends React.Component {
   public render() {
     return (
       <WithRouteData<

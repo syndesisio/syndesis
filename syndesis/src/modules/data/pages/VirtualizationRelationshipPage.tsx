@@ -22,10 +22,7 @@ export interface IVirtualizationRelationshipPageRouteState {
   virtualization: RestDataService;
 }
 
-export class VirtualizationRelationshipPage extends React.Component<
-  IVirtualizationRelationshipPageRouteParams,
-  IVirtualizationRelationshipPageRouteState
-> {
+export class VirtualizationRelationshipPage extends React.Component {
   public render() {
     return (
       <WithRouteData<
