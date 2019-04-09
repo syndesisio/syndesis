@@ -183,7 +183,7 @@
             <!--
                 Connector depdendencies
 
-                NOTE: any new connector provided out of the box by syndesis should be listed here. Maybve this can be
+                NOTE: any new connector provided out of the box by syndesis should be listed here. Maybe this can be
                       auto generated in a future release.
             -->
       <dependency>
@@ -324,6 +324,11 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-odata</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-box</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
