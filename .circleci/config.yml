@@ -96,7 +96,7 @@ jobs:
       - run:
           name: Build app for GH-Pages
           command: |
-            PUBLIC_URL="https://syndesisio.github.io/syndesis-react-poc/app" yarn build --scope @syndesis/syndesis
+            PUBLIC_URL="https://syndesisio.github.io/syndesis-react/app" yarn build --scope @syndesis/syndesis
             cp -a syndesis/build doc/app
             cp syndesis/config.staging.json doc/app/config.json
 
@@ -140,7 +140,7 @@ jobs:
           name: Build app for Circle CI artifacts
           command: |
             # 153815627 is GH project id, but it's not exposed as an env variable. TODO find a better way to handle it
-            PUBLIC_URL="https://$CIRCLE_BUILD_NUM-153815627-gh.circle-artifacts.com/0/home/circleci/project/doc/app" yarn build --scope @syndesis/syndesis
+            PUBLIC_URL="https://$CIRCLE_BUILD_NUM-153815627-gh.circle-artifacts.com/0/home/circleci/repo/app/ui-react/doc/app" yarn build --scope @syndesis/syndesis
             cp -a syndesis/build doc/app
             cp syndesis/config.staging.json doc/app/config.json
 
@@ -150,7 +150,7 @@ jobs:
       - run:
           name: Post artifact link on GH issue
           command: |
-            ARTIFACT_URL="https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/home/circleci/project/doc/index.html"
+            ARTIFACT_URL="https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/home/circleci/repo/app/ui-react/doc/index.html"
 
             curl \
               -d "{\"pull_request\": \"$CIRCLE_PULL_REQUEST\", \"template\": \"PR Storybook available [here]($ARTIFACT_URL)\"}" \
