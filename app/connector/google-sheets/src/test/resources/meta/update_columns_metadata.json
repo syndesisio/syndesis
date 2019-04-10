@@ -1,0 +1,16 @@
+{
+  "inputShape" : {
+    "kind" : "json-schema",
+    "type" : "VALUE_RANGE_PARAM_IN",
+    "name" : "ValueRange Parameter",
+    "description" : "Parameters of range [A5:C5]",
+    "metadata": {
+      "variant": "collection"
+    },
+    "specification" : "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"VALUE_RANGE\",\"properties\":{\"spreadsheetId\":{\"type\":\"string\",\"required\":true},\"#5\":{\"type\":\"string\",\"required\":true}}}}"
+  },
+  "outputShape" : {
+    "kind" : "none",
+    "type" : "VALUE_RANGE_PARAM_OUT"
+  }
+}

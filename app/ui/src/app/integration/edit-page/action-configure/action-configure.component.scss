@@ -1,0 +1,14 @@
+.pre-content {
+  .toolbar-pf {
+    background: none !important;
+    border: none !important;
+
+    .search {
+      width: 50% !important;
+
+      .input-group {
+        width: 80% !important;
+      }
+    }
+  }
+}

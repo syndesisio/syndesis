@@ -1,0 +1,74 @@
+= System Tests
+
+== What they are
+
+The system tests are a set of tests that are meant to be run against an identical to the production environment and ensure that things work. Initially they were meant to be used for pull request validation, but at the moment this is not feasible.
+
+The things that they actually test, is the validity of the Open-shift templates.
+
+- Templates are syntactically correct.
+- Syndesis starts up properly.
+
+Also, they do check that the core services (e.g. syndesis-server) are ready and accessible.r
+
+== Where they live
+
+The actual source code of the system tests, lives in the test maven module, which can be found at:
+
+---
+app/test
+---
+
+The code that actually bootstraps and orchestrates the test can be found
+
+---
+tools/bin/syndesis
+tools/bin/commands/system-test
+---
+
+== How we run them
+
+They can be run using the cli:
+
+---
+ ./tools/bin/syndesis system-test
+---
+
+== How they work
+
+The system tests are implemented using arquillian-cube and are controlled using internal shell scripts.
+
+Arquillian Cube for Kubernetes and Openshift usually provides the following features:
+
+- Management of an ephemeral environment where tests run.
+- Installation of all the required Openshift resources.
+- Waiting until everything is ready.
+- Dependency injection for Kubernetes/Openshift resources used in the tests
+- and more...
+
+Due to restrictions related to security in the target environment (a service account can't create a project and then create build configs inside it), we can't use arquillian for creating ephemeral environments. So we do it manually using shell scripting.
+
+The system-test shell script, allows us to utilize a pool of pre-existing projects.
+
+=== How the project pool works
+
+The idea is that we have a central secret that holds a token for every project in the pool and each project in the pool has a configmap which is used as lock. Each process that needs to `allocate` a project, finds the first un-allocated project and `locks` its configmap. Races are prevented with the use of configmap's resource version.
+
+=== The arquillian-cube setup
+
+There are two issues that make the arquillian-cube setup look slightly different than the typical arquillian-cube-kubernetes setup:
+
+- the fact that the project is allocated externally (by a shell script)
+- some pending issues in the kubernetes-client which prevents us load a parameterized template using java.
+
+For the reasons mentioned above two additional scripts have been implemented and passed to to arquillian-cube:
+
+- setup.sh
+- teaddown.sh
+
+The purpose of those scripts is to apply the openshift templates and to cleanup after the tests are run.
+
+Since the templates are installed via shell, we need to let arquillian-cube know which are the `services` that indicate that the environment is ready.
+This is why we specify `syndesis-server` and `syndesis-ui`.
+
+

@@ -1,0 +1,47 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='example-missing-unwanted-data_{context}']
+= Example of missing or unwanted data when combining or separating fields
+
+In a data mapping, you might need to identify missing or unwanted data when a source or
+target field contains compound data. For example, consider a 
+`long_address` field that has this format:
+
+_number street apartment city state zip zip+4 country_
+
+Suppose that you want to separate the `long_address` field into discrete 
+fields for `number`, `street`, `city`, `state`, and `zip`. To do this, 
+you select `long_address` as the source field and then select 
+the target fields. You then add padding fields at the locations for the
+parts of the source field that you do not want. In this example, the
+unwanted parts are _apartment_, _zip+4_, and _country_.
+
+To identify the unwanted parts, you need to know the order
+of the parts. The order indicates an index for 
+each part of the content in the compound field. For example, the `long_address` 
+field has 8 ordered parts. Starting at 1, the index of each part is:
+
+[cols="1,5"] 
+|===
+|1|_number_
+|2|_street_
+|3|_apartment_
+|4|_city_
+|5|_state_
+|6|_zip_
+|7|_zip+4_
+|8|_country_
+|===
+
+In the data mapper, to identify _apartment_, _zip+4_, and _country_ as missing, you 
+add padding fields at indexes 3, 7, and 8. See 
+link:{LinkFuseOnlineIntegrationGuide}#combine-multiple-source-fields-into-one-target-field_map}[Combining multiple source fields into one target field].
+
+Now suppose that you want to combine source fields for 
+`number`, `street`, `city`, `state`, and `zip` into a `long_address`
+target field. Further suppose that there are no source fields to provide content for 
+_apartment_, _zip+4_, and _country_. In the data mapper, you need to
+identify these fields as missing. Again, you add padding fields 
+at indexes 3, 7, and 8. See 
+link:{LinkFuseOnlineIntegrationGuide}#separate-one-source-field-into-multiple-target-fields_map[Separating one source field into multiple target fields].

@@ -1,0 +1,18 @@
+<syndesis-modal
+  id="leave-editor-prompt"
+  title="{{ 'integrations.leave-editor-title' | synI18n }}"
+  [body]="body"
+>
+  <ng-template #body>
+    <p
+      *ngIf="integration.name"
+      [innerHTML]="
+        'integrations.leave-editor-message' | synI18n: integration.name
+      "
+    ></p>
+    <p
+      *ngIf="!integration.name"
+      [innerHTML]="'integrations.leave-editor-message-noname' | synI18n"
+    ></p>
+  </ng-template>
+</syndesis-modal>

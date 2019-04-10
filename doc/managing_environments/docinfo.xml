@@ -1,0 +1,13 @@
+<productname>Syndesis</productname>
+<productnumber>1.1</productnumber>
+<subtitle>Managing Syndesis Environments</subtitle>
+<abstract>
+ <para>Managing accounts, resources, integration versions, and upgrades</para>
+</abstract>
+<authorgroup>
+  <org>
+    <orgname>Fuse Documentation Team</orgname>
+    <email>fuse-online-evaluation@redhat.com</email>
+  </org>
+</authorgroup>
+<xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

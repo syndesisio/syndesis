@@ -1,0 +1,144 @@
+#!/bin/bash
+
+
+doc::description() {
+    echo "Generate Syndesis Developer Handbook (SDH)"
+}
+
+doc::usage() {
+    cat <<EOT
+-d  --directory <dir>         Top-level dir holding doc source and output directory. Default: "doc/sdh"
+-i  --input <file>            Input file to use. Default: "index.adoc"
+    --out <dir>               Directory to generate files (default: "output")
+    --html                    Generate HTML pages
+    --pdf <out>               Generate PDF and write it to <out> (default: "sdh.pdf")
+    --epub <out>              Generate Epub and write it to <out> (default: "sdh.epub")
+    --gh-pages <msg>          Create everything into the gh-pages branch and commit with <msg>
+-o  --open                    Open HTML documentation in default browser after doc generation
+-l  --local                   Use locally installed commands instead of Docker image
+EOT
+}
+
+doc::run() {
+    local asciidoctor_image="asciidoctor/docker-asciidoctor"
+    local syndesis_git_url="git@github.com:syndesisio/syndesis.git"
+
+    local docdir=$(readopt --directory -d)
+    if [ -z "${docdir}" ]; then
+        docdir="$(basedir)/../../doc/sdh"
+    fi
+    docdir=$(cd $docdir && pwd)
+
+    local version=$(cd $docdir && git describe $(cd $docdir && git rev-parse HEAD) 2>/dev/null)
+
+    local input_file=$(readopt --input -i)
+    if [ -z "${input_file}" ]; then
+        input_file="index.adoc"
+    else
+        docdir=$(cd $(dirname $input_file) && pwd)
+    fi
+
+    local outdir=$(readopt --out)
+    if [ -z "${outdir}" ]; then
+        outdir="output"
+        if [ ! -d "$docdir/$outdir" ]; then
+            mkdir -p "$docdir/$outdir"
+        fi
+    fi
+
+    local pdf_out="$(optional_arg --pdf sdh.pdf)"
+    local epub_out="$(optional_arg --epub sdh.epub)"
+
+    local do_html=$(hasflag --html)
+    if [ -z "$do_html" ] && [ -z "$pdf_out" ] && [ -z "$epub_out" ]; then
+        do_html="true"
+    fi
+
+    if [ -n "${do_html}" ]; then
+        echo "SDH: Generating HTML from ${input_file} to $docdir/$outdir"
+        call_asciidoctor ${docdir} \
+            asciidoctor ${input_file} \
+                -r asciidoctor-diagram \
+                -a version=$version \
+                -a source-highlighter=coderay \
+                -a toc=left \
+                -D $outdir
+    fi
+
+    if [ -n "${pdf_out}" ]; then
+        echo "SDH: Generating PDF $docdir/$outdir/${pdf_out}"
+        call_asciidoctor ${docdir} \
+            asciidoctor-pdf ${input_file} \
+                -r asciidoctor-diagram \
+                -a version=$version \
+                -a source-highlighter=rouge \
+                -o ${outdir}/${pdf_out}
+    fi
+
+    if [ -n "${epub_out}" ]; then
+        echo "SDH: Generating Epub $docdir/$outdir/${epub_out}"
+        call_asciidoctor ${docdir} \
+            asciidoctor-epub3 ${input_file} \
+                -r asciidoctor-diagram \
+                -a version=$version \
+                -a source-highlighter=rouge \
+                -o ${outdir}/${epub_out}
+    fi
+
+    local gh_comment=$(optional_arg --gh-pages "update(sdh): Documentation")
+    if [ $(hasflag --gh-pages) ]; then
+        echo "SDH: Publishing documents to $syndesis_git_url"
+        gh_pages "$docdir/$outdir" "$syndesis_git_url" "$gh_comment"
+    fi
+
+    if [ -n "${do_html}" ] && [ $(hasflag --open -o) ]; then
+        open_url "$docdir/$outdir/$(basename $input_file .adoc).html"
+    fi
+}
+
+call_asciidoctor() {
+    local docdir=$1
+    shift
+    if [ $(hasflag --local -l) ]; then
+        cd $docdir
+        eval "$@"
+    else
+        docker run --rm -it -v ${docdir}:/documents $asciidoctor_image $@
+    fi
+}
+
+optional_arg() {
+    option=$1
+    default_value=$2
+
+    local out=$(hasflag $option)
+    if [ -n "${out}" ]; then
+        out=$(readopt $option)
+        if [ -z "${out}" ] || [[ $out = "-"* ]]; then
+            out=$default_value
+        fi
+        echo $out
+    fi
+}
+
+gh_pages() {
+    local docdir=$1
+    local github_url=$2
+    local message=$3
+
+    local tempdir=$(mktemp -d)
+    cd $tempdir
+
+    git clone --depth 1 -b gh-pages $github_url gh-pages
+    cd gh-pages
+
+    cp -rv ${docdir}/* .
+    git add --ignore-errors *
+    git commit -m "$message"
+
+    git push origin gh-pages
+
+    cd /
+    ls -Rl $tempdir
+    rm -rf $tempdir
+}

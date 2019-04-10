@@ -1,0 +1,20 @@
+:host ::ng-deep .tooltip-inner {
+  min-width: 200px;
+  word-wrap: break-word;
+}
+
+input:read-only,
+textarea:read-only {
+  color: inherit;
+  background-color: transparent;
+  border: none;
+  padding: 0;
+}
+
+.control-label {
+  cursor: pointer;
+
+  > .hint-icon {
+    order: 1;
+  }
+}

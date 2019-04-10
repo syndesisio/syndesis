@@ -1,0 +1,96 @@
+:experimental:
+include::topics/shared/attributes.adoc[]
+
+:prodname: Syndesis
+:prodversion: 7.3
+:imagesdir: topics
+:prodnameinurl: fuse-ignite
+:productpkg: red_hat_fuse
+:version: 7.3
+:location: upstream
+:context: connectors
+
+[id='connecting-to-applications-and-services']
+= Connecting {prodname} to Applications and Services
+
+To integrate applications, you create a connection to each application
+or service that you want to integrate. You then create an integration and
+add a connection to it for each integration or service that you want
+to integrate.
+
+{prodname} <<supported-connectors_{context},supports numerous connectors>> that serve
+as templates for creating connections. The following topics provide
+details for creating connections and adding them to integrations:
+
+* <<connecting-to-s3_{context}>>
+* <<connecting-to-amq_{context}>>
+* <<connecting-to-amqp_{context}>>
+* <<connecting-to-dropbox_{context}>>
+* <<connecting-to-fhir_{context}>>
+* <<connecting-to-ftp_{context}>>
+* <<connecting-to-google_{context}>>
+* <<connecting-to-http_{context}>>
+* <<connecting-to-irc_{context}>>
+* <<connecting-to-kafka_{context}>>
+* <<connecting-to-kudu_{context}>>
+* <<connecting-to-mqtt_{context}>>
+* <<connecting-to-odata_{context}>>
+* <<connecting-to-rest-apis_{context}>>
+* <<connecting-to-sf_{context}>>
+* <<connecting-to-concur_{context}>>
+* <<connecting-to-servicenow_{context}>>
+* <<connecting-to-slack_{context}>>
+* <<connecting-to-databases_{context}>>
+* <<connecting-to-telegram_{context}>>
+* <<connecting-to-twitter_{context}>>
+* <<triggering-integrations-with-http-requests_{context}>>
+* <<triggering-integrations-with-timers_{context}>>
+
+
+include::topics/r_supported-connectors.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-amazon-s3.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-amq.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-amqp.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-dropbox.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-fhir.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-ftp.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-google.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-http.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-irc.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-kafka.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-kudu.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-mqtt.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-odata.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-rest-apis.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-sf.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-concur.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-servicenow.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-slack.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-databases.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-telegram.adoc[leveloffset=+1]
+
+include::topics/as_connecting-to-twitter.adoc[leveloffset=+1]
+
+include::topics/as_triggering-integrations-with-http-requests.adoc[leveloffset=+1]
+
+include::topics/as_trigger-integration-with-timer.adoc[leveloffset=+1]

@@ -1,0 +1,11 @@
+= Syndesis Extension
+
+This project is a template of a Syndesis Extension.
+
+To build this project use
+
+    mvn install
+
+For more help see the Sydnesis documentation:
+
+    https://syndesis.io/

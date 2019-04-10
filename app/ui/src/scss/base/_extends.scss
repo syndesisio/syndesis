@@ -1,0 +1,20 @@
+/// Centralized set of extended SASS classNames
+
+%syn-visuallyhidden {
+  @include visuallyhidden;
+}
+
+%syn-preventclick {
+  @include preventclick;
+}
+
+%syn-cta-btn {
+  display: block;
+  margin-top: $button-top-gutter;
+  min-width: $button-min-width;
+}
+
+%reset-padmargins {
+  margin: 0;
+  padding: 0;
+}

@@ -1,0 +1,335 @@
+#!/bin/bash
+
+system-test::description() {
+    echo "Run system tests"
+}
+
+system-test::usage() {
+    cat - <<EOT
+    --project <project>       The test project to use
+    --token <token>           Token for connecting to the server
+    --server <url>            OpenShift Server url to use for the tests. If not given, use the currently connected
+                              server
+    --pool <project>          If no project is given use, a pooling mechanism. This pool has to be created
+                              before with --create-pool
+    --test-id <id>            Id to identify the test run
+    --create-pool <prefix>    Create project pool for system-tests with all projects with the given prefix
+    --list-pool               Show all locks for the pool
+    --release-project <t-id>  Release project for given test id (or all if no test id is given)
+EOT
+}
+
+system-test::run() {
+    source "$(basedir)/commands/util/maven_funcs"
+
+    local server=$(readopt --server)
+    local pool=$(readopt --pool)
+    if [ -z "${pool}" ]; then
+        pool="syndesis-ci"
+    fi
+    if [ -n "${server:-}" ]; then
+        local token=$(readopt --token)
+        if [ -z "${token:-}" ]; then
+            echo "--server provided for sytem tests but no --token for credentials"
+            exit 1
+        fi
+        local log
+        log=$(oc login $server --token $token)
+        if [ $? -ne 0 ]; then
+           echo $log
+           exit 1
+        fi
+    fi
+
+    local lock_prefix=$(readopt --create-pool)
+    if [ -n "${lock_prefix}" ]; then
+        create_pool $lock_prefix
+    elif [ -n "$(hasflag --list-pool)" ]; then
+        list_pool "$pool"
+    elif [ -n "$(hasflag --release-project)" ]; then
+        release_project "$pool" "$(readopt --test-id)"
+    else
+        test_build $pool
+    fi
+}
+
+# ======================================================
+# Testing functions
+
+base64_decode_option() {
+    set +e
+    for opt in -D -d; do
+        echo "Y2hpbGk=" | base64 $opt >/dev/null 2>&1
+        if [ $? -eq 0 ]; then
+            echo $opt
+            set -e
+            return
+        fi
+    done
+    set -e
+    echo "ERROR: Neither base64 -d nor base64 -D works"
+}
+
+find_secret() {
+    local project=$1
+    local service_account=$2
+    oc get sa $service_account -n $project -o yaml | grep "${service_account}-token-" | awk -F ": " '{print $2}'
+}
+
+read_token() {
+    local secret=$1
+    local project=$2
+    base64_opt=$(base64_decode_option)
+    check_error $base64_opt
+    oc get secret $secret -n $project -o yaml | grep token: | awk -F ": " '{print $2}' | base64 $base64_opt
+}
+
+read_token_of_sa() {
+    local project=$1
+    local service_account=$2
+    local secret=$(find_secret $project $service_account)
+    local token=$(read_token $secret $project)
+    echo $token
+}
+
+# Create a lock for all projects with the given prefix
+create_pool() {
+    local prefix=$1
+    local service_account="default"
+    local pool=$(readopt --pool)
+
+    if [ -z "$pool" ]; then
+        pool="syndesis-ci"
+    fi
+
+    for p in $(oc get projects | grep $prefix | awk -F " " '{print $1}'); do
+        echo "Creating a secret lock for project $p"
+        local secret=$(find_secret $p "default")
+        echo "Found secret: $secret"
+        local token=$(read_token_of_sa $p $service_account)
+        echo "Found token: $token"
+        oc delete secret project-lock-$p -n $pool_project || true
+        oc create secret generic project-lock-$p --from-literal=token=$token -n $pool_project
+        oc annotate secret project-lock-$p syndesis.io/lock-for-project=$p -n $pool_project
+        oc annotate secret project-lock-$p syndesis.io/allocated-by="" -n $pool_project
+
+        oc adm policy add-role-to-user edit system:serviceaccount:$p:$service_account -n $p
+        oc adm policy add-role-to-user system:image-puller system:serviceaccount:$p:$service_account -n $p
+        oc adm policy add-role-to-user system:image-builder system:serviceaccount:$p:$service_account -n $p
+    done
+}
+
+# Gets the current OpenShift user token.
+current_token() {
+    echo $(oc whoami -t)
+}
+
+# Get the current OpenShift server
+current_server() {
+    echo $(oc whoami --show-server)
+}
+
+# Lock functions (secret lock strategy)
+
+# Displays the data of the lock. A project lock is a secret that contains the following:
+# 1. annotations:
+#    i)  syndesis.io/lock-for-project: The project that this lock corresponds to.
+#    ii) syndesis.io/allocated-by:     The owner of the lock.
+# 2. data:
+#    i)  connection information for the project (token)
+project_lock_data() {
+    local secret=$1
+    local pool=$2
+    oc get $secret -n $pool -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}}~{{.metadata.resourceVersion}}~{{index .metadata.annotations "syndesis.io/allocated-by"}}{{"\n"}}'
+}
+
+# Extract test id used for system tests
+calc_test_id() {
+    local test_id=$(readopt --test-id)
+
+    if [ -z "${test_id}" ]; then
+      if [ -n "${JOB_NAME:-}" ]; then
+          # Jenkins Job
+          test_id="${JOB_NAME:-}${BUILD_NUMBER:-}"
+      elif [ -n "${CIRCLE_JOB:-}" ]; then
+          # Circle CI Job
+          test_id="${CIRCLE_JOB:-}${CIRCLE_BUILD_NUM:-}"
+      else
+          test_id="cli"
+      fi
+    fi
+    echo $test_id
+}
+
+
+#
+# Obtains a project lock. (See above).
+lock_project() {
+    local test_id=$1
+    local pool=$2
+    for lock in $(oc get secret -o name -n $pool | grep "project-lock-" ); do
+        local status=$(project_lock_data "$lock" "$pool")
+        local project=$(echo $status | awk -F "~" '{print $1}')
+        local version=$(echo $status | awk -F "~" '{print $2}')
+        local allocator=$(echo $status | awk -F "~" '{print $3}')
+
+        if [ "${test_id}" == "${allocator}" ]; then
+           # Already occupied by the given test ID. No actionr required
+           echo $project;
+           return
+        fi
+
+        # Lock is free
+        if [ -z "$allocator" ]; then
+            oc annotate $lock syndesis.io/allocated-by=$test_id --resource-version=$version --overwrite -n $pool > /dev/null
+            local newstatus=$(project_lock_data "$lock" "$pool")
+            local newallocator=$(echo $newstatus | awk -F "~" '{print $3}')
+            if [ "$newallocator" == "$test_id" ]; then
+                echo $project
+                return
+            fi
+        fi
+    done
+
+    # Nothing found, empty return value
+}
+
+check_project_status() {
+    local pool=$1
+    # Checking active status of pool project
+    local pool_status=$(oc get projects | grep $pool | awk -F " " '{print $2}')
+    if [ "$pool_status" != "Active" ]; then
+        echo "ERROR: No active project $pool: $pool_status"
+        exit 1
+    fi
+}
+
+get_free_pool_project() {
+
+    # The pool project. See below.
+    local pool=$(readopt --pool)
+
+    # Calculate the test ID used for locking
+    local test_id=$(calc_test_id)
+
+    # The calculated project to use
+    local project
+    echo "Trying to allocate project for: $test_id" >&2
+
+    # Project holding secrets for all projects used for testing.
+    # These secrets are updated with locks to reflect the current
+    # status of all parallel running tests
+    if [ -z "$pool" ]; then
+        pool="syndesis-ci"
+    fi
+
+    # Is the poo project active ?
+    check_error $(check_project_status $pool)
+
+    echo "Using pool: $pool" >&2
+
+    # Get the lock for the given (or calculated) test_id. Retry 10 times if every projects
+    # is locked
+    local project=$(lock_project "$test_id" "$pool")
+    if [ -z "$project" ]; then
+        for r in {1..10}; do
+            project=$(lock_project "$test_id" "$pool_project")
+            if [ -n "${project}" ]; then
+                break
+            fi
+            echo "Couldn't obtain lock for a single project. Retrying in 1 minute." >&2
+            sleep 1m
+        done
+    fi
+
+    if [ -n "$project" ]; then
+        echo "Obtained project $project" >&2
+        echo $project
+    else
+        echo "ERROR: Failed to allocate project. Exiting."
+    fi
+}
+
+project_lock_name() {
+    local secret_name=$1
+    local pool=$2
+    if [ -n "${secret}" ]; then
+      oc get secret $secret_name -n $pool -o go-template='{{index .metadata.annotations "syndesis.io/lock-for-project"}}{{"\n"}}'
+    fi
+}
+
+release_project_lock() {
+    local lock=$1
+    local pool_project=$2
+    oc annotate $lock syndesis.io/allocated-by="" --overwrite -n $pool_project > /dev/null
+}
+
+list_pool() {
+    local pool=$1
+    for lock in $(oc get secret -o name -n $pool | grep "project-lock-" ); do
+        local status=$(project_lock_data "$lock" "$pool")
+        local project=$(echo $status | awk -F "~" '{print $1}')
+        local version=$(echo $status | awk -F "~" '{print $2}')
+        local allocator=$(echo $status | awk -F "~" '{print $3}')
+
+        echo -e "$project:\t${allocator:----}"
+    done
+}
+
+release_project() {
+    local pool=$1
+    local test_id=$2
+
+    oc project $pool
+    for lock in $(oc get secret -o name -n $pool | grep "project-lock-" ); do
+        local status=$(project_lock_data "$lock" "$pool")
+        local project=$(echo $status | awk -F "~" '{print $1}')
+        local version=$(echo $status | awk -F "~" '{print $2}')
+        local allocator=$(echo $status | awk -F "~" '{print $3}')
+
+        if [ -z "${test_id:-}" ] || [ "${test_id}" == "${allocator:-}" ]; then
+          echo "Releasing $lock"
+          release_project_lock $lock $pool
+        fi
+    done
+}
+
+is_minishift() {
+    if [ -x "$(command -v foo)" ]; then
+        local minishift_ip=$(minishift ip)
+        local server_url=$(oc version | grep Server | cut -d' ' -f 2)
+        if [ "https://$minishift_ip:8443" == "$server_url"]; then
+            echo "true"
+        fi
+    fi
+}
+
+test_build() {
+    source "$(basedir)/commands/build"
+
+    echo "Running build for system tests"
+    local pool=$1
+    # Test project given directly
+    local project=$(readopt --project)
+    if [ -z "$project" ]; then
+        project=$(get_free_pool_project)
+        check_error $project
+        local test_id=$(calc_test_id)
+        trap "release_project "$pool" "$test_id"" EXIT
+    fi
+
+    local minishift=$(is_minishift)
+    if [ -n "$minishift" ]; then
+        export MINISHIFT_ENABLED="true"
+    fi
+    export NAMESPACE_USE_EXISTING=$project
+    export KUBERNETES_NAMESPACE=$project
+    export OPENSHIFT_TEMPLATE_FROM_WORKSPACE=true
+    export WORKSPACE=$(appdir)
+
+    oc project $project
+    local maven_args=$(maven_args $project)
+    check_error $maven_args
+    maven_args="-Psystem-tests,image,flash -Dfabric8.mode=openshift $maven_args"
+    call_maven "$maven_args"
+}

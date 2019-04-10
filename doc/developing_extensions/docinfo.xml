@@ -1,0 +1,13 @@
+<productname>Syndesis</productname>
+<productnumber>1.1</productnumber>
+<subtitle>Developing Syndesis Customizations</subtitle>
+<abstract>
+ <para>Information and instructions for developing extensions</para>
+</abstract>
+<authorgroup>
+  <org>
+    <orgname>Fuse Documentation Team</orgname>
+    <email>fuse-online-evaluation@redhat.com</email>
+  </org>
+</authorgroup>
+<xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

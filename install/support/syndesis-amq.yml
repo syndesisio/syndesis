@@ -1,0 +1,140 @@
+apiVersion: v1
+kind: Template
+labels:
+  template: syndesis-amq
+message: A new messaging service has been created in your project. It will handle
+  the protocol openwire. The username/password for accessing the service
+  is ${MQ_USERNAME}/${MQ_PASSWORD}.
+metadata:
+  annotations:
+    description: Application template for JBoss A-MQ brokers. These can be deployed
+      as standalone or in a mesh. This template doesn't feature SSL support.
+    iconClass: icon-amq
+    openshift.io/display-name: Syndesis A-MQ (Ephemeral, no SSL)
+    openshift.io/provider-display-name: syndesis.io
+    tags: messaging,amq,jboss
+  name: amq63-basic
+parameters:
+  - description: The name for the application.
+    displayName: Application Name
+    name: APPLICATION_NAME
+    required: true
+    value: broker
+  - description: Queue names, separated by commas. These queues will be automatically
+      created when the broker starts. If left empty, queues will be still created dynamically.
+    displayName: Queues
+    name: MQ_QUEUES
+  - description: Topic names, separated by commas. These topics will be automatically
+      created when the broker starts. If left empty, topics will be still created dynamically.
+    displayName: Topics
+    name: MQ_TOPICS
+  - description: User name for standard broker user. It is required for connecting to
+      the broker. If left empty, it will be generated.
+    displayName: A-MQ Username
+    from: user[a-zA-Z0-9]{3}
+    generate: expression
+    name: MQ_USERNAME
+  - description: Password for standard broker user. It is required for connecting to
+      the broker. If left empty, it will be generated.
+    displayName: A-MQ Password
+    from: '[a-zA-Z0-9]{8}'
+    generate: expression
+    name: MQ_PASSWORD
+  - description: Namespace in which the ImageStreams for Red Hat Middleware images are
+      installed. These ImageStreams are normally installed in the openshift namespace.
+      You should only need to modify this if you've installed the ImageStreams in a
+      different namespace/project.
+    displayName: ImageStream Namespace
+    name: IMAGE_STREAM_NAMESPACE
+    required: true
+    value: fuse-ignite
+objects:
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    name: jboss-amq-63
+    labels:
+      app: syndesis
+      component: amq
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: registry.access.redhat.com/jboss-amq-6/amq63-openshift:1.2
+      importPolicy:
+        scheduled: true
+      name: "1.2"
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      description: The broker's OpenWire port.
+    labels:
+      application: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}-amq-tcp
+  spec:
+    ports:
+    - port: 61616
+      targetPort: 61616
+    selector:
+      deploymentConfig: ${APPLICATION_NAME}-amq
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      application: ${APPLICATION_NAME}
+    name: ${APPLICATION_NAME}-amq
+  spec:
+    replicas: 1
+    selector:
+      deploymentConfig: ${APPLICATION_NAME}-amq
+    strategy:
+      rollingParams:
+        maxSurge: 0
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          application: ${APPLICATION_NAME}
+          deploymentConfig: ${APPLICATION_NAME}-amq
+        name: ${APPLICATION_NAME}-amq
+      spec:
+        containers:
+        - env:
+          - name: AMQ_USER
+            value: ${MQ_USERNAME}
+          - name: AMQ_PASSWORD
+            value: ${MQ_PASSWORD}
+          - name: AMQ_TRANSPORTS
+            value: openwire
+          - name: AMQ_QUEUES
+            value: ${MQ_QUEUES}
+          - name: AMQ_TOPICS
+            value: ${MQ_TOPICS}
+          image: jboss-amq-63
+          imagePullPolicy: Always
+          name: ${APPLICATION_NAME}-amq
+          ports:
+          - containerPort: 8778
+            name: jolokia
+            protocol: TCP
+          - containerPort: 61616
+            name: tcp
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - /bin/bash
+              - -c
+              - /opt/amq/bin/readinessProbe.sh
+        terminationGracePeriodSeconds: 60
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - ${APPLICATION_NAME}-amq
+        from:
+          kind: ImageStreamTag
+          name: jboss-amq-63:1.2
+      type: ImageChange
+    - type: ConfigChange

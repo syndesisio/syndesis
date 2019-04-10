@@ -1,0 +1,39 @@
+@import 'syndesis-sass';
+
+.integration-detail {
+  &__body {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__info {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    flex-shrink: 0;
+  }
+
+  &__name {
+    margin-right: $gutter;
+  }
+
+  &__row {
+    padding: 0 $gutter;
+  }
+
+  &__outlet {
+    flex-grow: 1;
+    background: white;
+    padding: $gutter;
+  }
+
+  ::ng-deep syndesis-editable .fa {
+    font-size: 14px;
+  }
+
+  .syn-tabs {
+    margin: 0;
+    padding-left: 0;
+  }
+}

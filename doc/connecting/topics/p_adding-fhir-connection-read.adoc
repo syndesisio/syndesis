@@ -1,0 +1,50 @@
+// This module is included in the following assemblies:
+// as_connecting-to-fhir.adoc
+
+[id='adding-fhir-connection-read_{context}']
+= Obtaining a resource from a FHIR server
+
+In an integration, you can obtain one resource that is of the type 
+that you specify. To do this, add a FHIR connection 
+to the middle of a flow. 
+
+.Prerequisites
+* You created a connection to the FHIR server that has the resource 
+that you want to obtain.
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step.  
+
+.Procedure
+
+. Click the FHIR connection that can access the resource that you want to obtain. 
+. On the *Choose an Action* page, click *Read*. 
+. Click in the *Resource Type* field to display a list
+of FHIR resource types. Select or enter the type of resource that you 
+want to obtain. 
+. In the *Contained Resource Types* field, if the resource type 
+that you want contains other resource types, select 
+them. Use the *Ctrl* key if you need to select more than one. 
++
+Identifying contained resource types lets the data mapper display 
+the fields that are in the contained resources. If you do not specify 
+a contained resource type then you cannot map from any fields that are 
+in the contained resource. There is no harm in selecting a resource 
+that is not actually contained. 
+
+. In the *Resource Id* field, enter the ID of the resource that you want. 
+Or, leave this field blank if you 
+plan to map it from an earlier step that is in the flow. 
+. In the *Resource version* field, optionally specify a version ID
+for the resource. Leave this field blank to obtain 
+the most recent version of the resource or to map the version ID of 
+the resource that you want from a previous step. 
+.  Click *Next* to add this connection to the flow. 
+
+.Result
+The connection appears in the integration flow 
+in the location where you added it. During execution, this 
+connection returns one resource. 
+
+.Next steps
+To map a value to the *Resource Id* field or the *Resource version* field, add a data mapper step 
+before this connection.  

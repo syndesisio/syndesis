@@ -1,0 +1,168 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: {{Name}}
+#
+# Template flavor:
+#
+# Allow localhost refs: {{AllowLocalHost}}
+# Use docker images: {{WithDockerImages}}
+# Syndesis Tag: {{Tags.Syndesis}}
+# Prometheus Tag: {{Tags.Prometheus}}
+# Postgresql Tag: {{Tags.Postgresql}}
+# OAuthProxy Tag: {{Tags.OAuthProxy}}
+#
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+parameters:
+- name: ROUTE_HOSTNAME
+  description: The external hostname to access Syndesis
+- name: OPENSHIFT_MASTER
+  description: Public OpenShift master address
+  value: https://localhost:8443
+  required: true
+- name: OPENSHIFT_CONSOLE_URL
+  description: The URL to the OpenShift console
+  displayName: OpenShift Console URL
+- name: OPENSHIFT_PROJECT
+  description: The name of the OpenShift project Syndesis is being deployed into.
+  displayName: OpenShift project to deploy into
+  required: true
+- name: SAR_PROJECT
+  description: The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation in the $OPENSHIFT_PROJECT
+  displayName: OpenShift project to be used to authenticate the user against
+  required: true
+- name: OPENSHIFT_OAUTH_CLIENT_SECRET
+  description: OpenShift OAuth client secret
+  generate: expression
+  from: "[a-zA-Z0-9]{64}"
+  required: true
+- description: Maximum amount of memory the PostgreSQL container can use.
+  displayName: Memory Limit
+  name: POSTGRESQL_MEMORY_LIMIT
+  value: 255Mi
+- description: The OpenShift Namespace where the PostgreSQL ImageStream resides.
+  displayName: Namespace
+  name: POSTGRESQL_IMAGE_STREAM_NAMESPACE
+  value: openshift
+- description: Username for PostgreSQL user that will be used for accessing the database.
+  displayName: PostgreSQL Connection Username
+  name: POSTGRESQL_USER
+  value: syndesis
+- description: Password for the PostgreSQL connection user.
+  displayName: PostgreSQL Connection Password
+  from: '[a-zA-Z0-9]{16}'
+  generate: expression
+  name: POSTGRESQL_PASSWORD
+  required: true
+- description: Name of the PostgreSQL database accessed.
+  displayName: PostgreSQL Database Name
+  name: POSTGRESQL_DATABASE
+  required: true
+  value: syndesis
+- description: Volume space available for PostgreSQL data, e.g. 512Mi, 2Gi.
+  displayName: PostgreSQL Volume Capacity
+  name: POSTGRESQL_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
+- description: Password for the PostgreSQL sampledb user.
+  displayName: PostgreSQL SampleDB Connection Password
+  from: '[a-zA-Z0-9]{16}'
+  generate: expression
+  name: POSTGRESQL_SAMPLEDB_PASSWORD
+  required: true
+- description: Enables test-support endpoint on backend API
+  displayName: Test Support Enabled
+  name: TEST_SUPPORT_ENABLED
+  required: true
+  value: "false"
+- description: Enables starting up with demo data
+  displayName: Demo Data Enabled
+  name: DEMO_DATA_ENABLED
+  required: true
+  value: "false"
+{{^Productized}}- description: Registry from where to fetch Syndesis images
+  displayName: Syndesis Image Registry
+  name: SYNDESIS_REGISTRY
+  value: '{{ Registry }}'
+{{/Productized}}- description: Should deployment of integrations be enabled?
+  displayName: Enable Integration Deployment
+  name: CONTROLLERS_INTEGRATION_ENABLED
+  value: 'true'
+- description: Namespace containing image streams
+  displayName: Image Stream Namespace
+  name: IMAGE_STREAM_NAMESPACE
+  value: '{{ Images.ImageStreamNamespace }}'
+- description: Secret to use to encrypt oauth cookies
+  displayName: OAuth Cookie Secret
+  name: OAUTH_COOKIE_SECRET
+  generate: expression
+  from: '[a-zA-Z0-9]{32}'
+- name: SYNDESIS_ENCRYPT_KEY
+  description: The encryption key used to encrypt/decrypt stored secrets
+  generate: expression
+  from: "[a-zA-Z0-9]{64}"
+  required: true
+- description: Volume space available for Prometheus data, e.g. 512Mi, 2Gi.
+  displayName: Prometheus Volume Capacity
+  name: PROMETHEUS_VOLUME_CAPACITY
+  value: 1Gi
+  required: true
+- description: Maximum amount of memory the Prometheus container can use.
+  displayName: Memory Limit
+  name: PROMETHEUS_MEMORY_LIMIT
+  value: 512Mi
+  required: true
+- description: Volume space available for Meta data, e.g. 512Mi, 2Gi.
+  displayName: Meta Volume Capacity
+  name: META_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
+  required: true
+- description: Maximum amount of memory the syndesis-meta service might use.
+  displayName: Memory Limit
+  name: META_MEMORY_LIMIT
+  value: 512Mi
+  required: true
+- description: Maximum amount of memory the syndesis-server service might use.
+  displayName: Memory Limit
+  name: SERVER_MEMORY_LIMIT
+  value: 800Mi
+  required: true
+- description: Maximum number of integrations single user can create
+  displayName: Maximum number of integrations
+  name: MAX_INTEGRATIONS_PER_USER
+  value: "{{#Ocp}}0{{/Ocp}}{{^Ocp}}1{{/Ocp}}"
+  required: true
+- description: Interval for checking the state of the integrations.
+  displayName: Integration state check interval
+  name: INTEGRATION_STATE_CHECK_INTERVAL
+  value: "60"
+  required: true
+- description: Key used to perform authentication of client side stored state.
+  displayName: Client side state authentication key
+  from: '[a-zA-Z0-9]{32}'
+  generate: expression
+  name: CLIENT_STATE_AUTHENTICATION_KEY
+  required: true
+- description: Key used to perform encryption of client side stored state.
+  displayName: Client side state encryption key
+  from: '[a-zA-Z0-9]{32}'
+  generate: expression
+  name: CLIENT_STATE_ENCRYPTION_KEY
+  required: true
+- description: Volume space available for the upgrade process (backup data), e.g. 512Mi, 2Gi.
+  displayName: Upgrade Volume Capacity
+  name: UPGRADE_VOLUME_CAPACITY
+  required: true
+  value: 1Gi
+- description: How to expose services, via OpenShift Route (false) or via 3scale (true)
+  displayName: Expose services via 3scale
+  name: CONTROLLERS_EXPOSE_VIA3SCALE
+  required: true
+  value: 'false'
+message: |-
+  Syndesis is deployed to ${ROUTE_HOSTNAME}.
+objects:

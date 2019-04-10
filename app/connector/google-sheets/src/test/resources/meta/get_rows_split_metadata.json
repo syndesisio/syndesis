@@ -1,0 +1,16 @@
+{
+  "inputShape" : {
+    "kind" : "none",
+    "type" : "VALUE_RANGE_PARAM_IN"
+  },
+  "outputShape" : {
+    "kind" : "json-schema",
+    "type" : "VALUE_RANGE_PARAM_OUT",
+    "name" : "ValueRange Result",
+    "description" : "Results of range [A1:D1]",
+    "metadata": {
+      "variant": "element"
+    },
+    "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"VALUE_RANGE\",\"properties\":{\"spreadsheetId\":{\"type\":\"string\",\"required\":true},\"A\":{\"type\":\"string\",\"required\":true},\"B\":{\"type\":\"string\",\"required\":true},\"C\":{\"type\":\"string\",\"required\":true},\"D\":{\"type\":\"string\",\"required\":true}}}"
+  }
+}

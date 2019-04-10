@@ -1,0 +1,147 @@
+<syndesis-loading [loading]="!currentFlowService.loaded" [content]="content">
+  <ng-template #content>
+    <!-- Navigation buttons -->
+    <ng-template #controlButtons>
+      <button type="btn btn-default" (click)="flowPageService.cancel()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        [disabled]="isInvalidInput()"
+        (click)="flowPageService.done()"
+      >
+        Done
+      </button>
+    </ng-template>
+    <div class="syn-scrollable" *ngIf="step">
+      <!-- Page body -->
+      <syndesis-loading
+        class="body {{
+          step.stepKind !== 'mapper' ? 'syn-scrollable--body' : 'mapper'
+        }}"
+        [loading]="loading"
+        [content]="content"
+      >
+        <ng-template #content>
+          <div class="container-fluid">
+            <ng-container *ngIf="error">
+              <div [class]="error.class" [innerHtml]="error.message"></div>
+            </ng-container>
+            <div [ngSwitch]="step.stepKind">
+              <div *ngSwitchCase="'mapper'">
+                <div class="row">
+                  <div class="col-md-12" *ngIf="step">
+                    <syndesis-data-mapper-host
+                      [position]="position"
+                      [(valid)]="valid"
+                      (mappings)="setMappings($event)"
+                    ></syndesis-data-mapper-host>
+                  </div>
+                </div>
+              </div>
+              <div *ngSwitchCase="'template'">
+                <div class="row">
+                  <div class="col-md-12" *ngIf="step && dataShape">
+                    <div class="template">
+                      <div class="title"><h1>Upload Template</h1></div>
+                      <p>
+                        A template step takes data from a source and inserts it
+                        into the format that is defined in a template that you
+                        provide.
+                      </p>
+                      <div class="row row-cards-pf">
+                        <div class="card-pf">
+                          <div class="card-pf-body">
+                            <syndesis-templater
+                              [(configuredProperties)]="customProperties"
+                              [(valid)]="valid"
+                              [dataShape]="dataShape"
+                              [position]="position"
+                            ></syndesis-templater>
+                            <div class="control-buttons">
+                              <ng-container
+                                *ngTemplateOutlet="controlButtons"
+                              ></ng-container>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngSwitchCase="'ruleFilter'">
+                <div class="row">
+                  <div class="col-md-12" *ngIf="step && dataShape">
+                    <div class="basic-filter">
+                      <div class="title">
+                        <h1>Configure Basic Filter Step</h1>
+                      </div>
+                      <p>
+                        Define one or more rules for evaluating data to
+                        determine whether the integration should continue.
+                      </p>
+                      <div class="row row-cards-pf">
+                        <div class="card-pf">
+                          <div class="card-pf-body">
+                            <syndesis-basic-filter
+                              [(configuredProperties)]="customProperties"
+                              [(valid)]="valid"
+                              [dataShape]="dataShape"
+                              [position]="position"
+                            ></syndesis-basic-filter>
+                            <div class="control-buttons">
+                              <ng-container
+                                *ngTemplateOutlet="controlButtons"
+                              ></ng-container>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div *ngSwitchDefault>
+                <div class="title">
+                  <h1>
+                    Configure
+                    {{
+                      step.name || step.stepKind
+                        | titleize: { separator: '-' }
+                        | capitalize
+                    }}
+                  </h1>
+                </div>
+                <p>Fill out the fields associated with the selected step.</p>
+                <div *ngIf="formGroup">
+                  <div class="row row-cards-pf">
+                    <div class="card-pf">
+                      <div class="card-pf-body">
+                        <form class="form-horizontal" [formGroup]="formGroup">
+                          <syndesis-form-control
+                            *ngFor="let controlModel of formModel"
+                            [group]="formGroup"
+                            [model]="controlModel"
+                          ></syndesis-form-control>
+                        </form>
+                        <div class="row control-buttons">
+                          <div class="col-sm-9 col-sm-offset-3">
+                            <ng-container
+                              *ngTemplateOutlet="controlButtons"
+                            ></ng-container>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </ng-template>
+      </syndesis-loading>
+    </div>
+  </ng-template>
+</syndesis-loading>

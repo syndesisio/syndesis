@@ -1,0 +1,118 @@
+<section class="integration-description">
+  <ng-container [ngSwitch]="integration.type">
+    <ng-container *ngSwitchCase="IntegrationType.ApiProvider">
+      <div *ngTemplateOutlet="multiflowApiProvider;context:{
+        flowsCount: integration.getFlowsCount()
+      }"></div>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <div *ngTemplateOutlet="stepsBreadcrumb;context:{
+        steps: integration.flows[0].steps
+      }"></div>
+    </ng-container>
+  </ng-container>
+
+  <div *ngIf="integration.url" class="block-copy-container container-fluid">
+    <div class="col-sm-8">
+      <p>
+        <pfng-block-copy
+          [buttonAriaLabel]="'integrations.external-url.copy-instruction' | synI18n"
+          [expandToggleAriaLabel]="'integrations.external-url.expand-instruction' | synI18n"
+          [tooltipText]="'external-url' | synI18n"
+          [buttonLabel]="'copy' | synI18n"
+          [label]="'external-url' | synI18n"
+          [width]="'695px'"
+          [value]="integration.url">
+        </pfng-block-copy>
+      </p>
+    </div>
+  </div>
+  <p>
+    <syndesis-editable-textarea [value]="integration.description"
+                                placeholder="No description set..."
+                                (onSave)="onAttributeUpdated('description', $event)">
+    </syndesis-editable-textarea>
+  </p>
+</section>
+
+<!-- end of output template -->
+
+<ng-template #stepConnection
+             let-id="id"
+             let-connectionName="connectionName"
+             let-actionName="actionName"
+             let-iconSrc="iconSrc"
+             let-onClick="onClick()">
+  <div [id]="id"
+       class="text-center connection"
+       (click)="onClick"
+       title="{{ connectionName }}&nbsp;{{ actionName }}">
+    <div class="icon">
+      <img class="syn-icon-small"
+        [ngClass]="{ 'api-provider' : (id == 'api-provider') }"
+        [src]="iconSrc"
+        alt="{{ connectionName }}">
+    </div>
+    <div class="syn-truncate__ellipsis">{{ connectionName | capitalize }}</div>
+  </div>
+</ng-template>
+
+<ng-template #stepDefault let-id="id" let-name="name" let-iconSrc="iconSrc">
+  <div [id]="id"
+       class="text-center step">
+    <div class="icon">
+      <img class="syn-icon-small" [src]="iconSrc" alt="{{ name }}">
+    </div>
+    <div class="syn-truncate__ellipsis">{{ name }}</div>
+  </div>
+</ng-template>
+
+<ng-template #stepsBreadcrumb let-steps="steps">
+  <div *ngFor="let step of steps; let stepIndex=index; let last=last"
+       class="step-block inline-block text-center">
+    <ng-container [ngSwitch]="step.stepKind">
+      <ng-container *ngSwitchCase="'endpoint'">
+        <div *ngTemplateOutlet="stepConnection;context:{
+          id: step.connection?.name | synSlugify,
+          connectionName: step.connection?.name,
+          actionName: step.action?.name,
+          onClick: onViewDetails.bind(this, step),
+          iconSrc: step.connection | synIconPath,
+          class: getStepLineClass(stepIndex)
+        }"></div>
+      </ng-container>
+      <ng-container *ngSwitchDefault>
+        <div *ngTemplateOutlet="stepDefault;context:{
+          id: (step.name || step.stepKind) | synSlugify,
+          name: stepStore.getStepName(step),
+          iconSrc: step | synIconPath
+        }"></div>
+      </ng-container>
+    </ng-container>
+    <span *ngIf="!last" class="step-sep fa fa-angle-right"></span>
+  </div>
+</ng-template>
+
+<ng-template #multiflowApiProvider let-flowsCount="flowsCount">
+  <div class="step-block inline-block text-center">
+    <div *ngTemplateOutlet="stepConnection;context:{
+      id: 'api-provider',
+      connectionName: 'API Provider',
+      actionName: '',
+      onClick: onApiProviderClick.bind(this),
+      iconSrc: './../../assets/icons/api-provider.connection.png',
+      class: 'start'
+    }"></div>
+    <span class="step-sep fa fa-angle-right"></span>
+  </div>
+  <div class="step-block inline-block text-center">
+    <div *ngTemplateOutlet="stepConnection;context:{
+      id: 'multi-flow',
+      connectionName: flowsCount + ' Flow' + (flowsCount === 1 ? '' : 's'),
+      actionName: '',
+      onClick: onApiProviderFlowsClick.bind(this),
+      iconSrc: './../../assets/icons/multi-flow.connection.png',
+      class: 'finish'
+    }"></div>
+  </div>
+</ng-template>

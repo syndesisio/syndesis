@@ -1,0 +1,49 @@
+@import 'syndesis-sass';
+
+:host,
+::ng-deep syndesis-connections-connection-basics {
+  @include syn-scrollable-parent;
+}
+
+.card-pf {
+  box-shadow: none;
+}
+
+.toolbar.toolbar-pf {
+  padding: 10px 0;
+  flex: 0 0 auto;
+
+  .toolbar-pf-actions {
+    margin: 0;
+
+    .breadcrumb {
+      margin: 0;
+    }
+  }
+}
+
+.toolbar-pf.steps {
+  flex: 0 0 auto;
+}
+
+::ng-deep {
+  syndesis-connections-connection-basics,
+  syndesis-connections-configure-fields,
+  syndesis-connections-review {
+    @include syn-scrollable-body;
+    position: relative;
+    margin-left: -20px;
+    margin-right: -20px;
+    padding-left: 20px;
+    padding-right: 20px;
+
+    .connector-list {
+      margin-left: -20px;
+      margin-right: -20px;
+
+      .toolbar-pf {
+        margin: -20px -50px;
+      }
+    }
+  }
+}

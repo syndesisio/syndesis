@@ -1,0 +1,34 @@
+// This module is included in these assemblies:
+// as_monitoring-integrations.adoc
+
+[id='viewing-system-metrics_{context}']
+= Viewing metrics for a {prodname} environment
+
+Metrics for your {prodname} environment appear on the {prodname} home page. 
+
+.Procedure 
+
+In the left panel, click *Home*. 
+
+.Results
+
+{prodname} updates the following metrics
+every 5 seconds:
+
+* The number of integrations that are defined in this environment as
+well as the number of integrations that are running, the number 
+of integrations that are stopped, and the number of integrations that
+are pending. {prodname} is either stopping or starting pending integrations.
+A red cross indicates any integrations that
+were running but that encountered an error that suspended execution. 
+
+* The number of connections that are defined in this environment. 
+
+* Total number of messages that have been processed by integrations in 
+this environment in
+the last 30 days. This includes messages that were processed by 
+integrations that might no longer be running or that might have been 
+deleted from this environment.
+
+* Uptime indicates how long there has been at least one integration that
+is running. The date and time when uptime started appears as well. 

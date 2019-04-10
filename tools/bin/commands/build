@@ -1,0 +1,439 @@
+#!/bin/bash
+
+build::description() {
+    echo "Build Syndesis builds"
+}
+
+build::usage() {
+    cat <<EOT
+    -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
+        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade, camel-k
+        --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
+                                   and create images
+        --infra-images             Build only infrastructure modules with Docker images (operator, camel-k, upgrade) and create images
+    -m  --module <m1>,<m2>, ..     Build modules
+                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camel-k, upgrade
+                                   Submodules: defined with [groupId]:artifactId (e.g. :connector-sql)
+    -d  --dependencies             Build also all project the specified module depends on
+        --skip-tests               Skip unit and system test execution
+        --skip-checks              Disable all checks
+    -f  --flash                    Skip checks and tests execution (fastest mode)
+    -i  --image                    Build Docker via s2i images, too (for those modules creating images)
+        --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
+        --multi-stage              Multi-stage Dockerfile support for operator build (experimental)
+    -p  --project <project>        Specifies the project / namespace to create images
+    -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
+    -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
+    -l  --local                    If building the operators, use a locally installed go
+                                   Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
+        --clean-cache              Used for the operator build to remove the local dependency cache.
+    -c  --clean                    Run clean builds (mvn clean)
+
+        --resume <m1>              Resume build from maven module (mvn -rf m1)
+        --batch-mode               Run mvn in batch mode
+        --camel-snapshot <version> Run a build with a specific Camel snapshot. If no argument is given the
+                                   environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.
+        --maven-mirror <url>       Use the maven mirror for the build, e.g. a maven repo proxy in OpenShift. If no
+                                   argument is given, the MAVEN_MIRROR_URL environment variable is used or
+                                   'http://nexus.myproject:8081/nexus/content/groups/public', if none is set.
+                                   See also https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html
+        --man                      Open HTML documentation in the Syndesis Developer Handbook
+
+EOT
+
+}
+
+build::run() {
+    # Maven helper funcs
+    source "$(basedir)/commands/util/maven_funcs"
+
+    # For building the operator
+    source "$(basedir)/commands/util/operator_funcs"
+
+    # For OpenShift based builds
+    source "$(basedir)/commands/util/openshift_funcs"
+
+    local modules="$(extract_modules)"
+
+    local top_dir="$(appdir .)"
+
+    # All Maven modules (all modules minus operator, camel-k, upgrade)
+    local maven_modules=$(pick_module "$MAVEN_MODULES" "$modules")
+    if [ -z "$modules" ] || [ -n "$maven_modules" ]; then
+        call_maven "$(maven_args)" "$maven_modules"
+    fi
+
+    # All individual Maven submodules defined with [groupId]:artifactId (e.g. :connector-sql)
+    local submodules=$(pick_submodule "$ALL_MODULES" "$modules")
+    if [ -n "$modules" ] && [ -n "$submodules" ]; then
+        call_maven "$(maven_args)" "$submodules"
+    fi
+
+    # Build operator if requested
+    if $(should_build "operator" "$modules"); then
+        do_operator $top_dir
+    fi
+
+    # Build operator if requested
+    if $(should_build "camel-k" "$modules"); then
+        do_camel_k $top_dir
+    fi
+
+    # Build image for upgrade pod if requested
+    if $(should_build "upgrade" "$modules") && [ $(hasflag -i --image --docker) ]; then
+        do_upgrade_pod $top_dir
+    fi
+}
+
+maven_args() {
+    local project=${1:-}
+    local args=""
+
+    if [ $(hasflag --flash -f) ]; then
+        args="$args -Pflash"
+    fi
+
+    if [ $(hasflag --skip-tests) ]; then
+        args="$args -DskipTests"
+    fi
+
+    if [ $(hasflag --skip-checks) ]; then
+        args="$args -Pskip-checks"
+    fi
+
+    if [ $(hasflag --batch-mode) ]; then
+        args="$args --batch-mode"
+    fi
+
+    if [ $(hasflag --image -i --all-images --app-images --infra-images --docker) ]; then
+        #Build images
+        args="$args -Pimage"
+        if [ $(hasflag --docker) ]; then
+            args="$args -Dfabric8.mode=kubernetes"
+        else
+            args="$args -Dfabric8.mode=openshift"
+        fi
+    fi
+
+    if [ $(hasflag --camel-snapshot) ]; then
+       local version=$(readopt --camel-snapshot)
+       if [ -z "$version" ]; then
+          version="${CAMEL_SNAPSHOT_VERION:-}"
+       fi
+       if [ -z "$version" ]; then
+          echo "ERROR: you need to provied an argument to --camel-snapshot or set the environment variable CAMEL_SNAPSHOT_VERSION to use --camel-snapshot option".
+          exit 1
+       fi
+       args="$args -Dcamel.version=$version"
+    fi
+
+    if [ $(hasflag --maven-mirror) ]; then
+        local maven_mirror=$(readopt --maven-mirror)
+        if [ -z "$maven_mirror" ]; then
+            args="$args -DmavenMirror=${MAVEN_MIRROR_URL:-http://nexus.myproject:8081/nexus/content/groups/public}"
+        else
+            args="$args -DmavenMirror=$maven_mirror"
+        fi
+    fi
+
+    if [ -z "$project" ]; then
+        project="$(readopt --project -p)"
+    fi
+    if [ -n "${project}" ]; then
+        args="$args -Dfabric8.namespace=${project}"
+    fi
+
+    local resume_from="$(readopt --resume)"
+    if [ -n "${resume_from}" ]; then
+        args="$args -rf ${resume_from}"
+    fi
+
+    if [ "$(hasflag --clean -c)" ]; then
+        args="$args clean"
+    fi
+
+    local goals="$(readopt --goals -g)"
+    if [ -n "${goals}" ]; then
+        args="$args ${goals//,/ }"
+    else
+        args="$args install"
+    fi
+
+    echo $args
+}
+
+do_operator() {
+    local top_dir=$1
+    echo "=============================================================================="
+    echo "Building syndesis-operator"
+    echo "=============================================================================="
+
+    local operator_dir="$top_dir/install/operator"
+
+    # New multi stage build for creating the operator image all in one step
+    if [ $(hasflag -i --image --docker) ] && [ $(hasflag --multi-stage) ]; then
+        if $(is_minishift_docker_daemon); then
+            echo "ERROR: Multistage build is not supported on Minishift as the Docker daemon in Minishift is too old"
+            exit 1
+        fi
+        create_multi_stage_operator_image "$operator_dir"
+        return
+    fi
+
+    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$(hasflag -f --flash --skip-tests)"
+
+    if [ "$(hasflag -i --image --docker)" ]; then
+        create_operator_image "$operator_dir" "$(hasflag --docker)"
+    fi
+}
+
+do_camel_k() {
+    local top_dir=$1
+    echo "=============================================================================="
+    echo "Building camel-k"
+    echo "=============================================================================="
+
+    set +u
+    if [ -z "$GOPATH" ]; then
+        echo "ERROR: \$GOPATH has to be set for camel-k build"
+        exit 1
+    fi
+    set -u
+
+    local camel_k_root=$GOPATH/src/github.com/apache/camel-k
+    if [ ! -e $camel_k_root ]; then
+        echo "ERROR: Can't find $camel_k_root. camel-k image can be build only locally (--local is implied) for camel-k builds)."
+        exit 1
+    fi
+
+    if ! operator-sdk --help 2>&1 >/dev/null; then
+        echo "ERROR: operator-sdk needs to be installed locally for building camel-k"
+        exit 1
+    fi
+
+    pushd $camel_k_root >/dev/null
+
+    local version=$(script/get_version.sh)
+
+    local kamel_dir=~/.syndesis/bin
+    echo "Building $kamel_dir/kamel-$version"
+    [ -d $kamel_dir ] || mkdir -p $kamel_dir
+    go build -o $kamel_dir/kamel-$version ./cmd/kamel/*.go
+    if [ $? != 0 ]; then
+       echo "ERROR: Can't build kamel-$version"
+       exit 1
+    fi
+    [ -f $kamel_dir/kamel-latest ] && rm $kamel_dir/kamel-latest
+
+    echo "Linking $kamel_dir/kamel-$version --> $kamel_dir/kamel-latest"
+    ln -sf $kamel_dir/kamel-$version $kamel_dir/kamel-latest
+
+    local camel_k_image="docker.io/apache/camel-k"
+    echo "Building image $camel_k_image:$version"
+    ./script/images_build.sh
+
+    echo "Tagging $camel_k_image:$version --> $camel_k_image:latest"
+    docker tag $camel_k_image:$version $camel_k_image:latest
+    popd >/dev/null
+}
+
+do_upgrade_pod() {
+    local top_dir=$1
+    echo "=============================================================================="
+    echo "Building syndesis-upgrade"
+    echo "=============================================================================="
+
+    local cli_jar=${top_dir}/app/server/cli/target/syndesis-cli.jar
+    if [ ! -f $cli_jar ]; then
+        echo "Cannot find $cli_jar to include in the upgrade pod. Please run 'syndesis build -f -m server' to create it"
+        exit 1
+    fi
+
+    local upgrade_src=${top_dir}/tools/upgrade
+    local build_dir=$(mktemp -d)
+    trap "rm -rf '$build_dir'" EXIT
+
+    cp -r ${upgrade_src}/* ${build_dir}
+    cp ${top_dir}/install/syndesis.yml ${build_dir}
+    cp $cli_jar ${build_dir}
+
+    echo "Creating image syndesis/syndesis-upgrade:latest"
+    docker build --build-arg version=latest -t syndesis/syndesis-upgrade:latest ${build_dir}
+}
+
+is_minishift_docker_daemon() {
+    if [ -n "${DOCKER_CERT_PATH:-}" ] && [ "${DOCKER_CERT_PATH//minishift/}" != "$DOCKER_CERT_PATH" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+ensure_rcp_on_minishift() {
+    if ! $(minishift ssh type rsync >/dev/null 2>&1); then
+        echo "Installing rsync on Minishift"
+        minishift ssh sudo "su -c 'yum install -y rsync'"
+    fi
+}
+
+
+mkdir_on_minishift() {
+    local dirs="$@"
+    for dir in $dirs; do
+        minishift ssh "sudo su -c '[ -d $dir ] || (mkdir -p $dir && chown -R docker $dir)'"
+    done
+}
+
+rsync_binary_from_minishift() {
+    local operator_bin=${1}
+    local local_target_dir=${2}
+
+    echo "Rsync compiled $operator_bin back to $local_target_dir"
+
+    rsync -az \
+          -e "ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o IdentitiesOnly=yes -o PasswordAuthentication=no -i ~/.minishift/machines/minishift/id_rsa"\
+          --progress \
+          docker@$(minishift ip):${operator_bin} \
+          $local_target_dir
+}
+
+
+# All modules, in the right build order
+ALL_MODULES="common extension integration connector meta server s2i ui test operator camel-k upgrade"
+MAVEN_MODULES="common extension integration connector meta server s2i ui test"
+APP_IMAGES="ui server meta s2i"
+INFRA_IMAGES="operator camel-k upgrade"
+ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
+MODULES=(
+  "upgrade:server common extension integration connector"
+  "operator"
+  "camel-k"
+  "ui"
+  "common"
+  "extension:common"
+  "integration:common extension"
+  "connector:common extension integration"
+  "meta:common extension integration connector"
+  "server:common extension integration connector"
+  "s2i:common extension integration connector server"
+  "test:common extension integration connector server s2i"
+)
+
+extract_modules() {
+    local modules=""
+
+    if [ "$(hasflag --backend -b)" ]; then
+        modules="$modules common extension integration connector server meta"
+    fi
+
+    if [ "$(hasflag --all-images)" ]; then
+        modules="$modules ui server meta s2i operator camel-k"
+    fi
+
+    if [ "$(hasflag --app-images)" ]; then
+        modules="$modules $APP_IMAGES"
+    fi
+
+    if [ "$(hasflag --infra-images)" ]; then
+        modules="$modules $INFRA_IMAGES"
+    fi
+
+    local arg_modules=$(readopt --module -m);
+    if [ -n "${arg_modules}" ]; then
+        modules="$modules ${arg_modules//,/ }"
+    fi
+
+    if [ "$(hasflag --dependencies -d)" ]; then
+        local extra_modules=""
+        for module in $modules; do
+            for m in "${MODULES[@]}"; do
+              local k=${m%%:*}
+              if [ "$module" == $k ]; then
+                  local v=${m#*:}
+                  extra_modules="${extra_modules} $v"
+              fi
+            done
+        done
+        modules="$modules $extra_modules"
+    fi
+    if [ -z "$modules" ]; then
+      return
+    fi
+    # Unique modules
+    local unique_modules=$(echo $modules | xargs -n 1 | sort -u | xargs | awk '$1=$1')
+    echo $(order_modules "$unique_modules")
+}
+
+order_modules() {
+    # Fix order
+    local modules="$1"
+    local toplevel=""
+    local submodules=""
+
+    for module in ${modules}; do
+      # Check if module is one of our top level modules
+      if [ "${ALL_MODULES//$module}" != "${ALL_MODULES}" ]; then
+        toplevel="${toplevel} $module"
+      else
+        submodules="${submodules} $module"
+      fi
+    done
+
+    # All modules in the proper order
+    local ordered=$ALL_MODULES
+    for cm in "${MODULES[@]}"; do
+      local check_module=${cm%%:*}
+      # Check if $check_module is in the list of unordered top level modules
+      if [ -z "${toplevel}" ] || [ -n "${toplevel##*${check_module}*}" ]; then
+        # No, so remove it from the return value
+        ordered=${ordered//$check_module/}
+      fi
+    done
+
+    if [ -n "$submodules" ]; then
+        ordered="$ordered $submodules"
+    fi
+
+    # Normalize return value
+    echo $ordered | awk '$1=$1'
+}
+
+pick_module() {
+    local pick_list="$1"
+    local modules="$2"
+
+    local res=""
+    for module in $modules; do
+        if [ "${pick_list//$module/}" != "${pick_list}" ]; then
+            res="$res $module"
+        fi
+    done
+    echo $res | awk '$1=$1'
+}
+
+pick_submodule() {
+    local toplevel="$1"
+    local modules="$2"
+
+    local res=""
+    for module in $modules; do
+        if [ "${toplevel//$module/}" == "${toplevel}" ]; then
+            res="$res $module"
+        fi
+    done
+    echo $res | awk '$1=$1'
+}
+
+should_build() {
+    local module="$1"
+    local modules="$2"
+    if [ -z "$modules" ]; then
+        # Empty --> Build everything
+        echo "true"
+    elif [ "${modules//$module}" != "${modules}" ]; then
+        # Modules contains module
+        echo "true"
+    else
+        echo "false"
+    fi
+}

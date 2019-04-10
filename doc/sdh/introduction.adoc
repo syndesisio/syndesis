@@ -1,0 +1,3 @@
+= Introduction
+
+This handbook contains all information required for installing, running and developing Syndesis from a developer's point of view.

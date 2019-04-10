@@ -1,0 +1,11 @@
+daysUntilStale: 90
+daysUntilClose: 7
+exemptLabels:
+  - prio/p0
+  - status/never-stale
+  - Epic
+staleLabel: status/stale
+markComment: >
+  This issue has been automatically marked as stale because it has not had any activity since 90 days. It will be closed if no further activity occurs within 7 days. Thank you for your contributions!
+closeComment: false
+only: issues

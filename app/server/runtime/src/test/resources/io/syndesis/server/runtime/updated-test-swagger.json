@@ -1,0 +1,202 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Todo App API",
+    "version": "1.0.0",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host": "hostname",
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "paths": {
+    "/api": {
+      "get": {
+        "tags": [
+          "tasks",
+          "fetching"
+        ],
+        "summary": "List all tasks",
+        "description": "Fetches all tasks from the database",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "All is good",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Task"
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tasks",
+          "creating"
+        ],
+        "summary": "Create new task",
+        "description": "Stores new task in the database",
+        "operationId": "create-task",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "debug",
+            "description": "Enable debugging",
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Task to create",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "All is good",
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          }
+        }
+      }
+    },
+    "/api/{id}": {
+      "put": {
+        "tags": [
+          "tasks",
+          "updating"
+        ],
+        "summary": "Update task",
+        "description": "Updates task by given identifier",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int64",
+            "description": "Task identifier",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Task with updates",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "All is good",
+            "schema": {
+              "$ref": "#/definitions/Task"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "tasks",
+          "destruction"
+        ],
+        "summary": "Delete task",
+        "description": "Deletes task by given identifier",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int64",
+            "description": "Task identifier to delete",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Task deleted"
+          }
+        }
+      }
+    },
+    "/api/count": {
+      "get": {
+        "tags": [
+          "tasks",
+          "accounting"
+        ],
+        "summary": "Counts tasks",
+        "description": "Returns the number of tasks in the database",
+        "operationId": "count-tasks",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "All is good",
+            "schema": {
+              "type": "integer"
+            }
+          }
+        }
+      }
+    }
+  },
+  "securityDefinitions": {
+    "username_password": {
+      "type": "basic"
+    }
+  },
+  "definitions": {
+    "Task": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "integer",
+          "format": "int64",
+          "title": "Task ID",
+          "description": "Unique task identifier"
+        },
+        "task": {
+          "type": "string",
+          "title": "The task",
+          "description": "Task line"
+        },
+        "completed": {
+          "type": "integer",
+          "title": "Task completition status",
+          "description": "0 - ongoing, 1 - completed",
+          "enum": [
+            0,
+            1
+          ]
+        }
+      }
+    }
+  }
+}

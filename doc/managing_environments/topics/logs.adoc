@@ -1,0 +1,4 @@
+[id='monitoring-integration-logs']
+= Monitoring integration logs
+
+Add the topic contents here.

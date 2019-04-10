@@ -1,0 +1,19 @@
+@import 'syndesis-sass';
+
+.oauth-apps {
+  padding-bottom: $gutter;
+
+  ::ng-deep {
+    .toolbar-pf {
+      @include toolbar($border-bottom: none);
+    }
+
+    .list-pf-item {
+      background: $color-pf-white;
+    }
+
+    div.close {
+      display: none;
+    }
+  }
+}

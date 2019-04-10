@@ -1,0 +1,61 @@
+@import 'syndesis-sass';
+
+.syn-form--edit-mode {
+  .syn-form-row {
+    &__input--editor {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 5px;
+
+      &:hover {
+        color: $color-pf-blue-500;
+      }
+
+      .fa-pencil {
+        border: none;
+        background: none;
+        color: $color-pf-blue-500;
+        margin-left: $forms-grid-gutter;
+        cursor: hand;
+      }
+    }
+  }
+}
+
+.syn-form-filebrowser {
+  &__default-file {
+    overflow: hidden;
+    flex: 0 0 auto;
+  }
+
+  &__preview {
+    display: block;
+    min-width: 50px;
+    max-height: 50px;
+    margin-left: 50%;
+    transform: translateX(-50%);
+  }
+
+  &__label,
+  &__input {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.syn-form--api-connector {
+  .form-group {
+    &.icon-row {
+      @media (min-width: 768px) {
+        .control-label {
+          line-height: 50px;
+          padding-top: 0;
+        }
+      }
+    }
+
+    .control-label {
+      display: block !important; // Override the flex setting in overrides.scss
+    }
+  }
+}

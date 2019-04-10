@@ -1,0 +1,139 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Send GET request to /operation",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@syndesiss.version@",
+        "camelConnectorPrefix": "swagger-operation",
+        "configuredProperties": {
+          "operationId": "operation-0"
+        },
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        }
+      },
+      "id": "io.syndesis.connector:connector-rest-swagger:@project.version@:_id_:operation-0",
+      "name": "GET /operation",
+      "pattern": "To"
+    }
+  ],
+  "configuredProperties": {
+    "authenticationType": "basic",
+    "basePath": "/api",
+    "host": "http://sample.io",
+    "specification": "{\"swagger\":\"2.0\",\"host\":\"sample.io\",\"basePath\":\"/api\",\"schemes\":[\"http\"],\"paths\":{\"/operation\":{\"get\":{\"operationId\":\"operation-0\",\"produces\":[\"application/json\"]}}}}"
+  },
+  "connectorGroup": {
+    "id": "swagger-connector-template"
+  },
+  "connectorGroupId": "swagger-connector-template",
+  "description": "Sample Swagger file with HTTP Basic Authentication",
+  "name": "HTTP Basic Authentication Sample",
+  "properties": {
+    "authenticationType": {
+      "componentProperty": true,
+      "defaultValue": "basic",
+      "deprecated": false,
+      "description": "Type of authentication used to connect to the API",
+      "displayName": "Authentication Type",
+      "enum": [
+        {
+          "label": "HTTP Basic Authentication",
+          "value": "basic"
+        }
+      ],
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 1,
+      "required": false,
+      "secret": false,
+      "tags": [
+        "authentication-type"
+      ],
+      "type": "string"
+    },
+    "basePath": {
+      "componentProperty": true,
+      "defaultValue": "/api",
+      "deprecated": false,
+      "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI document.",
+      "displayName": "Base path",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 11,
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "host": {
+      "componentProperty": true,
+      "defaultValue": "http://sample.io",
+      "deprecated": false,
+      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port.",
+      "displayName": "Host",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 10,
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Password to authenticate with",
+      "displayName": "Password",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 3,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "specification": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "OpenAPI document of the service",
+      "displayName": "Document",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": true,
+      "secret": false,
+      "tags": [
+        "upload",
+        "url"
+      ],
+      "type": "hidden"
+    },
+    "username": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Username to authenticate with",
+      "displayName": "Username",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 2,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    }
+  }
+}

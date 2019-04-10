@@ -1,0 +1,56 @@
+@import 'syndesis-sass';
+
+:host {
+  .api-connector-editor {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: $color-pf-white;
+
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-left: $gutter;
+      padding-right: $gutter;
+    }
+
+    &__title {
+      display: inline-flex;
+      align-items: center;
+
+      h2 {
+        border-left: 1px solid $color-pf-black-300;
+        font-size: 16px;
+        font-weight: normal;
+        margin: 0 0 0 1em;
+        padding-left: 1em;
+      }
+    }
+
+    &__body {
+      position: relative;
+    }
+  }
+
+  .wizard {
+    &__main {
+      margin-left: -$gutter;
+      margin-right: -$gutter;
+      position: relative;
+    }
+
+    &-nav {
+      &__button {
+        margin-left: 1.6em;
+      }
+    }
+
+    &__body {
+      max-width: 700px;
+      margin: auto;
+    }
+  }
+}

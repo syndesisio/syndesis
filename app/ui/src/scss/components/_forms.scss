@@ -1,0 +1,114 @@
+.syn-form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding-bottom: 1.8em;
+
+  &--card {
+    min-height: $forms-default-card-height;
+  }
+
+  &__body {
+    width: 100%;
+    flex: 2;
+    padding-bottom: 1.4em;
+  }
+
+  &__buttons {
+    &--pushed {
+      padding-left: $forms-label-column-width;
+    }
+  }
+
+  &__submit {
+    @extend %syn-cta-btn;
+  }
+
+  &-row {
+    display: flex;
+    align-items: center;
+    padding-top: $forms-grid-gutter;
+
+    &__label,
+    &__textbox {
+      line-height: $forms-row-height;
+    }
+
+    &__label {
+      width: $forms-label-column-width;
+      text-align: right;
+      padding-right: $forms-grid-gutter;
+
+      &--list {
+        align-self: flex-start;
+      }
+
+      &--top {
+        align-self: flex-start;
+      }
+    }
+
+    &__input {
+      flex: 2;
+    }
+  }
+
+  &-input-list { // To be used for radio button or checkbox lists
+    padding-left: 1em;
+
+    &__option {
+      line-height: $forms-row-height;
+      font-weight: normal;
+
+      input[type="checkbox"],
+      input[type="radio"] {
+        margin-right: $forms-grid-gutter;
+      }
+    }
+  }
+
+  &-input-list:not(.syn-form-input-list--horizontal) {
+    .syn-form-input-list__option {
+      display: block;
+    }
+  }
+
+  &-input-list--horizontal {
+    .syn-form-input-list__option {
+      margin-right: $forms-grid-gutter * 2;
+    }
+  }
+
+  &-column {
+    display: flex;
+    align-items: center;
+    flex: 2;
+  }
+
+  &-filebrowser {
+    &__default-file {
+      display: block;
+      line-height: $forms-default-file-thumb-size;
+      width: $forms-default-file-thumb-size;
+      font-size: $forms-default-file-thumb-size - 10;
+      text-align: center;
+      background: $color-pf-black-300;
+      color: $color-pf-black-600;
+      border: 1px solid $color-pf-black-600;
+    }
+
+    &__input {
+      margin-left: 1.6em;
+    }
+  }
+}
+
+input[type="text"] {
+  &.ng-touched.ng-invalid,
+  &.syn-submitted.ng-invalid,
+  &.syn-invalid {
+    color: $color-pf-red-200;
+    border: 1px solid $color-pf-red-100;
+  }
+}

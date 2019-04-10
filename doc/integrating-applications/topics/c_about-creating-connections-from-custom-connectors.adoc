@@ -1,0 +1,37 @@
+// This module is included in the following assemblies:
+// as_connecting-to-applications.adoc
+
+[id='creating-connections-from-custom-connectors_{context}']
+= About creating a connection from a custom connector
+
+After you upload an extension that defines a custom connector, the
+custom connector is available for use. You use custom connectors
+to create connections 
+in the same way that you use {prodname}-provided connectors to
+create connections.
+
+A custom connector might be for an application that uses the OAuth 
+protocol. Before you create a connection from this kind of connector, you must 
+register your {prodname} environment for access to the application
+that the connector is for. You do this in the interface for the application
+that the connector is for. The details for how to register your 
+{prodname} environment vary for each application. 
+
+For example, suppose the custom connector is
+for creating connections to Yammer. You would need to register your
+{prodname} environment by creating a new application within Yammer. 
+Registration provides a
+Yammer client ID for {prodname}
+and a Yammer client secret value for {prodname}. 
+A connection from your {prodname} environment to Yammer
+must provide these two values. 
+
+Note that an application might use different
+names for these values, such as consumer ID or consumer secret. 
+
+After you register your {prodname} environment, you can create
+a connection to the application. When you configure the connection,
+there should be parameters for entering the client ID and the client
+secret. If these parameters are not available, you need to talk with 
+the extension developer and ask for an updated extension that lets
+you specify the client ID and client secret. 

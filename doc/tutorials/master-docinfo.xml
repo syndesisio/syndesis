@@ -1,0 +1,13 @@
+<productname>Syndesis</productname>
+<productnumber>{version}</productnumber>
+<subtitle>How business users can share data among different applications</subtitle>
+<abstract>
+ <para>Follow step-by-step instructions to create, deploy, and test sample integrations. </para>
+</abstract>
+<authorgroup>
+  <org>
+    <orgname>Fuse Documentation Team</orgname>
+    <email>fuse-online-evaluation@redhat.com</email>
+  </org>
+</authorgroup>
+<xi:include href="Common_Content/Legal_Notice.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

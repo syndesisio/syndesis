@@ -1,0 +1,80 @@
+@import 'syndesis-sass';
+
+//----- Integration Board ----------------->>
+.integration-board {
+  .legend {
+    padding: 0;
+
+    .col-xs-12 {
+      padding: 0;
+
+      .colors {
+        height: 10px;
+        padding: 9px;
+
+        &.active {
+          background: $color-pf-blue-400;
+        }
+
+        &.draft {
+          background: $color-pf-orange-400;
+        }
+
+        &.inactive {
+          background: $color-pf-black-300;
+        }
+      }
+
+      .text {
+        padding: 0 0 0 13px;
+      }
+    }
+  }
+}
+
+//----- Recent Updates ----------------->>
+.recent-updates {
+  .update {
+    border-bottom: 1px solid $color-pf-black-200;
+    cursor: pointer;
+    padding: 10px 0;
+
+    &:hover {
+      background: rgba(214, 238, 250, 0.36);
+    }
+
+    a:hover {
+      text-decoration: none;
+    }
+  }
+
+  .update:last-child {
+    border-bottom: none;
+  }
+}
+
+//----- Top 5 Integrations ----------------->>
+.top-integrations {
+  .card-pf-heading-details {
+    float: right;
+    font-size: 12px;
+    margin-bottom: 0;
+  }
+
+  ::ng-deep .integrations.list {
+    margin-left: -20px;
+    margin-right: -20px;
+
+    .list-pf {
+      border-bottom: none;
+    }
+
+    .list-pf-item {
+      border-style: none;
+    }
+
+    .list-pf-actions {
+      margin-left: 10px;
+    }
+  }
+}

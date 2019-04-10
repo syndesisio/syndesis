@@ -1,0 +1,137 @@
+{
+  "kind" : "extension",
+  "name" : "Syndesis Extension POC",
+  "description" : "My Description",
+  "extensionId" : "com.github.lburgazzoli:syndesis-extensions-poc",
+  "version" : "1.0.0-SNAPSHOT",
+  "tags" : [ ],
+  "actions" : [ {
+    "actionType" : "step",
+    "id" : "my-bean-binding",
+    "name" : "BeanBindingLogExtension",
+    "description" : "A simple bean-binding based logging extension",
+    "descriptor" : {
+      "kind" : "BEAN",
+      "entrypoint" : "io.syndesis.extension.MyBeanBindingExtension",
+      "inputDataShape" : {
+        "kind" : "any"
+      },
+      "outputDataShape" : {
+        "kind" : "any"
+      },
+      "propertyDefinitionSteps" : [ ]
+    },
+    "tags" : [ ]
+  }, {
+    "actionType" : "step",
+    "id" : "my-function-1",
+    "name" : "FunctionLogExtension1",
+    "description" : "A simple function based logging extension (1)",
+    "descriptor" : {
+      "kind" : "BEAN",
+      "entrypoint" : "io.syndesis.extension.MyBeanExtension::log1",
+      "inputDataShape" : {
+        "kind" : "any"
+      },
+      "outputDataShape" : {
+        "kind" : "any"
+      },
+      "propertyDefinitionSteps" : [ ]
+    },
+    "tags" : [ ]
+  }, {
+    "actionType" : "step",
+    "id" : "my-function-2",
+    "name" : "FunctionLogExtension2",
+    "description" : "A simple function based logging extension (2)",
+    "descriptor" : {
+      "kind" : "BEAN",
+      "entrypoint" : "io.syndesis.extension.MyBeanExtension::log2",
+      "inputDataShape" : {
+        "kind" : "any"
+      },
+      "outputDataShape" : {
+        "kind" : "any"
+      },
+      "propertyDefinitionSteps" : [ ]
+    },
+    "tags" : [ ]
+  }, {
+    "actionType" : "step",
+    "id" : "my-boot-1",
+    "name" : "BootLogExtension1",
+    "description" : "A simple route-definition based logging extension (1)",
+    "descriptor" : {
+      "kind" : "ENDPOINT",
+      "entrypoint" : "direct:my-boot-1",
+      "inputDataShape" : {
+        "kind" : "any"
+      },
+      "outputDataShape" : {
+        "kind" : "any"
+      },
+      "propertyDefinitionSteps" : [ ]
+    },
+    "tags" : [ ]
+  }, {
+    "actionType" : "step",
+    "id" : "my-boot-2",
+    "name" : "BootLogExtension2",
+    "description" : "A simple route-builder based logging extension (2)",
+    "descriptor" : {
+      "kind" : "ENDPOINT",
+      "entrypoint" : "direct:my-boot-2",
+      "inputDataShape" : {
+        "kind" : "any"
+      },
+      "outputDataShape" : {
+        "kind" : "any"
+      },
+      "propertyDefinitionSteps" : [ ]
+    },
+    "tags" : [ ]
+  }, {
+    "actionType" : "step",
+    "id" : "my-boot-3",
+    "name" : "BootLogExtension3",
+    "description" : "A simple processor based logging extension (2)",
+    "descriptor" : {
+      "kind" : "ENDPOINT",
+      "entrypoint" : "my-boot-3",
+      "inputDataShape" : {
+        "kind" : "any"
+      },
+      "outputDataShape" : {
+        "kind" : "any"
+      },
+      "propertyDefinitionSteps" : [ ]
+    },
+    "tags" : [ ]
+  }, {
+    "actionType" : "step",
+    "id" : "my-step",
+    "name" : "StepLogExtension",
+    "description" : "A simple step based logging extension",
+    "descriptor" : {
+      "kind" : "STEP",
+      "entrypoint" : "io.syndesis.extension.MyStepExtension",
+      "inputDataShape" : {
+        "kind" : "any"
+      },
+      "outputDataShape" : {
+        "kind" : "any"
+      },
+      "propertyDefinitionSteps" : [ ]
+    },
+    "tags" : [ ]
+  } ],
+  "dependencies" : [{
+      "type": "MAVEN",
+      "id": "org.apache.camel:camel-core:jar:2.20.0"
+    }, {
+      "type": "MAVEN",
+      "id": "org.springframework.boot:spring-boot-starter:jar:1.5.8.RELEASE"
+    }
+  ],
+  "properties" : { }
+}

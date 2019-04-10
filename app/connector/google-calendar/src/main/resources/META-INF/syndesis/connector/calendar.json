@@ -1,0 +1,680 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Create an event into a specific Calendar.",
+      "descriptor": {
+        "componentScheme": "google-calendar",
+        "connectorCustomizers": [
+          "io.syndesis.connector.calendar.GoogleCalendarSendEventCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "CalendarEvent",
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "name": "CalendarEvent",
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify event content and attendees and summary. ",
+            "name": "Send Event to Calendar",
+            "properties": {
+              "attendees": {
+                "deprecated": false,
+                "displayName": "Guest list",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "One or more comma-separated guest email addresses",
+                "order": "9",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "calendarId": {
+                "deprecated": false,
+                "displayName": "Calendar name",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The calendar name",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "description": {
+                "deprecated": false,
+                "displayName": "Event Description",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The event description",
+                "order": "7",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "endDate": {
+                "deprecated": false,
+                "displayName": "Ending Date",
+                "group": "producer",
+                "javaType": "java.util.Date",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The ending date of the calendar Event.",
+                "order": "5",
+                "required": false,
+                "secret": false,
+                "type": "date"
+              },
+              "endTime": {
+                "deprecated": false,
+                "displayName": "Ending Time",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The ending time of the calendar Event.",
+                "order": "6",
+                "required": false,
+                "secret": false,
+                "type": "time"
+              },
+              "location": {
+                "deprecated": false,
+                "displayName": "Location",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The location of the event as free text",
+                "order": "8",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "startDate": {
+                "deprecated": false,
+                "displayName": "Starting Date",
+                "group": "producer",
+                "javaType": "java.util.Date",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The starting date of the calendar Event.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "date"
+              },
+              "startTime": {
+                "deprecated": false,
+                "displayName": "Starting Time",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The starting time of the calendar Event.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "time"
+              },
+              "summary": {
+                "deprecated": false,
+                "displayName": "Event title",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The event title",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "textarea"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:google-calendar-insert-event-connector",
+      "name": "Create Event",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Update an event in a specific Calendar.",
+      "descriptor": {
+        "componentScheme": "google-calendar",
+        "connectorCustomizers": [
+          "io.syndesis.connector.calendar.GoogleCalendarUpdateEventCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "CalendarEvent",
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "name": "CalendarEvent",
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify event content and attendees and summary. ",
+            "name": "Update an Event in the Calendar",
+            "properties": {
+              "attendees": {
+                "deprecated": false,
+                "displayName": "Guest list",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "One or more comma-separated guest email addresses",
+                "order": "10",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "calendarId": {
+                "deprecated": false,
+                "displayName": "Calendar name",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The calendar name",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "description": {
+                "deprecated": false,
+                "displayName": "Event description",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The event description",
+                "order": "8",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "endDate": {
+                "deprecated": false,
+                "displayName": "Ending Date",
+                "group": "producer",
+                "javaType": "java.util.Date",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The ending date of the calendar Event.",
+                "order": "6",
+                "required": false,
+                "secret": false,
+                "type": "date"
+              },
+              "endTime": {
+                "deprecated": false,
+                "displayName": "Ending Time",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The ending time of the calendar Event.",
+                "order": "7",
+                "required": false,
+                "secret": false,
+                "type": "time"
+              },
+              "eventId": {
+                "deprecated": false,
+                "displayName": "Event id",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The event Id of the event to update",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "location": {
+                "deprecated": false,
+                "displayName": "Location",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The location of the event as free text",
+                "order": "9",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "startDate": {
+                "deprecated": false,
+                "displayName": "Starting Date",
+                "group": "producer",
+                "javaType": "java.util.Date",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The starting date of the calendar Event.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "date"
+              },
+              "startTime": {
+                "deprecated": false,
+                "displayName": "Starting Time",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The starting time of the calendar Event.",
+                "order": "5",
+                "required": false,
+                "secret": false,
+                "type": "time"
+              },
+              "summary": {
+                "deprecated": false,
+                "displayName": "Event title",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The event title",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "textarea"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:google-calendar-update-event-connector",
+      "name": "Update Event",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Obtain an event from a specific Calendar.",
+      "descriptor": {
+        "componentScheme": "google-calendar",
+        "connectorCustomizers": [
+          "io.syndesis.connector.calendar.GoogleCalendarGetEventCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "name": "CalendarEvent",
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the event Id of the event that you want to obtain.",
+            "name": "Obtain Specific event from Calendar",
+            "properties": {
+              "calendarId": {
+                "deprecated": false,
+                "displayName": "Calendar name",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The calendar name",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "eventId": {
+                "deprecated": false,
+                "displayName": "Event id",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The event Id of the event to update",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:google-calendar-get-event-connector",
+      "name": "Get a specific Event",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Obtain events from the Google Calendar account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-calendar-stream",
+        "connectorCustomizers": [
+          "io.syndesis.connector.calendar.GoogleCalendarEventsCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "name": "CalendarEvent",
+          "type": "io.syndesis.connector.calendar.GoogleCalendarEventModel"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the events that you want to obtain.",
+            "name": "Obtain Events from Calendar",
+            "properties": {
+              "calendarId": {
+                "deprecated": false,
+                "displayName": "Calendar name",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The calendar name",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "considerLastUpdate": {
+                "defaultValue": false,
+                "deprecated": false,
+                "displayName": "Consume from the last event update date on the next poll",
+                "group": "producer",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "If true, in the next poll, you'll get events starting from the last update date of the last event from the last poll",
+                "order": "5",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "consumeFromNow": {
+                "defaultValue": true,
+                "deprecated": false,
+                "displayName": "Consume from the current date ahead",
+                "group": "producer",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "If true you will consume events from the current date",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "delay": {
+                "componentProperty": false,
+                "defaultValue": 30000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Time interval between polls for events.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "duration"
+              },
+              "maxResults": {
+                "defaultValue": "5",
+                "deprecated": false,
+                "displayName": "Max results",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Maximum number of events to return.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "query": {
+                "deprecated": false,
+                "displayName": "Query for events",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Free text string to apply on all the fields of events.",
+                "order": "6",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:google-calendar-receive-events-connector",
+      "name": "Get Events",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    }
+  ],
+  "configuredProperties": {
+    "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}",
+    "applicationName": "calendar-syndesis",
+    "authenticationType": "oauth2",
+    "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+    "googleScopes": "https://www.googleapis.com/auth/calendar",
+    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token"
+  },
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Receive, create and update events.",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjkiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZT4uc3QzN3tmaWxsOiMxOTc2ZDJ9LnN0Mzl7ZmlsbDojZmFmYWZhfS5zdDQwe2ZpbGw6I2UwZTBlMH08L3N0eWxlPjxnIGlkPSJMYXllcl8zIj48cGF0aCBkPSJNMjU1IDBINDUuMWMtOC4zIDAtMTUgNi43LTE1IDE1djIyLjVIMjcwVjE1YzAtOC4zLTYuNy0xNS0xNS0xNXpNNzUgMjIuNWMtNC4xIDAtNy41LTMuNC03LjUtNy41czMuNC03LjUgNy41LTcuNSA3LjUgMy40IDcuNSA3LjUtMy4zIDcuNS03LjUgNy41em0xNTAgMGMtNC4xIDAtNy41LTMuNC03LjUtNy41czMuNC03LjUgNy41LTcuNSA3LjUgMy40IDcuNSA3LjUtMy40IDcuNS03LjUgNy41eiIgZmlsbD0iI2M3YzdjNyIvPjxwYXRoIGNsYXNzPSJzdDM3IiBkPSJNMzAwIDQ1Yy44LTQuNC0xMC42LTE1LTE1LTE1SDE1LjFDNy42IDMwLS43IDQwLjYuMSA0NWM2LjIgMzUgMjIuNSAxMTIuNSAyMi41IDExMi41aDI1NC45YzAtLjEgMTYuMy03Ny42IDIyLjUtMTEyLjV6Ii8+PHBhdGggZD0iTTI3Ny41IDE1Ny40SDIyLjZTNi4zIDIzNC45LjEgMjY5LjljMCA4LjYgNS45IDE1IDE1IDE1SDI4NWM0LjQgMCAxNS0zLjcgMTUtMTUtNi4yLTM1LTIyLjUtMTEyLjUtMjIuNS0xMTIuNXoiIGZpbGw9IiMxZTg4ZTUiLz48cGF0aCBjbGFzcz0ic3QzOSIgZD0iTTEyNCAxNTcuNGM3LjQgMi40IDEyLjYgNi40IDE1LjggMTEuNyAzLjIgNS41IDQuOSAxMS42IDQuOSAxOC40IDAgMTEuOS0zLjkgMjEuMi0xMS43IDI4LTcuOCA2LjgtMTcuNyAxMC4yLTI5LjggMTAuMi0xMS45IDAtMjEuNy0zLjItMjkuNS05LjZDNjYgMjA5LjcgNjIuMiAyMDEgNjIuNSAxOTBsLjMtLjVoMTYuOGMwIDYuOSAyLjEgMTIuMyA2LjMgMTYuNCA0LjIgNC4xIDEwIDYuMSAxNy4zIDYuMSA3LjUgMCAxMy4zLTIgMTcuNS02LjEgNC4yLTQuMSA2LjQtMTAgNi40LTE4cy0xLjktMTQtNS42LTE3LjhjLTMuOC0zLjgtOS43LTUuNy0xNy44LTUuN0g4OC4zdi02LjlIMTI0ek0yMDcuMyAxNTcuNGgxNy42djY2LjRoLTE3LjZ6Ii8+PHBhdGggY2xhc3M9InN0NDAiIGQ9Ik04MC41IDEyNy43SDYzLjZsLS4yLS41Yy0uMy05LjggMy4zLTE4LjIgMTAuNy0yNS4xIDcuNC02LjkgMTcuMS0xMC4zIDI5LjEtMTAuM3MyMS42IDMuMiAyOC44IDkuNmM3LjIgNi40IDEwLjcgMTUuNSAxMC43IDI3LjQgMCA1LjQtMS42IDEwLjctNC45IDE2LjEtMy4yIDUuMy04LjEgOS40LTE0LjYgMTIuMmwuOC40SDg4LjN2LTYuOGgxNS40YzcuOCAwIDEzLjMtMS45IDE2LjYtNS45IDMuMi0zLjkgNC45LTkuMyA0LjktMTYuMyAwLTcuNS0xLjgtMTMuMS01LjUtMTctMy43LTMuOS05LjEtNS44LTE2LjQtNS44LTYuOSAwLTEyLjQgMi0xNi41IDYtNC4xIDMuOS02LjIgOS02LjMgMTZ6TTIyNC45IDE1Ny40aC0xNy42di00Ni42bC0yNi43LjRWOTguNWw0NC4zLTQuOHoiLz48cGF0aCBjbGFzcz0ic3QzNyIgZD0iTTE1LjEgMzBDNC4zIDMwLS43IDQwLjYuMSA0NWM2LjIgMzUgMjIuNSAxMTIuNSAyMi41IDExMi41TTI3Ny41IDE1Ny40UzI5My44IDc5LjkgMzAwIDQ0LjljMC0xMi4yLTEwLjYtMTUtMTUtMTUiLz48L2c+PC9zdmc+",
+  "id": "google-calendar",
+  "name": "Google Calendar",
+  "properties": {
+    "accessToken": {
+      "deprecated": false,
+      "displayName": "Access Token",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "path",
+      "labelHint": "String provided by Google that authorizes access to a Google calendar account.",
+      "order": "4",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "tags": [
+        "oauth-access-token"
+      ],
+      "type": "string"
+    },
+    "additionalOAuthQueryParameters": {
+      "deprecated": false,
+      "displayName": "Additional OAuth query parameters",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-additional-query-parameters"
+      ],
+      "type": "hidden"
+    },
+    "applicationName": {
+      "deprecated": false,
+      "displayName": "Application Name",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "A name that you choose as the name of an OAuth 2.0 Google calendar client. This name appears in the Google developers account list of OAuth clients.",
+      "order": "3",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "authenticationType": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The access token",
+      "displayName": "Authorization URL",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "required": false,
+      "secret": true,
+      "tags": [
+        "authentication-type"
+      ],
+      "type": "hidden"
+    },
+    "authorizationUrl": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The access token",
+      "displayName": "Authorization URL",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "required": false,
+      "secret": true,
+      "tags": [
+        "oauth-authorization-url"
+      ],
+      "type": "hidden"
+    },
+    "clientId": {
+      "deprecated": false,
+      "displayName": "Client ID",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The client ID that Google provides when you register a client application.",
+      "order": "1",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-client-id"
+      ],
+      "type": "string"
+    },
+    "clientSecret": {
+      "deprecated": false,
+      "displayName": "Client Secret",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The client secret that Google provides when you register a client application.",
+      "order": "2",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "tags": [
+        "oauth-client-secret"
+      ],
+      "type": "string"
+    },
+    "googleScopes": {
+      "deprecated": false,
+      "displayName": "Scopes",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "UserId",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-scope"
+      ],
+      "type": "hidden"
+    },
+    "refreshToken": {
+      "deprecated": false,
+      "displayName": "Refresh Token",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "path",
+      "labelHint": "String provided by Google that enables retrieval of a new access token.",
+      "order": "5",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "tokenUrl": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The access token",
+      "displayName": "Token URL",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "required": false,
+      "secret": true,
+      "tags": [
+        "oauth-access-token-url"
+      ],
+      "type": "hidden"
+    },
+    "userId": {
+      "deprecated": false,
+      "displayName": "User ID",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Google calendar account name that is associated with this registration.",
+      "order": "6",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

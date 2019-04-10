@@ -1,0 +1,32 @@
+// This module is included in the following assemblies:
+// as_connecting-to-concur.adoc
+
+[id='user-roles-for-connecting-to-concur_{context}']
+= User roles for connecting to SAP Concur
+
+SAP Concur has an implementation site for development work and a production
+site for live use. The implementation site simulates 
+the production site. This lets you create and refine an integration
+before you use it in production with the live SAP Concur site. 
+
+At any one time, a {prodname} environment can connect to the SAP Concur implementation site 
+or the SAP Concur production site. In other words, a particular 
+{prodname} environment does not support connections to both SAP Concur
+sites at the same time. Each {prodname} environment requires its own 
+credentials for accessing each SAP Concur site and the credentials for 
+the implementation site are different from the credentials for the
+production site. 
+
+Consequently, the expectation is that someone in a system administrator-like
+role would do the following:
+
+. Obtain two sets of OAuth credentials from SAP Concur:
++
+* One set for access to the SAP Concur implementation site
+* Another set for access to the SAP Concur production site
+
+. Configure the SAP Concur connector for access to the appropriate SAP Concur site. 
+. Create a SAP Concur connection. 
+
+A business user can then create an integration that uses the 
+SAP Concur connection. 

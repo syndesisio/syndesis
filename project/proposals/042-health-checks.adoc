@@ -1,0 +1,215 @@
+= Syndesis - Camel Health Check
+
+* Issues:
+** https://github.com/syndesisio/syndesis-project/issues/42
+** https://issues.apache.org/jira/browse/CAMEL-11443
+** https://issues.apache.org/jira/browse/CAMEL-10026
+
+* Branches:
+** https://github.com/apache/camel (master)
+
+* Example:
+** https://github.com/apache/camel/tree/master/examples/camel-example-spring-boot-routecontroller
+
+== Background
+
+There is two kind of health checks required for Syndesis:
+
+* Technical health checks which ensure that the Integration itself is running, but not whether the components are without faults. This healthcheck is used as liveness and readiness checks for OpenShift
+* Status of an integration with respect to the backends. This status should be visualised in the Syndesis UI to give direct feedback to the user. It must not be the case that a faulty backend restarts the integration.
+
+=== Technical health checks
+
+These are native OpenShift readiness and liveness probes.
+
+It is important that the readiness and liveness probes are only being used casually to ensure the integration can startup and become ready, and that the JVM stays alive. We can leverage the existing Camel health check from camel-spring-boot (`/health` HTTP REST endpoint), that ties into OpenShift readiness/liveness probes and ensures the JVM, Spring-Boot, and Apache Camel can startup and be ready. The liveness probe then calls the same `/health` HTTP REST endpoint which just checks that Spring Boot, and Camel is running.
+
+We do not want the OpenShift liveness probe to react on errors from the integration because when an integration is in an error state because of one of its connectors fails, this should be reported by other means than Kubernetes status changes. It should be visible on the Syndesis UI instead (i.e. integration health checks).
+
+===  Integration health checks (status)
+
+These are Syndesis specific and requires new functionality developed into Apache Camel and as well in Syndesis.
+
+== Implementation
+
+The existing Camel health check from camel-spring-boot (`/health` HTTP REST endpoint) can be used as-is, however as we want Syndesis to be more in control of errors, we would need to ensure that the readiness/liveness probes reports OK even if an integration startup and cannot connect to a remote system, and would be in error.
+
+When Apache Camel startup then Camel routes will startup by default, and as part of their startup then the (route consumers) will often connect to remote systems, and in case of connection errors those will be thrown as exception and Camel will fail to startup. Only a handful of Camel components has built-in failover/retry in those situations.
+
+For Syndesis we would need to be in full control, and therefore we will need to ensure Apache Camel can startup even if there is a connection problem with a remote system. This requires to configure Apache Camel to not auto start the routes, which can be done in Spring Boot by configuring `application.properties` with the following:
+
+    camel.springboot.auto-startup = false
+
+By doing so no routes is automatic startup up, but we would then need to defer starting these routes and do this using another way.
+
+When using spring,the camel context can be configured using beans from the registry footnote:[http://camel.apache.org/advanced-configuration-of-camelcontext-using-spring.html[advanced-configuration]] therefore we can add a new auto discovered `RouteController` SPI which will be the responsible for starting up the routes in a controlled manner.
+
+[NOTE]
+====
+- as the idea of a route controller has been brought up for Camel 3.0, the  RouteController will be an early preview SPI.
+- as refactoring the route management requires to change camel-core, the first implementation leverages `RoutePolicy`/`RoutePolicyFactory`
+====
+
+The `RouteController` implementation will sets `autoStartup = false` and will install its own `RoutePolicyFactory` which then creates a `RoutePolicy`  for each route an where we in the `onInit` callback can register the routes to the `RouteController` which then runs as a background thread and orchestrates starting the routes. The `RouteController` will then be responsible for starting up all these routes, and have support for periodically retry in case a route fails to startup. And only when all routes has been started the `RouteController` has completed starting up all the routes.
+
+In Camel with Spring Boot we can setup this in the `Main` class via something along the following code lines:
+
+[source,java]
+----
+@Bean
+RouteController newRouteController(CamelContext camelContext) {
+    // The route controller is also in charge to add add its own
+    // RoutePolicyFactory to the camel context
+    return new RouteController(camelContext);
+}
+----
+
+[NOTE]
+====
+- We can then implement a `DefaultRouteController` in camel-core which in 3.0 which will take over the current route management and then one can either configure its behavior or implement its own using DefaultRouteController as base class.
+- The syndesis `RouteController` should have configuration setting to specify how often to retry starting failed routes (we may need to have backoff etc).
+====
+
+Besides starting up routes the `RouteController` should have a Java, JMX API, and REST which can report back status of the running integrations (i.e. running routes) and should also have APIs to force starting a route on demand, eg so an user can click a button, and then it will immediately schedule to run a task that attempts to start the route.
+
+At minimum it should collect status of each route with details:
+
+- route id
+- current status (starting, started, stopping, stopped)
+- health (unknown, ok, failure)
+- failure error message (exception message + stacktrace)
+
+TODO: API details to be determined
+
+To expose this API in Rest we can use Spring Actuate which allows to expose such details and leverage:
+- `org.apache.camel.spring.boot.actuate.endpoint.CamelRoutesEndpoint`
+- `org.apache.camel.spring.boot.actuate.endpoint.CamelRoutesMvcEndpoint`
+
+The MVC endpoint could expose the following api:
+
+[cols="3*", options="header"]
+|===
+| HTTP Verb | Path | Description
+| GET | /camelroutes | List all the routes with minimal information
+| GET | /camelroutes/{id}/info | Provide detailed information about the route identified by {id}
+| POST | /camelroutes/{id}/start | Attempt to start the route identified by {id}
+| POST | /camelroutes/{id}/stop | Attempt to stop the route identified by {id}
+|===
+
+NOTE: the path could be changed like endpoints.camelroutes.path = /camel/routes
+
+- Example of /camelroutes
++
+[source,json]
+----
+[
+  {
+    "id": "bar",
+    "uptime": "10.347 seconds",
+    "uptimeMillis": 10347,
+    "status": "Started"
+  },
+  {
+    "id": "foo",
+    "uptime": "10.341 seconds",
+    "uptimeMillis": 10341,
+    "status": "Started"
+  },
+  {
+    "id": "undertow",
+    "uptimeMillis": 0,
+    "status": "Stopped"
+  }
+]
+----
+
+- Example of /camelroutes/{id}/info (no error)
++
+[source,json]
+----
+{
+  "id": "undertow",
+  "uptime": "6.218 seconds",
+  "uptimeMillis": 6218,
+  "status": "Started",
+  "details": {
+    "deltaProcessingTime": 0,
+    "exchangesInflight": 0,
+    "exchangesTotal": 0,
+    "externalRedeliveries": 0,
+    "failuresHandled": 0,
+    "lastProcessingTime": -1,
+    "maxProcessingTime": 0,
+    "meanProcessingTime": -1,
+    "minProcessingTime": 0,
+    "redeliveries": 0,
+    "totalProcessingTime": 0,
+    "hasRouteController": true
+  }
+----
+
+- Example of /camelroutes/{id}/info (with error)
++
+[source,json]
+----
+{
+  "id": "undertow",
+  "uptimeMillis": 0,
+  "status": "Stopped",
+  "details": {
+    "deltaProcessingTime": 0,
+    "exchangesInflight": 0,
+    "exchangesTotal": 0,
+    "externalRedeliveries": 0,
+    "failuresHandled": 0,
+    "lastProcessingTime": -1,
+    "maxProcessingTime": 0,
+    "meanProcessingTime": -1,
+    "minProcessingTime": 0,
+    "redeliveries": 0,
+    "totalProcessingTime": 0,
+    "lastError": {
+      "phase": "START",
+      "exception": {
+        "cause": {
+          "cause": null,
+          "stackTrace": [
+            {
+              "methodName": "bind0",
+              "fileName": "Net.java",
+              "lineNumber": -2,
+              "className": "sun.nio.ch.Net",
+              "nativeMethod": true
+            },
+            ...
+          ],
+          "message": "Address already in use",
+          "localizedMessage": "Address already in use",
+          "suppressed": []
+        },
+        "stackTrace": [
+          {
+            "methodName": "start",
+            "fileName": "Undertow.java",
+            "lineNumber": 214,
+            "className": "io.undertow.Undertow",
+            "nativeMethod": false
+          },
+          ...
+        ],
+        "message": "java.net.BindException: Address already in use",
+        "localizedMessage": "java.net.BindException: Address already in use",
+        "suppressed": []
+      }
+    },
+    "hasRouteController": true
+  }
+}
+----
+
+NOTE: the ``hasRouteController`` property can be used to check if a route is managed by the route controller or it is up to the user to restart it (i.e. after the number of configured attempts has exhausted)
+
+=== User interaction
+
+- if a user stops a running or failing route then the route will be moved out of the route controller supervision so the user can decide when to restart the route
+- if a user starts a stopped or failing route then the route will be moved to the route controller supervision and eventually fail again shortly

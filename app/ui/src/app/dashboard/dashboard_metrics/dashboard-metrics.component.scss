@@ -1,0 +1,48 @@
+@import 'syndesis-sass';
+
+.metrics {
+  &__cards {
+    &-item {
+      > .card-pf {
+        min-height: 100px;
+      }
+
+      &--text-only {
+        > .card-pf {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .card-pf-title {
+            margin: 0;
+          }
+        }
+      }
+
+      &--uptime {
+        .card-pf-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: baseline;
+        }
+
+        .metrics__uptime-header {
+          margin-top: 0;
+          font-size: 16px;
+        }
+
+        .metrics__uptime-kickoff {
+          font-size: 11px;
+        }
+
+        .card-pf-body {
+          .metrics__uptime-legend {
+            font-size: 15px;
+            margin-bottom: 0;
+            line-height: 1.2;
+          }
+        }
+      }
+    }
+  }
+}

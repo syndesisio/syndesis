@@ -1,0 +1,377 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "actions": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "actionType": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "descriptor": {
+              "type": "object",
+              "properties": {
+                "configuredProperties": {
+                  "type": "object"
+                },
+                "connectorCustomizers": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "inputDataShape": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "outputDataShape": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "propertyDefinitionSteps": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "properties": {
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "description",
+                        "name",
+                        "properties"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "inputDataShape",
+                "outputDataShape"
+              ]
+            },
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "pattern": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "actionType",
+            "description",
+            "descriptor",
+            "id",
+            "name",
+            "pattern"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "actionType": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "descriptor": {
+              "type": "object",
+              "properties": {
+                "configuredProperties": {
+                  "type": "object"
+                },
+                "connectorCustomizers": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "inputDataShape": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "outputDataShape": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "propertyDefinitionSteps": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "inputDataShape",
+                "outputDataShape"
+              ]
+            },
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "pattern": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "required": [
+            "actionType",
+            "description",
+            "descriptor",
+            "id",
+            "name",
+            "pattern"
+          ]
+        },
+        {
+          "type": "object",
+          "properties": {
+            "actionType": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "descriptor": {
+              "type": "object",
+              "properties": {
+                "configuredProperties": {
+                  "type": "object"
+                },
+                "inputDataShape": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "outputDataShape": {
+                  "type": "object",
+                  "properties": {
+                    "kind": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "kind"
+                  ]
+                },
+                "propertyDefinitionSteps": {
+                  "type": "array",
+                  "items": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "description": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "properties": {
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "description",
+                        "name",
+                        "properties"
+                      ]
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "inputDataShape",
+                "outputDataShape"
+              ]
+            },
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "pattern": {
+              "type": "string"
+            },
+            "tags": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "required": [
+            "actionType",
+            "description",
+            "descriptor",
+            "id",
+            "name",
+            "pattern"
+          ]
+        }
+      ]
+    },
+    "componentScheme": {
+      "type": "string"
+    },
+    "configuredProperties": {
+      "type": "object"
+    },
+    "dependencies": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "type"
+          ]
+        }
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "properties": {
+      "type": "object"
+    },
+    "tags": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    }
+  },
+  "required": [
+    "actions",
+    "description",
+    "icon",
+    "id",
+    "name"
+  ]
+}

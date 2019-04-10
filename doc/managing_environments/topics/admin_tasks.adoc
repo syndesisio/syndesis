@@ -1,0 +1,11 @@
+[id='administrator-tasks']
+= Administrator tasks
+
+This chapter describes typical administrative tasks and processes for the
+{prodname} administrator.
+
+include::user_admin.adoc[leveloffset=+1]
+
+include::metrics.adoc[leveloffset=+1]
+
+include::logs.adoc[leveloffset=+1]

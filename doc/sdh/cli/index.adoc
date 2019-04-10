@@ -1,0 +1,170 @@
+[[syndesis]]
+= Buildtool "syndesis"
+
+Syndesis uses a single tool for controlling various aspects of the build and developer related tasks.
+This script can be found in `$SYNDESIS_DIR/tools/bin` and is called `syndesis`.
+It requires bash and can be used on any Unix or macOS.
+
+To have this script handy all the time it is recommended to either put this `bin/` directory into the path or add a symlink from `syndesis` into a directory which is already on your execution path.
+
+[source,bash]
+----
+# Navigate to syndesis project directory
+cd $SYNDESIS_DIR
+
+# Set path to include Syndesis' tool directory
+$ export PATH=${PATH}:$(pwd)/tools/bin
+
+# Alternatively, set a symbolic link to "syndesis"
+$ ln -s $(pwd)/tools/bin/syndesis /usr/local/bin
+----
+
+The script can be used for various tasks which are selected by a so-called command which is the first argument to the script.
+
+Just type `syndesis -h` to get an overview of the commands available:
+
+[source,indent=0,subs="verbatim,quotes"]
+.Usage message
+----
+Usage: syndesis <command> [... options ...]
+
+with the following commands
+
+   build            Build Syndesis
+   completion       Shell completion
+   dev              Syndesis developer tools
+   doc              Generate Syndesis Developer Handbook (SDH)
+   install          Install Syndesis to a connected OpenShift cluster
+   minishift        Initialize and manage a Minishift developer environment
+   release          Perform a release
+   system-test      Run system tests
+
+"build" is the default command if no command is specified.
+----
+
+There are a handful of global options which can be used:
+
+[cols="3,1,15"]
+|===
+| `--help`
+| `-h`
+| Print usage information. If a command is given print out commands specific options
+
+| `--rebase`
+| `-r`
+| Rebase your project directory before building to integrate upstream changes to your local repository. See <<syndesis-rebase,below>> for details how this works.
+
+| `--verbose`
+|
+| Set verbose mode, which is useful mostly only for debugging the script itself.
+|===
+
+[[syndesis-rebase]]
+.Rebase to upstream
+To easily rebase on changes which have been merged upstream to master, you can use the option `--rebase` (short: `-r`).
+This command assumes that you have forked the Syndesis GitHub repositories and you have "origin" and "upstream" remotes like
+
+[source,indent=0,subs="verbatim,quotes"]
+----
+$ git remote -v
+origin    git@github.com:rhuss/syndesis.git (fetch)
+origin    git@github.com:rhuss/syndesis.git (push)
+upstream  https://github.com/syndesisio/syndesis (fetch)
+upstream  https://github.com/syndesisio/syndesis (push)
+----
+
+With this in place, a `--rebase` performs the following steps:
+
+* Refresh upstream remote: `git fetch upstream master`
+* Try a `git rebase upstream/master` which rebases your current local working branch.
+* If this fails because you have uncommitted work:
+  - A `git stash` is performed
+  - The rebase is retried and should succeed
+  - `git stash pop` brings back your changes. Stashing can fail with conflicts which you would have to resolve on your own.
+
+[[syndesis-dev-modes]]
+.Development Modes
+
+The Syndesis application consists of a set of Docker images OpenShift resources descriptors for installing Syndesis.
+For development, https://www.openshift.org/minishift/[minishift] is used, and most of the commands assume that you have minishift installed locally and executable directly from your path.
+Minishift can be downloaded and installed from https://github.com/minishift/minishift/releases
+
+For development OpenShift S2I builds and image streams are used.
+This mode works also when running with a real OpenShift cluster and is not restricted to Minishift usage.
+The advantage is that a build automatically triggers a redeployment, so you don't have to kill any pods manually.
+
+[[syndesis-commands]]
+.Commands
+All other options are specific to each command.
+You get a list of those options with `syndesis <cmd> -h`.
+These options are described in detail in the next sections.
+
+The following commands are available:
+
+[cols="3,15",options="header"]
+|===
+| Command
+| Description
+
+| <<syndesis-build,**build**>>
+| Used for building Syndesis and its various modules.
+
+| <<syndesis-ui,**ui**>>
+| Start the UI for local development _(not implemented yet)_
+
+| <<syndesis-minishift,**minishift**>>
+| Start and install Syndesis on Minishift
+
+| <<syndesis-install,**install**>>
+| Install Syndesis in a running cluster (other than Minishift)
+
+| <<syndesis-system-test,**system-test**>>
+| Run System test against an OpenShift cluster
+
+| <<syndesis-dev,**dev**>>
+| Utility commands useful during development
+
+| <<syndesis-doc,**doc**>>
+| Generating and publish this documentation
+
+| <<syndesis-doc,**release**>>
+| Release Syndesis' Maven and NPM artefacts _(not implemented yet)_
+|===
+
+If no command is given, `build` is the default.
+Remember a command must be the first argument, but there are additional possibilities to specify commands:
+
+* You can use the form `--command` anywhere as an option, too. E.g. using  `--minishift` is the same as specifying "minishift" as the first argument.
+* A `--mode command` can be used, too (e.g. `--mode sytem-test`)
+
+The next sections describe the commands in detail.
+To add a new command, just drop a script file into `$SYNDESIS_DIR/tools/bin/commands` directory with following structure:
+
+[source,bash]
+----
+#!/bin/bash
+
+yourscriptname::description() {
+    echo "Describe the command"
+}
+
+yourscriptname::usage() {
+    cat <<EOT
+    Describe the usage of the command
+EOT
+}
+
+yourscriptname::run() {
+    Do your stuff
+}
+
+----
+
+include::cmd_build.adoc[]
+include::cmd_ui.adoc[]
+include::cmd_minishift.adoc[]
+include::cmd_system_test.adoc[]
+include::cmd_dev.adoc[]
+include::cmd_doc.adoc[]
+include::cmd_release.adoc[]
+include::cmd_install.adoc[]

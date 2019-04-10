@@ -1,0 +1,29 @@
+<div class="integrations edit row">
+  <div class="header">
+    <ol class="syn-breadcrumb">
+      <li>
+        <i class="fa fa-angle-double-left"></i>
+        <a [routerLink]="['/integrations']">All Integrations</a>
+      </li>
+    </ol>
+    <syndesis-integration-api-provider-operation-editor-toolbar
+      [showOperationsButton]="false"
+    ></syndesis-integration-api-provider-operation-editor-toolbar>
+  </div>
+  <div class="content">
+    <div class="operations">
+      <syndesis-loading
+        [loading]="!(currentFlowService.loaded$ | async)"
+        [content]="content"
+      >
+      </syndesis-loading>
+    </div>
+  </div>
+</div>
+
+<ng-template #content>
+  <syndesis-integration-api-provider-operations-list
+    [flows$]="currentFlowService.flows$"
+    [integrationId]="currentFlowService.integration?.id"
+  ></syndesis-integration-api-provider-operations-list>
+</ng-template>

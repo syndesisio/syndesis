@@ -1,0 +1,15 @@
+<syndesis-loading
+  [loading]="!(currentFlowService.loaded$ | async)"
+  [content]="content"
+>
+  <ng-template #content>
+    <div
+      *ngIf="currentFlowService.isApiProvider(); then apiProviderHeader"
+    ></div>
+  </ng-template>
+  <ng-template #apiProviderHeader>
+    <span><h3 class="inline-block">Create a Flow</h3></span> &nbsp;
+    <span>{{ currentFlowService.currentFlow?.description }}</span> &nbsp;
+    <span>{{ currentFlowService.currentFlow?.name }} </span>
+  </ng-template>
+</syndesis-loading>

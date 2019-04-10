@@ -1,0 +1,98 @@
+// This module is included in the following assembly:
+// as_develop-step-extensions.adoc
+
+[id='example-route-xml-fragment_{context}']
+= Example of developing a Camel route with XML fragments
+
+To develop a custom step, you can implement the action as an XML fragment that 
+is a Camel route that has an input such as `direct`. The Syndesis runtime
+invokes this route in the same way that it invokes any other Camel route. 
+
+For example, suppose that you want to create a step that logs the body of a 
+message with an optional prefix. The following XML defines a Camel route
+that does this. 
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<routes xmlns="http://camel.apache.org/schema/spring"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+      http://camel.apache.org/schema/spring
+      http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+  <route id="log-body-with-prefix">
+    <from uri="direct:log"/>
+    <choice>
+      <when>
+        <simple>${header.prefix} != ''</simple>
+        <log message="${header.prefix} ${body}"/>
+      </when>
+      <otherwise>
+        <log message="Output ${body}"/>
+      </otherwise>
+    </choice>
+  </route>
+
+</routes>
+----
+
+When you develop an extension in XML, you must create the extension
+definition JSON file yourself. For this XML fragment, the
+`src/main/resources/META-INF/syndesis/syndesis-extension-definition.json` 
+file could define the action as follows:
+
+[source,json]
+----
+{
+  "actionType": "step",
+  "id": "log-body-with-prefix",
+  "name": "Log body with prefix",
+  "description": "A simple body log with a prefix",
+  "descriptor": {
+    "kind": "ENDPOINT", <1>
+    "entrypoint": "direct:log", <2>
+    "resource": "classpath:log-body-action.xml", <3>
+    "inputDataShape": {
+      "kind": "none"
+    },
+    "outputDataShape": {
+      "kind": "none"
+    },
+  "propertyDefinitionSteps": [ {
+    "description": "extension-properties",
+    "name": "extension-properties",
+    "properties": { <4>
+      "prefix": {
+        "componentProperty": false,
+        "deprecated": false,
+        "description": "The Log body prefix message",
+        "displayName": "Log Prefix",
+        "javaType": "String",
+        "kind": "parameter",
+        "required": false,
+        "secret": false,
+        "type": "string"
+      }
+    }
+  } ]
+  }
+}
+----
+<1> The type of the action is set to `ENDPOINT`. The runtime invokes a 
+Camel endpoint to execute the action provided by this custom step.
+<2> The Camel endpoint to invoke is `direct:log`. This is the `from` specification 
+in the route.
+<3> This is the location of the XML  fragment.
+<4> These are the properties that the action defined in this custom step
+exposes to the integrator who will be adding this step to an integration. In 
+{prodname}, each value that the integrator specifies in the user interface
+gets mapped to a message header that has the same name as the property. 
+In this example, the integrator will see one input field, with the
+*Log Prefix* display name. 
+
+[WARNING]
+====
+Syndesis does not support full Camel XML configuration. Syndesis supports
+only the <routes> tag.
+====

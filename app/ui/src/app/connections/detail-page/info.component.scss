@@ -1,0 +1,19 @@
+@import 'syndesis-sass';
+
+:host {
+  .syn-connection-detail-info__header,
+  .syn-connection-detail-info__description,
+  .syn-connection-detail-info__usage {
+    margin-bottom: $gutter;
+  }
+
+  .syn-connection-detail-info__header {
+    display: flex;
+    align-items: flex-start;
+
+    img {
+      width: 46px;
+      margin-right: $gutter;
+    }
+  }
+}

@@ -1,0 +1,9 @@
+# Update scripts
+
+This directory contains various update scripts.
+
+These scripts will be run for _every_ update. These scripts have to be _idempotent_ in that sense that they have to check the status of the system and only change/update something if this has not already happened. That way these scripts can run all the time without doing any harm when they are run a second time.
+
+Also, you script should not depend on any particular order (also you can order them), but if so, clearly indicate which other script needs to be run before the current script is run within the comments of this script.
+
+All scripts besides the *01_server_config_map_upgrade.sh* should be removed with each syndesis version bump.

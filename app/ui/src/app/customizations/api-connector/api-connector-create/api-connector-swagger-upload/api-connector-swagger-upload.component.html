@@ -1,0 +1,30 @@
+<div class="card-pf-heading">
+  <h2 class="card-pf-title">
+    {{ 'customizations.api-client-connectors.create-upload-spec-step-title' | synI18n }}
+  </h2>
+</div>
+<div class="card-pf-body">
+  <syndesis-validation-error *ngFor="let error of errors">
+    {{ error.message }}
+  </syndesis-validation-error>
+
+  <form class="form-horizontal syn-form--swagger-upload"
+        (ngSubmit)="onDone.emit()"
+        #openApiForm="ngForm"
+        novalidate>
+    <openapi-uploader [ngModel]="uploadSpecification"
+                      (ngModelChange)="onUploadSpecificationChange.emit($event)"
+                      name="uploaderValue"
+                      [allowSpecCreation]="false"
+                      [isInvalid]="(errors)">
+    </openapi-uploader>
+    <fieldset>
+      <syndesis-button type="submit"
+                       [loading]="loading"
+                       [disabled]="!uploadSpecification.valid">
+        {{ 'shared.next-button' | synI18n }}
+      </syndesis-button>
+    </fieldset>
+  </form>
+
+</div>

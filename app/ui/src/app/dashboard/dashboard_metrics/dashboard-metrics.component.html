@@ -1,0 +1,92 @@
+<div class="syndesis-dashboard-metrics metrics">
+  <div class="container-fluid">
+    <div class="row syndesis-dashboard__header">
+      <h1 class="col-sm-6 syndesis-dashboard__title">
+        {{ 'dashboard.metrics.sysmetrics' | synI18n }}
+      </h1>
+      <div class="col-sm-6 syndesis-dashboard__actions text-right" *ngIf="integrations.length > 0">
+        <a routerLink="/integrations" class="syndesis-dashboard__view-all">{{ 'viewall' | synI18n: ('integrations.integrations' | synI18n) }}</a>&nbsp;&nbsp;
+        <button class="btn btn-primary" routerLink="/integrations/create">
+          {{ 'dashboard.metrics.create' | synI18n }}
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="metrics__cards">
+    <div class="row row-cards-pf">
+      <div class="col-sm-6 col-md-3 metrics__cards-item">
+        <div class="card-pf card-pf-accented card-pf-aggregate-status">
+          <h2 class="card-pf-title">
+            <span class="card-pf-aggregate-status-count">
+              {{ integrations.length | number }}
+            </span>
+            {{ 'integrations.integrations' | synI18n }}
+          </h2>
+          <div class="card-pf-body">
+              <p class="card-pf-aggregate-status-notifications">
+                <span class="card-pf-aggregate-status-notification">
+                  <span class="pficon pficon-ok"></span>
+                  {{ integrations.length - errorIntegrations | number }}
+                </span>
+                <span class="card-pf-aggregate-status-notification">
+                  <span class="pficon pficon-error-circle-o"></span>
+                  {{ errorIntegrations | number }}
+                </span>
+              </p>
+            </div>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 metrics__cards-item metrics__cards-item--text-only">
+        <div class="card-pf card-pf-accented card-pf-aggregate-status">
+          <h2 class="card-pf-title">
+              <span class="card-pf-aggregate-status-count">
+                {{ connections.length | number }}
+              </span>
+              {{ 'connections.connections' | synI18n }}
+          </h2>
+        </div>
+      </div>
+      <div class="col-sm-6 col-md-3 metrics__cards-item">
+          <div class="card-pf card-pf-accented card-pf-aggregate-status">
+            <h2 class="card-pf-title">
+              <span class="card-pf-aggregate-status-count">
+                {{ integrationMetrics.messages | number }}
+              </span>
+              {{ 'dashboard.metrics.totalmessages' | synI18n }}
+            </h2>
+            <div class="card-pf-body">
+                <p class="card-pf-aggregate-status-notifications">
+                  <span class="card-pf-aggregate-status-notification">
+                    <span class="pficon pficon-ok"></span>
+                    {{ integrationMetrics.messages - integrationMetrics.errors | number }}
+                  </span>
+                  <span class="card-pf-aggregate-status-notification">
+                    <span class="pficon pficon-error-circle-o"></span>
+                    {{ integrationMetrics.errors | number }}
+                  </span>
+                </p>
+              </div>
+          </div>
+        </div>
+      <div class="col-sm-6 col-md-3 metrics__cards-item metrics__cards-item--uptime">
+        <div class="card-pf card-pf-accented card-pf-aggregate-status">
+          <div class="card-pf-title">
+            <h2 class="metrics__uptime-header metrics__uptime-label">
+              {{ 'dashboard.metrics.uptime.uptime' | synI18n }}
+            </h2>
+            <time
+              [attr.datetime]="dateTime"
+              class="metrics__uptime-header metrics__uptime-kickoff">
+              {{ 'dashboard.metrics.uptime.since' | synI18n: uptimeStart }}
+            </time>
+          </div>
+          <div class="card-pf-body">
+            <span class="metrics__uptime-legend">
+              {{ integrationMetrics.start | synDurationDiff$ | async }}
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+/* tslint:disable */
+
+export interface BaseEntity {
+  readonly id?: string;
+  // TODO we'll make this optional for now
+  kind?: string;
+}
+
+{{#definitions}}
+export interface {{&name}} extends BaseEntity {{#tsType}}{{> type}}{{/tsType}};
+export type {{#pluralize}}{{&name}}{{/pluralize}} = Array<{{&name}}>;
+
+{{/definitions}}
+
+class TypeFactoryClass {
+  {{#definitions}}
+  create{{&name}}() {
+    return <{{&name}}>
+      {{#tsType}}
+      {{! must use different delimiters to avoid ambiguities when delimiters directly follow a literal brace {. }}
+      {{=<% %>=}}
+      <%#isRef%><%target%><%/isRef%><%!%><%#isAtomic%><%&tsType%><%/isAtomic%><%!%><%#isObject%>{
+        <%#properties%>
+          <%name%>: undefined,
+        <%/properties%>
+      }<%/isObject%><%!%><%#isArray%>Array<<%#elementType%><%>type%><%/elementType%>><%/isArray%>
+      <%={{ }}=%>
+      {{/tsType}};
+  };
+
+  {{/definitions}}
+};
+
+export const TypeFactory = new TypeFactoryClass();

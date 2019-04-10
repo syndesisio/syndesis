@@ -1,0 +1,96 @@
+{
+  "description": "ComponentProxyCustomizerTest",
+  "connections": [],
+  "flows": [
+    {
+      "steps": [
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "direct",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "start"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "1"
+          }
+        },
+        {
+          "connection": {
+            "connector": {
+
+            }
+          },
+          "action": {
+            "descriptor": {
+              "componentScheme": "seda",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "proxy"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "2"
+          }
+        },
+        {
+          "stepKind": "split",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "3"
+          }
+        },
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "mock",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "result"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "4"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": [],
+  "tags": []
+}

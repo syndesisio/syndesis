@@ -1,0 +1,21 @@
+/// Provides general styles for generic tabbed top nav bar components.
+.syn-tabs {
+  flex: 0 0 auto;
+  padding-left: $top-nav-gutter;
+  padding-right: $top-nav-gutter;
+  background: inherit;
+
+  &__tab {
+    min-width: 200px;
+    background: inherit;
+    cursor: pointer;
+
+    &.active {
+      cursor: default;
+    }
+
+    > * {
+      text-align: center;
+    }
+  }
+}

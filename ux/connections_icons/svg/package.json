@@ -1,0 +1,18 @@
+{
+  "name": "syndesis-icons",
+  "version": "1.0.0",
+  "description": "Syndesis icons",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "optimize": "yarn install && mkdir -p optimized && svgo -f . -o optimized",
+    "icons": "yarn install && node update_icons.js"
+  },
+  "dependencies": {
+    "bluebird": "^3.5.2",
+    "jsonfile": "^5.0.0",
+    "node-jq": "^1.3.1",
+    "readdir": "^0.1.0",
+    "svgo": "^1.1.1"
+  }
+}

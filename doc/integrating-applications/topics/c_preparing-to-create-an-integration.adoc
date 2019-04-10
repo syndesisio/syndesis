@@ -1,0 +1,35 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='preparing-to-create-an-integration_{context}']
+= Preparation for creating an integration
+
+Preparation for creating an integration starts with answers to the
+questions listed in 
+link:{LinkFuseOnlineIntegrationGuide}#plan_ready[Considerations for planning your integrations].
+After you have a plan for the
+integration, you need to do the following before you can create the
+integration:
+
+. Determine whether an application that you want to connect to uses the
+OAuth protocol. For each application that uses OAuth, register
+{prodname} as a client that is authorized to access that application.
+Applications that use the OAuth protocol include: 
+
+* Dropbox
+* Google applications (Gmail, Calendar, Sheets)
+* Salesforce
+* SAP Concur
+* Twitter
+
+. Determine whether an application that you want to connect to uses
+HTTP basic authentication. For each application that does, identify
+the user name and password for accessing that application.
+You need to provide this information when you
+create the connection. 
+
+. For each application that you want to integrate, create a connection.
+
+.Additional resources
+* link:{LinkFuseOnlineIntegrationGuide}#general-procedure-for-obtaining-authorization_connections[General procedure for obtaining authorization]
+* link:{LinkFuseOnlineIntegrationGuide}#about-creating-connections_connections[About creating connections]

@@ -1,0 +1,12 @@
+.syn-loading {
+  display: block;
+  min-height: 30px;
+  position: relative;
+
+  .loading {
+    position: absolute;
+    z-index: 9999999999;
+    top: calc(50% - 15px);
+    left: calc(50% - 15px);
+  }
+}

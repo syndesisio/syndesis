@@ -1,0 +1,17 @@
+/// Centralized set of Application SASS variables
+
+// Generic styles for pages
+$gutter: 20px;
+$top-page-gutter: $gutter + 10px;
+$top-nav-gutter: $gutter;
+
+// Generic styles for wizard and card CTA buttons
+$button-top-gutter: .8em;
+$button-min-width: 100px;
+
+// Generic style config for forms
+$forms-label-column-width: 120px;
+$forms-row-height: 20px;
+$forms-default-card-height: 250px;
+$forms-default-file-thumb-size: 50px;
+$forms-grid-gutter: 1em;

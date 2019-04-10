@@ -1,0 +1,218 @@
+@import 'syndesis-sass';
+
+.flow-view {
+  height: 100%;
+  position: relative;
+  z-index: 0;
+
+  .toggle-collapsed {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 30px;
+    border: solid #d1d1d1;
+    border-width: 0 0 0 1px;
+    font-size: 1.5em;
+    font-weight: 200;
+    outline: 0;
+
+    &:before {
+      content: '\00ab';
+    }
+
+    &.collapsed:before {
+      content: '\00bb';
+    }
+  }
+
+  .flow-view-container {
+    flex: 1 1 auto;
+    padding-top: 15px;
+    padding-bottom: 80px;
+    padding-left: 50px;
+    padding-right: 0;
+    margin-right: 30px;
+    display: flex;
+    flex-direction: column;
+    width: 400px;
+
+    &.collapsed {
+      width: auto;
+      padding-right: 50px;
+      padding-bottom: 20px;
+
+      ::ng-deep .step {
+        &:not(:last-child) .icon-container {
+          padding-bottom: 20px;
+          height: 75px;
+        }
+      }
+    }
+
+    ::ng-deep {
+      .step {
+        position: relative;
+
+        .icon-container {
+          width: 55px;
+          height: 55px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          position: relative;
+          flex-shrink: 0;
+          cursor: pointer;
+        }
+
+        &:not(:last-child) .icon-container {
+          padding-bottom: 70px;
+          height: 125px;
+
+          &::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: #d4d4d4;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+          }
+        }
+      }
+    }
+
+    .start,
+    .finish {
+      h5 {
+        background-color: #ededed;
+        cursor: pointer;
+        display: inline;
+        padding: 5px;
+        text-transform: uppercase;
+      }
+
+      ul {
+        min-width: 160px;
+        padding: 10px 0; // Sub-Menu Items
+
+        &.collapse {
+          margin-top: 5px;
+          padding: 5px 0;
+
+          li {
+            padding: 5px 5px 5px 17px;
+
+            &.active {
+              background-color: #d6eefa;
+              border-bottom: 1px solid #b8dff3;
+              border-top: 1px solid #b8dff3;
+            }
+
+            &.inactive {
+              color: #d1d1d1;
+            }
+          }
+        }
+      }
+
+      .fa {
+        font-size: x-small;
+        padding-right: 5px;
+      }
+    }
+  }
+
+  .name {
+    flex: 0 0 auto;
+    border-bottom: 1px #d9d9d9 solid;
+    padding: $gutter;
+    margin-right: 10px;
+
+    .integration-name {
+      flex: 1 0 0;
+      padding-right: 1em;
+
+      .integration-name-field {
+        color: #363636;
+        font-size: 14px;
+        font-style: normal;
+
+        &[readonly] {
+          @include truncate(ellipsis);
+          background: none;
+          border-color: transparent;
+          box-shadow: none;
+        }
+
+        &.ng-invalid {
+          color: #ff0000;
+        }
+      }
+    }
+  }
+
+  ////////////////////////////////////////////////////////////////////////////////
+  // LEFT-HAND NAV BAR W/ STEPS
+  ////////////////////////////////////////////////////////////////////////////////
+  .flow-view-container {
+    .step {
+      flex: 0 0 auto;
+
+      &.finish {
+        flex: 0 0 auto;
+        min-height: 0px;
+      }
+
+      &.step-insert {
+        flex: 0 0 auto;
+        z-index: 2;
+
+        .icon-container {
+          height: 50px;
+        }
+
+        a {
+          text-decoration: none;
+        }
+
+        .square-icon {
+          position: relative;
+          cursor: pointer;
+
+          .fa.fa-plus-square {
+            color: #158acc;
+            background-color: white;
+            font-size: 24px;
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .flow-view-add-popover {
+  border-color: $color-pf-black-500;
+
+  &.bottom {
+    > .arrow {
+      border-bottom-color: $color-pf-black-500;
+    }
+  }
+
+  .popover-body {
+    a {
+      cursor: pointer;
+      display: inline-block;
+
+      &:not(:last-child) {
+        margin-bottom: 5px;
+      }
+    }
+
+    > div:not(:last-child) {
+      margin-bottom: 5px;
+    }
+  }
+}

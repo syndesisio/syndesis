@@ -1,0 +1,63 @@
+<div class="row row-cards-pf">
+  <div class="col-md-8 col-md-offset-2">
+    <div class="card-pf">
+      <div class="card-pf-heading">
+        <h2 class="card-pf-title">
+          {{ 'connections.add-connection-details' | synI18n }}
+        </h2>
+      </div>
+      <div class="card-pf-body">
+        <ng-container *ngIf='!hasCredentialError'>
+          <form id="reviewForm"
+                [formGroup]="reviewForm"
+                class="form-horizontal"
+                novalidate>
+            <p class="fields-status-pf" [innerHTML]="'required-fields' | synI18n"></p>
+            <div class="form-group"
+                 [ngClass]="{'has-error': name.invalid && name.touched}">
+              <label for="nameInput" class="col-sm-3 control-label required-pf">{{ 'connections.connection-name' | synI18n }}</label>
+              <!-- data-id is used in automated tests -->
+              <div class="col-sm-9">
+                <input data-id="nameInput"
+                       id="nameInput"
+                       class="form-control"
+                       formControlName="name"
+                       (blur)="validateNameNotTaken()"
+                       required>
+                <div *ngIf="name.invalid && name.touched">
+                  <span class="help-block"
+                        *ngIf="name.errors.required">
+                    {{ 'connections.name-is-required' | synI18n }}
+                  </span>
+                  <span class="help-block"
+                        *ngIf="name.errors.UniqueProperty">
+                    {{ 'connections.name-is-taken' | synI18n }}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="descriptionInput" class="col-sm-3 control-label">{{ 'description' | synI18n }}</label>
+              <div class="col-sm-9">
+                <textarea data-id="descriptionInput"
+                          id="descriptionInput"
+                          class="form-control"
+                          formControlName="description"
+                          rows="2"></textarea>
+              </div>
+            </div>
+          </form>
+        </ng-container>
+        <ng-container *ngIf='hasCredentialError'>
+          <div class="alert alert-warning alert-dismissable">
+            <span class="pficon pficon-warning-triangle-o"></span>
+            <p [innerHTML]='current.oauthStatus.message'></p>
+          </div>
+        </ng-container>
+      </div>
+    </div>
+  </div>
+</div>
+<syndesis-modal title="{{ 'connections.leave-page-title' | synI18n }}"
+                message="{{ 'connections.leave-page-message' | synI18n }}">
+</syndesis-modal>

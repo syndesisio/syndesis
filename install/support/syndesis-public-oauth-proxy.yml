@@ -1,0 +1,223 @@
+apiVersion: template.openshift.io/v1
+kind: Template
+metadata:
+  name: syndesis-public-oauthproxy
+  annotations:
+    openshift.io/display-name: "Syndesis Public API"
+    description: |-
+      This is the public API application for Syndesis.
+    openshift.io/long-description: |-
+      When this template is applied, an OAuth proxy is created to expose the Syndesis public API.
+      The API can then be accessed externally from CI/CD tools using a user provided service account secret token.
+    tags: "syndesis,public-api"
+    iconClass: icon-rh-integration
+    openshift.io/provider-display-name: "Red Hat, Inc."
+    openshift.io/documentation-url: "https://syndesis.io"
+    openshift.io/support-url: "https://access.redhat.com"
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+parameters:
+- name: PUBLIC_API_ROUTE_HOSTNAME
+  description: The external hostname to access Syndesis public API
+- name: OPENSHIFT_PROJECT
+  description: The name of the OpenShift project Syndesis is being deployed into.
+  displayName: OpenShift project to deploy into
+  required: true
+- name: SAR_PROJECT
+  description: The user needs to have permissions to at least get a list of pods in the given project in order to be granted access to the Syndesis installation in the $OPENSHIFT_PROJECT
+  displayName: OpenShift project to be used to authenticate the user against
+  required: true
+- name: OPENSHIFT_OAUTH_CLIENT_SECRET
+  description: OpenShift OAuth client secret
+  required: true
+- name: OAUTH_PROXY_TAG
+  description: OpenShift OAuth proxy image tag
+  value: 'v4.0.0'
+- description: Namespace containing image streams
+  displayName: Image Stream Namespace
+  name: IMAGE_STREAM_NAMESPACE
+  value: ''
+- description: Secret to use to encrypt oauth cookies
+  displayName: OAuth Cookie Secret
+  name: OAUTH_COOKIE_SECRET
+  generate: expression
+  from: '[a-zA-Z0-9]{32}'
+message: |-
+  Syndesis Public API is deployed to ${PUBLIC_API_ROUTE_HOSTNAME}.
+objects:
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    name: syndesis-public-oauthproxy
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-public-oauthproxy
+- apiVersion: authorization.openshift.io/v1
+  kind: RoleBinding
+  metadata:
+    name: syndesis-public-oauthproxy:viewers
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+  roleRef:
+    name: view
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-public-oauthproxy
+- apiVersion: authorization.openshift.io/v1
+  kind: ClusterRoleBinding
+  metadata:
+    name: syndesis-${OPENSHIFT_PROJECT}-auth-delegator
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-public-oauthproxy
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-public-oauthproxy
+    namespace: ${OPENSHIFT_PROJECT}
+  roleRef:
+    kind: ClusterRole
+    name: system:auth-delegator
+    apiGroup: rbac.authorization.k8s.io
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-public-oauthproxy
+    annotations:
+      service.alpha.openshift.io/serving-cert-secret-name: syndesis-public-oauthproxy-tls
+    name: syndesis-public-oauthproxy
+  spec:
+    ports:
+    - port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-public-oauthproxy
+- apiVersion: route.openshift.io/v1
+  kind: Route
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+    annotations:
+      console.alpha.openshift.io/overview-app-route: "true"
+    name: syndesis-public-api
+  spec:
+    host: ${PUBLIC_API_ROUTE_HOSTNAME}
+    port:
+      targetPort: 8443
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: reencrypt
+    to:
+      kind: Service
+      name: syndesis-public-oauthproxy
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-public-oauthproxy
+    name: syndesis-public-oauthproxy
+  spec:
+    replicas: 1
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-public-oauthproxy
+    strategy:
+      resources:
+        limits:
+          memory: "256Mi"
+        requests:
+          memory: "20Mi"
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: syndesis
+          syndesis.io/app: syndesis
+          syndesis.io/type: infrastructure
+          syndesis.io/component: syndesis-public-oauthproxy
+      spec:
+        containers:
+        - name: syndesis-public-oauthproxy
+          args:
+            - --provider=openshift
+            - --client-id=system:serviceaccount:${OPENSHIFT_PROJECT}:syndesis-oauth-client
+            - --client-secret=${OPENSHIFT_OAUTH_CLIENT_SECRET}
+            - --upstream=http://syndesis-server/api/v1/public/
+            - --tls-cert=/etc/tls/private/tls.crt
+            - --tls-key=/etc/tls/private/tls.key
+            - --cookie-secret=$(OAUTH_COOKIE_SECRET)
+            - --pass-user-bearer-token
+            - --skip-provider-button
+            - --approval-prompt=auto
+            - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
+            - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+            - --openshift-sar={"namespace":"${SAR_PROJECT}","resource":"pods","verb":"get"}
+            - --openshift-delegate-urls={"/api/v1/public":{"namespace":"${SAR_PROJECT}","resource":"pods","verb":"get"}}
+          env:
+          - name: OAUTH_COOKIE_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: syndesis-oauth-proxy-cookie-secret
+                key: oauthCookieSecret
+          ports:
+          - containerPort: 8443
+            name: public
+            protocol: TCP
+          readinessProbe:
+            httpGet:
+              port: 8443
+              path: /oauth/healthz
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+          livenessProbe:
+            httpGet:
+              port: 8443
+              path: /oauth/healthz
+              scheme: HTTPS
+            initialDelaySeconds: 15
+            timeoutSeconds: 10
+          volumeMounts:
+          - mountPath: /etc/tls/private
+            name: syndesis-public-oauthproxy-tls
+          resources:
+            limits:
+              memory: 200Mi
+            requests:
+              memory: 20Mi
+        serviceAccountName: syndesis-public-oauthproxy
+        volumes:
+        - name: syndesis-public-oauthproxy-tls
+          secret:
+            secretName: syndesis-public-oauthproxy-tls
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-public-oauthproxy
+        from:
+          kind: ImageStreamTag
+          name: oauth-proxy:${OAUTH_PROXY_TAG}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+    - type: ConfigChange

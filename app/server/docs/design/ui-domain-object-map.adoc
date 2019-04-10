@@ -1,0 +1,42 @@
+The https://github.com/syndesisio/syndesis-rest[syndesis-rest] server use an own domain model which can be inferred from this https://github.com/syndesisio/syndesis-rest/blob/master/docs/database/schema.png[schema].
+
+Following the https://syndesisio.github.io/syndesis-ux/[UX walkthrough] the following mappings can be inferred (all UX objects are in _italics_, all domain objects in `FixedWidth`.
+
+[cols="1,1,2"]
+|===
+| UI / View | Domain | Description
+
+| _connection type_
+| `Connector`
+| The overall category for an _connection_ as it can be selected in the https://redhat.invisionapp.com/share/RS9OFJ9YK#/screens[first step] when creating a _connection_. Connectors represent other systems, for instance Twitter or SQL database they corespond roughly to a Camel Components. In Syndesis Connector could represent multiple Camel Connectors based on the same Camel Component.
+
+| _connection field_
+| `ConnectorProperty`
+| For each _connection type_ a certain set of fields are available (these has been defined externally and originate from the supported Camel component fields). These fields can be selected in the https://redhat.invisionapp.com/share/9E9OFJDX3#/screens[second step] when creating a _connection_. Defines properties that are shared between Camel Connectors based on the same Camel Component but can differ between use cases. For instance host/port, authentication information.
+
+| _connection value_
+| `ConnectionProperty`
+| This is the data entered for the _connection fields_ as entered in https://redhat.invisionapp.com/share/C29OFJJH8#/screens[step 2] when creating a connection. It refers to the _connection field_. These represent properties and values that can be set on a Camel Connectors based on the same Camel Component and are in general less likely to change but nonetheless differ between use cases, for instance hostname/port, OAuth application authentication details.
+
+| _connection_
+| `Connection`
+| The _connection type_ and the _connection values_ together are the _connection_.
+This is also used during the creation of an _integration_ when selecting the _connection_ (like https://redhat.invisionapp.com/share/3994CEWT6#/screens[here] in the lower half). `Connection` is associated with a single `Connector` and refers to multiple `ConnectionProperty` objects. In Camel terms this would be a configured Camel Component instance. A set of property values gathered from the Connector and Connection properties that can used to configure Camel Connectors based on the same Camel Component.
+
+| _action_
+| `Action`
+| Each `Connector` has one or more `Action` s associated. For example: A "Twitter" `Connector` has several `Actions`: "TwitterMention", "TwitterSearch", ... The _action_ is selected during the creation of an _integration_ as part of the https://redhat.invisionapp.com/share/JG9JWFD5H#/screens/221870785[integration wizard]. Represents different Camel Connectors, all based on the same Camel Component.
+
+| _action field_
+| `ActionProperty`
+| These are the possible field values which can be edited when configuring the connection as part of an integration as shown as  this https://redhat.invisionapp.com/share/HW9OF54BQ#/screens[step in the integration wizard]. Any properties that need to be specified for the Camel Connector that are not specified using Connector or Connection properties.
+
+| _action value_
+| `ActionInstanceProperty`
+| Analogous to the _connection value_ s specified when creating a _connection_ which holds the values configured, the _action value_ holds the `Action` specific configuration values. Property values that will be set along with Connector/Connection property values to instantiate a Camel Connector. So all Camel Component and Endpoint values that the Connector has chosen to expose for configuration.
+
+| _start / end connection_ (looking for a better name)
+| `ActionInstance`
+| The fully configured _connection_ with the selected action and references to the _connection values_ and the _action values_. Its created as part of the integration wizard when the start / end connections has been added, like after this https://redhat.invisionapp.com/share/HW9OF54BQ#/screens[step]
+
+|===

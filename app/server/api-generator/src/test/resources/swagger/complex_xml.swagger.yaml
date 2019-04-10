@@ -1,0 +1,79 @@
+swagger: '2.0'
+info:
+  version: '1.0'
+  title: Complex XML
+host: example.com
+basePath: /api
+schemes:
+ - http
+paths:
+  /complex/{pathParam}:
+    post:
+      operationId: complexOperation
+      consumes:
+        - application/xml
+      produces:
+        - application/xml
+      parameters:
+        - in: path
+          name: pathParam
+          type: string
+          required: true
+        - in: query
+          name: queryParam
+          type: integer
+          required: false
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/Complex'
+      responses:
+        default:
+          description: OK
+definitions:
+  Complex:
+    type: object
+    properties:
+      id:
+        type: integer
+        minimum: 0
+        xml:
+          attribute: true
+      date:
+        type: string
+        format: date-time
+        xml:
+          name: date-time
+      status:
+        type: string
+        default: value2
+        enum:
+          - value1
+          - value2
+          - value3
+      children:
+        type: array
+        items:
+          $ref: '#/definitions/Child'
+        xml:
+          wrapped: true
+      complete:
+        type: boolean
+        default: false
+    xml:
+      name: complex
+      namespace: 'http://example.com/Complex'
+  Child:
+    type: object
+    properties:
+      name:
+        type: string
+        minLength: 1
+        xml:
+          attribute: true
+      description:
+        type: string
+    xml:
+      name: child
+      namespace: 'http://example.com/Child'

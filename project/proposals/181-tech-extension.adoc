@@ -1,0 +1,554 @@
+= Tech Extension
+:toc:
+
+== Summary
+
+* Issues:
+** https://github.com/syndesisio/syndesis/issues/181
+* Sprint: 19, 20, 21
+* Affected Modules:
+** rest
+** ui
+** runtime
+* Examples:
+** https://github.com/lburgazzoli/syndesis-extension-example
+** https://github.com/lburgazzoli/syndesis-extension-example-xml
+* UX
+** https://github.com/syndesisio/syndesis/blob/master/ux/designs/technical_extensions/tech_ext.md
+
+== Objective
+
+As a citizen integrator should be able to leverage custom steps created by his team in form of technical extension packaged as jar files so he need to be able to import them into the Syndesis environment.
+
+The import process should:
+
+* validate the extension
+* let the citizen integrator review extension details (name, description, steps included)
+
+As there may be more extension, the citizen integrator should be able to list and get details about any extension available on the platform.
+
+A developer working on technical extension should be able to provide steps using:
+
+* routes (Spring XML, XML Fragment, Java)
+* beans
+* custom step handlers
+
+A developer should also be able to customize the behavior of the Camel context.
+
+[WARNING]
+====
+Only one camel context per integration is supported
+====
+
+RH Dev Studio should have a dedicated support for extension such as:
+
+* Dedicated project wizard
+* Dedicated tools to upload extension
+
+Extensions should appears a standard step on Syndesis with he possibility to set parameters if needed.
+
+== Archive format
+
+The archive should be packaged using `syndesis-maven-plugin` that:
+
+* bundles dependencies excluding those with `provided` scope and those already provided by syndesis
+* generate extension meta data
+
+[source,xml]
+.Example Usage
+----
+<plugin>
+  <groupId>io.syndesis</groupId>
+  <artifactId>syndesis-maven-plugin</artifactId>
+  <version>${syndesis.version}</version>
+  <executions>
+    <execution>
+      <id>generate</id>
+      <goals>
+        <goal>generate-metadata</goal>
+      </goals>
+    </execution>
+    <execution>
+      <id>repackage</id>
+      <goals>
+        <goal>repackage-extension</goal>
+      </goals>
+    </execution>
+  </executions>
+</plugin>
+----
+
+[WARNING]
+====
+* Artifacts already provided by the integration should have *provided* as scope.
+====
+
+The archive is bundled with an `Extension Metadata` that should be placed in
+
+[source]
+----
+META-INF/syndesis/syndesis-extension-definition.json
+----
+
+An example of complete extension metadata is provided below (it contains properties that will be filled in server-side):
+
+[source,json]
+----
+{
+  "id": "assigned-by-syndesis-server (must not be hardcoded in packaged extensions)",
+  "extensionId": "${groupId}:${artifactId}",
+  "version": "${version}",
+  "name": "Extension Name",
+  "status": "Draft|Installed|Deleted (must not be hardcoded in packaged extensions)",
+  "description": "Extension Description",
+  "icon": "fa-puzzle-piece",
+  "tags": [],
+  "actions": [
+    {
+      "id": "${actionId}",
+      "name": "Action Name",
+      "actionType" : "extension",
+      "description": "Action Description",
+      "tags": [],
+      "descriptor": {
+        "kind": "ENDPOINT|BEAN|STEP",
+        "entrypoint" : "camel-uri",
+        "inputDataShape": {
+          "kind" : "any"
+        },
+        "outputDataShape": {
+          "kind" : "any"
+        },
+        "propertyDefinitionSteps": []
+      }
+    }
+  ],
+  "dependencies": [
+    "artifact-id",
+    "..."
+  ]
+}
+----
+
+[NOTE]
+====
+Extensions do not have global options (yet)
+====
+
+The archive layout should then looks like:
+
+[source]
+----
+META-INF/syndesys/syndesis-extension-definition.json
+com/example/MyExtension.class
+...
+lib/oracle-jdbc.jar
+lib/...
+----
+
+== Deployment model
+
+
+== Storage
+
+The extension are persisted on Syndesis backend using a `filestore` that should support file-system like paths and operation and should have a pluggable storage backend.
+
+
+[source,java]
+.FileStore interface
+----
+public interface FileStore {
+
+    /**
+     * Initialize the file store.
+     */
+    void init();
+
+    /**
+     * Write a file on a path.
+     *
+     * The path must be absolute (e.g. "/path/to/file.zip").
+     *
+     * If a file already exists it is overwritten.
+     * Parent directories are created automatically.
+     *
+     * @param path the destination path
+     * @param file the content of the file
+     */
+    void write(String path, InputStream file);
+
+    /**
+     * Write a file on a temporary path.
+     *
+     * The path will be decided by the file store and returned to the client.
+     *
+     * @param file the content of the file
+     * @return the path created for the file
+     */
+    String writeTemporaryFile(InputStream file);
+
+    /**
+     * Read a file from a path.
+     *
+     * The path must be absolute (e.g. "/path/to/file.zip").
+     *
+     * @param path the path to read
+     * @return the file content or null if the file is not present
+     */
+    InputStream read(String path);
+
+    /**
+     * Delete a file corresponding to a path.
+     *
+     * The path must be absolute (e.g. "/path/to/file.zip").
+     *
+     * @param path the path to the file to delete
+     * @return true if the file existed before deleting
+     */
+    boolean delete(String path);
+
+    /**
+     * Moves a file from a source path to a destination path.
+     *
+     * Both paths must be absolute (e.g. "/path/to/file.zip").
+     *
+     * If a file already exists in the destination path, it is overwritten.
+     * If the source file does not exist, the operation is cancelled and the
+     * destination file (if present) is left unchanged.
+     *
+     * @param fromPath the source path
+     * @param toPath the destination path
+     * @return true if the source file existed before moving it
+     */
+    boolean move(String fromPath, String toPath);
+
+}
+----
+
+The default `FileStore` implementation stores the extension (jar) in a DB table named "filestore" inside the `syndesis` database (PostgreSQL).
+
+References:
+
+* PR: https://github.com/syndesisio/syndesis-rest/pull/743
+
+== API
+
+We need to use a dedicated beta API version, like v1beta (not yet defined as it depend on API refactoring)
+
+[cols="1,3,4a", options="header"]
+|===
+|Verb
+|Path
+|Description
+
+|POST
+|/api/{version}/extensions
+|To create a tech extension by pushing a binary artifact
+
+|GET
+|/api/{version}/extensions
+|To list tech extensions
+
+|GET
+|/api/{version}/extensions/{extensionId}
+|To get a tech extension
+
+|DELETE
+|/api/{version}/extensions/{extensionId}
+|To logically delete a tech extension (change status to "Deleted")
+
+|GET
+|/api/{version}/extensions/{extensionId}/actions
+|To get actions of a tech extension
+
+|GET
+|/api/{version}/extensions/{extensionId}/actions/{actionId}
+|To get a specific action of a tech extension
+
+|POST
+|/api/{version}/extensions/{extensionId}/validation
+|Executes a validation of a uploaded extension and returns the validation result. Status code indicates if errors are blocking.
+
+|POST
+|/api/{version}/extensions/validation
+|Accepts a Extension metadata object and validates it, returning the the validation result. It can be used to validate extension metadata without uploading the binary file. Status code indicates if errors are blocking.
+
+|POST
+|/api/{version}/extensions/{extensionId}/install
+|Installs the extension if there are no blocking validation errors (validation is performed before installing it). Other active extensions for the same extensionId are logically deleted (if any).
+|===
+
+
+== Impacts
+
+* *Model*
++
+To share the concept of Actions between connectors and extension, a change of the model is required as Actions are nowadays tightly linked to a camel connector so they have a number of connector related properties that do not fit the extension definition.
++
+The proposed `Action` definition is:
++
+[source,java]
+----
+public interface Descriptor {
+}
+
+@JsonTypeInfo(
+    use      = JsonTypeInfo.Id.NAME,
+    include  = JsonTypeInfo.As.EXISTING_PROPERTY,
+    property = "actionType"
+)
+@JsonSubTypes({
+    @JsonSubTypes.Type(
+        value = ImmutableConnectorAction.class,
+        name  = Action.TYPE_CONNECTOR),
+    @JsonSubTypes.Type(
+        value = ImmutableStepAction.class,
+        name  = Action.TYPE_EXTENSION)
+})
+public interface Action<D extends Descriptor> {
+    String TYPE_CONNECTOR = "connector";
+    String TYPE_STEP = "step";
+
+    /**
+     * Only used as marker purpose
+     */
+    String getActionType();
+
+    /**
+     * The descriptor
+     */
+    D getDescriptor();
+}
+
+@Value.Immutable
+@JsonIgnoreProperties({ "actionType" })
+@JsonDeserialize(builder = ConnectorAction.Builder.class)
+public interface ConnectorAction extends Action<ConnectorDescriptor> {
+    @Override
+    default String getActionType() {
+        return Action.TYPE_CONNECTOR;
+    }
+
+    class Builder extends ImmutableConnectorAction.Builder {
+    }
+}
+
+@Value.Immutable
+@JsonIgnoreProperties({ "actionType" })
+@JsonDeserialize(builder = ExtensionAction.Builder.class)
+public interface ExtensionAction extends Action<ExtensionDescriptor> {
+    @Override
+    default String getActionType() {
+        return Action.TYPE_EXTENSION;
+    }
+
+    class Builder extends ImmutableStepAction.Builder {
+    }
+}
+
+@Value.Immutable
+@JsonDeserialize(builder = Step.Builder.class)
+public interface Step {
+    Action<?> getAction();
+
+    class Builder extends ImmutableStep.Builder {
+    }
+}
+
+public static class ConnectorDescriptor implements Descriptor {
+    ...
+}
+
+public static class ExtensionDescriptor implements Descriptor {
+   ...
+}
+----
++
+A step would then look like:
++
+[source,json]
+----
+{
+    "action": {
+        "actionType": "extension",
+        "id": "log-body",
+        "name": "simple-log",
+        "description": "A simple function based logging extension (1)",
+        "descriptor": {
+            "kind": "BEAN",
+            "entrypoint": "io.syndesis.extension.SimpleExtension::log",
+            "inputDataShape": {
+                "kind": "any"
+            },
+            "outputDataShape": {
+                "kind": "any"
+            },
+            "propertyDefinitionSteps": []
+        },
+        "tags": []
+    },
+    "extension": {
+        "id": "-KzSYuq8zZ3ATmAVSYlR",
+        "name": "Syndesis Extension",
+        "description": "A simple Syndesis Extension",
+        "extensionId": "com.github.lburgazzoli:syndesis-extensions",
+        "version": "1.0.0-SNAPSHOT",
+        "tags": [
+            "experimental",
+            "feature"
+        ],
+        "actions": [
+            {
+                "actionType": "extension",
+                "id": "log-body",
+                "name": "simple-log",
+                "description": "A simple function based logging extension (1)",
+                "descriptor": {
+                    "kind": "BEAN",
+                    "entrypoint": "io.syndesis.extension.SimpleExtension::log",
+                    "inputDataShape": {
+                        "kind": "any"
+                    },
+                    "outputDataShape": {
+                        "kind": "any"
+                    },
+                    "propertyDefinitionSteps": []
+                },
+                "tags": []
+            }
+        ],
+        "dependencies": [
+            "io.syndesis.integration:runtime:jar:1.2.3",
+            "org.apache.camel:camel-core:jar:2.20.0",
+            "org.springframework.boot:spring-boot-starter:jar:1.5.8.RELEASE"
+        ],
+        "properties": {}
+    },
+    "stepKind": "extension",
+    "configuredProperties": {
+        "ascii": "false"
+    }
+}
+----
+
+* *Syndesis Integration Runtime*
++
+Extension's Action with kind *endpoint* should be translated to native steps: SetHeaders + Endpoint.
++
+Extension's Action with kind *bean* should be translated to native steps: Function (which need to be enhanced to accept properties)
++
+Extension's Action with kind *step* require a new step and step handler definition:
++
+[source,java]
+.Extension
+----
+@FunctionalInterface
+public interface SyndesisStepExtension {
+    /**
+     * Customize the definition.
+     *
+     * @param context the camel context.
+     * @param definition the current {@link ProcessorDefinition}.
+     * @param parameter the extension parameters.
+     *
+     * @return the latest definition.
+     */
+    ProcessorDefinition configure(
+        CamelContext context,
+        ProcessorDefinition definition,
+        Map<String, Object> parameters);
+}
+----
++
+[source,yaml]
+.Extension YAML
+----
+- kind: "extension"
+  name: "com.example.MyExtension"
+  properties:
+    message: "hello"
+----
++
+[NOTE]
+====
+The extension step handler should bind properties to the object if possible, remaining parameters are passed to the configure method as _parameters_
+====
+
+
+== Misc
+
+A java developer should leverage annotation to implement extensions.
+
+[source,java]
+----
+Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE, ElementType.METHOD})
+public @interface SyndesisExtensionAction {
+    /**
+     * The action id;
+     */
+    String id();
+
+    /**
+     * The action name.
+     */
+    String name() default "";
+
+    /**
+     * The action description.
+     */
+    String description() default "";
+
+    /**
+     * The action tags;
+     */
+    String[] tags() default {};
+
+    /**
+     * The action input data shape;
+     */
+    String inputDataShape() default "any";
+
+    /**
+     * The action output data shape;
+     */
+    String outputDataShape() default "any";
+
+    /**
+     * The entrypoint;
+     */
+    String entrypoint() default "";
+}
+----
+
+There should be support for tooling like:
+
+- if SyndesisExtensionAction is used for a class extending SyndesisStepExtension, the action should have a descriptor like:
++
+[source,json]
+----
+"descriptor": {
+    "kind": "STEP",
+    "entrypoint" : "full.qualified.class.name"
+}
+----
+
+- if SyndesisExtensionAction is used for a class *not* extending SyndesisStepExtension, the action should have a descriptor like:
++
+[source,json]
+----
+"descriptor": {
+    "kind": "BEAN",
+    "entrypoint" : "full.qualified.class.name"
+}
+----
+
+- if SyndesisExtensionAction is used to define beans spring beans (@Bean) and with RouteDefinition or RouteBuilder as return type, the action should have a descriptor like:
++
+[source,json]
+----
+"descriptor": {
+    "kind": "ENDPOINT",
+    "entrypoint" : "SyndesisExtensionAction::target()"
+}
+----

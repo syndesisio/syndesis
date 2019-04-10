@@ -1,0 +1,67 @@
+<!-- Toolbar -->
+<div class="row toolbar-pf toolbar">
+  <div class="col-sm-12">
+    <div class="toolbar-pf-actions">
+      <div class="inline-block">
+        <ol class="breadcrumb">
+          <li>
+            <a [routerLink]=" ['/'] ">{{ 'home' | synI18n }}</a>
+          </li>
+          <li>
+            <a [routerLink]=" ['..'] ">{{ 'connections' | synI18n }}</a>
+          </li>
+          <li class="active"><strong>{{ 'connections.create-connection' | synI18n }}</strong></li>
+        </ol>
+      </div>
+      <div *ngIf="current.loaded" class="toolbar-pf-action-right">
+        <button class="btn btn-default"
+                (click)="showCancelModal()"> {{ 'cancel' | synI18n }}
+        </button> &nbsp;
+        <button class="btn btn-default"
+                *ngIf="showBack()"
+                (click)="goBack()">
+          <i class="fa fa-chevron-left"></i> {{ 'back' | synI18n }}
+        </button>
+        <button class="btn btn-primary"
+                *ngIf="showNextButton()"
+                (click)="goForward()"
+                [disabled]="!canContinue()">
+          {{ 'next' | synI18n }} <i class="fa fa-chevron-right"></i>
+        </button>
+        <button class="btn btn-primary"
+                *ngIf="getCurrentPage() === 'review'"
+                (click)="doCreate()"
+                [disabled]="current.saving || !canContinue()"> {{ 'create' | synI18n }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Wizard Progress Bar-->
+<syndesis-wizard-progress-bar
+  [steps]="[ 'connections.select-connector' | synI18n, 'connections.configure-connection' | synI18n, 'connections.name-connection' | synI18n]"
+  stepUrlPrefix="connections/create/"
+  [stepUrls]="['connection-basics', 'configure-fields', 'review']"
+  [selectedStep]="currentActiveStep">
+</syndesis-wizard-progress-bar>
+
+<ng-template #cancelModalTemplate>
+  <cancel-confirmation-modal (cancel)="onCancel($event)"
+                              primaryLabel="{{ 'yes' | synI18n }}"
+                              secondaryLabel="{{ 'no' | synI18n }}">
+    <p class="lead">{{ 'connections.cancel-create-modal-lead' | synI18n }}</p>
+    <p>{{ 'connections.cancel-create-modal' | synI18n }}</p>
+  </cancel-confirmation-modal>
+</ng-template>
+
+<!-- debug section -->
+<!--
+<div class="row">
+  <pre>{{ connection | json }}</pre>
+</div>
+-->
+
+<!-- Wizard Content -->
+
+<router-outlet></router-outlet>

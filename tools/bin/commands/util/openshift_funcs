@@ -1,0 +1,523 @@
+#!/bin/bash
+
+# Minimal version for OC
+OC_MIN_VERSION=3.9.0
+
+check_oc_version()
+{
+    local minimum=${OC_MIN_VERSION}
+    local test=$(oc version | grep "^oc" | tr -d oc\ v | cut -f1 -d "+")
+
+    echo $(compare_oc_version $test $minimum)
+}
+
+setup_oc() {
+
+    # Check path first if it already exists
+    set +e
+    which oc &>/dev/null
+    if [ $? -eq 0 ]; then
+      set -e
+      err=$(check_oc_version)
+      check_error $err
+      return
+    fi
+
+    # Check for minishift
+    which minishift &>/dev/null
+    if [ $? -eq 0 ]; then
+      set -e
+      eval $(minishift oc-env)
+      err=$(check_oc_version)
+      check_error $err
+      return
+    fi
+
+    set -e
+
+    # Error, no oc found
+    echo "ERROR: No 'oc' binary found in path. Please install the client tools from https://github.com/openshift/origin/releases/tag/v3.9.0 (or newer)"
+    exit 1
+}
+
+recreate_project() {
+    local project=$1
+    local dont_ask=${2:-false}
+
+    if [ -z "$project" ]; then
+        echo "No project given"
+        exit 1
+    fi
+
+    # Delete project if existing
+    if oc get project "${project}" >/dev/null 2>&1 ; then
+        if [ $dont_ask != "true" ]; then
+            echo =============== WARNING -- Going to delete project ${project}
+            oc get all -n $project
+            echo ============================================================
+            read -p "Do you really want to delete the existing project $project ? yes/[no] : " choice
+            echo
+            if [ "$choice" != "yes" ] && [ "$choice" != "y" ]; then
+                echo "Aborting on user's request"
+                exit 1
+            fi
+        fi
+        echo "Deleting project ${project}"
+        oc delete project "${project}"
+    fi
+
+    # Create project afresh
+    echo "Creating project ${project}"
+    for i in {1..10}; do
+        if oc new-project "${project}" >/dev/null 2>&1 ; then
+            break
+        fi
+        echo "Project still exists. Sleeping 10s ..."
+        sleep 10
+    done
+    oc project "${project}"
+}
+
+
+# Install the Syndesis custom resource definition
+install_syndesis_crd() {
+    set +e
+    oc get crd >/dev/null 2>&1
+    local err=$?
+    set -e
+    if [ $err -ne 0 ]; then
+        echo "ERROR: Cannot install CRD 'Syndesis'. You have to be a cluster admin to do this."
+        return
+    fi
+
+    local crd_installed=$(oc get crd -o name | grep syndesises.syndesis.io)
+    if [ -z "$crd_installed" ]; then
+        local result=$(create_openshift_resource "install/operator/deploy/syndesis-crd.yml")
+        check_error $result
+    fi
+}
+
+# Deploy operator
+deploy_syndesis_operator() {
+    local operator_installed=$(oc get dc -o name | grep syndesis-operator)
+    if [ -n "$operator_installed" ]; then
+        local result=$(delete_openshift_resource "install/operator/deploy/syndesis-operator.yml")
+        check_error $result
+        wait_for_deployments 0 syndesis-operator >/dev/null 2>&1
+    fi
+
+    local result=$(create_openshift_resource "install/operator/deploy/syndesis-operator.yml")
+    check_error $result
+    if [ $(hasflag --local) ]; then
+        patch_for_using_template_from_configmap
+    fi
+}
+
+# Create syndesis resource
+create_syndesis() {
+    local route="${1:-}"
+    local console="${2:-}"
+
+    local syndesis_installed=$(oc get syndesis -o name | wc -l)
+    local force=$(hasflag --force)
+    if [ $syndesis_installed -gt 0 ]; then
+        if [ -n "${force}" ]; then
+            oc delete $(oc get syndesis -o name)
+        fi
+    fi
+
+    local syndesis=$(cat <<EOT
+apiVersion: "syndesis.io/v1alpha1"
+kind: "Syndesis"
+metadata:
+  name: "app"
+spec:
+EOT
+)
+    local extra=""
+    if [ -n "$console" ]; then
+        extra=$(cat <<EOT
+
+  openShiftConsoleUrl: $console
+EOT
+)
+        syndesis="${syndesis}${extra}"
+    fi
+    if [ -n "$route" ]; then
+        extra=$(cat <<EOT
+
+  routeHostname: $route
+EOT
+)
+        syndesis="${syndesis}${extra}"
+    fi
+    if [ $(hasflag --test-support) ]; then
+        extra=$(cat <<EOT
+
+  testSupport: true
+EOT
+)
+
+        syndesis="${syndesis}${extra}"
+    fi
+
+    local memory_server=$(readopt --memory-server)
+    local memory_meta=$(readopt --memory-meta)
+    if [ -n "$memory_server" ] || [ -n "$memory_meta" ]; then
+        extra=$(cat <<EOT
+
+  components:
+EOT
+)
+    fi
+    if [ -n "$memory_server" ]; then
+        extra=$(cat <<EOT
+
+    server:
+      resources:
+        limits:
+          memory: $memory_server
+          cpu: 750m
+EOT
+)
+        syndesis="${syndesis}${extra}"
+    fi
+    if [ -n "$memory_meta" ]; then
+        extra=$(cat <<EOT
+
+    meta:
+      resources:
+        limits:
+          memory: $memory_meta
+EOT
+)
+        syndesis="${syndesis}${extra}"
+    fi
+
+    echo "$syndesis" | cat | oc create -f -
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Error while creating resource"
+        echo "$syndesis"
+        return
+    fi
+}
+
+add_user_permissions_for_operator() {
+    local user="$1"
+    local cluster_wide=${2:-false}
+
+    if [ -z "$user" ]; then
+        echo "ERROR: No user provided to fix permissions for"
+        return
+    fi
+
+    # Don't fail on error for a moment, as grep exits with 1 if nothing is found
+    set +e
+    local extra_role_installed="$(oc get role -o name | grep syndesis-extra-permissions | wc -l | xargs)"
+    local kind="Role"
+    local oc_command="policy add-role-to-user --role-namespace=$(oc project -q)"
+    if $cluster_wide; then
+        extra_role_installed="$(oc get clusterrole -o name | grep syndesis-extra-permissions | wc -l | xargs)"
+        kind="ClusterRole"
+        oc_command="adm policy add-cluster-role-to-user"
+    fi
+
+    if [ $extra_role_installed -eq 0 ]; then
+        oc create -f - >/dev/null 2>&1 <<EOT
+---
+kind: $kind
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: syndesis-extra-permissions
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: operator
+    syndesis.io/component: syndesis-operator
+rules:
+- apiGroups:
+  - syndesis.io
+  resources:
+  - "*"
+  - "*/finalisers"
+  verbs:
+  - "*"
+- apiGroups:
+  - route.openshift.io
+  resources:
+  - routes/custom-host
+  verbs:
+  - "*"
+- apiGroups:
+  - camel.apache.org
+  resources:
+  - "*"
+  verbs:
+  - "*"
+- apiGroups:
+  - monitoring.coreos.com
+  resources:
+  - alertmanagers
+  - prometheuses
+  - servicemonitors
+  - prometheusrules
+  verbs:
+  - "*"
+- apiGroups:
+  - integreatly.org
+  resources:
+  - grafanadashboards
+  verbs:
+  - "*"
+---
+EOT
+        if [ $? -ne 0 ]; then
+            echo "ERROR: Can not install role 'syndesis-extra-permissions'. Are you running as cluster-admin ?"
+            exit 1
+        fi
+    fi
+
+    oc $oc_command syndesis-extra-permissions $user
+    if [ $? -ne 0 ]; then
+        echo "ERROR: Can not add role 'syndesis-extra-permssionns' to user $user. Does the user exist ?"
+        exit 1
+    fi
+    set -e
+}
+
+create_openshift_resource() {
+    create_or_delete_openshift_resource "create" "${1:-}" "${2:-}"
+}
+
+delete_openshift_resource() {
+    create_or_delete_openshift_resource "delete --ignore-not-found" "${1:-}" "${2:-}"
+}
+
+create_or_delete_openshift_resource() {
+    local what=${1}
+    local resource=${2:-}
+    local parameters=${3:-}
+    local tag="$(readopt --tag)"
+    local use_local_resource="$(hasflag --local)"
+
+    local result
+
+    set +e
+    if [ -n "$use_local_resource" ]; then
+        local template="tee"
+        if [ -n "$parameters" ]; then
+          template="oc process -f - -p $parameters"
+        fi
+
+        if [ -n "$tag" ]; then
+            pushd $(appdir) >/dev/null
+            git fetch --tags
+            result=$(git show $tag:${resource} | $template | oc $what -f - >$ERROR_FILE 2>&1)
+            if [ $? -ne 0 ]; then
+                echo "ERROR: Cannot create $resource (tag: $tag)"
+            fi
+            popd >/dev/null
+        else
+            result=$(cat $(appdir)/../$resource | $template | oc $what -f - >$ERROR_FILE 2>&1)
+            if [ $? -ne 0 ]; then
+                echo "ERROR: Cannot create local $(appdir)/../$resource"
+            fi
+        fi
+    else
+        local url="https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-master}/${resource}"
+        if [ -z "$parameters" ]; then
+            result=$(oc $what -f $url >$ERROR_FILE 2>&1)
+        else
+            result=$(oc process -f $url -p $parameters | oc $what -f - >$ERROR_FILE 2>&1)
+        fi
+        if [ $? -ne 0 ]; then
+            echo "ERROR: Cannot create remote resource $url"
+        fi
+    fi
+    set -e
+}
+
+scale_deployments() {
+  local replicas=$1
+  shift
+  local dcs="$@"
+  for dc in $dcs; do
+    oc scale dc $dc --replicas=$replicas
+  done
+  wait_for_deployments $replicas $dcs
+}
+
+wait_for_deployments() {
+  local replicas_desired=$1
+  shift
+  local dcs="$@"
+
+  oc get pods -w &
+  watch_pid=$!
+  for dc in $dcs; do
+      echo "Waiting for $dc to be scaled to ${replicas_desired}"
+      local replicas=$(get_replicas $dc)
+      while [ -z "$replicas" ] || [ "$replicas" -ne $replicas_desired ]; do
+          echo "Sleeping 10s ..."
+          sleep 10
+          replicas=$(get_replicas $dc)
+      done
+  done
+  kill $watch_pid
+}
+
+get_replicas() {
+  local dc=${1}
+  local hasDc=$(oc get dc -o name | grep $dc)
+  if [ -z "$hasDc" ]; then
+      echo "0"
+      return
+  fi
+  oc get dc $dc -o jsonpath="{.status.availableReplicas}"
+}
+
+patch_imagestreams_for_initial_image() {
+    for is in "syndesis-server" "syndesis-ui" "syndesis-meta" "syndesis-s2i" "syndesis-operator"; do
+        echo "Patching imagestream $is"
+        local replace_kind='{"op": "replace", "path": "/spec/tags/0/from/kind", "value": "ImageStreamTag"}'
+        local replace_name="{\"op\": \"replace\", \"path\": \"/spec/tags/0/from/name\", \"value\": \"$is:latest\"}"
+        local remove_import_policy='{"op": "remove", "path": "/spec/tags/0/importPolicy"}'
+        oc patch is $is --type json -p="[$replace_kind, $replace_name, $remove_import_policy]"
+    done
+}
+
+pod() {
+  local dc=${1}
+  local ret=$(oc get pod -o name | grep "$dc" | sed -e "s/^pods\///")
+  local nr_pods=$(echo $ret | wc -l | awk '$1=$1')
+  if [ $nr_pods != "1" ]; then
+      echo "ERROR: More than 1 pod found for $dc ($nr_pods found)"
+  fi
+  echo $ret
+}
+
+get_route() {
+  local name="${1}"
+  oc get route $name -o jsonpath="{.spec.host}"
+}
+
+syndesis_deployments() {
+  oc get dc -l syndesis.io/app=syndesis -o name | sed -e "s/^deploymentconfigs\///"
+}
+
+compare_version_part() {
+    local test=$1
+    local min=$2
+
+    test=`expr $test`
+    min=`expr $min`
+
+    if [ $test -eq $min ]; then
+        echo 0;
+    elif [ $test -gt $min ]; then
+        echo 1;
+    else
+        # $test -lt $min
+        echo -1
+    fi
+}
+
+compare_oc_version() {
+    local test=$1
+    local min=$2
+
+    echo -n "Testing oc version '$test' against required minimum '$min' ... "
+
+    testparts=( ${test//./ } )
+    minparts=( ${min//./ } )
+
+    local i=0
+    while [ $i -lt ${#minparts[@]} ]
+    do
+        local testpart=${testparts[$i]}
+        local minpart=${minparts[$i]}
+
+        if [ -z "$testpart" ]; then
+            # test version does not extend as far as minimum
+            # in parts so append a 0
+            testpart=0
+        fi
+
+        ret=$(compare_version_part $testpart $minpart)
+        if [ $ret == -1 ]; then
+            #
+            # version part is less than minimum while all preceding
+            # parts were equal so version does not meet minimum
+            #
+            echo "ERROR: oc version ($test) should be at least $min"
+            return
+        elif [ $ret == 1 ]; then
+            #
+            # version part is greater than minimum so no need to test
+            # any further parts as version is greater than minimum
+            #
+            echo "OK"
+            return
+        fi
+
+        #
+        # Only if the version part is equal will the loop continue
+        # with further parts.
+        #
+        i=`expr $i + 1`
+    done
+
+    echo "OK"
+}
+
+
+patch_for_using_template_from_configmap() {
+  # we need to include the `syndesis-template.yml` akka `syndesis.yml` in
+  # the operator image, this adds a ConfigMap that we mount into the
+  # operator container
+  oc delete configmap syndesis-template >/dev/null 2>&1
+  oc create configmap syndesis-template --from-file=template=$(appdir "install")/syndesis.yml
+  local patch=$(cat <<EOT
+  {
+    "spec": {
+      "template": {
+        "spec": {
+          "containers": [
+            {
+              "name": "syndesis-operator",
+              "command": [
+                "syndesis-operator",
+                "-template",
+                "/conf/syndesis-template.yml"
+              ],
+              "volumeMounts": [
+                {
+                  "mountPath": "/conf",
+                  "name": "syndesis-template-config"
+                }
+              ]
+            }
+          ],
+          "volumes": [
+            {
+              "configMap": {
+                "name": "syndesis-template",
+                "items": [
+                  {
+                    "key": "template",
+                    "path": "syndesis-template.yml"
+                  }
+                ]
+              },
+              "name": "syndesis-template-config"
+            }
+          ]
+        }
+      }
+    }
+  }
+EOT
+)
+  oc patch deploymentconfig syndesis-operator -p "$patch"
+
+}

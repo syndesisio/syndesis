@@ -1,0 +1,54 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Read a resource from the server",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "read"
+        },
+        "propertyDefinitionSteps": []
+      },
+      "id": "io.syndesis:odata-read-connector",
+      "name": "Read",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Delete an entity from a server resource",
+      "descriptor": {
+        "inputDataShape": {
+          "kind": "java",
+          "type": "java.lang.String"
+        },
+        "outputDataShape": {
+          "kind": "json-instance"
+        }
+      },
+      "id": "io.syndesis:odata-delete-connector",
+      "name": "Delete",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    }
+  ],
+  "componentScheme": "olingo4",
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Communicate with an OData service",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+Cgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgdmlld0JveD0iMCAwIDMwMCAzMDAiPgogIDxnIGlkPSJsYXllcjEiPgogICAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNmZThiMDAiIC8+CgogICAgPHJlY3QgeD0iMjYiIHk9IjMwIiB3aWR0aD0iMTExIiBoZWlnaHQ9IjI4IiBmaWxsPSJ3aGl0ZSIgLz4KICAgIDxyZWN0IHg9IjI2IiB5PSI4NiIgd2lkdGg9IjExMSIgaGVpZ2h0PSIyOCIgZmlsbD0id2hpdGUiIC8+CiAgICA8cmVjdCB4PSIyNiIgeT0iMTQyIiB3aWR0aD0iMTExIiBoZWlnaHQ9IjI4IiBmaWxsPSJ3aGl0ZSIgLz4KICAgIDxjaXJjbGUgY3g9IjgxLjUiIGN5PSIyMzAiIHI9IjQ4IiBmaWxsPSJ3aGl0ZSIgLz4KCiAgICA8cmVjdCB4PSIxNjMiIHk9IjMwIiB3aWR0aD0iMTExIiBoZWlnaHQ9IjI4IiBmaWxsPSJ3aGl0ZSIgLz4KICAgIDxyZWN0IHg9IjE2MyIgeT0iODYiIHdpZHRoPSIxMTEiIGhlaWdodD0iMjgiIGZpbGw9IndoaXRlIiAvPgogICAgPHJlY3QgeD0iMTYzIiB5PSIxNDIiIHdpZHRoPSIxMTEiIGhlaWdodD0iMjgiIGZpbGw9IndoaXRlIiAvPgogICAgPHJlY3QgeD0iMTYzIiB5PSIxOTgiIHdpZHRoPSIxMTEiIGhlaWdodD0iMjgiIGZpbGw9IndoaXRlIiAvPgogICAgCiAgPC9nPgo8L3N2Zz4K",
+  "id": "odata",
+  "name": "OData",
+  "tags": [
+    "verifier"
+  ]
+}

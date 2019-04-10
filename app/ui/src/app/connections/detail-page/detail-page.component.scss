@@ -1,0 +1,12 @@
+@import 'syndesis-sass';
+
+:host {
+  @include syn-scrollable-parent;
+
+  syndesis-loading {
+    padding-left: $gutter;
+    padding-right: $gutter;
+    margin-right: -$gutter;
+    margin-left: -$gutter;
+  }
+}

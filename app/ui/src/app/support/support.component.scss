@@ -1,0 +1,16 @@
+@import 'syndesis-sass';
+
+:host {
+  ::ng-deep .toolbar-pf {
+    @include toolbar(0);
+
+    .toolbar-pf-view-selector {
+      font-size: $font-size-base;
+      padding-top: 5px;
+    }
+  }
+
+  .spinner {
+    margin-left: 1em;
+  }
+}

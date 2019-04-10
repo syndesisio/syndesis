@@ -1,0 +1,70 @@
+{
+  "flows": [
+    {
+      "steps": [
+        {
+          "id": "step-1",
+          "stepKind": "endpoint",
+          "action": {
+            "id": "io.syndesis:timer-action",
+            "name": "Simple Timer",
+            "actionType": "connector",
+            "description": "Simple Timer",
+            "descriptor": {
+              "componentScheme": "timer",
+              "configuredProperties": {
+                "timerName": "syndesis-timer"
+              }
+            },
+            "pattern": "From"
+          },
+          "configuredProperties": {
+            "period": "60000"
+          },
+          "connection": {},
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "id": "step-2",
+          "stepKind": "endpoint",
+          "action": {
+            "id": "io.syndesis:log-action",
+            "name": "Simple Logger",
+            "actionType": "connector",
+            "description": "Simple Logger",
+            "descriptor": {
+              "componentScheme": "log",
+              "configuredProperties": {
+                "loggerName": "syndesis-log"
+              }
+            },
+            "pattern": "To"
+          },
+          "configuredProperties": {
+            "level": "INFO",
+            "showAll": "false",
+            "showBody": "true",
+            "showExchangeId": "false",
+            "showHeaders": "false"
+          },
+          "connection": {},
+          "metadata": {
+            "configured": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "id": "test-integration",
+  "description": "This is a test integration!",
+  "name": "Test Integration",
+  "tags": [
+    "sheets",
+    "sql"
+  ],
+  "updatedAt": 0,
+  "createdAt": 0,
+  "version": 1
+}

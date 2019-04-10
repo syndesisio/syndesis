@@ -1,0 +1,55 @@
+@import 'syndesis-sass';
+
+// TODO: This code replciates the same code at dashboard-metrics.component.scss.
+//       Consolidate it into a single file.
+.metrics {
+  &__header {
+    margin: $gutter 0;
+    padding: 0;
+  }
+
+  &__nav {
+    justify-content: flex-end;
+    padding: 0;
+  }
+
+  &__cards {
+    > * {
+      padding: 0 5px;
+    }
+
+    &-item {
+      > .card-pf {
+        min-height: 100px;
+      }
+
+      &--text-only {
+        > .card-pf {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          .card-pf-title {
+            margin: 0;
+          }
+        }
+      }
+
+      &--uptime {
+        .card-pf-title {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
+
+        .metrics__uptime-header {
+          margin-top: 0;
+        }
+
+        .metrics__uptime-kickoff {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+}

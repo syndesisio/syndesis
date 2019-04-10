@@ -1,0 +1,82 @@
+{
+  "JavaClass": {
+    "jsonType": "io.atlasmap.java.v2.JavaClass",
+    "path": "geoLocation",
+    "status": "SUPPORTED",
+    "fieldType": "COMPLEX",
+    "modifiers": {
+      "modifier": [
+        "PUBLIC"
+      ]
+    },
+    "name": "geoLocation",
+    "className": "twitter4j.GeoLocation",
+    "getMethod": "getGeoLocation",
+    "primitive": false,
+    "synthetic": false,
+    "javaEnumFields": {
+      "javaEnumField": []
+    },
+    "javaFields": {
+      "javaField": [
+        {
+          "jsonType": "io.atlasmap.java.v2.JavaField",
+          "path": "geoLocation/serialVersionUID",
+          "status": "BLACK_LIST",
+          "fieldType": "LONG",
+          "modifiers": {
+            "modifier": [
+              "FINAL",
+              "PRIVATE",
+              "STATIC"
+            ]
+          },
+          "name": "serialVersionUID",
+          "className": "long",
+          "primitive": true,
+          "synthetic": false
+        },
+        {
+          "jsonType": "io.atlasmap.java.v2.JavaField",
+          "path": "geoLocation/latitude",
+          "status": "SUPPORTED",
+          "fieldType": "DOUBLE",
+          "modifiers": {
+            "modifier": [
+              "PRIVATE"
+            ]
+          },
+          "name": "latitude",
+          "className": "double",
+          "getMethod": "getLatitude",
+          "primitive": true,
+          "synthetic": false
+        },
+        {
+          "jsonType": "io.atlasmap.java.v2.JavaField",
+          "path": "geoLocation/longitude",
+          "status": "SUPPORTED",
+          "fieldType": "DOUBLE",
+          "modifiers": {
+            "modifier": [
+              "PRIVATE"
+            ]
+          },
+          "name": "longitude",
+          "className": "double",
+          "getMethod": "getLongitude",
+          "primitive": true,
+          "synthetic": false
+        }
+      ]
+    },
+    "packageName": "twitter4j",
+    "annotation": false,
+    "annonymous": false,
+    "enumeration": false,
+    "localClass": false,
+    "memberClass": false,
+    "uri": "atlas:java?className=twitter4j.GeoLocation",
+    "interface": false
+  }
+}

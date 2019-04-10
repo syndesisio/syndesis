@@ -1,0 +1,40 @@
+// This module is included in the following assemblies:
+// as_connecting-to-slack.adoc
+
+[id='add-slack-connection-middle-finish_{context}']
+= Adding a Slack connection to send a message to a Slack channel or user
+
+In an integration, you can send a message to a Slack channel or Slack user
+in the middle of a flow or to finish a simple integration. To do this, add 
+a Slack connection to the middle of a flow or as a simple integration's 
+finish connection.   
+
+.Prerequisites
+
+* You created a Slack connection.
+* You are creating or editing a flow and {prodname} is prompting you
+to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
+
+.Procedure
+
+. Click the Slack connection that you want to add to the flow. 
+. Select the action that you want the connection to perform.
++
+* Click *Username* to send a message to one user. To configure this action,
+in the *User name* field, specify the Slack name of the user to send the message
+to. 
+* Click *Channel* to publish a message on a channel. To configure
+this action, in the *Channel* field, specify the channel to publish 
+the message to. 
+
+. Click *Done* to add the connection to the flow. 
+. Optionally, add additional connections to the flow. Whether 
+additional connections are needed depends on what you want the flow
+to do. The important point is to add all connections before you 
+continue. 
+. Add a data mapping step just before the Slack connection that you added
+in this procedure. In the mapping step, map a string
+from a data mapping source to the Slack *message* field. This string 
+should contain the message that you want to send to the Slack
+user or channel. See
+link:{LinkFuseOnlineIntegrationGuide}#add-data-mapping-step_map[Add data mapping step].

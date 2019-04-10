@@ -1,0 +1,12 @@
+<div class="syn-scrollable">
+  <syndesis-list-toolbar [items]="connectors"
+    [filteredItems]="filteredConnectors"></syndesis-list-toolbar>
+
+  <div class="connector-list syn-scrollable--body">
+    <syndesis-connections-list [connections]="filteredConnectors | async"
+      [loading]="loading | async"
+      isConnectors="true"
+      [showKebab]="false"
+      (onSelected)="onSelected($event)"></syndesis-connections-list>
+  </div>
+</div>

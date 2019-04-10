@@ -1,0 +1,44 @@
+<syndesis-loading
+  [loading]="!(currentFlowService.loaded$ | async)"
+  [content]="content"
+>
+  <ng-template #content>
+    <div class="integrations edit row">
+      <div class="header">
+        <ol class="syn-breadcrumb">
+          <li>
+            <i class="fa fa-angle-double-left"></i>
+            <a [routerLink]="['/integrations']"> All Integrations </a>
+          </li>
+          <li *ngIf="currentFlowService.integration.name">
+            <a
+              [routerLink]="[
+                '/integrations',
+                currentFlowService.integration.id
+              ]"
+              >{{ currentFlowService.integration.name }}</a
+            >
+          </li>
+        </ol>
+
+        <syndesis-integration-flow-toolbar
+          [hideButtons]="currentFlowService.isApiProvider()"
+        ></syndesis-integration-flow-toolbar>
+      </div>
+      <div class="content">
+        <!-- Sidebar -->
+        <div class="wizard-sidebar" *ngIf="!currentFlowService.isApiProvider()">
+          <syndesis-integration-flow-view></syndesis-integration-flow-view>
+        </div>
+        <!-- Add/Edit Integration -->
+        <div class="main-panel {{ getPageContainer() }}">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</syndesis-loading>
+
+<syndesis-flow-view-cancel-prompt
+  [integration]="currentFlowService.integration$ | async"
+></syndesis-flow-view-cancel-prompt>

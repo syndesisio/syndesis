@@ -1,0 +1,19 @@
+{
+  "activity" : {
+    "exchanges" : {
+      "my-integration" : {
+        "i-L38cZ51d1L876xV4vEFz" : "{\"id\":\"i-L38cZ51d1L876xV4vEFz\",\"logts\":\"2018-01-12T21:22:02.068338027Z\",\"at\":1516285084034,\"pod\":\"test-pod-x23x\",\"ver\":\"3\",\"status\":\"done\",\"failed\":false,\"steps\":[{\"id\":\"s2\",\"at\":1516285084052,\"duration\":582977,\"messages\":[\"Hello World\"]},{\"id\":\"s4\",\"at\":1516285084057,\"duration\":494949}]}",
+        "i-L38cZ5Pd1L876xV4vELz" : "{\"id\":\"i-L38cZ5Pd1L876xV4vELz\",\"logts\":\"2018-01-12T21:22:02.068338027Z\",\"at\":1516285084058,\"pod\":\"test-pod-x23x\",\"ver\":\"3\",\"status\":\"done\",\"failed\":true,\"steps\":[{\"id\":\"s2\",\"at\":1516285084058,\"duration\":213613,\"messages\":[\"Hello World\"]}]}",
+        "i-L38cZ5Ud1L876xV4vEQz" : "{\"id\":\"i-L38cZ5Ud1L876xV4vEQz\",\"logts\":\"2018-01-12T21:22:02.068338027Z\",\"at\":1516285084063,\"pod\":\"test-pod-x23x\",\"ver\":\"3\",\"status\":\"done\",\"failed\":false,\"steps\":[{\"id\":\"s2\",\"at\":1516285084064,\"duration\":247312,\"messages\":[\"Hello World\"]},{\"id\":\"s3\",\"at\":1516285084064,\"duration\":4242},{\"id\":\"s4\",\"at\":1516285084064,\"duration\":70724}]}"
+      }
+    },
+    "integrations" : {
+      "my-integration" : true
+    },
+    "pods" : {
+      "test-pod-x23x" : {
+        "time" : "2018-01-12T21:22:02.068338027Z"
+      }
+    }
+  }
+}

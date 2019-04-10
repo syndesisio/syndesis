@@ -1,0 +1,16 @@
+<syndesis-list-toolbar [items]="connections"
+  [filteredItems]="filteredConnections"
+  [viewTemplate]="viewTemplate">
+  <ng-template #viewTemplate>
+    <button type="button"
+      class="btn btn-primary toolbar-pf-action-right"
+      [routerLink]="['/connections/create']">
+      Create Connection
+    </button>
+  </ng-template>
+</syndesis-list-toolbar>
+
+<syndesis-connections-list [connections]="filteredConnections | async"
+  [loading]="loading | async"
+  (onSelected)="onSelected($event)"
+class="syn-scrollable--body"></syndesis-connections-list>

@@ -1,0 +1,65 @@
+// This module is included in the following assembly:
+// as_developing-extensions.adoc
+
+[id='creating-jdbc-driver-library-extensions_{context}']
+= Creating JDBC driver library extensions
+
+To connect to a SQL database other than Apache Derby, MySQL, and
+PostgreSQL, you can create a library extension that wraps a JDBC driver for 
+the database you want to connect to. 
+After uploading this extension to {prodname}, the {prodname}-provided 
+*Database* connector can access the driver to validate and create connections 
+to the proprietary database. You do not create 
+a new connector for your particular database.
+
+The Syndesis open source community provides a project for creating an
+extension that wraps a JDBC driver. 
+
+Package one driver only in an extension. This makes
+it easier to manage the extension as part of managing your particular database. 
+However, it is possible to create a library extension that wraps more than one driver. 
+
+.Prerequisites
+To use the Syndesis project, you must have a GitHub account.  
+
+.Procedure
+
+. Ensure access to the JDBC driver for the database you want to connect to
+by doing one of the following:
+.. Confirm that the driver is in a Maven repository.
+.. Download the driver.  
+. In a browser tab, go to
+https://github.com/syndesisio/syndesis-extensions 
+. Fork the `syndesis-extensions` repository to your GitHub account.
+. Create a local clone from your fork.
+. In your `syndesis-extensions` clone:
+.. If the driver is not in a Maven repository, copy the 
+driver into the `syndesis-library-jdbc-driver/lib` folder.
+.. Edit the `syndesis-library-jdbc-driver/pom.xml` file:
+... Update the value of the `Name` element to be a name that you choose 
+for this extension. 
+... Update the value of the `Description` element to provide helpful
+information about this extension.
+... If the driver is in a Maven repository, ensure that a reference to
+that Maven repository is in the `pom.xml` file. 
+... Examine the rest of the content of the `pom.xml` file and change
+any relevant metadata as needed.
+.. In the `syndesis-library-jdbc-driver` folder, execute `mvn clean package`
+to build the extension. 
+    
+The generated `.jar` file is in the `syndesis-library-jdbc-driver/target` 
+folder. Provide this `.jar` file for uploading to {prodname}. 
+
+[NOTE]
+====
+{prodname} does not yet offer a way to select which library extension(s) an 
+integration should include. When you add a database connection to an  
+integration, {prodname} adds all extensions that have
+the `jdbc-driver` tag to integration runtime. This is expected to
+improve in a future release. 
+
+ifeval::["{location}" == "upstream"]
+For more information, see 
+https://github.com/syndesisio/syndesis/issues/2809[this GitHub issue]. 
+endif::[]
+====

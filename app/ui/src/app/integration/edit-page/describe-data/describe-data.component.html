@@ -1,0 +1,47 @@
+<syndesis-loading [loading]="!currentFlowService.loaded" [content]="content">
+  <ng-template #content>
+    <div class="syn-scrollable">
+      <div class="syn-scrollable--body">
+        <div class="container-fluid">
+          <div class="title">
+            <h1>{{ connectionName }}</h1>
+            <h3>Specify {{ direction | capitalize }} Data Type</h3>
+          </div>
+          <ng-container *ngIf="userDefined">
+            <div class="row">
+              <div class="col-md-12">
+                <p>
+                  This is a typeless connection. To use type-aware
+                  functionality, enter information that defines the data type
+                </p>
+              </div>
+            </div>
+            <div class="row row-cards-pf">
+              <div class="card-pf">
+                <div class="card-pf-body">
+                  <form class="form-horizontal" [formGroup]="formGroup">
+                    <syndesis-form-control
+                      *ngFor="let controlModel of formModel"
+                      [group]="formGroup"
+                      [model]="controlModel"
+                    ></syndesis-form-control>
+                    <div class="row control-buttons">
+                      <div class="col-sm-9 col-sm-offset-3">
+                        <button
+                          class="btn btn-primary"
+                          type="button"
+                          (click)="continue()"
+                          [innerHtml]="buttonText"
+                        ></button>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</syndesis-loading>

@@ -1,0 +1,263 @@
+[[syndesis-release]]
+## syndesis release
+
+Use `syndesis release` for performing a release of Syndesis.
+A Syndesis release consists of:
+
+* Maven artefacts of the backend and runtime services
+* Docker images pushed to Docker Hub
+* A set of OpenShift templates referencing these images
+
+This chapter describes how you can efficiently perform a release and
+how to troubleshoot if something goes wrong.
+This documentation might also be interesting to you even when you do not perform a release on your own, as it might help you to understand how the various Syndesis artefacts fit together.
+
+[[syndesis-release-usage]]
+### Usage
+
+[source,indent=0,subs="verbatim,quotes"]
+----
+Perform a release
+
+This command performs a release but does *no* automated rollback when something fails.
+Please refer to the manual at https://docs.syndesis.io for more details and what needs
+to be cleaned up in case of a failure.
+
+Usage: syndesis release [... options ...]
+
+Options for release:
+-n  --dry-run                 Dry run, which performs the whole build but does no tagging,
+                              artefact upload or pushing Docker images
+    --release-version <ver>   Version to release (e.g. "1.2.1"). This is a mandatory argument.
+    --snapshot-release        Snapshot release which can be created on a daily basis.
+                              A timestamped version will be created automatically, and no Maven artefacts
+                              are pushed to maven central. No moving tag will be moved, too.
+    --dev-version <version>   Next development version. If not given, set to
+                              "<major>.<minor>-SNAPSHOT" as calculated from
+                              --release-version (e.g. "1.2-SNAPSHOT")
+    --settings <file>         Path to a custom settings.xml to use for the release.
+                              This file must contain all the credentials to be used for Sonatype.
+                              By default ~/.m2/settings.xml is used.
+    --local-maven-repo <dir>  Local dir for holding the local Maven repo cache.
+                              If not given, then a new
+                              temporary directory will be used
+                              (and removed after the release)
+    --docker-user <user>      Docker user for Docker Hub
+    --docker-password <pwd>   Docker password for Docker Hub
+    --no-git-push             Don't push the release tag (and symbolic major.minor tag)
+    --git-remote              Name of the git remote to push to. If not given, its trying to be pushed
+                              to the git remote to which the currently checked out branch is attached to.
+                              Works only when on a branch, not when checked out directly.
+
+    --log <log-file>          Write full log to <log-file>, only print progress to screen
+    --skip-tests              Do not run tests
+    --no-strict-checksums     Do not insist on strict checksum policy for downloaded Maven artifacts
+    --man                     Open HTML documentation in the Syndesis Developer Handbook
+----
+
+A lot of output is produced during a release.
+If you are only interested to see the major steps only, then you
+can use `--log` to redirect the output to a specific log file.
+This log file will contain all output (and if you add `--verbose` you see even more output), but on the console you will only see the current step that is actually performed.
+
+.Example
+An example run for a dry run for `1.3.1` release on the current branch look like:
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+./tools/bin/syndesis release           \ <1>
+    --release-version 1.3.1            \ <2>
+    --local-maven-repo /tmp/clean-repo \ <3>
+    --log /tmp/build.log               \ <4>
+    --dry-run                            <5>
+----
+<1> Always run `syndesis` from the repo and branch you want to release.
+<2> The release version is mandatory and must be in the format `<major>.<minor>.<patch>`.
+<3> Use a clean local Maven repository to avoid side effects
+<4> Redirect the full output to `/tmp/build.log` but still print the main steps to the console.
+<5> Make only a dry run, without pushing any artefacts out nor checking in any changed files.
+
+[[dev-release-preparations]]
+### Preparations
+
+To perform a release, certain preconditions need to be given.
+
+First of all, you need to have access to the various systems to which release artefacts are uploaded:
+
+* You need to be logged in to https://hub.docker.com/[Docker Hub] and your account needs to have write access to the https://hub.docker.com/u/syndesis/[syndesis] Docker Hub organisation.
+* You have `gpg` to have installed and set up a gpg-agent for being able to sign Maven artefacts during deployment in a non-interactive mode.
+* You need to have access to the "syndesis" account on (http://oss.sonatype.org/)[oss.sonatype.org] for being able to publish Maven artefacts.
+This credential needs to be added to either your `~/.m2/settings.xml` or you can use an settings file with the `--settings-xml` option.
+The credential needs to be added to the server with the id `oss-sonatype-staging`.
+
+You have to perform the release from a locally checked out Syndesis repository, which can be either checkout from a branch like `1.2.x` for a patch release or directly from `master`.
+It is highly recommended to run the release directly from a freshly checked out directory:
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+# Go to a temporary directory
+cd /tmp
+
+# Clone repository afresh, but only use the last history entry (--depth=1)
+git clone --depth=1 https://github.com/syndesisio/syndesis.git
+
+# Jump into the directory
+cd syndesis
+
+# Switch to the target branch if needed (or stay on master)
+git fetch --depth 1 origin 1.2.x:1.2.x
+git checkout 1.2.x
+
+# Call Syndesis from the checked out clone
+./tools/bin/syndesis release --release-version 1.2.8 .....
+
+# Push to origin after a successful release.
+# This automatically done if --no-git-push is given
+git push 1.2.8
+git push -f 1.2
+
+# Remove the temporary clone again
+cd ..
+rm -rf syndesis
+----
+
+Please note that you should always call `syndesis` out of the branch for which the release is for.
+If there is an issue due to bugs in the release script itself, please fix them on the branch with the usual developer process (i.e. opening a PR request).
+`syndesis release` must always work for the branch where this script is, too.
+
+[[dev-release-steps]]
+### Release steps
+
+A release consist of several different steps, which can be grouped into two groups:
+
+* *Build steps* are performed to build the release and create the artefacts.
+Also during the build Maven artefacts are uploaded to the staging area for publishing to Maven central
+* *Persist steps* are then used for releasing objects, pushing Docker images to Docker Hub, committing and tagging in Git (but only when the build steps have been performed successfully).
+
+#### Build steps
+
+* Check whether the current local Git clone is _clean_, i.e. that is does not have any modified files.
+The script will abort if this is the case.
+* Update the versions of all `pom.xml` files below `app/` to the version given with `--release-version`.
+If no `--release-version` is given, then the script aborts.
+* Run an `mvn clean install` to verify that the build is not broken and all tests succeed.
+* Re-generate the OpenShift templates in `install` so that the image streams included in these templates refer to Docker images with the new version.
+* Now run an `mvn -Prelease clean deploy` to deploy all artefacts to a new staging repository on oss.sonatype.org, the platform for release artefacts on Maven central.
+The staging repository on this Sonatype Nexus is validated and closed.
+* If `--docker-user` and `--docker-password` is given, then a `docker login` is performed.
+Otherwise, it is assumed that the user is already logged in.
+* The Docker images are created with `mvn -Prelease,image package` in the `server`, `meta`, `ui` and `s2i` modules.
+
+If the option `--dry-run` (short: `-n`) is provided, the script drops the staging repository at Sonatype and stops.
+You should examine the generated files and before starting a real build, reset the repository (`git reset --hard`).
+
+The builds are using a clean local Maven repository, which otherwise is usually taken from `~/.m2/repository`.
+This new local cache should ensure that we have a completely fresh build without interference from previous builds store in the local Maven cache in the home directory.
+You can provide such a directory with `--local-maven-repo` which will be taken directly (so it's good if you have to perform multiple runs like with `--dry-run`).
+If not provided, a new temporary directory is created and also _deleted_ after the release run.
+
+#### Persist steps
+
+* Push Docker images to Docker Hub.
+In addition to the images that carry the full release version as the tag, also a tag for the _minor version_ is attached and pushed.
+E.g. when the release version is `1.2.8`, then the minor version is `1.2`.
+If this minor version tag already exists on Docker Hub, its moved to the newly created version.
+* The staging repository on Sonatype is released.
+It will take a bit, but the artefact should then be downloadable from https://search.maven.org/[Maven central] soon after.
+* Commit all modified local files to the local Git repo.
+* Create a Git tag for the release version (e.g. `git tag 1.2.8`).
+
+The next steps are for creating templates for the minor version:
+
+* In `install` create new templates which contain image streams that reference images with the minor version (e.g. `syndesis/syndesis-server:1.3` for a release version of 1.3.8).
+* Commit those generated templates
+* Tag it with the minor version (e.g. `1.2`), overwriting an already existing minor version tag
+
+Next, we are switching back to the next development version of the pom.xml files.
+This version can be given with `--dev-version`, but by default, it is calculated automatically as `<minor.version>-SNAPSHOT` (e.g. `1.2-SNAPSHOT`).
+This new version is then committed to the local git repository.
+
+Finally, the tags just created on the local Git repo is pushed to the remote repository.
+You can omit this with the option `--no-git-push`.
+If to so, the last step can also be performed manually afterwards with:
+
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+git push 1.2.8
+git push -f 1.2 <1>
+----
+<1> Using `-f` as the minor tag needs to be moved.
+
+Please be careful to *not* push the master branch upstream (i.e. do *not* a plain `git push`).
+We only want to have the tag with all the release preparation steps, not on the branch so that pull requests can be still be easily rebased with out conflict because of the temporary version changes.
+
+### Minor Version Templates
+
+What is now the thing with this _minor version_?
+Why is the needed and how does it work?
+
+Syndesis follows a https://semver.org/[semantic versioning] approach.
+So, patch level releases (i.e. all releases which only change the last digit in 1.2.8) are fully compatible with all other patch level versions.
+In order to allow easy bug fix upgrades, we also create a tag which contains only the version parts up to the minor version (e.g. 1.2).
+These tags *always* points to the latest full version of its minor version.
+If, e.g. 1.2.8 is the latest 1.2.x version, then the tag 1.2 point to this 1.2.8 version.
+Corresponding to these Docker image variants, there exist two OpenShift templates variants:
+
+* One set of templates directly references the Docker images which its full version, e.g. `syndesis/syndesis-ui:1.2.8`.
+Applying such a template will keep your application at precisely this patch-level.
+You would have to update your templates and recreate your applications if you want to upgrade.
+* The other set of templates references images only via its minor version, e.g. `syndesis/syndesis-ui:1.2`.
+Using these templates has the advantage that application created from these templates automatically benefit from patch releases.
+The templates contain an image change trigger which will redeploy the application if the images change.
+So when we release the next patch level release, moving the minor version tag to this patch level release, then the application gets automatically redeployed, and it will pick up the new image.
+
+These two sets of templates can be reached directly from GitHub as the git tags correspond to the Docker tags (i.e. a `1.2.8` tag and a `1.2` tag which will be moved forward).
+
+### Snapshot Release
+
+With the option `--snapshot-release` a lightweight snapshot release for the images and templates can be created.
+The tag/version is calculated automatically by picking up the latest release number (e.g. 1.3.5), increasing the patch-level by
+ one and adding a daily timestamp (e.g. 1.3.6-20180419).
+According to  https://semver.org/[Semantic Versioning 2.0] this is considered to be a version larger than 1.3.5 but https://semver.org/#spec-item-11[smaller] than 1.3.6.
+
+This tag can be referenced to in `syndesis install` and `syndesis minishift`.
+
+In detail, a snapshot release differs from a normal release as it:
+
+* ... doesn't release artefacts on Maven central, but pushes Docker images and creates a Git tag for referencing the proper templates.
+* ... skips all checks and tests when building to maximise the likelihood that the release succeeds. The rationale here is to better have untested daily snapshot release than no snapshot release because of test failure (which in many cases are not because of errors, but of failure in the infrastructure)
+* ... force pushes the snapshot tag on GitHub so that multiple releases per day are allowed
+
+.Example
+[source,bash,indent=0,subs="verbatim,quotes"]
+----
+syndesis release \
+     --snapshot-release \                   <1>
+     --local-maven-repo /tmp/clean-repo \   <2>
+     --git-remote origin \                  <3>
+     --docker-user "${DOCKER_USER}" \       <4>
+     --docker-password "${DOCKER_PASSWORD}"
+----
+<1> Enable snapshot release with a version in the format 1.3.5-20180419
+<2> Point to an empty repository to avoid side effects when building
+<3> Push to the origin repository
+<4> Docker credentials required for pushing to Docker Hub
+
+A daily Jenkins job with this configuration run on https://ci.fabric8.io for creating a daily snapshots.
+
+[[dev-release-troubleshooting]]
+### Troubleshooting
+
+When you run the `syndesis release` command and when it should not succeed, you might have to perform some cleanup steps yourself
+(there is now automatic rollback).
+However, care has been taken to move all persistent changes to the end of the release flow, so if something breaks early, you only need to clean up locally.
+If the process fails before the step _=== Pushing Docker images_ you only need to:
+
+* Reset your local git repo with `git reset --hard`
+* Potentially remove the create staging repository on `http://oss.sonatype.org/` (but it doesn't harm if it is not cleaned up immediately).
+
+After pushing the Docker images, it should be improbable that things go wrong.
+But these things should take care of if this should be the case:
+
+* Remove Docker Hub tags for the pushed images, which is best done on the Docker Hub Web UI
+* Revert your local git commits to the point before the release. If you did this on a fresh checked out repo (as recommended), you just could delete the whole clone.

@@ -1,0 +1,25 @@
+// This module is included in these assemblies:
+// as_managing-integrations.adoc
+
+[id='testing-integrations_{context}']
+= Testing integrations
+
+After you create an integration and it is running correctly in a {prodname}
+development environment, you might want to run it in a different {prodname}
+environment to test it.
+
+.Prerequisite
+* You have a {prodname} development environment and a {prodname} test 
+environment. 
+* You have an integration that is running correctly in your {prodname}
+development environment.
+
+.Procedure
+
+. Learn about link:{LinkFuseOnlineIntegrationGuide}#about-copying-integrations_copy[copying an integration to another environment].
+
+. Export the integration from the development environment. See
+link:{LinkFuseOnlineIntegrationGuide}#exporting-integrations_copy[Exporting an integration].
+
+. Import the integration into the test environment. See
+link:{LinkFuseOnlineIntegrationGuide}#importing-integrations_copy[Importing an integration].

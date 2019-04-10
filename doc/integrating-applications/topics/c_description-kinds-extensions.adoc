@@ -1,0 +1,33 @@
+// This module is included in the following assembly:
+// as_developing-extensions.adoc
+
+[id='description-kinds-extensions_{context}']
+= Description of the kinds of extensions
+
+An extension defines one of the following:
+
+* One or more custom steps that operate on integration data between
+connections. Each custom step performs one action. This is a step extension. 
+
+* A library resource that an integration runtime uses. For example, 
+a library extension can provide a JDBC driver for connecting to a proprietary 
+SQL database, such as Oracle. 
+
+* A single custom connector for creating connections to a particular application
+or service that you want to integrate. This is a connector extension. 
++
+NOTE: {prodname} can use an OpenAPI document to create a connector 
+for a REST API client. See 
+link:{LinkFuseOnlineIntegrationGuide}#developing-rest-api-client-connectors_custom[Develop a REST API client connector].
+
+A business integrator shares requirements with a developer who codes the extension.
+The developer provides a `.jar` file that contains the extension.
+The business integrator uploads the `.jar` file in {prodname} to make the custom connector, 
+custom step(s), or library resource available for use within {prodname}.
+
+An extension `.jar` file that you upload to {prodname} always contains 
+exactly one extension.  
+
+For an example of uploading and using an extension that provides a step
+that operates on data between connections, see the 
+link:{LinkFuseOnlineTutorials}#amq-to-rest-api_tutorials[AMQ to REST API sample integration tutorial].

@@ -1,0 +1,445 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Send data to the destination you specify.",
+      "descriptor": {
+        "componentScheme": "sjms",
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+            "name": "Select the JMS Destination",
+            "properties": {
+              "destinationName": {
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the queue or topic to send data to.",
+                "displayName": "Destination Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              },
+              "destinationType": {
+                "componentProperty": false,
+                "defaultValue": "topic",
+                "deprecated": false,
+                "displayName": "Destination Type",
+                "enum": [
+                  {
+                    "label": "Topic",
+                    "value": "topic"
+                  },
+                  {
+                    "label": "Queue",
+                    "value": "queue"
+                  }
+                ],
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "By default, the destination is a topic.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "persistent": {
+                "componentProperty": false,
+                "defaultValue": true,
+                "deprecated": false,
+                "displayName": "Persistent",
+                "group": "producer",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Message delivery is guaranteed when Persistent is selected.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-activemq-publish",
+      "name": "Publish messages",
+      "pattern": "To",
+      "tags": []
+    },
+    {
+      "actionType": "connector",
+      "description": "Receive data from the destination you specify.",
+      "descriptor": {
+        "componentScheme": "sjms",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+            "name": "Select the JMS Destination",
+            "properties": {
+              "destinationName": {
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the queue or topic to receive data from.",
+                "displayName": "Destination Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              },
+              "destinationType": {
+                "componentProperty": false,
+                "defaultValue": "topic",
+                "deprecated": false,
+                "displayName": "Destination Type",
+                "enum": [
+                  {
+                    "label": "Topic",
+                    "value": "topic"
+                  },
+                  {
+                    "label": "Queue",
+                    "value": "queue"
+                  }
+                ],
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "By default, the destination is a topic.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "durableSubscriptionId": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Durable Subscription ID",
+                "group": "consumer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "messageSelector": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Message Selector",
+                "group": "consumer (advanced)",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer,advanced",
+                "labelHint": "Specify a filter expression to receive only data that meets certain criteria.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-activemq-subscribe",
+      "name": "Subscribe for messages",
+      "pattern": "From",
+      "tags": []
+    },
+    {
+      "actionType": "connector",
+      "description": "Send data to the destination you specify and receive a response.",
+      "descriptor": {
+        "componentScheme": "sjms",
+        "configuredProperties": {
+          "exchangePattern": "InOut"
+        },
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify AMQ Connection Factory properties, including Queue or Topic Name",
+            "name": "Select the JMS Destination",
+            "properties": {
+              "destinationName": {
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "Name of the queue or topic to send data to.",
+                "displayName": "Destination Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              },
+              "destinationType": {
+                "componentProperty": false,
+                "defaultValue": "topic",
+                "deprecated": false,
+                "displayName": "Destination Type",
+                "enum": [
+                  {
+                    "label": "Topic",
+                    "value": "topic"
+                  },
+                  {
+                    "label": "Queue",
+                    "value": "queue"
+                  }
+                ],
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "By default, the destination is a topic.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "messageSelector": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Message Selector",
+                "group": "consumer (advanced)",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer,advanced",
+                "labelHint": "Specify a filter expression to receive only responses that meet certain criteria.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "namedReplyTo": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Named Reply To",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The destination sends the response to this queue or topic.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "persistent": {
+                "componentProperty": false,
+                "defaultValue": true,
+                "deprecated": false,
+                "displayName": "Persistent",
+                "group": "producer",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Message delivery is guaranteed when Persistent is selected.",
+                "order": "5",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "responseTimeOut": {
+                "componentProperty": false,
+                "defaultValue": 5000,
+                "deprecated": false,
+                "displayName": "Response Time Out",
+                "group": "producer (advanced)",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "producer,advanced",
+                "labelHint": "Amount of time a connection waits for a response message before throwing a runtime exception.",
+                "order": "6",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis.connector:connector-activemq-request",
+      "name": "Request response using messages",
+      "pattern": "Pipe",
+      "tags": []
+    }
+  ],
+  "connectorFactory": "io.syndesis.connector.activemq.ActiveMQConnectorFactory",
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Subscribe for and publish messages.",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDMuOTM2IiBoZWlnaHQ9IjE1NS42MjQiIHZpZXdCb3g9IjAgMCAyNy41IDQxLjE3NiI+PGcgdHJhbnNmb3JtPSJtYXRyaXgoLjA3NzYgMCAwIC4wNzc2IC0xMTkuMDEgLTg4LjQ3KSI+PHBhdGggZD0iTTE4MzguNDQ2IDE0OTAuODk5bC05OC45ODItLjMwNy00OS4yMjYtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjYgODUuODc0eiIgZmlsbD0iI2MxMjc2NiIvPjxwYXRoIGQ9Ik0xNjgxLjk5OSAxNTgwLjY1MmwtOTguOTgyLS4zMDctNDkuMjI2LTg1Ljg3NCA0OS43NTctODUuNTY4IDk4Ljk4Mi4zMDcgNDkuMjI1IDg1Ljg3NXoiIGZpbGw9IiMzZTQ4OWYiLz48cGF0aCBkPSJNMTgzNy40NzQgMTY3MC44NDVsLTk4Ljk4My0uMzA3LTQ5LjIyNS04NS44NzQgNDkuNzU3LTg1LjU2OCA5OC45ODIuMzA3IDQ5LjIyNSA4NS44NzV6IiBmaWxsPSIjNzE0MDk5Ii8+PHBhdGggZD0iTTE2ODIuODIyIDE0MDEuODA4bC05OC45ODItLjMwNy00OS4yMjUtODUuODc1IDQ5Ljc1Ny04NS41NjcgOTguOTgyLjMwNyA0OS4yMjUgODUuODc0eiIgZmlsbD0iIzc4OTMyYyIvPjxwYXRoIGQ9Ik0xODM4LjM3MSAxMzExLjkzbC05OC45ODItLjMwNy00OS4yMjUtODUuODc0IDQ5Ljc1Ny04NS41NjggOTguOTgyLjMwNyA0OS4yMjUgODUuODc1eiIgZmlsbD0iI2NmMjQyYSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxMjI2LjA1NiIgY3g9IjE3ODkuMTQ2IiBmaWxsPSIjZmZmIi8+PGNpcmNsZSByPSIxNSIgY3k9IjEzMTUuOTMzIiBjeD0iMTYzMy41OTciIGZpbGw9IiNmZmYiLz48Y2lyY2xlIHI9IjE1IiBjeT0iMTQ5NC43NzgiIGN4PSIxNjMyLjc3MyIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNTg0Ljk3MSIgY3g9IjE3ODguMjQ4IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE3NzkuNjcgMTIzMC4yNDRsLTEzNi4xOTggNzguMDMxTTE2MzMuMDI5IDEzMjcuNjUybC40NiAxNTYuOTY3TTE2NDMuODE4IDE1MDEuMzE1bDEzNC45NTMgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjxjaXJjbGUgcj0iMTUiIGN5PSIxNDA1LjAyNCIgY3g9IjE3ODkuMjIiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNMTc4OC42NjggMTIzNi42MWwuNDU5IDE1Ni45NjdNMTc4OS41MzQgMTQxNi41MjZsLjQ2IDE1Ni45NjhNMTc3OS45MDEgMTQxMC42NDFsLTEzNi4xOTggNzguMDMyTTE2NDQuMzI1IDEzMjIuNTEzbDEzNC45NTQgODAuMTY2IiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmYiIHN0cm9rZS13aWR0aD0iNSIvPjwvZz48L3N2Zz4=",
+  "id": "activemq",
+  "name": "Red Hat AMQ",
+  "properties": {
+    "brokerCertificate": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Red Hat AMQ Broker X.509 PEM Certificate",
+      "displayName": "Broker Certificate",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": "6",
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "skipCertificateCheck",
+              "value": "false"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": false,
+      "type": "textarea"
+    },
+    "brokerUrl": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Broker URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common",
+      "labelHint": "Location to send data to or obtain data from.",
+      "order": "1",
+      "placeholder": "for example, failover://ssl://{BROKER-HOST}:{BROKER-PORT}",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "clientCertificate": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Red Hat AMQ Client X.509 PEM Certificate",
+      "displayName": "Client Certificate",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": "7",
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "skipCertificateCheck",
+              "value": "false"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": false,
+      "type": "textarea"
+    },
+    "clientID": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Client ID",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Required for connections to close and reopen without missing messages. Connection destination must be a topic.",
+      "order": "4",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Password for the specified user account.",
+      "order": "3",
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "skipCertificateCheck": {
+      "componentProperty": true,
+      "defaultValue": "false",
+      "deprecated": false,
+      "displayName": "Check Certificates",
+      "enum": [
+        {
+          "label": "Disable",
+          "value": "true"
+        },
+        {
+          "label": "Enable",
+          "value": "false"
+        }
+      ],
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
+      "order": "5",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "username": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User Name",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Access the broker with this user’s authorization credentials.",
+      "order": "2",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "message": "@pullRequester, thanks!  @syndesisio/ui-api, please review this...",
+  "assignToReviewer": false,
+  "createReviewRequest": true,
+  "actions": ["opened", "reopened"],
+  "skipAlreadyAssignedPR": true,
+  "skipAlreadyMentionedPR": true,
+  "fallbackNotifyForPaths": [{
+    "name": "gashcrumb",
+    "files": ["**/*"]
+  }],
+  "userBlacklist": "jludvice"
+}

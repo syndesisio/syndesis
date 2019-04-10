@@ -1,0 +1,37 @@
+<div [ngClass]="{'text-right': placement === 'right'}">
+  <!-- validate button -->
+  <button *ngIf="showValidateButton(connection?.connector) && !validating"
+          [disabled]="!formGroup.valid || validating"
+          (click)="doValidate(connection.connector, formGroup)"
+          class="btn"
+          [ngClass]="[primaryAction === null ? 'btn-default' : 'btn-primary']">{{ 'validate' | synI18n }}
+  </button>
+  <!-- validate progress -->
+  <span *ngIf="validating">{{ 'validating' | synI18n }}
+    <span class="spinner spinner-xs spinner-inline"></span>
+  </span>
+</div>
+<div *ngIf="validateError">
+  <div class="alert alert-warning alert-dismissable">
+    <button type="button"
+            class="close"
+            (click)="validateError = undefined">
+            <span class="pficon pficon-close"></span>
+          </button>
+    <span class="pficon pficon-warning-triangle-o"></span>
+    <p>{{ 'validation-error' | synI18n }}</p>
+    <pre>{{ validateError }}</pre>
+  </div>
+</div>
+<div *ngIf="validateSuccess">
+  <div class="alert alert-success alert-dismissable">
+    <button type="button"
+            class="close"
+            data-dismiss="alert"
+            aria-hidden="true">
+            <span class="pficon pficon-close"></span>
+          </button>
+    <span class="pficon pficon-ok"></span>
+    <span [innerHTML]="'validation-success' | synI18n: connection.connector.name"></span>
+  </div>
+</div>

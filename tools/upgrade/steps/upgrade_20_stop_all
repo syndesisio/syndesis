@@ -1,0 +1,26 @@
+#!/bin/bash
+
+stop_all::label() {
+  echo "Stop all deployments"
+}
+
+stop_all::doc() {
+  cat <<EOT
+Before doing upgrades on the resource objects, all deployments should be scaled down to 0 replicas and waited until all infrastructure pods are stopped.
+
+.Rollback
+Scale back to one replica per deployment
+EOT
+}
+
+stop_all::run() {
+    local deployments=$(syndesis_deployments)
+    echo "      - Stopping deployments $deployments"
+    scale_deployments 0 ${deployments}
+}
+
+stop_all::rollback() {
+    local deployments=$(syndesis_deployments)
+    echo "      - Restarting deployments $deployments"
+    scale_deployments 1 ${deployments}
+}

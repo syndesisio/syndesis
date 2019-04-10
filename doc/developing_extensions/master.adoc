@@ -1,0 +1,18 @@
+:experimental:
+include::topics/shared/attributes.adoc[]
+
+:prodname: Syndesis
+:prodversion: 7.1
+:imagesdir: topics
+:prodnameinurl: fuse-ignite
+:productpkg: red_hat_fuse
+:version: 7.1
+
+[id='developing-customizations']
+= Developing {prodname} Customizations
+
+Add an intro paragraph here.
+
+* <<developing-extensions>>
+
+include::topics/developing_extensions.adoc[leveloffset=+1]

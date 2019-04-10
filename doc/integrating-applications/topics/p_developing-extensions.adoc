@@ -1,0 +1,64 @@
+// This module is included in the following assembly:
+// as_developing-extensions.adoc
+
+[id='procedure-for-developing-extensions_{context}']
+= General procedure for developing extensions
+
+Before you start to develop an extension, become familiar with the tasks that
+you will need to accomplish.
+
+.Prerequisites
+- Familiarity with https://maven.apache.org/[Maven]
+- Familiarity with https://camel.apache.org/[Camel] if you are developing an extension that provides
+a connector or that provides an integration step that operates on data between connections
+- Experience programming
+
+[CAUTION]
+====
+An integration pod runs in a Java process with a flat classpath. 
+To avoid version clashes, make sure that the dependencies that an extension 
+uses are aligned with the imported bill of materials (BOM) from all of 
+these sources: 
+
+* `org.springframework.boot:spring-boot-dependencies:$SPRING_BOOT_VERSION`
+* `org.apache.camel:camel-spring-boot-dependencies:$CAMEL_VERSION` 
+* `io.syndesis.integration:integration-bom:$SYNDESIS_VERSION`
+
+If there are additional dependencies that are not part of the imported BOMs,
+you must:
+
+* Package them in the extension JAR file that is in the `lib` directory.
+* Omit them from the `dependencies` property of the extension's JSON descriptor file.
+====
+
+.Procedure
+. Obtain an understanding of what the extended feature must do. 
+Talk to your business colleague to understand the feature requirements.
+. Determine whether you need to develop a step extension, a connector extension, 
+or a library extension. 
+. Set up the Maven project in which to develop the extension. 
+. If you are developing a step extension: 
++
+.. Decide whether to implement it as a Camel route or implement it by using 
+the Syndesis `Step` API. Information for the Syndesis API is at 
+http://javadoc.io/doc/io.syndesis.extension/extension-api. 
+.. If you choose to implement the extension as a Camel route, 
+decide whether to implement XML fragments, a `RouteBuilder` class, or a bean. 
+.. In your Maven project, specify the required metadata, such as the
+`schemaVersion`, extension `name`, `extensionId`, and so on. 
+. Code the classes that implement the feature. 
+. Add dependencies to the project's `pom.xml` file. 
+. For connector and library extensions, and for step extensions that
+you implement in XML, create the JSON file that 
+defines the extension. 
++
+For step extensions that you implement in Java, 
+Maven can generate the JSON extension definition file
+for you when you specify corresponding data structure values in your Maven project. 
+. Run Maven to build the extension and create the extension's JAR file. 
+. Test the extension by uploading the JAR file to a {prodname} development environment. 
+. Provide the JAR file that packages the extension to your business colleague, 
+who uploads it to a
+{prodname} production environment. When you provide the JAR file, let your 
+business colleague know about any configuration settings that require 
+information beyond what appears in the {prodname} web interface. 

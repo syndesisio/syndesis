@@ -1,0 +1,68 @@
+<h1>{{ 'customizations.extensions.heading' | synI18n }}</h1>
+<p [innerHtml]="'customizations.extensions.description' | synI18n"></p>
+<div class="extensions-list">
+  <syndesis-list-toolbar [items]="extensions$"
+                          [filterTags]="false"
+                          [filteredItems]="filteredExtensions$"
+                          [viewTemplate]="viewTemplate">
+    <ng-template #viewTemplate>
+      <div class="toolbar-pf-action-right">
+        <button type="button"
+                class="btn btn-primary"
+                *ngIf="(filteredExtensions$ | async).length > 0"
+                [routerLink]="['/customizations/extensions/import']">
+                {{ 'customizations.extensions.import-extension' | synI18n }}
+        </button>
+      </div>
+    </ng-template>
+  </syndesis-list-toolbar>
+  <syndesis-loading [loading]="loading$ | async" [content]="content">
+    <ng-template #content>
+      <syndesis-extension-delete-modal></syndesis-extension-delete-modal>
+      <pfng-list [items]="filteredExtensions$ | async"
+                [config]="listConfig"
+                [itemTemplate]="itemTemplate"
+                [actionTemplate]="actionTemplate"
+                (onActionSelect)="handleAction($event)"
+                (onClick)="handleClick($event)">
+        <ng-template #itemTemplate
+                    let-item="item"
+                    let-index="index">
+          <div class="list-pf-content-wrapper">
+            <div class="list-pf-main-content">
+              <div class="list-pf-title">{{ item.name }}</div>
+              <div class="list-pf-description" text-overflow-pf>{{ item.description }}</div>
+            </div>
+            <div class="list-pf-additional-content">
+              <ng-container [ngSwitch]="item.extensionType">
+                <span *ngSwitchCase="'Steps'">{{ 'customizations.extensions.step-extension' | synI18n }}</span>
+                <span *ngSwitchCase="'Connectors'">{{ 'customizations.extensions.connector-extension' | synI18n }}</span>
+                <span *ngSwitchCase="'Libraries'">{{ 'customizations.extensions.library-extension' | synI18n }}</span>
+                <span *ngSwitchDefault>{{ 'customizations.extensions.unknown-extension' | synI18n }}</span>
+              </ng-container>
+              <span *ngIf="item.uses" [innerHtml]="usageText( item.uses )"></span>
+            </div>
+          </div>
+        </ng-template>
+        <ng-template #actionTemplate
+                      let-item="item"
+                      let-index="index">
+            <button type="button"
+                    class="btn btn-default"
+                    [routerLink]="['import', item.id, { 'name': item.name }]">{{ 'shared.update' | synI18n }}</button>
+            <button type="button"
+                    class="btn btn-default"
+                    [disabled]="isBeingUsed( item )"
+                    (click)="deleteModal.prompt(item)">
+              <span [tooltip]="'customizations.extensions.delete-extension-not-allowed' | synI18n"
+                    [isDisabled]="!isBeingUsed( item )"
+                    placement="auto"
+                    container="body">
+                {{ 'shared.delete' | synI18n }}
+              </span>
+            </button>
+        </ng-template>
+      </pfng-list>
+    </ng-template>
+  </syndesis-loading>
+</div>

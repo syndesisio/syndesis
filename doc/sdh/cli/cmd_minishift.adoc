@@ -1,0 +1,109 @@
+[[syndesis-minishift]]
+## syndesis minishift
+
+With `syndesis minishift` you can adequately manage a https://www.openshift.org/minishift/[minishift] installation for hosting Syndesis.
+This command is especially useful for a simple and self-contained development workflow.
+
+`syndesis minishift` requires that you have a current minishift in your path.
+You can download it directly from https://github.com/minishift/minishift/releases[GitHub].
+
+[[syndesis-minishift-usage]]
+### Usage
+
+[source,indent=0,subs="verbatim,quotes"]
+----
+--install                 Install templates to a running Minishift.
+-p  --project             Install into this project.
+                          Delete this project if it already exists.
+                          By default, install into the current project (without deleting)
+-c  --context             Install into this context. Default is 'minishift'
+--reset                   Reset and initialize the minishift installation by
+                          'minishift delete && minishift start'.
+--full-reset              Full reset and initialie by
+                          'minishift stop && rm -rf ~/.minishift/* && minishift start'
+--memory <mem>            How much memory to use when doing a reset. Default: 4912
+--cpus <nr cpus>          How many CPUs to use when doing a reset. Default: 2
+--disk-size <size>        How many disk space to use when doing a reset. Default: 20GB
+--vm-driver <driver>      Which virtual machine driver to use (depends on OS)
+--show-logs               Show minishift logs during startup
+--openshift-version <ver> Set OpenShift version to use when reseting (default: v3.9.0)
+--tag <tag>               Syndesis version/tag to install. If not given, then the latest
+                          version from master is installed
+--local                   Use the local resource files instead of fetching them from GitHub
+-o  --open                Open Syndesis in the browser
+-y  --yes                 Assume 'yes' automatically when asking for deleting
+                          a given project.
+--memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
+--memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
+--test-support            Allow test support endpoint for syndesis-server
+--man                     Open HTML documentation in the Syndesis Developer Handbook
+----
+
+### Installing Syndesis
+
+You can easily install Syndesis with the option `--install`.
+This option triggers the creation of all relevant OpenShift resources objects in the currently connected OpenShift project.
+
+If you want to use a different project, then use `--project` (short: `-p`) to specify this project.
+
+WARNING: Any existing project will be deleted first when specified with `--project`. This option is also an easy and quick way to recreate a Syndesis installation.
+
+### Resetting Minishift
+
+The quickest way to get a fresh Syndesis setup is to use `--project` which will install Syndesis into a clean, new project.
+
+However, you can also recreate the whole Minishift installation with `--reset`. This will delete the Minishift VM (`minishift delete`) and create a new one (`minishift start`).
+It doesn't harm if the Minishift VM does not exist so that you can use `--reset` also on a fresh Minishift installation.
+
+If you want to get a real clean installation use `--full-reset` which deletes the `~/.minishift` directory which holds downloaded artefacts like the ISO image for the Minishift VM.
+Using `--full-reset` forces Minishift to re-download all those files.
+
+There are several options which influence the re-creation of the VM:
+
+[cols="5,10,2",options="header"]
+|===
+| Option
+| Description
+| Default
+
+|`--memory`
+| Memory to use for the Minishift VM.
+| 4 GB
+
+|`--cpus`
+| Number of CPUs used for the Minishift VM.
+| 2
+
+|`--disk-size`
+| Disk space used for Minishift.
+| 20 GB
+
+|`--show-logs`
+| Whether to show OpenShift logs during startup.
+| false
+
+|`--vm-driver`
+| Which virtual machine driver to use. For OS X this can be 'virtualbox', 'xhyve' or 'vmwarefusion' (if insalled).
+|
+
+|`--openshift-version`
+| OpenShift version to use
+| 3.7.1
+|===
+
+### Example
+
+This short example performs the following actions:
+
+* Stops and deletes a running Minishift VM (if existent)
+* Removes `~/.minishift` (if existent)
+* Install Syndesis in OpenShift modes (S2I builds & image streams) in project `syndesis`
+* Open Syndesis UI in the default browser
+
+```
+# Complete fresh installation in project "syndesis"
+syndesis minishift --full-reset --install --project syndesis
+
+# Open Syndesis in default browser
+syndesis minishift -o
+```

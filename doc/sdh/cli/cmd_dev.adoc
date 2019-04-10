@@ -1,0 +1,19 @@
+[[syndesis-dev]]
+## syndesis dev
+
+Dev commands are useful helpers for developing Syndesis
+
+[[syndesis-dev-usage]]
+### Usage
+
+[source,indent=0,subs="verbatim,quotes"]
+----
+Usage: syndesis dev [... options ...]
+
+Options for dev:
+    --debug <name>            Setup a port forwarding to <name> pod (default: server)
+----
+
+This command enable port-forwarding of port 5005 from a specific pod (by default: "server") to port 5005 on the localhost.
+You then can point your Java IDE to port 5005 on localhost for connecting for remote debugging.
+As argument to `--debug` "server", "meta" and "atlasmap" can be used, which are our Java based services.

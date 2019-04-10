@@ -1,0 +1,54 @@
+/// Centralized Library of Mixins
+
+@mixin visuallyhidden {
+  position: absolute;
+
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip: rect(0, 0, 0, 0);
+
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+}
+
+@mixin preventclick {
+  cursor: default;
+  pointer-events: none;
+}
+
+@mixin transition($transition...) {
+  -moz-transition:    $transition;
+  -o-transition:      $transition;
+  -webkit-transition: $transition;
+  transition:         $transition;
+}
+
+@mixin syn-icon-box($size) {
+  max-height: $size;
+  max-width: $size;
+}
+
+@mixin syn-scrollable-parent {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+@mixin syn-scrollable-body {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+@mixin toolbar($border-bottom: 1px solid #d1d1d1, $background: none, $box-shadow: none) {
+  background: $background;
+  box-shadow: $box-shadow;
+  border-bottom: $border-bottom;
+}
+
+@mixin truncate($text-overflow: clip) {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: $text-overflow;
+}

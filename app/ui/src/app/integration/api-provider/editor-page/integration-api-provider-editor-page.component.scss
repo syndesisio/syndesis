@@ -1,0 +1,63 @@
+@import 'syndesis-sass';
+
+.integrations.edit {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
+
+  .content {
+    display: flex;
+    flex: 1;
+
+    .card-pf {
+      flex: 1;
+      display: flex;
+      flex-flow: column;
+      margin: 0;
+      background: transparent;
+      border: 0;
+      box-shadow: 0;
+
+      .card-pf-heading {
+        margin-bottom: 0;
+        background: #fff;
+      }
+
+      .card-pf-title {
+        display: flex;
+
+        > span {
+          font-weight: bold;
+          flex: 1;
+          padding-left: 20px;
+        }
+      }
+
+      .card-pf-body {
+        flex: 1;
+        margin: 0 -20px;
+        padding: 0;
+        overflow: hidden;
+      }
+    }
+
+    .main-panel {
+      height: 100%;
+      flex: 1 1 auto;
+      display: flex;
+
+      .flow {
+        flex: 1 1 0;
+        background: #fff;
+      }
+
+      .form {
+        flex: 1 1 100%;
+
+        /deep/ .blank-slate-pf {
+          border: 0 none;
+        }
+      }
+    }
+  }
+}

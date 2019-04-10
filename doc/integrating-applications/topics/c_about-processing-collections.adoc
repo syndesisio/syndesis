@@ -1,0 +1,51 @@
+// This module is included in the following assembly:
+// as_how-to-process-a-collection-in-a-flow.adoc
+
+[id='about-processing-collections_{context}']
+= About processing collections
+
+The easiest way for a flow to process a collection is to 
+use the data mapper to map fields that are in a source collection 
+to fields that are in a target collection. For many 
+flows, this is all that is required. For example, a flow 
+might obtain a collection of employee records from a 
+database and then insert those records into a spreadsheet. 
+Between the database connection and the Google Sheets 
+connection, a data mapper step maps the database fields 
+to the Google Sheets fields. Since both the 
+source and the target are collections, when {prodname}
+executes the flow, it calls the Google Sheets connection once. 
+In that call, {prodname} iterates 
+through the records and correctly populates the spreadsheet. 
+
+In some flows, you might need to split a collection into 
+individual objects. For example, consider a flow that 
+connects to a database and obtains 
+a collection of employees who will lose allotted time off 
+if they do not use it before a certain date. 
+The flow then needs to send an email notification to each
+of these employees. In this flow, you would add a split
+step after the database connection. You would then add a
+data mapper step that maps the source fields for an employee 
+record to target fields in a Gmail connection that sends a message. 
+When {prodname} executes the flow, it executes the data mapper
+step and the Gmail connection once for each employee. 
+
+Sometimes, after you split a collection in a flow, and after 
+the flow executes some steps once for each element that was in the collection, 
+you want the flow to operate on the collection again. Consider the 
+example in the previous paragraph. Suppose that after a Gmail 
+connection sends a message to each employee, you want to add 
+a list of the employees who were notified to a spreadsheet. 
+In this scenario, after the Gmail connection, add an aggregate 
+step to create a collection of employee names. Then add a 
+data mapper step that maps fields in the source collection 
+to fields in the target Google Sheets connection. When 
+{prodname} executes the flow, it executes the new data mapper
+step and the Google Sheets connection once for the collection. 
+ 
+These are the most common scenarios for processing a collection 
+in a flow. However, much more complex processing is also possible.
+For example, when the elements in a collection are themselves collections, 
+you can nest split and aggregate steps inside other split and 
+aggregate steps. 

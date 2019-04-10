@@ -1,0 +1,10 @@
+@import 'syndesis-sass';
+
+.syn-card-info {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  border-bottom: 1px solid $color-pf-black-300;
+  padding: 5px 10px;
+}

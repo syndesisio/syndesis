@@ -1,0 +1,96 @@
+<syndesis-loading [loading]="!currentFlowService.loaded" [content]="content">
+  <ng-template #content>
+    <!-- Navigation buttons -->
+    <ng-template #controlButtons>
+      <button
+        type="button"
+        *ngIf="(lastPage === 0 || page === 0) && !isApiProvider()"
+        class="btn btn-default"
+        (click)="goBack()"
+      >
+        <i class="fa fa-chevron-left"></i> Choose Action
+      </button>
+      <button
+        type="button"
+        *ngIf="lastPage > 0 && page !== 0"
+        class="btn btn-default"
+        (click)="previous()"
+      >
+        <i class="fa fa-chevron-left"></i> Previous
+      </button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="continue()"
+        [disabled]="maybeDisableDone()"
+      >
+        <ng-container
+          *ngIf="!isShapeless && (page >= lastPage || !hasConfiguration)"
+        >
+          Done
+        </ng-container>
+        <ng-container *ngIf="isShapeless || page < lastPage">
+          Next
+        </ng-container>
+      </button>
+    </ng-template>
+    <div class="syn-scrollable">
+      <div class="syn-scrollable--body">
+        <div class="container-fluid">
+          <syndesis-loading [loading]="loading" [content]="content">
+            <ng-template #content>
+              <div class="row row-cards-pf">
+                <div class="card-pf">
+                  <div class="card-pf-heading">
+                    <h1 class="card-pf-title">
+                      {{ step?.connection?.name }} - {{ action?.name }}
+                    </h1>
+                    <p *ngIf="hasConfiguration">{{ descriptor.description }}</p>
+                  </div>
+                  <div class="card-pf-body">
+                    <ng-container *ngIf="error">
+                      <div class="row">
+                        <div class="col-xs-12">
+                          <p [ngClass]="error.class">
+                            <span [ngClass]="error.icon"></span>
+                            {{ error.message }}
+                          </p>
+                        </div>
+                      </div>
+                      <div
+                        *ngIf="!hasConfiguration"
+                        class="row control-buttons"
+                      >
+                        <div class="col-xs-12">
+                          <ng-container
+                            *ngTemplateOutlet="controlButtons"
+                          ></ng-container>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-container *ngIf="hasConfiguration">
+                      <form class="form-horizontal" [formGroup]="formGroup">
+                        <syndesis-form-control
+                          *ngFor="let controlModel of formModel"
+                          [group]="formGroup"
+                          [model]="controlModel"
+                        ></syndesis-form-control>
+                        <div class="row control-buttons">
+                          <div class="col-sm-9 col-sm-offset-3">
+                            <ng-container
+                              *ngTemplateOutlet="controlButtons"
+                            ></ng-container>
+                          </div>
+                        </div>
+                      </form>
+                    </ng-container>
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </syndesis-loading>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</syndesis-loading>

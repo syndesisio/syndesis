@@ -1,0 +1,65 @@
+// Module included in the following assemblies:
+// master.adoc
+
+[id='comparison-of-sample-integrations_{context}']
+= Choosing the sample integration to create first
+
+You can create the sample integrations in any order. To help you decide
+which one to try first, the following table compares them.
+
+[cols="4*"]
+|===
+|&nbsp;
+|link:{LinkFuseOnlineTutorials}#twitter-to-salesforce_tutorials[Twitter to Salesforce]
+|link:{LinkFuseOnlineTutorials}#salesforce-to-db_tutorials[Salesforce to Database]
+|link:{LinkFuseOnlineTutorials}#amq-to-rest-api_tutorials[AMQ to REST API]
+
+|What it does
+|Captures and filters tweets that mention
+a particular Twitter user. For tweets that contain specified text, 
+the integration passes data related to the tweet to Salesforce
+and Salesforce creates a new contact.
+|Captures updates in Salesforce and then calls a database
+stored procedure to synchronize a particular database table
+with the Salesforce updates.
+|Obtains delivery records from a Red Hat AMQ broker, executes
+a custom step to identify any
+items that were damaged when they were received, and 
+connects to a REST API to provide contact information for vendors of
+damaged items.
+
+|What you learn about
+|Connecting to Twitter and Salesforce, how {prodname} interfaces with
+applications that use the OAuth 
+protocol, mapping data fields received from one application to fields that
+the next connected application in the integration can operate on, filtering data
+to determine whether to continue integration execution. 
+|Connecting to Salesforce and a SQL database, OAuth support, data mapping, 
+how to update a SQL database as part of an integration.
+|Connecting to a Red Hat AMQ broker and a REST API, data mapping, 
+uploading extensions for a step and for a REST API client
+connector, using a custom step and a custom API client connection.
+
+|Average minutes to complete
+|25  
+|20  
+|25 
+
+|Notes about the time
+|This includes the time needed to obtain Twitter and Salesforce accounts.
+It does not include 5 - 12 minutes of waiting for Salesforce registration to take effect
+and for {prodname} to start running the integration.
+|20 minutes includes the time needed to obtain a Salesforce developer account
+but not the time spent waiting.
+If you already created the Twitter to Salesforce sample then it takes 
+10 minutes to create this integration.
+|This does not include the time it takes for {prodname} to start running the integration.
+
+|Prerequisites
+|Twitter developer account, Salesforce developer account
+|Salesforce developer account
+|None 
+
+|===
+
+:context: tutorials

@@ -1,0 +1,80 @@
+{
+  "flows": [
+    {
+      "steps": [
+        {
+          "id": "step-service-now-start",
+          "stepKind": "endpoint",
+          "action": {
+            "actionType": "connector",
+            "descriptor": {
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape" : {
+                "kind" : "json-schema",
+                "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"properties\":{\"ID\":{\"type\":\"integer\",\"required\":true}}}"
+              }
+            },
+            "id": "io.syndesis:servicenow-action-retrieve-record",
+            "name": "Retrieve Record",
+            "pattern": "From",
+            "tags": [],
+            "dependencies": []
+          },
+          "configuredProperties": {
+            "query": "incident",
+            "schedulerExpression": "60000",
+            "table": "test",
+            "limit": 100
+          },
+          "connection": {},
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "id": "step-2",
+          "stepKind": "mapper",
+          "name": "Data Mapper",
+          "action": {
+            "actionType": "step",
+            "descriptor": {}
+          },
+          "configuredProperties": {
+            "atlasmapping": "{}"
+          },
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "id": "step-3",
+          "stepKind": "endpoint",
+          "action": {
+            "actionType": "connector",
+            "descriptor": {
+              "componentScheme": "mock",
+              "configuredProperties": {
+                "name": "mockedResult"
+              }
+            },
+            "tags": [],
+            "dependencies": []
+          },
+          "configuredProperties": {
+          }
+        }
+      ]
+    }
+  ],
+  "id": "test-integration",
+  "description": "This is a test integration!",
+  "name": "Test Integration",
+  "tags": [
+    "servicenow"
+  ],
+  "updatedAt": 0,
+  "createdAt": 0,
+  "version": 1
+}

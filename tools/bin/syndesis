@@ -1,0 +1,187 @@
+#!/bin/bash
+
+# ===================================================================================================
+# Syndesis Build Script
+#
+# See `build.sh --help` for usage information
+# ==================================================================================================
+
+# Exit if any error occurs
+# Fail on a single failed command in a pipeline (if supported)
+set -o pipefail
+
+# Save global script args, use "build" as default
+if [ -z "$1" ]; then
+    ARGS=("build")
+else
+    ARGS=("$@")
+fi
+
+# Fail on error and undefined vars (please don't use global vars, but evaluation of functions for return values)
+set -eu
+
+# Display a help message.
+display_help() {
+    local command="${1:-}"
+    local cmd_dir="$(basedir)/commands"
+    if [ -z "${command}" ]; then
+        cat <<EOT
+Syndesis Developer Tool
+
+Usage: syndesis <command> [... options ...]
+
+with the following commands
+
+EOT
+        for cmd in $(ls $cmd_dir); do
+          if [ -f $cmd_dir/$cmd ]; then
+              source $cmd_dir/$cmd
+              printf "   %-15s  %s\n" $cmd "$($cmd::description)"
+          fi
+        done
+        cat - <<EOT
+
+"build" is the default command if no command is specified.
+
+Global options:
+
+-r  --rebase                  Fetch origin/master and try a rebase
+-h  --help                    Display this help message
+    --verbose                 Verbose script output (set -x)
+
+Call "syndesis <module> --help" for module specific options.
+
+Examples:
+
+* Build only backend modules, fast               syndesis --backend --flash
+* Build only UI                                  syndesis -m ui
+* Build only images with OpenShift S2I, fast     syndesis --images --s2i -f
+* Build only the server and meta image           syndesis --module server,meta --s2i
+* Build for system test                          syndesis system-test
+* Start Minishift afresh                         syndesis minishift --full-reset --install
+* Setup debug port forward for rest pod          syndesis dev --debug rest
+
+Prerequisites:
+
+- GOPATH needs to be provided (golang installed)
+
+EOT
+    else
+        source $cmd_dir/$command
+        cat <<EOT
+$($command::description)
+
+Usage: syndesis $command [... options ...]
+
+EOT
+        echo "Options for $command:"
+        echo -e "$($command::usage)"
+        echo "    --man                     Open HTML documentation in the Syndesis Developer Handbook
+"
+    fi
+}
+
+
+# Dir where this script is located
+basedir() {
+    # Default is current directory
+    local script=${BASH_SOURCE[0]}
+
+    # Resolve symbolic links
+    if [ -L $script ]; then
+        if readlink -f $script >/dev/null 2>&1; then
+            script=$(readlink -f $script)
+        elif readlink $script >/dev/null 2>&1; then
+            script=$(readlink $script)
+        elif realpath $script >/dev/null 2>&1; then
+            script=$(realpath $script)
+        else
+            echo "ERROR: Cannot resolve symbolic link $script"
+            exit 1
+        fi
+    fi
+
+    local dir=$(dirname "$script")
+    local full_dir=$(cd "${dir}" && pwd)
+    echo ${full_dir}
+}
+
+appdir() {
+  local subdir="${1:-app}"
+  local dir=$(basedir)
+  local full_dir=$(cd "$dir/../../${subdir}" && pwd)
+  echo ${full_dir}
+}
+
+
+run() {
+    local first_arg=${1:-}
+    local cmd_dir="$(basedir)/commands"
+    local command
+    if [ -n "${first_arg}" ] && [[ ${first_arg} != -* ]]; then
+        command="$first_arg"
+        if [ ! -f "$cmd_dir/$command" ]; then
+            echo
+            echo ">>>> Unknown command '$command'"
+            echo
+            display_help
+            exit 1
+        fi
+    fi
+
+    # Check for the mode (backwards compatibility)
+    mode=$(readopt --mode)
+    if [ -n "${mode}" ]; then
+      command="${mode}"
+    fi
+
+
+    if [ -z "${command:-}" ]; then
+        # Try to detect command
+        for cand in $(ls $cmd_dir); do
+            if [ $(hasflag "--$cand") ]; then
+                command=$cand
+                break
+            fi
+        done
+    fi
+
+    if [ "${command:-}" == "help" ] || [ $(hasflag --help -h) ]; then
+        display_help ${command:-}
+        exit 0
+    fi
+
+    if [ $(hasflag --man) ]; then
+        if [ -n "${command:-}" ]; then
+          open_url "https://doc.syndesis.io/#syndesis-${command}"
+        else
+          open_url "https://doc.syndesis.io"
+        fi
+        exit 0
+    fi
+
+    if [ -z "${command:-}" ]; then
+        command="build"
+    fi
+
+    # Git rebase if requested
+    if [ $(hasflag --rebase -r) ]; then
+        git_rebase_upstream
+    fi
+
+    source "$cmd_dir/$command"
+
+    eval "${command}::run"
+}
+
+source "$(basedir)/commands/util/common_funcs"
+
+ERROR_FILE="$(mktemp /tmp/syndesis-output.XXXXXX)"
+trap "print_error $ERROR_FILE" EXIT
+
+if [ $(hasflag --verbose) ]; then
+    export PS4='+($(basename ${BASH_SOURCE[0]}):${LINENO}): ${FUNCNAME[0]:+${FUNCNAME[0]}(): }'
+    set -x
+fi
+
+run "$@"

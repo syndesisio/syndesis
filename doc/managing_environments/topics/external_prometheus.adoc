@@ -1,0 +1,97 @@
+[id='external_prometheus']
+= Configuring an external Prometheus instance to monitor {prodname}
+
+When configuring an external Prometheus it’s best to use the {prodname}
+Prometheus configuration as a template. The default {prodname} Prometheus
+pod has the following configuration:
+
+* Scrape interval is set to 5 seconds:
+
+....
+global:
+        scrape_interval:     5s
+        evaluation_interval: 5s
+....
+
+* A scrape config job called `integration-pod` with kubernetes service
+discovery configuration that configures it to scrape pods in the
+`${OPENSHIFT_PROJECT}`, which is typically `syndesis` namespace:
+
+....
+ - job_name: integration-pods
+
+          kubernetes_sd_configs:
+          - role: pod
+            namespaces:
+              names:
+                - ${OPENSHIFT_PROJECT}
+....
+
+* A relabel config that only scrapes integration pods with the label
+`prometheus.io/scrape` set to true. The `__metrics_path__` and
+`__address__` labels, which are used to scrape the jmx exporter in the
+integration pod, are set using values from `prometheus.io/path` and
+`prometheus.io/port` labels. And finally adds pod labels and annotations
+as Prometheus labels, and creates kubernetes_namespace and
+kubernetes_pod_name labels:
+
+....
+relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+            action: keep
+            regex: true
+          - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+            action: replace
+            target_label: __metrics_path__
+            regex: (.+)
+          - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+            action: replace
+            regex: ([^:]+)(?::\d+)?;(\d+)
+            replacement: $1:$2
+            target_label: __address__
+          - action: labelmap
+            regex: __meta_kubernetes_pod_label_(.+)
+          - action: labelmap
+            regex: __meta_kubernetes_pod_annotation_(syndesis.+)
+          - source_labels: [__meta_kubernetes_namespace]
+            action: replace
+            target_label: kubernetes_namespace
+          - source_labels: [__meta_kubernetes_pod_name]
+            action: replace
+            target_label: kubernetes_pod_name
+....
+
+* {prodname} integrations expose a large number of metrics from the JVM,
+Camel and CXF. To reduce the amount of storage needed for metrics the
+following `metric_relabel_configs` is used to filter out metrics that
+are not displayed in the {prodname} console. Note that the last
+configuration line explicitly lists metrics to be added in Prometheus
+metrics store that are critical to the statistics shown in {prodname} web
+console. So a user provided Prometheus instance MUST explicitly allow
+these metrics to be collected if other metrics are being filtered.
+
+....
+ metric_relabel_configs:
+          - source_labels: [__name__]
+            regex: jmx_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: jvm_(.+)
+            action: drop
+          - source_labels: [__name__]
+            regex: process_(.+)
+            action: drop
+          - source_labels: [type, __name__]
+            separator: ':'
+            regex: context:(org_apache_camel_ExchangesTotal|org_apache_camel_ExchangesFailed|io_syndesis_camel_StartTimestamp|io_syndesis_camel_LastExchangeCompletedTimestamp|io_syndesis_camel_LastExchangeFailureTimestamp)
+            action: keep
+....
+
+* The Prometheus pod itself is also configured to store 30 days worth of
+metric data using the following configuration in the pod definition:
+
+....
+args:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+            - '--storage.tsdb.retention=30d'
+....

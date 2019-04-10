@@ -1,0 +1,49 @@
+// This module is included in the following assemblies:
+// as_connecting-to-applications.adoc
+
+[id='about-connection-validation_{context}']
+= About connection validation
+
+After obtaining authorization for {prodname} to access an application
+that uses OAuth, you can create one or more connections
+to that application.
+When you create a connection to an OAuth application, 
+{prodname} validates it to confirm that
+authorization is in place. At any time, you can validate the connection again to
+ensure that authorization is still in place.
+
+Some OAuth applications grant access tokens that have an expiration date. 
+If the access token expires, you can reconnect to the application to
+obtain a new access token.
+
+To validate a connection that uses OAuth or to obtain a new access token
+for an OAuth application:
+
+. In the left panel, click *Connections*.
+. Click the connection that you want to validate or for which you want to
+obtain a new access token.
+. In the connection's details page, click *Validate* or click
+*Reconnect*. 
+
+If validation or reconnection fails, then check with the application/service provider to
+determine if the application's OAuth keys, IDs, tokens, or secrets are still
+valid. It is possible that an item has expired or been revoked.
+
+If you find that an OAuth item is invalid, has expired, or been
+revoked, obtain new values and paste them into the {prodname} settings
+for the application. See the instructions in 
+link:{LinkFuseOnlineConnectorGuide}[{NameOfFuseOnlineConnectorGuide}] 
+for registering the application whose connection did not validate. With the
+updated settings in place, follow the instructions above to try to
+validate the updated connection. If validation is successful, and there
+is a running integration that is using this connection, restart
+the integration. To restart an integration, stop it and then start it.
+
+If validation fails and reconnection fails but everything appears to 
+be valid at the service provider, then try reregistering
+your {prodname} environment with the application and then recreate the
+connection. {prodname} validates the connection when you recreate it.
+If you recreate the connection, and there is an integration that is
+using the connection, then you must edit the integration to delete the old
+connection and add the new connection. If the integration is running,
+then you must stop it and restart it.

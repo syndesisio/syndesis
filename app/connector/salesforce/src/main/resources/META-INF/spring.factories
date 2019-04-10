@@ -1,0 +1,4 @@
+
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  io.syndesis.connector.salesforce.SalesforceVerifierAutoConfiguration,\
+  io.syndesis.connector.salesforce.SalesforceMetaDataAutoConfiguration

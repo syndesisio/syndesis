@@ -1,0 +1,69 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='add-basic-filter-step_{context}']
+= Adding a basic filter step
+
+You can add a step to a flow to filter the data that the
+flow operates on. In a filter step, {prodname} inspects the
+data and continues only if the content meets
+criteria that you define. For example, in a flow that
+obtains data from Twitter, you can specify that you want to
+continue execution by operating only on tweets that contain "Red Hat".
+
+.Prerequisites
+* The flow contains all connections that it needs to. 
+* You are creating or editing a flow. 
+
+.Procedure
+
+. In the left panel, where you want to add a filter step to
+the flow, click the
+image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
+
+. Click *Basic Filter*. 
+
+. On the *Configure Basic Filter Step* page, in
+the *Continue only if incoming data match* field, select one of the
+following options:
++
+* Accept the default that all defined rules must be satisfied.
+* Indicate that only
+one rule must be satisfied by selecting *ANY of the following*.
+
+. Define the filter rule:
+
+.. *The data you want to evaluate*: Enter the name of the field that contains the
+content you want the filter to evaluate. For example, suppose the data
+coming in to the step consists of tweets that mention your Twitter handle.
+You want to continue execution only when the tweet contains
+certain content. The tweet is in a field named `text` so you enter or
+select `text` as the value in the first field.
++
+You can define the field value in the following ways:
++
+*** Start typing. The data name field has a typeahead feature that
+provides a list of possible completions for you in a pop-up box.
+Select the correct one from the box.
+*** Click in the field. A dropdown box appears with a list of
+available fields. Select the field of interest from the list.
+
+.. *Must meet this condition*: Select a condition from the dropdown box.
+The setting defaults to *Contains*. For execution to continue,
+the condition that you select in this field must be
+true for the value that you enter in the third field.
+
+.. *For this value*: Enter a value to filter on. For example,
+if you want to operate on mentions of a certain product from the
+Twitter feed, you would enter the product name here.
+
+. Optionally, click *+ Add another rule* and define another rule.
++
+You can delete a rule by clicking the trash can icon next to the entry.
+
+. When the filter step is complete, click *Done* to add it to the flow.
+
+.Additional resource
+
+If you cannot define the filter you need in a basic filter step,
+see link:{LinkFuseOnlineIntegrationGuide}#add-advanced-filter-step_create[Adding an advanced filter step].

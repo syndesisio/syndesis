@@ -1,0 +1,171 @@
+<div class="row toolbar-pf">
+  <div class="col-sm-12">
+    <div class="toolbar-pf-actions">
+      <div class="inline-block">
+        <ol class="breadcrumb no-bottom-margin">
+          <li>
+            <a routerLink="/">
+              {{ 'shared.home' | synI18n }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['/customizations']">
+              {{ 'shared.customizations' | synI18n }}
+            </a>
+          </li>
+          <li>
+            <a [routerLink]="['..']">
+              {{ 'customizations.extensions.heading' | synI18n }}
+            </a>
+          </li>
+          <li class="active">
+            <strong>
+              {{ 'customizations.extensions.details-heading' | synI18n }}
+            </strong>
+          </li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<syndesis-loading [loading]="loading$ | async" [content]="content">
+  <ng-template #content>
+    <div class="row row-cards-pf" *ngIf="extension$ | async; let extension">
+      <div class="col-xs-12">
+        <syndesis-extension-delete-modal></syndesis-extension-delete-modal>
+        <div class="card-pf">
+          <div class="card-pf-heading">
+            <div class="card-pf-title">
+              <div class="row">
+                <h1 class="col-sm-8 extension__title">
+                  {{ extension.name }}
+                  <span class="extension__title__id">(ID: {{ extension.extensionId }})</span>
+                </h1>
+                <div class="col-sm-4 text-right">
+                  <button type="button"
+                          class="btn btn-primary"
+                          [routerLink]="['..', 'import', extension.id, { 'name': extension.name }]">
+                    {{ 'shared.update' | synI18n }}
+                  </button>
+                  <button type="button"
+                          class="btn btn-default"
+                          [disabled]="isBeingUsed( extension )"
+                          (click)="deleteModal.prompt(extension)">
+                    <span [tooltip]="'customizations.extensions.delete-extension-not-allowed' | synI18n"
+                          [isDisabled]="!isBeingUsed( extension )"
+                          placement="auto"
+                          container="body">
+                      {{ 'shared.delete' | synI18n }}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-pf-body">
+            <div class="extension__group">
+              <h3>
+                {{ 'shared.overview' | synI18n }}
+              </h3>
+              <dl class="dl-horizontal">
+                <dt>
+                  {{ 'shared.name' | synI18n }}
+                </dt>
+                <dd>
+                  {{ extension.name }}
+                </dd>
+                <dt>
+                  {{ 'shared.description' | synI18n }}
+                </dt>
+                <dd>
+                  {{ extension.description }}
+                </dd>
+                <dt>
+                  {{ 'shared.type' | synI18n }}
+                </dt>
+                <dd>
+                  <ng-container [ngSwitch]="extension.extensionType">
+                    <span *ngSwitchCase="'Steps'">
+                      {{ 'customizations.extensions.step-extension' | synI18n }}
+                    </span>
+                    <span *ngSwitchCase="'Connectors'">
+                      {{ 'customizations.extensions.connector-extension' | synI18n }}
+                    </span>
+                    <span *ngSwitchCase="'Libraries'">
+                      {{ 'customizations.extensions.library-extension' | synI18n }}
+                    </span>
+                    <span *ngSwitchDefault>
+                      {{ 'customizations.extensions.unknown-extension' | synI18n }}
+                    </span>
+                  </ng-container>
+                </dd>
+                <dt>
+                  {{ 'shared.last-update' | synI18n }}
+                </dt>
+                <dd>
+                  {{ extension.lastUpdated | date : 'medium' }}
+                </dd>
+              </dl>
+            </div>
+            <div class="extension__group">
+              <ng-container [ngSwitch]="extension.extensionType">
+                <h3 *ngSwitchCase="'Steps'">
+                  {{ 'customizations.extensions.supported-steps' | synI18n }}
+                </h3>
+                <h3 *ngSwitchCase="'Connectors'">
+                  {{ 'customizations.extensions.supported-actions' | synI18n }}
+                </h3>
+              </ng-container>
+              <div class="row">
+                <div class="col-xs-offset-1 col-xs-11">
+                  <div *ngFor="let action of extension.actions">
+                    <strong>
+                      {{ action.name }}
+                    </strong>
+                    - {{ action.description }}
+                  </div>
+                </div>
+              </div>
+            </div>
+            <ng-container *ngIf="integrations$ | async; let integrations">
+              <div class="extension__group">
+                <h3 class="section-heading intermediate">
+                  {{ 'shared.usage' | synI18n }}
+                </h3>
+                <div class="row">
+                  <div class="col-xs-offset-1 col-xs-11">
+                    <p *ngIf="integrations"
+                      [innerHtml]="usageText( integrations.length )"></p>
+                    <table class="table"
+                          *ngIf="integrations.length">
+                      <thead>
+                        <tr>
+                          <th>
+                            {{ 'shared.integration-name' | synI18n }}
+                          </th>
+                          <th>
+                            {{ 'shared.integration-description' | synI18n }}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr *ngFor="let integration of integrations">
+                          <td>
+                            <a [routerLink]="['/integrations', integration.id]">{{ integration.name }}</a>
+                          </td>
+                          <td>
+                            {{ integration.description }}
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</syndesis-loading>

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<arquillian xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://jboss.org/schema/arquillian"
+    xsi:schemaLocation="http://jboss.org/schema/arquillian
+    http://jboss.org/schema/arquillian/arquillian_1_0.xsd">
+
+    <extension qualifier="kubernetes">
+      <!-- This is blocked by https://github.com/openshift/origin/issues/13197 -->
+      <property name="env.config.url">https://raw.githubusercontent.com/syndesisio/openshift-templates/master/syndesis.yml</property>
+      <property name="wait.timeout">600000</property>
+    </extension>
+
+</arquillian>

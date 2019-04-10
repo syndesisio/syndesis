@@ -1,0 +1,930 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Create a spreadsheet on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsCreateSpreadsheetCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "Spreadsheet",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "name": "Spreadsheet",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify spreadsheet properties.",
+            "name": "Create spreadsheets through Google Sheets",
+            "properties": {
+              "locale": {
+                "deprecated": false,
+                "displayName": "Locale",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet locale.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "timeZone": {
+                "deprecated": false,
+                "displayName": "Time Zone",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet time zone.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "title": {
+                "deprecated": false,
+                "displayName": "Title",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet title.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-create-spreadsheet-connector",
+      "name": "Create spreadsheet",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Update spreadsheet properties on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsUpdateSpreadsheetCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "Spreadsheet",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "name": "Spreadsheet",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify spreadsheet properties.",
+            "name": "Update spreadsheet properties through Google Sheets",
+            "properties": {
+              "locale": {
+                "deprecated": false,
+                "displayName": "Locale",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet locale.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "timeZone": {
+                "deprecated": false,
+                "displayName": "Time Zone",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet time zone.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "title": {
+                "deprecated": false,
+                "displayName": "Title",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet title.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-update-spreadsheet-connector",
+      "name": "Update spreadsheet properties",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Update values in a spreadsheet on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsUpdateValuesCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify grid data content and target spreadsheet id.",
+            "name": "Update values through Google Sheets",
+            "properties": {
+              "majorDimension": {
+                "defaultValue": "ROWS",
+                "deprecated": false,
+                "displayName": "Major Dimension",
+                "enum": [
+                  {
+                    "label": "Rows",
+                    "value": "ROWS"
+                  },
+                  {
+                    "label": "Columns",
+                    "value": "COLUMNS"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The major dimension that results should use. Indicates which dimension results apply to.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "range": {
+                "defaultValue": "A:A",
+                "deprecated": false,
+                "displayName": "Range",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The range to write values to.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "valueInputOption": {
+                "defaultValue": "USER_ENTERED",
+                "deprecated": false,
+                "displayName": "Value Input Option",
+                "enum": [
+                  {
+                    "label": "Unspecified",
+                    "value": "INPUT_VALUE_OPTION_UNSPECIFIED"
+                  },
+                  {
+                    "label": "User entered",
+                    "value": "USER_ENTERED"
+                  },
+                  {
+                    "label": "Raw",
+                    "value": "RAW"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "How to interpret input data.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-update-values-connector",
+      "name": "Update sheet values",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Append values to a spreadsheet on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsAppendValuesCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify grid data content and target spreadsheet id.",
+            "name": "Append values through Google Sheets",
+            "properties": {
+              "majorDimension": {
+                "defaultValue": "ROWS",
+                "deprecated": false,
+                "displayName": "Major Dimension",
+                "enum": [
+                  {
+                    "label": "Rows",
+                    "value": "ROWS"
+                  },
+                  {
+                    "label": "Columns",
+                    "value": "COLUMNS"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The major dimension that results should use. Indicates which dimension results apply to.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "range": {
+                "defaultValue": "A:A",
+                "deprecated": false,
+                "displayName": "Range",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target range. Operation will append the values to that range.",
+                "order": "2",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "valueInputOption": {
+                "defaultValue": "USER_ENTERED",
+                "deprecated": false,
+                "displayName": "Value Input Option",
+                "enum": [
+                  {
+                    "label": "Unspecified",
+                    "value": "INPUT_VALUE_OPTION_UNSPECIFIED"
+                  },
+                  {
+                    "label": "User entered",
+                    "value": "USER_ENTERED"
+                  },
+                  {
+                    "label": "Raw",
+                    "value": "RAW"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "How to interpret input data.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-append-values-connector",
+      "name": "Append values to a sheet",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Obtain data range values from a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets-stream",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsGetValuesCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the value range that you want to obtain.",
+            "name": "Obtain spreadsheet values from Google Sheets",
+            "properties": {
+              "delay": {
+                "componentProperty": false,
+                "defaultValue": 30000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Time interval between polls for value changes.",
+                "order": "5",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "duration"
+              },
+              "majorDimension": {
+                "defaultValue": "ROWS",
+                "deprecated": false,
+                "displayName": "Major Dimension",
+                "enum": [
+                  {
+                    "label": "Rows",
+                    "value": "ROWS"
+                  },
+                  {
+                    "label": "Columns",
+                    "value": "COLUMNS"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The major dimension that results should use. Indicates which dimension results apply to.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "maxResults": {
+                "defaultValue": "0",
+                "deprecated": false,
+                "displayName": "Max results",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Maximum number of values to return (value of '0' meaning results are unbounded).",
+                "order": "6",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "range": {
+                "defaultValue": "A:A",
+                "deprecated": false,
+                "displayName": "Range",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Value range in a spreadsheet to obtain.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "splitResults": {
+                "defaultValue": false,
+                "deprecated": false,
+                "displayName": "Split results",
+                "enum": [
+                  {
+                    "label": "No",
+                    "value": "false"
+                  },
+                  {
+                    "label": "Yes",
+                    "value": "true"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "When enabled value range is split into multiple results where each result represents a single row or column.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-get-values-connector",
+      "name": "Get sheet values",
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Obtain a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets-stream",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsGetSpreadsheetCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "name": "Spreadsheet",
+          "type": "io.syndesis.connector.sheets.model.GoogleSpreadsheet"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the spreadsheet that you want to obtain.",
+            "name": "Obtain spreadsheet from Google Sheets",
+            "properties": {
+              "delay": {
+                "componentProperty": false,
+                "defaultValue": 30000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Time interval between polls for value changes.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "duration"
+              },
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-get-spreadsheet-connector",
+      "name": "Get spreadsheet properties",
+      "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Add charts on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsAddChartCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "Chart",
+          "type": "io.syndesis.connector.sheets.model.GoogleChart"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify chart properties.",
+            "name": "Add charts through Google Sheets",
+            "properties": {
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "subtitle": {
+                "deprecated": false,
+                "displayName": "Subtitle",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The chart subtitle.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "title": {
+                "deprecated": false,
+                "displayName": "Chart Title",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The chart title.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-add-chart-connector",
+      "name": "Add charts",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Add pivot tables on your Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsAddPivotTableCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "PivotTable",
+          "type": "io.syndesis.connector.sheets.model.GooglePivotTable"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify pivot table properties.",
+            "name": "Add pivot tables through Google Sheets",
+            "properties": {
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The target spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-add-pivot-tables-connector",
+      "name": "Add pivot tables",
+      "pattern": "To"
+    }
+  ],
+  "configuredProperties": {
+    "additionalOAuthQueryParameters": "{\"access_type\": \"offline\"}",
+    "applicationName": "sheets-syndesis",
+    "authenticationType": "oauth2",
+    "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
+    "googleScopes": "https://www.googleapis.com/auth/spreadsheets",
+    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token"
+  },
+  "connectorFactory": "io.syndesis.connector.sheets.GoogleSheetsConnectorFactory",
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Read and write data to spreadsheets.",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiBoZWlnaHQ9IjExOCIgd2lkdGg9IjExOCI+PGRlZnM+PGxpbmVhckdyYWRpZW50IGlkPSJhIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiMwYTQxMjQiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiMyM2E1NjUiLz48L2xpbmVhckdyYWRpZW50PjxsaW5lYXJHcmFkaWVudCB4bGluazpocmVmPSIjYSIgaWQ9ImIiIHgxPSIxNjguOTEzIiB5MT0iNS4yNDIiIHgyPSIxNzUuNjI0IiB5Mj0iOTIuMjkzIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgZ3JhZGllbnRUcmFuc2Zvcm09InRyYW5zbGF0ZSgtMTI4LjUgMTAuNSkiLz48L2RlZnM+PGcgZmlsbC1ydWxlPSJldmVub2RkIj48cGF0aCBkPSJNMjEuODQ2LjAwM2g0Ny41MzhsMzIuNzYgMzIuNjQzLS4yODcgNzkuMThjLS4wMTIgMy4zOTQtMi42OTYgNi4xNy01Ljk5IDYuMTdIMjEuODQ1Yy0zLjI5NSAwLTUuOTktMi43NzYtNS45OS02LjE3VjYuMTc0YzAtMy4zOTQgMi42OTUtNi4xNyA1Ljk5LTYuMTd6IiBmaWxsPSIjMjNhNTY1IiBzdHJva2Utd2lkdGg9Ii44MDciLz48cGF0aCBkPSJNMTAyLjE0NSAzMi42NDZMNjkuMzg1LjAwM2wuMDY2IDI2LjQ2NmMuMDA4IDMuMzUxIDIuNjYxIDYuMDgyIDUuOTE0IDYuMDkyeiIgZmlsbD0iIzhiZDFiNSIgc3Ryb2tlLXdpZHRoPSIuODA3Ii8+PHBhdGggZD0iTTM4LjAxNiA1OC4yOTZoNDEuNTYzdjM3LjY5OEgzOC4wMTZ6TTQyLjMgODUuMTNoMTQuNzF2Ni41MTZINDIuM3ptMTguMjg0LTIyLjQ4N2gxNC43MXY2LjUxNmgtMTQuNzF6bTAgMjIuNDg3aDE0LjcxdjYuNTE2aC0xNC43MXptMC0xMS4yNDNoMTQuNzF2Ni41MTZoLTE0Ljcxek00Mi4zIDYyLjY0M2gxNC43MXY2LjUxNkg0Mi4zem0wIDExLjI0NGgxNC43MXY2LjUxNkg0Mi4zeiIgZmlsbD0iI2ZmZiIgc3Ryb2tlLXdpZHRoPSIuNjkzIi8+PHBhdGggZD0iTTI4Ljg4NSA3My43MTNjOC45MjUgMTAuMjcxIDE4Ljg3MyAxOS42OTIgMjkuMDIxIDI5Ljg0bC4zOTUtLjM5NS4xMDMtMjguNjU0LTI2Ljc3OS0uMDg0YTUuNzQ2IDUuNzQ2IDAgMCAxLTIuNzQtLjcwN3oiIGZpbGw9InVybCgjYikiIHN0cm9rZS13aWR0aD0iLjgwNyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNDMuNzQgLTQxLjg1OCkiLz48L2c+PC9zdmc+",
+  "id": "sheets",
+  "name": "Google Sheets",
+  "properties": {
+    "accessToken": {
+      "deprecated": false,
+      "displayName": "Access Token",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "path",
+      "labelHint": "String provided by Google that authorizes access to a Google Sheets account.",
+      "order": "5",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "tags": [
+        "oauth-access-token"
+      ],
+      "type": "string"
+    },
+    "additionalOAuthQueryParameters": {
+      "deprecated": false,
+      "displayName": "Additional OAuth query parameters",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-additional-query-parameters"
+      ],
+      "type": "hidden"
+    },
+    "applicationName": {
+      "deprecated": false,
+      "displayName": "Application Name",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "A name that you choose as the name of an OAuth 2.0 Google Sheets client. This name appears in the Google developers account list of OAuth clients.",
+      "order": "2",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "authenticationType": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The access token",
+      "displayName": "Authorization URL",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "required": false,
+      "secret": true,
+      "tags": [
+        "authentication-type"
+      ],
+      "type": "hidden"
+    },
+    "authorizationUrl": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The access token",
+      "displayName": "Authorization URL",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "required": false,
+      "secret": true,
+      "tags": [
+        "oauth-authorization-url"
+      ],
+      "type": "hidden"
+    },
+    "clientId": {
+      "deprecated": false,
+      "displayName": "Client ID",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The client ID that Google provides when you register a client application.",
+      "order": "3",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-client-id"
+      ],
+      "type": "string"
+    },
+    "clientSecret": {
+      "deprecated": false,
+      "displayName": "Client Secret",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The client secret that Google provides when you register a client application.",
+      "order": "4",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "tags": [
+        "oauth-client-secret"
+      ],
+      "type": "string"
+    },
+    "googleScopes": {
+      "deprecated": false,
+      "displayName": "Scopes",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "UserId",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "tags": [
+        "oauth-scope"
+      ],
+      "type": "hidden"
+    },
+    "refreshToken": {
+      "deprecated": false,
+      "displayName": "Refresh Token",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "path",
+      "labelHint": "String provided by Google that enables retrieval of a new access token.",
+      "order": "6",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "rootUrl": {
+      "defaultValue": "https://sheets.googleapis.com/",
+      "deprecated": false,
+      "displayName": "Google Sheets API server root URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The root URL pointing to the Google sheets API server.",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "tags": [],
+      "type": "string"
+    },
+    "serverCertificate": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Google API Server X.509 PEM Certificate",
+      "displayName": "Server Certificate",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "order": "9",
+      "relation": [
+        {
+          "action": "ENABLE",
+          "when": [
+            {
+              "id": "validateCertificates",
+              "value": "false"
+            }
+          ]
+        }
+      ],
+      "required": false,
+      "secret": false,
+      "type": "textarea"
+    },
+    "tokenUrl": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "The access token",
+      "displayName": "Token URL",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "required": false,
+      "secret": true,
+      "tags": [
+        "oauth-access-token-url"
+      ],
+      "type": "hidden"
+    },
+    "userId": {
+      "deprecated": false,
+      "displayName": "User ID",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Google Sheets account name that is associated with this registration.",
+      "order": "7",
+      "raw": true,
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "validateCertificates": {
+      "componentProperty": true,
+      "defaultValue": "false",
+      "deprecated": false,
+      "displayName": "Check server certificates",
+      "enum": [
+        {
+          "label": "Disable",
+          "value": "true"
+        },
+        {
+          "label": "Enable",
+          "value": "false"
+        }
+      ],
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "common,security",
+      "labelHint": "Ensure certificate checks are enabled for secure production environments. Disable for convenience in only development environments.",
+      "order": "8",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

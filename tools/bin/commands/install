@@ -1,0 +1,131 @@
+#!/bin/bash
+
+install::description() {
+    echo "Install Syndesis to a connected OpenShift cluster"
+}
+
+install::usage() {
+cat <<"EOT"
+-s  --setup                   Install CRDs clusterwide. Use --grant if you want a specific user to be
+                              able to install Syndesis. You have to run this option once as cluster admin.
+-u  --grant <user>            Add permissions for the given user so that user can install the operator
+                              in her projects. Must be run as cluster admin.
+    --cluster                 Add the permission for all projects in the cluster
+                              (only when used together with --grant)
+-p  --project                 Install into this project. Delete this project
+                              if it already exists. By default, install into the current project (without deleting)
+    --route                   Route to use. If not given, the route is trying to be detected from the currently
+    --operator-only           Only install the operator but no resource
+                              connected cluster.
+    --console                 The URL to the OpenShift console
+    --tag <tag>               Syndesis version/tag to install. If not given, then the latest
+                              version from master is installed
+    --dev                     Prepare for development of Syndesis so that S2I builds of
+                              Syndesis images are picked up properly (implies --watch)
+    --force                   Override an existing "Syndesis" if present
+-w  --watch                   Wait until cluster is up
+    --local                   install from local Git repo when using. By default the resource descriptor is
+                              downloaded from GitHub remotely.
+-o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
+-y  --yes                     Assume 'yes' automatically when asking for deleting
+                              a given project.
+    --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
+    --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
+    --test-support            Allow test support endpoint for syndesis-server
+    --camel-k <version>       Install camel-k operator version <version>
+                              (version is optional)
+    --camel-k-options "opts"  Options used when installing the camel-k operator.
+                              Use quotes and start with a space before appending the options.
+EOT
+}
+
+
+install::run() {
+    source "$(basedir)/commands/util/openshift_funcs"
+    source "$(basedir)/commands/util/camel_k_funcs"
+
+    local prep_only="false"
+    if [ $(hasflag -s --setup) ]; then
+        echo "Installing Syndesis CRD"
+        local result=$(install_syndesis_crd)
+        check_error "$result"
+        if [ $(hasflag --camel-k) ]; then
+          echo "Installing Camel-K CRDs"
+          local result=$(install_camel_k_crds "$(readopt --camel-k)")
+          check_error "$result"
+        fi
+        prep_only="true"
+    fi
+
+    local user_to_prepare="$(readopt -u --grant)"
+    if [ -n  "$user_to_prepare" ]; then
+        echo "Grant permission to create Syndesis to user $user_to_prepare"
+        local result=$(add_user_permissions_for_operator "$user_to_prepare" $(hasflag --cluster))
+        check_error "$result"
+        prep_only="true"
+    fi
+
+    if $prep_only; then
+        return
+    fi
+
+    # If a project is given, create it new or recreate it
+    local project=$(readopt --project -p)
+    if [ -n "${project}" ]; then
+        recreate_project $project "$(hasflag --yes -y)"
+    fi
+
+    # Setup oc
+    setup_oc
+
+    # Check for the proper setup
+    set +e
+    oc get syndesis >/dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        check_error "ERROR: No CRD Syndesis installed or not enough permissions to read them. Please run --setup and/or --grant as cluster-admin. See 'syndesis install --help' for more information."
+    fi
+
+    if [ $(hasflag --camel-k) ]; then
+        oc get integration >/dev/null 2>&1
+        if [ $? -ne 0 ]; then
+            check_error "ERROR: Camel-K installation requested but no Camel-K CRDs accessible. Please run --setup --camel-k to register the proper CRDs."
+        fi
+    fi
+    set -e
+
+    # Deploy operator and wait until its up
+    echo "Deploying Syndesis operator"
+    result=$(deploy_syndesis_operator)
+    check_error "$result"
+
+    if [ $(hasflag --camel-k) ]; then
+        echo "Deploying Camel-K operator"
+        result=$(deploy_camel_k_operator "$(readopt --camel-k)" "$(oc project -q)" "$(readopt --camel-k-options)")
+        check_error "$result"
+    fi
+
+    if [ $(hasflag --operator-only) ]; then
+        exit 0
+    fi
+
+    wait_for_deployments 1 syndesis-operator
+
+    # Create syndesis resource
+    local route=$(readopt --route)
+    local console=$(readopt --console)
+    result=$(create_syndesis "$route" "$console")
+    check_error "$result"
+
+    if [ $(hasflag --watch -w) ] || [ $(hasflag --dev) ] || [ $(hasflag --open -o) ]; then
+        wait_for_deployments 1 syndesis-server syndesis-ui syndesis-meta
+    fi
+
+    if [ $(hasflag --dev) ]; then
+        patch_imagestreams_for_initial_image
+    fi
+
+    if [ $(hasflag --open -o) ]; then
+        route=$(get_route "syndesis")
+        open_url "https://$route"
+    fi
+}

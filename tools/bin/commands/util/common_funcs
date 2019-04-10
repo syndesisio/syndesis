@@ -1,0 +1,146 @@
+#!/bin/bash
+
+# Checks if a flag is present in the arguments.
+hasflag() {
+    filters="$@"
+    for var in "${ARGS[@]}"; do
+        for filter in $filters; do
+          if [ "$var" = "$filter" ]; then
+              echo 'true'
+              return
+          fi
+        done
+    done
+}
+
+isMacOs() {
+    if [ -z "${OSTYPE}" ]; then
+        if [ $(uname) == "Darwin" ]; then
+            echo "true"
+        fi
+    elif [ "${OSTYPE#darwin}" != "${OSTYPE}" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+isWindows() {
+    if [ -z "${OSTYPE}" ]; then
+        if [ $(uname) == "Windows" ]; then
+            echo "true"
+        fi
+    elif [ "${OSTYPE#windows}" != "${OSTYPE}" ]; then
+        echo "true"
+    else
+        echo "false"
+    fi
+}
+
+# Read the value of an option.
+readopt() {
+    filters="$@"
+    next=false
+    for var in "${ARGS[@]}"; do
+        if $next; then
+            local value="${var##-}"
+            if [ "$value" != "$var" ]; then
+               # Next is already also option, so we haven't
+               # specified a value.
+               return
+            fi
+            echo $var
+            break;
+        fi
+        for filter in $filters; do
+            if [[ "$var" = ${filter}* ]]; then
+                local value="${var//${filter}=/}"
+                if [ "$value" != "$var" ]; then
+                    echo $value
+                    return
+                fi
+                next=true
+            fi
+        done
+    done
+}
+
+
+check_error() {
+    local msg="$*"
+    if [ "${msg//ERROR/}" != "${msg}" ]; then
+        if [ -n "${ERROR_FILE:-}" ] && [ -f "$ERROR_FILE" ] && ! grep "$msg" $ERROR_FILE ; then
+            local tmp=$(mktemp /tmp/error-XXXX)
+            echo ${msg} >> $tmp
+            if [ $(wc -c <$ERROR_FILE) -ne 0 ]; then
+              echo >> $tmp
+              echo "===============================================================" >> $tmp
+              echo >> $tmp
+              cat $ERROR_FILE >> $tmp
+            fi
+            mv $tmp $ERROR_FILE
+        fi
+        exit 0
+    fi
+}
+
+print_error() {
+    local exit_code=$?
+    local error_file="${1:-}"
+    if [ -f $error_file ] && grep -q "ERROR" $error_file; then
+        cat $error_file
+    elif [ $exit_code -ne 0 ]; then
+        echo "ERROR: Last command exited with $exit_code"
+    fi
+
+    if [ -f $error_file ]; then
+        rm $error_file
+    fi
+}
+
+open_url() {
+    local url=$1
+    local cmd="$(probe_commands open xdg-open chrome firefox)"
+    if [ -z "$cmd" ]; then
+        echo "Cannot find command for opening URL:"
+        echo $url
+        exit 1
+    fi
+    exec $cmd $url
+}
+
+probe_commands() {
+    for cmd in $@; do
+      local ret=$(which $cmd 2>/dev/null)
+      if [ $? -eq 0 ]; then
+          echo $ret
+          return
+      fi
+    done
+}
+
+# Syndesis config dir holding state across builds
+syndesis_config_dir() {
+  local dir="$HOME/.syndesis";
+  [ -d $dir ] || mkdir $dir;
+  echo $dir
+}
+
+# ======================================================
+# Git update functions
+git_rebase_upstream() {
+  echo "git fetch upstream master"
+  git fetch upstream master
+  echo -n "git rebase upstream/master"
+  if ! git rebase upstream/master; then
+    echo " (failed)"
+    echo "git stash"
+    git stash
+    echo "git rebase upstream/master"
+    git rebase upstream/master
+    echo "git stash pop"
+    git stash pop
+  else
+    echo
+  fi
+}

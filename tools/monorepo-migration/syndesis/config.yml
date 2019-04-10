@@ -1,0 +1,152 @@
+
+auth:
+  user: "syndesis-bot"
+  token: "...."
+
+target: "syndesisio/issue-import-test"
+#target: "syndesisio/syndesis"
+state: "./issues_state.bin"
+
+labels:
+  approved: "0ffa16"
+  Epic: "364294"
+
+  module/rest: "2e9288"
+  module/ui: "dce6f0"
+  module/deploy: "ab947d"
+  module/runtime: "657c9a"
+  module/s2i: "2b313c"
+  module/connectors: "b39d9e"
+  module/tests: "91ac83"
+  module/uxd: "fdc5d8"
+  module/verifier: "c6d74b"
+  module/project: "e8a824"
+
+  ext/atlasmap: "edb080"
+  ext/camel: "c56b37"
+  ext/docs: "f9d647"
+  ext/qe: "91ac83"
+
+  status/wip: "f5c73f"
+  status/blocked: "ad0009"
+
+  notif/doc-update: "98cc38"
+  notif/ux-design: "f382d0"
+
+  prio/p0 : "f85963"
+  prio/p1 : "e68b8a"
+  prio/p2 : "fabaaf"
+  prio/p3 : "faeadf"
+
+  size/s: "edeca6"
+  size/m: "fdf595"
+  size/l: "fbdf78"
+  size/xl: "fcc674"
+
+  cat/bug: "e08891"
+  cat/blocker: "dd6977"
+  cat/feature: "bdd9f4"
+  cat/enhancement: "93d273"
+  cat/techdebt: "e7aeb6"
+  cat/question: "8bd5e3"
+  cat/retro: "84c68f"
+  cat/process: "84c68f"
+  cat/discussion: "1d4367"
+  cat/quickwin: "a35e86"
+  cat/starter: "e2704f"
+  cat/research: "e9d355"
+  cat/design: "cebdf8"
+
+  target/tp1: "c6aad5"
+  target/tp2: "bb98cb"
+  target/tp3: "ae84c4"
+  target/tp4: "8e6aaa"
+  target/ga: "7e6eb1"
+
+repos:
+  rest:
+    name: "syndesisio/syndesis-rest"
+    label_mapping:
+      big: "size/xl"
+      WIP: "status/wip"
+      Epic: "Epic"
+      bug: "cat/bug"
+      enhancement: "cat/enhancement"
+      question: "cat/question"
+      technical debt: "cat/debt"
+      Retro Action Item: "cat/retro"
+      wontfix: "cat/wontfix"
+      blocked: "status/blocked"
+      TP1: "target/tp1"
+      TP2: "target/tp2"
+      TP3: "target/tp3"
+      approved: "approved"
+  ui:
+    name: "syndesisio/syndesis-ui"
+    label_mapping:
+      approved: "approved"
+      bug: "cat/bug"
+      "data mapper": "ext/atlasmap"
+      "dev process": "cat/process"
+      discussion: "cat/discussion"
+      enhancement: "cat/enhancement"
+      "good first issue": "cat/starter"
+      "in progress": "status/wip"
+      "Priority - Blocking": "prio/p0"
+      "Priority - High": "prio/p1"
+      "Priority - Low": "prio/p2"
+      "Priority - never gonna happen": "prio/p3"
+      question: "cat/question"
+      refactoring: "cat/techdebt"
+      research: "cat/research"
+      "Retro Action Item": "cat/retro"
+      "sprint requirement": "cat/feature"
+      "support & docs": "ext/docs"
+      "testing & qe": "ext/qe"
+      "text changed": "notif/doc-update"
+      "TP1": "target/tp1"
+      "TP2": "target/tp2"
+      "UX Design" : "notif/ux-design"
+  project:
+    name: "syndesisio/syndesis-project"
+    label_mapping:
+      approved: "approved"
+      Blocker: "cat/blocker"
+      Bug: "cat/bug"
+      Enhancement: "cat/enhancement"
+      Epic: "Epic"
+      Feature: "cat/feature"
+      Requirement: "cat/feature"
+      "Retro Action Item": "cat/retro"
+      TP1: "target/tp1"
+      "UX Design": "notif/ux-design"
+  verifier:
+    name: "syndesisio/syndesis-verifier"
+    label_mapping:
+      approved: "approved"
+  uxd:
+    name: "syndesisio/syndesis-ux"
+    label_mapping:
+      approved: "approved"
+      "Data Mapper": "ext/atlasmap"
+      "project management": "cat/process"
+      "UX Design": "cat/design"
+      "UX Research": "cat/research"
+      TP1: "target/tp1"
+  tests:
+    name: "syndesisio/syndesis-system-tests"
+  connectors:
+    name: "syndesisio/connectors"
+    label_mapping:
+      bug: "cat/bug"
+      "Retro Action Item": "cat/retro"
+      TP2: "target/tp2"
+      TP3: "target/tp3"
+  runtime:
+    name: "syndesisio/syndesis-integration-runtime"
+  s2i:
+    name: "syndesisio/syndesis-s2i-image"
+  deploy:
+    name: "syndesisio/syndesis-openshift-templates"
+    label_mapping:
+      approved: "approved"

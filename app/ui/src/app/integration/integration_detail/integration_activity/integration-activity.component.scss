@@ -1,0 +1,53 @@
+@import 'syndesis-sass';
+
+.integration-activity {
+  &__toolbar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0;
+
+    &-text {
+      padding: 0 $gutter;
+      margin: 0;
+      color: $color-pf-black-400;
+
+      & + & {
+        border-left: 1px solid $color-pf-black-400;
+      }
+    }
+  }
+
+  &__pagination::ng-deep .content-view-pf-pagination {
+    background: none;
+    border: 0;
+    margin: $gutter 0;
+  }
+}
+
+.integration-step {
+  &__output {
+    @extend %reset-padmargins;
+    background-color: $color-pf-black-100;
+
+    &-log {
+      @extend %reset-padmargins;
+      max-height: 15em;
+      padding: 5px;
+      border: 0;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+}
+
+// Patternfly overrides
+.list-group-item-container {
+  .table {
+    margin-top: 20px;
+  }
+}
+
+.list-view-pf-expand {
+  margin-top: 15px;
+}

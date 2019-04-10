@@ -1,0 +1,10 @@
+/deep/ .toolbar-pf {
+  .form-group.sort {
+    border-right: 0 !important;
+  }
+}
+
+:host-context(.card-pf-heading) /deep/ .toolbar-pf {
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}

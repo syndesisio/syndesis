@@ -1,0 +1,13 @@
+@import 'syndesis-sass';
+
+.syn-form--swagger-upload {
+  .form-group--inline {
+    label:not(:last-child) {
+      margin-right: $gutter;
+    }
+  }
+}
+
+.api-file-chooser {
+  width: 100%;
+}

@@ -1,0 +1,61 @@
+[[syndesis-doc]]
+## syndesis doc
+
+This command is used to generated and manage this documentation which you are currently reading.
+
+[[syndesis-doc-usage]]
+### Usage
+
+[source,indent=0,subs="verbatim,quotes"]
+----
+Usage: syndesis doc [... options ...]
+
+Options for doc:
+-d  --directory <dir>         Top-level dir holding doc source and output directory. Default: "doc/sdh"
+-i  --input <file>            Input file to use. Default: "index.adoc"
+    --out <dir>               Directory to generate files (default: "output")
+    --html                    Generate HTML pages
+    --pdf <out>               Generate PDF and write it to <out> (default: "sdh.pdf")
+    --epub <out>              Generate Epub and write it to <out> (default: "sdh.epub")
+    --gh-pages <msg>          Create everything into the gh-pages branch and commit with <msg>
+-o  --open                    Open HTML documentation in default browser after doc generation
+-l  --local                   Use locally installed commands instead of Docker image
+----
+
+`syndesis doc` uses by default a Docker container to create the documentation.
+Therefore a Docker daemon must be accessible, and it must allow https://docs.docker.com/engine/admin/volumes/bind-mounts/[bind volume mounts] to the local `doc/sdh` directory.
+Bind mounts are possible for Linux Docker daemons and for "Docker for Mac".
+But it is not the case for the Minishift exposed Docker daemon, as this daemon is running isolated in a VM.
+
+You can always run `asciidoctor` locally with the `--local` (short: `-l`) options. See the https://asciidoctor.org/#installation[Asciidoctor manual] for more information how to install Asciidoctor.
+
+[[syndesis-doc-output]]
+### Output
+
+Input and output has the same defaults but can be changed with the following options
+
+[cols="4,3,15"]
+|===
+|`--input <file>`
+|`-i <file>`
+| Input document in Asciidoc format which is by default `$SYNDESIS_DIR/doc/sdh/index.adoc`
+
+
+| `--output <dir>`
+| `-o <dir>`
+| Output directory, default is `$SYNDESIS_DIR/doc/sdh/output`
+|===
+
+By default `syndesis doc` creates the documentation in HTML format, but more formats are supported:
+
+[cols="3,15"]
+|===
+| `--html`
+| Create HTML documentation in the output directory
+
+|`--pdf <name>`
+| Create PDF documentation. `<name>` is optional, but when given, then this specifies the file name generated in the output directory. By default `sdh.pdf` is used.
+
+|`--epub <name>`
+| Create the documentation in Epub format. `<name>` is optional, but when given, then this specifies the file name generated in the output directory. By default `sdh.epub` is used.
+|===

@@ -1,0 +1,25 @@
+{
+  "JavaClass" : {
+    "jsonType" : "io.atlasmap.java.v2.JavaClass",
+    "modifiers" : {
+      "modifier" : [ "ABSTRACT", "PUBLIC" ]
+    },
+    "className" : "twitter4j.LoggerFactory",
+    "primitive" : false,
+    "synthetic" : false,
+    "javaEnumFields" : {
+      "javaEnumField" : [ ]
+    },
+    "javaFields" : {
+      "javaField" : [ ]
+    },
+    "packageName" : "twitter4j",
+    "annotation" : false,
+    "annonymous" : false,
+    "enumeration" : false,
+    "localClass" : false,
+    "memberClass" : false,
+    "uri" : "atlas:java?className=twitter4j.LoggerFactory",
+    "interface" : false
+  }
+}

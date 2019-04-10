@@ -1,0 +1,18 @@
+@import 'syndesis-sass';
+
+.list-pf-left {
+  min-width: 30px;
+}
+
+.dl-horizontal {
+  @extend %reset-padmargins;
+
+  dt {
+    text-align: left;
+    padding: $gutter;
+  }
+
+  dd table td .label.pull-right {
+    margin-top: 4px;
+  }
+}

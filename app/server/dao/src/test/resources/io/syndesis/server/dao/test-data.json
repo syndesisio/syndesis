@@ -1,0 +1,39 @@
+[
+  {
+    "kind": "connection",
+    "data": {
+      "id": "1",
+      "name": "Twitter Example",
+      "description": "Twitter Connection",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "icon": "fa-twitter",
+      "connectorId": "twitter",
+      "configuredProperties": {
+        "accessToken": "twitter-access-token",
+        "accessTokenSecret": "@SECRET_NOT_IN_ENV@",
+        "consumerKey": "twitter-consumer-key",
+        "consumerSecret": "twitter-consumer-secret"
+      }
+    }
+  },
+  {
+    "kind": "connection",
+    "data": {
+      "id": "2",
+      "name": "Database Example",
+      "description": "Sample Database Connection",
+      "createdDate": 1492095344060,
+      "lastUpdated": 1492095344060,
+      "tags":["example","test"],
+      "icon": "fa-globe",
+      "connectorId": "sql-stored",
+      "configuredProperties": {
+        "url": "jdbc:postgresql://syndesis-db:5432/sampledbm",
+        "user": "sampledb",
+        "password": "@POSTGRESQL_SAMPLEDB_PASSWORD@",
+        "schema": "sampledb"
+      }
+    }
+  }
+]

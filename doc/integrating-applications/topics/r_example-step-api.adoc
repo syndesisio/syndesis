@@ -1,0 +1,150 @@
+// This module is included in the following assembly:
+// as_develop-step-extensions.adoc
+
+[id='example-step-api_{context}']
+= Example of using the Syndesis Step API
+
+You can implement a custom step by using the Syndesis `Step` API. This
+provides a way to interact with runtime route creation. You can use
+any method provided by the `ProcessorDefinition` class and you can 
+create more complex routes. Information for the Syndesis API is at 
+http://javadoc.io/doc/io.syndesis.extension/extension-api.
+
+Here is an example of a step extension 
+that uses the Syndesis `Step` API to implement a split action:  
+
+[source,java]
+----
+import java.util.Map;
+import java.util.Optional;
+
+import io.syndesis.extension.api.Step;
+import io.syndesis.extension.api.annotations.Action;
+import io.syndesis.extension.api.annotations.ConfigurationProperty;
+import org.apache.camel.CamelContext;
+import org.apache.camel.model.ProcessorDefinition;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.camel.Expression;
+import org.apache.camel.builder.Builder;
+import org.apache.camel.processor.aggregate.AggregationStrategy;
+import org.apache.camel.processor.aggregate.UseOriginalAggregationStrategy;
+import org.apache.camel.spi.Language;
+
+@Action(id = "split", name = "Split", description = "Split your exchange")
+public class SplitAction implements Step {
+
+    @ConfigurationProperty(
+        name = "language",
+        displayName = "Language",
+        description = "The language used for the expression")
+    private String language;
+
+    @ConfigurationProperty(
+        name = "expression",
+        displayName = "Expression",
+        description = "The expression used to split the exchange")
+    private String expression;
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getExpression() {
+        return expression;
+    }
+
+    public void setExpression(String expression) {
+        this.expression = expression;
+    }
+
+    @Override
+    public Optional<ProcessorDefinition> configure(
+            CamelContext context,
+            ProcessorDefinition route,
+            Map<String, Object> parameters) { // <1>
+
+        String languageName = language;
+        String expressionDefinition = expression;
+
+        if (ObjectHelper.isEmpty(languageName) && ObjectHelper.isEmpty(expressionDefinition)) {
+            route = route.split(Builder.body());
+        } else if (ObjectHelper.isNotEmpty(expressionDefinition)) {
+
+            if (ObjectHelper.isEmpty(languageName)) {
+                languageName = "simple";
+            }
+
+            final Language splitLanguage = context.resolveLanguage(languageName);
+            final Expression splitExpression = splitLanguage.createExpression(expressionDefinition);
+            final AggregationStrategy aggreationStrategy = new UseOriginalAggregationStrategy(null, false);
+
+            route = route.split(splitExpression).aggregationStrategy(aggreationStrategy);
+        }
+
+        return Optional.of(route);
+    }
+}
+----
+<1> This is the implementation of the action that the custom step performs. 
+
+This Java code uses Syndesis annotations, which means that the
+`extension-maven-plugin` can automatically generate the action definition.
+In the extension definition JSON file, the action definition will look 
+like this: 
+
+[source,json]
+----
+{
+  "id": "split",
+  "name": "Split",
+  "description": "Split your exchange",
+  "descriptor": {
+    "kind": "STEP", <1>
+    "entrypoint": "io.syndesis.extension.split.SplitAction", <2>
+    "inputDataShape": {
+      "kind": "none"
+    },
+    "outputDataShape": {
+      "kind": "none"
+    },
+    "propertyDefinitionSteps": [ {
+      "description": "extension-properties",
+      "name": "extension-properties",
+      "properties": {
+        "language": {
+          "componentProperty": false,
+          "deprecated": false,
+          "description": "The language used for the expression",
+          "displayName": "Language",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "required": false,
+          "secret": false,
+          "type": "string",
+          "raw": false
+        },
+        "expression": {
+          "componentProperty": false,
+          "deprecated": false,
+          "description": "The expression used to split the exchange",
+          "displayName": "Expression",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "required": false,
+          "secret": false,
+          "type": "string",
+          "raw": false
+        }
+      }
+    } ]
+  },
+  "tags": [],
+  "actionType": "step"
+}
+----
+<1> The type of the action is `STEP`.
+<2> This is the class that is implementing the `Step` interface. 

@@ -1,0 +1,103 @@
+<article class="wizard syn-scrollable"
+         onDragStart="return false;"
+         ondragenter="return false;"
+         ondragover="return false;"
+         ondrop="return false;">
+  <section class="wizard__ui wizard__nav" *ngIf="!( showApiEditor$ | async )">
+    <nav class="wizard-nav row toolbar-pf">
+      <div class="col-sm-12">
+        <div class="toolbar-pf-actions">
+          <div class="wizard-nav__breadcrumbs inline-block">
+            <ol class="breadcrumb no-bottom-margin">
+              <li>
+                <a routerLink="/">{{ 'menu.home' | synI18n }}</a>
+              </li>
+              <li>
+                <a routerLink="/customizations/api-connector">{{ 'menu.customizations' | synI18n }}</a>
+              </li>
+              <li class="active">
+                <strong>{{ 'customizations.api-client-connectors.api-client-connector' | synI18n }}</strong>
+              </li>
+            </ol>
+          </div>
+          <div class="wizard-nav__buttons toolbar-pf-action-right">
+            <button class="wizard-nav__button btn btn-default" (click)="showCancelModal()">
+              {{ 'shared.cancel' | synI18n }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </section>
+  <div class="wizard__main syn-scrollable--body container-fluid">
+    <section class="wizard__ui wizard__progress">
+      <syndesis-wizard-progress-bar [steps]="[
+        'customizations.api-client-connectors.create-upload-spec-step-title' | synI18n,
+        'customizations.api-client-connectors.create-review-step-title' | synI18n,
+        'customizations.api-client-connectors.create-security-step-title' | synI18n,
+        'customizations.api-client-connectors.create-details-step-title' | synI18n]" [selectedStep]="(currentActiveStep$ | async)">
+      </syndesis-wizard-progress-bar>
+    </section>
+
+    <section class="wizard__ui wizard__body wizard__body--step1">
+      <div class="row row-cards-pf">
+        <div class="card-pf">
+          <syndesis-api-connector-swagger-upload
+            *ngIf="( currentActiveStep$ | async ) == ApiConnectorWizardStep.UploadSwagger"
+            [uploadSpecification]="uploadSpecification$ | async"
+            [errors]="validationErrors$ | async"
+            [loading]="loading$ | async"
+            (onUploadSpecificationChange)="onUploadSpecificationChange($event)"
+            (onDone)="onStepDone()"
+            (onCancel)="showCancelModal()">
+          </syndesis-api-connector-swagger-upload>
+
+          <syndesis-api-connector-review
+            *ngIf="( currentActiveStep$ | async ) == ApiConnectorWizardStep.ReviewApiConnector && !( showApiEditor$ | async )"
+            [validation]="(createRequest$ | async)"
+            [enableEditButton]="true"
+            [showNextButton]="true"
+            [loading]="loading$ | async"
+            (onBack)="onBackPressed()"
+            (onDone)="onStepDone()"
+            (onEdit)="onEditSpecification()">
+          </syndesis-api-connector-review>
+
+          <syndesis-api-connector-auth
+            *ngIf="( currentActiveStep$ | async ) == ApiConnectorWizardStep.UpdateAuthSettings"
+            [customConnectorRequest]="(createRequest$ | async)"
+            (authSetup)="onAuthSetup($event)"
+            (onBack)="onBackPressed()"
+            (onDone)="onStepDone()">
+          </syndesis-api-connector-auth>
+
+          <syndesis-api-connector-info
+            *ngIf="( currentActiveStep$ | async ) == ApiConnectorWizardStep.SubmitRequest"
+            [apiConnectorState]="(apiConnectorState$ | async)"
+            (update)="onCreateComplete($event)"
+            (onBack)="onBackPressed()">
+          </syndesis-api-connector-info>
+        </div>
+
+        <div class="api-connector-editor" *ngIf="( showApiEditor$ | async )">
+          <syndesis-api-connector-editor
+            [specification]="(specificationForEditor$ | async)"
+            (onBack)="onCloseApiEditor()"
+            (onCancel)="onCloseApiEditor()"
+            (onSave)="onSpecificationEdited($event)">
+          </syndesis-api-connector-editor>
+        </div>
+      </div>
+    </section>
+  </div>
+</article>
+
+<ng-template #cancelModalTemplate>
+  <cancel-confirmation-modal
+    (cancel)="onCancel($event)"
+    primaryLabel="Yes"
+    secondaryLabel="No">
+    <p class="lead">{{ 'customizations.api-client-connectors.cancel-connector-modal-lead' | synI18n }}</p>
+    <p>{{ 'customizations.api-client-connectors.cancel-connector-modal' | synI18n }}</p>
+  </cancel-confirmation-modal>
+</ng-template>

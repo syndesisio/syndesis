@@ -1,0 +1,68 @@
+{
+  "description": "This is a test integration!",
+  "connections": [],
+  "flows": [
+    {
+      "steps": [
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "direct",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "1"
+          }
+        },
+        {
+          "stepKind": "split",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "2"
+          }
+        },
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "mock",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "3"
+          }
+        }
+      ]
+    }
+  ],
+  "resources": [],
+  "tags": []
+}

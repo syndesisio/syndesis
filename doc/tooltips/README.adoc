@@ -1,0 +1,23 @@
+= Tooltips File
+
+The `tooltips.json` file in this directory provides the mechanism for handing over tool tips from the docs team to the UI team.
+
+The docs team generate the tool tips, as follows:
+
+. Generate the `tooltips.json` file in this directory:
++
+----
+cd doc/
+mvn generate-resources
+----
+
+. Commit the `tooltips.json` file:
++
+----
+git add tooltips/
+git commit -m "Regenerated the tooltips for the UI"
+----
+
+. Follow the standard Merge Request process to contribute this update.
+
+For more details about how the tooltips are defined in the documentation, see link:../tools/syndesis-documentation-maven-plugin/README.adoc[]

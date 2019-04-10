@@ -1,0 +1,76 @@
+#!/bin/bash
+
+replace_template::label() {
+  echo "Replace template"
+}
+
+replace_template::doc() {
+  cat <<EOT
+Replace the Syndesis template with the new template for this version.
+Also update the global config to set the new version.
+
+.Rollback
+Replace the Syndesis template with the original template which has been backuped in this <<step-backup-resources, step>>.
+Also restore the old version number.
+EOT
+}
+
+replace_template::run() {
+    local backupdir=$1
+    local workdir=$2
+    local tag=$3
+    local migrationdir=$4
+
+    local new_template=$(template_path)
+    local name=$(extract_template_name $new_template)
+
+    echo "      * Replacing template '$name'"
+    oc replace --force -f $new_template
+
+    echo "      * Updating version to $tag"
+    update_version $tag
+}
+
+replace_template::rollback() {
+    local backupdir=${1}
+    local workdir=${2}
+    local cleanup=${3:-}
+    local current_tag=${4}
+
+    local orig_template=${backupdir}/resources/Template/syndesis.json
+    if [ ! -f $orig_template ]; then
+        orig_template=${backupdir}/resources/Template/syndesis-dev.json
+    fi
+
+    if [ -f $orig_template ]; then
+        local name=$(extract_template_name $orig_template)
+        echo "      * Restoring $name from $orig_template"
+        cat $orig_template | jq -M '.metadata |= del(.resourceVersion)' | oc replace --force -f -
+    else
+        echo "      * Original template not found, skipping restore"
+    fi
+
+    echo "      * Restoring old version $current_tag"
+    update_version $current_tag
+
+}
+
+extract_template_name() {
+    local file=$1
+
+    local ext="${file##*.}"
+    if [ $ext = "yml" ] || [ $ext = "yaml" ]; then
+        grep 'name:' $file | head -1 | sed -e 's/^[ ]*name:[ ]*//'
+    else
+        cat $file | jq -r .metadata.name
+    fi
+}
+
+update_version() {
+  local version=${1}
+  local version64="$(echo -n $version | base64)"
+  local old_version64=$(oc get secret syndesis-global-config -o jsonpath={.data.syndesis})
+  if [ "$version64" != "$old_version64" ]; then
+      oc patch secret syndesis-global-config -p "{\"data\": { \"syndesis\": \"$version64\" }}"
+  fi
+}

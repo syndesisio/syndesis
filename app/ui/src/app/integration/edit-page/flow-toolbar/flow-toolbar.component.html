@@ -1,0 +1,77 @@
+<syndesis-loading
+  [loading]="!(currentFlowService.loaded$ | async)"
+  [content]="content"
+>
+  <ng-template #content>
+    <div class="container-fluid">
+      <div class="row toolbar-pf">
+        <div class="col-sm-12">
+          <div class="toolbar-pf-actions">
+            <div class="form-group toolbar-pf-filter">
+              <strong> <span>Integration</span> </strong>
+            </div>
+            <div class="form-group" *ngIf="currentFlowService.isSaved()">
+              <label for="integrationName">Name</label>&nbsp;
+              <syndesis-editable-text
+                name="integrationName"
+                [value]="currentFlowService.integration.name"
+                (onSave)="nameUpdated($event)"
+              >
+              </syndesis-editable-text>
+            </div>
+            <div *ngIf="!hideButtons" class="toolbar-pf-action-right">
+              <button
+                class="btn btn-default"
+                (click)="flowPageService.cancel()"
+                *ngIf="flowPageService.showCancel"
+              >
+                Cancel
+              </button>
+              <button
+                class="btn btn-primary"
+                (click)="flowPageService.done()"
+                [disabled]="flowPageService.doneDisabled"
+                *ngIf="flowPageService.showDone"
+              >
+                Done
+              </button>
+              <button
+                class="btn btn-default"
+                (click)="save()"
+                *ngIf="!flowPageService.showDone"
+                [disabled]="
+                  (currentFlowService.currentFlowErrors$ | async).length ||
+                  flowPageService.saveInProgress ||
+                  flowPageService.publishInProgress
+                "
+              >
+                <span
+                  *ngIf="flowPageService.saveInProgress"
+                  class="spinner spinner-sm spinner-inline"
+                ></span>
+                Save
+              </button>
+              <button
+                type="button"
+                class="btn btn-primary"
+                (click)="publish()"
+                *ngIf="!flowPageService.showDone"
+                [disabled]="
+                  (currentFlowService.currentFlowErrors$ | async).length ||
+                  flowPageService.saveInProgress ||
+                  flowPageService.publishInProgress
+                "
+              >
+                <span
+                  *ngIf="flowPageService.publishInProgress"
+                  class="spinner spinner-sm spinner-inline"
+                ></span>
+                Publish
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</syndesis-loading>

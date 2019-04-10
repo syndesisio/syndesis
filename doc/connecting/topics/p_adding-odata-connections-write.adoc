@@ -1,0 +1,57 @@
+// This module is included in the following assemblies:
+// as_connecting-to-odata.adoc
+
+[id='adding-odata-connections-write_{context}']
+= Updating data that is managed by an OData service 
+
+In an integration, you can update a resource that is managed by an OData service in the middle 
+of a flow or to finish
+a simple integration. To do this, add an OData connection to the middle of 
+a flow or as a simple integration's 
+finish connection. 
+
+.Prerequisites
+* You created an OData connection.
+* You are creating or editing an integration and {prodname} is
+prompting you to choose a step. Or, {prodname} is 
+prompting you to choose a finish connection.  
+
+.Procedure
+
+. Click the OData connection that you want to use. Note that when 
+an OData connection updates a resource, the connection does not return anything.  
+
+. On the *Choose an Action* page, click the action that you want the 
+connection to perform:  
++
+* *Create* adds an entity to an OData resource. 
+* *Delete* removes an entity from an OData resource. 
+* *Update* changes an entity that is in an OData resource. 
+
+. To configure the action, select the OData resource that
+you want to update. 
++
+It is important for you to have an understanding of how the OData 
+resource that you are updating is set up. The backing data source for 
+an OData service determines the rules for updates and resolving conflicts. 
+For example, suppose an OData connection tries to create a new entity but 
+an entity with that predicate key already exists. The OData service might 
+overwrite the existing entity, or it might update some fields in the 
+existing entity, or it might ignore the operation. It is up to you to 
+know how the OData service behaves in this situation.
+ 
+. Click *Done*. 
+
+.Result
+The connection appears in the integration flow in the location where
+you added it. 
+
+.Next steps
+Ensure that the input to an OData connection that updates a resource 
+is a single entity or a single property. The input cannot be a collection. 
+This might require a *Split* step before the OData connection. 
+
+Add a *Data Mapper* step before the OData connection. You must 
+map source fields that provide the data that is required to create a 
+new entity, to update an entity, or to delete an entity. 
+ 

@@ -1,0 +1,5 @@
+/.history/
+.DS_Store
+rest-builder-image-generator.jar
+project/target
+src/main/docker/project/.m2

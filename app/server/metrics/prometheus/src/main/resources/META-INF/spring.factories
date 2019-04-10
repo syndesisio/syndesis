@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=io.syndesis.server.metrics.prometheus.PrometheusConfigurationProperties

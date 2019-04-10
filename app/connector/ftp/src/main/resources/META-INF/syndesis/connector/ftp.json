@@ -1,0 +1,392 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Upload a file to the FTP server",
+      "descriptor": {
+        "configuredProperties": {},
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Upload to FTP server",
+            "name": "Upload to FTP server",
+            "properties": {
+              "directoryName": {
+                "deprecated": false,
+                "displayName": "FTP directory",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "FTP directory name in which to upload file",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "fileExist": {
+                "defaultValue": "Override",
+                "deprecated": false,
+                "displayName": "If file exists",
+                "enum": [
+                  {
+                    "label": "Override",
+                    "value": "Override"
+                  },
+                  {
+                    "label": "Append",
+                    "value": "Append"
+                  },
+                  {
+                    "label": "Fail",
+                    "value": "Fail"
+                  },
+                  {
+                    "label": "Ignore",
+                    "value": "Ignore"
+                  },
+                  {
+                    "label": "Move",
+                    "value": "Move"
+                  },
+                  {
+                    "label": "TryRename",
+                    "value": "TryRename"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Desired behavior when the file being uploaded is already on the server",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "fileName": {
+                "deprecated": false,
+                "displayName": "File name expression",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Simple language expression that resolves to a file name",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "tempFileName": {
+                "deprecated": false,
+                "displayName": "Temporary file name while copying",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Temporary file name while copying",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "tempPrefix": {
+                "deprecated": false,
+                "displayName": "Temporary file prefix while copying",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Temporary file prefix while copying",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:ftp-upload-connector",
+      "name": "Upload",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Download a file from the FTP server",
+      "descriptor": {
+        "configuredProperties": {},
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Download from FTP server",
+            "name": "Download from FTP server",
+            "properties": {
+              "delay": {
+                "defaultValue": "5000",
+                "deprecated": false,
+                "displayName": "Time interval before the next poll",
+                "group": "consumer",
+                "javaType": "java.lang.Integer",
+                "kind": "parameter",
+                "labelHint": "Wait this amount of time between polls",
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              },
+              "delete": {
+                "defaultValue": "false",
+                "deprecated": false,
+                "displayName": "Delete file after download",
+                "enum": [
+                  {
+                    "label": "No",
+                    "value": "false"
+                  },
+                  {
+                    "label": "Yes",
+                    "value": "true"
+                  }
+                ],
+                "group": "consumer",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "labelHint": "Delete the file from the server after downloading it",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "directoryName": {
+                "deprecated": false,
+                "displayName": "FTP directory",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "FTP directory name from which to download file",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "fileName": {
+                "deprecated": false,
+                "displayName": "File name expression",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Simple language expression that resolves to a file name",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "initialDelay": {
+                "defaultValue": "1000",
+                "deprecated": false,
+                "displayName": "Interval before polling starts",
+                "group": "consumer",
+                "javaType": "java.lang.Integer",
+                "kind": "parameter",
+                "labelHint": "Wait amount of time before starting to poll",
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:ftp-download-connector",
+      "name": "Download",
+      "pattern": "From"
+    }
+  ],
+  "componentScheme": "ftp",
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Download and upload files.",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAyMjEuMSAzMDAiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZT48L3N0eWxlPjxjaXJjbGUgY3g9IjExMS42IiBjeT0iMTkxLjciIHI9Ijg4LjYiIGZpbGw9IiMwMGI5ZTQiLz48cGF0aCBkPSJNMTEwLjYgOTkuOWMtNTAuOCAwLTkyLjIgNDEuNC05Mi4yIDkyLjIgMCA1MC45IDQxLjQgOTIuMiA5Mi4yIDkyLjIgNTAuOCAwIDkyLjItNDEuNCA5Mi4yLTkyLjIgMC01MC44LTQxLjQtOTIuMi05Mi4yLTkyLjJ6bTcyLjYgNDRjLTcgNi44LTEzLjMgMTQuNC0xOC42IDIyLjctLjUtLjEtLjktLjItMS40LS4yLTEgMC0xLjkuMy0yLjguNy00LjYtNi41LTguNC0xMy4xLTExLjMtMTkuNiAxLjctMS4xIDIuOC0zIDIuOC01LjIgMC0uNi0uMS0xLjEtLjMtMS43IDYuMy00LjQgMTEuNy05LjMgMTYtMTQuMyA2IDUuMSAxMS4yIDExIDE1LjYgMTcuNnpNNjguOCAxNjkuMWM0LjgtLjUgOS42LTEuMiAxNC41LTIgMSAyIDMuMSAzLjQgNS41IDMuNC44IDAgMS43LS4yIDIuNC0uNSA2LjIgOC45IDEzLjUgMTcuMSAyMS44IDI0LjQgOC43IDcuNiAxOC4yIDE0IDI4LjEgMTkuMS0uMS41LS4yIDEtLjIgMS41IDAgMi40IDEuNCA0LjUgMy40IDUuNS0xLjEgNy4yLTEuNiAxNC41LTEuNSAyMS42LTEuMi4zLTIuMy44LTMuMiAxLjYtOS4zLTYuNi0xOS40LTEyLjItMzAuMS0xNi41LTEyLjktNS4yLTI2LjItOC40LTM5LjUtOS43LS44LTMuNS0zLjktNi4xLTcuNi02LjItMS02LjMtMS41LTEyLjctMS41LTE5LjIgMC01LjQuNC0xMC43IDEuMS0xNS45IDMuNS0uNSA2LjMtMy40IDYuOC03LjF6bS00LjEtNy45YzIuMy04LjcgNS41LTE3IDkuNy0yNC43IDIuNiA3LjkgNiAxNS43IDEwLjIgMjMuMS0xLjEgMS0xLjggMi4zLTIgMy44LTQuOC44LTkuNSAxLjUtMTQuMyAxLjktLjYtMS43LTEuOS0zLjItMy42LTQuMXptODEuOCA0Ny43Yy0xLjguMi0zLjQgMS4xLTQuNCAyLjQtOS43LTUtMTktMTEuMi0yNy42LTE4LjctOC4yLTcuMi0xNS4zLTE1LjMtMjEuNC0yNCAxLTEgMS42LTIuNCAxLjctMy45IDE3LjQtNC4xIDMzLjQtMTAuMyA0Ni43LTE3LjggMS4xIDEgMi41IDEuNiA0LjEgMS42LjQgMCAuOCAwIDEuMi0uMSAyLjkgNi44IDYuOCAxMy42IDExLjYgMjAuMy0uOSAxLjEtMS41IDIuNS0xLjUgNCAwIDEuNi42IDMuMSAxLjcgNC4yLTMuNyA3LTYuOSAxNC40LTkuMyAyMi4yLTEuMSAzLjItMiA2LjUtMi44IDkuOHptLTIuMS05Ny4yYzcuNCAzLjEgMTQuMiA3LjIgMjAuNCAxMi4xLTQuMSA0LjctOS4yIDkuMy0xNS4zIDEzLjUtMS4xLS44LTIuNC0xLjQtMy44LTEuNC0uMiAwLS4zIDAtLjUuMS0yLjMtOC43LTIuNy0xNy4xLS44LTI0LjN6bS0zMy44LTYuOGMxMS4xIDAgMjEuNyAyLjEgMzEuNSA1LjktMi4xIDcuNy0xLjcgMTYuNi43IDI1LjktMiAxLTMuNCAzLjEtMy40IDUuNSAwIC41LjEuOS4yIDEuNC0xMyA3LjQtMjguNyAxMy41LTQ1LjYgMTcuNS0xLjEtMS44LTMuMS0zLjEtNS4zLTMuMS0uNyAwLTEuNC4xLTIgLjQtNC41LTcuOS04LjEtMTYuMy0xMC43LTI0LjggNi40LTExIDE0LjYtMjAuNSAyNC40LTI4LjEgMy40LS40IDYuNy0uNiAxMC4yLS42em0tMTcuNCAxLjdjLTcuMSA2LjMtMTMuNCAxMy43LTE4LjUgMjItMS4yLTQuOS0yLjEtOS44LTIuNy0xNC43IDYuNi0zLjMgMTMuOC01LjggMjEuMi03LjN6bS0yMy42IDguNWMuNyA1LjUgMS44IDExIDMuMyAxNi41LTUuMSA4LjgtOS4xIDE4LjQtMTEuOCAyOC41aC0uNGMtMy44IDAtNi45IDIuNi03LjggNi4yLTguOC4xLTE3LjItLjUtMjUuMS0xLjggNy4yLTIxLjMgMjIuMy0zOSA0MS44LTQ5LjR6bS00Ni4zIDc3YzAtOC4zIDEuMi0xNi40IDMuNC0yNCA3LjYgMS4zIDE1LjcgMiAyNC4xIDIgLjcgMCAxLjMgMCAyLS4xLjYgMi43IDIuNiA0LjkgNS4yIDUuOC0uNyA1LjMtMS4xIDEwLjgtMS4xIDE2LjMgMCA2LjguNSAxMy41IDEuNiAyMC0yIC45LTMuNiAyLjctNC4zIDQuOC04LjkuMS0xNy43IDEuMS0yNi40IDMtMi44LTguNy00LjUtMTguMS00LjUtMjcuOHptNS45IDMxLjNjOC4yLTEuNyAxNi41LTIuNiAyNC45LTIuOC42IDMuOSAzLjkgNi44IDggNi44aC4xYzUuOCAxOS44IDE2LjYgMzcuMiAzMS4xIDUwLjEtMjkuNS01LjktNTMuNS0yNi42LTY0LjEtNTQuMXptODEuNCA1NS45Yy0zLjQgMC02LjgtLjItMTAuMi0uNkM4NCAyNjYgNzIgMjQ3LjcgNjUuNyAyMjYuNmMyLTEuMSAzLjYtMi45IDQuMS01LjIgMTIuOSAxLjMgMjUuNyA0LjQgMzguMiA5LjQgMTAuNCA0LjIgMjAuMiA5LjYgMjkuMiAxNi0uNSAxLS43IDIuMS0uNyAzLjMgMCA0LjIgMy4zIDcuNyA3LjUgOCAuNiA0LjUgMS41IDkgMi43IDEzLjQtMTEuMSA1LTIzLjMgNy44LTM2LjEgNy44em0zOS40LTkuNGMtMS00LjEtMS44LTguMi0yLjQtMTIuMy42LS4zIDEuMi0uNiAxLjgtMSAzLjEgMi44IDYgNS43IDguNyA4LjctMi42IDEuNi01LjMgMy4xLTguMSA0LjZ6bTExLjMtNi45Yy0zLTMuMy02LjEtNi40LTkuNS05LjQuNS0xLjEuOS0yLjMuOS0zLjYgMC0zLjgtMi43LTctNi4yLTcuOC0uMS03IC40LTE0IDEuNS0yMSAxLjgtLjIgMy4zLTEuMiA0LjMtMi42IDEyLjQgNC45IDI1LjMgNy44IDM4LjMgOC41LTYuNSAxNC40LTE2LjYgMjYuOC0yOS4zIDM1Ljl6bTMwLjItMzguNGMtMTMtLjYtMjUuOS0zLjQtMzguMy04LjMuMS0uNC4xLS44LjEtMS4yIDAtMi4zLTEuMy00LjMtMy4xLTUuNC44LTMuMiAxLjYtNi40IDIuNi05LjUgMi40LTcuNSA1LjQtMTQuNiA5LTIxLjQuNC4xLjkuMSAxLjMuMiAxIDAgMi0uMyAyLjktLjcgMi4xIDIuNCA0LjMgNC44IDYuNiA3LjEgNy42IDcuNCAxNS44IDEzLjYgMjQuMyAxOC42LS45IDctMi43IDE0LTUuNCAyMC42em0tMTcuMS00MS4yYy0yLjMtMi4yLTQuNC00LjUtNi41LTYuOC45LTEuMSAxLjQtMi40IDEuNC0zLjkgMC0xLjYtLjYtMy0xLjYtNC4xIDUuMS03LjggMTAuOS0xNSAxNy41LTIxLjQgOCAxMy4xIDEyLjUgMjguNiAxMi41IDQ1IDAgMy0uMiA2LS41IDguOS03LjktNC45LTE1LjYtMTAuNy0yMi44LTE3Ljd6IiBmaWxsPSIjZmZmIi8+PHBhdGggZD0iTTE2OC4xIDEuM2MtLjgtLjktMi0xLjMtMy4xLTEuM0g0LjRDMiAwIDAgMiAwIDQuNHYyOTEuM2MwIDIuNCAyIDQuNCA0LjQgNC40aDIxMi40YzIuNCAwIDQuNC0yIDQuNC00LjRWNTcuOGMwLTEuMS0uNC0yLjItMS4yLTNMMTY4LjEgMS4zem0xLjIgMTMuOWwzOS41IDQwLjdoLTM5LjVWMTUuMnpNOC43IDguN2gxNTEuOHY0OS42YzAgLjMuMS42LjIuOS0uMS4zLS4yLjYtLjIuOSAwIDIuNCAyIDQuNCA0LjQgNC40aDQ3LjV2MjI2LjdIOC43VjguN3oiLz48cGF0aCBmaWxsPSJub25lIiBkPSJNMCA0OC40aDIyMS43djc2SDB6Ii8+PHRleHQgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoNzcuODI1IDgyLjkxMykiIGZvbnQtc2l6ZT0iNDUuNDExIiBmb250LWZhbWlseT0iT3BlblNhbnMtQm9sZCIgZmlsbD0iIzIzMWYyMCI+ZnRwPC90ZXh0Pjwvc3ZnPg==",
+  "id": "ftp",
+  "name": "FTP",
+  "properties": {
+    "binary": {
+      "defaultValue": "true",
+      "deprecated": false,
+      "displayName": "Binary file transfer mode",
+      "enum": [
+        {
+          "label": "No",
+          "value": "false"
+        },
+        {
+          "label": "Yes",
+          "value": "true"
+        }
+      ],
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Indicate whether file transfer mode is binary",
+      "order": "8",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "connectTimeout": {
+      "defaultValue": "10000",
+      "deprecated": false,
+      "displayName": "Connect timeout",
+      "group": "common",
+      "javaType": "java.lang.Integer",
+      "kind": "parameter",
+      "labelHint": "Maximum number of milliseconds to wait for a connection to be established",
+      "order": "5",
+      "required": false,
+      "secret": false,
+      "type": "integer"
+    },
+    "disconnect": {
+      "defaultValue": "false",
+      "deprecated": false,
+      "displayName": "Disconnect from server after use",
+      "enum": [
+        {
+          "label": "No",
+          "value": "false"
+        },
+        {
+          "label": "Yes",
+          "value": "true"
+        }
+      ],
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Disconnect from the server after performing the action",
+      "order": "10",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "host": {
+      "deprecated": false,
+      "displayName": "Host",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "path",
+      "labelHint": "Host name of the FTP server to connect to",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "maximumReconnectAttempts": {
+      "defaultValue": "3",
+      "deprecated": false,
+      "displayName": "Maximum reconnect attempts",
+      "group": "common",
+      "javaType": "java.lang.Integer",
+      "kind": "parameter",
+      "labelHint": "Try to reconnect no more than this many times",
+      "order": "7",
+      "required": false,
+      "secret": false,
+      "type": "integer"
+    },
+    "passiveMode": {
+      "defaultValue": "true",
+      "deprecated": false,
+      "displayName": "Passive connection mode",
+      "enum": [
+        {
+          "label": "No",
+          "value": "false"
+        },
+        {
+          "label": "Yes",
+          "value": "true"
+        }
+      ],
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Indicates whether passive connection mode is being used",
+      "order": "9",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "password": {
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Password for connecting to the FTP server",
+      "order": "3",
+      "raw": true,
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "port": {
+      "defaultValue": "21",
+      "deprecated": false,
+      "displayName": "Port",
+      "group": "common",
+      "javaType": "java.lang.Integer",
+      "kind": "path",
+      "labelHint": "FTP port",
+      "order": "4",
+      "required": true,
+      "secret": false,
+      "type": "integer"
+    },
+    "reconnectDelay": {
+      "defaultValue": "1000",
+      "deprecated": false,
+      "displayName": "Reconnect delay",
+      "group": "common",
+      "javaType": "java.lang.Integer",
+      "kind": "parameter",
+      "labelHint": "Number of milliseconds to wait before trying to reconnect",
+      "order": "6",
+      "required": false,
+      "secret": false,
+      "type": "integer"
+    },
+    "timeout": {
+      "defaultValue": "30000",
+      "deprecated": false,
+      "displayName": "Data timeout",
+      "group": "common",
+      "javaType": "java.lang.Integer",
+      "kind": "parameter",
+      "labelHint": "Maximum number of milliseconds to wait for a reply",
+      "order": "11",
+      "required": false,
+      "secret": false,
+      "type": "integer"
+    },
+    "username": {
+      "deprecated": false,
+      "displayName": "User name",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "User name for connecting to the FTP server",
+      "order": "2",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

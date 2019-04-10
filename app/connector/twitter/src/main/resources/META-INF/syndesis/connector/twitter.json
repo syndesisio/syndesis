@@ -1,0 +1,177 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Search for tweets that mention you.",
+      "descriptor": {
+        "componentScheme": "twitter-timeline",
+        "configuredProperties": {
+          "delay": "30000",
+          "timelineType": "MENTIONS"
+        },
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "description": "Search result for tweets that mention you. The object represents one single status of a user",
+          "kind": "java",
+          "name": "Twitter Mention",
+          "type": "twitter4j.Status"
+        },
+        "propertyDefinitionSteps": []
+      },
+      "id": "io.syndesis:twitter-mention-action",
+      "name": "Mention",
+      "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Search for tweets that contain text that you specify.",
+      "descriptor": {
+        "componentScheme": "twitter-search",
+        "configuredProperties": {},
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "description": "Search result for tweets that contain text that you specify. The object represents one single status of a user",
+          "kind": "java",
+          "name": "Twitter Search",
+          "type": "twitter4j.Status"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify criteria for search",
+            "name": "Search criteria",
+            "properties": {
+              "delay": {
+                "componentProperty": false,
+                "defaultValue": 5000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Time delay before the next poll",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "duration"
+              },
+              "filterOld": {
+                "componentProperty": false,
+                "defaultValue": true,
+                "deprecated": false,
+                "displayName": "Ignore tweets previously found",
+                "group": "filter",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "label": "consumer,filter",
+                "labelHint": "Filter out old tweets that have previously been polled",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "boolean"
+              },
+              "keywords": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Keywords",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Multiple search values can be separated with comma",
+                "required": true,
+                "secret": false,
+                "tags": [],
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:twitter-search-action",
+      "name": "Search",
+      "pattern": "From"
+    }
+  ],
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Trigger integrations based on tweet content.",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAzMDAgMjQzLjgiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZT48L3N0eWxlPjxwYXRoIGQ9Ik05NC4zIDI0My44YzExMy4yIDAgMTc1LjEtOTMuOCAxNzUuMS0xNzUuMSAwLTIuNy0uMS01LjMtLjItOCAxMi04LjcgMjIuNS0xOS41IDMwLjctMzEuOS0xMSA0LjktMjIuOSA4LjItMzUuMyA5LjcgMTIuNy03LjYgMjIuNS0xOS43IDI3LjEtMzQtMTEuOSA3LjEtMjUuMSAxMi4yLTM5LjEgMTQuOUMyNDEuNCA3LjUgMjI1LjQgMCAyMDcuNyAwYy0zNCAwLTYxLjYgMjcuNi02MS42IDYxLjUgMCA0LjguNSA5LjUgMS42IDE0LTUxLjEtMi41LTk2LjUtMjctMTI2LjgtNjQuMi01LjMgOS4xLTguMyAxOS43LTguMyAzMC45IDAgMjEuNCAxMC45IDQwLjIgMjcuNCA1MS4yLTEwLjEtLjMtMTkuNi0zLjEtMjcuOS03Ljd2LjhjMCAyOS44IDIxLjIgNTQuNyA0OS40IDYwLjMtNS4yIDEuNC0xMC42IDIuMi0xNi4yIDIuMi00IDAtNy44LS40LTExLjYtMS4xIDcuOCAyNC41IDMwLjYgNDIuMiA1Ny41IDQyLjdDNzAuMSAyMDcuMiA0My41IDIxNyAxNC43IDIxN2MtNSAwLTkuOS0uMy0xNC43LS45IDI3LjIgMTcuNSA1OS42IDI3LjcgOTQuMyAyNy43IiBmaWxsPSIjMWRhMWYyIi8+PC9zdmc+",
+  "id": "twitter",
+  "name": "Twitter",
+  "properties": {
+    "accessToken": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Access Token",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "The access token",
+      "required": true,
+      "secret": true,
+      "tags": [],
+      "type": "string"
+    },
+    "accessTokenSecret": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Access Token Secret",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "The access token secret",
+      "required": true,
+      "secret": true,
+      "tags": [],
+      "type": "string"
+    },
+    "consumerKey": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Consumer API Key",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "The Consumer API key that Twitter provides when you register a client application.",
+      "order": 1,
+      "required": true,
+      "secret": true,
+      "tags": [
+        "oauth-client-id"
+      ],
+      "type": "string"
+    },
+    "consumerSecret": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "Consumer API Secret Key",
+      "group": "security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "The Consumer API secret key that Twitter provides when you register a client application.",
+      "order": 2,
+      "required": true,
+      "secret": true,
+      "tags": [
+        "oauth-client-secret"
+      ],
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

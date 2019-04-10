@@ -1,0 +1,50 @@
+// This module is included in the following assemblies:
+// as_copying-integrations-to-other-environments.adoc
+
+[id='about-copying-integrations_{context}']
+= About copying integrations
+
+Each {prodname} installation is an environment from which you
+can export an integration. Exporting an integration downloads a zip file
+that contains the information needed to recreate the integration in a
+different {prodname} environment.
+
+In an environment, each integration can have only one *Draft* version.
+
+The result of importing an integration depends on:
+
+* Whether the integration was previously imported
+* Whether a connection that the integration uses was previously imported
+
+{prodname} uses an internal identifier for each integration and each
+connection to determine whether it already exists in the environment that
+it is being imported into. If you change the name of an integration or
+connection, {prodname} recognizes it as the same integration or connection,
+which just has a different name.
+
+The following table describes the possible results of importing
+an integration:
+
+[cols=2*,options="header"]
+|===
+|In the importing environment:
+|What the import operation does:
+
+|The integration has not been previously imported.
+|Creates the integration. The integration is in the *Draft* state.
+
+|The integration has been previously imported.
+|{prodname} updates the integration. The updated integration is in
+the *Draft* state. If there was a *Draft* version of this integration,
+it is lost.
+
+|The imported integration uses a connection that did not exist in the
+environment before the import operation.
+|{prodname} creates a connection that has the same settings except for
+secrets. You must review each new connection. If a connection is not
+completely configured for its new environment then you must add the
+missing settings. For example, you might need to obtain secret settings by
+registering this {prodname} environment as a client of the application that this
+connection accesses.
+
+|===

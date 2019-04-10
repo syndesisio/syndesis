@@ -1,0 +1,33 @@
+<syndesis-loading [loading]="!currentFlowService.loaded" [content]="content">
+  <ng-template #content>
+    <div class="syn-scrollable">
+      <div class="syn-scrollable--body">
+        <div class="container-fluid">
+          <div class="row row-cards-pf cards">
+            <div class="card-pf">
+              <div class="card-pf-heading">
+                <h1 class="card-pf-title">
+                  {{ step?.connection.name }} - Choose an Action
+                </h1>
+                <p>Choose an action for the selected connection.</p>
+                <!-- Toolbar -->
+                <syndesis-list-toolbar
+                  [items]="actions$"
+                  [filteredItems]="filteredActions$"
+                ></syndesis-list-toolbar>
+              </div>
+              <div class="card-pf-body">
+                <!-- Action List -->
+                <syndesis-list-actions
+                  [actions]="filteredActions$ | async"
+                  [loading]="loading$ | async"
+                  (onSelected)="onSelected($event.item)"
+                ></syndesis-list-actions>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</syndesis-loading>

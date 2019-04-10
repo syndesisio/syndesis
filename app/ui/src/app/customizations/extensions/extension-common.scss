@@ -1,0 +1,12 @@
+.extension__title {
+  margin: 0;
+
+  &__id {
+    font-size: 0.5em;
+    margin-left: 10px;
+  }
+}
+
+.extension__group:not(:last-child) {
+  margin-bottom: 35px;
+}

@@ -1,0 +1,18 @@
+{
+  "inputShape" : {
+    "kind" : "json-schema",
+    "type" : "DEMO_ADD_IN",
+    "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"DEMO_ADD_IN\",\"properties\":{\"A\":{\"type\":\"integer\",\"required\":true},\"B\":{\"type\":\"integer\",\"required\":true}}}"
+  },
+  "outputShape" : {
+    "kind" : "json-schema",
+    "type" : "DEMO_ADD_OUT",
+    "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"DEMO_ADD_OUT\",\"properties\":{\"C\":{\"type\":\"integer\",\"required\":true}}}"
+  },
+  "properties" : {
+    "template" : [ {
+      "displayValue" : "template",
+      "value" : "DEMO_ADD(INTEGER ${body[A]}, INTEGER ${body[B]}, INTEGER ${body[C]})"
+    } ]
+  }
+}

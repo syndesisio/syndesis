@@ -1,42 +1,91 @@
-# See https://help.github.com/ignore-files/ for more about ignoring files.
+# Compiled class file
+*.class
 
-# ignore built storybook
-doc/syndesis
-doc/auto-form
-doc/ui
-doc/app
+# Log file
+*.log
 
-# @syndesis/syndesis
-syndesis/public/config.json
-syndesis/public/config.json.bak
-syndesis/public/atlasmap/
-syndesis/tapes/ht*
-.puppeteer_data
+# BlueJ files
+*.ctxt
 
-# @syndesis/models
-packages/models/src/models.d.ts
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
 
-# dependencies
-node_modules
+# Package Files #
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
 
-# testing
-coverage
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
 
-# production
-build
-dist
+# IDEs and editors
+/.idea
+.idea
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+*.launch
+.settings/
+.vscode/
+.checkstyle
+.pmd
+.pmdruleset.xml
+.factorypath
+.sts4-cache/
 
-# misc
+# System Files
 .DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+Thumbs.db
+.directory
 
+# Build generated files
+node_modules
+target
+ui/bin
+ui/node
+*~
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-.idea
-.cache
-.rts2_cache*
+###
+# app/ui-react
+###
+
+# ignore built storybook
+ui-react/doc/syndesis
+ui-react/doc/auto-form
+ui-react/doc/ui
+ui-react/doc/app
+
+# @syndesis/syndesis
+ui-react/syndesis/public/config.json
+ui-react/syndesis/public/config.json.bak
+ui-react/syndesis/public/atlasmap/
+ui-react/syndesis/tapes/ht*
+ui-react/.puppeteer_data
+
+# @syndesis/models
+ui-react/packages/models/src/models.d.ts
+
+# testing
+ui-react/*/coverage
+
+# production
+ui-react/*/build
+ui-react/*/dist
+
+# misc
+ui-react/syndesis/.env.local
+ui-react/syndesis/.env.development.local
+ui-react/syndesis/.env.test.local
+ui-react/syndesis/.env.production.local
+
+# build cache
+ui-react/*/.cache
+ui-react/*/.rts2_cache*

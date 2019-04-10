@@ -1,0 +1,111 @@
+<div class="row">
+  <div class="col-md-12">
+    <h1>Support</h1>
+      <p>To obtain support, download diagnostic information through this page and open a request on the <a [attr.href]="'links.contactus' | synI18n">Red Hat Customer portal</a>.
+        If you have any issues please see the support <a href="https://access.redhat.com/solutions/2112">instructions</a>.</p>
+    <h2>Version</h2>
+    <syndesis-loading [loading]="!(version$ | async)" [content]="content">
+      <ng-template #content>
+        <div *ngIf="version$ | async as versionInfo">
+          <dl class="dl-horizontal" *ngIf="versionInfo.version">
+            <dt>{{ 'shared.project.name' | synI18n }}:</dt>
+            <dd id="productVersion">{{ versionInfo.version }}</dd>
+          </dl>
+          <dl class="dl-horizontal" *ngIf="versionInfo['build-id']">
+            <dt>{{ 'support.buildid' | synI18n }}:</dt>
+            <dd id="buildID">{{ versionInfo['build-id'] }}</dd>
+          </dl>
+          <dl class="dl-horizontal" *ngIf="versionInfo['commit-id']">
+            <dt>{{ 'support.commitid' | synI18n }}:</dt>
+            <dd id="commitID">{{ versionInfo['commit-id'] }}</dd>
+          </dl>
+        </div>
+      </ng-template>
+    </syndesis-loading>
+
+    <h2>Download Troubleshooting Diagnostics</h2>
+    <p>System level and application level diagnostics will be captured since both are required to troubleshoot any issues. Usernames
+      and passwords are not present in the downloaded zip file.</p>
+
+    <div class="row-cards-pf">
+      <div class="card-pf">
+        <div class="card-pf-body">
+          <pfng-inline-notification [header]="'Unable to download diagnostics.'" [message]="'Try download again.'" [dismissable]="true"
+            [type]="notificationType" [hidden]="notificationHidden">
+          </pfng-inline-notification>
+          <p><strong>Select the integrations to capture diagnostics for:</strong></p>
+          <form novalidatef>
+            <fieldset class="container-fluid form-group">
+              <div class="radio">
+                <label>
+                  <input type="radio" id="alllogs" name="logs" [value]="true" [(ngModel)]="allLogsSelected" (click)="deselectAll()"> All integrations
+                </label>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="radio">
+                    <label>
+                      <input type="radio" id="specificlogs" name="logs" [value]="false" [(ngModel)]="allLogsSelected"> Specific integrations
+                    </label>
+                  </div>
+                  <!-- Toolbar -->
+                  <div class="col-xs-12">
+                    <div *ngIf="!allLogsSelected" class="container-fluid">
+                      <pfng-toolbar [config]="toolbarConfig" (onFilterChange)="filterChanged($event)" (onSortChange)="sortChanged($event)" [viewTemplate]="viewTemplate">
+                        <ng-template #viewTemplate>
+                          <div class="toolbar-pf-action-right">
+                            <div class="form-group">
+                              <strong>{{ selectedItems() }}</strong> of
+                              <strong>{{ totalItems() }}</strong> Items
+                            </div>
+                            <div class="form-group" *ngIf="filtersText">
+                              <a role="button" (click)="selectAllMatchingFiler(pfnglist)">Select All</a>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </pfng-toolbar>
+                      <div class="row">
+                        <!-- List displayed here -->
+                        <syndesis-loading>
+                          <pfng-list [items]="itemsInPage" [config]="listConfig" [itemTemplate]="listItemMain" (onSelectionChange)="handleSelectionChange($event)"
+                            #pfnglist>
+                          </pfng-list>
+                          <pfng-pagination [config]="paginationConfig" (onPageSizeChange)="handlePageSize($event)" (onPageNumberChange)="handlePageNumber($event)">
+                          </pfng-pagination>
+                        </syndesis-loading>
+                        <!-- One list item, main row -->
+                        <ng-template #listItemMain let-item="item">
+                          <div class="list-pf-content list-pf-content-flex">
+                            <div class="list-pf-content-wrapper">
+                              <div class="list-pf-main-content">
+                                <div class="list-pf-title">
+                                  {{ item.name }}
+                                </div>
+                                <div class="list-pf-description">
+                                  <i>{{ item.description }}</i>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </fieldset>
+            <div class="row vertical-align">
+              <div class="col-xs-12">
+                <button (click)="onSubmit()" class="btn btn-primary">Download</button>
+                <div class="vertical-align" *ngIf="saving">
+                  <span class="spinner spinner-sm spinner-inline"></span>
+                  Creating archive...
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

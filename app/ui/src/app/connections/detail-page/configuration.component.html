@@ -1,0 +1,57 @@
+<ng-container *ngIf="formModel.length > 0">
+  <h3>{{ connection.connector?.name }} Configuration</h3>
+  <div *ngIf="connection.isDerived">
+    <p>This connection is configured using OAuth. Use the validate button to check if the connection is still authorized</p>
+    <div *ngIf="message" class="alert {{ messageOutcome === 'SUCCESS' ? 'alert-success' : 'alert-warning' }}"><span class="pficon {{ messageOutcome === 'SUCCESS' ? 'pficon-ok' : 'pficon-warning-triangle-o' }}"></span>{{ message }}</div>
+    <p>
+      <syndesis-connection-configuration-validation [connection]="connection"
+      [formGroup]="formGroup"></syndesis-connection-configuration-validation>
+    </p>
+    <p>
+      <button type="button" class="btn btn-primary" (click)="reconnect()">Reconnect</button>
+    </p>
+  </div>
+  <div *ngIf="!connection.isDerived">
+    <form class="form-horizontal"
+          [formGroup]="formGroup">
+      <syndesis-form-control *ngFor="let controlModel of formModel"
+                             [group]="formGroup"
+                             [model]="controlModel"></syndesis-form-control>
+      <ng-container *ngIf="mode === 'view'">
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <button type="button"
+                    class="btn btn-primary"
+                    (click)="edit()">
+              Edit
+            </button>
+          </div>
+        </div>
+      </ng-container>
+      <ng-container *ngIf="mode === 'edit'">
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <syndesis-connection-configuration-validation [connection]="connection"
+                                                          [formGroup]="formGroup"></syndesis-connection-configuration-validation>
+          </div>
+        </div>
+        <div class="form-group">
+          <div class="col-sm-offset-3 col-sm-9">
+            <button type="button"
+                    class="btn btn-default"
+                    [disabled]="saving"
+                    (click)="cancel()">
+              Cancel
+            </button>
+            <button type="button"
+                    class="btn btn-primary"
+                    [disabled]="saving"
+                    (click)="save()">
+              <span *ngIf="saving" class="spinner spinner-sm spinner-inline"></span> Save
+            </button>
+          </div>
+        </div>
+      </ng-container>
+    </form>
+  </div>
+</ng-container>

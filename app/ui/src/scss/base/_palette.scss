@@ -1,0 +1,12 @@
+/// Centralized set of Application SASS color variables, not covered by PatternFly
+
+// This is the darker gray we are using as a result of the lighter grays in PatternFly
+// getting washed out on projectors, demo recordings, and BlueJeans screenshares.
+$color-pf-custom-gray: #e1e1e1;
+
+$colors: (
+  red: (
+    base:  red,
+    light: #FBE7E7
+  )
+);

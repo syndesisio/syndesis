@@ -1,0 +1,24 @@
+@import 'syndesis-sass';
+
+.syn-validation-error {
+  display: flex;
+  background-color: color(red, light);
+  border: 1px solid $color-pf-red-200;
+  padding: 5px 10px;
+  line-height: 24px;
+  margin-bottom: $gutter;
+
+  &__icon {
+    display: block;
+    width: 24px;
+    height: 24px;
+    line-height: 18px;
+    margin-right: 1em;
+    border: 3px solid $color-pf-red-200;
+    color: $color-pf-red-200;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: bold;
+    text-align: center;
+  }
+}

@@ -1,0 +1,24 @@
+// This module is included in the following assemblies:
+// as_connecting-to-applications.adoc
+
+[id='about-creating-connections_{context}']
+= About creating connections from {prodname} to applications
+
+To create a connection, you
+select the connector for the application that you want to connect to
+and then enter values in input fields to configure a connection to that application.
+The configuration details that you need to provide vary for each application.
+After configuring the connection, you give it a name that helps you
+distinguish it from any other connections to the same application.
+Optionally, you can specify a description of the connection.
+
+You can use the same connector to create any number of connections to that
+application. For example, you might use the AMQ connector to create
+three different connections. Each AMQ connection could specify a
+different broker.
+
+For examples, see: 
+
+* link:{LinkFuseOnlineConnectorGuide}#create-amq-connection_amq[Create AMQ connections]
+* link:{LinkFuseOnlineConnectorGuide}#creating-http-connections_http[Create HTTP and HTTPS connections]
+* link:{LinkFuseOnlineConnectorGuide}#creating-slack-connections_slack[Create Slack connections]

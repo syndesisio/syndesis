@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<hash>
+  <error>Desktop applications only support the oauth_callback value 'oob'</error>
+  <request>/oauth/request_token</request>
+</hash>

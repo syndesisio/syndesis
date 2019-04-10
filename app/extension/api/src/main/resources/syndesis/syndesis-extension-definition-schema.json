@@ -1,0 +1,354 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "id": "urn:jsonschema:io:syndesis:common:model:extension:Extension",
+  "properties": {
+    "schemaVersion": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "icon": {
+      "type": "string"
+    },
+    "extensionId": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "id": "urn:jsonschema:io:syndesis:common:model:action:Action",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "descriptor": {
+            "type": "object",
+            "id": "urn:jsonschema:io:syndesis:common:model:action:ActionDescriptor",
+            "properties": {
+              "propertyDefinitionSteps": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "id": "urn:jsonschema:io:syndesis:common:model:action:ActionDescriptor:ActionDescriptorStep",
+                  "properties": {
+                    "description": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "properties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "id": "urn:jsonschema:io:syndesis:common:model:connection:ConfigurationProperty",
+                        "properties": {
+                          "type": {
+                            "type": "string"
+                          },
+                          "defaultValue": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "description": {
+                            "type": "string"
+                          },
+                          "kind": {
+                            "type": "string"
+                          },
+                          "controlHint": {
+                            "type": "string"
+                          },
+                          "relation": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "id": "urn:jsonschema:io:syndesis:common:model:connection:PropertyRelation",
+                              "properties": {
+                                "when": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "id": "urn:jsonschema:io:syndesis:common:model:connection:PropertyRelation:When",
+                                    "properties": {
+                                      "value": {
+                                        "type": "string"
+                                      },
+                                      "id": {
+                                        "type": "string"
+                                      }
+                                    }
+                                  }
+                                },
+                                "action": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "javaType": {
+                            "type": "string"
+                          },
+                          "group": {
+                            "type": "string"
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "deprecated": {
+                            "type": "boolean"
+                          },
+                          "labelHint": {
+                            "type": "string"
+                          },
+                          "enum": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "id": "urn:jsonschema:io:syndesis:common:model:connection:ConfigurationProperty:PropertyValue",
+                              "properties": {
+                                "value": {
+                                  "type": "string"
+                                },
+                                "label": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          },
+                          "placeholder": {
+                            "type": "string"
+                          },
+                          "connectorValue": {
+                            "type": "string"
+                          },
+                          "tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "order": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    },
+                    "configuredProperties": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                }
+              },
+              "outputDataShape": {
+                "type": "object",
+                "id": "urn:jsonschema:io:syndesis:common:model:DataShape",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "any",
+                      "java",
+                      "json-schema",
+                      "json-instance",
+                      "xml-schema",
+                      "xml-instance",
+                      "none"
+                    ]
+                  },
+                  "specification": {
+                    "type": "string"
+                  },
+                  "exemplar": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              },
+              "inputDataShape": {
+                "type": "object",
+                "id": "urn:jsonschema:io:syndesis:common:model:DataShape",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "any",
+                      "java",
+                      "json-schema",
+                      "json-instance",
+                      "xml-schema",
+                      "xml-instance",
+                      "none"
+                    ]
+                  },
+                  "specification": {
+                    "type": "string"
+                  },
+                  "exemplar": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "actionType": {
+            "type": "string"
+          },
+          "pattern": {
+            "type": "string",
+            "enum": [
+              "From",
+              "Pipe",
+              "To"
+            ]
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "dependencies": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "id": "urn:jsonschema:io:syndesis:common:model:Dependency",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "MAVEN",
+              "EXTENSION",
+              "EXTENSION_TAG"
+            ]
+          }
+        }
+      }
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "Draft",
+        "Installed",
+        "Deleted"
+      ]
+    },
+    "uses": {
+      "type": "integer"
+    },
+    "userId": {
+      "type": "string"
+    },
+    "lastUpdated": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "createdDate": {
+      "type": "integer",
+      "format": "utc-millisec"
+    },
+    "extensionType": {
+      "type": "string",
+      "enum": [
+        "Steps",
+        "Connectors",
+        "Libraries"
+      ]
+    },
+    "id": {
+      "type": "string"
+    },
+    "properties": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "$ref": "urn:jsonschema:io:syndesis:common:model:connection:ConfigurationProperty"
+      }
+    },
+    "configuredProperties": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "string"
+      }
+    }
+  }
+}

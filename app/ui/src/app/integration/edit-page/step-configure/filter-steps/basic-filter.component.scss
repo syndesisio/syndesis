@@ -1,0 +1,59 @@
+@import 'syndesis-sass';
+.basic-filter {
+  .basic-filter-form {
+    .rule-buttons {
+      a,
+      a:hover,
+      a:active,
+      a:visited,
+      a:focus {
+        cursor: pointer;
+        font-size: 20px;
+        text-decoration: none;
+        vertical-align: middle;
+        padding: 6px;
+      }
+    }
+
+  }
+
+  .add-rule {
+    text-decoration: none;
+    padding: 8px;
+    color: #0088ce;
+    background: none;
+    border: none;
+  }
+
+  &-form {
+    .filterSettingsGroupContainer,
+    .rulesArrayContainer {
+      margin-bottom: 20px;
+      padding-bottom: 6px;
+
+      @media(max-width: 992px) {
+        border-bottom: 1px solid rgba(0,0,0,0.2);
+      }
+    }
+
+    .filterSettingsGroupContainer {
+      padding-bottom: 12px;
+
+      .form-control.predicate-select {
+        width: auto;
+        display: inline-block;
+        margin-left: 12px;
+      }
+    }
+
+    .rulesArrayContainer {
+      .rule-col {
+        padding-bottom: 12px;
+      }
+    }
+
+    .error.help-block {
+      color: $color-pf-red-200;
+    }
+  }
+}

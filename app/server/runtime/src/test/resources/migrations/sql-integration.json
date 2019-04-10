@@ -1,0 +1,94 @@
+{
+  "flows": [
+    {
+      "steps": [
+        {
+          "id": "step-sql-start",
+          "stepKind": "endpoint",
+          "action": {
+            "actionType": "connector",
+            "descriptor": {
+              "inputDataShape": {
+                "kind": "none",
+                "type": "SQL_PARAM_IN"
+              },
+              "outputDataShape" : {
+                "kind" : "json-schema",
+                "type" : "SQL_PARAM_OUT",
+                "name" : "SQL Result",
+                "description" : "Result of SQL [SELECT * FROM NAME WHERE ID=:#id]",
+                "specification" : "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_OUT\",\"properties\":{\"ID\":{\"type\":\"integer\",\"required\":true},\"FIRSTNAME\":{\"type\":\"string\",\"required\":true},\"LASTNAME\":{\"type\":\"string\",\"required\":true}}}}"
+              }
+            },
+            "id": "sql-start-connector",
+            "name": "Periodic SQL invocation",
+            "pattern": "From",
+            "tags": [],
+            "dependencies": []
+          },
+          "configuredProperties": {
+            "query": "select * from todo",
+            "schedulerExpression": "60000"
+          },
+          "connection": {},
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "id": "step-2",
+          "stepKind": "log",
+          "name": "Log",
+          "configuredProperties": {
+            "bodyLoggingEnabled": "true",
+            "contextLoggingEnabled": "false"
+          },
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "id": "step-3",
+          "stepKind": "mapper",
+          "name": "Data Mapper",
+          "action": {
+            "actionType": "step",
+            "descriptor": {}
+          },
+          "configuredProperties": {
+            "atlasmapping": "{}"
+          },
+          "metadata": {
+            "configured": "true"
+          }
+        },
+        {
+          "id": "step-4",
+          "stepKind": "endpoint",
+          "action": {
+            "actionType": "connector",
+            "descriptor": {
+              "componentScheme": "mock",
+              "configuredProperties": {
+                "name": "mockedResult"
+              }
+            },
+            "tags": [],
+            "dependencies": []
+          },
+          "configuredProperties": {
+          }
+        }
+      ]
+    }
+  ],
+  "id": "test-integration",
+  "description": "This is a test integration!",
+  "name": "Test Integration",
+  "tags": [
+    "sql"
+  ],
+  "updatedAt": 0,
+  "createdAt": 0,
+  "version": 1
+}

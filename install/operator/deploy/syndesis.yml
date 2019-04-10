@@ -1,0 +1,50 @@
+# Syndesis installation parameters with default values used
+# All of them are optional except 'routeHostname' for now
+apiVersion: "syndesis.io/v1alpha1"
+kind: "Syndesis"
+metadata:
+  name: "example"
+spec:
+  # Name of the route how to access Syndesis (optional)
+  #routeHostname: syndesis.192.168.64.79.nip.io
+  # Enable demo data (or not)
+  demoData: false
+  # Should deployment of integrations be enabled?
+  deployIntegrations: true
+  imageStreamNamespace: ""
+  integration:
+    # How many integration are allowed ?
+    limit: 1
+    # How to check for state changes ?
+    stateCheckInterval: 60
+  # Registry from where to pickup images
+  registry: docker.io
+  # Component specific configuration
+  components:
+    db:
+      resources:
+        limits:
+          memory: 255Mi
+        volumeCapacity: 1Gi
+      # DB user
+      user: syndesis
+      # DB name
+      database: syndesis
+      imageStreamNamespace: openshift
+    prometheus:
+      resources:
+        limits:
+          memory: 512Mi
+        volumeCapacity: 1Gi
+    server:
+      resources:
+        limits:
+          memory: 800Mi
+    meta:
+      resources:
+        limits:
+          memory: 512Mi
+        volumeCapacity: 1Gi
+    upgrade:
+      resources:
+        volumeCapacity: 1Gi

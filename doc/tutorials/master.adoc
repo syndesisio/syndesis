@@ -1,0 +1,37 @@
+
+include::topics/shared/attributes.adoc[]
+
+:prodname: Syndesis
+:prodversion: 7.3
+:imagesdir: topics
+:prodnameinurl: fuse-ignite
+:productpkg: red_hat_fuse
+:version: 7.3
+:parent-context: tutorials
+:location: upstream
+
+= {prodname} Sample Integration Tutorials
+:context: tutorials
+
+{prodname} lets you obtain data from an
+application or service, operate on that data if you need to, and then send the
+data to a completely different application or service. You can do all this
+without writing code.
+
+Explore {prodname} by creating sample integrations. 
+A <<comparison-of-sample-integrations_{context},comparison table>>
+can help you decide which of these integrations to create first: 
+
+* <<twitter-to-salesforce_{context}>>
+* <<salesforce-to-db_{context}>>
+* <<amq-to-rest-api_{context}>>
+
+See also: link:{LinkFuseOnlineIntegrationGuide}[{NameOfFuseOnlineIntegrationGuide}]
+
+include::topics/r_comparison-of-sample-integrations.adoc[leveloffset=+1]
+
+include::topics/as_t2sf-intro.adoc[leveloffset=+1]
+
+include::topics/as_sf2db-intro.adoc[leveloffset=+1]
+
+include::topics/as_amq2api-intro.adoc[leveloffset=+1]

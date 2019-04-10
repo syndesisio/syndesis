@@ -1,0 +1,42 @@
+<form class="form-inline duration-input">
+  <div class="input-group">
+    <input class="form-control duration-input__input"
+           [attr.accept]="model.accept"
+           [attr.autoComplete]="model.autoComplete"
+           [attr.list]="model.listId"
+           [attr.max]="model.max"
+           [attr.min]="model.min || 0"
+           [attr.multiple]="model.multiple"
+           [attr.step]="model.step"
+           [attr.tabindex]="model.tabIndex"
+           [autofocus]="model.autoFocus"
+           [dynamicId]="bindId && model.id"
+           [(ngModel)]="baseValue"
+           [ngModelOptions]="{standalone: true}"
+           [tooltip]="model.hint"
+           [ngClass]="elementControlClass"
+           [pattern]="model.pattern"
+           [placeholder]="model.placeholder"
+           [readonly]="model.readOnly"
+           [required]="model.required"
+           [spellcheck]="model.spellCheck"
+           [textMask]="{mask: (model.mask || false), showMask: model.mask && !(model.placeholder)}"
+           type="number"
+           (blur)="inputBlurTriggered($event)"
+           (change)="inputChangeTriggered($event)"
+           (focus)="inputFocusTriggered($event)" />
+  </div>
+  <div class="input-group">
+    <select [attr.id]="'select-' + model.id"
+            class="duration-input__select"
+            [(ngModel)]="duration"
+            [ngModelOptions]="{standalone: true}"
+            (blur)="selectBlurTriggered($event)"
+            (change)="selectChangeTriggered($event)"
+            (change)="selectChangeTriggered($event)"
+            (focus)="selectFocusTriggered($event)">
+      <option value="" disabled>Choose a time unit</option>
+      <option *ngFor="let duration of durations" [ngValue]="duration">{{ duration.label }}</option>
+    </select>
+  </div>
+</form>

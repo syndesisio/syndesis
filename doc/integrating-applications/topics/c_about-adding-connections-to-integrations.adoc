@@ -1,0 +1,21 @@
+// This module is included in the following assemblies:
+// as_connecting-to-applications.adoc
+
+[id='about-adding-connections-to-integrations_{context}']
+= About adding connections to integrations
+
+When you add a connection to a simple integration or to 
+an operation flow, {prodname} displays a list
+of the actions that the connection can perform when it connects to the
+application. You must select exactly one action. In a running integration,
+each connection performs only the action you choose. For example, when you
+add a Twitter connection as an integration's start connection, you might
+choose the *Mention* action, which monitors Twitter for tweets that
+mention your Twitter handle.
+
+Selection of some actions prompts you to specify one or more parameters,
+which configure the action.
+For example, if
+you add a Salesforce connection to an integration and choose the *On create*
+action then you must indicate the type of object whose creation you are
+interested in, such as a lead or a contact.
