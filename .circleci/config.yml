@@ -96,7 +96,7 @@ jobs:
       - run:
           name: Build app for GH-Pages
           command: |
-            PUBLIC_URL="https://syndesisio.github.io/syndesis-react-poc/app" yarn build --scope @syndesis/syndesis
+            PUBLIC_URL="https://syndesisio.github.io/syndesis-react/app" yarn build --scope @syndesis/syndesis
             cp -a syndesis/build doc/app
             cp syndesis/config.staging.json doc/app/config.json
 
