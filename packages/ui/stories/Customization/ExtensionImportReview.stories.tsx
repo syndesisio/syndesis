@@ -42,6 +42,7 @@ const stepsActionsLabel = 'Steps';
 const title = 'Import Review';
 const typeLabel = 'Type';
 const typeMsg = 'Step Extension';
+const uid = 'uid';
 
 const handleImport = () => action('Import clicked');
 
@@ -112,6 +113,7 @@ stories
           extensionDescription={description}
           extensionId={id}
           extensionName={name}
+          extensionUid={uid}
           i18nActionsLabel={stepsActionsLabel}
           i18nCancel={cancelBtnText}
           i18nDescriptionLabel={descriptionLabel}
@@ -137,6 +139,7 @@ stories
           cancelLink={'/extensions'}
           extensionId={id}
           extensionName={name}
+          extensionUid={uid}
           i18nActionsLabel={stepsActionsLabel}
           i18nCancel={cancelBtnText}
           i18nDescriptionLabel={descriptionLabel}

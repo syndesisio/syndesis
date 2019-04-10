@@ -1,6 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
 import {
   ExtensionDetail,
   ExtensionOverview,
@@ -207,141 +208,147 @@ stories
   .add(
     extensionDetailStory,
     () => (
-      <ExtensionDetail
-        extensionName={extension.name}
-        extensionUses={extension.uses}
-        i18nCancelText={'Cancel'}
-        i18nDelete={deleteText}
-        i18nDeleteModalMessage={
-          'Are you sure you want to delete the extension?'
-        }
-        i18nDeleteModalTitle={'Confirm Delete?'}
-        i18nIdMessage={idMsg}
-        i18nOverviewSectionTitle={overviewText}
-        i18nSupportsSectionTitle={supportedStepsText}
-        i18nUpdate={updateText}
-        i18nUpdateTip={updateTip}
-        i18nUsageSectionTitle={usageText}
-        integrationsSection={<div />}
-        onDelete={action(deleteActionText)}
-        onUpdate={action(updateActionText)}
-        overviewSection={
-          <ExtensionOverview
-            extensionDescription={extension.description}
-            extensionName={extension.name}
-            i18nDescription={descriptionText}
-            i18nLastUpdate={lastUpdateText}
-            i18nLastUpdateDate={lastUpdateDate}
-            i18nName={nameText}
-            i18nType={typeText}
-            i18nTypeMessage={stepTypeMessage}
-          />
-        }
-        supportsSection={
-          <ExtensionSupports
-            extensionActions={[
-              { name: 'action-1', description: 'description-1' },
-              { name: 'action-2', description: 'description-2' },
-              { name: 'action-3', description: 'description-3' },
-              { name: 'action-4', description: 'description-4' },
-              { name: 'action-5', description: 'description-5' },
-            ]}
-          />
-        }
-      />
+      <Router>
+        <ExtensionDetail
+          extensionName={extension.name}
+          extensionUses={extension.uses}
+          i18nCancelText={'Cancel'}
+          i18nDelete={deleteText}
+          i18nDeleteModalMessage={
+            'Are you sure you want to delete the extension?'
+          }
+          i18nDeleteModalTitle={'Confirm Delete?'}
+          i18nIdMessage={idMsg}
+          i18nOverviewSectionTitle={overviewText}
+          i18nSupportsSectionTitle={supportedStepsText}
+          i18nUpdate={updateText}
+          i18nUpdateTip={updateTip}
+          i18nUsageSectionTitle={usageText}
+          integrationsSection={<div />}
+          linkUpdateExtension={'/extensions/'}
+          onDelete={action(deleteActionText)}
+          overviewSection={
+            <ExtensionOverview
+              extensionDescription={extension.description}
+              extensionName={extension.name}
+              i18nDescription={descriptionText}
+              i18nLastUpdate={lastUpdateText}
+              i18nLastUpdateDate={lastUpdateDate}
+              i18nName={nameText}
+              i18nType={typeText}
+              i18nTypeMessage={stepTypeMessage}
+            />
+          }
+          supportsSection={
+            <ExtensionSupports
+              extensionActions={[
+                { name: 'action-1', description: 'description-1' },
+                { name: 'action-2', description: 'description-2' },
+                { name: 'action-3', description: 'description-3' },
+                { name: 'action-4', description: 'description-4' },
+                { name: 'action-5', description: 'description-5' },
+              ]}
+            />
+          }
+        />
+      </Router>
     ),
     { notes: inUseTestNotes }
   )
   .add(
     'connector extension not in use',
     () => (
-      <ExtensionDetail
-        extensionName={notUsedExtension.name}
-        extensionUses={notUsedExtension.uses}
-        i18nCancelText={'Cancel'}
-        i18nDelete={deleteText}
-        i18nDeleteModalMessage={
-          'Are you sure you want to delete the extension?'
-        }
-        i18nDeleteModalTitle={'Confirm Delete?'}
-        i18nDeleteTip={deleteTip}
-        i18nIdMessage={idMsg}
-        i18nOverviewSectionTitle={overviewText}
-        i18nSupportsSectionTitle={supportedConnectorsText}
-        i18nUpdate={updateText}
-        i18nUsageSectionTitle={usageText}
-        integrationsSection={<div />}
-        onDelete={action(deleteActionText)}
-        onUpdate={action(updateActionText)}
-        overviewSection={
-          <ExtensionOverview
-            extensionName={extension.name}
-            i18nDescription={descriptionText}
-            i18nLastUpdate={lastUpdateText}
-            i18nLastUpdateDate={lastUpdateDate}
-            i18nName={nameText}
-            i18nType={typeText}
-            i18nTypeMessage={connectorTypeMessage}
-          />
-        }
-        supportsSection={
-          <ExtensionSupports
-            extensionActions={[
-              { name: 'action-1', description: 'description-1' },
-              { name: 'action-2', description: 'description-2' },
-              { name: 'action-3', description: 'description-3' },
-              { name: 'action-4', description: 'description-4' },
-              { name: 'action-5', description: 'description-5' },
-            ]}
-          />
-        }
-      />
+      <Router>
+        <ExtensionDetail
+          extensionName={notUsedExtension.name}
+          extensionUses={notUsedExtension.uses}
+          i18nCancelText={'Cancel'}
+          i18nDelete={deleteText}
+          i18nDeleteModalMessage={
+            'Are you sure you want to delete the extension?'
+          }
+          i18nDeleteModalTitle={'Confirm Delete?'}
+          i18nDeleteTip={deleteTip}
+          i18nIdMessage={idMsg}
+          i18nOverviewSectionTitle={overviewText}
+          i18nSupportsSectionTitle={supportedConnectorsText}
+          i18nUpdate={updateText}
+          i18nUsageSectionTitle={usageText}
+          integrationsSection={<div />}
+          linkUpdateExtension={'/extensions/'}
+          onDelete={action(deleteActionText)}
+          overviewSection={
+            <ExtensionOverview
+              extensionName={extension.name}
+              i18nDescription={descriptionText}
+              i18nLastUpdate={lastUpdateText}
+              i18nLastUpdateDate={lastUpdateDate}
+              i18nName={nameText}
+              i18nType={typeText}
+              i18nTypeMessage={connectorTypeMessage}
+            />
+          }
+          supportsSection={
+            <ExtensionSupports
+              extensionActions={[
+                { name: 'action-1', description: 'description-1' },
+                { name: 'action-2', description: 'description-2' },
+                { name: 'action-3', description: 'description-3' },
+                { name: 'action-4', description: 'description-4' },
+                { name: 'action-5', description: 'description-5' },
+              ]}
+            />
+          }
+        />
+      </Router>
     ),
     { notes: notUsedTestNotes }
   )
   .add(
     'library extension in use',
     () => (
-      <ExtensionDetail
-        extensionName={libraryExtension.name}
-        extensionUses={libraryExtension.uses}
-        i18nCancelText={'Cancel'}
-        i18nDelete={deleteText}
-        i18nDeleteModalMessage={
-          'Are you sure you want to delete the extension?'
-        }
-        i18nDeleteModalTitle={'Confirm Delete?'}
-        i18nIdMessage={idMsg}
-        i18nOverviewSectionTitle={overviewText}
-        i18nSupportsSectionTitle={supportedLibrariesText}
-        i18nUpdate={updateText}
-        i18nUpdateTip={updateTip}
-        i18nUsageSectionTitle={usageText}
-        integrationsSection={<div />}
-        onDelete={action(deleteActionText)}
-        onUpdate={action(updateActionText)}
-        overviewSection={
-          <ExtensionOverview
-            extensionDescription={extension.description}
-            extensionName={extension.name}
-            i18nDescription={descriptionText}
-            i18nLastUpdate={lastUpdateText}
-            i18nLastUpdateDate={lastUpdateDate}
-            i18nName={nameText}
-            i18nType={typeText}
-            i18nTypeMessage={libraryTypeMessage}
-          />
-        }
-        supportsSection={
-          <ExtensionSupports
-            extensionActions={[
-              { name: 'action-1', description: 'description-1' },
-              { name: 'action-2', description: 'description-2' },
-              { name: 'action-3', description: 'description-3' },
-            ]}
-          />
-        }
-      />
+      <Router>
+        <ExtensionDetail
+          extensionName={libraryExtension.name}
+          extensionUses={libraryExtension.uses}
+          i18nCancelText={'Cancel'}
+          i18nDelete={deleteText}
+          i18nDeleteModalMessage={
+            'Are you sure you want to delete the extension?'
+          }
+          i18nDeleteModalTitle={'Confirm Delete?'}
+          i18nIdMessage={idMsg}
+          i18nOverviewSectionTitle={overviewText}
+          i18nSupportsSectionTitle={supportedLibrariesText}
+          i18nUpdate={updateText}
+          i18nUpdateTip={updateTip}
+          i18nUsageSectionTitle={usageText}
+          integrationsSection={<div />}
+          linkUpdateExtension={'/extensions/'}
+          onDelete={action(deleteActionText)}
+          overviewSection={
+            <ExtensionOverview
+              extensionDescription={extension.description}
+              extensionName={extension.name}
+              i18nDescription={descriptionText}
+              i18nLastUpdate={lastUpdateText}
+              i18nLastUpdateDate={lastUpdateDate}
+              i18nName={nameText}
+              i18nType={typeText}
+              i18nTypeMessage={libraryTypeMessage}
+            />
+          }
+          supportsSection={
+            <ExtensionSupports
+              extensionActions={[
+                { name: 'action-1', description: 'description-1' },
+                { name: 'action-2', description: 'description-2' },
+                { name: 'action-3', description: 'description-3' },
+              ]}
+            />
+          }
+        />
+      </Router>
     ),
     { notes: libraryTypeTestNotes }
   );

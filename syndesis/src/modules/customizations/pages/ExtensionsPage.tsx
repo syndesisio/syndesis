@@ -75,11 +75,6 @@ export default class ExtensionsPage extends React.Component {
     return i18n.t('customizations:usedByMulti', { count: numUsedBy });
   }
 
-  public handleUpdate(extensionId: string) {
-    // TODO: implement handleUpdate
-    // alert('Update extension ' + extensionId);
-  }
-
   public render() {
     return (
       <WithExtensionHelpers>
@@ -161,7 +156,7 @@ export default class ExtensionsPage extends React.Component {
                                       (extension: Extension, index: number) => (
                                         <ExtensionListItem
                                           key={index}
-                                          detailsPageLink={resolvers.extensions.extension(
+                                          detailsPageLink={resolvers.extensions.extension.details(
                                             { extension }
                                           )}
                                           extensionDescription={
@@ -196,8 +191,10 @@ export default class ExtensionsPage extends React.Component {
                                           i18nUsedByMessage={this.getUsedByMessage(
                                             extension
                                           )}
+                                          linkUpdateExtension={resolvers.extensions.extension.update(
+                                            { extension }
+                                          )}
                                           onDelete={handleDelete}
-                                          onUpdate={this.handleUpdate}
                                           usedBy={
                                             // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
                                             extension.uses as number

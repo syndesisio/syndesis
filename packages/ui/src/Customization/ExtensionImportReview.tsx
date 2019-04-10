@@ -35,6 +35,11 @@ export interface IExtensionImportReviewProps {
   extensionName: string;
 
   /**
+   * The unique, not for user consumption, identifier.
+   */
+  extensionUid: string;
+
+  /**
    * The localized label for the list of actions.
    */
   i18nActionsLabel: string;
@@ -88,9 +93,9 @@ export interface IExtensionImportReviewProps {
 
   /**
    * Callback for when the import button is clicked.
-   * @param extensionId the ID of the extension being imported/installed
+   * @param extensionUid the UID of the extension being imported/installed
    */
-  onImport(extensionId: string): void;
+  onImport(extensionUid: string): void;
 }
 
 /**
@@ -144,7 +149,7 @@ export class ExtensionImportReview extends React.Component<
   }
 
   public handleImport() {
-    return this.props.onImport(this.props.extensionId);
+    return this.props.onImport(this.props.extensionUid);
   }
 
   public render() {

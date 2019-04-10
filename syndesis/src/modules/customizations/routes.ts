@@ -12,7 +12,10 @@ export default include('/customizations', {
     list: '',
   }),
   extensions: include('extensions', {
-    extension: ':extensionId',
+    extension: include(':extensionId', {
+      details: '',
+      update: 'update',
+    }),
     import: 'import',
     list: '',
   }),

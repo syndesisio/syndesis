@@ -7,9 +7,10 @@ import {
   IImportAction,
 } from '../../src/Customization';
 
-const mockOnImport = jest.fn();
-
 export default describe('ExtensionImportReview', () => {
+  const mockOnImport = jest.fn();
+  const mockActionText = jest.fn();
+
   const fourActions = [
     {
       name: 'Action 1',
@@ -31,10 +32,6 @@ export default describe('ExtensionImportReview', () => {
 
   const oneAction = [fourActions[1]] as IImportAction[];
 
-  const actionText = (name: string, description: string) => {
-    return `${name} - ${description}`;
-  };
-
   const cancelBtnText = 'Cancel';
   const cancelLink = '/extensions';
   const description = 'An extension to Syndesis to do Logging';
@@ -48,6 +45,7 @@ export default describe('ExtensionImportReview', () => {
   const title = 'Import Review';
   const typeLabel = 'Type';
   const typeMsg = 'Step Extension';
+  const uid = 'uid';
 
   const props = {
     actions: fourActions,
@@ -55,6 +53,7 @@ export default describe('ExtensionImportReview', () => {
     extensionDescription: description,
     extensionId: id,
     extensionName: name,
+    extensionUid: uid,
     i18nActionsLabel: stepsActionsLabel,
     i18nCancel: cancelBtnText,
     i18nDescriptionLabel: descriptionLabel,
@@ -64,7 +63,7 @@ export default describe('ExtensionImportReview', () => {
     i18nNameLabel: nameLabel,
     i18nTitle: title,
     i18nTypeLabel: typeLabel,
-    i18nActionText: actionText,
+    i18nActionText: mockActionText,
     onImport: mockOnImport,
   } as IExtensionImportReviewProps;
 
@@ -72,18 +71,17 @@ export default describe('ExtensionImportReview', () => {
 
   beforeEach(() => {
     mockOnImport.mockReset();
+    mockActionText.mockReset();
   });
 
   it('Should render correctly with description', () => {
-    const componentWithDescription = (
+    const comp = (
       <MemoryRouter>
         <ExtensionImportReview {...props} />
       </MemoryRouter>
     );
 
-    const { getByText, queryAllByText, queryByText } = render(
-      componentWithDescription
-    );
+    const { getByText, queryAllByText } = render(comp);
 
     // title
     expect(queryAllByText(title)).toHaveLength(1);
@@ -113,24 +111,26 @@ export default describe('ExtensionImportReview', () => {
 
     // cancel button
     expect(queryAllByText(cancelBtnText)).toHaveLength(1);
-    expect(queryByText(cancelBtnText)).toHaveAttribute('href', cancelLink);
+    const cancelBtn = getByText(cancelBtnText);
+    fireEvent.click(cancelBtn);
+    expect(mockOnImport).toHaveBeenCalledTimes(1);
+    expect(cancelBtn).toHaveAttribute('href', cancelLink);
 
     // actions
-    fourActions.map(a => {
-      expect(queryByText(actionText(a.name, a.description))).toBeDefined();
+    fourActions.map((a, index) => {
+      expect(mockActionText.mock.calls[index][0]).toBe(a.name);
+      expect(mockActionText.mock.calls[index][1]).toBe(a.description);
     });
   });
 
   it('Should render correctly without a description', () => {
-    const componentWithoutDescription = (
+    const comp = (
       <MemoryRouter>
         <ExtensionImportReview {...noDescriptionProps} actions={oneAction} />
       </MemoryRouter>
     );
 
-    const { getByText, queryAllByText, queryByText } = render(
-      componentWithoutDescription
-    );
+    const { getByText, queryAllByText, queryByText } = render(comp);
 
     // title
     expect(queryAllByText(title)).toHaveLength(1);
@@ -160,11 +160,58 @@ export default describe('ExtensionImportReview', () => {
 
     // cancel button
     expect(queryAllByText(cancelBtnText)).toHaveLength(1);
-    expect(queryByText(cancelBtnText)).toHaveAttribute('href', cancelLink);
+    const cancelBtn = getByText(cancelBtnText);
+    fireEvent.click(cancelBtn);
+    expect(mockOnImport).toHaveBeenCalledTimes(1);
+    expect(cancelBtn).toHaveAttribute('href', cancelLink);
 
     // actions
-    oneAction.map(a => {
-      expect(queryByText(actionText(a.name, a.description))).toBeDefined();
+    oneAction.map((a, index) => {
+      expect(mockActionText.mock.calls[index][0]).toBe(a.name);
+      expect(mockActionText.mock.calls[index][1]).toBe(a.description);
     });
+  });
+
+  it('Should render correctly without actions', () => {
+    const comp = (
+      <MemoryRouter>
+        <ExtensionImportReview {...noDescriptionProps} actions={undefined} />
+      </MemoryRouter>
+    );
+
+    const { getByText, queryAllByText, queryByText } = render(comp);
+
+    // title
+    expect(queryAllByText(title)).toHaveLength(1);
+
+    // id label
+    expect(queryAllByText(idLabel)).toHaveLength(1);
+
+    // id value
+    expect(queryAllByText(id)).toHaveLength(1);
+
+    // name label
+    expect(queryAllByText(nameLabel)).toHaveLength(1);
+
+    // name value
+    expect(queryAllByText(name)).toHaveLength(1);
+
+    // description label
+    expect(queryAllByText(descriptionLabel)).toHaveLength(1);
+
+    // description value
+    expect(queryByText(description)).toBeNull();
+
+    // import button
+    expect(queryAllByText(importBtnText)).toHaveLength(1);
+    fireEvent.click(getByText(importBtnText));
+    expect(mockOnImport).toHaveBeenCalledTimes(1);
+
+    // cancel button
+    expect(queryAllByText(cancelBtnText)).toHaveLength(1);
+    const cancelBtn = getByText(cancelBtnText);
+    fireEvent.click(cancelBtn);
+    expect(mockOnImport).toHaveBeenCalledTimes(1);
+    expect(cancelBtn).toHaveAttribute('href', cancelLink);
   });
 });

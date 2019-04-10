@@ -12,6 +12,7 @@ const description =
 const importText = 'Import Extension';
 const importTip = 'Import extension from your filesystem';
 const title = 'Extensions';
+const uid = 'uid';
 
 const extensions = [
   <ExtensionListItem
@@ -29,8 +30,8 @@ const extensions = [
     i18nExtensionType={'Step Extension'}
     i18nUpdate={'Update'}
     i18nUsedByMessage={'Used by 0 integration(s)'}
+    linkUpdateExtension={uid}
     onDelete={action('Delete id-0')}
-    onUpdate={action('Update id-0')}
     usedBy={0}
   />,
   <ExtensionListItem
@@ -47,8 +48,8 @@ const extensions = [
     i18nExtensionType={'Step Extension'}
     i18nUpdate={'Update'}
     i18nUsedByMessage={'Used by 1 integration(s)'}
+    linkUpdateExtension={uid}
     onDelete={action('Delete id-1')}
-    onUpdate={action('Update id-1')}
     usedBy={1}
   />,
   <ExtensionListItem
@@ -65,8 +66,8 @@ const extensions = [
     i18nExtensionType={'Step Extension'}
     i18nUpdate={'Update'}
     i18nUsedByMessage={'Used by 2 integration(s)'}
+    linkUpdateExtension={uid}
     onDelete={action('Delete id-2')}
-    onUpdate={action('Update id-2')}
     usedBy={2}
   />,
 ];

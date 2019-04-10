@@ -2,6 +2,7 @@ import { Row, Table } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IExtensionIntegration {
+  id: string; // used to create link to integration details page
   name: string;
   description: string;
 }
@@ -27,7 +28,7 @@ export class ExtensionIntegrationsTable extends React.Component<
       { rowData }: { rowData: any }
     ) => {
       // rowData is an Integration type so 'name' property is what makes the integration unique
-      const onClick = () => this.onIntegrationSelected(rowData.name);
+      const onClick = () => this.onIntegrationSelected(rowData.id);
       return (
         <Table.Cell>
           <a href="javascript:void(0)" onClick={onClick}>
