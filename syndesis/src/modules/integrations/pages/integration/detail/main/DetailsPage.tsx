@@ -4,16 +4,18 @@ import { Integration } from '@syndesis/models';
 // import { Loader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { Translation } from 'react-i18next';
+import { IntegrationDetailNavBar } from '../shared/IntegrationDetailNavBar';
 
 /**
  * @integrationId - the ID of the integration for which details are being displayed.
  */
-export interface IHistoryPageParams {
+export interface IDetailsPageParams {
   integration: Integration;
   integrationId: string;
 }
 
-export interface IHistoryPageState {
+export interface IDetailsPageState {
   integration: Integration;
 }
 
@@ -28,10 +30,13 @@ export interface IHistoryPageState {
 export class HistoryPage extends React.Component {
   public render() {
     return (
-      <WithRouteData<IHistoryPageParams, IHistoryPageState>>
+      <WithRouteData<IDetailsPageParams, IDetailsPageState>>
         {({ integrationId }, { integration }, { history }) => {
           return (
             <div>
+              <Translation ns={['integration', 'shared']}>
+                {t => <IntegrationDetailNavBar integration={integration} />}
+              </Translation>
               <p>This is the Integration Detail History page.</p>
             </div>
           );
