@@ -41,7 +41,7 @@ export class IntegrationEditorApp extends React.Component {
           <WithClosedNavigation>
             <Breadcrumb>
               <Link to={resolvers.list()}>Integrations</Link>
-              <Link to={resolvers.integration.details({ integration })}>
+              <Link to={resolvers.detail.details({ integration })}>
                 {integration.name}
               </Link>
               <span>Add to integration</span>

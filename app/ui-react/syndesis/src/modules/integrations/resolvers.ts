@@ -250,9 +250,9 @@ export default {
       ),
     },
   },
-  integration: {
+  detail: {
     details: makeResolver<{ integration: Integration }>(
-      routes.integration.details,
+      routes.detail.details,
       ({ integration }) => ({
         params: {
           integrationId: integration.id,
@@ -262,6 +262,8 @@ export default {
         },
       })
     ),
+  },
+  integration: {
     edit: {
       index: makeResolver<{ integration: Integration }>(
         routes.integration.edit.index,
