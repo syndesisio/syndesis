@@ -1,463 +1,183 @@
+# Javascript Node CircleCI 2.0 configuration file
 #
-# Copyright (C) 2016 Red Hat, Inc.
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#         http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
+# Check https://circleci.com/docs/2.0/language-javascript/ for more details
 #
 version: 2
 
-common_env: &common_env
-  MAVEN_OPTS: -Xmx1024m
-  DOCKER_VERSION: 18.06.1-ce
-
-job_default: &job_defaults
-  working_directory: /workspace
-  docker:
-    - image: openjdk:8-jdk
-  filters:
-    branches:
-      only:
-        - master
-        - /\d+\.\d+\.x/
-
-push_images: &push_images
-  deploy:
-    command: |
-      if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
-        exit 0
-      fi
-
-      if [ ! -x /usr/bin/docker ]; then
-        curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
-      fi
-
-      if [ "${CIRCLE_BRANCH}" == "master" ]; then
-        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        for image in ${DOCKER_IMAGES} ; do
-          docker push syndesis/${image}:latest | cat -
-        done
-      fi
-      if [[ "${CIRCLE_TAG}" =~ ^[0-9]+(\.[0-9]+){2} ]]; then
-        docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        for image in ${IMAGES} ; do
-          docker push syndesis/${image}:${CIRCLE_TAG} | cat -
-          docker tag syndesis/${image}:${CIRCLE_TAG} syndesis/${image}:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
-          docker push syndesis/${image}:$(echo ${CIRCLE_TAG} | sed -e 's/\.[0-9][0-9]*$//')
-        done
-      fi
-
-load_m2: &load_m2
-  attach_workspace:
-    at: ~/.m2
-
-save_m2: &save_m2
-  persist_to_workspace:
-    root: ~/.m2
-    paths:
-      - repository/io/syndesis
-
-save_junit: &save_junit
-  run:
-    name: Collect junit reports
-    when: always
-    command: |
-      mkdir -p /workspace/junit/
-      find . -type f -regextype posix-extended -regex ".*target/.*TESTS?-.*xml" | xargs -i cp --backup --suffix=.xml {} /workspace/junit/
-
 jobs:
-  # UI has no dependencies, just load cache
-  ui:
-    <<: *job_defaults
-    environment:
-      DOCKER_IMAGES: syndesis-ui
-      <<: *common_env
-    steps:
-      - setup_remote_docker
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
-      - restore_cache:
-          key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
-      - run:
-          name: Build UI
-          command: |
-            apt-get update
-            apt-get install libxss1 patch
-            ./tools/bin/syndesis build --batch-mode --module ui --docker | tee build_log.txt
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
-      - store_artifacts:
-          path: ./build_ui_log.txt
-      - save_cache:
-          key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
-          paths:
-          - /usr/local/share/.cache/yarn/v1
-      - store_artifacts:
-          path: build_log.txt
-      - save_cache:
-          key: syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
-          paths:
-          - ~/.m2
-      - <<: *push_images
-
-  # Connector depends on integration, mount workspace .m2
-  connector:
-    <<: *job_defaults
-    environment:
-      <<: *common_env
-    steps:
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
-      - <<: *load_m2
-      - run:
-          name: Build Connectors
-          command: |
-            ./tools/bin/syndesis build --batch-mode --module connector | tee build_log.txt
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
-      - store_artifacts:
-          path: build_log.txt
-      - save_cache:
-          key: syndesis-mvn-connector-{{ checksum "app/connector/pom.xml" }}
-          paths:
-          - ~/.m2
-      - <<: *save_m2
-
-
-  # Meta depends on connectors, mount workspace .m2
-  meta:
-    <<: *job_defaults
-    environment:
-      DOCKER_IMAGES: syndesis-meta
-      <<: *common_env
-    steps:
-      - setup_remote_docker
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-meta-{{ checksum "app/meta/pom.xml" }}
-      - <<: *load_m2
-      - run:
-          name: Build Meta
-          command: |
-            ./tools/bin/syndesis build --batch-mode --module meta --docker | tee build_log.txt
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
-      - store_artifacts:
-          path: build_log.txt
-      - <<: *push_images
-      - <<: *save_m2
-      - save_cache:
-          key: syndesis-mvn-meta-{{ checksum "app/meta/pom.xml" }}
-          paths:
-          - ~/.m2
-
-  # Common has no dependencies, just load cache
-  common:
-    <<: *job_defaults
-    environment:
-      <<: *common_env
-    steps:
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-common-{{ checksum "app/common/pom.xml" }}
-      - <<: *load_m2
-      - run:
-          name: Build Common
-          command: |
-            ./tools/bin/syndesis build --batch-mode --module common | tee build_log.txt
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
-      - store_artifacts:
-          path: build_log.txt
-      - <<: *save_m2
-      - save_cache:
-          key: syndesis-mvn-common-{{ checksum "app/common/pom.xml" }}
-          paths:
-          - ~/.m2
-
-  # Extension depends on common
-  extension:
-    <<: *job_defaults
-    environment:
-      <<: *common_env
-    steps:
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
-      - <<: *load_m2
-      - run:
-          name: Build Extension
-          command: |
-            ./tools/bin/syndesis build --batch-mode --module extension | tee build_log.txt
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
-      - store_artifacts:
-          path: build_log.txt
-      - <<: *save_m2
-      - save_cache:
-          key: syndesis-mvn-extension-{{ checksum "app/extension/pom.xml" }}
-          paths:
-          - ~/.m2
-
-  # integration dependes on extension, mount workspace .m2
-  integration:
-    <<: *job_defaults
-    environment:
-      <<: *common_env
-    steps:
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-integration-{{ checksum "app/integration/pom.xml" }}
-      - <<: *load_m2
-      - run:
-          name: Build Connectors
-          command: |
-            ./tools/bin/syndesis build --batch-mode --module integration | tee build_log.txt
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
-      - store_artifacts:
-          path: build_log.txt
-      - save_cache:
-          key: syndesis-mvn-integration-{{ checksum "app/integration/pom.xml" }}
-          paths:
-          - ~/.m2
-      - <<: *save_m2
-
-  # S2I image
-  s2i:
-    <<: *job_defaults
-    environment:
-      DOCKER_IMAGES: syndesis-s2i
-      <<: *common_env
-    steps:
-      - setup_remote_docker
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
-      - <<: *load_m2
-      - run:
-          name: Build S2I Builder image
-          command: |
-            ./tools/bin/syndesis build --batch-mode --module s2i --docker | tee build_log.txt
-      - store_artifacts:
-          path: build_log.txt
-      - <<: *push_images
-      - <<: *save_m2
-      - save_cache:
-          key: syndesis-mvn-s2i-{{ checksum "app/s2i/pom.xml" }}
-          paths:
-          - ~/.m2
-
-  # "server" depends on common, connector and integration, mount workspace .m2
-  server:
-    <<: *job_defaults
-    environment:
-      DOCKER_IMAGES: syndesis-server
-      <<: *common_env
-    steps:
-      - setup_remote_docker
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
-      - <<: *load_m2
-      - run:
-          name: Build Server
-          command: |
-            ./tools/bin/syndesis build --batch-mode --module server --docker | tee build_log.txt
-      - run:
-          name: Collect API docs
-          command: |
-            mkdir ./apidocs
-            if [[ -d app/runtime/runtime/target/classes/static ]]; then
-              cp app/runtime/runtime/target/classes/static/index.html ./apidocs
-              cp app/runtime/runtime/target/classes/static/swagger.json ./apidocs
-              cp app/runtime/runtime/target/classes/static/swagger.yaml ./apidocs
-            fi
-      - <<: *save_junit
-      - store_test_results:
-          path: /workspace/junit
-      - store_artifacts:
-          path: apidocs
-      - store_artifacts:
-          path: build_log.txt
-      - <<: *push_images
-      - <<: *save_m2
-      - save_cache:
-          key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
-          paths:
-          - ~/.m2
-
-  operator:
-    machine: true
-    environment:
-      DOCKER_IMAGES: syndesis-operator
-      <<: *common_env
-    steps:
-      - checkout
-      - run:
-          name: Build Operator
-          command: |
-            ./tools/bin/syndesis build --module operator --image --docker --ensure | tee build_log.txt
-      - store_artifacts:
-          path: build_log.txt
-      - <<: *push_images
-
-  upgrade:
-    <<: *job_defaults
-    environment:
-      DOCKER_IMAGES: syndesis-upgrade
-      <<: *common_env
-    steps:
-      - setup_remote_docker
-      - checkout
-      - restore_cache:
-          key: syndesis-mvn-server-{{ checksum "app/server/pom.xml" }}
-      - <<: *load_m2
-      - run:
-          name: Install Docker
-          command: |
-            if [ ! -x /usr/bin/docker ]; then
-              curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
-            fi
-      - run:
-          name: Build CLI jar
-          command: |
-            ./tools/bin/syndesis build --batch-mode --flash --module server
-      - run:
-          name: Build upgrade image
-          command: |
-            ./tools/bin/syndesis build --batch-mode --module upgrade --docker
-      - <<: *push_images
-
-
-  system-test:
-    <<: *job_defaults
-    environment:
-      <<: *common_env
-    steps:
-      - checkout
-      - run:
-          name: Prep for Maven cache load
-          command: |
-            cat $(find app -name pom.xml ! -path */src/* | sort) > all-poms
-      - restore_cache:
-          key: syndesis-mvn-tests-{{ checksum "all-poms" }}
-      - run:
-          name: Run System Tests
-          command: |
-            if [ -n "${OPENSHIFT_TOKEN}" ]; then
-              # Install 'oc' and login
-              curl -fsSL https://github.com/openshift/origin/releases/download/v3.6.0/openshift-origin-client-tools-v3.6.0-c4dd4cf-linux-64bit.tar.gz | tar xz -C /usr/bin --strip-components 1
-              oc login --server "${OPENSHIFT_SERVER}" --token "${OPENSHIFT_TOKEN}"
-              test_id="${CIRCLE_JOB}-${CIRCLE_BUILD_NUM}"
-
-              # Install missing libs for UI tests
-              apt-get update
-              apt-get install libxss1
-
-              ./tools/bin/syndesis system-test --batch-mode --server "${OPENSHIFT_SERVER}" --token "${OPENSHIFT_TOKEN}" --test-id "$test_id" --project ${OPENSHIFT_PROJECT} | tee test_log.txt | grep -v " Download"
-              # Always cleanup
-              ./tools/bin/syndesis system-test --release-project --test-id "$test_id"
-            fi
-      - store_artifacts:
-          path: test_log.txt
-      - save_cache:
-          key: syndesis-mvn-tests-{{ checksum "all-poms" }}
-          paths:
-          - ~/.m2
-
-  license-check:
-    <<: *job_defaults
-    environment:
-      <<: *common_env
-    steps:
-      - checkout
-      - run:
-          name: Prep for Maven cache load
-          command: |
-            cat $(find app -name pom.xml ! -path */src/* | sort) > all-poms
-      - restore_cache:
-          key: syndesis-license-check-{{ checksum "all-poms" }}
-      - run:
-          name: License check
-          command: |
-            cd app
-            ./mvnw -N install license:check
-      - save_cache:
-          key: syndesis-license-check-{{ checksum "all-poms" }}
-          paths:
-          - ~/.m2
-
-  doc:
+  build:
     docker:
-      - image: syndesis/builder-doc
+      # specify the version you desire here
+      - image: circleci/node:10.13-browsers
+        environment:
+          CHROME_BIN: "/usr/bin/google-chrome"
+
+    # Specify service dependencies here if necessary
+    # CircleCI maintains a library of pre-built images
+    # documented at https://circleci.com/docs/2.0/circleci-images/
+    # - image: circleci/mongo:3.4.4
+
+    working_directory: ~/repo/app/ui-react
+
     steps:
-      - checkout
+      - checkout:
+          path: ~/repo
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: Lint project
+          command: yarn lint
+
+
+      - run:
+          name: Build project
+          command: yarn build
+
+      - run:
+          name: Run tests
+          command: yarn test
+
+      - run:
+          name: Build docs
+          command: yarn build-storybook
+
+      - persist_to_workspace:
+          root: doc
+          paths:
+            - '*'
+
+  doc-deploy:
+    docker:
+      - image: circleci/node:10.13
+
+    working_directory: ~/repo/app/ui-react
+
+    steps:
       - add_ssh_keys:
           fingerprints:
-            - "d8:49:be:71:ed:d9:d3:dc:7a:dd:35:ac:81:30:c5:d8"
+            - "5e:e6:01:8d:15:8c:df:f6:d6:0c:bd:48:08:78:d9:7a"
+
+      - checkout:
+          path: ~/repo
+
+      - attach_workspace:
+          at: doc
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
       - run:
-          name: Generate docs
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+
+      - run:
+          name: Build packages
           command: |
-            git config --global user.email "circleci@syndesis.io"
-            git config --global user.name "CircleCI"
-            ./tools/bin/syndesis doc --local --html --pdf --gh-pages
+            yarn build --ignore @syndesis/syndesis
+
+      - run:
+          name: Build app for GH-Pages
+          command: |
+            PUBLIC_URL="https://syndesisio.github.io/syndesis-react-poc/app" yarn build --scope @syndesis/syndesis
+            cp -a syndesis/build doc/app
+            cp syndesis/config.staging.json doc/app/config.json
+
+      - run:
+          name: Deploy docs to gh-pages branch
+          command: |
+            git config user.email "circleci@syndesis.io"
+            git config user.name "CircleCI"
+            yarn gh-pages-update
+
+  doc-artifact:
+    docker:
+      - image: circleci/node:10.13
+
+    working_directory: ~/repo/app/ui-react
+
+    steps:
+
+      - checkout:
+          path: ~/repo
+
+      - attach_workspace:
+          at: doc
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+
+      - run:
+          name: Build packages
+          command: |
+            yarn build --ignore @syndesis/syndesis
+
+      - run:
+          name: Build app for Circle CI artifacts
+          command: |
+            # 153815627 is GH project id, but it's not exposed as an env variable. TODO find a better way to handle it
+            PUBLIC_URL="https://$CIRCLE_BUILD_NUM-153815627-gh.circle-artifacts.com/0/home/circleci/project/doc/app" yarn build --scope @syndesis/syndesis
+            cp -a syndesis/build doc/app
+            cp syndesis/config.staging.json doc/app/config.json
+
+      - store_artifacts:
+          path: doc
+
+      - run:
+          name: Post artifact link on GH issue
+          command: |
+            ARTIFACT_URL="https://circleci.com/api/v1.1/project/github/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME/$CIRCLE_BUILD_NUM/artifacts/0/home/circleci/project/doc/index.html"
+
+            curl \
+              -d "{\"pull_request\": \"$CIRCLE_PULL_REQUEST\", \"template\": \"PR Storybook available [here]($ARTIFACT_URL)\"}" \
+              -H "Content-Type: application/json" \
+              -X POST https://ghcommentbot.herokuapp.com/comment
 
 workflows:
   version: 2
-  syndesis:
+  build:
     jobs:
-      - system-test:
+      - build:
           filters:
             branches:
-              only: system-test
-      - doc:
+              ignore:
+                - gh-pages
+      - doc-deploy:
+          requires:
+            - build
           filters:
             branches:
-              only: master
-      - license-check
-      - ui
-      - common
-      - operator
-      - extension:
+              only:
+                - master
+      - doc-artifact:
           requires:
-           - common
-      - integration:
-          requires:
-            - extension
-      - connector:
-          requires:
-            - integration
-      - meta:
-          requires:
-            - connector
-      - server:
-          requires:
-            - integration
-            - connector
-            - common
-      - s2i:
-          requires:
-            - server
-      - upgrade:
+            - build
           filters:
             branches:
-              only: master
-          requires:
-            - server
+              ignore:
+                - master
+                - gh-pages
