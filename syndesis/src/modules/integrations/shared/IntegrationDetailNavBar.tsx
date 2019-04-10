@@ -24,7 +24,7 @@ export class IntegrationDetailNavBar extends React.Component {
             <TabBar>
               <TabBarItem
                 label={t('integration.detailsPageTitle')}
-                to={routes.integration.detail.details}
+                to={routes.integration.details}
               />
             </TabBar>
           </Container>

@@ -42,13 +42,10 @@ export default include('/integrations', {
     root: '',
   }),
   integration: include(':integrationId', {
+    details: 'details',
+    activity: 'activity',
+    metrics: 'metrics',
     edit: include('edit', editorRoutes),
-    detail: include('', {
-      details: 'details',
-      activity: 'activity',
-      metrics: 'metrics',
-      root: '',
-    }),
     root: '',
   }),
 });

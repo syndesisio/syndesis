@@ -251,19 +251,17 @@ export default {
     },
   },
   integration: {
-    detail: {
-      details: makeResolver<{ integration: Integration }>(
-        routes.integration.detail.details,
-        ({ integration }) => ({
-          params: {
-            integrationId: integration.id,
-          },
-          state: {
-            integration,
-          },
-        })
-      ),
-    },
+    details: makeResolver<{ integration: Integration }>(
+      routes.integration.details,
+      ({ integration }) => ({
+        params: {
+          integrationId: integration.id,
+        },
+        state: {
+          integration,
+        },
+      })
+    ),
     edit: {
       index: makeResolver<{ integration: Integration }>(
         routes.integration.edit.index,
