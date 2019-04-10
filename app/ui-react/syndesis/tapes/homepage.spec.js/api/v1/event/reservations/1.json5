@@ -1,0 +1,73 @@
+{
+    meta: {
+        createdAt: '2019-04-04T11:56:33.515Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/api/v1/event/reservations',
+        method: 'POST',
+        headers: {
+            'syndesis-mock-session': 'homepage.spec.js',
+            'syndesis-mock-request': '1',
+        },
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'access-control-allow-credentials': [
+                'true',
+            ],
+            'access-control-allow-origin': [
+                'http://localhost:3000',
+            ],
+            'cache-control': [
+                'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
+            ],
+            'content-length': [
+                '62',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Thu, 04 Apr 2019 11:56:33 GMT',
+            ],
+            'gap-auth': [
+                'riccardo-forina@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'syndesis-server',
+            ],
+            'strict-transport-security': [
+                'max-age=31536000 ; includeSubDomains',
+            ],
+            'syndesis-xsrf-token': [
+                'awesome',
+            ],
+            vary: [
+                'Origin',
+            ],
+            'x-application-context': [
+                'application',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-xss-protection': [
+                '1; mode=block',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: {
+            event: 'uuid',
+            data: '8ec09f85-f743-4c76-84c4-89548e92ddd9',
+        },
+    },
+}

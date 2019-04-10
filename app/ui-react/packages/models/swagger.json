@@ -1,0 +1,3675 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "The Syndesis REST API connects to back-end services on the Syndesis and provides a\n                      single entry point for the Syndesis UI. For\n                      console developement it can run in\n                      off-line mode where it only serves responses from the response cache.",
+    "version" : "v1",
+    "title" : "Syndesis API",
+    "contact" : {
+      "name" : "The Syndesis Community",
+      "url" : "https://syndesis.io/",
+      "email" : "syndesis@googlegroups.com"
+    },
+    "license" : {
+      "name" : "Apache 2.0",
+      "url" : "http://www.apache.org/licenses/LICENSE-2.0.html"
+    }
+  },
+  "host" : "localhost:8080",
+  "basePath" : "/api/v1",
+  "tags" : [ {
+    "name" : "actions"
+  }, {
+    "name" : "connections"
+  }, {
+    "name" : "connector"
+  }, {
+    "name" : "connector-icon"
+  }, {
+    "name" : "connector-template"
+  }, {
+    "name" : "connectorgroups"
+  }, {
+    "name" : "connectors"
+  }, {
+    "name" : "credentials"
+  }, {
+    "name" : "custom-connector"
+  }, {
+    "name" : "events"
+  }, {
+    "name" : "extensions"
+  }, {
+    "name" : "integration-deployments"
+  }, {
+    "name" : "integration-metrics"
+  }, {
+    "name" : "integration-support"
+  }, {
+    "name" : "integrations"
+  }, {
+    "name" : "oauth-apps"
+  }, {
+    "name" : "permissions"
+  }, {
+    "name" : "roles"
+  }, {
+    "name" : "tags"
+  }, {
+    "name" : "users"
+  } ],
+  "schemes" : [ "http", "https" ],
+  "paths" : {
+    "/" : {
+      "post" : {
+        "tags" : [ "custom-connector", "connector-template" ],
+        "summary" : "Creates a new Connector based on the ConnectorTemplate identified by the provided `id`  and the data given in `connectorSettings`",
+        "description" : "",
+        "operationId" : "create",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Newly created Connector",
+            "schema" : {
+              "$ref" : "#/definitions/Connector"
+            }
+          }
+        }
+      }
+    },
+    "/connections" : {
+      "get" : {
+        "tags" : [ "connections" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultConnectionOverview"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "connections" ],
+        "operationId" : "create",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithId"
+            }
+          }
+        }
+      }
+    },
+    "/connections/validation" : {
+      "post" : {
+        "tags" : [ "connections" ],
+        "operationId" : "validate",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "204" : {
+            "description" : "All validations pass"
+          },
+          "400" : {
+            "description" : "Found violations in validation",
+            "schema" : {
+              "$ref" : "#/definitions/Violation"
+            }
+          }
+        }
+      }
+    },
+    "/connections/{id}" : {
+      "get" : {
+        "tags" : [ "connections" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ConnectionOverview"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "connections" ],
+        "operationId" : "update",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "connections" ],
+        "operationId" : "delete",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "connections" ],
+        "operationId" : "patch",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/connections/{id}/actions/{id}" : {
+      "post" : {
+        "tags" : [ "actions", "connections" ],
+        "summary" : "Retrieves enriched action definition, that is an action definition that has input/output data shapes and property enums defined with respect to the given action properties",
+        "description" : "",
+        "operationId" : "enrichWithMetadata",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "io.syndesis:salesforce-create-or-update:latest"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "my-connection"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A map of zero or more action property suggestions keyed by the property name"
+          }
+        }
+      }
+    },
+    "/connections/{id}/bulletins" : {
+      "get" : {
+        "tags" : [ "connections" ],
+        "operationId" : "getBulletins",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ConnectionBulletinBoard"
+            }
+          }
+        }
+      }
+    },
+    "/connector-templates" : {
+      "get" : {
+        "tags" : [ "connector-template" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultConnectorTemplate"
+            }
+          }
+        }
+      }
+    },
+    "/connector-templates/{id}" : {
+      "get" : {
+        "tags" : [ "connector-template" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ConnectorTemplate"
+            }
+          }
+        }
+      }
+    },
+    "/connectorgroups" : {
+      "get" : {
+        "tags" : [ "connectorgroups" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultWithIdObject"
+            }
+          }
+        }
+      }
+    },
+    "/connectorgroups/{id}" : {
+      "get" : {
+        "tags" : [ "connectorgroups" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithIdObject"
+            }
+          }
+        }
+      }
+    },
+    "/connectors" : {
+      "get" : {
+        "tags" : [ "connectors" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultConnector"
+            }
+          }
+        }
+      }
+    },
+    "/connectors/custom" : {
+      "post" : {
+        "tags" : [ "connectors", "custom-connector", "connector-template" ],
+        "summary" : "Creates a new Connector based on the ConnectorTemplate identified by the provided `id`  and the data given in `connectorSettings`",
+        "description" : "",
+        "operationId" : "create",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "Newly created Connector",
+            "schema" : {
+              "$ref" : "#/definitions/Connector"
+            }
+          }
+        }
+      }
+    },
+    "/connectors/custom/info" : {
+      "post" : {
+        "tags" : [ "connectors", "custom-connector", "connector-template" ],
+        "summary" : "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`",
+        "description" : "",
+        "operationId" : "info",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/APISummary"
+            }
+          }
+        }
+      }
+    },
+    "/connectors/{connectorId}/actions/{actionId}/filters/options" : {
+      "get" : {
+        "tags" : [ "connectors" ],
+        "operationId" : "getFilterOptions",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "connectorId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "actionId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/FilterOptions"
+            }
+          }
+        }
+      }
+    },
+    "/connectors/{id}" : {
+      "get" : {
+        "tags" : [ "connectors" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithId"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "connectors" ],
+        "operationId" : "update",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "connectors" ],
+        "operationId" : "delete",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "connectors" ],
+        "operationId" : "patch",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/connectors/{id}/actions/{id}" : {
+      "get" : {
+        "tags" : [ "connectors", "actions" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithId"
+            }
+          }
+        }
+      }
+    },
+    "/connectors/{id}/verifier" : {
+      "post" : {
+        "tags" : [ "connectors" ],
+        "operationId" : "verifyConnectionParameters",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/Result"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/credentials/callback" : {
+      "get" : {
+        "tags" : [ "credentials" ],
+        "operationId" : "callback",
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/event/reservations" : {
+      "post" : {
+        "tags" : [ "events" ],
+        "operationId" : "reserveEventStream",
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/EventMessage"
+            }
+          }
+        }
+      }
+    },
+    "/extensions" : {
+      "get" : {
+        "tags" : [ "extensions" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultExtension"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "extensions" ],
+        "operationId" : "upload",
+        "consumes" : [ "multipart/form-data" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "updatedId",
+          "in" : "query",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/Extension"
+            }
+          }
+        }
+      }
+    },
+    "/extensions/validation" : {
+      "post" : {
+        "tags" : [ "extensions" ],
+        "operationId" : "validate",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "All blocking validations pass",
+            "schema" : {
+              "$ref" : "#/definitions/Violation"
+            }
+          },
+          "400" : {
+            "description" : "Found violations in validation",
+            "schema" : {
+              "$ref" : "#/definitions/Violation"
+            }
+          }
+        }
+      }
+    },
+    "/extensions/{id}" : {
+      "get" : {
+        "tags" : [ "extensions" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithId"
+            }
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "extensions" ],
+        "operationId" : "delete",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/extensions/{id}/install" : {
+      "post" : {
+        "tags" : [ "extensions" ],
+        "operationId" : "install",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Installed"
+          },
+          "400" : {
+            "description" : "Found violations in validation",
+            "schema" : {
+              "$ref" : "#/definitions/Violation"
+            }
+          }
+        }
+      }
+    },
+    "/extensions/{id}/integrations" : {
+      "get" : {
+        "tags" : [ "extensions" ],
+        "operationId" : "integrations",
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "uniqueItems" : true,
+              "items" : {
+                "$ref" : "#/definitions/ResourceIdentifier"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/extensions/{id}/validation" : {
+      "post" : {
+        "tags" : [ "extensions" ],
+        "operationId" : "validate",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "All blocking validations pass",
+            "schema" : {
+              "$ref" : "#/definitions/Violation"
+            }
+          },
+          "400" : {
+            "description" : "Found violations in validation",
+            "schema" : {
+              "$ref" : "#/definitions/Violation"
+            }
+          }
+        }
+      }
+    },
+    "/info" : {
+      "post" : {
+        "tags" : [ "custom-connector", "connector-template" ],
+        "summary" : "Provides a summary of the connector as it would be built using a ConnectorTemplate identified by the provided `connector-template-id` and the data given in `connectorSettings`",
+        "description" : "",
+        "operationId" : "info",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/APISummary"
+            }
+          }
+        }
+      }
+    },
+    "/integration-support/export.zip" : {
+      "get" : {
+        "tags" : [ "integration-support" ],
+        "operationId" : "export",
+        "produces" : [ "application/octet-stream" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "query",
+          "required" : true,
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          },
+          "collectionFormat" : "multi"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/StreamingOutput"
+            }
+          }
+        }
+      }
+    },
+    "/integration-support/generate/pom.xml" : {
+      "post" : {
+        "tags" : [ "integration-support" ],
+        "operationId" : "projectPom",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/octet-stream" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "type" : "string",
+                "format" : "byte"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integration-support/import" : {
+      "post" : {
+        "tags" : [ "integration-support" ],
+        "operationId" : "importIntegration",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "object",
+              "additionalProperties" : {
+                "type" : "array",
+                "items" : {
+                  "$ref" : "#/definitions/WithResourceId"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/integration-support/overviews" : {
+      "get" : {
+        "tags" : [ "integration-support" ],
+        "operationId" : "getOverviews",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultIntegrationOverview"
+            }
+          }
+        }
+      }
+    },
+    "/integrations" : {
+      "get" : {
+        "tags" : [ "integrations" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultIntegrationOverview"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "integrations" ],
+        "operationId" : "create",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithId"
+            }
+          }
+        }
+      }
+    },
+    "/integrations/filters/options" : {
+      "get" : {
+        "tags" : [ "integrations" ],
+        "operationId" : "getGlobalFilterOptions",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/FilterOptions"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "integrations" ],
+        "operationId" : "getFilterOptions",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/FilterOptions"
+            }
+          }
+        }
+      }
+    },
+    "/integrations/validation" : {
+      "post" : {
+        "tags" : [ "integrations" ],
+        "operationId" : "validate",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "204" : {
+            "description" : "All validations pass"
+          },
+          "400" : {
+            "description" : "Found violations in validation",
+            "schema" : {
+              "$ref" : "#/definitions/Violation"
+            }
+          }
+        }
+      }
+    },
+    "/integrations/{id}" : {
+      "get" : {
+        "tags" : [ "integrations" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationOverview"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "integrations" ],
+        "operationId" : "update",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "integrations" ],
+        "operationId" : "delete",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "patch" : {
+        "tags" : [ "integrations" ],
+        "operationId" : "patch",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/integrations/{id}/deployments" : {
+      "get" : {
+        "tags" : [ "integration-deployments" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultIntegrationDeployment"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "integration-deployments" ],
+        "operationId" : "update",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationDeployment"
+            }
+          }
+        }
+      }
+    },
+    "/integrations/{id}/deployments/{version}" : {
+      "get" : {
+        "tags" : [ "integration-deployments" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "version",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationDeployment"
+            }
+          }
+        }
+      }
+    },
+    "/integrations/{id}/deployments/{version}/targetState" : {
+      "post" : {
+        "tags" : [ "integration-deployments" ],
+        "operationId" : "updateTargetState",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "version",
+          "in" : "path",
+          "required" : true,
+          "type" : "integer",
+          "format" : "int32"
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : true,
+          "schema" : {
+            "$ref" : "#/definitions/TargetStateRequest"
+          }
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/integrations/{id}/overview" : {
+      "get" : {
+        "tags" : [ "integrations" ],
+        "operationId" : "getOverview",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationOverview"
+            }
+          }
+        }
+      }
+    },
+    "/metrics/integrations" : {
+      "get" : {
+        "tags" : [ "integration-metrics" ],
+        "summary" : "Retrieves a rolled up metrics summary for all integrations over their lifetime",
+        "description" : "",
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationMetricsSummary"
+            }
+          }
+        }
+      }
+    },
+    "/metrics/integrations/{integrationId}" : {
+      "get" : {
+        "tags" : [ "integration-metrics" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "integrationId",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/IntegrationMetricsSummary"
+            }
+          }
+        }
+      }
+    },
+    "/organizations" : {
+      "get" : {
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultWithIdObject"
+            }
+          }
+        }
+      }
+    },
+    "/organizations/{id}" : {
+      "get" : {
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithIdObject"
+            }
+          }
+        }
+      }
+    },
+    "/permissions" : {
+      "get" : {
+        "tags" : [ "permissions" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultWithIdObject"
+            }
+          }
+        }
+      }
+    },
+    "/permissions/{id}" : {
+      "get" : {
+        "tags" : [ "permissions" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithIdObject"
+            }
+          }
+        }
+      }
+    },
+    "/roles" : {
+      "get" : {
+        "tags" : [ "roles" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultWithIdObject"
+            }
+          }
+        }
+      }
+    },
+    "/roles/{id}" : {
+      "get" : {
+        "tags" : [ "roles" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithIdObject"
+            }
+          }
+        }
+      }
+    },
+    "/setup/oauth-apps" : {
+      "get" : {
+        "tags" : [ "oauth-apps" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultOAuthApp"
+            }
+          }
+        }
+      }
+    },
+    "/setup/oauth-apps/{id}" : {
+      "get" : {
+        "tags" : [ "oauth-apps" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/OAuthApp"
+            }
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "oauth-apps" ],
+        "operationId" : "update",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      },
+      "delete" : {
+        "tags" : [ "oauth-apps" ],
+        "operationId" : "delete",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/tags" : {
+      "get" : {
+        "tags" : [ "tags" ],
+        "operationId" : "listTags",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultString"
+            }
+          }
+        }
+      }
+    },
+    "/test-support/delete-deployments" : {
+      "get" : {
+        "operationId" : "deleteDeployments",
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/test-support/reset-db" : {
+      "get" : {
+        "operationId" : "resetDBToDefault",
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/test-support/restore-db" : {
+      "post" : {
+        "operationId" : "restoreDB",
+        "consumes" : [ "application/json" ],
+        "responses" : {
+          "default" : {
+            "description" : "successful operation"
+          }
+        }
+      }
+    },
+    "/test-support/snapshot-db" : {
+      "get" : {
+        "operationId" : "snapshotDB",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/definitions/ModelDataObject"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "operationId" : "list",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "sort",
+          "in" : "query",
+          "description" : "Sort the result list according to the given field value",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "direction",
+          "in" : "query",
+          "description" : "Sorting direction when a 'sort' field is provided. Can be 'asc' (ascending) or 'desc' (descending)",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "page",
+          "in" : "query",
+          "description" : "Page number to return",
+          "required" : false,
+          "type" : "integer",
+          "default" : 1
+        }, {
+          "name" : "per_page",
+          "in" : "query",
+          "description" : "Number of records per page",
+          "required" : false,
+          "type" : "integer",
+          "default" : 20
+        }, {
+          "name" : "query",
+          "in" : "query",
+          "description" : "The search query to filter results on",
+          "required" : false,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/ListResultWithIdObject"
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithIdObject"
+            }
+          }
+        }
+      }
+    },
+    "/users/~" : {
+      "get" : {
+        "tags" : [ "users" ],
+        "operationId" : "whoAmI",
+        "produces" : [ "application/json" ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/User"
+            }
+          }
+        }
+      }
+    },
+    "/{id}" : {
+      "get" : {
+        "tags" : [ "actions" ],
+        "operationId" : "get",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "successful operation",
+            "schema" : {
+              "$ref" : "#/definitions/WithId"
+            }
+          }
+        }
+      },
+      "post" : {
+        "tags" : [ "actions" ],
+        "summary" : "Retrieves enriched action definition, that is an action definition that has input/output data shapes and property enums defined with respect to the given action properties",
+        "description" : "",
+        "operationId" : "enrichWithMetadata",
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "id",
+          "in" : "path",
+          "required" : true,
+          "type" : "string",
+          "x-example" : "io.syndesis:salesforce-create-or-update:latest"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "A map of zero or more action property suggestions keyed by the property name"
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "APISummary" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "warnings" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        },
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Violation"
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "icon" : {
+          "type" : "string"
+        },
+        "actionsSummary" : {
+          "$ref" : "#/definitions/ActionsSummary"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "properties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ConfigurationProperty"
+          }
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Action" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "discriminator" : "actionType",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "descriptor" : {
+          "$ref" : "#/definitions/ActionDescriptor"
+        },
+        "tags" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "actionType" : {
+          "type" : "string"
+        },
+        "pattern" : {
+          "type" : "string",
+          "enum" : [ "From", "Pipe", "To" ]
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ActionDescriptor" : {
+      "type" : "object",
+      "properties" : {
+        "propertyDefinitionSteps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ActionDescriptorStep"
+          }
+        },
+        "inputDataShape" : {
+          "$ref" : "#/definitions/DataShape"
+        },
+        "outputDataShape" : {
+          "$ref" : "#/definitions/DataShape"
+        }
+      }
+    },
+    "ActionDescriptorStep" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "properties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ConfigurationProperty"
+          }
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ActionsSummary" : {
+      "type" : "object",
+      "properties" : {
+        "actionCountByTags" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int32"
+          }
+        },
+        "totalActions" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ConfigurationProperty" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string"
+        },
+        "defaultValue" : {
+          "type" : "string"
+        },
+        "displayName" : {
+          "type" : "string"
+        },
+        "deprecated" : {
+          "type" : "boolean"
+        },
+        "group" : {
+          "type" : "string"
+        },
+        "label" : {
+          "type" : "string"
+        },
+        "kind" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "enum" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PropertyValue"
+          }
+        },
+        "generator" : {
+          "type" : "string"
+        },
+        "placeholder" : {
+          "type" : "string"
+        },
+        "javaType" : {
+          "type" : "string"
+        },
+        "connectorValue" : {
+          "type" : "string"
+        },
+        "relation" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/PropertyRelation"
+          }
+        },
+        "controlHint" : {
+          "type" : "string"
+        },
+        "labelHint" : {
+          "type" : "string"
+        },
+        "tags" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "order" : {
+          "$ref" : "#/definitions/OptionalInt"
+        }
+      }
+    },
+    "Connection" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "lastUpdated" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "organizationId" : {
+          "type" : "string"
+        },
+        "userId" : {
+          "type" : "string"
+        },
+        "organization" : {
+          "$ref" : "#/definitions/Organization"
+        },
+        "options" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "connector" : {
+          "$ref" : "#/definitions/Connector"
+        },
+        "icon" : {
+          "type" : "string"
+        },
+        "uses" : {
+          "$ref" : "#/definitions/OptionalInt"
+        },
+        "derived" : {
+          "type" : "boolean"
+        },
+        "connectorId" : {
+          "type" : "string"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "tags" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ConnectionBulletinBoard" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "targetResourceId" : {
+          "type" : "string"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/OptionalInt"
+        },
+        "errors" : {
+          "$ref" : "#/definitions/OptionalInt"
+        },
+        "notices" : {
+          "$ref" : "#/definitions/OptionalInt"
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/LeveledMessage"
+          }
+        },
+        "createdAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "ConnectionOverview" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "board" : {
+          "$ref" : "#/definitions/ConnectionBulletinBoard"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "lastUpdated" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "organizationId" : {
+          "type" : "string"
+        },
+        "userId" : {
+          "type" : "string"
+        },
+        "organization" : {
+          "$ref" : "#/definitions/Organization"
+        },
+        "options" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "connector" : {
+          "$ref" : "#/definitions/Connector"
+        },
+        "icon" : {
+          "type" : "string"
+        },
+        "uses" : {
+          "$ref" : "#/definitions/OptionalInt"
+        },
+        "derived" : {
+          "type" : "boolean"
+        },
+        "connectorId" : {
+          "type" : "string"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "tags" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Connector" : {
+      "type" : "object",
+      "required" : [ "actions", "name" ],
+      "properties" : {
+        "connectorGroup" : {
+          "$ref" : "#/definitions/ConnectorGroup"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "icon" : {
+          "type" : "string"
+        },
+        "uses" : {
+          "readOnly" : true,
+          "$ref" : "#/definitions/OptionalInt"
+        },
+        "connectorFactory" : {
+          "type" : "string"
+        },
+        "connectorCustomizers" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "connectorGroupId" : {
+          "type" : "string"
+        },
+        "actionsSummary" : {
+          "$ref" : "#/definitions/ActionsSummary"
+        },
+        "componentScheme" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "actions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ConnectorAction"
+          }
+        },
+        "tags" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "properties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ConfigurationProperty"
+          }
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "dependencies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Dependency"
+          }
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ConnectorAction" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "descriptor" : {
+          "$ref" : "#/definitions/ConnectorDescriptor"
+        },
+        "tags" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "actionType" : {
+          "type" : "string"
+        },
+        "dependencies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Dependency"
+          }
+        },
+        "pattern" : {
+          "type" : "string",
+          "enum" : [ "From", "Pipe", "To" ]
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ConnectorDescriptor" : {
+      "type" : "object",
+      "properties" : {
+        "connectorFactory" : {
+          "type" : "string"
+        },
+        "connectorCustomizers" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "connectorId" : {
+          "type" : "string"
+        },
+        "componentScheme" : {
+          "type" : "string"
+        },
+        "camelConnectorGAV" : {
+          "type" : "string"
+        },
+        "camelConnectorPrefix" : {
+          "type" : "string"
+        },
+        "propertyDefinitionSteps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ActionDescriptorStep"
+          }
+        },
+        "inputDataShape" : {
+          "$ref" : "#/definitions/DataShape"
+        },
+        "outputDataShape" : {
+          "$ref" : "#/definitions/DataShape"
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "split" : {
+          "$ref" : "#/definitions/Split"
+        }
+      }
+    },
+    "ConnectorGroup" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ConnectorTemplate" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "connectorGroup" : {
+          "$ref" : "#/definitions/ConnectorGroup"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "icon" : {
+          "type" : "string"
+        },
+        "connectorProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ConfigurationProperty"
+          }
+        },
+        "camelConnectorGAV" : {
+          "type" : "string"
+        },
+        "camelConnectorPrefix" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "properties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ConfigurationProperty"
+          }
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "DataManager" : {
+      "type" : "object"
+    },
+    "DataShape" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string"
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "kind" : {
+          "type" : "string",
+          "enum" : [ "ANY", "JAVA", "JSON_SCHEMA", "JSON_INSTANCE", "XML_SCHEMA", "XML_INSTANCE", "NONE" ]
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "specification" : {
+          "type" : "string"
+        },
+        "exemplar" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "format" : "byte"
+          }
+        }
+      }
+    },
+    "Dependency" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "type" : {
+          "type" : "string",
+          "enum" : [ "MAVEN", "EXTENSION", "EXTENSION_TAG" ]
+        }
+      }
+    },
+    "Environment" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "EventMessage" : {
+      "type" : "object",
+      "properties" : {
+        "data" : {
+          "type" : "object"
+        },
+        "event" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Extension" : {
+      "type" : "object",
+      "required" : [ "actions", "extensionType", "name", "schemaVersion" ],
+      "properties" : {
+        "schemaVersion" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "icon" : {
+          "type" : "string"
+        },
+        "extensionId" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "string"
+        },
+        "tags" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "actions" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Action"
+          }
+        },
+        "dependencies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Dependency"
+          }
+        },
+        "lastUpdated" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "Draft", "Installed", "Deleted" ]
+        },
+        "extensionType" : {
+          "type" : "string",
+          "enum" : [ "Steps", "Connectors", "Libraries" ]
+        },
+        "userId" : {
+          "type" : "string"
+        },
+        "uses" : {
+          "$ref" : "#/definitions/OptionalInt"
+        },
+        "createdDate" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "properties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ConfigurationProperty"
+          }
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "FilterOptions" : {
+      "type" : "object",
+      "properties" : {
+        "paths" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "ops" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Op"
+          }
+        }
+      }
+    },
+    "Flow" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "description" : {
+          "type" : "string"
+        },
+        "connections" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Connection"
+          }
+        },
+        "scheduler" : {
+          "$ref" : "#/definitions/Scheduler"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "tags" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "steps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Step"
+          }
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ImmutableConnectorAction" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/Action"
+      }, {
+        "type" : "object",
+        "required" : [ "name" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "readOnly" : true
+          },
+          "name" : {
+            "type" : "string",
+            "readOnly" : true
+          },
+          "description" : {
+            "type" : "string",
+            "readOnly" : true
+          },
+          "descriptor" : {
+            "readOnly" : true,
+            "$ref" : "#/definitions/ConnectorDescriptor"
+          },
+          "tags" : {
+            "type" : "array",
+            "readOnly" : true,
+            "uniqueItems" : true,
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "actionType" : {
+            "type" : "string",
+            "readOnly" : true
+          },
+          "dependencies" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/Dependency"
+            }
+          },
+          "pattern" : {
+            "type" : "string",
+            "readOnly" : true,
+            "enum" : [ "From", "Pipe", "To" ]
+          },
+          "metadata" : {
+            "type" : "object",
+            "readOnly" : true,
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        }
+      } ]
+    },
+    "ImmutableStepAction" : {
+      "allOf" : [ {
+        "$ref" : "#/definitions/Action"
+      }, {
+        "type" : "object",
+        "required" : [ "name" ],
+        "properties" : {
+          "id" : {
+            "type" : "string",
+            "readOnly" : true
+          },
+          "name" : {
+            "type" : "string",
+            "readOnly" : true
+          },
+          "description" : {
+            "type" : "string",
+            "readOnly" : true
+          },
+          "descriptor" : {
+            "readOnly" : true,
+            "$ref" : "#/definitions/StepDescriptor"
+          },
+          "tags" : {
+            "type" : "array",
+            "readOnly" : true,
+            "uniqueItems" : true,
+            "items" : {
+              "type" : "string"
+            }
+          },
+          "actionType" : {
+            "type" : "string",
+            "readOnly" : true
+          },
+          "pattern" : {
+            "type" : "string",
+            "readOnly" : true,
+            "enum" : [ "From", "Pipe", "To" ]
+          },
+          "metadata" : {
+            "type" : "object",
+            "readOnly" : true,
+            "additionalProperties" : {
+              "type" : "string"
+            }
+          }
+        }
+      } ]
+    },
+    "Integration" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "deleted" : {
+          "type" : "boolean"
+        },
+        "flows" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Flow"
+          }
+        },
+        "steps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Step"
+          }
+        },
+        "connections" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Connection"
+          }
+        },
+        "properties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ConfigurationProperty"
+          }
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "createdAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tags" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "resources" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ResourceIdentifier"
+          }
+        }
+      }
+    },
+    "IntegrationBulletinBoard" : {
+      "type" : "object",
+      "properties" : {
+        "targetResourceId" : {
+          "type" : "string"
+        },
+        "warnings" : {
+          "$ref" : "#/definitions/OptionalInt"
+        },
+        "errors" : {
+          "$ref" : "#/definitions/OptionalInt"
+        },
+        "notices" : {
+          "$ref" : "#/definitions/OptionalInt"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "messages" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/LeveledMessage"
+          }
+        },
+        "createdAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "IntegrationDeployment" : {
+      "type" : "object",
+      "properties" : {
+        "integrationId" : {
+          "type" : "string"
+        },
+        "spec" : {
+          "$ref" : "#/definitions/Integration"
+        },
+        "userId" : {
+          "type" : "string"
+        },
+        "currentState" : {
+          "type" : "string",
+          "enum" : [ "Published", "Unpublished", "Error", "Pending" ]
+        },
+        "stepsDone" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "statusMessage" : {
+          "type" : "string"
+        },
+        "targetState" : {
+          "type" : "string",
+          "enum" : [ "Published", "Unpublished", "Error", "Pending" ]
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "createdAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "IntegrationDeploymentMetrics" : {
+      "type" : "object",
+      "properties" : {
+        "start" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "version" : {
+          "type" : "string"
+        },
+        "errors" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "messages" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "lastProcessed" : {
+          "type" : "string",
+          "format" : "date-time"
+        }
+      }
+    },
+    "IntegrationDeploymentOverview" : {
+      "type" : "object",
+      "properties" : {
+        "userId" : {
+          "type" : "string"
+        },
+        "currentState" : {
+          "type" : "string",
+          "enum" : [ "Published", "Unpublished", "Error", "Pending" ]
+        },
+        "stepsDone" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "statusMessage" : {
+          "type" : "string"
+        },
+        "targetState" : {
+          "type" : "string",
+          "enum" : [ "Published", "Unpublished", "Error", "Pending" ]
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "createdAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "IntegrationMetricsSummary" : {
+      "type" : "object",
+      "properties" : {
+        "start" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "errors" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "messages" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "lastProcessed" : {
+          "type" : "string",
+          "format" : "date-time"
+        },
+        "metricsProvider" : {
+          "type" : "string"
+        },
+        "integrationDeploymentMetrics" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IntegrationDeploymentMetrics"
+          }
+        },
+        "topIntegrations" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "integer",
+            "format" : "int64"
+          }
+        },
+        "id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "IntegrationOverview" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "url" : {
+          "type" : "string"
+        },
+        "currentState" : {
+          "type" : "string",
+          "enum" : [ "Published", "Unpublished", "Error", "Pending" ]
+        },
+        "deployments" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IntegrationDeploymentOverview"
+          }
+        },
+        "deploymentVersion" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "draft" : {
+          "type" : "boolean"
+        },
+        "targetState" : {
+          "type" : "string",
+          "enum" : [ "Published", "Unpublished", "Error", "Pending" ]
+        },
+        "board" : {
+          "$ref" : "#/definitions/IntegrationBulletinBoard"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        },
+        "deleted" : {
+          "type" : "boolean"
+        },
+        "flows" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Flow"
+          }
+        },
+        "steps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Step"
+          }
+        },
+        "connections" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Connection"
+          }
+        },
+        "properties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ConfigurationProperty"
+          }
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "version" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "createdAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "updatedAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        },
+        "tags" : {
+          "type" : "array",
+          "uniqueItems" : true,
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "resources" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ResourceIdentifier"
+          }
+        }
+      }
+    },
+    "LeveledMessage" : {
+      "type" : "object",
+      "properties" : {
+        "message" : {
+          "type" : "string"
+        },
+        "level" : {
+          "type" : "string",
+          "enum" : [ "INFO", "WARN", "ERROR" ]
+        },
+        "code" : {
+          "type" : "string",
+          "enum" : [ "SYNDESIS000", "SYNDESIS001", "SYNDESIS002", "SYNDESIS003", "SYNDESIS004", "SYNDESIS005", "SYNDESIS006", "SYNDESIS007", "SYNDESIS008", "SYNDESIS009", "SYNDESIS010", "SYNDESIS011", "SYNDESIS012" ]
+        },
+        "detail" : {
+          "type" : "string"
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "ListResult" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "type" : "object"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ListResultConnectionOverview" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ConnectionOverview"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ListResultConnector" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Connector"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ListResultConnectorTemplate" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ConnectorTemplate"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ListResultExtension" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Extension"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ListResultIntegrationDeployment" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IntegrationDeployment"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ListResultIntegrationOverview" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/IntegrationOverview"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ListResultOAuthApp" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/OAuthApp"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ListResultString" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ListResultWithIdObject" : {
+      "type" : "object",
+      "properties" : {
+        "items" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/WithIdObject"
+          }
+        },
+        "totalCount" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "ModelData" : {
+      "type" : "object",
+      "properties" : {
+        "kind" : {
+          "type" : "string",
+          "enum" : [ "Action", "Connection", "ConnectionOverview", "Connector", "ConnectorAction", "ConnectorGroup", "ConnectorTemplate", "Icon", "Environment", "EnvironmentType", "Extension", "StepAction", "Organization", "Integration", "IntegrationOverview", "IntegrationDeployment", "IntegrationDeploymentStateDetails", "IntegrationMetricsSummary", "IntegrationRuntime", "IntegrationEndpoint", "Step", "Permission", "Role", "User", "ConnectionBulletinBoard", "IntegrationBulletinBoard", "OpenApi" ]
+        },
+        "data" : {
+          "type" : "string"
+        }
+      }
+    },
+    "ModelDataObject" : {
+      "type" : "object",
+      "properties" : {
+        "kind" : {
+          "type" : "string",
+          "enum" : [ "Action", "Connection", "ConnectionOverview", "Connector", "ConnectorAction", "ConnectorGroup", "ConnectorTemplate", "Icon", "Environment", "EnvironmentType", "Extension", "StepAction", "Organization", "Integration", "IntegrationOverview", "IntegrationDeployment", "IntegrationDeploymentStateDetails", "IntegrationMetricsSummary", "IntegrationRuntime", "IntegrationEndpoint", "Step", "Permission", "Role", "User", "ConnectionBulletinBoard", "IntegrationBulletinBoard", "OpenApi" ]
+        },
+        "data" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OAuthApp" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "icon" : {
+          "type" : "string"
+        },
+        "derived" : {
+          "type" : "boolean"
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        },
+        "properties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "$ref" : "#/definitions/ConfigurationProperty"
+          }
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "Op" : {
+      "type" : "object",
+      "properties" : {
+        "label" : {
+          "type" : "string"
+        },
+        "operator" : {
+          "type" : "string"
+        }
+      }
+    },
+    "OptionalInt" : {
+      "type" : "object",
+      "properties" : {
+        "present" : {
+          "type" : "boolean"
+        },
+        "asInt" : {
+          "type" : "integer",
+          "format" : "int32"
+        }
+      }
+    },
+    "Organization" : {
+      "type" : "object",
+      "required" : [ "name" ],
+      "properties" : {
+        "environments" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Environment"
+          }
+        },
+        "users" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/User"
+          }
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Principal" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PropertyRelation" : {
+      "type" : "object",
+      "properties" : {
+        "when" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/When"
+          }
+        },
+        "action" : {
+          "type" : "string"
+        }
+      }
+    },
+    "PropertyValue" : {
+      "type" : "object",
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "label" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Reservation" : {
+      "type" : "object",
+      "properties" : {
+        "principal" : {
+          "$ref" : "#/definitions/Principal"
+        },
+        "createdAt" : {
+          "type" : "integer",
+          "format" : "int64"
+        }
+      }
+    },
+    "ResourceIdentifier" : {
+      "type" : "object",
+      "properties" : {
+        "version" : {
+          "type" : "integer",
+          "format" : "int32"
+        },
+        "kind" : {
+          "type" : "string",
+          "enum" : [ "Action", "Connection", "ConnectionOverview", "Connector", "ConnectorAction", "ConnectorGroup", "ConnectorTemplate", "Icon", "Environment", "EnvironmentType", "Extension", "StepAction", "Organization", "Integration", "IntegrationOverview", "IntegrationDeployment", "IntegrationDeploymentStateDetails", "IntegrationMetricsSummary", "IntegrationRuntime", "IntegrationEndpoint", "Step", "Permission", "Role", "User", "ConnectionBulletinBoard", "IntegrationBulletinBoard", "OpenApi" ]
+        },
+        "id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Result" : {
+      "type" : "object",
+      "properties" : {
+        "status" : {
+          "type" : "string",
+          "enum" : [ "OK", "ERROR", "UNSUPPORTED" ]
+        },
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/VerifierError"
+          }
+        },
+        "scope" : {
+          "type" : "string",
+          "enum" : [ "PARAMETERS", "CONNECTIVITY" ]
+        }
+      }
+    },
+    "Scheduler" : {
+      "type" : "object",
+      "properties" : {
+        "type" : {
+          "type" : "string",
+          "enum" : [ "timer", "cron" ]
+        },
+        "expression" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Split" : {
+      "type" : "object",
+      "properties" : {
+        "language" : {
+          "type" : "string"
+        },
+        "expression" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Step" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "extension" : {
+          "$ref" : "#/definitions/Extension"
+        },
+        "connection" : {
+          "$ref" : "#/definitions/Connection"
+        },
+        "action" : {
+          "$ref" : "#/definitions/Action"
+        },
+        "stepKind" : {
+          "type" : "string",
+          "enum" : [ "endpoint", "connector", "expressionFilter", "ruleFilter", "extension", "mapper", "split", "log", "headers", "template" ]
+        },
+        "id" : {
+          "type" : "string"
+        },
+        "configuredProperties" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        },
+        "dependencies" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Dependency"
+          }
+        },
+        "metadata" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "string"
+          }
+        }
+      }
+    },
+    "StepDescriptor" : {
+      "type" : "object",
+      "properties" : {
+        "resource" : {
+          "type" : "string"
+        },
+        "kind" : {
+          "type" : "string",
+          "enum" : [ "STEP", "BEAN", "ENDPOINT" ]
+        },
+        "entrypoint" : {
+          "type" : "string"
+        },
+        "propertyDefinitionSteps" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/ActionDescriptorStep"
+          }
+        },
+        "inputDataShape" : {
+          "$ref" : "#/definitions/DataShape"
+        },
+        "outputDataShape" : {
+          "$ref" : "#/definitions/DataShape"
+        }
+      }
+    },
+    "StreamingOutput" : {
+      "type" : "object"
+    },
+    "TargetStateRequest" : {
+      "type" : "object",
+      "properties" : {
+        "targetState" : {
+          "type" : "string",
+          "enum" : [ "Published", "Unpublished", "Error", "Pending" ]
+        }
+      }
+    },
+    "User" : {
+      "type" : "object",
+      "properties" : {
+        "name" : {
+          "type" : "string"
+        },
+        "organizationId" : {
+          "type" : "string"
+        },
+        "username" : {
+          "type" : "string"
+        },
+        "lastName" : {
+          "type" : "string"
+        },
+        "roleId" : {
+          "type" : "string"
+        },
+        "firstName" : {
+          "type" : "string"
+        },
+        "fullName" : {
+          "type" : "string"
+        },
+        "integrations" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/Integration"
+          }
+        },
+        "id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Validator" : {
+      "type" : "object"
+    },
+    "VerifierError" : {
+      "type" : "object",
+      "properties" : {
+        "parameters" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "attributes" : {
+          "type" : "object",
+          "additionalProperties" : {
+            "type" : "object"
+          }
+        },
+        "code" : {
+          "type" : "string"
+        },
+        "description" : {
+          "type" : "string"
+        }
+      }
+    },
+    "Violation" : {
+      "type" : "object"
+    },
+    "When" : {
+      "type" : "object",
+      "properties" : {
+        "value" : {
+          "type" : "string"
+        },
+        "id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "WithId" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "WithIdObject" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        }
+      }
+    },
+    "WithResourceId" : {
+      "type" : "object",
+      "properties" : {
+        "id" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,7 @@
+.integration-progress {
+  width: 180px;
+}
+
+.integration-progress .integration-progress-value {
+  text-transform: capitalize;
+}

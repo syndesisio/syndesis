@@ -1,0 +1,9 @@
+.extension-import-page__action {
+  font-size: 0.75em;
+}
+
+.extension-import-page__actionContainer {
+  background: #fff;
+  margin-left: -20px;
+  padding: 8px 15px;
+}

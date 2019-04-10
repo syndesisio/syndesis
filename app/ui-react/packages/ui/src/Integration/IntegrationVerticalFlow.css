@@ -1,0 +1,31 @@
+.integration-vertical-flow {
+  min-width: 185px;
+  display: flex;
+  flex-flow: row nowrap;
+  flex: 1;
+}
+
+.integration-vertical-flow.is-expanded {
+  min-width: 400px;
+}
+
+.integration-vertical-flow__body {
+  flex: 1 1 auto;
+}
+
+.integration-vertical-flow__expand {
+  flex: 0 0 30px;
+}
+
+.integration-vertical-flow__expand .btn {
+  width: 100%;
+  height: 100%;
+}
+
+.integration-vertical-flow__expand .btn::before {
+  content: '\00bb';
+}
+
+.is-expanded .integration-vertical-flow__expand .btn::before {
+  content: '\00ab';
+}

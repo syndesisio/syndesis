@@ -1,0 +1,12 @@
+.integration-detail-info {
+    display: flex;
+}
+
+.integration-detail-info .fa-pencil {
+    font-weight: 400;
+    color: #0088ce;
+    border-radius: 0;
+    border: 1px solid transparent;
+    padding: 2px 6px;
+    font-size: 12px;
+}

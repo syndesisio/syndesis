@@ -1,0 +1,65 @@
+{
+    meta: {
+        createdAt: '2019-04-04T11:56:33.723Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/api/v1/metrics/integrations',
+        method: 'GET',
+        headers: {
+            'syndesis-mock-session': 'homepage.spec.js',
+            'syndesis-mock-request': '3',
+        },
+        body: '',
+    },
+    res: {
+        status: 500,
+        headers: {
+            'cache-control': [
+                'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
+            ],
+            'content-length': [
+                '169',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Thu, 04 Apr 2019 11:56:46 GMT',
+            ],
+            'gap-auth': [
+                'riccardo-forina@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'syndesis-server',
+            ],
+            'strict-transport-security': [
+                'max-age=31536000 ; includeSubDomains',
+            ],
+            'syndesis-xsrf-token': [
+                'awesome',
+            ],
+            'x-application-context': [
+                'application',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-xss-protection': [
+                '1; mode=block',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: {
+            errorCode: 500,
+            userMsg: 'Please contact the administrator and file a bug report',
+            developerMsg: 'Internal Server Exception. RESTEASY004655: Unable to invoke request',
+        },
+    },
+}

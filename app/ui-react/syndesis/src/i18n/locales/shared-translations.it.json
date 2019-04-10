@@ -1,0 +1,66 @@
+{
+  "it": {
+    "app": {},
+    "modules": {
+      "connections": {},
+      "customizations": {},
+      "dashboard": {},
+      "data": {},
+      "integrations": {}
+    },
+    "shared": {
+      "Actions": "Azioni",
+      "Connection": "Connessione",
+      "Connections": "Connessioni",
+      "Connector": "Connettore",
+      "Create": "Crea",
+      "Customizations": "Personalizzazioni",
+      "DataVirtualization": "Virtualizzazione dei Dati",
+      "DataVirtualizations": "Virtualizzazioni di Dati",
+      "Delete": "Elimina",
+      "Description": "Descrizione",
+      "Details": "Dettagli",
+      "Draft": "Bozza",
+      "Error": "Errore",
+      "Export": "Esportare",
+      "Extension": "Estensione",
+      "Extensions": "Estensioni",
+      "filterByNamePlaceholder": "Filtra per Nome",
+      "Home": "Casa",
+      "ID": "ID",
+      "Import": "Importare",
+      "Integrations": "Integrazioni",
+      "Library": "Libreria",
+      "linkCreateConnection": "Crea Connessione",
+      "linkCreateIntegration": "Crea Integrazione",
+      "Name": "Nome",
+      "nameFilterPlaceholder": "Filtra per Nome...",
+      "Pending": "Pendente",
+      "Publish": "Pubblicare",
+      "Published": "Funzionante",
+      "resultsCount": "{{count}} Risultati",
+      "Settings": "Impostazioni",
+      "Status": "Stato",
+      "Step": "Passo",
+      "Steps": "Passi",
+      "Total": "Totale",
+      "Type": "Tipo",
+      "Unpublish": "Non Pubblicato",
+      "Unpublished": "Fermato",
+      "Update": "Aggiornare",
+      "uploadFileFailureMessage": "<span>Il file '<strong>{{fileName}}</strong>' non può essere caricato</span>",
+      "viewLogs": "Visualizza i Registri",
+      "links": {
+        "contactus": "//access.redhat.com/support/cases/#/case/new",
+        "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online",
+        "connectorsguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/connecting_fuse_online_to_applications_and_services/",
+        "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/fuse_online_sample_integration_tutorials/",
+        "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online/#obtaining-authorization-to-access-applications"
+      },
+      "project": {
+        "name": "Syndesis",
+        "version": "7.1"
+      }
+    }
+  }
+}

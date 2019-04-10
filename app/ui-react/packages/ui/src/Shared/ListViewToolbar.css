@@ -1,0 +1,12 @@
+@media (max-width: 768px) {
+  .toolbar-pf-actions > .toolbar-pf-filter,
+  .toolbar-pf-actions > .form-group {
+    float: left;
+    margin-bottom: 0;
+    margin-right: 5px;
+  }
+  .toolbar-pf-actions .toolbar-pf-action-right {
+    clear: both;
+    padding-top: 10px;
+  }
+}
