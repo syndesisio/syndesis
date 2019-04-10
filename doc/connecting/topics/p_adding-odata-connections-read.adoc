@@ -11,13 +11,6 @@ polls the service at intervals that you specify. When the connection finds
 data that satisfies the connection configuration, the connection passes
 the data to the next step in the integration. 
 
-An OData connection can obtain data from only one resource. As described in 
-the OData 4 specification, an OData resource is identified by a URL and it 
-defines a data model. For an example, see the resource at the following URL:
-
-link:https://services.odata.org/TripPinRESTierService/(S(yvqxbruqidpd1qecd35rwl5o))/$metadata[]
-
-
 .Prerequisite
 You created an OData connection. 
 
