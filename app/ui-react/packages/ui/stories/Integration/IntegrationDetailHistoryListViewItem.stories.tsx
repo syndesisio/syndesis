@@ -11,8 +11,8 @@ const stories = storiesOf(
 );
 
 const integrationPublished = {
-  version: 1,
   updatedAt: 'Feb 24, 2019, 04:27:49',
+  version: 1,
 };
 
 const i18nTextHistoryMenuReplaceDraft = 'Replace Draft';
