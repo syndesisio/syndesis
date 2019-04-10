@@ -4,7 +4,7 @@ module.exports = ({ config, mode }) => {
     exclude: /node_modules/,
     use: [
       'awesome-typescript-loader?configFileName=tsconfig.storybook.json',
-      'react-docgen-typescript-loader',
+      // 'react-docgen-typescript-loader',
     ],
   });
   config.resolve.extensions = ['.ts', '.tsx', '.js', '.jsx'];
