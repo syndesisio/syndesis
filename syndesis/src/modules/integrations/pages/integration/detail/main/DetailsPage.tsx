@@ -5,7 +5,7 @@ import { Integration } from '@syndesis/models';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { IntegrationDetailNavBar } from '../shared/IntegrationDetailNavBar';
+import { IntegrationDetailNavBar } from '../../../../shared/IntegrationDetailNavBar';
 
 /**
  * @integrationId - the ID of the integration for which details are being displayed.
@@ -35,7 +35,7 @@ export class HistoryPage extends React.Component {
           return (
             <div>
               <Translation ns={['integration', 'shared']}>
-                {t => <IntegrationDetailNavBar integration={integration} />}
+                {t => <IntegrationDetailNavBar />}
               </Translation>
               <p>This is the Integration Detail History page.</p>
             </div>

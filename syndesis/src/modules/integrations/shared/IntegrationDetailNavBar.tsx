@@ -13,7 +13,7 @@ import routes from '../routes';
  *
  * @see [DetailsPage]{@link ../pages/DetailsPage}
  */
-export default class IntegrationDetailNavBar extends React.Component {
+export class IntegrationDetailNavBar extends React.Component {
   public render() {
     return (
       <Translation ns={['integration', 'shared']}>
