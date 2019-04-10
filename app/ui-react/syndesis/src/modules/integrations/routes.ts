@@ -41,12 +41,12 @@ export default include('/integrations', {
     configure: include('configure', editorRoutes),
     root: '',
   }),
-  detail: include(':integrationId', {
-    details: 'details',
-    activity: 'activity',
-    metrics: 'metrics',
-  }),
   integration: include(':integrationId', {
+    detail: include(':integrationId', {
+      details: 'details',
+      activity: 'activity',
+      metrics: 'metrics',
+    }),
     edit: include('edit', editorRoutes),
     root: '',
   }),
