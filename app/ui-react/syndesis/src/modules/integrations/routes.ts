@@ -42,7 +42,7 @@ export default include('/integrations', {
     root: '',
   }),
   integration: include(':integrationId', {
-    detail: include(':integrationId', {
+    detail: include('', {
       details: 'details',
       activity: 'activity',
       metrics: 'metrics',
