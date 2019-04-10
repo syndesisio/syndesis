@@ -4,11 +4,9 @@ import { Translation } from 'react-i18next';
 import routes from '../routes';
 
 /**
- * A component that displays a nav bar with 3 items:
+ * A component that displays a nav bar with 3 items, only showing 1 for now:
  *
- * 1. a link to the page that displays the integration with the Details tab enabled,
- * 2. a link to the page that displays the integration with the Activity tab enabled, and
- * 3. a link to the page that displays the integration with the Metrics tab enabled.
+ * 1. a link to the page that displays the integration with the Details tab enabled.
  *
  *
  * @see [DetailsPage]{@link ../pages/DetailsPage}

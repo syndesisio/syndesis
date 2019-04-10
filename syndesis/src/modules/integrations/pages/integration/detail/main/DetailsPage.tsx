@@ -1,7 +1,4 @@
-// import { WithIntegrations } from '@syndesis/api';
 import { Integration } from '@syndesis/models';
-// import { IntegrationDetailHistoryListView, IntegrationDetailHistoryListViewItem } from '@syndesis/ui';
-// import { Loader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -18,8 +15,6 @@ export interface IDetailsPageParams {
 export interface IDetailsPageState {
   integration: Integration;
 }
-
-// const integrationHistoryItems: IntegrationDetailHistoryListViewItem[];
 
 /**
  * This page shows the first, and default, tab of the Integration Detail page.
