@@ -17,7 +17,7 @@
     "lint:staged": "lint-staged",
     "lint": "lerna run --parallel --no-bail lint",
     "test:angular": "lerna run test:ci",
-    "test:jest": "CI=true lerna run test -- --coverage --color",
+    "test:jest": "CI=true lerna run test -- --coverage --color --runInBand",
     "test": "npm-run-all -s test:*",
     "build": "lerna run build",
     "postbuild": "cpr packages/atlasmap-assembly/dist/atlasmap syndesis/public/atlasmap -d",
