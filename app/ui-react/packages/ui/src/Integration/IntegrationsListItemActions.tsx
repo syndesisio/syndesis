@@ -13,6 +13,7 @@ export interface IIntegrationAction {
 export interface IIntegrationsListItemActionsProps {
   integrationId: string;
   actions: IIntegrationAction[];
+  detailsHref?: H.LocationDescriptor;
 }
 
 export class IntegrationsListItemActions extends React.Component<
@@ -21,7 +22,9 @@ export class IntegrationsListItemActions extends React.Component<
   public render() {
     return (
       <>
-        <ButtonLink href={'#todo'}>View</ButtonLink>
+        <ButtonLink href={this.props.detailsHref} as={'primary'}>
+          View
+        </ButtonLink>
         <DropdownKebab
           id={`integration-${this.props.integrationId}-action-menu`}
           pullRight={true}

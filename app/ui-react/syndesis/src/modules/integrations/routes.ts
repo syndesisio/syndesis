@@ -46,6 +46,7 @@ export default include('/integrations', {
       details: 'details',
       activity: 'activity',
       metrics: 'metrics',
+      root: '',
     }),
     edit: include('edit', editorRoutes),
     root: '',

@@ -22,7 +22,7 @@ export interface IDetailsPageState {
  * This component expects an integrationId in the URL
  *
  */
-export class HistoryPage extends React.Component {
+export class DetailsPage extends React.Component {
   public render() {
     return (
       <WithRouteData<IDetailsPageParams, IDetailsPageState>>
