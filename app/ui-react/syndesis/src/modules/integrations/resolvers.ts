@@ -251,6 +251,17 @@ export default {
     },
   },
   integration: {
+    activity: makeResolver<{ integration: Integration }>(
+      routes.integration.activity,
+      ({ integration }) => ({
+        params: {
+          integrationId: integration.id,
+        },
+        state: {
+          integration,
+        },
+      })
+    ),
     details: makeResolver<{ integration: Integration }>(
       routes.integration.details,
       ({ integration }) => ({
@@ -410,5 +421,16 @@ export default {
         })
       ),
     },
+    metrics: makeResolver<{ integration: Integration }>(
+      routes.integration.metrics,
+      ({ integration }) => ({
+        params: {
+          integrationId: integration.id,
+        },
+        state: {
+          integration,
+        },
+      })
+    ),
   },
 };

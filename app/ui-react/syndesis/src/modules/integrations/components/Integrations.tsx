@@ -119,6 +119,9 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                     <IntegrationsListItemActions
                                       integrationId={mi.integration!.id!}
                                       actions={actions}
+                                      detailsHref={resolvers.integration.details(
+                                        { integration: mi.integration }
+                                      )}
                                     />
                                   }
                                   i18nConfigurationRequired={t(
