@@ -32,7 +32,7 @@ export class ActivityPage extends React.Component {
               <Translation ns={['integration', 'shared']}>
                 {t => <IntegrationDetailNavBar />}
               </Translation>
-              <p>This is the Integration Detail History page.</p>
+              <p>This is the Integration Detail Activity page.</p>
             </div>
           );
         }}

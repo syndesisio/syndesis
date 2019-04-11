@@ -2,7 +2,12 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { IntegrationCreatorApp } from './IntegrationCreatorApp';
 import { IntegrationEditorApp } from './IntegrationEditorApp';
-import { DetailsPage, IntegrationsPage, TestAtlasmapPage } from './pages';
+import {
+  ActivityPage,
+  DetailsPage,
+  IntegrationsPage,
+  TestAtlasmapPage,
+} from './pages';
 import routes from './routes';
 
 /**
@@ -41,6 +46,11 @@ export class IntegrationsModule extends React.Component {
           path={routes.integration.details}
           exact={true}
           component={DetailsPage}
+        />
+        <Route
+          path={routes.integration.activity}
+          exact={true}
+          component={ActivityPage}
         />
       </Switch>
     );
