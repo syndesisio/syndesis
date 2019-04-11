@@ -16,11 +16,13 @@ export interface IIntegrationDetailNavBarProps {
  * A component that displays a nav bar with 3 items, only showing 1 for now:
  *
  * 1. a link to the page that displays the integration with the Details tab enabled,
- * 2. a link to the page that displays the integration with the Activity tab enabled.
+ * 2. a link to the page that displays the integration with the Activity tab enabled, and
+ * 3. a link to the page that displays the integration with the Metrics tab enabled.
  *
  *
  * @see [DetailsPage]{@link ../pages/detail/DetailsPage}
  * @see [ActivityPage]{@link ../pages/detail/ActivityPage}
+ * @see [MetricsPage]{@link ../pages/detail/MetricsPage}
  */
 export class IntegrationDetailNavBar extends React.Component<
   IIntegrationDetailNavBarProps
@@ -44,6 +46,12 @@ export class IntegrationDetailNavBar extends React.Component<
               />
               <TabBarItem
                 label={'Activity'}
+                to={resolvers.integration.activity({
+                  integration,
+                })}
+              />
+              <TabBarItem
+                label={'Metrics'}
                 to={resolvers.integration.activity({
                   integration,
                 })}
