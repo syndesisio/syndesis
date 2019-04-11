@@ -17,9 +17,10 @@ export interface IActivityPageState {
 }
 
 /**
- * This page shows the first, and default, tab of the Integration Detail page.
+ * This page shows the second tab of the Integration Detail page.
  *
- * This component expects an integrationId in the URL
+ * This component expects either an integrationId in the URL,
+ * or an integration object set via the state.
  *
  */
 export class ActivityPage extends React.Component {

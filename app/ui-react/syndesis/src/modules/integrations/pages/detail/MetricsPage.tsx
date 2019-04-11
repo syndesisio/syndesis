@@ -7,33 +7,33 @@ import { IntegrationDetailNavBar } from '../../shared/IntegrationDetailNavBar';
 /**
  * @integrationId - the ID of the integration for which details are being displayed.
  */
-export interface IDetailsPageParams {
+export interface IMetricsPageParams {
   integration: Integration;
   integrationId: string;
 }
 
-export interface IDetailsPageState {
+export interface IMetricsPageState {
   integration: Integration;
 }
 
 /**
- * This page shows the first, and default, tab of the Integration Detail page.
+ * This page shows the second tab of the Integration Detail page.
  *
  * This component expects either an integrationId in the URL,
  * or an integration object set via the state.
  *
  */
-export class DetailsPage extends React.Component {
+export class MetricsPage extends React.Component {
   public render() {
     return (
-      <WithRouteData<IDetailsPageParams, IDetailsPageState>>
+      <WithRouteData<IMetricsPageParams, IMetricsPageState>>
         {({ integrationId }, { integration }, { history }) => {
           return (
             <div>
               <Translation ns={['integration', 'shared']}>
                 {t => <IntegrationDetailNavBar integration={integration} />}
               </Translation>
-              <p>This is the Integration Detail History page.</p>
+              <p>This is the Integration Detail Metrics page.</p>
             </div>
           );
         }}
