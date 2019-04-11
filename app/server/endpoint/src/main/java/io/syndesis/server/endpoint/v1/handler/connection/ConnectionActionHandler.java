@@ -190,15 +190,17 @@ public class ConnectionActionHandler {
         final Map<String, List<DynamicActionMetadata.ActionPropertySuggestion>> actionPropertySuggestions = dynamicMetadata.properties();
 
         final ConnectorDescriptor.Builder enriched = new ConnectorDescriptor.Builder().createFrom(descriptor);
-        actionPropertySuggestions.forEach((k, vals) -> enriched.replaceConfigurationProperty(k,
-            b -> b.addAllEnum(vals.stream().map(s -> ConfigurationProperty.PropertyValue.Builder.from(s))::iterator)));
-
-        // Setting the defaultValue as suggested by the metadata
+        // Setting enum values and the defaultValue as suggested by the metadata
         for (final Entry<String, List<DynamicActionMetadata.ActionPropertySuggestion>> suggestions : actionPropertySuggestions.entrySet()) {
+            if (suggestions.getValue().size() > 1) {
+                enriched.replaceConfigurationProperty(suggestions.getKey(),
+                        builder -> builder.addAllEnum(suggestions.getValue()
+                                                                .stream()
+                                                                .map(ConfigurationProperty.PropertyValue.Builder::from)::iterator));
+            }
+
             if (suggestions.getValue().size() == 1) {
-                for (final DynamicActionMetadata.ActionPropertySuggestion suggestion : suggestions.getValue()) {
-                    enriched.replaceConfigurationProperty(suggestion.displayValue(), v -> v.defaultValue(suggestion.value()));
-                }
+                enriched.replaceConfigurationProperty(suggestions.getKey(), builder -> builder.defaultValue(suggestions.getValue().get(0).value()));
             }
         }
 
