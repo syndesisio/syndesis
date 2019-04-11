@@ -1,7 +1,13 @@
+import * as H from 'history';
 import { Container, TabBar, TabBarItem } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import routes from '../routes';
+
+export interface IIntegrationDetailNavBarProps {
+  detailsTabHref: H.LocationDescriptor;
+  activityTabHref: H.LocationDescriptor;
+}
 
 /**
  * A component that displays a nav bar with 3 items, only showing 1 for now:
@@ -13,7 +19,9 @@ import routes from '../routes';
  * @see [DetailsPage]{@link ../pages/detail/DetailsPage}
  * @see [ActivityPage]{@link ../pages/detail/ActivityPage}
  */
-export class IntegrationDetailNavBar extends React.Component {
+export class IntegrationDetailNavBar extends React.Component<
+  IIntegrationDetailNavBarProps
+> {
   public render() {
     return (
       <Translation ns={['integration', 'shared']}>
