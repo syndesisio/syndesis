@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { IntegrationCreatorApp } from './IntegrationCreatorApp';
 import { IntegrationEditorApp } from './IntegrationEditorApp';
-import { IntegrationsPage, TestAtlasmapPage } from './pages';
+import { DetailsPage, IntegrationsPage, TestAtlasmapPage } from './pages';
 import routes from './routes';
 
 /**
@@ -36,6 +36,11 @@ export class IntegrationsModule extends React.Component {
           path={'/integrations/atlasmap'}
           exact={true}
           component={TestAtlasmapPage}
+        />
+        <Route
+          path={routes.integration.details}
+          exact={true}
+          component={DetailsPage}
         />
       </Switch>
     );
