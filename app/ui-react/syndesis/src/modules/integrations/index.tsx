@@ -6,6 +6,7 @@ import {
   ActivityPage,
   DetailsPage,
   IntegrationsPage,
+  MetricsPage,
   TestAtlasmapPage,
 } from './pages';
 import routes from './routes';
@@ -51,6 +52,11 @@ export class IntegrationsModule extends React.Component {
           path={routes.integration.activity}
           exact={true}
           component={ActivityPage}
+        />
+        <Route
+          path={routes.integration.metrics}
+          exact={true}
+          component={MetricsPage}
         />
       </Switch>
     );
