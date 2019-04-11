@@ -410,7 +410,7 @@ export default {
         })
       ),
     },
-    history: makeResolver<{ integration: Integration }>(
+    activity: makeResolver<{ integration: Integration }>(
       routes.integration.activity,
       ({ integration }) => ({
         params: {

@@ -1,11 +1,15 @@
+import { Integration } from '@syndesis/models';
 import { Container, TabBar, TabBarItem } from '@syndesis/ui';
-import * as H from 'history';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
+import resolvers from '../resolvers';
 
+/**
+ * @param integration - the integration being displayed. If it
+ * exists, it must equal to the [integrationId]{@link IIntegrationDetailNavBarProps#integration}.
+ */
 export interface IIntegrationDetailNavBarProps {
-  detailsTabHref: H.LocationDescriptor;
-  activityTabHref: H.LocationDescriptor;
+  integration: Integration;
 }
 
 /**
@@ -22,6 +26,7 @@ export class IntegrationDetailNavBar extends React.Component<
   IIntegrationDetailNavBarProps
 > {
   public render() {
+    const integration = this.props.integration;
     return (
       <Translation ns={['integration', 'shared']}>
         {t => (
@@ -31,8 +36,18 @@ export class IntegrationDetailNavBar extends React.Component<
             }}
           >
             <TabBar>
-              <TabBarItem label={'Details'} to={this.props.detailsTabHref} />
-              <TabBarItem label={'Activity'} to={this.props.activityTabHref} />
+              <TabBarItem
+                label={'Details'}
+                to={resolvers.integration.details({
+                  integration,
+                })}
+              />
+              <TabBarItem
+                label={'Activity'}
+                to={resolvers.integration.activity({
+                  integration,
+                })}
+              />
             </TabBar>
           </Container>
         )}

@@ -2,7 +2,6 @@ import { Integration } from '@syndesis/models';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import resolvers from '../../resolvers';
 import { IntegrationDetailNavBar } from '../../shared/IntegrationDetailNavBar';
 
 /**
@@ -31,16 +30,7 @@ export class ActivityPage extends React.Component {
           return (
             <div>
               <Translation ns={['integration', 'shared']}>
-                {t => (
-                  <IntegrationDetailNavBar
-                    detailsTabHref={resolvers.integration.details({
-                      integration,
-                    })}
-                    activityTabHref={resolvers.integration.details({
-                      integration,
-                    })}
-                  />
-                )}
+                {t => <IntegrationDetailNavBar integration={integration} />}
               </Translation>
               <p>This is the Integration Detail Activity page.</p>
             </div>
