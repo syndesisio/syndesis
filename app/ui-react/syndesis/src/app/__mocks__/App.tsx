@@ -18,6 +18,7 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
                 getPodLogUrl: () => '',
                 hideNavigation: () => void 0,
                 logout: () => void 0,
+                pushNotification: () => void 0,
                 showNavigation: () => void 0,
               }}
             >

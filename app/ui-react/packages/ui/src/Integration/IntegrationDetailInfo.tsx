@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-import { IntegrationDetailEditableName } from '../../src';
+import { IntegrationDetailEditableName } from './IntegrationDetailEditableName';
 
 import './IntegrationDetailInfo.css';
 

@@ -1,4 +1,5 @@
 import { IntegrationMonitoring } from '@syndesis/models';
+import { INotificationType } from '@syndesis/ui';
 import * as React from 'react';
 import { IConfigFile } from './WithConfig';
 
@@ -11,6 +12,7 @@ export interface IAppContext {
   logout(): void;
   hideNavigation(): void;
   showNavigation(): void;
+  pushNotification(msg: string, type: INotificationType): void;
 }
 
 export const AppContextDefaultValue = {} as IAppContext;
