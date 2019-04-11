@@ -1,8 +1,7 @@
-import * as H from 'history';
 import { Container, TabBar, TabBarItem } from '@syndesis/ui';
+import * as H from 'history';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import routes from '../routes';
 
 export interface IIntegrationDetailNavBarProps {
   detailsTabHref: H.LocationDescriptor;
@@ -32,8 +31,8 @@ export class IntegrationDetailNavBar extends React.Component<
             }}
           >
             <TabBar>
-              <TabBarItem label={'Details'} to={routes.integration.details} />
-              <TabBarItem label={'Activity'} to={routes.integration.activity} />
+              <TabBarItem label={'Details'} to={this.props.detailsTabHref} />
+              <TabBarItem label={'Activity'} to={this.props.activityTabHref} />
             </TabBar>
           </Container>
         )}
