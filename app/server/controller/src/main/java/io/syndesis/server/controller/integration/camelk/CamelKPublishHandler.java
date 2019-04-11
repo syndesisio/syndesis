@@ -16,6 +16,8 @@
 package io.syndesis.server.controller.integration.camelk;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -66,6 +68,7 @@ import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
 import io.syndesis.server.endpoint.v1.VersionService;
 import io.syndesis.server.openshift.OpenShiftService;
+import joptsimple.internal.Strings;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -74,6 +77,7 @@ import org.springframework.stereotype.Component;
 @Qualifier("camel-k")
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
 public class CamelKPublishHandler extends BaseCamelKHandler implements StateChangeHandler {
+    private static final List<String> DEFAULT_CUSTOMIZERS = Arrays.asList("metadata", "logging", "syndesis");
 
     private final IntegrationResourceManager resourceManager;
     private final IntegrationProjectGenerator projectGenerator;
@@ -244,12 +248,18 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
 
         ImmutableIntegrationSpec.Builder integrationSpecBuilder = new IntegrationSpec.Builder();
 
+        Collection<String> customizers = DEFAULT_CUSTOMIZERS;
+        if (!configuration.getCamelk().getCustomizers().isEmpty()) {
+            customizers = configuration.getCamelk().getCustomizers();
+        }
+
         //add customizers
-        //TODO: make all this configurable, where makes sense
         integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
             .type("property")
-            .value("camel.k.customizer=metadata,logging")
+            .value("camel.k.customizer=" + Strings.join(customizers, ","))
             .build());
+
+        //TODO: make all this configurable, where makes sense
         integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
             .type("env")
             .value("AB_JMX_EXPORTER_CONFIG=/etc/camel/resources/prometheus-config.yml")
