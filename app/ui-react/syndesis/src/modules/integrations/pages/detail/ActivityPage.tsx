@@ -7,12 +7,12 @@ import { IntegrationDetailNavBar } from '../../shared/IntegrationDetailNavBar';
 /**
  * @integrationId - the ID of the integration for which details are being displayed.
  */
-export interface IHistoryPageParams {
+export interface IActivityPageParams {
   integration: Integration;
   integrationId: string;
 }
 
-export interface IHistoryPageState {
+export interface IActivityPageState {
   integration: Integration;
 }
 
@@ -22,10 +22,10 @@ export interface IHistoryPageState {
  * This component expects an integrationId in the URL
  *
  */
-export class HistoryPage extends React.Component {
+export class ActivityPage extends React.Component {
   public render() {
     return (
-      <WithRouteData<IHistoryPageParams, IHistoryPageState>>
+      <WithRouteData<IActivityPageParams, IActivityPageState>>
         {({ integrationId }, { integration }, { history }) => {
           return (
             <div>
