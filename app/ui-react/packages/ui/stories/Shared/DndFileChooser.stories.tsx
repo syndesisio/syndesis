@@ -18,11 +18,19 @@ const noFileSelectedMessage = 'no file selected';
 const handleFiles = (files: File[]) => {
   files.forEach(file => {
     action('Process file ' + file.name + '\n');
+    logUploadSucceedMessage();
   });
 };
+const logUploadFailedMessage = action('upload failed message handler');
+const logUploadSucceedMessage = action('upload succeeded message handler');
+
 const selectedFileLabel = 'Selected file:';
-const uploadFailedMessage = (fileName: string) =>
-  '<span>File <strong>' + fileName + '</strong> could not be uploaded</span>';
+const uploadFailedMessage = (fileName: string) => {
+  logUploadFailedMessage();
+  return (
+    '<span>File <strong>' + fileName + '</strong> could not be uploaded</span>'
+  );
+};
 
 const multiNotes =
   '- Verify the drop area has an etched outline\n' +

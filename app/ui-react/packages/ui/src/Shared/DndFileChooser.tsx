@@ -1,13 +1,9 @@
-import {
-  Grid,
-  Icon,
-  TimedToastNotification,
-  ToastNotificationList,
-} from 'patternfly-react';
+import { Grid, Icon } from 'patternfly-react';
 import * as React from 'react';
 import Dropzone from 'react-dropzone';
 import { Container } from '../Layout/Container';
 import './DndFileChooser.css';
+import { INotification, INotificationType } from './Notifications';
 
 /**
  * The properties of the `DndFileChooser`.
@@ -64,11 +60,6 @@ export interface IDndFileChooserProps {
   i18nUploadSuccessMessage?: string;
 
   /**
-   * The number of milliseconds that toast notifications will be displayed. Defaults to `4000`.
-   */
-  notificationTimerDelay?: number;
-
-  /**
    * Obtains the localized text (may include HTML tags) that appears when the file upload was rejected. This
    * will occur when a DnD of a file with the wrong extension is dropped. This message is presented
    * as a timed toast notification.
@@ -79,14 +70,6 @@ export interface IDndFileChooserProps {
    * Callback for when one or more file uploads have been accepted. Caller should handler processing of the files.
    */
   onUploadAccepted(file: File[]): void;
-}
-
-/**
- * A type used to identify files that were rejected. The key is the file name.
- */
-interface INotificationType {
-  key: string;
-  message: string;
 }
 
 /**
@@ -102,7 +85,7 @@ export interface IDndFileChooserState {
    * The error notifications for rejected files. After a toast is displayed for a notification it is removed
    * from the array.
    */
-  notifications: INotificationType[];
+  notifications: INotification[];
 }
 
 /**
@@ -116,7 +99,6 @@ export class DndFileChooser extends React.Component<
   // setup default prop values
   public static defaultProps = {
     allowMultiple: false,
-    notificationTimerDelay: 4000, // 4 seconds
   };
 
   public constructor(props: IDndFileChooserProps) {
@@ -198,6 +180,7 @@ export class DndFileChooser extends React.Component<
     const notifications = rejectedFiles.map(file => ({
       key: file.name,
       message: this.props.onUploadRejected(file.name),
+      type: 'error' as INotificationType,
     }));
 
     // If single file dropped then all files will be cleared. If multiple allowed, and multiple dropped,
@@ -207,20 +190,6 @@ export class DndFileChooser extends React.Component<
       ...this.state,
       files: [],
       notifications: [...this.state.notifications, ...notifications],
-    });
-  }
-
-  /**
-   * Removes the specified notification from the list of notifications that have yet to be displayed.
-   * @param notificationToRemove the notificiation being removed
-   */
-  public removeNotificationAction(notificationToRemove: INotificationType) {
-    const notifications = this.state.notifications.filter(
-      notification => notificationToRemove.key !== notification.key
-    );
-    this.setState({
-      ...this.state,
-      notifications,
     });
   }
 
@@ -235,26 +204,6 @@ export class DndFileChooser extends React.Component<
       >
         {({ getRootProps, getInputProps }) => (
           <Container>
-            <ToastNotificationList className="dnd-file-chooser__notificationList">
-              {this.state.notifications.map(notification => (
-                <TimedToastNotification
-                  key={notification.key}
-                  type={'error'}
-                  persistent={false}
-                  onDismiss={this.removeNotificationAction.bind(
-                    this,
-                    notification
-                  )}
-                  timerdelay={this.props.notificationTimerDelay}
-                >
-                  <Container
-                    dangerouslySetInnerHTML={{
-                      __html: notification.message,
-                    }}
-                  />
-                </TimedToastNotification>
-              ))}
-            </ToastNotificationList>
             <Grid
               disabled={this.props.disableDropzone}
               fluid={true}

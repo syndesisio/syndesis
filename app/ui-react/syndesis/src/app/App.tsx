@@ -7,7 +7,10 @@ import { IntegrationMonitoring } from '@syndesis/models';
 import {
   AppLayout,
   AppTopMenu,
+  INotification,
+  INotificationType,
   Loader,
+  Notifications,
   PfNavLink,
   PfVerticalNavItem,
   UnrecoverableError,
@@ -41,10 +44,12 @@ export interface IAppBaseProps {
 
 export interface IAppBaseState {
   showNavigation: boolean;
+  notifications: INotification[];
 }
 
 export class App extends React.Component<IAppBaseProps, IAppBaseState> {
   public state = {
+    notifications: [],
     showNavigation: true,
   };
 
@@ -54,6 +59,31 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
     this.getPodLogUrl = this.getPodLogUrl.bind(this);
     this.hideNavigation = this.hideNavigation.bind(this);
     this.showNavigation = this.showNavigation.bind(this);
+    this.pushNotification = this.pushNotification.bind(this);
+    this.removeNotificationAction = this.removeNotificationAction.bind(this);
+  }
+
+  public removeNotificationAction(notifToRemove: INotification) {
+    const notifications = this.state.notifications.filter(
+      (n: INotification) => n.key !== notifToRemove.key
+    );
+
+    this.setState({
+      notifications,
+    });
+  }
+
+  public pushNotification(msg: string, type: INotificationType) {
+    this.setState({
+      notifications: [
+        ...this.state.notifications,
+        {
+          key: Date.now().toString(),
+          message: msg,
+          type,
+        },
+      ],
+    });
   }
 
   public logout() {
@@ -150,6 +180,7 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
                       getPodLogUrl: this.getPodLogUrl,
                       hideNavigation: this.hideNavigation,
                       logout: this.logout,
+                      pushNotification: this.pushNotification,
                       showNavigation: this.showNavigation,
                     }}
                   >
@@ -176,6 +207,13 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
                                   onNavigationCollapse={this.hideNavigation}
                                   onNavigationExpand={this.showNavigation}
                                 >
+                                  <Notifications
+                                    notifications={this.state.notifications}
+                                    notificationTimerDelay={8000}
+                                    removeNotificationAction={
+                                      this.removeNotificationAction
+                                    }
+                                  />
                                   <WithRouter>
                                     {({ match }) => (
                                       <WithErrorBoundary key={match.url}>
