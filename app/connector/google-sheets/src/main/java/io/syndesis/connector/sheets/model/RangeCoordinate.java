@@ -16,6 +16,8 @@
 
 package io.syndesis.connector.sheets.model;
 
+import java.util.StringJoiner;
+
 /**
  * @author Christoph Deppisch
  */
@@ -81,6 +83,18 @@ public final class RangeCoordinate extends CellCoordinate {
         } else {
             return range;
         }
+    }
+
+    /**
+     * Get all names of columns included in this range.
+     * @return
+     */
+    public String getColumnNames() {
+        StringJoiner delimitedList = new StringJoiner(",");
+        for (int i = columnStartIndex; i < columnEndIndex; i++) {
+            delimitedList.add(CellCoordinate.getColumnName(i));
+        }
+        return delimitedList.toString();
     }
 
     public int getRowStartIndex() {

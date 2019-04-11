@@ -15,6 +15,9 @@
  */
 package io.syndesis.connector.sheets;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,6 +30,7 @@ import io.syndesis.connector.sheets.meta.GoogleSheetsMetaDataHelper;
 import io.syndesis.connector.sheets.meta.GoogleValueRangeMetaData;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
+import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
@@ -45,9 +49,24 @@ public final class GoogleSheetsMetadataRetrieval extends ComponentMetadataRetrie
         final GoogleValueRangeMetaData valueRangeMetaData = (GoogleValueRangeMetaData) metadata.getPayload();
 
         if (valueRangeMetaData != null) {
+            if (valueRangeMetaData.getColumnNames().length == 0) {
+                String columnNames;
+                Map<String, List<PropertyPair>> propertySuggestions = new HashMap<>();
+                if (ObjectHelper.isNotEmpty(valueRangeMetaData.getSpreadsheetId()) &&
+                        ObjectHelper.isNotEmpty(valueRangeMetaData.getHeaderRow())) {
+                    columnNames = GoogleSheetsMetaDataHelper.fetchHeaderRow(valueRangeMetaData.getSpreadsheetId(), valueRangeMetaData.getRange(), valueRangeMetaData.getHeaderRow(), properties);
+                } else {
+                    RangeCoordinate coordinate = RangeCoordinate.fromRange(valueRangeMetaData.getRange());
+                    columnNames = coordinate.getColumnNames();
+                }
+
+                propertySuggestions.put("columnNames", Collections.singletonList(new PropertyPair(columnNames)));
+                return SyndesisMetadata.of(propertySuggestions);
+            }
+
             final JsonSchema spec = GoogleSheetsMetaDataHelper.createSchema(valueRangeMetaData.getRange(),
                     Optional.ofNullable(valueRangeMetaData.getMajorDimension()).orElse(RangeCoordinate.DIMENSION_ROWS),
-                    valueRangeMetaData.isSplit());
+                    valueRangeMetaData.isSplit(), valueRangeMetaData.getColumnNames());
 
             try {
                 DataShape.Builder inputShapeBuilder = new DataShape.Builder().type("VALUE_RANGE_PARAM_IN");
