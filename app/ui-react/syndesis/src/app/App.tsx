@@ -11,7 +11,7 @@ import {
   INotificationType,
   Loader,
   Notifications,
-  PfNavLink,
+  PfDropdownItem,
   PfVerticalNavItem,
   UnrecoverableError,
 } from '@syndesis/ui';
@@ -19,14 +19,13 @@ import { WithLoader, WithRouter } from '@syndesis/utils';
 import i18next from 'i18next';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { Route, RouteComponentProps, Switch } from 'react-router-dom';
+import { Link, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { PageNotFound, WithErrorBoundary } from '../shared';
 import './App.css';
 import { AppContext } from './AppContext';
 import { IConfigFile, WithConfig } from './WithConfig';
 
-import pictogram from './glasses_logo_square.png';
-import typogram from './syndesis-logo-svg-white.svg';
+import logo from './syndesis_logo_full_darkbkg.svg';
 
 export interface IAppRoute {
   component:
@@ -131,7 +130,13 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
   public renderAppNav(t: i18next.TFunction) {
     return (
       <AppTopMenu username={'developer'}>
-        <PfNavLink to={'/logout'} label={t('Logout')} />
+        <PfDropdownItem>
+          <Link
+            to={'/logout'}
+            className="pf-c-dropdown__menu-item"
+            children={t('Logout')}
+          />
+        </PfDropdownItem>
       </AppTopMenu>
     );
   }
@@ -200,8 +205,13 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
                                   appTitle={'Syndesis'}
                                   appNav={this.renderAppNav(t)}
                                   verticalNav={this.renderVerticalNav()}
-                                  pictograph={pictogram}
-                                  typogram={typogram}
+                                  pictograph={
+                                    <img
+                                      src={logo}
+                                      alt="Syndesis"
+                                      style={{ minWidth: '164px' }}
+                                    />
+                                  }
                                   logoHref={'/'}
                                   showNavigation={this.state.showNavigation}
                                   onNavigationCollapse={this.hideNavigation}

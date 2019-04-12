@@ -1,3 +1,4 @@
+import { Text } from '@patternfly/react-core';
 import { EmptyState } from 'patternfly-react';
 import { useState } from 'react';
 import * as React from 'react';
@@ -55,9 +56,9 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
         </EmptyState.Action>
         {showErrorInfo && error && (
           <EmptyState.Help style={{ textAlign: 'left' }}>
-            <p>
+            <Text>
               {error.name}: {error.message}
-            </p>
+            </Text>
             {errorInfo && <pre>{errorInfo.componentStack}</pre>}
           </EmptyState.Help>
         )}

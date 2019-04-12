@@ -8,4 +8,5 @@ export * from './LogViewer';
 export * from './Notifications';
 export * from './SimplePageHeader';
 export * from './ProgressWithLink';
+export * from './PfDropdownItem';
 export * from './UnrecoverableError';

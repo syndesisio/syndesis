@@ -4,6 +4,7 @@ import {
   ApiConnectorListItem,
   ApiConnectorListSkeleton,
   ApiConnectorListView,
+  Container,
   IActiveFilter,
   IFilterType,
   ISortType,
@@ -109,6 +110,18 @@ export default class ApiConnectorsPage extends React.Component {
                   {t => (
                     <>
                       <CustomizationsNavBar />
+                      <Container className="pf-u-my-md">
+                        <h1 className="pf-c-title pf-m-xl">
+                          {t('apiConnector.apiConnectorsPageTitle')}
+                        </h1>
+                        <p
+                          dangerouslySetInnerHTML={{
+                            __html: t(
+                              'apiConnector.apiConnectorsPageDescription'
+                            ),
+                          }}
+                        />
+                      </Container>
                       <ApiConnectorListView
                         filterTypes={filterTypes}
                         sortTypes={sortTypes}
@@ -118,9 +131,8 @@ export default class ApiConnectorsPage extends React.Component {
                         }
                         resultsCount={filteredAndSorted.length}
                         {...helpers}
-                        i18nDescription={t(
-                          'apiConnector.apiConnectorsPageDescription'
-                        )}
+                        i18nTitle={''}
+                        i18nDescription={''}
                         i18nEmptyStateInfo={t('apiConnector.emptyStateInfo')}
                         i18nEmptyStateTitle={t(
                           'apiConnector.CreateApiConnector'
@@ -135,7 +147,6 @@ export default class ApiConnectorsPage extends React.Component {
                         i18nResultsCount={t('shared:resultsCount', {
                           count: filteredAndSorted.length,
                         })}
-                        i18nTitle={t('apiConnector.apiConnectorsPageTitle')}
                       >
                         <WithLoader
                           error={error}

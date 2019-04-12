@@ -1,6 +1,7 @@
 import { WithExtensionHelpers, WithExtensions } from '@syndesis/api';
 import { Extension } from '@syndesis/models';
 import {
+  Container,
   ExtensionListItem,
   ExtensionListSkeleton,
   ExtensionListView,
@@ -104,15 +105,26 @@ export default class ExtensionsPage extends React.Component {
                         {t => (
                           <>
                             <CustomizationsNavBar />
+                            <Container className="pf-u-my-md">
+                              <h1 className="pf-c-title pf-m-xl">
+                                {t('extension.extensionsPageTitle')}
+                              </h1>
+                              <p
+                                dangerouslySetInnerHTML={{
+                                  __html: t(
+                                    'extension.extensionsPageDescription'
+                                  ),
+                                }}
+                              />
+                            </Container>
                             <ExtensionListView
                               filterTypes={filterTypes}
                               sortTypes={sortTypes}
                               linkImportExtension={resolvers.extensions.import()}
                               resultsCount={filteredAndSorted.length}
                               {...helpers}
-                              i18nDescription={t(
-                                'extension.extensionsPageDescription'
-                              )}
+                              i18nTitle={''}
+                              i18nDescription={''}
                               i18nEmptyStateInfo={t(
                                 'extension.emptyStateInfoMessage'
                               )}
@@ -132,7 +144,6 @@ export default class ExtensionsPage extends React.Component {
                               i18nResultsCount={t('shared:resultsCount', {
                                 count: filteredAndSorted.length,
                               })}
-                              i18nTitle={t('extension.extensionsPageTitle')}
                             >
                               <WithLoader
                                 error={error}

@@ -108,6 +108,7 @@ export class CiCdManagePageUI extends React.Component<
     return (
       <>
         <SimplePageHeader
+          className="pf-u-my-md"
           i18nTitle={this.props.i18nPageTitle}
           i18nDescription={this.props.i18nPageDescription}
         />

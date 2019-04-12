@@ -1,3 +1,4 @@
+import { Text } from '@patternfly/react-core';
 import { Icon } from 'patternfly-react';
 import * as React from 'react';
 
@@ -12,10 +13,10 @@ export class IntegrationDetailDescription extends React.PureComponent<
     return (
       <div>
         {this.props.description ? (
-          <p>
+          <Text>
             {this.props.description}&nbsp;
             <Icon name={'pencil'} />
-          </p>
+          </Text>
         ) : null}
       </div>
     );

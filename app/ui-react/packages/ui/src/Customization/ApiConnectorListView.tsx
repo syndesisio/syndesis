@@ -1,3 +1,4 @@
+import { Text, Title } from '@patternfly/react-core';
 import {
   EmptyState,
   ListView,
@@ -41,10 +42,14 @@ export class ApiConnectorListView extends React.Component<
           </div>
         </ListViewToolbar>
         <Container>
-          <h1>{this.props.i18nTitle}</h1>
-          <div
-            dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
-          />
+          {this.props.i18nTitle !== '' && (
+            <Title size="xl">{this.props.i18nTitle}</Title>
+          )}
+          {this.props.i18nDescription !== '' && (
+            <Text
+              dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
+            />
+          )}
           {this.props.children ? (
             <ListView>{this.props.children}</ListView>
           ) : (

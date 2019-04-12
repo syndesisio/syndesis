@@ -43,10 +43,10 @@ export default describe('App', () => {
   it('Should render', async () => {
     const { getByText, getByTestId, queryByTestId } = render(testComponent);
 
-    expect(getByTestId('navbar-link-/some-test-url')).toHaveAttribute(
-      'href',
-      '/some-test-url'
-    );
+    // expect(getByTestId('navbar-link-/some-test-url')).toHaveAttribute(
+    //   'href',
+    //   '/some-test-url'
+    // );
 
     expect(getByText('Test route')).toBeTruthy();
 
