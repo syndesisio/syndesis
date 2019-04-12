@@ -15,7 +15,13 @@
  */
 package io.syndesis.server.controller;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.NestedConfigurationProperty;
 
 @ConfigurationProperties("controllers")
 public class ControllersConfigurationProperties {
@@ -28,6 +34,9 @@ public class ControllersConfigurationProperties {
     private int maxDeploymentsPerUser = 1;
     private int integrationStateCheckInterval = 60;
     private boolean exposeVia3scale;
+
+    @NestedConfigurationProperty
+    private CamelK camelk = new CamelK();
 
     public int getMaxIntegrationsPerUser() {
         return maxIntegrationsPerUser;
@@ -59,5 +68,31 @@ public class ControllersConfigurationProperties {
 
     public boolean isExposeVia3scale() {
         return exposeVia3scale;
+    }
+
+    public CamelK getCamelk() {
+        return camelk;
+    }
+
+    public static class CamelK {
+        private boolean compression;
+        private Map<String, String> environment = new HashMap<>();
+        private Set<String> customizers = new HashSet<>();
+
+        public Map<String, String> getEnvironment() {
+            return environment;
+        }
+
+        public boolean isCompression() {
+            return compression;
+        }
+
+        public void setCompression(boolean compression) {
+            this.compression = compression;
+        }
+
+        public Set<String> getCustomizers() {
+            return customizers;
+        }
     }
 }
