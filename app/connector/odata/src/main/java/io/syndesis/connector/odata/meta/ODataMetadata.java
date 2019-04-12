@@ -46,6 +46,7 @@ public class ODataMetadata implements ODataConstants {
         private TypeClass type;
         private boolean array;
         private boolean required;
+        private Set<PropertyMetadata> chilldProperties;
 
         public PropertyMetadata(String name, Class<?> type) {
             this.name = name;
@@ -75,6 +76,14 @@ public class ODataMetadata implements ODataConstants {
         public void setRequired(boolean required) {
             this.required = required;
         }
+
+        public Set<PropertyMetadata> getChilldProperties() {
+            return chilldProperties;
+        }
+
+        public void setChildProperties(Set<PropertyMetadata> childProperties) {
+            this.chilldProperties = childProperties;
+        }
     }
 
     private Set<String> entityNames;
@@ -95,6 +104,10 @@ public class ODataMetadata implements ODataConstants {
         }
 
         entityProperties.add(property);
+    }
+
+    public void setEntityProperties(Set<PropertyMetadata> properties) {
+        entityProperties = properties;
     }
 
     public boolean hasEntityNames() {

@@ -282,6 +282,30 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
+    public void testReferenceODataRouteIssue5151() throws Exception {
+        String resourcePath = "Airports";
+
+        context = new SpringCamelContext(applicationContext);
+
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, REF_SERVICE_URI));
+
+        Step odataStep = createODataStep(odataConnector, resourcePath);
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
+
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setMinimumExpectedMessageCount(1);
+        result.setResultWaitTime(3600000L);
+
+        context.start();
+
+        result.assertIsSatisfied();
+        testResult(result, 0, REF_SERVER_AIRPORT_DATA_1);
+    }
+
+    @Test
     public void testODataRouteWithSimpleQuery() throws Exception {
         String queryParams = "$filter=ID eq 1";
 

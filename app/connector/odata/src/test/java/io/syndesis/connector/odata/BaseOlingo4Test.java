@@ -20,12 +20,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.component.olingo4.Olingo4AppEndpointConfiguration;
 import org.apache.camel.component.olingo4.Olingo4Component;
 import org.apache.camel.main.Main;
+import org.apache.http.HttpHeaders;
 import org.apache.http.HttpStatus;
 import org.apache.olingo.client.api.ODataClient;
 import org.apache.olingo.client.api.communication.response.ODataRetrieveResponse;
@@ -94,6 +96,14 @@ public class BaseOlingo4Test extends AbstractODataTest {
         // workaround the no serviceUri problem.
         //
         Olingo4AppEndpointConfiguration configuration = new Olingo4AppEndpointConfiguration();
+
+        //
+        // Override the ACCEPT header since it does not take account of the odata.metadata parameter
+        //
+        Map<String, String> httpHeaders = new HashMap<>();
+        httpHeaders.put(HttpHeaders.ACCEPT, "application/json;odata.metadata=full,application/xml,*/*");
+        configuration.setHttpHeaders(httpHeaders);
+
         configuration.setServiceUri(defaultTestServer.servicePlainUri());
 
         //
@@ -125,8 +135,6 @@ public class BaseOlingo4Test extends AbstractODataTest {
         main.addRouteBuilder(new MyRouteBuilder(camelURI));
 
         try {
-            main.start();
-
             ClientEntitySet olEntitySet = null;
             ODataRetrieveResponse<ClientEntitySet> response = null;
             try {
@@ -141,6 +149,8 @@ public class BaseOlingo4Test extends AbstractODataTest {
                     response.close();
                 }
             }
+
+            main.start();
 
             /*
              * Note:

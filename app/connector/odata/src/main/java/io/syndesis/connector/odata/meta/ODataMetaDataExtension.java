@@ -16,7 +16,6 @@
 package io.syndesis.connector.odata.meta;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -30,7 +29,6 @@ import org.apache.olingo.client.api.communication.response.ODataRetrieveResponse
 import org.apache.olingo.client.api.http.HttpClientFactory;
 import org.apache.olingo.client.core.ODataClientFactory;
 import org.apache.olingo.commons.api.edm.Edm;
-import org.apache.olingo.commons.api.edm.EdmElement;
 import org.apache.olingo.commons.api.edm.EdmEntityContainer;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
@@ -106,18 +104,10 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
             return;
         }
 
-        EdmEntityType entityType = entitySet.getEntityType();
-        List<String> propertyNames = entityType.getPropertyNames();
-        for (String propertyName : propertyNames) {
-            EdmElement property = entityType.getProperty(propertyName);
-            PropertyMetadata convertedType = convert(property);
-            odataMetadata.addEntityProperty(convertedType);
-        }
-    }
-
-    private PropertyMetadata convert(EdmElement property) {
         EdmTypeConvertor visitor = new EdmTypeConvertor();
-        return visitor.visit(property);
+        EdmEntityType entityType = entitySet.getEntityType();
+        Set<PropertyMetadata> properties = visitor.visit(entityType);
+        odataMetadata.setEntityProperties(properties);
     }
 
     private void extractEdmNames(ODataMetadata odataMetadata, Edm edm) {

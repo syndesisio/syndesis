@@ -18,6 +18,7 @@ package io.syndesis.connector.odata.meta;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -81,14 +82,25 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
 
     private void checkTestServerSchemaMap(Map<String, JsonSchema> schemaMap) {
         JsonSchema descSchema = schemaMap.get("Description");
+        JsonSchema specSchema = schemaMap.get("Specification");
+
         assertNotNull(descSchema);
         assertNotNull(schemaMap.get("ID"));
         assertNotNull(schemaMap.get("Name"));
+        assertNotNull(specSchema);
 
         JsonFormatTypes descType = descSchema.getType();
         assertNotNull(descType);
         assertEquals(JsonFormatTypes.STRING, descType);
         assertEquals(false, descSchema.getRequired());
+
+        JsonFormatTypes specType = specSchema.getType();
+        assertNotNull(specType);
+        assertEquals(JsonFormatTypes.OBJECT, specType);
+        assertEquals(false, specSchema.getRequired());
+        assertThat(specSchema).isInstanceOf(ObjectSchema.class);
+        ObjectSchema specObjSchema = specSchema.asObjectSchema();
+        assertEquals(3, specObjSchema.getProperties().size());
     }
 
     @Test
@@ -263,23 +275,23 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
     public void testUpdateMetaDataRetrieval() throws Exception {
         CamelContext context = new DefaultCamelContext();
         ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();
-    
+
         String resourcePath = "Products";
-    
+
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(METHOD_NAME, Methods.PATCH.id());
         parameters.put(SERVICE_URI, defaultTestServer.servicePlainUri());
         parameters.put(RESOURCE_PATH, resourcePath);
-    
+
         String componentId = "odata";
         String actionId = "io.syndesis:" + Methods.PATCH.connectorId();
-    
+
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);
-    
+
         Map<String, List<PropertyPair>> properties = metadata.properties;
         assertFalse(properties.isEmpty());
-    
+
         //
         // The method names are important for collecting prior
         // to the filling in of the integration step (values such as resource etc...)
@@ -287,16 +299,16 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         List<PropertyPair> resourcePaths = properties.get(RESOURCE_PATH);
         assertNotNull(resourcePaths);
         assertFalse(resourcePaths.isEmpty());
-    
+
         PropertyPair pair = resourcePaths.get(0);
         assertNotNull(pair);
         assertEquals(resourcePath, pair.getValue());
-    
+
         DataShape inputShape = metadata.inputShape;
         Map<String, JsonSchema> schemaMap = checkShape(inputShape, ObjectSchema.class);
         checkTestServerSchemaMap(schemaMap);
         assertNotNull(schemaMap.get(KEY_PREDICATE));
-    
+
         DataShape outputShape = metadata.outputShape;
         assertEquals(DataShapeKinds.JSON_INSTANCE, outputShape.getKind());
     }

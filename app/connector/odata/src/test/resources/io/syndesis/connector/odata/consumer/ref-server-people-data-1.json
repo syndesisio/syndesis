@@ -3,22 +3,26 @@
   "FirstName": "Russell",
   "LastName": "Whyte",
   "MiddleName": "",
-  "Gender": "Male",
+  "Gender": "Microsoft.OData.Service.Sample.TrippinInMemory.Models.PersonGender'Male'",
   "Age": "",
   "Emails": [
     "Russell@example.com",
     "Russell@contoso.com"
   ],
-  "FavoriteFeature": "Feature1",
+  "FavoriteFeature": "Microsoft.OData.Service.Sample.TrippinInMemory.Models.Feature'Feature1'",
   "Features": [
-    "Feature1",
-    "Feature2"
+    "Microsoft.OData.Service.Sample.TrippinInMemory.Models.Feature'Feature1'",
+    "Microsoft.OData.Service.Sample.TrippinInMemory.Models.Feature'Feature2'"
   ],
   "AddressInfo": [
-    [
-      "{Address:\"187 Suffolk Ln.\"}",
-      "{City:[\"{Name:\\\"Boise\\\"}\",\"{CountryRegion:\\\"United States\\\"}\",\"{Region:\\\"ID\\\"}\"]}"
-    ]
+    {
+      "Address":"187 Suffolk Ln.",
+      "City":{
+        "Name":"Boise",
+        "CountryRegion":"United States",
+        "Region":"ID"
+      }
+    }
   ],
   "HomeAddress": "",
   "ResultCount": 20

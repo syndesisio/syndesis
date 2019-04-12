@@ -3,18 +3,22 @@
   "FirstName": "Scott",
   "LastName": "Ketchum",
   "MiddleName": "",
-  "Gender": "Male",
+  "Gender": "Microsoft.OData.Service.Sample.TrippinInMemory.Models.PersonGender'Male'",
   "Age": "",
   "Emails": [
     "Scott@example.com"
   ],
-  "FavoriteFeature": "Feature1",
+  "FavoriteFeature": "Microsoft.OData.Service.Sample.TrippinInMemory.Models.Feature'Feature1'",
   "Features":[],
   "AddressInfo": [
-    [
-      "{Address:\"2817 Milton Dr.\"}",
-      "{City:[\"{Name:\\\"Albuquerque\\\"}\",\"{CountryRegion:\\\"United States\\\"}\",\"{Region:\\\"NM\\\"}\"]}"
-    ]
+    {
+      "Address":"2817 Milton Dr.",
+      "City":{
+        "Name":"Albuquerque",
+        "CountryRegion":"United States",
+        "Region":"NM"
+      }
+    }
   ],
   "HomeAddress": "",
   "ResultCount": 20

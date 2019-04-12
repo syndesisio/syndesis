@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -150,7 +151,15 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                 schema = factory.numberSchema();
                 break;
             case OBJECT:
-                schema = factory.objectSchema();
+                ObjectSchema objectSchema = factory.objectSchema();
+                Set<PropertyMetadata> childProperties = propertyMetadata.getChilldProperties();
+                if (childProperties != null) {
+                    for (PropertyMetadata childProperty : childProperties) {
+                        JsonSchema childSchema = schemaFor(childProperty);
+                        objectSchema.putProperty(childProperty.getName(), childSchema);
+                    }
+                }
+                schema = objectSchema;
                 break;
             default:
                 schema = factory.anySchema();

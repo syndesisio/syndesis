@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.edm.FullQualifiedName;
 import org.apache.olingo.commons.api.edm.provider.CsdlAbstractEdmProvider;
+import org.apache.olingo.commons.api.edm.provider.CsdlComplexType;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainerInfo;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
@@ -34,41 +35,51 @@ import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
  * Taken from the tutorial:
  * https://olingo.apache.org/doc/odata4/tutorials/read/tutorial_read.html
  */
-public class ProductsEdmProvider extends CsdlAbstractEdmProvider {
+public class ProductsEdmProvider extends CsdlAbstractEdmProvider implements ODataServerConstants {
 
-    // Service Namespace
-    public static final String NAMESPACE = "OData.Demo";
+    @Override
+    public CsdlComplexType getComplexType(FullQualifiedName complexTypeName) {
+        if (complexTypeName.equals(ET_SPEC_FQN)) {
+            CsdlProperty type = new CsdlProperty().setName(SPEC_PRODUCT_TYPE)
+                .setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            CsdlProperty detail1 = new CsdlProperty().setName(SPEC_DETAIL_1)
+                .setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            CsdlProperty detail2 = new CsdlProperty().setName(SPEC_DETAIL_2)
+                .setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            CsdlComplexType complexType = new CsdlComplexType();
+            complexType.setName(ET_SPEC_NAME);
+            complexType.setProperties(Arrays.asList(type, detail1, detail2));
+            return complexType;
+        }
 
-    // EDM Container
-    public static final String CONTAINER_NAME = "Container";
-    public static final FullQualifiedName CONTAINER = new FullQualifiedName(NAMESPACE, CONTAINER_NAME);
-
-    // Entity Types Names
-    public static final String ET_PRODUCT_NAME = "Product";
-    public static final FullQualifiedName ET_PRODUCT_FQN = new FullQualifiedName(NAMESPACE, ET_PRODUCT_NAME);
-
-    // Entity Set Names
-    public static final String ES_PRODUCTS_NAME = "Products";
+        return null;
+    }
 
     @Override
     public CsdlEntityType getEntityType(FullQualifiedName entityTypeName) {
-
         // this method is called for one of the EntityTypes that are configured in the Schema
         if (entityTypeName.equals(ET_PRODUCT_FQN)) {
 
             //create EntityType properties
-            CsdlProperty id = new CsdlProperty().setName("ID").setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
-            CsdlProperty name = new CsdlProperty().setName("Name").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
-            CsdlProperty description = new CsdlProperty().setName("Description").setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            CsdlProperty id = new CsdlProperty().setName(PRODUCT_ID).setType(EdmPrimitiveTypeKind.Int32.getFullQualifiedName());
+            CsdlProperty name = new CsdlProperty().setName(PRODUCT_NAME).setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            CsdlProperty description = new CsdlProperty().setName(PRODUCT_DESCRIPTION).setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            CsdlProperty serialNums = new CsdlProperty()
+                .setName(PRODUCT_SERIALS)
+                .setType(EdmPrimitiveTypeKind.String.getFullQualifiedName())
+                .setCollection(true);
+            CsdlProperty specification = new CsdlProperty()
+                .setName(PRODUCT_SPEC)
+                .setType(ET_SPEC_FQN);
 
             // create CsdlPropertyRef for Key element
             CsdlPropertyRef propertyRef = new CsdlPropertyRef();
-            propertyRef.setName("ID");
+            propertyRef.setName(PRODUCT_ID);
 
             // configure EntityType
             CsdlEntityType entityType = new CsdlEntityType();
             entityType.setName(ET_PRODUCT_NAME);
-            entityType.setProperties(Arrays.asList(id, name, description));
+            entityType.setProperties(Arrays.asList(id, name, description, serialNums, specification));
             entityType.setKey(Collections.singletonList(propertyRef));
 
             return entityType;
@@ -114,6 +125,10 @@ public class ProductsEdmProvider extends CsdlAbstractEdmProvider {
         // create Schema
         CsdlSchema schema = new CsdlSchema();
         schema.setNamespace(NAMESPACE);
+
+        List<CsdlComplexType> complexTypes = new ArrayList<CsdlComplexType>();
+        complexTypes.add(getComplexType(ET_SPEC_FQN));
+        schema.setComplexTypes(complexTypes);
 
         // add EntityTypes
         List<CsdlEntityType> entityTypes = new ArrayList<CsdlEntityType>();
