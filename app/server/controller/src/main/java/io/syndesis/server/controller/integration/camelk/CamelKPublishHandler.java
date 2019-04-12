@@ -69,7 +69,6 @@ import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
 import io.syndesis.server.endpoint.v1.VersionService;
 import io.syndesis.server.openshift.OpenShiftService;
-import joptsimple.internal.Strings;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -78,7 +77,7 @@ import org.springframework.stereotype.Component;
 @Qualifier("camel-k")
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
 public class CamelKPublishHandler extends BaseCamelKHandler implements StateChangeHandler {
-    private static final List<String> DEFAULT_CUSTOMIZERS = Arrays.asList("metadata", "logging", "syndesis");
+    public static final List<String> DEFAULT_CUSTOMIZERS = Arrays.asList("metadata", "logging", "syndesis");
 
     private final IntegrationResourceManager resourceManager;
     private final IntegrationProjectGenerator projectGenerator;
@@ -255,7 +254,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         //add customizers
         integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
             .type("property")
-            .value("camel.k.customizer=" + Strings.join(customizers, ","))
+            .value("camel.k.customizer=" + String.join(",", customizers))
             .build());
 
         //TODO: make all this configurable, where makes sense
