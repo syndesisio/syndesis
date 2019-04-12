@@ -125,11 +125,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>io.syndesis.integration</groupId>
-      <artifactId>integration-runtime</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.hibernate.validator</groupId>
       <artifactId>hibernate-validator</artifactId>
       <scope>test</scope>

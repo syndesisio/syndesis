@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.support.processor;
+package io.syndesis.integration.runtime.util;
 
 import org.apache.camel.http.common.HttpHeaderFilterStrategy;
 

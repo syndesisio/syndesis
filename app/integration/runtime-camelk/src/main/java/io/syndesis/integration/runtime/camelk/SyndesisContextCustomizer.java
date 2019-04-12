@@ -15,7 +15,7 @@
  */
 package io.syndesis.integration.runtime.camelk;
 
-import io.syndesis.integration.runtime.camelk.support.SyndesisHeaderStrategy;
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 import org.apache.camel.CamelContext;
 import org.apache.camel.k.ContextCustomizer;
 import org.apache.camel.k.Runtime;
