@@ -17,7 +17,7 @@ package io.syndesis.integration.runtime.camelk;
 
 import java.util.Properties;
 
-import io.syndesis.integration.runtime.camelk.support.SyndesisHeaderStrategy;
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 import org.apache.camel.component.properties.PropertiesComponent;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.k.Constants;
