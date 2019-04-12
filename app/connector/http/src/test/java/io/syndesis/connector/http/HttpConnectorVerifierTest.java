@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.syndesis.connector.http.util.BasicValidationHandler;
+import io.syndesis.connector.support.verifier.api.ComponentVerifier;
 import io.syndesis.connector.support.verifier.api.Verifier;
 import io.syndesis.connector.support.verifier.api.VerifierResponse;
 import org.apache.camel.CamelContext;
@@ -89,7 +90,7 @@ public class HttpConnectorVerifierTest {
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("baseUrl", getLocalServerHostAndPort());
 
-            Verifier verifier = new HttpVerifierAutoConfiguration().httpVerifier();
+            Verifier verifier = new HttpVerifier();
             List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
 
             assertThat(responses).hasSize(2);
@@ -111,7 +112,7 @@ public class HttpConnectorVerifierTest {
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("baseUrl", "http://" + getLocalServerHostAndPort());
 
-            Verifier verifier = new HttpVerifierAutoConfiguration().httpVerifier();
+            Verifier verifier = new HttpVerifier();
             List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
 
             assertThat(responses).hasSize(2);
@@ -134,7 +135,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("baseUrl", getLocalServerHostAndPort());
             parameters.put("path", "/withPath");
 
-            Verifier verifier = new HttpVerifierAutoConfiguration().httpVerifier();
+            Verifier verifier = new HttpVerifier();
             List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
 
             assertThat(responses).hasSize(2);
@@ -157,7 +158,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("baseUrl", getLocalServerHostAndPort() + "/");
             parameters.put("path", "withPath");
 
-            Verifier verifier = new HttpVerifierAutoConfiguration().httpVerifier();
+            Verifier verifier = new HttpVerifier();
             List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
 
             assertThat(responses).hasSize(2);
@@ -180,7 +181,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("baseUrl", getLocalServerHostAndPort() + "/");
             parameters.put("path", "/withPath");
 
-            Verifier verifier = new HttpVerifierAutoConfiguration().httpVerifier();
+            Verifier verifier = new HttpVerifier();
             List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
 
             assertThat(responses).hasSize(2);
@@ -203,7 +204,7 @@ public class HttpConnectorVerifierTest {
             parameters.put("baseUrl", getLocalServerHostAndPort() + "/with/nested");
             parameters.put("path", "path");
 
-            Verifier verifier = new HttpVerifierAutoConfiguration().httpVerifier();
+            Verifier verifier = new HttpVerifier();
             List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
 
             assertThat(responses).hasSize(2);
@@ -225,7 +226,7 @@ public class HttpConnectorVerifierTest {
             Map<String, Object> parameters = new HashMap<>();
             parameters.put("baseUrl", "https://" + getLocalServerHostAndPort());
 
-            Verifier verifier = new HttpVerifierAutoConfiguration().httpVerifier();
+            Verifier verifier = new HttpVerifier();
             List<VerifierResponse> responses = verifier.verify(context, "http4", parameters);
 
             assertThat(responses).hasSize(1);
