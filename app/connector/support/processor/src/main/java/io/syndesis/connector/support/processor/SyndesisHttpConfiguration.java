@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.support.processor;
 
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 import org.apache.camel.spi.HeaderFilterStrategy;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.AnyNestedCondition;
