@@ -6,14 +6,39 @@ import { SyndesisFetch } from './SyndesisFetch';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
+export interface IConnectorsFetchResponse {
+  readonly items: Connector[];
+  readonly totalCount: number;
+}
+
 export interface IConnectorsResponse {
-  items: Connector[];
-  totalCount: number;
+  readonly connectorsForDisplay: Connector[];
+  readonly dangerouslyUnfilteredConnections: Connector[];
+  readonly totalCount: number;
 }
 
 export interface IWithConnectorsProps {
   disableUpdates?: boolean;
   children(props: IFetchState<IConnectorsResponse>): any;
+}
+
+export function getConnectorsForDisplay(connectors: Connector[]) {
+  return connectors.filter(
+    c => !c.metadata || !c.metadata['hide-from-connection-pages']
+  );
+}
+
+export function transformConnectorsResponse(
+  response: IFetchState<IConnectorsFetchResponse>
+): IFetchState<IConnectorsResponse> {
+  return {
+    ...response,
+    data: {
+      connectorsForDisplay: getConnectorsForDisplay(response.data.items),
+      dangerouslyUnfilteredConnections: response.data.items,
+      totalCount: response.data.totalCount,
+    },
+  };
 }
 
 export class WithConnectors extends React.Component<IWithConnectorsProps> {
@@ -22,7 +47,7 @@ export class WithConnectors extends React.Component<IWithConnectorsProps> {
   }
   public render() {
     return (
-      <SyndesisFetch<IConnectorsResponse>
+      <SyndesisFetch<IConnectorsFetchResponse>
         url={'/connectors'}
         defaultValue={{
           items: [],
@@ -31,7 +56,7 @@ export class WithConnectors extends React.Component<IWithConnectorsProps> {
       >
         {({ read, response }) => {
           if (this.props.disableUpdates) {
-            return this.props.children(response);
+            return this.props.children(transformConnectorsResponse(response));
           }
           return (
             <ServerEventsContext.Consumer>
@@ -42,7 +67,9 @@ export class WithConnectors extends React.Component<IWithConnectorsProps> {
                   unregisterChangeListener={unregisterChangeListener}
                   filter={this.changeFilter}
                 >
-                  {() => this.props.children(response)}
+                  {() =>
+                    this.props.children(transformConnectorsResponse(response))
+                  }
                 </WithChangeListener>
               )}
             </ServerEventsContext.Consumer>

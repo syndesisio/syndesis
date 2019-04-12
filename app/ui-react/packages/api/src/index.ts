@@ -16,6 +16,8 @@ export * from './WithMonitoredIntegrations';
 export * from './WithIntegrationsMetrics';
 export * from './WithConnections';
 export * from './WithConnection';
+export * from './WithConnectionHelpers';
+export * from './WithConnector';
 export * from './WithConnectors';
 export * from './WithPolling';
 export * from './WithChangeListener';
