@@ -305,6 +305,7 @@
       </activation>
       <properties>
         <basepom.check.skip-all>true</basepom.check.skip-all>
+        <basepom.it.skip>true</basepom.it.skip>
       </properties>
       <build>
         <plugins>
