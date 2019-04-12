@@ -77,7 +77,7 @@ import org.springframework.stereotype.Component;
 @Qualifier("camel-k")
 @ConditionalOnProperty(value = "controllers.integration", havingValue = "camel-k")
 public class CamelKPublishHandler extends BaseCamelKHandler implements StateChangeHandler {
-    public static final List<String> DEFAULT_CUSTOMIZERS = Arrays.asList("metadata", "logging", "syndesis");
+    static final List<String> DEFAULT_CUSTOMIZERS = Arrays.asList("metadata", "logging", "syndesis");
 
     private final IntegrationResourceManager resourceManager;
     private final IntegrationProjectGenerator projectGenerator;
