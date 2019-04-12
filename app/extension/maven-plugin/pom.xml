@@ -311,6 +311,17 @@
     <plugins>
 
       <plugin>
+        <artifactId>maven-resources-plugin</artifactId>
+        <configuration>
+          <delimiters>
+            <!-- This makes sure that the files in src/it are not
+                 filtered so that the placeholders remain unchanged -->
+            <delimiter>${*}</delimiter>
+          </delimiters>
+        </configuration>
+      </plugin>
+
+      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-plugin-plugin</artifactId>
         <configuration>
