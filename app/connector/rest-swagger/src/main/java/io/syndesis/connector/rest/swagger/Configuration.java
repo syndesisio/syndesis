@@ -46,6 +46,16 @@ public class Configuration {
         this.options = options;
     }
 
+    public boolean booleanOption(final String key) {
+        final Boolean value = value(key, Boolean.class);
+
+        if (value == null) {
+            return false;
+        }
+
+        return value.booleanValue();
+    }
+
     public long longOption(final String key) {
         final Long value = value(key, Long.class);
 

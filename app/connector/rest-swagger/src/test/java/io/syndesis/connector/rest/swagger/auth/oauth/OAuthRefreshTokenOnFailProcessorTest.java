@@ -74,8 +74,8 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(processor.accessToken).isEqualTo("access-token");
-        assertThat(processor.refreshToken).isEqualTo("refresh-token");
+        assertThat(processor.state.getAccessToken()).isEqualTo("access-token");
+        assertThat(processor.state.getRefreshToken()).isEqualTo("refresh-token");
     }
 
     @Test
@@ -84,8 +84,8 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(processor.accessToken).isEqualTo("access-token");
-        assertThat(processor.refreshToken).isEqualTo("refresh-token");
+        assertThat(processor.state.getAccessToken()).isEqualTo("access-token");
+        assertThat(processor.state.getRefreshToken()).isEqualTo("refresh-token");
     }
 
     @Test
@@ -95,8 +95,8 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(processor.accessToken).isEqualTo("new-access-token");
-        assertThat(processor.refreshToken).isEqualTo("refresh-token");
+        assertThat(processor.state.getAccessToken()).isEqualTo("new-access-token");
+        assertThat(processor.state.getRefreshToken()).isEqualTo("refresh-token");
     }
 
     @Test
@@ -106,8 +106,8 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(processor.accessToken).isEqualTo("new-access-token");
-        assertThat(processor.refreshToken).isEqualTo("refresh-token");
+        assertThat(processor.state.getAccessToken()).isEqualTo("new-access-token");
+        assertThat(processor.state.getRefreshToken()).isEqualTo("refresh-token");
     }
 
     @Test
@@ -118,20 +118,20 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(processor.accessToken).isEqualTo("new-access-token");
-        assertThat(processor.refreshToken).isEqualTo("new-refresh-token");
+        assertThat(processor.state.getAccessToken()).isEqualTo("new-access-token");
+        assertThat(processor.state.getRefreshToken()).isEqualTo("new-refresh-token");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(processor.accessToken).isEqualTo("newer-access-token");
-        assertThat(processor.refreshToken).isEqualTo("new-refresh-token");
+        assertThat(processor.state.getAccessToken()).isEqualTo("newer-access-token");
+        assertThat(processor.state.getRefreshToken()).isEqualTo("new-refresh-token");
     }
 
     @Test
     public void shouldThrowExceptionIfAlreadyAttemptedWithTheSameRefreshToken() throws Exception {
         final Configuration configuration = configuration("403");
 
-        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(configuration);
+        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(OAuthState.createFrom(configuration), configuration);
         processor.lastRefreshTokenTried.set("refresh-token");
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
@@ -141,7 +141,7 @@ public class OAuthRefreshTokenOnFailProcessorTest {
     public void shouldThrowExceptionIfStatusIsNonRetriable() {
         final Configuration configuration = configuration("400");
 
-        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(configuration);
+        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(OAuthState.createFrom(configuration), configuration);
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
     }
@@ -153,8 +153,8 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(processor.accessToken).isEqualTo("new-access-token");
-        assertThat(processor.refreshToken).isEqualTo("new-refresh-token");
+        assertThat(processor.state.getAccessToken()).isEqualTo("new-access-token");
+        assertThat(processor.state.getRefreshToken()).isEqualTo("new-refresh-token");
     }
 
     @Test
@@ -163,7 +163,7 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(processor.accessToken).isEqualTo("new-access-token");
+        assertThat(processor.state.getAccessToken()).isEqualTo("new-access-token");
     }
 
     @Test
@@ -172,8 +172,8 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
         assertThatThrownBy(() -> processor.process(exchange)).isSameAs(exception);
 
-        assertThat(processor.accessToken).isEqualTo("access-token");
-        assertThat(processor.refreshToken).isEqualTo("refresh-token");
+        assertThat(processor.state.getAccessToken()).isEqualTo("access-token");
+        assertThat(processor.state.getRefreshToken()).isEqualTo("refresh-token");
     }
 
     private static Configuration configuration(final String retryStatuses) {
@@ -184,10 +184,10 @@ public class OAuthRefreshTokenOnFailProcessorTest {
         initial.put("refreshToken", "refresh-token");
         initial.put("accessTokenExpiresAt", Long.valueOf(-1));
         initial.put("authorizationEndpoint", "token-endpoint");
-        initial.put("authorizeUsingParameters", "false");
+        initial.put("authorizeUsingParameters", Boolean.FALSE);
         initial.put("refreshTokenRetryStatuses", retryStatuses);
-        final Configuration configuration = new Configuration(initial, null, null, null);
-        return configuration;
+
+        return new Configuration(initial, null, null, null);
     }
 
     @SuppressWarnings("resource")
@@ -205,7 +205,7 @@ public class OAuthRefreshTokenOnFailProcessorTest {
 
         final Configuration configuration = configuration("403");
 
-        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(configuration) {
+        final OAuthRefreshTokenOnFailProcessor processor = new OAuthRefreshTokenOnFailProcessor(OAuthState.createFrom(configuration), configuration) {
             @Override
             CloseableHttpClient createHttpClient() {
                 return client;

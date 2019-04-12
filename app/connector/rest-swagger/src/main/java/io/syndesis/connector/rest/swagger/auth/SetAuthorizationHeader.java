@@ -15,7 +15,7 @@
  */
 package io.syndesis.connector.rest.swagger.auth;
 
-import io.syndesis.connector.support.processor.SyndesisHeaderStrategy;
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;

@@ -15,13 +15,17 @@
  */
 package io.syndesis.connector.rest.swagger;
 
-import io.syndesis.connector.rest.swagger.auth.oauth.OAuthRefreshingEndpoint;
+import java.util.function.Function;
+
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 import org.apache.camel.Endpoint;
 
 public final class SwaggerProxyComponent extends ComponentProxyComponent {
+
     private Configuration configuration;
+
+    private Function<Endpoint, Endpoint> endpointOverride = Function.identity();
 
     public SwaggerProxyComponent(final String componentId, final String componentScheme) {
         super(componentId, componentScheme);
@@ -38,7 +42,11 @@ public final class SwaggerProxyComponent extends ComponentProxyComponent {
             return endpoint;
         }
 
-        return new OAuthRefreshingEndpoint(this, configuration, endpoint);
+        return endpointOverride.apply(endpoint);
+    }
+
+    public void overrideEndpoint(final Function<Endpoint, Endpoint> endpointOverride) {
+        this.endpointOverride = endpointOverride;
     }
 
     public void setConfiguration(final Configuration configuration) {

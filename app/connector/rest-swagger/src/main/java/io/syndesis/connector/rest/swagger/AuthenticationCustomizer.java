@@ -27,19 +27,18 @@ import org.apache.camel.CamelContext;
 public class AuthenticationCustomizer implements ComponentProxyCustomizer {
 
     @Override
-    public void customize(final ComponentProxyComponent component, final Map<String, Object> options) {
+    public void customize(final ComponentProxyComponent proxyComponent, final Map<String, Object> options) {
         consumeOption(options, "authenticationType", authenticationTypeObject -> {
             final AuthenticationType authenticationType = AuthenticationType.valueOf(String.valueOf(authenticationTypeObject));
             if (authenticationType == AuthenticationType.none) {
                 return;
             }
 
+            final SwaggerProxyComponent component = (SwaggerProxyComponent) proxyComponent;
+
             final CamelContext context = component.getCamelContext();
             final Configuration configuration = new Configuration(this, context, options);
-
-            if (component instanceof SwaggerProxyComponent) {
-                ((SwaggerProxyComponent) component).setConfiguration(configuration);
-            }
+            component.setConfiguration(configuration);
 
             if (authenticationType == AuthenticationType.oauth2) {
                 OAuth.setup(component, configuration);

@@ -16,8 +16,8 @@
 package io.syndesis.connector.rest.swagger.auth.oauth;
 
 import io.syndesis.connector.rest.swagger.Configuration;
+import io.syndesis.connector.rest.swagger.SwaggerProxyComponent;
 import io.syndesis.connector.rest.swagger.auth.SetAuthorizationHeader;
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.Processors;
 
 public final class OAuth {
@@ -26,14 +26,41 @@ public final class OAuth {
         // utility class
     }
 
-    public static void setup(final ComponentProxyComponent component, final Configuration configuration) {
-        final OAuthRefreshTokenProcessor refreshing = new OAuthRefreshTokenProcessor(configuration);
+    public static void setup(final SwaggerProxyComponent component, final Configuration configuration) {
+        final boolean canProcessRefresh = canProcessRefresh(configuration);
+        final boolean retriesOnAuthenticationErrors = retriesOnAuthenticationErrors(configuration);
 
-        final String authorizationHeaderValue = "Bearer " + configuration.stringOption("accessToken");
-        Processors.addBeforeProducer(component, new SetAuthorizationHeader(authorizationHeaderValue));
+        final OAuthState state = OAuthState.createFrom(configuration);
 
-        if (refreshing.canProcessRefresh()) {
-            Processors.addBeforeProducer(component, refreshing);
+        if (canProcessRefresh && !retriesOnAuthenticationErrors) {
+            Processors.addBeforeProducer(component, new OAuthRefreshTokenProcessor(state, configuration));
+        } else if (retriesOnAuthenticationErrors) {
+            Processors.addBeforeProducer(component, new OAuthRefreshTokenProcessor(state, configuration));
+
+            final OAuthRefreshTokenOnFailProcessor refreshOnFailure = new OAuthRefreshTokenOnFailProcessor(state, configuration);
+            component.overrideEndpoint(e -> new OAuthRefreshingEndpoint(component, e, refreshOnFailure));
+        } else {
+            final String authorizationHeaderValue = "Bearer " + configuration.stringOption("accessToken");
+            Processors.addBeforeProducer(component, new SetAuthorizationHeader(authorizationHeaderValue));
         }
+    }
+
+    private static boolean canProcessRefresh(final Configuration configuration) {
+        final String clientId = configuration.stringOption("clientId");
+        final String clientSecret = configuration.stringOption("clientSecret");
+        final String refreshToken = configuration.stringOption("refreshToken");
+        final String authorizationEndpoint = configuration.stringOption("authorizationEndpoint");
+        final boolean authorizeUsingParameters = configuration.booleanOption("authorizeUsingParameters");
+
+        final boolean hasBasicRefreshOptions = refreshToken != null && authorizationEndpoint != null;
+        final boolean hasParametersIfNeeded = authorizeUsingParameters && clientId != null && clientSecret != null;
+
+        return hasBasicRefreshOptions && (!authorizeUsingParameters || hasParametersIfNeeded);
+    }
+
+    private static boolean retriesOnAuthenticationErrors(final Configuration configuration) {
+        final String statuses = configuration.stringOption("refreshTokenRetryStatuses");
+
+        return statuses != null && !statuses.isEmpty();
     }
 }

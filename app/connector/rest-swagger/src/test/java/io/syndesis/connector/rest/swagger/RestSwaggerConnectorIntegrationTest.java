@@ -289,10 +289,9 @@ public class RestSwaggerConnectorIntegrationTest {
 
         assertThat(context.createProducerTemplate().requestBody("direct:oauth-retry",
             "{\"parameters\":{\"petId\":\"123\"}}", String.class))
-                .isEqualTo(
-                    "{\"parameters\":{\"Status\":200,\"Content-Type\":\"application/json\"},\"body\":" + DOGGIE + "}");
+                .isEqualTo(DOGGIE);
 
-        wiremock.verify(getRequestedFor(urlEqualTo("/v2/user/logout"))
+        wiremock.verify(getRequestedFor(urlEqualTo("/v2/pet/123"))
             .withHeader("Authorization", equalTo("Bearer new-token"))
             .withRequestBody(WireMock.equalTo("")));
     }
@@ -335,6 +334,13 @@ public class RestSwaggerConnectorIntegrationTest {
 
     private RouteBuilder createRouteBuilder() {
         return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class)) {
+
+            @Override
+            public void configure() throws Exception {
+                errorHandler(defaultErrorHandler().maximumRedeliveries(1));
+
+                super.configure();
+            }
 
             @Override
             protected ModelCamelContext createContainer() {

@@ -33,8 +33,8 @@ class OAuthRefreshTokenOnFailProcessor extends OAuthRefreshTokenProcessor {
 
     private Set<Integer> statusesToRefreshFor = new HashSet<>();
 
-    OAuthRefreshTokenOnFailProcessor(final Configuration configuration) {
-        super(configuration);
+    OAuthRefreshTokenOnFailProcessor(final OAuthState state, final Configuration configuration) {
+        super(state, configuration);
 
         final String statuses = configuration.stringOption("refreshTokenRetryStatuses");
         if (statuses != null) {
@@ -46,21 +46,27 @@ class OAuthRefreshTokenOnFailProcessor extends OAuthRefreshTokenProcessor {
 
     @Override
     public void process(final Exchange exchange) throws Exception {
-        final HttpOperationFailedException httpFailure = (HttpOperationFailedException) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
-        LOG.warn("Failed invoking the remote API, status: {} {}, response body: {}", httpFailure.getStatusCode(),
-            httpFailure.getStatusText(), httpFailure.getResponseBody());
+        final Exception caught = (Exception) exchange.getProperty(Exchange.EXCEPTION_CAUGHT);
+        if (caught instanceof HttpOperationFailedException) {
+            final HttpOperationFailedException httpFailure = (HttpOperationFailedException) caught;
+            LOG.warn("Failed invoking the remote API, status: {} {}, response body: {}", httpFailure.getStatusCode(),
+                httpFailure.getStatusText(), httpFailure.getResponseBody());
 
-        if (!shouldTryRefreshingAccessCode(httpFailure)) {
+            if (!shouldTryRefreshingAccessCode(httpFailure)) {
+                throw httpFailure;
+            }
+
+            // we don't check the return value as we will throw `httpFailure`
+            // anyhow
+            tryToRefreshAccessToken();
+
+            // we need to throw the failure so that the exchange fails,
+            // otherwise it might be considered successful and we do not perform
+            // any retry, and that would lead to data inconsistencies
             throw httpFailure;
         }
 
-        // we don't check the return value as we will throw `httpFailure` anyhow
-        tryToRefreshAccessToken();
-
-        // we need to throw the failure so that the exchange fails, otherwise it
-        // might be considered successful and we do not perform any
-        // retry, and that would lead to data inconsistencies
-        throw httpFailure;
+        super.process(exchange);
     }
 
     boolean shouldTryRefreshingAccessCode(final HttpOperationFailedException httpFailure) {

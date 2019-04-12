@@ -15,10 +15,8 @@
  */
 package io.syndesis.connector.rest.swagger.auth.oauth;
 
-import java.util.Collections;
 import java.util.List;
 
-import io.syndesis.connector.rest.swagger.Configuration;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyEndpoint;
 import io.syndesis.integration.component.proxy.ComponentProxyProducer;
@@ -41,7 +39,8 @@ public class OAuthRefreshingEndpoint extends ComponentProxyEndpoint {
 
     private final Pipeline pipeline;
 
-    public OAuthRefreshingEndpoint(final ComponentProxyComponent component, final Configuration configuration, final Endpoint endpoint) {
+    public OAuthRefreshingEndpoint(final ComponentProxyComponent component, final Endpoint endpoint,
+        final OAuthRefreshTokenOnFailProcessor retryProcessor) {
         super(endpoint.getEndpointUri(), component, endpoint);
         delegate = endpoint;
 
@@ -52,14 +51,14 @@ public class OAuthRefreshingEndpoint extends ComponentProxyEndpoint {
             throw new ExceptionInInitializerError(e);
         }
 
-        final Processor catchBody = new OAuthRefreshTokenOnFailProcessor(configuration);
+        final Processor catchBody = retryProcessor;
 
         final Processor catchProcessor = new CatchProcessor(EXCEPTIONS_HANDLED, catchBody, null, null);
 
         final Processor tryProcessor = new TryProcessor(producer,
             singletonList(catchProcessor), null);
 
-        pipeline = new Pipeline(delegate.getCamelContext(), Collections.singletonList(tryProcessor));
+        pipeline = new Pipeline(delegate.getCamelContext(), singletonList(tryProcessor));
     }
 
     @Override

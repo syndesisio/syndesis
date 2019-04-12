@@ -20,10 +20,10 @@ import java.util.Map;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.InputDataShapeAware;
 import io.syndesis.common.model.OutputDataShapeAware;
-import io.syndesis.connector.support.processor.SyndesisHeaderStrategy;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import io.syndesis.integration.component.proxy.Processors;
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 
 import org.apache.camel.CamelContext;
 

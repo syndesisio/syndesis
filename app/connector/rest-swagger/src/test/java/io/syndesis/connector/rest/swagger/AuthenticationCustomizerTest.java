@@ -56,7 +56,7 @@ public class AuthenticationCustomizerTest {
         options.put("username", "username");
         options.put("password", "{{password}}");
 
-        final ComponentProxyComponent component = new ComponentProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 
@@ -78,7 +78,7 @@ public class AuthenticationCustomizerTest {
         options.put("authenticationType", AuthenticationType.oauth2);
         options.put("accessToken", "{{accessToken}}");
 
-        final ComponentProxyComponent component = new ComponentProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 
@@ -107,7 +107,7 @@ public class AuthenticationCustomizerTest {
         final String authorizationEndpoint = "http://localhost:" + wiremock.port() + "/oauth/authorize";
         options.put("authorizationEndpoint", authorizationEndpoint);
 
-        final ComponentProxyComponent component = new ComponentProxyComponent("test", "test");
+        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
         final CamelContext context = mock(CamelContext.class);
         component.setCamelContext(context);
 

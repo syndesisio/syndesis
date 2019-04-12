@@ -32,7 +32,7 @@ abstract class PayloadConverterBase implements Processor {
 
     private final DataShapeKinds kind;
 
-    public PayloadConverterBase(final DataShapeKinds kind) {
+    PayloadConverterBase(final DataShapeKinds kind) {
         this.kind = kind;
     }
 

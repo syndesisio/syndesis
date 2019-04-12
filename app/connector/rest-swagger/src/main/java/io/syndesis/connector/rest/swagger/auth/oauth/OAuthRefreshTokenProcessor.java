@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.syndesis.connector.rest.swagger.Configuration;
-import io.syndesis.connector.support.processor.SyndesisHeaderStrategy;
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -56,10 +56,6 @@ class OAuthRefreshTokenProcessor implements Processor {
 
     private static final Logger LOG = LoggerFactory.getLogger(OAuthRefreshTokenProcessor.class);
 
-    String accessToken;
-
-    long accessTokenExpiresAt;
-
     Optional<Long> expiresInOverride = Optional.ofNullable(System.getenv().get("AUTHTOKEN_EXPIRES_IN_OVERRIDE")).map(Long::valueOf);
 
     // Always refresh on (re)start
@@ -67,42 +63,28 @@ class OAuthRefreshTokenProcessor implements Processor {
 
     final AtomicReference<String> lastRefreshTokenTried = new AtomicReference<>(null);
 
-    String refreshToken;
+    final OAuthState state;
 
     private final String authorizationEndpoint;
 
-    private boolean authorizeUsingParameters;
+    private final boolean authorizeUsingParameters;
 
-    private final String clientId;
-
-    private final String clientSecret;
-
-    public OAuthRefreshTokenProcessor(final Configuration configuration) {
-        clientId = configuration.stringOption("clientId");
-        clientSecret = configuration.stringOption("clientSecret");
-        accessToken = configuration.stringOption("accessToken");
-        refreshToken = configuration.stringOption("refreshToken");
+    OAuthRefreshTokenProcessor(final OAuthState state, final Configuration configuration) {
+        this.state = state;
         authorizationEndpoint = configuration.stringOption("authorizationEndpoint");
-        accessTokenExpiresAt = configuration.longOption("accessTokenExpiresAt");
+        authorizeUsingParameters = configuration.booleanOption("authorizeUsingParameters");
     }
 
     @Override
     public void process(final Exchange exchange) throws Exception {
-        if (refreshToken != null && (isFirstTime.get() || accessTokenExpiresAt - AHEAD_OF_TIME_REFRESH_MILIS <= now())) {
+        if (state.getRefreshToken() != null && (isFirstTime.get() || state.getAccessTokenExpiresAt() - AHEAD_OF_TIME_REFRESH_MILIS <= now())) {
             tryToRefreshAccessToken();
         }
 
         final Message in = exchange.getIn();
-        in.setHeader("Authorization", "Bearer " + accessToken);
+        in.setHeader("Authorization", "Bearer " + state.getAccessToken());
 
         SyndesisHeaderStrategy.whitelist(exchange, "Authorization");
-    }
-
-    boolean canProcessRefresh() {
-        final boolean hasBasicRefreshOptions = refreshToken != null && authorizationEndpoint != null;
-        final boolean hasParametersIfNeeded = authorizeUsingParameters && clientId != null && clientSecret != null;
-
-        return hasBasicRefreshOptions && (!authorizeUsingParameters || hasParametersIfNeeded);
     }
 
     CloseableHttpClient createHttpClient() {
@@ -113,11 +95,11 @@ class OAuthRefreshTokenProcessor implements Processor {
         final RequestBuilder builder = RequestBuilder.post(authorizationEndpoint);
 
         if (authorizeUsingParameters) {
-            builder.addParameter("client_id", clientId)
-                .addParameter("client_secret", clientSecret);
+            builder.addParameter("client_id", state.getClientId())
+                .addParameter("client_secret", state.getClientSecret());
         }
 
-        builder.addParameter("refresh_token", refreshToken)
+        builder.addParameter("refresh_token", state.getRefreshToken())
             .addParameter("grant_type", "refresh_token");
 
         return builder.build();
@@ -137,7 +119,7 @@ class OAuthRefreshTokenProcessor implements Processor {
 
         final JsonNode accessToken = body.get("access_token");
         if (isPresentAndHasValue(accessToken)) {
-            this.accessToken = accessToken.asText();
+            final String accessTokenValue = accessToken.asText();
             isFirstTime.set(Boolean.FALSE);
             LOG.info("Successful access token refresh");
 
@@ -150,21 +132,26 @@ class OAuthRefreshTokenProcessor implements Processor {
                     expiresInSeconds = expiresIn.asLong();
                 }
             }
+
+            long accessTokenExpiresAt = 0;
             if (expiresInSeconds != null) {
                 accessTokenExpiresAt = now() + expiresInSeconds * 1000;
             }
 
             final JsonNode refreshToken = body.get("refresh_token");
+            String refreshTokenValue = null;
             if (isPresentAndHasValue(refreshToken)) {
-                this.refreshToken = refreshToken.asText();
+                refreshTokenValue = refreshToken.asText();
 
-                lastRefreshTokenTried.compareAndSet(this.refreshToken, null);
+                lastRefreshTokenTried.compareAndSet(refreshTokenValue, null);
             }
+
+            state.update(accessTokenValue, accessTokenExpiresAt, refreshTokenValue);
         }
     }
 
     void tryToRefreshAccessToken() {
-        final String currentRefreshToken = refreshToken;
+        final String currentRefreshToken = state.getRefreshToken();
         lastRefreshTokenTried.getAndUpdate(last -> {
             if (isFirstTime.get()) {
                 return null;
