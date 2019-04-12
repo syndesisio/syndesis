@@ -16,15 +16,59 @@
 
 package io.syndesis.connector.sheets.meta;
 
+import java.util.Arrays;
+
 /**
  * @author Christoph Deppisch
  */
 public class GoogleValueRangeMetaData {
 
+    private String spreadsheetId;
+    private String headerRow;
+    private String[] columnNames = new String[0];
     private String range;
     private String majorDimension;
 
     private boolean split;
+
+    public String getSpreadsheetId() {
+        return spreadsheetId;
+    }
+
+    /**
+     * Specifies the spreadsheetId.
+     *
+     * @param spreadsheetId
+     */
+    public void setSpreadsheetId(String spreadsheetId) {
+        this.spreadsheetId = spreadsheetId;
+    }
+
+    public String[] getColumnNames() {
+        return Arrays.copyOf(columnNames, columnNames.length);
+    }
+
+    /**
+     * Specifies the columnNames.
+     *
+     * @param columnNames
+     */
+    public void setColumnNames(String ... columnNames) {
+        this.columnNames = Arrays.copyOf(columnNames, columnNames.length);
+    }
+
+    public String getHeaderRow() {
+        return headerRow;
+    }
+
+    /**
+     * Specifies the headerRow.
+     *
+     * @param headerRow
+     */
+    public void setHeaderRow(String headerRow) {
+        this.headerRow = headerRow;
+    }
 
     public String getRange() {
         return range;

@@ -112,7 +112,7 @@ public class CellCoordinate {
     }
 
     /**
-     * Evaluates column name in A1 notation based on column index. Index 0 will be "A" and index 25 will be "Z". Method also supports
+     * Evaluates column name in A1 notation based on the column index. Index 0 will be "A" and index 25 will be "Z". Method also supports
      * name overflow where index 26 will be "AA" and index 51 will be "AZ" and so on.
      *
      * @param columnIndex
@@ -130,12 +130,43 @@ public class CellCoordinate {
         }
 
         if (overflowIndex >= 0) {
-            columnName.append(String.valueOf(alphabet.toCharArray()[overflowIndex]));
+            columnName.append(alphabet.toCharArray()[overflowIndex]);
         }
 
-        columnName.append(String.valueOf(alphabet.toCharArray()[index]));
+        columnName.append(alphabet.toCharArray()[index]);
 
         return columnName.toString();
+    }
+
+    /**
+     * Special getter for column name where user is able to give set of user defined column names. When given column index is resolvable via custom names
+     * the custom column name is returned otherwise the evaluated default column name is returned.
+     *
+     * @param columnIndex
+     * @param columnStartIndex
+     * @param columnNames
+     * @return
+     */
+    public static String getColumnName(int columnIndex, int columnStartIndex, String ... columnNames) {
+        String columnName = getColumnName(columnIndex);
+
+        int index;
+        if (columnStartIndex > 0) {
+            index = columnIndex % columnStartIndex;
+        } else {
+            index = columnIndex;
+        }
+
+        if (index < columnNames.length) {
+            String name = columnNames[index];
+            if (columnName.equals(name)) {
+                return columnName;
+            } else {
+                return name;
+            }
+        }
+
+        return columnName;
     }
 
     public int getRowIndex() {

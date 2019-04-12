@@ -69,5 +69,14 @@ public class CellCoordinateTest {
     @Test
     public void testGetColumnName() {
         Assert.assertEquals(columnName, CellCoordinate.getColumnName(columnIndexCheck));
+
+        String[] names = new String[columnIndexCheck];
+        Arrays.fill(names, "Foo");
+        Assert.assertEquals(columnName, CellCoordinate.getColumnName(columnIndexCheck, 0, names));
+
+        names = new String[columnIndexCheck + 1];
+        Arrays.fill(names, "Foo");
+        Assert.assertEquals("Foo", CellCoordinate.getColumnName(columnIndexCheck, 0, names));
+        Assert.assertEquals("Foo", CellCoordinate.getColumnName(columnIndexCheck, columnIndexCheck, names));
     }
 }

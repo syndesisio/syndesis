@@ -16,29 +16,20 @@
 
 package io.syndesis.connector.sheets;
 
-import java.io.ByteArrayInputStream;
-import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.services.sheets.v4.Sheets;
 import io.syndesis.integration.component.proxy.ComponentDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import org.apache.camel.Component;
-import org.apache.camel.component.google.sheets.BatchGoogleSheetsClientFactory;
 import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
 import org.apache.camel.component.google.sheets.GoogleSheetsComponent;
 import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamComponent;
-import org.apache.camel.util.ObjectHelper;
 
 /**
  * @author Christoph Deppisch
  */
 public class GoogleSheetsConnector extends ComponentProxyComponent {
-
-    public static final String BEGIN_CERT = "-----BEGIN CERTIFICATE-----";
-    public static final String END_CERT = "-----END CERTIFICATE-----";
 
     private String rootUrl;
     private String serverCertificate;
@@ -51,22 +42,7 @@ public class GoogleSheetsConnector extends ComponentProxyComponent {
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     @Override
     protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {
-        NetHttpTransport.Builder transport = new NetHttpTransport.Builder();
-
-        if (validateCertificates && ObjectHelper.isNotEmpty(serverCertificate)) {
-            byte [] decoded = Base64.getDecoder().decode(serverCertificate.replaceAll(BEGIN_CERT, "")
-                                                                          .replaceAll(END_CERT, ""));
-            transport.trustCertificatesFromStream(new ByteArrayInputStream(decoded));
-        } else {
-            transport.doNotValidateCertificate();
-        }
-
-        final GoogleSheetsClientFactory clientFactory = new BatchGoogleSheetsClientFactory(transport.build()) {
-            @Override
-            protected void configure(Sheets.Builder clientBuilder) {
-                clientBuilder.setRootUrl(rootUrl);
-            }
-        };
+        final GoogleSheetsClientFactory clientFactory = GoogleSheetsConnectorHelper.createClientFactory(rootUrl, serverCertificate, validateCertificates);
 
         switch (getComponentScheme()) {
             case "google-sheets-stream": {
