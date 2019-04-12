@@ -262,6 +262,10 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             .type("env")
             .value("AB_JMX_EXPORTER_CONFIG=/etc/camel/resources/prometheus-config.yml")
             .build());
+        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
+            .type("property")
+            .value("camel.context.streamCaching=true")
+            .build());
         integrationSpecBuilder.addResources(new ResourceSpec.Builder()
             .dataSpec(new DataSpec.Builder()
                 .name("prometheus-config.yml")
