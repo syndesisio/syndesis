@@ -7,6 +7,6 @@ export default include('/connections', {
     selectConnector: 'connection-basics',
     configureConnector: 'configure-fields/:connectorId',
     review: 'review',
+    root: '',
   }),
-  root: '',
 });

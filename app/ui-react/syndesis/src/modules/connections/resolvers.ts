@@ -17,6 +17,14 @@ export default {
         connector,
       },
     })),
-    review: makeResolverNoParams(routes.create.review),
+    review: makeResolver<{
+      connector: Connector;
+      configuredProperties: { [key: string]: string };
+    }>(routes.create.review, ({ connector, configuredProperties }) => ({
+      state: {
+        connector,
+        configuredProperties,
+      },
+    })),
   },
 };

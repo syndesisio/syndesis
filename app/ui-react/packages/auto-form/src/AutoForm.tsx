@@ -1,4 +1,4 @@
-import { Formik } from 'formik';
+import { Formik, FormikErrors } from 'formik';
 import * as React from 'react';
 import { FormBuilder } from './FormBuilder';
 import { IFormDefinition, IFormErrors } from './models';
@@ -44,6 +44,7 @@ export interface IAutoFormState {
   isValidating: boolean;
   resetForm: (nextValues?: any) => void;
   submitForm: () => void;
+  validateForm: () => Promise<FormikErrors<any>>;
   values: any;
   errors: any;
 }
@@ -76,6 +77,7 @@ export class AutoForm<T> extends React.Component<
                 isValidating,
                 isSubmitting,
                 resetForm,
+                validateForm,
                 submitForm,
               }) =>
                 this.props.children({
@@ -98,6 +100,7 @@ export class AutoForm<T> extends React.Component<
                   isValidating,
                   resetForm,
                   submitForm,
+                  validateForm,
                   values,
                 })
               }
