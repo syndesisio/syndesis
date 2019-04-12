@@ -10,6 +10,8 @@ export interface IWithVirtualizationHelpersChildrenProps {
     virtualizationName: string,
     virtualizationDescription?: string
   ): Promise<void>;
+  deleteView(virtualization: RestDataService, viewName: string): Promise<void>;
+  deleteViewEditorState(viewEditorStateId: string): Promise<void>;
   deleteVirtualization(virtualizationName: string): Promise<void>;
   publishVirtualization(virtualizationName: string): Promise<void>;
   refreshVirtualizationViews(
@@ -32,6 +34,8 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
     super(props);
     this.createVirtualization = this.createVirtualization.bind(this);
     this.updateViewEditorStates = this.updateViewEditorStates.bind(this);
+    this.deleteView = this.deleteView.bind(this);
+    this.deleteViewEditorState = this.deleteViewEditorState.bind(this);
     this.deleteVirtualization = this.deleteVirtualization.bind(this);
     this.publishVirtualization = this.publishVirtualization.bind(this);
     this.refreshVirtualizationViews = this.refreshVirtualizationViews.bind(
@@ -61,6 +65,35 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
       method: 'POST',
       url: `${this.props.dvApiUri}workspace/dataservices/${virtName}`,
     });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return Promise.resolve();
+  }
+
+  /**
+   * Deletes the specified virtualization view.
+   * @param virtualization the virtualization
+   * @param viewName the name of the view being deleted
+   */
+  public async deleteView(
+    virtualization: RestDataService,
+    viewName: string
+  ): Promise<void> {
+    const vdbName = virtualization.serviceVdbName;
+    const editorStateId = vdbName + '.' + viewName;
+    // Delete viewEditorState
+    await this.deleteViewEditorState(editorStateId);
+    // Delete virtualization view
+    const response = await callFetch({
+      headers: {},
+      method: 'DELETE',
+      url: `${
+        this.props.dvApiUri
+      }workspace/vdbs/${vdbName}/Models/views/Views/${viewName}`,
+    });
+
     if (!response.ok) {
       throw new Error(response.statusText);
     }
@@ -130,6 +163,26 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
   }
 
   /**
+   * Delete the specified ViewEditorState in the komodo user profile
+   * @param viewEditorState the view editor state
+   */
+  public async deleteViewEditorState(viewEditorStateId: string): Promise<void> {
+    const response = await callFetch({
+      headers: {},
+      method: 'DELETE',
+      url: `${
+        this.props.dvApiUri
+      }service/userProfile/viewEditorState/${viewEditorStateId}`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return Promise.resolve();
+  }
+
+  /**
    * Saves ViewEditorStates in the komodo user profile
    * @param viewEditorStates the array of view editor states
    */
@@ -177,6 +230,8 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
   public render() {
     return this.props.children({
       createVirtualization: this.createVirtualization,
+      deleteView: this.deleteView,
+      deleteViewEditorState: this.deleteViewEditorState,
       deleteVirtualization: this.deleteVirtualization,
       publishVirtualization: this.publishVirtualization,
       refreshVirtualizationViews: this.refreshVirtualizationViews,
