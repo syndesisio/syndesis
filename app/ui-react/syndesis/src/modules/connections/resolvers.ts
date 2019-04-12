@@ -1,10 +1,23 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
-import { Connector } from '@syndesis/models';
+import { Connection, Connector } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import routes from './routes';
 
 export default {
   connections: makeResolverNoParams(routes.connections),
+  connection: {
+    details: makeResolver<{ connection: Connection }>(
+      routes.connection.details,
+      ({ connection }) => ({
+        params: {
+          connectionId: connection.id,
+        },
+        state: {
+          connection,
+        },
+      })
+    ),
+  },
   create: {
     selectConnector: makeResolverNoParams(routes.create.selectConnector),
     configureConnector: makeResolver<{

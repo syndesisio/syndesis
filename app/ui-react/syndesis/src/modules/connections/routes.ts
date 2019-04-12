@@ -3,6 +3,9 @@ import { include } from 'named-urls';
 
 export default include('/connections', {
   connections: '',
+  connection: include(':connectionId', {
+    details: '',
+  }),
   create: include('create', {
     selectConnector: 'connection-basics',
     configureConnector: 'configure-fields/:connectorId',
