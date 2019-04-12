@@ -1,4 +1,4 @@
-import { WithConnection, WithIntegrationHelpers } from '@syndesis/api';
+import { getSteps, WithConnection } from '@syndesis/api';
 import { ConnectionOverview, Integration } from '@syndesis/models';
 import {
   ButtonLink,
@@ -69,14 +69,10 @@ export class SelectActionPage extends React.Component {
                       <IntegrationEditorLayout
                         header={<IntegrationEditorBreadcrumbs step={1} />}
                         sidebar={
-                          <WithIntegrationHelpers>
-                            {({ getSteps }) => (
-                              <IntegrationEditorSidebar
-                                steps={getSteps(integration, 0)}
-                                activeIndex={positionAsNumber}
-                              />
-                            )}
-                          </WithIntegrationHelpers>
+                          <IntegrationEditorSidebar
+                            steps={getSteps(integration, 0)}
+                            activeIndex={positionAsNumber}
+                          />
                         }
                         content={
                           <IntegrationEditorChooseAction

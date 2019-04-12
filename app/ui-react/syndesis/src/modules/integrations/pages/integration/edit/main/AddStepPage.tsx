@@ -1,4 +1,4 @@
-import { WithIntegrationHelpers } from '@syndesis/api';
+import { getSteps } from '@syndesis/api';
 import { Integration } from '@syndesis/models';
 import { Container, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
@@ -52,24 +52,20 @@ export class AddStepPage extends React.Component {
                     You can continue adding steps and connections to your
                     integration as well.
                   </p>
-                  <WithIntegrationHelpers>
-                    {({ getSteps }) => (
-                      <IntegrationEditorStepAdder
-                        steps={getSteps(integration, 0)}
-                        addConnectionHref={getEditAddConnectionHref.bind(
-                          null,
-                          integration
-                        )}
-                        addStepHref={getEditAddStepHref.bind(null, integration)}
-                        configureConnectionHref={getEditConfigureConnectionHrefCallback(
-                          integration
-                        )}
-                        configureStepHref={getEditConfigureStepHrefCallback(
-                          integration
-                        )}
-                      />
+                  <IntegrationEditorStepAdder
+                    steps={getSteps(integration, 0)}
+                    addConnectionHref={getEditAddConnectionHref.bind(
+                      null,
+                      integration
                     )}
-                  </WithIntegrationHelpers>
+                    addStepHref={getEditAddStepHref.bind(null, integration)}
+                    configureConnectionHref={getEditConfigureConnectionHrefCallback(
+                      integration
+                    )}
+                    configureStepHref={getEditConfigureStepHrefCallback(
+                      integration
+                    )}
+                  />
                 </Container>
               </>
             }

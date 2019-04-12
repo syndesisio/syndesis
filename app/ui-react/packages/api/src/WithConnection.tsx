@@ -1,7 +1,7 @@
 import { Action, ConnectionOverview } from '@syndesis/models';
 import * as React from 'react';
 import { IFetchState } from './Fetch';
-import { getActionsWithFrom, getActionsWithTo } from './integrationHelpers';
+import { getActionsWithFrom, getActionsWithTo } from './helpers';
 import { SyndesisFetch } from './SyndesisFetch';
 
 export interface IConnectionOverviewExtended extends ConnectionOverview {

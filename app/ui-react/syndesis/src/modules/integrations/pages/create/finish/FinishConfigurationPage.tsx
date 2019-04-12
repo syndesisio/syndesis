@@ -1,4 +1,4 @@
-import { WithIntegrationHelpers } from '@syndesis/api';
+import { getStep, WithIntegrationHelpers } from '@syndesis/api';
 import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import {
   IntegrationEditorLayout,
@@ -65,7 +65,7 @@ export class FinishConfigurationPage extends React.Component {
   public render() {
     return (
       <WithIntegrationHelpers>
-        {({ addConnection, getStep, updateOrAddConnection }) => (
+        {({ updateOrAddConnection }) => (
           <WithRouteData<
             IFinishConfigurationPageRouteParams,
             IFinishConfigurationPageRouteState

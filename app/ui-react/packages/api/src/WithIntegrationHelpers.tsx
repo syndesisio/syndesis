@@ -3,7 +3,6 @@ import {
   ActionDescriptor,
   Connection,
   Integration,
-  IntegrationOverview,
   Step,
 } from '@syndesis/models';
 import { key } from '@syndesis/utils';
@@ -11,11 +10,6 @@ import produce from 'immer';
 import * as React from 'react';
 import { ApiContext, IApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
-
-export const NEW_INTEGRATION = {
-  name: '',
-  tags: [],
-} as Integration;
 
 type UpdateOrAddConnection = (
   integration: Integration,
@@ -75,12 +69,6 @@ export interface IWithIntegrationHelpersChildrenProps {
    */
   updateOrAddConnection: UpdateOrAddConnection;
   /**
-   * returns an empty integration object.
-   *
-   * @todo make the returned object immutable to avoid uncontrolled changes
-   */
-  getEmptyIntegration(): Integration;
-  /**
    * asynchronously saves the provided integration, returning the saved
    * integration in case of success.
    *
@@ -89,59 +77,6 @@ export interface IWithIntegrationHelpersChildrenProps {
    * @todo make the returned object immutable to avoid uncontrolled changes
    */
   saveIntegration(integration: Integration): Promise<Integration>;
-  /**
-   * updates the name of an integration.
-   *
-   * @param integration
-   * @param name
-   */
-  setName(integration: Integration, name: string): Integration;
-  /**
-   * returns the list of steps of the provided integration.
-   *
-   * @param value
-   * @param flow
-   *
-   * @todo make the returned object immutable to avoid uncontrolled changes
-   */
-  getSteps(integration: Integration, flow: number): Step[];
-  /**
-   * returns a specific step of the provided integration.
-   *
-   * @param value
-   * @param flow
-   *
-   * @todo make the returned object immutable to avoid uncontrolled changes
-   */
-  getStep(integration: Integration, flow: number, step: number): Step;
-  /**
-   * returns true if the provided integration can be published; returns false
-   * otherwise.
-   *
-   * @param integration
-   */
-  canPublish(integration: IntegrationOverview): boolean;
-  /**
-   * returns true if the provided integration can be activated; returns false
-   * otherwise.
-   *
-   * @param integration
-   */
-  canActivate(integration: IntegrationOverview): boolean;
-  /**
-   * returns true if the provided integration can be edited; returns false
-   * otherwise.
-   *
-   * @param integration
-   */
-  canEdit(integration: IntegrationOverview): boolean;
-  /**
-   * returns true if the provided integration can be deactivated; returns false
-   * otherwise.
-   *
-   * @param integration
-   */
-  canDeactivate(integration: IntegrationOverview): boolean;
 }
 
 export interface IWithIntegrationHelpersProps {
@@ -154,13 +89,9 @@ export class WithIntegrationHelpersWrapped extends React.Component<
   constructor(props: IWithIntegrationHelpersProps & IApiContext) {
     super(props);
     this.addConnection = this.addConnection.bind(this);
-    this.getEmptyIntegration = this.getEmptyIntegration.bind(this);
     this.saveIntegration = this.saveIntegration.bind(this);
-    this.setName = this.setName.bind(this);
     this.updateConnection = this.updateConnection.bind(this);
     this.updateOrAddConnection = this.updateOrAddConnection.bind(this);
-    this.getStep = this.getStep.bind(this);
-    this.getSteps = this.getSteps.bind(this);
   }
 
   public async getActionDescriptor(
@@ -316,10 +247,6 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     });
   }
 
-  public getEmptyIntegration(): Integration {
-    return NEW_INTEGRATION;
-  }
-
   public async saveIntegration(integration: Integration): Promise<Integration> {
     const response = await callFetch({
       body: integration,
@@ -337,61 +264,10 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       : Promise.resolve(integration);
   }
 
-  public setName(integration: Integration, name: string): Integration {
-    return produce(integration, nextIntegration => {
-      nextIntegration.name = name;
-    });
-  }
-
-  public getSteps(integration: Integration, flow: number): Step[] {
-    try {
-      return integration.flows![flow].steps!;
-    } catch (e) {
-      throw new Error(`Can't find steps in position flow:${flow}`);
-    }
-  }
-
-  public getStep(integration: Integration, flow: number, step: number): Step {
-    try {
-      return integration.flows![flow].steps![step];
-    } catch (e) {
-      throw new Error(
-        `Can't find a step in position flow:${flow} step:${step}`
-      );
-    }
-  }
-
-  public canPublish(integration: IntegrationOverview) {
-    return integration.currentState !== 'Pending';
-  }
-
-  public canActivate(integration: IntegrationOverview) {
-    return (
-      integration.currentState !== 'Pending' &&
-      integration.currentState !== 'Published'
-    );
-  }
-
-  public canEdit(integration: IntegrationOverview) {
-    return integration.currentState !== 'Pending';
-  }
-
-  public canDeactivate(integration: IntegrationOverview) {
-    return integration.currentState !== 'Unpublished';
-  }
-
   public render() {
     return this.props.children({
       addConnection: this.addConnection,
-      canActivate: this.canActivate,
-      canDeactivate: this.canDeactivate,
-      canEdit: this.canEdit,
-      canPublish: this.canPublish,
-      getEmptyIntegration: this.getEmptyIntegration,
-      getStep: this.getStep,
-      getSteps: this.getSteps,
       saveIntegration: this.saveIntegration,
-      setName: this.setName,
       updateConnection: this.updateConnection,
       updateOrAddConnection: this.updateOrAddConnection,
     });
@@ -413,15 +289,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
  * @see [addConnection]{@link IWithIntegrationHelpersChildrenProps#addConnection}
  * @see [updateConnection]{@link IWithIntegrationHelpersChildrenProps#updateConnection}
  * @see [updateOrAddConnection]{@link IWithIntegrationHelpersChildrenProps#updateOrAddConnection}
- * @see [getEmptyIntegration]{@link IWithIntegrationHelpersChildrenProps#getEmptyIntegration}
  * @see [saveIntegration]{@link IWithIntegrationHelpersChildrenProps#saveIntegration}
- * @see [setName]{@link IWithIntegrationHelpersChildrenProps#setName}
- * @see [getSteps]{@link IWithIntegrationHelpersChildrenProps#getSteps}
- * @see [getStep]{@link IWithIntegrationHelpersChildrenProps#getStep}
- * @see [canPublish]{@link IWithIntegrationHelpersChildrenProps#canPublish}
- * @see [canActivate]{@link IWithIntegrationHelpersChildrenProps#canActivate}
- * @see [canEdit]{@link IWithIntegrationHelpersChildrenProps#canEdit}
- * @see [canDeactivate]{@link IWithIntegrationHelpersChildrenProps#canDeactivate}
  */
 export const WithIntegrationHelpers: React.FunctionComponent<
   IWithIntegrationHelpersProps

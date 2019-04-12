@@ -1,4 +1,5 @@
 import {
+  Connection,
   ConfigurationProperty,
   IntegrationMetricsSummary,
   IntegrationOverview,
@@ -8,6 +9,11 @@ import {
 export interface IConfigurationProperty extends ConfigurationProperty {
   required?: boolean;
   secret?: boolean;
+}
+
+export interface IConnectionWithIconFile extends Connection {
+  icon?: any;
+  iconFile?: File;
 }
 
 export interface IntegrationWithOverview {

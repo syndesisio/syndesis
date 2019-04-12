@@ -1,4 +1,4 @@
-import { WithIntegrationHelpers } from '@syndesis/api';
+import { setIntegrationName, WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { Integration } from '@syndesis/models';
 import { IntegrationEditorForm, IntegrationEditorLayout } from '@syndesis/ui';
@@ -38,12 +38,15 @@ export class SaveIntegrationPage extends React.Component {
       <WithRouteData<null, ISaveIntegrationRouteState>>
         {(_, { integration }, { history }) => (
           <WithIntegrationHelpers>
-            {({ setName, saveIntegration }) => {
+            {({ saveIntegration }) => {
               const onSave = async (
                 { name, description }: ISaveForm,
                 actions: any
               ) => {
-                const updatedIntegration = setName(integration, name);
+                const updatedIntegration = setIntegrationName(
+                  integration,
+                  name
+                );
                 // TODO: set the description
                 await saveIntegration(updatedIntegration);
                 actions.setSubmitting(false);

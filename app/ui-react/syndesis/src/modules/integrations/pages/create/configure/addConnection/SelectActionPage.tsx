@@ -1,4 +1,4 @@
-import { WithConnection, WithIntegrationHelpers } from '@syndesis/api';
+import { getSteps, WithConnection } from '@syndesis/api';
 import { ConnectionOverview, Integration } from '@syndesis/models';
 import {
   ButtonLink,
@@ -56,104 +56,96 @@ export class SelectActionPage extends React.Component {
   public render() {
     return (
       <WithRouteData<ISelectActionRouteParams, ISelectActionRouteState>>
-        {({ connectionId, position }, { connection, integration }) => (
-          <WithConnection id={connectionId} initialValue={connection}>
-            {({ data, hasData, error }) => (
-              <WithLoader
-                error={error}
-                loading={!hasData}
-                loaderChildren={<Loader />}
-                errorChildren={<div>TODO</div>}
-              >
-                {() => (
-                  <>
-                    <PageTitle title={'Choose an action'} />
-                    <IntegrationEditorLayout
-                      header={<IntegrationCreatorBreadcrumbs step={3} />}
-                      sidebar={
-                        <WithIntegrationHelpers>
-                          {({ getSteps }) => {
-                            const positionAsNumber = parseInt(position, 10);
-                            return (
-                              <IntegrationEditorSidebar
-                                steps={getSteps(integration, 0)}
-                                addAtIndex={positionAsNumber}
-                                addIcon={
-                                  hasData ? (
-                                    <img
-                                      src={data.icon}
-                                      width={24}
-                                      height={24}
-                                    />
-                                  ) : (
-                                    <Loader />
-                                  )
-                                }
-                                addI18nTitle={
-                                  hasData
-                                    ? `${positionAsNumber + 1}. ${
-                                        data.connector!.name
-                                      }`
-                                    : `${positionAsNumber + 1}. Start`
-                                }
-                                addI18nTooltip={
-                                  hasData
-                                    ? `${positionAsNumber + 1}. ${data.name}`
-                                    : 'Start'
-                                }
-                                addI18nDescription={'Choose an action'}
-                              />
-                            );
-                          }}
-                        </WithIntegrationHelpers>
-                      }
-                      content={
-                        <IntegrationEditorChooseAction
-                          i18nTitle={`${connection.name} - Choose Action`}
-                          i18nSubtitle={
-                            'Choose an action for the selected connectionName.'
-                          }
-                        >
-                          {data.actionsWithTo
-                            .sort((a, b) => a.name.localeCompare(b.name))
-                            .map((a, idx) => (
-                              <IntegrationEditorActionsListItem
-                                key={idx}
-                                integrationName={a.name}
-                                integrationDescription={
-                                  a.description || 'No description available.'
-                                }
-                                actions={
-                                  <ButtonLink
-                                    href={resolvers.create.configure.addConnection.configureAction(
-                                      {
-                                        actionId: a.id!,
-                                        connection,
-                                        integration,
-                                        position,
-                                      }
-                                    )}
-                                  >
-                                    Select
-                                  </ButtonLink>
-                                }
-                              />
-                            ))}
-                        </IntegrationEditorChooseAction>
-                      }
-                      cancelHref={resolvers.create.configure.index({
-                        integration,
-                      })}
-                      backHref={resolvers.create.configure.addConnection.selectConnection(
-                        { position, integration }
-                      )}
-                    />
-                  </>
-                )}
-              </WithLoader>
-            )}
-          </WithConnection>
-        )}
+        {({ connectionId, position }, { connection, integration }) => {
+          const positionAsNumber = parseInt(position, 10);
+          return (
+            <WithConnection id={connectionId} initialValue={connection}>
+              {({ data, hasData, error }) => (
+                <WithLoader
+                  error={error}
+                  loading={!hasData}
+                  loaderChildren={<Loader />}
+                  errorChildren={<div>TODO</div>}
+                >
+                  {() => (
+                    <>
+                      <PageTitle title={'Choose an action'} />
+                      <IntegrationEditorLayout
+                        header={<IntegrationCreatorBreadcrumbs step={3} />}
+                        sidebar={
+                          <IntegrationEditorSidebar
+                            steps={getSteps(integration, 0)}
+                            addAtIndex={positionAsNumber}
+                            addIcon={
+                              hasData ? (
+                                <img src={data.icon} width={24} height={24} />
+                              ) : (
+                                <Loader />
+                              )
+                            }
+                            addI18nTitle={
+                              hasData
+                                ? `${positionAsNumber + 1}. ${
+                                    data.connector!.name
+                                  }`
+                                : `${positionAsNumber + 1}. Start`
+                            }
+                            addI18nTooltip={
+                              hasData
+                                ? `${positionAsNumber + 1}. ${data.name}`
+                                : 'Start'
+                            }
+                            addI18nDescription={'Choose an action'}
+                          />
+                        }
+                        content={
+                          <IntegrationEditorChooseAction
+                            i18nTitle={`${connection.name} - Choose Action`}
+                            i18nSubtitle={
+                              'Choose an action for the selected connectionName.'
+                            }
+                          >
+                            {data.actionsWithTo
+                              .sort((a, b) => a.name.localeCompare(b.name))
+                              .map((a, idx) => (
+                                <IntegrationEditorActionsListItem
+                                  key={idx}
+                                  integrationName={a.name}
+                                  integrationDescription={
+                                    a.description || 'No description available.'
+                                  }
+                                  actions={
+                                    <ButtonLink
+                                      href={resolvers.create.configure.addConnection.configureAction(
+                                        {
+                                          actionId: a.id!,
+                                          connection,
+                                          integration,
+                                          position,
+                                        }
+                                      )}
+                                    >
+                                      Select
+                                    </ButtonLink>
+                                  }
+                                />
+                              ))}
+                          </IntegrationEditorChooseAction>
+                        }
+                        cancelHref={resolvers.create.configure.index({
+                          integration,
+                        })}
+                        backHref={resolvers.create.configure.addConnection.selectConnection(
+                          { position, integration }
+                        )}
+                      />
+                    </>
+                  )}
+                </WithLoader>
+              )}
+            </WithConnection>
+          );
+        }}
       </WithRouteData>
     );
   }

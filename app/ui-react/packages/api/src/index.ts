@@ -20,7 +20,7 @@ export * from './WithConnectors';
 export * from './WithPolling';
 export * from './WithChangeListener';
 export * from './WithServerEvents';
-export * from './integrationHelpers';
+export * from './helpers';
 export * from './WithViews';
 export * from './WithVirtualizationHelpers';
 export * from './WithVirtualization';
