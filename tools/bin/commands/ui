@@ -15,6 +15,7 @@ ui::usage() {
     --watch-tests       Run the tests and watch for changes
     --serve             Serve the UI (defaults to staging, use --minishift or --local to change this) and watch for changes
     --local             When serving, run against a local Syndesis server
+    --angular           Use the angular codebase instead of the react codebase
     --minishift         Involve minishift as needed
 -p  --project           Use the specified openshift project
     --nuke-everything   Use with --minishift, start or reset the minishift VM
@@ -30,7 +31,11 @@ ui::run() {
 }
 
 cd_to_ui_dir() {
-  pushd $(appdir)/ui > /dev/null 2>&1
+  if [ $(hasflag --angular) ]; then
+    pushd $(appdir)/ui > /dev/null 2>&1
+  else
+    pushd $(appdir)/ui-react > /dev/null 2>&1
+  fi
   echo "note: changing directory to $(pwd)"
 }
 
@@ -47,7 +52,11 @@ killall() {
     wait
     if [ $(hasflag --minishift) ]; then
       if [ $(hasflag --serve) ]; then
-        yarn restore:minishift
+        if [ $(hasflag --angular) ]; then
+          yarn restore:minishift
+        else
+          yarn watch:app:minishift:restore
+        fi
       fi
     fi
     cd_back
@@ -84,11 +93,19 @@ do_things() {
   fi
 
   if [ $(hasflag --build) ]; then
-    yarn build:ci
+    if [ $(hasflag --angular) ]; then
+      yarn build:ci
+    else
+      yarn build
+    fi
   fi
 
   if [ $(hasflag --run-tests) ]; then
-    yarn test:ci
+    if [ $(hasflag --angular) ]; then
+      yarn test:ci
+    else
+      yarn test
+    fi
     if [ $? -ne 0 ]; then
       check_error "Error running tests"
       return 1
@@ -97,7 +114,11 @@ do_things() {
 
   if [ $(hasflag --watch-tests) ]; then
     trap 'killall' INT
-    yarn test &
+    if [ $(hasflag --angular) ]; then
+      yarn test &
+    else
+      yarn test --watch &
+    fi
     cat
     return 0
   fi
@@ -140,11 +161,19 @@ do_things() {
       yarn start:local &
     elif [ $(hasflag --minishift) ]; then
       echo -e "\nRunning against minishift"
-      yarn start:minishift &
+      if [ $(hasflag --angular) ]; then
+        yarn start:minishift &
+      else
+        yarn watch:app:minishift &
+      fi
     else
       echo -e "\nRunning against the staging environment"
       export BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com
-      yarn start:staging &
+      if [ $(hasflag --angular) ]; then
+        yarn start:staging &
+      else
+        yarn watch:app:proxy &
+      fi
     fi
     # block
     cat
