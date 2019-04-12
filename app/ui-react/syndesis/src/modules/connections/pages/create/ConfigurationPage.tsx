@@ -3,6 +3,7 @@ import { Connector } from '@syndesis/models';
 import { ButtonLink, ConnectionCreatorLayout, Loader } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { PageTitle } from '../../../../shared';
 import { ConnectionCreatorBreadcrumbs } from '../../components';
 import resolvers from '../../resolvers';
 import { WithConfigurationForm } from '../../shared';
@@ -53,28 +54,31 @@ export default class ConfigurationPage extends React.Component {
                         validateForm,
                       }) => {
                         return (
-                          <ConnectionCreatorLayout
-                            header={<ConnectionCreatorBreadcrumbs step={2} />}
-                            content={form}
-                            backHref={resolvers.create.selectConnector()}
-                            cancelHref={resolvers.connections()}
-                            onNext={submitForm}
-                            isNextDisabled={isSubmitting}
-                            extraButtons={
-                              <ButtonLink
-                                onClick={validateForm}
-                                disabled={!isValid || isValidating}
-                              >
-                                Validate
-                                {isValidating && (
-                                  <>
-                                    &nbsp;
-                                    <Loader size={'sm'} inline={true} />
-                                  </>
-                                )}
-                              </ButtonLink>
-                            }
-                          />
+                          <>
+                            <PageTitle title={'Configure connection'} />
+                            <ConnectionCreatorLayout
+                              header={<ConnectionCreatorBreadcrumbs step={2} />}
+                              content={form}
+                              backHref={resolvers.create.selectConnector()}
+                              cancelHref={resolvers.connections()}
+                              onNext={submitForm}
+                              isNextDisabled={isSubmitting}
+                              extraButtons={
+                                <ButtonLink
+                                  onClick={validateForm}
+                                  disabled={!isValid || isValidating}
+                                >
+                                  Validate
+                                  {isValidating && (
+                                    <>
+                                      &nbsp;
+                                      <Loader size={'sm'} inline={true} />
+                                    </>
+                                  )}
+                                </ButtonLink>
+                              }
+                            />
+                          </>
                         );
                       }}
                     </WithConfigurationForm>
