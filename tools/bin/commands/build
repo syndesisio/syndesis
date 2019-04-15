@@ -228,8 +228,15 @@ do_camel_k() {
     echo "Linking $kamel_dir/kamel-$version --> $kamel_dir/kamel-latest"
     ln -sf $kamel_dir/kamel-$version $kamel_dir/kamel-latest
 
+    go build -o $camel_k_root/build/_output/bin/builder ./cmd/builder/*.go
+    if [ $? != 0 ]; then
+       echo "ERROR: Can't build camel k builder"
+       exit 1
+    fi
+
     local camel_k_image="docker.io/apache/camel-k"
     echo "Building image $camel_k_image:$version"
+    mkdir -p $camel_k_root/build/_maven_output
     operator-sdk build $camel_k_image:$version
 
     echo "Tagging $camel_k_image:$version --> $camel_k_image:latest"
