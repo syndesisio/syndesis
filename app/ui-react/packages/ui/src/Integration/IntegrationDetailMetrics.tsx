@@ -32,7 +32,7 @@ export class IntegrationDetailMetrics extends React.Component<
       <CardGrid>
         <Row style={{ marginBottom: '20px', marginTop: '20px' }}>
           <Col xs={6} sm={3} md={3}>
-            <Card accented aggregated>
+            <Card accented={true} aggregated={true} matchHeight={true}>
               <CardTitle>
                 <Icon type="pf" name="error-circle-o" />
                 {this.props.errorMessagesCount}
@@ -41,7 +41,7 @@ export class IntegrationDetailMetrics extends React.Component<
             </Card>
           </Col>
           <Col xs={6} sm={3} md={3}>
-            <Card accented aggregated>
+            <Card accented={true} aggregated={true} matchHeight={true}>
               <CardTitle>
                 <Icon name="shield" />
                 Last Processed
@@ -52,7 +52,7 @@ export class IntegrationDetailMetrics extends React.Component<
             </Card>
           </Col>
           <Col xs={6} sm={3} md={3}>
-            <Card accented aggregated>
+            <Card accented={true} aggregated={true} matchHeight={true}>
               <CardTitle>
                 <AggregateStatusCount>
                   {this.props.totalMessages}&nbsp;
