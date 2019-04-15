@@ -72,7 +72,7 @@ public class CustomConnectorHandlerTest {
         when(dataManager.fetch(ConnectorTemplate.class, "connector-template-id")).thenReturn(connectorTemplate);
         when(dataManager.create(any(Connector.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        when(applicationContext.getBean("connector-template-id", ConnectorGenerator.class)).thenReturn(new ConnectorGenerator(new Connector.Builder()
+        when(applicationContext.getBean("connector-template-id")).thenReturn(new ConnectorGenerator(new Connector.Builder()
             .addTags("from-connector")
             .build()) {
             @Override
@@ -122,7 +122,7 @@ public class CustomConnectorHandlerTest {
         final APISummary preparedSummary = new APISummary.Builder().build();
 
         when(dataManager.fetch(ConnectorTemplate.class, "connector-template")).thenReturn(template);
-        when(applicationContext.getBean("connector-template", ConnectorGenerator.class)).thenReturn(connectorGenerator);
+        when(applicationContext.getBean("connector-template")).thenReturn(connectorGenerator);
         when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(preparedSummary);
 
         final APISummary info = handler.info(connectorSettings);
