@@ -3,8 +3,8 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import {
-  // AggregatedMetricCard,
   Container,
+  IntegrationDetailActivity,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
   IntegrationDetailHistoryListViewItem,
@@ -80,7 +80,7 @@ storiesOf('Integration/Detail', module)
             <TabBarItem label={'Metrics'} to={'#metrics'} />
           </TabBar>
         </Container>
-        <p>Activity table goes here.</p>
+        <IntegrationDetailActivity />
       </>
     </Router>
   ))

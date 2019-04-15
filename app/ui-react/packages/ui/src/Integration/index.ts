@@ -2,6 +2,7 @@ export * from './CiCd';
 export * from './Import';
 export * from '../Shared/AggregatedMetricCard';
 export * from './IntegrationActionSelectorCard';
+export * from './IntegrationDetailActivity';
 export * from './IntegrationDetailDescription';
 export * from './IntegrationDetailEditableName';
 export * from './IntegrationDetailHistoryListView';
