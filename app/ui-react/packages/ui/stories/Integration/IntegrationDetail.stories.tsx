@@ -99,7 +99,14 @@ storiesOf('Integration/Detail', module)
             <TabBarItem label={'Metrics'} to={'#metrics'} />
           </TabBar>
         </Container>
-        <IntegrationDetailMetrics />
+        <IntegrationDetailMetrics
+          errorMessagesCount={26128}
+          okMessagesCount={26126}
+          lastProcessedDate={''}
+          totalErrorsCount={2}
+          totalMessages={2425}
+          uptimeSince={'Apr 15th 15:37'}
+        />
       </>
     </Router>
   ));

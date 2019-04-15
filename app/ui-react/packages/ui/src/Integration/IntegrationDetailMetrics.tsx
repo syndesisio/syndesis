@@ -1,4 +1,3 @@
-// import * as H from 'history';
 import {
   AggregateStatusCount,
   AggregateStatusNotification,
@@ -14,9 +13,19 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-// import { Link } from 'react-router-dom';
 
-export class IntegrationDetailMetrics extends React.Component {
+export interface IIntegrationDetailMetricsProps {
+  errorMessagesCount?: number;
+  okMessagesCount?: number;
+  lastProcessedDate?: string;
+  totalErrorsCount?: number;
+  totalMessages?: number;
+  uptimeSince?: string;
+}
+
+export class IntegrationDetailMetrics extends React.Component<
+  IIntegrationDetailMetricsProps
+> {
   public render() {
     return (
       <CardGrid>
@@ -27,7 +36,7 @@ export class IntegrationDetailMetrics extends React.Component {
                 <a href="#">
                   <Icon name="shield" />
                   <AggregateStatusCount>9</AggregateStatusCount>
-                  Ipsum
+                  {this.props.uptimeSince}
                 </a>
               </CardTitle>
               <CardBody>
