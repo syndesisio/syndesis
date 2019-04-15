@@ -161,7 +161,6 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-rest-swagger</artifactId>
-      <version>${project.version}</version>
       <scope>test</scope>
     </dependency>
 
