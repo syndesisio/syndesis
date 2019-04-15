@@ -1,12 +1,15 @@
+// import { number, text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import {
+  // AggregatedMetricCard,
   Container,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
   IntegrationDetailHistoryListViewItem,
   IntegrationDetailInfo,
+  IntegrationDetailMetrics,
   IntegrationStepsHorizontalView,
   TabBar,
   TabBarItem,
@@ -96,7 +99,7 @@ storiesOf('Integration/Detail', module)
             <TabBarItem label={'Metrics'} to={'#metrics'} />
           </TabBar>
         </Container>
-        <p>Metrics cards go here.</p>
+        <IntegrationDetailMetrics />
       </>
     </Router>
   ));
