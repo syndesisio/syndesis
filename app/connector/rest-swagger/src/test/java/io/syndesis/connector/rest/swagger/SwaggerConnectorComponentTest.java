@@ -20,17 +20,22 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
 
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.rest.swagger.RestSwaggerEndpoint;
+import org.apache.camel.spi.HeaderFilterStrategy;
 import org.apache.camel.util.IntrospectionSupport;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -125,5 +130,14 @@ public class SwaggerConnectorComponentTest {
 
         component.setRefreshTokenRetryStatuses(" 1 ,2 , 3");
         assertThat(component.getRefreshTokenRetryStatuses()).isEqualTo("1,2,3");
+    }
+
+    @Configuration
+    public static class SwaggerConnectorComponentTestConfiguration {
+        @Bean
+        @ConditionalOnMissingBean
+        public HeaderFilterStrategy syndesisHeaderStrategy() {
+            return new SyndesisHeaderStrategy();
+        }
     }
 }
