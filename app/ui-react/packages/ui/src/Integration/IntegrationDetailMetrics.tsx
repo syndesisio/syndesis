@@ -8,9 +8,7 @@ import {
   CardTitle,
   Col,
   Icon,
-  OverlayTrigger,
   Row,
-  Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
 
@@ -33,66 +31,52 @@ export class IntegrationDetailMetrics extends React.Component<
           <Col xs={6} sm={3} md={3}>
             <Card accented aggregated>
               <CardTitle>
-                <a href="#">
-                  <Icon name="shield" />
-                  <AggregateStatusCount>9</AggregateStatusCount>
-                  {this.props.uptimeSince}
-                </a>
+                <Icon type="pf" name="error-circle-o" />
+                {this.props.errorMessagesCount}
+              </CardTitle>
+              <CardBody>Total Errors</CardBody>
+            </Card>
+          </Col>
+          <Col xs={6} sm={3} md={3}>
+            <Card accented aggregated>
+              <CardTitle>
+                <Icon name="shield" />
+                Last Processed
               </CardTitle>
               <CardBody>
-                <AggregateStatusNotifications>
-                  <AggregateStatusNotification>
-                    <OverlayTrigger overlay={<Tooltip />}>
-                      <a href="#" className="add">
-                        <Icon type="pf" name="add-circle-o" />
-                      </a>
-                    </OverlayTrigger>
-                  </AggregateStatusNotification>
-                </AggregateStatusNotifications>
+                <h2>n/a</h2>
               </CardBody>
             </Card>
           </Col>
           <Col xs={6} sm={3} md={3}>
             <Card accented aggregated>
               <CardTitle>
-                <a href="#">
-                  <Icon name="shield" />
-                  <AggregateStatusCount>20</AggregateStatusCount>
-                  Amet
-                </a>
-              </CardTitle>
-              <CardBody>
-                <AggregateStatusNotifications>
-                  <AggregateStatusNotification>
-                    <a href="#">
-                      <Icon type="pf" name="error-circle-o" />4
-                    </a>
-                  </AggregateStatusNotification>
-                  <AggregateStatusNotification>
-                    <a href="#">
-                      <Icon type="pf" name="warning-triangle-o" />1
-                    </a>
-                  </AggregateStatusNotification>
-                </AggregateStatusNotifications>
-              </CardBody>
-            </Card>
-          </Col>
-          <Col xs={6} sm={3} md={3}>
-            <Card accented aggregated>
-              <CardTitle>
-                <a href="#">
-                  <Icon name="shield" />
-                  <AggregateStatusCount>9</AggregateStatusCount>
-                  Adipiscing
-                </a>
+                <AggregateStatusCount>
+                  {this.props.totalMessages}&nbsp;
+                </AggregateStatusCount>
+                Total Messages
               </CardTitle>
               <CardBody>
                 <AggregateStatusNotifications>
                   <AggregateStatusNotification>
                     <Icon type="pf" name="ok" />
+                    {this.props.okMessagesCount}&nbsp;
+                  </AggregateStatusNotification>
+                  <AggregateStatusNotification>
+                    <Icon type="pf" name="error-circle-o" />
+                    {this.props.errorMessagesCount}
                   </AggregateStatusNotification>
                 </AggregateStatusNotifications>
               </CardBody>
+            </Card>
+          </Col>
+          <Col xs={6} sm={3} md={3}>
+            <Card accented aggregated>
+              <CardTitle>
+                <Icon name="shield" />
+                Uptime
+              </CardTitle>
+              <CardBody>{this.props.uptimeSince}</CardBody>
             </Card>
           </Col>
         </Row>

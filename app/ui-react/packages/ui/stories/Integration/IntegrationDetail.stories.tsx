@@ -100,11 +100,11 @@ storiesOf('Integration/Detail', module)
           </TabBar>
         </Container>
         <IntegrationDetailMetrics
-          errorMessagesCount={26128}
-          okMessagesCount={26126}
+          errorMessagesCount={2}
+          okMessagesCount={2425}
           lastProcessedDate={''}
           totalErrorsCount={2}
-          totalMessages={2425}
+          totalMessages={26126}
           uptimeSince={'Apr 15th 15:37'}
         />
       </>
