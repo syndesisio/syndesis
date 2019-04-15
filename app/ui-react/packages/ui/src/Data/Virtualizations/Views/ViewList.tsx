@@ -1,6 +1,5 @@
 import * as H from 'history';
 import {
-  Button,
   EmptyState,
   ListView,
   OverlayTrigger,
@@ -14,9 +13,10 @@ export interface IViewsListProps extends IListViewToolbarProps {
   hasListData: boolean;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
-  i18nImportView: string;
-  i18nImportViewTip: string;
-  linkCreateHRef: H.LocationDescriptor;
+  i18nImportViews: string;
+  i18nImportViewsTip: string;
+  linkCreateViewHRef: H.LocationDescriptor;
+  linkImportViewsHRef: H.LocationDescriptor;
   i18nCreateViewTip?: string;
   i18nCreateView: string;
   i18nDescription: string;
@@ -36,22 +36,18 @@ export class ViewList extends React.Component<IViewsListProps> {
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <OverlayTrigger
-              overlay={this.getImportViewTooltip()}
+              overlay={this.getImportViewsTooltip()}
               placement="top"
             >
-              <Button
-                bsStyle="default"
-                to={this.props.i18nImportView}
-                onClick={this.handleImportView}
-              >
-                {this.props.i18nImportView}
-              </Button>
+              <ButtonLink href={this.props.linkImportViewsHRef} as={'default'}>
+                {this.props.i18nImportViews}
+              </ButtonLink>
             </OverlayTrigger>
             <OverlayTrigger
               overlay={this.getCreateViewTooltip()}
               placement="top"
             >
-              <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
+              <ButtonLink href={this.props.linkCreateViewHRef} as={'primary'}>
                 {this.props.i18nCreateView}
               </ButtonLink>
             </OverlayTrigger>
@@ -71,7 +67,7 @@ export class ViewList extends React.Component<IViewsListProps> {
                 overlay={this.getCreateViewTooltip()}
                 placement="top"
               >
-                <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
+                <ButtonLink href={this.props.linkCreateViewHRef} as={'primary'}>
                   {this.props.i18nCreateView}
                 </ButtonLink>
               </OverlayTrigger>
@@ -92,17 +88,13 @@ export class ViewList extends React.Component<IViewsListProps> {
     );
   }
 
-  private getImportViewTooltip() {
+  private getImportViewsTooltip() {
     return (
-      <Tooltip id="importViewTip">
-        {this.props.i18nImportViewTip
-          ? this.props.i18nImportViewTip
-          : this.props.i18nImportView}
+      <Tooltip id="importViewsTip">
+        {this.props.i18nImportViewsTip
+          ? this.props.i18nImportViewsTip
+          : this.props.i18nImportViews}
       </Tooltip>
     );
   }
-
-  private handleImportView = () => {
-    this.props.onImportView('');
-  };
 }

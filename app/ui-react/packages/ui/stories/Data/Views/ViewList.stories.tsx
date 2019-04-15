@@ -49,22 +49,22 @@ const viewItems = [
 
 const createView = 'Create View';
 const createViewTip = 'Create a new view';
-const importView = 'Import';
-const importViewTip = 'Import a view';
+const importViews = 'Import Data Source';
+const importViewsTip = 'Import data source';
 const importActionText = 'Import View';
 
 const hasViewsTestNotes =
   '- Verify toolbar is displayed\n' +
   '- Verify toolbar contains "' +
-  importView +
+  importViews +
   '" button\n' +
   '- Verify toolbar "' +
-  importView +
+  importViews +
   '" button is enabled\n' +
   '- Verify toolbar "' +
-  importView +
+  importViews +
   '" button tooltip is "' +
-  importViewTip +
+  importViewsTip +
   '"\n' +
   '- Verify toolbar contains "' +
   createView +
@@ -94,15 +94,15 @@ const hasViewsTestNotes =
 const noViewsTestNotes =
   '- Verify toolbar is displayed\n' +
   '- Verify toolbar contains "' +
-  importView +
+  importViews +
   '" button\n' +
   '- Verify toolbar "' +
-  importView +
+  importViews +
   '" button is enabled\n' +
   '- Verify toolbar "' +
-  importView +
+  importViews +
   '" button tooltip is "' +
-  importViewTip +
+  importViewsTip +
   '"\n' +
   '- Verify toolbar contains "' +
   createView +
@@ -137,7 +137,8 @@ stories
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
-          //linkCreateView={action('/data/create')}
+          linkCreateViewHRef={action('/data/create')}
+          linkImportViewsHRef={action('/data/import')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -154,10 +155,9 @@ stories
             'There are no currently available Views. Please click on the button below to create one.'
           )}
           i18nEmptyStateTitle={text('i18nEmptyStateTitle', createView)}
-          i18nImportView={importView}
-          i18nImportViewTip={importViewTip}
           i18nCreateView={text('i18nLinkCreateView', createView)}
-          linkCreateHRef={action('/data/view/create')}
+          i18nImportViews={importViews}
+          i18nImportViewsTip={importViewsTip}
           i18nDescription={text('i18nDescription', 'Name')}
           i18nName={text('i18nName', 'Name')}
           i18nNameFilterPlaceholder={text(
@@ -189,7 +189,8 @@ stories
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
-          // linkCreateView={action('/data/create')}
+          linkCreateViewHRef={action('/data/create')}
+          linkImportViewsHRef={action('/data/import')}
           resultsCount={0}
           sortTypes={[]}
           onUpdateCurrentValue={action('onUpdateCurrentValue')}
@@ -206,10 +207,9 @@ stories
             'There are no currently available API connectors. Please click on the button below to create one.'
           )}
           i18nEmptyStateTitle={text('i18nEmptyStateTitle', createView)}
-          i18nImportView={importView}
-          i18nImportViewTip={importViewTip}
           i18nCreateView={text('i18nLinkCreateView', createView)}
-          linkCreateHRef={action('/data/view/create')}
+          i18nImportViews={importViews}
+          i18nImportViewsTip={importViewsTip}
           i18nName={text('i18nName', 'Name')}
           i18nDescription={text('i18nDescription', 'Name')}
           i18nNameFilterPlaceholder={text(

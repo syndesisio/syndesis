@@ -78,11 +78,6 @@ export class VirtualizationsPage extends React.Component {
     alert('Import virtualization ' + virtualizationName);
   }
 
-  public handleEditVirtualization() {
-    // TODO: implement handleEditVirtualization
-    alert('Edit virtualization ');
-  }
-
   public handleExportVirtualization() {
     // TODO: implement handleExportVirtualization
     alert('Export virtualization ');
@@ -90,7 +85,7 @@ export class VirtualizationsPage extends React.Component {
 
   public render() {
     return (
-      // TODO need to retrieve real here
+      // TODO need to retrieve real username here
       <WithVirtualizationHelpers username="developer">
         {({
           deleteVirtualization,
@@ -130,7 +125,6 @@ export class VirtualizationsPage extends React.Component {
                           <VirtualizationList
                             filterTypes={filterTypes}
                             sortTypes={sortTypes}
-                            {...this.state}
                             resultsCount={filteredAndSorted.length}
                             {...helpers}
                             i18nCreateDataVirtualization={t(
@@ -191,7 +185,7 @@ export class VirtualizationsPage extends React.Component {
                                   ) => (
                                     <VirtualizationListItem
                                       key={index}
-                                      detailsPageLink={resolvers.virtualizations.views(
+                                      detailsPageLink={resolvers.virtualizations.views.root(
                                         { virtualization }
                                       )}
                                       virtualizationName={
@@ -227,7 +221,6 @@ export class VirtualizationsPage extends React.Component {
                                       i18nUnpublish={t('shared:Unpublish')}
                                       i18nPublish={t('shared:Publish')}
                                       onDelete={handleDelete}
-                                      onEdit={this.handleEditVirtualization}
                                       onExport={this.handleExportVirtualization}
                                       onUnpublish={handleUnpublish}
                                       onPublish={handlePublish}

@@ -1,14 +1,65 @@
 import * as React from 'react';
-import Loadable from 'react-loadable';
-import { ModuleLoader } from '../../shared';
-
-const LoadableDataApp = Loadable({
-  loader: () => import(/* webpackChunkName: "Virtualizations" */ './DataApp'),
-  loading: ModuleLoader,
-});
+import { Redirect, Route, Switch } from 'react-router';
+import CreateViewsApp from './CreateViewsApp';
+import {
+  VirtualizationCreatePage,
+  VirtualizationMetricsPage,
+  VirtualizationRelationshipPage,
+  VirtualizationsPage,
+  VirtualizationSqlClientPage,
+  VirtualizationViewsPage,
+} from './pages';
+import routes from './routes';
 
 export class DataModule extends React.Component {
   public render() {
-    return <LoadableDataApp />;
+    return (
+      <Switch>
+        <Redirect
+          path={routes.root}
+          exact={true}
+          to={routes.virtualizations.list}
+        />
+        <Route
+          path={routes.virtualizations.virtualization.views.importSource.root}
+          component={CreateViewsApp}
+        />
+        <Route
+          path={routes.virtualizations.create}
+          exact={true}
+          component={VirtualizationCreatePage}
+        />
+        <Route
+          path={routes.virtualizations.list}
+          exact={true}
+          component={VirtualizationsPage}
+        />
+        <Redirect
+          path={routes.virtualizations.virtualization.root}
+          exact={true}
+          to={routes.virtualizations.virtualization.views.root}
+        />
+        <Route
+          path={routes.virtualizations.virtualization.views.root}
+          exact={true}
+          component={VirtualizationViewsPage}
+        />
+        <Route
+          path={routes.virtualizations.virtualization.relationship}
+          exact={true}
+          component={VirtualizationRelationshipPage}
+        />
+        <Route
+          path={routes.virtualizations.virtualization.sqlClient}
+          exact={true}
+          component={VirtualizationSqlClientPage}
+        />
+        <Route
+          path={routes.virtualizations.virtualization.metrics}
+          exact={true}
+          component={VirtualizationMetricsPage}
+        />
+      </Switch>
+    );
   }
 }

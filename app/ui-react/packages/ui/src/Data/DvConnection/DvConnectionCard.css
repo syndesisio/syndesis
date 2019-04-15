@@ -1,0 +1,17 @@
+.dv-connection-card,
+.dv-connection-card:hover {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.dv-connection-card__content {
+  display: flex;
+  align-items: center;
+  flex-flow: column;
+  text-align: center;
+}
+
+.dv-connection-card__status {
+  margin-bottom: 10px;
+}

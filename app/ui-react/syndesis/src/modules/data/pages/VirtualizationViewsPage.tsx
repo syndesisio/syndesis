@@ -82,7 +82,10 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export class VirtualizationViewsPage extends React.Component {
+export class VirtualizationViewsPage extends React.Component<
+  IVirtualizationViewsPageRouteParams,
+  IVirtualizationViewsPageRouteState
+> {
   public filterUndefinedId(view: RestViewDefinition): boolean {
     return view.keng__id !== undefined;
   }
@@ -112,7 +115,7 @@ export class VirtualizationViewsPage extends React.Component {
           return (
             <div>
               <HeaderView virtualizationId={virtualizationId} />
-              <WithViews serviceVdbName={virtualization.serviceVdbName}>
+              <WithViews vdbId={virtualization.serviceVdbName}>
                 {({ data, hasData, error }) => (
                   <WithListViewToolbarHelpers
                     defaultFilterType={filterByName}
@@ -147,11 +150,15 @@ export class VirtualizationViewsPage extends React.Component {
                                 i18nEmptyStateTitle={t(
                                   'data:virtualization.viewEmptyStateTitle'
                                 )}
-                                i18nImportView={t('shared:Import')}
-                                i18nImportViewTip={t(
-                                  'data:virtualization.importViewTip'
+                                i18nImportViews={t(
+                                  'data:virtualization.importDataSource'
                                 )}
-                                i18nCreateView={t('shared:Create')}
+                                i18nImportViewsTip={t(
+                                  'data:virtualization.importDataSourceTip'
+                                )}
+                                i18nCreateView={t(
+                                  'data:virtualization.createView'
+                                )}
                                 i18nCreateViewTip={t(
                                   'data:virtualization.createViewTip'
                                 )}
@@ -163,7 +170,10 @@ export class VirtualizationViewsPage extends React.Component {
                                   count: filteredAndSorted.length,
                                 })}
                                 // TODO - Point to views.create when available
-                                linkCreateHRef={resolvers.virtualizations.create()}
+                                linkCreateViewHRef={resolvers.virtualizations.create()}
+                                linkImportViewsHRef={resolvers.virtualizations.views.importSource.selectConnection(
+                                  { virtualization }
+                                )}
                                 onImportView={this.handleImportView}
                                 hasListData={data.length > 0}
                               />
@@ -195,7 +205,7 @@ export class VirtualizationViewsPage extends React.Component {
                                           key={index}
                                           viewName={view.keng__id}
                                           viewDescription={
-                                            'Description goes here'
+                                            'Description for ' + view.keng__id
                                           }
                                           i18nDelete={t('shared:Delete')}
                                           i18nEdit={t('shared:Edit')}

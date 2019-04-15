@@ -38,7 +38,7 @@ export class VirtualizationNavBar extends React.Component<
             <TabBar>
               <TabBarItem
                 label={t('data:virtualization.views')}
-                to={resolvers.virtualizations.views({
+                to={resolvers.virtualizations.views.root({
                   virtualization,
                 })}
               />
