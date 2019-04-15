@@ -31,88 +31,11 @@
 
   <name>UI</name>
 
+  <properties>
+      <npmRegistryURL2></npmRegistryURL2>
+  </properties>
   <build>
     <plugins>
-      <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>install node and npm</id>
-            <goals>
-              <goal>install-node-and-npm</goal>
-            </goals>
-            <configuration>
-              <nodeVersion>${node.version}</nodeVersion>
-            </configuration>
-          </execution>
-          <execution>
-            <id>install yarn</id>
-            <goals>
-              <goal>install-node-and-yarn</goal>
-            </goals>
-            <configuration>
-              <nodeVersion>${node.version}</nodeVersion>
-              <yarnVersion>${yarn.version}</yarnVersion>
-            </configuration>
-          </execution>
-          <execution>
-            <id>yarn install</id>
-            <goals>
-              <goal>yarn</goal>
-            </goals>
-            <configuration>
-              <arguments>install --no-progress --force</arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>yarn cache dir</id>
-            <goals>
-              <goal>yarn</goal>
-            </goals>
-            <configuration>
-              <arguments>cache dir</arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>yarn ng lint</id>
-            <goals>
-              <goal>yarn</goal>
-            </goals>
-            <configuration>
-              <arguments>lint</arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>yarn ng test</id>
-            <goals>
-              <goal>yarn</goal>
-            </goals>
-            <configuration>
-              <arguments>test:ci</arguments>
-              <skip>${skipTests}</skip>
-            </configuration>
-          </execution>
-          <execution>
-            <id>yarn cleanup</id>
-            <goals>
-              <goal>yarn</goal>
-            </goals>
-            <configuration>
-              <arguments>cleanup</arguments>
-            </configuration>
-          </execution>
-          <execution>
-            <id>yarn ng build</id>
-            <goals>
-              <goal>yarn</goal>
-            </goals>
-            <configuration>
-              <arguments>build:ci</arguments>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
@@ -124,6 +47,7 @@
               <goal>single</goal>
             </goals>
             <configuration>
+              <tarLongFileMode>posix</tarLongFileMode>
               <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
               <descriptors>
                 <descriptor>src/assembly/unix-dist.xml</descriptor>
@@ -164,6 +88,256 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>noproxy</id>
+      <activation>
+          <property>
+              <name>!proxy</name>
+          </property>
+      </activation>
+      <build>
+          <plugins>
+            <plugin>
+              <groupId>com.github.eirslett</groupId>
+              <artifactId>frontend-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>install node and npm</id>
+                  <goals>
+                    <goal>install-node-and-npm</goal>
+                  </goals>
+                  <configuration>
+                    <nodeVersion>${node.version}</nodeVersion>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>install yarn</id>
+                  <goals>
+                    <goal>install-node-and-yarn</goal>
+                  </goals>
+                  <configuration>
+                    <nodeVersion>${node.version}</nodeVersion>
+                    <yarnVersion>${yarn.version}</yarnVersion>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>yarn install</id>
+                  <goals>
+                    <goal>yarn</goal>
+                  </goals>
+                  <configuration>
+                    <arguments>install --no-progress --force</arguments>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>yarn cache dir</id>
+                  <goals>
+                    <goal>yarn</goal>
+                  </goals>
+                  <configuration>
+                    <arguments>cache dir</arguments>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>yarn ng lint</id>
+                  <goals>
+                    <goal>yarn</goal>
+                  </goals>
+                  <configuration>
+                    <arguments>lint</arguments>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>yarn ng test</id>
+                  <goals>
+                    <goal>yarn</goal>
+                  </goals>
+                  <configuration>
+                    <arguments>test:ci</arguments>
+                    <skip>${skipTests}</skip>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>yarn cleanup</id>
+                  <goals>
+                    <goal>yarn</goal>
+                  </goals>
+                  <configuration>
+                    <arguments>cleanup</arguments>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>yarn ng build</id>
+                  <goals>
+                    <goal>yarn</goal>
+                  </goals>
+                  <configuration>
+                    <arguments>build:ci</arguments>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+              </plugins>
+          </build>
+      </profile>
+      <profile>
+          <id>proxy</id>
+          <activation>
+              <property>
+                  <name>proxy</name>
+              </property>
+          </activation>
+          <build>
+            <plugins>
+              <plugin>
+                <groupId>com.github.eirslett</groupId>
+                <artifactId>frontend-maven-plugin</artifactId>
+                <version>${frontend-maven-plugin-version}</version>
+                <executions>
+                  <execution>
+                    <id>install node and npm</id>
+                    <goals>
+                      <goal>install-node-and-npm</goal>
+                    </goals>
+                    <configuration>
+                      <nodeVersion>${node.version}</nodeVersion>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>install yarn</id>
+                    <goals>
+                      <goal>install-node-and-yarn</goal>
+                    </goals>
+                    <configuration>
+                      <nodeVersion>${node.version}</nodeVersion>
+                      <yarnVersion>${yarn.version}</yarnVersion>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>set https proxy</id>
+                    <goals>
+                      <goal>npm</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>config set https-proxy http://${buildContentId}+tracking:${accessToken}@${proxyServer}:${proxyPort}</arguments>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>set http proxy</id>
+                    <goals>
+                      <goal>npm</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>config set proxy http://${buildContentId}+tracking:${accessToken}@${proxyServer}:${proxyPort}</arguments>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>set maxconn</id>
+                    <goals>
+                      <goal>npm</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>config set maxsockets 30</arguments>
+                    </configuration>
+                  </execution>
+        <execution>
+                    <id>npm set registry</id>
+                    <goals>
+                      <goal>npm</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>config set registry ${npmRegistryURL2}</arguments>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>yarn set registry</id>
+                    <goals>
+                      <goal>yarn</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>config set registry ${npmRegistryURL2}</arguments>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>yarn set no-strict ssl</id>
+                    <goals>
+                      <goal>yarn</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>config set strict-ssl false</arguments>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>yarn set sass binary url</id>
+                    <goals>
+                      <goal>npm</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>config set sass-binary-site ${sass-binary-site}</arguments>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>install node-sass</id>
+                    <goals>
+                      <goal>npm</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>install --global-style node-sass@4.9.0 --loglevel=silly --max-sockets=30 --fetch-retry-mintimeout=60000 --fetch-retries=10</arguments>
+                    </configuration>
+                  </execution>
+        <execution>
+                    <id>yarn install</id>
+                    <goals>
+                      <goal>yarn</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>install --verbose  --force  --network-concurrency=30 --child-concurrency=1 --no-progress --pure-lockfile --network-timeout=100000</arguments>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>yarn cache dir</id>
+                    <goals>
+                      <goal>yarn</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>cache dir</arguments>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>yarn ng test</id>
+                    <goals>
+                      <goal>yarn</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>test:ci</arguments>
+                      <skip>${skipTests}</skip>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>yarn cleanup</id>
+                    <goals>
+                      <goal>yarn</goal>
+                    </goals>
+                    <configuration>
+                      <arguments>cleanup</arguments>
+                    </configuration>
+                  </execution>
+                  <execution>
+                    <id>yarn ng build</id>
+                    <goals>
+                      <goal>yarn</goal>
+                    </goals>
+                    <configuration>
+                        <arguments>build:ci</arguments>
+                        <yarnInheritsProxyConfigFromMaven>false</yarnInheritsProxyConfigFromMaven>
+                    </configuration>
+                  </execution>
+                </executions>
+              </plugin>
+              <!-- End Prod fixes -->
+            </plugins>
+          </build>
+      </profile>
     <profile>
       <id>flash</id>
       <build>
