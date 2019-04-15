@@ -105,7 +105,7 @@ storiesOf('Integration/Detail', module)
           lastProcessedDate={''}
           totalErrorsCount={2}
           totalMessages={26126}
-          uptimeSince={'Apr 15th 15:37'}
+          uptimeStart={5358454957349}
         />
       </>
     </Router>

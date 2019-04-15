@@ -18,13 +18,16 @@ export interface IIntegrationDetailMetricsProps {
   lastProcessedDate?: string;
   totalErrorsCount?: number;
   totalMessages?: number;
-  uptimeSince?: string;
+  uptimeStart: number;
 }
 
 export class IntegrationDetailMetrics extends React.Component<
   IIntegrationDetailMetricsProps
 > {
   public render() {
+    const startAsDate = new Date(this.props.uptimeStart);
+    const startAsHuman = startAsDate.toLocaleString();
+
     return (
       <CardGrid>
         <Row style={{ marginBottom: '20px', marginTop: '20px' }}>
@@ -71,12 +74,14 @@ export class IntegrationDetailMetrics extends React.Component<
             </Card>
           </Col>
           <Col xs={6} sm={3} md={3}>
-            <Card accented aggregated>
-              <CardTitle>
-                <Icon name="shield" />
-                Uptime
-              </CardTitle>
-              <CardBody>{this.props.uptimeSince}</CardBody>
+            <Card accented={true} aggregated={true} matchHeight={true}>
+              <Card.Title className={'text-left'}>
+                <small className={'pull-right'}>Since {startAsHuman}</small>
+                <div>Uptime</div>
+              </Card.Title>
+              <Card.Body>
+                <></>
+              </Card.Body>
             </Card>
           </Col>
         </Row>
