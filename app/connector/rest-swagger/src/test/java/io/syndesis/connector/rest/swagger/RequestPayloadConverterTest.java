@@ -15,6 +15,8 @@
  */
 package io.syndesis.connector.rest.swagger;
 
+import io.syndesis.common.model.DataShapeKinds;
+
 import org.apache.camel.Exchange;
 import org.junit.Test;
 
@@ -24,10 +26,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class RequestPayloadConverterTest {
 
-    private final RequestPayloadConverter converter = new RequestPayloadConverter();
-
     @Test
     public void shouldBeRobust() {
+        final RequestPayloadConverter converter = new RequestPayloadConverter((DataShapeKinds) null);
+
         converter.process(createExhangeWithBody(null, null));
         converter.process(createExhangeWithBody(null, ""));
         converter.process(createExhangeWithBody(null, "<xml/>"));
@@ -38,6 +40,8 @@ public class RequestPayloadConverterTest {
 
     @Test
     public void shouldConvertUnifiedJsonToHeadersAndBody() {
+        final RequestPayloadConverter converter = new RequestPayloadConverter(DataShapeKinds.JSON_SCHEMA);
+
         final Exchange exchange = createExhangeWithBody("application/json",
             "{\"parameters\":{\"slug\":\"1\", \"tick\":\"tock\"},\"body\":{\"description\":\"hello\"}}");
 
@@ -50,6 +54,8 @@ public class RequestPayloadConverterTest {
 
     @Test
     public void shouldConvertUnifiedXmlToHeadersAndBody() {
+        final RequestPayloadConverter converter = new RequestPayloadConverter(DataShapeKinds.XML_SCHEMA);
+
         final Exchange exchange = createExhangeWithBody("application/xml",
             "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<r:request xmlns:r=\"http://syndesis.io/v1/swagger-connector-template/request\" "
                 + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\n" + //

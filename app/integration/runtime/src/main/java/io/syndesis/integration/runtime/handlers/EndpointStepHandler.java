@@ -15,12 +15,6 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
@@ -32,17 +26,26 @@ import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.Predicates;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
-
 import org.apache.camel.Component;
 import org.apache.camel.model.ModelCamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.URISupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * This is needed until connectors are migrated to the new architecture.
  */
 public class EndpointStepHandler implements IntegrationStepHandler, IntegrationStepHandler.Consumer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(EndpointStepHandler.class);
+
     @Override
     public boolean canHandle(Step step) {
         if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
@@ -74,7 +77,7 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
         final ConnectorDescriptor descriptor = action.getDescriptor();
 
         // Camel
-        final String componentScheme = action.getDescriptor().getCamelConnectorPrefix();
+        final String componentScheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
         final Map<String, String> configuredProperties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
         final Map<String, String> properties = CollectionsUtils.aggregate(connector.filterEndpointProperties(configuredProperties), action.filterEndpointProperties(configuredProperties));
 
@@ -105,7 +108,9 @@ public class EndpointStepHandler implements IntegrationStepHandler, IntegrationS
         }
 
         final ModelCamelContext context = builder.getContext();
+        LOGGER.debug("Getting component with name: {}", componentName);
         final Component component = context.getComponent(componentName);
+        LOGGER.debug("Got component: {}", component);
         HandlerCustomizer.customizeComponent(context, connector, descriptor, component, new HashMap<>(properties));
 
         if (route == null) {

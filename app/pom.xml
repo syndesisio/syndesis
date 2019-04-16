@@ -1449,6 +1449,12 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-rest-swagger</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- ============================================== -->
 
       <dependency>

@@ -15,9 +15,32 @@
  */
 package io.syndesis.integration.runtime.util;
 
+import java.util.Collection;
+import java.util.HashSet;
+
+import org.apache.camel.Exchange;
 import org.apache.camel.http.common.HttpHeaderFilterStrategy;
 
-public class SyndesisHeaderStrategy extends HttpHeaderFilterStrategy {
+public final class SyndesisHeaderStrategy extends HttpHeaderFilterStrategy {
+
+    public static final String WHITELISTED_HEADERS = "syndesis-whitelisted-headers";
+
+    /**
+     * Filters headers passed on from Camel message to (possibly) external
+     * service by configured filters and the whitelist. The whitelist needs to
+     * be a {@link Collection} of {@link String}s under the
+     * {@link SyndesisHeaderStrategy#WHITELISTED_HEADERS} name.
+     */
+    @Override
+    public boolean applyFilterToCamelHeaders(final String headerName, final Object headerValue, final Exchange exchange) {
+        final Collection<String> whitelisted = whitelisted(exchange);
+
+        if (whitelisted != null && whitelisted.contains(headerName)) {
+            return false; // allow the header
+        }
+
+        return super.applyFilterToCamelHeaders(headerName, headerValue, exchange);
+    }
 
     @Override
     protected void initialize() {
@@ -28,5 +51,35 @@ public class SyndesisHeaderStrategy extends HttpHeaderFilterStrategy {
 
         // we need to preserve the Content-Type header
         setInFilterPattern("^(?!Content-Type).*$");
+    }
+
+    public static void whitelist(final Exchange exchange, final Collection<String> headerNames) {
+        for (final String headerName : headerNames) {
+            whitelist(exchange, headerName);
+        }
+    }
+
+    public static void whitelist(final Exchange exchange, final String headerName) {
+        final Collection<String> existing = whitelisted(exchange);
+
+        Collection<String> whitelisted = existing;
+        if (existing == null) {
+            whitelisted = new HashSet<>();
+        }
+
+        try {
+            whitelisted.add(headerName);
+        } catch (final UnsupportedOperationException ignored) {
+            // handle unmodifiable collections
+            whitelisted = new HashSet<>(existing);
+            whitelisted.add(headerName);
+        }
+
+        exchange.setProperty(WHITELISTED_HEADERS, whitelisted);
+    }
+
+    @SuppressWarnings("unchecked")
+    private static Collection<String> whitelisted(final Exchange exchange) {
+        return exchange.getProperty(WHITELISTED_HEADERS, Collection.class);
     }
 }

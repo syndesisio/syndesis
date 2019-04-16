@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.api.generator;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
@@ -22,14 +24,40 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import io.syndesis.common.model.api.APISummary;
-import io.syndesis.server.api.generator.util.IconGenerator;
-import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorGroup;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.server.api.generator.util.IconGenerator;
 
 public abstract class ConnectorGenerator {
+
+    private final Connector baseConnector;
+
+    public ConnectorGenerator(final Connector baseConnector) {
+        // we want to inherit all the configuration metadata from the connector
+        // the template only points to the connector and holds properties
+        // metadata needs to be sourced from the connector implementation
+        // so we keep it in sync
+
+        // properties should be taken based on the given settings and the
+        // specification
+        final Map<String, ConfigurationProperty> properties = Collections.emptyMap();
+
+        // some metadata needs to be removed
+        final Map<String, String> metadata = new HashMap<>(baseConnector.getMetadata());
+        metadata.remove("hide-from-connection-pages"); // we want the generated
+                                                       // connector to show up
+                                                       // on connection pages
+
+        this.baseConnector = new Connector.Builder()
+            .createFrom(baseConnector)
+            .metadata(metadata)
+            .properties(properties)
+            .build();
+    }
 
     public abstract Connector generate(ConnectorTemplate connectorTemplate, ConnectorSettings connectorSettings);
 
@@ -38,10 +66,11 @@ public abstract class ConnectorGenerator {
     protected final Connector baseConnectorFrom(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
         final Set<String> properties = connectorTemplate.getProperties().keySet();
 
-        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties()//
-            .entrySet().stream()//
-            .filter(e -> properties.contains(e.getKey()))//
+        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties()
+            .entrySet().stream()
+            .filter(e -> properties.contains(e.getKey()))
             .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        configuredProperties.putAll(baseConnector.getConfiguredProperties());
 
         final String name = Optional.ofNullable(connectorSettings.getName())
             .orElseGet(() -> determineConnectorName(connectorTemplate, connectorSettings));
@@ -58,14 +87,15 @@ public abstract class ConnectorGenerator {
             icon = IconGenerator.generate(connectorTemplate.getId().get(), name);
         }
 
-        return new Connector.Builder()//
-            .id(KeyGenerator.createKey())//
-            .name(name)//
-            .description(description)//
-            .icon(icon)//
-            .configuredProperties(configuredProperties)//
-            .connectorGroup(connectorGroup)//
-            .connectorGroupId(connectorGroup.map(ConnectorGroup::getId).orElse(Optional.empty()))//
+        return new Connector.Builder()
+            .createFrom(baseConnector)
+            .id(KeyGenerator.createKey())
+            .name(name)
+            .description(description)
+            .icon(icon)
+            .configuredProperties(configuredProperties)
+            .connectorGroup(connectorGroup)
+            .connectorGroupId(connectorGroup.map(ConnectorGroup::getId).orElse(Optional.empty()))
             .build();
     }
 

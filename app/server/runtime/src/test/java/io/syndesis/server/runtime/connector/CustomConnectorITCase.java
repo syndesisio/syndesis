@@ -20,16 +20,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 
-import io.syndesis.common.model.api.APISummary;
-import io.syndesis.server.api.generator.ConnectorGenerator;
-import io.syndesis.server.dao.file.IconDao;
 import io.syndesis.common.model.action.ActionsSummary;
+import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorGroup;
 import io.syndesis.common.model.connection.ConnectorSettings;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 import io.syndesis.common.model.icon.Icon;
+import io.syndesis.server.api.generator.ConnectorGenerator;
+import io.syndesis.server.dao.file.IconDao;
 import io.syndesis.server.runtime.BaseITCase;
 
 import org.junit.Before;
@@ -81,7 +81,9 @@ public class CustomConnectorITCase extends BaseITCase {
 
         @Bean(TEMPLATE_ID)
         public static ConnectorGenerator testGenerator() {
-            return new ConnectorGenerator() {
+            return new ConnectorGenerator(new Connector.Builder()
+                .addTags("from-connector")
+                .build()) {
                 @Override
                 public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
                     return generateTestConnector(connectorTemplate, connectorSettings);

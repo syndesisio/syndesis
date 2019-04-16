@@ -13,10 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.integration.component.proxy;
+package io.syndesis.connector.rest.swagger;
 
-import org.apache.camel.component.connector.ConnectorComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyFactory;
 
-public interface ConnectorComponentCustomizer extends ComponentCustomizer<ConnectorComponent> {
+public final class ConnectorFactory implements ComponentProxyFactory {
+
+    @Override
+    public ComponentProxyComponent newInstance(final String componentId, final String componentScheme) {
+        return new SwaggerProxyComponent(componentId, componentScheme);
+    }
 
 }

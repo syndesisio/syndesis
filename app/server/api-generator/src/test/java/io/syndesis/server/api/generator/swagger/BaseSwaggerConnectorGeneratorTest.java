@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator.swagger;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +25,7 @@ import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
 import io.swagger.models.parameters.Parameter;
+import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ActionsSummary;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -31,6 +33,7 @@ import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorSettings;
+import io.syndesis.common.util.Json;
 import io.syndesis.common.util.openapi.OpenApiHelper;
 
 import org.junit.Test;
@@ -44,12 +47,54 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorTest {
 
-    private final BaseSwaggerConnectorGenerator generator = new BaseSwaggerConnectorGenerator() {
-        @Override
-        ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Swagger swagger, final Operation operation) {
-            return new ConnectorDescriptor.Builder();
+    private final BaseSwaggerConnectorGenerator generator;
+
+    public BaseSwaggerConnectorGeneratorTest() {
+        try (InputStream stream = SwaggerUnifiedShapeGeneratorExampleTests.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
+            final Connector restSwagger = Json.readFromStream(stream, Connector.class);
+
+            generator = new BaseSwaggerConnectorGenerator(restSwagger) {
+                @Override
+                ConnectorDescriptor.Builder createDescriptor(final ObjectNode json, final Swagger swagger, final Operation operation) {
+                    return new ConnectorDescriptor.Builder();
+                }
+            };
+        } catch (final IOException e) {
+            throw new AssertionError(e);
         }
-    };
+    }
+
+    @Test
+    public void includesRestSwaggerConnectorCustomizers() throws IOException {
+        final ConnectorSettings connectorSettings = createReverbSettings();
+        final Connector connector = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
+
+        assertThat(connector.getConnectorCustomizers()).isNotEmpty();
+        assertThat(connector.getConnectorCustomizers()).contains(
+            "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
+            "io.syndesis.connector.rest.swagger.AuthenticationCustomizer",
+            "io.syndesis.connector.rest.swagger.RequestCustomizer",
+            "io.syndesis.connector.rest.swagger.ResponseCustomizer");
+    }
+
+    @Test
+    public void includesRestSwaggerConnectorDependency() throws IOException {
+        final ConnectorSettings connectorSettings = createReverbSettings();
+        final Connector connector = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
+
+        assertThat(connector.getDependencies()).isNotEmpty();
+        assertThat(connector.getDependencies())
+            .anyMatch(d -> d.getType() == Dependency.Type.MAVEN && d.getId().startsWith("io.syndesis.connector:connector-rest-swagger"));
+    }
+
+    @Test
+    public void includesRestSwaggerConnectorFactory() throws IOException {
+        final ConnectorSettings connectorSettings = createReverbSettings();
+        final Connector connector = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
+
+        assertThat(connector.getConnectorFactory()).isPresent();
+        assertThat(connector.getConnectorFactory()).hasValue("io.syndesis.connector.rest.swagger.ConnectorFactory");
+    }
 
     @Test
     public void shouldCreatePropertyParametersFromPetstoreSwagger() throws IOException {
@@ -232,6 +277,15 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
 
         assertThat(summary.getErrors()).hasSize(1);
         assertThat(summary.getWarnings()).hasSize(1);
+    }
+
+    private static ConnectorSettings createReverbSettings() throws IOException {
+        return new ConnectorSettings.Builder()
+            .name("Reverb API")
+            .description("Invokes Reverb API")
+            .icon("fa-music")
+            .putConfiguredProperty("specification", resource("/swagger/reverb.swagger.yaml"))
+            .build();
     }
 
     private static ConnectorSettings createSettingsFrom(final Swagger swagger) {

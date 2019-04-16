@@ -37,12 +37,16 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.spi.ClassResolver;
 import org.apache.camel.util.ObjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static io.syndesis.common.model.InputDataShapeAware.trySetInputDataShape;
 import static io.syndesis.common.model.OutputDataShapeAware.trySetOutputDataShape;
 
 @SuppressWarnings("PMD.ExcessiveImports")
 public class ConnectorStepHandler implements IntegrationStepHandler, IntegrationStepHandler.Consumer {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ConnectorStepHandler.class);
+
     @Override
     public boolean canHandle(Step step) {
         if (StepKind.endpoint != step.getStepKind() && StepKind.connector != step.getStepKind()) {
@@ -77,7 +81,9 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
         final String scheme = Optionals.first(descriptor.getComponentScheme(), connector.getComponentScheme()).get();
         final CamelContext context = builder.getContext();
         final String componentId = scheme + "-" + flowIndex + "-" + stepIndex;
+        LOGGER.info("Resolving component: {} {} {} {}", componentId, scheme, connector, descriptor);
         final ComponentProxyComponent component = resolveComponent(componentId, scheme, context, connector, descriptor);
+        LOGGER.info("Got component: {}, {}, {}", component, component.getComponentId(), component.getComponentScheme());
         final Map<String, String> properties = CollectionsUtils.aggregate(connection.getConfiguredProperties(), step.getConfiguredProperties());
         final Map<String, ConfigurationProperty> configurationProperties = CollectionsUtils.aggregate(connector.getProperties(), action.getProperties());
 
@@ -117,9 +123,10 @@ public class ConnectorStepHandler implements IntegrationStepHandler, Integration
             // Try to set properties to the component
             HandlerCustomizer.setProperties(context, component, proxyProperties);
 
+            component.setCamelContext(context);
+
             HandlerCustomizer.customizeComponent(context, connector, descriptor, component, proxyProperties);
 
-            component.setCamelContext(context);
             component.setOptions(proxyProperties);
 
             // Remove component

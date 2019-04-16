@@ -173,7 +173,7 @@
         <version>${project.version}</version>
       </dependency>
 
-             <!-- Atlasmap runtime -->
+      <!-- Atlasmap runtime -->
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>camel-atlasmap</artifactId>
@@ -186,6 +186,18 @@
                 NOTE: any new connector provided out of the box by syndesis should be listed here. Maybe this can be
                       auto generated in a future release.
             -->
+      <!-- components -->
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-component-proxy</artifactId>
+        <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-connector</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-twitter</artifactId>

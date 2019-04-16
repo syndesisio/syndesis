@@ -1,78 +1,78 @@
 {
-  "xml": {
-    "name": "Pet"
-  },
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "title": "Pet",
-  "required": [
-    "name",
-    "photoUrls"
-  ],
-  "type": "object",
   "properties": {
     "category": {
-      "xml": {
-        "name": "Category"
-      },
-      "type": "object",
       "properties": {
         "id": {
-          "type": "integer",
-          "format": "int64"
+          "format": "int64",
+          "type": "integer"
         },
         "name": {
           "type": "string"
         }
+      },
+      "type": "object",
+      "xml": {
+        "name": "Category"
+      }
+    },
+    "id": {
+      "format": "int64",
+      "type": "integer"
+    },
+    "name": {
+      "example": "doggie",
+      "type": "string"
+    },
+    "photoUrls": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array",
+      "xml": {
+        "name": "photoUrl",
+        "wrapped": true
       }
     },
     "status": {
+      "description": "pet status in the store",
       "enum": [
         "available",
         "pending",
         "sold"
       ],
-      "type": "string",
-      "description": "pet status in the store"
-    },
-    "name": {
-      "type": "string",
-      "example": "doggie"
+      "type": "string"
     },
     "tags": {
-      "xml": {
-        "wrapped": true,
-        "name": "tag"
-      },
       "items": {
-        "xml": {
-          "name": "Tag"
-        },
-        "type": "object",
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int64"
+            "format": "int64",
+            "type": "integer"
           },
           "name": {
             "type": "string"
           }
+        },
+        "type": "object",
+        "xml": {
+          "name": "Tag"
         }
       },
-      "type": "array"
-    },
-    "photoUrls": {
+      "type": "array",
       "xml": {
-        "wrapped": true,
-        "name": "photoUrl"
-      },
-      "items": {
-        "type": "string"
-      },
-      "type": "array"
-    },
-    "id": {
-      "type": "integer",
-      "format": "int64"
+        "name": "tag",
+        "wrapped": true
+      }
     }
+  },
+  "required": [
+    "name",
+    "photoUrls"
+  ],
+  "title": "Pet",
+  "type": "object",
+  "xml": {
+    "name": "Pet"
   }
 }
