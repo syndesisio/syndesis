@@ -1,4 +1,4 @@
-import { Col, ListView, ListViewItem, Row } from 'patternfly-react';
+import { Col, Icon, ListView, ListViewItem, Row } from 'patternfly-react';
 import * as React from 'react';
 import {
   // IntegrationDetailActivityItemSteps,
@@ -38,14 +38,23 @@ export class IntegrationDetailActivity extends React.Component<
                   actions={
                     <>
                       {i.errorCount > 0 ? (
-                        <span>{this.props.i18nErrorsFound}</span>
+                        <span>
+                          <Icon type="pf" name="error-circle-o" />
+                          {'  '}
+                          {this.props.i18nErrorsFound}
+                        </span>
                       ) : (
-                        <span>{this.props.i18nNoErrors}</span>
+                        <span>
+                          <Icon type="pf" name="ok" />
+                          {'  '}
+                          {this.props.i18nNoErrors}
+                        </span>
                       )}
                     </>
                   }
-                  heading={<span>{i.date}</span>}
-                  description={
+                  heading={i.date}
+                  description={i.time}
+                  additionalInfo={
                     <>
                       {this.props.i18nVersion}
                       {'  '}
