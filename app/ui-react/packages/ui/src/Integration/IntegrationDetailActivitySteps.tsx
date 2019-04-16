@@ -1,4 +1,4 @@
-import { Body, Header, TablePfProvider } from 'patternfly-react';
+import { TablePfProvider } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationDetailActivityItemStepsProps {
@@ -35,8 +35,8 @@ export class IntegrationDetailActivityItemSteps extends React.Component<
             { header: { label: 'Username' }, cell: { property: 'username' } },
           ]}
         >
-          <Header />
-          <Body
+          <TablePfProvider.Header />
+          <TablePfProvider.Body
             rows={[
               {
                 id: 0,

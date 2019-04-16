@@ -146,6 +146,7 @@ storiesOf('Integration/Detail', module)
           </TabBar>
         </Container>
         <IntegrationDetailActivity
+          i18nBtnDetails={'Refresh'}
           i18nErrorsFound={'Errors found'}
           i18nLastRefresh={'Last refresh'}
           i18nNoErrors={'No errors'}

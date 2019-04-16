@@ -1,5 +1,13 @@
-import { Col, Icon, ListView, ListViewItem, Row } from 'patternfly-react';
+import {
+  Button,
+  Col,
+  Icon,
+  ListView,
+  ListViewItem,
+  Row,
+} from 'patternfly-react';
 import * as React from 'react';
+import { Container } from '../Layout';
 import {
   // IntegrationDetailActivityItemSteps,
   IIntegrationDetailActivityItemStepsProps,
@@ -14,6 +22,7 @@ export interface IIntegrationDetailActivityItem {
 }
 
 export interface IIntegrationDetailActivityProps {
+  i18nBtnDetails: string;
   i18nErrorsFound: string;
   i18nLastRefresh: string;
   i18nNoErrors: string;
@@ -30,6 +39,15 @@ export class IntegrationDetailActivity extends React.Component<
   public render() {
     return (
       <>
+        <Container>
+          <div className="pull-right">
+            {this.props.i18nViewLogOpenShift}
+            {'  |  '}
+            {this.props.i18nLastRefresh}
+            {'  '}
+            <Button>{this.props.i18nBtnDetails}</Button>
+          </div>
+        </Container>
         <ListView>
           {this.props.items
             ? this.props.items.map((i, index) => (
