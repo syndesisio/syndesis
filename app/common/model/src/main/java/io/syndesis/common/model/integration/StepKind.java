@@ -22,6 +22,7 @@ public enum StepKind {
     ruleFilter,
     extension,
     mapper,
+    choice,
     split,
     aggregate,
     log,
