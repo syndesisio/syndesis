@@ -27,6 +27,21 @@ const integrationPublishedHistoryItems = [
   />,
 ];
 
+const activityItems = [
+  {
+    date: '4/15/2019',
+    errorCount: 4,
+    time: '10:50:19',
+    version: 2,
+  },
+  {
+    date: '4/16/2019',
+    errorCount: 0,
+    time: '07:40:28',
+    version: 2,
+  },
+];
+
 const steps = [
   {
     name: 'SQL',
@@ -80,7 +95,11 @@ storiesOf('Integration/Detail', module)
             <TabBarItem label={'Metrics'} to={'#metrics'} />
           </TabBar>
         </Container>
-        <IntegrationDetailActivity />
+        <IntegrationDetailActivity
+          i18nNoErrors={'No errors'}
+          i18nVersion={'Version'}
+          items={activityItems}
+        />
       </>
     </Router>
   ))
