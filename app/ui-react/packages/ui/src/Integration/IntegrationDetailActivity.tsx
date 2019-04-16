@@ -35,13 +35,21 @@ export class IntegrationDetailActivity extends React.Component<
             ? this.props.items.map((i, index) => (
                 <ListViewItem
                   key={index}
-                  actions={<>{this.props.i18nNoErrors}</>}
+                  actions={
+                    <>
+                      {i.errorCount > 0 ? (
+                        <span>{this.props.i18nErrorsFound}</span>
+                      ) : (
+                        <span>{this.props.i18nNoErrors}</span>
+                      )}
+                    </>
+                  }
                   heading={<span>{i.date}</span>}
                   description={
                     <>
-                      {i.version}
-                      {'  '}
                       {this.props.i18nVersion}
+                      {'  '}
+                      {i.version}
                     </>
                   }
                 >
