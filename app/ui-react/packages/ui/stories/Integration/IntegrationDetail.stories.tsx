@@ -27,6 +27,17 @@ const integrationPublishedHistoryItems = [
   />,
 ];
 
+const steps = [
+  {
+    name: 'SQL',
+    pattern: 'From',
+  },
+  {
+    name: 'Salesforce',
+    pattern: 'To',
+  },
+];
+
 const activityItems = [
   {
     date: '4/15/2019',
@@ -37,19 +48,9 @@ const activityItems = [
   {
     date: '4/16/2019',
     errorCount: 0,
+    steps: steps,
     time: '07:40:28',
     version: 2,
-  },
-];
-
-const steps = [
-  {
-    name: 'SQL',
-    pattern: 'From',
-  },
-  {
-    name: 'Salesforce',
-    pattern: 'To',
   },
 ];
 
@@ -97,6 +98,7 @@ storiesOf('Integration/Detail', module)
         </Container>
         <IntegrationDetailActivity
           i18nNoErrors={'No errors'}
+          i18nNoSteps={'No steps information was found for this integration'}
           i18nVersion={'Version'}
           items={activityItems}
         />

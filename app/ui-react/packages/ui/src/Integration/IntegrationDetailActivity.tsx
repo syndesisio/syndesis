@@ -1,15 +1,22 @@
 import { Col, ListView, ListViewItem, Row } from 'patternfly-react';
 import * as React from 'react';
 
+export interface IIntegrationDetailActivityItemSteps {
+  name: string;
+  pattern: string;
+}
+
 export interface IIntegrationDetailActivityItem {
-  date: string;
+  date?: string;
   errorCount: number;
-  time: string;
+  steps?: IIntegrationDetailActivityItemSteps[];
+  time?: string;
   version: number;
 }
 
 export interface IIntegrationDetailActivityProps {
   i18nNoErrors: string;
+  i18nNoSteps: string;
   i18nVersion: string;
   items: IIntegrationDetailActivityItem[];
 }
@@ -37,8 +44,13 @@ export class IntegrationDetailActivity extends React.Component<
                 >
                   <Row>
                     <Col sm={11}>
-                      Lorem Ipsum is simply dummy text of the printing and
-                      typesetting industry
+                      {i.steps ? (
+                        i.steps.map((step, idx) => (
+                          <span key={idx}>{step.name}</span>
+                        ))
+                      ) : (
+                        <span>{this.props.i18nNoSteps}</span>
+                      )}
                     </Col>
                   </Row>
                 </ListViewItem>
