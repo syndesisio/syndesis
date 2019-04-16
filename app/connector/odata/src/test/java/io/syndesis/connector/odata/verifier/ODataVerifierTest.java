@@ -76,6 +76,24 @@ public class ODataVerifierTest extends AbstractODataTest {
     }
 
     @Test
+    public void testVerifyWithServerWithEndSlashesServiceURI() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+        StringBuilder builder = new StringBuilder(defaultTestServer.servicePlainUri());
+        for (int i = 0; i < 10; ++i) {
+            builder.append(FORWARD_SLASH);
+        }
+        parameters.put(SERVICE_URI, builder.toString());
+
+        Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
+        List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
+
+        assertThat(responses).hasSize(2);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.PARAMETERS);
+        assertThat(responses).allMatch(response -> response.getStatus() == Verifier.Status.OK);
+    }
+
+    @Test
     public void testVerifyWithBasicAuthenticatedServer() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(SERVICE_URI, authTestServer.servicePlainUri());

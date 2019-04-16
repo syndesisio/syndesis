@@ -77,41 +77,33 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
         return resourcePath;
     }
 
-
     public void setResourcePath(String resourcePath) {
         this.resourcePath = resourcePath;
     }
-
 
     public String getServiceUri() {
         return serviceUri;
     }
 
-
     public void setServiceUri(String serviceUri) {
-        this.serviceUri = serviceUri;
+        this.serviceUri = ODataUtil.removeEndSlashes(serviceUri);
     }
-
 
     public String getBasicUserName() {
         return basicUserName;
     }
 
-
     public void setBasicUserName(String basicUserName) {
         this.basicUserName = basicUserName;
     }
-
 
     public String getBasicPassword() {
         return basicPassword;
     }
 
-
     public void setBasicPassword(String basicPassword) {
         this.basicPassword = basicPassword;
     }
-
 
     public String getServerCertificate() {
         return serverCertificate;

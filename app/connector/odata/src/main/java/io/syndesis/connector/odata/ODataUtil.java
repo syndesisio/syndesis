@@ -33,6 +33,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.util.Map;
+import java.util.Optional;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
@@ -41,6 +42,7 @@ import org.apache.camel.util.jsse.KeyManagersParameters;
 import org.apache.camel.util.jsse.KeyStoreParameters;
 import org.apache.camel.util.jsse.SSLContextParameters;
 import org.apache.camel.util.jsse.TrustManagersParameters;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
@@ -278,5 +280,18 @@ public class ODataUtil implements ODataConstants {
 
     public static HttpClientFactory newHttpFactory(Map<String, Object> options) {
         return new ODataHttpClientFactory(options);
+    }
+
+    /**
+     * Remove the slashes at the end of the given string
+     *
+     * @param path
+     * @return string sans slashes
+     */
+    public static String removeEndSlashes(String path) {
+        return Optional.ofNullable(path)
+            .filter(str -> str.length() != 0)
+            .map(str -> StringUtils.stripEnd(path, FORWARD_SLASH))
+            .orElse(path);
     }
 }
