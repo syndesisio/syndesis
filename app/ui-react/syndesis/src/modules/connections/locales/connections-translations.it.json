@@ -1,1 +1,7 @@
-{}
+{
+  "connectionDetailPageTitle": "Dettagli di Connessione",
+  "descriptionPlaceholder": "Inserisci la descrizione della connessione...",
+  "namePlaceholder": "Devi inserire un nome di connessione...",
+  "usedByOne": "Utilizzato da 1 integrazione",
+  "usedByMulti": "Utilizzato dalle integrazioni {{count}} volte"
+}

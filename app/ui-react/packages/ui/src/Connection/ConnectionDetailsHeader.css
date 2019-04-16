@@ -2,32 +2,6 @@
   width: 46px;
 }
 
-.connection-details-header__connectionName {
-  font-size: 24px;
-  font-weight: 300;
-  margin: 4px;
-}
-
-.connection-details-header__saveButton {
-  font-size: 0.5em;
-  margin-bottom: 20px;
-  margin-left: -20px;
-  margin-top: 20px;
-}
-
-.connection-details-header__editIcon {
-  cursor: pointer;
-  color: #1ea7fd;
-  font-size: 0.5em;
-  margin-left: 8px;
-}
-
-.connection-details-header__placeholderText {
-  color: lightgray;
-  font-style: italic;
-  text-align: left;
-}
-
 .connection-details-header__propertyLabel {
   font-weight: bold;
   text-align: right;

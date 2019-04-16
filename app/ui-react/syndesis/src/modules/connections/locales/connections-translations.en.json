@@ -1,3 +1,7 @@
 {
-  "connectionDetailPageTitle": "Connection Details"
+  "connectionDetailPageTitle": "Connection Details",
+  "descriptionPlaceholder": "Enter connection description...",
+  "namePlaceholder": "Must enter a connection name...",
+  "usedByOne": "Used by 1 integration",
+  "usedByMulti": "Used by integrations {{count}} times"
 }

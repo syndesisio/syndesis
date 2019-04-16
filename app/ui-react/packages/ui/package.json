@@ -12,6 +12,7 @@
   "license": "MIT",
   "devDependencies": {
     "@babel/core": "^7.1.5",
+    "@dump247/storybook-state": "^1.5.2",
     "@patternfly/react-core": "^2.10.9",
     "@storybook/addon-a11y": "^5.0.0",
     "@storybook/addon-actions": "^5.0.0",

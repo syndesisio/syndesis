@@ -38,6 +38,7 @@
       "Pending": "Pendente",
       "Publish": "Pubblicare",
       "Published": "Funzionante",
+      "requiredFieldMessage": "* Campo obbligatorio",
       "resultsCount": "{{count}} Risultati",
       "Settings": "Impostazioni",
       "Status": "Stato",
@@ -49,6 +50,7 @@
       "Unpublished": "Fermato",
       "Update": "Aggiornare",
       "uploadFileFailureMessage": "<span>Il file '<strong>{{fileName}}</strong>' non può essere caricato</span>",
+      "Usage": "Uso",
       "viewLogs": "Visualizza i Registri",
       "links": {
         "contactus": "//access.redhat.com/support/cases/#/case/new",
@@ -60,6 +62,21 @@
       "project": {
         "name": "Syndesis",
         "version": "7.1"
+      },
+      "error": {
+        "title": "Qualcosa è sbagliato",
+        "info": "Si è verificato un errore durante la conversazione con il server.",
+        "help": "Per favore controlla la tua connessione Internet.",
+        "refreshButton": "Clicca per aggiornare",
+        "reportIssueButton": "Segnala il problema",
+        "showErrorInfoButton": "Mostra i dettagli dell'errore"
+      },
+      "404": {
+        "title": "Spiacenti! 404",
+        "info": "Questa pagina non è stata trovata.",
+        "help": "Se ritieni che si tratti di un bug, ti preghiamo di segnalare il problema.",
+        "refreshButton": "Portami a casa",
+        "reportIssueButton": "Segnala il problema"
       }
     }
   }

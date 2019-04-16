@@ -1,12 +1,8 @@
-import { AutoForm } from '@syndesis/auto-form';
-import { Col, Grid, Icon, InlineEdit, Row } from 'patternfly-react';
+import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Container } from '../Layout';
+import { InlineTextEdit } from '../Shared';
 import './ConnectionDetailsHeader.css';
-
-interface ISaveProp {
-  prop: string;
-}
 
 export interface IConnectionDetailsHeaderProps {
   /**
@@ -25,6 +21,11 @@ export interface IConnectionDetailsHeaderProps {
   connectionName: string;
 
   /**
+   * The error message associated with the proposed name or an empty string if proposed name is valid.
+   */
+  errorMsg: string;
+
+  /**
    * The localized text of the description label.
    */
   i18nDescriptionLabel: string;
@@ -33,11 +34,6 @@ export interface IConnectionDetailsHeaderProps {
    * The localized placeholder text of the connection description.
    */
   i18nDescriptionPlaceholder: string;
-
-  /**
-   * The localized validation message used when a required field is empty.
-   */
-  i18nIsRequiredMessage: string;
 
   /**
    * The localized placeholder text of the connection name.
@@ -56,22 +52,61 @@ export interface IConnectionDetailsHeaderProps {
 
   /**
    * The callback for when the connection description should be saved.
+   * @param newDescription - the new description being saved
+   * @returns `true` if save was successful
    */
-  onSaveDescription: (newDescription: string) => void;
+  onSaveDescription: (newDescription: string) => boolean;
 
   /**
    * The callback for when the connection name should be saved.
+   * @param newName - the new name being saved
+   * @returns `true` if save was successful
    */
-  onSaveName: (newName: string) => void;
+  onSaveName: (newName: string) => boolean;
+
+  /**
+   * The callback that validates the changes to the connection name. The `errorMsg` property should be set within this
+   * method.
+   * @param proposedName - the proposed name being validated
+   */
+  validate: (proposedName: string) => void;
 }
 
 export interface IConnectionDetailsHeaderState {
-  description: string;
+  /**
+   * `true` when the description is being edited.
+   */
   editingDescription: boolean;
+
+  /**
+   * `true` when the name is being edited.
+   */
   editingName: boolean;
-  name: string;
+
+  /**
+   * `true` when the name or description is being saved.
+   */
+  isSaving: boolean;
+
+  /**
+   * The last persisted description.
+   */
   prevDescription: string;
+
+  /**
+   * The last persisted name.
+   */
   prevName: string;
+
+  /**
+   * The proposed new description.
+   */
+  proposedDescription: string;
+
+  /**
+   * The proposed new name.
+   */
+  proposedName: string;
 }
 
 /**
@@ -92,205 +127,16 @@ export class ConnectionDetailsHeader extends React.Component<
 
     // setup initial state
     this.state = {
-      description: currentDescription,
       editingDescription: false,
       editingName: false,
-      name: this.props.connectionName,
+      isSaving: false,
       prevDescription: currentDescription,
       prevName: this.props.connectionName,
+      proposedDescription: this.props.connectionDescription
+        ? this.props.connectionDescription
+        : '',
+      proposedName: this.props.connectionName,
     };
-
-    this.handleSaveDescription = this.handleSaveDescription.bind(this);
-    this.handleSaveName = this.handleSaveName.bind(this);
-    this.isEditingDescription = this.isEditingDescription.bind(this);
-    this.isEditingName = this.isEditingName.bind(this);
-    this.renderDescriptionEdit = this.renderDescriptionEdit.bind(this);
-    this.renderDescriptionValue = this.renderDescriptionValue.bind(this);
-    this.renderNameEdit = this.renderNameEdit.bind(this);
-    this.renderNameValue = this.renderNameValue.bind(this);
-    this.setEditingDescription = this.setEditingDescription.bind(this);
-    this.setEditingName = this.setEditingName.bind(this);
-    this.setNotEditingDescription = this.setNotEditingDescription.bind(this);
-    this.setNotEditingName = this.setNotEditingName.bind(this);
-  }
-
-  public handleSaveDescription(newDescription: ISaveProp) {
-    const proposedDescription = newDescription.prop;
-
-    if (proposedDescription !== this.state.prevDescription) {
-      this.props.onSaveDescription(proposedDescription);
-      this.setState({
-        ...this.state,
-        description: proposedDescription,
-        editingDescription: false,
-        prevDescription: proposedDescription,
-      });
-    } else {
-      this.setState({
-        ...this.state,
-        editingDescription: false,
-      });
-    }
-  }
-
-  public handleSaveName(newName: ISaveProp) {
-    const proposedName = newName.prop;
-
-    if (proposedName !== this.state.prevName) {
-      this.props.onSaveName(proposedName);
-      this.setState({
-        ...this.state,
-        editingName: false,
-        name: proposedName,
-        prevName: proposedName,
-      });
-    } else {
-      this.setState({
-        ...this.state,
-        editingName: false,
-      });
-    }
-  }
-
-  public isEditingDescription() {
-    return this.state.editingDescription;
-  }
-
-  public isEditingName() {
-    return this.state.editingName;
-  }
-
-  public renderDescriptionEdit() {
-    return (
-      <AutoForm<ISaveProp>
-        i18nRequiredProperty={this.props.i18nIsRequiredMessage}
-        definition={{
-          prop: {
-            placeholder: this.props.i18nDescriptionPlaceholder,
-            type: 'textarea',
-          },
-        }}
-        initialValue={{
-          prop: this.state.description,
-        }}
-        onSave={this.handleSaveDescription}
-      >
-        {({ fields, handleSubmit, values }) => (
-          <Container>
-            <Row>
-              <Col sm={3}>{fields}</Col>
-              <Col>
-                <InlineEdit.ConfirmButton
-                  // classNames="connection-details-header__saveButton"
-                  disabled={values.prop === this.state.prevDescription}
-                  onClick={handleSubmit}
-                />
-                <InlineEdit.CancelButton
-                  onClick={this.setNotEditingDescription}
-                />
-              </Col>
-            </Row>
-          </Container>
-        )}
-      </AutoForm>
-    );
-  }
-
-  public renderDescriptionValue() {
-    return (
-      <Container
-        className={
-          this.state.description.length > 0
-            ? 'connection-details-header__propertyValue'
-            : 'connection-details-header__placeholderText'
-        }
-      >
-        {this.state.description.length > 0
-          ? this.state.description
-          : this.props.i18nDescriptionPlaceholder}
-        <Icon
-          type="pf"
-          name="edit"
-          onClick={this.setEditingDescription}
-          className="connection-details-header__editIcon"
-        />
-      </Container>
-    );
-  }
-
-  public renderNameEdit() {
-    return (
-      <AutoForm<ISaveProp>
-        i18nRequiredProperty={this.props.i18nIsRequiredMessage}
-        definition={{
-          prop: {
-            placeholder: this.props.i18nNamePlaceholder,
-            required: true,
-          },
-        }}
-        initialValue={{
-          prop: this.state.name,
-        }}
-        validate={this.validateName}
-        onSave={this.handleSaveName}
-      >
-        {({ fields, handleSubmit, values }) => (
-          <Container>
-            <Row>
-              <Col sm={3}>{fields}</Col>
-              <Col>
-                <InlineEdit.ConfirmButton
-                  // className="connection-details-header__saveButton"
-                  disabled={values.prop === this.state.prevName}
-                  onClick={handleSubmit}
-                />
-                <InlineEdit.CancelButton onClick={this.setNotEditingName} />
-              </Col>
-            </Row>
-          </Container>
-        )}
-      </AutoForm>
-    );
-  }
-
-  public renderNameValue() {
-    return (
-      <Container className="connection-details-header__connectionName">
-        {this.state.name}
-        <Icon
-          type="pf"
-          name="edit"
-          onClick={this.setEditingName}
-          className="connection-details-header__editIcon"
-        />
-      </Container>
-    );
-  }
-
-  public setEditingDescription() {
-    this.setState({ ...this.state, editingDescription: true });
-  }
-
-  public setEditingName() {
-    this.setState({ ...this.state, editingName: true });
-  }
-
-  public setNotEditingDescription() {
-    this.setState({ ...this.state, editingDescription: false });
-  }
-
-  public setNotEditingName() {
-    this.setState({ ...this.state, editingName: false });
-  }
-
-  public validateName(proposedName: ISaveProp) {
-    const errors: any = {};
-    // TODO: Implement save here
-    // if (v.virtName.includes('?')) {
-    //   errors.virtName = 'Virtualization name contains an illegal character';
-    // }
-
-    return errors;
   }
 
   public render() {
@@ -310,11 +156,13 @@ export class ConnectionDetailsHeader extends React.Component<
             </Grid.Col>
           ) : null}
           <Grid.Col>
-            <InlineEdit
-              value={this.props.connectionName}
-              isEditing={this.isEditingName}
-              renderValue={this.renderNameValue}
-              renderEdit={this.renderNameEdit}
+            <InlineTextEdit
+              currentValue={this.props.connectionName}
+              errorMsg={this.props.errorMsg}
+              i18nPlaceholder={this.props.i18nNamePlaceholder}
+              isTextArea={false}
+              onSave={this.props.onSaveName}
+              onValidate={this.props.validate}
             />
           </Grid.Col>
         </Grid.Row>
@@ -323,11 +171,11 @@ export class ConnectionDetailsHeader extends React.Component<
             {this.props.i18nDescriptionLabel}
           </Grid.Col>
           <Grid.Col>
-            <InlineEdit
-              value={this.props.connectionDescription}
-              isEditing={this.isEditingDescription}
-              renderValue={this.renderDescriptionValue}
-              renderEdit={this.renderDescriptionEdit}
+            <InlineTextEdit
+              currentValue={this.props.connectionDescription}
+              i18nPlaceholder={this.props.i18nDescriptionPlaceholder}
+              isTextArea={true}
+              onSave={this.props.onSaveDescription}
             />
           </Grid.Col>
         </Grid.Row>
