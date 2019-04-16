@@ -1,23 +1,26 @@
 import { Col, ListView, ListViewItem, Row } from 'patternfly-react';
 import * as React from 'react';
-
-export interface IIntegrationDetailActivityItemSteps {
-  name: string;
-  pattern: string;
-}
+import {
+  // IntegrationDetailActivityItemSteps,
+  IIntegrationDetailActivityItemStepsProps,
+} from './';
 
 export interface IIntegrationDetailActivityItem {
   date?: string;
   errorCount: number;
-  steps?: IIntegrationDetailActivityItemSteps[];
+  steps?: IIntegrationDetailActivityItemStepsProps[];
   time?: string;
   version: number;
 }
 
 export interface IIntegrationDetailActivityProps {
+  i18nErrorsFound: string;
+  i18nLastRefresh: string;
   i18nNoErrors: string;
   i18nNoSteps: string;
+  i18nRefresh: string;
   i18nVersion: string;
+  i18nViewLogOpenShift: string;
   items: IIntegrationDetailActivityItem[];
 }
 
@@ -45,9 +48,7 @@ export class IntegrationDetailActivity extends React.Component<
                   <Row>
                     <Col sm={11}>
                       {i.steps ? (
-                        i.steps.map((step, idx) => (
-                          <span key={idx}>{step.name}</span>
-                        ))
+                        <>Activity Item Steps will go here when ready.</>
                       ) : (
                         <span>{this.props.i18nNoSteps}</span>
                       )}

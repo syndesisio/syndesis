@@ -38,17 +38,66 @@ const steps = [
   },
 ];
 
+const activityItemsSteps1 = [
+  {
+    duration: 4,
+    i18nHeaderDuration: 'Duration',
+    i18nHeaderDurationUnit: 'ms',
+    i18nHeaderOutput: 'Output',
+    i18nHeaderStatus: 'Status',
+    i18nHeaderStep: 'Step',
+    i18nHeaderTime: 'Time',
+    i18nNoOutput: 'No output',
+    name: 'Data Mapper',
+    output: 'No output',
+    status: 'Success',
+    time: 'Mar 14, 2019, 14:24:29',
+  },
+  {
+    duration: 11,
+    i18nHeaderDuration: 'Duration',
+    i18nHeaderDurationUnit: 'ms',
+    i18nHeaderOutput: 'Output',
+    i18nHeaderStatus: 'Status',
+    i18nHeaderStep: 'Step',
+    i18nHeaderTime: 'Time',
+    i18nNoOutput: 'No output',
+    name: 'Invoke stored procedure',
+    output: 'No output',
+    status: 'Success',
+    time: 'Mar 14, 2019, 14:24:29',
+  },
+];
+
+const activityItemsSteps2 = [
+  {
+    duration: 13,
+    i18nHeaderDuration: 'Duration',
+    i18nHeaderDurationUnit: 'ms',
+    i18nHeaderOutput: 'Output',
+    i18nHeaderStatus: 'Status',
+    i18nHeaderStep: 'Step',
+    i18nHeaderTime: 'Time',
+    name: 'Data Mapper',
+    output:
+      '<pre>io.atlasmap.api.AtlasException: java.lang.IllegalArgumentException: document cannot be null nor empty</pre>',
+    status: 'Error',
+    time: 'Mar 14, 2019, 14:23:35',
+  },
+];
+
 const activityItems = [
   {
-    date: '4/15/2019',
+    date: '4/16/2019',
     errorCount: 4,
-    time: '10:50:19',
+    steps: activityItemsSteps1,
+    time: '07:40:28',
     version: 2,
   },
   {
     date: '4/16/2019',
     errorCount: 0,
-    steps: steps,
+    steps: activityItemsSteps2,
     time: '07:40:28',
     version: 2,
   },
@@ -97,9 +146,13 @@ storiesOf('Integration/Detail', module)
           </TabBar>
         </Container>
         <IntegrationDetailActivity
+          i18nErrorsFound={'Errors found'}
+          i18nLastRefresh={'Last refresh'}
           i18nNoErrors={'No errors'}
+          i18nRefresh={'Refresh'}
           i18nNoSteps={'No steps information was found for this integration'}
           i18nVersion={'Version'}
+          i18nViewLogOpenShift={'View Log in OpenShift'}
           items={activityItems}
         />
       </>
