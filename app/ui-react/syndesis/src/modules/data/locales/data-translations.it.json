@@ -28,6 +28,14 @@
     "importDataSourceWizardStep1": "Select Connection",
     "importDataSourceWizardStep2": "Select Views",
     "viewEmptyStateTitle": "Create New View",
-    "viewEmptyStateInfo": "There are no views available. Please click on the button below to create one."
+    "viewEmptyStateInfo": "There are no views available. Please click on the button below to create one.",
+    "viewSqlFormRowLimit": "Row Limit",
+    "viewSqlFormRowLimitDescription": "Maximum number of rows to return from your query",
+    "viewSqlFormRowOffset": "Row Offset",
+    "viewSqlFormRowOffsetDescription": "Number of rows to skip in the returned query results",
+    "viewSqlFormSqlStatement": "SQL Statement",
+    "viewSqlFormSqlStatementDescription": "Enter SQL query and click SUBMIT (i.e. SELECT a, b FROM view1)",
+    "queryResultsTableEmptyStateInfo": "Query has not yet been executed.\nSelect view, enter SQL query and click 'Submit'",
+    "queryResultsTableEmptyStateTitle": "NO DATA AVAILABLE"
   }
 }
