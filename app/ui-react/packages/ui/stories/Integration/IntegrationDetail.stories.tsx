@@ -149,7 +149,6 @@ storiesOf('Integration/Detail', module)
           i18nErrorsFound={'Errors found'}
           i18nLastRefresh={'Last refresh'}
           i18nNoErrors={'No errors'}
-          i18nRefresh={'Refresh'}
           i18nNoSteps={'No steps information was found for this integration'}
           i18nVersion={'Version'}
           i18nViewLogOpenShift={'View Log in OpenShift'}
@@ -177,8 +176,6 @@ storiesOf('Integration/Detail', module)
         <IntegrationDetailMetrics
           errorMessagesCount={2}
           okMessagesCount={2425}
-          lastProcessedDate={''}
-          totalErrorsCount={2}
           totalMessages={26126}
           uptimeStart={5358454957349}
         />
