@@ -1,4 +1,3 @@
-// import { number, text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
@@ -146,7 +145,7 @@ storiesOf('Integration/Detail', module)
           </TabBar>
         </Container>
         <IntegrationDetailActivity
-          i18nBtnDetails={'Refresh'}
+          i18nBtnRefresh={'Refresh'}
           i18nErrorsFound={'Errors found'}
           i18nLastRefresh={'Last refresh'}
           i18nNoErrors={'No errors'}
@@ -154,6 +153,7 @@ storiesOf('Integration/Detail', module)
           i18nNoSteps={'No steps information was found for this integration'}
           i18nVersion={'Version'}
           i18nViewLogOpenShift={'View Log in OpenShift'}
+          linkToOpenShiftLog={'/link'}
           items={activityItems}
         />
       </>

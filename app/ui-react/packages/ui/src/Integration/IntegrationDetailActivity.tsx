@@ -7,10 +7,11 @@ import {
   Row,
 } from 'patternfly-react';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { Container } from '../Layout';
 import {
-  // IntegrationDetailActivityItemSteps,
   IIntegrationDetailActivityItemStepsProps,
+  IntegrationDetailActivityItemSteps,
 } from './';
 
 export interface IIntegrationDetailActivityItem {
@@ -22,15 +23,15 @@ export interface IIntegrationDetailActivityItem {
 }
 
 export interface IIntegrationDetailActivityProps {
-  i18nBtnDetails: string;
+  i18nBtnRefresh: string;
   i18nErrorsFound: string;
   i18nLastRefresh: string;
   i18nNoErrors: string;
   i18nNoSteps: string;
-  i18nRefresh: string;
   i18nVersion: string;
   i18nViewLogOpenShift: string;
   items: IIntegrationDetailActivityItem[];
+  linkToOpenShiftLog: string;
 }
 
 export class IntegrationDetailActivity extends React.Component<
@@ -41,11 +42,13 @@ export class IntegrationDetailActivity extends React.Component<
       <>
         <Container>
           <div className="pull-right">
-            {this.props.i18nViewLogOpenShift}
+            <Link to={this.props.linkToOpenShiftLog}>
+              {this.props.i18nViewLogOpenShift}
+            </Link>
             {'  |  '}
             {this.props.i18nLastRefresh}
             {'  '}
-            <Button>{this.props.i18nBtnDetails}</Button>
+            <Button>{this.props.i18nBtnRefresh}</Button>
           </div>
         </Container>
         <ListView>
@@ -83,7 +86,9 @@ export class IntegrationDetailActivity extends React.Component<
                   <Row>
                     <Col sm={11}>
                       {i.steps ? (
-                        <>Activity Item Steps will go here when ready.</>
+                        <IntegrationDetailActivityItemSteps>
+                          {i.steps}
+                        </IntegrationDetailActivityItemSteps>
                       ) : (
                         <span>{this.props.i18nNoSteps}</span>
                       )}

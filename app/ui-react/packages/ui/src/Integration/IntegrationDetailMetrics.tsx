@@ -15,8 +15,6 @@ import * as React from 'react';
 export interface IIntegrationDetailMetricsProps {
   errorMessagesCount?: number;
   okMessagesCount?: number;
-  lastProcessedDate?: string;
-  totalErrorsCount?: number;
   totalMessages?: number;
   uptimeStart: number;
 }
