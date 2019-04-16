@@ -12,7 +12,7 @@ deploy it.
 .Prerequisites
 * You added the start and finish connections to the integration.
 * You added a Damager Reporter step between the start and finish connections.
-* You added a Data Mapper step between the Damage Reporter step and 
+* You added a data mapper step between the Damage Reporter step and 
 the connection to the Todo App API. 
 
 .Procedure
