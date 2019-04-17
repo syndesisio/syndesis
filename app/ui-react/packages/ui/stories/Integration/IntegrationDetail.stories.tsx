@@ -94,7 +94,7 @@ const activityItemsSteps2 = [
 
 const activityItems = [
   <IntegrationDetailActivityItem
-    children={activityItemsSteps1}
+    steps={activityItemsSteps1}
     date={'4/16/2019'}
     errorCount={4}
     i18nErrorsFound={'Errors found'}
@@ -106,7 +106,7 @@ const activityItems = [
     version={2}
   />,
   <IntegrationDetailActivityItem
-    children={activityItemsSteps2}
+    steps={activityItemsSteps2}
     date={'4/14/2019'}
     errorCount={0}
     i18nErrorsFound={'Errors found'}

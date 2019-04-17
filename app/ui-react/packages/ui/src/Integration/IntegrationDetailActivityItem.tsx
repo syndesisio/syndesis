@@ -8,6 +8,7 @@ export interface IIntegrationDetailActivityItemProps {
   i18nNoErrors: string;
   i18nNoSteps: string;
   i18nVersion: string;
+  steps: JSX.Element[];
   time: string;
   version?: number;
 }
@@ -38,22 +39,22 @@ export class IntegrationDetailActivityItem extends React.Component<
         }
         heading={this.props.date}
         description={this.props.time}
-        additionalInfo={
+        additionalInfo={[
           <>
             {this.props.i18nVersion}
             {'  '}
             {this.props.version}
-          </>
-        }
+          </>,
+        ]}
       >
         <Row>
-          <Col sm={11}>
-            {this.props.children ? (
-              <span>Steps will be here soon.</span>
-            ) : (
+          {this.props.steps ? (
+            <Col sm={11}>{this.props.steps}</Col>
+          ) : (
+            <Col sm={11}>
               <span>{this.props.i18nNoSteps}</span>
-            )}
-          </Col>
+            </Col>
+          )}
         </Row>
       </ListViewItem>
     );
