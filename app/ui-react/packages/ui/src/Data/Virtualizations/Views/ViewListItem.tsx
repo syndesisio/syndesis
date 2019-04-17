@@ -8,63 +8,97 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
+import { DeleteConfirmationDialog } from '../../../Shared';
 
 export interface IViewListItemProps {
   viewDescription: string;
   viewIcon?: string;
   viewName: string;
+  i18nCancelText: string;
   i18nDelete: string;
   i18nDeleteTip?: string;
+  i18nDeleteModalMessage: string;
+  i18nDeleteModalTitle: string;
   i18nEdit: string;
   i18nEditTip?: string;
   onDelete: (viewName: string) => void;
   onEdit: (viewName: string) => void;
 }
 
-export class ViewListItem extends React.Component<IViewListItemProps> {
+export interface IViewListItemState {
+  showDeleteDialog: boolean;
+}
+
+export class ViewListItem extends React.Component<
+  IViewListItemProps,
+  IViewListItemState
+> {
+  public constructor(props: IViewListItemProps) {
+    super(props);
+    this.state = {
+      showDeleteDialog: false, // initial visibility of delete dialog
+    };
+    this.handleCancel = this.handleCancel.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.showDeleteDialog = this.showDeleteDialog.bind(this);
+  }
+
   public render() {
     return (
-      <ListViewItem
-        actions={
-          <div className="form-group">
-            <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
-              <Button bsStyle="default" onClick={this.handleEdit}>
-                {this.props.i18nEdit}
-              </Button>
-            </OverlayTrigger>
-            <DropdownKebab
-              id={`view-${this.props.viewName}-action-menu`}
-              pullRight={true}
-            >
-              <OverlayTrigger
-                overlay={this.getDeleteTooltip()}
-                placement="left"
-              >
-                <MenuItem onClick={this.handleDelete}>Delete</MenuItem>
+      <>
+        <DeleteConfirmationDialog
+          i18nCancelButtonText={this.props.i18nCancelText}
+          i18nDeleteButtonText={this.props.i18nDelete}
+          i18nDeleteMessage={this.props.i18nDeleteModalMessage}
+          i18nTitle={this.props.i18nDeleteModalTitle}
+          showDialog={this.state.showDeleteDialog}
+          onCancel={this.handleCancel}
+          onDelete={this.handleDelete}
+        />
+        <ListViewItem
+          actions={
+            <div className="form-group">
+              <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
+                <Button bsStyle="default" onClick={this.handleEdit}>
+                  {this.props.i18nEdit}
+                </Button>
               </OverlayTrigger>
-            </DropdownKebab>
-          </div>
-        }
-        heading={this.props.viewName}
-        description={
-          this.props.viewDescription ? this.props.viewDescription : ''
-        }
-        hideCloseIcon={true}
-        leftContent={
-          this.props.viewIcon ? (
-            <div className="blank-slate-pf-icon">
-              <img
-                src={this.props.viewIcon}
-                alt={this.props.viewName}
-                width={46}
-              />
+              <DropdownKebab
+                id={`view-${this.props.viewName}-action-menu`}
+                pullRight={true}
+              >
+                <OverlayTrigger
+                  overlay={this.getDeleteTooltip()}
+                  placement="left"
+                >
+                  <MenuItem onClick={this.showDeleteDialog}>
+                    {this.props.i18nDelete}
+                  </MenuItem>
+                </OverlayTrigger>
+              </DropdownKebab>
             </div>
-          ) : (
-            <ListViewIcon name={'cube'} />
-          )
-        }
-        stacked={false}
-      />
+          }
+          heading={this.props.viewName}
+          description={
+            this.props.viewDescription ? this.props.viewDescription : ''
+          }
+          hideCloseIcon={true}
+          leftContent={
+            this.props.viewIcon ? (
+              <div className="blank-slate-pf-icon">
+                <img
+                  src={this.props.viewIcon}
+                  alt={this.props.viewName}
+                  width={46}
+                />
+              </div>
+            ) : (
+              <ListViewIcon name={'cube'} />
+            )
+          }
+          stacked={false}
+        />
+      </>
     );
   }
 
@@ -86,15 +120,32 @@ export class ViewListItem extends React.Component<IViewListItemProps> {
     );
   }
 
+  private handleCancel() {
+    this.setState({
+      showDeleteDialog: false, // hide dialog
+    });
+  }
+
   private handleEdit = () => {
     if (this.props.viewName) {
       this.props.onEdit(this.props.viewName);
     }
   };
 
-  private handleDelete = () => {
+  private showDeleteDialog() {
+    this.setState({
+      showDeleteDialog: true,
+    });
+  }
+
+  private handleDelete() {
+    this.setState({
+      showDeleteDialog: false, // hide dialog
+    });
+
+    // TODO: disable components while delete is processing
     if (this.props.viewName) {
       this.props.onDelete(this.props.viewName);
     }
-  };
+  }
 }

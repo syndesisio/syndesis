@@ -52,8 +52,11 @@ stories.add(
       viewName={text('viewName', viewName)}
       viewDescription={text('viewDescription', viewDescription)}
       viewIcon={text('icon', null)}
+      i18nCancelText={'Cancel'}
       i18nDelete={text('deleteText', deleteText)}
       i18nDeleteTip={text('deleteTip', deleteTip)}
+      i18nDeleteModalMessage={'Do you really want to delete the view?'}
+      i18nDeleteModalTitle={'Confirm Delete'}
       i18nEdit={text('editText', editText)}
       i18nEditTip={text('editTip', editTip)}
       onDelete={action(deleteActionText)}
