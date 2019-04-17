@@ -1,9 +1,19 @@
 import {
-  Connection,
   ConfigurationProperty,
+  Connection,
   IntegrationMetricsSummary,
   IntegrationOverview,
+  WithId,
 } from './models';
+
+/**
+ * Extra interfaces and overrides for the swagger generated models
+ *
+ * ONLY INTERFACES AND TYPES GO IN THIS FILE!
+ *
+ * NO FUNCTIONS OR CONSTANTS
+ *
+ */
 
 // TODO remove when these values are advertised by the swagger
 export interface IConfigurationProperty extends ConfigurationProperty {
@@ -11,6 +21,7 @@ export interface IConfigurationProperty extends ConfigurationProperty {
   secret?: boolean;
 }
 
+// Extended connection interface to add support for the 'iconFile' property
 export interface IConnectionWithIconFile extends Connection {
   icon?: any;
   iconFile?: File;

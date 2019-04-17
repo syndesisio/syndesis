@@ -6,10 +6,12 @@ import {
   Step,
 } from '@syndesis/models';
 import { key } from '@syndesis/utils';
+import { saveAs } from 'file-saver';
 import produce from 'immer';
 import * as React from 'react';
 import { ApiContext, IApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
+import { PUBLISHED, UNPUBLISHED } from './constants';
 
 type UpdateOrAddConnection = (
   integration: Integration,
@@ -69,6 +71,29 @@ export interface IWithIntegrationHelpersChildrenProps {
    */
   updateOrAddConnection: UpdateOrAddConnection;
   /**
+   * Delete the integration with the specified ID, empty response is returned
+   * @param id
+   */
+  deleteIntegration(id: string): Promise<Response>;
+  /**
+   * Deploy the integration with the specified ID and version.  Empty response is returned
+   *
+   * @param id
+   * @param version
+   * @param isIntegrationDeployment
+   */
+  deployIntegration(
+    id: string,
+    version: string | number,
+    isIntegrationDeployment?: boolean
+  ): Promise<Response>;
+  /**
+   * Requests a .zip file of the integration, using the specified filename
+   * @param id
+   * @param fileName
+   */
+  exportIntegration(id: string, fileName: string): Promise<void>;
+  /**
    * asynchronously saves the provided integration, returning the saved
    * integration in case of success.
    *
@@ -77,6 +102,13 @@ export interface IWithIntegrationHelpersChildrenProps {
    * @todo make the returned object immutable to avoid uncontrolled changes
    */
   saveIntegration(integration: Integration): Promise<Integration>;
+  /**
+   * Request that the given integration ID at the given version be deactivated, empty response is returned
+   * @param id
+   * @param version
+   */
+
+  undeployIntegration(id: string, version: string | number): Promise<Response>;
 }
 
 export interface IWithIntegrationHelpersProps {
@@ -89,7 +121,11 @@ export class WithIntegrationHelpersWrapped extends React.Component<
   constructor(props: IWithIntegrationHelpersProps & IApiContext) {
     super(props);
     this.addConnection = this.addConnection.bind(this);
+    this.deleteIntegration = this.deleteIntegration.bind(this);
+    this.deployIntegration = this.deployIntegration.bind(this);
+    this.exportIntegration = this.exportIntegration.bind(this);
     this.saveIntegration = this.saveIntegration.bind(this);
+    this.undeployIntegration = this.undeployIntegration.bind(this);
     this.updateConnection = this.updateConnection.bind(this);
     this.updateOrAddConnection = this.updateOrAddConnection.bind(this);
   }
@@ -156,6 +192,50 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       step.stepKind = 'endpoint';
       draft.flows[flow].steps!.splice(position, 0, step);
       draft.tags = Array.from(new Set([...(draft.tags || []), connection.id!]));
+    });
+  }
+
+  public async deleteIntegration(id: string) {
+    return callFetch({
+      headers: this.props.headers,
+      method: 'DELETE',
+      url: `${this.props.apiUri}/integrations/${id}`,
+    });
+  }
+
+  public async exportIntegration(id: string, fileName: string) {
+    return callFetch({
+      headers: this.props.headers,
+      method: 'GET',
+      url: `${this.props.apiUri}/integration-support/export.zip?id=${id}`,
+    }).then(async body => saveAs(await body.blob(), fileName));
+  }
+
+  public async deployIntegration(
+    id: string,
+    version: string | number,
+    isIntegrationDeployment = false
+  ) {
+    return callFetch({
+      body: isIntegrationDeployment ? { targetState: PUBLISHED } : {},
+      headers: this.props.headers,
+      method: isIntegrationDeployment ? 'POST' : 'PUT',
+      url: isIntegrationDeployment
+        ? `${
+            this.props.apiUri
+          }/integrations/${id}/deployments/${version}/targetState`
+        : `${this.props.apiUri}/integrations/${id}/deployments`,
+    });
+  }
+
+  public async undeployIntegration(id: string, version: string | number) {
+    return callFetch({
+      body: { targetState: UNPUBLISHED },
+      headers: this.props.headers,
+      method: 'POST',
+      url: `${
+        this.props.apiUri
+      }/integrations/${id}/deployments/${version}/targetState`,
     });
   }
 
@@ -267,7 +347,11 @@ export class WithIntegrationHelpersWrapped extends React.Component<
   public render() {
     return this.props.children({
       addConnection: this.addConnection,
+      deleteIntegration: this.deleteIntegration,
+      deployIntegration: this.deployIntegration,
+      exportIntegration: this.exportIntegration,
       saveIntegration: this.saveIntegration,
+      undeployIntegration: this.undeployIntegration,
       updateConnection: this.updateConnection,
       updateOrAddConnection: this.updateOrAddConnection,
     });
