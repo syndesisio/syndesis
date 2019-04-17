@@ -21,11 +21,6 @@ export interface IConnectionDetailsHeaderProps {
   connectionName: string;
 
   /**
-   * The error message associated with the proposed name or an empty string if proposed name is valid.
-   */
-  errorMsg: string;
-
-  /**
    * The localized text of the description label.
    */
   i18nDescriptionLabel: string;
@@ -55,18 +50,17 @@ export interface IConnectionDetailsHeaderProps {
    * @param newDescription - the new description being saved
    * @returns `true` if save was successful
    */
-  onSaveDescription: (newDescription: string) => boolean;
+  onChangeDescription: (newDescription: string) => Promise<boolean>;
 
   /**
    * The callback for when the connection name should be saved.
    * @param newName - the new name being saved
    * @returns `true` if save was successful
    */
-  onSaveName: (newName: string) => boolean;
+  onChangeName: (newName: string) => Promise<boolean>;
 
   /**
-   * The callback that validates the changes to the connection name. The `errorMsg` property should be set within this
-   * method.
+   * The callback that validates the changes to the connection name. In case of error, the error message is expected as the return value.
    * @param proposedName - the proposed name being validated
    */
   validate: (proposedName: string) => true | string;
@@ -157,10 +151,10 @@ export class ConnectionDetailsHeader extends React.Component<
           ) : null}
           <Grid.Col>
             <InlineTextEdit
-              currentValue={this.props.connectionName}
+              value={this.props.connectionName}
               i18nPlaceholder={this.props.i18nNamePlaceholder}
               isTextArea={false}
-              onSave={this.props.onSaveName}
+              onChange={this.props.onChangeName}
               onValidate={this.props.validate}
             />
           </Grid.Col>
@@ -171,10 +165,10 @@ export class ConnectionDetailsHeader extends React.Component<
           </Grid.Col>
           <Grid.Col>
             <InlineTextEdit
-              currentValue={this.props.connectionDescription}
+              value={this.props.connectionDescription || ''}
               i18nPlaceholder={this.props.i18nDescriptionPlaceholder}
               isTextArea={true}
-              onSave={this.props.onSaveDescription}
+              onChange={this.props.onChangeDescription}
             />
           </Grid.Col>
         </Grid.Row>

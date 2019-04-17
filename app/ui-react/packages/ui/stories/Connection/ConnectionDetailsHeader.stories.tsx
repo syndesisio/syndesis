@@ -1,4 +1,3 @@
-import { withState } from '@dump247/storybook-state';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { ConnectionDetailsHeader } from '../../src';
@@ -15,42 +14,38 @@ const namePlaceholder = 'Enter a connection name...';
 const usageLabel = 'Usage';
 const usageMessage = 'Used by 1 integration';
 
-const saveDescription = (newDescription: string) => {
+const changeDescription = (newDescription: string) => {
   console.log('new description:' + newDescription);
-  return true;
+  return Promise.resolve(true);
 };
 
-const saveName = (newName: string) => {
+const changeName = (newName: string) => {
   console.log('new name: ' + newName);
-  return true;
+  return Promise.resolve(true);
 };
 
-stories.add(
-  'render me',
-  withState({ errorMsg: '' })(({ store }) => {
-    const validate = proposedName => {
-      if (proposedName.length === 0) {
-        return '* Required field';
-      } else if (proposedName === 'foo') {
-        return 'foo is not a valid connection name';
-      }
-      return true;
-    };
-    return (
-      <ConnectionDetailsHeader
-        connectionDescription={connectionDescription}
-        connectionIcon={connectionIcon}
-        connectionName={connectionName}
-        errorMsg={store.state.errorMsg}
-        i18nDescriptionLabel={desriptionLabel}
-        i18nDescriptionPlaceholder={descriptionPlaceholder}
-        i18nNamePlaceholder={namePlaceholder}
-        i18nUsageLabel={usageLabel}
-        i18nUsageMessage={usageMessage}
-        onSaveDescription={saveDescription}
-        onSaveName={saveName}
-        validate={validate}
-      />
-    );
-  })
-);
+stories.add('render me', () => {
+  const validate = proposedName => {
+    if (proposedName.length === 0) {
+      return '* Required field';
+    } else if (proposedName === 'foo') {
+      return 'foo is not a valid connection name';
+    }
+    return true;
+  };
+  return (
+    <ConnectionDetailsHeader
+      connectionDescription={connectionDescription}
+      connectionIcon={connectionIcon}
+      connectionName={connectionName}
+      i18nDescriptionLabel={desriptionLabel}
+      i18nDescriptionPlaceholder={descriptionPlaceholder}
+      i18nNamePlaceholder={namePlaceholder}
+      i18nUsageLabel={usageLabel}
+      i18nUsageMessage={usageMessage}
+      onChangeDescription={changeDescription}
+      onChangeName={changeName}
+      validate={validate}
+    />
+  );
+});
