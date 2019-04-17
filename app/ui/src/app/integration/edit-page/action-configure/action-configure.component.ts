@@ -162,6 +162,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
                 this.currentFlowService.events.emit({
                   kind: INTEGRATION_SET_DESCRIPTOR,
                   position: this.position,
+                  skipReconcile: true,
                   descriptor,
                   onSave: () => {
                     /* All done... */
@@ -229,6 +230,7 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
         this.currentFlowService.events.emit({
           kind: INTEGRATION_SET_DESCRIPTOR,
           position: this.position,
+          skipReconcile: true,
           descriptor,
           onSave: () => {
             this.initialize(position, page, descriptor);

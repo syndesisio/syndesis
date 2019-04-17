@@ -99,6 +99,7 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
         this.currentFlowService.events.emit({
           kind: INTEGRATION_SET_METADATA,
           position: this.position,
+          skipReconcile: true,
           metadata: { configured: 'true' },
           onSave: () => {
             this.router.navigate(['save-or-add-step'], {
