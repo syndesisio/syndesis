@@ -34,16 +34,34 @@ export class IntegrationDetailActivityItemSteps extends React.Component<
           hover={true}
           columns={[
             {
-              cell: { property: 'first_name', formatters: [cellFormat] },
-              header: { label: 'First Name', formatters: [headerFormat] },
+              cell: {
+                formatters: [cellFormat],
+                property: 'first_name',
+              },
+              header: {
+                formatters: [headerFormat],
+                label: 'First Name',
+              },
             },
             {
-              header: { label: 'Last Name', formatters: [headerFormat] },
-              cell: { property: 'last_name', formatters: [cellFormat] },
+              cell: {
+                formatters: [cellFormat],
+                property: 'last_name',
+              },
+              header: {
+                formatters: [headerFormat],
+                label: 'Last Name',
+              },
             },
             {
-              header: { label: 'Username', formatters: [headerFormat] },
-              cell: { property: 'username', formatters: [cellFormat] },
+              cell: {
+                formatters: [cellFormat],
+                property: 'username',
+              },
+              header: {
+                formatters: [headerFormat],
+                label: 'Username',
+              },
             },
           ]}
         >
