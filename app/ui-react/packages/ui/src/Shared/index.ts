@@ -1,4 +1,4 @@
-export * from './DeleteConfirmationDialog';
+export * from './ConfirmationDialog';
 export * from './DndFileChooser';
 export * from './ListViewToolbar';
 export * from './LogViewer';
