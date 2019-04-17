@@ -8,7 +8,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { DeleteConfirmationDialog } from '../../../Shared';
+import { ConfirmationDialog, ConfirmationDialogType } from '../../../Shared';
 
 export interface IViewListItemProps {
   viewDescription: string;
@@ -46,14 +46,15 @@ export class ViewListItem extends React.Component<
   public render() {
     return (
       <>
-        <DeleteConfirmationDialog
+        <ConfirmationDialog
+          confirmationType={ConfirmationDialogType.DANGER}
           i18nCancelButtonText={this.props.i18nCancelText}
-          i18nDeleteButtonText={this.props.i18nDelete}
-          i18nDeleteMessage={this.props.i18nDeleteModalMessage}
+          i18nAcceptButtonText={this.props.i18nDelete}
+          i18nConfirmationMessage={this.props.i18nDeleteModalMessage}
           i18nTitle={this.props.i18nDeleteModalTitle}
           showDialog={this.state.showDeleteDialog}
           onCancel={this.handleCancel}
-          onDelete={this.handleDelete}
+          onAccept={this.handleDelete}
         />
         <ListViewItem
           actions={
