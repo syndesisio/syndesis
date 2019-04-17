@@ -16,6 +16,7 @@
 package io.syndesis.common.model.filter;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.syndesis.common.model.expression.RuleBase;
 import org.immutables.value.Value;
 
 /**
@@ -23,25 +24,7 @@ import org.immutables.value.Value;
  */
 @Value.Immutable
 @JsonDeserialize(builder = FilterRule.Builder.class)
-public interface FilterRule {
-
-    /**
-     *  Path expression within the message on which to filter. Can be part of header, body, properties
-     * The path is a simple dot notation to the property to filter.
-     */
-    String getPath();
-
-    /**
-     * Operator to use for the filter. The value comes from meta dara obtained by the UI in
-     * a separate call. Example: "contains"
-     */
-    String getOp();
-
-    /**
-     * Value used by operator to decide whether the filter applies
-     *
-     */
-    String getValue();
+public interface FilterRule extends RuleBase {
 
     /**
      * Get the simple filter expression for this rule
@@ -51,10 +34,6 @@ public interface FilterRule {
                              convertPathToSimple(),
                              getOp(),
                              getValue());
-    }
-
-    default String convertPathToSimple() {
-        return String.format("${body.%s}",getPath());
     }
 
     class Builder extends ImmutableFilterRule.Builder { }
