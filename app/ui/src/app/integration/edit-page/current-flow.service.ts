@@ -21,7 +21,6 @@ import {
   StepStore,
   SPLIT,
   AGGREGATE,
-  ENDPOINT,
 } from '@syndesis/ui/store';
 import {
   FlowEvent,
@@ -507,7 +506,7 @@ export class CurrentFlowService {
           addMetadataToStep(step, metadata),
           position
         );
-        thenFinally();
+        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
         break;
       }
       case INTEGRATION_SET_PROPERTIES: {
@@ -654,21 +653,6 @@ export class CurrentFlowService {
     this.currentFlow.steps.forEach((step, position) => {
       outstanding = outstanding + 1;
       switch (step.stepKind) {
-        case ENDPOINT:
-          // Update metadata but the connection needs to be configured and the action needs to be tagged as dynamic
-          if (
-            typeof step.connection !== 'undefined' &&
-            typeof step.action !== 'undefined' &&
-            typeof step.configuredProperties !== 'undefined' &&
-            typeof step.action.tags !== 'undefined' &&
-            typeof step.action.tags.find(tag => tag === 'dynamic') !==
-              'undefined'
-          ) {
-            this.fetchStepMetadata(step, position, decrementCount);
-          } else {
-            decrementCount();
-          }
-          break;
         case SPLIT:
         case AGGREGATE:
           // Just reset the existing step and trigger executing step customizations
@@ -754,26 +738,6 @@ export class CurrentFlowService {
           // we'll just pass through
           sub.unsubscribe();
           then(step);
-        }
-      );
-  }
-
-  fetchStepMetadata(step: Step, position: number, then: () => void) {
-    const sub = this.integrationSupportService
-      .fetchMetadata(step.connection, step.action, step.configuredProperties)
-      .subscribe(
-        descriptor => {
-          this.events.emit({
-            kind: INTEGRATION_SET_DESCRIPTOR,
-            position,
-            descriptor,
-            skipReconcile: true,
-            onSave: then,
-          });
-        },
-        _ => {
-          sub.unsubscribe();
-          then();
         }
       );
   }
