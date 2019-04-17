@@ -8,7 +8,7 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
-import { DeleteConfirmationDialog } from '../Shared';
+import { ConfirmationDialog, ConfirmationDialogType } from '../Shared';
 
 export interface IExtensionListItemProps {
   detailsPageLink: H.LocationDescriptor;
@@ -111,15 +111,16 @@ export class ExtensionListItem extends React.Component<
   public render() {
     return (
       <>
-        <DeleteConfirmationDialog
+        <ConfirmationDialog
           // extensionId={this.props.extensionId}
+          confirmationType={ConfirmationDialogType.DANGER}
           i18nCancelButtonText={this.props.i18nCancelText}
-          i18nDeleteButtonText={this.props.i18nDelete}
-          i18nDeleteMessage={this.props.i18nDeleteModalMessage}
+          i18nAcceptButtonText={this.props.i18nDelete}
+          i18nConfirmationMessage={this.props.i18nDeleteModalMessage}
           i18nTitle={this.props.i18nDeleteModalTitle}
           showDialog={this.state.showDeleteDialog}
           onCancel={this.doCancel}
-          onDelete={this.doDelete}
+          onAccept={this.doDelete}
         />
         <ListViewItem
           actions={
