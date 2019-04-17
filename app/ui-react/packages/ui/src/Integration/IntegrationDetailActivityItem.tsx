@@ -1,4 +1,4 @@
-import { Col, Icon, ListViewItem, Row } from 'patternfly-react';
+import { Col, Icon, ListView, Row } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationDetailActivityItemProps {
@@ -18,7 +18,7 @@ export class IntegrationDetailActivityItem extends React.Component<
 > {
   public render() {
     return (
-      <ListViewItem
+      <ListView.Item
         key={1}
         actions={
           <>
@@ -40,11 +40,11 @@ export class IntegrationDetailActivityItem extends React.Component<
         heading={this.props.date}
         description={this.props.time}
         additionalInfo={[
-          <>
+          <React.Fragment key={'not-really-needed'}>
             {this.props.i18nVersion}
             {'  '}
             {this.props.version}
-          </>,
+          </React.Fragment>,
         ]}
       >
         <Row>
@@ -56,7 +56,7 @@ export class IntegrationDetailActivityItem extends React.Component<
             </Col>
           )}
         </Row>
-      </ListViewItem>
+      </ListView.Item>
     );
   }
 }
