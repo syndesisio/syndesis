@@ -36,31 +36,51 @@ export class IntegrationDetailActivityItemSteps extends React.Component<
             {
               cell: {
                 formatters: [cellFormat],
-                property: 'first_name',
+                property: 'step',
               },
               header: {
                 formatters: [headerFormat],
-                label: 'First Name',
+                label: 'Step',
               },
             },
             {
               cell: {
                 formatters: [cellFormat],
-                property: 'last_name',
+                property: 'time',
               },
               header: {
                 formatters: [headerFormat],
-                label: 'Last Name',
+                label: 'Time',
               },
             },
             {
               cell: {
                 formatters: [cellFormat],
-                property: 'username',
+                property: 'duration',
               },
               header: {
                 formatters: [headerFormat],
-                label: 'Username',
+                label: 'Duration',
+              },
+            },
+            {
+              cell: {
+                formatters: [cellFormat],
+                property: 'status',
+              },
+              header: {
+                formatters: [headerFormat],
+                label: 'Status',
+              },
+            },
+            {
+              cell: {
+                formatters: [cellFormat],
+                property: 'output',
+              },
+              header: {
+                formatters: [headerFormat],
+                label: 'Output',
               },
             },
           ]}
@@ -69,24 +89,17 @@ export class IntegrationDetailActivityItemSteps extends React.Component<
           <Table.Body
             rows={[
               {
-                first_name: 'Dan',
-                id: 0,
-                last_name: 'Abramov',
-              },
-              {
-                first_name: 'Sebastian',
-                id: 1,
-                last_name: 'Markbåge',
-              },
-              {
-                first_name: 'Sophie',
-                id: 2,
-                last_name: 'Alpert',
+                step: this.props.name,
+                time: this.props.time,
+                duration: this.props.duration,
+                status: this.props.status,
+                output: this.props.output,
               },
             ]}
-            rowKey="id"
+            rowKey={this.props.name}
           />
         </Table.PfProvider>
+        {this.props.children}
       </>
     );
   }
