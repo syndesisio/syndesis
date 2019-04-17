@@ -40,6 +40,7 @@ import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.impl.DefaultComponent;
 import org.apache.camel.util.IntrospectionSupport;
 import org.apache.camel.util.ObjectHelper;
+import org.apache.camel.util.StringHelper;
 import org.apache.camel.util.URISupport;
 import org.apache.camel.util.function.Predicates;
 import org.slf4j.Logger;
@@ -63,13 +64,38 @@ public class ComponentProxyComponent extends DefaultComponent {
     private Processor beforeConsumer;
     private Processor afterConsumer;
 
+
     public ComponentProxyComponent(String componentId, String componentScheme) {
-        this.componentId = componentId;
-        this.componentScheme = componentScheme;
+        this(componentId, componentScheme, (String)null, new DefaultCamelCatalog(false));
+    }
+
+    public ComponentProxyComponent(String componentId, String componentScheme, CamelCatalog catalog) {
+        this(componentId, componentScheme, (String)null, catalog);
+    }
+
+    public ComponentProxyComponent(String componentId, String componentScheme, String componentClass) {
+        this(componentId, componentScheme, componentClass, new DefaultCamelCatalog(false));
+    }
+
+    public ComponentProxyComponent(String componentId, String componentScheme, Class<?> componentClass) {
+        this(componentId, componentScheme, componentClass.getName(), new DefaultCamelCatalog(false));
+    }
+
+    public ComponentProxyComponent(String componentId, String componentScheme, Class<?> componentClass, CamelCatalog catalog) {
+        this(componentId, componentScheme, componentClass.getName(), catalog);
+    }
+
+    public ComponentProxyComponent(String componentId, String componentScheme, String componentClass, CamelCatalog catalog) {
+        this.componentId = StringHelper.notEmpty(componentId, "componentId");
+        this.componentScheme = StringHelper.notEmpty(componentScheme, "componentScheme");
         this.componentSchemeAlias = Optional.empty();
         this.configuredOptions = new HashMap<>();
         this.remainingOptions = new HashMap<>();
-        this.catalog = new DefaultCamelCatalog(false);
+        this.catalog = ObjectHelper.notNull(catalog, "catalog");
+
+        if (ObjectHelper.isNotEmpty(componentClass)) {
+            this.catalog.addComponent(componentScheme, componentClass);
+        }
 
         try {
             this.definition = ComponentDefinition.forScheme(catalog, componentScheme);

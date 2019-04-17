@@ -66,6 +66,7 @@
   </profiles>
 
   <modules>
+    <module>support/camel-acme</module>
     <module>api</module>
     <module>component-proxy</module>
     <module>runtime</module>
