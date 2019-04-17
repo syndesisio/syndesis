@@ -38,7 +38,6 @@ import io.syndesis.connector.odata.customizer.json.ClientComplexValueSerializer;
 import io.syndesis.connector.odata.customizer.json.ClientEntitySerializer;
 import io.syndesis.connector.odata.customizer.json.ClientEnumValueSerializer;
 import io.syndesis.connector.odata.customizer.json.ClientPrimitiveValueSerializer;
-import io.syndesis.connector.odata.customizer.json.ClientPropertySerializer;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public abstract class AbstractODataCustomizer implements ComponentProxyCustomizer, CamelContextAware, ODataConstants {
@@ -52,7 +51,6 @@ public abstract class AbstractODataCustomizer implements ComponentProxyCustomize
             new SimpleModule(ClientEntitySet.class.getSimpleName(), new Version(1, 0, 0, null, null, null));
         module
             .addSerializer(new ClientEntitySerializer())
-            .addSerializer(new ClientPropertySerializer())
             .addSerializer(new ClientPrimitiveValueSerializer())
             .addSerializer(new ClientEnumValueSerializer())
             .addSerializer(new ClientCollectionValueSerializer())

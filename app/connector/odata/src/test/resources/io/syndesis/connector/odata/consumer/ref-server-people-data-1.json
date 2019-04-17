@@ -2,17 +2,17 @@
   "UserName": "russellwhyte",
   "FirstName": "Russell",
   "LastName": "Whyte",
+  "Gender": "Male",
   "MiddleName": "",
-  "Gender": "Microsoft.OData.Service.Sample.TrippinInMemory.Models.PersonGender'Male'",
   "Age": "",
   "Emails": [
     "Russell@example.com",
     "Russell@contoso.com"
   ],
-  "FavoriteFeature": "Microsoft.OData.Service.Sample.TrippinInMemory.Models.Feature'Feature1'",
+  "FavoriteFeature": "Feature1",
   "Features": [
-    "Microsoft.OData.Service.Sample.TrippinInMemory.Models.Feature'Feature1'",
-    "Microsoft.OData.Service.Sample.TrippinInMemory.Models.Feature'Feature2'"
+    "Feature1",
+    "Feature2"
   ],
   "AddressInfo": [
     {

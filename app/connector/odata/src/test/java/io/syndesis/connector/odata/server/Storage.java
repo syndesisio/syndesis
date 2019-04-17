@@ -259,7 +259,7 @@ public class Storage implements ODataServerConstants {
         return false;
     }
 
-    private ComplexValue createSpec(String productType, String detail1, String detail2) {
+    private ComplexValue createSpec(String productType, String detail1, String detail2, int powerType) {
         ComplexValue complexValue = new ComplexValue();
         List<Property> complexValueValue = complexValue.getValue();
         complexValueValue.add(new Property(
@@ -271,6 +271,9 @@ public class Storage implements ODataServerConstants {
         complexValueValue.add(new Property(
                                            EdmPrimitiveTypeKind.String.getFullQualifiedName().toString(),
                                            SPEC_DETAIL_2, ValueType.PRIMITIVE, detail2));
+        complexValueValue.add(new Property(
+                                           ET_POWER_TYPE_FQN.getFullQualifiedNameAsString(),
+                                           SPEC_POWER_TYPE, ValueType.ENUM, powerType));
         return complexValue;
     }
 
@@ -299,7 +302,7 @@ public class Storage implements ODataServerConstants {
     private void initSampleData() {
         // add some sample product entities
         String[] e1Serials = {"ae8353484", "er5845474", "px376876"};
-        ComplexValue e1Spec = createSpec("Notebook", "CPU AMD Ryzen 3 2200U", "Dual-Core Cores");
+        ComplexValue e1Spec = createSpec("Notebook", "CPU AMD Ryzen 3 2200U", "Dual-Core Cores", 0);
 
         productList.add(createEntity(1,
                                  "Notebook Basic 15",
@@ -307,7 +310,7 @@ public class Storage implements ODataServerConstants {
                                  e1Serials, e1Spec));
 
         String[] e2Serials = {"ae867484", "er586874", "px3429876"};
-        ComplexValue e2Spec = createSpec("Tablet", "Android OS", "Resolution - 1920 x 1200");
+        ComplexValue e2Spec = createSpec("Tablet", "Android OS", "Resolution - 1920 x 1200", 0);
 
         productList.add(createEntity(2,
                                      "1UMTS PDA",
@@ -315,7 +318,7 @@ public class Storage implements ODataServerConstants {
                                      e2Serials, e2Spec));
 
         String[] e3Serials = {"ae949549", "er342367", "px230434"};
-        ComplexValue e3Spec = createSpec("Monitor", "Diagonal Size 22", "Aspect Ratio 16:9");
+        ComplexValue e3Spec = createSpec("Monitor", "Diagonal Size 22", "Aspect Ratio 16:9", 1);
 
         productList.add(createEntity(3,
                                      "Ergo Screen",

@@ -6,7 +6,8 @@
     "Specification":{
       "ProductType":"Notebook",
       "Detail1":"CPU AMD Ryzen 3 2200U",
-      "Detail2":"Dual-Core Cores"
+      "Detail2":"Dual-Core Cores",
+      "PowerType": "240V"
     },
     "ResultCount": 3
  }

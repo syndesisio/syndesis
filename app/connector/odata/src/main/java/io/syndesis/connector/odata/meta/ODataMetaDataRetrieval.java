@@ -40,6 +40,9 @@ import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 
 public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implements ODataConstants {
 
+    // This is the schema supported by current jackson API for {@link ObjectSchema}
+    private static final String JSON_SCHEMA_URI = "http://json-schema.org/draft-03/schema#";
+
     private JsonSchemaFactory factory = new JsonSchemaFactory();
 
     @Override
@@ -88,7 +91,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
     private ObjectSchema createEntitySchema() {
         ObjectSchema entitySchema = new ObjectSchema();
         entitySchema.setTitle("ODATA_ENTITY_PROPERTIES");
-        entitySchema.set$schema("http://json-schema.org/schema#");
+        entitySchema.set$schema(JSON_SCHEMA_URI);
         return entitySchema;
     }
 
@@ -98,13 +101,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         }
 
         for (PropertyMetadata entityProperty : odataMetadata.getEntityProperties()) {
-            JsonSchema propSchema = schemaFor(entityProperty);
-            boolean required = propSchema.getRequired();
-            entitySchema.putProperty(entityProperty.getName(), propSchema);
-            //
-            // Workaround oddity where ObjectSchema#putProperty sets required to true
-            //
-            propSchema.setRequired(required);
+            schemaFor(entityProperty, entitySchema);
         }
     }
 
@@ -136,7 +133,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
     }
 
     @SuppressWarnings("PMD")
-    private JsonSchema schemaFor(PropertyMetadata propertyMetadata) {
+    private void schemaFor(PropertyMetadata propertyMetadata, ObjectSchema parentSchema) {
         JsonSchema schema;
 
         TypeClass type = propertyMetadata.getType();
@@ -155,8 +152,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                 Set<PropertyMetadata> childProperties = propertyMetadata.getChilldProperties();
                 if (childProperties != null) {
                     for (PropertyMetadata childProperty : childProperties) {
-                        JsonSchema childSchema = schemaFor(childProperty);
-                        objectSchema.putProperty(childProperty.getName(), childSchema);
+                        schemaFor(childProperty, objectSchema);
                     }
                 }
                 schema = objectSchema;
@@ -172,7 +168,8 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         }
 
         schema.setRequired(propertyMetadata.isRequired());
-        return schema;
+        // Use #putOptionalProperty() as it does not override required flag
+        parentSchema.putOptionalProperty(propertyMetadata.getName(), schema);
     }
 
     /*
@@ -191,17 +188,22 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
             .type(entitySchema.getTitle());
 
         populateEntitySchema(odataMetadata, entitySchema);
+        //
+        // If a key predicate is used then only one entity is expected to be returned
+        // hence an array schema is not required.
+        //
+        boolean hasKeyPredicate = basicProperties.containsKey(KEY_PREDICATE);
         boolean isSplit = isSplit(basicProperties);
 
         if (! entitySchema.getProperties().isEmpty()) {
-            if (isSplit) {
+            if (hasKeyPredicate || isSplit) {
                 //
                 // A split will mean that the schema is no longer an array schema
                 //
                 applyEntitySchemaSpecification(entitySchema,  outDataShapeBuilder);
             } else {
                 ArraySchema collectionSchema = new ArraySchema();
-                collectionSchema.set$schema("http://json-schema.org/schema#");
+                collectionSchema.set$schema(JSON_SCHEMA_URI);
                 collectionSchema.setItemsSchema(entitySchema);
                 applyEntitySchemaSpecification(collectionSchema, outDataShapeBuilder);
             }

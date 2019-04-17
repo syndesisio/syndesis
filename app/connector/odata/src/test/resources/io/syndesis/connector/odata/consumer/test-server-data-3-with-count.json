@@ -6,7 +6,8 @@
     "Specification":{
       "ProductType":"Monitor",
       "Detail1":"Diagonal Size 22",
-      "Detail2":"Aspect Ratio 16:9"
+      "Detail2":"Aspect Ratio 16:9",
+      "PowerType": "110V"
     },
     "ResultCount": 3
 }
