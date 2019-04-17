@@ -43,13 +43,6 @@ const activityItemsSteps1 = [
   <IntegrationDetailActivityItemSteps
     key={0}
     duration={4}
-    i18nHeaderDuration={'Duration'}
-    i18nHeaderDurationUnit={'ms'}
-    i18nHeaderOutput={'Output'}
-    i18nHeaderStatus={'Status'}
-    i18nHeaderStep={'Step'}
-    i18nHeaderTime={'Time'}
-    i18nNoOutput={'No output'}
     name={'Data Mapper'}
     output={'No output'}
     status={'Success'}
@@ -58,14 +51,7 @@ const activityItemsSteps1 = [
   <IntegrationDetailActivityItemSteps
     key={1}
     duration={4}
-    i18nHeaderDuration={'Duration'}
-    i18nHeaderDurationUnit={'ms'}
-    i18nHeaderOutput={'Output'}
-    i18nHeaderStatus={'Status'}
-    i18nHeaderStep={'Step'}
-    i18nHeaderTime={'Time'}
-    i18nNoOutput={'No output'}
-    name={'Data Mapper'}
+    name={'Invoke stored procedure'}
     output={'No output'}
     status={'Success'}
     time={'Mar 14, 2019, 14:24:29'}
@@ -76,16 +62,9 @@ const activityItemsSteps2 = [
   <IntegrationDetailActivityItemSteps
     key={0}
     duration={67}
-    i18nHeaderDuration={'Duration'}
-    i18nHeaderDurationUnit={'ms'}
-    i18nHeaderOutput={'Output'}
-    i18nHeaderStatus={'Status'}
-    i18nHeaderStep={'Step'}
-    i18nHeaderTime={'Time'}
-    i18nNoOutput={'No output'}
-    name={'Data Mapper'}
+    name={'Invoke stored procedure'}
     output={
-      '<pre>io.atlasmap.api.AtlasException: java.lang.IllegalArgumentException: document cannot be null nor empty</pre>'
+      'io.atlasmap.api.AtlasException: java.lang.IllegalArgumentException: document cannot be null nor empty'
     }
     status={'Error'}
     time={'Mar 14, 2019, 14:23:35'}
@@ -96,8 +75,14 @@ const activityItems = [
   <IntegrationDetailActivityItem
     steps={activityItemsSteps1}
     date={'4/16/2019'}
-    errorCount={4}
+    errorCount={0}
     i18nErrorsFound={'Errors found'}
+    i18nHeaderDuration={'Duration'}
+    i18nHeaderDurationUnit={'ms'}
+    i18nHeaderOutput={'Output'}
+    i18nHeaderStatus={'Status'}
+    i18nHeaderStep={'Step'}
+    i18nHeaderTime={'Time'}
     i18nNoErrors={'No errors'}
     i18nNoSteps={'No steps information was found for this integration'}
     i18nVersion={'Version'}
@@ -108,8 +93,14 @@ const activityItems = [
   <IntegrationDetailActivityItem
     steps={activityItemsSteps2}
     date={'4/14/2019'}
-    errorCount={0}
+    errorCount={5}
     i18nErrorsFound={'Errors found'}
+    i18nHeaderDuration={'Duration'}
+    i18nHeaderDurationUnit={'ms'}
+    i18nHeaderOutput={'Output'}
+    i18nHeaderStatus={'Status'}
+    i18nHeaderStep={'Step'}
+    i18nHeaderTime={'Time'}
     i18nNoErrors={'No errors'}
     i18nNoSteps={'No steps information was found for this integration'}
     i18nVersion={'Version'}
