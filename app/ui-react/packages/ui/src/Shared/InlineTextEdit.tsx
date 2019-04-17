@@ -31,7 +31,7 @@ const ReadWidget: React.FunctionComponent<IReadWidget> = ({
   >
     {value}
     <Icon
-      className="inline-text-edit__editIcon" // not working
+      className="inline-text-edit__editIcon"
       name="edit"
       onClick={onEdit}
       type="pf"
@@ -44,6 +44,8 @@ interface IEditWidget {
   saving: boolean;
   value: string;
   asTextarea: boolean;
+  smOffset?: number;
+  smWidth: number;
   placeholder?: string;
   errorMsg?: string;
   onChange(e: React.ChangeEvent): void;
@@ -54,6 +56,8 @@ interface IEditWidget {
 const EditWidget: React.FunctionComponent<IEditWidget> = ({
   valid,
   value,
+  smOffset,
+  smWidth,
   placeholder,
   errorMsg,
   saving,
@@ -65,18 +69,16 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
   asTextarea ? (
     <Container>
       <Row>
-        <Col sm={6}>
+        <Col sm={smWidth}>
           <FormGroup
             controlId="textarea"
             validationState={valid ? 'success' : 'error'}
           >
             <FormControl
-              // className="inline-text-edit__valueTextArea"
               componentClass="textarea"
               disabled={saving}
               onChange={onChange}
               placeholder={placeholder}
-              required={false}
               value={value}
             />
           </FormGroup>
@@ -84,7 +86,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
         </Col>
       </Row>
       <Row>
-        <Col sm={6} xsOffset={2}>
+        <Col sm={smWidth} smOffset={smOffset}>
           <Loader inline={true} loading={saving} />
           <InlineEdit.ConfirmButton
             disabled={saving || !valid}
@@ -97,10 +99,9 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
   ) : (
     <Container>
       <Row>
-        <Col sm={3}>
+        <Col sm={smWidth}>
           <FormGroup validationState={valid ? 'success' : 'error'}>
             <FormControl
-              // className="inline-text-edit__valueText"
               disabled={saving}
               onChange={onChange}
               placeholder={placeholder}
@@ -113,15 +114,10 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
         <Col>
           <Loader inline={true} loading={saving} />
           <InlineEdit.ConfirmButton
-            // className="connection-details-header__editButton connection-details-header__saveButton"
             disabled={saving || !valid}
             onClick={onConfirm}
           />
-          <InlineEdit.CancelButton
-            // className="connection-details-header__editButton"
-            disabled={saving}
-            onClick={onCancel}
-          />
+          <InlineEdit.CancelButton disabled={saving} onClick={onCancel} />
         </Col>
       </Row>
     </Container>
@@ -144,6 +140,16 @@ export interface IInlineTextEditProps {
   isTextArea: boolean;
 
   /**
+   * The column offset needed for confirm and cancel edit buttons to align with the textarea.
+   */
+  smOffset?: number;
+
+  /**
+   * The width of the edit component.
+   */
+  smWidth: number;
+
+  /**
    * The callback invoked when the confirm button is clicked.
    */
   onChange: (newValue: string) => Promise<boolean>;
@@ -158,6 +164,8 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
   value,
   i18nPlaceholder,
   isTextArea,
+  smOffset,
+  smWidth,
   onChange,
   onValidate,
 }) => {
@@ -225,6 +233,8 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
       placeholder={i18nPlaceholder}
       saving={saving}
       value={v}
+      smOffset={smOffset}
+      smWidth={smWidth}
       errorMsg={errorMsg}
       asTextarea={isTextArea}
       onChange={handleChange}

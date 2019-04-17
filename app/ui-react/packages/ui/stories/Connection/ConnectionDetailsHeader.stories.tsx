@@ -14,17 +14,15 @@ const namePlaceholder = 'Enter a connection name...';
 const usageLabel = 'Usage';
 const usageMessage = 'Used by 1 integration';
 
-const changeDescription = (newDescription: string) => {
-  console.log('new description:' + newDescription);
+const changeDescription = (/*newDescription: string*/) => {
   return Promise.resolve(true);
 };
 
-const changeName = (newName: string) => {
-  console.log('new name: ' + newName);
+const changeName = (/*newName: string*/) => {
   return Promise.resolve(true);
 };
 
-stories.add('render me', () => {
+stories.add('render', () => {
   const validate = proposedName => {
     if (proposedName.length === 0) {
       return '* Required field';

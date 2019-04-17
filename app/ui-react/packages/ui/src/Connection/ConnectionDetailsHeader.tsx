@@ -154,6 +154,7 @@ export class ConnectionDetailsHeader extends React.Component<
               value={this.props.connectionName}
               i18nPlaceholder={this.props.i18nNamePlaceholder}
               isTextArea={false}
+              smWidth={3}
               onChange={this.props.onChangeName}
               onValidate={this.props.validate}
             />
@@ -168,6 +169,8 @@ export class ConnectionDetailsHeader extends React.Component<
               value={this.props.connectionDescription || ''}
               i18nPlaceholder={this.props.i18nDescriptionPlaceholder}
               isTextArea={true}
+              smOffset={2}
+              smWidth={6}
               onChange={this.props.onChangeDescription}
             />
           </Grid.Col>
