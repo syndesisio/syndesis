@@ -215,11 +215,18 @@ export class VirtualizationsPage extends React.Component {
                                       )}
                                       i18nError={t('shared:Error')}
                                       i18nExport={t('shared:Export')}
+                                      i18nPublish={t('shared:Publish')}
                                       i18nPublished={t(
                                         'virtualization.publishedDataVirtualization'
                                       )}
                                       i18nUnpublish={t('shared:Unpublish')}
-                                      i18nPublish={t('shared:Publish')}
+                                      i18nUnpublishModalMessage={t(
+                                        'virtualization.unpublishModalMessage',
+                                        { name: virtualization.keng__id }
+                                      )}
+                                      i18nUnpublishModalTitle={t(
+                                        'virtualization.unpublishModalTitle'
+                                      )}
                                       onDelete={handleDelete}
                                       onExport={this.handleExportVirtualization}
                                       onUnpublish={handleUnpublish}

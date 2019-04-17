@@ -20,9 +20,12 @@ const editText = 'Edit';
 const editTip = 'Edit ' + virtualizationName + ' virtualization';
 const draftText = 'Draft';
 const publishedText = 'Published';
-const confirmDeleteTitle = 'Confirm Delete?';
+const confirmDeleteTitle = 'Delete Virtualization';
 const confirmDeleteMessage =
-  'Are you sure you want to delete the virtualization?';
+  'This will permanently delete the Virtualization.  Proceed with the delete?';
+const confirmUnpublishTitle = 'Unpublish Virtualization';
+const confirmUnpublishMessage =
+  'This Virtualization has been published.  Please unpublish the Virtualization first.';
 const cancelText = 'Cancel';
 const deleteText = 'Delete';
 const errorText = 'Error';
@@ -96,6 +99,8 @@ stories.add(
       i18nPublish={publishText}
       i18nPublishInProgress={publishInProgressText}
       i18nPublishLogUrlText={publishLogUrlText}
+      i18nUnpublishModalMessage={confirmUnpublishMessage}
+      i18nUnpublishModalTitle={confirmUnpublishTitle}
       detailsPageLink={''}
       onDelete={action(deleteText)}
       onExport={action(exportText)}
