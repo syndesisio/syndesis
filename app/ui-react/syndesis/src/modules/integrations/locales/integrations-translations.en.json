@@ -1,4 +1,10 @@
 {
+  "publishIntegrationModal": "Are you sure you want to start the \"{{name}}\" integration?",
+  "publishIntegrationModalTitle": "Confirm Start?",
+  "unpublishIntegrationModal": "Are you sure you want to stop the \"{{name}}\" integration?",
+  "unpublishIntegrationModalTitle": "Confirm Stop?",
+  "deleteIntegrationModal": "Are you sure you want to delete the \"{{name}}\" integration?",
+  "deleteIntegrationModalTitle": "Confirm Delete?",
   "ConfigurationRequired": "Configuration Required",
   "filterByConnectionPlaceholder": "Filter by Connection",
   "progressStarting": "Starting...",

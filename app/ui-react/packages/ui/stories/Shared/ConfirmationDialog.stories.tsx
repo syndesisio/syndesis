@@ -1,7 +1,11 @@
 import { storiesOf } from '@storybook/react';
 import { Button } from 'patternfly-react';
 import * as React from 'react';
-import { ConfirmationDialog, ConfirmationDialogType } from '../../src';
+import {
+  ConfirmationButtonStyle,
+  ConfirmationDialog,
+  ConfirmationIconType,
+} from '../../src';
 
 const cancelText = 'Cancel';
 const deleteMessage = 'Are you sure you want to delete this object?';
@@ -81,14 +85,24 @@ const noDetailsMessageWarningStoryNotes =
 stories
   .add(
     'no details - danger',
-    () => <ConfirmDialog type={ConfirmationDialogType.DANGER} />,
+    () => (
+      <ConfirmationDialogStory
+        buttonStyle={ConfirmationButtonStyle.DANGER}
+        icon={ConfirmationIconType.DANGER}
+      />
+    ),
     {
       notes: noDetailsMessageDangerStoryNotes,
     }
   )
   .add(
     'no details - warning',
-    () => <ConfirmDialog type={ConfirmationDialogType.WARNING} />,
+    () => (
+      <ConfirmationDialogStory
+        buttonStyle={ConfirmationButtonStyle.WARNING}
+        icon={ConfirmationIconType.WARNING}
+      />
+    ),
     {
       notes: noDetailsMessageWarningStoryNotes,
     }
@@ -96,28 +110,30 @@ stories
   .add(
     'with details',
     () => (
-      <ConfirmDialog
+      <ConfirmationDialogStory
         includeDetailsMessage={true}
-        type={ConfirmationDialogType.DANGER}
+        buttonStyle={ConfirmationButtonStyle.DANGER}
+        icon={ConfirmationIconType.DANGER}
       />
     ),
     { notes: detailsMessageStoryNotes }
   );
 
-interface IConfirmationDialogProps {
+interface IConfirmationDialogStoryProps {
   includeDetailsMessage?: boolean;
-  type: ConfirmationDialogType;
+  buttonStyle: ConfirmationButtonStyle;
+  icon: ConfirmationIconType;
 }
 
-interface IConfirmationDialogState {
+interface IConfirmationDialogStoryState {
   show: boolean;
 }
 
-class ConfirmDialog extends React.Component<
-  IConfirmationDialogProps,
-  IConfirmationDialogState
+class ConfirmationDialogStory extends React.Component<
+  IConfirmationDialogStoryProps,
+  IConfirmationDialogStoryState
 > {
-  public constructor(props: IConfirmationDialogProps) {
+  public constructor(props: IConfirmationDialogStoryProps) {
     super(props);
     this.state = {
       show: false,
@@ -152,16 +168,17 @@ class ConfirmDialog extends React.Component<
             : showNoDetailsMessageDialogButtonText}
         </Button>
         <ConfirmationDialog
-          confirmationType={this.props.type}
+          buttonStyle={this.props.buttonStyle}
           i18nCancelButtonText={cancelText}
-          i18nAcceptButtonText={deleteText}
+          i18nConfirmButtonText={deleteText}
           i18nConfirmationMessage={deleteMessage}
           i18nDetailsMessage={
             this.props.includeDetailsMessage ? detailsMessage : undefined
           }
           i18nTitle={title}
+          icon={this.props.icon}
           onCancel={this.handleCancel}
-          onAccept={this.handleDelete}
+          onConfirm={this.handleDelete}
           showDialog={this.state.show}
         />
       </>

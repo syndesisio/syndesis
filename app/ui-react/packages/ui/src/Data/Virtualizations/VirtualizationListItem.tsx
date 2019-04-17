@@ -15,7 +15,11 @@ import {
   VirtualizationPublishStatusDetail,
 } from '../';
 import { ButtonLink } from '../../Layout';
-import { ConfirmationDialog, ConfirmationDialogType } from '../../Shared';
+import {
+  ConfirmationButtonStyle,
+  ConfirmationDialog,
+  ConfirmationIconType,
+} from '../../Shared';
 import {
   BUILDING,
   CONFIGURING,
@@ -151,30 +155,32 @@ export class VirtualizationListItem extends React.Component<
         ? true
         : false;
 
-    // Determine confirmation dialog settings based on published state
-    let confirmationType: ConfirmationDialogType =
-      ConfirmationDialogType.DANGER;
-    let acceptButtonText = this.props.i18nDelete;
-    let confirmationMessage = this.props.i18nDeleteModalMessage;
-    let confirmationTitle = this.props.i18nDeleteModalTitle;
-    if (isPublished) {
-      confirmationType = ConfirmationDialogType.WARNING;
-      acceptButtonText = this.props.i18nUnpublish;
-      confirmationMessage = this.props.i18nUnpublishModalMessage;
-      confirmationTitle = this.props.i18nUnpublishModalTitle;
-    }
-
     return (
       <>
         <ConfirmationDialog
-          confirmationType={confirmationType}
+          buttonStyle={
+            isPublished
+              ? ConfirmationButtonStyle.WARNING
+              : ConfirmationButtonStyle.DANGER
+          }
           i18nCancelButtonText={this.props.i18nCancelText}
-          i18nAcceptButtonText={acceptButtonText}
-          i18nConfirmationMessage={confirmationMessage}
-          i18nTitle={confirmationTitle}
+          i18nConfirmButtonText={
+            isPublished ? this.props.i18nUnpublish : this.props.i18nDelete
+          }
+          i18nConfirmationMessage={
+            isPublished
+              ? this.props.i18nUnpublishModalMessage
+              : this.props.i18nDeleteModalMessage
+          }
+          i18nTitle={
+            isPublished
+              ? this.props.i18nUnpublishModalTitle
+              : this.props.i18nDeleteModalTitle
+          }
+          icon={ConfirmationIconType.DANGER}
           showDialog={this.state.showConfirmationDialog}
           onCancel={this.handleCancel}
-          onAccept={this.handleAcceptConfirmation}
+          onConfirm={this.handleDelete}
         />
         <ListViewItem
           actions={
