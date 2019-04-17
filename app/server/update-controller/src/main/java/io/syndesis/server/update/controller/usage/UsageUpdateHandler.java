@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.update.controller.usage;
 
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -35,11 +36,18 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.update.controller.ResourceUpdateHandler;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.google.common.base.Functions;
 
 import rx.subjects.PublishSubject;
 
 public final class UsageUpdateHandler implements ResourceUpdateHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UsageUpdateHandler.class);
+
+    private static final EnumSet<Kind> SUPPORTED = EnumSet.of(Kind.Integration, Kind.Extension);
 
     private final DataManager dataManager;
 
@@ -55,15 +63,24 @@ public final class UsageUpdateHandler implements ResourceUpdateHandler {
 
     @Override
     public boolean canHandle(final ChangeEvent event) {
-        return event.getKind().map(kind -> Kind.Integration.equals(Kind.from(kind))).orElse(false);
+        final Optional<String> maybeKind = event.getKind();
+        if (!maybeKind.isPresent()) {
+            return false;
+        }
+
+        final Kind kind = Kind.from(maybeKind.get());
+        return SUPPORTED.contains(kind);
     }
 
     @Override
     public void process(final ChangeEvent event) {
+        LOG.debug("Received event: {}", event);
         pipe.onNext(event);
     }
 
     void processInternal(final ChangeEvent event) {
+        LOG.debug("Processing event: {}", event);
+
         final ListResult<Integration> integrationsResult = dataManager.fetchAll(Integration.class);
 
         final List<Integration> integrations = integrationsResult.getItems();
@@ -90,6 +107,7 @@ public final class UsageUpdateHandler implements ResourceUpdateHandler {
             final int currentUse = usage.getOrDefault(id, 0L).intValue();
 
             if (recordedUse != currentUse) {
+                LOG.debug("Updating usage from: {} to: {}", recordedUse, currentUse);
                 dataManager.update(usageUpdater.apply(item, currentUse));
             }
         }
