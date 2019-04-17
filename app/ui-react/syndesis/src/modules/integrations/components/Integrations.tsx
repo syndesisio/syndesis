@@ -35,7 +35,12 @@ export class Integrations extends React.Component<IIntegrationsProps> {
           <AppContext.Consumer>
             {({ config, getPodLogUrl }) => (
               <WithIntegrationHelpers>
-                {({}) => (
+                {({
+                  deleteIntegration,
+                  deployIntegration,
+                  exportIntegration,
+                  undeployIntegration,
+                }) => (
                   <IntegrationsList>
                     <WithLoader
                       error={this.props.error}
@@ -55,19 +60,33 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                               };
                               const startAction: IIntegrationAction = {
                                 label: 'Start',
-                                onClick: () => alert('todo: start'),
+                                onClick: () =>
+                                  deployIntegration(
+                                    mi.integration.id!,
+                                    mi.integration.version!,
+                                    false
+                                  ),
                               };
                               const stopAction: IIntegrationAction = {
                                 label: 'Stop',
-                                onClick: () => alert('todo: stop'),
+                                onClick: () =>
+                                  undeployIntegration(
+                                    mi.integration.id!,
+                                    mi.integration.version!
+                                  ),
                               };
                               const deleteAction: IIntegrationAction = {
                                 label: 'Delete',
-                                onClick: () => alert('todo: delete'),
+                                onClick: () =>
+                                  deleteIntegration(mi.integration.id!),
                               };
                               const exportAction: IIntegrationAction = {
                                 label: 'Export',
-                                onClick: () => alert('todo: export'),
+                                onClick: () =>
+                                  exportIntegration(
+                                    mi.integration.id!,
+                                    `${mi.integration.name}-export.zip`
+                                  ),
                               };
                               const actions: IIntegrationAction[] = [];
                               if (canEdit(mi.integration)) {
