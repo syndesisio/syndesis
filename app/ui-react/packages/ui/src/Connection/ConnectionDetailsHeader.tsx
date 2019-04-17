@@ -69,7 +69,7 @@ export interface IConnectionDetailsHeaderProps {
    * method.
    * @param proposedName - the proposed name being validated
    */
-  validate: (proposedName: string) => void;
+  validate: (proposedName: string) => true | string;
 }
 
 export interface IConnectionDetailsHeaderState {
@@ -158,7 +158,6 @@ export class ConnectionDetailsHeader extends React.Component<
           <Grid.Col>
             <InlineTextEdit
               currentValue={this.props.connectionName}
-              errorMsg={this.props.errorMsg}
               i18nPlaceholder={this.props.i18nNamePlaceholder}
               isTextArea={false}
               onSave={this.props.onSaveName}

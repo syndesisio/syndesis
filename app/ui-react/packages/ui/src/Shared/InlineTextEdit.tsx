@@ -18,11 +18,6 @@ export interface IInlineTextEditProps {
   currentValue?: string;
 
   /**
-   * An error message generated during validation of a proposed value.
-   */
-  errorMsg?: string;
-
-  /**
    * A value to display if the current value is empty or undefined.
    */
   i18nPlaceholder?: string;
@@ -40,7 +35,7 @@ export interface IInlineTextEditProps {
   /**
    * The callback invoked when the proposed value changes.
    */
-  onValidate?: (newValue: string) => void;
+  onValidate?: (newValue: string) => true | string;
 }
 
 export interface IInlineTextEditState {
@@ -63,6 +58,15 @@ export interface IInlineTextEditState {
    * The proposed new value.
    */
   proposed: string;
+
+  /**
+   * is the current value valid
+   */
+  valid: boolean;
+  /**
+   * An error message generated during validation of a proposed value.
+   */
+  errorMsg?: string;
 }
 
 export class InlineTextEdit extends React.Component<
@@ -72,22 +76,29 @@ export class InlineTextEdit extends React.Component<
   public constructor(props: IInlineTextEditProps) {
     super(props);
 
+    const current = this.props.currentValue ? this.props.currentValue : '';
+
     // setup initial state
     this.state = {
-      current: this.props.currentValue ? this.props.currentValue : '',
+      current,
       editing: false,
       isSaving: false,
-      proposed: this.props.currentValue ? this.props.currentValue : '',
+      proposed: current,
+      valid: true,
     };
 
     this.handleSave = this.handleSave.bind(this);
     this.handleValueChanged = this.handleValueChanged.bind(this);
     this.isEditing = this.isEditing.bind(this);
-    this.isValid = this.isValid.bind(this);
+    this.validate = this.validate.bind(this);
     this.renderEdit = this.renderEdit.bind(this);
     this.renderValue = this.renderValue.bind(this);
     this.setEditing = this.setEditing.bind(this);
     this.setNotEditing = this.setNotEditing.bind(this);
+  }
+
+  public componentDidMount(): void {
+    this.validate(this.state.current);
   }
 
   public handleSave() {
@@ -122,23 +133,24 @@ export class InlineTextEdit extends React.Component<
   }
 
   public handleValueChanged(e: any) {
-    this.setState({ proposed: e.target.value });
+    this.setState({
+      proposed: e.target.value,
+    });
+    this.validate(e.target.value);
   }
 
   public isEditing(): boolean {
     return this.state.editing;
   }
 
-  public isValid(): string {
+  public validate(value: string) {
     if (this.props.onValidate) {
-      this.props.onValidate(this.state.proposed);
+      const result = this.props.onValidate(value);
+      this.setState({
+        errorMsg: result === true ? undefined : result,
+        valid: result === true,
+      });
     }
-
-    if (this.props.errorMsg && this.props.errorMsg.length === 0) {
-      return 'error';
-    }
-
-    return 'success';
   }
 
   public renderEdit() {
@@ -180,7 +192,7 @@ export class InlineTextEdit extends React.Component<
       <Container>
         <Row>
           <Col sm={3}>
-            <FormGroup validationState={this.isValid()}>
+            <FormGroup validationState={this.state.valid ? 'success' : 'error'}>
               <FormControl
                 // className="inline-text-edit__valueText"
                 disabled={this.state.isSaving}
@@ -189,7 +201,7 @@ export class InlineTextEdit extends React.Component<
                 type="text"
                 value={this.state.proposed}
               />
-              <HelpBlock>{this.props.errorMsg}</HelpBlock>
+              <HelpBlock>{this.state.errorMsg}</HelpBlock>
             </FormGroup>
           </Col>
           <Col>

@@ -29,13 +29,12 @@ stories.add(
   'render me',
   withState({ errorMsg: '' })(({ store }) => {
     const validate = proposedName => {
-      // if (proposedName.length === 0) {
-      //   store.set({ errorMsg: '* Required field' });
-      // } else if (proposedName === 'foo') {
-      //   store.set({ errorMsg: 'foo is not a valid connection name' });
-      // } else {
-      //   store.set({ errorMsg: '' });
-      // }
+      if (proposedName.length === 0) {
+        return '* Required field';
+      } else if (proposedName === 'foo') {
+        return 'foo is not a valid connection name';
+      }
+      return true;
     };
     return (
       <ConnectionDetailsHeader
