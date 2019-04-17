@@ -1,4 +1,8 @@
-import { RestDataService, ViewEditorState } from '@syndesis/models';
+import {
+  QueryResults,
+  RestDataService,
+  ViewEditorState,
+} from '@syndesis/models';
 import * as React from 'react';
 import { ApiContext, IApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
@@ -14,6 +18,12 @@ export interface IWithVirtualizationHelpersChildrenProps {
   deleteViewEditorState(viewEditorStateId: string): Promise<void>;
   deleteVirtualization(virtualizationName: string): Promise<void>;
   publishVirtualization(virtualizationName: string): Promise<void>;
+  queryVirtualization(
+    virtualizationName: string,
+    query: string,
+    limit: number,
+    offset: number
+  ): Promise<QueryResults>;
   refreshVirtualizationViews(
     virtualizationName: string,
     viewEditorStates: ViewEditorState[]
@@ -38,6 +48,7 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
     this.deleteViewEditorState = this.deleteViewEditorState.bind(this);
     this.deleteVirtualization = this.deleteVirtualization.bind(this);
     this.publishVirtualization = this.publishVirtualization.bind(this);
+    this.queryVirtualization = this.queryVirtualization.bind(this);
     this.refreshVirtualizationViews = this.refreshVirtualizationViews.bind(
       this
     );
@@ -145,6 +156,47 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
   }
 
   /**
+   * Query the Service VDB with sql query and properties.
+   * @param virtualizationName the name of the virtualization associated with the service
+   * @param sqlQuery the sql query statement to execute against the virtualization
+   * @param rowlimit limit to number of rows to return
+   * @param rowOffset number of data rows to filter from the beginning of the result set
+   */
+  public async queryVirtualization(
+    virtualizationName: string,
+    sqlQuery: string,
+    rowlimit: number,
+    rowOffset: number
+  ): Promise<QueryResults> {
+    // The payload for the rest call
+    const queryBody = {
+      limit: rowlimit,
+      offset: rowOffset,
+      query: sqlQuery,
+      target: virtualizationName,
+    };
+
+    // The query results for the rest call
+    const queryResults = {
+      columns: [],
+      rows: [],
+    };
+
+    const response = await callFetch({
+      body: queryBody,
+      headers: {},
+      method: 'POST',
+      url: `${this.props.dvApiUri}metadata/query`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return Promise.resolve(queryResults);
+  }
+
+  /**
    * Unpublish the Service VDB with the specified name.
    * @param vdbName the name of the vdb associated with the service
    */
@@ -234,6 +286,7 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
       deleteViewEditorState: this.deleteViewEditorState,
       deleteVirtualization: this.deleteVirtualization,
       publishVirtualization: this.publishVirtualization,
+      queryVirtualization: this.queryVirtualization,
       refreshVirtualizationViews: this.refreshVirtualizationViews,
       unpublishServiceVdb: this.unpublishServiceVdb,
       updateViewEditorStates: this.updateViewEditorStates,

@@ -82,3 +82,18 @@ export interface ViewEditorState {
   id: string;
   viewDefinition: ViewDefinition;
 }
+
+export interface ColumnData {
+  name: string;
+  label: string;
+  type: string;
+}
+
+export interface RowData {
+  row: string[];
+}
+
+export interface QueryResults {
+  columns: ColumnData[];
+  rows: RowData[];
+}
