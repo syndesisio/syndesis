@@ -3,8 +3,8 @@
     "createDataVirtualization": "Create $t(shared:DataVirtualization)",
     "createDataVirtualizationTip": "Create a data virtualization",
     "createDataVirtualizationTitle": "Create New $t(shared:DataVirtualization)",
-    "deleteModalMessage": "Are you sure you want to delete the \"{{name}}\" virtualization?",
-    "deleteModalTitle": "Confirm Delete?",
+    "deleteModalMessage": "This will permanently delete Virtualization \"{{name}}\".  Proceed with the delete?",
+    "deleteModalTitle": "Delete Virtualization",
     "deleteViewModalMessage": "Are you sure you want to delete the \"{{name}}\" view?",
     "editDataVirtualizationTip": "Edit the data virtualization",
     "emptyStateInfoMessage": "There are no virtualizations available. Please click on the button below to import one.",
@@ -28,6 +28,8 @@
     "importDataSourceTip": "Import views from a data source",
     "importDataSourceWizardStep1": "Select Connection",
     "importDataSourceWizardStep2": "Select Views",
+    "unpublishModalMessage": "This Virtualization has been published.  Please unpublish Virtualization \"{{name}}\" first.",
+    "unpublishModalTitle": "Unpublish Virtualization",
     "viewEmptyStateTitle": "Create New View",
     "viewEmptyStateInfo": "There are no views available. Please click on the button below to create one."
   }

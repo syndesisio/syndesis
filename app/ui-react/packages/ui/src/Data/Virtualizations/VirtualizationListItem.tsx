@@ -10,6 +10,10 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
+import {
+  VirtualizationPublishStatus,
+  VirtualizationPublishStatusDetail,
+} from '../';
 import { ButtonLink } from '../../Layout';
 import { ConfirmationDialog, ConfirmationDialogType } from '../../Shared';
 import {
@@ -20,8 +24,6 @@ import {
   SUBMITTED,
   VirtualizationPublishState,
 } from './models';
-import { VirtualizationPublishStatus } from './VirtualizationPublishStatus';
-import { VirtualizationPublishStatusDetail } from './VirtualizationPublishStatusDetail';
 
 export interface IVirtualizationListItemProps {
   currentPublishedState: VirtualizationPublishState;
@@ -35,11 +37,13 @@ export interface IVirtualizationListItemProps {
   i18nEdit: string;
   i18nEditTip?: string;
   i18nExport: string;
+  i18nPublish: string;
   i18nPublished: string;
   i18nPublishLogUrlText: string;
   i18nPublishInProgress: string;
   i18nUnpublish: string;
-  i18nPublish: string;
+  i18nUnpublishModalMessage: string;
+  i18nUnpublishModalTitle: string;
   icon?: string;
   onDelete: (virtualizationName: string) => void;
   onExport: (virtualizationName: string) => void;
@@ -52,7 +56,7 @@ export interface IVirtualizationListItemProps {
 }
 
 export interface IVirtualizationListItemState {
-  showDeleteDialog: boolean;
+  showConfirmationDialog: boolean;
 }
 
 export class VirtualizationListItem extends React.Component<
@@ -62,14 +66,14 @@ export class VirtualizationListItem extends React.Component<
   public constructor(props: IVirtualizationListItemProps) {
     super(props);
     this.state = {
-      showDeleteDialog: false, // initial visibility of delete dialog
+      showConfirmationDialog: false, // initial visibility of confirmation dialog
     };
     this.handleCancel = this.handleCancel.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleExport = this.handleExport.bind(this);
     this.handleUnpublish = this.handleUnpublish.bind(this);
     this.handlePublish = this.handlePublish.bind(this);
-    this.showDeleteDialog = this.showDeleteDialog.bind(this);
+    this.showConfirmationDialog = this.showConfirmationDialog.bind(this);
   }
 
   public getEditTooltip() {
@@ -82,13 +86,13 @@ export class VirtualizationListItem extends React.Component<
 
   public handleCancel() {
     this.setState({
-      showDeleteDialog: false, // hide dialog
+      showConfirmationDialog: false, // hide dialog
     });
   }
 
   public handleDelete() {
     this.setState({
-      showDeleteDialog: false, // hide dialog
+      showConfirmationDialog: false, // hide dialog
     });
 
     // TODO: disable components while delete is processing
@@ -110,43 +114,72 @@ export class VirtualizationListItem extends React.Component<
   }
 
   public handleUnpublish() {
+    this.setState({
+      showConfirmationDialog: false, // hide dialog
+    });
+
     if (this.props.serviceVdbName) {
       this.props.onUnpublish(this.props.serviceVdbName);
     }
   }
 
-  public showDeleteDialog() {
+  public showConfirmationDialog() {
     this.setState({
-      showDeleteDialog: true,
+      showConfirmationDialog: true,
     });
   }
 
-  public render() {
+  public handleAcceptConfirmation() {
     const isPublished =
       this.props.currentPublishedState === RUNNING ? true : false;
-    const isInProgress =
+    if (isPublished) {
+      this.handleUnpublish();
+    } else {
+      this.handleDelete();
+    }
+  }
+
+  public render() {
+    // Determine published state
+    const isPublished =
+      this.props.currentPublishedState === RUNNING ? true : false;
+    const publishInProgress =
       this.props.currentPublishedState === BUILDING ||
       this.props.currentPublishedState === CONFIGURING ||
       this.props.currentPublishedState === DEPLOYING ||
       this.props.currentPublishedState === SUBMITTED
         ? true
         : false;
+
+    // Determine confirmation dialog settings based on published state
+    let confirmationType: ConfirmationDialogType =
+      ConfirmationDialogType.DANGER;
+    let acceptButtonText = this.props.i18nDelete;
+    let confirmationMessage = this.props.i18nDeleteModalMessage;
+    let confirmationTitle = this.props.i18nDeleteModalTitle;
+    if (isPublished) {
+      confirmationType = ConfirmationDialogType.WARNING;
+      acceptButtonText = this.props.i18nUnpublish;
+      confirmationMessage = this.props.i18nUnpublishModalMessage;
+      confirmationTitle = this.props.i18nUnpublishModalTitle;
+    }
+
     return (
       <>
         <ConfirmationDialog
-          confirmationType={ConfirmationDialogType.DANGER}
+          confirmationType={confirmationType}
           i18nCancelButtonText={this.props.i18nCancelText}
-          i18nAcceptButtonText={this.props.i18nDelete}
-          i18nConfirmationMessage={this.props.i18nDeleteModalMessage}
-          i18nTitle={this.props.i18nDeleteModalTitle}
-          showDialog={this.state.showDeleteDialog}
+          i18nAcceptButtonText={acceptButtonText}
+          i18nConfirmationMessage={confirmationMessage}
+          i18nTitle={confirmationTitle}
+          showDialog={this.state.showConfirmationDialog}
           onCancel={this.handleCancel}
-          onAccept={this.handleDelete}
+          onAccept={this.handleAcceptConfirmation}
         />
         <ListViewItem
           actions={
             <div className="form-group">
-              {isInProgress ? (
+              {publishInProgress ? (
                 <VirtualizationPublishStatusDetail
                   logUrl={this.props.publishLogUrl}
                   i18nPublishInProgress={this.props.i18nPublishInProgress}
@@ -171,13 +204,14 @@ export class VirtualizationListItem extends React.Component<
                 }-action-menu`}
                 pullRight={true}
               >
-                <MenuItem onClick={this.showDeleteDialog}>
+                <MenuItem onClick={this.showConfirmationDialog}>
                   {this.props.i18nDelete}
                 </MenuItem>
                 <MenuItem onClick={this.handleExport}>
                   {this.props.i18nExport}
                 </MenuItem>
                 <MenuItem
+                  disabled={publishInProgress}
                   onClick={
                     isPublished ? this.handleUnpublish : this.handlePublish
                   }
