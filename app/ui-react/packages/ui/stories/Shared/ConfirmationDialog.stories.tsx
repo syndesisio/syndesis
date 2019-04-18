@@ -117,7 +117,14 @@ stories
       />
     ),
     { notes: detailsMessageStoryNotes }
-  );
+  )
+  .add('no icon', () => (
+    <ConfirmationDialogStory
+      includeDetailsMessage={false}
+      buttonStyle={ConfirmationButtonStyle.NORMAL}
+      icon={ConfirmationIconType.NONE}
+    />
+  ));
 
 interface IConfirmationDialogStoryProps {
   includeDetailsMessage?: boolean;
