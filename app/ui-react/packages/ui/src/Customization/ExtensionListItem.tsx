@@ -8,7 +8,11 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
-import { ConfirmationDialog, ConfirmationDialogType } from '../Shared';
+import {
+  ConfirmationButtonStyle,
+  ConfirmationDialog,
+  ConfirmationIconType,
+} from '../Shared';
 
 export interface IExtensionListItemProps {
   detailsPageLink: H.LocationDescriptor;
@@ -113,14 +117,15 @@ export class ExtensionListItem extends React.Component<
       <>
         <ConfirmationDialog
           // extensionId={this.props.extensionId}
-          confirmationType={ConfirmationDialogType.DANGER}
+          buttonStyle={ConfirmationButtonStyle.DANGER}
           i18nCancelButtonText={this.props.i18nCancelText}
-          i18nAcceptButtonText={this.props.i18nDelete}
+          i18nConfirmButtonText={this.props.i18nDelete}
           i18nConfirmationMessage={this.props.i18nDeleteModalMessage}
           i18nTitle={this.props.i18nDeleteModalTitle}
+          icon={ConfirmationIconType.DANGER}
           showDialog={this.state.showDeleteDialog}
           onCancel={this.doCancel}
-          onAccept={this.doDelete}
+          onConfirm={this.doDelete}
         />
         <ListViewItem
           actions={

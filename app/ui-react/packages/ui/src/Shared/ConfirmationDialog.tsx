@@ -1,30 +1,49 @@
 import { Icon, MessageDialog } from 'patternfly-react';
 import * as React from 'react';
 
-const literal = <L extends string>(l: L) => l;
-export const ConfirmationDialogType = {
-  DANGER: literal('DANGER'),
-  INFO: literal('INFO'),
-  WARNING: literal('WARNING'),
-};
-export type ConfirmationDialogType = (typeof ConfirmationDialogType)[keyof typeof ConfirmationDialogType];
+/**
+ * Icon type enum that maps to patternfly icon types
+ */
+export enum ConfirmationIconType {
+  DANGER = 'error-circle-o',
+  WARNING = 'warning-triangle-o',
+  INFO = 'info',
+  OK = 'ok',
+  NONE = 'NONE',
+}
 
 /**
- * A dialog that can be used to obtain user confirmation.
+ * Button style enum that maps to patternfly button classes
  */
-export interface IConfirmationDialogProps {
+export enum ConfirmationButtonStyle {
+  NORMAL = 'primary',
+  SUCCESS = 'success',
+  DANGER = 'danger',
+  WARNING = 'warning',
+  INFO = 'info',
+  LINK = 'link',
+}
+
+/**
+ * A dialog that can be used to obtain user confirmation when deleting an object.
+ */
+export interface IDeleteConfirmationDialogProps {
+  /**
+   * The style of button to use for the primary action
+   */
+  buttonStyle: ConfirmationButtonStyle;
   /**
    * The localized cancel button text.
    */
   i18nCancelButtonText: string;
 
   /**
-   * The localized accept button text.
+   * The localized confirmation button text.
    */
-  i18nAcceptButtonText: string;
+  i18nConfirmButtonText: string;
 
   /**
-   * The localized accept confirmation message.
+   * The localized confirmation message.
    */
   i18nConfirmationMessage: string;
 
@@ -39,9 +58,9 @@ export interface IConfirmationDialogProps {
   i18nTitle: string;
 
   /**
-   * Confirmation type (DANGER, WARNING, INFO)
+   * The icon type to use, or unset for no icon
    */
-  confirmationType: ConfirmationDialogType;
+  icon: ConfirmationIconType;
 
   /**
    * A callback for when the cancel button is clicked. Caller should hide dialog.
@@ -49,9 +68,9 @@ export interface IConfirmationDialogProps {
   onCancel: () => void;
 
   /**
-   * A callback for when the accept button is clicked. Caller should hide dialog.
+   * A callback for when the confirmation button is clicked. Caller should hide dialog.
    */
-  onAccept: () => void;
+  onConfirm: () => void;
 
   /**
    * Indicates if the dialog should be visible.
@@ -60,38 +79,25 @@ export interface IConfirmationDialogProps {
 }
 
 /**
- * A modal dialog to display for user confirmation.
+ * A modal dialog to display when an object is being deleted.
  */
 export class ConfirmationDialog extends React.Component<
-  IConfirmationDialogProps
+  IDeleteConfirmationDialogProps
 > {
   public render() {
-    // Determine icon and button style based on dialog type
-    let iconName = 'error-circle-o';
-    let buttonStyle = 'danger';
-    switch (this.props.confirmationType) {
-      case ConfirmationDialogType.DANGER:
-        iconName = 'error-circle-o';
-        buttonStyle = 'danger';
-        break;
-      case ConfirmationDialogType.WARNING:
-        iconName = 'warning-triangle-o';
-        buttonStyle = 'primary';
-        break;
-      case ConfirmationDialogType.INFO:
-        iconName = 'info';
-        buttonStyle = 'primary';
-    }
-
     return (
       <MessageDialog
-        accessibleName="confirmationDialog"
-        accessibleDescription="confirmationDialogContent"
-        icon={<Icon type="pf" name={iconName} />}
+        accessibleName="deleteConfirmationDialog"
+        accessibleDescription="deleteConfirmationDialogContent"
+        icon={
+          this.props.icon !== ConfirmationIconType.NONE && (
+            <Icon type="pf" name={this.props.icon} />
+          )
+        }
         onHide={this.props.onCancel}
-        primaryAction={this.props.onAccept}
-        primaryActionButtonContent={this.props.i18nAcceptButtonText}
-        primaryActionButtonBsStyle={buttonStyle}
+        primaryAction={this.props.onConfirm}
+        primaryActionButtonContent={this.props.i18nConfirmButtonText}
+        primaryActionButtonBsStyle={this.props.buttonStyle}
         primaryContent={
           <p className="lead">{this.props.i18nConfirmationMessage}</p>
         }
