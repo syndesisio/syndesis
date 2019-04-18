@@ -10,9 +10,7 @@ import {
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
 import {
-  getCreateAddConnectionHref,
   getCreateAddStepHref,
-  getCreateConfigureConnectionHrefCallback,
   getCreateConfigureStepHrefCallback,
 } from '../../../resolversHelpers';
 
@@ -51,14 +49,7 @@ export class AddStepPage extends React.Component {
                   </p>
                   <IntegrationEditorStepAdder
                     steps={getSteps(integration, 0)}
-                    addConnectionHref={getCreateAddConnectionHref.bind(
-                      null,
-                      integration
-                    )}
                     addStepHref={getCreateAddStepHref.bind(null, integration)}
-                    configureConnectionHref={getCreateConfigureConnectionHrefCallback(
-                      integration
-                    )}
                     configureStepHref={getCreateConfigureStepHrefCallback(
                       integration
                     )}

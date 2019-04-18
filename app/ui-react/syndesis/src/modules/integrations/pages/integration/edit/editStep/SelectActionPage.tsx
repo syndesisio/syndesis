@@ -11,7 +11,7 @@ import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../shared';
 import {
-  IntegrationCreatorBreadcrumbs,
+  IntegrationEditorBreadcrumbs,
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
@@ -40,7 +40,6 @@ export interface ISelectActionRouteState {
 /**
  * This page shows the list of actions of a connection containing either a
  * **to** or **from pattern, depending on the specified [position]{@link ISelectActionRouteParams#position}.
- * It's supposed to be used for 3.edit.2 of the creation wizard.
  *
  * This component expects some [params]{@link ISelectActionRouteParams} and
  * [state]{@link ISelectActionRouteState} to be properly set in the route
@@ -68,7 +67,7 @@ export class SelectActionPage extends React.Component {
                     <>
                       <PageTitle title={'Choose an action'} />
                       <IntegrationEditorLayout
-                        header={<IntegrationCreatorBreadcrumbs step={3} />}
+                        header={<IntegrationEditorBreadcrumbs step={1} />}
                         sidebar={
                           <IntegrationEditorSidebar
                             steps={getSteps(integration, 0)}
@@ -96,7 +95,7 @@ export class SelectActionPage extends React.Component {
                                   }
                                   actions={
                                     <ButtonLink
-                                      href={resolvers.create.configure.editConnection.configureAction(
+                                      href={resolvers.integration.edit.editStep.configureAction(
                                         {
                                           actionId: a.id!,
                                           integration,
@@ -111,7 +110,7 @@ export class SelectActionPage extends React.Component {
                               ))}
                           </IntegrationEditorChooseAction>
                         }
-                        cancelHref={resolvers.create.configure.index({
+                        cancelHref={resolvers.integration.edit.index({
                           integration,
                         })}
                       />

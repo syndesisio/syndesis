@@ -5,7 +5,7 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../shared';
 import {
-  IntegrationCreatorBreadcrumbs,
+  IntegrationEditorBreadcrumbs,
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
@@ -15,7 +15,7 @@ import {
 } from '../../../../shared';
 
 /**
- * @param actionId - the ID of the action selected in step 3.add.2.
+ * @param actionId - the ID of the action selected in the previous step.
  * @param position - the zero-based position for the new step in the integration
  * flow.
  * @param step - the configuration step when configuring a multi-page connection.
@@ -27,9 +27,8 @@ export interface IConfigureActionRouteParams {
 }
 
 /**
- * @param integration - the integration object coming from step 3.index, used to
- * render the IVP.
- * @param connection - the connection object selected in step 3.add.1. Needed
+ * @param integration - the integration object, used to render the IVP.
+ * @param connection - the connection object selected in the previous step. Needed
  * to render the IVP.
  * @param updatedIntegration - when creating a link to this page, this should
  * never be set. It is used by the page itself to pass the partially configured
@@ -42,8 +41,7 @@ export interface IConfigureActionRouteState {
 }
 
 /**
- * This page shows the configuration form for a given action. It's supposed to
- * be used for step 3.add.3 of the creation wizard.
+ * This page shows the configuration form for a given action.
  *
  * Submitting the form will update the integration object adding a *new* step in
  * the [position specified in the params]{@link IConfigureActionRouteParams#position}
@@ -92,7 +90,7 @@ export class ConfigureActionPage extends React.Component {
                 );
                 if (moreConfigurationSteps) {
                   history.push(
-                    resolvers.create.configure.addConnection.configureAction({
+                    resolvers.integration.edit.addStep.configureAction({
                       actionId,
                       connection,
                       integration,
@@ -103,7 +101,7 @@ export class ConfigureActionPage extends React.Component {
                   );
                 } else {
                   history.push(
-                    resolvers.create.configure.index({
+                    resolvers.integration.edit.index({
                       integration: updatedIntegration,
                     })
                   );
@@ -122,7 +120,7 @@ export class ConfigureActionPage extends React.Component {
                     <>
                       <PageTitle title={'Configure the action'} />
                       <IntegrationEditorLayout
-                        header={<IntegrationCreatorBreadcrumbs step={3} />}
+                        header={<IntegrationEditorBreadcrumbs step={1} />}
                         sidebar={
                           <IntegrationEditorSidebar
                             steps={getSteps(
@@ -149,10 +147,10 @@ export class ConfigureActionPage extends React.Component {
                           />
                         }
                         content={form}
-                        cancelHref={resolvers.create.configure.index({
+                        cancelHref={resolvers.integration.edit.index({
                           integration,
                         })}
-                        backHref={resolvers.create.configure.addConnection.selectAction(
+                        backHref={resolvers.integration.edit.addStep.selectAction(
                           { position, integration, connection }
                         )}
                         onNext={submitForm}

@@ -80,33 +80,33 @@ export class IntegrationCreatorApp extends React.Component {
           />
           {/* step 3: add connection.1 */}
           <Route
-            path={routes.create.configure.addConnection.selectConnection}
+            path={routes.create.configure.addStep.selectConnection}
             exact={true}
-            component={create.configure.addConnection.SelectConnectionPage}
+            component={create.configure.addStep.SelectConnectionPage}
           />
           {/* step 3: add connection.2 */}
           <Route
-            path={routes.create.configure.addConnection.selectAction}
+            path={routes.create.configure.addStep.selectAction}
             exact={true}
-            component={create.configure.addConnection.SelectActionPage}
+            component={create.configure.addStep.SelectActionPage}
           />
           {/* step 3: add connection.3 */}
           <Route
-            path={routes.create.configure.addConnection.configureAction}
+            path={routes.create.configure.addStep.configureAction}
             exact={true}
-            component={create.configure.addConnection.ConfigureActionPage}
+            component={create.configure.addStep.ConfigureActionPage}
+          />
+          {/* step 3: edit connection.2 (this is optional and can be reached only from the configuration page), must be declared before the configure route */}
+          <Route
+            path={routes.create.configure.editStep.selectAction}
+            exact={true}
+            component={create.configure.editStep.SelectActionPage}
           />
           {/* step 3: edit connection.1 (when editing we link directly to the configuration step) */}
           <Route
-            path={routes.create.configure.editConnection.configureAction}
+            path={routes.create.configure.editStep.configureAction}
             exact={true}
-            component={create.configure.editConnection.ConfigureActionPage}
-          />
-          {/* step 3: edit connection.2 (this is optional and can be reached only from the configuration page) */}
-          <Route
-            path={routes.create.configure.editConnection.selectAction}
-            exact={true}
-            component={create.configure.editConnection.SelectActionPage}
+            component={create.configure.editStep.ConfigureActionPage}
           />
           {/* step 4 */}
           <Route

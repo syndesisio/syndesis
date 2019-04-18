@@ -54,15 +54,16 @@ export class SaveIntegrationPage extends React.Component {
                 history.push(resolvers.list());
               };
               const definition: IFormDefinition = {
-                description: {
-                  defaultValue: '',
-                  displayName: 'Description',
-                  type: 'textarea',
-                },
                 name: {
                   defaultValue: '',
                   displayName: 'Name',
                   required: true,
+                },
+                // tslint:disable-next-line
+                description: {
+                  defaultValue: '',
+                  displayName: 'Description',
+                  type: 'textarea',
                 },
               };
               return (

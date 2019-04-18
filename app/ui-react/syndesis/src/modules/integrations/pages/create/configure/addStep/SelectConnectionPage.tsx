@@ -11,7 +11,7 @@ import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../shared';
 import {
-  IntegrationEditorBreadcrumbs,
+  IntegrationCreatorBreadcrumbs,
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
@@ -35,6 +35,7 @@ export interface ISelectConnectionRouteState {
 /**
  * This page shows the list of connections containing actions with a **to**
  * pattern.
+ * It's supposed to be used for 3.add.1 of the creation wizard.
  *
  * This component expects some [params]{@link ISelectConnectionRouteParams} and
  * [state]{@link ISelectConnectionRouteState} to be properly set in the route
@@ -53,7 +54,7 @@ export class SelectConnectionPage extends React.Component {
             <>
               <PageTitle title={'Choose a connection'} />
               <IntegrationEditorLayout
-                header={<IntegrationEditorBreadcrumbs step={1} />}
+                header={<IntegrationCreatorBreadcrumbs step={3} />}
                 sidebar={
                   <IntegrationEditorSidebar
                     steps={getSteps(integration, 0)}
@@ -92,7 +93,7 @@ export class SelectConnectionPage extends React.Component {
                                   }
                                   actions={
                                     <ButtonLink
-                                      href={resolvers.integration.edit.addConnection.selectAction(
+                                      href={resolvers.create.configure.addStep.selectAction(
                                         {
                                           connection: c,
                                           integration,
@@ -122,7 +123,7 @@ export class SelectConnectionPage extends React.Component {
                     )}
                   </WithConnections>
                 }
-                cancelHref={resolvers.integration.edit.index({ integration })}
+                cancelHref={resolvers.create.configure.index({ integration })}
               />
             </>
           );

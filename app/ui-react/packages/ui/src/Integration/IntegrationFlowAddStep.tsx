@@ -1,5 +1,4 @@
 import * as H from 'history';
-import { Overlay, Popover } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import './IntegrationFlowAddStep.css';
@@ -9,8 +8,6 @@ export interface IIntegrationFlowAddStepProps {
   forceTooltip?: boolean;
   addStepHref?: H.LocationDescriptor;
   i18nAddStep?: string;
-  addConnectionHref?: H.LocationDescriptor;
-  i18nAddConnection?: string;
 }
 
 export interface IIntegrationFlowAddStepState {
@@ -65,36 +62,22 @@ export class IntegrationFlowAddStep extends React.Component<
         onMouseLeave={this.hideTooltip}
         onTouchStart={this.toggleTooltip}
       >
-        <div
-          className={'integration-flow-add-step__iconWrapper'}
-          ref={this.containerRef}
-        >
-          <div className={'integration-flow-add-step__icon'}>
-            <i className="fa fa-plus-square" />
-          </div>
-        </div>
-        {this.props.showDetails && this.props.children}
-        <Overlay
-          placement="top"
-          rootClose={false}
-          show={this.props.forceTooltip || this.state.showTooltip}
-          target={this.containerRef.current}
-          container={this}
-        >
-          <Popover
-            id={'integration-flow-add-step'}
-            className={'integration-flow-add-step__links'}
+        {this.props.addStepHref && (
+          <div
+            className={'integration-flow-add-step__iconWrapper'}
+            ref={this.containerRef}
           >
-            {this.props.addStepHref && this.props.i18nAddStep && (
-              <Link to={this.props.addStepHref}>{this.props.i18nAddStep}</Link>
-            )}
-            {this.props.addConnectionHref && this.props.i18nAddConnection && (
-              <Link to={this.props.addConnectionHref}>
-                {this.props.i18nAddConnection}
-              </Link>
-            )}
-          </Popover>
-        </Overlay>
+            <Link to={this.props.addStepHref}>
+              <div className={'integration-flow-add-step__icon'}>
+                <i
+                  className="fa fa-plus-square"
+                  title={this.props.i18nAddStep}
+                />
+              </div>
+            </Link>
+          </div>
+        )}
+        {this.props.showDetails && this.props.children}
       </div>
     );
   }

@@ -53,37 +53,29 @@ export class IntegrationEditorApp extends React.Component {
                 component={integrationPages.edit.main.AddStepPage}
               />
               <Route
-                path={routes.integration.edit.addConnection.selectConnection}
+                path={routes.integration.edit.addStep.selectConnection}
                 exact={true}
-                component={
-                  integrationPages.edit.addConnection.SelectConnectionPage
-                }
+                component={integrationPages.edit.addStep.SelectConnectionPage}
               />
               <Route
-                path={routes.integration.edit.addConnection.selectAction}
+                path={routes.integration.edit.addStep.selectAction}
                 exact={true}
-                component={integrationPages.edit.addConnection.SelectActionPage}
+                component={integrationPages.edit.addStep.SelectActionPage}
               />
               <Route
-                path={routes.integration.edit.addConnection.configureAction}
+                path={routes.integration.edit.addStep.configureAction}
                 exact={true}
-                component={
-                  integrationPages.edit.addConnection.ConfigureActionPage
-                }
+                component={integrationPages.edit.addStep.ConfigureActionPage}
               />
               <Route
-                path={routes.integration.edit.editConnection.selectAction}
+                path={routes.integration.edit.editStep.selectAction}
                 exact={true}
-                component={
-                  integrationPages.edit.editConnection.SelectActionPage
-                }
+                component={integrationPages.edit.editStep.SelectActionPage}
               />
               <Route
-                path={routes.integration.edit.editConnection.configureAction}
+                path={routes.integration.edit.editStep.configureAction}
                 exact={true}
-                component={
-                  integrationPages.edit.editConnection.ConfigureActionPage
-                }
+                component={integrationPages.edit.editStep.ConfigureActionPage}
               />
               <Route
                 path={routes.integration.edit.saveAndPublish}

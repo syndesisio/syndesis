@@ -1,11 +1,11 @@
 import { getStep, getSteps, WithIntegrationHelpers } from '@syndesis/api';
-import { Integration } from '@syndesis/models';
+import { ConnectionOverview, Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../shared';
 import {
-  IntegrationEditorBreadcrumbs,
+  IntegrationCreatorBreadcrumbs,
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
@@ -15,10 +15,9 @@ import {
 } from '../../../../shared';
 
 /**
+ * @param actionId - the ID of the action selected in step 3.add.2.
  * @param position - the zero-based position for the new step in the integration
  * flow.
- * @param actionId - the ID of the action originally used to create the step, or
- * a new one selected in the sibling Select Action page.
  * @param step - the configuration step when configuring a multi-page connection.
  */
 export interface IConfigureActionRouteParams {
@@ -28,20 +27,25 @@ export interface IConfigureActionRouteParams {
 }
 
 /**
- * @param integration - the integration object, used to render the IVP.
+ * @param integration - the integration object coming from step 3.index, used to
+ * render the IVP.
+ * @param connection - the connection object selected in step 3.add.1. Needed
+ * to render the IVP.
  * @param updatedIntegration - when creating a link to this page, this should
  * never be set. It is used by the page itself to pass the partially configured
  * step when configuring a multi-page connection.
  */
 export interface IConfigureActionRouteState {
+  connection: ConnectionOverview;
   integration: Integration;
   updatedIntegration?: Integration;
 }
 
 /**
- * This page shows the configuration form for a given action.
+ * This page shows the configuration form for a given action. It's supposed to
+ * be used for step 3.add.3 of the creation wizard.
  *
- * Submitting the form will update an *existing* integration step in
+ * Submitting the form will update the integration object adding a *new* step in
  * the [position specified in the params]{@link IConfigureActionRouteParams#position}
  * of the first flow, set up as specified by the form values.
  *
@@ -51,19 +55,21 @@ export interface IConfigureActionRouteState {
  *
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
+ *
+ * @todo DRY the connection icon code
  */
 export class ConfigureActionPage extends React.Component {
   public render() {
     return (
       <WithIntegrationHelpers>
-        {({ updateConnection }) => (
+        {({ addConnection, updateConnection }) => (
           <WithRouteData<
             IConfigureActionRouteParams,
             IConfigureActionRouteState
           >>
             {(
               { actionId, step = '0', position },
-              { integration, updatedIntegration },
+              { connection, integration, updatedIntegration },
               { history }
             ) => {
               const stepAsNumber = parseInt(step, 10);
@@ -74,9 +80,11 @@ export class ConfigureActionPage extends React.Component {
                 moreConfigurationSteps,
                 values,
               }: IOnUpdatedIntegrationProps) => {
-                updatedIntegration = await updateConnection(
+                updatedIntegration = await (stepAsNumber === 0
+                  ? addConnection
+                  : updateConnection)(
                   updatedIntegration || integration,
-                  stepObject.connection!,
+                  connection,
                   action,
                   0,
                   positionAsNumber,
@@ -84,9 +92,9 @@ export class ConfigureActionPage extends React.Component {
                 );
                 if (moreConfigurationSteps) {
                   history.push(
-                    resolvers.integration.edit.addConnection.configureAction({
+                    resolvers.create.configure.addStep.configureAction({
                       actionId,
-                      connection: stepObject.connection!,
+                      connection,
                       integration,
                       position,
                       step: stepAsNumber + 1,
@@ -95,7 +103,7 @@ export class ConfigureActionPage extends React.Component {
                   );
                 } else {
                   history.push(
-                    resolvers.integration.edit.index({
+                    resolvers.create.configure.index({
                       integration: updatedIntegration,
                     })
                   );
@@ -104,7 +112,7 @@ export class ConfigureActionPage extends React.Component {
 
               return (
                 <WithConfigurationForm
-                  connection={stepObject.connection!}
+                  connection={connection}
                   actionId={actionId}
                   configurationStep={stepAsNumber}
                   initialValue={stepObject.configuredProperties}
@@ -114,27 +122,39 @@ export class ConfigureActionPage extends React.Component {
                     <>
                       <PageTitle title={'Configure the action'} />
                       <IntegrationEditorLayout
-                        header={<IntegrationEditorBreadcrumbs step={1} />}
+                        header={<IntegrationCreatorBreadcrumbs step={3} />}
                         sidebar={
                           <IntegrationEditorSidebar
                             steps={getSteps(
                               updatedIntegration || integration,
                               0
                             )}
-                            activeIndex={positionAsNumber}
+                            addAtIndex={
+                              stepAsNumber === 0 ? positionAsNumber : undefined
+                            }
+                            addIcon={
+                              <img
+                                src={connection.icon}
+                                width={24}
+                                height={24}
+                              />
+                            }
+                            addI18nTitle={`${positionAsNumber + 1}. ${
+                              connection.connector!.name
+                            }`}
+                            addI18nTooltip={`${positionAsNumber + 1}. ${
+                              connection.name
+                            }`}
+                            addI18nDescription={'Configure the action'}
                           />
                         }
                         content={form}
-                        backHref={resolvers.integration.edit.editConnection.selectAction(
-                          {
-                            connection: stepObject.connection!,
-                            integration,
-                            position,
-                          }
-                        )}
-                        cancelHref={resolvers.integration.edit.index({
+                        cancelHref={resolvers.create.configure.index({
                           integration,
                         })}
+                        backHref={resolvers.create.configure.addStep.selectAction(
+                          { position, integration, connection }
+                        )}
                         onNext={submitForm}
                         isNextLoading={isSubmitting}
                       />

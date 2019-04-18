@@ -122,12 +122,12 @@ export default {
           },
         })
       ),
-      addConnection: {
+      addStep: {
         selectConnection: makeResolver<{
           position: string;
           integration: Integration;
         }>(
-          routes.create.configure.addConnection.selectConnection,
+          routes.create.configure.addStep.selectConnection,
           ({ position, integration }) => ({
             params: {
               position,
@@ -142,7 +142,7 @@ export default {
           integration: Integration;
           connection: ConnectionOverview;
         }>(
-          routes.create.configure.addConnection.selectAction,
+          routes.create.configure.addStep.selectAction,
           ({ connection, position, integration }) => ({
             params: {
               position,
@@ -162,7 +162,7 @@ export default {
           updatedIntegration?: Integration;
           position: string;
         }>(
-          routes.create.configure.addConnection.configureAction,
+          routes.create.configure.addStep.configureAction,
           ({
             connection,
             integration,
@@ -185,13 +185,13 @@ export default {
           })
         ),
       },
-      editConnection: {
+      editStep: {
         selectAction: makeResolver<{
           position: string;
           integration: Integration;
           connection: ConnectionOverview;
         }>(
-          routes.create.configure.editConnection.selectAction,
+          routes.create.configure.editStep.selectAction,
           ({ connection, position, integration }) => ({
             params: {
               position,
@@ -210,7 +210,7 @@ export default {
           updatedIntegration?: Integration;
           position: string;
         }>(
-          routes.create.configure.editConnection.configureAction,
+          routes.create.configure.editStep.configureAction,
           ({ integration, actionId, step, position, updatedIntegration }) => ({
             params: {
               actionId,
@@ -220,22 +220,6 @@ export default {
             state: {
               integration,
               updatedIntegration,
-            },
-          })
-        ),
-      },
-      addStep: {
-        selectStep: makeResolver<{
-          position: string;
-          integration: Integration;
-        }>(
-          routes.create.configure.addStep.selectStep,
-          ({ position, integration }) => ({
-            params: {
-              position,
-            },
-            state: {
-              integration,
             },
           })
         ),
@@ -285,12 +269,12 @@ export default {
           },
         })
       ),
-      addConnection: {
+      addStep: {
         selectConnection: makeResolver<{
           position: string;
           integration: Integration;
         }>(
-          routes.integration.edit.addConnection.selectConnection,
+          routes.integration.edit.addStep.selectConnection,
           ({ position, integration }) => ({
             params: {
               integrationId: integration.id,
@@ -306,7 +290,7 @@ export default {
           integration: Integration;
           connection: ConnectionOverview;
         }>(
-          routes.integration.edit.addConnection.selectAction,
+          routes.integration.edit.addStep.selectAction,
           ({ connection, position, integration }) => ({
             params: {
               integrationId: integration.id,
@@ -327,7 +311,7 @@ export default {
           updatedIntegration?: Integration;
           position: string;
         }>(
-          routes.integration.edit.addConnection.configureAction,
+          routes.integration.edit.addStep.configureAction,
           ({
             connection,
             integration,
@@ -351,13 +335,13 @@ export default {
           })
         ),
       },
-      editConnection: {
+      editStep: {
         selectAction: makeResolver<{
           position: string;
           integration: Integration;
           connection: ConnectionOverview;
         }>(
-          routes.integration.edit.editConnection.selectAction,
+          routes.integration.edit.editStep.selectAction,
           ({ connection, position, integration }) => ({
             params: {
               integrationId: integration.id,
@@ -377,7 +361,7 @@ export default {
           updatedIntegration?: Integration;
           position: string;
         }>(
-          routes.integration.edit.editConnection.configureAction,
+          routes.integration.edit.editStep.configureAction,
           ({ integration, actionId, step, position, updatedIntegration }) => ({
             params: {
               integrationId: integration.id,
@@ -388,23 +372,6 @@ export default {
             state: {
               integration,
               updatedIntegration,
-            },
-          })
-        ),
-      },
-      addStep: {
-        selectStep: makeResolver<{
-          position: string;
-          integration: Integration;
-        }>(
-          routes.integration.edit.addStep.selectStep,
-          ({ position, integration }) => ({
-            params: {
-              integrationId: integration.id,
-              position,
-            },
-            state: {
-              integration,
             },
           })
         ),

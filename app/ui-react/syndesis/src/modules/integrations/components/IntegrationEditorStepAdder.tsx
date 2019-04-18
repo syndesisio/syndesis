@@ -18,21 +18,7 @@ export interface IIntegrationEditorStepAdderProps {
    * clicking the Add Connection button
    * @param idx - the zero-based index where a new connection should be added
    */
-  addConnectionHref(idx: number): H.LocationDescriptor;
-  /**
-   * a callback to get the `LocationDescriptor` that should be reached when
-   * clicking the Add Step button
-   * @param idx - the zero-based index where a new step should be added
-   */
   addStepHref(idx: number): H.LocationDescriptor;
-  /**
-   * a callback to get the `LocationDescriptor` that should be reached when
-   * clicking the Edit Connection button
-   * @param stepIdx - the zero-based index of the integration step that should
-   * be edited
-   * @param step - the integration step object that should be edited
-   */
-  configureConnectionHref(stepIdx: number, step: Step): H.LocationDescriptor;
   /**
    * a callback to get the `LocationDescriptor` that should be reached when
    * clicking the Edit Step button
@@ -49,9 +35,8 @@ export interface IIntegrationEditorStepAdderProps {
  * buttons to add a new step, edit an existing one, etc.
  *
  * @see [steps]{@link IIntegrationEditorStepAdderProps#steps}
- * @see [addConnectionHref]{@link IIntegrationEditorStepAdderProps#addConnectionHref}
  * @see [addStepHref]{@link IIntegrationEditorStepAdderProps#addStepHref}
- * @see [configureConnectionHref]{@link IIntegrationEditorStepAdderProps#configureConnectionHref}
+ * @see [addStepHref]{@link IIntegrationEditorStepAdderProps#addStepHref}
  * @see [configureStepHref]{@link IIntegrationEditorStepAdderProps#configureStepHref}
  *
  * @todo add the delete step button
@@ -71,9 +56,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                 icon={<img src={s.connection!.icon} width={24} height={24} />}
                 actions={
                   <>
-                    <ButtonLink
-                      href={this.props.configureConnectionHref(idx, s)}
-                    >
+                    <ButtonLink href={this.props.configureStepHref(idx, s)}>
                       Configure
                     </ButtonLink>
                     <ButtonLink href={'#'} as={'danger'}>
@@ -88,8 +71,6 @@ export class IntegrationEditorStepAdder extends React.Component<
                   showDetails={false}
                   addStepHref={this.props.addStepHref(idx + 1)}
                   i18nAddStep={'Add a step'}
-                  addConnectionHref={this.props.addConnectionHref(idx + 1)}
-                  i18nAddConnection={'Add a connection'}
                 />
               )}
             </React.Fragment>

@@ -1,9 +1,9 @@
-import * as addConnection from './addConnection';
-import * as editConnection from './editConnection';
+import * as addStep from './addStep';
+import * as editStep from './editStep';
 import * as main from './main';
 
 export default {
-  addConnection,
-  editConnection,
+  addStep,
+  editStep,
   main,
 };

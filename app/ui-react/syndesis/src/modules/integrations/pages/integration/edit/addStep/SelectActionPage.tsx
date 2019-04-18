@@ -11,14 +11,13 @@ import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../shared';
 import {
-  IntegrationCreatorBreadcrumbs,
+  IntegrationEditorBreadcrumbs,
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
 
 /**
- * @param connectionId - the ID of the connection selected in step 2.1, whose
- * actions should be shown.
+ * @param connectionId - the ID of the connection selected in the previous step
  * @param position - the zero-based position for the new step in the integration
  * flow.
  */
@@ -28,9 +27,8 @@ export interface ISelectActionRouteParams {
 }
 
 /**
- * @param integration - the integration object coming from step 3.index, used to
- * render the IVP.
- * @param connection - the connection object selected in step 3.add.1. Needed
+ * @param integration - the integration object, used to render the IVP.
+ * @param connection - the connection object selected in the previous step, used
  * to render the IVP.
  */
 export interface ISelectActionRouteState {
@@ -41,7 +39,6 @@ export interface ISelectActionRouteState {
 /**
  * This page shows the list of actions of a connection containing with a **to**
  * pattern.
- * It's supposed to be used for 3.add.2 of the creation wizard.
  *
  * This component expects some [params]{@link ISelectActionRouteParams} and
  * [state]{@link ISelectActionRouteState} to be properly set in the route
@@ -71,7 +68,7 @@ export class SelectActionPage extends React.Component {
                     <>
                       <PageTitle title={'Choose an action'} />
                       <IntegrationEditorLayout
-                        header={<IntegrationCreatorBreadcrumbs step={3} />}
+                        header={<IntegrationEditorBreadcrumbs step={1} />}
                         sidebar={
                           <IntegrationEditorSidebar
                             steps={getSteps(integration, 0)}
@@ -116,7 +113,7 @@ export class SelectActionPage extends React.Component {
                                   }
                                   actions={
                                     <ButtonLink
-                                      href={resolvers.create.configure.addConnection.configureAction(
+                                      href={resolvers.integration.edit.addStep.configureAction(
                                         {
                                           actionId: a.id!,
                                           connection,
@@ -132,10 +129,10 @@ export class SelectActionPage extends React.Component {
                               ))}
                           </IntegrationEditorChooseAction>
                         }
-                        cancelHref={resolvers.create.configure.index({
+                        cancelHref={resolvers.integration.edit.index({
                           integration,
                         })}
-                        backHref={resolvers.create.configure.addConnection.selectConnection(
+                        backHref={resolvers.integration.edit.addStep.selectConnection(
                           { position, integration }
                         )}
                       />
