@@ -13,6 +13,7 @@ export * from './WithExtension';
 export * from './WithExtensionHelpers';
 export * from './WithExtensionIntegrations';
 export * from './WithExtensions';
+export * from './WithIntegration';
 export * from './WithIntegrations';
 export * from './WithIntegrationTags';
 export * from './WithMonitoredIntegrations';
