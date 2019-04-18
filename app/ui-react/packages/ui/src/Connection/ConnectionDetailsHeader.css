@@ -1,0 +1,12 @@
+.connection-details-header__connectionIcon {
+  width: 46px;
+}
+
+.connection-details-header__propertyLabel {
+  font-weight: bold;
+  text-align: right;
+}
+
+.connection-details-header__propertyValue {
+  text-align: left;
+}

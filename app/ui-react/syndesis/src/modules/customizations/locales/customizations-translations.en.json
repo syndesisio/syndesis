@@ -46,6 +46,6 @@
     "supportedStepsSectionTitle": "Supported Steps",
     "unknownExtensionType": "Unknown $t(shared:Extension)",
     "updateExtensionTip": "Update this extension",
-    "usageSectionTitle": "Usage"
+    "usageSectionTitle": "$t(shared:Usage)"
   }
 }

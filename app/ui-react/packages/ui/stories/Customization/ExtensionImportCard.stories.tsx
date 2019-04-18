@@ -1,7 +1,7 @@
 import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
-import * as React from 'react';
 import { storiesOf } from '@storybook/react';
+import * as React from 'react';
 import { ExtensionImportCard } from '../../src';
 
 export const extensionImportStory = 'import one jar';

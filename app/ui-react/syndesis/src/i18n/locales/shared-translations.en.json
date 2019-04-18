@@ -38,6 +38,7 @@
       "Pending": "Pending",
       "Publish": "Publish",
       "Published": "Running",
+      "requiredFieldMessage": "* Required field",
       "resultsCount": "{{count}} Results",
       "Settings": "Settings",
       "Status": "Status",
@@ -49,6 +50,7 @@
       "Unpublished": "Stopped",
       "Update": "Update",
       "uploadFileFailureMessage": "<span>File '<strong>{{fileName}}</strong>' could not be uploaded</span>",
+      "Usage": "Usage",
       "viewLogs": "View Logs",
       "links": {
         "contactus": "//access.redhat.com/support/cases/#/case/new",
@@ -70,7 +72,7 @@
         "showErrorInfoButton": "Show error details"
       },
       "404": {
-        "title": "Ops! 404",
+        "title": "Oops! 404",
         "info": "This page couldn't be found.",
         "help": "If you think this is a bug, please report the issue.",
         "refreshButton": "Take me home",

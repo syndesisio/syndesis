@@ -2,7 +2,7 @@ import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { DndFileChooser, Container } from '../../src';
+import { Container, DndFileChooser } from '../../src';
 
 const stories = storiesOf('Shared/DndFileChooser', module);
 

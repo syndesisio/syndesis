@@ -1,0 +1,36 @@
+.inline-text-edit__valueText {
+  /* placeholder for any styling */
+}
+
+.inline-text-edit__valueTextArea {
+  /* placeholder for any styling */
+}
+
+.inline-text-edit__valueTextAreaPlaceholder {
+  color: lightgray;
+  font-size: 12px;
+  font-style: italic;
+  text-align: left;
+}
+
+.inline-text-edit__editText {
+  /* placeholder for any styling */
+}
+
+.inline-text-edit__editTextArea {
+  /* placeholder for any styling */
+}
+
+.inline-text-edit__button {
+  margin-top: 20px;
+}
+
+.inline-text-edit__saveButton {
+  margin-left: -40px;
+}
+
+.inline-text-edit__editIcon {
+  cursor: pointer;
+  color: #1ea7fd;
+  margin-left: 8px;
+}
