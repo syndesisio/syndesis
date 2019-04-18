@@ -64,6 +64,8 @@ import {
   getMiddlePosition,
   getStep,
   isActionShapeless,
+  isActionInputShapeless,
+  isActionOutputShapeless,
   filterStepsByPosition,
   getStartStep,
   getLastStep,
@@ -374,6 +376,14 @@ export class CurrentFlowService {
 
   isActionShapeless(descriptor: ActionDescriptor) {
     return isActionShapeless(descriptor);
+  }
+
+  isActionInputShapeless(descriptor: ActionDescriptor) {
+    return isActionInputShapeless(descriptor);
+  }
+
+  isActionOutputShapeless(descriptor: ActionDescriptor) {
+    return isActionOutputShapeless(descriptor);
   }
 
   handleEvent(event: FlowEvent): void {

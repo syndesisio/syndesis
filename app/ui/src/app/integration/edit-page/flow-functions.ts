@@ -140,7 +140,7 @@ export function hasDataShape(step: Step, isInput = false) {
 }
 
 /**
- * Returns whether or not the supplied descriptor has an input or output datashape or ANY
+ * Returns whether or not the supplied descriptor has an input or output datashape of ANY
  * @param descriptor
  */
 export function isActionShapeless(descriptor: ActionDescriptor) {
@@ -153,6 +153,30 @@ export function isActionShapeless(descriptor: ActionDescriptor) {
     inputDataShape.kind === DataShapeKinds.ANY ||
     outputDataShape.kind === DataShapeKinds.ANY
   );
+}
+
+/**
+ * Returns whether or not the supplied descriptor has an input datashape of ANY
+ * @param descriptor
+ */
+export function isActionInputShapeless(descriptor: ActionDescriptor) {
+  if (!descriptor) {
+    return false;
+  }
+  const inputDataShape = descriptor.inputDataShape;
+  return inputDataShape.kind === DataShapeKinds.ANY;
+}
+
+/**
+ * Returns whether or not the supplied descriptor has an output datashape of ANY
+ * @param descriptor
+ */
+export function isActionOutputShapeless(descriptor: ActionDescriptor) {
+  if (!descriptor) {
+    return false;
+  }
+  const outputDataShape = descriptor.outputDataShape;
+  return outputDataShape.kind === DataShapeKinds.ANY;
 }
 
 /**
