@@ -99,6 +99,7 @@ export class SaveIntegrationPage extends React.Component {
                       }
                       cancelHref={resolvers.list()}
                       backHref={resolvers.create.configure.index({
+                        flow: '0',
                         integration,
                       })}
                       onNext={submitForm}

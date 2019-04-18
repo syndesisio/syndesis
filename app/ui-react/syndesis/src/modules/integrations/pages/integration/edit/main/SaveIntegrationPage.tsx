@@ -16,6 +16,13 @@ export interface ISaveForm {
 /**
  * @param integration - the integration object.
  */
+export interface ISaveIntegrationRouteParams {
+  flow: string;
+}
+
+/**
+ * @param integration - the integration object.
+ */
 export interface ISaveIntegrationRouteState {
   integration: Integration;
 }
@@ -35,8 +42,8 @@ export interface ISaveIntegrationRouteState {
 export class SaveIntegrationPage extends React.Component {
   public render() {
     return (
-      <WithRouteData<null, ISaveIntegrationRouteState>>
-        {(_, { integration }, { history }) => (
+      <WithRouteData<ISaveIntegrationRouteParams, ISaveIntegrationRouteState>>
+        {({ flow }, { integration }, { history }) => (
           <WithIntegrationHelpers>
             {({ saveIntegration }) => {
               const onSave = async (
@@ -100,6 +107,7 @@ export class SaveIntegrationPage extends React.Component {
                       }
                       cancelHref={resolvers.list()}
                       backHref={resolvers.integration.edit.index({
+                        flow,
                         integration,
                       })}
                       onNext={submitForm}

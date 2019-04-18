@@ -21,6 +21,7 @@ import resolvers from '../../../../resolvers';
  * flow.
  */
 export interface ISelectConnectionRouteParams {
+  flow: string;
   position: string;
 }
 
@@ -47,7 +48,7 @@ export class SelectConnectionPage extends React.Component {
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {({ position }, { integration }) => {
+        {({ flow, position }, { integration }) => {
           const positionAsNumber = parseInt(position, 10);
           return (
             <>
@@ -95,6 +96,7 @@ export class SelectConnectionPage extends React.Component {
                                       href={resolvers.integration.edit.addStep.selectAction(
                                         {
                                           connection: c,
+                                          flow,
                                           integration,
                                           position,
                                         }
@@ -122,7 +124,10 @@ export class SelectConnectionPage extends React.Component {
                     )}
                   </WithConnections>
                 }
-                cancelHref={resolvers.integration.edit.index({ integration })}
+                cancelHref={resolvers.integration.edit.index({
+                  flow,
+                  integration,
+                })}
               />
             </>
           );

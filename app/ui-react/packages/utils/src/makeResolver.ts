@@ -18,6 +18,7 @@ export function makeResolver<T>(route: string, mapper: (data: T) => IRoute) {
   return (data: T) => {
     const { params, state } = mapper(data);
     return {
+      params,
       pathname: reverse(route, params),
       state,
     };

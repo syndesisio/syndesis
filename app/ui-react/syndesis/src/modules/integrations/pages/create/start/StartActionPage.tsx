@@ -134,6 +134,9 @@ export class StartActionPage extends React.Component {
                                         {
                                           actionId: a.id!,
                                           connection: data,
+                                          flow: '0',
+                                          integration: { name: '' },
+                                          position: '0',
                                         }
                                       )}
                                     >

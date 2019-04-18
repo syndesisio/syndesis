@@ -23,6 +23,7 @@ import resolvers from '../../../../resolvers';
  * flow.
  */
 export interface ISelectActionRouteParams {
+  flow: string;
   connectionId: string;
   position: string;
 }
@@ -52,7 +53,7 @@ export class SelectActionPage extends React.Component {
   public render() {
     return (
       <WithRouteData<ISelectActionRouteParams, ISelectActionRouteState>>
-        {({ connectionId, position }, { connection, integration }) => {
+        {({ connectionId, flow, position }, { connection, integration }) => {
           const positionAsNumber = parseInt(position, 10);
           return (
             <WithConnection id={connectionId} initialValue={connection}>
@@ -98,6 +99,8 @@ export class SelectActionPage extends React.Component {
                                       href={resolvers.integration.edit.editStep.configureAction(
                                         {
                                           actionId: a.id!,
+                                          connection,
+                                          flow,
                                           integration,
                                           position,
                                         }
@@ -111,6 +114,7 @@ export class SelectActionPage extends React.Component {
                           </IntegrationEditorChooseAction>
                         }
                         cancelHref={resolvers.integration.edit.index({
+                          flow,
                           integration,
                         })}
                       />

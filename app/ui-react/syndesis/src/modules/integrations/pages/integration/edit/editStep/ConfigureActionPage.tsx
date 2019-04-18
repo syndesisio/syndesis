@@ -22,6 +22,7 @@ import {
  * @param step - the configuration step when configuring a multi-page connection.
  */
 export interface IConfigureActionRouteParams {
+  flow: string;
   position: string;
   actionId: string;
   step?: string;
@@ -64,7 +65,7 @@ export class ConfigureActionPage extends React.Component {
             IConfigureActionRouteState
           >>
             {(
-              { actionId, step = '0', position },
+              { actionId, flow, step = '0', position },
               {
                 configuredProperties,
                 connection,
@@ -93,6 +94,7 @@ export class ConfigureActionPage extends React.Component {
                     resolvers.integration.edit.addStep.configureAction({
                       actionId,
                       connection,
+                      flow,
                       integration,
                       position,
                       step: stepAsNumber + 1,
@@ -102,6 +104,7 @@ export class ConfigureActionPage extends React.Component {
                 } else {
                   history.push(
                     resolvers.integration.edit.index({
+                      flow,
                       integration: updatedIntegration,
                     })
                   );
@@ -134,11 +137,13 @@ export class ConfigureActionPage extends React.Component {
                         backHref={resolvers.integration.edit.editStep.selectAction(
                           {
                             connection,
+                            flow,
                             integration,
                             position,
                           }
                         )}
                         cancelHref={resolvers.integration.edit.index({
+                          flow,
                           integration,
                         })}
                         onNext={submitForm}

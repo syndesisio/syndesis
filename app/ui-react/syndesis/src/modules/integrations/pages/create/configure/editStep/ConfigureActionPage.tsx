@@ -95,6 +95,7 @@ export class ConfigureActionPage extends React.Component {
                     resolvers.create.configure.addStep.configureAction({
                       actionId,
                       connection,
+                      flow: '0',
                       integration,
                       position,
                       step: stepAsNumber + 1,
@@ -104,6 +105,7 @@ export class ConfigureActionPage extends React.Component {
                 } else {
                   history.push(
                     resolvers.create.configure.index({
+                      flow: '0',
                       integration: updatedIntegration,
                     })
                   );
@@ -136,11 +138,13 @@ export class ConfigureActionPage extends React.Component {
                         backHref={resolvers.create.configure.editStep.selectAction(
                           {
                             connection,
+                            flow: '0',
                             integration,
                             position,
                           }
                         )}
                         cancelHref={resolvers.create.configure.index({
+                          flow: '0',
                           integration,
                         })}
                         onNext={submitForm}

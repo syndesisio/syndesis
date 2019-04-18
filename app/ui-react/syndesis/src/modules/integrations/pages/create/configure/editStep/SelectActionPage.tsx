@@ -99,6 +99,8 @@ export class SelectActionPage extends React.Component {
                                       href={resolvers.create.configure.editStep.configureAction(
                                         {
                                           actionId: a.id!,
+                                          connection,
+                                          flow: '0',
                                           integration,
                                           position,
                                         }
@@ -112,6 +114,7 @@ export class SelectActionPage extends React.Component {
                           </IntegrationEditorChooseAction>
                         }
                         cancelHref={resolvers.create.configure.index({
+                          flow: '0',
                           integration,
                         })}
                       />

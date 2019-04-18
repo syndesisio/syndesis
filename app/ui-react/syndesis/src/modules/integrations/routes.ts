@@ -4,20 +4,20 @@ import { include } from 'named-urls';
 const stepRoutes = {
   selectConnection: '',
   selectAction: `:connectionId`,
-  configureAction: `:connectionId/:actionId/:step?`,
+  configureAction: `:connectionId/action::actionId/step::step?`,
 };
 
 /**
  * Both the integration creator and editor share the same routes when the creator
  * reaches the third step in the wizard. This object is to keep them DRY.
  */
-const editorRoutes = {
+const editorRoutes = include('flow::flow', {
   index: 'add-step',
-  addStep: include(':position/connection', stepRoutes),
-  editStep: include(':position/edit-connection', stepRoutes),
+  addStep: include('position::position/connection', stepRoutes),
+  editStep: include('position::position/edit-connection', stepRoutes),
   saveAndPublish: 'save',
   root: '',
-};
+});
 
 export default include('/integrations', {
   list: '',

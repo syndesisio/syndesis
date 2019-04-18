@@ -14,6 +14,10 @@ import {
   getEditConfigureStepHrefCallback,
 } from '../../../resolversHelpers';
 
+export interface IAddStepRouteParams {
+  flow: string;
+}
+
 export interface IAddStepRouteState {
   /**
    * the integration object to edit
@@ -37,8 +41,8 @@ export interface IAddStepRouteState {
 export class AddStepPage extends React.Component {
   public render() {
     return (
-      <WithRouteData<null, IAddStepRouteState>>
-        {(_, { integration }) => (
+      <WithRouteData<IAddStepRouteParams, IAddStepRouteState>>
+        {({ flow }, { integration }) => (
           <IntegrationEditorLayout
             header={<IntegrationEditorBreadcrumbs step={1} />}
             content={
@@ -52,9 +56,14 @@ export class AddStepPage extends React.Component {
                   </p>
                   <IntegrationEditorStepAdder
                     steps={getSteps(integration, 0)}
-                    addStepHref={getEditAddStepHref.bind(null, integration)}
+                    addStepHref={getEditAddStepHref.bind(
+                      null,
+                      integration,
+                      flow
+                    )}
                     configureStepHref={getEditConfigureStepHrefCallback(
-                      integration
+                      integration,
+                      flow
                     )}
                   />
                 </Container>
@@ -62,6 +71,7 @@ export class AddStepPage extends React.Component {
             }
             cancelHref={resolvers.list()}
             nextHref={resolvers.integration.edit.saveAndPublish({
+              flow,
               integration,
             })}
           />

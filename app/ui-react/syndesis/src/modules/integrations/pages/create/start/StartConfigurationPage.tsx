@@ -109,7 +109,9 @@ export class StartConfigurationPage extends React.Component {
                     resolvers.create.start.configureAction({
                       actionId,
                       connection,
+                      flow: '0',
                       integration,
+                      position: '0',
                       step: stepAsNumber + 1,
                       updatedIntegration,
                     })

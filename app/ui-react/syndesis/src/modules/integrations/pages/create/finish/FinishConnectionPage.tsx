@@ -144,7 +144,9 @@ export class FinishConnectionPage extends React.Component {
               backHref={resolvers.create.start.configureAction({
                 actionId: startAction.id!,
                 connection: startConnection,
+                flow: '0',
                 integration,
+                position: '1',
               })}
               cancelHref={resolvers.list()}
             />

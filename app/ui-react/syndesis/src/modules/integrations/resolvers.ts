@@ -4,6 +4,95 @@ import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import routes from './routes';
 
+interface IEditorIndex {
+  flow: string;
+  integration: Integration;
+}
+
+interface IEditorSelectConnection extends IEditorIndex {
+  position: string;
+}
+
+interface IEditorSelectAction extends IEditorSelectConnection {
+  connection: ConnectionOverview;
+}
+
+interface IEditorConfigureAction extends IEditorSelectAction {
+  actionId: string;
+  step?: number;
+  updatedIntegration?: Integration;
+}
+
+const configureIndexMapper = ({ flow, integration }: IEditorIndex) => ({
+  params: {
+    flow,
+    integrationId: integration ? integration.id : undefined,
+  },
+  state: {
+    integration,
+  },
+});
+
+const configureSelectConnectionMapper = ({
+  position,
+  ...rest
+}: IEditorSelectConnection) => {
+  const { params, state } = configureIndexMapper(rest);
+  return {
+    params: {
+      ...params,
+      position,
+    },
+    state,
+  };
+};
+
+const configureSelectActionMapper = ({
+  connection,
+  ...rest
+}: IEditorSelectAction) => {
+  const { params, state } = configureSelectConnectionMapper(rest);
+  return {
+    params: {
+      ...params,
+      connectionId: connection.id,
+    },
+    state: {
+      ...state,
+      connection,
+    },
+  };
+};
+
+const configureConfigureActionMapper = ({
+  actionId,
+  step,
+  integration,
+  updatedIntegration,
+  position,
+  ...rest
+}: IEditorConfigureAction) => {
+  const { params, state } = configureSelectActionMapper({
+    ...rest,
+    integration,
+    position,
+  });
+  const positionAsNumber = parseInt(position, 10);
+  const stepObject = getStep(integration, 0, positionAsNumber);
+  return {
+    params: {
+      ...params,
+      actionId,
+      step,
+    },
+    state: {
+      ...state,
+      updatedIntegration,
+      configuredProperties: stepObject.configuredProperties,
+    },
+  };
+};
+
 // TODO: unit test every single one of these resolvers 😫
 export default {
   list: makeResolverNoParams(routes.list),
@@ -24,13 +113,7 @@ export default {
           },
         })
       ),
-      configureAction: makeResolver<{
-        connection: ConnectionOverview;
-        actionId: string;
-        step?: number;
-        integration?: Integration;
-        updatedIntegration?: Integration;
-      }>(
+      configureAction: makeResolver<IEditorConfigureAction>(
         routes.create.start.configureAction,
         ({ connection, integration, actionId, step, updatedIntegration }) => ({
           params: {
@@ -115,121 +198,32 @@ export default {
       ),
     },
     configure: {
-      index: makeResolver<{ integration: Integration }>(
+      index: makeResolver<IEditorIndex>(
         routes.create.configure.index,
-        ({ integration }) => ({
-          state: {
-            integration,
-          },
-        })
+        configureIndexMapper
       ),
       addStep: {
-        selectConnection: makeResolver<{
-          position: string;
-          integration: Integration;
-        }>(
+        selectConnection: makeResolver<IEditorSelectConnection>(
           routes.create.configure.addStep.selectConnection,
-          ({ position, integration }) => ({
-            params: {
-              position,
-            },
-            state: {
-              integration,
-            },
-          })
+          configureSelectConnectionMapper
         ),
-        selectAction: makeResolver<{
-          position: string;
-          integration: Integration;
-          connection: ConnectionOverview;
-        }>(
+        selectAction: makeResolver<IEditorSelectAction>(
           routes.create.configure.addStep.selectAction,
-          ({ connection, position, integration }) => ({
-            params: {
-              position,
-              connectionId: connection.id,
-            },
-            state: {
-              integration,
-              connection,
-            },
-          })
+          configureSelectActionMapper
         ),
-        configureAction: makeResolver<{
-          connection: ConnectionOverview;
-          actionId: string;
-          step?: number;
-          integration?: Integration;
-          updatedIntegration?: Integration;
-          position: string;
-        }>(
+        configureAction: makeResolver<IEditorConfigureAction>(
           routes.create.configure.addStep.configureAction,
-          ({
-            connection,
-            integration,
-            actionId,
-            step,
-            position,
-            updatedIntegration,
-          }) => ({
-            params: {
-              connectionId: connection.id,
-              actionId,
-              step,
-              position,
-            },
-            state: {
-              connection,
-              integration,
-              updatedIntegration,
-            },
-          })
+          configureConfigureActionMapper
         ),
       },
       editStep: {
-        selectAction: makeResolver<{
-          position: string;
-          integration: Integration;
-          connection: ConnectionOverview;
-        }>(
+        selectAction: makeResolver<IEditorSelectAction>(
           routes.create.configure.editStep.selectAction,
-          ({ connection, position, integration }) => ({
-            params: {
-              position,
-              connectionId: connection.id,
-            },
-            state: {
-              integration,
-              connection,
-            },
-          })
+          configureSelectActionMapper
         ),
-        configureAction: makeResolver<{
-          actionId: string;
-          step?: number;
-          integration: Integration;
-          updatedIntegration?: Integration;
-          position: string;
-        }>(
+        configureAction: makeResolver<IEditorConfigureAction>(
           routes.create.configure.editStep.configureAction,
-          ({ integration, actionId, step, position, updatedIntegration }) => {
-            const positionAsNumber = parseInt(position, 10);
-            const stepObject = getStep(integration, 0, positionAsNumber);
-            return {
-              params: {
-                actionId,
-                step,
-                position,
-                connectionId: stepObject.connection!.id!,
-              },
-              state: {
-                integration,
-                updatedIntegration,
-                connection: stepObject.connection!,
-                configuredProperties: stepObject.configuredProperties,
-              },
-            };
-          }
+          configureConfigureActionMapper
         ),
       },
       saveAndPublish: makeResolver<{ integration: Integration }>(
@@ -266,141 +260,37 @@ export default {
       })
     ),
     edit: {
-      index: makeResolver<{ integration: Integration }>(
+      index: makeResolver<IEditorIndex>(
         routes.integration.edit.index,
-        ({ integration }) => ({
-          params: {
-            integrationId: integration.id,
-          },
-          state: {
-            integration,
-          },
-        })
+        configureIndexMapper
       ),
       addStep: {
-        selectConnection: makeResolver<{
-          position: string;
-          integration: Integration;
-        }>(
+        selectConnection: makeResolver<IEditorSelectConnection>(
           routes.integration.edit.addStep.selectConnection,
-          ({ position, integration }) => ({
-            params: {
-              integrationId: integration.id,
-              position,
-            },
-            state: {
-              integration,
-            },
-          })
+          configureSelectConnectionMapper
         ),
-        selectAction: makeResolver<{
-          position: string;
-          integration: Integration;
-          connection: ConnectionOverview;
-        }>(
+        selectAction: makeResolver<IEditorSelectAction>(
           routes.integration.edit.addStep.selectAction,
-          ({ connection, position, integration }) => ({
-            params: {
-              integrationId: integration.id,
-              position,
-              connectionId: connection.id,
-            },
-            state: {
-              integration,
-              connection,
-            },
-          })
+          configureSelectActionMapper
         ),
-        configureAction: makeResolver<{
-          connection: ConnectionOverview;
-          actionId: string;
-          step?: number;
-          integration: Integration;
-          updatedIntegration?: Integration;
-          position: string;
-        }>(
+        configureAction: makeResolver<IEditorConfigureAction>(
           routes.integration.edit.addStep.configureAction,
-          ({
-            connection,
-            integration,
-            actionId,
-            step,
-            position,
-            updatedIntegration,
-          }) => ({
-            params: {
-              integrationId: integration.id,
-              connectionId: connection.id,
-              actionId,
-              step,
-              position,
-            },
-            state: {
-              connection,
-              integration,
-              updatedIntegration,
-            },
-          })
+          configureConfigureActionMapper
         ),
       },
       editStep: {
-        selectAction: makeResolver<{
-          position: string;
-          integration: Integration;
-          connection: ConnectionOverview;
-        }>(
+        selectAction: makeResolver<IEditorSelectAction>(
           routes.integration.edit.editStep.selectAction,
-          ({ connection, position, integration }) => ({
-            params: {
-              integrationId: integration.id,
-              position,
-              connectionId: connection.id,
-            },
-            state: {
-              integration,
-              connection,
-            },
-          })
+          configureSelectActionMapper
         ),
-        configureAction: makeResolver<{
-          actionId: string;
-          step?: number;
-          integration: Integration;
-          updatedIntegration?: Integration;
-          position: string;
-        }>(
+        configureAction: makeResolver<IEditorConfigureAction>(
           routes.integration.edit.editStep.configureAction,
-          ({ integration, actionId, step, position, updatedIntegration }) => {
-            const positionAsNumber = parseInt(position, 10);
-            const stepObject = getStep(integration, 0, positionAsNumber);
-            return {
-              params: {
-                integrationId: integration.id,
-                actionId,
-                step,
-                position,
-                connectionId: stepObject.connection!.id!,
-              },
-              state: {
-                integration,
-                updatedIntegration,
-                connection: stepObject.connection,
-                configuredProperties: stepObject.configuredProperties || {},
-              },
-            };
-          }
+          configureConfigureActionMapper
         ),
       },
-      saveAndPublish: makeResolver<{ integration: Integration }>(
+      saveAndPublish: makeResolver<IEditorIndex>(
         routes.integration.edit.saveAndPublish,
-        ({ integration }) => ({
-          params: {
-            integrationId: integration.id,
-          },
-          state: {
-            integration,
-          },
-        })
+        configureIndexMapper
       ),
     },
     metrics: makeResolver<{ integration: Integration }>(

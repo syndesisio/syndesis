@@ -120,6 +120,7 @@ export class SelectActionPage extends React.Component {
                                         {
                                           actionId: a.id!,
                                           connection,
+                                          flow: '0',
                                           integration,
                                           position,
                                         }
@@ -133,10 +134,11 @@ export class SelectActionPage extends React.Component {
                           </IntegrationEditorChooseAction>
                         }
                         cancelHref={resolvers.create.configure.index({
+                          flow: '0',
                           integration,
                         })}
                         backHref={resolvers.create.configure.addStep.selectConnection(
-                          { position, integration }
+                          { flow: '0', position, integration }
                         )}
                       />
                     </>

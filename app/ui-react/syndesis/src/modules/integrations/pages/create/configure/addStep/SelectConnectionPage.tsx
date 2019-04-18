@@ -96,6 +96,7 @@ export class SelectConnectionPage extends React.Component {
                                       href={resolvers.create.configure.addStep.selectAction(
                                         {
                                           connection: c,
+                                          flow: '0',
                                           integration,
                                           position,
                                         }
@@ -123,7 +124,10 @@ export class SelectConnectionPage extends React.Component {
                     )}
                   </WithConnections>
                 }
-                cancelHref={resolvers.create.configure.index({ integration })}
+                cancelHref={resolvers.create.configure.index({
+                  flow: '0',
+                  integration,
+                })}
               />
             </>
           );
