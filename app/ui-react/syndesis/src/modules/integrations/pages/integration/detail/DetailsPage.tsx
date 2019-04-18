@@ -4,8 +4,9 @@ import {
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
   IntegrationDetailInfo,
+  Loader,
 } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
+import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { IntegrationDetailSteps } from '../../../components';
@@ -40,31 +41,40 @@ export class DetailsPage extends React.Component {
               integrationId={integrationId}
               initialValue={integration}
             >
-              <div>
-                <Translation ns={['integration', 'shared']}>
-                  {t => (
-                    <>
-                      <IntegrationDetailInfo
-                        name={integration.name}
-                        version={integration.version}
-                      />
-                      <IntegrationDetailNavBar integration={integration} />
-                      <IntegrationDetailSteps
-                        steps={getSteps(integration, 0)}
-                      />
-                      <IntegrationDetailDescription
-                        description={integration.description}
-                      />
-                      <IntegrationDetailHistoryListView
-                        integrationIsDraft={false}
-                        children={integration.flows}
-                        i18nTextDraft={t('Draft')}
-                        i18nTextHistory={t('History')}
-                      />
-                    </>
+              {({ data, hasData, error }) => (
+                <WithLoader
+                  error={error}
+                  loading={!hasData}
+                  loaderChildren={<Loader />}
+                  errorChildren={<div>TODO</div>}
+                >
+                  {() => (
+                    <div>
+                      <Translation ns={['integration', 'shared']}>
+                        {t => (
+                          <>
+                            <IntegrationDetailInfo
+                              name={data.name}
+                              version={data.version}
+                            />
+                            <IntegrationDetailNavBar integration={data} />
+                            <IntegrationDetailSteps steps={getSteps(data, 0)} />
+                            <IntegrationDetailDescription
+                              description={data.description}
+                            />
+                            <IntegrationDetailHistoryListView
+                              integrationIsDraft={false}
+                              children={data.flows}
+                              i18nTextDraft={t('Draft')}
+                              i18nTextHistory={t('History')}
+                            />
+                          </>
+                        )}
+                      </Translation>
+                    </div>
                   )}
-                </Translation>
-              </div>
+                </WithLoader>
+              )}
             </WithIntegration>
           );
         }}
