@@ -1,4 +1,5 @@
-import { RestDataService } from '@syndesis/models';
+import { WithViewEditorStates } from '@syndesis/api';
+import { RestDataService, ViewEditorState } from '@syndesis/models';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -7,6 +8,8 @@ import {
   ViewSqlFormAndTable,
   VirtualizationNavBar,
 } from '../shared/';
+import { getPreviewVdbName } from '../shared/VirtualizationUtils';
+
 /**
  * @param virtualizationId - the ID of the virtualization whose details are being shown by this page.
  */
@@ -51,10 +54,19 @@ export class VirtualizationSqlClientPage extends React.Component<
               <>
                 <HeaderView virtualizationId={virtualizationId} />
                 <VirtualizationNavBar virtualization={virtualization} />
-                <ViewSqlFormAndTable
-                  viewNames={virtualization.serviceViewDefinitions}
-                  virtualizationName={virtualizationId}
-                />
+                <WithViewEditorStates
+                  idPattern={virtualization.serviceVdbName + '*'}
+                >
+                  {({ data, hasData, error }) => (
+                    <ViewSqlFormAndTable
+                      views={data.map(
+                        (editorState: ViewEditorState) =>
+                          editorState.viewDefinition
+                      )}
+                      targetVdb={getPreviewVdbName()}
+                    />
+                  )}
+                </WithViewEditorStates>
               </>
             )}
           </Translation>

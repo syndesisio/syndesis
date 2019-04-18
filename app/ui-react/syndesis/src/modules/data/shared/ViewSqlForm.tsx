@@ -1,23 +1,23 @@
 import { WithVirtualizationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { QueryResults } from '@syndesis/models';
+import { QueryResults, ViewDefinition } from '@syndesis/models';
 import { Container } from '@syndesis/ui';
 // tslint:disable-next-line:no-implicit-dependencies
 import { DropdownButton, MenuItem } from 'patternfly-react';
 import * as React from 'react';
 import i18n from '../../../i18n';
+import { getPreviewSql } from './VirtualizationUtils';
 
 export interface IViewSqlFormProps {
   /**
-   * @param viewNames the array of view names for the current virtualization
-   * This will come from the virtualization.serviceViewDefinitions string[] array
+   * @param views the array of view definitions for the current virtualization
    */
-  viewNames: string[];
+  views: ViewDefinition[];
 
   /**
-   * @param virtualizationName the name of the virtualization
+   * @param targetVdb the name of the vdb to query
    */
-  virtualizationName: string;
+  targetVdb: string;
 
   /**
    * @param onQueryResultsChanged the parameter function called by the parent component to that returns
@@ -29,7 +29,7 @@ export interface IViewSqlFormProps {
 export interface IViewSqlFormState {
   queryResults: QueryResults;
   querySql: string;
-  viewName: string;
+  selectedView?: ViewDefinition;
 }
 
 export class ViewSqlForm extends React.Component<
@@ -45,12 +45,7 @@ export class ViewSqlForm extends React.Component<
     super(props);
     this.state = {
       queryResults: ViewSqlForm.queryResultsEmpty,
-      querySql:
-        'SELECT * FROM ' +
-        (this.props.viewNames.length > 0
-          ? this.props.viewNames[0]
-          : '<view name>'),
-      viewName: this.props.viewNames.length > 0 ? this.props.viewNames[0] : '',
+      querySql: '',
     };
 
     this.updateQueryResults = this.updateQueryResults.bind(this);
@@ -68,9 +63,15 @@ export class ViewSqlForm extends React.Component<
   }
 
   public viewSelected() {
+    const viewSql = getPreviewSql(this.props.views[0]);
     // TODO: change the defaultValue in the SqlStatement text area
     // to reflect the newly selected view name (if changed)
     // Maybe even show a text field showing the selected component depending on the PF4 widget type
+    this.setState({
+      queryResults: ViewSqlForm.queryResultsEmpty,
+      querySql: viewSql,
+      selectedView: this.props.views[0],
+    });
   }
 
   public render() {
@@ -128,19 +129,13 @@ export class ViewSqlForm extends React.Component<
       <WithVirtualizationHelpers username="developer">
         {({ queryVirtualization }) => {
           const doSubmit = async (value: any) => {
-            await queryVirtualization(
-              this.props.virtualizationName,
+            const results: QueryResults = await queryVirtualization(
+              this.props.targetVdb,
               value.sqlStatement,
               value.rowLimit,
               value.rowOffset
             );
-            // TODO: post toast notification
-            alert(
-              'Query successful. SQL : ' +
-                JSON.stringify(value, undefined, 2) +
-                '\nQuery Results: ' +
-                JSON.stringify(this.state.queryResults, undefined, 2)
-            );
+            this.updateQueryResults(results);
           };
           return (
             // NOTE: This is a fake SELECTOR widget (i.e. dropdown menu) just to show a selector-like UI component
@@ -151,15 +146,15 @@ export class ViewSqlForm extends React.Component<
                   bsStyle="default"
                   title={
                     // TODO: i18n translations
-                    this.props.viewNames.length > 0
+                    this.props.views.length > 0
                       ? 'Select View...'
                       : 'No Views Defined'
                   }
                   id="dropdown-example"
                   onClick={this.viewSelected}
                 >
-                  {this.props.viewNames.map((name, index) => (
-                    <MenuItem key={index}>{name}</MenuItem>
+                  {this.props.views.map((view, index) => (
+                    <MenuItem key={index}>{view.viewName}</MenuItem>
                   ))}
                 </DropdownButton>
               </Container>
