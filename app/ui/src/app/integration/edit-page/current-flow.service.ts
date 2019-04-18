@@ -11,8 +11,7 @@ import {
   ActionDescriptor,
   Flow,
   Flows,
-  StepOrConnection,
-  Action,
+  StepOrConnection
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import {
@@ -466,10 +465,7 @@ export class CurrentFlowService {
                   kind: INTEGRATION_REMOVE_STEP,
                   position: stepIndex,
                   onSave: () =>
-                    perhapsReconcileDataShapes(
-                      event.skipReconcile,
-                      thenFinally
-                    ),
+                    perhapsReconcileDataShapes(event.skipReconcile, thenFinally)
                 });
               } else {
                 perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
@@ -484,15 +480,13 @@ export class CurrentFlowService {
       case INTEGRATION_SET_STEP: {
         const position = +event.position;
         const step = event.step as Step;
-        this.executeStepCustomizations(position, step, (_step: Step) => {
-          this._integration = setStepInFlow(
-            this._integration,
-            this.flowId,
-            { ..._step },
-            position
-          );
-          perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
-        });
+        this._integration = setStepInFlow(
+          this._integration,
+          this.flowId,
+          { ...step },
+          position
+        );
+        thenFinally();
         break;
       }
       case INTEGRATION_SET_METADATA: {
@@ -520,11 +514,7 @@ export class CurrentFlowService {
           setConfiguredPropertiesOnStep(step, properties),
           position
         );
-        if (step.stepKind === DATA_MAPPER) {
-          perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
-        } else {
-          thenFinally();
-        }
+        thenFinally();
         break;
       }
       case INTEGRATION_SET_ACTION: {
@@ -539,7 +529,7 @@ export class CurrentFlowService {
           setActionOnStep(step, action, stepKind),
           position
         );
-        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
+        thenFinally();
         break;
       }
       case INTEGRATION_SET_DESCRIPTOR: {
@@ -553,7 +543,7 @@ export class CurrentFlowService {
           setDescriptorOnStep(step, descriptor),
           position
         );
-        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
+        thenFinally();
         break;
       }
       case INTEGRATION_SET_DATASHAPE: {
@@ -568,7 +558,7 @@ export class CurrentFlowService {
           setDataShapeOnStep(step, dataShape, isInput),
           position
         );
-        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
+        thenFinally();
         break;
       }
       case INTEGRATION_SET_CONNECTION: {
@@ -580,7 +570,7 @@ export class CurrentFlowService {
           createStepWithConnection(connection),
           position
         );
-        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
+        thenFinally();
         break;
       }
       case INTEGRATION_SET_PROPERTY:
@@ -638,106 +628,31 @@ export class CurrentFlowService {
   }
 
   /**
-   * Iterate through the flow and fire off requests as needed to ensure data
-   * shapes are consistent
+   * Fire off requests as needed to ensure data shapes are consistent
    * @param then
    */
   reconcileAllDataShapes(then: () => void) {
-    let outstanding = 0;
-    const decrementCount = () => {
-      outstanding = outstanding - 1;
-      if (outstanding <= 0) {
-        then();
-      }
-    };
-    this.currentFlow.steps.forEach((step, position) => {
-      outstanding = outstanding + 1;
-      switch (step.stepKind) {
-        case SPLIT:
-        case AGGREGATE:
-          // Just reset the existing step and trigger executing step customizations
-          this.events.emit({
-            kind: INTEGRATION_SET_STEP,
-            position,
-            step,
-            skipReconcile: true,
-            onSave: decrementCount,
-          });
-          break;
-        default:
-          decrementCount();
-      }
+    this.fetchStepDescriptors(this.currentFlow.steps, steps => {
+      this.currentFlow.steps = steps;
+      then();
     });
   }
 
-  /**
-   * Apply any step-specific custom actions on the given step, then run the
-   * supplied callback
-   * @param position
-   * @param step
-   * @param then
-   */
-  executeStepCustomizations(
-    position: number,
-    step: Step,
-    then: (step: Step) => void
-  ): any {
-    switch (step.stepKind) {
-      case SPLIT: {
-        // A split step uses the data shape of the previous step, the
-        // backend converts the output data shape to a collection
-        const previous = this.getPreviousStepWithDataShape(position);
-        this.fetchStepDescriptor(
-          step,
-          previous.action.descriptor.inputDataShape,
-          previous.action.descriptor.outputDataShape,
-          then
-        );
-        break;
-      }
-      case AGGREGATE: {
-        // An aggregate step uses the output data shape of the previous step
-        // and the input data shape of the subsequent step, backend will
-        // convert the input data shape of the aggregate step to a collection
-        const previous = this.getPreviousStepWithDataShape(position);
-        const subsequent = this.getSubsequentStepWithDataShape(position);
-        this.fetchStepDescriptor(
-          step,
-          typeof subsequent !== 'undefined' ? subsequent.action.descriptor.inputDataShape : undefined,
-          previous.action.descriptor.outputDataShape,
-          then
-        );
-        break;
-      }
-      default:
-        setTimeout(() => then(step), 1);
-    }
-  }
-
-  fetchStepDescriptor(
-    step: Step,
-    inputDataShape: DataShape,
-    outputDataShape: DataShape,
-    then: (step: Step) => void
+  fetchStepDescriptors(
+    steps: Step[],
+    then: (steps: Step[]) => void
   ) {
     const sub = this.integrationSupportService
-      .getStepDescriptor(step.stepKind, {
-        inputShape: inputDataShape,
-        outputShape: outputDataShape,
-      })
+      .getStepDescriptors(steps)
       .subscribe(
-        descriptor => {
-          step = {
-            ...step,
-            action: { actionType: 'step', descriptor } as Action,
-          };
+        enrichedSteps => {
           sub.unsubscribe();
-          then(step);
+          then(enrichedSteps);
         },
         err => {
           // we'll just pass through
           sub.unsubscribe();
-          then(step);
+          then(steps);
         }
       );
   }
