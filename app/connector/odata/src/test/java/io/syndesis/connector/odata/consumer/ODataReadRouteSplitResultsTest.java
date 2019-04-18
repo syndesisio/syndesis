@@ -15,11 +15,12 @@
  */
 package io.syndesis.connector.odata.consumer;
 
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import java.util.List;
 import java.util.Map;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.component.olingo4.Olingo4Endpoint;
@@ -140,6 +141,50 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         testResult(result, 0, TEST_SERVER_DATA_1);
         testResult(result, 1, TEST_SERVER_DATA_2);
         testResult(result, 2, TEST_SERVER_DATA_3);
+    }
+
+    @Test
+    public void testEmptyServiceUri() throws Exception {
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>());
+
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
+
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+
+        assertThatExceptionOfType(RuntimeCamelException.class)
+            .isThrownBy(() -> {
+                context.start();
+            })
+            .withMessageContaining("serviceUri is not set");
+    }
+
+    @Test
+    public void testEndSlashOnServiceUri() throws Exception {
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                                .property(SERVICE_URI, defaultTestServer.servicePlainUri() + FORWARD_SLASH));
+
+        Step odataStep = createODataStep(odataConnector, defaultTestServer.resourcePath());
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
+
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+
+        MockEndpoint result = initMockEndpoint();
+        result.setMinimumExpectedMessageCount(defaultTestServer.getResultCount());
+
+        context.start();
+
+        result.assertIsSatisfied();
+        testResult(result, 0, TEST_SERVER_DATA_1);
+        testResult(result, 1, TEST_SERVER_DATA_2);
+        testResult(result, 2, TEST_SERVER_DATA_3);
+
+        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_ENDPOINT, Olingo4Endpoint.class);
+        assertNotNull(olingo4Endpoint);
+        String endpointServiceURI = olingo4Endpoint.getConfiguration().getServiceUri();
+        assertEquals(defaultTestServer.servicePlainUri(), endpointServiceURI);
     }
 
     /**

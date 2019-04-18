@@ -77,12 +77,13 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
         if (!builder.build().getErrors().isEmpty()) {
             return;
         }
-        final String serviceUrl = (String) parameters.get(SERVICE_URI);
+        String serviceUrl = (String) parameters.get(SERVICE_URI);
         LOGGER.debug("Validating OData connection to {}", serviceUrl);
 
         if (ObjectHelper.isNotEmpty(serviceUrl)) {
             try (CloseableHttpClient httpClient = ODataUtil.createHttpClient(parameters)) {
 
+                serviceUrl = ODataUtil.removeEndSlashes(serviceUrl);
                 HttpGet httpGet = new HttpGet(serviceUrl + METADATA_ENDPOINT);
                 CloseableHttpResponse response = httpClient.execute(httpGet);
                 if (response.getStatusLine().getStatusCode() == 401) {
