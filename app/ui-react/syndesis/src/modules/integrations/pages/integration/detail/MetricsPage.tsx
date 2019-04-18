@@ -2,16 +2,16 @@ import { Integration } from '@syndesis/models';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { IntegrationDetailNavBar } from '../../shared/IntegrationDetailNavBar';
+import { IntegrationDetailNavBar } from '../../../shared';
 
 /**
  * @integrationId - the ID of the integration for which details are being displayed.
  */
-export interface IActivityPageParams {
+export interface IMetricsPageParams {
   integrationId: string;
 }
 
-export interface IActivityPageState {
+export interface IMetricsPageState {
   integration: Integration;
 }
 
@@ -22,17 +22,17 @@ export interface IActivityPageState {
  * or an integration object set via the state.
  *
  */
-export class ActivityPage extends React.Component {
+export class MetricsPage extends React.Component {
   public render() {
     return (
-      <WithRouteData<IActivityPageParams, IActivityPageState>>
+      <WithRouteData<IMetricsPageParams, IMetricsPageState>>
         {({ integrationId }, { integration }, { history }) => {
           return (
             <div>
               <Translation ns={['integration', 'shared']}>
                 {t => <IntegrationDetailNavBar integration={integration} />}
               </Translation>
-              <p>This is the Integration Detail Activity page.</p>
+              <p>This is the Integration Detail Metrics page.</p>
             </div>
           );
         }}

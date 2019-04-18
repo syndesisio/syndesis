@@ -5,8 +5,7 @@ import * as React from 'react';
 import './IntegrationStepsHorizontalView.css';
 
 export interface IIntegrationSteps {
-  name: string;
-  pattern: string;
+  name?: string;
 }
 
 export interface IIntegrationStepsHorizontalViewProps {
