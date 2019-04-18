@@ -1,21 +1,20 @@
 /* tslint:disable:object-literal-sort-keys */
 import { include } from 'named-urls';
 
+const stepRoutes = {
+  selectConnection: '',
+  selectAction: `:connectionId`,
+  configureAction: `:connectionId/:actionId/:step?`,
+};
+
 /**
  * Both the integration creator and editor share the same routes when the creator
  * reaches the third step in the wizard. This object is to keep them DRY.
  */
 const editorRoutes = {
   index: 'add-step',
-  addStep: include(':position/connection', {
-    selectConnection: '',
-    selectAction: `:connectionId`,
-    configureAction: `:connectionId/:actionId/:step?`,
-  }),
-  editStep: include(':position/edit-connection', {
-    selectAction: `select-action/:connectionId`,
-    configureAction: `:actionId/:step?`,
-  }),
+  addStep: include(':position/connection', stepRoutes),
+  editStep: include(':position/edit-connection', stepRoutes),
   saveAndPublish: 'save',
   root: '',
 };
@@ -23,16 +22,8 @@ const editorRoutes = {
 export default include('/integrations', {
   list: '',
   create: include('create', {
-    start: include('start', {
-      selectConnection: '',
-      selectAction: `:connectionId`,
-      configureAction: `:connectionId/:actionId/:step?`,
-    }),
-    finish: include('finish', {
-      selectConnection: ``,
-      selectAction: `:connectionId`,
-      configureAction: `:connectionId/:actionId/:step?`,
-    }),
+    start: include('start', stepRoutes),
+    finish: include('finish', stepRoutes),
     configure: include('configure', editorRoutes),
     root: '',
   }),

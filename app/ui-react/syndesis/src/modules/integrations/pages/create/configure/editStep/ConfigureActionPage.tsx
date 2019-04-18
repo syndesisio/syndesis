@@ -1,5 +1,5 @@
-import { getStep, getSteps, WithIntegrationHelpers } from '@syndesis/api';
-import { Integration } from '@syndesis/models';
+import { getSteps, WithIntegrationHelpers } from '@syndesis/api';
+import { Connection, Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -37,6 +37,8 @@ export interface IConfigureActionRouteParams {
 export interface IConfigureActionRouteState {
   integration: Integration;
   updatedIntegration?: Integration;
+  connection: Connection;
+  configuredProperties: { [key: string]: string };
 }
 
 /**
@@ -65,12 +67,16 @@ export class ConfigureActionPage extends React.Component {
           >>
             {(
               { actionId, step = '0', position },
-              { integration, updatedIntegration },
+              {
+                configuredProperties,
+                connection,
+                integration,
+                updatedIntegration,
+              },
               { history }
             ) => {
               const stepAsNumber = parseInt(step, 10);
               const positionAsNumber = parseInt(position, 10);
-              const stepObject = getStep(integration, 0, positionAsNumber);
               const onUpdatedIntegration = async ({
                 action,
                 moreConfigurationSteps,
@@ -78,7 +84,7 @@ export class ConfigureActionPage extends React.Component {
               }: IOnUpdatedIntegrationProps) => {
                 updatedIntegration = await updateConnection(
                   updatedIntegration || integration,
-                  stepObject.connection!,
+                  connection,
                   action,
                   0,
                   positionAsNumber,
@@ -88,7 +94,7 @@ export class ConfigureActionPage extends React.Component {
                   history.push(
                     resolvers.create.configure.addStep.configureAction({
                       actionId,
-                      connection: stepObject.connection!,
+                      connection,
                       integration,
                       position,
                       step: stepAsNumber + 1,
@@ -106,10 +112,10 @@ export class ConfigureActionPage extends React.Component {
 
               return (
                 <WithConfigurationForm
-                  connection={stepObject.connection!}
+                  connection={connection}
                   actionId={actionId}
                   configurationStep={stepAsNumber}
-                  initialValue={stepObject.configuredProperties}
+                  initialValue={configuredProperties}
                   onUpdatedIntegration={onUpdatedIntegration}
                 >
                   {({ form, submitForm, isSubmitting }) => (
@@ -129,7 +135,7 @@ export class ConfigureActionPage extends React.Component {
                         content={form}
                         backHref={resolvers.create.configure.editStep.selectAction(
                           {
-                            connection: stepObject.connection!,
+                            connection,
                             integration,
                             position,
                           }

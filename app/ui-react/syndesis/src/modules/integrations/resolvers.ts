@@ -1,4 +1,5 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
+import { getStep } from '@syndesis/api';
 import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import routes from './routes';
@@ -211,17 +212,24 @@ export default {
           position: string;
         }>(
           routes.create.configure.editStep.configureAction,
-          ({ integration, actionId, step, position, updatedIntegration }) => ({
-            params: {
-              actionId,
-              step,
-              position,
-            },
-            state: {
-              integration,
-              updatedIntegration,
-            },
-          })
+          ({ integration, actionId, step, position, updatedIntegration }) => {
+            const positionAsNumber = parseInt(position, 10);
+            const stepObject = getStep(integration, 0, positionAsNumber);
+            return {
+              params: {
+                actionId,
+                step,
+                position,
+                connectionId: stepObject.connection!.id!,
+              },
+              state: {
+                integration,
+                updatedIntegration,
+                connection: stepObject.connection!,
+                configuredProperties: stepObject.configuredProperties,
+              },
+            };
+          }
         ),
       },
       saveAndPublish: makeResolver<{ integration: Integration }>(
@@ -362,18 +370,25 @@ export default {
           position: string;
         }>(
           routes.integration.edit.editStep.configureAction,
-          ({ integration, actionId, step, position, updatedIntegration }) => ({
-            params: {
-              integrationId: integration.id,
-              actionId,
-              step,
-              position,
-            },
-            state: {
-              integration,
-              updatedIntegration,
-            },
-          })
+          ({ integration, actionId, step, position, updatedIntegration }) => {
+            const positionAsNumber = parseInt(position, 10);
+            const stepObject = getStep(integration, 0, positionAsNumber);
+            return {
+              params: {
+                integrationId: integration.id,
+                actionId,
+                step,
+                position,
+                connectionId: stepObject.connection!.id!,
+              },
+              state: {
+                integration,
+                updatedIntegration,
+                connection: stepObject.connection,
+                configuredProperties: stepObject.configuredProperties || {},
+              },
+            };
+          }
         ),
       },
       saveAndPublish: makeResolver<{ integration: Integration }>(

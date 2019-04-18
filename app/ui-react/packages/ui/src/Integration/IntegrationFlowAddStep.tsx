@@ -5,7 +5,6 @@ import './IntegrationFlowAddStep.css';
 
 export interface IIntegrationFlowAddStepProps {
   showDetails: boolean;
-  forceTooltip?: boolean;
   addStepHref?: H.LocationDescriptor;
   i18nAddStep?: string;
 }
@@ -23,7 +22,6 @@ export class IntegrationFlowAddStep extends React.Component<
   };
 
   public state = {
-    forceTooltip: false,
     showTooltip: false,
   };
 
