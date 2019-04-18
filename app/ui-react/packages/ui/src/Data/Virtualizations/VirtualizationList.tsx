@@ -7,8 +7,12 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink, Container } from '../../Layout';
-import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
+import { ButtonLink } from '../../Layout';
+import {
+  IListViewToolbarProps,
+  ListViewToolbar,
+  SimplePageHeader,
+} from '../../Shared';
 
 export interface IVirtualizationListProps extends IListViewToolbarProps {
   hasListData: boolean;
@@ -63,10 +67,10 @@ export class VirtualizationList extends React.Component<
   public render() {
     return (
       <>
-        <Container>
-          <h2>{this.props.i18nTitle}</h2>
-          <h3>{this.props.i18nDescription}</h3>
-        </Container>
+        <SimplePageHeader
+          i18nTitle={this.props.i18nTitle}
+          i18nDescription={this.props.i18nDescription}
+        />
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <OverlayTrigger

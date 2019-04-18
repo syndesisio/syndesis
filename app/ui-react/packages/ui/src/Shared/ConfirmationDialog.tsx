@@ -27,7 +27,7 @@ export enum ConfirmationButtonStyle {
 /**
  * A dialog that can be used to obtain user confirmation when deleting an object.
  */
-export interface IDeleteConfirmationDialogProps {
+export interface IConfirmationDialogProps {
   /**
    * The style of button to use for the primary action
    */
@@ -82,7 +82,7 @@ export interface IDeleteConfirmationDialogProps {
  * A modal dialog to display when an object is being deleted.
  */
 export class ConfirmationDialog extends React.Component<
-  IDeleteConfirmationDialogProps
+  IConfirmationDialogProps
 > {
   public render() {
     return (
