@@ -42,6 +42,6 @@ public class ClientEnumValueSerializer
 
     @Override
     public void serialize(ClientEnumValue value, JsonGenerator generator, SerializerProvider provider) throws IOException {
-        generator.writeString(value.toString());
+        generator.writeString(value.getValue());
     }
 }

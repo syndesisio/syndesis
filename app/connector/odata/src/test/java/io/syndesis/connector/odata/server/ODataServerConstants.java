@@ -34,6 +34,9 @@ public interface ODataServerConstants extends StringConstants {
     String ET_SPEC_NAME = "Specification";
     FullQualifiedName ET_SPEC_FQN = new FullQualifiedName(NAMESPACE, ET_SPEC_NAME);
 
+    String ET_POWER_TYPE_NAME = "PowerType";
+    FullQualifiedName ET_POWER_TYPE_FQN = new FullQualifiedName(NAMESPACE, ET_POWER_TYPE_NAME);
+
     // Entity Set Names
     String ES_PRODUCTS_NAME = "Products";
 
@@ -46,5 +49,6 @@ public interface ODataServerConstants extends StringConstants {
     String SPEC_PRODUCT_TYPE = "ProductType";
     String SPEC_DETAIL_1 = "Detail1";
     String SPEC_DETAIL_2 = "Detail2";
+    String SPEC_POWER_TYPE = "PowerType";
 
 }

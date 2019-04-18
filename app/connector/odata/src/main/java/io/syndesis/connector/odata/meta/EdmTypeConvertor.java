@@ -60,7 +60,11 @@ public class EdmTypeConvertor {
     }
 
     public PropertyMetadata visit(EdmEnumType type) {
-        return visit(type.getUnderlyingType());
+        /*
+         * Need to synchronize with what the customize generates from enum values
+         * see {@link io.syndesis.connector.odata.customizer.json.ClientEnumValueSerializer#serialize}
+         */
+        return property(String.class);
     }
 
     public PropertyMetadata visit(EdmPrimitiveType type) {

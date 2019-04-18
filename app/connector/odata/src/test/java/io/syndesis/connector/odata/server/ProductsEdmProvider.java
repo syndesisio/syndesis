@@ -27,6 +27,8 @@ import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainer;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityContainerInfo;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntitySet;
 import org.apache.olingo.commons.api.edm.provider.CsdlEntityType;
+import org.apache.olingo.commons.api.edm.provider.CsdlEnumMember;
+import org.apache.olingo.commons.api.edm.provider.CsdlEnumType;
 import org.apache.olingo.commons.api.edm.provider.CsdlProperty;
 import org.apache.olingo.commons.api.edm.provider.CsdlPropertyRef;
 import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
@@ -38,6 +40,26 @@ import org.apache.olingo.commons.api.edm.provider.CsdlSchema;
 public class ProductsEdmProvider extends CsdlAbstractEdmProvider implements ODataServerConstants {
 
     @Override
+    public CsdlEnumType getEnumType(FullQualifiedName enumTypeName) {
+        if (enumTypeName.equals(ET_POWER_TYPE_FQN)) {
+            CsdlEnumMember twoForty = new CsdlEnumMember();
+            twoForty.setName("240V");
+            twoForty.setValue("0");
+
+            CsdlEnumMember oneTen = new CsdlEnumMember();
+            oneTen.setName("110V");
+            oneTen.setValue("1");
+
+            CsdlEnumType powerTypeEnum = new CsdlEnumType();
+            powerTypeEnum.setName(ET_POWER_TYPE_NAME);
+            powerTypeEnum.setMembers(Arrays.asList(twoForty, oneTen));
+            return powerTypeEnum;
+        }
+
+        return null;
+    }
+
+    @Override
     public CsdlComplexType getComplexType(FullQualifiedName complexTypeName) {
         if (complexTypeName.equals(ET_SPEC_FQN)) {
             CsdlProperty type = new CsdlProperty().setName(SPEC_PRODUCT_TYPE)
@@ -46,9 +68,11 @@ public class ProductsEdmProvider extends CsdlAbstractEdmProvider implements ODat
                 .setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
             CsdlProperty detail2 = new CsdlProperty().setName(SPEC_DETAIL_2)
                 .setType(EdmPrimitiveTypeKind.String.getFullQualifiedName());
+            CsdlProperty powerType = new CsdlProperty().setName(SPEC_POWER_TYPE)
+                .setType(ET_POWER_TYPE_FQN);
             CsdlComplexType complexType = new CsdlComplexType();
             complexType.setName(ET_SPEC_NAME);
-            complexType.setProperties(Arrays.asList(type, detail1, detail2));
+            complexType.setProperties(Arrays.asList(type, detail1, detail2, powerType));
             return complexType;
         }
 
@@ -126,12 +150,16 @@ public class ProductsEdmProvider extends CsdlAbstractEdmProvider implements ODat
         CsdlSchema schema = new CsdlSchema();
         schema.setNamespace(NAMESPACE);
 
-        List<CsdlComplexType> complexTypes = new ArrayList<CsdlComplexType>();
+        List<CsdlEnumType> enumTypes = new ArrayList<>();
+        enumTypes.add(getEnumType(ET_POWER_TYPE_FQN));
+        schema.setEnumTypes(enumTypes);
+
+        List<CsdlComplexType> complexTypes = new ArrayList<>();
         complexTypes.add(getComplexType(ET_SPEC_FQN));
         schema.setComplexTypes(complexTypes);
 
         // add EntityTypes
-        List<CsdlEntityType> entityTypes = new ArrayList<CsdlEntityType>();
+        List<CsdlEntityType> entityTypes = new ArrayList<>();
         entityTypes.add(getEntityType(ET_PRODUCT_FQN));
         schema.setEntityTypes(entityTypes);
 

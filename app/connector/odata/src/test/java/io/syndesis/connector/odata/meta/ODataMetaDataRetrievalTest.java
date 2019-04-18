@@ -100,7 +100,7 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         assertEquals(false, specSchema.getRequired());
         assertThat(specSchema).isInstanceOf(ObjectSchema.class);
         ObjectSchema specObjSchema = specSchema.asObjectSchema();
-        assertEquals(3, specObjSchema.getProperties().size());
+        assertEquals(4, specObjSchema.getProperties().size());
     }
 
     @Test
