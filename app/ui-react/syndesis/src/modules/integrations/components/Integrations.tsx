@@ -97,17 +97,21 @@ export class Integrations extends React.Component<
                   undeployIntegration,
                 }) => (
                   <>
-                    <ConfirmationDialog
-                      buttonStyle={ConfirmationButtonStyle.NORMAL}
-                      i18nCancelButtonText={t('shared:Cancel')}
-                      i18nConfirmButtonText={this.state.promptDialogButtonText!}
-                      i18nConfirmationMessage={this.state.promptDialogText!}
-                      i18nTitle={this.state.promptDialogTitle!}
-                      icon={this.state.promptDialogIcon!}
-                      showDialog={this.state.showPromptDialog}
-                      onCancel={this.handleActionCancel}
-                      onConfirm={this.handleAction}
-                    />
+                    {this.state.showPromptDialog && (
+                      <ConfirmationDialog
+                        buttonStyle={ConfirmationButtonStyle.NORMAL}
+                        i18nCancelButtonText={t('shared:Cancel')}
+                        i18nConfirmButtonText={
+                          this.state.promptDialogButtonText!
+                        }
+                        i18nConfirmationMessage={this.state.promptDialogText!}
+                        i18nTitle={this.state.promptDialogTitle!}
+                        icon={this.state.promptDialogIcon!}
+                        showDialog={this.state.showPromptDialog}
+                        onCancel={this.handleActionCancel}
+                        onConfirm={this.handleAction}
+                      />
+                    )}
                     <IntegrationsList>
                       <WithLoader
                         error={this.props.error}
