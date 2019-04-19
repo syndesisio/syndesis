@@ -1,4 +1,0 @@
-
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-    io.syndesis.connector.sql.SqlVerifierAutoConfiguration,\
-    io.syndesis.connector.sql.SqlMetaDataAutoConfiguration

@@ -66,7 +66,7 @@ public class ODataVerifierTest extends AbstractODataTest {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(SERVICE_URI, defaultTestServer.servicePlainUri());
 
-        Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
+        Verifier verifier = new ODataVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
 
         assertThat(responses).hasSize(2);
@@ -100,7 +100,7 @@ public class ODataVerifierTest extends AbstractODataTest {
         parameters.put(BASIC_USER_NAME, ODataTestServer.USER);
         parameters.put(BASIC_PASSWORD, ODataTestServer.USER_PASSWORD);
 
-        Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
+        Verifier verifier = new ODataVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
 
         assertThat(responses).hasSize(2);
@@ -116,7 +116,7 @@ public class ODataVerifierTest extends AbstractODataTest {
         parameters.put(BASIC_USER_NAME, ODataTestServer.USER);
         parameters.put(BASIC_PASSWORD, "WrongPassword");
 
-        Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
+        Verifier verifier = new ODataVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
 
         assertThat(responses).hasSize(2);
@@ -141,7 +141,7 @@ public class ODataVerifierTest extends AbstractODataTest {
         parameters.put(SERVICE_URI, sslTestServer.serviceSSLUri());
         parameters.put(SERVER_CERTIFICATE, ODataTestServer.serverCertificate());
 
-        Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
+        Verifier verifier = new ODataVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
 
         assertThat(responses).hasSize(2);
@@ -156,7 +156,7 @@ public class ODataVerifierTest extends AbstractODataTest {
         parameters.put(SERVICE_URI, sslTestServer.serviceSSLUri());
         parameters.put(SERVER_CERTIFICATE, ODataTestServer.differentCertificate());
 
-        Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
+        Verifier verifier = new ODataVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
 
         assertThat(responses).hasSize(2);
@@ -184,7 +184,7 @@ public class ODataVerifierTest extends AbstractODataTest {
         parameters.put(BASIC_USER_NAME, ODataTestServer.USER);
         parameters.put(BASIC_PASSWORD, ODataTestServer.USER_PASSWORD);
 
-        Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
+        Verifier verifier = new ODataVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
 
         assertThat(responses).hasSize(2);

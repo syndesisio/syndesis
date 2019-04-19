@@ -19,9 +19,7 @@ import io.syndesis.connector.support.verifier.api.ComponentVerifier;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
-import org.springframework.stereotype.Component;
 
-@Component("amqp")
 public class AMQPVerifier extends ComponentVerifier {
     public AMQPVerifier() {
         super("amqp-publish", AMQPVerifierExtension.class);

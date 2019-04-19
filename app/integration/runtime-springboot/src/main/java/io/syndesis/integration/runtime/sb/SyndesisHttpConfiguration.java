@@ -48,7 +48,7 @@ public class SyndesisHttpConfiguration {
         /**
          * Checks if we're using API connector-http.
          */
-        @ConditionalOnClass(name = "io.syndesis.connector.http.HttpVerifierAutoConfiguration")
+        @ConditionalOnClass(name = "io.syndesis.connector.http.HttpVerifier")
         static class HttpUsed {
             // auto configuration test
         }
@@ -64,7 +64,7 @@ public class SyndesisHttpConfiguration {
         /**
          * Checks if we're using API connector-webhook.
          */
-        @ConditionalOnClass(name = "io.syndesis.connector.webhook.WebhookServletAutoConfiguration")
+        @ConditionalOnClass(name = "io.syndesis.connector.webhook.WebhookConnectorCustomizer")
         static class WebhookUsed {
             // auto configuration test
         }
