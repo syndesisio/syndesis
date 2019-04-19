@@ -17,8 +17,7 @@ import {
   PUBLISHED,
   IntegrationStatusDetail,
   ContinuousDeliveryEnvironment,
-  DescriptorRequest,
-  ActionDescriptor,
+  Step
 } from '@syndesis/ui/platform';
 import { EventsService } from '@syndesis/ui/store';
 import { HttpHeaders } from '@angular/common/http';
@@ -222,12 +221,11 @@ export class IntegrationSupportProviderService extends IntegrationSupportService
       .get();
   }
 
-  getStepDescriptor(
-    kind: string,
-    dataShapes: DescriptorRequest
-  ): Observable<ActionDescriptor> {
+  getStepDescriptors(
+    steps: Step[]
+  ): Observable<Step[]> {
     return this.apiHttpService
-      .setEndpointUrl(integrationEndpoints.getStepDescriptor, { kind })
-      .post(dataShapes);
+      .setEndpointUrl(integrationEndpoints.getStepDescriptors)
+      .post(steps);
   }
 }

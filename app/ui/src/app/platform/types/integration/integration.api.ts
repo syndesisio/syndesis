@@ -11,7 +11,7 @@ export const integrationEndpoints: Endpoints = {
   metadata: '/connections/{connectionId}/actions/{actionId}',
   // TODO should this go into the integration service
   filterOptions: '/integrations/filters/options',
-  getStepDescriptor: '/steps/{kind}/descriptor',
+  getStepDescriptors: '/steps/descriptor',
 
   overviews: '/integration-support/overviews',
   overview: '/integrations/{id}/overview',

@@ -326,7 +326,6 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
       kind: INTEGRATION_SET_ACTION,
       position: this.position,
       stepKind: 'mapper',
-      skipReconcile: true,
       action: {
         actionType: 'step',
         descriptor: {
