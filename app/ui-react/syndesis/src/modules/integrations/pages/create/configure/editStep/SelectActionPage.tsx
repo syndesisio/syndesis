@@ -35,7 +35,7 @@ export class SelectActionPage extends React.Component {
   public render() {
     return (
       <WithRouteData<ISelectActionRouteParams, ISelectActionRouteState>>
-        {({ connectionId, position }, { connection, integration }) => {
+        {({ connectionId, flow, position }, { connection, integration }) => {
           const positionAsNumber = parseInt(position, 10);
           return (
             <WithConnection id={connectionId} initialValue={connection}>
@@ -82,7 +82,7 @@ export class SelectActionPage extends React.Component {
                                         {
                                           actionId: a.id!,
                                           connection,
-                                          flow: '0',
+                                          flow,
                                           integration,
                                           position,
                                         }
@@ -96,7 +96,7 @@ export class SelectActionPage extends React.Component {
                           </IntegrationEditorChooseAction>
                         }
                         cancelHref={resolvers.create.configure.index({
-                          flow: '0',
+                          flow,
                           integration,
                         })}
                       />

@@ -26,7 +26,7 @@ export function makeResolver<T, P = any, S = any>(
     const { params, state } = mapper(data);
     return {
       params,
-      pathname: reverse(route, params),
+      pathname: reverse(route, params || {}),
       state,
     };
   };

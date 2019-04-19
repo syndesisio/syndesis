@@ -35,7 +35,7 @@ export class SelectConnectionPage extends React.Component {
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {({ position }, { integration }) => {
+        {({ flow, position }, { integration }) => {
           const positionAsNumber = parseInt(position, 10);
           return (
             <>
@@ -83,7 +83,7 @@ export class SelectConnectionPage extends React.Component {
                                       href={resolvers.create.configure.addStep.selectAction(
                                         {
                                           connection: c,
-                                          flow: '0',
+                                          flow,
                                           integration,
                                           position,
                                         }
@@ -112,7 +112,7 @@ export class SelectConnectionPage extends React.Component {
                   </WithConnections>
                 }
                 cancelHref={resolvers.create.configure.index({
-                  flow: '0',
+                  flow,
                   integration,
                 })}
               />

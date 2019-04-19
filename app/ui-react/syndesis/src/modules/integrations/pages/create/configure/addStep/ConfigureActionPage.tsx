@@ -44,7 +44,7 @@ export class ConfigureActionPage extends React.Component {
             IConfigureActionRouteState
           >>
             {(
-              { actionId, step = '0', position },
+              { actionId, flow, step = '0', position },
               { connection, integration, updatedIntegration },
               { history }
             ) => {
@@ -71,7 +71,7 @@ export class ConfigureActionPage extends React.Component {
                     resolvers.create.configure.addStep.configureAction({
                       actionId,
                       connection,
-                      flow: '0',
+                      flow,
                       integration,
                       position,
                       step: stepAsNumber + 1,
@@ -81,7 +81,7 @@ export class ConfigureActionPage extends React.Component {
                 } else {
                   history.push(
                     resolvers.create.configure.index({
-                      flow: '0',
+                      flow,
                       integration: updatedIntegration,
                     })
                   );
@@ -128,11 +128,11 @@ export class ConfigureActionPage extends React.Component {
                         }
                         content={form}
                         cancelHref={resolvers.create.configure.index({
-                          flow: '0',
+                          flow,
                           integration,
                         })}
                         backHref={resolvers.create.configure.addStep.selectAction(
-                          { flow: '0', position, integration, connection }
+                          { flow, position, integration, connection }
                         )}
                         onNext={submitForm}
                         isNextLoading={isSubmitting}
