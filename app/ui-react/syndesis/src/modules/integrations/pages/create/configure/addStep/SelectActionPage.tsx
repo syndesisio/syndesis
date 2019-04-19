@@ -1,5 +1,4 @@
 import { getSteps, WithConnection } from '@syndesis/api';
-import { ConnectionOverview, Integration } from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorActionsListItem,
@@ -11,34 +10,19 @@ import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../shared';
 import {
-  IntegrationEditorBreadcrumbs,
+  IntegrationCreatorBreadcrumbs,
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
-
-/**
- * @param connectionId - the ID of the connection selected in the previous step
- * @param position - the zero-based position for the new step in the integration
- * flow.
- */
-export interface ISelectActionRouteParams {
-  connectionId: string;
-  position: string;
-}
-
-/**
- * @param integration - the integration object, used to render the IVP.
- * @param connection - the connection object selected in the previous step, used
- * to render the IVP.
- */
-export interface ISelectActionRouteState {
-  connection: ConnectionOverview;
-  integration: Integration;
-}
+import {
+  ISelectActionRouteParams,
+  ISelectActionRouteState,
+} from '../../../editorInterfaces';
 
 /**
  * This page shows the list of actions of a connection containing with a **to**
  * pattern.
+ * It's supposed to be used for 3.add.2 of the creation wizard.
  *
  * This component expects some [params]{@link ISelectActionRouteParams} and
  * [state]{@link ISelectActionRouteState} to be properly set in the route
@@ -53,7 +37,7 @@ export class SelectActionPage extends React.Component {
   public render() {
     return (
       <WithRouteData<ISelectActionRouteParams, ISelectActionRouteState>>
-        {({ connectionId, position }, { connection, integration }) => {
+        {({ connectionId, flow, position }, { connection, integration }) => {
           const positionAsNumber = parseInt(position, 10);
           return (
             <WithConnection id={connectionId} initialValue={connection}>
@@ -68,7 +52,7 @@ export class SelectActionPage extends React.Component {
                     <>
                       <PageTitle title={'Choose an action'} />
                       <IntegrationEditorLayout
-                        header={<IntegrationEditorBreadcrumbs step={1} />}
+                        header={<IntegrationCreatorBreadcrumbs step={3} />}
                         sidebar={
                           <IntegrationEditorSidebar
                             steps={getSteps(integration, 0)}
@@ -113,10 +97,11 @@ export class SelectActionPage extends React.Component {
                                   }
                                   actions={
                                     <ButtonLink
-                                      href={resolvers.integration.edit.addConnection.configureAction(
+                                      href={resolvers.create.configure.addStep.configureAction(
                                         {
                                           actionId: a.id!,
                                           connection,
+                                          flow,
                                           integration,
                                           position,
                                         }
@@ -129,11 +114,12 @@ export class SelectActionPage extends React.Component {
                               ))}
                           </IntegrationEditorChooseAction>
                         }
-                        cancelHref={resolvers.integration.edit.index({
+                        cancelHref={resolvers.create.configure.index({
+                          flow,
                           integration,
                         })}
-                        backHref={resolvers.integration.edit.addConnection.selectConnection(
-                          { position, integration }
+                        backHref={resolvers.create.configure.addStep.selectConnection(
+                          { flow, position, integration }
                         )}
                       />
                     </>

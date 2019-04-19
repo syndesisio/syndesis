@@ -1,5 +1,4 @@
 import { getSteps, WithConnection } from '@syndesis/api';
-import { ConnectionOverview, Integration } from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorActionsListItem,
@@ -15,31 +14,14 @@ import {
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
+import {
+  ISelectActionRouteParams,
+  ISelectActionRouteState,
+} from '../../../editorInterfaces';
 
 /**
- * @param connectionId - the ID of the connection coming from step 3.edit.1.,
- * whose actions should be shown.
- * @param position - the zero-based position for the new step in the integration
- * flow.
- */
-export interface ISelectActionRouteParams {
-  connectionId: string;
-  position: string;
-}
-
-/**
- * @param integration - the integration object coming from step 3.edit.1, used to
- * render the IVP.
- * @param connection - the connection object, coming from step 3.edit.1.
- */
-export interface ISelectActionRouteState {
-  connection: ConnectionOverview;
-  integration: Integration;
-}
-
-/**
- * This page shows the list of actions of a connection containing either a
- * **to** or **from pattern, depending on the specified [position]{@link ISelectActionRouteParams#position}.
+ * This page shows the list of actions of a connection containing with a **to**
+ * pattern.
  *
  * This component expects some [params]{@link ISelectActionRouteParams} and
  * [state]{@link ISelectActionRouteState} to be properly set in the route
@@ -47,12 +29,14 @@ export interface ISelectActionRouteState {
  *
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
+ *
+ * @todo DRY the connection icon code
  */
 export class SelectActionPage extends React.Component {
   public render() {
     return (
       <WithRouteData<ISelectActionRouteParams, ISelectActionRouteState>>
-        {({ connectionId, position }, { connection, integration }) => {
+        {({ connectionId, flow, position }, { connection, integration }) => {
           const positionAsNumber = parseInt(position, 10);
           return (
             <WithConnection id={connectionId} initialValue={connection}>
@@ -71,7 +55,27 @@ export class SelectActionPage extends React.Component {
                         sidebar={
                           <IntegrationEditorSidebar
                             steps={getSteps(integration, 0)}
-                            activeIndex={positionAsNumber}
+                            addAtIndex={positionAsNumber}
+                            addIcon={
+                              hasData ? (
+                                <img src={data.icon} width={24} height={24} />
+                              ) : (
+                                <Loader />
+                              )
+                            }
+                            addI18nTitle={
+                              hasData
+                                ? `${positionAsNumber + 1}. ${
+                                    data.connector!.name
+                                  }`
+                                : `${positionAsNumber + 1}. Start`
+                            }
+                            addI18nTooltip={
+                              hasData
+                                ? `${positionAsNumber + 1}. ${data.name}`
+                                : 'Start'
+                            }
+                            addI18nDescription={'Choose an action'}
                           />
                         }
                         content={
@@ -81,10 +85,7 @@ export class SelectActionPage extends React.Component {
                               'Choose an action for the selected connectionName.'
                             }
                           >
-                            {(positionAsNumber > 0
-                              ? data.actionsWithTo
-                              : data.actionsWithFrom
-                            )
+                            {data.actionsWithTo
                               .sort((a, b) => a.name.localeCompare(b.name))
                               .map((a, idx) => (
                                 <IntegrationEditorActionsListItem
@@ -95,9 +96,11 @@ export class SelectActionPage extends React.Component {
                                   }
                                   actions={
                                     <ButtonLink
-                                      href={resolvers.integration.edit.editConnection.configureAction(
+                                      href={resolvers.integration.edit.addStep.configureAction(
                                         {
                                           actionId: a.id!,
+                                          connection,
+                                          flow,
                                           integration,
                                           position,
                                         }
@@ -111,8 +114,12 @@ export class SelectActionPage extends React.Component {
                           </IntegrationEditorChooseAction>
                         }
                         cancelHref={resolvers.integration.edit.index({
+                          flow,
                           integration,
                         })}
+                        backHref={resolvers.integration.edit.addStep.selectConnection(
+                          { flow, position, integration }
+                        )}
                       />
                     </>
                   )}

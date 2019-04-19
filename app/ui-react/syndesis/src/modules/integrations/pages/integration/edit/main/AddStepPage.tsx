@@ -1,5 +1,4 @@
 import { getSteps } from '@syndesis/api';
-import { Integration } from '@syndesis/models';
 import { Container, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -9,38 +8,30 @@ import {
   IntegrationEditorStepAdder,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
+import { IBaseRouteParams, IBaseRouteState } from '../../../editorInterfaces';
 import {
-  getEditAddConnectionHref,
   getEditAddStepHref,
-  getEditConfigureConnectionHrefCallback,
   getEditConfigureStepHrefCallback,
 } from '../../../resolversHelpers';
-
-export interface IAddStepRouteState {
-  /**
-   * the integration object to edit
-   */
-  integration: Integration;
-}
 
 /**
  * This page shows the steps of an existing integration.
  *
- * This component expects a [state]{@link IAddStepRouteState} to be properly set in
+ * This component expects a [state]{@link IBaseRouteState} to be properly set in
  * the route object.
  *
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
  *
- * @todo make this page shareable by making the [integration]{@link IAddStepRouteState#integration}
+ * @todo make this page shareable by making the [integration]{@link IBaseRouteState#integration}
  * optinal and adding a WithIntegration component to retrieve the integration
  * from the backend
  */
 export class AddStepPage extends React.Component {
   public render() {
     return (
-      <WithRouteData<null, IAddStepRouteState>>
-        {(_, { integration }) => (
+      <WithRouteData<IBaseRouteParams, IBaseRouteState>>
+        {({ flow }, { integration }) => (
           <IntegrationEditorLayout
             header={<IntegrationEditorBreadcrumbs step={1} />}
             content={
@@ -54,16 +45,14 @@ export class AddStepPage extends React.Component {
                   </p>
                   <IntegrationEditorStepAdder
                     steps={getSteps(integration, 0)}
-                    addConnectionHref={getEditAddConnectionHref.bind(
+                    addStepHref={getEditAddStepHref.bind(
                       null,
-                      integration
-                    )}
-                    addStepHref={getEditAddStepHref.bind(null, integration)}
-                    configureConnectionHref={getEditConfigureConnectionHrefCallback(
-                      integration
+                      integration,
+                      flow
                     )}
                     configureStepHref={getEditConfigureStepHrefCallback(
-                      integration
+                      integration,
+                      flow
                     )}
                   />
                 </Container>
@@ -71,6 +60,7 @@ export class AddStepPage extends React.Component {
             }
             cancelHref={resolvers.list()}
             nextHref={resolvers.integration.edit.saveAndPublish({
+              flow,
               integration,
             })}
           />

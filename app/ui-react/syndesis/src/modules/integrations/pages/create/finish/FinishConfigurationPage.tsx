@@ -122,6 +122,7 @@ export class FinishConfigurationPage extends React.Component {
                 } else {
                   history.push(
                     resolvers.create.configure.index({
+                      flow: '0',
                       integration: updatedIntegration,
                     })
                   );

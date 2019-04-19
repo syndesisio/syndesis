@@ -22,7 +22,7 @@ import routes from './routes';
  * some refactoring aimed to DRY the business logic that's embedded in every
  * page of the same type (especially the configuration ones).
  * Actually the IntegrationEditorApp is the result of a copy-paste of this folder
- * `syndesis/src/modules/integrations/pages/create/configure/editConnection`,
+ * `syndesis/src/modules/integrations/pages/create/configure/editStep`,
  * with updated titles and links between the steps.
  * This is an hint that at least those 2 "areas" could be DRYed up, but it could
  * be worth exploring options to take it up a notch and figure out a way to

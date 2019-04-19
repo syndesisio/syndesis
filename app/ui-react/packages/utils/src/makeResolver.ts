@@ -1,8 +1,12 @@
 import { reverse } from 'named-urls';
 
-export interface IRoute {
-  params?: any;
-  state?: any;
+export interface IRoute<P, S> {
+  params?: P;
+  state?: S;
+}
+
+export interface IResolvedRoute<P, S> extends IRoute<P, S> {
+  pathname: string;
 }
 
 /**
@@ -14,11 +18,15 @@ export interface IRoute {
  * @param route
  * @param mapper
  */
-export function makeResolver<T>(route: string, mapper: (data: T) => IRoute) {
-  return (data: T) => {
+export function makeResolver<T, P = any, S = any>(
+  route: string,
+  mapper: (data: T) => IRoute<P, S>
+) {
+  return (data: T): IResolvedRoute<P, S> => {
     const { params, state } = mapper(data);
     return {
-      pathname: reverse(route, params),
+      params,
+      pathname: reverse(route, params || {}),
       state,
     };
   };
