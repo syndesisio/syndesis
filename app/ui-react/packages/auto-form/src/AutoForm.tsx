@@ -39,6 +39,7 @@ export interface IAutoFormState {
    * Function to trigger a form submit which will then trigger onSave
    */
   handleSubmit: (e?: any) => void;
+  dirty: boolean;
   isSubmitting: boolean;
   isValid: boolean;
   isValidating: boolean;
@@ -72,6 +73,7 @@ export class AutoForm<T> extends React.Component<
                 handleSubmit,
                 values,
                 touched,
+                dirty,
                 errors,
                 isValid,
                 isValidating,
@@ -81,6 +83,7 @@ export class AutoForm<T> extends React.Component<
                 submitForm,
               }) =>
                 this.props.children({
+                  dirty,
                   errors,
                   fields: (
                     <React.Fragment>

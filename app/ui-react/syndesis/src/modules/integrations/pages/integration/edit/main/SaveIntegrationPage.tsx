@@ -1,5 +1,6 @@
 import { setIntegrationName, WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
+import { OptionalInt } from '@syndesis/models';
 import { IntegrationEditorForm, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -46,15 +47,18 @@ export class SaveIntegrationPage extends React.Component {
                 history.push(resolvers.list());
               };
               const definition: IFormDefinition = {
-                description: {
-                  defaultValue: '',
-                  displayName: 'Description',
-                  type: 'textarea',
-                },
                 name: {
                   defaultValue: '',
                   displayName: 'Name',
+                  order: 0 as OptionalInt,
                   required: true,
+                },
+                // tslint:disable-next-line
+                description: {
+                  defaultValue: '',
+                  displayName: 'Description',
+                  order: 1 as OptionalInt,
+                  type: 'textarea',
                 },
               };
               return (
@@ -69,6 +73,7 @@ export class SaveIntegrationPage extends React.Component {
                 >
                   {({
                     fields,
+                    dirty,
                     handleSubmit,
                     isSubmitting,
                     isValid,
@@ -96,7 +101,7 @@ export class SaveIntegrationPage extends React.Component {
                         integration,
                       })}
                       onNext={submitForm}
-                      isNextDisabled={!isValid}
+                      isNextDisabled={dirty && !isValid}
                       isNextLoading={isSubmitting}
                       isLastStep={true}
                     />
