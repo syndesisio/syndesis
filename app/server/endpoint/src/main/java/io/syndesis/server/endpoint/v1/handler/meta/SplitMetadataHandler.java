@@ -26,6 +26,7 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
+import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
@@ -44,6 +45,24 @@ class SplitMetadataHandler implements StepMetadataHandler {
     @Override
     public boolean canHandle(StepKind kind) {
         return StepKind.split.equals(kind);
+    }
+
+    @Override
+    public DynamicActionMetadata createMetadata(Step step, List<Step> previousSteps, List<Step> subsequentSteps) {
+        Optional<Step> previousStepWithDataShape = previousSteps.stream()
+                                                                .filter(StepMetadataHelper::hasOutputDataShape)
+                                                                .findFirst();
+
+        DataShape inputShape = previousStepWithDataShape.map(StepMetadataHelper::getInputDataShape)
+                                                        .orElse(StepMetadataHelper.NO_SHAPE);
+
+        DataShape outputShape = previousStepWithDataShape.map(StepMetadataHelper::getOutputDataShape)
+                                                        .orElse(StepMetadataHelper.NO_SHAPE);
+
+        return new DynamicActionMetadata.Builder()
+                .inputShape(inputShape)
+                .outputShape(outputShape)
+                .build();
     }
 
     @Override
@@ -75,7 +94,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                                 .createFrom(metadata)
                                 .outputShape(new DataShape.Builder()
                                         .createFrom(singleElementShape.get())
-                                        .addAllVariants(extractVariants(dataShape, singleElementShape.get(), DataShapeMetaData.VARIANT_ELEMENT))
+                                        .addAllVariants(StepMetadataHelper.extractVariants(dataShape, singleElementShape.get(), DataShapeMetaData.VARIANT_ELEMENT))
                                         .build())
                                 .build();
                     }
@@ -98,7 +117,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                                         .outputShape(new DataShape.Builder().createFrom(collectionShape)
                                                 .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                                                 .specification(Json.writer().writeValueAsString(itemSchema))
-                                                .addAllVariants(extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
+                                                .addAllVariants(StepMetadataHelper.extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
                                                 .build())
                                         .build();
                             }
@@ -119,7 +138,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                                         .outputShape(new DataShape.Builder().createFrom(collectionShape)
                                                 .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                                                 .specification(Json.writer().writeValueAsString(items.get(0)))
-                                                .addAllVariants(extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
+                                                .addAllVariants(StepMetadataHelper.extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
                                                 .build())
                                         .build();
                             }

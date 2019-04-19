@@ -16,13 +16,19 @@
 package io.syndesis.server.endpoint.v1.handler.meta;
 
 import javax.ws.rs.core.Response;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.action.StepDescriptor;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
+import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.v1.dto.Meta;
@@ -73,7 +79,7 @@ public class StepActionHandlerTest {
         final Meta<StepDescriptor> meta = (Meta<StepDescriptor>) response.getEntity();
 
         final StepDescriptor descriptor = meta.getValue();
-        assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
+        assertThat(descriptor.getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
         assertThat(descriptor.getOutputDataShape()).isPresent();
         assertThat(descriptor.getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
                 .createFrom(elementShape)
@@ -98,7 +104,7 @@ public class StepActionHandlerTest {
         final Meta<StepDescriptor> meta = (Meta<StepDescriptor>) response.getEntity();
 
         final StepDescriptor descriptor = meta.getValue();
-        assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
+        assertThat(descriptor.getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
         assertThat(descriptor.getOutputDataShape()).contains(givenMetadata.outputShape());
     }
 
@@ -118,7 +124,7 @@ public class StepActionHandlerTest {
         final Meta<StepDescriptor> meta = (Meta<StepDescriptor>) response.getEntity();
 
         final StepDescriptor descriptor = meta.getValue();
-        assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
+        assertThat(descriptor.getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
         assertThat(descriptor.getOutputDataShape()).isPresent();
         assertThat(descriptor.getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
                 .createFrom(collectionShape)
@@ -143,7 +149,7 @@ public class StepActionHandlerTest {
         final Meta<StepDescriptor> meta = (Meta<StepDescriptor>) response.getEntity();
 
         final StepDescriptor descriptor = meta.getValue();
-        assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
+        assertThat(descriptor.getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
         assertThat(descriptor.getOutputDataShape()).isPresent();
         assertThat(descriptor.getOutputDataShape()).contains(givenMetadata.outputShape());
     }
@@ -168,7 +174,7 @@ public class StepActionHandlerTest {
         final Meta<StepDescriptor> meta = (Meta<StepDescriptor>) response.getEntity();
 
         final StepDescriptor descriptor = meta.getValue();
-        assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
+        assertThat(descriptor.getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
         assertThat(descriptor.getOutputDataShape()).isPresent();
         assertThat(descriptor.getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
                 .createFrom(elementShape)
@@ -182,8 +188,8 @@ public class StepActionHandlerTest {
     @Test
     public void shouldCreateNoShapesForNoShape() {
         final DynamicActionMetadata givenMetadata = new DynamicActionMetadata.Builder()
-                .inputShape(StepActionHandler.NO_SHAPE)
-                .outputShape(StepActionHandler.NO_SHAPE)
+                .inputShape(StepMetadataHelper.NO_SHAPE)
+                .outputShape(StepMetadataHelper.NO_SHAPE)
                 .build();
 
         final Response response = handler.enrichStepMetadata(StepKind.split.name(), givenMetadata);
@@ -192,8 +198,8 @@ public class StepActionHandlerTest {
         final Meta<StepDescriptor> meta = (Meta<StepDescriptor>) response.getEntity();
 
         final StepDescriptor descriptor = meta.getValue();
-        assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
-        assertThat(descriptor.getOutputDataShape()).contains(StepActionHandler.NO_SHAPE);
+        assertThat(descriptor.getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(descriptor.getOutputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
     }
 
     @Test
@@ -206,8 +212,8 @@ public class StepActionHandlerTest {
         final Meta<StepDescriptor> meta = (Meta<StepDescriptor>) response.getEntity();
 
         final StepDescriptor descriptor = meta.getValue();
-        assertThat(descriptor.getInputDataShape()).contains(StepActionHandler.NO_SHAPE);
-        assertThat(descriptor.getOutputDataShape()).contains(StepActionHandler.NO_SHAPE);
+        assertThat(descriptor.getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(descriptor.getOutputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
     }
 
     @Test
@@ -248,6 +254,199 @@ public class StepActionHandlerTest {
         final StepDescriptor descriptor = meta.getValue();
         assertThat(descriptor.getInputDataShape()).contains(dummyShape());
         assertThat(descriptor.getOutputDataShape()).contains(dummyShape());
+    }
+
+    @Test
+    public void shouldEnrichSplitSteps() {
+        List<Step> steps = Arrays.asList(new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                                .inputDataShape(StepMetadataHelper.NO_SHAPE)
+                                .outputDataShape(new DataShape.Builder()
+                                        .createFrom(collectionShape)
+                                        .addVariant(elementShape)
+                                        .addVariant(dummyShape())
+                                        .build())
+                                .build())
+                        .build())
+                .build(),
+                new Step.Builder()
+                        .stepKind(StepKind.split)
+                        .build(),
+                new Step.Builder()
+                        .stepKind(StepKind.log)
+                        .build());
+
+        final Response response = handler.enrichStepMetadata(steps);
+
+        @SuppressWarnings("unchecked")
+        final List<Step> enriched = (List<Step>) response.getEntity();
+
+        assertThat(enriched).hasSize(3);
+        assertThat(enriched.get(0).getStepKind()).isEqualTo(StepKind.endpoint);
+        assertThat(enriched.get(0).getAction()).isPresent();
+        assertThat(enriched.get(0).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(enriched.get(0).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(collectionShape)
+                .addVariant(elementShape)
+                .addVariant(dummyShape())
+                .build());
+        assertThat(enriched.get(1).getStepKind()).isEqualTo(StepKind.split);
+        assertThat(enriched.get(1).getAction()).isPresent();
+        assertThat(enriched.get(1).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(enriched.get(1).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(elementShape)
+                .addVariant(dummyShape())
+                .addVariant(collectionShape)
+                .build());
+        assertThat(enriched.get(2).getAction()).isNotPresent();
+        assertThat(enriched.get(2).getStepKind()).isEqualTo(StepKind.log);
+    }
+
+    @Test
+    public void shouldEnrichAggregateSteps() {
+        List<Step> steps = Arrays.asList(new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .action(new ConnectorAction.Builder()
+                                .descriptor(new ConnectorDescriptor.Builder()
+                                        .inputDataShape(StepMetadataHelper.NO_SHAPE)
+                                        .outputDataShape(new DataShape.Builder()
+                                                .createFrom(collectionShape)
+                                                .addVariant(elementShape)
+                                                .addVariant(dummyShape())
+                                                .build())
+                                        .build())
+                                .build())
+                        .build(),
+                new Step.Builder()
+                        .stepKind(StepKind.split)
+                        .action(new StepAction.Builder()
+                                .descriptor(new StepDescriptor.Builder()
+                                        .inputDataShape(StepMetadataHelper.NO_SHAPE)
+                                        .outputDataShape(new DataShape.Builder()
+                                                .createFrom(elementShape)
+                                                .addVariant(collectionShape)
+                                                .addVariant(dummyShape())
+                                                .build())
+                                        .build())
+                                .build())
+                        .build(),
+                new Step.Builder()
+                        .stepKind(StepKind.log)
+                        .build(),
+                new Step.Builder()
+                        .stepKind(StepKind.aggregate)
+                        .build(),
+                new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .action(new ConnectorAction.Builder()
+                                .descriptor(new ConnectorDescriptor.Builder()
+                                        .inputDataShape(new DataShape.Builder()
+                                                .createFrom(collectionShape)
+                                                .addVariant(dummyShape())
+                                                .build())
+                                        .outputDataShape(StepMetadataHelper.NO_SHAPE)
+                                        .build())
+                                .build())
+                        .build());
+
+        final Response response = handler.enrichStepMetadata(steps);
+
+        @SuppressWarnings("unchecked")
+        final List<Step> enriched = (List<Step>) response.getEntity();
+
+        assertThat(enriched).hasSize(5);
+        assertThat(enriched.get(0).getStepKind()).isEqualTo(StepKind.endpoint);
+        assertThat(enriched.get(0).getAction()).isPresent();
+        assertThat(enriched.get(0).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(enriched.get(0).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(collectionShape)
+                .addVariant(elementShape)
+                .addVariant(dummyShape())
+                .build());
+        assertThat(enriched.get(1).getStepKind()).isEqualTo(StepKind.split);
+        assertThat(enriched.get(1).getAction()).isPresent();
+        assertThat(enriched.get(1).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(enriched.get(1).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(elementShape)
+                .addVariant(dummyShape())
+                .addVariant(collectionShape)
+                .build());
+        assertThat(enriched.get(2).getAction()).isNotPresent();
+        assertThat(enriched.get(2).getStepKind()).isEqualTo(StepKind.log);
+        assertThat(enriched.get(3).getStepKind()).isEqualTo(StepKind.aggregate);
+        assertThat(enriched.get(3).getAction()).isPresent();
+        assertThat(enriched.get(3).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(collectionShape)
+                .addVariant(dummyShape())
+                .build());
+        assertThat(enriched.get(3).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(collectionShape)
+                .addVariant(dummyShape())
+                .addVariant(elementShape)
+                .build());
+        assertThat(enriched.get(4).getStepKind()).isEqualTo(StepKind.endpoint);
+        assertThat(enriched.get(4).getAction()).isPresent();
+        assertThat(enriched.get(4).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(collectionShape)
+                .addVariant(dummyShape())
+                .build());
+        assertThat(enriched.get(4).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+    }
+
+    @Test
+    public void shouldPreserveStepsWithShapes() {
+        DataShape dummyShape = dummyShape();
+
+        List<Step> steps = Collections.singletonList(new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                                .inputDataShape(dummyShape)
+                                .outputDataShape(dummyShape)
+                                .build())
+                        .build())
+                .build());
+
+        final Response response = handler.enrichStepMetadata(steps);
+
+        @SuppressWarnings("unchecked")
+        final List<Step> enriched = (List<Step>) response.getEntity();
+
+        assertThat(enriched).hasSize(1);
+        assertThat(enriched.get(0).getStepKind()).isEqualTo(StepKind.endpoint);
+        assertThat(enriched.get(0).getAction()).isPresent();
+        assertThat(enriched.get(0).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).get().isEqualTo(dummyShape);
+        assertThat(enriched.get(0).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).get().isEqualTo(dummyShape);
+    }
+
+    @Test
+    public void shouldPreserveStepsWithNoShape() {
+        List<Step> steps = Arrays.asList(new Step.Builder()
+                .stepKind(StepKind.endpoint)
+                .action(new ConnectorAction.Builder()
+                        .descriptor(new ConnectorDescriptor.Builder()
+                                .inputDataShape(StepMetadataHelper.NO_SHAPE)
+                                .outputDataShape(StepMetadataHelper.NO_SHAPE)
+                                .build())
+                        .build())
+                .build(),
+                new Step.Builder()
+                        .stepKind(StepKind.log)
+                        .build());
+
+        final Response response = handler.enrichStepMetadata(steps);
+
+        @SuppressWarnings("unchecked")
+        final List<Step> enriched = (List<Step>) response.getEntity();
+        assertThat(enriched).hasSize(2);
+        assertThat(enriched.get(0).getStepKind()).isEqualTo(StepKind.endpoint);
+        assertThat(enriched.get(0).getAction()).isPresent();
+        assertThat(enriched.get(0).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(enriched.get(0).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(enriched.get(1).getAction()).isNotPresent();
+        assertThat(enriched.get(1).getStepKind()).isEqualTo(StepKind.log);
     }
 
     private DataShape dummyShape() {
