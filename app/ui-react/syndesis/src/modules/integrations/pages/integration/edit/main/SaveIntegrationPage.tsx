@@ -1,31 +1,16 @@
 import { setIntegrationName, WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { Integration } from '@syndesis/models';
 import { IntegrationEditorForm, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../../shared';
 import { IntegrationEditorBreadcrumbs } from '../../../../components';
 import resolvers from '../../../../resolvers';
-
-export interface ISaveForm {
-  name: string;
-  description?: string;
-}
-
-/**
- * @param integration - the integration object.
- */
-export interface ISaveIntegrationRouteParams {
-  flow: string;
-}
-
-/**
- * @param integration - the integration object.
- */
-export interface ISaveIntegrationRouteState {
-  integration: Integration;
-}
+import {
+  ISaveIntegrationForm,
+  ISaveIntegrationRouteParams,
+  ISaveIntegrationRouteState,
+} from '../../../editorInterfaces';
 
 /**
  * This page asks for the details of the integration, and saves it.
@@ -47,7 +32,7 @@ export class SaveIntegrationPage extends React.Component {
           <WithIntegrationHelpers>
             {({ saveIntegration }) => {
               const onSave = async (
-                { name, description }: ISaveForm,
+                { name, description }: ISaveIntegrationForm,
                 actions: any
               ) => {
                 const updatedIntegration = setIntegrationName(
@@ -73,7 +58,7 @@ export class SaveIntegrationPage extends React.Component {
                 },
               };
               return (
-                <AutoForm<ISaveForm>
+                <AutoForm<ISaveIntegrationForm>
                   i18nRequiredProperty={'* Required field'}
                   definition={definition}
                   initialValue={{

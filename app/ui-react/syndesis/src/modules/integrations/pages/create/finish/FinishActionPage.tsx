@@ -143,6 +143,7 @@ export class FinishActionPage extends React.Component {
                                         integration,
                                         startAction,
                                         startConnection,
+                                        updatedIntegration: integration,
                                       }
                                     )}
                                   >

@@ -1,5 +1,4 @@
 import { getSteps } from '@syndesis/api';
-import { Integration } from '@syndesis/models';
 import { Container, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -9,23 +8,17 @@ import {
   IntegrationEditorStepAdder,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
+import { IBaseRouteParams, IBaseRouteState } from '../../../editorInterfaces';
 import {
   getCreateAddStepHref,
   getCreateConfigureStepHrefCallback,
 } from '../../../resolversHelpers';
 
 /**
- * @param integration - the integration updated in step 2, or after any
- * configuration done when editing/adding a new integration step in step 3.
- */ export interface IAddStepRouteState {
-  integration: Integration;
-}
-
-/**
  * This page shows the integration steps configured in steps 1 and 2. It's
  * supposed to be used as the index page for step 3.
  *
- * This component expects a [state]{@link IAddStepRouteState} to be properly set in
+ * This component expects a [state]{@link IBaseRouteState} to be properly set in
  * the route object.
  *
  * **Warning:** this component will throw an exception if the route state is
@@ -34,8 +27,8 @@ import {
 export class AddStepPage extends React.Component {
   public render() {
     return (
-      <WithRouteData<null, IAddStepRouteState>>
-        {(_, { integration }) => (
+      <WithRouteData<IBaseRouteParams, IBaseRouteState>>
+        {({ flow }, { integration }) => (
           <IntegrationEditorLayout
             header={<IntegrationCreatorBreadcrumbs step={3} />}
             content={
@@ -58,17 +51,6 @@ export class AddStepPage extends React.Component {
               </>
             }
             cancelHref={resolvers.list()}
-            backHref={resolvers.create.finish.configureAction({
-              actionId: integration.flows![0].steps![
-                integration.flows![0].steps!.length - 1
-              ].action!.id!,
-              finishConnection: integration.flows![0].steps![
-                integration.flows![0].steps!.length - 1
-              ].connection!,
-              integration,
-              startAction: integration.flows![0].steps![0].action!,
-              startConnection: integration.flows![0].steps![0].connection!,
-            })}
             nextHref={resolvers.create.configure.saveAndPublish({
               integration,
             })}

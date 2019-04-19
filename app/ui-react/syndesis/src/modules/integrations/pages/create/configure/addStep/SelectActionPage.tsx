@@ -1,5 +1,4 @@
 import { getSteps, WithConnection } from '@syndesis/api';
-import { ConnectionOverview, Integration } from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorActionsListItem,
@@ -15,28 +14,10 @@ import {
   IntegrationEditorSidebar,
 } from '../../../../components';
 import resolvers from '../../../../resolvers';
-
-/**
- * @param connectionId - the ID of the connection selected in step 2.1, whose
- * actions should be shown.
- * @param position - the zero-based position for the new step in the integration
- * flow.
- */
-export interface ISelectActionRouteParams {
-  connectionId: string;
-  position: string;
-}
-
-/**
- * @param integration - the integration object coming from step 3.index, used to
- * render the IVP.
- * @param connection - the connection object selected in step 3.add.1. Needed
- * to render the IVP.
- */
-export interface ISelectActionRouteState {
-  connection: ConnectionOverview;
-  integration: Integration;
-}
+import {
+  ISelectActionRouteParams,
+  ISelectActionRouteState,
+} from '../../../editorInterfaces';
 
 /**
  * This page shows the list of actions of a connection containing with a **to**

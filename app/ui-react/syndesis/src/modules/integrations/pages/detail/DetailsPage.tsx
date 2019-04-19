@@ -8,7 +8,6 @@ import { IntegrationDetailNavBar } from '../../shared/IntegrationDetailNavBar';
  * @integrationId - the ID of the integration for which details are being displayed.
  */
 export interface IDetailsPageParams {
-  integration: Integration;
   integrationId: string;
 }
 

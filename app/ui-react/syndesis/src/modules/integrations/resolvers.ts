@@ -2,6 +2,39 @@
 import { getStep } from '@syndesis/api';
 import { Action, ConnectionOverview, Integration } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
+import {
+  IFinishActionRouteParams,
+  IFinishActionRouteState,
+  IFinishConfigurationPageRouteParams,
+  IFinishConfigurationPageRouteState,
+  IFinishConnectionRouteState,
+} from './pages/create/finish';
+import {
+  IStartActionRouteParams,
+  IStartActionRouteState,
+  IStartConfigurationPageRouteParams,
+  IStartConfigurationPageRouteState,
+} from './pages/create/start';
+import {
+  IActivityPageParams,
+  IActivityPageState,
+  IDetailsPageParams,
+  IDetailsPageState,
+  IMetricsPageParams,
+  IMetricsPageState,
+} from './pages/detail';
+import {
+  IBaseRouteParams,
+  IBaseRouteState,
+  IConfigureActionRouteParams,
+  IConfigureActionRouteState,
+  ISaveIntegrationRouteParams,
+  ISaveIntegrationRouteState,
+  ISelectActionRouteParams,
+  ISelectActionRouteState,
+  ISelectConnectionRouteParams,
+  ISelectConnectionRouteState,
+} from './pages/editorInterfaces';
 import routes from './routes';
 
 interface IEditorIndex {
@@ -27,10 +60,10 @@ const configureIndexMapper = ({ flow, integration }: IEditorIndex) => ({
   params: {
     flow,
     integrationId: integration ? integration.id : undefined,
-  },
+  } as IBaseRouteParams,
   state: {
     integration,
-  },
+  } as IBaseRouteState,
 });
 
 const configureSelectConnectionMapper = ({
@@ -42,7 +75,7 @@ const configureSelectConnectionMapper = ({
     params: {
       ...params,
       position,
-    },
+    } as ISelectConnectionRouteParams,
     state,
   };
 };
@@ -55,12 +88,12 @@ const configureSelectActionMapper = ({
   return {
     params: {
       ...params,
-      connectionId: connection.id,
-    },
+      connectionId: connection.id!,
+    } as ISelectActionRouteParams,
     state: {
       ...state,
       connection,
-    },
+    } as ISelectActionRouteState,
   };
 };
 
@@ -83,13 +116,13 @@ const configureConfigureActionMapper = ({
     params: {
       ...params,
       actionId,
-      step,
-    },
+      step: `${step || 0}`,
+    } as IConfigureActionRouteParams,
     state: {
       ...state,
       updatedIntegration,
       configuredProperties: stepObject.configuredProperties,
-    },
+    } as IConfigureActionRouteState,
   };
 };
 
@@ -102,24 +135,29 @@ export default {
       selectConnection: makeResolverNoParams(
         routes.create.start.selectConnection
       ),
-      selectAction: makeResolver<{ connection: ConnectionOverview }>(
-        routes.create.start.selectAction,
-        ({ connection }) => ({
-          params: {
-            connectionId: connection.id,
-          },
-          state: {
-            connection,
-          },
-        })
-      ),
-      configureAction: makeResolver<IEditorConfigureAction>(
+      selectAction: makeResolver<
+        { connection: ConnectionOverview },
+        IStartActionRouteParams,
+        IStartActionRouteState
+      >(routes.create.start.selectAction, ({ connection }) => ({
+        params: {
+          connectionId: connection.id!,
+        },
+        state: {
+          connection,
+        },
+      })),
+      configureAction: makeResolver<
+        IEditorConfigureAction,
+        IStartConfigurationPageRouteParams,
+        IStartConfigurationPageRouteState
+      >(
         routes.create.start.configureAction,
         ({ connection, integration, actionId, step, updatedIntegration }) => ({
           params: {
             connectionId: connection.id,
             actionId,
-            step,
+            step: `${step || 0}`,
           },
           state: {
             connection,
@@ -130,13 +168,18 @@ export default {
       ),
     },
     finish: {
-      selectConnection: makeResolver<{
-        integration: Integration;
-        startConnection: ConnectionOverview;
-        startAction: Action;
-      }>(
+      selectConnection: makeResolver<
+        {
+          integration: Integration;
+          startConnection: ConnectionOverview;
+          startAction: Action;
+        },
+        null,
+        IFinishConnectionRouteState
+      >(
         routes.create.finish.selectConnection,
         ({ integration, startConnection, startAction }) => ({
+          params: null,
           state: {
             integration,
             startAction,
@@ -144,16 +187,20 @@ export default {
           },
         })
       ),
-      selectAction: makeResolver<{
-        integration: Integration;
-        startConnection: ConnectionOverview;
-        startAction: Action;
-        finishConnection: ConnectionOverview;
-      }>(
+      selectAction: makeResolver<
+        {
+          integration: Integration;
+          startConnection: ConnectionOverview;
+          startAction: Action;
+          finishConnection: ConnectionOverview;
+        },
+        IFinishActionRouteParams,
+        IFinishActionRouteState
+      >(
         routes.create.finish.selectAction,
         ({ integration, startConnection, startAction, finishConnection }) => ({
           params: {
-            connectionId: finishConnection.id,
+            connectionId: finishConnection.id!,
           },
           state: {
             integration,
@@ -163,15 +210,19 @@ export default {
           },
         })
       ),
-      configureAction: makeResolver<{
-        integration: Integration;
-        updatedIntegration?: Integration;
-        startConnection: ConnectionOverview;
-        startAction: Action;
-        finishConnection: ConnectionOverview;
-        actionId: string;
-        step?: number;
-      }>(
+      configureAction: makeResolver<
+        {
+          integration: Integration;
+          updatedIntegration: Integration;
+          startConnection: ConnectionOverview;
+          startAction: Action;
+          finishConnection: ConnectionOverview;
+          actionId: string;
+          step?: number;
+        },
+        IFinishConfigurationPageRouteParams,
+        IFinishConfigurationPageRouteState
+      >(
         routes.create.finish.configureAction,
         ({
           integration,
@@ -184,8 +235,8 @@ export default {
         }) => ({
           params: {
             actionId,
-            step,
             connectionId: finishConnection.id,
+            step: `${step || 0}`,
           },
           state: {
             integration,
@@ -198,111 +249,157 @@ export default {
       ),
     },
     configure: {
-      index: makeResolver<IEditorIndex>(
+      index: makeResolver<IEditorIndex, IBaseRouteParams, IBaseRouteState>(
         routes.create.configure.index,
         configureIndexMapper
       ),
       addStep: {
-        selectConnection: makeResolver<IEditorSelectConnection>(
+        selectConnection: makeResolver<
+          IEditorSelectConnection,
+          ISelectConnectionRouteParams,
+          ISelectConnectionRouteState
+        >(
           routes.create.configure.addStep.selectConnection,
           configureSelectConnectionMapper
         ),
-        selectAction: makeResolver<IEditorSelectAction>(
+        selectAction: makeResolver<
+          IEditorSelectAction,
+          ISelectActionRouteParams,
+          ISelectActionRouteState
+        >(
           routes.create.configure.addStep.selectAction,
           configureSelectActionMapper
         ),
-        configureAction: makeResolver<IEditorConfigureAction>(
+        configureAction: makeResolver<
+          IEditorConfigureAction,
+          IConfigureActionRouteParams,
+          IConfigureActionRouteState
+        >(
           routes.create.configure.addStep.configureAction,
           configureConfigureActionMapper
         ),
       },
       editStep: {
-        selectAction: makeResolver<IEditorSelectAction>(
+        selectAction: makeResolver<
+          IEditorSelectAction,
+          ISelectActionRouteParams,
+          ISelectActionRouteState
+        >(
           routes.create.configure.editStep.selectAction,
           configureSelectActionMapper
         ),
-        configureAction: makeResolver<IEditorConfigureAction>(
+        configureAction: makeResolver<
+          IEditorConfigureAction,
+          IConfigureActionRouteParams,
+          IConfigureActionRouteState
+        >(
           routes.create.configure.editStep.configureAction,
           configureConfigureActionMapper
         ),
       },
-      saveAndPublish: makeResolver<{ integration: Integration }>(
-        routes.create.configure.saveAndPublish,
-        ({ integration }) => ({
-          state: {
-            integration,
-          },
-        })
-      ),
+      saveAndPublish: makeResolver<
+        { integration: Integration },
+        null,
+        ISaveIntegrationRouteState
+      >(routes.create.configure.saveAndPublish, ({ integration }) => ({
+        params: null,
+        state: {
+          integration,
+        },
+      })),
     },
   },
   integration: {
-    activity: makeResolver<{ integration: Integration }>(
-      routes.integration.activity,
-      ({ integration }) => ({
-        params: {
-          integrationId: integration.id,
-        },
-        state: {
-          integration,
-        },
-      })
-    ),
-    details: makeResolver<{ integration: Integration }>(
-      routes.integration.details,
-      ({ integration }) => ({
-        params: {
-          integrationId: integration.id,
-        },
-        state: {
-          integration,
-        },
-      })
-    ),
+    activity: makeResolver<
+      { integration: Integration },
+      IActivityPageParams,
+      IActivityPageState
+    >(routes.integration.activity, ({ integration }) => ({
+      params: {
+        integrationId: integration.id!,
+      },
+      state: {
+        integration,
+      },
+    })),
+    details: makeResolver<
+      { integration: Integration },
+      IDetailsPageParams,
+      IDetailsPageState
+    >(routes.integration.details, ({ integration }) => ({
+      params: {
+        integrationId: integration.id!,
+      },
+      state: {
+        integration,
+      },
+    })),
     edit: {
-      index: makeResolver<IEditorIndex>(
+      index: makeResolver<IEditorIndex, IBaseRouteParams, IBaseRouteState>(
         routes.integration.edit.index,
         configureIndexMapper
       ),
       addStep: {
-        selectConnection: makeResolver<IEditorSelectConnection>(
+        selectConnection: makeResolver<
+          IEditorSelectConnection,
+          ISelectConnectionRouteParams,
+          ISelectConnectionRouteState
+        >(
           routes.integration.edit.addStep.selectConnection,
           configureSelectConnectionMapper
         ),
-        selectAction: makeResolver<IEditorSelectAction>(
+        selectAction: makeResolver<
+          IEditorSelectAction,
+          ISelectActionRouteParams,
+          ISelectConnectionRouteState
+        >(
           routes.integration.edit.addStep.selectAction,
           configureSelectActionMapper
         ),
-        configureAction: makeResolver<IEditorConfigureAction>(
+        configureAction: makeResolver<
+          IEditorConfigureAction,
+          IConfigureActionRouteParams,
+          IConfigureActionRouteState
+        >(
           routes.integration.edit.addStep.configureAction,
           configureConfigureActionMapper
         ),
       },
       editStep: {
-        selectAction: makeResolver<IEditorSelectAction>(
+        selectAction: makeResolver<
+          IEditorSelectAction,
+          ISelectActionRouteParams,
+          ISelectActionRouteState
+        >(
           routes.integration.edit.editStep.selectAction,
           configureSelectActionMapper
         ),
-        configureAction: makeResolver<IEditorConfigureAction>(
+        configureAction: makeResolver<
+          IEditorConfigureAction,
+          IConfigureActionRouteParams,
+          IConfigureActionRouteState
+        >(
           routes.integration.edit.editStep.configureAction,
           configureConfigureActionMapper
         ),
       },
-      saveAndPublish: makeResolver<IEditorIndex>(
-        routes.integration.edit.saveAndPublish,
-        configureIndexMapper
-      ),
+      saveAndPublish: makeResolver<
+        IEditorIndex,
+        ISaveIntegrationRouteParams,
+        ISaveIntegrationRouteState
+      >(routes.integration.edit.saveAndPublish, configureIndexMapper),
     },
-    metrics: makeResolver<{ integration: Integration }>(
-      routes.integration.metrics,
-      ({ integration }) => ({
-        params: {
-          integrationId: integration.id,
-        },
-        state: {
-          integration,
-        },
-      })
-    ),
+    metrics: makeResolver<
+      { integration: Integration },
+      IMetricsPageParams,
+      IMetricsPageState
+    >(routes.integration.metrics, ({ integration }) => ({
+      params: {
+        integrationId: integration.id!,
+      },
+      state: {
+        integration,
+      },
+    })),
   },
 };
