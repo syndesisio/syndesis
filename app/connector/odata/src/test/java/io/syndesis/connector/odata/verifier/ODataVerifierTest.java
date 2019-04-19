@@ -84,7 +84,7 @@ public class ODataVerifierTest extends AbstractODataTest {
         }
         parameters.put(SERVICE_URI, builder.toString());
 
-        Verifier verifier = new ODataVerifierAutoConfiguration().odataVerifier();
+        Verifier verifier = new ODataVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
 
         assertThat(responses).hasSize(2);
