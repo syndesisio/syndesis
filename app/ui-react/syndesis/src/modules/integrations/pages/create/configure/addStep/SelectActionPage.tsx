@@ -118,7 +118,7 @@ export class SelectActionPage extends React.Component {
                           flow,
                           integration,
                         })}
-                        backHref={resolvers.create.configure.addStep.selectConnection(
+                        backHref={resolvers.create.configure.addStep.selectStep(
                           { flow, position, integration }
                         )}
                       />

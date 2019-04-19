@@ -112,7 +112,7 @@ export class FinishConnectionPage extends React.Component {
                                 }
                                 actions={
                                   <ButtonLink
-                                    href={resolvers.create.finish.selectAction({
+                                    href={resolvers.create.finish.stepSwitcher({
                                       finishConnection: c,
                                       integration,
                                       startAction,

@@ -10,7 +10,7 @@ export interface IConfigureActionRouteParams {
   flow: string;
   position: string;
   actionId: string;
-  step?: string;
+  step: string;
 }
 
 /**

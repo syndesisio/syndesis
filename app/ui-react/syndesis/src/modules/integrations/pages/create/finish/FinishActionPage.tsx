@@ -156,7 +156,7 @@ export class FinishActionPage extends React.Component {
                       )}
                     </WithLoader>
                   }
-                  backHref={resolvers.create.finish.selectConnection({
+                  backHref={resolvers.create.finish.selectStep({
                     integration,
                     startAction,
                     startConnection,

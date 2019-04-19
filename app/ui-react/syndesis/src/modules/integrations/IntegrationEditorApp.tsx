@@ -53,27 +53,31 @@ export class IntegrationEditorApp extends React.Component {
                 component={integrationPages.edit.main.AddStepPage}
               />
               <Route
-                path={routes.integration.edit.addStep.selectConnection}
+                path={routes.integration.edit.addStep.selectStep}
                 exact={true}
                 component={integrationPages.edit.addStep.SelectConnectionPage}
               />
               <Route
-                path={routes.integration.edit.addStep.selectAction}
+                path={routes.integration.edit.addStep.connection.selectAction}
                 exact={true}
                 component={integrationPages.edit.addStep.SelectActionPage}
               />
               <Route
-                path={routes.integration.edit.addStep.configureAction}
+                path={
+                  routes.integration.edit.addStep.connection.configureAction
+                }
                 exact={true}
                 component={integrationPages.edit.addStep.ConfigureActionPage}
               />
               <Route
-                path={routes.integration.edit.editStep.selectAction}
+                path={routes.integration.edit.editStep.connection.selectAction}
                 exact={true}
                 component={integrationPages.edit.editStep.SelectActionPage}
               />
               <Route
-                path={routes.integration.edit.editStep.configureAction}
+                path={
+                  routes.integration.edit.editStep.connection.configureAction
+                }
                 exact={true}
                 component={integrationPages.edit.editStep.ConfigureActionPage}
               />

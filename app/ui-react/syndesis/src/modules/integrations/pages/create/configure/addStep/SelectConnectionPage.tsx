@@ -80,7 +80,7 @@ export class SelectConnectionPage extends React.Component {
                                   }
                                   actions={
                                     <ButtonLink
-                                      href={resolvers.create.configure.addStep.selectAction(
+                                      href={resolvers.create.configure.addStep.stepSwitcher(
                                         {
                                           connection: c,
                                           flow,

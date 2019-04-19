@@ -118,7 +118,7 @@ export class StartConfigurationPage extends React.Component {
                   );
                 } else {
                   history.push(
-                    resolvers.create.finish.selectConnection({
+                    resolvers.create.finish.selectStep({
                       integration: updatedIntegration,
                       startAction: action,
                       startConnection: connection,

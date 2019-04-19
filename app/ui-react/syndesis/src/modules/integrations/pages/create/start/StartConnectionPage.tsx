@@ -82,8 +82,8 @@ export class StartConnectionPage extends React.Component {
                             icon={<img src={c.icon} width={24} height={24} />}
                             actions={
                               <ButtonLink
-                                href={resolvers.create.start.selectAction({
-                                  connection: c,
+                                href={resolvers.create.start.stepSwitcher({
+                                  stepOrConnection: c,
                                 })}
                               >
                                 Select

@@ -136,7 +136,7 @@ export default () => (
                   {t => (
                     <Dashboard
                       linkToIntegrations={resolvers.integrations.list()}
-                      linkToIntegrationCreation={resolvers.integrations.create.start.selectConnection()}
+                      linkToIntegrationCreation={resolvers.integrations.create.start.selectStep()}
                       linkToConnections={resolvers.connections.connections()}
                       linkToConnectionCreation={resolvers.connections.create.selectConnector()}
                       integrationsOverview={

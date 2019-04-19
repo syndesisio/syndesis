@@ -5,7 +5,7 @@ export function getCreateAddStepHref(
   integration: Integration,
   position: number
 ) {
-  return resolvers.create.configure.addStep.selectConnection({
+  return resolvers.create.configure.addStep.selectStep({
     flow: '0',
     integration,
     position: `${position}`,
@@ -29,7 +29,7 @@ export function getEditAddStepHref(
   flow: string,
   position: number
 ) {
-  return resolvers.integration.edit.addStep.selectConnection({
+  return resolvers.integration.edit.addStep.selectStep({
     flow,
     integration,
     position: `${position}`,

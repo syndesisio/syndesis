@@ -134,7 +134,7 @@ export class IntegrationsPage extends React.Component {
                             linkToIntegrationImport={'/integrations/import'}
                             linkToManageCiCd={routes.manageCicd.root}
                             linkToIntegrationCreation={
-                              routes.create.start.selectConnection
+                              routes.create.start.selectStep
                             }
                             filterTypes={getFilterTypes(
                               connectionsData.connectionsForDisplay

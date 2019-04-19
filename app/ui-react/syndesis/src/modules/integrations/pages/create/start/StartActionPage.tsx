@@ -148,7 +148,7 @@ export class StartActionPage extends React.Component {
                           </IntegrationEditorChooseAction>
                         }
                         cancelHref={resolvers.list()}
-                        backHref={resolvers.create.start.selectConnection()}
+                        backHref={resolvers.create.start.selectStep()}
                       />
                     </>
                   )}
