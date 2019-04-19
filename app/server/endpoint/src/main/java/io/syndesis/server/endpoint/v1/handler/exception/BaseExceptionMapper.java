@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 abstract class BaseExceptionMapper<E extends Throwable> implements ExceptionMapper<E> {
 
     @SuppressWarnings("PMD.LoggerIsNotStaticFinal")
-    private final Logger LOG = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     private final Status status;
 
@@ -41,7 +41,7 @@ abstract class BaseExceptionMapper<E extends Throwable> implements ExceptionMapp
     public final Response toResponse(final E exception) {
         final String developerMessage = developerMessage(exception);
 
-        LOG.error(developerMessage, exception);
+        log.error(developerMessage, exception);
 
         final RestError error = new RestError(developerMessage, userMessage, null, status.getStatusCode());
 

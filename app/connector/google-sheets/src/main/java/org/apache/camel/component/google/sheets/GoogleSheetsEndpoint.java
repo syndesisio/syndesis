@@ -56,7 +56,7 @@ public class GoogleSheetsEndpoint extends AbstractApiEndpoint<GoogleSheetsApiNam
 
     @Override
     public Producer createProducer() throws Exception {
-        return new org.apache.camel.component.google.sheets.GoogleSheetsProducer(this);
+        return new GoogleSheetsProducer(this);
     }
 
     @Override
