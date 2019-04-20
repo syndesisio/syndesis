@@ -3,9 +3,9 @@ import { text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
-import { CiCdListItem } from '../../src';
+import { CiCdListItem } from '../../../src';
 
-const stories = storiesOf('CiCd/CiCdListItem', module);
+const stories = storiesOf('Integration/CiCd/CiCdListItem', module);
 stories.addDecorator(withKnobs);
 
 stories.add('Normal', () => (

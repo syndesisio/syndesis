@@ -2,9 +2,13 @@ import { action } from '@storybook/addon-actions';
 import { text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { CiCdManagePage, ICiCdListPageItem } from '../../src';
+import {
+  CiCdManagePageUI,
+  ICiCdListPageItem,
+  TagNameValidationError,
+} from '../../../src';
 
-const stories = storiesOf('CiCd/CiCdManagePage', module);
+const stories = storiesOf('Integration/CiCd/CiCdManagePageUI', module);
 stories.addDecorator(withKnobs);
 
 stories
@@ -49,17 +53,37 @@ interface ICiCdManagePageStoryProps {
   i18nConfirmRemoveMessageText: string;
 }
 
-class CiCdManagePageStory extends React.Component<ICiCdManagePageStoryProps> {
+interface ICiCdManagePageStoryState {
+  nameValidationError: TagNameValidationError;
+}
+
+class CiCdManagePageStory extends React.Component<
+  ICiCdManagePageStoryProps,
+  ICiCdManagePageStoryState
+> {
   constructor(props: ICiCdManagePageStoryProps) {
     super(props);
+    this.state = {
+      nameValidationError: TagNameValidationError.NoErrors,
+    };
     this.createConfirmRemoveString = this.createConfirmRemoveString.bind(this);
+    this.handleNameValidation = this.handleNameValidation.bind(this);
+  }
+  public handleNameValidation(name: string) {
+    if (!name || name === '') {
+      this.setState({ nameValidationError: TagNameValidationError.NoName });
+    } else if (name === 'UsedTag') {
+      this.setState({ nameValidationError: TagNameValidationError.NameInUse });
+    } else {
+      this.setState({ nameValidationError: TagNameValidationError.NoErrors });
+    }
   }
   public createConfirmRemoveString(name: string) {
     return this.props.i18nConfirmRemoveMessageText.replace('###', name);
   }
   public render() {
     return (
-      <CiCdManagePage
+      <CiCdManagePageUI
         activeFilters={[]}
         currentFilterType={{
           filterType: 'text',
@@ -73,6 +97,7 @@ class CiCdManagePageStory extends React.Component<ICiCdManagePageStoryProps> {
         isSortAscending={true}
         resultsCount={2}
         sortTypes={[]}
+        nameValidationError={this.state.nameValidationError}
         onUpdateCurrentValue={action('onUpdateCurrentValue')}
         onValueKeyPress={action('onValueKeyPress')}
         onFilterAdded={action('onFilterAdded')}
@@ -82,10 +107,10 @@ class CiCdManagePageStory extends React.Component<ICiCdManagePageStoryProps> {
         onClearFilters={action('onClearFilters')}
         onToggleCurrentSortDirection={action('onToggleCurrentSortDirection')}
         onUpdateCurrentSortType={action('onUpdateCurrentSortType')}
-        onAddNew={action('onAddNew')}
         onEditItem={action('onEditItem')}
         onAddItem={action('onAddItem')}
         onRemoveItem={action('onRemoveItem')}
+        onValidateItem={this.handleNameValidation}
         i18nRemoveButtonText={text('Remove Button Text', 'Remove')}
         i18nResultsCount={text('i18nResultsCount', '2 Results')}
         i18nAddNewButtonText={text('Add New Text', 'Add New')}
@@ -122,6 +147,11 @@ class CiCdManagePageStory extends React.Component<ICiCdManagePageStoryProps> {
         i18nEmptyStateTitle={text(
           'Empty State Title',
           'No Environments Available'
+        )}
+        i18nNoNameError={text('No Name Error', 'Please enter a tag name.')}
+        i18nNameInUseError={text(
+          'Name in Use Error',
+          'That tag name is already in use.'
         )}
         listItems={this.props.items}
       />

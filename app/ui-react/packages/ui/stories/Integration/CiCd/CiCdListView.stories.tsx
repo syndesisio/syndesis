@@ -2,10 +2,10 @@ import { action } from '@storybook/addon-actions';
 import { text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { CiCdList, CiCdListItem, CiCdListView } from '../../src';
-import { CiCdListEmptyState } from '../../src';
+import { CiCdList, CiCdListItem, CiCdListView } from '../../../src';
+import { CiCdListEmptyState } from '../../../src';
 
-const stories = storiesOf('CiCd/CiCdListView', module);
+const stories = storiesOf('/Integration/CiCd/CiCdListView', module);
 stories.addDecorator(withKnobs);
 
 stories
@@ -94,6 +94,7 @@ stories
         i18nAddNewButtonText={text('Add New Text', 'Add New')}
         children={
           <CiCdListEmptyState
+            onAddNew={action('onAddNew')}
             i18nAddNewButtonText={text('Add New Text', 'Add New')}
             i18nTitle={text('Empty State Title', 'No Environments Available')}
           />

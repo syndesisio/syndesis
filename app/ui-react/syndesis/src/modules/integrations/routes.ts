@@ -21,6 +21,7 @@ const editorRoutes = include('flow::flow', {
 
 export default include('/integrations', {
   list: '',
+  manageCicd: include('manageCicd', { root: '' }),
   create: include('create', {
     start: include('start', stepRoutes),
     finish: include('finish', stepRoutes),

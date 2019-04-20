@@ -1,6 +1,6 @@
 import './index.css';
 
-export * from './CiCd';
+export * from './Integration/CiCd';
 export * from './Connection';
 export * from './Customization';
 export * from './Dashboard';

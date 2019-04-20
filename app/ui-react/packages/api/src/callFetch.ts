@@ -33,6 +33,11 @@ export interface IFetch {
    * Indicates if a 'Referer Policy' of 'no-referrer' should be included.
    */
   includeReferrerPolicy?: boolean;
+
+  /**
+   * Whether or not to stringify the data to JSON, overrides the content type
+   */
+  stringifyBody?: boolean;
 }
 
 export function callFetch({
@@ -45,6 +50,7 @@ export function callFetch({
   includeAccept = true,
   accept = 'application/json,text/plain,*/*',
   includeReferrerPolicy = true,
+  stringifyBody = true,
 }: IFetch) {
   if (includeAccept) {
     const acceptId = 'Accept';
@@ -62,9 +68,10 @@ export function callFetch({
   }
 
   return fetch(url, {
-    body: contentType.includes('application/json')
-      ? JSON.stringify(body)
-      : body,
+    body:
+      contentType.includes('application/json') && stringifyBody
+        ? JSON.stringify(body)
+        : body,
     cache: 'no-cache',
     credentials: 'include',
     headers: {

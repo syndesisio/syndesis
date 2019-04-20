@@ -9,6 +9,7 @@ import {
   MetricsPage,
   TestAtlasmapPage,
 } from './pages';
+import { ManageCiCdPage } from './pages/cicd';
 import routes from './routes';
 
 /**
@@ -32,6 +33,11 @@ export class IntegrationsModule extends React.Component {
   public render() {
     return (
       <Switch>
+        <Route
+          path={routes.manageCicd.root}
+          exact={true}
+          component={ManageCiCdPage}
+        />
         <Route path={routes.create.root} component={IntegrationCreatorApp} />
         <Route
           path={routes.integration.edit.root}

@@ -2,9 +2,9 @@ import { action } from '@storybook/addon-actions';
 import { text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { CiCdList, CiCdListItem } from '../../src';
+import { CiCdList, CiCdListItem } from '../../../src';
 
-const stories = storiesOf('CiCd/CiCdList', module);
+const stories = storiesOf('Integration/CiCd/CiCdList', module);
 stories.addDecorator(withKnobs);
 
 stories.add('Normal', () => (

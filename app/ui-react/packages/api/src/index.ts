@@ -7,6 +7,8 @@ export * from './ServerEventsContext';
 export * from './Stream';
 export * from './WithIntegrationHelpers';
 export * from './WithApiConnectors';
+export * from './WithEnvironments';
+export * from './WithEnvironmentHelpers';
 export * from './WithExtension';
 export * from './WithExtensionHelpers';
 export * from './WithExtensionIntegrations';

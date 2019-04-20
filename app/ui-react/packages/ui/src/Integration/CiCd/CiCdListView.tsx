@@ -1,7 +1,7 @@
 import { Button } from 'patternfly-react';
 import * as React from 'react';
-import { Container } from '../Layout';
-import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
+import { Container } from '../../Layout';
+import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
 export interface ICiCdListViewProps extends IListViewToolbarProps {
   i18nAddNewButtonText: string;
