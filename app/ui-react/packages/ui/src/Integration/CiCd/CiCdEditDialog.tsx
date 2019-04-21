@@ -1,12 +1,7 @@
 import { Button } from 'patternfly-react';
 import * as React from 'react';
 import { Dialog } from '../../Shared';
-
-export enum TagNameValidationError {
-  NoErrors = 'NoErrors',
-  NoName = 'NoName',
-  NameInUse = 'NameInUse',
-}
+import { TagNameValidationError } from './CiCdUIModels';
 
 export interface ICiCdEditDialogProps {
   i18nTitle: string;

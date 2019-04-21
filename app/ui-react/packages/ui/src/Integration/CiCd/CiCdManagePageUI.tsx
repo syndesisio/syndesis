@@ -6,12 +6,12 @@ import {
   IListViewToolbarProps,
   SimplePageHeader,
 } from '../../Shared';
-import { CiCdEditDialog, TagNameValidationError } from './CiCdEditDialog';
+import { CiCdEditDialog } from './CiCdEditDialog';
 import { CiCdList } from './CiCdList';
 import { CiCdListEmptyState } from './CiCdListEmptyState';
 import { CiCdListItem } from './CiCdListItem';
 import { CiCdListView } from './CiCdListView';
-import { ICiCdListPageItem } from './CiCdUIModels';
+import { ICiCdListPageItem, TagNameValidationError } from './CiCdUIModels';
 
 export interface ICiCdManagePageUIProps extends IListViewToolbarProps {
   i18nAddTagDialogTitle: string;

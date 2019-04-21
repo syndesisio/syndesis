@@ -5,3 +5,5 @@ export * from './CiCdListItem';
 export * from './CiCdManagePageUI';
 export * from './CiCdListView';
 export * from './CiCdUIModels';
+export * from './TagIntegrationDialog';
+export * from './TagIntegrationListItem';
