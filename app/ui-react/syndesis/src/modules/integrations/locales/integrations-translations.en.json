@@ -24,5 +24,6 @@
   "ManageCiCdDescription": "This description has not yet been actually defined, please send help.",
   "NoEnvironmentsAvailable": "No Environments Available",
   "PleaseEnterATagName": "Please enter a tag name.",
-  "ThatTagNameIsInUse": "That tag name is already in use."
+  "ThatTagNameIsInUse": "That tag name is already in use.",
+  "NoEnvironmentsAvailableInfo": ""
 }

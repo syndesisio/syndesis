@@ -94,6 +94,7 @@ stories
           onAddNew={action('onAddNew')}
           i18nAddNewButtonText={text('Add New Text', 'Add New')}
           i18nTitle={text('Empty State Title', 'No Environments Available')}
+          i18nInfo={text('Empty State Info', '')}
         />
       }
     />

@@ -4,13 +4,14 @@ import {
   CiCdList,
   CiCdListEmptyState,
   CiCdListItem,
+  CiCdListSkeleton,
   CiCdManagePageUI,
   IActiveFilter,
   IFilterType,
   ISortType,
   TagNameValidationError,
 } from '@syndesis/ui';
-import { WithListViewToolbarHelpers } from '@syndesis/utils';
+import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -175,36 +176,56 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                               openEditDialog,
                               openRemoveDialog,
                             }) => (
-                              <>
-                                {filteredAndSortedEnvironments.length !== 0 && (
-                                  <CiCdList
-                                    children={filteredAndSortedEnvironments.map(
-                                      (listItem, index) => (
-                                        <CiCdListItem
-                                          key={index}
-                                          onEditClicked={openEditDialog}
-                                          onRemoveClicked={openRemoveDialog}
-                                          i18nEditButtonText={t('shared:Edit')}
-                                          i18nRemoveButtonText={t(
-                                            'shared:Remove'
-                                          )}
-                                          name={listItem.name}
-                                          i18nUsesText={listItem.i18nUsesText}
-                                        />
-                                      )
+                              <WithLoader
+                                error={error}
+                                loading={!hasData}
+                                loaderChildren={<CiCdListSkeleton />}
+                                errorChildren={<div>TODO - error</div>}
+                              >
+                                {() => (
+                                  <>
+                                    {filteredAndSortedEnvironments.length !==
+                                      0 && (
+                                      <CiCdList
+                                        children={filteredAndSortedEnvironments.map(
+                                          (listItem, index) => (
+                                            <CiCdListItem
+                                              key={index}
+                                              onEditClicked={openEditDialog}
+                                              onRemoveClicked={openRemoveDialog}
+                                              i18nEditButtonText={t(
+                                                'shared:Edit'
+                                              )}
+                                              i18nRemoveButtonText={t(
+                                                'shared:Remove'
+                                              )}
+                                              name={listItem.name}
+                                              i18nUsesText={
+                                                listItem.i18nUsesText
+                                              }
+                                            />
+                                          )
+                                        )}
+                                      />
                                     )}
-                                  />
-                                )}
-                                {filteredAndSortedEnvironments.length === 0 && (
-                                  <CiCdListEmptyState
-                                    onAddNew={openAddDialog}
-                                    i18nTitle={t(
-                                      'integrations:NoEnvironmentsAvailable'
+                                    {filteredAndSortedEnvironments.length ===
+                                      0 && (
+                                      <CiCdListEmptyState
+                                        onAddNew={openAddDialog}
+                                        i18nTitle={t(
+                                          'integrations:NoEnvironmentsAvailable'
+                                        )}
+                                        i18nAddNewButtonText={t(
+                                          'shared:AddNew'
+                                        )}
+                                        i18nInfo={t(
+                                          'integrations:NoEnvironmentsAvailableInfo'
+                                        )}
+                                      />
                                     )}
-                                    i18nAddNewButtonText={t('shared:AddNew')}
-                                  />
+                                  </>
                                 )}
-                              </>
+                              </WithLoader>
                             )}
                           </CiCdManagePageUI>
                         </>

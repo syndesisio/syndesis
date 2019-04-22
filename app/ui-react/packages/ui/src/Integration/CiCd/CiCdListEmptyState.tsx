@@ -4,6 +4,7 @@ import * as React from 'react';
 export interface ICiCdListEmptyState {
   onAddNew: () => void;
   i18nTitle: string;
+  i18nInfo: string;
   i18nAddNewButtonText: string;
 }
 
@@ -13,7 +14,7 @@ export class CiCdListEmptyState extends React.Component<ICiCdListEmptyState> {
       <EmptyState>
         <EmptyState.Icon />
         <EmptyState.Title>{this.props.i18nTitle}</EmptyState.Title>
-        <EmptyState.Info />
+        <EmptyState.Info>{this.props.i18nInfo}</EmptyState.Info>
         <EmptyState.Action>
           <Button
             bsStyle="primary"
