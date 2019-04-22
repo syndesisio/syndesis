@@ -1,6 +1,9 @@
 import { WithEnvironmentHelpers, WithEnvironments } from '@syndesis/api';
 import {
   Breadcrumb,
+  CiCdList,
+  CiCdListEmptyState,
+  CiCdListItem,
   CiCdManagePageUI,
   IActiveFilter,
   IFilterType,
@@ -128,12 +131,10 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                             i18nResultsCount={t('shared:resultsCount', {
                               count: filteredAndSortedEnvironments.length,
                             })}
-                            i18nRemoveButtonText={t('shared:Remove')}
                             i18nAddNewButtonText={t('shared:AddNew')}
                             i18nPageTitle={t('integrations:ManageCiCd')}
                             i18nCancelButtonText={t('shared:Cancel')}
                             i18nSaveButtonText={t('shared:Save')}
-                            i18nEditButtonText={t('shared:Edit')}
                             i18nConfirmRemoveButtonText={t('shared:Yes')}
                             i18nConfirmCancelButtonText={t('shared:No')}
                             i18nRemoveConfirmationMessage={
@@ -161,9 +162,6 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                             i18nPageDescription={t(
                               'integrations:ManageCiCdDescription'
                             )}
-                            i18nEmptyStateTitle={t(
-                              'integrations:NoEnvironmentsAvailable'
-                            )}
                             nameValidationError={this.state.nameValidationError}
                             i18nNoNameError={t(
                               'integrations:PleaseEnterATagName'
@@ -171,8 +169,44 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                             i18nNameInUseError={t(
                               'integrations:ThatTagNameIsInUse'
                             )}
-                            listItems={filteredAndSortedEnvironments}
-                          />
+                          >
+                            {({
+                              openAddDialog,
+                              openEditDialog,
+                              openRemoveDialog,
+                            }) => (
+                              <>
+                                {filteredAndSortedEnvironments.length !== 0 && (
+                                  <CiCdList
+                                    children={filteredAndSortedEnvironments.map(
+                                      (listItem, index) => (
+                                        <CiCdListItem
+                                          key={index}
+                                          onEditClicked={openEditDialog}
+                                          onRemoveClicked={openRemoveDialog}
+                                          i18nEditButtonText={t('shared:Edit')}
+                                          i18nRemoveButtonText={t(
+                                            'shared:Remove'
+                                          )}
+                                          name={listItem.name}
+                                          i18nUsesText={listItem.i18nUsesText}
+                                        />
+                                      )
+                                    )}
+                                  />
+                                )}
+                                {filteredAndSortedEnvironments.length === 0 && (
+                                  <CiCdListEmptyState
+                                    onAddNew={openAddDialog}
+                                    i18nTitle={t(
+                                      'integrations:NoEnvironmentsAvailable'
+                                    )}
+                                    i18nAddNewButtonText={t('shared:AddNew')}
+                                  />
+                                )}
+                              </>
+                            )}
+                          </CiCdManagePageUI>
                         </>
                       )}
                     </WithEnvironmentHelpers>

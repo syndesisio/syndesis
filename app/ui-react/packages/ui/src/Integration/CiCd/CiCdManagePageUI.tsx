@@ -7,11 +7,14 @@ import {
   SimplePageHeader,
 } from '../../Shared';
 import { CiCdEditDialog } from './CiCdEditDialog';
-import { CiCdList } from './CiCdList';
-import { CiCdListEmptyState } from './CiCdListEmptyState';
-import { CiCdListItem } from './CiCdListItem';
 import { CiCdListView } from './CiCdListView';
-import { ICiCdListPageItem, TagNameValidationError } from './CiCdUIModels';
+import { TagNameValidationError } from './CiCdUIModels';
+
+export interface ICiCdManagePageUIChildrenProps {
+  openAddDialog: () => void;
+  openEditDialog: (name: string) => void;
+  openRemoveDialog: (name: string) => void;
+}
 
 export interface ICiCdManagePageUIProps extends IListViewToolbarProps {
   i18nAddTagDialogTitle: string;
@@ -22,11 +25,8 @@ export interface ICiCdManagePageUIProps extends IListViewToolbarProps {
   i18nTagInputLabel: string;
   i18nSaveButtonText: string;
   i18nCancelButtonText: string;
-  i18nRemoveButtonText: string;
   i18nConfirmCancelButtonText: string;
   i18nConfirmRemoveButtonText: string;
-  i18nEditButtonText: string;
-  i18nEmptyStateTitle: string;
   i18nRemoveConfirmationMessage: (name: string) => string;
   i18nRemoveConfirmationTitle: string;
   i18nRemoveConfirmationDetailMessage: string;
@@ -34,12 +34,12 @@ export interface ICiCdManagePageUIProps extends IListViewToolbarProps {
   i18nPageDescription: string;
   i18nNoNameError: string;
   i18nNameInUseError: string;
-  listItems: ICiCdListPageItem[];
   nameValidationError: TagNameValidationError;
   onValidateItem: (name: string) => void;
   onEditItem: (oldName: string, newName: string) => void;
   onAddItem: (name: string) => void;
   onRemoveItem: (name: string) => void;
+  children: (props: ICiCdManagePageUIChildrenProps) => any;
 }
 
 export interface ICiCdManagePageUIState {
@@ -180,33 +180,13 @@ export class CiCdManagePageUI extends React.Component<
           i18nResultsCount={this.props.i18nResultsCount}
           i18nAddNewButtonText={this.props.i18nAddNewButtonText}
           onAddNew={this.openAddDialog}
-          children={
-            <>
-              {this.props.listItems.length !== 0 && (
-                <CiCdList
-                  children={this.props.listItems.map((listItem, index) => (
-                    <CiCdListItem
-                      key={index}
-                      onEditClicked={this.openEditDialog}
-                      onRemoveClicked={this.openRemoveDialog}
-                      i18nEditButtonText={this.props.i18nEditButtonText}
-                      i18nRemoveButtonText={this.props.i18nRemoveButtonText}
-                      name={listItem.name}
-                      i18nUsesText={listItem.i18nUsesText}
-                    />
-                  ))}
-                />
-              )}
-              {this.props.listItems.length === 0 && (
-                <CiCdListEmptyState
-                  onAddNew={this.openAddDialog}
-                  i18nTitle={this.props.i18nEmptyStateTitle}
-                  i18nAddNewButtonText={this.props.i18nAddNewButtonText}
-                />
-              )}
-            </>
-          }
-        />
+        >
+          {this.props.children({
+            openAddDialog: this.openAddDialog,
+            openEditDialog: this.openEditDialog,
+            openRemoveDialog: this.openRemoveDialog,
+          })}
+        </CiCdListView>
       </>
     );
   }

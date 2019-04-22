@@ -3,6 +3,9 @@ import { text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import {
+  CiCdList,
+  CiCdListEmptyState,
+  CiCdListItem,
   CiCdManagePageUI,
   ICiCdListPageItem,
   TagNameValidationError,
@@ -14,6 +17,13 @@ stories.addDecorator(withKnobs);
 stories
   .add('with children', () => (
     <CiCdManagePageStory
+      i18nAddNewButtonText={text('Add New Text', 'Add New')}
+      i18nRemoveButtonText={text('Remove Button Text', 'Remove')}
+      i18nEditButtonText={text('Edit Button', 'Edit')}
+      i18nEmptyStateTitle={text(
+        'Empty State Title',
+        'No Environments Available'
+      )}
       i18nConfirmRemoveMessageText={text(
         'Confirm Remove Message',
         'Are you sure you want to remove the ### tag'
@@ -40,6 +50,13 @@ stories
   ))
   .add('empty state', () => (
     <CiCdManagePageStory
+      i18nAddNewButtonText={text('Add New Text', 'Add New')}
+      i18nRemoveButtonText={text('Remove Button Text', 'Remove')}
+      i18nEditButtonText={text('Edit Button', 'Edit')}
+      i18nEmptyStateTitle={text(
+        'Empty State Title',
+        'No Environments Available'
+      )}
       i18nConfirmRemoveMessageText={text(
         'Confirm Remove Message',
         'Are you sure you want to remove the ### tag'
@@ -51,6 +68,10 @@ stories
 interface ICiCdManagePageStoryProps {
   items: ICiCdListPageItem[];
   i18nConfirmRemoveMessageText: string;
+  i18nAddNewButtonText: string;
+  i18nRemoveButtonText: string;
+  i18nEditButtonText: string;
+  i18nEmptyStateTitle: string;
 }
 
 interface ICiCdManagePageStoryState {
@@ -111,13 +132,11 @@ class CiCdManagePageStory extends React.Component<
         onAddItem={action('onAddItem')}
         onRemoveItem={action('onRemoveItem')}
         onValidateItem={this.handleNameValidation}
-        i18nRemoveButtonText={text('Remove Button Text', 'Remove')}
         i18nResultsCount={text('i18nResultsCount', '2 Results')}
-        i18nAddNewButtonText={text('Add New Text', 'Add New')}
+        i18nAddNewButtonText={this.props.i18nAddNewButtonText}
         i18nPageTitle={text('Page Title', 'Manage CI/CD')}
         i18nCancelButtonText={text('Dialog Cancel Text', 'Cancel')}
         i18nSaveButtonText={text('Dialog Save Text', 'Save')}
-        i18nEditButtonText={text('Edit Button', 'Edit')}
         i18nConfirmRemoveButtonText={text('Confirm Remove Button', 'Yes')}
         i18nConfirmCancelButtonText={text('Confirm Cancel Button', 'No')}
         i18nRemoveConfirmationMessage={this.createConfirmRemoveString}
@@ -144,17 +163,39 @@ class CiCdManagePageStory extends React.Component<
           'Page Description',
           'This description has not yet been actually defined, please send help.'
         )}
-        i18nEmptyStateTitle={text(
-          'Empty State Title',
-          'No Environments Available'
-        )}
         i18nNoNameError={text('No Name Error', 'Please enter a tag name.')}
         i18nNameInUseError={text(
           'Name in Use Error',
           'That tag name is already in use.'
         )}
-        listItems={this.props.items}
-      />
+      >
+        {({ openAddDialog, openEditDialog, openRemoveDialog }) => (
+          <>
+            {this.props.items.length !== 0 && (
+              <CiCdList
+                children={this.props.items.map((listItem, index) => (
+                  <CiCdListItem
+                    key={index}
+                    onEditClicked={openEditDialog}
+                    onRemoveClicked={openRemoveDialog}
+                    i18nEditButtonText={this.props.i18nEditButtonText}
+                    i18nRemoveButtonText={this.props.i18nRemoveButtonText}
+                    name={listItem.name}
+                    i18nUsesText={listItem.i18nUsesText}
+                  />
+                ))}
+              />
+            )}
+            {this.props.items.length === 0 && (
+              <CiCdListEmptyState
+                onAddNew={openAddDialog}
+                i18nTitle={this.props.i18nEmptyStateTitle}
+                i18nAddNewButtonText={this.props.i18nAddNewButtonText}
+              />
+            )}
+          </>
+        )}
+      </CiCdManagePageUI>
     );
   }
 }
