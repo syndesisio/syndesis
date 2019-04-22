@@ -179,7 +179,9 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                               <WithLoader
                                 error={error}
                                 loading={!hasData}
-                                loaderChildren={<CiCdListSkeleton />}
+                                loaderChildren={
+                                  <CiCdList children={<CiCdListSkeleton />} />
+                                }
                                 errorChildren={<div>TODO - error</div>}
                               >
                                 {() => (

@@ -1,17 +1,21 @@
-import { Button, ListView } from 'patternfly-react';
+import { Button } from 'patternfly-react';
 import * as React from 'react';
 import { Dialog } from '../../Shared';
 import { ITagIntegrationEntry } from './CiCdUIModels';
-import { TagIntegrationListItem } from './TagIntegrationListItem';
+
+export interface ITagIntegrationDialogChildrenProps {
+  handleChange: (name: string, selected: boolean) => void;
+  items: ITagIntegrationEntry[];
+}
 
 export interface ITagIntegrationDialogProps {
   i18nTitle: string;
   i18nCancelButtonText: string;
   i18nSaveButtonText: string;
-  i18nTagIntegrationDialogMessage: string;
   onHide: () => void;
   onSave: (items: ITagIntegrationEntry[]) => void;
-  items: ITagIntegrationEntry[];
+  initialItems: ITagIntegrationEntry[];
+  children: (props: ITagIntegrationDialogChildrenProps) => any;
 }
 export interface ITagIntegrationDialogState {
   items: ITagIntegrationEntry[];
@@ -26,7 +30,7 @@ export class TagIntegrationDialog extends React.Component<
     super(props);
     this.state = {
       disableSave: true,
-      items: this.props.items,
+      items: this.props.initialItems,
     };
     this.handleClick = this.handleClick.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -35,7 +39,7 @@ export class TagIntegrationDialog extends React.Component<
     const items = this.state.items.map(item =>
       item.name === name ? { name, selected } : item
     );
-    const needsSave = this.props.items
+    const needsSave = this.props.initialItems
       .map(
         (item, index) =>
           item.name === items[index].name &&
@@ -50,21 +54,10 @@ export class TagIntegrationDialog extends React.Component<
   public render() {
     return (
       <Dialog
-        body={
-          <>
-            <p>{this.props.i18nTagIntegrationDialogMessage}</p>
-            <ListView>
-              {this.state.items.map((item, index) => (
-                <TagIntegrationListItem
-                  key={index}
-                  name={item.name}
-                  selected={item.selected}
-                  onChange={this.handleChange}
-                />
-              ))}
-            </ListView>
-          </>
-        }
+        body={this.props.children({
+          handleChange: this.handleChange,
+          items: this.state.items,
+        })}
         footer={
           <>
             <Button onClick={this.props.onHide}>

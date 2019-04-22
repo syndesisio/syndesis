@@ -1,21 +1,61 @@
 import { action } from '@storybook/addon-actions';
 import { text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
-import { Button } from 'patternfly-react';
+import { Button, ListView } from 'patternfly-react';
 import * as React from 'react';
-import { TagIntegrationDialog } from '../../../src/Integration/CiCd';
+import {
+  CiCdListSkeleton,
+  ITagIntegrationEntry,
+  TagIntegrationDialog,
+  TagIntegrationListItem,
+} from '../../../src';
 
 const stories = storiesOf('Integration/CiCd/TagIntegrationDialog', module);
 stories.addDecorator(withKnobs);
 
-stories.add('Normal', () => <TagIntegrationDialogStory />);
+const i18nTagIntegrationDialogMessage = text(
+  'Dialog Message',
+  'Tag this integration for release in one or more of the environments.'
+);
+
+stories
+  .add('with children', () => (
+    <TagIntegrationDialogStory
+      loading={false}
+      items={[
+        {
+          name: 'Development',
+          selected: true,
+        },
+        {
+          name: 'Staging',
+          selected: true,
+        },
+        {
+          name: 'Production',
+          selected: false,
+        },
+      ]}
+    />
+  ))
+  .add('empty state', () => (
+    <TagIntegrationDialogStory loading={false} items={[]} />
+  ))
+  .add('loading', () => (
+    <TagIntegrationDialogStory loading={true} items={[]} />
+  ));
+
+interface ITagIntegrationDialogStoryProps {
+  items: ITagIntegrationEntry[];
+  loading: boolean;
+}
 
 interface ITagIntegrationDialogStoryState {
   showDialog: boolean;
 }
 
 class TagIntegrationDialogStory extends React.Component<
-  {},
+  ITagIntegrationDialogStoryProps,
   ITagIntegrationDialogStoryState
 > {
   constructor(props) {
@@ -39,31 +79,42 @@ class TagIntegrationDialogStory extends React.Component<
           <TagIntegrationDialog
             onHide={this.closeDialog}
             onSave={action('onSave')}
-            items={[
-              {
-                name: 'Development',
-                selected: true,
-              },
-              {
-                name: 'Staging',
-                selected: true,
-              },
-              {
-                name: 'Production',
-                selected: false,
-              },
-            ]}
+            initialItems={this.props.items}
             i18nTitle={text(
               'Title',
               'Mark Integration for Continuous Integration/Continuous Deployment'
             )}
             i18nCancelButtonText={text('Cancel Button', 'Cancel')}
             i18nSaveButtonText={text('Save Button', 'Save')}
-            i18nTagIntegrationDialogMessage={text(
-              'Dialog Message',
-              'Tag this integration for release in one or more of the environments.'
+          >
+            {({ handleChange, items }) => (
+              <>
+                <p>{i18nTagIntegrationDialogMessage}</p>
+                {this.props.loading && (
+                  <ListView>
+                    <CiCdListSkeleton />
+                  </ListView>
+                )}
+                {!this.props.loading && (
+                  <>
+                    {items.length > 0 && (
+                      <ListView>
+                        {items.map((item, index) => (
+                          <TagIntegrationListItem
+                            key={index}
+                            name={item.name}
+                            selected={item.selected}
+                            onChange={handleChange}
+                          />
+                        ))}
+                      </ListView>
+                    )}
+                    {items.length === 0 && <div>TODO</div>}
+                  </>
+                )}
+              </>
             )}
-          />
+          </TagIntegrationDialog>
         )}
         <Button className="btn btn-primary" onClick={this.openDialog}>
           Open Dialog

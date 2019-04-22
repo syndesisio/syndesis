@@ -34,7 +34,7 @@ export class CiCdListItem extends React.Component<ICiCdListItemProps> {
       <ListViewItem
         heading={this.props.name}
         description={this.props.i18nUsesText}
-        additionalInfo={<span>&nbsp;{/* workaround */}</span>}
+        additionalInfo={[]}
         actions={
           <div>
             <Button onClick={this.handleEditClicked}>
