@@ -44,4 +44,4 @@ including:
 
 * A web browser page that takes data input and generates the call.
 * An application that explicitly calls the REST APIs. 
-* Other APIs that call the REST API, for example a webhook. 
+* Other APIs that call the REST API, for example, a webhook. 
