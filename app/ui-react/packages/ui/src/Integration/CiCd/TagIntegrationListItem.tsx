@@ -27,7 +27,9 @@ export class TagIntegrationListItem extends React.Component<
             onChange={this.handleChange}
           />
         }
-        additionalInfo={this.props.name}
+        heading={this.props.name}
+        description={''}
+        additionalInfo={[]}
       />
     );
   }

@@ -7,6 +7,7 @@ import {
   CiCdListSkeleton,
   ITagIntegrationEntry,
   TagIntegrationDialog,
+  TagIntegrationDialogEmptyState,
   TagIntegrationListItem,
 } from '../../../src';
 
@@ -99,17 +100,32 @@ class TagIntegrationDialogStory extends React.Component<
                   <>
                     {items.length > 0 && (
                       <ListView>
-                        {items.map((item, index) => (
-                          <TagIntegrationListItem
-                            key={index}
-                            name={item.name}
-                            selected={item.selected}
-                            onChange={handleChange}
-                          />
-                        ))}
+                        {items.map((item, index) => {
+                          return (
+                            <TagIntegrationListItem
+                              key={index}
+                              name={item.name}
+                              selected={item.selected}
+                              onChange={handleChange}
+                            />
+                          );
+                        })}
                       </ListView>
                     )}
-                    {items.length === 0 && <div>TODO</div>}
+                    {items.length === 0 && (
+                      <TagIntegrationDialogEmptyState
+                        href={text('href', '#example')}
+                        i18nTitle={text(
+                          'Empty State Title',
+                          'No Environments Available'
+                        )}
+                        i18nInfo={text('Empty State Info', '')}
+                        i18nGoToManageCiCdButtonText={text(
+                          'Go To Manage CI/CD',
+                          'Go To Manage CI/CD'
+                        )}
+                      />
+                    )}
                   </>
                 )}
               </>

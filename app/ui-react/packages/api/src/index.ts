@@ -14,6 +14,7 @@ export * from './WithExtensionHelpers';
 export * from './WithExtensionIntegrations';
 export * from './WithExtensions';
 export * from './WithIntegrations';
+export * from './WithIntegrationTags';
 export * from './WithMonitoredIntegrations';
 export * from './WithIntegrationsMetrics';
 export * from './WithConnections';
