@@ -74,7 +74,7 @@ function buildTags(flows: Flow[] = [], tags: string[] = []) {
   const connectorIds = [].concat(
     ...flows.map(f =>
       f.steps
-        .filter(step => step.stepKind === ENDPOINT)
+        .filter(step => step.stepKind === ENDPOINT && typeof step.connection !== 'undefined')
         .map(step => step.connection.connectorId)
     )
   );
@@ -922,14 +922,17 @@ export function validateFlow(
   const startStep = getStartStep(integration, flowId);
   if (
     typeof startStep === 'undefined' ||
-    typeof startStep.connection === 'undefined'
+    typeof startStep.stepKind === 'undefined' ||
+    (typeof startStep.connection === 'undefined' &&
+      startStep.stepKind === ENDPOINT)
   ) {
     errors.push({ kind: FlowErrorKind.NO_START_CONNECTION });
   }
   const endStep = getLastStep(integration, flowId);
   if (
     typeof endStep === 'undefined' ||
-    (endStep.stepKind === 'endpoint' &&
+    typeof endStep.stepKind === 'undefined' ||
+    (endStep.stepKind === ENDPOINT &&
       typeof endStep.connection === 'undefined')
   ) {
     errors.push({ kind: FlowErrorKind.NO_FINISH_CONNECTION });

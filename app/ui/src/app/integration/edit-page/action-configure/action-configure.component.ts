@@ -335,12 +335,16 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
   }
 
   hasNoActionPropertiesToDisplay(descriptor: ActionDescriptor) {
-    return (
-      !descriptor ||
-      descriptor === undefined ||
+    if (typeof descriptor === 'undefined' ||
       descriptor.propertyDefinitionSteps === undefined ||
-      Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0
-    );
+      Object.keys(descriptor.propertyDefinitionSteps[0]).length === 0 ||
+      Object.keys(descriptor.propertyDefinitionSteps[0].properties).length === 0) {
+      return true;
+    }
+
+    return Object.keys(descriptor.propertyDefinitionSteps[0].properties).filter(key => {
+      return descriptor.propertyDefinitionSteps[0].properties[key].type != 'hidden';
+    }).length === 0;
   }
 
   configuredPropertiesForMetadataCall(action: Action) {

@@ -9,7 +9,7 @@ import {
   INTEGRATION_INSERT_DATAMAPPER,
 } from '@syndesis/ui/integration/edit-page';
 import { INTEGRATION_DELETE_PROMPT } from '../edit-page.models';
-import { SPLIT } from '@syndesis/ui/store';
+import { SPLIT, ENDPOINT, LOG } from '@syndesis/ui/store';
 
 @Component({
   selector: 'syndesis-integration-flow-view-step',
@@ -74,14 +74,14 @@ export class FlowViewStepComponent implements OnChanges {
     }
     const step = this.step;
     switch (step.stepKind) {
-      case 'endpoint':
+      case ENDPOINT:
         if (!this.step.connection) {
           return 'fa fa-plus';
         }
         return this.step.connection.icon
           ? 'fa ' + step.connection.icon
           : 'fa fa-airplane';
-      case 'log':
+      case LOG:
         return 'fa fa-newspaper-o';
       default:
         return '';
@@ -183,7 +183,7 @@ export class FlowViewStepComponent implements OnChanges {
 
   getMenuCompleteClass(state: string) {
     switch (this.step.stepKind) {
-      case 'endpoint':
+      case ENDPOINT:
         if (
           this.step.connection &&
           this.step.action &&
@@ -237,7 +237,7 @@ export class FlowViewStepComponent implements OnChanges {
 
   stepIsComplete(step: Step) {
     switch (step.stepKind) {
-      case 'endpoint':
+      case ENDPOINT:
         if (!step.connection || !step.action || !step.configuredProperties) {
           return false;
         }
@@ -255,7 +255,7 @@ export class FlowViewStepComponent implements OnChanges {
       return;
     }
     switch (step.stepKind) {
-      case 'endpoint':
+      case ENDPOINT:
         if (!step.connection) {
           this.goto('step-select');
           return;
@@ -393,7 +393,7 @@ export class FlowViewStepComponent implements OnChanges {
       return 'Set up this step';
     }
     switch (step.stepKind) {
-      case 'endpoint':
+      case ENDPOINT:
         if (
           this.isApiProvider &&
           this.getPosition() === 0 &&
@@ -458,7 +458,7 @@ export class FlowViewStepComponent implements OnChanges {
       return false;
     }
     switch (step.stepKind) {
-      case 'endpoint':
+      case ENDPOINT:
         if (step.connection && step.connection && step.configuredProperties) {
           return true;
         }

@@ -39,6 +39,7 @@ import {
 
 import {
   BasicFilterComponent,
+  ContentBasedRouterComponent,
   CurrentFlowService,
   DataMapperHostComponent,
   FlowPageService,
@@ -216,6 +217,7 @@ const routes: Routes = [
     ...INTEGRATION_DETAIL_DIRECTIVES,
     DataMapperHostComponent,
     BasicFilterComponent,
+    ContentBasedRouterComponent,
     TemplaterComponent,
     IntegrationConfigureActionComponent,
     IntegrationEditPage,
