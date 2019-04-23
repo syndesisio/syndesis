@@ -51,16 +51,12 @@ class AggregateMetadataHandler implements StepMetadataHandler {
 
     @Override
     public DynamicActionMetadata createMetadata(Step step, List<Step> previousSteps, List<Step> subsequentSteps) {
-        DataShape inputShape = subsequentSteps.stream()
-                                            .filter(StepMetadataHelper::hasInputDataShape)
-                                            .findFirst()
-                                            .map(StepMetadataHelper::getInputDataShape)
+        DataShape inputShape = StepMetadataHelper.getFirstWithInputShape(subsequentSteps)
+                                            .map(s -> s.inputDataShape().orElse(StepMetadataHelper.NO_SHAPE))
                                             .orElse(StepMetadataHelper.NO_SHAPE);
 
-        DataShape outputShape = previousSteps.stream()
-                                            .filter(StepMetadataHelper::hasOutputDataShape)
-                                            .reduce((first, second) -> second)
-                                            .map(StepMetadataHelper::getOutputDataShape)
+        DataShape outputShape = StepMetadataHelper.getLastWithOutputShape(previousSteps)
+                                            .map(s -> s.outputDataShape().orElse(StepMetadataHelper.NO_SHAPE))
                                             .orElse(StepMetadataHelper.NO_SHAPE);
 
         return new DynamicActionMetadata.Builder()

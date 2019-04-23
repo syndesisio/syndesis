@@ -20,22 +20,21 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.Dependency;
+import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.WithConfiguredProperties;
 import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithMetadata;
-import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.extension.Extension;
-
 import org.immutables.value.Value;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = Step.Builder.class)
@@ -76,21 +75,31 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
     }
 
     default Optional<DataShape> inputDataShape() {
-        return getAction().flatMap(a -> a.getInputDataShape());
+        return getAction().flatMap(Action::getInputDataShape);
     }
 
     default Optional<DataShape> outputDataShape() {
-        return getAction().flatMap(a -> a.getOutputDataShape());
+        return getAction().flatMap(Action::getOutputDataShape);
     }
 
     default Step updateInputDataShape(final Optional<DataShape> inputDataShape) {
-        return getAction().map(a -> builder().action(a.withInputDataShape(inputDataShape))).map(b -> b.build())
+        return getAction().map(a -> builder().action(a.withInputDataShape(inputDataShape))).map(ImmutableStep.Builder::build)
             .orElseThrow(() -> new IllegalStateException("Unable to update input data shape of non existing action"));
     }
 
     default Step updateOutputDataShape(final Optional<DataShape> outputDataShape) {
-        return getAction().map(a -> builder().action(a.withOutputDataShape(outputDataShape))).map(b -> b.build())
+        return getAction().map(a -> builder().action(a.withOutputDataShape(outputDataShape))).map(ImmutableStep.Builder::build)
             .orElseThrow(() -> new IllegalStateException("Unable to update output data shape of non existing action"));
+    }
+
+    default boolean hasInputDataShape() {
+        Optional<DataShape> maybeShape = inputDataShape();
+        return maybeShape.isPresent() && maybeShape.get().getKind() != DataShapeKinds.NONE;
+    }
+
+    default boolean hasOutputDataShape() {
+        Optional<DataShape> maybeShape = outputDataShape();
+        return maybeShape.isPresent() && maybeShape.get().getKind() != DataShapeKinds.NONE;
     }
 
     @JsonIgnore

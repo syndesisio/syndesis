@@ -32,7 +32,9 @@ interface StepMetadataHandler {
      * @param metadata
      * @return
      */
-    DynamicActionMetadata handle(DynamicActionMetadata metadata);
+    default DynamicActionMetadata handle(DynamicActionMetadata metadata) {
+        return metadata;
+    }
 
     /**
      * Determine if this handler can handle the specific step kind.
