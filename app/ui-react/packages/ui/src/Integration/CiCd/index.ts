@@ -9,3 +9,4 @@ export * from './CiCdUIModels';
 export * from './TagIntegrationDialog';
 export * from './TagIntegrationListItem';
 export * from './TagIntegrationDialogEmptyState';
+export * from './TagIntegrationDialogBody';

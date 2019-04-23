@@ -7,8 +7,7 @@ import {
   CiCdListSkeleton,
   ITagIntegrationEntry,
   TagIntegrationDialog,
-  TagIntegrationDialogEmptyState,
-  TagIntegrationListItem,
+  TagIntegrationDialogBody,
 } from '../../../src';
 
 const stories = storiesOf('Integration/CiCd/TagIntegrationDialog', module);
@@ -80,7 +79,6 @@ class TagIntegrationDialogStory extends React.Component<
           <TagIntegrationDialog
             onHide={this.closeDialog}
             onSave={action('onSave')}
-            initialItems={this.props.items}
             i18nTitle={text(
               'Title',
               'Mark Integration for Continuous Integration/Continuous Deployment'
@@ -88,7 +86,7 @@ class TagIntegrationDialogStory extends React.Component<
             i18nCancelButtonText={text('Cancel Button', 'Cancel')}
             i18nSaveButtonText={text('Save Button', 'Save')}
           >
-            {({ handleChange, items }) => (
+            {({ handleChange }) => (
               <>
                 <p>{i18nTagIntegrationDialogMessage}</p>
                 {this.props.loading && (
@@ -97,36 +95,23 @@ class TagIntegrationDialogStory extends React.Component<
                   </ListView>
                 )}
                 {!this.props.loading && (
-                  <>
-                    {items.length > 0 && (
-                      <ListView>
-                        {items.map((item, index) => {
-                          return (
-                            <TagIntegrationListItem
-                              key={index}
-                              name={item.name}
-                              selected={item.selected}
-                              onChange={handleChange}
-                            />
-                          );
-                        })}
-                      </ListView>
+                  <TagIntegrationDialogBody
+                    initialItems={this.props.items}
+                    onChange={handleChange}
+                    manageCiCdHref={text('href', '#example')}
+                    i18nEmptyStateButtonText={text(
+                      'Empty State Button',
+                      'Go To Manage CI/CD'
                     )}
-                    {items.length === 0 && (
-                      <TagIntegrationDialogEmptyState
-                        href={text('href', '#example')}
-                        i18nTitle={text(
-                          'Empty State Title',
-                          'No Environments Available'
-                        )}
-                        i18nInfo={text('Empty State Info', '')}
-                        i18nGoToManageCiCdButtonText={text(
-                          'Go To Manage CI/CD',
-                          'Go To Manage CI/CD'
-                        )}
-                      />
+                    i18nEmptyStateInfo={text(
+                      'Empty State Info',
+                      'No environments are available to tag this integration with.  Go to the CI/CD management page to create one or more environments.'
                     )}
-                  </>
+                    i18nEmptyStateTitle={text(
+                      'Empty State Title',
+                      'No Environments Available'
+                    )}
+                  />
                 )}
               </>
             )}

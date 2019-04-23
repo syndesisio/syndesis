@@ -1,11 +1,12 @@
 import { WithEnvironments, WithIntegrationTags } from '@syndesis/api';
 import {
   CiCdList,
+  CiCdListSkeleton,
   ITagIntegrationEntry,
   TagIntegrationDialog,
-  TagIntegrationDialogEmptyState,
-  TagIntegrationListItem,
+  TagIntegrationDialogBody,
 } from '@syndesis/ui';
+import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 
@@ -23,87 +24,86 @@ export interface ITagIntegrationDialogWrapperProps {
 export class TagIntegrationDialogWrapper extends React.Component<
   ITagIntegrationDialogWrapperProps
 > {
+  public constructor(props: ITagIntegrationDialogWrapperProps) {
+    super(props);
+    this.handleSave = this.handleSave.bind(this);
+  }
+  public handleSave(items: ITagIntegrationEntry[]) {
+    this.props.onSave();
+    const newEnvironments = items
+      .filter(item => item.selected)
+      .map(item => item.name);
+    this.props.tagIntegration(this.props.targetIntegrationId, newEnvironments);
+  }
   public render() {
     return (
       <Translation ns={['integrations', 'shared']}>
         {t => (
-          <WithIntegrationTags integrationId={this.props.targetIntegrationId}>
-            {({ data: tags, hasData: hasTags, error: tagError }) => (
-              <WithEnvironments disableUpdates={true}>
-                {({
-                  data: environments,
-                  hasData: hasEnvironments,
-                  error: environmentsError,
-                }) => {
-                  const doSave = (items: ITagIntegrationEntry[]) => {
-                    const newEnvironments = items
-                      .filter(item => item.selected)
-                      .map(item => item.name);
-                    this.props.tagIntegration(
-                      this.props.targetIntegrationId,
-                      newEnvironments
-                    );
-                    this.props.onSave();
-                  };
-                  const mappedItems = environments.map(item => ({
-                    name: item,
-                    selected: typeof tags[item] !== 'undefined',
-                  }));
-                  return (
-                    hasTags &&
-                    hasEnvironments && (
-                      <TagIntegrationDialog
-                        i18nTitle={t('integrations:MarkIntegrationForCiCd')}
-                        i18nCancelButtonText={t('shared:Cancel')}
-                        i18nSaveButtonText={t('shared:Save')}
-                        onHide={this.props.onHide}
-                        onSave={doSave}
-                        initialItems={mappedItems}
-                      >
-                        {({ handleChange, items }) => (
-                          <>
-                            {items.length > 0 && (
-                              <>
-                                <p>
-                                  {t(
-                                    'integrations:TagThisIntegrationForRelease'
+          <TagIntegrationDialog
+            i18nTitle={t('integrations:MarkIntegrationForCiCd')}
+            i18nCancelButtonText={t('shared:Cancel')}
+            i18nSaveButtonText={t('shared:Save')}
+            onHide={this.props.onHide}
+            onSave={this.handleSave}
+          >
+            {({ handleChange }) => (
+              <WithIntegrationTags
+                integrationId={this.props.targetIntegrationId}
+              >
+                {({ data: tags, hasData: hasTags, error: tagError }) => (
+                  <WithEnvironments disableUpdates={true}>
+                    {({
+                      data: environments,
+                      hasData: hasEnvironments,
+                      error: environmentsError,
+                    }) => {
+                      return (
+                        <>
+                          <p>
+                            {t('integrations:TagThisIntegrationForRelease')}
+                          </p>
+                          <WithLoader
+                            error={tagError || environmentsError}
+                            loading={!hasTags && !hasEnvironments}
+                            loaderChildren={
+                              <CiCdList>
+                                <CiCdListSkeleton />
+                              </CiCdList>
+                            }
+                            errorChildren={<p>TODO - Error</p>}
+                          >
+                            {() => {
+                              const mappedItems = environments.map(item => ({
+                                name: item,
+                                selected: typeof tags[item] !== 'undefined',
+                              }));
+                              return (
+                                <TagIntegrationDialogBody
+                                  key={JSON.stringify(tags)}
+                                  initialItems={mappedItems}
+                                  onChange={handleChange}
+                                  manageCiCdHref={this.props.manageCiCdHref}
+                                  i18nEmptyStateTitle={t(
+                                    'integrations:NoEnvironmentsAvailable'
                                   )}
-                                </p>
-                                <CiCdList
-                                  children={mappedItems.map((item, index) => {
-                                    return (
-                                      <TagIntegrationListItem
-                                        key={index}
-                                        name={item.name}
-                                        selected={item.selected}
-                                        onChange={handleChange}
-                                      />
-                                    );
-                                  })}
+                                  i18nEmptyStateInfo={t(
+                                    'integrations:NoEnvironmentsAvailableInfo'
+                                  )}
+                                  i18nEmptyStateButtonText={t(
+                                    'integrations:GoToManageCiCd'
+                                  )}
                                 />
-                              </>
-                            )}
-                            {items.length === 0 && (
-                              <TagIntegrationDialogEmptyState
-                                href={this.props.manageCiCdHref}
-                                i18nTitle={t(
-                                  'integrations:NoEnvironmentsAvailable'
-                                )}
-                                i18nInfo={''}
-                                i18nGoToManageCiCdButtonText={t(
-                                  'integrations:GoToManageCiCd'
-                                )}
-                              />
-                            )}
-                          </>
-                        )}
-                      </TagIntegrationDialog>
-                    )
-                  );
-                }}
-              </WithEnvironments>
+                              );
+                            }}
+                          </WithLoader>
+                        </>
+                      );
+                    }}
+                  </WithEnvironments>
+                )}
+              </WithIntegrationTags>
             )}
-          </WithIntegrationTags>
+          </TagIntegrationDialog>
         )}
       </Translation>
     );

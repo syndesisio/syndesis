@@ -25,7 +25,7 @@
   "NoEnvironmentsAvailable": "No Environments Available",
   "PleaseEnterATagName": "Please enter a tag name.",
   "ThatTagNameIsInUse": "That tag name is already in use.",
-  "NoEnvironmentsAvailableInfo": "",
+  "NoEnvironmentsAvailableInfo": "No environments are available to tag this integration with.  Go to the CI/CD management page to create one or more environments.",
   "MarkIntegrationForCiCd": "Mark Integration for Continuous Integration/Continuous Deployment",
   "TagThisIntegrationForRelease": "Tag this integration for release in one or more of the environments",
   "GoToManageCiCd": "Go To Manage CI/CD"
