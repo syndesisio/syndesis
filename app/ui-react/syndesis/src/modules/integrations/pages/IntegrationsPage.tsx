@@ -132,6 +132,7 @@ export class IntegrationsPage extends React.Component {
                           <PageTitle title={t('shared:Integrations')} />
                           <IntegrationsListView
                             linkToIntegrationImport={'/integrations/import'}
+                            linkToManageCiCd={routes.manageCicd.root}
                             linkToIntegrationCreation={
                               routes.create.start.selectConnection
                             }
@@ -142,6 +143,7 @@ export class IntegrationsPage extends React.Component {
                             resultsCount={filteredAndSortedIntegrations.length}
                             {...helpers}
                             i18nImport={t('shared:Import')}
+                            i18nManageCiCd={t('integrations:ManageCiCd')}
                             i18nLinkCreateConnection={t(
                               'shared:linkCreateIntegration'
                             )}

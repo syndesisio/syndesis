@@ -23,6 +23,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { AppContext } from '../../../app';
 import resolvers from '../resolvers';
+import { TagIntegrationDialogWrapper } from './TagIntegrationDialogWrapper';
 
 export interface IIntegrationsProps {
   error: boolean;
@@ -31,7 +32,9 @@ export interface IIntegrationsProps {
 }
 
 export interface IIntegrationsState {
-  showPromptDialog: boolean;
+  showActionPromptDialog: boolean;
+  showCiCdPromptDialog: boolean;
+  targetIntegrationId?: string;
   promptDialogButtonText?: string;
   promptDialogIcon?: ConfirmationIconType;
   promptDialogText?: string;
@@ -40,7 +43,6 @@ export interface IIntegrationsState {
 }
 
 interface IPromptActionOptions {
-  promptDialogButtonStyle: ConfirmationButtonStyle;
   promptDialogButtonText: string;
   promptDialogIcon: ConfirmationIconType;
   promptDialogText: string;
@@ -55,21 +57,28 @@ export class Integrations extends React.Component<
   public constructor(props: IIntegrationsProps) {
     super(props);
     this.state = {
-      showPromptDialog: false,
+      showActionPromptDialog: false,
+      showCiCdPromptDialog: false,
     };
     this.handleAction = this.handleAction.bind(this);
     this.handleActionCancel = this.handleActionCancel.bind(this);
     this.promptForAction = this.promptForAction.bind(this);
+    this.closeCiCdDialog = this.closeCiCdDialog.bind(this);
+  }
+  public closeCiCdDialog() {
+    this.setState({
+      showCiCdPromptDialog: false,
+    });
   }
   public handleActionCancel() {
     this.setState({
-      showPromptDialog: false,
+      showActionPromptDialog: false,
     });
   }
   public handleAction() {
     const action = this.state.handleAction;
     this.setState({
-      showPromptDialog: false,
+      showActionPromptDialog: false,
     });
     if (typeof action === 'function') {
       action.apply(this);
@@ -79,8 +88,18 @@ export class Integrations extends React.Component<
   }
   public promptForAction(options: IPromptActionOptions) {
     this.setState({
-      ...options,
-      showPromptDialog: true,
+      handleAction: options.handleAction,
+      promptDialogButtonText: options.promptDialogButtonText,
+      promptDialogIcon: options.promptDialogIcon,
+      promptDialogText: options.promptDialogText,
+      promptDialogTitle: options.promptDialogTitle,
+      showActionPromptDialog: true,
+    });
+  }
+  public promptForCiCd(targetIntegrationId: string) {
+    this.setState({
+      showCiCdPromptDialog: true,
+      targetIntegrationId,
     });
   }
   public render() {
@@ -95,9 +114,19 @@ export class Integrations extends React.Component<
                   deployIntegration,
                   exportIntegration,
                   undeployIntegration,
+                  tagIntegration,
                 }) => (
                   <>
-                    {this.state.showPromptDialog && (
+                    {this.state.showCiCdPromptDialog && (
+                      <TagIntegrationDialogWrapper
+                        manageCiCdHref={resolvers.manageCicd.root()}
+                        tagIntegration={tagIntegration}
+                        targetIntegrationId={this.state.targetIntegrationId!}
+                        onSave={this.closeCiCdDialog}
+                        onHide={this.closeCiCdDialog}
+                      />
+                    )}
+                    {this.state.showActionPromptDialog && (
                       <ConfirmationDialog
                         buttonStyle={ConfirmationButtonStyle.NORMAL}
                         i18nCancelButtonText={t('shared:Cancel')}
@@ -107,7 +136,7 @@ export class Integrations extends React.Component<
                         i18nConfirmationMessage={this.state.promptDialogText!}
                         i18nTitle={this.state.promptDialogTitle!}
                         icon={this.state.promptDialogIcon!}
-                        showDialog={this.state.showPromptDialog}
+                        showDialog={this.state.showActionPromptDialog}
                         onCancel={this.handleActionCancel}
                         onConfirm={this.handleAction}
                       />
@@ -207,6 +236,12 @@ export class Integrations extends React.Component<
                                       `${mi.integration.name}-export.zip`
                                     ),
                                 };
+                                const ciCdAction: IIntegrationAction = {
+                                  label: 'Manage CI/CD',
+                                  onClick: () => {
+                                    this.promptForCiCd(mi.integration.id!);
+                                  },
+                                };
                                 const actions: IIntegrationAction[] = [];
                                 if (canEdit(mi.integration)) {
                                   actions.push(editAction);
@@ -219,6 +254,7 @@ export class Integrations extends React.Component<
                                 }
                                 actions.push(deleteAction);
                                 actions.push(exportAction);
+                                actions.push(ciCdAction);
                                 return (
                                   <IntegrationsListItem
                                     key={mi.integration.id}

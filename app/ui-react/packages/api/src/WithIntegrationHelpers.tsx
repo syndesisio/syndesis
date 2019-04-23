@@ -103,11 +103,19 @@ export interface IWithIntegrationHelpersChildrenProps {
    */
   saveIntegration(integration: Integration): Promise<Integration>;
   /**
+   * Tags the integration with the given CI/CD environments
+   * @param integrationId
+   * @param environments
+   */
+  tagIntegration(
+    integrationId: string,
+    environments: string[]
+  ): Promise<Response>;
+  /**
    * Request that the given integration ID at the given version be deactivated, empty response is returned
    * @param id
    * @param version
    */
-
   undeployIntegration(id: string, version: string | number): Promise<Response>;
 }
 
@@ -128,6 +136,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     this.undeployIntegration = this.undeployIntegration.bind(this);
     this.updateConnection = this.updateConnection.bind(this);
     this.updateOrAddConnection = this.updateOrAddConnection.bind(this);
+    this.tagIntegration = this.tagIntegration.bind(this);
   }
 
   public async getActionDescriptor(
@@ -344,6 +353,15 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       : Promise.resolve(integration);
   }
 
+  public async tagIntegration(integrationId: string, environments: []) {
+    return callFetch({
+      body: environments,
+      headers: this.props.headers,
+      method: 'PUT',
+      url: `${this.props.apiUri}/public/integrations/${integrationId}/tags`,
+    });
+  }
+
   public render() {
     return this.props.children({
       addConnection: this.addConnection,
@@ -351,6 +369,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       deployIntegration: this.deployIntegration,
       exportIntegration: this.exportIntegration,
       saveIntegration: this.saveIntegration,
+      tagIntegration: this.tagIntegration,
       undeployIntegration: this.undeployIntegration,
       updateConnection: this.updateConnection,
       updateOrAddConnection: this.updateOrAddConnection,

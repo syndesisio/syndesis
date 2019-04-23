@@ -37,3 +37,7 @@
 .wizard-pf-footer .wizard-pf-cancel {
   order: -2;
 }
+
+.modal-body > div {
+  width: 100%;
+}
