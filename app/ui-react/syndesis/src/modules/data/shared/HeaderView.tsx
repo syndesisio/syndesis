@@ -2,6 +2,7 @@ import { WithVirtualization } from '@syndesis/api';
 import { Container, Loader } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
+import { ApiError } from '../../../shared';
 
 export interface IWithVirtualizationDetailHeaderProps {
   virtualizationId: string;
@@ -22,7 +23,7 @@ export class HeaderView extends React.Component<
             error={error}
             loading={!hasData}
             loaderChildren={<Loader />}
-            errorChildren={<div>TODO</div>}
+            errorChildren={<ApiError />}
           >
             {() => (
               <Container>

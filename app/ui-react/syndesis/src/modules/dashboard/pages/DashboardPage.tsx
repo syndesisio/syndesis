@@ -22,6 +22,7 @@ import {
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
+import { ApiError } from '../../../shared';
 import { Connections } from '../../connections/shared';
 import { Integrations } from '../../integrations/components';
 import resolvers from '../../resolvers';
@@ -107,11 +108,19 @@ export function getConnectionHref(connection: Connection) {
 
 export default () => (
   <WithMonitoredIntegrations>
-    {({ data: integrationsData, hasData: hasIntegrations }) => (
+    {({
+      data: integrationsData,
+      hasData: hasIntegrations,
+      error: integrationsError,
+    }) => (
       <WithIntegrationsMetrics>
         {({ data: metricsData }) => (
           <WithConnections>
-            {({ data: connectionsData, hasData: hasConnections }) => {
+            {({
+              data: connectionsData,
+              hasData: hasConnections,
+              error: connectionsError,
+            }) => {
               const integrationStatesCount = getIntegrationsCountsByState(
                 integrationsData.items
               );
@@ -187,7 +196,7 @@ export default () => (
                           })}
                         >
                           <Integrations
-                            error={false}
+                            error={integrationsError}
                             loading={!hasIntegrations}
                             integrations={topIntegrations}
                           />
@@ -222,7 +231,7 @@ export default () => (
                             error={false}
                             loading={!hasIntegrations}
                             loaderChildren={<RecentUpdatesSkeleton />}
-                            errorChildren={<div>TODO</div>}
+                            errorChildren={<ApiError />}
                           >
                             {() =>
                               recentlyUpdatedIntegrations.map(i => (
@@ -242,7 +251,7 @@ export default () => (
                       }
                       connections={
                         <Connections
-                          error={false}
+                          error={connectionsError}
                           loading={!hasConnections}
                           connections={connectionsData.connectionsForDisplay}
                           getConnectionHref={getConnectionHref}

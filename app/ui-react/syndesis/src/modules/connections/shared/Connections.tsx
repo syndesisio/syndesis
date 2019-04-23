@@ -8,6 +8,7 @@ import {
 import { getConnectionIcon, WithLoader } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
+import { ApiError } from '../../../shared';
 
 export interface IConnectionsProps {
   error: boolean;
@@ -32,7 +33,7 @@ export class Connections extends React.Component<IConnectionsProps> {
               ))}
             </>
           }
-          errorChildren={<div>TODO</div>}
+          errorChildren={<ApiError />}
         >
           {() =>
             this.props.connections.map((c, index) => (

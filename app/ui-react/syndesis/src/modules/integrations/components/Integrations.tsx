@@ -22,6 +22,7 @@ import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { AppContext } from '../../../app';
+import { ApiError } from '../../../shared';
 import resolvers from '../resolvers';
 import { TagIntegrationDialogWrapper } from './TagIntegrationDialogWrapper';
 
@@ -146,7 +147,7 @@ export class Integrations extends React.Component<
                         error={this.props.error}
                         loading={this.props.loading}
                         loaderChildren={<IntegrationsListSkeleton />}
-                        errorChildren={<div>TODO</div>}
+                        errorChildren={<ApiError />}
                       >
                         {() =>
                           this.props.integrations.map(
