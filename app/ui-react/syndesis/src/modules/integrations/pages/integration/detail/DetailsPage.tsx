@@ -26,7 +26,7 @@ export interface IDetailsPageParams {
 }
 
 export interface IDetailsPageState {
-  integration: Integration;
+  integration?: Integration;
 }
 
 /**
@@ -41,15 +41,13 @@ export class DetailsPage extends React.Component {
     return (
       <WithRouteData<IDetailsPageParams, IDetailsPageState>>
         {({ integrationId }, { integration }, { history }) => {
+          console.log('integration: ' + JSON.stringify(integration));
+          console.log('integrationId: ' + JSON.stringify(integrationId));
+
           return (
             <WithIntegrationHelpers>
-              {({
-                deleteIntegration,
-                deployIntegration,
-                exportIntegration,
-                undeployIntegration,
-              }) => (
-                <>
+              {({}) => {
+                return (
                   <WithIntegration
                     integrationId={integrationId}
                     initialValue={integration}
@@ -90,8 +88,8 @@ export class DetailsPage extends React.Component {
                       </WithLoader>
                     )}
                   </WithIntegration>
-                </>
-              )}
+                );
+              }}
             </WithIntegrationHelpers>
           );
         }}
