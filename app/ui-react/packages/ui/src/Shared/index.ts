@@ -7,4 +7,5 @@ export * from './ListViewToolbar';
 export * from './LogViewer';
 export * from './Notifications';
 export * from './SimplePageHeader';
+export * from './ProgressWithLink';
 export * from './UnrecoverableError';

@@ -2,14 +2,14 @@ import { text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 
-import { IntegrationProgress } from '../../src';
+import { ProgressWithLink } from '../../src';
 
-const stories = storiesOf('Integration/IntegrationProgress', module);
+const stories = storiesOf('Shared/ProgressWithLink', module);
 
 stories
 
   .add('without log link', () => (
-    <IntegrationProgress
+    <ProgressWithLink
       value={text('value', 'Building')}
       currentStep={text('currentStep', '2')}
       totalSteps={text('totalSteps', '4')}
@@ -17,7 +17,7 @@ stories
     />
   ))
   .add('with log link', () => (
-    <IntegrationProgress
+    <ProgressWithLink
       value={text('value', 'Deploying')}
       currentStep={text('currentStep', '3')}
       totalSteps={text('totalSteps', '4')}

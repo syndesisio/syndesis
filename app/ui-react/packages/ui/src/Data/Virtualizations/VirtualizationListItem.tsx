@@ -53,7 +53,10 @@ export interface IVirtualizationListItemProps {
   onExport: (virtualizationName: string) => void;
   onPublish: (virtualizationName: string) => void;
   onUnpublish: (virtualizationName: string) => void;
-  publishLogUrl?: string;
+  publishingCurrentStep?: number;
+  publishingLogUrl?: string;
+  publishingTotalSteps?: number;
+  publishingStepText?: string;
   serviceVdbName: string;
   virtualizationName: string;
   virtualizationDescription: string;
@@ -191,7 +194,10 @@ export class VirtualizationListItem extends React.Component<
             <div className="form-group">
               {publishInProgress ? (
                 <VirtualizationPublishStatusDetail
-                  logUrl={this.props.publishLogUrl}
+                  logUrl={this.props.publishingLogUrl}
+                  stepText={this.props.publishingStepText}
+                  currentStep={this.props.publishingCurrentStep}
+                  totalSteps={this.props.publishingTotalSteps}
                   i18nPublishInProgress={this.props.i18nPublishInProgress}
                   i18nLogUrlText={this.props.i18nPublishLogUrlText}
                 />
@@ -221,12 +227,13 @@ export class VirtualizationListItem extends React.Component<
                   {this.props.i18nExport}
                 </MenuItem>
                 <MenuItem
-                  disabled={publishInProgress}
                   onClick={
-                    isPublished ? this.handleUnpublish : this.handlePublish
+                    isPublished || publishInProgress
+                      ? this.handleUnpublish
+                      : this.handlePublish
                   }
                 >
-                  {isPublished
+                  {isPublished || publishInProgress
                     ? this.props.i18nUnpublish
                     : this.props.i18nPublish}
                 </MenuItem>

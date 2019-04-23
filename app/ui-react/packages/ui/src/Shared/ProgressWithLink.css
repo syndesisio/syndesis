@@ -1,0 +1,7 @@
+.progress-link {
+  width: 180px;
+}
+
+.progress-link .progress-link-value {
+  text-transform: capitalize;
+}

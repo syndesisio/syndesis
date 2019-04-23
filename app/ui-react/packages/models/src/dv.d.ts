@@ -17,6 +17,7 @@ export interface RestDataService {
     | 'NOTFOUND'
     | 'RUNNING'
     | 'SUBMITTED';
+  publishLogUrl?: string;
   serviceVdbName: string;
   serviceVdbVersion: string;
   serviceViewDefinitions: string[];
@@ -96,4 +97,20 @@ export interface RowData {
 export interface QueryResults {
   columns: ColumnData[];
   rows: RowData[];
+}
+
+export interface VirtualizationPublishingDetails {
+  state:
+    | 'BUILDING'
+    | 'CANCELLED'
+    | 'CONFIGURING'
+    | 'DEPLOYING'
+    | 'FAILED'
+    | 'NOTFOUND'
+    | 'RUNNING'
+    | 'SUBMITTED';
+  logUrl?: string;
+  stepNumber: number;
+  stepText: string;
+  stepTotal: number;
 }
