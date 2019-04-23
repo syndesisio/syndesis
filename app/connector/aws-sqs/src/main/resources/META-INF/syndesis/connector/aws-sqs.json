@@ -70,6 +70,20 @@
                 "secret": false,
                 "type": "string",
                 "order": "2"
+              },
+              "delaySeconds": {
+                "defaultValue": 0,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "producer",
+                "javaType": "integer",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Delay sending messages for a number of seconds",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "integer"
               }
             }
           }
@@ -164,6 +178,20 @@
                 "secret": false,
                 "type": "string",
                 "order": "2"
+              },
+              "delaySeconds": {
+                "defaultValue": 0,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "producer",
+                "javaType": "integer",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Delay sending messages for a number of seconds",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "integer"
               }
             }
           }
