@@ -22,9 +22,11 @@ const i18nTextHistoryMenuUnpublish = 'Unpublish';
 const i18nTextLastPublished = 'Last published on ';
 const i18nTextVersion = 'Version';
 
+const datePublished = Date.parse('24 Feb 2019 08:19:42 GMT');
+
 const integrationPublished = {
   isDraft: false,
-  updatedAt: 'Feb 24, 2019, 04:27:49',
+  updatedAt: datePublished,
   version: 1,
 };
 

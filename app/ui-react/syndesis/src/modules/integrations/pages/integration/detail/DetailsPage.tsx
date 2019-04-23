@@ -1,8 +1,13 @@
-import { getSteps, WithIntegration } from '@syndesis/api';
+import {
+  getSteps,
+  WithIntegration,
+  WithIntegrationHelpers,
+} from '@syndesis/api';
 import { Integration } from '@syndesis/models';
 import {
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
+  // IntegrationDetailHistoryListViewItem,
   IntegrationDetailInfo,
   Loader,
 } from '@syndesis/ui';
@@ -37,45 +42,57 @@ export class DetailsPage extends React.Component {
       <WithRouteData<IDetailsPageParams, IDetailsPageState>>
         {({ integrationId }, { integration }, { history }) => {
           return (
-            <WithIntegration
-              integrationId={integrationId}
-              initialValue={integration}
-            >
-              {({ data, hasData, error }) => (
-                <WithLoader
-                  error={error}
-                  loading={!hasData}
-                  loaderChildren={<Loader />}
-                  errorChildren={<div>TODO</div>}
-                >
-                  {() => (
-                    <div>
-                      <Translation ns={['integration', 'shared']}>
-                        {t => (
-                          <>
-                            <IntegrationDetailInfo
-                              name={data.name}
-                              version={data.version}
-                            />
-                            <IntegrationDetailNavBar integration={data} />
-                            <IntegrationDetailSteps steps={getSteps(data, 0)} />
-                            <IntegrationDetailDescription
-                              description={data.description}
-                            />
-                            <IntegrationDetailHistoryListView
-                              integrationIsDraft={false}
-                              children={data.flows}
-                              i18nTextDraft={t('Draft')}
-                              i18nTextHistory={t('History')}
-                            />
-                          </>
+            <WithIntegrationHelpers>
+              {({
+                deleteIntegration,
+                deployIntegration,
+                exportIntegration,
+                undeployIntegration,
+              }) => (
+                <>
+                  <WithIntegration
+                    integrationId={integrationId}
+                    initialValue={integration}
+                  >
+                    {({ data, hasData, error }) => (
+                      <WithLoader
+                        error={error}
+                        loading={!hasData}
+                        loaderChildren={<Loader />}
+                        errorChildren={<div>TODO</div>}
+                      >
+                        {() => (
+                          <div>
+                            <Translation ns={['integration', 'shared']}>
+                              {t => (
+                                <>
+                                  <IntegrationDetailInfo
+                                    name={data.name}
+                                    version={data.version}
+                                  />
+                                  <IntegrationDetailNavBar integration={data} />
+                                  <IntegrationDetailSteps
+                                    steps={getSteps(data, 0)}
+                                  />
+                                  <IntegrationDetailDescription
+                                    description={data.description}
+                                  />
+                                  <IntegrationDetailHistoryListView
+                                    integrationIsDraft={false}
+                                    i18nTextDraft={t('Draft')}
+                                    i18nTextHistory={t('History')}
+                                  />
+                                </>
+                              )}
+                            </Translation>
+                          </div>
                         )}
-                      </Translation>
-                    </div>
-                  )}
-                </WithLoader>
+                      </WithLoader>
+                    )}
+                  </WithIntegration>
+                </>
               )}
-            </WithIntegration>
+            </WithIntegrationHelpers>
           );
         }}
       </WithRouteData>

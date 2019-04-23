@@ -16,10 +16,12 @@ import {
   TabBarItem,
 } from '../../src';
 
+const datePublished = Date.parse('24 Feb 2019 08:19:42 GMT');
+
 const integrationPublishedHistoryItems = [
   <IntegrationDetailHistoryListViewItem
     key={0}
-    integrationUpdatedAt={'Feb 24, 2019, 04:27:49'}
+    integrationUpdatedAt={datePublished}
     integrationVersion={1}
     i18nTextHistoryMenuReplaceDraft={'Replace draft'}
     i18nTextHistoryMenuUnpublish={'Unpublish'}

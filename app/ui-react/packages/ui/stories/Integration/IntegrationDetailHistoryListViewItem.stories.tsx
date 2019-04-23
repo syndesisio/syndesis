@@ -10,8 +10,10 @@ const stories = storiesOf(
   module
 );
 
+const datePublished = Date.parse('24 Feb 2019 08:19:42 GMT');
+
 const integrationPublished = {
-  updatedAt: 'Feb 24, 2019, 04:27:49',
+  updatedAt: datePublished,
   version: 1,
 };
 
