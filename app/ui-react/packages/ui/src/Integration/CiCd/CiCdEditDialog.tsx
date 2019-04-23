@@ -54,10 +54,10 @@ export class CiCdEditDialog extends React.Component<
                   : 'form-group has-error'
               }
             >
-              <label className="col-sm-4 control-label" htmlFor="tagNameInput">
+              <label className="col-sm-3 control-label" htmlFor="tagNameInput">
                 {this.props.i18nInputLabel}
               </label>
-              <div className="col-sm-8">
+              <div className="col-sm-9">
                 <input
                   id="tagNameInput"
                   className="form-control"
