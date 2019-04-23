@@ -54,7 +54,7 @@ before you continue.
 
 . In this operation flow, to process data between connections:
 .. In the flow visualization panel on the left, click the
-plus sign in the location where you want to add a step. 
+plus sign that is in the location where you want to add a step. 
 .. On the *Choose a Step* page, click the step that you want to add. 
 .. Configure the step. 
 .. Click *Done*. 
