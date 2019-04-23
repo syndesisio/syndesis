@@ -4,6 +4,7 @@ import { DVFetch } from './DVFetch';
 import { IFetchState } from './Fetch';
 
 export interface IWithViewEditorStatesProps {
+  idPattern?: string;
   children(props: IFetchState<ViewEditorState[]>): any;
 }
 
@@ -13,7 +14,10 @@ export class WithViewEditorStates extends React.Component<
   public render() {
     return (
       <DVFetch<ViewEditorState[]>
-        url={'service/userProfile/viewEditorState'}
+        url={
+          'service/userProfile/viewEditorState' +
+          (this.props.idPattern ? '?pattern=' + this.props.idPattern : '')
+        }
         defaultValue={[]}
       >
         {({ response }) => this.props.children(response)}

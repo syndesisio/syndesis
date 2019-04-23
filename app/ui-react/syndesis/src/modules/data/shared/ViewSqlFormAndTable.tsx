@@ -1,4 +1,4 @@
-import { QueryResults } from '@syndesis/models';
+import { QueryResults, ViewDefinition } from '@syndesis/models';
 import { Container, GenericTable } from '@syndesis/ui';
 // tslint:disable-next-line:no-implicit-dependencies
 import { EmptyState, Grid, Table } from 'patternfly-react';
@@ -8,15 +8,14 @@ import { ViewSqlForm } from '../shared/';
 
 export interface IViewSqlFormAndTableProps {
   /**
-   * @param viewNames the list of view names for a virtualization
-   * This will come from the virtualization.serviceViewDefinitions string[] array
+   * @param views the list of ViewDefinitions for the virtualization
    */
-  viewNames: string[];
+  views: ViewDefinition[];
 
   /**
-   * @param virtualizationName the name of the virtualization
+   * @param targetVdb the name of the vdb to query
    */
-  virtualizationName: string;
+  targetVdb: string;
 }
 
 export interface IViewSqlFormAndTableState {
@@ -61,8 +60,8 @@ export class ViewSqlFormAndTable extends React.Component<
         <Grid.Col md={6}>
           <Container>
             <ViewSqlForm
-              viewNames={this.props.viewNames}
-              virtualizationName={this.props.virtualizationName}
+              views={this.props.views}
+              targetVdb={this.props.targetVdb}
               onQueryResultsChanged={this.setQueryResults}
             />
           </Container>

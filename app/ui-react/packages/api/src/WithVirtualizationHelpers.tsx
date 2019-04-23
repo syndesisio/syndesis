@@ -176,12 +176,6 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
       target: virtualizationName,
     };
 
-    // The query results for the rest call
-    const queryResults = {
-      columns: [],
-      rows: [],
-    };
-
     const response = await callFetch({
       body: queryBody,
       headers: {},
@@ -193,7 +187,7 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
       throw new Error(response.statusText);
     }
 
-    return Promise.resolve(queryResults);
+    return (await response.json()) as QueryResults;
   }
 
   /**

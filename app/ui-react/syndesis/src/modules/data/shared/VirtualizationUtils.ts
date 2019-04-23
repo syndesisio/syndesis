@@ -8,6 +8,9 @@ import {
   VirtualizationSourceStatus,
 } from '@syndesis/models';
 
+const PREVIEW_VDB_NAME = 'PreviewVdb';
+const SCHEMA_MODEL_SUFFIX = 'schemamodel';
+
 export enum DvConnectionStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
@@ -16,6 +19,13 @@ export enum DvConnectionStatus {
 export enum DvConnectionSelection {
   SELECTED = 'SELECTED',
   NOTSELECTED = 'NOTSELECTED',
+}
+
+/**
+ * Get the name of the preview VDB used for preview queries
+ */
+export function getPreviewVdbName(): string {
+  return PREVIEW_VDB_NAME;
 }
 
 /**
@@ -193,4 +203,53 @@ export function isDvConnectionSelected(conn: Connection) {
     isSelected = true;
   }
   return isSelected;
+}
+
+/**
+ * Generate preview SQL for the specified view definition
+ * @param viewDefinition the ViewDefinition
+ */
+export function getPreviewSql(viewDefinition: ViewDefinition): string {
+  // TODO: This assumes a single source view.  Will need to expand capability later
+  const sourcePath = viewDefinition.sourcePaths[0];
+  if (sourcePath) {
+    return 'SELECT * FROM ' + getPreviewTableName(sourcePath) + ';';
+  }
+  return '';
+}
+
+/**
+ * Generates the table name for the preview query, given the source path.
+ * Example sourcePath: (connection=pgConn/schema=public/table=account)
+ * @param sourcePath the path for the view source
+ */
+function getPreviewTableName(sourcePath: string): string {
+  // Assemble the name, utilizing the schema model suffix
+  return (
+    getConnectionName(sourcePath).toLowerCase() +
+    SCHEMA_MODEL_SUFFIX +
+    '.' +
+    getNodeName(sourcePath)
+  );
+}
+
+/**
+ * Get the connection name from the supplied source path.  connection is always the first segment.
+ * Example sourcePath: 'connection=pgConn/schema=public/table=account'
+ * @param sourcePath the view definition sourcePath
+ */
+function getConnectionName(sourcePath: string): string {
+  // Connection name is the value of the first segment
+  return sourcePath.split('/')[0].split('=')[1];
+}
+
+/**
+ * Get the node name from the supplied source path.
+ * Example sourcePath: 'connection=pgConn/schema=public/table=account'
+ * @param sourcePath the view definition sourcePath
+ */
+function getNodeName(sourcePath: string): string {
+  const segments = sourcePath.split('/');
+  // Node name is the value of the last segment
+  return segments[segments.length - 1].split('=')[1];
 }

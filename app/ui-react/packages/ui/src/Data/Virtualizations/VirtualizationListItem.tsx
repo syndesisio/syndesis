@@ -177,7 +177,11 @@ export class VirtualizationListItem extends React.Component<
               ? this.props.i18nUnpublishModalTitle
               : this.props.i18nDeleteModalTitle
           }
-          icon={ConfirmationIconType.DANGER}
+          icon={
+            isPublished
+              ? ConfirmationIconType.WARNING
+              : ConfirmationIconType.DANGER
+          }
           showDialog={this.state.showConfirmationDialog}
           onCancel={this.handleCancel}
           onConfirm={this.handleDelete}
