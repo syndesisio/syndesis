@@ -1,3 +1,4 @@
+import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { ConnectionDetailsHeader } from '../../src';
@@ -33,6 +34,7 @@ stories.add('render', () => {
   };
   return (
     <ConnectionDetailsHeader
+      allowEditing={boolean('allowEditing', true)}
       connectionDescription={connectionDescription}
       connectionIcon={connectionIcon}
       connectionName={connectionName}

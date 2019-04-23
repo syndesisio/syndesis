@@ -10,6 +10,7 @@
     },
     "shared": {
       "Actions": "Azioni",
+      "Cancel": "Annulla",
       "Connection": "Connessione",
       "Connections": "Connessioni",
       "Connector": "Connettore",
@@ -21,6 +22,7 @@
       "Description": "Descrizione",
       "Details": "Dettagli",
       "Draft": "Bozza",
+      "Edit": "Modificare",
       "Error": "Errore",
       "Export": "Esportare",
       "Extension": "Estensione",
@@ -40,6 +42,7 @@
       "Published": "Funzionante",
       "requiredFieldMessage": "* Campo obbligatorio",
       "resultsCount": "{{count}} Risultati",
+      "Save": "Salvare",
       "Settings": "Impostazioni",
       "Status": "Stato",
       "Step": "Passo",
@@ -51,6 +54,7 @@
       "Update": "Aggiornare",
       "uploadFileFailureMessage": "<span>Il file '<strong>{{fileName}}</strong>' non può essere caricato</span>",
       "Usage": "Uso",
+      "Validate": "Convalidare",
       "viewLogs": "Visualizza i Registri",
       "links": {
         "contactus": "//access.redhat.com/support/cases/#/case/new",

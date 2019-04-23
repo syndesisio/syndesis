@@ -3,10 +3,12 @@
 }
 
 .connection-details-header__propertyLabel {
+  font-size: 1.25em;
   font-weight: bold;
   text-align: right;
 }
 
 .connection-details-header__propertyValue {
+  font-size: 1.25em;
   text-align: left;
 }

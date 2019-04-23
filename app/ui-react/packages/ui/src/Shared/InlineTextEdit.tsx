@@ -14,28 +14,28 @@ import { Container, Loader } from '../Layout';
 import './InlineTextEdit.css';
 
 interface IReadWidget {
+  allowEditing: boolean;
   value: string;
+  styling?: {};
   onEdit(): void;
 }
 
 const ReadWidget: React.FunctionComponent<IReadWidget> = ({
+  allowEditing,
   value,
   onEdit,
+  styling,
 }) => (
-  <Container
-    className={
-      value.length > 0
-        ? 'inline-text-edit__valueTextArea'
-        : 'inline-text-edit__valueTextAreaPlaceholder'
-    }
-  >
+  <Container style={styling}>
     {value}
-    <Icon
-      className="inline-text-edit__editIcon"
-      name="edit"
-      onClick={onEdit}
-      type="pf"
-    />
+    {allowEditing ? (
+      <Icon
+        className="inline-text-edit__editIcon"
+        name="edit"
+        onClick={onEdit}
+        type="pf"
+      />
+    ) : null}
   </Container>
 );
 
@@ -46,6 +46,7 @@ interface IEditWidget {
   asTextarea: boolean;
   smOffset?: number;
   smWidth: number;
+  styling?: {};
   placeholder?: string;
   errorMsg?: string;
   onChange(e: React.ChangeEvent): void;
@@ -58,6 +59,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
   value,
   smOffset,
   smWidth,
+  styling,
   placeholder,
   errorMsg,
   saving,
@@ -79,6 +81,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
               disabled={saving}
               onChange={onChange}
               placeholder={placeholder}
+              style={styling}
               value={value}
             />
           </FormGroup>
@@ -105,6 +108,7 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
               disabled={saving}
               onChange={onChange}
               placeholder={placeholder}
+              style={styling}
               type="text"
               value={value}
             />
@@ -130,6 +134,16 @@ export interface IInlineTextEditProps {
   value: string;
 
   /**
+   * `true` if editing is allowed.
+   */
+  allowEditing: boolean;
+
+  /**
+   * Style attributes for the editable value component.
+   */
+  editableValueStyling?: {};
+
+  /**
    * A value to display if the current value is empty or undefined.
    */
   i18nPlaceholder?: string;
@@ -138,6 +152,11 @@ export interface IInlineTextEditProps {
    * `true` if the value should be rendered as a text area.
    */
   isTextArea: boolean;
+
+  /**
+   * Style attributes for the readonly value component.
+   */
+  readonlyValueStyling?: {};
 
   /**
    * The column offset needed for confirm and cancel edit buttons to align with the textarea.
@@ -157,13 +176,16 @@ export interface IInlineTextEditProps {
   /**
    * The callback invoked when the proposed value changes.
    */
-  onValidate?: (newValue: string) => true | string;
+  onValidate?: (newValue: string) => Promise<true | string>;
 }
 
 export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
   value,
+  allowEditing,
+  editableValueStyling,
   i18nPlaceholder,
   isTextArea,
+  readonlyValueStyling,
   smOffset,
   smWidth,
   onChange,
@@ -177,9 +199,9 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
     valid: true,
   });
 
-  const validate = (valueToValidate: string) => {
+  const validate = async (valueToValidate: string) => {
     if (onValidate) {
-      const result = onValidate(valueToValidate);
+      const result = await onValidate(valueToValidate);
       if (result === true) {
         setValidity({
           errorMsg: '',
@@ -225,7 +247,14 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
     setCurrentValue(value);
   };
 
-  const renderValue = (v: string) => <ReadWidget value={v} onEdit={onEdit} />;
+  const renderValue = (v: string) => (
+    <ReadWidget
+      styling={readonlyValueStyling}
+      value={v}
+      allowEditing={allowEditing}
+      onEdit={onEdit}
+    />
+  );
 
   const renderEdit = (v: string) => (
     <EditWidget
@@ -235,6 +264,7 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
       value={v}
       smOffset={smOffset}
       smWidth={smWidth}
+      styling={editableValueStyling}
       errorMsg={errorMsg}
       asTextarea={isTextArea}
       onChange={handleChange}

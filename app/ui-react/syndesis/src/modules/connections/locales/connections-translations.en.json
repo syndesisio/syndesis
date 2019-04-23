@@ -1,6 +1,11 @@
 {
   "connectionDetailPageTitle": "Connection Details",
   "descriptionPlaceholder": "Enter connection description...",
+  "detailsSectionTitle": "{{connectionName}} Configuration",
+  "duplicateNameError": "That name is taken. Try another.",
+  "errorSavingConnection": "Unexpected server error saving the connection.",
+  "errorValidatingDetails": "Unexpected server error validating the connection details.",
+  "errorValidatingName": "Unexpected server error validating connection name.",
   "namePlaceholder": "Must enter a connection name...",
   "usedByOne": "Used by 1 integration",
   "usedByMulti": "Used by integrations {{count}} times"

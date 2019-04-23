@@ -17,6 +17,13 @@ export interface IConfigurationValidation {
   errors?: IConfigurationValidationViolation[];
 }
 
+export interface IValidationResult {
+  isError: boolean;
+  error?: string;
+  message?: string;
+  property?: string;
+}
+
 export interface IWithConnectionHelpersChildrenProps {
   /**
    * asynchronously saves the provided connection, returning the saved
@@ -52,6 +59,18 @@ export interface IWithConnectionHelpersChildrenProps {
    * @todo make the returned object immutable to avoid uncontrolled changes
    */
   saveConnection(connection: Connection): Promise<Connection>;
+
+  /**
+   *  Asynchronously validates the proposed connection name.
+   *
+   * @param connection the connection whose name is being changed
+   * @param proposedName the name being validated
+   * @returns a validation result
+   */
+  validateName(
+    connection: Connection,
+    proposedName: string
+  ): Promise<IValidationResult>;
 }
 
 export interface IWithConnectionHelpersProps {
@@ -66,6 +85,7 @@ export class WithConnectionHelpersWrapped extends React.Component<
     this.createConnection = this.createConnection.bind(this);
     this.validateConfiguration = this.validateConfiguration.bind(this);
     this.saveConnection = this.saveConnection.bind(this);
+    this.validateName = this.validateName.bind(this);
   }
 
   public createConnection(
@@ -118,11 +138,45 @@ export class WithConnectionHelpersWrapped extends React.Component<
       : Promise.resolve(connection);
   }
 
+  public async validateName(
+    connection: Connection,
+    proposedName: string
+  ): Promise<IValidationResult> {
+    // short circuit if name has not changed
+    if (connection.name === proposedName) {
+      return {
+        isError: false,
+      };
+    }
+
+    const testConn = { name: proposedName };
+    const response = await callFetch({
+      body: testConn,
+      headers: this.props.headers,
+      method: 'POST',
+      url: `${this.props.apiUri}/connections/validation`,
+    });
+
+    if (response.ok) {
+      return {
+        isError: false,
+      };
+    }
+
+    // return the first error
+    const result = await response.json();
+    return {
+      isError: true,
+      ...result[0],
+    };
+  }
+
   public render() {
     return this.props.children({
       createConnection: this.createConnection,
       saveConnection: this.saveConnection,
       validateConfiguration: this.validateConfiguration,
+      validateName: this.validateName,
     });
   }
 }

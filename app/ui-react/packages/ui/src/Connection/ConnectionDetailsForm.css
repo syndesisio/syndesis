@@ -1,0 +1,9 @@
+.connection-details-form__buttonBar {
+  border-top: none;
+  padding: 0px 20px 10px;
+}
+
+.connection-details-form__editButton {
+  margin-bottom: 8px;
+  margin-right: 4px;
+}

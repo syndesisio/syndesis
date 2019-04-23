@@ -1,6 +1,11 @@
 {
   "connectionDetailPageTitle": "Dettagli di Connessione",
   "descriptionPlaceholder": "Inserisci la descrizione della connessione...",
+  "detailsSectionTitle": "Configurazione {{connectionName}}",
+  "duplicateNameError": "Quel nome è preso. Prova un altro.",
+  "errorSavingConnection": "Errore imprevisto del server durante il salvataggio della connessione.",
+  "errorValidatingDetails": "Errore imprevisto del server che convalida i dettagli della connessione.",
+  "errorValidatingName": "Errore imprevisto del server che convalida il nome della connessione.",
   "namePlaceholder": "Devi inserire un nome di connessione...",
   "usedByOne": "Utilizzato da 1 integrazione",
   "usedByMulti": "Utilizzato dalle integrazioni {{count}} volte"

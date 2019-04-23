@@ -1,4 +1,4 @@
-import { number, withKnobs } from '@storybook/addon-knobs';
+import { boolean, number, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { InlineTextEdit } from '../../src';
@@ -41,6 +41,7 @@ const textFieldNotes =
   '- Verify hitting the close button closes the editor and restores the original value.\n' +
   '- Verify entering a value other than "foo" enables the confirm button.\n' +
   '- Verify clicking the confirm button sets the new value on the readonly component.\n' +
+  '- Verify unchecking the **allowEditing** knob removes the edit icon.\n' +
   '- Verify when the editor is open you can change the size of the component by changing the **smWidth** knob value';
 
 const textAreaNotes =
@@ -57,6 +58,7 @@ const textAreaNotes =
   '- Verify hitting the close button closes the editor and restores the original value.\n' +
   '- Verify entering a value other than "foo" enables the confirm button.\n' +
   '- Verify clicking the confirm button sets the new value on the readonly component.\n' +
+  '- Verify unchecking the **allowEditing** knob removes the edit icon.\n' +
   '- Verify when the editor is open you can change the size of the component by changing the **smWidth** knob value.\n' +
   '- Verify when the editor is open you can change the offset of the confirm and cancel buttons by changing the **smOffset** knob value';
 
@@ -65,6 +67,7 @@ stories.add(
   () => (
     <InlineTextEdit
       value={value}
+      allowEditing={boolean('allowEditing', true)}
       i18nPlaceholder={placeholder}
       isTextArea={false}
       smWidth={number('smWidth', 3)}
@@ -80,6 +83,7 @@ stories.add(
   () => (
     <InlineTextEdit
       value={'This is a value'}
+      allowEditing={boolean('allowEditing', true)}
       i18nPlaceholder={'Placeholder...'}
       isTextArea={true}
       smOffset={number('smOffset', 0)}

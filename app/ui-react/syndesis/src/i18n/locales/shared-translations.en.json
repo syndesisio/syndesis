@@ -10,6 +10,7 @@
     },
     "shared": {
       "Actions": "Actions",
+      "Cancel": "Cancel",
       "Connection": "Connection",
       "Connections": "Connections",
       "Connector": "Connector",
@@ -21,6 +22,7 @@
       "Description": "Description",
       "Details": "Details",
       "Draft": "Draft",
+      "Edit": "Edit",
       "Error": "Error",
       "Export": "Export",
       "Extension": "Extension",
@@ -40,6 +42,7 @@
       "Published": "Running",
       "requiredFieldMessage": "* Required field",
       "resultsCount": "{{count}} Results",
+      "Save": "Save",
       "Settings": "Settings",
       "Status": "Status",
       "Step": "Step",
@@ -57,6 +60,7 @@
       "ConfirmRemove": "Confirm Remove?",
       "uploadFileFailureMessage": "<span>File '<strong>{{fileName}}</strong>' could not be uploaded</span>",
       "Usage": "Usage",
+      "Validate": "Validate",
       "viewLogs": "View Logs",
       "links": {
         "contactus": "//access.redhat.com/support/cases/#/case/new",
