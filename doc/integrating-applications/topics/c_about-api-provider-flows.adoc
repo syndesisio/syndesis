@@ -2,7 +2,7 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='about-api-provider-flows_{context}']
-= About API provider flows
+= About API provider integration flows
 
 A {prodname} integration that does not start with a REST API service has one 
 flow. That is, each time {prodname} executes the integration, {prodname} 

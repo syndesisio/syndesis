@@ -21,11 +21,9 @@ document for triggering execution of those integrations. To do this, you
 would edit the flow for each OpenAPI operation to be almost the
 same as the simple integrations that you already published. 
 
-https://www.youtube.com/watch?v=RAa1qy3WnWQ&feature=youtu.be[A video of configuring and publishing this quickstart is also available.] 
-
 .Prerequisites
 
-{prodname} is open in a browser.
+* {prodname} is open in a browser.
 
 .Procedure
 
@@ -35,7 +33,7 @@ https://github.com/syndesisio/syndesis-quickstarts/tree/master/api-provider
 and download `TaskAPI-export.zip`. 
 .. In {prodname}, in the left navigation panel, click *Integrations*. 
 .. In the upper right, click *Import*. 
-.. Drag and drop the zip file that you downloaded. {prodname} indicates
+.. Drag and drop the `TaskAPI-export.zip` file that you downloaded. {prodname} indicates
 that it has successfully imported the file. 
 .. In the left navigation panel, click *Integrations* to see
 an entry for the *Task API* integration that you just imported. The entry
@@ -115,4 +113,10 @@ It looks something like this:
 `\https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api/`
 +
 This is where {prodname} makes the Task API service available. REST 
-API calls specify URLs that start with this base URL. 
+API calls specify URLs that start with this base URL.
++
+If you are using {prodname} on OpenShift Container 
+Platform, if the external URL is not on the integration’s summary page, 
+then an administrator has set the `CONTROLLERS_EXPOSE_VIA3SCALE` environment 
+variable to true. To test this API provider integration, ask a 3scale 
+administrator for guidance. 

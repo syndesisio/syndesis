@@ -20,7 +20,7 @@ Twitter might trigger on a Twitter mention.
 * Do you want to publish a REST API service so that a client can invoke
 a REST API call that triggers execution of the flow for an operation?
 ** Is the OpenAPI schema for the service already defined?
-** If not, what operations will the service will define?
+** If not, what operations will the service define?
  
 To finish a simple integration:
 
