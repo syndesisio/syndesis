@@ -16,10 +16,14 @@
 package io.syndesis.connector.odata;
 
 import java.util.Locale;
+import org.apache.camel.component.olingo4.internal.Olingo4Constants;
 import io.syndesis.common.util.StringConstants;
 
 @SuppressWarnings("PMD.ConstantsInInterface")
-public interface ODataConstants extends StringConstants {
+public interface ODataConstants extends Olingo4Constants, StringConstants {
+
+    // prefix for parameters when passed as exchange header properties
+    String OLINGO4_PROPERTY_PREFIX = PROPERTY_PREFIX;
 
     String SERVICE_URI = "serviceUri";
 

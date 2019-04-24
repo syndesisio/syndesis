@@ -18,7 +18,6 @@ package io.syndesis.connector.odata.customizer;
 import java.io.IOException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.component.olingo4.internal.Olingo4Constants;
 import org.apache.camel.util.ObjectHelper;
 
 public class ODataCreateCustomizer extends AbstractProducerCustomizer {
@@ -29,7 +28,7 @@ public class ODataCreateCustomizer extends AbstractProducerCustomizer {
 
         String resource = in.getBody(String.class);
         if (! ObjectHelper.isEmpty(resource)) {
-            in.setHeader(Olingo4Constants.PROPERTY_PREFIX + DATA, resource);
+            in.setHeader(OLINGO4_PROPERTY_PREFIX + DATA, resource);
         }
     }
 
