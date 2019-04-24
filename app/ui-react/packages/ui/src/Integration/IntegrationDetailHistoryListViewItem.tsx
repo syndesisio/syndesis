@@ -8,11 +8,29 @@ import {
 import * as React from 'react';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
-  integrationUpdatedAt: number;
-  integrationVersion: number;
+  /**
+   * The last date the integration was updated.
+   */
+  integrationUpdatedAt?: number;
+  /**
+   * The most recent version of the integration.
+   */
+  integrationVersion?: number;
+  /**
+   * The localized text for the menu item to replace the integration draft.
+   */
   i18nTextHistoryMenuReplaceDraft?: string;
+  /**
+   * The localized text for the menu item to unpublish the integration.
+   */
   i18nTextHistoryMenuUnpublish?: string;
+  /**
+   * The localized text for displaying the last published date.
+   */
   i18nTextLastPublished?: string;
+  /**
+   * The localized text used to display the version of the integration.
+   */
   i18nTextVersion?: string;
 }
 

@@ -7,7 +7,7 @@ import { Integration } from '@syndesis/models';
 import {
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
-  // IntegrationDetailHistoryListViewItem,
+  IntegrationDetailHistoryListViewItem,
   IntegrationDetailInfo,
   Loader,
 } from '@syndesis/ui';
@@ -79,7 +79,12 @@ export class DetailsPage extends React.Component {
                                     integrationIsDraft={false}
                                     i18nTextDraft={t('Draft')}
                                     i18nTextHistory={t('History')}
-                                  />
+                                  >
+                                    <IntegrationDetailHistoryListViewItem
+                                      integrationUpdatedAt={data.updatedAt}
+                                      integrationVersion={data.version}
+                                    />
+                                  </IntegrationDetailHistoryListView>
                                 </>
                               )}
                             </Translation>
