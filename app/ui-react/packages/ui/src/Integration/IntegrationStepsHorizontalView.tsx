@@ -2,19 +2,7 @@ import { Text } from '@patternfly/react-core';
 import { Grid, Icon, ListViewIcon } from 'patternfly-react';
 import * as React from 'react';
 
-import './IntegrationStepsHorizontalView.css';
-
-export interface IIntegrationStepsHorizontalViewProps {
-  /**
-   * The name of the connector used for the step.
-   */
-  name?: string;
-  isFirst?: boolean;
-}
-
-export class IntegrationStepsHorizontalView extends React.Component<
-  IIntegrationStepsHorizontalViewProps
-> {
+export class IntegrationStepsHorizontalView extends React.Component {
   public render() {
     return (
       <div className="integration-steps-horizontal-view">

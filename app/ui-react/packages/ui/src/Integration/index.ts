@@ -28,6 +28,7 @@ export * from './IntegrationFlowStepWithOverview';
 export * from './IntegrationIcon';
 export * from './IntegrationStatus';
 export * from './IntegrationStatusDetail';
+export * from './IntegrationStepsHorizontalItem';
 export * from './IntegrationStepsHorizontalView';
 export * from './IntegrationVerticalFlow';
 export * from './IntegrationsList';
