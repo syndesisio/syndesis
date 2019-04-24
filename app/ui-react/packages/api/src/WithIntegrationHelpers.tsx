@@ -88,6 +88,11 @@ export interface IWithIntegrationHelpersChildrenProps {
     isIntegrationDeployment?: boolean
   ): Promise<Response>;
   /**
+   * Uploads and imports the supplied file as a new integration
+   * @param file
+   */
+  importIntegration(file: File): Promise<void>;
+  /**
    * Requests a .zip file of the integration, using the specified filename
    * @param id
    * @param fileName
@@ -132,6 +137,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     this.deleteIntegration = this.deleteIntegration.bind(this);
     this.deployIntegration = this.deployIntegration.bind(this);
     this.exportIntegration = this.exportIntegration.bind(this);
+    this.importIntegration = this.importIntegration.bind(this);
     this.saveIntegration = this.saveIntegration.bind(this);
     this.undeployIntegration = this.undeployIntegration.bind(this);
     this.updateConnection = this.updateConnection.bind(this);
@@ -210,6 +216,20 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       method: 'DELETE',
       url: `${this.props.apiUri}/integrations/${id}`,
     });
+  }
+
+  public async importIntegration(file: File) {
+    const response = await callFetch({
+      body: file,
+      contentType: 'application/zip',
+      headers: this.props.headers,
+      includeContentType: false,
+      method: 'POST',
+      url: `${this.props.apiUri}/integration-support/import`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
   }
 
   public async exportIntegration(id: string, fileName: string) {
@@ -368,6 +388,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       deleteIntegration: this.deleteIntegration,
       deployIntegration: this.deployIntegration,
       exportIntegration: this.exportIntegration,
+      importIntegration: this.importIntegration,
       saveIntegration: this.saveIntegration,
       tagIntegration: this.tagIntegration,
       undeployIntegration: this.undeployIntegration,

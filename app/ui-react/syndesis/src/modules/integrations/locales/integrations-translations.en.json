@@ -28,5 +28,16 @@
   "NoEnvironmentsAvailableInfo": "No environments are available to tag this integration with.  Go to the CI/CD management page to create one or more environments.",
   "MarkIntegrationForCiCd": "Mark Integration for Continuous Integration/Continuous Deployment",
   "TagThisIntegrationForRelease": "Tag this integration for release in one or more of the environments",
-  "GoToManageCiCd": "Go To Manage CI/CD"
+  "GoToManageCiCd": "Go To Manage CI/CD",
+  "ImportIntegrationInstructions": "Drag and drop your integration files here, or <strong>click</strong> to select files using a file chooser dialog.",
+  "ImportIntegrationInvalidFileMessage": "",
+  "ImportIntegrationFailedMessage": "",
+  "ImportIntegration": "Import Integration",
+  "ImportIntegrationDescription": "Choose one or more zip files that contain exported integrations that you want to import.",
+  "ImportHelpMessage": "Note: The imported integration will be in the draft state.  If you previously imported and this environment has a draft version of the integration, then that draft is lost.",
+  "ImportSelectedFileLabel": "Selected file:",
+  "ImportNoFileSelectedMessage": "no file selected",
+  "ImportUploadFailedAlertMessage": "<span>File <strong>'{{fileName}}'</strong> could not be uploaded</span>",
+  "ImportUploadFailedMessage": "Upload failed for {{fileName}}",
+  "ImportUploadSuccessMessage": "Successfully imported {{fileName}}"
 }

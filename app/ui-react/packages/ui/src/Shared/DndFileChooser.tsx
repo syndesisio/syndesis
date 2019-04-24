@@ -53,11 +53,21 @@ export interface IDndFileChooserProps {
   i18nUploadFailedMessage?: string;
 
   /**
+   * A list of error messages for failed uploads
+   */
+  i18nUploadFailedMessages?: string[];
+
+  /**
    * A general, localized message for when a file upload was successful. This message will be shown
    * along with an OK icon and appear next to the selected file message. If this property
    * is set then `i18nUploadFailedMessage` should not be set.
    */
   i18nUploadSuccessMessage?: string;
+
+  /**
+   * A list of error messages for successful uploads
+   */
+  i18nUploadSuccessMessages?: string[];
 
   /**
    * Obtains the localized text (may include HTML tags) that appears when the file upload was rejected. This
@@ -158,7 +168,30 @@ export class DndFileChooser extends React.Component<
         </span>
       );
     }
-
+    if (
+      this.props.i18nUploadSuccessMessages &&
+      this.props.i18nUploadFailedMessages
+    ) {
+      return (
+        <ul>
+          {this.props.i18nUploadSuccessMessages!.map((message, idx) => (
+            <li
+              key={'success' + idx}
+              className="dnd-file-chooser__uploadMessage"
+            >
+              <Icon type="pf" name="ok" />
+              &nbsp;{message}
+            </li>
+          ))}
+          {this.props.i18nUploadFailedMessages!.map((message, idx) => (
+            <li key={'fail' + idx} className="dnd-file-chooser__uploadMessage">
+              <Icon type="pf" name="error-circle-o" />
+              &nbsp;{message}
+            </li>
+          ))}
+        </ul>
+      );
+    }
     // no message
     return <Container />;
   }
