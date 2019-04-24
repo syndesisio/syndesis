@@ -8,7 +8,7 @@ import {
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { PageTitle } from '../../../../../../shared';
+import { ApiError, PageTitle } from '../../../../../../shared';
 import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorSidebar,
@@ -46,7 +46,7 @@ export class SelectActionPage extends React.Component {
                   error={error}
                   loading={!hasData}
                   loaderChildren={<Loader />}
-                  errorChildren={<div>TODO</div>}
+                  errorChildren={<ApiError />}
                 >
                   {() => (
                     <>

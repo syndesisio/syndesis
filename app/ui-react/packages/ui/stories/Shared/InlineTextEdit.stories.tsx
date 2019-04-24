@@ -1,9 +1,10 @@
-import { number } from '@storybook/addon-knobs';
+import { number, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { InlineTextEdit } from '../../src';
 
 const stories = storiesOf('Shared/InlineTextEdit', module);
+stories.addDecorator(withKnobs);
 
 const fooErrorMsg = 'Value cannot be foo';
 const requiredErrorMsg = 'Value cannot be empty';

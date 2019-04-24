@@ -12,6 +12,7 @@ import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
+import { ApiError } from '../../../shared';
 import { getExtensionTypeName } from '../customizationsUtils';
 import resolvers from '../resolvers';
 import CustomizationsNavBar from '../shared/CustomizationsNavBar';
@@ -145,7 +146,7 @@ export default class ExtensionsPage extends React.Component {
                                     }}
                                   />
                                 }
-                                errorChildren={<div>TODO</div>}
+                                errorChildren={<ApiError />}
                               >
                                 {() =>
                                   filteredAndSorted

@@ -12,7 +12,7 @@ import {
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { PageTitle } from '../../../../../shared';
+import { ApiError, PageTitle } from '../../../../../shared';
 import { IntegrationCreatorBreadcrumbs } from '../../../components';
 import resolvers from '../../../resolvers';
 
@@ -96,7 +96,7 @@ export class FinishConnectionPage extends React.Component {
                         error={error}
                         loading={!hasData}
                         loaderChildren={<IntegrationsListSkeleton />}
-                        errorChildren={<div>TODO</div>}
+                        errorChildren={<ApiError />}
                       >
                         {() => (
                           <>

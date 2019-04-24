@@ -7,6 +7,7 @@ import {
 } from '@syndesis/ui';
 import { getConnectionIcon, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
+import { ApiError } from '../../../shared';
 import {
   getDvConnectionStatus,
   isDvConnectionSelected,
@@ -46,7 +47,7 @@ export class DvConnections extends React.Component<IDvConnectionsProps> {
               ))}
             </>
           }
-          errorChildren={<div>TODO</div>}
+          errorChildren={<ApiError />}
         >
           {() =>
             this.props.connections.map((c, index) => (

@@ -1,3 +1,4 @@
+export * from './ApiError';
 export * from './ModuleLoader';
 export * from './PageNotFound';
 export * from './PageTitle';

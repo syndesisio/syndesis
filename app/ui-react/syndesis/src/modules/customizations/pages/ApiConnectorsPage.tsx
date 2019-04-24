@@ -16,6 +16,7 @@ import {
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
+import { ApiError } from '../../../shared';
 import routes from '../routes';
 import CustomizationsNavBar from '../shared/CustomizationsNavBar';
 
@@ -148,7 +149,7 @@ export default class ApiConnectorsPage extends React.Component {
                               }}
                             />
                           }
-                          errorChildren={<div>TODO</div>}
+                          errorChildren={<ApiError />}
                         >
                           {() =>
                             filteredAndSorted

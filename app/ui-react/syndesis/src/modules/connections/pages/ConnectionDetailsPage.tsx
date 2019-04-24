@@ -6,6 +6,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import i18n from '../../../i18n';
+import { ApiError } from '../../../shared';
 import resolvers from '../../resolvers';
 
 export interface IConnectionDetailsRouteParams {
@@ -66,7 +67,7 @@ export class ConnectionDetailsPage extends React.Component {
                   error={error}
                   loading={!hasData}
                   loaderChildren={<Loader />}
-                  errorChildren={<div>TODO</div>}
+                  errorChildren={<ApiError />}
                 >
                   {() => (
                     <Translation ns={['connections', 'shared']}>

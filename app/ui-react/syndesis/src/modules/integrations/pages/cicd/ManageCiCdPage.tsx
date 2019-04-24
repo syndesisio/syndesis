@@ -16,7 +16,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import i18n from '../../../../i18n';
-import { PageTitle } from '../../../../shared';
+import { ApiError, PageTitle } from '../../../../shared';
 import resolvers from '../../resolvers';
 
 function getFilteredAndSortedEnvironments(
@@ -182,7 +182,7 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                                 loaderChildren={
                                   <CiCdList children={<CiCdListSkeleton />} />
                                 }
-                                errorChildren={<div>TODO - error</div>}
+                                errorChildren={<ApiError />}
                               >
                                 {() => (
                                   <>

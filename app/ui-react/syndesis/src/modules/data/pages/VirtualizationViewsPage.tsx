@@ -3,6 +3,7 @@ import { RestDataService } from '@syndesis/models';
 import { RestViewDefinition } from '@syndesis/models';
 import * as React from 'react';
 import i18n from '../../../i18n';
+import { ApiError } from '../../../shared';
 import { HeaderView } from '../shared';
 import { VirtualizationNavBar } from '../shared';
 
@@ -195,7 +196,7 @@ export class VirtualizationViewsPage extends React.Component<
                                           }}
                                         />
                                       }
-                                      errorChildren={<div>TODO</div>}
+                                      errorChildren={<ApiError />}
                                     >
                                       {() =>
                                         filteredAndSorted

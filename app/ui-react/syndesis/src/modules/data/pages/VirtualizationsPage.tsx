@@ -12,6 +12,7 @@ import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
+import { ApiError } from '../../../shared';
 import resolvers from '../resolvers';
 
 function getFilteredAndSortedVirtualizations(
@@ -175,7 +176,7 @@ export class VirtualizationsPage extends React.Component {
                                   }}
                                 />
                               }
-                              errorChildren={<div>TODO</div>}
+                              errorChildren={<ApiError />}
                             >
                               {() =>
                                 filteredAndSorted.map(

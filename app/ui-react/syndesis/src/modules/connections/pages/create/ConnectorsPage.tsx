@@ -8,7 +8,7 @@ import {
 } from '@syndesis/ui';
 import { getConnectionIcon, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { PageTitle } from '../../../../shared';
+import { ApiError, PageTitle } from '../../../../shared';
 import { ConnectionCreatorBreadcrumbs } from '../../components';
 import resolvers from '../../resolvers';
 
@@ -35,7 +35,7 @@ export default class ConnectorsPage extends React.Component {
                         ))}
                       </>
                     }
-                    errorChildren={<div>TODO</div>}
+                    errorChildren={<ApiError />}
                   >
                     {() =>
                       data.connectorsForDisplay

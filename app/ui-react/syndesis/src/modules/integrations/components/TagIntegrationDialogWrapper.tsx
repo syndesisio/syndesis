@@ -9,6 +9,7 @@ import {
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
+import { ApiError } from '../../../shared';
 
 export interface ITagIntegrationDialogWrapperProps {
   manageCiCdHref: string;
@@ -70,7 +71,7 @@ export class TagIntegrationDialogWrapper extends React.Component<
                                 <CiCdListSkeleton />
                               </CiCdList>
                             }
-                            errorChildren={<p>TODO - Error</p>}
+                            errorChildren={<ApiError />}
                           >
                             {() => {
                               const mappedItems = environments.map(item => ({
