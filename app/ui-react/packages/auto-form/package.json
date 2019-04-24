@@ -78,7 +78,6 @@
     }
   },
   "dependencies": {
-    "@syndesis/models": "*",
     "@syndesis/ui": "*",
     "formik": "^1.5.1",
     "patternfly-react": "^2.29.15"

@@ -11,6 +11,7 @@ export const FormCheckboxComponent: React.FunctionComponent<
     validationState={getValidationState(props)}
   >
     <Checkbox
+      {...props.property.fieldAttributes}
       {...props.field}
       id={props.field.name}
       checked={props.field.value}

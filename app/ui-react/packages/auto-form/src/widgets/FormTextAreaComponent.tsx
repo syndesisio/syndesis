@@ -17,6 +17,7 @@ export const FormTextAreaComponent: React.FunctionComponent<
   >
     <ControlLabel>{props.property.displayName}</ControlLabel>
     <FormControl
+      {...props.property.fieldAttributes}
       {...props.field}
       data-testid={props.field.name}
       disabled={props.form.isSubmitting || props.property.disabled}

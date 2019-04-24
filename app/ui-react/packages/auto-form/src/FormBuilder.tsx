@@ -1,7 +1,6 @@
-import { IConfigurationProperty } from '@syndesis/models';
 import { Field } from 'formik';
 import * as React from 'react';
-import { IFormDefinition } from './models';
+import { IFormDefinition, IFormDefinitionProperty } from './models';
 import {
   FormCheckboxComponent,
   FormHiddenComponent,
@@ -10,7 +9,7 @@ import {
   FormTextAreaComponent,
 } from './widgets';
 
-export interface INamedConfigurationProperty extends IConfigurationProperty {
+export interface INamedConfigurationProperty extends IFormDefinitionProperty {
   name: string;
 }
 
@@ -121,7 +120,7 @@ export class FormBuilder<T> extends React.Component<
    *
    * @param property
    */
-  private massageType(property: IConfigurationProperty) {
+  private massageType(property: IFormDefinitionProperty) {
     let type = property.type || 'text';
     switch (type) {
       case 'int':
@@ -151,7 +150,7 @@ export class FormBuilder<T> extends React.Component<
    *
    * @param property
    */
-  private massageRequired(property: IConfigurationProperty): any {
+  private massageRequired(property: IFormDefinitionProperty): any {
     switch (property.type) {
       case 'boolean':
       case 'checkbox':
@@ -170,7 +169,7 @@ export class FormBuilder<T> extends React.Component<
    * @param property
    * @param value
    */
-  private massageValue(property: IConfigurationProperty, value?: string) {
+  private massageValue(property: IFormDefinitionProperty, value?: string) {
     if (value === undefined || value === null) {
       return value;
     }

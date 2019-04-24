@@ -7,7 +7,7 @@ import {
   getConnectionConnector,
   getConnectorActions,
 } from '@syndesis/api';
-import { AutoForm } from '@syndesis/auto-form';
+import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { Action, ConnectionOverview } from '@syndesis/models';
 import {
   IntegrationEditorForm,
@@ -138,7 +138,7 @@ export class WithConfigurationForm extends React.Component<
       return (
         <AutoForm<{ [key: string]: string }>
           i18nRequiredProperty={'* Required field'}
-          definition={definition}
+          definition={definition as IFormDefinition}
           initialValue={this.props.initialValue!}
           onSave={onSave}
           key={this.props.configurationStep}

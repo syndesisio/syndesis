@@ -2,8 +2,9 @@ import { object, text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { AutoForm, IFormDefinition } from '../src';
+import { StoryWrapper } from './StoryWrapper.component';
 
-const stories = storiesOf('Components', module);
+const stories = storiesOf('AutoForm', module);
 
 const formDefinition = {
   brokerCertificate: {
@@ -154,7 +155,7 @@ export const initialValue = {
   username: 'blah',
 };
 
-stories.add('AutoForm', () => {
+stories.add('Kitchen Sink', () => {
   const onSave = v => {
     alert('Got value: ' + JSON.stringify(v, undefined, 2));
   };
@@ -166,32 +167,34 @@ stories.add('AutoForm', () => {
     return errors;
   };
   return (
-    <AutoForm
-      definition={object('definition', formDefinition)}
-      initialValue={object('initialValue', initialValue)}
-      i18nRequiredProperty={text(
-        'i18nRequiredProperty',
-        'This property is required'
-      )}
-      validate={validate}
-      onSave={onSave}
-    >
-      {({ fields, handleSubmit }) => (
-        <React.Fragment>
-          <p className="fields-status-pf">
-            The fields marked with <span className="required-pf">*</span> are
-            required.
-          </p>
-          {fields}
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
-        </React.Fragment>
-      )}
-    </AutoForm>
+    <StoryWrapper>
+      <AutoForm
+        definition={object('definition', formDefinition)}
+        initialValue={object('initialValue', initialValue)}
+        i18nRequiredProperty={text(
+          'i18nRequiredProperty',
+          'This property is required'
+        )}
+        validate={validate}
+        onSave={onSave}
+      >
+        {({ fields, handleSubmit }) => (
+          <React.Fragment>
+            <p className="fields-status-pf">
+              The fields marked with <span className="required-pf">*</span> are
+              required.
+            </p>
+            {fields}
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={handleSubmit}
+            >
+              Submit
+            </button>
+          </React.Fragment>
+        )}
+      </AutoForm>
+    </StoryWrapper>
   );
 });

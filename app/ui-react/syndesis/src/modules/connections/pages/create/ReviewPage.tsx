@@ -58,6 +58,7 @@ export default class ReviewPage extends React.Component {
                       defaultValue: '',
                       displayName: 'Name',
                       required: true,
+                      type: 'string',
                     },
                     /* tslint:disable-next-line:object-literal-sort-keys */
                     description: {
