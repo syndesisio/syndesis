@@ -43,5 +43,5 @@ There are many ways to call the REST APIs that trigger integration execution,
 including: 
 
 * A web browser page that takes data input and generates the call.
-* An application that explicitly calls the REST APIs. 
+* An application that explicitly calls the REST APIs, such as the `curl` utility.
 * Other APIs that call the REST API, for example, a webhook. 

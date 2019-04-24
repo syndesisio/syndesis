@@ -125,6 +125,15 @@ flow.
 
 .Next steps
 When an API provider integration 
-is running, you can use the `curl` utility to confirm that it is
+is running in {prodname} on OpenShift Online or on OpenShift Dedicated, 
+you can use the `curl` utility to confirm that it is
 working as expected. For examples of doing this, see 
 link:{LinkFuseOnlineIntegrationGuide}#try-api-provider-quickstart_api-provider[the description of the API provider quickstart].
+
+When an API provider integration is running in {prodname} on 
+OpenShift Container Platform, an administrator might have set the 
+`CONTROLLERS_EXPOSE_VIA3SCALE` environment variable to true, which makes 
+the integration’s API discoverable in Red Hat 3scale.  When this environment 
+variable is set to true, {prodname} does not provide an external URL for 
+an API provider integration. 
+To test the integration, ask a 3scale administrator for guidance. 
