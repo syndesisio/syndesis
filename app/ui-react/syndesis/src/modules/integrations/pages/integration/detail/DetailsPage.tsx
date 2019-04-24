@@ -61,7 +61,7 @@ export class DetailsPage extends React.Component {
                       >
                         {() => (
                           <div>
-                            <Translation ns={['integration', 'shared']}>
+                            <Translation ns={['integrations', 'shared']}>
                               {t => (
                                 <>
                                   <IntegrationDetailInfo
@@ -74,13 +74,30 @@ export class DetailsPage extends React.Component {
                                   />
                                   <IntegrationDetailDescription
                                     description={data.description}
+                                    i18nNoDescription={t(
+                                      'integrations:detail:noDescription'
+                                    )}
                                   />
                                   <IntegrationDetailHistoryListView
                                     integrationIsDraft={false}
-                                    i18nTextDraft={t('Draft')}
-                                    i18nTextHistory={t('History')}
+                                    i18nTextBtnEdit={t('shared:Edit')}
+                                    i18nTextBtnPublish={t('shared:Publish')}
+                                    i18nTextDraft={t('shared:Draft')}
+                                    i18nTextHistory={t(
+                                      'integrations:detail:History'
+                                    )}
                                   >
                                     <IntegrationDetailHistoryListViewItem
+                                      i18nTextHistoryMenuReplaceDraft={t(
+                                        'integrations:detail:replaceDraft'
+                                      )}
+                                      i18nTextHistoryMenuUnpublish={t(
+                                        'shared:Unpublish'
+                                      )}
+                                      i18nTextLastPublished={t(
+                                        'integrations:detail:lastPublished'
+                                      )}
+                                      i18nTextVersion={t('shared:Version')}
                                       integrationUpdatedAt={data.updatedAt}
                                       integrationVersion={data.version}
                                     />

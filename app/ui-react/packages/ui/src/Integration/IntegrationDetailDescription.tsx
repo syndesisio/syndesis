@@ -4,6 +4,7 @@ import * as React from 'react';
 
 export interface IIntegrationDetailDescriptionProps {
   description?: string;
+  i18nNoDescription?: string;
 }
 
 export class IntegrationDetailDescription extends React.PureComponent<

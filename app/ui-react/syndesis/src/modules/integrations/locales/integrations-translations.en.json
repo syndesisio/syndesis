@@ -45,5 +45,17 @@
   "DeletingIntegrationMessage": "Deleting integration.  It takes a few moments to delete the integration.",
   "PublishingIntegrationFailedMessage": "Error starting integration: {{error}}",
   "UnpublishingIntegrationFailedMessage": "Error stopping integration: {{error}}",
-  "DeletingIntegrationFailedMessage": "Error deleting integration: {{error}}"
+  "DeletingIntegrationFailedMessage": "Error deleting integration: {{error}}",
+  "Running": "Running",
+  "Stopped": "Stopped",
+  "detail": {
+    "History": "History",
+    "lastPublished": "Last published on ",
+    "noDescription": "No description set...",
+    "replaceDraft": "Replace Draft"
+  },
+  "alerts": {
+    "modified": "A connection associated with this integration has been modified. To incorporate the changes, please edit the integration.",
+    "obsolete": "The published integration has become obsolete and its recommended it should be republished."
+  }
 }
