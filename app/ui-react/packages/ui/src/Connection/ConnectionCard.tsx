@@ -6,17 +6,17 @@ import { Link } from 'react-router-dom';
 import './ConnectionCard.css';
 
 export interface IConnectionProps {
-  name: string;
   description: string;
-  icon: string;
+  name: string;
   href: H.LocationDescriptor;
+  icon: string;
 }
 
 export class ConnectionCard extends React.PureComponent<IConnectionProps> {
   public render() {
     return (
-      <Link to={this.props.href} className={'connection-card'}>
-        <Card matchHeight={true}>
+      <Card matchHeight={true}>
+        <Link to={this.props.href} className={'connection-card'}>
           <Card.Body>
             <div className={'connection-card__content'}>
               <div className="connection-card__icon">
@@ -33,8 +33,8 @@ export class ConnectionCard extends React.PureComponent<IConnectionProps> {
               </p>
             </div>
           </Card.Body>
-        </Card>
-      </Link>
+        </Link>
+      </Card>
     );
   }
 }

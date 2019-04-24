@@ -52,6 +52,7 @@
       "Unpublish": "Non Pubblicato",
       "Unpublished": "Fermato",
       "Update": "Aggiornare",
+      "View": "Vista",
       "uploadFileFailureMessage": "<span>Il file '<strong>{{fileName}}</strong>' non può essere caricato</span>",
       "Usage": "Uso",
       "Validate": "Convalidare",

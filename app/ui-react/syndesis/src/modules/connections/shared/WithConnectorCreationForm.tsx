@@ -1,17 +1,14 @@
 import { WithConnectionHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { Connector } from '@syndesis/models';
-import {
-  ConnectorConfigurationForm,
-  IConnectorConfigurationFormValidationResult,
-} from '@syndesis/ui';
+import { IConnectorConfigurationFormValidationResult } from '@syndesis/ui';
 import * as React from 'react';
 
 export interface IWithConfigurationFormChildrenProps {
   /**
    * the form (embedded in the right UI elements)
    */
-  form: JSX.Element;
+  fields: JSX.Element;
   /**
    * true if the form contains valid values. Can be used to enable/disable the
    * submit button.
@@ -31,6 +28,10 @@ export interface IWithConfigurationFormChildrenProps {
    * the current values of the form fields
    */
   values: { [key: string]: string };
+
+  validationResults: IConnectorConfigurationFormValidationResult[];
+
+  handleSubmit: (e?: any) => void;
   /**
    * the callback to trigger to validate the form against the backend.
    */
@@ -70,10 +71,8 @@ export interface IWithConfigurationFormProps {
    * the callback that is fired after the form submit with valid values.
    *
    * @see [action]{@link IOnUpdatedIntegrationProps#action}
-   * @see [moreConfigurationSteps]{@link IOnUpdatedIntegrationProps#moreConfigurationSteps}
-   * @see [values]{@link IOnUpdatedIntegrationProps#values}
    */
-  onSave(props: { [key: string]: string }): any;
+  onSave(props: { [key: string]: string }, action: any): any;
 }
 
 /**
@@ -170,20 +169,14 @@ export class WithConfigurationForm extends React.Component<
                 };
 
                 return this.props.children({
-                  form: (
-                    <ConnectorConfigurationForm
-                      i18nFormTitle={this.props.connector.name}
-                      handleSubmit={handleSubmit}
-                      validationResults={validationResults}
-                    >
-                      {fields}
-                    </ConnectorConfigurationForm>
-                  ),
+                  fields,
+                  handleSubmit,
                   isSubmitting,
                   isValid,
                   isValidating,
                   submitForm,
                   validateForm: enableValidationAgainstBackend,
+                  validationResults,
                   values,
                 });
               }}

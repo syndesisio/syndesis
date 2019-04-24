@@ -24,13 +24,13 @@ const changeName = (/*newName: string*/) => {
 };
 
 stories.add('render', () => {
-  const validate = proposedName => {
+  const validate = (proposedName: string): Promise<true | string> => {
     if (proposedName.length === 0) {
-      return '* Required field';
+      return Promise.resolve('* Required field');
     } else if (proposedName === 'foo') {
-      return 'foo is not a valid connection name';
+      return Promise.resolve('foo is not a valid connection name');
     }
-    return true;
+    return Promise.resolve(true) as Promise<true>;
   };
   return (
     <ConnectionDetailsHeader
@@ -43,6 +43,7 @@ stories.add('render', () => {
       i18nNamePlaceholder={namePlaceholder}
       i18nUsageLabel={usageLabel}
       i18nUsageMessage={usageMessage}
+      isWorking={boolean('isWorking', false)}
       onChangeDescription={changeDescription}
       onChangeName={changeName}
       validate={validate}

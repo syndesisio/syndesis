@@ -59,6 +59,20 @@ export interface IWithConnectionHelpersChildrenProps {
    * @todo make the returned object immutable to avoid uncontrolled changes
    */
   saveConnection(connection: Connection): Promise<Connection>;
+  /**
+   * create a new Connection object starting from an existing Connection.
+   *
+   * @param connection
+   * @param name
+   * @param description
+   * @param configuredProperties
+   */
+  updateConnection(
+    connection: Connection,
+    name?: string,
+    description?: string,
+    configuredProperties?: { [key: string]: string }
+  ): Connection;
 
   /**
    *  Asynchronously validates the proposed connection name.
@@ -83,6 +97,7 @@ export class WithConnectionHelpersWrapped extends React.Component<
   constructor(props: IWithConnectionHelpersProps & IApiContext) {
     super(props);
     this.createConnection = this.createConnection.bind(this);
+    this.updateConnection = this.updateConnection.bind(this);
     this.validateConfiguration = this.validateConfiguration.bind(this);
     this.saveConnection = this.saveConnection.bind(this);
     this.validateName = this.validateName.bind(this);
@@ -102,6 +117,20 @@ export class WithConnectionHelpersWrapped extends React.Component<
       connection.connector = connector;
       connection.connectorId = connector.id;
       connection.icon = connector.icon;
+    });
+  }
+
+  public updateConnection(
+    connection: Connection,
+    name?: string,
+    description?: string,
+    configuredProperties?: { [key: string]: string }
+  ): Connection {
+    return produce(connection, draft => {
+      connection.name = name || connection.name;
+      connection.description = description || connection.description;
+      connection.configuredProperties =
+        configuredProperties || connection.configuredProperties;
     });
   }
 
@@ -175,6 +204,7 @@ export class WithConnectionHelpersWrapped extends React.Component<
     return this.props.children({
       createConnection: this.createConnection,
       saveConnection: this.saveConnection,
+      updateConnection: this.updateConnection,
       validateConfiguration: this.validateConfiguration,
       validateName: this.validateName,
     });

@@ -47,13 +47,18 @@ export interface IConnectionDetailsFormProps {
   /**
    * Form level validationResults
    */
-  validationResults?: IConnectionDetailsValidationResult[];
+  validationResults: IConnectionDetailsValidationResult[];
 
   /**
    * The callback fired when submitting the form.
    * @param e
    */
   handleSubmit: (e?: any) => void;
+
+  /**
+   * The callback for editing has been canceled.
+   */
+  onCancel: () => void;
 
   /**
    * The callback for when the validate button is clicked.
@@ -79,11 +84,17 @@ export class ConnectionDetailsForm extends React.Component<
   public constructor(props: IConnectionDetailsFormProps) {
     super(props);
     this.state = { isEditing: false };
-    this.toggleIsEditing = this.toggleIsEditing.bind(this);
+    this.cancelEditing = this.cancelEditing.bind(this);
+    this.startEditing = this.startEditing.bind(this);
   }
 
-  public toggleIsEditing() {
-    this.setState({ isEditing: !this.state.isEditing });
+  public cancelEditing() {
+    this.setState({ isEditing: false });
+    this.props.onCancel();
+  }
+
+  public startEditing() {
+    this.setState({ isEditing: true });
   }
 
   public render() {
@@ -97,18 +108,16 @@ export class ConnectionDetailsForm extends React.Component<
         >
           <div className="row row-cards-pf">
             <div className="card-pf">
+              {this.props.validationResults.map((e, idx) => (
+                <Alert key={idx} type={e.type}>
+                  {e.message}
+                </Alert>
+              ))}
               <div className="card-pf-title">{this.props.i18nTitle}</div>
-              <div className="card-pf-body">
-                {this.props.validationResults!.map((e, idx) => (
-                  <Alert key={idx} type={e.type}>
-                    {e.message}
-                  </Alert>
-                ))}
+              <div className="card-pf-body connection-details-form__formFields">
                 <fieldset disabled={!this.state.isEditing}>
                   <Container>{this.props.children}</Container>
                 </fieldset>
-              </div>
-              <div className="card-pf-footer connection-details-form__buttonBar">
                 {this.state.isEditing ? (
                   <Container>
                     <Row>
@@ -126,7 +135,7 @@ export class ConnectionDetailsForm extends React.Component<
                         bsStyle="default"
                         className="connection-details-form__editButton"
                         disabled={this.props.isWorking}
-                        onClick={this.toggleIsEditing}
+                        onClick={this.cancelEditing}
                       >
                         {this.props.i18nCancelLabel}
                       </Button>
@@ -141,7 +150,7 @@ export class ConnectionDetailsForm extends React.Component<
                     </Row>
                   </Container>
                 ) : (
-                  <Button bsStyle="primary" onClick={this.toggleIsEditing}>
+                  <Button bsStyle="primary" onClick={this.startEditing}>
                     {this.props.i18nEditLabel}
                   </Button>
                 )}

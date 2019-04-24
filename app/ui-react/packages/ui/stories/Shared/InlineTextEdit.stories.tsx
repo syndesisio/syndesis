@@ -11,16 +11,16 @@ const requiredErrorMsg = 'Value cannot be empty';
 const placeholder = 'Placeholder...';
 const value = 'This is a value';
 
-const handleValidate = (newValue: string): string | true => {
+const handleValidate = (newValue: string): Promise<string | true> => {
   if (!newValue || newValue.length === 0) {
-    return requiredErrorMsg;
+    return Promise.resolve(requiredErrorMsg);
   }
 
   if (newValue === 'foo') {
-    return fooErrorMsg;
+    return Promise.resolve(fooErrorMsg);
   }
 
-  return true;
+  return Promise.resolve(true) as Promise<true>;
 };
 
 const handleValueChanged = (newValue: string) => {
