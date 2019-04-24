@@ -41,9 +41,6 @@ export class DetailsPage extends React.Component {
     return (
       <WithRouteData<IDetailsPageParams, IDetailsPageState>>
         {({ integrationId }, { integration }, { history }) => {
-          console.log('integration: ' + JSON.stringify(integration));
-          console.log('integrationId: ' + JSON.stringify(integrationId));
-
           return (
             <WithIntegrationHelpers>
               {({}) => {

@@ -4,12 +4,12 @@ import * as React from 'react';
 
 import './IntegrationStepsHorizontalView.css';
 
-export interface IIntegrationSteps {
-  name?: string;
-}
-
 export interface IIntegrationStepsHorizontalViewProps {
-  steps: IIntegrationSteps[];
+  /**
+   * The name of the connector used for the step.
+   */
+  name?: string;
+  isFirst?: boolean;
 }
 
 export class IntegrationStepsHorizontalView extends React.Component<
@@ -20,6 +20,11 @@ export class IntegrationStepsHorizontalView extends React.Component<
       <div className="integration-steps-horizontal-view">
         <Grid fluid={true} xs={4}>
           <Grid.Row className="show-grid">
+            {this.props.isFirst === false ? (
+              <Grid.Col sm={6} md={4}>
+                <Icon name={'angle-right'} className="step-arrow" />
+              </Grid.Col>
+            ) : null}
             <Grid.Col sm={6} md={4}>
               {this.props.steps && this.props.steps[0] ? (
                 <>
