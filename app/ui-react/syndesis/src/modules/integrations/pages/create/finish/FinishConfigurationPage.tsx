@@ -115,7 +115,7 @@ export class FinishConfigurationPage extends React.Component {
                       integration,
                       startAction,
                       startConnection,
-                      step: stepAsNumber + 1,
+                      step: `${stepAsNumber + 1}`,
                       updatedIntegration,
                     })
                   );

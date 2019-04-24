@@ -1,9 +1,10 @@
+import * as H from 'history';
 import * as React from 'react';
 import { ButtonLink, Container } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
 export interface IDvConnectionsListViewProps extends IListViewToolbarProps {
-  linkToConnectionCreate: string;
+  linkToConnectionCreate: H.LocationDescriptor;
   i18nLinkCreateConnection: string;
 }
 

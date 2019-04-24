@@ -1,4 +1,5 @@
 import { getSteps, WithConnection } from '@syndesis/api';
+import { IConnectionWithIconFile, Step } from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorActionsListItem,
@@ -7,21 +8,35 @@ import {
   Loader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
+import * as H from 'history';
 import * as React from 'react';
-import { ApiError, PageTitle } from '../../../../../../shared';
-import {
-  IntegrationEditorBreadcrumbs,
-  IntegrationEditorSidebar,
-} from '../../../../components';
-import resolvers from '../../../../resolvers';
+import { ApiError, PageTitle } from '../../../../../shared';
 import {
   ISelectActionRouteParams,
   ISelectActionRouteState,
-} from '../../../editorInterfaces';
+} from '../interfaces';
+
+export interface ISelectActionPageProps {
+  cancelHref: (
+    p: ISelectActionRouteParams,
+    s: ISelectActionRouteState
+  ) => H.LocationDescriptor;
+  header: React.ReactNode;
+  sidebar: (props: {
+    steps: Step[];
+    activeIndex: number;
+    connection: IConnectionWithIconFile;
+  }) => React.ReactNode;
+  selectHref: (
+    actionId: string,
+    p: ISelectActionRouteParams,
+    s: ISelectActionRouteState
+  ) => H.LocationDescriptor;
+}
 
 /**
- * This page shows the list of actions of a connection containing with a **to**
- * pattern.
+ * This page shows the list of actions of a connection containing either a
+ * **to** or **from pattern, depending on the specified [position]{@link ISelectActionRouteParams#position}.
  *
  * This component expects some [params]{@link ISelectActionRouteParams} and
  * [state]{@link ISelectActionRouteState} to be properly set in the route
@@ -29,14 +44,13 @@ import {
  *
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
- *
- * @todo DRY the connection icon code
  */
-export class SelectActionPage extends React.Component {
+export class SelectActionPage extends React.Component<ISelectActionPageProps> {
   public render() {
     return (
       <WithRouteData<ISelectActionRouteParams, ISelectActionRouteState>>
         {({ connectionId, flow, position }, { connection, integration }) => {
+          const flowAsNumber = parseInt(flow, 10);
           const positionAsNumber = parseInt(position, 10);
           return (
             <WithConnection id={connectionId} initialValue={connection}>
@@ -51,33 +65,12 @@ export class SelectActionPage extends React.Component {
                     <>
                       <PageTitle title={'Choose an action'} />
                       <IntegrationEditorLayout
-                        header={<IntegrationEditorBreadcrumbs step={1} />}
-                        sidebar={
-                          <IntegrationEditorSidebar
-                            steps={getSteps(integration, 0)}
-                            addAtIndex={positionAsNumber}
-                            addIcon={
-                              hasData ? (
-                                <img src={data.icon} width={24} height={24} />
-                              ) : (
-                                <Loader />
-                              )
-                            }
-                            addI18nTitle={
-                              hasData
-                                ? `${positionAsNumber + 1}. ${
-                                    data.connector!.name
-                                  }`
-                                : `${positionAsNumber + 1}. Start`
-                            }
-                            addI18nTooltip={
-                              hasData
-                                ? `${positionAsNumber + 1}. ${data.name}`
-                                : 'Start'
-                            }
-                            addI18nDescription={'Choose an action'}
-                          />
-                        }
+                        header={this.props.header}
+                        sidebar={this.props.sidebar({
+                          activeIndex: positionAsNumber,
+                          connection: connection as IConnectionWithIconFile,
+                          steps: getSteps(integration, flowAsNumber),
+                        })}
                         content={
                           <IntegrationEditorChooseAction
                             i18nTitle={`${connection.name} - Choose Action`}
@@ -85,7 +78,10 @@ export class SelectActionPage extends React.Component {
                               'Choose an action for the selected connectionName.'
                             }
                           >
-                            {data.actionsWithTo
+                            {(positionAsNumber > 0
+                              ? data.actionsWithTo
+                              : data.actionsWithFrom
+                            )
                               .sort((a, b) => a.name.localeCompare(b.name))
                               .map((a, idx) => (
                                 <IntegrationEditorActionsListItem
@@ -96,14 +92,10 @@ export class SelectActionPage extends React.Component {
                                   }
                                   actions={
                                     <ButtonLink
-                                      href={resolvers.integration.edit.addStep.configureAction(
-                                        {
-                                          actionId: a.id!,
-                                          connection,
-                                          flow,
-                                          integration,
-                                          position,
-                                        }
+                                      href={this.props.selectHref(
+                                        a.id!,
+                                        { connectionId, flow, position },
+                                        { connection, integration }
                                       )}
                                     >
                                       Select
@@ -113,12 +105,9 @@ export class SelectActionPage extends React.Component {
                               ))}
                           </IntegrationEditorChooseAction>
                         }
-                        cancelHref={resolvers.integration.edit.index({
-                          flow,
-                          integration,
-                        })}
-                        backHref={resolvers.integration.edit.addStep.selectStep(
-                          { flow, position, integration }
+                        cancelHref={this.props.cancelHref(
+                          { connectionId, flow, position },
+                          { connection, integration }
                         )}
                       />
                     </>

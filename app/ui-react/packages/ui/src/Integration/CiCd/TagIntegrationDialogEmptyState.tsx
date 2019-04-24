@@ -1,9 +1,10 @@
+import * as H from 'history';
 import { EmptyState } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../Layout';
 
 export interface ITagIntegrationDialogEmptyStateProps {
-  href: string;
+  href: H.LocationDescriptor;
   i18nTitle: string;
   i18nInfo: string;
   i18nGoToManageCiCdButtonText: string;

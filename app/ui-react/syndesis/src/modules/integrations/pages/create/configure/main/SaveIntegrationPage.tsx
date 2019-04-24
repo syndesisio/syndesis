@@ -6,12 +6,12 @@ import * as React from 'react';
 import { PageTitle } from '../../../../../../shared';
 import { ISaveForm } from '../../../../../connections/pages/create/ReviewPage';
 import { IntegrationCreatorBreadcrumbs } from '../../../../components';
-import resolvers from '../../../../resolvers';
 import {
   ISaveIntegrationForm,
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState,
-} from '../../../editorInterfaces';
+} from '../../../../components/editor/interfaces';
+import resolvers from '../../../../resolvers';
 
 /**
  * This page asks for the details of the integration, and saves it.

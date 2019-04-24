@@ -112,7 +112,7 @@ export class StartConfigurationPage extends React.Component {
                       flow: '0',
                       integration,
                       position: '0',
-                      step: stepAsNumber + 1,
+                      step: `${stepAsNumber + 1}`,
                       updatedIntegration,
                     })
                   );

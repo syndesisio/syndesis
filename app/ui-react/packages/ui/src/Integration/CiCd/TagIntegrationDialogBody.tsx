@@ -1,3 +1,4 @@
+import * as H from 'history';
 import * as React from 'react';
 import { CiCdList } from './CiCdList';
 import { ITagIntegrationEntry } from './CiCdUIModels';
@@ -5,7 +6,7 @@ import { TagIntegrationDialogEmptyState } from './TagIntegrationDialogEmptyState
 import { TagIntegrationListItem } from './TagIntegrationListItem';
 
 export interface ITagIntegrationDialogBodyProps {
-  manageCiCdHref: string;
+  manageCiCdHref: H.LocationDescriptor;
   initialItems: ITagIntegrationEntry[];
   onChange: (
     items: ITagIntegrationEntry[],

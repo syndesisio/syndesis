@@ -13,11 +13,11 @@ import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorSidebar,
 } from '../../../../components';
-import resolvers from '../../../../resolvers';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
-} from '../../../editorInterfaces';
+} from '../../../../components/editor/interfaces';
+import resolvers from '../../../../resolvers';
 
 /**
  * This page shows the list of connections containing actions with a **to**

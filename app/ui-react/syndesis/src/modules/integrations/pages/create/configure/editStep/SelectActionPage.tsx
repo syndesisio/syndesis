@@ -13,11 +13,11 @@ import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorSidebar,
 } from '../../../../components';
-import resolvers from '../../../../resolvers';
 import {
   ISelectActionRouteParams,
   ISelectActionRouteState,
-} from '../../../editorInterfaces';
+} from '../../../../components/editor/interfaces';
+import resolvers from '../../../../resolvers';
 
 /**
  * This page shows the list of actions of a connection containing either a

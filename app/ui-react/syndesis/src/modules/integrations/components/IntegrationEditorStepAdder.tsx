@@ -18,7 +18,7 @@ export interface IIntegrationEditorStepAdderProps {
    * clicking the Add Connection button
    * @param idx - the zero-based index where a new connection should be added
    */
-  addStepHref(idx: number): H.LocationDescriptor;
+  addStepHref: (idx: number) => H.LocationDescriptor;
   /**
    * a callback to get the `LocationDescriptor` that should be reached when
    * clicking the Edit Step button
@@ -27,7 +27,7 @@ export interface IIntegrationEditorStepAdderProps {
    * @param step - the integration step object that should be edited
    */
   // tslint:disable-next-line:react-unused-props-and-state
-  configureStepHref(stepIdx: number, step: Step): H.LocationDescriptor;
+  configureStepHref: (stepIdx: number, step: Step) => H.LocationDescriptor;
 }
 
 /**

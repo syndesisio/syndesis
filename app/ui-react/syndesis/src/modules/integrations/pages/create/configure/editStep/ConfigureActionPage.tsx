@@ -7,15 +7,15 @@ import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorSidebar,
 } from '../../../../components';
+import {
+  IConfigureActionRouteParams,
+  IConfigureActionRouteState,
+} from '../../../../components/editor/interfaces';
 import resolvers from '../../../../resolvers';
 import {
   IOnUpdatedIntegrationProps,
   WithConfigurationForm,
 } from '../../../../shared';
-import {
-  IConfigureActionRouteParams,
-  IConfigureActionRouteState,
-} from '../../../editorInterfaces';
 
 /**
  * This page shows the configuration form for a given action. It's supposed to
@@ -74,7 +74,7 @@ export class ConfigureActionPage extends React.Component {
                       flow,
                       integration,
                       position,
-                      step: stepAsNumber + 1,
+                      step: `${stepAsNumber + 1}`,
                       updatedIntegration,
                     })
                   );

@@ -7,8 +7,11 @@ import {
   IntegrationCreatorBreadcrumbs,
   IntegrationEditorStepAdder,
 } from '../../../../components';
+import {
+  IBaseRouteParams,
+  IBaseRouteState,
+} from '../../../../components/editor/interfaces';
 import resolvers from '../../../../resolvers';
-import { IBaseRouteParams, IBaseRouteState } from '../../../editorInterfaces';
 import {
   getCreateAddStepHref,
   getCreateConfigureStepHrefCallback,

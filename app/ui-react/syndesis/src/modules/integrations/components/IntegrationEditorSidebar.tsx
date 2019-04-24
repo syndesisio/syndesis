@@ -1,3 +1,4 @@
+import { getConnectionIcon } from '@syndesis/api';
 import { Step } from '@syndesis/models';
 import {
   IntegrationFlowStepGeneric,
@@ -72,8 +73,7 @@ export class IntegrationEditorSidebar extends React.Component<
         {({ expanded }) =>
           this.props.steps.map((s, idx) => {
             const isActive = idx === this.props.activeIndex;
-            const hasAddStep =
-              this.props.addAtIndex && idx < this.props.steps.length - 1;
+            const hasAddStep = this.props.addAtIndex === idx + 1;
             const isAfterActiveAddStep = this.props.addAtIndex! - 1 < idx;
             const position = isAfterActiveAddStep ? idx + 2 : idx + 1;
 
@@ -92,7 +92,14 @@ export class IntegrationEditorSidebar extends React.Component<
                 {s.stepKind === 'endpoint' && (
                   <IntegrationFlowStepWithOverview
                     icon={
-                      <img src={s.connection!.icon} width={24} height={24} />
+                      <img
+                        src={getConnectionIcon(
+                          process.env.PUBLIC_URL,
+                          s.connection!
+                        )}
+                        width={24}
+                        height={24}
+                      />
                     }
                     i18nTitle={`${position}. ${s.action!.name}`}
                     i18nTooltip={`${position}. ${s.action!.name}`}

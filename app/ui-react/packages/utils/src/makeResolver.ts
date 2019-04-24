@@ -40,5 +40,8 @@ export function makeResolver<T, P = any, S = any>(
  * @param route
  */
 export function makeResolverNoParams(route: string) {
-  return () => reverse(route);
+  return (): IResolvedRoute<null, null> => ({
+    pathname: reverse(route),
+    route,
+  });
 }

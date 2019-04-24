@@ -1,4 +1,5 @@
 import { getSteps, WithConnections } from '@syndesis/api';
+import { ConnectionOverview, Step } from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorChooseConnection,
@@ -7,17 +8,27 @@ import {
   IntegrationsListSkeleton,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
+import * as H from 'history';
 import * as React from 'react';
-import { ApiError, PageTitle } from '../../../../../../shared';
-import {
-  IntegrationEditorBreadcrumbs,
-  IntegrationEditorSidebar,
-} from '../../../../components';
-import resolvers from '../../../../resolvers';
+import { ApiError, PageTitle } from '../../../../shared';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
-} from '../../../editorInterfaces';
+} from './interfaces';
+
+export interface ISelectConnectionPageProps {
+  cancelHref: (
+    p: ISelectConnectionRouteParams,
+    s: ISelectConnectionRouteState
+  ) => H.LocationDescriptor;
+  header: React.ReactNode;
+  selectHref: (
+    connection: ConnectionOverview,
+    p: ISelectConnectionRouteParams,
+    s: ISelectConnectionRouteState
+  ) => H.LocationDescriptor;
+  sidebar: (props: { steps: Step[]; activeIndex: number }) => React.ReactNode;
+}
 
 /**
  * This page shows the list of connections containing actions with a **to**
@@ -30,26 +41,24 @@ import {
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
  */
-export class SelectConnectionPage extends React.Component {
+export class SelectConnectionPage extends React.Component<
+  ISelectConnectionPageProps
+> {
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
         {({ flow, position }, { integration }) => {
+          const flowAsNumber = parseInt(flow, 10);
           const positionAsNumber = parseInt(position, 10);
           return (
             <>
               <PageTitle title={'Choose a connection'} />
               <IntegrationEditorLayout
-                header={<IntegrationEditorBreadcrumbs step={1} />}
-                sidebar={
-                  <IntegrationEditorSidebar
-                    steps={getSteps(integration, 0)}
-                    addAtIndex={positionAsNumber}
-                    addI18nTitle={`${positionAsNumber + 1}. Start`}
-                    addI18nTooltip={'Start'}
-                    addI18nDescription={'Choose a connection'}
-                  />
-                }
+                header={this.props.header}
+                sidebar={this.props.sidebar({
+                  activeIndex: positionAsNumber,
+                  steps: getSteps(integration, flowAsNumber),
+                })}
                 content={
                   <WithConnections>
                     {({ data, hasData, error }) => (
@@ -79,13 +88,10 @@ export class SelectConnectionPage extends React.Component {
                                   }
                                   actions={
                                     <ButtonLink
-                                      href={resolvers.integration.edit.addStep.stepSwitcher(
-                                        {
-                                          connection: c,
-                                          flow,
-                                          integration,
-                                          position,
-                                        }
+                                      href={this.props.selectHref(
+                                        c,
+                                        { flow, position },
+                                        { integration }
                                       )}
                                     >
                                       Select
@@ -110,10 +116,10 @@ export class SelectConnectionPage extends React.Component {
                     )}
                   </WithConnections>
                 }
-                cancelHref={resolvers.integration.edit.index({
-                  flow,
-                  integration,
-                })}
+                cancelHref={this.props.cancelHref(
+                  { flow, position },
+                  { integration }
+                )}
               />
             </>
           );

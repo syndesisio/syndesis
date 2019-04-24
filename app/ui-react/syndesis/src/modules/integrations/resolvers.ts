@@ -1,8 +1,24 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import { getStep } from '@syndesis/api';
-import { Action, ConnectionOverview, Integration } from '@syndesis/models';
-import { Step } from '@syndesis/models/src';
+import {
+  Action,
+  ConnectionOverview,
+  Integration,
+  Step,
+} from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
+import {
+  IBaseRouteParams,
+  IBaseRouteState,
+  IConfigureActionRouteParams,
+  IConfigureActionRouteState,
+  ISaveIntegrationRouteParams,
+  ISaveIntegrationRouteState,
+  ISelectActionRouteParams,
+  ISelectActionRouteState,
+  ISelectConnectionRouteParams,
+  ISelectConnectionRouteState,
+} from './components/editor/interfaces';
 import {
   IFinishActionRouteParams,
   IFinishActionRouteState,
@@ -24,18 +40,6 @@ import {
   IMetricsPageParams,
   IMetricsPageState,
 } from './pages/detail';
-import {
-  IBaseRouteParams,
-  IBaseRouteState,
-  IConfigureActionRouteParams,
-  IConfigureActionRouteState,
-  ISaveIntegrationRouteParams,
-  ISaveIntegrationRouteState,
-  ISelectActionRouteParams,
-  ISelectActionRouteState,
-  ISelectConnectionRouteParams,
-  ISelectConnectionRouteState,
-} from './pages/editorInterfaces';
 import routes from './routes';
 
 interface IEditorIndex {
@@ -53,7 +57,7 @@ interface IEditorSelectAction extends IEditorSelectConnection {
 
 interface IEditorConfigureAction extends IEditorSelectAction {
   actionId: string;
-  step?: number;
+  step?: string;
   updatedIntegration?: Integration;
 }
 
@@ -224,7 +228,7 @@ export const createFinishConfigureActionResolver = makeResolver<
     startAction: Action;
     finishConnection: ConnectionOverview;
     actionId: string;
-    step?: number;
+    step?: string;
   },
   IFinishConfigurationPageRouteParams,
   IFinishConfigurationPageRouteState

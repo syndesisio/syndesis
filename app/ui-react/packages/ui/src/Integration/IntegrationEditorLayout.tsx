@@ -32,9 +32,9 @@ import './IntegrationEditorLayout.css';
  * 'Done'.
  */
 export interface IIntegrationEditorLayoutProps {
-  header: JSX.Element;
-  sidebar?: JSX.Element;
-  content: JSX.Element;
+  header: React.ReactNode;
+  sidebar?: React.ReactNode;
+  content: React.ReactNode;
   onCancel?: (e: React.MouseEvent<any>) => void;
   onBack?: (e: React.MouseEvent<any>) => void;
   onNext?: (e: React.MouseEvent<any>) => void;

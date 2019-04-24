@@ -1,3 +1,4 @@
+import * as H from 'history';
 import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -5,10 +6,10 @@ import { ButtonLink, Container } from '../Layout';
 import './Dashboard.css';
 
 export interface IIntegrationsPageProps {
-  linkToIntegrations: string;
-  linkToIntegrationCreation: string;
-  linkToConnections: string;
-  linkToConnectionCreation: string;
+  linkToIntegrations: H.LocationDescriptor;
+  linkToIntegrationCreation: H.LocationDescriptor;
+  linkToConnections: H.LocationDescriptor;
+  linkToConnectionCreation: H.LocationDescriptor;
   integrationsOverview: JSX.Element;
   connectionsOverview: JSX.Element;
   messagesOverview: JSX.Element;
