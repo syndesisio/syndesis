@@ -55,7 +55,6 @@ export interface IFormDefinitionProperty {
   enum?: IFormPropertyValue[];
   generator?: string;
   placeholder?: string;
-  javaType?: string;
   connectorValue?: string;
   relation?: IFormPropertyRelation[];
   controlHint?: string;

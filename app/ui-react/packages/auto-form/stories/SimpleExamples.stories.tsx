@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { text, withKnobs } from '@storybook/addon-knobs';
+import { number, text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { AutoForm } from '../src';
@@ -253,6 +253,55 @@ stories.add('Select', () => (
       )}
       initialValue={{
         SomeField: 'three',
+      }}
+      validate={action('validate')}
+      onSave={action('onSave')}
+    >
+      {({ fields, handleSubmit }) => (
+        <>
+          {fields}
+          <button
+            type="button"
+            className="btn btn-primary"
+            onClick={handleSubmit}
+          >
+            Submit
+          </button>
+        </>
+      )}
+    </AutoForm>
+  </StoryWrapper>
+));
+
+stories.add('Duration', () => (
+  <StoryWrapper>
+    <AutoForm
+      definition={{
+        duration1: {
+          displayName: 'Duration 1',
+          labelHint: 'This is shown for the label hint text',
+          type: 'duration',
+        },
+        duration2: {
+          description: 'Some description so the help text is filled in',
+          displayName: 'Duration 2',
+          labelHint: 'This is shown for the label hint text',
+          type: 'duration',
+        },
+        duration3: {
+          displayName: 'Duration 3',
+          labelHint: 'This is shown for the label hint text',
+          type: 'duration',
+        },
+      }}
+      i18nRequiredProperty={text(
+        'i18nRequiredProperty',
+        'This property is required'
+      )}
+      initialValue={{
+        duration1: number('Duration 1', 642343),
+        duration2: number('Duration 2', 100),
+        duration3: number('Duration 3', 60000),
       }}
       validate={action('validate')}
       onSave={action('onSave')}

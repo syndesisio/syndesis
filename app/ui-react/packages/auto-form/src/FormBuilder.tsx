@@ -3,6 +3,7 @@ import * as React from 'react';
 import { IFormDefinition, IFormDefinitionProperty } from './models';
 import {
   FormCheckboxComponent,
+  FormDurationComponent,
   FormHiddenComponent,
   FormInputComponent,
   FormSelectComponent,
@@ -47,6 +48,7 @@ export class FormBuilder<T> extends React.Component<
     const type = this.massageType(props.property);
     const componentTypemaps = {
       checkbox: FormCheckboxComponent,
+      duration: FormDurationComponent,
       hidden: FormHiddenComponent,
       select: FormSelectComponent,
       textarea: FormTextAreaComponent,

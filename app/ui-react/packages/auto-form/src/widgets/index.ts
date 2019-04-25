@@ -3,3 +3,4 @@ export * from './FormSelectComponent';
 export * from './FormTextAreaComponent';
 export * from './FormCheckboxComponent';
 export * from './FormHiddenComponent';
+export * from './FormDurationComponent';

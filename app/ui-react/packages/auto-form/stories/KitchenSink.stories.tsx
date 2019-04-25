@@ -131,6 +131,12 @@ const formDefinition = {
     secret: false,
     type: 'string',
   },
+  someDuration: {
+    description: 'How often to poll for updates',
+    displayName: 'Polling Time',
+    order: 3,
+    type: 'duration',
+  },
   username: {
     componentProperty: true,
     deprecated: false,
@@ -152,6 +158,7 @@ export const initialValue = {
   password:
     '»ENC:c4b1c3818185a78d61f31d3b2bcba791d0e1dc6c5e691f4bf25f8513d6ee999b',
   skipCertificateCheck: 'false',
+  someDuration: 45000,
   username: 'blah',
 };
 

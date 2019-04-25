@@ -8,7 +8,7 @@ export interface IStoryWrapperProps {
 export class StoryWrapper extends React.Component<IStoryWrapperProps> {
   public render() {
     return (
-      <body className="cards-pf">
+      <div className="cards-pf">
         <CardGrid>
           <CardGrid.Row style={{ marginBottom: '20px', marginTop: '20px' }}>
             <CardGrid.Col xs={12} md={12}>
@@ -18,7 +18,7 @@ export class StoryWrapper extends React.Component<IStoryWrapperProps> {
             </CardGrid.Col>
           </CardGrid.Row>
         </CardGrid>
-      </body>
+      </div>
     );
   }
 }
