@@ -1,10 +1,18 @@
 import {
+  canActivate,
+  canDeactivate,
+  canEdit,
   getSteps,
   WithIntegration,
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import { Integration } from '@syndesis/models';
 import {
+  ConfirmationButtonStyle,
+  ConfirmationDialog,
+  ConfirmationIconType,
+  IIntegrationAction,
+  IntegrationActions,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
   IntegrationDetailHistoryListViewItem,
@@ -15,18 +23,36 @@ import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { IntegrationDetailSteps } from '../../../components';
+import resolvers from '../../../resolvers';
 import { IntegrationDetailNavBar } from '../../../shared';
 
 /**
  * @integrationId - the ID of the integration for which details are being displayed.
  */
-export interface IDetailsPageParams {
+export interface IDetailsPageProps {
+  error: boolean;
   integration: Integration;
   integrationId: string;
+  loading: boolean;
 }
 
 export interface IDetailsPageState {
+  handleAction?: () => void;
   integration?: Integration;
+  promptDialogButtonText?: string;
+  promptDialogIcon?: ConfirmationIconType;
+  promptDialogText?: string;
+  promptDialogTitle?: string;
+  showPromptDialog: boolean;
+}
+
+interface IPromptActionOptions {
+  promptDialogButtonStyle: ConfirmationButtonStyle;
+  promptDialogButtonText: string;
+  promptDialogIcon: ConfirmationIconType;
+  promptDialogText: string;
+  promptDialogTitle: string;
+  handleAction: () => void;
 }
 
 /**
@@ -36,14 +62,57 @@ export interface IDetailsPageState {
  * or an integration object set via the state.
  *
  */
-export class DetailsPage extends React.Component {
+export class DetailsPage extends React.Component<
+  IDetailsPageProps,
+  IDetailsPageState
+> {
+  public constructor(props: IDetailsPageProps) {
+    super(props);
+    this.state = {
+      showPromptDialog: false,
+    };
+    this.handleAction = this.handleAction.bind(this);
+    this.handleActionCancel = this.handleActionCancel.bind(this);
+    this.promptForAction = this.promptForAction.bind(this);
+  }
+
+  public handleActionCancel() {
+    this.setState({
+      showPromptDialog: false,
+    });
+  }
+
+  public handleAction() {
+    const action = this.state.handleAction;
+    this.setState({
+      showPromptDialog: false,
+    });
+    if (typeof action === 'function') {
+      action.apply(this);
+    } else {
+      throw Error('Undefined action set for confirmation dialog');
+    }
+  }
+
+  public promptForAction(options: IPromptActionOptions) {
+    this.setState({
+      ...options,
+      showPromptDialog: true,
+    });
+  }
+
   public render() {
     return (
-      <WithRouteData<IDetailsPageParams, IDetailsPageState>>
+      <WithRouteData<IDetailsPageProps, IDetailsPageState>>
         {({ integrationId }, { integration }, { history }) => {
           return (
             <WithIntegrationHelpers>
-              {({}) => {
+              {({
+                deleteIntegration,
+                deployIntegration,
+                exportIntegration,
+                undeployIntegration,
+              }) => {
                 return (
                   <WithIntegration
                     integrationId={integrationId}
@@ -59,48 +128,175 @@ export class DetailsPage extends React.Component {
                         {() => (
                           <div>
                             <Translation ns={['integrations', 'shared']}>
-                              {t => (
-                                <>
-                                  <IntegrationDetailInfo
-                                    name={data.name}
-                                    version={data.version}
-                                  />
-                                  <IntegrationDetailNavBar integration={data} />
-                                  <IntegrationDetailSteps
-                                    steps={getSteps(data, 0)}
-                                  />
-                                  <IntegrationDetailDescription
-                                    description={data.description}
-                                    i18nNoDescription={t(
-                                      'integrations:detail:noDescription'
-                                    )}
-                                  />
-                                  <IntegrationDetailHistoryListView
-                                    integrationIsDraft={false}
-                                    i18nTextBtnEdit={t('shared:Edit')}
-                                    i18nTextBtnPublish={t('shared:Publish')}
-                                    i18nTextDraft={t('shared:Draft')}
-                                    i18nTextHistory={t(
-                                      'integrations:detail:History'
-                                    )}
-                                  >
-                                    <IntegrationDetailHistoryListViewItem
-                                      i18nTextHistoryMenuReplaceDraft={t(
-                                        'integrations:detail:replaceDraft'
-                                      )}
-                                      i18nTextHistoryMenuUnpublish={t(
-                                        'shared:Unpublish'
-                                      )}
-                                      i18nTextLastPublished={t(
-                                        'integrations:detail:lastPublished'
-                                      )}
-                                      i18nTextVersion={t('shared:Version')}
-                                      integrationUpdatedAt={data.updatedAt}
-                                      integrationVersion={data.version}
+                              {t => {
+                                const editAction: IIntegrationAction = {
+                                  href: resolvers.integration.edit.index({
+                                    integration: data,
+                                  }),
+                                  label: 'Edit',
+                                };
+                                const startAction: IIntegrationAction = {
+                                  label: 'Start',
+                                  onClick: () =>
+                                    this.promptForAction({
+                                      handleAction: () =>
+                                        deployIntegration(
+                                          data.id!,
+                                          data.version!,
+                                          false
+                                        ),
+                                      promptDialogButtonStyle:
+                                        ConfirmationButtonStyle.NORMAL,
+                                      promptDialogButtonText: t('shared:Start'),
+                                      promptDialogIcon:
+                                        ConfirmationIconType.NONE,
+                                      promptDialogText: t(
+                                        'integrations:publishIntegrationModal',
+                                        { name: data.name }
+                                      ),
+                                      promptDialogTitle: t(
+                                        'integrations:publishIntegrationModalTitle'
+                                      ),
+                                    } as IPromptActionOptions),
+                                };
+                                const stopAction: IIntegrationAction = {
+                                  label: 'Stop',
+                                  onClick: () =>
+                                    this.promptForAction({
+                                      handleAction: () =>
+                                        undeployIntegration(
+                                          data.id!,
+                                          data.version!
+                                        ),
+                                      promptDialogButtonStyle:
+                                        ConfirmationButtonStyle.NORMAL,
+                                      promptDialogButtonText: t('shared:Stop'),
+                                      promptDialogIcon:
+                                        ConfirmationIconType.NONE,
+                                      promptDialogText: t(
+                                        'integrations:unpublishIntegrationModal',
+                                        { name: data.name }
+                                      ),
+                                      promptDialogTitle: t(
+                                        'integrations:unpublishIntegrationModalTitle'
+                                      ),
+                                    } as IPromptActionOptions),
+                                };
+                                const deleteAction: IIntegrationAction = {
+                                  label: 'Delete',
+                                  onClick: () =>
+                                    this.promptForAction({
+                                      handleAction: () =>
+                                        deleteIntegration(data.id!),
+                                      promptDialogButtonStyle:
+                                        ConfirmationButtonStyle.DANGER,
+                                      promptDialogButtonText: t(
+                                        'shared:Delete'
+                                      ),
+                                      promptDialogIcon:
+                                        ConfirmationIconType.DANGER,
+                                      promptDialogText: t(
+                                        'integrations:deleteIntegrationModal',
+                                        { name: data.name }
+                                      ),
+                                      promptDialogTitle: t(
+                                        'integrations:deleteIntegrationModalTitle'
+                                      ),
+                                    } as IPromptActionOptions),
+                                };
+                                const exportAction: IIntegrationAction = {
+                                  label: 'Export',
+                                  onClick: () =>
+                                    exportIntegration(
+                                      data.id!,
+                                      `${data.name}-export.zip`
+                                    ),
+                                };
+
+                                const actions: IIntegrationAction[] = [];
+                                if (canEdit(data)) {
+                                  actions.push(editAction);
+                                }
+                                if (canActivate(data)) {
+                                  actions.push(startAction);
+                                }
+                                if (canDeactivate(data)) {
+                                  actions.push(stopAction);
+                                }
+                                actions.push(deleteAction);
+                                actions.push(exportAction);
+
+                                return (
+                                  <>
+                                    <ConfirmationDialog
+                                      buttonStyle={
+                                        ConfirmationButtonStyle.NORMAL
+                                      }
+                                      i18nCancelButtonText={t('shared:Cancel')}
+                                      i18nConfirmButtonText={
+                                        this.state.promptDialogButtonText!
+                                      }
+                                      i18nConfirmationMessage={
+                                        this.state.promptDialogText!
+                                      }
+                                      i18nTitle={this.state.promptDialogTitle!}
+                                      icon={this.state.promptDialogIcon!}
+                                      showDialog={this.state.showPromptDialog}
+                                      onCancel={this.handleActionCancel}
+                                      onConfirm={this.handleAction}
                                     />
-                                  </IntegrationDetailHistoryListView>
-                                </>
-                              )}
+                                    <IntegrationDetailInfo
+                                      name={data.name}
+                                      version={data.version}
+                                    />
+                                    <IntegrationDetailNavBar
+                                      integration={data}
+                                    />
+                                    <IntegrationDetailSteps
+                                      steps={getSteps(data, 0)}
+                                    />
+                                    <IntegrationDetailDescription
+                                      description={data.description}
+                                      i18nNoDescription={t(
+                                        'integrations:detail:noDescription'
+                                      )}
+                                    />
+                                    <IntegrationDetailHistoryListView
+                                      integrationIsDraft={false}
+                                      i18nTextBtnEdit={t('shared:Edit')}
+                                      i18nTextBtnPublish={t('shared:Publish')}
+                                      i18nTextDraft={t('shared:Draft')}
+                                      i18nTextHistory={t(
+                                        'integrations:detail:History'
+                                      )}
+                                    >
+                                      <IntegrationDetailHistoryListViewItem
+                                        actions={
+                                          <IntegrationActions
+                                            integrationId={data!.id!}
+                                            actions={actions}
+                                            detailsHref={resolvers.integration.details(
+                                              { integration: data }
+                                            )}
+                                          />
+                                        }
+                                        i18nTextHistoryMenuReplaceDraft={t(
+                                          'integrations:detail:replaceDraft'
+                                        )}
+                                        i18nTextHistoryMenuUnpublish={t(
+                                          'shared:Unpublish'
+                                        )}
+                                        i18nTextLastPublished={t(
+                                          'integrations:detail:lastPublished'
+                                        )}
+                                        i18nTextVersion={t('shared:Version')}
+                                        integrationUpdatedAt={data.updatedAt}
+                                        integrationVersion={data.version}
+                                      />
+                                    </IntegrationDetailHistoryListView>
+                                  </>
+                                );
+                              }}
                             </Translation>
                           </div>
                         )}

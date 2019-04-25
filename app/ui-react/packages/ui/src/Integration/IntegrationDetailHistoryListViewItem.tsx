@@ -1,13 +1,8 @@
-import {
-  DropdownKebab,
-  ListView,
-  ListViewInfoItem,
-  ListViewItem,
-  MenuItem,
-} from 'patternfly-react';
+import { ListView, ListViewInfoItem, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
+  actions: any;
   /**
    * The last date the integration was updated.
    */
@@ -40,18 +35,12 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
   public render() {
     return (
       <ListViewItem
-        key={1}
+        actions={this.props.actions}
         heading={
           <span>
             {<span>{this.props.i18nTextVersion}:</span>}{' '}
             {this.props.integrationVersion}
           </span>
-        }
-        actions={
-          <DropdownKebab id="historyactions" pullRight={true}>
-            <MenuItem>{this.props.i18nTextHistoryMenuReplaceDraft}</MenuItem>
-            <MenuItem>{this.props.i18nTextHistoryMenuUnpublish}</MenuItem>
-          </DropdownKebab>
         }
         additionalInfo={[
           <ListViewInfoItem key={1}>
