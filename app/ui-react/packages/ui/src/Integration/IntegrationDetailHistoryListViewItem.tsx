@@ -12,14 +12,6 @@ export interface IIntegrationDetailHistoryListViewItemProps {
    */
   integrationVersion?: number;
   /**
-   * The localized text for the menu item to replace the integration draft.
-   */
-  i18nTextHistoryMenuReplaceDraft?: string;
-  /**
-   * The localized text for the menu item to unpublish the integration.
-   */
-  i18nTextHistoryMenuUnpublish?: string;
-  /**
    * The localized text for displaying the last published date.
    */
   i18nTextLastPublished?: string;

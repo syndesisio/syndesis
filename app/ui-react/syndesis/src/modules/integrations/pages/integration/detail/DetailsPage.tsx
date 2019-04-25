@@ -6,7 +6,7 @@ import {
   WithIntegration,
   WithIntegrationHelpers,
 } from '@syndesis/api';
-import { Integration } from '@syndesis/models';
+import { IntegrationOverview } from '@syndesis/models';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
@@ -31,14 +31,14 @@ import { IntegrationDetailNavBar } from '../../../shared';
  */
 export interface IDetailsPageProps {
   error: boolean;
-  integration: Integration;
+  integration: IntegrationOverview;
   integrationId: string;
   loading: boolean;
 }
 
 export interface IDetailsPageState {
   handleAction?: () => void;
-  integration?: Integration;
+  integration?: IntegrationOverview;
   promptDialogButtonText?: string;
   promptDialogIcon?: ConfirmationIconType;
   promptDialogText?: string;
@@ -262,7 +262,7 @@ export class DetailsPage extends React.Component<
                                       )}
                                     />
                                     <IntegrationDetailHistoryListView
-                                      integrationIsDraft={false}
+                                      integrationIsDraft={data.draft!}
                                       i18nTextBtnEdit={t('shared:Edit')}
                                       i18nTextBtnPublish={t('shared:Publish')}
                                       i18nTextDraft={t('shared:Draft')}
@@ -270,29 +270,44 @@ export class DetailsPage extends React.Component<
                                         'integrations:detail:History'
                                       )}
                                     >
-                                      <IntegrationDetailHistoryListViewItem
-                                        actions={
-                                          <IntegrationActions
-                                            integrationId={data!.id!}
-                                            actions={actions}
-                                            detailsHref={resolvers.integration.details(
-                                              { integration: data }
-                                            )}
-                                          />
-                                        }
-                                        i18nTextHistoryMenuReplaceDraft={t(
-                                          'integrations:detail:replaceDraft'
-                                        )}
-                                        i18nTextHistoryMenuUnpublish={t(
-                                          'shared:Unpublish'
-                                        )}
-                                        i18nTextLastPublished={t(
-                                          'integrations:detail:lastPublished'
-                                        )}
-                                        i18nTextVersion={t('shared:Version')}
-                                        integrationUpdatedAt={data.updatedAt}
-                                        integrationVersion={data.version}
-                                      />
+                                      {() =>
+                                        data.deployments.map(
+                                          (deployment, idx) => {
+                                            return (
+                                              <IntegrationDetailHistoryListViewItem
+                                                key={idx}
+                                                actions={
+                                                  <IntegrationActions
+                                                    integrationId={data!.id!}
+                                                    actions={actions}
+                                                    detailsHref={resolvers.integration.details(
+                                                      { integration: data }
+                                                    )}
+                                                  />
+                                                }
+                                                i18nTextHistoryMenuReplaceDraft={t(
+                                                  'integrations:detail:replaceDraft'
+                                                )}
+                                                i18nTextHistoryMenuUnpublish={t(
+                                                  'shared:Unpublish'
+                                                )}
+                                                i18nTextLastPublished={t(
+                                                  'integrations:detail:lastPublished'
+                                                )}
+                                                i18nTextVersion={t(
+                                                  'shared:Version'
+                                                )}
+                                                integrationUpdatedAt={
+                                                  deployment!.updatedAt!
+                                                }
+                                                integrationVersion={
+                                                  data.version
+                                                }
+                                              />
+                                            );
+                                          }
+                                        )
+                                      }
                                     </IntegrationDetailHistoryListView>
                                   </>
                                 );
