@@ -4,7 +4,9 @@ import {
   IntegrationOverview,
   Step,
 } from '@syndesis/models';
+import { key } from '@syndesis/utils';
 import produce from 'immer';
+import { getConnectionIcon } from './connectionFunctions';
 
 export const NEW_INTEGRATION = {
   name: '',
@@ -17,7 +19,15 @@ export const NEW_INTEGRATION = {
  * @todo make the returned object immutable to avoid uncontrolled changes
  */
 export function getEmptyIntegration(): Integration {
-  return NEW_INTEGRATION;
+  return produce(NEW_INTEGRATION, draft => {
+    draft.flows = [
+      {
+        id: key(),
+        name: '',
+        steps: [],
+      },
+    ];
+  });
 }
 
 /**
@@ -149,33 +159,7 @@ export function getStepIcon(
   // The step is a connection
   if (step.connection) {
     const connection = step.connection as IConnectionWithIconFile;
-    if (
-      typeof connection.icon === 'undefined' &&
-      typeof connection.iconFile === 'undefined'
-    ) {
-      // The connection has no icon for whatever reason
-      // TODO: sensible default icon
-      return '';
-    }
-    // Connections created from the API client connector can have a custom icon file
-    if (connection.iconFile || connection.icon instanceof File) {
-      const file = connection.iconFile || connection.icon;
-      const tempIconBlobPath = URL.createObjectURL(file);
-      return tempIconBlobPath;
-    }
-    // The connection has an embedded icon
-    if (connection.icon.toLowerCase().startsWith('data:')) {
-      return connection.icon;
-    }
-    // The connection's icon is stored in the DB in some weird way
-    if (
-      connection.icon.toLowerCase().startsWith('db:') ||
-      connection.icon.toLowerCase().startsWith('extension:')
-    ) {
-      return `${apiUri}/connectors/${connection.id}/icon?${connection.icon}`;
-    }
-    // Legacy connections rely on the icon being in the UI's assets
-    return `./../../icons/${connection.icon}.connection.png`;
+    return getConnectionIcon(apiUri, connection);
   }
   // The step is an extension
   if (step.extension && step.extension.icon) {

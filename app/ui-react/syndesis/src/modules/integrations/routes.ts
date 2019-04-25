@@ -2,19 +2,40 @@
 import { include } from 'named-urls';
 
 const stepRoutes = {
-  selectConnection: '',
-  selectAction: `:connectionId`,
-  configureAction: `:connectionId/action::actionId/step::step?`,
+  // step 1
+  selectStep: '',
+  // if selected step is api provider
+  apiProvider: include('api-provider', {
+    specification: 'specification',
+    review: 'review',
+    edit: 'edit',
+    save: 'save',
+  }),
+  // if selected step kind is data mapper
+  dataMapper: 'mapper',
+  // if selected step kind is basic filter
+  basicFilter: 'filter',
+  // if selected step kind is template
+  template: 'template',
+  // if selected step kind is step
+  step: 'step',
+  // if selected step kind is endpoint
+  connection: include('connection/:connectionId', {
+    selectAction: 'action',
+    configureAction: 'action/:actionId/step/:step',
+    // if 'any' data shape
+    describeData: 'describe-data/:position/:direction(input|output)',
+  }),
 };
 
 /**
  * Both the integration creator and editor share the same routes when the creator
  * reaches the third step in the wizard. This object is to keep them DRY.
  */
-const editorRoutes = include('flow::flow', {
+const editorRoutes = include('flow/:flow', {
   index: 'add-step',
-  addStep: include('position::position/connection', stepRoutes),
-  editStep: include('position::position/edit-connection', stepRoutes),
+  addStep: include('position/:position/connection', stepRoutes),
+  editStep: include('position/:position/edit-connection', stepRoutes),
   saveAndPublish: 'save',
   root: '',
 });
@@ -24,8 +45,8 @@ export default include('/integrations', {
   manageCicd: include('manageCicd', { root: '' }),
   import: include('import', { root: '' }),
   create: include('create', {
-    start: include('start', stepRoutes),
-    finish: include('finish', stepRoutes),
+    start: include('start/flow/:flow/position/:position', stepRoutes),
+    finish: include('finish/flow/:flow/position/:position', stepRoutes),
     configure: include('configure', editorRoutes),
     root: '',
   }),

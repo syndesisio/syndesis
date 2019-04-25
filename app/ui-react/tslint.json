@@ -22,6 +22,7 @@
         "props-interface-regex": "Props$",
         "state-interface-regex": "^(?!Route)State$"
       }
-    ]
+    ],
+    "jsx-no-lambda": [ false ]
   }
 }

@@ -1,10 +1,11 @@
+import * as H from 'history';
 import * as React from 'react';
 import { ButtonLink, Container } from '../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
 
 export interface IConnectionsListViewProps extends IListViewToolbarProps {
-  linkToConnectionCreate: string;
-  i18nLinkCreateConnection: string;
+  linkToConnectionCreate: H.LocationDescriptor;
+  i18nLinkCreateConnection: H.LocationDescriptor;
 }
 
 export class ConnectionsListView extends React.Component<

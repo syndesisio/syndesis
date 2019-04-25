@@ -1,3 +1,4 @@
+import * as H from 'history';
 import {
   EmptyState,
   ListView,
@@ -12,12 +13,12 @@ export interface IExtensionListViewProps extends IListViewToolbarProps {
   i18nDescription: string;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
-  i18nLinkImportExtension: string;
-  i18nLinkImportExtensionTip?: string;
+  i18nLinkImportExtension: H.LocationDescriptor;
+  i18nLinkImportExtensionTip?: H.LocationDescriptor;
   i18nName: string;
   i18nNameFilterPlaceholder: string;
   i18nTitle: string;
-  linkImportExtension: string;
+  linkImportExtension: H.LocationDescriptor;
 }
 
 export class ExtensionListView extends React.Component<

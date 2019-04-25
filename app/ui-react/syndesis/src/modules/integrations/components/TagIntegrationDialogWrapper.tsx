@@ -7,12 +7,13 @@ import {
   TagIntegrationDialogBody,
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
+import * as H from 'history';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { ApiError } from '../../../shared';
 
 export interface ITagIntegrationDialogWrapperProps {
-  manageCiCdHref: string;
+  manageCiCdHref: H.LocationDescriptor;
   targetIntegrationId: string;
   onSave: () => void;
   onHide: () => void;

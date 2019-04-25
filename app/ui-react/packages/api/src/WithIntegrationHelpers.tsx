@@ -5,7 +5,6 @@ import {
   Integration,
   Step,
 } from '@syndesis/models';
-import { key } from '@syndesis/utils';
 import { saveAs } from 'file-saver';
 import produce from 'immer';
 import * as React from 'react';
@@ -182,30 +181,17 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       configuredProperties
     );
     return produce(integration, draft => {
-      if (!draft.flows) {
-        draft.flows = [];
-      }
-      if (!draft.flows[flow]) {
-        draft.flows[flow] = {
-          id: key(),
-          name: '',
-          steps: [],
-        };
-      }
-      if (!draft.flows[flow].steps) {
-        draft.flows[flow].steps = [];
-      }
       const step: Step = {
         action,
         configuredProperties,
         connection,
-        id: draft.flows[flow].id,
+        id: draft.flows![flow].id,
       };
       if (actionDescriptor) {
         step.action!.descriptor = actionDescriptor;
       }
       step.stepKind = 'endpoint';
-      draft.flows[flow].steps!.splice(position, 0, step);
+      draft.flows![flow].steps!.splice(position, 0, step);
       draft.tags = Array.from(new Set([...(draft.tags || []), connection.id!]));
     });
   }
@@ -282,30 +268,17 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       configuredProperties
     );
     return produce(integration, draft => {
-      if (!draft.flows) {
-        draft.flows = [];
-      }
-      if (!draft.flows[flow]) {
-        draft.flows[flow] = {
-          id: key(),
-          name: '',
-          steps: [],
-        };
-      }
-      if (!draft.flows[flow].steps) {
-        draft.flows[flow].steps = [];
-      }
       const step: Step = {
         action,
         configuredProperties,
         connection,
-        id: draft.flows[flow].id,
+        id: draft.flows![flow].id,
       };
       if (actionDescriptor) {
         step.action!.descriptor = actionDescriptor;
       }
       step.stepKind = 'endpoint';
-      draft.flows[flow].steps![position] = step;
+      draft.flows![flow].steps![position] = step;
     });
   }
   public async updateOrAddConnection(
@@ -322,33 +295,20 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       configuredProperties
     );
     return produce(integration, draft => {
-      if (!draft.flows) {
-        draft.flows = [];
-      }
-      if (!draft.flows[flow]) {
-        draft.flows[flow] = {
-          id: key(),
-          name: '',
-          steps: [],
-        };
-      }
-      if (!draft.flows[flow].steps) {
-        draft.flows[flow].steps = [];
-      }
       const step: Step = {
         action,
         configuredProperties,
         connection,
-        id: draft.flows[flow].id,
+        id: draft.flows![flow].id,
       };
       if (actionDescriptor) {
         step.action!.descriptor = actionDescriptor;
       }
       step.stepKind = 'endpoint';
-      if (draft.flows[flow].steps![position]) {
-        draft.flows[flow].steps![position] = step;
+      if (draft.flows![flow].steps![position]) {
+        draft.flows![flow].steps![position] = step;
       } else {
-        draft.flows[flow].steps!.splice(position, 0, step);
+        draft.flows![flow].steps!.splice(position, 0, step);
         draft.tags = Array.from(
           new Set([...(draft.tags || []), connection.id!])
         );

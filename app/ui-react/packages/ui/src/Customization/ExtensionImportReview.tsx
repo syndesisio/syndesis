@@ -1,3 +1,4 @@
+import * as H from 'history';
 import { Button, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, Container } from '../Layout';
@@ -17,7 +18,7 @@ export interface IExtensionImportReviewProps {
   /**
    * The href that will be navigated to when the cancel button is clicked.
    */
-  cancelLink: string;
+  cancelLink: H.LocationDescriptor;
 
   /**
    * The optional description of the extension.

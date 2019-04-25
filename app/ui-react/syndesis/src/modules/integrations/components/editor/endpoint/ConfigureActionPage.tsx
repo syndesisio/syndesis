@@ -1,21 +1,45 @@
 import { getSteps, WithIntegrationHelpers } from '@syndesis/api';
+import { Connection, Integration, Step } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
+import * as H from 'history';
 import * as React from 'react';
-import { PageTitle } from '../../../../../../shared';
-import {
-  IntegrationEditorBreadcrumbs,
-  IntegrationEditorSidebar,
-} from '../../../../components';
-import resolvers from '../../../../resolvers';
+import { PageTitle } from '../../../../../shared';
 import {
   IOnUpdatedIntegrationProps,
   WithConfigurationForm,
-} from '../../../../shared';
+} from '../../../shared';
 import {
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
-} from '../../../editorInterfaces';
+} from '../interfaces';
+
+export interface IConfigureActionPageProps {
+  backHref: (
+    p: IConfigureActionRouteParams,
+    s: IConfigureActionRouteState
+  ) => H.LocationDescriptor;
+  cancelHref: (
+    p: IConfigureActionRouteParams,
+    s: IConfigureActionRouteState
+  ) => H.LocationDescriptor;
+  header: React.ReactNode;
+  mode: 'adding' | 'editing';
+  nextStepHref: (
+    p: IConfigureActionRouteParams,
+    s: IConfigureActionRouteState
+  ) => H.LocationDescriptorObject;
+  sidebar: (props: {
+    connection: Connection;
+    steps: Step[];
+    activeIndex: number;
+  }) => React.ReactNode;
+  postConfigureHref: (
+    integration: Integration,
+    p: IConfigureActionRouteParams,
+    s: IConfigureActionRouteState
+  ) => H.LocationDescriptorObject;
+}
 
 /**
  * This page shows the configuration form for a given action.
@@ -31,11 +55,13 @@ import {
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
  */
-export class ConfigureActionPage extends React.Component {
+export class ConfigureActionPage extends React.Component<
+  IConfigureActionPageProps
+> {
   public render() {
     return (
       <WithIntegrationHelpers>
-        {({ updateConnection }) => (
+        {({ addConnection, updateConnection }) => (
           <WithRouteData<
             IConfigureActionRouteParams,
             IConfigureActionRouteState
@@ -51,38 +77,53 @@ export class ConfigureActionPage extends React.Component {
               { history }
             ) => {
               const stepAsNumber = parseInt(step, 10);
+              const flowAsNumber = parseInt(flow, 10);
               const positionAsNumber = parseInt(position, 10);
               const onUpdatedIntegration = async ({
                 action,
                 moreConfigurationSteps,
                 values,
               }: IOnUpdatedIntegrationProps) => {
-                updatedIntegration = await updateConnection(
+                updatedIntegration = await (this.props.mode === 'adding' &&
+                  stepAsNumber === 0
+                  ? addConnection
+                  : updateConnection)(
                   updatedIntegration || integration,
                   connection,
                   action,
-                  0,
+                  flowAsNumber,
                   positionAsNumber,
                   values
                 );
                 if (moreConfigurationSteps) {
                   history.push(
-                    resolvers.integration.edit.addStep.configureAction({
-                      actionId,
-                      connection,
-                      flow,
-                      integration,
-                      position,
-                      step: stepAsNumber + 1,
-                      updatedIntegration,
-                    })
+                    this.props.nextStepHref(
+                      {
+                        actionId,
+                        flow,
+                        position,
+                        step: `${stepAsNumber + 1}`,
+                      },
+                      {
+                        configuredProperties,
+                        connection,
+                        integration,
+                        updatedIntegration,
+                      }
+                    )
                   );
                 } else {
                   history.push(
-                    resolvers.integration.edit.index({
-                      flow,
-                      integration: updatedIntegration,
-                    })
+                    this.props.postConfigureHref(
+                      updatedIntegration,
+                      { actionId, flow, step, position },
+                      {
+                        configuredProperties,
+                        connection,
+                        integration,
+                        updatedIntegration,
+                      }
+                    )
                   );
                 }
               };
@@ -99,29 +140,31 @@ export class ConfigureActionPage extends React.Component {
                     <>
                       <PageTitle title={'Configure the action'} />
                       <IntegrationEditorLayout
-                        header={<IntegrationEditorBreadcrumbs step={1} />}
-                        sidebar={
-                          <IntegrationEditorSidebar
-                            steps={getSteps(
-                              updatedIntegration || integration,
-                              0
-                            )}
-                            activeIndex={positionAsNumber}
-                          />
-                        }
+                        header={this.props.header}
+                        sidebar={this.props.sidebar({
+                          activeIndex: positionAsNumber,
+                          connection,
+                          steps: getSteps(updatedIntegration || integration, 0),
+                        })}
                         content={form}
-                        backHref={resolvers.integration.edit.editStep.selectAction(
+                        backHref={this.props.backHref(
+                          { actionId, flow, step, position },
                           {
+                            configuredProperties,
                             connection,
-                            flow,
                             integration,
-                            position,
+                            updatedIntegration,
                           }
                         )}
-                        cancelHref={resolvers.integration.edit.index({
-                          flow,
-                          integration,
-                        })}
+                        cancelHref={this.props.cancelHref(
+                          { actionId, flow, step, position },
+                          {
+                            configuredProperties,
+                            connection,
+                            integration,
+                            updatedIntegration,
+                          }
+                        )}
                         onNext={submitForm}
                         isNextLoading={isSubmitting}
                       />

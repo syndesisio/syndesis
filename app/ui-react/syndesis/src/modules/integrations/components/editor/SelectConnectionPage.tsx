@@ -1,4 +1,5 @@
-import { getSteps, WithConnections } from '@syndesis/api';
+import { getEmptyIntegration, getSteps, WithConnections } from '@syndesis/api';
+import { ConnectionOverview, Step } from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorChooseConnection,
@@ -7,17 +8,45 @@ import {
   IntegrationsListSkeleton,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
+import * as H from 'history';
 import * as React from 'react';
-import { ApiError, PageTitle } from '../../../../../../shared';
-import {
-  IntegrationEditorBreadcrumbs,
-  IntegrationEditorSidebar,
-} from '../../../../components';
-import resolvers from '../../../../resolvers';
+import { ApiError, PageTitle } from '../../../../shared';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
-} from '../../../editorInterfaces';
+} from './interfaces';
+
+export const getStepKind = (stepOrConnection: ConnectionOverview | Step) => {
+  if ((stepOrConnection as ConnectionOverview).connectorId === 'api-provider') {
+    return 'api-provider';
+  }
+  if ((stepOrConnection as Step).stepKind) {
+    // not a connection
+  }
+  return 'endpoint';
+};
+
+export interface ISelectConnectionPageProps {
+  backHref?: (
+    p: ISelectConnectionRouteParams,
+    s: ISelectConnectionRouteState
+  ) => H.LocationDescriptor;
+  cancelHref: (
+    p: ISelectConnectionRouteParams,
+    s: ISelectConnectionRouteState
+  ) => H.LocationDescriptor;
+  header: React.ReactNode;
+  apiProviderHref: (
+    p: ISelectConnectionRouteParams,
+    s: ISelectConnectionRouteState
+  ) => H.LocationDescriptorObject;
+  connectionHref: (
+    connection: ConnectionOverview,
+    p: ISelectConnectionRouteParams,
+    s: ISelectConnectionRouteState
+  ) => H.LocationDescriptorObject;
+  sidebar: (props: { steps: Step[]; activeIndex: number }) => React.ReactNode;
+}
 
 /**
  * This page shows the list of connections containing actions with a **to**
@@ -30,26 +59,43 @@ import {
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
  */
-export class SelectConnectionPage extends React.Component {
+export class SelectConnectionPage extends React.Component<
+  ISelectConnectionPageProps
+> {
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {({ flow, position }, { integration }) => {
-          const positionAsNumber = parseInt(position, 10);
+        {(params, state, { history }) => {
+          const { flow, position } = params;
+          const { integration = getEmptyIntegration() } = state;
+          const flowAsNumber = parseInt(flow, 10) || 0;
+          const positionAsNumber = parseInt(position, 10) || 0;
+          const onStepClick = (connectionOrStep: ConnectionOverview | Step) => {
+            const stepKind = getStepKind(connectionOrStep);
+            switch (stepKind) {
+              case 'api-provider':
+                history.push(this.props.apiProviderHref(params, state));
+                break;
+              default:
+                history.push(
+                  this.props.connectionHref(
+                    connectionOrStep as ConnectionOverview,
+                    params,
+                    state
+                  )
+                );
+                break;
+            }
+          };
           return (
             <>
               <PageTitle title={'Choose a connection'} />
               <IntegrationEditorLayout
-                header={<IntegrationEditorBreadcrumbs step={1} />}
-                sidebar={
-                  <IntegrationEditorSidebar
-                    steps={getSteps(integration, 0)}
-                    addAtIndex={positionAsNumber}
-                    addI18nTitle={`${positionAsNumber + 1}. Start`}
-                    addI18nTooltip={'Start'}
-                    addI18nDescription={'Choose a connection'}
-                  />
-                }
+                header={this.props.header}
+                sidebar={this.props.sidebar({
+                  activeIndex: positionAsNumber,
+                  steps: getSteps(integration, flowAsNumber),
+                })}
                 content={
                   <WithConnections>
                     {({ data, hasData, error }) => (
@@ -78,16 +124,7 @@ export class SelectConnectionPage extends React.Component {
                                     <img src={c.icon} width={24} height={24} />
                                   }
                                   actions={
-                                    <ButtonLink
-                                      href={resolvers.integration.edit.addStep.selectAction(
-                                        {
-                                          connection: c,
-                                          flow,
-                                          integration,
-                                          position,
-                                        }
-                                      )}
-                                    >
+                                    <ButtonLink onClick={() => onStepClick(c)}>
                                       Select
                                     </ButtonLink>
                                   }
@@ -110,10 +147,12 @@ export class SelectConnectionPage extends React.Component {
                     )}
                   </WithConnections>
                 }
-                cancelHref={resolvers.integration.edit.index({
-                  flow,
-                  integration,
-                })}
+                backHref={
+                  this.props.backHref
+                    ? this.props.backHref(params, state)
+                    : undefined
+                }
+                cancelHref={this.props.cancelHref(params, state)}
               />
             </>
           );
