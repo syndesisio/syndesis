@@ -29,7 +29,7 @@ const addStepPage = (
       })
     }
     getEditConfigureStepHrefCallback={(stepIdx, step, p, s) =>
-      resolvers.integration.edit.editStep.configureAction({
+      resolvers.integration.edit.editStep.connection.configureAction({
         actionId: step.action!.id!,
         connection: step.connection!,
         position: `${stepIdx}`,
@@ -51,8 +51,9 @@ const selectConnectionPage = (
   <SelectConnectionPage
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
     header={<IntegrationEditorBreadcrumbs step={1} />}
-    selectHref={(connection, p, s) =>
-      resolvers.integration.edit.addStep.stepSwitcher({
+    apiProviderHref={(p, s) => ({ pathname: 'todo' })}
+    connectionHref={(connection, p, s) =>
+      resolvers.integration.edit.addStep.connection.selectAction({
         connection,
         ...p,
         ...s,
@@ -100,7 +101,7 @@ const addStepSelectActionPage = (
       />
     )}
     selectHref={(actionId, p, s) =>
-      resolvers.integration.edit.addStep.configureAction({
+      resolvers.integration.edit.addStep.connection.configureAction({
         actionId,
         ...p,
         ...s,
@@ -112,13 +113,13 @@ const addStepSelectActionPage = (
 const addStepConfigureActionPage = (
   <ConfigureActionPage
     backHref={(p, s) =>
-      resolvers.integration.edit.addStep.selectAction({ ...p, ...s })
+      resolvers.integration.edit.addStep.connection.selectAction({ ...p, ...s })
     }
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
     header={<IntegrationEditorBreadcrumbs step={1} />}
     mode={'adding'}
     nextStepHref={(p, s) =>
-      resolvers.integration.edit.addStep.configureAction({
+      resolvers.integration.edit.addStep.connection.configureAction({
         ...p,
         ...s,
       })
@@ -156,7 +157,7 @@ const editStepSelectActionPage = (
       <IntegrationEditorSidebar steps={steps} activeIndex={activeIndex} />
     )}
     selectHref={(actionId, p, s) =>
-      resolvers.integration.edit.editStep.configureAction({
+      resolvers.integration.edit.editStep.connection.configureAction({
         actionId,
         ...p,
         ...s,
@@ -168,13 +169,16 @@ const editStepSelectActionPage = (
 const editStepConfigureActionPage = (
   <ConfigureActionPage
     backHref={(p, s) =>
-      resolvers.integration.edit.editStep.selectAction({ ...p, ...s })
+      resolvers.integration.edit.editStep.connection.selectAction({
+        ...p,
+        ...s,
+      })
     }
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
     header={<IntegrationEditorBreadcrumbs step={1} />}
     mode={'editing'}
     nextStepHref={(p, s) =>
-      resolvers.integration.edit.editStep.configureAction({
+      resolvers.integration.edit.editStep.connection.configureAction({
         ...p,
         ...s,
       })

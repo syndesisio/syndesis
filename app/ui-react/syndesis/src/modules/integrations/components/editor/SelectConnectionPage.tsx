@@ -16,6 +16,16 @@ import {
   ISelectConnectionRouteState,
 } from './interfaces';
 
+export const getStepKind = (stepOrConnection: ConnectionOverview | Step) => {
+  if ((stepOrConnection as ConnectionOverview).connectorId === 'api-provider') {
+    return 'api-provider';
+  }
+  if ((stepOrConnection as Step).stepKind) {
+    // not a connection
+  }
+  return 'endpoint';
+};
+
 export interface ISelectConnectionPageProps {
   backHref?: (
     p: ISelectConnectionRouteParams,
@@ -26,11 +36,15 @@ export interface ISelectConnectionPageProps {
     s: ISelectConnectionRouteState
   ) => H.LocationDescriptor;
   header: React.ReactNode;
-  selectHref: (
+  apiProviderHref: (
+    p: ISelectConnectionRouteParams,
+    s: ISelectConnectionRouteState
+  ) => H.LocationDescriptorObject;
+  connectionHref: (
     connection: ConnectionOverview,
     p: ISelectConnectionRouteParams,
     s: ISelectConnectionRouteState
-  ) => H.LocationDescriptor;
+  ) => H.LocationDescriptorObject;
   sidebar: (props: { steps: Step[]; activeIndex: number }) => React.ReactNode;
 }
 
@@ -51,11 +65,28 @@ export class SelectConnectionPage extends React.Component<
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {(params, state) => {
+        {(params, state, { history }) => {
           const { flow, position } = params;
           const { integration = getEmptyIntegration() } = state;
           const flowAsNumber = parseInt(flow, 10) || 0;
           const positionAsNumber = parseInt(position, 10) || 0;
+          const onStepClick = (connectionOrStep: ConnectionOverview | Step) => {
+            const stepKind = getStepKind(connectionOrStep);
+            switch (stepKind) {
+              case 'api-provider':
+                history.push(this.props.apiProviderHref(params, state));
+                break;
+              default:
+                history.push(
+                  this.props.connectionHref(
+                    connectionOrStep as ConnectionOverview,
+                    params,
+                    state
+                  )
+                );
+                break;
+            }
+          };
           return (
             <>
               <PageTitle title={'Choose a connection'} />
@@ -93,13 +124,7 @@ export class SelectConnectionPage extends React.Component<
                                     <img src={c.icon} width={24} height={24} />
                                   }
                                   actions={
-                                    <ButtonLink
-                                      href={this.props.selectHref(
-                                        c,
-                                        params,
-                                        state
-                                      )}
-                                    >
+                                    <ButtonLink onClick={() => onStepClick(c)}>
                                       Select
                                     </ButtonLink>
                                   }

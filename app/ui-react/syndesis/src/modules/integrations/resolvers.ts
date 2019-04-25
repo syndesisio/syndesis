@@ -1,6 +1,6 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import { getEmptyIntegration, getStep } from '@syndesis/api';
-import { ConnectionOverview, Integration, Step } from '@syndesis/models';
+import { ConnectionOverview, Integration } from '@syndesis/models';
 import {
   makeResolver,
   makeResolverNoParams,
@@ -328,105 +328,6 @@ export const metricsResolver = makeResolver<
   },
 }));
 
-/**
- * A special resolver, this will return a different url depending on the step kind
- */
-export const getStepKind = (stepOrConnection: ConnectionOverview | Step) => {
-  if ((stepOrConnection as ConnectionOverview).connectorId === 'api-provider') {
-    return 'api-provider';
-  }
-  if ((stepOrConnection as Step).stepKind) {
-    // not a connection
-  }
-  return 'endpoint';
-};
-
-export const createStartStepSwitcherResolver = makeResolver<{
-  connection: ConnectionOverview | Step;
-  params: ISelectConnectionRouteParams;
-  state: ISelectConnectionRouteState;
-}>(
-  '',
-  ({ connection, params, state }): any => {
-    const stepKind = getStepKind(connection);
-    switch (stepKind) {
-      case 'api-provider':
-        return makeResolverNoParams(
-          routes.create.start.apiProvider.specification
-        );
-      default:
-        return createStartSelectActionResolver({
-          connection: connection as ConnectionOverview,
-          ...params,
-          ...state,
-        });
-    }
-  }
-);
-
-export const createFinishStepSwitcherResolver = makeResolver<{
-  connection: ConnectionOverview | Step;
-  params: ISelectConnectionRouteParams;
-  state: ISelectConnectionRouteState;
-}>(
-  '',
-  ({ connection, params, state }): any => {
-    const stepKind = getStepKind(connection);
-    switch (stepKind) {
-      case 'api-provider':
-        return makeResolverNoParams(
-          routes.create.finish.apiProvider.specification
-        );
-      default:
-        return createFinishSelectActionResolver({
-          connection: connection as ConnectionOverview,
-          ...params,
-          ...state,
-        });
-    }
-  }
-);
-
-export const createConfigureAddStepStepSwitcherResolver = makeResolver<
-  IEditorSelectAction
->(
-  '',
-  ({ connection, ...rest }): any => {
-    const stepKind = getStepKind(connection);
-    switch (stepKind) {
-      case 'api-provider':
-        return makeResolverNoParams(
-          routes.create.configure.addStep.apiProvider.specification
-        );
-      default:
-        return createConfigureAddStepSelectActionResolver({
-          ...rest,
-          connection: connection as ConnectionOverview,
-        });
-    }
-  }
-);
-
-export const integrationEditAddStepStepSwitcherResolver = makeResolver<
-  IEditorSelectAction
->(
-  '',
-  ({ connection, ...rest }): any => {
-    const stepKind = getStepKind(connection);
-    switch (stepKind) {
-      case 'api-provider':
-        return makeResolverNoParams(
-          routes.create.configure.editStep.apiProvider.specification
-        );
-      default:
-        return integrationEditAddStepSelectActionResolver({
-          ...rest,
-          connection: connection as ConnectionOverview,
-        });
-    }
-  }
-);
-
 export default {
   list: listResolver,
   manageCicd: {
@@ -436,27 +337,33 @@ export default {
     root: createRootResolver,
     start: {
       selectStep: createStartSelectStepResolver,
-      stepSwitcher: createStartStepSwitcherResolver,
-      selectAction: createStartSelectActionResolver,
-      configureAction: createStartConfigureActionResolver,
+      connection: {
+        selectAction: createStartSelectActionResolver,
+        configureAction: createStartConfigureActionResolver,
+      },
     },
     finish: {
       selectStep: createFinishSelectStepResolver,
-      stepSwitcher: createFinishStepSwitcherResolver,
-      selectAction: createFinishSelectActionResolver,
-      configureAction: createFinishConfigureActionResolver,
+      connection: {
+        selectAction: createFinishSelectActionResolver,
+        configureAction: createFinishConfigureActionResolver,
+      },
     },
     configure: {
       index: createConfigureIndexResolver,
       addStep: {
         selectStep: createConfigureAddStepSelectStepResolver,
-        stepSwitcher: createConfigureAddStepStepSwitcherResolver,
-        selectAction: createConfigureAddStepSelectActionResolver,
-        configureAction: createConfigureAddStepConfigureActionResolver,
+        connection: {
+          selectAction: createConfigureAddStepSelectActionResolver,
+          configureAction: createConfigureAddStepConfigureActionResolver,
+        },
       },
       editStep: {
-        selectAction: createConfigureEditStepSelectActionResolver,
-        configureAction: createConfigureEditStepConfigureActionResolver,
+        index: 'todo',
+        connection: {
+          selectAction: createConfigureEditStepSelectActionResolver,
+          configureAction: createConfigureEditStepConfigureActionResolver,
+        },
       },
       saveAndPublish: createConfigureEditStepSaveAndPublishResolver,
     },
@@ -468,13 +375,17 @@ export default {
       index: integrationEditIndexResolver,
       addStep: {
         selectStep: integrationEditAddStepSelectStepResolver,
-        stepSwitcher: integrationEditAddStepStepSwitcherResolver,
-        selectAction: integrationEditAddStepSelectActionResolver,
-        configureAction: integrationEditAddStepConfigureActionResolver,
+        connection: {
+          selectAction: integrationEditAddStepSelectActionResolver,
+          configureAction: integrationEditAddStepConfigureActionResolver,
+        },
       },
       editStep: {
-        selectAction: integrationEditEditStepSelectActionResolver,
-        configureAction: integrationEditEditStepConfigureActionResolver,
+        index: 'todo',
+        connection: {
+          selectAction: integrationEditEditStepSelectActionResolver,
+          configureAction: integrationEditEditStepConfigureActionResolver,
+        },
       },
       saveAndPublish: integrationEditSaveAndPublish,
     },

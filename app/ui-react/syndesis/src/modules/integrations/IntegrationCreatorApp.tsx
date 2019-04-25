@@ -36,7 +36,7 @@ const addStepPage = (
       })
     }
     getEditConfigureStepHrefCallback={(stepIdx, step, p, s) =>
-      resolvers.create.configure.editStep.configureAction({
+      resolvers.create.configure.editStep.connection.configureAction({
         actionId: step.action!.id!,
         connection: step.connection!,
         position: `${stepIdx}`,
@@ -67,11 +67,12 @@ const startStepSelectConnectionPage = (
   <SelectConnectionPage
     cancelHref={resolvers.list}
     header={<IntegrationCreatorBreadcrumbs step={1} />}
-    selectHref={(connection, params, state) =>
-      resolvers.create.start.stepSwitcher({
+    apiProviderHref={(p, s) => ({ pathname: 'todo' })}
+    connectionHref={(connection, params, state) =>
+      resolvers.create.start.connection.selectAction({
         connection,
-        params,
-        state,
+        ...params,
+        ...state,
       })
     }
     sidebar={() => (
@@ -141,7 +142,7 @@ const startStepSelectActionPage = (
       </IntegrationVerticalFlow>
     )}
     selectHref={(actionId, p, s) =>
-      resolvers.create.start.configureAction({
+      resolvers.create.start.connection.configureAction({
         actionId,
         ...p,
         ...s,
@@ -152,12 +153,14 @@ const startStepSelectActionPage = (
 
 const startStepConfigureActionPage = (
   <ConfigureActionPage
-    backHref={(p, s) => resolvers.create.start.selectAction({ ...p, ...s })}
+    backHref={(p, s) =>
+      resolvers.create.start.connection.selectAction({ ...p, ...s })
+    }
     cancelHref={resolvers.list}
     header={<IntegrationCreatorBreadcrumbs step={1} subStep={2} />}
     mode={'adding'}
     nextStepHref={(p, s) =>
-      resolvers.create.start.configureAction({
+      resolvers.create.start.connection.configureAction({
         ...p,
         ...s,
       })
@@ -208,7 +211,7 @@ const finishStepSelectConnectionPage = (
   <SelectConnectionPage
     backHref={(p, s) => {
       const startStep = getSteps(s.integration, 0)[0];
-      return resolvers.create.start.configureAction({
+      return resolvers.create.start.connection.configureAction({
         ...p,
         ...s,
         actionId: startStep.action!.id!,
@@ -218,11 +221,12 @@ const finishStepSelectConnectionPage = (
     }}
     cancelHref={resolvers.list}
     header={<IntegrationCreatorBreadcrumbs step={2} />}
-    selectHref={(connection, params, state) =>
-      resolvers.create.finish.stepSwitcher({
+    apiProviderHref={(p, s) => ({ pathname: 'todo' })}
+    connectionHref={(connection, params, state) =>
+      resolvers.create.finish.connection.selectAction({
         connection,
-        params,
-        state,
+        ...params,
+        ...state,
       })
     }
     sidebar={({ steps }) => (
@@ -316,7 +320,7 @@ const finishStepSelectActionPage = (
       </IntegrationVerticalFlow>
     )}
     selectHref={(actionId, p, s) =>
-      resolvers.create.finish.configureAction({
+      resolvers.create.finish.connection.configureAction({
         actionId,
         ...p,
         ...s,
@@ -327,12 +331,14 @@ const finishStepSelectActionPage = (
 
 const finishStepConfigureActionPage = (
   <ConfigureActionPage
-    backHref={(p, s) => resolvers.create.finish.selectAction({ ...p, ...s })}
+    backHref={(p, s) =>
+      resolvers.create.finish.connection.selectAction({ ...p, ...s })
+    }
     cancelHref={resolvers.list}
     header={<IntegrationCreatorBreadcrumbs step={2} subStep={2} />}
     mode={'adding'}
     nextStepHref={(p, s) =>
-      resolvers.create.finish.configureAction({
+      resolvers.create.finish.connection.configureAction({
         ...p,
         ...s,
       })
@@ -394,8 +400,9 @@ const addStepSelectConnectionPage = (
   <SelectConnectionPage
     cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
     header={<IntegrationCreatorBreadcrumbs step={3} />}
-    selectHref={(connection, p, s) =>
-      resolvers.create.configure.addStep.stepSwitcher({
+    apiProviderHref={(p, s) => ({ pathname: 'todo' })}
+    connectionHref={(connection, p, s) =>
+      resolvers.create.configure.addStep.connection.selectAction({
         connection,
         ...p,
         ...s,
@@ -434,7 +441,7 @@ const addStepSelectActionPage = (
       />
     )}
     selectHref={(actionId, p, s) =>
-      resolvers.create.configure.addStep.configureAction({
+      resolvers.create.configure.addStep.connection.configureAction({
         actionId,
         ...p,
         ...s,
@@ -446,13 +453,13 @@ const addStepSelectActionPage = (
 const addStepConfigureActionPage = (
   <ConfigureActionPage
     backHref={(p, s) =>
-      resolvers.create.configure.addStep.selectAction({ ...p, ...s })
+      resolvers.create.configure.addStep.connection.selectAction({ ...p, ...s })
     }
     cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
     header={<IntegrationCreatorBreadcrumbs step={3} />}
     mode={'adding'}
     nextStepHref={(p, s) =>
-      resolvers.create.configure.addStep.configureAction({
+      resolvers.create.configure.addStep.connection.configureAction({
         ...p,
         ...s,
       })
@@ -490,7 +497,7 @@ const editStepSelectActionPage = (
       <IntegrationEditorSidebar steps={steps} activeIndex={activeIndex} />
     )}
     selectHref={(actionId, p, s) =>
-      resolvers.create.configure.editStep.configureAction({
+      resolvers.create.configure.editStep.connection.configureAction({
         actionId,
         ...p,
         ...s,
@@ -502,13 +509,16 @@ const editStepSelectActionPage = (
 const editStepConfigureActionPage = (
   <ConfigureActionPage
     backHref={(p, s) =>
-      resolvers.create.configure.editStep.selectAction({ ...p, ...s })
+      resolvers.create.configure.editStep.connection.selectAction({
+        ...p,
+        ...s,
+      })
     }
     cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
     header={<IntegrationCreatorBreadcrumbs step={3} />}
     mode={'editing'}
     nextStepHref={(p, s) =>
-      resolvers.create.configure.editStep.configureAction({
+      resolvers.create.configure.editStep.connection.configureAction({
         ...p,
         ...s,
       })
