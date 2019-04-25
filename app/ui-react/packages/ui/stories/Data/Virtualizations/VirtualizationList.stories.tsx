@@ -22,8 +22,11 @@ const virtualizationName1 = 'Virtualization_1';
 const virtualizationDescription1 = 'Virtualization 1 description ...';
 const virtualizationName2 = 'Virtualization_2';
 const virtualizationDescription2 = 'Virtualization 2 description ...';
+const virtualizationName3 = 'Virtualization_3';
+const virtualizationDescription3 = 'Virtualization 3 description ...';
 const serviceVdbName1 = 'virtualization_1vdb';
 const serviceVdbName2 = 'virtualization_2vdb';
+const serviceVdbName3 = 'virtualization_3vdb';
 const cancelText = 'Cancel';
 const editText = 'Edit';
 const editTip1 = 'Edit ' + virtualizationName1 + ' virtualization';
@@ -45,6 +48,7 @@ const publishInProgressText = 'Publish In Progress';
 const publishLogUrlText = 'View Logs';
 const currentStatusPublished = 'RUNNING';
 const currentStatusDraft = 'NOTFOUND';
+const currentStatusBuilding = 'BUILDING';
 
 const viewItems = [
   <ViewListItem
@@ -105,7 +109,7 @@ const virtItem = [
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusDraft}
-    publishLogUrl=""
+    publishingLogUrl=""
     children={viewItems}
   />,
 ];
@@ -138,7 +142,7 @@ const virtualizationItems = [
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusDraft}
-    publishLogUrl=""
+    publishingLogUrl=""
   />,
   <VirtualizationListItem
     key="virtualizationListItem2"
@@ -167,7 +171,38 @@ const virtualizationItems = [
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
     currentPublishedState={currentStatusPublished}
-    publishLogUrl=""
+  />,
+  <VirtualizationListItem
+    key="virtualizationListItem3"
+    virtualizationName={virtualizationName3}
+    virtualizationDescription={virtualizationDescription3}
+    serviceVdbName={serviceVdbName3}
+    detailsPageLink={''}
+    i18nCancelText={cancelText}
+    i18nDelete={deleteText}
+    i18nDeleteModalMessage={confirmDeleteMessage}
+    i18nDeleteModalTitle={confirmDeleteTitle}
+    i18nDraft={draftText}
+    i18nEdit={editText}
+    i18nEditTip={editTip2}
+    i18nError={errorText}
+    i18nExport={exportText}
+    i18nPublished={publishedText}
+    i18nUnpublish={unpublishText}
+    i18nPublish={publishText}
+    i18nPublishInProgress={publishInProgressText}
+    i18nPublishLogUrlText={publishLogUrlText}
+    i18nUnpublishModalMessage={confirmUnpublishMessage}
+    i18nUnpublishModalTitle={confirmUnpublishTitle}
+    onDelete={action(deleteText)}
+    onExport={action(exportText)}
+    onUnpublish={action(unpublishText)}
+    onPublish={action(publishText)}
+    currentPublishedState={currentStatusBuilding}
+    publishingLogUrl={''}
+    publishingCurrentStep={2}
+    publishingTotalSteps={4}
+    publishingStepText={'Building'}
   />,
 ];
 
@@ -208,7 +243,7 @@ const defaultNotes =
   '" button tooltip is "' +
   createVirtualizationTip;
 
-const twoVirtualizationsTestNotes =
+const threeVirtualizationsTestNotes =
   defaultNotes +
   '"\n' +
   '- Verify empty state component does not show\n' +
@@ -303,8 +338,8 @@ stories
   )
 
   .add(
-    '2 virtualizations',
-    withNotes(twoVirtualizationsTestNotes)(() => (
+    '3 virtualizations',
+    withNotes(threeVirtualizationsTestNotes)(() => (
       <Router>
         <VirtualizationList
           activeFilters={[]}

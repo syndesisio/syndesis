@@ -1,6 +1,6 @@
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
-import { IntegrationProgress } from './IntegrationProgress';
+import { ProgressWithLink } from '../Shared/ProgressWithLink';
 import { IntegrationState, PUBLISHED, UNPUBLISHED } from './models';
 
 import './IntegrationStatusDetail.css';
@@ -36,7 +36,7 @@ export class IntegrationStatusDetail extends React.Component<
         className={'integration-status-detail'}
       >
         {this.props.value && this.props.currentStep && this.props.totalSteps ? (
-          <IntegrationProgress
+          <ProgressWithLink
             currentStep={this.props.currentStep}
             totalSteps={this.props.totalSteps}
             value={this.props.value}

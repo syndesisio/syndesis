@@ -11,6 +11,7 @@ import {
   SUBMITTED,
   VirtualizationPublishState,
 } from './models';
+import './VirtualizationPublishStatus.css';
 
 export interface IVirtualizationPublishStatusProps {
   currentState?: VirtualizationPublishState;
@@ -47,6 +48,10 @@ export class VirtualizationPublishStatus extends React.Component<
         label = DEPLOYING;
         break;
     }
-    return <Label type={labelType}>{label}</Label>;
+    return (
+      <Label className={'virtualization-publish-status-label'} type={labelType}>
+        {label}
+      </Label>
+    );
   }
 }

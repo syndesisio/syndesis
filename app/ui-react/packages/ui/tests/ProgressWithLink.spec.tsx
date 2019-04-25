@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { render } from 'react-testing-library';
-import { IntegrationProgress } from '../src/Integration';
+import { ProgressWithLink } from '../src/Shared';
 
 export default describe('IntegrationProgress', () => {
   // Component with a log link
   const testComponent = (
-    <IntegrationProgress
+    <ProgressWithLink
       value={'Deploying'}
       currentStep={2}
       totalSteps={4}
@@ -16,7 +16,7 @@ export default describe('IntegrationProgress', () => {
 
   // Component without a log link
   const testComponentNoLog = (
-    <IntegrationProgress
+    <ProgressWithLink
       value={'Assembling'}
       currentStep={1}
       totalSteps={4}
@@ -26,23 +26,23 @@ export default describe('IntegrationProgress', () => {
 
   it('Should show the progress value and steps', () => {
     const { getByTestId } = render(testComponent);
-    expect(getByTestId('integration-progress-value')).toHaveTextContent(
+    expect(getByTestId('progress-link-value')).toHaveTextContent(
       'Deploying ( 2 / 4 )'
     );
   });
   it('Should show the log link when supplied', () => {
     const { queryByTestId } = render(testComponent);
-    expect(queryByTestId('deployment-log-link')).toBeDefined();
-    expect(queryByTestId('deployment-log-link')).toHaveTextContent('View Logs');
+    expect(queryByTestId('progress-log-link')).toBeDefined();
+    expect(queryByTestId('progress-log-link')).toHaveTextContent('View Logs');
   });
   it('Should show the progress value and steps', () => {
     const { getByTestId } = render(testComponentNoLog);
-    expect(getByTestId('integration-progress-value')).toHaveTextContent(
+    expect(getByTestId('progress-link-value')).toHaveTextContent(
       'Assembling ( 1 / 4 )'
     );
   });
   it('Should not show the log link if not supplied', () => {
     const { queryByTestId } = render(testComponentNoLog);
-    expect(queryByTestId('deployment-log-link')).toEqual(null);
+    expect(queryByTestId('progess-log-link')).toEqual(null);
   });
 });

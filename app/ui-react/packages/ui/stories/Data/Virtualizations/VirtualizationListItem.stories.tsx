@@ -120,7 +120,7 @@ stories.add(
         ],
         'NOTFOUND'
       )}
-      publishLogUrl={text('publishLogUrl', publishLogUrl)}
+      publishingLogUrl={text('publishLogUrl', publishLogUrl)}
     />
   ))
 );

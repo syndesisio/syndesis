@@ -16,12 +16,18 @@ stories
 
   .add('without logs link', () => (
     <VirtualizationPublishStatusDetail
+      currentStep={2}
+      totalSteps={4}
+      stepText={'Building'}
       i18nPublishInProgress={publishInProgress}
       i18nLogUrlText={logUrlText}
     />
   ))
   .add('with logs link', () => (
     <VirtualizationPublishStatusDetail
+      currentStep={2}
+      totalSteps={4}
+      stepText={'Building'}
       logUrl={logsLink}
       i18nPublishInProgress={publishInProgress}
       i18nLogUrlText={logUrlText}

@@ -1,10 +1,12 @@
 import {
   Connection,
   ProjectedColumn,
+  RestDataService,
   SchemaNode,
   ViewDefinition,
   ViewEditorState,
   ViewInfo,
+  VirtualizationPublishingDetails,
   VirtualizationSourceStatus,
 } from '@syndesis/models';
 
@@ -203,6 +205,44 @@ export function isDvConnectionSelected(conn: Connection) {
     isSelected = true;
   }
   return isSelected;
+}
+
+/**
+ * Get publishing state details for the specified virtualization
+ * @param virtualization the RestDataService
+ */
+export function getPublishingDetails(
+  virtualization: RestDataService
+): VirtualizationPublishingDetails {
+  // Determine published state
+  const publishStepDetails: VirtualizationPublishingDetails = {
+    state: virtualization.publishedState,
+    stepNumber: 0,
+    stepText: '',
+    stepTotal: 4,
+  };
+  switch (virtualization.publishedState) {
+    case 'CONFIGURING':
+      publishStepDetails.stepNumber = 1;
+      publishStepDetails.stepText = 'Configuring';
+      break;
+    case 'BUILDING':
+      publishStepDetails.stepNumber = 2;
+      publishStepDetails.stepText = 'Building';
+      break;
+    case 'DEPLOYING':
+      publishStepDetails.stepNumber = 3;
+      publishStepDetails.stepText = 'Deploying';
+      break;
+    case 'RUNNING':
+      publishStepDetails.stepNumber = 4;
+      publishStepDetails.stepText = 'Published';
+      break;
+  }
+  if (virtualization.publishLogUrl) {
+    publishStepDetails.logUrl = virtualization.publishLogUrl;
+  }
+  return publishStepDetails;
 }
 
 /**
