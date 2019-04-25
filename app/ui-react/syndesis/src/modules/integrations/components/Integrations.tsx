@@ -22,6 +22,7 @@ import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { AppContext } from '../../../app';
+import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import resolvers from '../resolvers';
 import { TagIntegrationDialogWrapper } from './TagIntegrationDialogWrapper';
@@ -108,7 +109,7 @@ export class Integrations extends React.Component<
       <Translation ns={['integrations', 'shared']}>
         {t => (
           <AppContext.Consumer>
-            {({ config, getPodLogUrl }) => (
+            {({ config, getPodLogUrl, pushNotification }) => (
               <WithIntegrationHelpers>
                 {({
                   deleteIntegration,
@@ -164,12 +165,29 @@ export class Integrations extends React.Component<
                                   label: 'Start',
                                   onClick: () =>
                                     this.promptForAction({
-                                      handleAction: () =>
-                                        deployIntegration(
-                                          mi.integration.id!,
-                                          mi.integration.version!,
-                                          false
-                                        ),
+                                      handleAction: async () => {
+                                        pushNotification(
+                                          i18n.t(
+                                            'integrations:PublishingIntegrationMessage'
+                                          ),
+                                          'info'
+                                        );
+                                        try {
+                                          await deployIntegration(
+                                            mi.integration.id!,
+                                            mi.integration.version!,
+                                            false
+                                          );
+                                        } catch (err) {
+                                          pushNotification(
+                                            i18n.t(
+                                              'integrations.PublishingIntegrationFailedMessage',
+                                              { error: err }
+                                            ),
+                                            'warning'
+                                          );
+                                        }
+                                      },
                                       promptDialogButtonStyle:
                                         ConfirmationButtonStyle.NORMAL,
                                       promptDialogButtonText: t('shared:Start'),
@@ -188,11 +206,28 @@ export class Integrations extends React.Component<
                                   label: 'Stop',
                                   onClick: () =>
                                     this.promptForAction({
-                                      handleAction: () =>
-                                        undeployIntegration(
-                                          mi.integration.id!,
-                                          mi.integration.version!
-                                        ),
+                                      handleAction: async () => {
+                                        pushNotification(
+                                          i18n.t(
+                                            'integrations:UnpublishingIntegrationMessage'
+                                          ),
+                                          'info'
+                                        );
+                                        try {
+                                          undeployIntegration(
+                                            mi.integration.id!,
+                                            mi.integration.version!
+                                          );
+                                        } catch (err) {
+                                          pushNotification(
+                                            i18n.t(
+                                              'integrations.UnpublishingIntegrationFailedMessage',
+                                              { error: err }
+                                            ),
+                                            'warning'
+                                          );
+                                        }
+                                      },
                                       promptDialogButtonStyle:
                                         ConfirmationButtonStyle.NORMAL,
                                       promptDialogButtonText: t('shared:Stop'),
@@ -211,8 +246,27 @@ export class Integrations extends React.Component<
                                   label: 'Delete',
                                   onClick: () =>
                                     this.promptForAction({
-                                      handleAction: () =>
-                                        deleteIntegration(mi.integration.id!),
+                                      handleAction: async () => {
+                                        pushNotification(
+                                          i18n.t(
+                                            'integrations:DeletingIntegrationMessage'
+                                          ),
+                                          'info'
+                                        );
+                                        try {
+                                          await deleteIntegration(
+                                            mi.integration.id!
+                                          );
+                                        } catch (err) {
+                                          pushNotification(
+                                            i18n.t(
+                                              'integrations.DeletingIntegrationFailedMessage',
+                                              { error: err }
+                                            ),
+                                            'warning'
+                                          );
+                                        }
+                                      },
                                       promptDialogButtonStyle:
                                         ConfirmationButtonStyle.DANGER,
                                       promptDialogButtonText: t(
