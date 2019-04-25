@@ -292,16 +292,17 @@ export class DetailsPage extends React.Component<
                                                   'shared:Version'
                                                 )}
                                                 integrationUpdatedAt={
-                                                  deployment!.updatedAt!
+                                                  deployment.updatedAt
                                                 }
                                                 integrationVersion={
-                                                  data.version
+                                                  deployment.version
                                                 }
                                               />
                                             );
                                           }
                                         )
                                       }
+                                      s
                                     </IntegrationDetailHistoryListView>
                                   </>
                                 );
