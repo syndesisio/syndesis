@@ -21,10 +21,10 @@ import io.syndesis.integration.runtime.util.DefaultRoutePolicy;
 import org.apache.camel.Exchange;
 import org.apache.camel.Route;
 
-public final class ActivityTrackingPolicy extends DefaultRoutePolicy {
+public final class IntegrationLoggingActivityTrackingPolicy extends DefaultRoutePolicy {
     private final ActivityTracker tracker;
 
-    public ActivityTrackingPolicy(ActivityTracker tracker) {
+    public IntegrationLoggingActivityTrackingPolicy(ActivityTracker tracker) {
         this.tracker = tracker;
     }
 

@@ -19,12 +19,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.ServiceLoader;
-import javax.xml.bind.JAXBException;
 
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.sb.logging.IntegrationLoggingConfiguration;
+import javax.xml.bind.JAXBException;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
@@ -39,6 +35,11 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import io.syndesis.integration.runtime.ActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
+import io.syndesis.integration.runtime.sb.logging.IntegrationLoggingConfiguration;
+
 @Configuration
 @ConditionalOnProperty(prefix = "syndesis.integration.runtime", name = "enabled", matchIfMissing = true)
 @EnableConfigurationProperties({IntegrationRuntimeConfiguration.class, IntegrationLoggingConfiguration.class})
@@ -49,7 +50,7 @@ public class IntegrationRuntimeAutoConfiguration {
     private IntegrationRuntimeConfiguration configuration;
 
     @Autowired(required = false)
-    private ActivityTracker activityTracker;
+    private List<ActivityTrackingPolicyFactory> activityTrackingPolicyFactories = Collections.emptyList();
 
     @SuppressWarnings("PMD.ImmutableField")
     @Autowired(required = false)
@@ -85,7 +86,7 @@ public class IntegrationRuntimeAutoConfiguration {
 
                 // IntegrationRouteBuilder automatically add known handlers to
                 // the list of provided ones, know handlers have priority
-                final RouteBuilder routeBuilder = new IntegrationRouteBuilder(location, handlers, activityTracker);
+                final RouteBuilder routeBuilder = new IntegrationRouteBuilder(location, handlers, activityTrackingPolicyFactories);
 
                 try {
                     // Register routes to the camel context

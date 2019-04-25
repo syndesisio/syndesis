@@ -47,12 +47,9 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Resources;
 import io.syndesis.connector.odata.server.ODataTestServer;
 import io.syndesis.connector.odata.server.ODataTestServer.Options;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.integration.runtime.logging.ActivityTracker;
 
 public abstract class AbstractODataTest implements ODataConstants {
 
@@ -192,11 +189,7 @@ public abstract class AbstractODataTest implements ODataConstants {
     }
 
     protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration) {
-        return newIntegrationRouteBuilder(integration, null);
-    }
-
-    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration, ActivityTracker activityTracker) {
-        return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class), activityTracker) {
+        return new IntegrationRouteBuilder("") {
             @Override
             protected Integration loadIntegration() throws IOException {
                 return integration;

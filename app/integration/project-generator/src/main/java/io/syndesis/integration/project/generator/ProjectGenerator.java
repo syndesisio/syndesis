@@ -236,6 +236,24 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         }
     }
 
+    public static class Scope {
+        public ProjectGeneratorConfiguration configuration;
+        public Integration integration;
+
+        public Scope(ProjectGeneratorConfiguration configuration, Integration integration) {
+            this.configuration = configuration;
+            this.integration = integration;
+        }
+
+        public ProjectGeneratorConfiguration getConfiguration() {
+            return configuration;
+        }
+
+        public Integration getIntegration() {
+            return integration;
+        }
+    }
+
     @SuppressWarnings("PMD.DoNotUseThreads")
     private Runnable generateAddProjectTarEntries(Integration integration, OutputStream os, IntegrationErrorHandler errorHandler) {
         return () -> {
@@ -246,7 +264,8 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 ObjectWriter writer = Json.writer();
 
                 addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", ProjectGeneratorHelper.generate(integration, applicationJavaMustache));
-                addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(integration, applicationPropertiesMustache));
+                Scope scope = new Scope(configuration, integration);
+                addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(scope, applicationPropertiesMustache));
                 addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration));
                 addTarEntry(tos, "pom.xml", generatePom(integration));
 
