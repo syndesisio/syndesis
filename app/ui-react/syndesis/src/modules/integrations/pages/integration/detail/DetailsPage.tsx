@@ -3,26 +3,27 @@ import {
   canDeactivate,
   canEdit,
   getSteps,
-  WithIntegrationDetail,
+  WithIntegration,
   WithIntegrationHelpers,
 } from '@syndesis/api';
-import { IIntegrationDetail } from '@syndesis/models';
+import { IntegrationOverview } from '@syndesis/models';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
   IIntegrationAction,
-  IntegrationActions,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
-  IntegrationDetailHistoryListViewItem,
   IntegrationDetailInfo,
   Loader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { IntegrationDetailSteps } from '../../../components';
+import {
+  IntegrationDetailHistory,
+  IntegrationDetailSteps,
+} from '../../../components';
 import resolvers from '../../../resolvers';
 import { IntegrationDetailNavBar } from '../../../shared';
 
@@ -31,14 +32,14 @@ import { IntegrationDetailNavBar } from '../../../shared';
  */
 export interface IDetailsPageProps {
   error: boolean;
-  integration: IIntegrationDetail;
+  integration: IntegrationOverview;
   integrationId: string;
   loading: boolean;
 }
 
 export interface IDetailsPageState {
   handleAction?: () => void;
-  integration?: IIntegrationDetail;
+  integration?: IntegrationOverview;
   promptDialogButtonText?: string;
   promptDialogIcon?: ConfirmationIconType;
   promptDialogText?: string;
@@ -114,7 +115,7 @@ export class DetailsPage extends React.Component<
                 undeployIntegration,
               }) => {
                 return (
-                  <WithIntegrationDetail
+                  <WithIntegration
                     integrationId={integrationId}
                     initialValue={integration}
                   >
@@ -262,48 +263,20 @@ export class DetailsPage extends React.Component<
                                       )}
                                     />
                                     <IntegrationDetailHistoryListView
-                                      integrationIsDraft={data.isDraft!}
+                                      draft={data.draft!}
                                       i18nTextBtnEdit={t('shared:Edit')}
                                       i18nTextBtnPublish={t('shared:Publish')}
                                       i18nTextDraft={t('shared:Draft')}
                                       i18nTextHistory={t(
                                         'integrations:detail:History'
                                       )}
-                                    >
-                                      {() =>
-                                        data!.deployments!.map(
-                                          (deployment, idx) => {
-                                            return (
-                                              <IntegrationDetailHistoryListViewItem
-                                                key={idx}
-                                                actions={
-                                                  <IntegrationActions
-                                                    integrationId={data!.id!}
-                                                    actions={actions}
-                                                    detailsHref={resolvers.integration.details(
-                                                      { integration: data }
-                                                    )}
-                                                  />
-                                                }
-                                                i18nTextLastPublished={t(
-                                                  'integrations:detail:lastPublished'
-                                                )}
-                                                i18nTextVersion={t(
-                                                  'shared:Version'
-                                                )}
-                                                integrationUpdatedAt={
-                                                  deployment.updatedAt
-                                                }
-                                                integrationVersion={
-                                                  deployment.version
-                                                }
-                                              />
-                                            );
-                                          }
-                                        )
+                                      items={
+                                        <IntegrationDetailHistory
+                                          actions={actions}
+                                          integration={data}
+                                        />
                                       }
-                                      s
-                                    </IntegrationDetailHistoryListView>
+                                    />
                                   </>
                                 );
                               }}
@@ -312,7 +285,7 @@ export class DetailsPage extends React.Component<
                         )}
                       </WithLoader>
                     )}
-                  </WithIntegrationDetail>
+                  </WithIntegration>
                 );
               }}
             </WithIntegrationHelpers>

@@ -6,11 +6,11 @@ export interface IIntegrationDetailHistoryListViewItemProps {
   /**
    * The last date the integration was updated.
    */
-  integrationUpdatedAt?: number;
+  updatedAt?: number;
   /**
-   * The most recent version of the integration.
+   * The version of the integration deployment.
    */
-  integrationVersion?: number;
+  version?: number;
   /**
    * The localized text for displaying the last published date.
    */
@@ -30,17 +30,17 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
         actions={this.props.actions}
         heading={
           <span>
-            {<span>{this.props.i18nTextVersion}:</span>}{' '}
-            {this.props.integrationVersion}
+            {<span>{this.props.i18nTextVersion}:</span>} {this.props.version}
           </span>
         }
         additionalInfo={[
           <ListViewInfoItem key={1}>
             {this.props.i18nTextLastPublished}
-            {this.props.integrationUpdatedAt}
+            {this.props.updatedAt}
           </ListViewInfoItem>,
         ]}
         leftContent={
+          // TODO: If first item and current deployment, show status icon
           <ListView.Icon
             type="pf"
             name="ok"

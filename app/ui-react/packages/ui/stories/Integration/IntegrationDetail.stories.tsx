@@ -21,10 +21,9 @@ const datePublished = Date.parse('24 Feb 2019 08:19:42 GMT');
 const integrationPublishedHistoryItems = [
   <IntegrationDetailHistoryListViewItem
     key={0}
-    integrationUpdatedAt={datePublished}
-    integrationVersion={1}
-    i18nTextHistoryMenuReplaceDraft={'Replace draft'}
-    i18nTextHistoryMenuUnpublish={'Unpublish'}
+    actions={<></>}
+    updatedAt={datePublished}
+    version={1}
     i18nTextLastPublished={'Last published on '}
     i18nTextVersion={'Version'}
   />,
@@ -128,13 +127,13 @@ storiesOf('Integration/Detail', module)
             <TabBarItem label={'Metrics'} to={'#metrics'} />
           </TabBar>
         </Container>
-        <IntegrationStepsHorizontalView steps={steps} />
+        <IntegrationStepsHorizontalView children={steps} />
         <IntegrationDetailDescription description={'This is my description.'} />
         <IntegrationDetailHistoryListView
-          integrationIsDraft={false}
-          children={integrationPublishedHistoryItems}
+          draft={false}
           i18nTextDraft={'Draft'}
           i18nTextHistory={'History'}
+          items={integrationPublishedHistoryItems}
         />
       </>
     </Router>
