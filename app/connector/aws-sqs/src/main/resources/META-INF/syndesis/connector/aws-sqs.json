@@ -319,7 +319,7 @@
       "group": "common",
       "javaType": "java.lang.String",
       "kind": "path",
-      "labelHint": "Queue name or ARN",
+      "labelHint": "Queue name or ARN. If the queue does not exist, it will be created.",
       "order": "4",
       "required": true,
       "secret": false,
