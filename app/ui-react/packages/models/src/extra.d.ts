@@ -1,6 +1,8 @@
 import {
   ConfigurationProperty,
   Connection,
+  Integration,
+  IntegrationDeploymentOverview,
   IntegrationMetricsSummary,
   IntegrationOverview,
   Step,
@@ -30,6 +32,11 @@ export interface IConfigurationProperty extends ConfigurationProperty {
 export interface IConnectionWithIconFile extends Connection {
   icon?: any;
   iconFile?: File;
+}
+
+export interface IIntegrationDetail extends Integration {
+  deployments?: IntegrationDeploymentOverview[];
+  isDraft: boolean;
 }
 
 export interface IntegrationWithOverview {

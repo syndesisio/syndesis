@@ -3,10 +3,10 @@ import {
   canDeactivate,
   canEdit,
   getSteps,
-  WithIntegration,
+  WithIntegrationDetail,
   WithIntegrationHelpers,
 } from '@syndesis/api';
-import { IntegrationOverview } from '@syndesis/models';
+import { IIntegrationDetail } from '@syndesis/models';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
@@ -31,14 +31,14 @@ import { IntegrationDetailNavBar } from '../../../shared';
  */
 export interface IDetailsPageProps {
   error: boolean;
-  integration: IntegrationOverview;
+  integration: IIntegrationDetail;
   integrationId: string;
   loading: boolean;
 }
 
 export interface IDetailsPageState {
   handleAction?: () => void;
-  integration?: IntegrationOverview;
+  integration?: IIntegrationDetail;
   promptDialogButtonText?: string;
   promptDialogIcon?: ConfirmationIconType;
   promptDialogText?: string;
@@ -114,7 +114,7 @@ export class DetailsPage extends React.Component<
                 undeployIntegration,
               }) => {
                 return (
-                  <WithIntegration
+                  <WithIntegrationDetail
                     integrationId={integrationId}
                     initialValue={integration}
                   >
@@ -262,7 +262,7 @@ export class DetailsPage extends React.Component<
                                       )}
                                     />
                                     <IntegrationDetailHistoryListView
-                                      integrationIsDraft={data.draft!}
+                                      integrationIsDraft={data.isDraft!}
                                       i18nTextBtnEdit={t('shared:Edit')}
                                       i18nTextBtnPublish={t('shared:Publish')}
                                       i18nTextDraft={t('shared:Draft')}
@@ -271,7 +271,7 @@ export class DetailsPage extends React.Component<
                                       )}
                                     >
                                       {() =>
-                                        data.deployments.map(
+                                        data!.deployments!.map(
                                           (deployment, idx) => {
                                             return (
                                               <IntegrationDetailHistoryListViewItem
@@ -285,12 +285,6 @@ export class DetailsPage extends React.Component<
                                                     )}
                                                   />
                                                 }
-                                                i18nTextHistoryMenuReplaceDraft={t(
-                                                  'integrations:detail:replaceDraft'
-                                                )}
-                                                i18nTextHistoryMenuUnpublish={t(
-                                                  'shared:Unpublish'
-                                                )}
                                                 i18nTextLastPublished={t(
                                                   'integrations:detail:lastPublished'
                                                 )}
@@ -317,7 +311,7 @@ export class DetailsPage extends React.Component<
                         )}
                       </WithLoader>
                     )}
-                  </WithIntegration>
+                  </WithIntegrationDetail>
                 );
               }}
             </WithIntegrationHelpers>
