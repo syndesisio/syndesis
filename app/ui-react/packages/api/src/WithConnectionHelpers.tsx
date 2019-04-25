@@ -73,7 +73,12 @@ export interface IWithConnectionHelpersChildrenProps {
     description?: string,
     configuredProperties?: { [key: string]: string }
   ): Connection;
-
+  /**
+   * asynchronously deletes the provided connection.
+   *
+   * @param connectionId the connection ID
+   */
+  deleteConnection(connectionId: string): Promise<void>;
   /**
    *  Asynchronously validates the proposed connection name.
    *
@@ -97,6 +102,7 @@ export class WithConnectionHelpersWrapped extends React.Component<
   constructor(props: IWithConnectionHelpersProps & IApiContext) {
     super(props);
     this.createConnection = this.createConnection.bind(this);
+    this.deleteConnection = this.deleteConnection.bind(this);
     this.updateConnection = this.updateConnection.bind(this);
     this.validateConfiguration = this.validateConfiguration.bind(this);
     this.saveConnection = this.saveConnection.bind(this);
@@ -118,6 +124,20 @@ export class WithConnectionHelpersWrapped extends React.Component<
       connection.connectorId = connector.id;
       connection.icon = connector.icon;
     });
+  }
+
+  public async deleteConnection(connectionId: string): Promise<void> {
+    const response = await callFetch({
+      headers: this.props.headers,
+      method: 'DELETE',
+      url: `${this.props.apiUri}/connections/${connectionId}`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return Promise.resolve();
   }
 
   public updateConnection(
@@ -203,6 +223,7 @@ export class WithConnectionHelpersWrapped extends React.Component<
   public render() {
     return this.props.children({
       createConnection: this.createConnection,
+      deleteConnection: this.deleteConnection,
       saveConnection: this.saveConnection,
       updateConnection: this.updateConnection,
       validateConfiguration: this.validateConfiguration,
@@ -215,7 +236,7 @@ export class WithConnectionHelpersWrapped extends React.Component<
  * This component provides provides through a render propr a number of helper
  * functions useful when working with a connection.
  *
- * Methods that modify an integration return a immutable copy of the original
+ * Methods that modify a connection return a immutable copy of the original
  * object, to reduce the risk of bugs.
  *
  * @see [saveConnection]{@link IWithConnectionHelpersChildrenProps#saveConnection}

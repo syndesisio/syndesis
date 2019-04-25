@@ -18,6 +18,7 @@ export class ConnectionsPage extends React.Component {
             <PageTitle title={'Connections'} />
             <ConnectionsWithToolbar
               error={error}
+              includeConnectionMenu={true}
               loading={!hasData}
               connections={data.connectionsForDisplay}
               getConnectionHref={getConnectionHref}

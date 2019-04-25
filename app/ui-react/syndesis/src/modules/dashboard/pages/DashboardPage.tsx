@@ -103,7 +103,7 @@ export function getTopIntegrations(
 }
 
 export function getConnectionHref(connection: Connection) {
-  return `/connections/${connection.id}`;
+  return resolvers.connections.connection.details({ connection });
 }
 
 export default () => (
@@ -252,6 +252,7 @@ export default () => (
                       connections={
                         <Connections
                           error={connectionsError}
+                          includeConnectionMenu={false}
                           loading={!hasConnections}
                           connections={connectionsData.connectionsForDisplay}
                           getConnectionHref={getConnectionHref}
