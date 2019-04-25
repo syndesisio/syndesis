@@ -1,6 +1,6 @@
-import { WithViews, WithVirtualizationHelpers } from '@syndesis/api';
+import { WithViewEditorStates, WithVirtualizationHelpers } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
-import { RestViewDefinition } from '@syndesis/models';
+import { ViewDefinition, ViewEditorState } from '@syndesis/models';
 import * as React from 'react';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
@@ -40,27 +40,27 @@ export interface IVirtualizationViewsPageRouteState {
   virtualization: RestDataService;
 }
 
-function getFilteredAndSortedViews(
-  views: RestViewDefinition[],
+function getFilteredAndSortedViewDefns(
+  viewDefinitions: ViewDefinition[],
   activeFilters: IActiveFilter[],
   currentSortType: string,
   isSortAscending: boolean
 ) {
-  let filteredAndSorted = views;
+  let filteredAndSorted = viewDefinitions;
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
-    filteredAndSorted = filteredAndSorted.filter((view: RestViewDefinition) =>
-      view.keng__id.toLowerCase().includes(valueToLower)
+    filteredAndSorted = filteredAndSorted.filter((view: ViewDefinition) =>
+      view.viewName.toLowerCase().includes(valueToLower)
     );
   });
 
   filteredAndSorted = filteredAndSorted.sort((thisView, thatView) => {
     if (isSortAscending) {
-      return thisView.keng__id.localeCompare(thatView.keng__id);
+      return thisView.viewName.localeCompare(thatView.viewName);
     }
 
     // sort descending
-    return thatView.keng__id.localeCompare(thisView.keng__id);
+    return thatView.viewName.localeCompare(thisView.viewName);
   });
 
   return filteredAndSorted;
@@ -87,8 +87,8 @@ export class VirtualizationViewsPage extends React.Component<
   IVirtualizationViewsPageRouteParams,
   IVirtualizationViewsPageRouteState
 > {
-  public filterUndefinedId(view: RestViewDefinition): boolean {
-    return view.keng__id !== undefined;
+  public filterUndefinedId(view: ViewDefinition): boolean {
+    return view.viewName !== undefined;
   }
 
   public handleImportView(viewName: string) {
@@ -119,15 +119,21 @@ export class VirtualizationViewsPage extends React.Component<
                 return (
                   <div>
                     <HeaderView virtualizationId={virtualizationId} />
-                    <WithViews vdbId={virtualization.serviceVdbName}>
+                    <WithViewEditorStates
+                      idPattern={virtualization.serviceVdbName + '*'}
+                    >
                       {({ data, hasData, error }) => (
                         <WithListViewToolbarHelpers
                           defaultFilterType={filterByName}
                           defaultSortType={sortByName}
                         >
                           {helpers => {
-                            const filteredAndSorted = getFilteredAndSortedViews(
-                              data,
+                            const viewDefns = data.map(
+                              (editorState: ViewEditorState) =>
+                                editorState.viewDefinition
+                            );
+                            const filteredAndSorted = getFilteredAndSortedViewDefns(
+                              viewDefns,
                               helpers.activeFilters,
                               helpers.currentSortType,
                               helpers.isSortAscending
@@ -200,20 +206,19 @@ export class VirtualizationViewsPage extends React.Component<
                                     >
                                       {() =>
                                         filteredAndSorted
-                                          .filter((view: RestViewDefinition) =>
+                                          .filter((view: ViewDefinition) =>
                                             this.filterUndefinedId(view)
                                           )
                                           .map(
                                             (
-                                              view: RestViewDefinition,
+                                              view: ViewDefinition,
                                               index: number
                                             ) => (
                                               <ViewListItem
                                                 key={index}
-                                                viewName={view.keng__id}
+                                                viewName={view.viewName}
                                                 viewDescription={
-                                                  'Description for ' +
-                                                  view.keng__id
+                                                  view.keng__description
                                                 }
                                                 i18nCancelText={t(
                                                   'shared:Cancel'
@@ -221,7 +226,7 @@ export class VirtualizationViewsPage extends React.Component<
                                                 i18nDelete={t('shared:Delete')}
                                                 i18nDeleteModalMessage={t(
                                                   'virtualization.deleteViewModalMessage',
-                                                  { name: view.keng__id }
+                                                  { name: view.viewName }
                                                 )}
                                                 i18nDeleteModalTitle={t(
                                                   'virtualization.deleteModalTitle'
@@ -244,7 +249,7 @@ export class VirtualizationViewsPage extends React.Component<
                           }}
                         </WithListViewToolbarHelpers>
                       )}
-                    </WithViews>
+                    </WithViewEditorStates>
                   </div>
                 );
               }}
