@@ -1,6 +1,7 @@
 export * from './CiCd';
 export * from './Import';
 export * from '../Shared/AggregatedMetricCard';
+export * from './IntegrationActions';
 export * from './IntegrationActionSelectorCard';
 export * from './IntegrationDetailActivity';
 export * from './IntegrationDetailActivityItem';
@@ -33,7 +34,6 @@ export * from './IntegrationStepsHorizontalView';
 export * from './IntegrationVerticalFlow';
 export * from './IntegrationsList';
 export * from './IntegrationsListItem';
-export * from './IntegrationsListItemActions';
 export * from './IntegrationsListItemUnreadable';
 export * from './IntegrationsListSkeleton';
 export * from './IntegrationsListView';
