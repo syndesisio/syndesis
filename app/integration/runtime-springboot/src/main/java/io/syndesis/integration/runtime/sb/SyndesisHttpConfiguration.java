@@ -21,6 +21,7 @@ import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.AnyNestedCondition;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnResource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
@@ -48,15 +49,23 @@ public class SyndesisHttpConfiguration {
         /**
          * Checks if we're using API connector-http.
          */
-        @ConditionalOnClass(name = "io.syndesis.connector.http.HttpVerifier")
+        @ConditionalOnResource(resources = "classpath:META-INF/syndesis/connector/http4.json")
         static class HttpUsed {
+            // auto configuration test
+        }
+
+        /**
+         * Checks if we're using API connector-https.
+         */
+        @ConditionalOnResource(resources = "classpath:META-INF/syndesis/connector/https4.json")
+        static class HttpsUsed {
             // auto configuration test
         }
 
         /**
          * Checks if we're using API connector-rest-swagger.
          */
-        @ConditionalOnClass(name = "io.syndesis.connector.rest.swagger.SwaggerConnectorComponent")
+        @ConditionalOnResource(resources = "classpath:META-INF/syndesis/connector/rest-swagger.json")
         static class SyndesisApiClientUsed {
             // auto configuration test
         }
@@ -64,7 +73,7 @@ public class SyndesisHttpConfiguration {
         /**
          * Checks if we're using API connector-webhook.
          */
-        @ConditionalOnClass(name = "io.syndesis.connector.webhook.WebhookConnectorCustomizer")
+        @ConditionalOnResource(resources = "classpath:META-INF/syndesis/connector/webhook.json")
         static class WebhookUsed {
             // auto configuration test
         }
