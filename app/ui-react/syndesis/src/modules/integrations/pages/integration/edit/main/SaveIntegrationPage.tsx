@@ -1,6 +1,5 @@
 import { setIntegrationName, WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { OptionalInt } from '@syndesis/models';
 import { IntegrationEditorForm, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -50,14 +49,15 @@ export class SaveIntegrationPage extends React.Component {
                 name: {
                   defaultValue: '',
                   displayName: 'Name',
-                  order: 0 as OptionalInt,
+                  order: 0,
                   required: true,
+                  type: 'string',
                 },
                 // tslint:disable-next-line
                 description: {
                   defaultValue: '',
                   displayName: 'Description',
-                  order: 1 as OptionalInt,
+                  order: 1,
                   type: 'textarea',
                 },
               };
