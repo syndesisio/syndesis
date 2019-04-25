@@ -8,6 +8,7 @@ import {
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
+import './ViewList.css';
 
 export interface IViewsListProps extends IListViewToolbarProps {
   hasListData: boolean;
@@ -63,6 +64,18 @@ export class ViewList extends React.Component<IViewsListProps> {
             </EmptyState.Title>
             <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
             <EmptyState.Action>
+              <OverlayTrigger
+                overlay={this.getImportViewsTooltip()}
+                placement="top"
+              >
+                <ButtonLink
+                  href={this.props.linkImportViewsHRef}
+                  as={'default'}
+                  className={'view-list-empty-state-import'}
+                >
+                  {this.props.i18nImportViews}
+                </ButtonLink>
+              </OverlayTrigger>
               <OverlayTrigger
                 overlay={this.getCreateViewTooltip()}
                 placement="top"
