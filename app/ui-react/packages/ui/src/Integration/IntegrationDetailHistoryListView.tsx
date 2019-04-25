@@ -1,6 +1,6 @@
-import { IIntegrationDetailHistoryItem } from './models';
 import { Button, Grid, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
+import { IIntegrationDetailHistoryItem } from './models';
 
 import './IntegrationDetailHistoryListView.css';
 
