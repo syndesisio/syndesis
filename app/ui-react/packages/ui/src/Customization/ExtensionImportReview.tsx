@@ -1,5 +1,5 @@
-import { Button, Grid } from 'patternfly-react';
 import * as H from 'history';
+import { Button, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, Container } from '../Layout';
 import './ExtensionImportReview.css';

@@ -4,6 +4,7 @@ import {
   IntegrationOverview,
   Step,
 } from '@syndesis/models';
+import { key } from '@syndesis/utils';
 import produce from 'immer';
 import { getConnectionIcon } from './connectionFunctions';
 
@@ -18,7 +19,15 @@ export const NEW_INTEGRATION = {
  * @todo make the returned object immutable to avoid uncontrolled changes
  */
 export function getEmptyIntegration(): Integration {
-  return NEW_INTEGRATION;
+  return produce(NEW_INTEGRATION, draft => {
+    draft.flows = [
+      {
+        id: key(),
+        name: '',
+        steps: [],
+      },
+    ];
+  });
 }
 
 /**

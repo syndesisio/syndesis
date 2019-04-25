@@ -1,12 +1,11 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
-import { getStep } from '@syndesis/api';
+import { getEmptyIntegration, getStep } from '@syndesis/api';
+import { ConnectionOverview, Integration, Step } from '@syndesis/models';
 import {
-  Action,
-  ConnectionOverview,
-  Integration,
-  Step,
-} from '@syndesis/models';
-import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
+  makeResolver,
+  makeResolverNoParams,
+  makeResolverNoParamsWithDefaults,
+} from '@syndesis/utils';
 import {
   IBaseRouteParams,
   IBaseRouteState,
@@ -19,19 +18,6 @@ import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
 } from './components/editor/interfaces';
-import {
-  IFinishActionRouteParams,
-  IFinishActionRouteState,
-  IFinishConfigurationPageRouteParams,
-  IFinishConfigurationPageRouteState,
-  IFinishConnectionRouteState,
-} from './pages/create/finish';
-import {
-  IStartActionRouteParams,
-  IStartActionRouteState,
-  IStartConfigurationPageRouteParams,
-  IStartConfigurationPageRouteState,
-} from './pages/create/start';
 import {
   IActivityPageParams,
   IActivityPageState,
@@ -64,7 +50,7 @@ interface IEditorConfigureAction extends IEditorSelectAction {
 export const configureIndexMapper = ({ flow, integration }: IEditorIndex) => ({
   params: {
     flow,
-    integrationId: integration ? integration.id : undefined,
+    ...(integration && integration.id ? { integrationId: integration.id } : {}),
   } as IBaseRouteParams,
   state: {
     integration,
@@ -116,7 +102,7 @@ export const configureConfigureActionMapper = ({
     position,
   });
   const positionAsNumber = parseInt(position, 10);
-  const stepObject = getStep(integration, 0, positionAsNumber);
+  const stepObject = getStep(integration, 0, positionAsNumber) || {};
   return {
     params: {
       ...params,
@@ -131,19 +117,6 @@ export const configureConfigureActionMapper = ({
   };
 };
 
-export const createStartSelectActionResolver = makeResolver<
-  { connection: ConnectionOverview },
-  IStartActionRouteParams,
-  IStartActionRouteState
->(routes.create.start.connection.selectAction, ({ connection }) => ({
-  params: {
-    connectionId: connection.id!,
-  },
-  state: {
-    connection,
-  },
-}));
-
 // TODO: unit test every single one of these resolvers 😫
 
 export const listResolver = makeResolverNoParams(routes.list);
@@ -152,110 +125,55 @@ export const manageCicdResolver = makeResolverNoParams(routes.manageCicd.root);
 
 export const createRootResolver = makeResolverNoParams(routes.create.root);
 
-export const createStartSelectStepResolver = makeResolverNoParams(
-  routes.create.start.selectStep
-);
+export const createStartSelectStepResolver = makeResolverNoParamsWithDefaults<
+  ISelectConnectionRouteParams,
+  ISelectConnectionRouteState
+>(routes.create.start.selectStep, () => {
+  return {
+    params: {
+      flow: '0',
+      position: '0',
+    },
+    state: {
+      integration: getEmptyIntegration(),
+    },
+  };
+});
+
+export const createStartSelectActionResolver = makeResolver<
+  IEditorSelectAction,
+  ISelectActionRouteParams,
+  ISelectActionRouteState
+>(routes.create.start.connection.selectAction, configureSelectActionMapper);
 
 export const createStartConfigureActionResolver = makeResolver<
   IEditorConfigureAction,
-  IStartConfigurationPageRouteParams,
-  IStartConfigurationPageRouteState
+  IConfigureActionRouteParams,
+  IConfigureActionRouteState
 >(
   routes.create.start.connection.configureAction,
-  ({ connection, integration, actionId, step, updatedIntegration }) => ({
-    params: {
-      connectionId: connection.id,
-      actionId,
-      step: `${step || 0}`,
-    },
-    state: {
-      connection,
-      integration,
-      updatedIntegration,
-    },
-  })
+  configureConfigureActionMapper
 );
 
 export const createFinishSelectStepResolver = makeResolver<
-  {
-    integration: Integration;
-    startConnection: ConnectionOverview;
-    startAction: Action;
-  },
-  null,
-  IFinishConnectionRouteState
->(
-  routes.create.finish.selectStep,
-  ({ integration, startConnection, startAction }) => ({
-    params: null,
-    state: {
-      integration,
-      startAction,
-      startConnection,
-    },
-  })
-);
+  IEditorSelectConnection,
+  ISelectConnectionRouteParams,
+  ISelectConnectionRouteState
+>(routes.create.finish.selectStep, configureSelectConnectionMapper);
 
 export const createFinishSelectActionResolver = makeResolver<
-  {
-    integration: Integration;
-    startConnection: ConnectionOverview;
-    startAction: Action;
-    finishConnection: ConnectionOverview;
-  },
-  IFinishActionRouteParams,
-  IFinishActionRouteState
->(
-  routes.create.finish.connection.selectAction,
-  ({ integration, startConnection, startAction, finishConnection }) => ({
-    params: {
-      connectionId: finishConnection.id!,
-    },
-    state: {
-      integration,
-      startAction,
-      startConnection,
-      finishConnection,
-    },
-  })
-);
+  IEditorSelectAction,
+  ISelectActionRouteParams,
+  ISelectActionRouteState
+>(routes.create.finish.connection.selectAction, configureSelectActionMapper);
 
 export const createFinishConfigureActionResolver = makeResolver<
-  {
-    integration: Integration;
-    updatedIntegration: Integration;
-    startConnection: ConnectionOverview;
-    startAction: Action;
-    finishConnection: ConnectionOverview;
-    actionId: string;
-    step?: string;
-  },
-  IFinishConfigurationPageRouteParams,
-  IFinishConfigurationPageRouteState
+  IEditorConfigureAction,
+  IConfigureActionRouteParams,
+  IConfigureActionRouteState
 >(
   routes.create.finish.connection.configureAction,
-  ({
-    integration,
-    startConnection,
-    startAction,
-    finishConnection,
-    actionId,
-    step,
-    updatedIntegration,
-  }) => ({
-    params: {
-      actionId,
-      connectionId: finishConnection.id,
-      step: `${step || 0}`,
-    },
-    state: {
-      integration,
-      updatedIntegration,
-      startAction,
-      startConnection,
-      finishConnection,
-    },
-  })
+  configureConfigureActionMapper
 );
 
 export const createConfigureIndexResolver = makeResolver<
@@ -424,11 +342,13 @@ export const getStepKind = (stepOrConnection: ConnectionOverview | Step) => {
 };
 
 export const createStartStepSwitcherResolver = makeResolver<{
-  stepOrConnection: ConnectionOverview | Step;
+  connection: ConnectionOverview | Step;
+  params: ISelectConnectionRouteParams;
+  state: ISelectConnectionRouteState;
 }>(
   '',
-  ({ stepOrConnection }): any => {
-    const stepKind = getStepKind(stepOrConnection);
+  ({ connection, params, state }): any => {
+    const stepKind = getStepKind(connection);
     switch (stepKind) {
       case 'api-provider':
         return makeResolverNoParams(
@@ -436,21 +356,22 @@ export const createStartStepSwitcherResolver = makeResolver<{
         );
       default:
         return createStartSelectActionResolver({
-          connection: stepOrConnection as ConnectionOverview,
+          connection: connection as ConnectionOverview,
+          ...params,
+          ...state,
         });
     }
   }
 );
 
 export const createFinishStepSwitcherResolver = makeResolver<{
-  integration: Integration;
-  startConnection: ConnectionOverview;
-  startAction: Action;
-  finishConnection: ConnectionOverview | Step;
+  connection: ConnectionOverview | Step;
+  params: ISelectConnectionRouteParams;
+  state: ISelectConnectionRouteState;
 }>(
   '',
-  ({ finishConnection, ...rest }): any => {
-    const stepKind = getStepKind(finishConnection);
+  ({ connection, params, state }): any => {
+    const stepKind = getStepKind(connection);
     switch (stepKind) {
       case 'api-provider':
         return makeResolverNoParams(
@@ -458,8 +379,9 @@ export const createFinishStepSwitcherResolver = makeResolver<{
         );
       default:
         return createFinishSelectActionResolver({
-          ...rest,
-          finishConnection: finishConnection as ConnectionOverview,
+          connection: connection as ConnectionOverview,
+          ...params,
+          ...state,
         });
     }
   }

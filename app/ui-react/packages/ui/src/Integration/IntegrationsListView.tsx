@@ -1,11 +1,12 @@
+import * as H from 'history';
 import * as React from 'react';
 import { ButtonLink, Container } from '../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
 
 export interface IIntegrationsListViewProps extends IListViewToolbarProps {
-  linkToManageCiCd: string;
-  linkToIntegrationImport: string;
-  linkToIntegrationCreation: string;
+  linkToManageCiCd: H.LocationDescriptor;
+  linkToIntegrationImport: H.LocationDescriptor;
+  linkToIntegrationCreation: H.LocationDescriptor;
   i18nManageCiCd: string;
   i18nImport: string;
   i18nLinkCreateConnection: string;

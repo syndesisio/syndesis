@@ -139,10 +139,10 @@ const addStepConfigureActionPage = (
         addI18nDescription={'Configure the action'}
       />
     )}
-    postConfigureHref={(integration, flow) =>
+    postConfigureHref={(integration, params) =>
       resolvers.integration.edit.index({
-        flow,
         integration,
+        ...params,
       })
     }
   />
@@ -182,10 +182,10 @@ const editStepConfigureActionPage = (
     sidebar={({ steps, activeIndex }) => (
       <IntegrationEditorSidebar steps={steps} activeIndex={activeIndex} />
     )}
-    postConfigureHref={(integration, flow) =>
+    postConfigureHref={(integration, params) =>
       resolvers.integration.edit.index({
-        flow,
         integration,
+        ...params,
       })
     }
   />

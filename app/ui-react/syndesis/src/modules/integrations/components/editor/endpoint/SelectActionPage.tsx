@@ -17,6 +17,10 @@ import {
 } from '../interfaces';
 
 export interface ISelectActionPageProps {
+  backHref?: (
+    p: ISelectActionRouteParams,
+    s: ISelectActionRouteState
+  ) => H.LocationDescriptor;
   cancelHref: (
     p: ISelectActionRouteParams,
     s: ISelectActionRouteState
@@ -104,6 +108,14 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                                 />
                               ))}
                           </IntegrationEditorChooseAction>
+                        }
+                        backHref={
+                          this.props.backHref
+                            ? this.props.backHref(
+                                { connectionId, flow, position },
+                                { connection, integration }
+                              )
+                            : undefined
                         }
                         cancelHref={this.props.cancelHref(
                           { connectionId, flow, position },

@@ -12,7 +12,7 @@ import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 import { PageTitle } from '../../../shared';
 import { Integrations } from '../components';
-import routes from '../routes';
+import resolvers from '../resolvers';
 
 function getFilteredAndSortedIntegrations(
   integrations: IntegrationWithMonitoring[],
@@ -132,10 +132,8 @@ export class IntegrationsPage extends React.Component {
                           <PageTitle title={t('shared:Integrations')} />
                           <IntegrationsListView
                             linkToIntegrationImport={'/integrations/import'}
-                            linkToManageCiCd={routes.manageCicd.root}
-                            linkToIntegrationCreation={
-                              routes.create.start.selectStep
-                            }
+                            linkToManageCiCd={resolvers.manageCicd.root()}
+                            linkToIntegrationCreation={resolvers.create.start.selectStep()}
                             filterTypes={getFilterTypes(
                               connectionsData.connectionsForDisplay
                             )}

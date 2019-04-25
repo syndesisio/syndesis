@@ -36,7 +36,8 @@ export interface IConfigureActionPageProps {
   }) => React.ReactNode;
   postConfigureHref: (
     integration: Integration,
-    flow: string
+    p: IConfigureActionRouteParams,
+    s: IConfigureActionRouteState
   ) => H.LocationDescriptorObject;
 }
 
@@ -113,7 +114,16 @@ export class ConfigureActionPage extends React.Component<
                   );
                 } else {
                   history.push(
-                    this.props.postConfigureHref(updatedIntegration, flow)
+                    this.props.postConfigureHref(
+                      updatedIntegration,
+                      { actionId, flow, step, position },
+                      {
+                        configuredProperties,
+                        connection,
+                        integration,
+                        updatedIntegration,
+                      }
+                    )
                   );
                 }
               };

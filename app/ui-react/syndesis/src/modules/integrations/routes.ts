@@ -45,8 +45,8 @@ export default include('/integrations', {
   manageCicd: include('manageCicd', { root: '' }),
   import: include('import', { root: '' }),
   create: include('create', {
-    start: include('start', stepRoutes),
-    finish: include('finish', stepRoutes),
+    start: include('start/flow/:flow/position/:position', stepRoutes),
+    finish: include('finish/flow/:flow/position/:position', stepRoutes),
     configure: include('configure', editorRoutes),
     root: '',
   }),

@@ -1,4 +1,4 @@
-import { getSteps, WithConnections } from '@syndesis/api';
+import { getEmptyIntegration, getSteps, WithConnections } from '@syndesis/api';
 import { ConnectionOverview, Step } from '@syndesis/models';
 import {
   ButtonLink,
@@ -17,6 +17,10 @@ import {
 } from './interfaces';
 
 export interface ISelectConnectionPageProps {
+  backHref?: (
+    p: ISelectConnectionRouteParams,
+    s: ISelectConnectionRouteState
+  ) => H.LocationDescriptor;
   cancelHref: (
     p: ISelectConnectionRouteParams,
     s: ISelectConnectionRouteState
@@ -47,9 +51,11 @@ export class SelectConnectionPage extends React.Component<
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {({ flow, position }, { integration }) => {
-          const flowAsNumber = parseInt(flow, 10);
-          const positionAsNumber = parseInt(position, 10);
+        {(params, state) => {
+          const { flow, position } = params;
+          const { integration = getEmptyIntegration() } = state;
+          const flowAsNumber = parseInt(flow, 10) || 0;
+          const positionAsNumber = parseInt(position, 10) || 0;
           return (
             <>
               <PageTitle title={'Choose a connection'} />
@@ -90,8 +96,8 @@ export class SelectConnectionPage extends React.Component<
                                     <ButtonLink
                                       href={this.props.selectHref(
                                         c,
-                                        { flow, position },
-                                        { integration }
+                                        params,
+                                        state
                                       )}
                                     >
                                       Select
@@ -116,10 +122,12 @@ export class SelectConnectionPage extends React.Component<
                     )}
                   </WithConnections>
                 }
-                cancelHref={this.props.cancelHref(
-                  { flow, position },
-                  { integration }
-                )}
+                backHref={
+                  this.props.backHref
+                    ? this.props.backHref(params, state)
+                    : undefined
+                }
+                cancelHref={this.props.cancelHref(params, state)}
               />
             </>
           );
