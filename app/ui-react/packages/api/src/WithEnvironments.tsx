@@ -3,9 +3,13 @@ import { IFetchState } from './Fetch';
 import { SyndesisFetch } from './SyndesisFetch';
 import { WithPolling } from './WithPolling';
 
+export interface IWithEnvironmentsRenderProps extends IFetchState<string[]> {
+  read(): Promise<void>;
+}
+
 export interface IWithEnvironmentsProps {
   disableUpdates?: boolean;
-  children(props: IFetchState<string[]>): any;
+  children(props: IWithEnvironmentsRenderProps): any;
 }
 
 export class WithEnvironments extends React.Component<IWithEnvironmentsProps> {
@@ -14,11 +18,11 @@ export class WithEnvironments extends React.Component<IWithEnvironmentsProps> {
       <SyndesisFetch<string[]> url={'/public/environments'} defaultValue={[]}>
         {({ read, response }) => {
           if (this.props.disableUpdates) {
-            return this.props.children(response);
+            return this.props.children({ ...response, read });
           }
           return (
             <WithPolling read={read} polling={5000}>
-              {() => this.props.children(response)}
+              {() => this.props.children({ ...response, read })}
             </WithPolling>
           );
         }}
