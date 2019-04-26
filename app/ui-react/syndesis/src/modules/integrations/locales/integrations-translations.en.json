@@ -39,5 +39,11 @@
   "ImportNoFileSelectedMessage": "no file selected",
   "ImportUploadFailedAlertMessage": "<span>File <strong>'{{fileName}}'</strong> could not be uploaded</span>",
   "ImportUploadFailedMessage": "Upload failed for {{fileName}}",
-  "ImportUploadSuccessMessage": "Successfully imported {{fileName}}"
+  "ImportUploadSuccessMessage": "Successfully imported {{fileName}}",
+  "PublishingIntegrationMessage": "Starting integration.  Your integration will start running in a few moments.",
+  "UnpublishingIntegrationMessage": "Stopping integration.  It takes a few moments to stop the integration.",
+  "DeletingIntegrationMessage": "Deleting integration.  It takes a few moments to delete the integration.",
+  "PublishingIntegrationFailedMessage": "Error starting integration: {{error}}",
+  "UnpublishingIntegrationFailedMessage": "Error stopping integration: {{error}}",
+  "DeletingIntegrationFailedMessage": "Error deleting integration: {{error}}"
 }

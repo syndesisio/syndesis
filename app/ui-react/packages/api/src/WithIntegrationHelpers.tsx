@@ -73,7 +73,7 @@ export interface IWithIntegrationHelpersChildrenProps {
    * Delete the integration with the specified ID, empty response is returned
    * @param id
    */
-  deleteIntegration(id: string): Promise<Response>;
+  deleteIntegration(id: string): Promise<void>;
   /**
    * Deploy the integration with the specified ID and version.  Empty response is returned
    *
@@ -85,7 +85,7 @@ export interface IWithIntegrationHelpersChildrenProps {
     id: string,
     version: string | number,
     isIntegrationDeployment?: boolean
-  ): Promise<Response>;
+  ): Promise<void>;
   /**
    * Uploads and imports the supplied file as a new integration
    * @param file
@@ -120,7 +120,7 @@ export interface IWithIntegrationHelpersChildrenProps {
    * @param id
    * @param version
    */
-  undeployIntegration(id: string, version: string | number): Promise<Response>;
+  undeployIntegration(id: string, version: string | number): Promise<void>;
 }
 
 export interface IWithIntegrationHelpersProps {
@@ -197,11 +197,14 @@ export class WithIntegrationHelpersWrapped extends React.Component<
   }
 
   public async deleteIntegration(id: string) {
-    return callFetch({
+    const response = await callFetch({
       headers: this.props.headers,
       method: 'DELETE',
       url: `${this.props.apiUri}/integrations/${id}`,
     });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
   }
 
   public async importIntegration(file: File) {
@@ -231,7 +234,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     version: string | number,
     isIntegrationDeployment = false
   ) {
-    return callFetch({
+    const response = await callFetch({
       body: isIntegrationDeployment ? { targetState: PUBLISHED } : {},
       headers: this.props.headers,
       method: isIntegrationDeployment ? 'POST' : 'PUT',
@@ -241,10 +244,13 @@ export class WithIntegrationHelpersWrapped extends React.Component<
           }/integrations/${id}/deployments/${version}/targetState`
         : `${this.props.apiUri}/integrations/${id}/deployments`,
     });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
   }
 
   public async undeployIntegration(id: string, version: string | number) {
-    return callFetch({
+    const response = await callFetch({
       body: { targetState: UNPUBLISHED },
       headers: this.props.headers,
       method: 'POST',
@@ -252,6 +258,9 @@ export class WithIntegrationHelpersWrapped extends React.Component<
         this.props.apiUri
       }/integrations/${id}/deployments/${version}/targetState`,
     });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
   }
 
   public async updateConnection(
