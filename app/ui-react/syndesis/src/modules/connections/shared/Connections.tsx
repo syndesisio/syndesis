@@ -111,7 +111,6 @@ export class Connections extends React.Component<IConnectionsProps> {
                                         : undefined
                                     }
                                   />
-                                  )}
                                 </ConnectionsGridCell>
                               );
                             })

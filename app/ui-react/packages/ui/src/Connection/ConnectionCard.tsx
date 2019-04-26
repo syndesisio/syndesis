@@ -98,6 +98,7 @@ export class ConnectionCard extends React.PureComponent<
             <div className="pull-right">
               <DropdownKebab
                 id={`connection-${this.props.name}-menu`}
+                pullRight={true}
                 title={this.props.menuProps.i18nMenuTitle}
               >
                 <li role={'presentation'} key={0}>
