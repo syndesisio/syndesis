@@ -1,4 +1,3 @@
-export * from './getConnectionIcon';
 export * from './key';
 export * from './makeResolver';
 export * from './WithListViewToolbarHelpers';

@@ -1,3 +1,4 @@
+import { getConnectionIcon } from '@syndesis/api';
 import { Connection } from '@syndesis/models';
 import {
   ConnectionCard,
@@ -5,7 +6,7 @@ import {
   ConnectionsGridCell,
   ConnectionSkeleton,
 } from '@syndesis/ui';
-import { getConnectionIcon, WithLoader } from '@syndesis/utils';
+import { WithLoader } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
 import { ApiError } from '../../../shared';
@@ -41,7 +42,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                 <ConnectionCard
                   name={c.name}
                   description={c.description || ''}
-                  icon={getConnectionIcon(c, process.env.PUBLIC_URL)}
+                  icon={getConnectionIcon(process.env.PUBLIC_URL, c)}
                   href={this.props.getConnectionHref(c)}
                 />
               </ConnectionsGridCell>
