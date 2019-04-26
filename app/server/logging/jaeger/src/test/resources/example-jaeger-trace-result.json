@@ -1,0 +1,325 @@
+{
+  "data": [
+    {
+      "traceID": "b959b72de489c892",
+      "data": [
+        {
+          "traceID": "b959b72de489c892",
+          "spanID": "b959b72de489c892",
+          "flags": 1,
+          "operationName": "i-LXQ28wrYwToP6mMs7Vaz",
+          "references": [],
+          "startTime": 1548789523494000,
+          "duration": 28140,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "i-LXQ29FYYwToP6mMs7Vbz"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": true
+            },
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "b959b72de489c892",
+          "spanID": "d791ed589e590f8d",
+          "flags": 1,
+          "operationName": "step-1",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "b959b72de489c892",
+              "spanID": "b959b72de489c892"
+            }
+          ],
+          "startTime": 1548789523510000,
+          "duration": 3737,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1548789523513000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LXQ29FYYwToP6mMs7Vbz, Syndesis.FLOW_ID=i-LXQ28wrYwToP6mMs7Vaz, Syndesis.STEP_ID=step-1, Syndesis.STEP_SPAN=b959b72de489c892:d791ed589e590f8d:b959b72de489c892:1 - step-1}] Log me baby one more time"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "b959b72de489c892",
+          "spanID": "f164f527f5ea5f46",
+          "flags": 1,
+          "operationName": "step-2",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "b959b72de489c892",
+              "spanID": "b959b72de489c892"
+            }
+          ],
+          "startTime": 1548789523514000,
+          "duration": 7814,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "io.syndesis.integration.runtime.tracing.ActivityTracingWithSplitTest",
+          "tags": [
+            {
+              "key": "hostname",
+              "type": "string",
+              "value": "chirino-mbp.local"
+            },
+            {
+              "key": "ip",
+              "type": "string",
+              "value": "10.193.21.76"
+            },
+            {
+              "key": "jaeger.version",
+              "type": "string",
+              "value": "Java-0.32.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    },
+    {
+      "traceID": "b56dd31b1dea7ea3",
+      "data": [
+        {
+          "traceID": "b56dd31b1dea7ea3",
+          "spanID": "b56dd31b1dea7ea3",
+          "flags": 1,
+          "operationName": "i-LXQ29GaYwToP6mMs7Vfz",
+          "references": [],
+          "startTime": 1548789523835000,
+          "duration": 2943,
+          "tags": [
+            {
+              "key": "exchange",
+              "type": "string",
+              "value": "i-LXQ29KvYwToP6mMs7Vgz"
+            },
+            {
+              "key": "failed",
+              "type": "bool",
+              "value": false
+            },
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "activity"
+            },
+            {
+              "key": "sampler.type",
+              "type": "string",
+              "value": "const"
+            },
+            {
+              "key": "sampler.param",
+              "type": "bool",
+              "value": true
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "b56dd31b1dea7ea3",
+          "spanID": "2dbae319a5f95027",
+          "flags": 1,
+          "operationName": "step-1",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "b56dd31b1dea7ea3",
+              "spanID": "b56dd31b1dea7ea3"
+            }
+          ],
+          "startTime": 1548789523835000,
+          "duration": 526,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1548789523836000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LXQ29KvYwToP6mMs7Vgz, Syndesis.FLOW_ID=i-LXQ29GaYwToP6mMs7Vfz, Syndesis.STEP_ID=step-1, Syndesis.STEP_SPAN=b56dd31b1dea7ea3:2dbae319a5f95027:b56dd31b1dea7ea3:1 - step-1}] Log me baby one more time"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "b56dd31b1dea7ea3",
+          "spanID": "f04e8ad4c1d3c40d",
+          "flags": 1,
+          "operationName": "step-2",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "b56dd31b1dea7ea3",
+              "spanID": "b56dd31b1dea7ea3"
+            }
+          ],
+          "startTime": 1548789523836000,
+          "duration": 480,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "b56dd31b1dea7ea3",
+          "spanID": "19c9e027dd10e053",
+          "flags": 1,
+          "operationName": "step-3",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "b56dd31b1dea7ea3",
+              "spanID": "b56dd31b1dea7ea3"
+            }
+          ],
+          "startTime": 1548789523836000,
+          "duration": 499,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            }
+          ],
+          "logs": [
+            {
+              "timestamp": 1548789523837000,
+              "fields": [
+                {
+                  "key": "event",
+                  "type": "string",
+                  "value": "Message Context: [{breadcrumbId=i-LXQ29KvYwToP6mMs7Vgz, Syndesis.FLOW_ID=i-LXQ29GaYwToP6mMs7Vfz, Syndesis.STEP_ID=step-3, Syndesis.STEP_SPAN=b56dd31b1dea7ea3:19c9e027dd10e053:b56dd31b1dea7ea3:1 - step-3}] Log me baby one more time"
+                }
+              ]
+            }
+          ],
+          "processID": "p1",
+          "warnings": null
+        },
+        {
+          "traceID": "b56dd31b1dea7ea3",
+          "spanID": "30b50b214305c633",
+          "flags": 1,
+          "operationName": "step-4",
+          "references": [
+            {
+              "refType": "CHILD_OF",
+              "traceID": "b56dd31b1dea7ea3",
+              "spanID": "b56dd31b1dea7ea3"
+            }
+          ],
+          "startTime": 1548789523837000,
+          "duration": 327,
+          "tags": [
+            {
+              "key": "kind",
+              "type": "string",
+              "value": "step"
+            }
+          ],
+          "logs": [],
+          "processID": "p1",
+          "warnings": null
+        }
+      ],
+      "processes": {
+        "p1": {
+          "serviceName": "io.syndesis.integration.runtime.tracing.ActivityTracingWithSplitTest",
+          "tags": [
+            {
+              "key": "hostname",
+              "type": "string",
+              "value": "chirino-mbp.local"
+            },
+            {
+              "key": "ip",
+              "type": "string",
+              "value": "10.193.21.76"
+            },
+            {
+              "key": "jaeger.version",
+              "type": "string",
+              "value": "Java-0.32.0"
+            }
+          ]
+        }
+      },
+      "warnings": null
+    }
+  ],
+  "total": 0,
+  "limit": 0,
+  "offset": 0,
+  "errors": null
+}

@@ -1141,6 +1141,12 @@
 
       <dependency>
         <groupId>io.syndesis.server</groupId>
+        <artifactId>server-logging-jaeger</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.server</groupId>
         <artifactId>server-monitoring</artifactId>
         <version>${project.version}</version>
       </dependency>

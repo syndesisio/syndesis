@@ -52,3 +52,8 @@ io:
         enabled: true
       meta:
         enabled: true
+
+# Jaeger/Opentracing
+jaeger:
+  service:
+    name: syndesis-meta

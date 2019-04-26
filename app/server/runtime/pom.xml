@@ -563,6 +563,12 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis.server</groupId>
+      <artifactId>server-logging-jaeger</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
     <!-- DeploymentStateMonitor implementation -->
     <dependency>
       <groupId>io.syndesis.server</groupId>

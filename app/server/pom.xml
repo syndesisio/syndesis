@@ -46,6 +46,7 @@
     <module>dao</module>
     <module>update-controller</module>
     <module>logging/jsondb</module>
+    <module>logging/jaeger</module>
     <module>filestore</module>
     <module>inspector</module>
     <module>jsondb</module>
