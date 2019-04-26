@@ -2,7 +2,7 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='create-api-provider-integration_{context}']
-= Creating an integration that is triggered by an API call
+= Creating an API provider integration
 
 To be able to invoke a call that triggers execution of an integration, you provide
 an OpenAPI document that defines the operations that the integration
