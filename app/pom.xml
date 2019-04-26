@@ -1094,6 +1094,13 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>jaeger-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+
       <!-- ::::::::::: rest :::::::::::: -->
 
       <dependency>

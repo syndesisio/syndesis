@@ -35,6 +35,7 @@
   <modules>
     <module>util</module>
     <module>model</module>
+    <module>jaeger-spring-boot-starter</module>
   </modules>
 
   <profiles>
