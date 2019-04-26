@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  io.syndesis.connector.http.HttpVerifierAutoConfiguration,\
-  io.syndesis.connector.support.processor.SyndesisHttpConfiguration

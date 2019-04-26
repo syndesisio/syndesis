@@ -16,6 +16,7 @@
 package io.syndesis.server.controller.integration.camelk;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Properties;
 
 import io.fabric8.kubernetes.api.model.Secret;
@@ -32,6 +33,7 @@ import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.common.util.MavenProperties;
 import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
+import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.endpoint.v1.VersionService;
 import io.syndesis.server.openshift.OpenShiftServiceNoOp;
 import org.junit.Test;
@@ -105,7 +107,8 @@ public class CamelKPublishHandlerTest {
             null,
             manager,
             new VersionService(),
-            Collections.emptyList());
+            Collections.emptyList(),
+            new ControllersConfigurationProperties());
 
         Secret secret = handler.createIntegrationSecret(deployment);
 
@@ -118,7 +121,6 @@ public class CamelKPublishHandlerTest {
         assertThat(actual).isEqualTo(expected);
         assertThat(actual).containsEntry("flow-0.http4-0.username", "admin");
     }
-
 
     @Test
     public void testCamelkIntegration() throws Exception {
@@ -152,8 +154,8 @@ public class CamelKPublishHandlerTest {
             null,
             manager,
             new VersionService(),
-            Collections.emptyList());
-
+            Collections.emptyList(),
+            new ControllersConfigurationProperties());
 
         io.syndesis.server.controller.integration.camelk.crd.Integration i = handler.createIntegrationCR(deployment);
 
@@ -162,5 +164,60 @@ public class CamelKPublishHandlerTest {
         assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("bom:io.syndesis.integration/integration-bom-camel-k/pom/"));
         assertThat(i.getSpec().getResources()).isNotEmpty();
         assertThat(i.getSpec().getResources()).anyMatch(r -> "mapping-flow-0-step-1.json".equals(r.getDataSpec().getName()));
+    }
+
+    @Test
+    public void testCamelkDefaultCustomizers() throws Exception {
+        TestResourceManager manager = new TestResourceManager();
+        Integration integration = manager.newIntegration();
+        ProjectGenerator generator = new ProjectGenerator(new ProjectGeneratorConfiguration(), manager, new MavenProperties());
+        IntegrationDeployment deployment = new IntegrationDeployment.Builder().userId("user").id("idId").spec(integration).build();
+
+        CamelKPublishHandler handler = new CamelKPublishHandler(
+            new OpenShiftServiceNoOp(),
+            null,
+            null,
+            generator,
+            null,
+            manager,
+            new VersionService(),
+            Collections.emptyList(),
+            new ControllersConfigurationProperties());
+
+        io.syndesis.server.controller.integration.camelk.crd.Integration i = handler.createIntegrationCR(deployment);
+
+        assertThat(i.getSpec().getConfiguration()).anyMatch(r -> {
+            return Objects.equals("property", r.getType())
+                && Objects.equals("camel.k.customizer=" + String.join(",", CamelKPublishHandler.DEFAULT_CUSTOMIZERS), r.getValue());
+        });
+    }
+
+    @Test
+    public void testCamelkCustomCustomizers() throws Exception {
+        TestResourceManager manager = new TestResourceManager();
+        Integration integration = manager.newIntegration();
+        ProjectGenerator generator = new ProjectGenerator(new ProjectGeneratorConfiguration(), manager, new MavenProperties());
+        IntegrationDeployment deployment = new IntegrationDeployment.Builder().userId("user").id("idId").spec(integration).build();
+        ControllersConfigurationProperties properties = new ControllersConfigurationProperties();
+        properties.getCamelk().getCustomizers().add("mycustomizer1");
+        properties.getCamelk().getCustomizers().add("mycustomizer2");
+
+        CamelKPublishHandler handler = new CamelKPublishHandler(
+            new OpenShiftServiceNoOp(),
+            null,
+            null,
+            generator,
+            null,
+            manager,
+            new VersionService(),
+            Collections.emptyList(),
+            properties);
+
+        io.syndesis.server.controller.integration.camelk.crd.Integration i = handler.createIntegrationCR(deployment);
+
+        assertThat(i.getSpec().getConfiguration()).anyMatch(r -> {
+            return Objects.equals("property", r.getType())
+                && Objects.equals("camel.k.customizer=" + String.join(",", properties.getCamelk().getCustomizers()), r.getValue());
+        });
     }
 }

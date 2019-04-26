@@ -2,5 +2,12 @@
     "ID": 3,
     "Name": "Ergo Screen",
     "Description": "19 Optimum Resolution 1024 x 768 @ 85Hz, resolution 1280 x 960",
+    "SerialNumbers":["ae949549","er342367","px230434"],
+    "Specification":{
+      "ProductType":"Monitor",
+      "Detail1":"Diagonal Size 22",
+      "Detail2":"Aspect Ratio 16:9",
+      "PowerType": "110V"
+    },
     "ResultCount": 3
 }

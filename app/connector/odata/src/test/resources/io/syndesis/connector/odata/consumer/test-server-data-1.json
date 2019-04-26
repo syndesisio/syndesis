@@ -1,5 +1,13 @@
 {
     "ID": 1,
     "Name": "Notebook Basic 15",
-    "Description": "Notebook Basic, 1.7GHz - 15 XGA - 1024MB DDR2 SDRAM - 40GB"
+    "Description": "Notebook Basic, 1.7GHz - 15 XGA - 1024MB DDR2 SDRAM - 40GB",
+    "SerialNumbers": ["ae8353484","er5845474","px376876"],
+    "Specification":{
+      "ProductType":"Notebook",
+      "Detail1":"CPU AMD Ryzen 3 2200U",
+      "Detail2":"Dual-Core Cores",
+      "PowerType": "240V"
+    }
+  }
 }

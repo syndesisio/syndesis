@@ -17,6 +17,7 @@ package io.syndesis.connector.sheets;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
 
     private String spreadsheetId;
     private String range;
+    private String[] columnNames;
     private String majorDimension;
     private String valueInputOption;
 
@@ -57,12 +59,20 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
     private void setApiMethod(Map<String, Object> options) {
         spreadsheetId = (String) options.get("spreadsheetId");
         range = (String) options.get("range");
+
         majorDimension = Optional.ofNullable(options.get("majorDimension"))
                                   .map(Object::toString)
                                   .orElse(RangeCoordinate.DIMENSION_ROWS);
         valueInputOption = Optional.ofNullable(options.get("valueInputOption"))
                                    .map(Object::toString)
                                    .orElse("USER_ENTERED");
+
+        columnNames = Optional.ofNullable(options.get("columnNames"))
+                .map(Object::toString)
+                .map(names -> names.split(","))
+                .orElse(new String[]{});
+
+        Arrays.parallelSetAll(columnNames, (i) -> columnNames[i].trim());
 
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName());
@@ -97,7 +107,7 @@ public class GoogleSheetsUpdateValuesCustomizer implements ComponentProxyCustomi
         List<List<Object>> values = new ArrayList<>();
 
         if (ObjectHelper.isNotEmpty(jsonBeans)) {
-            final ObjectSchema spec = getItemSchema(GoogleSheetsMetaDataHelper.createSchema(range, majorDimension));
+            final ObjectSchema spec = getItemSchema(GoogleSheetsMetaDataHelper.createSchema(range, majorDimension, columnNames));
 
             for (String json : jsonBeans) {
                 Map<String, Object> dataShape = Json.reader().forType(Map.class).readValue(json);

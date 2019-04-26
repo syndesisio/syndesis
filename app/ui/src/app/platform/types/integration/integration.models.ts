@@ -10,7 +10,6 @@ import {
   StringMap,
   WithId,
 } from '@syndesis/ui/platform';
-import { DataShape } from '../platform.models';
 
 export class Step implements BaseEntity {
   id?: string;
@@ -231,11 +230,6 @@ export interface ContinuousDeliveryEnvironment {
   lastTaggedAt: number;
   lastExportedat: number;
   lastImportedAt: number;
-}
-
-export interface DescriptorRequest {
-  inputShape: DataShape;
-  outputShape: DataShape;
 }
 
 export const HIDE_FROM_STEP_SELECT = 'hide-from-step-select';

@@ -51,8 +51,7 @@ final class TestConstants {
             .id("periodic-timer-action")
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("timer")
-                .camelConnectorPrefix("periodic-timer-connector")
-                .camelConnectorGAV("io.syndesis.connector:connector-timer:" + SYNDESIS_VERSION)
+                .componentScheme("periodic-timer-connector")
                 .build())
             .build();
 
@@ -72,8 +71,7 @@ final class TestConstants {
             .id("http-get-action")
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("http")
-                .camelConnectorPrefix("http-get-connector")
-                .camelConnectorGAV("io.syndesis.connector:connector-http-get:" + SYNDESIS_VERSION)
+                .componentScheme("http-get-connector")
                 .build())
             .build();
 
@@ -82,8 +80,7 @@ final class TestConstants {
             .id("http-post-action")
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("http")
-                .camelConnectorPrefix("http-post-connector")
-                .camelConnectorGAV("io.syndesis.connector:connector-http-post:" + SYNDESIS_VERSION)
+                .componentScheme("http-post-connector")
                 .build())
             .build();
 

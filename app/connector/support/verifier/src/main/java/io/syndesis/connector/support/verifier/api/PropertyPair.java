@@ -23,6 +23,10 @@ public final class PropertyPair {
 
     private final String value;
 
+    public PropertyPair(final String value) {
+        this(value, value);
+    }
+
     public PropertyPair(final String value, final String displayValue) {
         this.value = value;
         this.displayValue = displayValue;

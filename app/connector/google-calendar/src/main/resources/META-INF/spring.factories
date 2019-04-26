@@ -1,3 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-io.syndesis.connector.calendar.GoogleCalendarVerifierAutoConfiguration,\
-io.syndesis.connector.calendar.GoogleCalendarMetaDataAutoConfiguration

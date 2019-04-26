@@ -15,13 +15,18 @@
  */
 package io.syndesis.connector.odata.meta;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import org.apache.olingo.commons.api.edm.EdmComplexType;
 import org.apache.olingo.commons.api.edm.EdmElement;
+import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.edm.EdmEnumType;
 import org.apache.olingo.commons.api.edm.EdmNavigationProperty;
 import org.apache.olingo.commons.api.edm.EdmParameter;
 import org.apache.olingo.commons.api.edm.EdmPrimitiveType;
 import org.apache.olingo.commons.api.edm.EdmProperty;
+import org.apache.olingo.commons.api.edm.EdmStructuredType;
 import org.apache.olingo.commons.api.edm.EdmType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +49,25 @@ public class EdmTypeConvertor {
         return metadata;
     }
 
-    private PropertyMetadata visit(EdmEnumType type) {
-        return visit(type.getUnderlyingType());
+    private Set<PropertyMetadata> properties(EdmStructuredType structuredType) {
+        Set<PropertyMetadata> properties = new HashSet<>();
+        List<String> propertyNames = structuredType.getPropertyNames();
+        for (String propertyName : propertyNames) {
+            EdmElement property = structuredType.getProperty(propertyName);
+            properties.add(visit(property));
+        }
+        return properties;
     }
 
-    private PropertyMetadata visit(EdmPrimitiveType type) {
+    public PropertyMetadata visit(EdmEnumType type) {
+        /*
+         * Need to synchronize with what the customize generates from enum values
+         * see {@link io.syndesis.connector.odata.customizer.json.ClientEnumValueSerializer#serialize}
+         */
+        return property(String.class);
+    }
+
+    public PropertyMetadata visit(EdmPrimitiveType type) {
         switch (type.getName()) {
             case "Boolean":
                 return property(Boolean.class);
@@ -77,12 +96,18 @@ public class EdmTypeConvertor {
         }
     }
 
-    @SuppressWarnings("PMD")
-    private PropertyMetadata visit(EdmComplexType type) {
-        return property(Object.class);
+    public PropertyMetadata visit(EdmComplexType type) {
+        PropertyMetadata property = property(Object.class);
+        Set<PropertyMetadata> childProperties = properties(type);
+        property.setChildProperties(childProperties);
+        return property;
     }
 
-    private PropertyMetadata visit(EdmType type) {
+    public Set<PropertyMetadata> visit(EdmEntityType entityType) {
+        return properties(entityType);
+    }
+
+    public PropertyMetadata visit(EdmType type) {
         if (type instanceof EdmEnumType) {
             return visit((EdmEnumType) type);
         } else if (type instanceof EdmPrimitiveType) {
@@ -97,7 +122,9 @@ public class EdmTypeConvertor {
     public PropertyMetadata visit(EdmNavigationProperty property) {
         this.nullable = property.isNullable();
         this.isCollection = property.isCollection();
-        return visit(property.getType());
+        PropertyMetadata metaProperty = property(Object.class);
+        metaProperty.setChildProperties(visit(property.getType()));
+        return metaProperty;
     }
 
     public PropertyMetadata visit(EdmParameter property) {

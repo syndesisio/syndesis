@@ -48,6 +48,8 @@ public class SheetsStreamConsumerIntegrationTest extends AbstractGoogleSheetsStr
                 .hasSheetTitle("TestData")
                 .andReturnSpreadsheet(spreadsheetId);
 
+        Spreadsheet testSheet = getSpreadsheet();
+
         List<List<Object>> data = Arrays.asList(
                 Arrays.asList("a1", "b1"),
                 Arrays.asList("a2", "b2")
@@ -57,7 +59,7 @@ public class SheetsStreamConsumerIntegrationTest extends AbstractGoogleSheetsStr
                 .updateValuesRequest(spreadsheetId, range, data)
                 .andReturnUpdateResponse();
 
-        Spreadsheet testSheet = getSpreadsheetWithTestData();
+        applyTestData(testSheet);
 
         assertThatGoogleApi(getGoogleApiTestServer())
                 .batchGetValuesRequest(testSheet.getSpreadsheetId(), range)
@@ -96,6 +98,8 @@ public class SheetsStreamConsumerIntegrationTest extends AbstractGoogleSheetsStr
                 .hasSheetTitle("TestData")
                 .andReturnSpreadsheet(spreadsheetId);
 
+        Spreadsheet testSheet = getSpreadsheet();
+
         List<List<Object>> data = Arrays.asList(
                 Arrays.asList("a1", "b1"),
                 Arrays.asList("a2", "b2")
@@ -105,7 +109,7 @@ public class SheetsStreamConsumerIntegrationTest extends AbstractGoogleSheetsStr
                 .updateValuesRequest(spreadsheetId, range, data)
                 .andReturnUpdateResponse();
 
-        Spreadsheet testSheet = getSpreadsheetWithTestData();
+        applyTestData(testSheet);
 
         assertThatGoogleApi(getGoogleApiTestServer())
                 .batchGetValuesRequest(testSheet.getSpreadsheetId(), range)

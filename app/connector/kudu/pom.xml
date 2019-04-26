@@ -46,6 +46,11 @@
         </dependency>
 
         <dependency>
+          <groupId>io.syndesis.connector</groupId>
+          <artifactId>connector-support-verifier</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>io.syndesis.integration</groupId>
             <artifactId>integration-runtime</artifactId>
             <scope>test</scope>
@@ -66,23 +71,6 @@
         <dependency>
             <groupId>org.apache.camel</groupId>
             <artifactId>camel-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-autoconfigure</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.camel</groupId>
-            <artifactId>camel-spring</artifactId>
         </dependency>
 
         <dependency>
@@ -173,9 +161,17 @@
         </dependency>
 
         <dependency>
-            <groupId>io.syndesis.connector</groupId>
-            <artifactId>connector-support-verifier</artifactId>
+          <groupId>org.apache.camel</groupId>
+          <artifactId>camel-spring</artifactId>
+          <scope>test</scope>
         </dependency>
+
+        <dependency>
+          <groupId>org.springframework</groupId>
+          <artifactId>spring-context</artifactId>
+          <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -48,19 +48,26 @@ public interface ComponentCustomizer<T extends Component> {
      * Removes the option with the given name and invokes the consumer performing
      * property placeholders resolution and type conversion.
      */
-    @SuppressWarnings("PMD.SignatureDeclareThrowsException")
-    default <T> void consumeOption(CamelContext camelContext, Map<String, Object> options, String name, Class<T> type, Consumer<T> consumer) throws Exception {
-        TypeConverter converter = camelContext.getTypeConverter();
+    default <T> void consumeOption(CamelContext camelContext, Map<String, Object> options, String name, Class<T> type, Consumer<T> consumer) {
         Object val = options.remove(name);
 
         if (val != null) {
-            if (val instanceof String) {
-                val = camelContext.resolvePropertyPlaceholders((String)val);
-            }
+            try {
+                if (val instanceof String) {
+                    val = camelContext.resolvePropertyPlaceholders((String)val);
+                }
 
-            consumer.accept(
-                converter.mandatoryConvertTo(type, val)
-            );
+                if (type.isInstance(val)) {
+                    consumer.accept(type.cast(val));
+                } else {
+                    TypeConverter converter = camelContext.getTypeConverter();
+                    consumer.accept(
+                        converter.mandatoryConvertTo(type, val)
+                    );
+                }
+            } catch (Exception e) {
+                throw new IllegalStateException("Unable to resolve or convert property named: " + name, e);
+            }
         }
     }
 }

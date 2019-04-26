@@ -71,6 +71,8 @@ final class XmlPayloadProcessor implements StreamFilter {
             processText(reader);
             break;
         default:
+            // do nothing
+            break;
         }
 
         return (inRequest && inPayload) || !inRequest;

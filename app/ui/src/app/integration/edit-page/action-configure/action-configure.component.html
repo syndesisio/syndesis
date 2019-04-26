@@ -25,11 +25,11 @@
         [disabled]="maybeDisableDone()"
       >
         <ng-container
-          *ngIf="!isShapeless && (page >= lastPage || !hasConfiguration)"
+          *ngIf="canShowDone()"
         >
           Done
         </ng-container>
-        <ng-container *ngIf="isShapeless || page < lastPage">
+        <ng-container *ngIf="canShowNext()">
           Next
         </ng-container>
       </button>

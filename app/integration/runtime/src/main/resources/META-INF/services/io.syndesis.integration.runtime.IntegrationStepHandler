@@ -4,6 +4,7 @@ io.syndesis.integration.runtime.handlers.DataMapperStepHandler
 io.syndesis.integration.runtime.handlers.EndpointStepHandler
 io.syndesis.integration.runtime.handlers.ExpressionFilterStepHandler
 io.syndesis.integration.runtime.handlers.ExtensionStepHandler
+io.syndesis.integration.runtime.handlers.ChoiceStepHandler
 io.syndesis.integration.runtime.handlers.HeadersStepHandler
 io.syndesis.integration.runtime.handlers.LogStepHandler
 io.syndesis.integration.runtime.handlers.RuleFilterStepHandler

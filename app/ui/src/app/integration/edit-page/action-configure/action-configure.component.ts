@@ -33,7 +33,8 @@ import {
   ],
 })
 export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
-  isShapeless: boolean;
+  isInputShapeless: boolean;
+  isOutputShapeless: boolean;
   routeSubscription: Subscription;
   flowSubscription: Subscription;
   position: number;
@@ -117,6 +118,48 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
 
   maybeDisableDone() {
     return this.formGroup ? this.formGroup.invalid : false;
+  }
+
+  canShowDone() {
+    const isLastPage = (this.page >= this.lastPage || !this.hasConfiguration);
+    if (!isLastPage) {
+      return false;
+    }
+
+    if (this.position == 0) {
+      // First step - only care about output shape
+      return !this.isOutputShapeless;
+    }
+
+    const isLastStep = this.currentFlowService.atEnd(this.position);
+    if (isLastStep) {
+      // Last step - only care about input shape
+      return !this.isInputShapeless;
+    }
+
+    // Other steps - care about both input and output shapes
+    return !this.isInputShapeless && !this.isOutputShapeless;
+  }
+
+  canShowNext() {
+    const hasMorePages = this.page < this.lastPage;
+    if (hasMorePages) {
+      return true;
+    }
+
+    if (this.position == 0) {
+      // First step - only care about output shape
+      return this.isOutputShapeless;
+    }
+
+    const isLastStep = this.currentFlowService.atEnd(this.position);
+    if (isLastStep) {
+      // Last step - only care about input shape
+      return this.isInputShapeless;
+    }
+
+    // Other steps - care about both input and output shapes
+    return this.isInputShapeless || this.isOutputShapeless;
   }
 
   finishUp() {
@@ -251,7 +294,8 @@ export class IntegrationConfigureActionComponent implements OnInit, OnDestroy {
       this.loading = false;
       return;
     }
-    this.isShapeless = this.currentFlowService.isActionShapeless(descriptor);
+    this.isInputShapeless = this.currentFlowService.isActionInputShapeless(descriptor);
+    this.isOutputShapeless = this.currentFlowService.isActionOutputShapeless(descriptor);
     if (this.hasNoActionPropertiesToDisplay(descriptor)) {
       this.loading = false;
       // TODO figure out how to get a link in here that works

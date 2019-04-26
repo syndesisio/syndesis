@@ -11,8 +11,7 @@ import {
   IntegrationStatus,
   IntegrationStatusDetail,
   ContinuousDeliveryEnvironment,
-  DescriptorRequest,
-  ActionDescriptor,
+  Step
 } from '@syndesis/ui/platform';
 
 @Injectable()
@@ -121,8 +120,7 @@ export abstract class IntegrationSupportService {
 
   abstract getEnvironments(): Observable<string[]>;
 
-  abstract getStepDescriptor(
-    kind: string,
-    dataShapes: DescriptorRequest
-  ): Observable<ActionDescriptor>;
+  abstract getStepDescriptors(
+    steps: Step[]
+  ): Observable<Step[]>;
 }

@@ -21,7 +21,7 @@
   <parent>
     <groupId>org.basepom</groupId>
     <artifactId>basepom-oss</artifactId>
-    <version>27</version>
+    <version>28</version>
   </parent>
 
   <groupId>io.syndesis</groupId>
@@ -75,15 +75,8 @@
     <commons.compress.version>1.18</commons.compress.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.21.0.fuse-740001</camel.version>
+    <camel.version>2.21.0.fuse-740005</camel.version>
     <camel-k-runtime.version>0.3.1</camel-k-runtime.version>
-
-    <dep.plugin.dependency.version>3.0.2</dep.plugin.dependency.version>
-    <dep.plugin.pmd.version>3.10.0</dep.plugin.pmd.version>
-    <dep.pmd.version>6.8.0</dep.pmd.version>
-    <dep.plugin.surefire.version>2.21.0</dep.plugin.surefire.version> <!-- SUREFIRE-1422 -->
-    <dep.plugin.failsafe.version>2.21.0</dep.plugin.failsafe.version> <!-- SUREFIRE-1422 -->
-    <dep.checkstyle.version>8.10.1</dep.checkstyle.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
     <basepom.test.fork-count>1</basepom.test.fork-count>
@@ -305,6 +298,7 @@
       </activation>
       <properties>
         <basepom.check.skip-all>true</basepom.check.skip-all>
+        <basepom.it.skip>true</basepom.it.skip>
       </properties>
       <build>
         <plugins>
@@ -331,7 +325,7 @@
             <artifactId>property-helper-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>get-build-id</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -340,7 +334,7 @@
             <artifactId>maven-enforcer-plugin</artifactId>
             <executions>
               <execution>
-                <id>default</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -350,11 +344,11 @@
             <artifactId>jacoco-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>default</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
               <execution>
-                <id>default-it</id>
+                <id>basepom.default-it</id>
                 <phase />
               </execution>
             </executions>
@@ -363,7 +357,11 @@
             <artifactId>maven-jar-plugin</artifactId>
             <executions>
               <execution>
-                <id>attach-tests</id>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>basepom.default-it</id>
                 <phase />
               </execution>
             </executions>
@@ -371,6 +369,10 @@
           <plugin>
             <artifactId>maven-javadoc-plugin</artifactId>
             <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
               <execution>
                 <id>attach-javadocs</id>
                 <phase />
@@ -381,7 +383,7 @@
             <artifactId>maven-source-plugin</artifactId>
             <executions>
               <execution>
-                <id>attach-sources</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -390,7 +392,7 @@
             <artifactId>maven-dependency-plugin</artifactId>
             <executions>
               <execution>
-                <id>default</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -400,7 +402,7 @@
             <artifactId>maven-dependency-versions-check-plugin</artifactId>
             <executions>
               <execution>
-                <id>default</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -410,7 +412,7 @@
             <artifactId>dependency-management-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>default</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -420,7 +422,7 @@
             <artifactId>duplicate-finder-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>default</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -429,7 +431,7 @@
             <artifactId>maven-pmd-plugin</artifactId>
             <executions>
               <execution>
-                <id>default</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -438,7 +440,7 @@
             <artifactId>maven-checkstyle-plugin</artifactId>
             <executions>
               <execution>
-                <id>default</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -448,7 +450,7 @@
             <artifactId>license-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>default</id>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -487,6 +489,30 @@
             <executions>
               <execution>
                 <id>default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>spotbugs</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.hubspot.maven.plugins</groupId>
+            <artifactId>dependency-scope-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
                 <phase />
               </execution>
             </executions>
@@ -613,6 +639,7 @@
               <exclude>**/*.webapp</exclude>
               <exclude>**/browserconfig.xml</exclude>
               <exclude>connector/**/META-INF/syndesis/connector/verifier/*</exclude>
+              <exclude>connector/**/META-INF/syndesis/connector/meta/*</exclude>
               <exclude>connector/**/springboot/*Configuration.java</exclude><!-- auto generated without headers -->
               <exclude>connector/**/springboot/*Common.java </exclude><!-- auto generated without headers -->
               <exclude>connector/fhir/**/META-INF/syndesis/schemas/**</exclude><!-- HL7 license -->
@@ -1067,6 +1094,13 @@
         <version>${project.version}</version>
       </dependency>
 
+      <dependency>
+        <groupId>io.syndesis.common</groupId>
+        <artifactId>jaeger-spring-boot-starter</artifactId>
+        <version>${project.version}</version>
+        <scope>runtime</scope>
+      </dependency>
+
       <!-- ::::::::::: rest :::::::::::: -->
 
       <dependency>
@@ -1306,6 +1340,12 @@
 
       <dependency>
         <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-aws-sqs</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-box</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -1421,6 +1461,12 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-odata</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-rest-swagger</artifactId>
         <version>${project.version}</version>
       </dependency>
 

@@ -15,6 +15,8 @@
  */
 package io.syndesis.connector.rest.swagger;
 
+import io.syndesis.common.model.DataShapeKinds;
+
 import org.apache.camel.Exchange;
 import org.junit.Test;
 
@@ -23,10 +25,11 @@ import static io.syndesis.connector.rest.swagger.PayloadConverterHelper.createEx
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ResponsePayloadConverterTest {
-    private final ResponsePayloadConverter converter = new ResponsePayloadConverter();
 
     @Test
     public void shouldBeRobust() {
+        final ResponsePayloadConverter converter = new ResponsePayloadConverter((DataShapeKinds) null);
+
         converter.process(createExhangeWithBody(null, null));
         converter.process(createExhangeWithBody(null, ""));
         converter.process(createExhangeWithBody(null, "<xml/>"));
@@ -37,6 +40,8 @@ public class ResponsePayloadConverterTest {
 
     @Test
     public void shouldConvert() {
+        final ResponsePayloadConverter converter = new ResponsePayloadConverter(DataShapeKinds.JSON_SCHEMA);
+
         final Exchange exchange = createExhangeWithBody("application/json", "{\"hello\":\"world\"}");
 
         converter.process(exchange);

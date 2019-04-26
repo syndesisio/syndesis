@@ -2,8 +2,8 @@
   "UserName": "ronaldmundy",
   "FirstName": "Ronald",
   "LastName": "Mundy",
-  "MiddleName": "",
   "Gender": "Male",
+  "MiddleName": "",
   "Age": "",
   "Emails": [
     "Ronald@example.com",
@@ -12,10 +12,14 @@
   "FavoriteFeature": "Feature1",
   "Features": [],
   "AddressInfo": [
-    [
-      "{Address:\"187 Suffolk Ln.\"}",
-      "{City:[\"{Name:\\\"Boise\\\"}\",\"{CountryRegion:\\\"United States\\\"}\",\"{Region:\\\"ID\\\"}\"]}"
-    ]
+    {
+      "Address":"187 Suffolk Ln.",
+      "City":{
+        "Name":"Boise",
+        "CountryRegion":"United States",
+        "Region":"ID"
+      }
+    }
   ],
   "HomeAddress": "",
   "ResultCount": 20

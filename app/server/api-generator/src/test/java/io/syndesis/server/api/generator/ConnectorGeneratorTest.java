@@ -15,11 +15,11 @@
  */
 package io.syndesis.server.api.generator;
 
+import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.connection.ConnectorGroup;
 import io.syndesis.common.model.connection.ConnectorSettings;
-import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.ConnectorTemplate;
 
 import org.junit.Test;
@@ -28,7 +28,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ConnectorGeneratorTest {
 
-    private final ConnectorGenerator generator = new ConnectorGenerator() {
+    private final ConnectorGenerator generator = new ConnectorGenerator(new Connector.Builder()
+        .addTags("from-connector")
+        .build()) {
 
         @Override
         public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
@@ -52,11 +54,11 @@ public class ConnectorGeneratorTest {
         }
     };
 
-    private final ConnectorTemplate template = new ConnectorTemplate.Builder()//
-        .id("template-id")//
+    private final ConnectorTemplate template = new ConnectorTemplate.Builder()
+        .id("template-id")
         .connectorGroup(new ConnectorGroup.Builder().id("template-group").build())
         .putProperty("property1", new ConfigurationProperty.Builder().build())
-        .putProperty("property2", new ConfigurationProperty.Builder().build())//
+        .putProperty("property2", new ConfigurationProperty.Builder().build())
         .build();
 
     @Test
@@ -65,14 +67,15 @@ public class ConnectorGeneratorTest {
 
         final Connector connector = generator.baseConnectorFrom(template, settings);
 
-        assertThat(connector).isEqualToIgnoringGivenFields(//
-            new Connector.Builder()//
-                .name("test-name")//
-                .description("test-description")//
-                .connectorGroup(template.getConnectorGroup())//
-                .connectorGroupId("template-group")//
-                .properties(template.getConnectorProperties())//
-                .putConfiguredProperty("property2", "value2")//
+        assertThat(connector).isEqualToIgnoringGivenFields(
+            new Connector.Builder()
+                .name("test-name")
+                .description("test-description")
+                .addTags("from-connector")
+                .connectorGroup(template.getConnectorGroup())
+                .connectorGroupId("template-group")
+                .properties(template.getConnectorProperties())
+                .putConfiguredProperty("property2", "value2")
                 .build(),
             "id", "icon");
         assertThat(connector.getIcon()).isEqualTo("data:image/svg+xml,dummy");
@@ -85,13 +88,14 @@ public class ConnectorGeneratorTest {
 
         final Connector connector = generator.baseConnectorFrom(template, settings);
 
-        assertThat(connector).isEqualToIgnoringGivenFields(//
-            new Connector.Builder()//
-                .name("given-name")//
-                .description("given-description")//
-                .connectorGroup(template.getConnectorGroup())//
-                .connectorGroupId("template-group")//
-                .properties(template.getConnectorProperties())//
+        assertThat(connector).isEqualToIgnoringGivenFields(
+            new Connector.Builder()
+                .name("given-name")
+                .description("given-description")
+                .addTags("from-connector")
+                .connectorGroup(template.getConnectorGroup())
+                .connectorGroupId("template-group")
+                .properties(template.getConnectorProperties())
                 .putConfiguredProperty("property2", "value2").build(),
             "id", "icon");
         assertThat(connector.getIcon()).isEqualTo("data:image/svg+xml,dummy");

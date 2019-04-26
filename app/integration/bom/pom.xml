@@ -28,8 +28,9 @@
 
   <properties>
     <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
-    <camel.version>2.21.0.fuse-740001</camel.version>
+    <camel.version>2.21.0.fuse-740005</camel.version>
     <atlasmap.version>1.39.6</atlasmap.version>
+    <jackson.databind.version>2.8.11.3</jackson.databind.version>
   </properties>
 
     <!-- Metadata need to publish to central -->
@@ -173,7 +174,7 @@
         <version>${project.version}</version>
       </dependency>
 
-             <!-- Atlasmap runtime -->
+      <!-- Atlasmap runtime -->
       <dependency>
         <groupId>io.atlasmap</groupId>
         <artifactId>camel-atlasmap</artifactId>
@@ -186,6 +187,18 @@
                 NOTE: any new connector provided out of the box by syndesis should be listed here. Maybe this can be
                       auto generated in a future release.
             -->
+      <!-- components -->
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-component-proxy</artifactId>
+        <version>${project.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.camel</groupId>
+            <artifactId>camel-connector</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-twitter</artifactId>
@@ -209,6 +222,11 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-aws-s3</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-aws-sqs</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -330,6 +348,11 @@
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-box</artifactId>
         <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${jackson.databind.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

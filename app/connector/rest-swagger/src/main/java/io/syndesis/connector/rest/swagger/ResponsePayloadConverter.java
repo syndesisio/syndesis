@@ -17,6 +17,9 @@ package io.syndesis.connector.rest.swagger;
 
 import java.io.IOException;
 
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
+
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.slf4j.Logger;
@@ -29,6 +32,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 public final class ResponsePayloadConverter extends PayloadConverterBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResponsePayloadConverter.class);
+
+    public ResponsePayloadConverter(final DataShape dataShape) {
+        super(dataShape.getKind());
+    }
+
+    public ResponsePayloadConverter(final DataShapeKinds kind) {
+        super(kind);
+    }
 
     @Override
     void convertAsJson(final Message in) {

@@ -23,6 +23,11 @@ import java.util.List;
 @ConfigurationProperties("generator")
 public class ProjectGeneratorConfiguration {
 
+    /**
+     * Should activity tracing be enabled?
+     */
+    private boolean activityTracing;
+
     private Boolean secretMaskingEnabled = false;
     private String syndesisExtensionPath = "extensions";
 
@@ -53,6 +58,14 @@ public class ProjectGeneratorConfiguration {
 
     public Templates getTemplates() {
         return templates;
+    }
+
+    public boolean isActivityTracing() {
+        return activityTracing;
+    }
+
+    public void setActivityTracing(boolean activityTracing) {
+        this.activityTracing = activityTracing;
     }
 
     public static class Templates {

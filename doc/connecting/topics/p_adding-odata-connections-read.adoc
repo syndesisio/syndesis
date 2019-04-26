@@ -11,8 +11,6 @@ polls the service at intervals that you specify. When the connection finds
 data that satisfies the connection configuration, the connection passes
 the data to the next step in the integration. 
 
-An OData connection can obtain data from only one resource.
-
 .Prerequisite
 You created an OData connection. 
 
@@ -41,7 +39,7 @@ resource that has a `name` field that starts with `N`.
 You can specify both *Entity Key Predicate* and *Query Options*. If you do, 
 the OData service obtains the specified entity and applies the query to 
 that entity. For example, suppose that you set *Entity Key Predicate* to 
-`*UserName='russellwhyte'*` and you set *Query Options* to 
+`*UserName='russellwhyte'/Emails*` and you set *Query Options* to 
 `*$filter=contains($it,'example')*`. The connection creates a request 
 that looks something like this: 
 +
@@ -58,13 +56,13 @@ message only once.
 connection to return individual messages 
 rather than a collection of messages. 
 +
-{prodname} also provides discrete *Split* and *Aggregate* steps, which 
+{prodname} also provides discrete split and aggregate steps, which 
 you can add to a flow. 
 If you want to process individual messages in one or more steps and 
-then aggregate the messages into a collection, do not split the OData
-connection result. Instead, leave the checkbox empty and then add a 
-*Split* step to the flow after this connection. A *Split* step is 
-required if you want an *Aggregate* step in the flow. 
+then aggregate the messages into a collection, do not select the 
+*Split Results* checkbox. Instead, leave the checkbox empty and then add a 
+split step to the flow after this connection. A split step is 
+required if you want an aggregate step in the flow. 
 
 .. In the *Interval Before Polling Starts* field, accept the default of 
 1 second, or enter the length of time that you want to elapse before 
@@ -129,13 +127,13 @@ message that it passes to the next step in the flow.
 Add the integration’s finish connection and any other connections that you 
 want to include in the integration. When the integration contains all the 
 connections that are needed, if the OData connection returns a collection, 
-consider whether you need to add a *Split* step after the OData connection. 
+consider whether you need to add a split step after the OData connection. 
 An integration usually needs to map the data returned by the OData connection 
 to fields that a subsequent connection in the flow can use. Sometimes you can 
 map a collection, but more often you need to split the collection in order 
 to map to the target fields. 
 
-After the OData connection, add a *Data Mapper* step to the flow. 
+After the OData connection, add a data mapper step to the flow. 
 Exactly where in the flow depends on what you want the flow to do.
-For example, after the OData connection, you might add a *Basic Filter* step 
-and then add a *Data Mapper* step.  
+For example, after the OData connection, you might add a basic filter step 
+and then add a data mapper step.  

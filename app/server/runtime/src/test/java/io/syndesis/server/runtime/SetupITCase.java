@@ -18,7 +18,6 @@ package io.syndesis.server.runtime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
@@ -30,6 +29,7 @@ import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.credential.OAuth1CredentialFlowState;
 import io.syndesis.server.credential.OAuth1CredentialProvider;
 import io.syndesis.server.endpoint.v1.handler.setup.OAuthApp;
+
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpMethod;
@@ -37,7 +37,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.social.oauth1.OAuthToken;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+
 import static java.util.concurrent.TimeUnit.SECONDS;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
 import static org.awaitility.Awaitility.given;
@@ -50,6 +53,9 @@ public class SetupITCase extends BaseITCase {
     static final ConfigurationProperty CLIENT_ID_PROPERTY = new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_ID_TAG).build();
 
     static final ConfigurationProperty CLIENT_SECRET_PROPERTY = new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_SECRET_TAG).build();
+
+    @Autowired
+    protected CredentialProviderLocator locator;
 
     @JsonDeserialize
     public static class OAuthResult implements ListResult<OAuthApp> {
@@ -71,14 +77,11 @@ public class SetupITCase extends BaseITCase {
         }
     }
 
-    @Autowired
-    protected CredentialProviderLocator locator;
-
     @Test
     public void getOAuthApps() {
         final ResponseEntity<OAuthResult> result = get("/api/v1/setup/oauth-apps", OAuthResult.class);
         final List<OAuthApp> apps = result.getBody().getItems();
-        assertThat(apps.size()).isEqualTo(6);
+        assertThat(apps).isNotEmpty();
 
         final OAuthApp twitter = apps.stream().filter(x -> x.idEquals("twitter")).findFirst().get();
         assertThat(twitter.getId()).hasValue("twitter");
@@ -132,7 +135,7 @@ public class SetupITCase extends BaseITCase {
 
         final ResponseEntity<OAuthResult> result = get("/api/v1/setup/oauth-apps", OAuthResult.class);
         final List<OAuthApp> apps = result.getBody().getItems();
-        assertThat(apps.size()).isEqualTo(6);
+        assertThat(apps).isNotEmpty();
 
         final OAuthApp updated = apps.stream().filter(x -> x.idEquals("twitter")).findFirst().get();
         assertThat(updated.getId()).hasValue("twitter");

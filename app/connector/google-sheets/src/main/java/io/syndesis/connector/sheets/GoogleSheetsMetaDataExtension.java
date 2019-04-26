@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.sheets;
 
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,15 +35,31 @@ public class GoogleSheetsMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(final Map<String, Object> properties) {
+        final String spreadsheetId = Optional.ofNullable(properties.get("spreadsheetId"))
+                                     .map(Object::toString)
+                                     .orElse("");
+
         final String range = Optional.ofNullable(properties.get("range"))
                                      .map(Object::toString)
                                      .orElse("");
 
-        MetaData metaData = EMPTY_METADATA;
+        final String headerRow = Optional.ofNullable(properties.get("headerRow"))
+                                     .map(Object::toString)
+                                     .orElse(null);
+
+        final String[] columnNames = Optional.ofNullable(properties.get("columnNames"))
+                                             .map(Object::toString)
+                                             .map(names -> names.split(","))
+                                             .orElse(new String[]{});
+
+        Arrays.parallelSetAll(columnNames, (i) -> columnNames[i].trim());
 
         if (ObjectHelper.isNotEmpty(range)) {
             final GoogleValueRangeMetaData valueRangeMetaData = new GoogleValueRangeMetaData();
+            valueRangeMetaData.setSpreadsheetId(spreadsheetId);
             valueRangeMetaData.setRange(range);
+            valueRangeMetaData.setHeaderRow(headerRow);
+            valueRangeMetaData.setColumnNames(columnNames);
 
             final String majorDimension = Optional.ofNullable(properties.get("majorDimension"))
                     .map(Object::toString)
@@ -57,9 +74,9 @@ public class GoogleSheetsMetaDataExtension extends AbstractMetaDataExtension {
 
             valueRangeMetaData.setSplit(split);
 
-            metaData = new DefaultMetaData(null, null, valueRangeMetaData);
+            return Optional.of(new DefaultMetaData(null, null, valueRangeMetaData));
         }
 
-        return Optional.of(metaData);
+        return Optional.of(EMPTY_METADATA);
     }
 }

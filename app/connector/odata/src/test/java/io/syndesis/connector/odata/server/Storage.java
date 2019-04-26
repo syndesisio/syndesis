@@ -20,6 +20,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import org.apache.olingo.commons.api.data.ComplexValue;
 import org.apache.olingo.commons.api.data.Entity;
 import org.apache.olingo.commons.api.data.EntityCollection;
 import org.apache.olingo.commons.api.data.Property;
@@ -27,21 +28,27 @@ import org.apache.olingo.commons.api.data.ValueType;
 import org.apache.olingo.commons.api.edm.EdmEntitySet;
 import org.apache.olingo.commons.api.edm.EdmEntityType;
 import org.apache.olingo.commons.api.edm.EdmKeyPropertyRef;
+import org.apache.olingo.commons.api.edm.EdmPrimitiveTypeKind;
 import org.apache.olingo.commons.api.ex.ODataRuntimeException;
 import org.apache.olingo.commons.api.http.HttpMethod;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.apache.olingo.server.api.ODataApplicationException;
 import org.apache.olingo.server.api.uri.UriParameter;
+import org.assertj.core.util.Arrays;
 
-public class Storage {
+public class Storage implements ODataServerConstants {
+
+    private static Object storageLock = new Object();
 
     private static Storage storage;
 
     private List<Entity> productList;
 
     public static Storage getInstance() {
-        if (storage == null) {
-            storage = new Storage();
+        synchronized(storageLock) {
+            if (storage == null) {
+                storage = new Storage();
+            }
         }
 
         return storage;
@@ -152,6 +159,14 @@ public class Storage {
         return requestedEntity;
     }
 
+    private URI createId(String entitySetName, Object id) {
+        try {
+            return new URI(entitySetName + OPEN_BRACKET + String.valueOf(id) + CLOSE_BRACKET);
+        } catch (URISyntaxException e) {
+            throw new ODataRuntimeException("Unable to create id for entity: " + entitySetName, e);
+        }
+    }
+
     private Entity createProduct(EdmEntityType edmEntityType, Entity entity) {
         // the ID of the newly created product entity is generated automatically
         int newId = 1;
@@ -159,14 +174,14 @@ public class Storage {
             newId++;
         }
 
-        Property idProperty = entity.getProperty("ID");
+        Property idProperty = entity.getProperty(PRODUCT_ID);
         if (idProperty != null) {
             idProperty.setValue(ValueType.PRIMITIVE, Integer.valueOf(newId));
         } else {
             // as of OData v4 spec, the key property can be omitted from the POST request body
-            entity.getProperties().add(new Property(null, "ID", ValueType.PRIMITIVE, newId));
+            entity.getProperties().add(new Property(null, PRODUCT_ID, ValueType.PRIMITIVE, newId));
         }
-        entity.setId(createId("Products", newId));
+        entity.setId(createId(ES_PRODUCTS_NAME, newId));
         this.productList.add(entity);
 
         return entity;
@@ -175,7 +190,7 @@ public class Storage {
 
     private boolean productIdExists(int id) {
         for (Entity entity : this.productList) {
-            Integer existingID = (Integer)entity.getProperty("ID").getValue();
+            Integer existingID = (Integer)entity.getProperty(PRODUCT_ID).getValue();
             if (existingID.intValue() == id) {
                 return true;
             }
@@ -244,38 +259,70 @@ public class Storage {
         return false;
     }
 
-    private void initSampleData() {
-        // add some sample product entities
-        final Entity e1 = new Entity()
-                .addProperty(new Property(null, "ID", ValueType.PRIMITIVE, 1))
-                .addProperty(new Property(null, "Name", ValueType.PRIMITIVE, "Notebook Basic 15"))
-                .addProperty(new Property(null, "Description", ValueType.PRIMITIVE,
-                        "Notebook Basic, 1.7GHz - 15 XGA - 1024MB DDR2 SDRAM - 40GB"));
-        e1.setId(createId("Products", 1));
-        productList.add(e1);
-
-        final Entity e2 = new Entity()
-                .addProperty(new Property(null, "ID", ValueType.PRIMITIVE, 2))
-                .addProperty(new Property(null, "Name", ValueType.PRIMITIVE, "1UMTS PDA"))
-                .addProperty(new Property(null, "Description", ValueType.PRIMITIVE,
-                        "Ultrafast 3G UMTS/HSDPA Pocket PC, supports GSM network"));
-        e2.setId(createId("Products", 2));
-        productList.add(e2);
-
-        final Entity e3 = new Entity()
-                .addProperty(new Property(null, "ID", ValueType.PRIMITIVE, 3))
-                .addProperty(new Property(null, "Name", ValueType.PRIMITIVE, "Ergo Screen"))
-                .addProperty(new Property(null, "Description", ValueType.PRIMITIVE,
-                        "19 Optimum Resolution 1024 x 768 @ 85Hz, resolution 1280 x 960"));
-        e3.setId(createId("Products", 3));
-        productList.add(e3);
+    private ComplexValue createSpec(String productType, String detail1, String detail2, int powerType) {
+        ComplexValue complexValue = new ComplexValue();
+        List<Property> complexValueValue = complexValue.getValue();
+        complexValueValue.add(new Property(
+                                           EdmPrimitiveTypeKind.String.getFullQualifiedName().toString(),
+                                           SPEC_PRODUCT_TYPE, ValueType.PRIMITIVE, productType));
+        complexValueValue.add(new Property(
+                                           EdmPrimitiveTypeKind.String.getFullQualifiedName().toString(),
+                                           SPEC_DETAIL_1, ValueType.PRIMITIVE, detail1));
+        complexValueValue.add(new Property(
+                                           EdmPrimitiveTypeKind.String.getFullQualifiedName().toString(),
+                                           SPEC_DETAIL_2, ValueType.PRIMITIVE, detail2));
+        complexValueValue.add(new Property(
+                                           ET_POWER_TYPE_FQN.getFullQualifiedNameAsString(),
+                                           SPEC_POWER_TYPE, ValueType.ENUM, powerType));
+        return complexValue;
     }
 
-    private URI createId(String entitySetName, Object id) {
-        try {
-            return new URI(entitySetName + "(" + String.valueOf(id) + ")");
-        } catch (URISyntaxException e) {
-            throw new ODataRuntimeException("Unable to create id for entity: " + entitySetName, e);
-        }
+    private Entity createEntity(int id, String name, String description, String[] serials, ComplexValue spec) {
+        Entity e = new Entity()
+            .addProperty(new Property(
+                                  EdmPrimitiveTypeKind.Int32.getFullQualifiedName().toString(),
+                                  PRODUCT_ID, ValueType.PRIMITIVE, id))
+            .addProperty(new Property(
+                                  EdmPrimitiveTypeKind.String.getFullQualifiedName().toString(),
+                                  PRODUCT_NAME, ValueType.PRIMITIVE, name))
+            .addProperty(new Property(
+                                  EdmPrimitiveTypeKind.String.getFullQualifiedName().toString(),
+                                  PRODUCT_DESCRIPTION, ValueType.PRIMITIVE, description))
+            .addProperty(new Property(
+                                  EdmPrimitiveTypeKind.String.getFullQualifiedName().toString(),
+                                  PRODUCT_SERIALS, ValueType.COLLECTION_PRIMITIVE, Arrays.asList(serials)))
+            .addProperty(new Property(
+                                  ET_SPEC_FQN.toString(),
+                                  PRODUCT_SPEC, ValueType.COMPLEX, spec));
+
+        e.setId(createId(ES_PRODUCTS_NAME, id));
+        return e;
+    }
+
+    private void initSampleData() {
+        // add some sample product entities
+        String[] e1Serials = {"ae8353484", "er5845474", "px376876"};
+        ComplexValue e1Spec = createSpec("Notebook", "CPU AMD Ryzen 3 2200U", "Dual-Core Cores", 0);
+
+        productList.add(createEntity(1,
+                                 "Notebook Basic 15",
+                                 "Notebook Basic, 1.7GHz - 15 XGA - 1024MB DDR2 SDRAM - 40GB",
+                                 e1Serials, e1Spec));
+
+        String[] e2Serials = {"ae867484", "er586874", "px3429876"};
+        ComplexValue e2Spec = createSpec("Tablet", "Android OS", "Resolution - 1920 x 1200", 0);
+
+        productList.add(createEntity(2,
+                                     "1UMTS PDA",
+                                     "Ultrafast 3G UMTS/HSDPA Pocket PC, supports GSM network",
+                                     e2Serials, e2Spec));
+
+        String[] e3Serials = {"ae949549", "er342367", "px230434"};
+        ComplexValue e3Spec = createSpec("Monitor", "Diagonal Size 22", "Aspect Ratio 16:9", 1);
+
+        productList.add(createEntity(3,
+                                     "Ergo Screen",
+                                     "19 Optimum Resolution 1024 x 768 @ 85Hz, resolution 1280 x 960",
+                                     e3Serials, e3Spec));
     }
 }

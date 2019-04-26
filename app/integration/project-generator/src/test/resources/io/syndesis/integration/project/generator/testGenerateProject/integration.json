@@ -7,16 +7,9 @@
             "id": "periodic-timer-action",
             "descriptor": {
               "connectorId": "timer",
-              "camelConnectorGAV": "io.syndesis.connector:connector-timer:${project.version}",
-              "camelConnectorPrefix": "periodic-timer-connector"
+              "componentScheme": "periodic-timer-connector"
             },
-            "actionType": "connector",
-            "dependencies": [
-              {
-                "type": "MAVEN",
-                "id": "io.syndesis.connector:connector-timer:${project.version}"
-              }
-            ]
+            "actionType": "connector"
           },
           "connection": {
             "connector": {
@@ -131,16 +124,9 @@
             "id": "http-get-action",
             "descriptor": {
               "connectorId": "http",
-              "camelConnectorGAV": "io.syndesis.connector:connector-http-get:${project.version}",
-              "camelConnectorPrefix": "http-get-connector"
+              "componentScheme": "http-get-connector"
             },
-            "actionType": "connector",
-            "dependencies": [
-              {
-                "type": "MAVEN",
-                "id": "io.syndesis.connector:connector-http-get:${project.version}"
-              }
-            ]
+            "actionType": "connector"
           },
           "connection": {
             "connector": {

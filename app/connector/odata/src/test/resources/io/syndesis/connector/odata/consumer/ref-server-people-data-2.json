@@ -2,8 +2,8 @@
   "UserName": "scottketchum",
   "FirstName": "Scott",
   "LastName": "Ketchum",
-  "MiddleName": "",
   "Gender": "Male",
+  "MiddleName": "",
   "Age": "",
   "Emails": [
     "Scott@example.com"
@@ -11,10 +11,14 @@
   "FavoriteFeature": "Feature1",
   "Features":[],
   "AddressInfo": [
-    [
-      "{Address:\"2817 Milton Dr.\"}",
-      "{City:[\"{Name:\\\"Albuquerque\\\"}\",\"{CountryRegion:\\\"United States\\\"}\",\"{Region:\\\"NM\\\"}\"]}"
-    ]
+    {
+      "Address":"2817 Milton Dr.",
+      "City":{
+        "Name":"Albuquerque",
+        "CountryRegion":"United States",
+        "Region":"NM"
+      }
+    }
   ],
   "HomeAddress": "",
   "ResultCount": 20

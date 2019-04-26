@@ -44,7 +44,7 @@ public class ClientEntitySerializer extends StdSerializer<ClientEntity> {
         generator.writeStartObject();
         for (ClientProperty prop : entity.getProperties()) {
             generator.writeFieldName(prop.getName());
-            generator.writeObject(prop);
+            generator.writeObject(prop.getValue());
         }
         generator.writeEndObject();
     }

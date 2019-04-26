@@ -15,15 +15,16 @@
  */
 package io.syndesis.server.endpoint.v1.handler.connection;
 
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.ws.rs.client.Entity;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
+import com.netflix.hystrix.HystrixExecutable;
+import com.netflix.hystrix.HystrixInvokableInfo;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.action.ConnectorAction;
@@ -36,12 +37,8 @@ import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.dto.Meta;
 import io.syndesis.server.endpoint.v1.dto.MetaData;
 import io.syndesis.server.verifier.MetadataConfigurationProperties;
-
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
-
-import com.netflix.hystrix.HystrixExecutable;
-import com.netflix.hystrix.HystrixInvokableInfo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -176,7 +173,7 @@ public class ConnectionActionHandlerTest {
         final ConnectorDescriptor enrichedDefinitioin = new ConnectorDescriptor.Builder()
             .createFrom(createOrUpdateSalesforceObjectDescriptor)
             .replaceConfigurationProperty("sObjectName",
-                c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")))
+                c -> c.defaultValue("Contact"))
             .replaceConfigurationProperty("sObjectIdName",
                 c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("ID", "Contact ID")))
             .replaceConfigurationProperty("sObjectIdName", c -> c.addEnum(ConfigurationProperty.PropertyValue.Builder.of("Email", "Email")))

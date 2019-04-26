@@ -44,7 +44,7 @@ public final class Utils {
     static {
         ObjectMapper objectMapper = new ObjectMapper()
             .registerModules(new Jdk8Module(), new EpochMillisTimeModule())
-            .setSerializationInclusion(JsonInclude.Include.NON_EMPTY)
+            .setPropertyInclusion(JsonInclude.Value.construct(JsonInclude.Include.NON_EMPTY, JsonInclude.Include.NON_EMPTY))
             .disable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES)
             .enable(DeserializationFeature.READ_ENUMS_USING_TO_STRING)
             .enable(SerializationFeature.WRITE_ENUMS_USING_TO_STRING)

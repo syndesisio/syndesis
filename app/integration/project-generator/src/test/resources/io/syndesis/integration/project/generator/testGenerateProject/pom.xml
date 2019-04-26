@@ -91,14 +91,6 @@
 
     <!-- dependencies used in this integration -->
     <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-http-get</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.syndesis.connector</groupId>
-      <artifactId>connector-timer</artifactId>
-    </dependency>
-    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>

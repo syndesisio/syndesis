@@ -15,6 +15,42 @@
  */
 package io.syndesis.integration.project.generator;
 
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheFactory;
+import io.swagger.models.Swagger;
+import io.syndesis.common.model.Dependency;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ResourceIdentifier;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.common.util.CollectionsUtils;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.MavenProperties;
+import io.syndesis.common.util.Names;
+import io.syndesis.common.util.Optionals;
+import io.syndesis.common.util.openapi.OpenApiHelper;
+import io.syndesis.integration.api.IntegrationErrorHandler;
+import io.syndesis.integration.api.IntegrationProjectGenerator;
+import io.syndesis.integration.api.IntegrationResourceManager;
+import io.syndesis.integration.project.generator.mvn.MavenGav;
+import io.syndesis.integration.project.generator.mvn.PomContext;
+import org.apache.camel.generator.swagger.RestDslGenerator;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -34,45 +70,6 @@ import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
-import com.fasterxml.jackson.databind.ObjectWriter;
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheFactory;
-import io.swagger.models.Swagger;
-import io.syndesis.common.model.Dependency;
-import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.ResourceIdentifier;
-import io.syndesis.common.model.WithConfiguredProperties;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
-import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.model.openapi.OpenApi;
-import io.syndesis.common.util.CollectionsUtils;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.MavenProperties;
-import io.syndesis.common.util.Names;
-import io.syndesis.common.util.Optionals;
-import io.syndesis.common.util.Predicates;
-import io.syndesis.common.util.openapi.OpenApiHelper;
-import io.syndesis.integration.api.IntegrationErrorHandler;
-import io.syndesis.integration.api.IntegrationProjectGenerator;
-import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.integration.project.generator.mvn.MavenGav;
-import io.syndesis.integration.project.generator.mvn.PomContext;
-import org.apache.camel.generator.swagger.RestDslGenerator;
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addResource;
 import static io.syndesis.integration.project.generator.ProjectGeneratorHelper.addTarEntry;
@@ -174,40 +171,7 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                             }
                         }
                     } else {
-                        // The component scheme is defined as camel connector prefix
-                        // for 'old' style connectors.
-                        final String componentScheme = descriptor.getCamelConnectorPrefix();
-
-                        // endpoint secrets
-                        Stream.of(connector, connection, step)
-                            .filter(WithConfiguredProperties.class::isInstance)
-                            .map(WithConfiguredProperties.class::cast)
-                            .map(WithConfiguredProperties::getConfiguredProperties)
-                            .flatMap(map -> map.entrySet().stream())
-                            .filter(Predicates.or(connector::isEndpointProperty, action::isEndpointProperty))
-                            .filter(Predicates.or(connector::isSecret, action::isSecret))
-                            .forEach(
-                                e -> {
-                                    addDecryptedKeyProperty(properties, flowIndex, stepIndex, componentScheme, e.getKey(), e.getValue());
-                                }
-                            );
-
-                        // Component properties triggers connectors aliasing so we
-                        // can have multiple instances of the same connectors
-                        Stream.of(connector, connection, step)
-                            .filter(WithConfiguredProperties.class::isInstance)
-                            .map(WithConfiguredProperties.class::cast)
-                            .map(WithConfiguredProperties::getConfiguredProperties)
-                            .flatMap(map -> map.entrySet().stream())
-                            .filter(Predicates.or(connector::isComponentProperty, action::isComponentProperty))
-                            .forEach(
-                                e -> {
-                                    String key = String.format("%s.configurations.%s-%d-%d.%s", componentScheme, componentScheme, flowIndex, stepIndex, e.getKey());
-                                    String val = mandatoryDecrypt(resourceManager, e.getKey(), e.getValue());
-
-                                    properties.put(key, val);
-                                }
-                            );
+                        throw new UnsupportedOperationException("Old style of connectors from camel-connector are not supported anymore, please be sure that integration json satisfy connector.getComponentScheme().isPresent() || descriptor.getComponentScheme().isPresent()");
                     }
                 }
             }
@@ -272,6 +236,24 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
         }
     }
 
+    public static class Scope {
+        public ProjectGeneratorConfiguration configuration;
+        public Integration integration;
+
+        public Scope(ProjectGeneratorConfiguration configuration, Integration integration) {
+            this.configuration = configuration;
+            this.integration = integration;
+        }
+
+        public ProjectGeneratorConfiguration getConfiguration() {
+            return configuration;
+        }
+
+        public Integration getIntegration() {
+            return integration;
+        }
+    }
+
     @SuppressWarnings("PMD.DoNotUseThreads")
     private Runnable generateAddProjectTarEntries(Integration integration, OutputStream os, IntegrationErrorHandler errorHandler) {
         return () -> {
@@ -282,7 +264,8 @@ public class ProjectGenerator implements IntegrationProjectGenerator {
                 ObjectWriter writer = Json.writer();
 
                 addTarEntry(tos, "src/main/java/io/syndesis/example/Application.java", ProjectGeneratorHelper.generate(integration, applicationJavaMustache));
-                addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(integration, applicationPropertiesMustache));
+                Scope scope = new Scope(configuration, integration);
+                addTarEntry(tos, "src/main/resources/application.properties", ProjectGeneratorHelper.generate(scope, applicationPropertiesMustache));
                 addTarEntry(tos, "src/main/resources/syndesis/integration/integration.json", writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration));
                 addTarEntry(tos, "pom.xml", generatePom(integration));
 

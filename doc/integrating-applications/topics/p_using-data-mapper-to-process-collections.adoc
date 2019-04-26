@@ -8,12 +8,7 @@
 In a flow, when a step outputs a collection and when a
 subsequent connection that is in the flow expects a collection as the input, you can 
 use the data mapper to specify how you want the flow to 
-process the collection. When both the source collection and the target 
-collection contain only primitive types, you just need to map the source 
-collection to the target collection. When a collection contains more 
-than one kind of primitive type or when it contains at least one complex 
-type then the data mapper displays the collection’s child fields. 
-You can map from/to each field. 
+process the collection.  
 
 When a step outputs a collection, the flow visualization panel 
 displays *Collection* in the details about the step. For example: 
@@ -30,14 +25,21 @@ image:images/map-collections.png[mapping collection]
 
 In the source and target panels, the data mapper displays 
 image:images/collection-icon.png[this icon] to indicate
-a collection. If you map a collection to a collection, 
-when {prodname} executes the flow, it iterates over the source 
-collection elements to populate the target collection elements.
+a collection. When a source collection or a target 
+collection contain only primitive types, the data mapper does not 
+display collection fields because there is no need to. You can map 
+from/to the collection itself. 
 
-If you map one or more source collection fields to target collection 
-fields, when {prodname} executes the flow, it iterates over the source 
-collection elements to populate the target collection elements. 
-However, the target collection elements contain values for only 
+When a collection contains more 
+than one kind of primitive type or when it contains at least one complex 
+type then the data mapper displays the collection’s child fields. 
+You can map from/to each field.
+
+When {prodname} executes the flow, it iterates over the source 
+collection elements to populate the target collection elements.
+If you map one or more source collection fields to a target 
+collection or to target collection 
+fields, the target collection elements contain values for only 
 the mapped fields. 
 
 If you map a source collection or a field in a source collection 

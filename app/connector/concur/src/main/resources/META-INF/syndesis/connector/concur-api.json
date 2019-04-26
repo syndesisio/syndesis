@@ -10,8 +10,7 @@
       ],
       "description": "Add vendor groups by Vendor Code, Address Code, and Vendor Group.",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-79"
         },
@@ -46,8 +45,7 @@
       ],
       "description": "Appends a receipt image to an existing image in the receipt store.",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-63"
         },
@@ -82,8 +80,7 @@
       ],
       "description": "Creates a connection request on behalf of the specified user.",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-13"
         },
@@ -119,7 +116,7 @@
       "description": "Creates a new Payment Request with all relevant details including line items and associated allocations.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-48"
         },
@@ -155,7 +152,7 @@
       "description": "Creates a new attendee.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-8"
         },
@@ -191,7 +188,7 @@
       "description": "DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016 Creates a new attendee type.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-3"
         },
@@ -227,7 +224,7 @@
       "description": "Creates a new expense entry.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-21"
         },
@@ -263,7 +260,7 @@
       "description": "Creates a new expense itemization.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-28"
         },
@@ -299,7 +296,7 @@
       "description": "Create a new list",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-39"
         },
@@ -335,7 +332,7 @@
       "description": "Create a new listitem",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-34"
         },
@@ -371,7 +368,7 @@
       "description": "Creates a new quick expense.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-56"
         },
@@ -407,7 +404,7 @@
       "description": "Creates a new receipt entry. This operation enables a provider company to post receipts to Concur.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-65"
         },
@@ -443,7 +440,7 @@
       "description": "Creates a new image in the receipt store.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-61"
         },
@@ -479,7 +476,7 @@
       "description": "Create a new report",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-67"
         },
@@ -515,7 +512,7 @@
       "description": "Creates purchase order receipts and associate if to purchase order line item and returns status of updation.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-53"
         },
@@ -551,7 +548,7 @@
       "description": "Create vendor/s and returns the status of creation.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-83"
         },
@@ -587,7 +584,7 @@
       "description": "Deletes a connection request by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-16"
         },
@@ -623,7 +620,7 @@
       "description": "Deletes the specified quick expense.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-59"
         },
@@ -659,7 +656,7 @@
       "description": "Deletes the specified receipt image",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-64"
         },
@@ -695,7 +692,7 @@
       "description": "Delete a vendor by Vendor Code and Address Code.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-84"
         },
@@ -731,7 +728,7 @@
       "description": "Delete a vendor group by Vendor Code, Address Code, and Group Name.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-80"
         },
@@ -767,7 +764,7 @@
       "description": "DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016 Deletes the specified attendee.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-11"
         },
@@ -803,7 +800,7 @@
       "description": "DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016 Deletes the specified attendee type.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-6"
         },
@@ -839,7 +836,7 @@
       "description": "Deletes the specified expense entry.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-24"
         },
@@ -875,7 +872,7 @@
       "description": "Deletes the specified expense itemization.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-31"
         },
@@ -911,7 +908,7 @@
       "description": "Deletes the specified listitem",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-37"
         },
@@ -947,7 +944,7 @@
       "description": "Deletes a new purchase order line item receipt given a Goods Receipts Number.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-54"
         },
@@ -983,7 +980,7 @@
       "description": "Returns a Request by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-70"
         },
@@ -1019,7 +1016,7 @@
       "description": "Gets a connection request by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-14"
         },
@@ -1055,7 +1052,7 @@
       "description": "Gets details of the specified location.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-44"
         },
@@ -1091,7 +1088,7 @@
       "description": "Get a receipt image URL by image ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-62"
         },
@@ -1127,7 +1124,7 @@
       "description": "Returns a single Supplier ID",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-76"
         },
@@ -1163,7 +1160,7 @@
       "description": "Gets a single allocation by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-1"
         },
@@ -1199,7 +1196,7 @@
       "description": "Gets a single attendee by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-9"
         },
@@ -1235,7 +1232,7 @@
       "description": "Gets an attendee type by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-4"
         },
@@ -1271,7 +1268,7 @@
       "description": "Gets a single digital tax invoice by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-18"
         },
@@ -1307,7 +1304,7 @@
       "description": "Gets an expense entry by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-22"
         },
@@ -1343,7 +1340,7 @@
       "description": "Gets an expense itemization by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-29"
         },
@@ -1379,7 +1376,7 @@
       "description": "Returns a list by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-40"
         },
@@ -1415,7 +1412,7 @@
       "description": "Returns a listitem by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-35"
         },
@@ -1451,7 +1448,7 @@
       "description": "Returns a quick expenses by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-57"
         },
@@ -1487,7 +1484,7 @@
       "description": "Returns all Requests owned by the user.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-71"
         },
@@ -1523,7 +1520,7 @@
       "description": "Gets all allocations per entry or report.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-0"
         },
@@ -1559,7 +1556,7 @@
       "description": "Gets all active attendee types for the company.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-2"
         },
@@ -1595,7 +1592,7 @@
       "description": "Gets all attendees owned by the specified user.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-7"
         },
@@ -1631,7 +1628,7 @@
       "description": "Gets all connection requests that match the TripLink supplier ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-12"
         },
@@ -1667,7 +1664,7 @@
       "description": "Gets all digital tax invoices that can be validated by the user based on the search criteria.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-17"
         },
@@ -1703,7 +1700,7 @@
       "description": "Gets all expense entries owned by the user.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-20"
         },
@@ -1739,7 +1736,7 @@
       "description": "Gets all expense itemizations owned by the user.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-27"
         },
@@ -1775,7 +1772,7 @@
       "description": "Gets details of locations that are used by Concur and that are valid at the user's company.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-43"
         },
@@ -1811,7 +1808,7 @@
       "description": "Returns all payment requests digests based on the search criteria.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-50"
         },
@@ -1847,7 +1844,7 @@
       "description": "Returns all quick expenses owned by the user.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-55"
         },
@@ -1883,7 +1880,7 @@
       "description": "Get a list of all receipt IDs owned by the user associated with the OAuth token",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-60"
         },
@@ -1919,7 +1916,7 @@
       "description": "Gets all users based on the search criteria.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-77"
         },
@@ -1955,7 +1952,7 @@
       "description": "Gets the configuration of an expense group.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-25"
         },
@@ -1991,7 +1988,7 @@
       "description": "Gets an expense group configuration by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-26"
         },
@@ -2027,7 +2024,7 @@
       "description": "Gets invoices for the purpose of calculating sales tax.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-73"
         },
@@ -2063,7 +2060,7 @@
       "description": "Returns the  localized string of various codes in Invoice.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-42"
         },
@@ -2099,7 +2096,7 @@
       "description": "Get the latest hotel and air booking for a particular user.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-32"
         },
@@ -2135,7 +2132,7 @@
       "description": "Returns the payment request digest based on ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-49"
         },
@@ -2171,7 +2168,7 @@
       "description": "Returns all Suppliers based on the search criteria.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-75"
         },
@@ -2207,7 +2204,7 @@
       "description": "Gets a collection of opportunities for a specified trip or for all trips that fall within a date range. Specify values for fromUtc and toUtc to get opportunities for a range of trips. Specify only tripId to get opportunities for a single trip. Specify OpportunityType to filter results by the specified opportunity types.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-45"
         },
@@ -2243,7 +2240,7 @@
       "description": "Returns a report by ID.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-68"
         },
@@ -2279,7 +2276,7 @@
       "description": "Returns all list items based on the search criteria.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-33"
         },
@@ -2315,7 +2312,7 @@
       "description": "Returns all lists based on the search criteria.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-38"
         },
@@ -2351,7 +2348,7 @@
       "description": "This API Gets all relevant information (Payment Request Header, Payment Request Line Item and Payment Request Allocation) of a Payment Request.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-46"
         },
@@ -2387,7 +2384,7 @@
       "description": "Returns all reports owned by the user based on the search criteria.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-66"
         },
@@ -2423,7 +2420,7 @@
       "description": "Gets an existing purchase order receipts.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-51"
         },
@@ -2459,7 +2456,7 @@
       "description": "Gets an existing vendor. Note: If authenticating with a Company JWT the API will return all vendors associated with a specific entity.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-81"
         },
@@ -2495,7 +2492,7 @@
       "description": "Submit a Request by ID",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-72"
         },
@@ -2531,7 +2528,7 @@
       "description": "Updates a Payment Request with all relevant details including line items and associated allocations.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-47"
         },
@@ -2567,7 +2564,7 @@
       "description": "Updates the specified connection request. Only the fields provided in the supplied object are updated. Missing fields will not be altered.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-15"
         },
@@ -2603,7 +2600,7 @@
       "description": "Updates the specified digital tax invoice.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-19"
         },
@@ -2639,7 +2636,7 @@
       "description": "Updates the QuickExpense specified in the URL.  Only the fields provided in the supplied object will be updated, missing fields will not be altered.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-58"
         },
@@ -2675,7 +2672,7 @@
       "description": "Updates the specified attendee. Only the fields provided in the supplied object are updated. Missing fields are not altered.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-10"
         },
@@ -2711,7 +2708,7 @@
       "description": "Updates the specified attendee type. Only the fields provided in the supplied object will be updated. Missing fields will not be altered.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-5"
         },
@@ -2747,7 +2744,7 @@
       "description": "Updates the specified expense entry. Only the fields provided in the supplied object are updated. Missing fields will not be altered.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-23"
         },
@@ -2783,7 +2780,7 @@
       "description": "Updates the specified expense itemization. Only the fields provided in the supplied object are updated. Missing fields will not be altered.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-30"
         },
@@ -2819,7 +2816,7 @@
       "description": "Updates invoices with the calculated tax amount and tax rate.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-74"
         },
@@ -2855,7 +2852,7 @@
       "description": "DEPRECATED: 05/19/2016 UNSUPPORTED: 11/19/2016. Updates list specified in the URL.  Only the fields provided in the supplied object will be updated, missing fields will not be altered.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-41"
         },
@@ -2891,7 +2888,7 @@
       "description": "Updates listitem specified in the URL.  Only the fields provided in the supplied object will be updated, missing fields will not be altered.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-36"
         },
@@ -2927,7 +2924,7 @@
       "description": "Updates report specified in the URL.  Only the fields provided in the supplied object will be updated, missing fields will not be altered.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-69"
         },
@@ -2963,7 +2960,7 @@
       "description": "Updates existing vendor/s and returns the status of creation.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-82"
         },
@@ -2999,7 +2996,7 @@
       "description": "Updates purchase order receipts and associate if to purchase order line item and returns status of updation.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-52"
         },
@@ -3035,7 +3032,7 @@
       "description": "Updates/creates vendor banking information.",
       "descriptor": {
         "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:@project.version@",
-        "camelConnectorPrefix": "swagger-operation",
+        "componentScheme": "rest-swagger",
         "configuredProperties": {
           "operationId": "operation-78"
         },

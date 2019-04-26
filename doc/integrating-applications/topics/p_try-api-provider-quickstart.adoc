@@ -2,16 +2,18 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='try-api-provider-quickstart_{context}']
-= Executing the API provider quickstart integration
+= Testing the API provider quickstart integration
 
 When the {prodname} Task API quickstart integration is running, you can
 invoke `curl` utility commands that send HTTP requests to the Task API service.
 How you specify the HTTP request determines the flow that the call
 triggers.  
 
-.Prerequisite
+.Prerequisites
 
-{prodname} indicates that the Task API integration is *Running*. 
+* {prodname} indicates that the Task API integration is *Running*. 
+* If your {prodname} environment is running on OCP, 
+{prodname} is not configured to expose APIs to 3scale.
 
 .Procedure
 
@@ -20,10 +22,12 @@ triggers.
 . Copy the integration's external URL. 
 . In a terminal, invoke a command such as the following to assign the
 integration's external URL to the `externalURL` environment variable.
-Be sure to replace the URL in this sample command with the URL you copied 
+Be sure to replace the URL in this sample command with the URL that you copied 
 and add `/api` to the end. 
 +
-`export externalURL="https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api"`
+----
+export externalURL="https://i-task-api-proj319352.6a63.fuse-ignite.openshiftapps.com/api"`
+----
 
 . Invoke a `curl` command that triggers execution of the 
 flow for the *Create Task* operation: 

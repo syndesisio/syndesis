@@ -31,8 +31,8 @@ build::usage() {
 
         --resume <m1>              Resume build from maven module (mvn -rf m1)
         --batch-mode               Run mvn in batch mode
-        --camel-snapshot <version> Run a build with a specific Camel snapshot. If no argument is given the
-                                   environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.
+        --camel-snapshot <version> Run a build with a specific Camel snapshot. The the
+                                   environment variable CAMEL_SNAPSHOT_VERSION is used and you need to set it or an error thrown.
         --maven-mirror <url>       Use the maven mirror for the build, e.g. a maven repo proxy in OpenShift. If no
                                    argument is given, the MAVEN_MIRROR_URL environment variable is used or
                                    'http://nexus.myproject:8081/nexus/content/groups/public', if none is set.
@@ -213,7 +213,7 @@ do_camel_k() {
 
     pushd $camel_k_root >/dev/null
 
-    local version=$(script/get_version.sh)
+    local version=$(grep -e "^VERSION[ :]" Makefile | tr "=" " " | awk '{print $(NF)}')
 
     local kamel_dir=~/.syndesis/bin
     echo "Building $kamel_dir/kamel-$version"
@@ -228,9 +228,16 @@ do_camel_k() {
     echo "Linking $kamel_dir/kamel-$version --> $kamel_dir/kamel-latest"
     ln -sf $kamel_dir/kamel-$version $kamel_dir/kamel-latest
 
+    go build -o $camel_k_root/build/_output/bin/builder ./cmd/builder/*.go
+    if [ $? != 0 ]; then
+       echo "ERROR: Can't build camel k builder"
+       exit 1
+    fi
+
     local camel_k_image="docker.io/apache/camel-k"
     echo "Building image $camel_k_image:$version"
-    ./script/images_build.sh
+    mkdir -p $camel_k_root/build/_maven_output
+    operator-sdk build $camel_k_image:$version
 
     echo "Tagging $camel_k_image:$version --> $camel_k_image:latest"
     docker tag $camel_k_image:$version $camel_k_image:latest

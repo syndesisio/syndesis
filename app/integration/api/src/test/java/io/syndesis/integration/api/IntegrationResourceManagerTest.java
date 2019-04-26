@@ -187,8 +187,7 @@ public class IntegrationResourceManagerTest {
             .id("http-post-action")
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("http")
-                .camelConnectorPrefix("http-post-connector")
-                .camelConnectorGAV("io.syndesis.connector:connector-http-post:" + getSyndesisVersion())
+                .componentScheme("http-post-connector")
                 .build())
             .build();
     }
@@ -198,8 +197,8 @@ public class IntegrationResourceManagerTest {
             .id("http-get-action")
             .descriptor(new ConnectorDescriptor.Builder()
                 .connectorId("http")
-                .camelConnectorPrefix("http-get-connector")
-                .camelConnectorGAV("io.syndesis.connector:connector-http-get:" + getSyndesisVersion())
+                .connectorId("http")
+                .componentScheme("http-get-connector")
                 .build())
             .build();
     }
@@ -209,8 +208,7 @@ public class IntegrationResourceManagerTest {
             .id("periodic-timer-action")
             .descriptor(new ConnectorDescriptor.Builder()
                             .connectorId("timer")
-                            .camelConnectorPrefix("periodic-timer-connector")
-                            .camelConnectorGAV("io.syndesis.connector:connector-timer:" + getSyndesisVersion())
+                            .componentScheme("periodic-timer-connector")
                             .build())
             .build();
     }
