@@ -16,10 +16,13 @@ export class IntegrationDetailHistory extends React.Component<
   IIntegrationDetailDeploymentsProps
 > {
   public render() {
+    const deployments = this.props.integration.deployments
+      ? this.props.integration.deployments
+      : [];
     return (
       <Translation ns={['integrations', 'shared']}>
         {t =>
-          this.props.integration.deployments!.map((deployment, idx) => {
+          deployments.map((deployment, idx) => {
             return (
               <IntegrationDetailHistoryListViewItem
                 key={idx}
