@@ -78,7 +78,7 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
       <Translation ns={['integrations', 'shared']}>
         {t => (
           <WithEnvironments>
-            {({ data, hasData, error }) => (
+            {({ data, hasData, error, read }) => (
               <WithListViewToolbarHelpers
                 defaultFilterType={filterByName}
                 defaultSortType={sortByName}
@@ -121,9 +121,15 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                             <span>{t('integrations:ManageCiCd')}</span>
                           </Breadcrumb>
                           <CiCdManagePageUI
-                            onEditItem={renameEnvironment}
-                            onAddItem={createEnvironment}
-                            onRemoveItem={deleteEnvironment}
+                            onEditItem={(name: string, newName: string) =>
+                              renameEnvironment(name, newName).finally(read)
+                            }
+                            onAddItem={(name: string) =>
+                              createEnvironment(name).finally(read)
+                            }
+                            onRemoveItem={(name: string) =>
+                              deleteEnvironment(name).finally(read)
+                            }
                             onValidateItem={handleValidateItem}
                             filterTypes={filterTypes}
                             sortTypes={sortTypes}
