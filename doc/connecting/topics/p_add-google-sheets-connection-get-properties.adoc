@@ -15,8 +15,8 @@ Properties include the spreadsheet's title, locale, and time zone.
 Between polls, if there are no changes to the sheet properties, then 
 the next poll returns the same values as the previous poll. 
 
-.Prerequisite
-You created a Google Sheets connection that is authorized to access 
+.Prerequisites
+* You created a Google Sheets connection that is authorized to access 
 the spreadsheet that you want to obtain properties from. 
 
 .Procedure

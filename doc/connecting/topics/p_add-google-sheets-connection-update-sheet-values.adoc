@@ -55,7 +55,7 @@ Google Sheets formats it as a decimal.
 +
 * *Unspecified* defaults to the Google Sheets API setting, 
 which defaults to *User entered*.
-* *Raw* does nothing. Google Sheets inserts the input data as is.
+* *Raw* causes Google Sheets to insert the input data as is.
 * *User entered* enables automatic conversion of recognizable data. 
 
 .. Click *Done* to add the connection to the flow.

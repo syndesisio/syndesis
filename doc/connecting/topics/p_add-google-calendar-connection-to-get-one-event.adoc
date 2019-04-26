@@ -14,9 +14,12 @@ useful, for example, when you want to:
 To obtain one event, add a Google Calendar connection to the middle of 
 a flow.
 
-NOTE: In this release, while obtaining a specific event in a simple integration's 
+[NOTE]
+====
+In this release, while obtaining a specific event in a simple integration's 
 finish connection is supported, it is not particularly useful. This is 
 expected to change in a future release.
+====
 
 .Prerequisites
 * A Google Calendar connection is available and this connection
@@ -39,7 +42,7 @@ following:
 * Manually obtain it from the calendar as follows: 
 +
 .. In a browser, display the calendar that contains the event you want to get. 
-.. Append `?gsessionid=OK&eventdeb=1`to the URL and redisplay the calendar.
+.. Append `?gsessionid=OK&eventdeb=1` to the URL and redisplay the calendar.
 .. In the calendar, click the event that you want to get. 
 .. In the event popup, click 
 image:shared/images/ThreeVerticalDotsKebab.png[Options] and select 

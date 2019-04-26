@@ -18,8 +18,8 @@ When a Google Calendar connection returns more than one event,
 For example, if the poll returns 5 events then {prodname} executes
 the integration five times.
 
-.Prerequisite
-You created a Google Calendar connection. 
+.Prerequisites
+* You created a Google Calendar connection. 
 
 .Procedure
 
