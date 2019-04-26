@@ -2,6 +2,9 @@ import { ListView, ListViewInfoItem, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
+  /**
+   * Dropdown actions menu
+   */
   actions: any;
   /**
    * The last date the integration was updated.

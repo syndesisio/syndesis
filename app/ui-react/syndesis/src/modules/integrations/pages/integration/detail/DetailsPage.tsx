@@ -266,6 +266,7 @@ export class DetailsPage extends React.Component<
                                       )}
                                     />
                                     <IntegrationDetailHistoryListView
+                                      hasHistory={deployments.length > 0}
                                       isDraft={data.isDraft}
                                       i18nTextBtnEdit={t('shared:Edit')}
                                       i18nTextBtnPublish={t('shared:Publish')}

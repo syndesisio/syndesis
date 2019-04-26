@@ -130,7 +130,8 @@ storiesOf('Integration/Detail', module)
         <IntegrationStepsHorizontalView children={steps} />
         <IntegrationDetailDescription description={'This is my description.'} />
         <IntegrationDetailHistoryListView
-          draft={false}
+          isDraft={false}
+          hasHistory={true}
           i18nTextDraft={'Draft'}
           i18nTextHistory={'History'}
           children={integrationPublishedHistoryItems}
