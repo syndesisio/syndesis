@@ -75,3 +75,14 @@ body {
 .label {
   font-size: var(--pf-global--FontSize--xs);
 }
+
+.syn-scrollable {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.syn-scrollable--body {
+  flex: 1 1 auto;
+  overflow: auto;
+}
