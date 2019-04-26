@@ -133,7 +133,7 @@ storiesOf('Integration/Detail', module)
           draft={false}
           i18nTextDraft={'Draft'}
           i18nTextHistory={'History'}
-          items={integrationPublishedHistoryItems}
+          children={integrationPublishedHistoryItems}
         />
       </>
     </Router>

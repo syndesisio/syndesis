@@ -270,7 +270,7 @@ export class DetailsPage extends React.Component<
                                       i18nTextHistory={t(
                                         'integrations:detail:History'
                                       )}
-                                      items={
+                                      children={
                                         <IntegrationDetailHistory
                                           actions={actions}
                                           integration={data}

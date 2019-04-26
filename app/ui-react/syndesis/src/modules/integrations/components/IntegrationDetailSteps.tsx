@@ -16,8 +16,11 @@ export class IntegrationDetailSteps extends React.Component<
     return (
       <IntegrationStepsHorizontalView>
         {this.props.steps.map((s, idx) => {
+          console.log('s: ' + JSON.stringify(s));
           const isFirst = idx === 0;
-          const stepName = s.connection!.connector!.name;
+          const stepName = s.connection!
+            ? s.connection!.connector!.name
+            : s.name;
 
           return (
             <React.Fragment key={idx}>
