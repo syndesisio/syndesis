@@ -2,8 +2,8 @@ import { WithConnections } from '@syndesis/api';
 import { Connection } from '@syndesis/models';
 import * as React from 'react';
 import { PageTitle } from '../../../shared';
+import { ConnectionsWithToolbar } from '../components';
 import resolvers from '../resolvers';
-import { ConnectionsWithToolbar } from '../shared';
 
 function getConnectionHref(connection: Connection) {
   return resolvers.connection.details({ connection });

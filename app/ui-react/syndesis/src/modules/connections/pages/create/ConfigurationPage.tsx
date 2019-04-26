@@ -9,9 +9,11 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../shared';
-import { ConnectionCreatorBreadcrumbs } from '../../components';
+import {
+  ConnectionCreatorBreadcrumbs,
+  WithConnectorForm,
+} from '../../components';
 import resolvers from '../../resolvers';
-import { WithConfigurationForm } from '../../shared';
 
 export interface IConfigurationPageRouteParams {
   connectorId: string;
@@ -49,7 +51,7 @@ export default class ConfigurationPage extends React.Component {
                     );
                   };
                   return (
-                    <WithConfigurationForm connector={data} onSave={onSave}>
+                    <WithConnectorForm connector={data} onSave={onSave}>
                       {({
                         fields,
                         handleSubmit,
@@ -96,7 +98,7 @@ export default class ConfigurationPage extends React.Component {
                           </>
                         );
                       }}
-                    </WithConfigurationForm>
+                    </WithConnectorForm>
                   );
                 }}
               </WithLoader>

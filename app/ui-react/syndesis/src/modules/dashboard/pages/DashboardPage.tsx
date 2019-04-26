@@ -23,7 +23,7 @@ import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { ApiError } from '../../../shared';
-import { Connections } from '../../connections/shared';
+import { Connections } from '../../connections/components';
 import { Integrations } from '../../integrations/components';
 import resolvers from '../../resolvers';
 

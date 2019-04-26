@@ -4,7 +4,7 @@ import { Connector } from '@syndesis/models';
 import { IConnectorConfigurationFormValidationResult } from '@syndesis/ui';
 import * as React from 'react';
 
-export interface IWithConfigurationFormChildrenProps {
+export interface IWithConnectorFormChildrenProps {
   /**
    * the form (embedded in the right UI elements)
    */
@@ -42,16 +42,16 @@ export interface IWithConfigurationFormChildrenProps {
   submitForm(): any;
 }
 
-export interface IWithConfigurationFormProps {
+export interface IWithConnectorFormProps {
   /**
    * the connection object that contains the action with the provided
-   * [actionId]{@link IWithConfigurationFormProps#actionId}. Used to retrieve
+   * [actionId]{@link IWithConnectorFormProps#actionId}. Used to retrieve
    * the form definition.
    */
   connector: Connector;
   /**
    * the values to assign to the form once rendered. These can come either from
-   * an existing integration or from the [onSave]{@link IWithConfigurationFormProps#onSave}
+   * an existing integration or from the [onSave]{@link IWithConnectorFormProps#onSave}
    * callback.
    */
   initialValue?: { [key: string]: string };
@@ -60,12 +60,12 @@ export interface IWithConfigurationFormProps {
    * the render prop that will receive the ready-to-be-rendered form and some
    * helpers.
    *
-   * @see [form]{@link IWithConfigurationFormChildrenProps#form}
-   * @see [isValid]{@link IWithConfigurationFormChildrenProps#isValid}
-   * @see [isSubmitting]{@link IWithConfigurationFormChildrenProps#isSubmitting}
-   * @see [onSubmit]{@link IWithConfigurationFormChildrenProps#submitForm}
+   * @see [form]{@link IWithConnectorFormChildrenProps#form}
+   * @see [isValid]{@link IWithConnectorFormChildrenProps#isValid}
+   * @see [isSubmitting]{@link IWithConnectorFormChildrenProps#isSubmitting}
+   * @see [onSubmit]{@link IWithConnectorFormChildrenProps#submitForm}
    */
-  children(props: IWithConfigurationFormChildrenProps): any;
+  children(props: IWithConnectorFormChildrenProps): any;
 
   /**
    * the callback that is fired after the form submit with valid values.
@@ -78,12 +78,12 @@ export interface IWithConfigurationFormProps {
 /**
  * A component to generate a configuration form for a given action and values.
  *
- * @see [action]{@link IWithConfigurationFormProps#action}
- * @see [moreConfigurationSteps]{@link IWithConfigurationFormProps#moreConfigurationSteps}
- * @see [values]{@link IWithConfigurationFormProps#values}
+ * @see [action]{@link IWithConnectorFormProps#action}
+ * @see [moreConfigurationSteps]{@link IWithConnectorFormProps#moreConfigurationSteps}
+ * @see [values]{@link IWithConnectorFormProps#values}
  */
-export class WithConfigurationForm extends React.Component<
-  IWithConfigurationFormProps
+export class WithConnectorForm extends React.Component<
+  IWithConnectorFormProps
 > {
   public static defaultProps = {
     initialValue: {},

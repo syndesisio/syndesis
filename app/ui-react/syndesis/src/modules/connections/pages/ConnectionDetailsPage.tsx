@@ -18,8 +18,7 @@ import { AppContext } from '../../../app';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import resolvers from '../../resolvers';
-import { WithConfigurationForm } from '../shared/WithConnectorCreationForm';
-import './ConnectionDetailsPage.css';
+import { WithConnectorForm } from '../components';
 
 export interface IConnectionDetailsRouteParams {
   connectionId: string;
@@ -209,7 +208,7 @@ export class ConnectionDetailsPage extends React.Component<
                                 >
                                   {() => {
                                     return (
-                                      <WithConfigurationForm
+                                      <WithConnectorForm
                                         connector={data.connector!}
                                         initialValue={data.configuredProperties}
                                         onSave={saveConnector}
@@ -296,7 +295,7 @@ export class ConnectionDetailsPage extends React.Component<
                                             </ConnectionDetailsForm>
                                           </>
                                         )}
-                                      </WithConfigurationForm>
+                                      </WithConnectorForm>
                                     );
                                   }}
                                 </WithLoader>
