@@ -1,3 +1,4 @@
+import { Text } from '@patternfly/react-core';
 import { Card, CardBody } from 'patternfly-react';
 import * as React from 'react';
 import './ApiConnectorDetailCard.css';
@@ -29,9 +30,9 @@ export class ApiConnectorDetailCard extends React.Component<
             >
               {this.props.name}
             </div>
-            <p className="api-connector-card__description">
+            <Text className="api-connector-card__description">
               {this.props.description}
-            </p>
+            </Text>
           </div>
         </CardBody>
       </Card>

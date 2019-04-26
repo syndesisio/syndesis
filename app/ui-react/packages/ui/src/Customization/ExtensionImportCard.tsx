@@ -1,3 +1,4 @@
+import { Text } from '@patternfly/react-core';
 import { Alert, Card } from 'patternfly-react';
 import * as React from 'react';
 import { DndFileChooser } from '../Shared/DndFileChooser';
@@ -80,7 +81,7 @@ export class ExtensionImportCard extends React.Component<
           <Card.Title>{this.props.i18nTitle}</Card.Title>
         </Card.Heading>
         <Card.Body>
-          <p>{this.props.i18nImportInstructions}</p>
+          <Text>{this.props.i18nImportInstructions}</Text>
           {this.props.i18nAlertMessage ? (
             <Alert type={'error'}>
               <span>{this.props.i18nAlertMessage}</span>

@@ -21,7 +21,7 @@
     "emptyStateTitle": "$t(extension.ImportExtension)",
     "extensionDetailPageTitle": "Dettagli $t(shared:Extension)",
     "extensionImportPageTitle": "$t(extension.ImportExtension)",
-    "extensionsPageDescription": "<h3>Le estensioni forniscono funzionalità personalizzate da utilizzare nelle integrazioni. Scopri di più su <a href=$t(shared:links.userguide) target=\"_blank\">$t(shared:project.name) Aiuto</a></h3>.",
+    "extensionsPageDescription": "<p>Le estensioni forniscono funzionalità personalizzate da utilizzare nelle integrazioni. Scopri di più su <a href=$t(shared:links.userguide) target=\"_blank\">$t(shared:project.name) Aiuto</a></p>.",
     "extensionsPageTitle": "$t(shared:Extensions)",
     "idMessage": "(ID: {{id}})",
     "importDndInstructions": "Trascina qui <strong>uno</strong> file o <strong>fai clic </strong> per selezionare un file utilizzando una finestra di dialogo di selezione file.",

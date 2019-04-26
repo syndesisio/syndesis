@@ -68,6 +68,7 @@ export class VirtualizationList extends React.Component<
     return (
       <>
         <SimplePageHeader
+          className="container-fluid pf-u-my-md"
           i18nTitle={this.props.i18nTitle}
           i18nDescription={this.props.i18nDescription}
         />

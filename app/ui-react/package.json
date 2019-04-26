@@ -10,7 +10,8 @@
       "typings/*"
     ],
     "nohoist": [
-      "**/jest"
+      "**/jest",
+      "**/rxjs"
     ]
   },
   "scripts": {
@@ -72,5 +73,6 @@
     "trailingComma": "es5",
     "singleQuote": true,
     "semi": true
-  }
+  },
+  "dependencies": {}
 }

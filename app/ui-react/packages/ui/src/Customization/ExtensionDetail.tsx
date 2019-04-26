@@ -1,3 +1,4 @@
+import { Title, TitleLevel } from '@patternfly/react-core';
 import * as H from 'history';
 import {
   Button,
@@ -189,12 +190,15 @@ export class ExtensionDetail extends React.Component<
           <CardHeading>
             <CardTitle>
               <Row>
-                <h1 className={'col-sm-8 extension-detail__extensionTitle'}>
+                <Title
+                  size="xl"
+                  className={'col-sm-8 extension-detail__extensionTitle'}
+                >
                   {this.props.extensionName}
                   <span className={'extension-detail__extensionId'}>
                     {this.props.i18nIdMessage}
                   </span>
-                </h1>
+                </Title>
                 <div className="col-sm-4 text-right extension-detail__titleButtons">
                   <OverlayTrigger
                     overlay={this.getUpdateTooltip()}
@@ -224,17 +228,29 @@ export class ExtensionDetail extends React.Component<
             </CardTitle>
           </CardHeading>
           <CardBody>
-            <h3 className="extension-detail__sectionHeading">
+            <Title
+              size="md"
+              headingLevel={TitleLevel.h3}
+              className="extension-detail__sectionHeading"
+            >
               {this.props.i18nOverviewSectionTitle}
-            </h3>
+            </Title>
             {this.props.overviewSection}
-            <h3 className="extension-detail__sectionHeading">
+            <Title
+              size="md"
+              headingLevel={TitleLevel.h3}
+              className="extension-detail__sectionHeading"
+            >
               {this.props.i18nSupportsSectionTitle}
-            </h3>
+            </Title>
             {this.props.supportsSection}
-            <h3 className="extension-detail__sectionHeading">
+            <Title
+              size="md"
+              headingLevel={TitleLevel.h3}
+              className="extension-detail__sectionHeading"
+            >
               {this.props.i18nUsageSectionTitle}
-            </h3>
+            </Title>
             {this.props.integrationsSection}
           </CardBody>
         </Card>

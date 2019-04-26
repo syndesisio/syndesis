@@ -1,3 +1,4 @@
+import { Title } from '@patternfly/react-core';
 import * as H from 'history';
 import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
@@ -34,9 +35,9 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
           <Grid.Row>
             <Grid.Col sm={12}>
               <div className={'Dashboard-header'}>
-                <h1 className={'Dashboard-header__title'}>
+                <Title size="lg" className={'Dashboard-header__title'}>
                   {this.props.i18nTitle}
-                </h1>
+                </Title>
                 <div className="Dashboard-header__actions">
                   <ButtonLink href={this.props.linkToIntegrations}>
                     {this.props.i18nLinkToIntegrations}
@@ -85,9 +86,9 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
           <Grid.Row>
             <Grid.Col sm={12}>
               <div className={'Dashboard-header'}>
-                <h1 className={'Dashboard-header__title'}>
+                <Title size="lg" className={'Dashboard-header__title'}>
                   {this.props.i18nConnections}
-                </h1>
+                </Title>
                 <div className="Dashboard-header__actions">
                   <Link to={this.props.linkToConnections}>
                     {this.props.i18nLinkToConnections}

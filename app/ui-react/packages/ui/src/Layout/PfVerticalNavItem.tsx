@@ -1,10 +1,9 @@
 import classNames from 'classnames';
-import { VerticalNav } from 'patternfly-react';
 import * as React from 'react';
 import { Route } from 'react-router';
 import { Link } from 'react-router-dom';
 
-interface IPfVerticalNavItem {
+export interface IPfVerticalNavItem {
   className?: string;
   exact?: boolean;
   isActive?: (match: any, location: any) => boolean;
@@ -33,7 +32,7 @@ function PfVerticalNavItem({
   // Regex taken from: https://github.com/pillarjs/path-to-regexp/blob/master/index.js#L202
   const escapedPath = path && path.replace(/([.+*?=^!:${}()[\]|/\\])/g, '\\$1');
 
-  const NavLinkChildren = ({
+  const NavLinkViewTemplate = ({
     location: childLocation,
     match,
   }: {
@@ -45,20 +44,14 @@ function PfVerticalNavItem({
       : match);
 
     return (
-      <li
-        className={classNames('list-group-item', {
-          active: isActive,
-        })}
-      >
+      <li className={'pf-c-nav__item'}>
         <Link
           to={to}
-          children={
-            <React.Fragment>
-              <span className={icon} />
-              <span className="list-group-item-value">{label}</span>
-              <div className="badge-container-pf" />
-            </React.Fragment>
-          }
+          className={classNames('pf-c-nav__link', {
+            ['pf-m-current']: isActive,
+          })}
+          aria-current={isActive ? 'page' : undefined}
+          children={<>{label}</>}
           {...rest}
         />
         {children}
@@ -72,11 +65,11 @@ function PfVerticalNavItem({
       exact={exact}
       strict={strict}
       location={location}
-      children={NavLinkChildren}
+      children={NavLinkViewTemplate}
     />
   );
 }
 
-PfVerticalNavItem.displayName = VerticalNav.Item.displayName;
+PfVerticalNavItem.displayName = 'VerticalNav.Item';
 
 export { PfVerticalNavItem };

@@ -1,3 +1,4 @@
+import { Text, Title } from '@patternfly/react-core';
 import * as H from 'history';
 import {
   EmptyState,
@@ -47,10 +48,14 @@ export class ExtensionListView extends React.Component<
           </div>
         </ListViewToolbar>
         <Container>
-          <h1>{this.props.i18nTitle}</h1>
-          <div
-            dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
-          />
+          {this.props.i18nTitle !== '' && (
+            <Title size="lg">{this.props.i18nTitle}</Title>
+          )}
+          {this.props.i18nDescription !== '' && (
+            <Text
+              dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
+            />
+          )}
           {this.props.children ? (
             <ListView>{this.props.children}</ListView>
           ) : (

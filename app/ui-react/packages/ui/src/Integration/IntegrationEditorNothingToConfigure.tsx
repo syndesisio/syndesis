@@ -1,3 +1,4 @@
+import { Text, Title } from '@patternfly/react-core';
 import * as React from 'react';
 import { Container } from '../Layout';
 
@@ -28,17 +29,17 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
   public render() {
     return (
       <Container>
-        <h1>{this.props.i18nTitle} - Choose Action</h1>
-        <p>{this.props.i18nSubtitle}</p>
+        <Title size="lg">{this.props.i18nTitle} - Choose Action</Title>
+        <Text>{this.props.i18nSubtitle}</Text>
         <Container>
           <div className="row row-cards-pf">
             <div className="card-pf">
               <div className="card-pf-body">
                 <Container>
-                  <p className="alert alert-info">
+                  <Text className="alert alert-info">
                     <span className="pficon pficon-info" />
                     {this.props.i18nAlert}
-                  </p>
+                  </Text>
                 </Container>
               </div>
             </div>
