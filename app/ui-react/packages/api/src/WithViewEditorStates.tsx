@@ -3,9 +3,14 @@ import * as React from 'react';
 import { DVFetch } from './DVFetch';
 import { IFetchState } from './Fetch';
 
+export interface IWithViewEditorStatesRenderProps
+  extends IFetchState<ViewEditorState[]> {
+  read(): Promise<void>;
+}
+
 export interface IWithViewEditorStatesProps {
   idPattern?: string;
-  children(props: IFetchState<ViewEditorState[]>): any;
+  children(props: IWithViewEditorStatesRenderProps): any;
 }
 
 export class WithViewEditorStates extends React.Component<
@@ -20,7 +25,7 @@ export class WithViewEditorStates extends React.Component<
         }
         defaultValue={[]}
       >
-        {({ response }) => this.props.children(response)}
+        {({ read, response }) => this.props.children({ ...response, read })}
       </DVFetch>
     );
   }

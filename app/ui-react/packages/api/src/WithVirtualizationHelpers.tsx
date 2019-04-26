@@ -13,7 +13,7 @@ export interface IWithVirtualizationHelpersChildrenProps {
   createVirtualization(
     virtualizationName: string,
     virtualizationDescription?: string
-  ): Promise<void>;
+  ): Promise<RestDataService>;
   deleteView(virtualization: RestDataService, viewName: string): Promise<void>;
   deleteViewEditorState(viewEditorStateId: string): Promise<void>;
   deleteVirtualization(virtualizationName: string): Promise<void>;
@@ -63,7 +63,7 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
   public async createVirtualization(
     virtName: string,
     virtDesc?: string
-  ): Promise<void> {
+  ): Promise<RestDataService> {
     const newVirtualization = {
       keng__dataPath: `${WORKSPACE_ROOT}${this.props.username}/${virtName}`,
       keng__id: `${virtName}`,
@@ -80,7 +80,7 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
       throw new Error(response.statusText);
     }
 
-    return Promise.resolve();
+    return Promise.resolve(newVirtualization);
   }
 
   /**

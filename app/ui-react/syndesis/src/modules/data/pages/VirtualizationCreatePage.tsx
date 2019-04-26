@@ -52,12 +52,14 @@ export class VirtualizationCreatePage extends React.Component {
           <WithVirtualizationHelpers username="developer">
             {({ createVirtualization }) => {
               const handleCreate = async (value: any) => {
-                await createVirtualization(
+                const virtualization = await createVirtualization(
                   value.virtName,
                   value.virtDescription
                 );
                 // TODO: post toast notification
-                history.push(resolvers.data.virtualizations.list());
+                history.push(
+                  resolvers.data.virtualizations.views.root({ virtualization })
+                );
               };
               return (
                 <Translation ns={['data', 'shared']}>
