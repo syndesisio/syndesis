@@ -2,7 +2,7 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='workflow-api-providers_{context}']
-= General workflow for creating integrations that are triggered by API calls
+= General workflow for creating API provider integrations
 
 The *general* workflow for creating an API provider integration is shown 
 in the following diagram: 

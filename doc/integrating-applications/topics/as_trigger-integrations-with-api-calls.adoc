@@ -4,7 +4,7 @@
 
 :context: ug
 [id='trigger-integrations-with-api-calls_{context}']
-= Triggering integration execution with a REST API call
+= Creating an integration that is triggered by a REST API call
 
 :context: api-provider
 
