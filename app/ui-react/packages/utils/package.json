@@ -53,6 +53,7 @@
   },
   "dependencies": {
     "@syndesis/models": "*",
+    "@syndesis/auto-form": "*",
     "@syndesis/ui": "*",
     "named-urls": "^1.4.0",
     "react-fast-compare": "^2.0.2"

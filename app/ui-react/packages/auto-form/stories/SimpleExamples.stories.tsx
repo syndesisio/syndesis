@@ -223,6 +223,32 @@ stories.add('Select', () => (
   <StoryWrapper>
     <AutoForm
       definition={{
+        MultiField: {
+          displayName: 'Pick things',
+          enum: [
+            {
+              label: 'One Fish',
+              value: 'one',
+            },
+            {
+              label: 'Two Fish',
+              value: 'two',
+            },
+            {
+              label: 'Red Fish',
+              value: 'three',
+            },
+            {
+              label: 'Blue Fish',
+              value: 'four',
+            },
+          ],
+          fieldAttributes: {
+            multiple: true,
+          },
+          order: 2,
+          type: 'string',
+        },
         SomeField: {
           displayName: 'Pick a thing',
           enum: [
@@ -244,6 +270,7 @@ stories.add('Select', () => (
             },
           ],
           labelHint: 'This is shown for the label hint text',
+          order: 1,
           type: 'string',
         },
       }}
@@ -252,6 +279,7 @@ stories.add('Select', () => (
         'This property is required'
       )}
       initialValue={{
+        MultiField: ['one', 'four'],
         SomeField: 'three',
       }}
       validate={action('validate')}

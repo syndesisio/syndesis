@@ -106,6 +106,7 @@ export class FormDurationComponent extends React.Component<
         <ControlLabel>{this.props.property.displayName}</ControlLabel>
         <Form.InputGroup>
           <Form.FormControl
+            min={0}
             {...this.props.property.fieldAttributes}
             data-testid={this.props.field.name}
             type={'number'}
@@ -119,7 +120,6 @@ export class FormDurationComponent extends React.Component<
             onChange={this.handleChange}
             onBlur={this.handleBlur}
             inputRef={this.receiveInputRef}
-            min={0}
           />
           <DropdownButton
             id={this.props.field.name + '-duration'}
