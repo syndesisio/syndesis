@@ -1,4 +1,5 @@
 import {
+  getConnectionIcon,
   IValidationResult,
   WithConnection,
   WithConnectionHelpers,
@@ -110,7 +111,7 @@ export class ConnectionDetailsPage extends React.Component<
                                 description: string
                               ): Promise<boolean> => {
                                 this.setState({ isWorking: true });
-                                const saved = save({ description });
+                                const saved = await save({ description });
                                 this.setState({ isWorking: false });
                                 return saved;
                               };
@@ -118,24 +119,26 @@ export class ConnectionDetailsPage extends React.Component<
                               const saveName = async (
                                 name: string
                               ): Promise<boolean> => {
+                                let saved = false;
                                 this.setState({ isWorking: true });
-                                const validName = doValidateName(name);
-
-                                if (validName) {
-                                  const saved = save({ name });
-                                  this.setState({ isWorking: false });
-                                  return saved;
+                                const validation = await doValidateName(name);
+                                if (validation === true) {
+                                  saved = await save({ name });
+                                } else {
+                                  pushNotification(validation, 'error');
                                 }
-
-                                return false;
+                                this.setState({ isWorking: false });
+                                return saved;
                               };
 
                               const saveConnector = async (
                                 configuredProperties: { [key: string]: string },
                                 actions: any
                               ): Promise<void> => {
+                                this.setState({ isWorking: true });
                                 await save({ configuredProperties });
                                 actions.setSubmitting(false);
+                                this.setState({ isWorking: false });
                               };
 
                               /**
@@ -147,48 +150,32 @@ export class ConnectionDetailsPage extends React.Component<
                               ): Promise<true | string> => {
                                 // make sure name has a value
                                 if (proposedName === '') {
-                                  const msg = t('shared:requiredFieldMessage');
+                                  return t(
+                                    'shared:requiredFieldMessage'
+                                  ) as string;
+                                }
+
+                                const response: IValidationResult = await validateName(
+                                  connection!,
+                                  proposedName
+                                );
+
+                                if (!response.isError) {
+                                  return true;
+                                }
+
+                                if (response.error === 'UniqueProperty') {
+                                  const msg = t('duplicateNameError');
                                   return msg
                                     ? msg
-                                    : 'shared:requiredFieldMessage';
+                                    : 'connections:duplicateNameError';
                                 }
 
-                                // only call server validation if save is running
-                                if (this.state.isWorking) {
-                                  try {
-                                    const response: IValidationResult = await validateName(
-                                      connection!,
-                                      proposedName
-                                    );
-
-                                    if (!response.isError) {
-                                      return true;
-                                    }
-
-                                    if (response.error === 'UniqueProperty') {
-                                      const msg = t('duplicateNameError');
-                                      return msg
-                                        ? msg
-                                        : 'connections:duplicateNameError';
-                                    }
-
-                                    return response.message
-                                      ? response.message
-                                      : t('errorValidatingName')
-                                      ? t('errorValidatingName')!
-                                      : 'connections:errorValidatingName'; // return missing i18n key
-                                  } catch (error) {
-                                    pushNotification(
-                                      t('errorValidatingName'),
-                                      'error'
-                                    );
-                                    return true;
-                                  } finally {
-                                    this.setState({ isWorking: false });
-                                  }
-                                }
-
-                                return true;
+                                return response.message
+                                  ? response.message
+                                  : t('errorValidatingName')
+                                  ? t('errorValidatingName')!
+                                  : 'connections:errorValidatingName'; // return missing i18n key
                               };
 
                               const cancelEditing = () => {
@@ -243,7 +230,10 @@ export class ConnectionDetailsPage extends React.Component<
                                               connectionDescription={
                                                 data.description
                                               }
-                                              connectionIcon={data.icon}
+                                              connectionIcon={getConnectionIcon(
+                                                process.env.PUBLIC_URL,
+                                                data
+                                              )}
                                               connectionName={data.name}
                                               i18nDescriptionLabel={t(
                                                 'shared:Description'
@@ -263,7 +253,6 @@ export class ConnectionDetailsPage extends React.Component<
                                                 saveDescription
                                               }
                                               onChangeName={saveName}
-                                              validate={doValidateName}
                                             />
                                             <ConnectionDetailsForm
                                               i18nCancelLabel={t(

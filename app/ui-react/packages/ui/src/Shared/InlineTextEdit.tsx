@@ -1,55 +1,52 @@
 // tslint:disable react-unused-props-and-state
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
+import classnames from 'classnames';
 import {
-  Col,
   FormControl,
   FormGroup,
   HelpBlock,
   Icon,
   InlineEdit,
-  Row,
+  InputGroup,
 } from 'patternfly-react';
 import * as React from 'react';
-import { Container, Loader } from '../Layout';
+import { Omit } from 'react-router';
+import { Loader } from '../Layout';
 import './InlineTextEdit.css';
 
 interface IReadWidget {
+  className?: string;
   allowEditing: boolean;
   value: string;
-  styling?: {};
   onEdit(): void;
 }
 
 const ReadWidget: React.FunctionComponent<IReadWidget> = ({
+  className,
   allowEditing,
   value,
   onEdit,
-  styling,
 }) => (
-  <Container style={styling}>
+  <div className={classnames('inline-text-readwidget', className)}>
     {value}
     {allowEditing ? (
       <Icon
-        className="inline-text-edit__editIcon"
+        className="inline-text-editIcon"
         name="edit"
         onClick={onEdit}
         type="pf"
       />
     ) : null}
-  </Container>
+  </div>
 );
 
-interface IEditWidget {
+interface IEditWidget extends React.InputHTMLAttributes<HTMLInputElement> {
+  className?: string;
+  value: string;
   valid: boolean;
   saving: boolean;
-  value: string;
   asTextarea: boolean;
-  smOffset?: number;
-  smWidth: number;
-  styling?: {};
-  placeholder?: string;
   errorMsg?: string;
-  onChange(e: React.ChangeEvent): void;
   onConfirm(): void;
   onCancel(): void;
 }
@@ -57,9 +54,6 @@ interface IEditWidget {
 const EditWidget: React.FunctionComponent<IEditWidget> = ({
   valid,
   value,
-  smOffset,
-  smWidth,
-  styling,
   placeholder,
   errorMsg,
   saving,
@@ -67,67 +61,73 @@ const EditWidget: React.FunctionComponent<IEditWidget> = ({
   onChange,
   onConfirm,
   onCancel,
-}) =>
-  asTextarea ? (
-    <Container>
-      <Row>
-        <Col sm={smWidth}>
-          <FormGroup
-            controlId="textarea"
-            validationState={valid ? 'success' : 'error'}
-          >
-            <FormControl
-              componentClass="textarea"
-              disabled={saving}
-              onChange={onChange}
-              placeholder={placeholder}
-              style={styling}
-              value={value}
-            />
-          </FormGroup>
-          {errorMsg && <HelpBlock>{errorMsg}</HelpBlock>}
-        </Col>
-      </Row>
-      <Row>
-        <Col sm={smWidth} smOffset={smOffset}>
-          <Loader inline={true} loading={saving} />
-          <InlineEdit.ConfirmButton
-            disabled={saving || !valid}
-            onClick={onConfirm}
+}) => (
+  <div className={'inline-text-editwidget'}>
+    {asTextarea ? (
+      <>
+        <FormGroup
+          controlId="textarea"
+          validationState={valid ? 'success' : 'error'}
+        >
+          <FormControl
+            componentClass="textarea"
+            disabled={saving}
+            onChange={onChange}
+            placeholder={placeholder}
+            value={value}
           />
+          {saving ? (
+            <span className="btn">
+              <Loader inline={true} loading={saving} size={'sm'} />
+            </span>
+          ) : (
+            <InlineEdit.ConfirmButton
+              disabled={saving || !valid}
+              onClick={onConfirm}
+            />
+          )}
           <InlineEdit.CancelButton disabled={saving} onClick={onCancel} />
-        </Col>
-      </Row>
-    </Container>
-  ) : (
-    <Container>
-      <Row>
-        <Col sm={smWidth}>
-          <FormGroup validationState={valid ? 'success' : 'error'}>
+        </FormGroup>
+        {errorMsg && <HelpBlock>{errorMsg}</HelpBlock>}
+      </>
+    ) : (
+      <>
+        <FormGroup validationState={valid ? 'success' : 'error'}>
+          <InputGroup>
             <FormControl
               disabled={saving}
               onChange={onChange}
               placeholder={placeholder}
-              style={styling}
               type="text"
               value={value}
             />
-            {errorMsg && <HelpBlock>{errorMsg}</HelpBlock>}
-          </FormGroup>
-        </Col>
-        <Col>
-          <Loader inline={true} loading={saving} />
-          <InlineEdit.ConfirmButton
-            disabled={saving || !valid}
-            onClick={onConfirm}
-          />
-          <InlineEdit.CancelButton disabled={saving} onClick={onCancel} />
-        </Col>
-      </Row>
-    </Container>
-  );
+            <InputGroup.Button>
+              {saving ? (
+                <span className="btn">
+                  <Loader inline={true} loading={saving} size={'sm'} />
+                </span>
+              ) : (
+                <InlineEdit.ConfirmButton
+                  disabled={saving || !valid}
+                  onClick={onConfirm}
+                />
+              )}
+            </InputGroup.Button>
+            <InputGroup.Button>
+              <InlineEdit.CancelButton disabled={saving} onClick={onCancel} />
+            </InputGroup.Button>
+          </InputGroup>
+          {errorMsg && <HelpBlock>{errorMsg}</HelpBlock>}
+        </FormGroup>
+      </>
+    )}
+  </div>
+);
 
-export interface IInlineTextEditProps {
+export interface IInlineTextEditProps
+  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+  className?: string;
+
   /**
    * The current value of the property being rendered.
    */
@@ -139,11 +139,6 @@ export interface IInlineTextEditProps {
   allowEditing: boolean;
 
   /**
-   * Style attributes for the editable value component.
-   */
-  editableValueStyling?: {};
-
-  /**
    * A value to display if the current value is empty or undefined.
    */
   i18nPlaceholder?: string;
@@ -152,21 +147,6 @@ export interface IInlineTextEditProps {
    * `true` if the value should be rendered as a text area.
    */
   isTextArea: boolean;
-
-  /**
-   * Style attributes for the readonly value component.
-   */
-  readonlyValueStyling?: {};
-
-  /**
-   * The column offset needed for confirm and cancel edit buttons to align with the textarea.
-   */
-  smOffset?: number;
-
-  /**
-   * The width of the edit component.
-   */
-  smWidth: number;
 
   /**
    * The callback invoked when the confirm button is clicked.
@@ -180,16 +160,14 @@ export interface IInlineTextEditProps {
 }
 
 export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
+  className,
   value,
   allowEditing,
-  editableValueStyling,
   i18nPlaceholder,
   isTextArea,
-  readonlyValueStyling,
-  smOffset,
-  smWidth,
   onChange,
   onValidate,
+  ...attrs
 }) => {
   const [currentValue, setCurrentValue] = React.useState(value);
   const [editing, setEditing] = React.useState(false);
@@ -249,8 +227,8 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
 
   const renderValue = (v: string) => (
     <ReadWidget
-      styling={readonlyValueStyling}
-      value={v}
+      className={className}
+      value={v || i18nPlaceholder || 'Value...'}
       allowEditing={allowEditing}
       onEdit={onEdit}
     />
@@ -258,13 +236,10 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
 
   const renderEdit = (v: string) => (
     <EditWidget
+      {...attrs}
       valid={valid}
-      placeholder={i18nPlaceholder}
       saving={saving}
       value={v}
-      smOffset={smOffset}
-      smWidth={smWidth}
-      styling={editableValueStyling}
       errorMsg={errorMsg}
       asTextarea={isTextArea}
       onChange={handleChange}
@@ -277,6 +252,7 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
 
   return (
     <InlineEdit
+      className={className}
       value={currentValue}
       isEditing={isEditing}
       renderValue={renderValue}

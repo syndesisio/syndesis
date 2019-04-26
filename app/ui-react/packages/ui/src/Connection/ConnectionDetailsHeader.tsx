@@ -68,12 +68,6 @@ export interface IConnectionDetailsHeaderProps {
    * @returns `true` if save was successful
    */
   onChangeName: (newName: string) => Promise<boolean>;
-
-  /**
-   * The callback that validates the changes to the connection name. In case of error, the error message is expected as the return value.
-   * @param proposedName - the proposed name being validated
-   */
-  validate: (proposedName: string) => Promise<true | string>;
 }
 
 /**
@@ -86,8 +80,8 @@ export class ConnectionDetailsHeader extends React.Component<
 > {
   public render() {
     return (
-      <Grid>
-        <Grid.Row>
+      <Grid fluid={true}>
+        <Grid.Row className={'connection-details-header__row'}>
           {this.props.connectionIcon ? (
             <Grid.Col xs={1}>
               <Container className="blank-slate-pf-icon">
@@ -100,34 +94,27 @@ export class ConnectionDetailsHeader extends React.Component<
               </Container>
             </Grid.Col>
           ) : null}
-          <Grid.Col>
+          <Grid.Col xs={11}>
             <InlineTextEdit
+              className="connection-details-header__connectionName"
               value={this.props.connectionName}
               allowEditing={this.props.allowEditing && !this.props.isWorking}
-              editableValueStyling={{ fontSize: '2em' }}
-              i18nPlaceholder={this.props.i18nNamePlaceholder}
+              placeholder={this.props.i18nNamePlaceholder}
               isTextArea={false}
-              smWidth={3}
-              readonlyValueStyling={{ fontSize: '2em' }}
               onChange={this.props.onChangeName}
-              onValidate={this.props.validate}
             />
           </Grid.Col>
         </Grid.Row>
-        <Grid.Row>
+        <Grid.Row className={'connection-details-header__row'}>
           <Grid.Col xs={2} className="connection-details-header__propertyLabel">
             {this.props.i18nDescriptionLabel}
           </Grid.Col>
-          <Grid.Col>
+          <Grid.Col xs={10}>
             <InlineTextEdit
               value={this.props.connectionDescription || ''}
               allowEditing={this.props.allowEditing && !this.props.isWorking}
-              editableValueStyling={{ fontSize: '1.25em' }}
               i18nPlaceholder={this.props.i18nDescriptionPlaceholder}
               isTextArea={true}
-              readonlyValueStyling={{ fontSize: '1.25em' }}
-              smOffset={2}
-              smWidth={6}
               onChange={this.props.onChangeDescription}
             />
           </Grid.Col>
@@ -136,7 +123,10 @@ export class ConnectionDetailsHeader extends React.Component<
           <Grid.Col xs={2} className="connection-details-header__propertyLabel">
             {this.props.i18nUsageLabel}
           </Grid.Col>
-          <Grid.Col className="connection-details-header__propertyValue">
+          <Grid.Col
+            xs={10}
+            className="connection-details-header__propertyValue"
+          >
             {this.props.i18nUsageMessage}
           </Grid.Col>
         </Grid.Row>

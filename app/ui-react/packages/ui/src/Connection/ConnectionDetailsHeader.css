@@ -1,5 +1,14 @@
+.connection-details-header__connectionName {
+  font-size: 2em;
+}
+
 .connection-details-header__connectionIcon {
   width: 46px;
+}
+
+.connection-details-header__row {
+  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .connection-details-header__propertyLabel {
