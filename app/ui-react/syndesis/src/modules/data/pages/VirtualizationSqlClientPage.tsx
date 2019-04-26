@@ -1,8 +1,11 @@
 import { WithViewEditorStates } from '@syndesis/api';
 import { RestDataService, ViewEditorState } from '@syndesis/models';
+import { Breadcrumb } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import resolvers from '../../resolvers';
 import {
   HeaderView,
   ViewSqlFormAndTable,
@@ -52,6 +55,18 @@ export class VirtualizationSqlClientPage extends React.Component<
           <Translation ns={['data', 'shared']}>
             {t => (
               <>
+                <Breadcrumb>
+                  <Link to={resolvers.dashboard.root()}>
+                    {t('shared:Home')}
+                  </Link>
+                  <Link to={resolvers.data.root()}>
+                    {t('shared:DataVirtualizations')}
+                  </Link>
+                  <span>
+                    {virtualizationId + ' '}
+                    {t('data:virtualization.sqlClient')}
+                  </span>
+                </Breadcrumb>
                 <HeaderView virtualizationId={virtualizationId} />
                 <VirtualizationNavBar virtualization={virtualization} />
                 <WithViewEditorStates
