@@ -1,7 +1,10 @@
 import { RestDataService } from '@syndesis/models';
+import { Breadcrumb, Container } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
+import { Link } from 'react-router-dom';
+import resolvers from '../../resolvers';
 import { HeaderView } from '../shared';
 import { VirtualizationNavBar } from '../shared';
 
@@ -31,13 +34,29 @@ export class VirtualizationRelationshipPage extends React.Component {
       >>
         {({ virtualizationId }, { virtualization }, { history }) => {
           return (
-            <div>
-              <HeaderView virtualizationId={virtualizationId} />
-              <Translation ns={['data', 'shared']}>
-                {t => <VirtualizationNavBar virtualization={virtualization} />}
-              </Translation>
-              <h3>Relationship page goes here.</h3>
-            </div>
+            <Translation ns={['data', 'shared']}>
+              {t => (
+                <div>
+                  <Breadcrumb>
+                    <Link to={resolvers.dashboard.root()}>
+                      {t('shared:Home')}
+                    </Link>
+                    <Link to={resolvers.data.root()}>
+                      {t('shared:DataVirtualizations')}
+                    </Link>
+                    <span>
+                      {virtualizationId + ' '}
+                      {t('data:virtualization.relationship')}
+                    </span>
+                  </Breadcrumb>
+                  <HeaderView virtualizationId={virtualizationId} />
+                  <VirtualizationNavBar virtualization={virtualization} />
+                  <Container>
+                    <h3>Relationships are not yet implemented</h3>
+                  </Container>
+                </div>
+              )}
+            </Translation>
           );
         }}
       </WithRouteData>

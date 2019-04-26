@@ -1,7 +1,9 @@
 import { WithViewEditorStates, WithVirtualizationHelpers } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
 import { ViewDefinition, ViewEditorState } from '@syndesis/models';
+import { Breadcrumb } from '@syndesis/ui';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import { HeaderView } from '../shared';
@@ -21,7 +23,7 @@ import {
   WithRouteData,
 } from '@syndesis/utils';
 import { Translation } from 'react-i18next';
-import resolvers from '../resolvers';
+import resolvers from '../../resolvers';
 
 /**
  * @param virtualizationId - the ID of the virtualization whose details are being shown by this page.
@@ -109,39 +111,55 @@ export class VirtualizationViewsPage extends React.Component<
       >>
         {({ virtualizationId }, { virtualization }, { history }) => {
           return (
-            <div>
-              <HeaderView virtualizationId={virtualizationId} />
-              <WithViewEditorStates
-                idPattern={virtualization.serviceVdbName + '*'}
-              >
-                {({ data, hasData, error, read }) => {
-                  return (
-                    // TODO need to retrieve real username here
-                    <WithVirtualizationHelpers username="developer">
-                      {({ deleteView }) => {
-                        const handleDeleteView = async (viewName: string) => {
-                          await deleteView(virtualization, viewName).then(read);
-                          // TODO: post toast notification
-                        };
-                        return (
-                          <WithListViewToolbarHelpers
-                            defaultFilterType={filterByName}
-                            defaultSortType={sortByName}
-                          >
-                            {helpers => {
-                              const viewDefns = data.map(
-                                (editorState: ViewEditorState) =>
-                                  editorState.viewDefinition
+            <Translation ns={['data', 'shared']}>
+              {t => (
+                <>
+                  <Breadcrumb>
+                    <Link to={resolvers.dashboard.root()}>
+                      {t('shared:Home')}
+                    </Link>
+                    <Link to={resolvers.data.root()}>
+                      {t('shared:DataVirtualizations')}
+                    </Link>
+                    <span>
+                      {virtualizationId + ' '}
+                      {t('data:virtualization.views')}
+                    </span>
+                  </Breadcrumb>
+                  <HeaderView virtualizationId={virtualizationId} />
+                  <WithViewEditorStates
+                    idPattern={virtualization.serviceVdbName + '*'}
+                  >
+                    {({ data, hasData, error, read }) => {
+                      return (
+                        // TODO need to retrieve real username here
+                        <WithVirtualizationHelpers username="developer">
+                          {({ deleteView }) => {
+                            const handleDeleteView = async (
+                              viewName: string
+                            ) => {
+                              await deleteView(virtualization, viewName).then(
+                                read
                               );
-                              const filteredAndSorted = getFilteredAndSortedViewDefns(
-                                viewDefns,
-                                helpers.activeFilters,
-                                helpers.currentSortType,
-                                helpers.isSortAscending
-                              );
-                              return (
-                                <Translation ns={['data', 'shared']}>
-                                  {t => (
+                              // TODO: post toast notification
+                            };
+                            return (
+                              <WithListViewToolbarHelpers
+                                defaultFilterType={filterByName}
+                                defaultSortType={sortByName}
+                              >
+                                {helpers => {
+                                  const viewDefns = data.map(
+                                    (editorState: ViewEditorState) =>
+                                      editorState.viewDefinition
+                                  );
+                                  const filteredAndSorted = getFilteredAndSortedViewDefns(
+                                    viewDefns,
+                                    helpers.activeFilters,
+                                    helpers.currentSortType,
+                                    helpers.isSortAscending
+                                  );
+                                  return (
                                     <>
                                       <VirtualizationNavBar
                                         virtualization={virtualization}
@@ -184,8 +202,8 @@ export class VirtualizationViewsPage extends React.Component<
                                           }
                                         )}
                                         // TODO - Point to views.create when available
-                                        linkCreateViewHRef={resolvers.virtualizations.create()}
-                                        linkImportViewsHRef={resolvers.virtualizations.views.importSource.selectConnection(
+                                        linkCreateViewHRef={resolvers.data.virtualizations.create()}
+                                        linkImportViewsHRef={resolvers.data.virtualizations.views.importSource.selectConnection(
                                           { virtualization }
                                         )}
                                         onImportView={this.handleImportView}
@@ -229,7 +247,9 @@ export class VirtualizationViewsPage extends React.Component<
                                                   )}
                                                   i18nDeleteModalMessage={t(
                                                     'virtualization.deleteViewModalMessage',
-                                                    { name: view.viewName }
+                                                    {
+                                                      name: view.viewName,
+                                                    }
                                                   )}
                                                   i18nDeleteModalTitle={t(
                                                     'virtualization.deleteModalTitle'
@@ -246,18 +266,18 @@ export class VirtualizationViewsPage extends React.Component<
                                         }
                                       </WithLoader>
                                     </>
-                                  )}
-                                </Translation>
-                              );
-                            }}
-                          </WithListViewToolbarHelpers>
-                        );
-                      }}
-                    </WithVirtualizationHelpers>
-                  );
-                }}
-              </WithViewEditorStates>
-            </div>
+                                  );
+                                }}
+                              </WithListViewToolbarHelpers>
+                            );
+                          }}
+                        </WithVirtualizationHelpers>
+                      );
+                    }}
+                  </WithViewEditorStates>
+                </>
+              )}
+            </Translation>
           );
         }}
       </WithRouteData>
