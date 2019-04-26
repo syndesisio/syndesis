@@ -6,7 +6,7 @@ import {
   WithIntegration,
   WithIntegrationHelpers,
 } from '@syndesis/api';
-import { IntegrationOverview } from '@syndesis/models';
+import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
@@ -32,14 +32,14 @@ import { IntegrationDetailNavBar } from '../../../shared';
  */
 export interface IDetailsPageProps {
   error: boolean;
-  integration: IntegrationOverview;
+  integration: IIntegrationOverviewWithDraft;
   integrationId: string;
   loading: boolean;
 }
 
 export interface IDetailsPageState {
   handleAction?: () => void;
-  integration?: IntegrationOverview;
+  integration?: IIntegrationOverviewWithDraft;
   promptDialogButtonText?: string;
   promptDialogIcon?: ConfirmationIconType;
   promptDialogText?: string;
@@ -266,7 +266,7 @@ export class DetailsPage extends React.Component<
                                       )}
                                     />
                                     <IntegrationDetailHistoryListView
-                                      draft={data.draft!}
+                                      isDraft={data.isDraft}
                                       i18nTextBtnEdit={t('shared:Edit')}
                                       i18nTextBtnPublish={t('shared:Publish')}
                                       i18nTextDraft={t('shared:Draft')}
