@@ -130,6 +130,9 @@ export class DetailsPage extends React.Component<
                           <div>
                             <Translation ns={['integrations', 'shared']}>
                               {t => {
+                                const deployments = data.deployments
+                                  ? data.deployments
+                                  : [];
                                 const editAction: IIntegrationAction = {
                                   href: resolvers.integration.edit.index({
                                     integration: data,
@@ -273,7 +276,8 @@ export class DetailsPage extends React.Component<
                                       children={
                                         <IntegrationDetailHistory
                                           actions={actions}
-                                          integration={data}
+                                          deployments={deployments}
+                                          integrationId={data.id!}
                                           updatedAt={data.updatedAt!}
                                           version={data.version!}
                                         />

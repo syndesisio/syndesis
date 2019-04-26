@@ -1,15 +1,15 @@
-import { IntegrationOverview } from '@syndesis/models';
+import { IntegrationDeploymentOverview } from '@syndesis/models';
 import {
   IntegrationActions,
   IntegrationDetailHistoryListViewItem,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import resolvers from '../resolvers';
 
 export interface IIntegrationDetailDeploymentsProps {
   actions: any;
-  integration: IntegrationOverview;
+  integrationId: string;
+  deployments: IntegrationDeploymentOverview[];
   updatedAt: number;
   version: number;
 }
@@ -18,9 +18,7 @@ export class IntegrationDetailHistory extends React.Component<
   IIntegrationDetailDeploymentsProps
 > {
   public render() {
-    const deployments = this.props.integration.deployments
-      ? this.props.integration.deployments
-      : [];
+    const deployments = this.props.deployments ? this.props.deployments : [];
     return (
       <Translation ns={['integrations', 'shared']}>
         {t =>
@@ -30,11 +28,8 @@ export class IntegrationDetailHistory extends React.Component<
                 key={idx}
                 actions={
                   <IntegrationActions
-                    integrationId={this.props.integration.id!}
+                    integrationId={this.props.integrationId}
                     actions={this.props.actions}
-                    detailsHref={resolvers.integration.details({
-                      integration: this.props.integration,
-                    })}
                   />
                 }
                 i18nTextLastPublished={t('integrations:detail:lastPublished')}

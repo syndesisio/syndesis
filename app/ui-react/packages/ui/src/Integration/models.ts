@@ -22,6 +22,6 @@ export interface IIntegrationDetailHistoryItem {
 }
 
 export interface IIntegrationDetailHistory {
-  isDraft: boolean;
+  draft: boolean;
   items: IIntegrationDetailHistoryItem[];
 }
