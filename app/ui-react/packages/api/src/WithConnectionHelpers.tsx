@@ -148,7 +148,9 @@ export class WithConnectionHelpersWrapped extends React.Component<
   ): Connection {
     return produce(connection, draft => {
       connection.name = name || connection.name;
-      connection.description = description || connection.description;
+      // allow empty descriptions
+      connection.description =
+        description === undefined ? connection.description : description;
       connection.configuredProperties =
         configuredProperties || connection.configuredProperties;
     });

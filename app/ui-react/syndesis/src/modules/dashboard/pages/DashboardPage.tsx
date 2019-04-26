@@ -3,11 +3,7 @@ import {
   WithIntegrationsMetrics,
   WithMonitoredIntegrations,
 } from '@syndesis/api';
-import {
-  Connection,
-  IntegrationOverview,
-  IntegrationWithOverview,
-} from '@syndesis/models';
+import { IntegrationOverview, IntegrationWithOverview } from '@syndesis/models';
 import {
   AggregatedMetricCard,
   ConnectionsMetric,
@@ -100,10 +96,6 @@ export function getTopIntegrations(
     })
     .reverse()
     .slice(0, 5);
-}
-
-export function getConnectionHref(connection: Connection) {
-  return resolvers.connections.connection.details({ connection });
 }
 
 export default () => (
@@ -255,7 +247,16 @@ export default () => (
                           includeConnectionMenu={false}
                           loading={!hasConnections}
                           connections={connectionsData.connectionsForDisplay}
-                          getConnectionHref={getConnectionHref}
+                          getConnectionHref={connection =>
+                            resolvers.connections.connection.details({
+                              connection,
+                            })
+                          }
+                          getConnectionEditHref={connection =>
+                            resolvers.connections.connection.edit({
+                              connection,
+                            })
+                          }
                         />
                       }
                       i18nConnections={t('shared:Connections')}

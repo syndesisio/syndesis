@@ -17,6 +17,17 @@ export default {
         },
       })
     ),
+    edit: makeResolver<{ connection: Connection }>(
+      routes.connection.edit,
+      ({ connection }) => ({
+        params: {
+          connectionId: connection.id,
+        },
+        state: {
+          connection,
+        },
+      })
+    ),
   },
   create: {
     selectConnector: makeResolverNoParams(routes.create.selectConnector),

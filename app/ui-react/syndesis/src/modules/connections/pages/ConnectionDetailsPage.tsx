@@ -29,22 +29,21 @@ export interface IConnectionDetailsRouteState {
   connection?: Connection;
 }
 
+export interface IConnectionDetailsPageProps {
+  edit: boolean;
+}
+
 export interface IConnectionDetailsPageState {
-  isEditing: boolean;
   isWorking: boolean;
 }
 
 export class ConnectionDetailsPage extends React.Component<
-  {},
+  IConnectionDetailsPageProps,
   IConnectionDetailsPageState
 > {
-  public constructor(props: {}) {
-    super(props);
-    this.state = {
-      isEditing: false,
-      isWorking: false,
-    };
-  }
+  public state = {
+    isWorking: false,
+  };
 
   public getUsedByMessage(connection: Connection): string {
     // TODO: Schema is currently wrong as it has 'uses' as an OptionalInt. Remove cast when schema is fixed.
@@ -66,7 +65,7 @@ export class ConnectionDetailsPage extends React.Component<
               IConnectionDetailsRouteParams,
               IConnectionDetailsRouteState
             >>
-              {({ connectionId }, { connection }, { history }) => (
+              {({ connectionId }, { connection }, { history, location }) => (
                 <Translation ns={['connections', 'shared']}>
                   {t => (
                     <WithConnectionHelpers>
@@ -75,6 +74,7 @@ export class ConnectionDetailsPage extends React.Component<
                           <WithConnection
                             id={connectionId}
                             initialValue={connection}
+                            key={location.key}
                           >
                             {({ data, hasData, error }) => {
                               const save = async ({
@@ -182,6 +182,22 @@ export class ConnectionDetailsPage extends React.Component<
                                   : 'connections:errorValidatingName'; // return missing i18n key
                               };
 
+                              const cancelEditing = () => {
+                                history.push(
+                                  resolvers.connections.connection.details({
+                                    connection: data,
+                                  })
+                                );
+                              };
+
+                              const startEditing = () => {
+                                history.push(
+                                  resolvers.connections.connection.edit({
+                                    connection: data,
+                                  })
+                                );
+                              };
+
                               return (
                                 <WithLoader
                                   error={error}
@@ -194,115 +210,96 @@ export class ConnectionDetailsPage extends React.Component<
                                       <WithConnectorForm
                                         connector={data.connector!}
                                         initialValue={data.configuredProperties}
-                                        disabled={!this.state.isEditing}
+                                        disabled={!this.props.edit}
                                         onSave={saveConnector}
                                       >
                                         {({
                                           fields,
                                           handleSubmit,
                                           validationResults,
+                                          dirty,
                                           isSubmitting,
                                           isValid,
                                           isValidating,
-                                          resetForm,
                                           validateForm,
-                                        }) => {
-                                          const cancelEditing = () => {
-                                            resetForm();
-                                            this.setState({
-                                              isEditing: false,
-                                            });
-                                          };
-
-                                          const startEditing = () => {
-                                            this.setState({
-                                              isEditing: true,
-                                            });
-                                          };
-
-                                          return (
-                                            <>
-                                              <Breadcrumb>
-                                                <Link
-                                                  to={resolvers.dashboard.root()}
-                                                >
-                                                  {t('shared:Home')}
-                                                </Link>
-                                                <Link
-                                                  to={resolvers.connections.connections()}
-                                                >
-                                                  {t('shared:Connections')}
-                                                </Link>
-                                                <span>
-                                                  {t(
-                                                    'connectionDetailPageTitle'
-                                                  )}
-                                                </span>
-                                              </Breadcrumb>
-                                              <ConnectionDetailsHeader
-                                                allowEditing={true}
-                                                connectionDescription={
-                                                  data.description
-                                                }
-                                                connectionIcon={getConnectionIcon(
-                                                  process.env.PUBLIC_URL,
-                                                  data
-                                                )}
-                                                connectionName={data.name}
-                                                i18nDescriptionLabel={t(
-                                                  'shared:Description'
-                                                )}
-                                                i18nDescriptionPlaceholder={t(
-                                                  'descriptionPlaceholder'
-                                                )}
-                                                i18nNamePlaceholder={t(
-                                                  'namePlaceholder'
-                                                )}
-                                                i18nUsageLabel={t(
-                                                  'shared:Usage'
-                                                )}
-                                                i18nUsageMessage={this.getUsedByMessage(
-                                                  data
-                                                )}
-                                                isWorking={this.state.isWorking}
-                                                onChangeDescription={
-                                                  saveDescription
-                                                }
-                                                onChangeName={saveName}
-                                              />
-                                              <ConnectionDetailsForm
-                                                i18nCancelLabel={t(
-                                                  'shared:Cancel'
-                                                )}
-                                                i18nEditLabel={t('shared:Edit')}
-                                                i18nSaveLabel={t('shared:Save')}
-                                                i18nTitle={t(
-                                                  'detailsSectionTitle',
-                                                  {
-                                                    connectionName: data.name,
-                                                  }
-                                                )}
-                                                i18nValidateLabel={t(
-                                                  'shared:Validate'
-                                                )}
-                                                handleSubmit={handleSubmit}
-                                                isValid={isValid}
-                                                isWorking={
-                                                  isSubmitting || isValidating
-                                                }
-                                                validationResults={
-                                                  validationResults
-                                                }
-                                                isEditing={this.state.isEditing}
-                                                onCancelEditing={cancelEditing}
-                                                onStartEditing={startEditing}
-                                                onValidate={validateForm}
+                                        }) => (
+                                          <>
+                                            <Breadcrumb>
+                                              <Link
+                                                to={resolvers.dashboard.root()}
                                               >
-                                                {fields}
-                                              </ConnectionDetailsForm>
-                                            </>
-                                          );
-                                        }}
+                                                {t('shared:Home')}
+                                              </Link>
+                                              <Link
+                                                to={resolvers.connections.connections()}
+                                              >
+                                                {t('shared:Connections')}
+                                              </Link>
+                                              <span>
+                                                {t('connectionDetailPageTitle')}
+                                              </span>
+                                            </Breadcrumb>
+                                            <ConnectionDetailsHeader
+                                              allowEditing={true}
+                                              connectionDescription={
+                                                data.description
+                                              }
+                                              connectionIcon={getConnectionIcon(
+                                                process.env.PUBLIC_URL,
+                                                data
+                                              )}
+                                              connectionName={data.name}
+                                              i18nDescriptionLabel={t(
+                                                'shared:Description'
+                                              )}
+                                              i18nDescriptionPlaceholder={t(
+                                                'descriptionPlaceholder'
+                                              )}
+                                              i18nNamePlaceholder={t(
+                                                'namePlaceholder'
+                                              )}
+                                              i18nUsageLabel={t('shared:Usage')}
+                                              i18nUsageMessage={this.getUsedByMessage(
+                                                data
+                                              )}
+                                              isWorking={this.state.isWorking}
+                                              onChangeDescription={
+                                                saveDescription
+                                              }
+                                              onChangeName={saveName}
+                                            />
+                                            <ConnectionDetailsForm
+                                              i18nCancelLabel={t(
+                                                'shared:Cancel'
+                                              )}
+                                              i18nEditLabel={t('shared:Edit')}
+                                              i18nSaveLabel={t('shared:Save')}
+                                              i18nTitle={t(
+                                                'detailsSectionTitle',
+                                                {
+                                                  connectionName: data.name,
+                                                }
+                                              )}
+                                              i18nValidateLabel={t(
+                                                'shared:Validate'
+                                              )}
+                                              handleSubmit={handleSubmit}
+                                              isValid={!dirty || isValid}
+                                              isWorking={
+                                                isSubmitting || isValidating
+                                              }
+                                              validationResults={
+                                                validationResults
+                                              }
+                                              isEditing={this.props.edit}
+                                              onCancelEditing={cancelEditing}
+                                              onStartEditing={startEditing}
+                                              onValidate={validateForm}
+                                            >
+                                              {fields}
+                                            </ConnectionDetailsForm>
+                                          </>
+                                        )}
                                       </WithConnectorForm>
                                     );
                                   }}

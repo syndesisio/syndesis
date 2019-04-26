@@ -86,7 +86,6 @@ export class ConnectionDetailsForm extends React.Component<
   public render() {
     return (
       <Container>
-        {this.props.isWorking ? <Loader size={'lg'} inline={true} /> : null}
         <form
           className="form-horizontal required-pf"
           role="form"
@@ -108,9 +107,12 @@ export class ConnectionDetailsForm extends React.Component<
                       <Button
                         bsStyle="default"
                         className="connection-details-form__editButton"
-                        disabled={this.props.isWorking}
+                        disabled={this.props.isWorking || !this.props.isValid}
                         onClick={this.props.onValidate}
                       >
+                        {this.props.isWorking ? (
+                          <Loader size={'sm'} inline={true} />
+                        ) : null}
                         {this.props.i18nValidateLabel}
                       </Button>
                     </Row>

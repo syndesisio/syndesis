@@ -1,13 +1,8 @@
 import { WithConnections } from '@syndesis/api';
-import { Connection } from '@syndesis/models';
 import * as React from 'react';
 import { PageTitle } from '../../../shared';
 import { ConnectionsWithToolbar } from '../components';
 import resolvers from '../resolvers';
-
-function getConnectionHref(connection: Connection) {
-  return resolvers.connection.details({ connection });
-}
 
 export class ConnectionsPage extends React.Component {
   public render() {
@@ -21,7 +16,12 @@ export class ConnectionsPage extends React.Component {
               includeConnectionMenu={true}
               loading={!hasData}
               connections={data.connectionsForDisplay}
-              getConnectionHref={getConnectionHref}
+              getConnectionHref={connection =>
+                resolvers.connection.details({ connection })
+              }
+              getConnectionEditHref={connection =>
+                resolvers.connection.edit({ connection })
+              }
             />
           </>
         )}

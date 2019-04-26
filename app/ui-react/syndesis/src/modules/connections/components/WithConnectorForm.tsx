@@ -10,6 +10,10 @@ export interface IWithConnectorFormChildrenProps {
    */
   fields: JSX.Element;
   /**
+   * true if the form has been modified.
+   */
+  dirty: boolean;
+  /**
    * true if the form contains valid values. Can be used to enable/disable the
    * submit button.
    */
@@ -173,6 +177,7 @@ export class WithConnectorForm extends React.Component<
                 fields,
                 handleSubmit,
                 isSubmitting,
+                dirty,
                 isValid,
                 isValidating,
                 resetForm,
@@ -187,6 +192,7 @@ export class WithConnectorForm extends React.Component<
                 };
 
                 return this.props.children({
+                  dirty,
                   fields,
                   handleSubmit,
                   isSubmitting,
