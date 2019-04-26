@@ -163,6 +163,6 @@ export default describe('integrationFunctions', () => {
       ],
     } as Integration;
     const iconPath = getStepIcon('', integration, 0, 0);
-    expect(iconPath).toBe('./../../icons/steps/log.svg');
+    expect(iconPath).toBe('/icons/steps/log.svg');
   });
 });

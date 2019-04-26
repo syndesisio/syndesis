@@ -1,4 +1,5 @@
 import {
+  Extension,
   IConnectionWithIconFile,
   Integration,
   IntegrationOverview,
@@ -143,6 +144,14 @@ export function getFinishIcon(apiUri: string, integration: Integration) {
   return getStepIcon(apiUri, integration, 0, flow.steps!.length - 1);
 }
 
+export function getExtensionIcon(extension: Extension) {
+  return extension.icon || ''; // TODO: a default icon?
+}
+
+export function getStepKindIcon(stepKind: Step['stepKind']) {
+  return `/icons/steps/${stepKind}.svg`;
+}
+
 /**
  * Returns the icon for the supplied step index of the supplied flow index
  * @param integration
@@ -162,9 +171,9 @@ export function getStepIcon(
     return getConnectionIcon(apiUri, connection);
   }
   // The step is an extension
-  if (step.extension && step.extension.icon) {
-    return step.extension.icon;
+  if (step.extension) {
+    return getExtensionIcon(step.extension);
   }
   // It's just a step
-  return `./../../icons/steps/${step.stepKind}.svg`;
+  return getStepKindIcon(step.stepKind);
 }
