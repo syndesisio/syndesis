@@ -19,8 +19,8 @@ export class WithIntegration extends React.Component<IWithIntegrationProps> {
       <SyndesisFetch<IIntegrationOverviewWithDraft>
         url={`/integrations/${this.props.integrationId}`}
         defaultValue={{
-          name: '',
           isDraft: true,
+          name: '',
         }}
         initialValue={this.props.initialValue}
       >

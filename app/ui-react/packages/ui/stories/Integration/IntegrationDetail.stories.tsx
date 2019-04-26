@@ -29,17 +29,6 @@ const integrationPublishedHistoryItems = [
   />,
 ];
 
-const steps = [
-  {
-    name: 'SQL',
-    pattern: 'From',
-  },
-  {
-    name: 'Salesforce',
-    pattern: 'To',
-  },
-];
-
 const activityItemsSteps1 = [
   <IntegrationDetailActivityItemSteps
     key={0}
@@ -127,7 +116,7 @@ storiesOf('Integration/Detail', module)
             <TabBarItem label={'Metrics'} to={'#metrics'} />
           </TabBar>
         </Container>
-        <IntegrationStepsHorizontalView children={steps} />
+        <IntegrationStepsHorizontalView children={<></>} />
         <IntegrationDetailDescription description={'This is my description.'} />
         <IntegrationDetailHistoryListView
           isDraft={false}
