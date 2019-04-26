@@ -15,13 +15,9 @@
  */
 package io.syndesis.integration.runtime.sb.logging;
 
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
-import io.syndesis.integration.runtime.logging.BodyLogger;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import org.apache.camel.CamelContext;
 import org.apache.camel.spi.InterceptStrategy;
+import org.apache.camel.spi.RoutePolicy;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -31,6 +27,14 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.integration.runtime.ActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
+import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
+import io.syndesis.integration.runtime.logging.BodyLogger;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingActivityTrackingPolicy;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 
 @Configuration
 @AutoConfigureAfter(CamelAutoConfiguration.class)
@@ -74,5 +78,20 @@ public class IntegrationLoggingAutoConfiguration {
     @Bean
     public InterceptStrategy integrationLoggingInterceptStrategy(ActivityTracker activityTracker) {
         return new ActivityTrackingInterceptStrategy(activityTracker);
+    }
+
+    @Bean
+    public ActivityTrackingPolicyFactory activityTrackingPolicyFactory(ActivityTracker activityTracker) {
+        return new ActivityTrackingPolicyFactory(){
+            @Override
+            public RoutePolicy createRoutePolicy(String flowId) {
+                return new IntegrationLoggingActivityTrackingPolicy(activityTracker);
+            }
+
+            @Override
+            public boolean isInstance(RoutePolicy routePolicy) {
+                return IntegrationLoggingActivityTrackingPolicy.class.isInstance(routePolicy);
+            }
+        };
     }
 }

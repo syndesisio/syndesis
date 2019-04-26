@@ -27,7 +27,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <camel.version>2.21.0.fuse-740001</camel.version>
+    <camel.version>2.21.0.fuse-740005</camel.version>
     <atlasmap.version>1.39.5</atlasmap.version>
     <jackson.version>2.8.11</jackson.version>
     <jackson.databind.version>2.8.11.3</jackson.databind.version>
@@ -227,6 +227,11 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-aws-s3</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-aws-sqs</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

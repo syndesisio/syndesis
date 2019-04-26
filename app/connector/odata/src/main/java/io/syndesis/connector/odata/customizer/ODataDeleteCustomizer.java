@@ -18,7 +18,6 @@ package io.syndesis.connector.odata.customizer;
 import java.io.IOException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
-import org.apache.camel.component.olingo4.internal.Olingo4Constants;
 import org.apache.camel.util.ObjectHelper;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -34,7 +33,7 @@ public class ODataDeleteCustomizer extends AbstractProducerCustomizer {
 
         if (! ObjectHelper.isEmpty(keyPredicateNode)) {
             String keyPredicate = keyPredicateNode.asText();
-            in.setHeader(Olingo4Constants.PROPERTY_PREFIX + KEY_PREDICATE, keyPredicate);
+            in.setHeader(OLINGO4_PROPERTY_PREFIX + KEY_PREDICATE, keyPredicate);
         }
 
         in.setBody(EMPTY_STRING);

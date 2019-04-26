@@ -15,6 +15,11 @@
  */
 package io.syndesis.integration.project.generator;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
+import static org.awaitility.Awaitility.await;
+import static org.junit.Assert.assertEquals;
+
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -30,9 +35,25 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
+
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.JSONException;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.junit.rules.TestName;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
@@ -55,24 +76,6 @@ import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.json.JSONException;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.skyscreamer.jsonassert.JSONAssert;
-import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.awaitility.Awaitility.await;
-import static org.junit.Assert.assertEquals;
 
 @SuppressWarnings({ "PMD.ExcessiveImports", "PMD.ExcessiveMethodLength" })
 @RunWith(Parameterized.class)
@@ -220,6 +223,17 @@ public class ProjectGeneratorTest {
         assertThat(runtimeDir.resolve("extensions/my-extension-2.jar")).exists();
         assertThat(runtimeDir.resolve("extensions/my-extension-3.jar")).exists();
         assertThat(runtimeDir.resolve("src/main/resources/mapping-flow-0-step-1.json")).exists();
+
+        // lets validate configuration when activity tracing is enabled.
+        try( Stream<Path> stream = Files.walk(testFolder.getRoot().toPath().resolve("integration-project")) ) {
+            stream.sorted(Comparator.reverseOrder())
+                .map(Path::toFile)
+                .forEach(File::delete);
+        }
+        configuration.setActivityTracing(true);
+        runtimeDir = generate(integration, configuration, resourceManager);
+        assertFileContents(configuration, runtimeDir.resolve("src/main/resources/application.properties"), "application-tracing.properties");
+
         assertThat(errors).isEmpty();
     }
 
@@ -256,37 +270,6 @@ public class ProjectGeneratorTest {
 
     @Test
     public void testGenerateApplicationProperties() throws IOException {
-
-        // ******************
-        // OLD STYLE
-        // ******************
-
-        final ConnectorAction oldAction = new ConnectorAction.Builder()
-            .id(KeyGenerator.createKey())
-            .descriptor(new ConnectorDescriptor.Builder()
-                .connectorId("old")
-                .camelConnectorPrefix("old")
-                .build())
-            .build();
-        final Connector oldConnector = new Connector.Builder()
-            .id("old")
-            .addAction(oldAction)
-            .putProperty("username",
-                new ConfigurationProperty.Builder()
-                    .componentProperty(false)
-                    .secret(true)
-                    .build())
-            .putProperty("password",
-                new ConfigurationProperty.Builder()
-                    .componentProperty(false)
-                    .secret(true)
-                    .build())
-            .putProperty("token",
-                new ConfigurationProperty.Builder()
-                    .componentProperty(true)
-                    .secret(true)
-                    .build())
-            .build();
 
         // ******************
         // NEW STYLE
@@ -327,17 +310,6 @@ public class ProjectGeneratorTest {
             .stepKind(StepKind.endpoint)
             .connection(new Connection.Builder()
                 .id(KeyGenerator.createKey())
-                .connector(oldConnector)
-                .build())
-            .putConfiguredProperty("username", "my-username-1")
-            .putConfiguredProperty("password", "my-password-1")
-            .putConfiguredProperty("token", "my-token-1")
-            .action(oldAction)
-            .build();
-        Step s2 = new Step.Builder()
-            .stepKind(StepKind.endpoint)
-            .connection(new Connection.Builder()
-                .id(KeyGenerator.createKey())
                 .connector(newConnector)
                 .build())
             .putConfiguredProperty("username", "my-username-2")
@@ -350,20 +322,76 @@ public class ProjectGeneratorTest {
         ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
         ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager, TestConstants.MAVEN_PROPERTIES);
         Integration integration = new Integration.Builder()
-            .createFrom(resourceManager.newIntegration(s1, s2))
+            .createFrom(resourceManager.newIntegration(s1))
             .putConfiguredProperty("integration", "property")
             .build();
         Properties properties = generator.generateApplicationProperties(integration);
 
         assertThat(properties).containsOnly(
             entry("integration", "property"),
-            entry("old.configurations.old-0-0.token", "my-token-1"),
-            entry("flow-0.old-0.username", "my-username-1"),
-            entry("flow-0.old-0.password", "my-password-1"),
-            entry("flow-0.http4-1.token", "my-token-2"),
-            entry("flow-0.http4-1.username", "my-username-2"),
-            entry("flow-0.http4-1.password", "my-password-2")
+            entry("flow-0.http4-0.token", "my-token-2"),
+            entry("flow-0.http4-0.username", "my-username-2"),
+            entry("flow-0.http4-0.password", "my-password-2")
         );
+    }
+
+    @Test(expected = UnsupportedOperationException.class)
+    public void testGenerateApplicationPropertiesOldStyle() throws IOException {
+
+        // ******************
+        // OLD STYLE
+        // ******************
+
+        final ConnectorAction oldAction = new ConnectorAction.Builder()
+            .id(KeyGenerator.createKey())
+            .descriptor(new ConnectorDescriptor.Builder()
+                .connectorId("old")
+                .build())
+            .build();
+        final Connector oldConnector = new Connector.Builder()
+            .id("old")
+            .addAction(oldAction)
+            .putProperty("username",
+                new ConfigurationProperty.Builder()
+                    .componentProperty(false)
+                    .secret(true)
+                    .build())
+            .putProperty("password",
+                new ConfigurationProperty.Builder()
+                    .componentProperty(false)
+                    .secret(true)
+                    .build())
+            .putProperty("token",
+                new ConfigurationProperty.Builder()
+                    .componentProperty(true)
+                    .secret(true)
+                    .build())
+            .build();
+
+        // ******************
+        // Integration
+        // ******************
+
+        Step s1 = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .connection(new Connection.Builder()
+                .id(KeyGenerator.createKey())
+                .connector(oldConnector)
+                .build())
+            .putConfiguredProperty("username", "my-username-1")
+            .putConfiguredProperty("password", "my-password-1")
+            .putConfiguredProperty("token", "my-token-1")
+            .action(oldAction)
+            .build();
+
+        TestResourceManager resourceManager = new TestResourceManager();
+        ProjectGeneratorConfiguration configuration = new ProjectGeneratorConfiguration();
+        ProjectGenerator generator = new ProjectGenerator(configuration, resourceManager, TestConstants.MAVEN_PROPERTIES);
+        Integration integration = new Integration.Builder()
+            .createFrom(resourceManager.newIntegration(s1))
+            .putConfiguredProperty("integration", "property")
+            .build();
+        generator.generateApplicationProperties(integration);
     }
 
 
@@ -498,10 +526,9 @@ public class ProjectGeneratorTest {
         Collection<Dependency> dependencies = resourceManager.collectDependencies(integration);
         /*
          * Should return
-         * - 2 connector dependencies from the connectorAction in the first endpoint
          * - 3 step dependencies from the rule filter step
          */
-        assertEquals(5, dependencies.size());
+        assertEquals(3, dependencies.size());
     }
 
     @Test

@@ -211,10 +211,7 @@ public class PublicApiHandler {
     @Path("integrations/{id}/tags")
     @Produces(MediaType.APPLICATION_JSON)
     public Map<String, ContinuousDeliveryEnvironment> getReleaseTags(@NotNull @PathParam("id") @ApiParam(required = true) String integrationId) {
-        final Map<String, ContinuousDeliveryEnvironment> result = new HashMap<>(
-                getIntegration(integrationId).getContinuousDeliveryState());
-        getReleaseEnvironments().forEach(e -> result.putIfAbsent(e, null));
-        return result;
+        return getIntegration(integrationId).getContinuousDeliveryState();
     }
 
     /**

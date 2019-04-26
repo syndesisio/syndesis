@@ -21,6 +21,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,18 +30,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import io.syndesis.common.model.action.StepAction;
-import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Scheduler;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
-import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.logging.ActivityTrackingPolicy;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.model.ExpressionNode;
@@ -56,6 +45,18 @@ import org.apache.camel.util.ResourceHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.syndesis.common.model.action.StepAction;
+import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Scheduler;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.Resources;
+import io.syndesis.integration.runtime.capture.OutMessageCaptureProcessor;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
+
 /**
  * A Camel {@link RouteBuilder} which maps an Integration to Camel routes
  */
@@ -66,20 +67,25 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     private final String configurationUri;
     private final List<IntegrationStepHandler> stepHandlerList;
     private final Set<String> resources;
-    private final ActivityTracker activityTracker;
+    private final List<ActivityTrackingPolicyFactory> activityTrackingPolicyFactories;
 
-    public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers) {
-        this(configurationUri, handlers, null);
+
+    public IntegrationRouteBuilder(String configurationUri) {
+        this(configurationUri, Resources.loadServices(IntegrationStepHandler.class));
     }
 
-    public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers, ActivityTracker activityTracker) {
+    public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers) {
+        this(configurationUri, handlers, Collections.emptyList());
+    }
+
+    public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers, List<ActivityTrackingPolicyFactory> activityTrackingPolicyFactories) {
         this.configurationUri = configurationUri;
         this.resources = new HashSet<>();
 
         this.stepHandlerList = new ArrayList<>();
         this.stepHandlerList.addAll(handlers);
 
-        this.activityTracker = activityTracker;
+        this.activityTrackingPolicyFactories = activityTrackingPolicyFactories;
     }
 
     protected Integration loadIntegration() throws IOException {
@@ -238,7 +244,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             final RouteDefinition rd = (RouteDefinition)definition;
             final List<RoutePolicy> rp = rd.getRoutePolicies();
 
-            if (rp != null && rp.stream().anyMatch(ActivityTrackingPolicy.class::isInstance)) {
+            if (rp != null && !activityTrackingPolicyFactories.isEmpty() && rp.stream().anyMatch(activityTrackingPolicyFactories.get(0)::isInstance)) {
                 // Route has already been configured so no need to go ahead
                 return definition;
             }
@@ -248,7 +254,9 @@ public class IntegrationRouteBuilder extends RouteBuilder {
             }
 
             rd.routeId(flowId);
-            rd.routePolicy(new ActivityTrackingPolicy(activityTracker));
+            for (ActivityTrackingPolicyFactory factory : activityTrackingPolicyFactories) {
+                rd.routePolicy(factory.createRoutePolicy(flowId));
+            }
             rd.getInputs().get(0).id(stepId);
         }
 

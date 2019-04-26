@@ -2,7 +2,7 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='about-api-provider-urls_{context}']
-= About API provider URLs
+= About API provider integration URLs
 
 After you publish an API provider integration, in the integration's
 summary page, {prodname} displays the external URL for your REST API service.

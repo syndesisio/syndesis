@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.runtime;
 
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
@@ -41,6 +42,8 @@ public class Migrations {
 
     private final DataManager manager;
 
+    private CompletableFuture<Void> migrationsDone;
+
     private final Migrator migrator;
 
     private final StoredSettings storedSettings;
@@ -56,9 +59,15 @@ public class Migrations {
         return Schema.VERSION;
     }
 
+    public CompletableFuture<Void> migrationsDone() {
+        return migrationsDone;
+    }
+
     @PostConstruct
     public Future<Void> run() {
-        return Executors.newSingleThreadExecutor(Threads.newThreadFactory("DB migration")).submit(this::performMigrations);
+        migrationsDone = CompletableFuture.runAsync(this::performMigrations, Executors.newSingleThreadExecutor(Threads.newThreadFactory("DB migration")));
+
+        return migrationsDone;
     }
 
     Void performMigrations() {

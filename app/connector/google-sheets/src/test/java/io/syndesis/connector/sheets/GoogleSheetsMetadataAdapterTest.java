@@ -49,27 +49,31 @@ public class GoogleSheetsMetadataAdapterTest {
     private final String majorDimension;
     private final String expectedJson;
     private final boolean split;
+    private final String columnNames;
 
-    public GoogleSheetsMetadataAdapterTest(String range, String actionId, String majorDimension, String expectedJson, boolean split) {
+    public GoogleSheetsMetadataAdapterTest(String range, String actionId, String majorDimension, String expectedJson, boolean split, String columnNames) {
         this.range = range;
         this.actionId = actionId;
         this.majorDimension = majorDimension;
         this.expectedJson = expectedJson;
         this.split = split;
+        this.columnNames = columnNames;
     }
 
     @Parameterized.Parameters
     public static Collection<Object[]> data() {
         return Arrays.asList(new Object[][] {
-                { "A1:D1", "io.syndesis:sheets-get-values-connector", "", "/meta/get_rows_metadata.json", false },
-                { "A1:D1", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/get_rows_split_metadata.json", true },
-                { "A1:D1", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/get_rows_metadata.json", false },
-                { "A1:C5", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/get_columns_split_metadata.json", true },
-                { "A1:A5", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/get_columns_metadata.json", false },
-                { "A5:C5", "io.syndesis:sheets-update-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/update_rows_metadata.json", false },
-                { "A5:C5", "io.syndesis:sheets-update-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/update_columns_metadata.json", false },
-                { "A1:G3", "io.syndesis:sheets-append-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/append_rows_metadata.json", false },
-                { "A1:G3", "io.syndesis:sheets-append-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/append_columns_metadata.json", false }
+                { "A1:D1", "io.syndesis:sheets-get-values-connector", "", "/meta/get_rows_metadata.json", false, "A,B,C,D" },
+                { "A1:D1", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/get_rows_split_metadata.json", true, "A,B,C,D" },
+                { "A1:D1", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/get_rows_metadata.json", false, "A,B,C,D" },
+                { "A1:C5", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/get_columns_split_metadata.json", true, "A,B,C" },
+                { "A1:A5", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/get_columns_metadata.json", false, "A" },
+                { "A5:C5", "io.syndesis:sheets-update-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/update_rows_metadata.json", false, "A,B,C" },
+                { "A5:C5", "io.syndesis:sheets-update-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/update_columns_metadata.json", false, "A,B,C" },
+                { "A1:G3", "io.syndesis:sheets-append-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/append_rows_metadata.json", false, "A,B,C,D,E,F,G" },
+                { "A1:G3", "io.syndesis:sheets-append-values-connector", RangeCoordinate.DIMENSION_COLUMNS, "/meta/append_columns_metadata.json", false, "A,B,C,D,E,F,G" },
+                { "A1:D1", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/column_names_metadata.json", false, "Col_A,Col_B,Col_C,Col_D" },
+                { "A1:D1", "io.syndesis:sheets-get-values-connector", RangeCoordinate.DIMENSION_ROWS, "/meta/column_names_split_metadata.json", true, "Col_A,Col_B,Col_C,Col_D" }
         });
     }
 
@@ -85,6 +89,10 @@ public class GoogleSheetsMetadataAdapterTest {
 
         if (split) {
             parameters.put("splitResults", true);
+        }
+
+        if (ObjectHelper.isNotEmpty(columnNames)) {
+            parameters.put("columnNames", columnNames);
         }
 
         parameters.put("range", range);

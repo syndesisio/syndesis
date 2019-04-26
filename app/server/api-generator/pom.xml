@@ -159,6 +159,12 @@
     </dependency>
 
     <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-rest-swagger</artifactId>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>

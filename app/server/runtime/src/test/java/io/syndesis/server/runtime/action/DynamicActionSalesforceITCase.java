@@ -96,7 +96,7 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
 
     private final ConfigurationProperty contactSalesforceObjectName = new ConfigurationProperty.Builder()
         .createFrom(_DEFAULT_SALESFORCE_OBJECT_NAME)
-        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact")).build();
+        .defaultValue("Contact").build();
 
     private final ConfigurationProperty suggestedSalesforceIdNames = new ConfigurationProperty.Builder()
         .createFrom(_DEFAULT_SALESFORCE_IDENTIFIER)

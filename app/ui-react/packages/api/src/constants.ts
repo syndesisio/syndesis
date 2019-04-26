@@ -65,3 +65,19 @@ export enum DetailedStatus {
 // Special sekret connection metadata keys
 export const HIDE_FROM_STEP_SELECT = 'hide-from-step-select';
 export const HIDE_FROM_CONNECTION_PAGES = 'hide-from-connection-pages';
+
+// stuff used by the ui to compute the StepKinds
+export const EXTENSION = 'extension';
+export const ENDPOINT = 'endpoint';
+export const CONNECTION = ENDPOINT;
+export const DATA_MAPPER = 'mapper';
+export const BASIC_FILTER = 'ruleFilter';
+export const ADVANCED_FILTER = 'expressionFilter';
+export const STORE_DATA = 'storeData';
+export const SET_DATA = 'setData';
+export const CALL_ROUTE = 'callRoute';
+export const CONDITIONAL_PROCESSING = 'conditionalProcessing';
+export const SPLIT = 'split';
+export const AGGREGATE = 'aggregate';
+export const LOG = 'log';
+export const TEMPLATE = 'template';

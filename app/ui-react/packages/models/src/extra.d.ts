@@ -3,6 +3,7 @@ import {
   Connection,
   IntegrationMetricsSummary,
   IntegrationOverview,
+  Step,
   WithId,
 } from './models';
 
@@ -50,4 +51,11 @@ export interface IntegrationMonitoring {
   linkType: 'LOGS' | 'EVENTS';
   namespace: string;
   podName: string;
+}
+
+export interface StepKind extends Step {
+  name: string;
+  description: string;
+  properties: any;
+  visible?: (position: number, previous: Step[], subsequent: Step[]) => boolean;
 }

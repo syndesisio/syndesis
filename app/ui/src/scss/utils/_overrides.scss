@@ -5,11 +5,11 @@ body {
   height: 100%;
 }
 
-/// Patternfly Card overrides
-body.cards-pf {
-  background-color: $color-pf-custom-gray;
+body {
+  overflow-y: hidden;
 }
 
+/// Patternfly Card overrides
 .card-title {
   font-size: 14px;
   font-weight: 600;
@@ -40,7 +40,7 @@ body.cards-pf {
     background-color: $color-pf-custom-gray;
     margin-top: 76px;
     overflow: auto;
-    padding-top: 0;
+    padding: 0 20px;
   }
 }
 

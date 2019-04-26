@@ -30,15 +30,6 @@
 
   <properties>
     <olingoVersion>4.4.0</olingoVersion>
-    <!-- To be removed once CAMEL-13006 has been integrated into fuse release of camel-olingo4 component -->
-    <schemeName>olingo4</schemeName>
-    <componentName>Olingo4</componentName>
-    <componentPackage>org.apache.camel.component.olingo4</componentPackage>
-    <maven.exe.file.extension />
-    <camel.osgi.export.pkg>${componentPackage}</camel.osgi.export.pkg>
-    <componentPackage>org.apache.camel.component.olingo4</componentPackage>
-    <outPackage>org.apache.camel.component.olingo4.internal</outPackage>
-    <camel.osgi.private.pkg>${outPackage}</camel.osgi.private.pkg>
   </properties>
 
   <dependencyManagement>
@@ -80,16 +71,9 @@
         <artifactId>odata-commons-core</artifactId>
         <version>${olingoVersion}</version>
       </dependency>
-      <!-- Include once CAMEL-13006 has been integrated into fuse release of camel-olingo4 component
       <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-olingo4</artifactId>
-        <version>${camel.version}</version>
-      </dependency>
-      -->
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-olingo4-api</artifactId>
         <version>${camel.version}</version>
       </dependency>
     </dependencies>
@@ -108,37 +92,6 @@
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-component-proxy</artifactId>
     </dependency>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-beans</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-context</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-      <scope>provided</scope>
-    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connector-support-verifier</artifactId>
@@ -149,6 +102,10 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.httpcomponents</groupId>
@@ -200,21 +157,9 @@
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
     </dependency>
-    <!-- Include once CAMEL-13006 has been integrated into fuse release of camel-olingo4 component
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-olingo4</artifactId>
-    </dependency>
-    -->
-    <!-- Exclude once CAMEL-13006 has been integrated into fuse release of camel-olingo4 component -->
-    <dependency>
-      <groupId>commons-lang</groupId>
-      <artifactId>commons-lang</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-olingo4-api</artifactId>
     </dependency>
 
     <!-- test -->
@@ -254,6 +199,21 @@
       <artifactId>jsonassert</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.java-json-tools</groupId>
+      <artifactId>json-schema-validator</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>javax.mail</groupId>
+      <artifactId>mailapi</artifactId>
+      <scope>test</scope>
+    </dependency>
 
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -278,6 +238,26 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-spring</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-beans</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-core</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework</groupId>
+      <artifactId>spring-context</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

@@ -148,3 +148,8 @@ metrics:
 
 monitoring:
   kind: default
+
+# Jaeger/Opentracing
+jaeger:
+  service:
+    name: syndesis-server

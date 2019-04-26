@@ -1,5 +1,12 @@
 {
     "ID": 2,
     "Name": "1UMTS PDA",
-    "Description": "Ultrafast 3G UMTS/HSDPA Pocket PC, supports GSM network"
+    "Description": "Ultrafast 3G UMTS/HSDPA Pocket PC, supports GSM network",
+    "SerialNumbers":["ae867484","er586874","px3429876"],
+    "Specification":{
+      "ProductType":"Tablet",
+      "Detail1":"Android OS",
+      "Detail2":"Resolution - 1920 x 1200",
+      "PowerType": "240V"
+    }
 }

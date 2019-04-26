@@ -26,6 +26,7 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
+import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
@@ -46,6 +47,26 @@ class AggregateMetadataHandler implements StepMetadataHandler {
     @Override
     public boolean canHandle(StepKind kind) {
         return StepKind.aggregate.equals(kind);
+    }
+
+    @Override
+    public DynamicActionMetadata createMetadata(Step step, List<Step> previousSteps, List<Step> subsequentSteps) {
+        DataShape inputShape = subsequentSteps.stream()
+                                            .filter(StepMetadataHelper::hasInputDataShape)
+                                            .findFirst()
+                                            .map(StepMetadataHelper::getInputDataShape)
+                                            .orElse(StepMetadataHelper.NO_SHAPE);
+
+        DataShape outputShape = previousSteps.stream()
+                                            .filter(StepMetadataHelper::hasOutputDataShape)
+                                            .reduce((first, second) -> second)
+                                            .map(StepMetadataHelper::getOutputDataShape)
+                                            .orElse(StepMetadataHelper.NO_SHAPE);
+
+        return new DynamicActionMetadata.Builder()
+                        .inputShape(inputShape)
+                        .outputShape(outputShape)
+                        .build();
     }
 
     @Override
@@ -93,7 +114,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
             } else {
                 return new DataShape.Builder()
                         .createFrom(singleElementShape.get())
-                        .addAllVariants(extractVariants(dataShape, singleElementShape.get(), DataShapeMetaData.VARIANT_ELEMENT))
+                        .addAllVariants(StepMetadataHelper.extractVariants(dataShape, singleElementShape.get(), DataShapeMetaData.VARIANT_ELEMENT))
                         .build();
             }
         }
@@ -113,7 +134,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
                         return new DataShape.Builder().createFrom(collectionShape)
                                 .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                                 .specification(Json.writer().writeValueAsString(itemSchema))
-                                .addAllVariants(extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
+                                .addAllVariants(StepMetadataHelper.extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
                                 .build();
                     }
                 } else {
@@ -128,7 +149,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
                         return new DataShape.Builder().createFrom(collectionShape)
                                 .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                                 .specification(Json.writer().writeValueAsString(items.get(0)))
-                                .addAllVariants(extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
+                                .addAllVariants(StepMetadataHelper.extractVariants(dataShape, collectionShape, DataShapeMetaData.VARIANT_COLLECTION))
                                 .build();
                     }
                 } else {
@@ -150,7 +171,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
                 return collectionShape.get();
             } else {
                 return new DataShape.Builder().createFrom(collectionShape.get())
-                        .addAllVariants(extractVariants(dataShape, collectionShape.get(), DataShapeMetaData.VARIANT_COLLECTION))
+                        .addAllVariants(StepMetadataHelper.extractVariants(dataShape, collectionShape.get(), DataShapeMetaData.VARIANT_COLLECTION))
                         .build();
             }
         }
@@ -175,7 +196,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
                 return new DataShape.Builder().createFrom(singleElementShape)
                         .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
                         .specification(Json.writer().writeValueAsString(collectionSchema))
-                        .addAllVariants(extractVariants(dataShape, singleElementShape, DataShapeMetaData.VARIANT_ELEMENT))
+                        .addAllVariants(StepMetadataHelper.extractVariants(dataShape, singleElementShape, DataShapeMetaData.VARIANT_ELEMENT))
                         .build();
             } else if (singleElementShape.getKind() == DataShapeKinds.JSON_INSTANCE) {
                 if (JsonUtils.isJsonArray(specification)) {
@@ -186,7 +207,7 @@ class AggregateMetadataHandler implements StepMetadataHandler {
                     return new DataShape.Builder().createFrom(singleElementShape)
                             .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
                             .specification("[" + specification + "]")
-                            .addAllVariants(extractVariants(dataShape, singleElementShape, DataShapeMetaData.VARIANT_ELEMENT))
+                            .addAllVariants(StepMetadataHelper.extractVariants(dataShape, singleElementShape, DataShapeMetaData.VARIANT_ELEMENT))
                             .build();
                 }
             }

@@ -1,5 +1,19 @@
-import { getEmptyIntegration, getSteps, WithConnections } from '@syndesis/api';
-import { ConnectionOverview, Step } from '@syndesis/models';
+import {
+  getConnectionIcon,
+  getEmptyIntegration,
+  getExtensionIcon,
+  getStepKindIcon,
+  getSteps,
+  WithConnections,
+  WithExtensions,
+  WithSteps,
+} from '@syndesis/api';
+import {
+  ConnectionOverview,
+  Extension,
+  Step,
+  StepKind,
+} from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorChooseConnection,
@@ -15,6 +29,35 @@ import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
 } from './interfaces';
+
+export interface IUIStep extends StepKind {
+  icon: string;
+}
+
+export function toStepKindCollection(
+  connections: ConnectionOverview[],
+  extensions: Extension[],
+  steps: StepKind[]
+): IUIStep[] {
+  return [
+    ...connections.map(c => ({
+      ...c,
+      description: c.description || '',
+      icon: getConnectionIcon(process.env.PUBLIC_URL, c),
+      properties: undefined,
+    })),
+    ...extensions.map(e => ({
+      ...e,
+      description: e.description || '',
+      icon: `${process.env.PUBLIC_URL}${getExtensionIcon(e)}`,
+      properties: undefined,
+    })),
+    ...steps.map(s => ({
+      ...s,
+      icon: `${process.env.PUBLIC_URL}${getStepKindIcon(s.stepKind)}`,
+    })),
+  ].sort((a, b) => a.name.localeCompare(b.name));
+}
 
 export const getStepKind = (stepOrConnection: ConnectionOverview | Step) => {
   if ((stepOrConnection as ConnectionOverview).connectorId === 'api-provider') {
@@ -98,52 +141,83 @@ export class SelectConnectionPage extends React.Component<
                 })}
                 content={
                   <WithConnections>
-                    {({ data, hasData, error }) => (
-                      <IntegrationEditorChooseConnection
-                        i18nTitle={'Choose a connection'}
-                        i18nSubtitle={
-                          'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
-                        }
-                      >
-                        <WithLoader
-                          error={error}
-                          loading={!hasData}
-                          loaderChildren={<IntegrationsListSkeleton />}
-                          errorChildren={<ApiError />}
-                        >
-                          {() => (
-                            <>
-                              {data.connectionsWithToAction.map((c, idx) => (
-                                <IntegrationEditorConnectionsListItem
-                                  key={idx}
-                                  integrationName={c.name}
-                                  integrationDescription={
-                                    c.description || 'No description available.'
-                                  }
-                                  icon={
-                                    <img src={c.icon} width={24} height={24} />
-                                  }
-                                  actions={
-                                    <ButtonLink onClick={() => onStepClick(c)}>
-                                      Select
-                                    </ButtonLink>
-                                  }
-                                />
-                              ))}
-                              <IntegrationEditorConnectionsListItem
-                                integrationName={''}
-                                integrationDescription={''}
-                                icon={''}
-                                actions={
-                                  <ButtonLink href={'#'}>
-                                    Create connection
-                                  </ButtonLink>
+                    {({
+                      data: connectionsData,
+                      hasData: hasConnectionsData,
+                      error: connectionsError,
+                    }) => (
+                      <WithExtensions>
+                        {({
+                          data: extensionsData,
+                          hasData: hasExtensionsData,
+                          error: extensionsError,
+                        }) => (
+                          <WithSteps>
+                            {({ items: steps }) => (
+                              <IntegrationEditorChooseConnection
+                                i18nTitle={'Choose a connection'}
+                                i18nSubtitle={
+                                  'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
                                 }
-                              />
-                            </>
-                          )}
-                        </WithLoader>
-                      </IntegrationEditorChooseConnection>
+                              >
+                                <WithLoader
+                                  error={connectionsError || extensionsError}
+                                  loading={
+                                    !hasConnectionsData && !hasExtensionsData
+                                  }
+                                  loaderChildren={<IntegrationsListSkeleton />}
+                                  errorChildren={<ApiError />}
+                                >
+                                  {() => (
+                                    <>
+                                      {toStepKindCollection(
+                                        positionAsNumber === 0
+                                          ? connectionsData.connectionsWithFromAction
+                                          : connectionsData.connectionsWithToAction,
+                                        extensionsData.items,
+                                        steps
+                                      ).map((step, idx) => (
+                                        <IntegrationEditorConnectionsListItem
+                                          key={idx}
+                                          integrationName={step.name}
+                                          integrationDescription={
+                                            step.description ||
+                                            'No description available.'
+                                          }
+                                          icon={
+                                            <img
+                                              src={step.icon}
+                                              width={24}
+                                              height={24}
+                                            />
+                                          }
+                                          actions={
+                                            <ButtonLink
+                                              onClick={() => onStepClick(step)}
+                                            >
+                                              Select
+                                            </ButtonLink>
+                                          }
+                                        />
+                                      ))}
+                                      <IntegrationEditorConnectionsListItem
+                                        integrationName={''}
+                                        integrationDescription={''}
+                                        icon={''}
+                                        actions={
+                                          <ButtonLink href={'#'}>
+                                            Create connection
+                                          </ButtonLink>
+                                        }
+                                      />
+                                    </>
+                                  )}
+                                </WithLoader>
+                              </IntegrationEditorChooseConnection>
+                            )}
+                          </WithSteps>
+                        )}
+                      </WithExtensions>
                     )}
                   </WithConnections>
                 }

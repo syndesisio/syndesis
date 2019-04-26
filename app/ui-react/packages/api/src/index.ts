@@ -25,6 +25,7 @@ export * from './WithConnectors';
 export * from './WithPolling';
 export * from './WithChangeListener';
 export * from './WithServerEvents';
+export * from './WithSteps';
 export * from './helpers';
 export * from './WithViews';
 export * from './WithViewEditorStates';

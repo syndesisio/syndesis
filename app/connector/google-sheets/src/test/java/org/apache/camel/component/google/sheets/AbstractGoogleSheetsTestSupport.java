@@ -169,13 +169,8 @@ public class AbstractGoogleSheetsTestSupport extends CamelTestSupport {
         return spreadsheet;
     }
 
-    public Spreadsheet getSpreadsheetWithTestData() {
-        if (spreadsheet == null) {
-            createTestSpreadsheet();
-        }
-
+    public Spreadsheet applyTestData(Spreadsheet spreadsheet) {
         createTestData();
-
         return spreadsheet;
     }
 

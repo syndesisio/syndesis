@@ -38,7 +38,7 @@ public class ActivityLoggingWithSplitTest extends AbstractActivityLoggingTest {
             public void configure() {
                 from("direct:start")
                     .id("start")
-                    .routePolicy(new ActivityTrackingPolicy(activityTracker))
+                    .routePolicy(new IntegrationLoggingActivityTrackingPolicy(activityTracker))
                     .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
                     .process(OutMessageCaptureProcessor.INSTANCE)
                     .split()

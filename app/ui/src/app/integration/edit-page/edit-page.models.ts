@@ -21,7 +21,7 @@ export interface IndexedStep {
   index: number;
 }
 
-// Mucking with the intergration actions
+// Mucking with the integration actions
 export const INTEGRATION_UPDATED = 'integration-updated';
 export const INTEGRATION_INSERT_STEP = 'integration-insert-step';
 export const INTEGRATION_INSERT_DATAMAPPER = 'integration-insert-datamapper';

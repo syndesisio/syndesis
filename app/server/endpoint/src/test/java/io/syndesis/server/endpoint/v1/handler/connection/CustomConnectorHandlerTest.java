@@ -60,11 +60,11 @@ public class CustomConnectorHandlerTest {
 
         final ConnectorGroup group = new ConnectorGroup.Builder().name("connector template group").build();
 
-        final ConnectorTemplate connectorTemplate = new ConnectorTemplate.Builder()//
-            .id("connector-template-id")//
-            .name("connector template")//
-            .properties(properties).connectorProperties(connectorProperties)//
-            .connectorGroup(group)//
+        final ConnectorTemplate connectorTemplate = new ConnectorTemplate.Builder()
+            .id("connector-template-id")
+            .name("connector template")
+            .properties(properties).connectorProperties(connectorProperties)
+            .connectorGroup(group)
             .build();
 
         final ConnectorAction action = new ConnectorAction.Builder().name("action").build();
@@ -72,7 +72,9 @@ public class CustomConnectorHandlerTest {
         when(dataManager.fetch(ConnectorTemplate.class, "connector-template-id")).thenReturn(connectorTemplate);
         when(dataManager.create(any(Connector.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        when(applicationContext.getBean("connector-template-id", ConnectorGenerator.class)).thenReturn(new ConnectorGenerator() {
+        when(applicationContext.getBean("connector-template-id")).thenReturn(new ConnectorGenerator(new Connector.Builder()
+            .addTags("from-connector")
+            .build()) {
             @Override
             public Connector generate(final ConnectorTemplate connectorTemplate, final ConnectorSettings connectorSettings) {
                 return new Connector.Builder().createFrom(baseConnectorFrom(connectorTemplate, connectorSettings))
@@ -85,25 +87,26 @@ public class CustomConnectorHandlerTest {
             }
         });
 
-        final Connector created = new CustomConnectorHandler(dataManager, applicationContext, iconDao).create(//
-            new ConnectorSettings.Builder()//
-                .connectorTemplateId("connector-template-id")//
-                .name("new connector")//
-                .description("new connector description")//
-                .icon("new connector icon")//
-                .putConfiguredProperty("prop1", "value1")//
-                .putConfiguredProperty("unknown-prop", "unknown-value")//
+        final Connector created = new CustomConnectorHandler(dataManager, applicationContext, iconDao).create(
+            new ConnectorSettings.Builder()
+                .connectorTemplateId("connector-template-id")
+                .name("new connector")
+                .description("new connector description")
+                .icon("new connector icon")
+                .putConfiguredProperty("prop1", "value1")
+                .putConfiguredProperty("unknown-prop", "unknown-value")
                 .build());
 
-        final Connector expected = new Connector.Builder()//
-            .id(created.getId())//
-            .name("new connector")//
-            .description("new connector description")//
-            .icon("new connector icon")//
-            .connectorGroup(group)//
-            .properties(connectorProperties)//
-            .putConfiguredProperty("prop1", "value1")//
-            .addAction(action)//
+        final Connector expected = new Connector.Builder()
+            .id(created.getId())
+            .name("new connector")
+            .description("new connector description")
+            .addTag("from-connector")
+            .icon("new connector icon")
+            .connectorGroup(group)
+            .properties(connectorProperties)
+            .putConfiguredProperty("prop1", "value1")
+            .addAction(action)
             .build();
 
         assertThat(created).isEqualTo(expected);
@@ -119,7 +122,7 @@ public class CustomConnectorHandlerTest {
         final APISummary preparedSummary = new APISummary.Builder().build();
 
         when(dataManager.fetch(ConnectorTemplate.class, "connector-template")).thenReturn(template);
-        when(applicationContext.getBean("connector-template", ConnectorGenerator.class)).thenReturn(connectorGenerator);
+        when(applicationContext.getBean("connector-template")).thenReturn(connectorGenerator);
         when(connectorGenerator.info(same(template), same(connectorSettings))).thenReturn(preparedSummary);
 
         final APISummary info = handler.info(connectorSettings);
@@ -129,8 +132,8 @@ public class CustomConnectorHandlerTest {
 
     @Test
     public void shouldThrowEntityNotFoundIfNoConnectorTemplateExists() {
-        assertThatThrownBy(() -> new CustomConnectorHandler(dataManager, applicationContext, iconDao).create(//
-            new ConnectorSettings.Builder().connectorTemplateId("non-existent").build())//
+        assertThatThrownBy(() -> new CustomConnectorHandler(dataManager, applicationContext, iconDao).create(
+            new ConnectorSettings.Builder().connectorTemplateId("non-existent").build())
         ).isInstanceOf(EntityNotFoundException.class).hasMessage("Connector template: non-existent");
     }
 

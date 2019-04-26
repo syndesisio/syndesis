@@ -1,0 +1,457 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Send a single message to AWS SQS",
+      "descriptor": {
+        "componentScheme": "aws-sqs",
+        "connectorCustomizers": [
+          "io.syndesis.connector.aws.sqs.AWSSQSMessageCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "Message",
+          "type": "io.syndesis.connector.aws.sqs.SQSMessage"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Set the needed option for sending a single message to AWS SQS",
+            "name": "Send a single message to AWS SQS",
+            "properties": {
+              "messageGroupIdStrategy": {
+                "deprecated": false,
+                "displayName": "Message Group Id strategy",
+                "enum": [
+                  {
+                    "label": "ConstantMessageGroupIdStrategy",
+                    "value": "useConstant"
+                  },
+                  {
+                    "label": "ExchangeIdMessageGroupIdStrategy",
+                    "value": "useExchangeId"
+                  },
+                  {
+                    "label": "PropertyValueMessageGroupIdStrategy",
+                    "value": "usePropertyValue"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Strategy for setting the messageGroupId on the message, only for FIFO Queue",
+                "required": false,
+                "secret": false,
+                "type": "string",
+                "order": "1"
+              },
+              "messageDeduplicationIdStrategy": {
+                "deprecated": false,
+                "displayName": "Message Deduplication Id strategy",
+                "enum": [
+                  {
+                    "label": "ExchangeIdMessageDeduplicationIdStrategy",
+                    "value": "useExchangeId"
+                  },
+                  {
+                    "label": "NullMessageDeduplicationIdStrategy",
+                    "value": "useContentBasedDeduplication"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Strategy for setting the messageDeduplicationId on the message, only for FIFO Queue",
+                "required": false,
+                "secret": false,
+                "type": "string",
+                "order": "2"
+              },
+              "delaySeconds": {
+                "defaultValue": 0,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "producer",
+                "javaType": "integer",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Delay sending messages for a number of seconds",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              },
+              "queueNameOrArn": {
+                "deprecated": false,
+                "displayName": "Queue Name Or Amazon Resource Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Queue name or ARN. If the queue does not exist, it will be created.",
+                "order": "3",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:aws-sqs-send-object-connector",
+      "name": "Send Object",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Send a a batch of messages to AWS SQS",
+      "descriptor": {
+        "componentScheme": "aws-sqs",
+        "connectorCustomizers": [
+          "io.syndesis.connector.aws.sqs.AWSSQSBatchMessagesCustomizer"
+        ],
+        "inputDataShape": {
+          "description": "Represent one SQS Batch message",
+          "kind": "java",
+          "type": "io.syndesis.connector.aws.sqs.SQSMessage",
+          "collectionType": "List",
+          "collectionClass": "java.util.ArrayList",
+          "metadata": {
+            "variant": "collection"
+          },
+          "variants": [
+            {
+                "kind": "java",
+                "type": "io.syndesis.connector.aws.sqs.SQSMessage",
+                "metadata": {
+                    "variant": "element",
+                    "compression": "true"
+                }
+            }
+          ]
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Set the needed option for sending a batch of messages to AWS SQS",
+            "name": "Send a messages batch to AWS SQS",
+            "properties": {
+              "messageGroupIdStrategy": {
+                "deprecated": false,
+                "displayName": "Message Group Id strategy",
+                "enum": [
+                  {
+                    "label": "ConstantMessageGroupIdStrategy",
+                    "value": "useConstant"
+                  },
+                  {
+                    "label": "ExchangeIdMessageGroupIdStrategy",
+                    "value": "useExchangeId"
+                  },
+                  {
+                    "label": "PropertyValueMessageGroupIdStrategy",
+                    "value": "usePropertyValue"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Strategy for setting the messageGroupId on the message, only for FIFO Queue",
+                "required": false,
+                "secret": false,
+                "type": "string",
+                "order": "1"
+              },
+              "messageDeduplicationIdStrategy": {
+                "deprecated": false,
+                "displayName": "Message Deduplication Id strategy",
+                "enum": [
+                  {
+                    "label": "ExchangeIdMessageDeduplicationIdStrategy",
+                    "value": "useExchangeId"
+                  },
+                  {
+                    "label": "NullMessageDeduplicationIdStrategy",
+                    "value": "useContentBasedDeduplication"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Strategy for setting the messageDeduplicationId on the message, only for FIFO Queue",
+                "required": false,
+                "secret": false,
+                "type": "string",
+                "order": "2"
+              },
+              "delaySeconds": {
+                "defaultValue": 0,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "producer",
+                "javaType": "integer",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Delay sending messages for a number of seconds",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              },
+              "queueNameOrArn": {
+                "deprecated": false,
+                "displayName": "Queue Name Or Amazon Resource Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Queue name or ARN. If the queue does not exist, it will be created.",
+                "order": "3",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:aws-sqs-send-batch-connector",
+      "name": "Send Batch Object",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Retrieve multiple messages from an SQS queue",
+      "connectorCustomizers": [
+        "io.syndesis.connector.aws.sqs.AWSSQSPollMessageCustomizer"
+      ],
+      "descriptor": {
+        "componentScheme": "aws-sqs",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "name": "Message",
+          "type": "io.syndesis.connector.aws.sqs.SQSMessage"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "",
+            "name": "Poll an SQS Queue",
+            "properties": {
+              "delay": {
+                "defaultValue": 500,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
+                "optionalPrefix": "consumer.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "duration"
+              },
+              "deleteAfterRead": {
+                "defaultValue": true,
+                "deprecated": false,
+                "displayName": "Obtain messages and then delete from the queue",
+                "group": "consumer",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Delete message from SQS after it has been read.",
+                "order": "5",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "deleteIfFiltered": {
+                "defaultValue": true,
+                "deprecated": false,
+                "displayName": "Obtain messages and delete the message if the it does make it through a Camel filter.",
+                "group": "consumer",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Whether or not to send the DeleteMessage to the SQS queue if an exchange fails to get through a filter. If false and exchange does not make it through a Camel filter upstream in the route, then don't send DeleteMessage.",
+                "order": "6",
+                "required": false,
+                "secret": false,
+                "type": "boolean"
+              },
+              "maxMessagesPerPoll": {
+                "defaultValue": 10,
+                "deprecated": false,
+                "displayName": "Maximum Objects to Retrieve",
+                "group": "consumer",
+                "javaType": "int",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Gets the maximum number of messages as a limit to poll at each polling.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              },
+              "queueNameOrArn": {
+                "deprecated": false,
+                "displayName": "Queue Name Or Amazon Resource Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Queue name or ARN. If the queue does not exist, it will be created.",
+                "order": "4",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:aws-sqs-polling-queue-connector",
+      "name": "Poll an Amazon SQS queue",
+      "pattern": "From"
+    }
+  ],
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Send and receive messages.",
+"icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDEwMCAxMDAiIGhlaWdodD0iMTAwcHgiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHdpZHRoPSIxMDBweCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+PGcgaWQ9IkFtYXpvbl9DbG91ZFNlYXJjaCI+PGc+PHBvbHlnb24gZmlsbD0iI0Q5QTc0MSIgcG9pbnRzPSI1NC40Niw1OS41MDYgMjMuOTg1LDYzLjc5MyAyMy45ODcsMzYuMjAxIDU0LjQ2Miw0MC40OTQgICAiLz48cG9seWdvbiBmaWxsPSIjODc2OTI5IiBwb2ludHM9IjIwLjE3OSwzNy4zNDQgNTAuMDAzLDI4LjM5OSA1MC4wMDMsMTQgMjAuMTc5LDI4LjkwOCAgICIvPjxwb2x5Z29uIGZpbGw9IiM4NzY5MjkiIHBvaW50cz0iMjAuMTksNjIuNjU0IDQ5Ljk5OSw3MS42IDQ5Ljk5Nyw4NiAyMC4xOSw3MS4wOTQgICAiLz48cG9seWdvbiBmaWxsPSIjRDlBNzQxIiBwb2ludHM9Ijc5LjgyMywzNy4zNSA1MC4wMDMsMjguMzk5IDUwLjAwMywxNCA3OS44MjUsMjguOTE0ICAgIi8+PHBvbHlnb24gZmlsbD0iI0Q5QTc0MSIgcG9pbnRzPSI3OS44MDYsNjIuNjYgNDkuOTk5LDcxLjYgNDkuOTk3LDg2IDc5LjgwNiw3MS4wOTkgICAiLz48cG9seWdvbiBmaWxsPSIjODc2OTI5IiBwb2ludHM9IjIzLjk4NSw3Mi45OSAyMC4xNzUsNzEuMDg2IDIwLjE3OSwyOC45MDggMjMuOTg5LDI3LjAwNCAgICIvPjxwb2x5Z29uIGZpbGw9IiM4NzY5MjkiIHBvaW50cz0iMzkuMDE3LDU3Ljc2MiA0OS45OTksNTkuMTYgNTAuMDAxLDQwLjgzMiAzOS4wMTksNDIuMjI5ICAgIi8+PHBvbHlnb24gZmlsbD0iIzg3NjkyOSIgcG9pbnRzPSIyNy45NTQsNTYuMzU0IDM1LjA4MSw1Ny4yNiAzNS4wODMsNDIuNzI5IDI3Ljk1NCw0My42MzcgICAiLz48cG9seWdvbiBmaWxsPSIjNjI0QTFFIiBwb2ludHM9IjIzLjk4NywzNi4yMDEgNTAuMDAzLDI4LjM5OSA3OS44MjMsMzcuMzUgNTQuNDgxLDQwLjQ5NiAgICIvPjxwb2x5Z29uIGZpbGw9IiNGQUQ3OTEiIHBvaW50cz0iMjMuOTg1LDYzLjc5MyA0OS45OTksNzEuNiA3OS44MDYsNjIuNjYgNTQuNDYsNTkuNTA2ICAgIi8+PHBvbHlnb24gZmlsbD0iI0Q5QTc0MSIgcG9pbnRzPSI3OS44MDgsNTUuMzMgNDkuOTk5LDU5LjA5MiA1MC4wMDEsNDAuODMyIDc5LjgwOCw0NC42MjkgICAiLz48L2c+PC9nPjwvc3ZnPg==",
+  "id": "aws-sqs",
+  "name": "Amazon SQS",
+  "properties": {
+    "accessKey": {
+      "deprecated": false,
+      "displayName": "Access Key",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Amazon AWS Access Key",
+      "order": "1",
+      "raw": true,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "region": {
+      "defaultValue": "US_EAST_1",
+      "deprecated": false,
+      "displayName": "Region",
+      "enum": [
+        {
+          "label": "AP NORTHEAST 1",
+          "value": "AP_NORTHEAST_1"
+        },
+        {
+          "label": "AP NORTHEAST 2",
+          "value": "AP_NORTHEAST_2"
+        },
+        {
+          "label": "AP SOUTH 1",
+          "value": "AP_SOUTH_1"
+        },
+        {
+          "label": "AP SOUTHEAST 1",
+          "value": "AP_SOUTHEAST_1"
+        },
+        {
+          "label": "AP SOUTHEAST 2",
+          "value": "AP_SOUTHEAST_2"
+        },
+        {
+          "label": "CA CENTRAL 1",
+          "value": "CA_CENTRAL_1"
+        },
+        {
+          "label": "CN NORTH 1",
+          "value": "CN_NORTH_1"
+        },
+        {
+          "label": "CN NORTHWEST 1",
+          "value": "CN_NORTHWEST_1"
+        },
+        {
+          "label": "EU CENTRAL 1",
+          "value": "EU_CENTRAL_1"
+        },
+        {
+          "label": "EU WEST 1",
+          "value": "EU_WEST_1"
+        },
+        {
+          "label": "EU WEST 2",
+          "value": "EU_WEST_2"
+        },
+        {
+          "label": "EU WEST 3",
+          "value": "EU_WEST_3"
+        },
+        {
+          "label": "Gov Cloud",
+          "value": "GovCloud"
+        },
+        {
+          "label": "SA EAST 1",
+          "value": "SA_EAST_1"
+        },
+        {
+          "label": "US EAST 1",
+          "value": "US_EAST_1"
+        },
+        {
+          "label": "US EAST 2",
+          "value": "US_EAST_2"
+        },
+        {
+          "label": "US WEST 1",
+          "value": "US_WEST_1"
+        },
+        {
+          "label": "US WEST 2",
+          "value": "US_WEST_2"
+        }
+      ],
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "label": "producer",
+      "labelHint": "The region where the Queue is located.",
+      "order": "3",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "secretKey": {
+      "deprecated": false,
+      "displayName": "Secret Key",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Amazon AWS Secret Key",
+      "order": "2",
+      "raw": true,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

@@ -25,6 +25,8 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.StringConstants;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingActivityTrackingPolicyFactory;
+
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -39,6 +41,8 @@ import org.slf4j.LoggerFactory;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class IntegrationTestSupport implements StringConstants {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationTestSupport.class);
@@ -90,7 +94,12 @@ public class IntegrationTestSupport implements StringConstants {
     }
 
     protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration, ActivityTracker activityTracker) {
-        return new IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class), activityTracker) {
+        List<ActivityTrackingPolicyFactory> activityTrackingPolicyFactories = Collections.emptyList();
+        if(activityTracker!=null) {
+            activityTrackingPolicyFactories = Arrays.asList(new IntegrationLoggingActivityTrackingPolicyFactory(activityTracker));
+        }
+        return new
+            IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class), activityTrackingPolicyFactories) {
             @Override
             protected Integration loadIntegration() throws IOException {
                 return integration;

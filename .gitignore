@@ -72,6 +72,7 @@ ui-react/.puppeteer_data
 
 # @syndesis/models
 ui-react/packages/models/src/models.d.ts
+ui-react/packages/models/src/models-internal.d.ts
 
 # testing
 ui-react/*/coverage

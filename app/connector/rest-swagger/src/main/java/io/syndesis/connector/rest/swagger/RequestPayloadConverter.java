@@ -31,6 +31,9 @@ import javax.xml.transform.TransformerFactoryConfigurationError;
 import javax.xml.transform.stax.StAXSource;
 import javax.xml.transform.stream.StreamResult;
 
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.DataShapeKinds;
+
 import org.apache.camel.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,6 +44,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 public final class RequestPayloadConverter extends PayloadConverterBase {
 
     private static final Logger LOG = LoggerFactory.getLogger(RequestPayloadConverter.class);
+
+    public RequestPayloadConverter(final DataShape dataShape) {
+        super(dataShape.getKind());
+    }
+
+    public RequestPayloadConverter(final DataShapeKinds kind) {
+        super(kind);
+    }
 
     @Override
     void convertAsJson(final Message in) {

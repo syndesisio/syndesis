@@ -16,8 +16,11 @@
 package io.syndesis.server.api.generator.swagger;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Arrays;
 
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.util.Json;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ConnectorGenerator;
 import io.syndesis.server.api.generator.swagger.util.SwaggerHelper;
@@ -51,7 +54,13 @@ public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGenerat
 
     @Override
     ConnectorGenerator generator() {
-        return new SwaggerUnifiedShapeConnectorGenerator();
+        try (InputStream stream = SwaggerUnifiedShapeGeneratorExampleTests.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
+            final Connector restSwagger = Json.readFromStream(stream, Connector.class);
+
+            return new SwaggerUnifiedShapeConnectorGenerator(restSwagger);
+        } catch (final IOException e) {
+            throw new AssertionError(e);
+        }
     }
 
     @Parameters(name = "{0}")

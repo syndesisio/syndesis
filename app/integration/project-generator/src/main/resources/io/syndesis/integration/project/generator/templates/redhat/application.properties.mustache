@@ -3,7 +3,7 @@ logging.level.io.syndesis = DEBUG
 logging.level.org.apache.camel.spring.boot.RoutesCollector = DEBUG
 
 # Camel
-camel.springboot.name = {{name}}
+camel.springboot.name = {{integration.name}}
 camel.springboot.streamCachingEnabled = true
 camel.springboot.xml-routes = false
 camel.springboot.xml-rests = false
@@ -21,3 +21,10 @@ management.health.defaults.enabled = false
 
 # disable spring boot auto configurations
 spring.autoconfigure.exclude[0] = org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+
+{{#configuration.activityTracing}}
+# Jaeger/Opentracing
+jaeger.service.name = {{integration.name}}
+syndesis.integration.runtime.logging=false
+syndesis.integration.runtime.tracing=true
+{{/configuration.activityTracing}}

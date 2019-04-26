@@ -164,11 +164,13 @@ public class SheetsSpreadsheetsValuesIntegrationTest extends AbstractGoogleSheet
                 .hasSheetTitle("TestData")
                 .andReturnSpreadsheet(spreadsheetId);
 
+        Spreadsheet testSheet = getSpreadsheet();
+
         assertThatGoogleApi(getGoogleApiTestServer())
                 .updateValuesRequest(spreadsheetId, TEST_SHEET + "!A1:B2", Arrays.asList(Arrays.asList("a1", "b1"), Arrays.asList("a2", "b2")))
                 .andReturnUpdateResponse();
 
-        Spreadsheet testSheet = getSpreadsheetWithTestData();
+        applyTestData(testSheet);
 
         assertThatGoogleApi(getGoogleApiTestServer())
                 .clearValuesRequest(testSheet.getSpreadsheetId(), TEST_SHEET + "!A1:B2")

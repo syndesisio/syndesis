@@ -63,18 +63,157 @@ import static java.util.Optional.ofNullable;
 
 public class SwaggerAPIGenerator implements APIGenerator {
 
-    private static final String EXCERPT_METADATA_KEY = "excerpt";
-
     private static final String DEFAULT_RETURN_CODE_METADATA_KEY = "default-return-code";
+
+    private static final String EXCERPT_METADATA_KEY = "excerpt";
 
     private final DataShapeGenerator dataShapeGenerator;
 
     public SwaggerAPIGenerator() {
-        this.dataShapeGenerator = new UnifiedDataShapeGenerator();
+        dataShapeGenerator = new UnifiedDataShapeGenerator();
     }
 
     @Override
-    public APISummary info(String specification, APIValidationContext validation) {
+    @SuppressWarnings({"PMD.ExcessiveMethodLength"})
+    public APIIntegration generateIntegration(final String specification, final ProvidedApiTemplate template) {
+        final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.NONE);
+        final Swagger swagger = info.getModel();
+
+        final String name = ofNullable(swagger.getInfo())
+            .flatMap(i -> ofNullable(i.getTitle()))
+            .orElse(null);
+
+        final String integrationId = KeyGenerator.createKey();
+
+        Integration.Builder integration = new Integration.Builder()
+            .id(integrationId)
+            .addTag("api-provider")
+            .createdAt(System.currentTimeMillis())
+            .name(name);
+
+        final Set<String> alreadyUsedOperationIds = new HashSet<>();
+        final Map<String, Path> paths = swagger.getPaths();
+
+        for (final Map.Entry<String, Path> pathEntry : paths.entrySet()) {
+            final Path path = pathEntry.getValue();
+
+            for (final Map.Entry<HttpMethod, Operation> operationEntry : path.getOperationMap().entrySet()) {
+                final Operation operation = operationEntry.getValue();
+
+                String operationName = operation.getSummary();
+                final String operationDescription = operationEntry.getKey() + " " + pathEntry.getKey();
+
+                final String operationId = requireUniqueOperationId(operation.getOperationId(), alreadyUsedOperationIds);
+                alreadyUsedOperationIds.add(operationId);
+                operation.setOperationId(operationId); // Update swagger spec
+
+                final DataShape startDataShape = dataShapeGenerator.createShapeFromRequest(info.getResolvedJsonGraph(), swagger, operation);
+                final Action startAction = template.getStartAction().orElseThrow(() -> new IllegalStateException("cannot find start action"));
+                final ConnectorAction.Builder modifiedStartActionBuilder = new ConnectorAction.Builder()
+                    .createFrom(startAction)
+                    .addTag("locked-action")
+                    .descriptor(new ConnectorDescriptor.Builder()
+                        .createFrom(startAction.getDescriptor())
+                        .outputDataShape(startDataShape)
+                        .build());
+
+                final String basePath = swagger.getBasePath();
+                if (!Strings.isNullOrEmpty(basePath)) {
+                    // pass the basePath so it gets picked up by
+                    // EndpointController
+                    modifiedStartActionBuilder.putMetadata("serverBasePath", basePath);
+                }
+
+                final Action modifiedStartAction = modifiedStartActionBuilder.build();
+
+                final Step startStep = new Step.Builder()
+                    .id(KeyGenerator.createKey())
+                    .action(modifiedStartAction)
+                    .connection(template.getConnection())
+                    .stepKind(StepKind.endpoint)
+                    .putConfiguredProperty("name", operationId)
+                    .putMetadata("configured", "true")
+                    .build();
+
+                final DataShape endDataShape = dataShapeGenerator.createShapeFromResponse(info.getResolvedJsonGraph(), swagger, operation);
+                final Action endAction = template.getEndAction().orElseThrow(() -> new IllegalStateException("cannot find end action"));
+                final Action modifiedEndAction = new ConnectorAction.Builder()
+                    .createFrom(endAction)
+                    .addTag("locked-action")
+                    .descriptor(new ConnectorDescriptor.Builder()
+                        .createFrom(endAction.getDescriptor())
+                        .inputDataShape(endDataShape)
+                        .build())
+                    .build();
+                final Step endStep = new Step.Builder()
+                    .id(KeyGenerator.createKey())
+                    .action(modifiedEndAction)
+                    .connection(template.getConnection())
+                    .stepKind(StepKind.endpoint)
+                    .putConfiguredProperty("httpResponseCode", "501")
+                    .putMetadata("configured", "true")
+                    .build();
+
+                if (Strings.isNullOrEmpty(operationName)) {
+                    operationName = SwaggerHelper.operationDescriptionOf(
+                        swagger,
+                        operation,
+                        (m, p) -> "Receiving " + m + " request on " + p).description;
+                }
+
+                String defaultCode = "200";
+                final Optional<Pair<String, Response>> defaultResponse = BaseDataShapeGenerator.findResponseCodeValue(operation);
+                if (defaultResponse.isPresent() && NumberUtils.isDigits(defaultResponse.get().getKey())) {
+                    defaultCode = defaultResponse.get().getKey();
+                }
+
+                final Flow flow = new Flow.Builder()
+                    .id(String.format("%s:flows:%s", integrationId, operationId))
+                    .putMetadata(EXCERPT_METADATA_KEY, "501 Not Implemented")
+                    .putMetadata(DEFAULT_RETURN_CODE_METADATA_KEY, defaultCode)
+                    .addStep(startStep)
+                    .addStep(endStep)
+                    .name(operationName)
+                    .description(operationDescription)
+                    .build();
+
+                integration = integration.addFlow(flow);
+            }
+
+        }
+
+        // TODO: evaluate what can be shrinked (e.g.
+        // SwaggerHelper#minimalSwaggerUsedByComponent)
+        final byte[] updatedSwagger = OpenApiHelper.serialize(swagger).getBytes(StandardCharsets.UTF_8);
+
+        // same check SwaggerParser is performing
+        final String specificationContentType;
+        if (specification.trim().startsWith("{")) {
+            // means it's JSON (kinda)
+            specificationContentType = "application/vnd.oai.openapi+json";
+        } else {
+            // YAML
+            specificationContentType = "application/vnd.oai.openapi";
+        }
+
+        final String apiId = KeyGenerator.createKey();
+        final OpenApi api = new OpenApi.Builder()
+            .id(apiId)
+            .name(name)
+            .document(updatedSwagger)
+            .putMetadata("Content-Type", specificationContentType)
+            .build();
+
+        integration.addResource(new ResourceIdentifier.Builder()
+            .id(apiId)
+            .kind(Kind.OpenApi)
+            .build());
+
+        return new APIIntegration(integration.build(), api);
+    }
+
+    @Override
+    public APISummary info(final String specification, final APIValidationContext validation) {
         final SwaggerModelInfo swaggerInfo = SwaggerHelper.parse(specification, validation);
 
         final Swagger model = swaggerInfo.getModel();
@@ -102,147 +241,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
     }
 
     @Override
-    @SuppressWarnings({"PMD.ExcessiveMethodLength"})
-    public APIIntegration generateIntegration(String specification, ProvidedApiTemplate template) {
-        SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.NONE);
-        Swagger swagger = info.getModel();
-
-        String name = ofNullable(swagger.getInfo())
-            .flatMap(i -> ofNullable(i.getTitle()))
-            .orElse(null);
-
-        String integrationId = KeyGenerator.createKey();
-
-        Integration.Builder integration = new Integration.Builder()
-            .id(integrationId)
-            .addTag("api-provider")
-            .createdAt(System.currentTimeMillis())
-            .name(name);
-
-        Set<String> alreadyUsedOperationIds = new HashSet<>();
-        Map<String, Path> paths = swagger.getPaths();
-
-        for (Map.Entry<String, Path> pathEntry : paths.entrySet()) {
-            Path path = pathEntry.getValue();
-
-            for (Map.Entry<HttpMethod, Operation> operationEntry : path.getOperationMap().entrySet()) {
-                Operation operation = operationEntry.getValue();
-
-                String operationName = operation.getSummary();
-                String operationDescription = operationEntry.getKey() + " " + pathEntry.getKey();
-
-                String operationId = requireUniqueOperationId(operation.getOperationId(), alreadyUsedOperationIds);
-                alreadyUsedOperationIds.add(operationId);
-                operation.setOperationId(operationId); // Update swagger spec
-
-                DataShape startDataShape = dataShapeGenerator.createShapeFromRequest(info.getResolvedJsonGraph(), swagger, operation);
-                Action startAction = template.getStartAction().orElseThrow(() -> new IllegalStateException("cannot find start action"));
-                ConnectorAction.Builder modifiedStartActionBuilder = new ConnectorAction.Builder()
-                    .createFrom(startAction)
-                    .addTag("locked-action")
-                    .descriptor(new ConnectorDescriptor.Builder()
-                        .createFrom(startAction.getDescriptor())
-                        .outputDataShape(startDataShape)
-                        .build());
-
-                final String basePath = swagger.getBasePath();
-                if (!Strings.isNullOrEmpty(basePath)) {
-                    // pass the basePath so it gets picked up by EndpointController
-                    modifiedStartActionBuilder.putMetadata("serverBasePath", basePath);
-                }
-
-                Action modifiedStartAction = modifiedStartActionBuilder.build();
-
-                 Step startStep = new Step.Builder()
-                    .id(KeyGenerator.createKey())
-                    .action(modifiedStartAction)
-                    .connection(template.getConnection())
-                    .stepKind(StepKind.endpoint)
-                    .putConfiguredProperty("name", operationId)
-                    .putMetadata("configured", "true")
-                    .build();
-
-                DataShape endDataShape = dataShapeGenerator.createShapeFromResponse(info.getResolvedJsonGraph(), swagger, operation);
-                Action endAction = template.getEndAction().orElseThrow(() -> new IllegalStateException("cannot find end action"));
-                Action modifiedEndAction = new ConnectorAction.Builder()
-                    .createFrom(endAction)
-                    .addTag("locked-action")
-                    .descriptor(new ConnectorDescriptor.Builder()
-                        .createFrom(endAction.getDescriptor())
-                        .inputDataShape(endDataShape)
-                        .addConnectorCustomizer("io.syndesis.connector.rest.swagger.ResponseCustomizer")
-                        .build())
-                    .build();
-                Step endStep = new Step.Builder()
-                    .id(KeyGenerator.createKey())
-                    .action(modifiedEndAction)
-                    .connection(template.getConnection())
-                    .stepKind(StepKind.endpoint)
-                    .putConfiguredProperty("httpResponseCode", "501")
-                    .putMetadata("configured", "true")
-                    .build();
-
-                if (Strings.isNullOrEmpty(operationName)) {
-                    operationName = SwaggerHelper.operationDescriptionOf(
-                        swagger,
-                        operation,
-                        (m, p) -> "Receiving " + m + " request on " + p
-                    ).description;
-                }
-
-                String defaultCode = "200";
-                Optional<Pair<String, Response>> defaultResponse = BaseDataShapeGenerator.findResponseCodeValue(operation);
-                if (defaultResponse.isPresent() && NumberUtils.isDigits(defaultResponse.get().getKey())) {
-                    defaultCode = defaultResponse.get().getKey();
-                }
-
-
-                Flow flow = new Flow.Builder()
-                    .id(String.format("%s:flows:%s", integrationId, operationId))
-                    .putMetadata(EXCERPT_METADATA_KEY, "501 Not Implemented")
-                    .putMetadata(DEFAULT_RETURN_CODE_METADATA_KEY, defaultCode)
-                    .addStep(startStep)
-                    .addStep(endStep)
-                    .name(operationName)
-                    .description(operationDescription)
-                    .build();
-
-                integration = integration.addFlow(flow);
-            }
-
-        }
-
-        // TODO: evaluate what can be shrinked (e.g. SwaggerHelper#minimalSwaggerUsedByComponent)
-        byte[] updatedSwagger = OpenApiHelper.serialize(swagger).getBytes(StandardCharsets.UTF_8);
-
-        // same check SwaggerParser is performing
-        final String specificationContentType;
-        if (specification.trim().startsWith("{")) {
-            // means it's JSON (kinda)
-            specificationContentType = "application/vnd.oai.openapi+json";
-        } else {
-            // YAML
-            specificationContentType = "application/vnd.oai.openapi";
-        }
-
-        String apiId = KeyGenerator.createKey();
-        OpenApi api = new OpenApi.Builder()
-            .id(apiId)
-            .name(name)
-            .document(updatedSwagger)
-            .putMetadata("Content-Type", specificationContentType)
-            .build();
-
-        integration.addResource(new ResourceIdentifier.Builder()
-            .id(apiId)
-            .kind(Kind.OpenApi)
-            .build());
-
-        return new APIIntegration(integration.build(), api);
-    }
-
-    @Override
-    public Integration updateFlowExcerpts(Integration integration) {
+    public Integration updateFlowExcerpts(final Integration integration) {
         // Update excerpt for api provider endpoints only
         if (integration == null || !integration.getTags().contains("api-provider")) {
             return integration;
@@ -256,7 +255,50 @@ public class SwaggerAPIGenerator implements APIGenerator {
             .build();
     }
 
-    protected String requireUniqueOperationId(String preferredOperationId, Set<String> alreadyUsedOperationIds) {
+    protected String decodeHttpReturnCode(final List<Step> steps, final String code) {
+        if (code == null || steps.isEmpty()) {
+            return code;
+        }
+        final Step lastStep = steps.get(steps.size() - 1);
+        final Optional<Action> lastAction = lastStep.getAction();
+        if (!lastAction.isPresent()) {
+            return code;
+        }
+        final Optional<String> httpCodeDescription = lastAction
+            .flatMap(a -> ofNullable(a.getProperties().get("httpResponseCode")))
+            .flatMap(prop -> prop.getEnum().stream()
+                .filter(e -> code.equals(e.getValue()))
+                .map(ConfigurationProperty.PropertyValue::getLabel)
+                .findFirst());
+        return httpCodeDescription.orElse(code);
+    }
+
+    protected Flow flowWithExcerpts(final Flow flow) {
+        final List<Step> steps = flow.getSteps();
+        if (steps == null || steps.isEmpty()) {
+            return flow;
+        }
+
+        final Step last = steps.get(steps.size() - 1);
+        if (last.getConfiguredProperties().containsKey("httpResponseCode")) {
+            final String responseCode = last.getConfiguredProperties().get("httpResponseCode");
+            final String responseDesc = decodeHttpReturnCode(steps, responseCode);
+            return new Flow.Builder()
+                .createFrom(flow)
+                .putMetadata(EXCERPT_METADATA_KEY, responseDesc)
+                .build();
+        } else if (flow.getMetadata(EXCERPT_METADATA_KEY).isPresent()) {
+            final Map<String, String> newMetadata = new HashMap<>(flow.getMetadata());
+            newMetadata.remove(EXCERPT_METADATA_KEY);
+            return new Flow.Builder()
+                .createFrom(flow)
+                .metadata(newMetadata)
+                .build();
+        }
+        return flow;
+    }
+
+    protected String requireUniqueOperationId(final String preferredOperationId, final Set<String> alreadyUsedOperationIds) {
         String baseId = preferredOperationId;
         if (baseId == null) {
             baseId = "operation";
@@ -270,50 +312,6 @@ public class SwaggerAPIGenerator implements APIGenerator {
             newId = baseId + "-" + ++counter;
         }
         return newId;
-    }
-
-    protected Flow flowWithExcerpts(Flow flow) {
-        List<Step> steps = flow.getSteps();
-        if (steps == null || steps.isEmpty()) {
-            return flow;
-        }
-
-        Step last = steps.get(steps.size() - 1);
-        if (last.getConfiguredProperties().containsKey("httpResponseCode")) {
-            String responseCode = last.getConfiguredProperties().get("httpResponseCode");
-            String responseDesc = decodeHttpReturnCode(steps, responseCode);
-            return new Flow.Builder()
-                .createFrom(flow)
-                .putMetadata(EXCERPT_METADATA_KEY, responseDesc)
-                .build();
-        } else if (flow.getMetadata(EXCERPT_METADATA_KEY).isPresent()) {
-            Map<String, String> newMetadata = new HashMap<>(flow.getMetadata());
-            newMetadata.remove(EXCERPT_METADATA_KEY);
-            return new Flow.Builder()
-                .createFrom(flow)
-                .metadata(newMetadata)
-                .build();
-        }
-        return flow;
-    }
-
-    protected String decodeHttpReturnCode(List<Step> steps, String code) {
-        if (code == null || steps.isEmpty()) {
-            return code;
-        }
-        Step lastStep = steps.get(steps.size() - 1);
-        Optional<Action> lastAction = lastStep.getAction();
-        if (!lastAction.isPresent()) {
-            return code;
-        }
-        Optional<String> httpCodeDescription = lastAction
-            .flatMap(a -> ofNullable(a.getProperties().get("httpResponseCode")))
-            .flatMap(prop -> prop.getEnum().stream()
-                .filter(e -> code.equals(e.getValue()))
-                .map(ConfigurationProperty.PropertyValue::getLabel)
-                .findFirst()
-            );
-        return httpCodeDescription.orElse(code);
     }
 
     static ActionsSummary determineSummaryFrom(final Map<String, Path> paths) {

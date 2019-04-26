@@ -15,6 +15,7 @@
  */
 package io.syndesis.connector.sheets;
 
+import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,6 +43,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
     private String spreadsheetId;
     private String range;
     private String majorDimension;
+    private String[] columnNames;
     private boolean splitResults;
 
     @Override
@@ -55,6 +57,12 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
         range = (String) options.get("range");
         majorDimension = (String) Optional.ofNullable(options.get("majorDimension"))
                                           .orElse(RangeCoordinate.DIMENSION_ROWS);
+        columnNames = Optional.ofNullable(options.get("columnNames"))
+                                .map(Object::toString)
+                                .map(names -> names.split(","))
+                                .orElse(new String[]{});
+        Arrays.parallelSetAll(columnNames, (i) -> columnNames[i].trim());
+
         splitResults = Optional.ofNullable(options.get("splitResults"))
                                                 .map(Object::toString)
                                                 .map(Boolean::valueOf)
@@ -95,7 +103,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
                     model.put("spreadsheetId", spreadsheetId);
                     int columnIndex = rangeCoordinate.getColumnStartIndex();
                     for (Object value : values) {
-                        model.put(CellCoordinate.getColumnName(columnIndex), value);
+                        model.put(CellCoordinate.getColumnName(columnIndex, rangeCoordinate.getColumnStartIndex(), columnNames), value);
                         columnIndex++;
                     }
                     jsonBeans.add(Json.writer().writeValueAsString(model));
@@ -136,7 +144,7 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
             if (ObjectHelper.equal(RangeCoordinate.DIMENSION_ROWS, majorDimension)) {
                 int columnIndex = rangeCoordinate.getColumnStartIndex();
                 for (Object value : values) {
-                    model.put(CellCoordinate.getColumnName(columnIndex), value);
+                    model.put(CellCoordinate.getColumnName(columnIndex, rangeCoordinate.getColumnStartIndex(), columnNames), value);
                     columnIndex++;
                 }
             } else if (ObjectHelper.equal(RangeCoordinate.DIMENSION_COLUMNS, majorDimension)) {

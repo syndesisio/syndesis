@@ -261,7 +261,7 @@
         maxIntegrationsPerUser: ${MAX_INTEGRATIONS_PER_USER}
         maxDeploymentsPerUser: ${MAX_INTEGRATIONS_PER_USER}
         integrationStateCheckInterval: ${INTEGRATION_STATE_CHECK_INTERVAL}
-# Access to Camel-K resources
+# START:CAMEL-K
 - kind: Role
   apiVersion: rbac.authorization.k8s.io/v1beta1
   metadata:
@@ -293,3 +293,4 @@
     kind: Role
     name: camel-k
     apiGroup: rbac.authorization.k8s.io
+# END:CAMEL-K

@@ -21,16 +21,17 @@ import java.util.Map;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.OutputDataShapeAware;
-import io.syndesis.integration.component.proxy.ConnectorComponentCustomizer;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import io.syndesis.integration.component.proxy.Processors;
 
-import org.apache.camel.component.connector.ConnectorComponent;
 import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-public final class ResponseCustomizer implements ConnectorComponentCustomizer, OutputDataShapeAware {
+public final class ResponseCustomizer implements ComponentProxyCustomizer, OutputDataShapeAware {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResponseCustomizer.class);
 
@@ -39,9 +40,9 @@ public final class ResponseCustomizer implements ConnectorComponentCustomizer, O
     private boolean isUnifiedDataShape;
 
     @Override
-    public void customize(final ConnectorComponent component, final Map<String, Object> options) {
+    public void customize(final ComponentProxyComponent component, final Map<String, Object> options) {
         if (isUnifiedDataShape) {
-            component.setAfterProducer(new ResponsePayloadConverter());
+            Processors.addAfterProducer(component, new ResponsePayloadConverter(dataShape));
         }
     }
 

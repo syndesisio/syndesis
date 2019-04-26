@@ -2,7 +2,7 @@
 // as_connecting-to-odata.adoc
 
 [id='adding-odata-connections-write_{context}']
-= Updating data that is managed by an OData service 
+= Updating, creating, and deleting data that is managed by an OData service 
 
 In an integration, you can update a resource that is managed by an OData service in the middle 
 of a flow or to finish
@@ -18,9 +18,9 @@ prompting you to choose a finish connection.
 
 .Procedure
 
-. Click the OData connection that you want to use. Note that when 
-an OData connection updates a resource, the connection does not return anything.  
-
+. Click the OData connection that you want to use. Note that when an OData 
+connection updates or deletes an entity, the connection does not return anything. 
+When the OData connection creates an entity, the connection returns the new entity. 
 . On the *Choose an Action* page, click the action that you want the 
 connection to perform:  
 +
@@ -47,11 +47,10 @@ The connection appears in the integration flow in the location where
 you added it. 
 
 .Next steps
-Ensure that the input to an OData connection that updates a resource 
-is a single entity or a single property. The input cannot be a collection. 
-This might require a *Split* step before the OData connection. 
-
-Add a *Data Mapper* step before the OData connection. You must 
-map source fields that provide the data that is required to create a 
-new entity, to update an entity, or to delete an entity. 
+Add a data mapper step before the OData connection. You must map 
+source fields that provide the data that is required to create a new entity, 
+to update an entity, or to delete an entity. If you map a collection to a 
+target field, the default behavior is that the content in the last element 
+that is in the source collection is mapped to the target field. 
+ 
  
