@@ -31,6 +31,8 @@ export interface IWithConnectorFormChildrenProps {
 
   validationResults: IConnectorConfigurationFormValidationResult[];
 
+  resetForm: (nextValues?: any) => void;
+
   handleSubmit: (e?: any) => void;
   /**
    * the callback to trigger to validate the form against the backend.
@@ -55,6 +57,11 @@ export interface IWithConnectorFormProps {
    * callback.
    */
   initialValue?: { [key: string]: string };
+
+  /**
+   * true to have the fields rendered as read-only.
+   */
+  disabled?: boolean;
 
   /**
    * the render prop that will receive the ready-to-be-rendered form and some
@@ -90,7 +97,17 @@ export class WithConnectorForm extends React.Component<
   };
 
   public render() {
-    const definition = this.props.connector.properties;
+    const definition = Object.keys(this.props.connector.properties!).reduce(
+      (def, key) => {
+        const d = this.props.connector.properties![key];
+        def[key] = {
+          ...d,
+          disabled: this.props.disabled,
+        };
+        return def;
+      },
+      {}
+    );
     return (
       <WithConnectionHelpers>
         {({ validateConfiguration }) => {
@@ -158,6 +175,7 @@ export class WithConnectorForm extends React.Component<
                 isSubmitting,
                 isValid,
                 isValidating,
+                resetForm,
                 submitForm,
                 validateForm,
                 values,
@@ -174,6 +192,7 @@ export class WithConnectorForm extends React.Component<
                   isSubmitting,
                   isValid,
                   isValidating,
+                  resetForm,
                   submitForm,
                   validateForm: enableValidationAgainstBackend,
                   validationResults,

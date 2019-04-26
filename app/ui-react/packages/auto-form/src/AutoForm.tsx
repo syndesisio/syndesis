@@ -27,10 +27,10 @@ export interface IAutoFormProps<T> {
   /**
    * Child component that will receive the form fields and submit handler
    */
-  children: (state: IAutoFormState) => any;
+  children: (state: IAutoFormChildrenProps) => any;
 }
 
-export interface IAutoFormState {
+export interface IAutoFormChildrenProps {
   /**
    * Fragment containing all of the form fields
    */
@@ -50,67 +50,62 @@ export interface IAutoFormState {
   errors: any;
 }
 
-export class AutoForm<T> extends React.Component<
-  IAutoFormProps<T>,
-  IAutoFormState
-> {
+export class AutoForm<T> extends React.Component<IAutoFormProps<T>> {
   public render() {
     return (
-      <React.Fragment>
-        <FormBuilder
-          definition={this.props.definition}
-          initialValue={this.props.initialValue}
-          onSave={this.props.onSave}
-          i18nRequiredProperty={this.props.i18nRequiredProperty}
-        >
-          {({ initialValue, fields, onSave, getField }) => (
-            <Formik<T>
-              initialValues={initialValue}
-              onSubmit={onSave}
-              validate={this.props.validate}
-            >
-              {({
-                handleSubmit,
-                values,
-                touched,
+      <FormBuilder
+        definition={this.props.definition}
+        initialValue={this.props.initialValue}
+        onSave={this.props.onSave}
+        i18nRequiredProperty={this.props.i18nRequiredProperty}
+      >
+        {({ initialValue, fields, onSave, getField }) => (
+          <Formik<T>
+            initialValues={initialValue}
+            onSubmit={onSave}
+            validate={this.props.validate}
+          >
+            {({
+              handleSubmit,
+              values,
+              touched,
+              dirty,
+              errors,
+              isValid,
+              isValidating,
+              isSubmitting,
+              resetForm,
+              validateForm,
+              submitForm,
+            }) =>
+              this.props.children({
                 dirty,
                 errors,
+                fields: (
+                  <React.Fragment>
+                    {fields.map(property =>
+                      getField({
+                        errors,
+                        property,
+                        touched,
+                        value: (values || {})[property.name],
+                      })
+                    )}
+                  </React.Fragment>
+                ),
+                handleSubmit,
+                isSubmitting,
                 isValid,
                 isValidating,
-                isSubmitting,
                 resetForm,
-                validateForm,
                 submitForm,
-              }) =>
-                this.props.children({
-                  dirty,
-                  errors,
-                  fields: (
-                    <React.Fragment>
-                      {fields.map(property =>
-                        getField({
-                          errors,
-                          property,
-                          touched,
-                          value: (values || {})[property.name],
-                        })
-                      )}
-                    </React.Fragment>
-                  ),
-                  handleSubmit,
-                  isSubmitting,
-                  isValid,
-                  isValidating,
-                  resetForm,
-                  submitForm,
-                  validateForm,
-                  values,
-                })
-              }
-            </Formik>
-          )}
-        </FormBuilder>
-      </React.Fragment>
+                validateForm,
+                values,
+              })
+            }
+          </Formik>
+        )}
+      </FormBuilder>
     );
   }
 }

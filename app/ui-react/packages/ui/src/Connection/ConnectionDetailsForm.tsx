@@ -56,46 +56,32 @@ export interface IConnectionDetailsFormProps {
   handleSubmit: (e?: any) => void;
 
   /**
-   * The callback for editing has been canceled.
-   */
-  onCancel: () => void;
-
-  /**
    * The callback for when the validate button is clicked.
    */
   onValidate: () => void;
-}
 
-export interface IConnectionDetailsFormState {
   /**
    * `true` when the connection details are being edited.
    */
   isEditing: boolean;
+
+  /**
+   * The callback for editing has been canceled.
+   */
+  onCancelEditing: () => void;
+
+  /**
+   * The callback for start editing.
+   */
+  onStartEditing: () => void;
 }
 
 export class ConnectionDetailsForm extends React.Component<
-  IConnectionDetailsFormProps,
-  IConnectionDetailsFormState
+  IConnectionDetailsFormProps
 > {
   public static defaultProps = {
     validationResults: [],
   };
-
-  public constructor(props: IConnectionDetailsFormProps) {
-    super(props);
-    this.state = { isEditing: false };
-    this.cancelEditing = this.cancelEditing.bind(this);
-    this.startEditing = this.startEditing.bind(this);
-  }
-
-  public cancelEditing() {
-    this.setState({ isEditing: false });
-    this.props.onCancel();
-  }
-
-  public startEditing() {
-    this.setState({ isEditing: true });
-  }
 
   public render() {
     return (
@@ -115,10 +101,8 @@ export class ConnectionDetailsForm extends React.Component<
               ))}
               <div className="card-pf-title">{this.props.i18nTitle}</div>
               <div className="card-pf-body connection-details-form__formFields">
-                <fieldset disabled={!this.state.isEditing}>
-                  <Container>{this.props.children}</Container>
-                </fieldset>
-                {this.state.isEditing ? (
+                <Container>{this.props.children}</Container>
+                {this.props.isEditing ? (
                   <Container>
                     <Row>
                       <Button
@@ -135,7 +119,7 @@ export class ConnectionDetailsForm extends React.Component<
                         bsStyle="default"
                         className="connection-details-form__editButton"
                         disabled={this.props.isWorking}
-                        onClick={this.cancelEditing}
+                        onClick={this.props.onCancelEditing}
                       >
                         {this.props.i18nCancelLabel}
                       </Button>
@@ -150,7 +134,7 @@ export class ConnectionDetailsForm extends React.Component<
                     </Row>
                   </Container>
                 ) : (
-                  <Button bsStyle="primary" onClick={this.startEditing}>
+                  <Button bsStyle="primary" onClick={this.props.onStartEditing}>
                     {this.props.i18nEditLabel}
                   </Button>
                 )}
