@@ -1,4 +1,4 @@
-import { WithConnectors } from '@syndesis/api';
+import { getConnectionIcon, WithConnectors } from '@syndesis/api';
 import {
   ConnectionCard,
   ConnectionCreatorLayout,
@@ -6,7 +6,7 @@ import {
   ConnectionsGridCell,
   ConnectionSkeleton,
 } from '@syndesis/ui';
-import { getConnectionIcon, WithLoader } from '@syndesis/utils';
+import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../shared';
 import { ConnectionCreatorBreadcrumbs } from '../../components';
@@ -46,8 +46,8 @@ export default class ConnectorsPage extends React.Component {
                               name={connector.name}
                               description={connector.description || ''}
                               icon={getConnectionIcon(
-                                connector,
-                                process.env.PUBLIC_URL
+                                process.env.PUBLIC_URL,
+                                connector
                               )}
                               href={resolvers.create.configureConnector({
                                 connector,
