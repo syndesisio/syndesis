@@ -274,6 +274,8 @@ export class DetailsPage extends React.Component<
                                         <IntegrationDetailHistory
                                           actions={actions}
                                           integration={data}
+                                          updatedAt={data.updatedAt!}
+                                          version={data.version!}
                                         />
                                       }
                                     />

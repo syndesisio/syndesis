@@ -13,9 +13,11 @@ export class IntegrationDetailSteps extends React.Component<
   IIntegrationDetailStepsProps
 > {
   public render() {
+    const steps = this.props.steps ? this.props.steps : [];
+
     return (
       <IntegrationStepsHorizontalView>
-        {this.props.steps.map((s, idx) => {
+        {steps.map((s, idx) => {
           const isFirst = idx === 0;
           const stepName = s.connection!
             ? s.connection!.connector!.name

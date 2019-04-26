@@ -10,6 +10,8 @@ import resolvers from '../resolvers';
 export interface IIntegrationDetailDeploymentsProps {
   actions: any;
   integration: IntegrationOverview;
+  updatedAt: number;
+  version: number;
 }
 
 export class IntegrationDetailHistory extends React.Component<
