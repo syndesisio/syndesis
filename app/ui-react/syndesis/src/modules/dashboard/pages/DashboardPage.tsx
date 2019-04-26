@@ -3,11 +3,7 @@ import {
   WithIntegrationsMetrics,
   WithMonitoredIntegrations,
 } from '@syndesis/api';
-import {
-  Connection,
-  IntegrationOverview,
-  IntegrationWithOverview,
-} from '@syndesis/models';
+import { IntegrationOverview, IntegrationWithOverview } from '@syndesis/models';
 import {
   AggregatedMetricCard,
   ConnectionsMetric,
@@ -23,7 +19,7 @@ import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { ApiError } from '../../../shared';
-import { Connections } from '../../connections/shared';
+import { Connections } from '../../connections/components';
 import { Integrations } from '../../integrations/components';
 import resolvers from '../../resolvers';
 
@@ -100,10 +96,6 @@ export function getTopIntegrations(
     })
     .reverse()
     .slice(0, 5);
-}
-
-export function getConnectionHref(connection: Connection) {
-  return `/connections/${connection.id}`;
 }
 
 export default () => (
@@ -252,9 +244,19 @@ export default () => (
                       connections={
                         <Connections
                           error={connectionsError}
+                          includeConnectionMenu={false}
                           loading={!hasConnections}
                           connections={connectionsData.connectionsForDisplay}
-                          getConnectionHref={getConnectionHref}
+                          getConnectionHref={connection =>
+                            resolvers.connections.connection.details({
+                              connection,
+                            })
+                          }
+                          getConnectionEditHref={connection =>
+                            resolvers.connections.connection.edit({
+                              connection,
+                            })
+                          }
                         />
                       }
                       i18nConnections={t('shared:Connections')}

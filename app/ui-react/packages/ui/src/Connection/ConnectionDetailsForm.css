@@ -1,0 +1,16 @@
+.connection-details-form__buttonBar {
+  border-top: none;
+  margin-left: auto;
+  padding: 0px 20px 10px;
+  width: 90%;
+}
+
+.connection-details-form__editButton {
+  margin-bottom: 8px;
+  margin-right: 4px;
+}
+
+.connection-details-form__formFields {
+  margin-left: auto;
+  width: 90%;
+}

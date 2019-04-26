@@ -1,6 +1,16 @@
 {
+  "connectionCardMenuTitle": "Connection Actions",
+  "connectionDeletedFailed": "An error occurred deleting connection \"{{connectionName}}.\" Details: {{details}}",
+  "connectionDeletedSuccess": "Connection \"{{connectionName}}\" was successfully deleted.",
   "connectionDetailPageTitle": "Connection Details",
+  "deleteModalMessage": "Are you sure you want to delete the \"{{connectionName}}\" connection?",
+  "deleteModalTitle": "Confirm Delete?",
   "descriptionPlaceholder": "Enter connection description...",
+  "detailsSectionTitle": "{{connectionName}} Configuration",
+  "duplicateNameError": "That name is taken. Try another.",
+  "errorSavingConnection": "Unexpected server error saving the connection.",
+  "errorValidatingDetails": "Unexpected server error validating the connection details.",
+  "errorValidatingName": "Unexpected server error validating connection name.",
   "namePlaceholder": "Must enter a connection name...",
   "usedByOne": "Used by 1 integration",
   "usedByMulti": "Used by integrations {{count}} times"

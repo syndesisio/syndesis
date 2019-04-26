@@ -1,3 +1,4 @@
+import { boolean } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { ConnectionDetailsHeader } from '../../src';
@@ -23,16 +24,9 @@ const changeName = (/*newName: string*/) => {
 };
 
 stories.add('render', () => {
-  const validate = proposedName => {
-    if (proposedName.length === 0) {
-      return '* Required field';
-    } else if (proposedName === 'foo') {
-      return 'foo is not a valid connection name';
-    }
-    return true;
-  };
   return (
     <ConnectionDetailsHeader
+      allowEditing={boolean('allowEditing', true)}
       connectionDescription={connectionDescription}
       connectionIcon={connectionIcon}
       connectionName={connectionName}
@@ -41,9 +35,9 @@ stories.add('render', () => {
       i18nNamePlaceholder={namePlaceholder}
       i18nUsageLabel={usageLabel}
       i18nUsageMessage={usageMessage}
+      isWorking={boolean('isWorking', false)}
       onChangeDescription={changeDescription}
       onChangeName={changeName}
-      validate={validate}
     />
   );
 });

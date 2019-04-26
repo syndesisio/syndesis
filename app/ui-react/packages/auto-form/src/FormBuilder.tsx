@@ -25,20 +25,17 @@ export interface IFormBuilderProps<T> {
   initialValue: T;
   i18nRequiredProperty: string;
   onSave: (value: T | any, actions: any) => void;
-  children(props: IFormBuilderState<T>): any;
+  children(props: IFormBuilderChildrenProps<T>): any;
 }
 
-export interface IFormBuilderState<T> {
+export interface IFormBuilderChildrenProps<T> {
   fields: INamedConfigurationProperty[];
   getField: (props: IRenderFieldProps) => any;
   initialValue: T;
   onSave: (value: T, actions: any) => void;
 }
 
-export class FormBuilder<T> extends React.Component<
-  IFormBuilderProps<T>,
-  IFormBuilderState<T>
-> {
+export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
   /**
    * Converts a property configuration to some kind of input field
    * @param props

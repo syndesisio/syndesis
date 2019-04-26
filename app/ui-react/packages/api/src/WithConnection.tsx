@@ -25,7 +25,7 @@ export class WithConnection extends React.Component<IWithConnectionProps> {
         }}
         initialValue={this.props.initialValue}
       >
-        {({ read, response }) =>
+        {({ response }) =>
           this.props.children({
             ...response,
             data: {

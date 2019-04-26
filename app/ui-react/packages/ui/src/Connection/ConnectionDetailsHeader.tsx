@@ -6,6 +6,11 @@ import './ConnectionDetailsHeader.css';
 
 export interface IConnectionDetailsHeaderProps {
   /**
+   * `true` if the name and description can be edited.
+   */
+  allowEditing: boolean;
+
+  /**
    * The optional connection description.
    */
   connectionDescription?: string;
@@ -46,6 +51,11 @@ export interface IConnectionDetailsHeaderProps {
   i18nUsageMessage: string;
 
   /**
+   * `true` when the name or description is being saved.
+   */
+  isWorking: boolean;
+
+  /**
    * The callback for when the connection description should be saved.
    * @param newDescription - the new description being saved
    * @returns `true` if save was successful
@@ -58,49 +68,6 @@ export interface IConnectionDetailsHeaderProps {
    * @returns `true` if save was successful
    */
   onChangeName: (newName: string) => Promise<boolean>;
-
-  /**
-   * The callback that validates the changes to the connection name. In case of error, the error message is expected as the return value.
-   * @param proposedName - the proposed name being validated
-   */
-  validate: (proposedName: string) => true | string;
-}
-
-export interface IConnectionDetailsHeaderState {
-  /**
-   * `true` when the description is being edited.
-   */
-  editingDescription: boolean;
-
-  /**
-   * `true` when the name is being edited.
-   */
-  editingName: boolean;
-
-  /**
-   * `true` when the name or description is being saved.
-   */
-  isSaving: boolean;
-
-  /**
-   * The last persisted description.
-   */
-  prevDescription: string;
-
-  /**
-   * The last persisted name.
-   */
-  prevName: string;
-
-  /**
-   * The proposed new description.
-   */
-  proposedDescription: string;
-
-  /**
-   * The proposed new name.
-   */
-  proposedName: string;
 }
 
 /**
@@ -109,34 +76,12 @@ export interface IConnectionDetailsHeaderState {
  * Line 3: usage label and value
  */
 export class ConnectionDetailsHeader extends React.Component<
-  IConnectionDetailsHeaderProps,
-  IConnectionDetailsHeaderState
+  IConnectionDetailsHeaderProps
 > {
-  public constructor(props: IConnectionDetailsHeaderProps) {
-    super(props);
-
-    const currentDescription = this.props.connectionDescription
-      ? this.props.connectionDescription
-      : '';
-
-    // setup initial state
-    this.state = {
-      editingDescription: false,
-      editingName: false,
-      isSaving: false,
-      prevDescription: currentDescription,
-      prevName: this.props.connectionName,
-      proposedDescription: this.props.connectionDescription
-        ? this.props.connectionDescription
-        : '',
-      proposedName: this.props.connectionName,
-    };
-  }
-
   public render() {
     return (
-      <Grid>
-        <Grid.Row>
+      <Grid fluid={true}>
+        <Grid.Row className={'connection-details-header__row'}>
           {this.props.connectionIcon ? (
             <Grid.Col xs={1}>
               <Container className="blank-slate-pf-icon">
@@ -149,28 +94,27 @@ export class ConnectionDetailsHeader extends React.Component<
               </Container>
             </Grid.Col>
           ) : null}
-          <Grid.Col>
+          <Grid.Col xs={11}>
             <InlineTextEdit
+              className="connection-details-header__connectionName"
               value={this.props.connectionName}
-              i18nPlaceholder={this.props.i18nNamePlaceholder}
+              allowEditing={this.props.allowEditing && !this.props.isWorking}
+              placeholder={this.props.i18nNamePlaceholder}
               isTextArea={false}
-              smWidth={3}
               onChange={this.props.onChangeName}
-              onValidate={this.props.validate}
             />
           </Grid.Col>
         </Grid.Row>
-        <Grid.Row>
+        <Grid.Row className={'connection-details-header__row'}>
           <Grid.Col xs={2} className="connection-details-header__propertyLabel">
             {this.props.i18nDescriptionLabel}
           </Grid.Col>
-          <Grid.Col>
+          <Grid.Col xs={10}>
             <InlineTextEdit
               value={this.props.connectionDescription || ''}
+              allowEditing={this.props.allowEditing && !this.props.isWorking}
               i18nPlaceholder={this.props.i18nDescriptionPlaceholder}
               isTextArea={true}
-              smOffset={2}
-              smWidth={6}
               onChange={this.props.onChangeDescription}
             />
           </Grid.Col>
@@ -179,7 +123,10 @@ export class ConnectionDetailsHeader extends React.Component<
           <Grid.Col xs={2} className="connection-details-header__propertyLabel">
             {this.props.i18nUsageLabel}
           </Grid.Col>
-          <Grid.Col className="connection-details-header__propertyValue">
+          <Grid.Col
+            xs={10}
+            className="connection-details-header__propertyValue"
+          >
             {this.props.i18nUsageMessage}
           </Grid.Col>
         </Grid.Row>

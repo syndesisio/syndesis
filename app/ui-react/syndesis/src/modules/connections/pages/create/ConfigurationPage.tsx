@@ -1,12 +1,19 @@
 import { WithConnector } from '@syndesis/api';
 import { Connector } from '@syndesis/models';
-import { ButtonLink, ConnectionCreatorLayout, Loader } from '@syndesis/ui';
+import {
+  ButtonLink,
+  ConnectionCreatorLayout,
+  ConnectorConfigurationForm,
+  Loader,
+} from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../shared';
-import { ConnectionCreatorBreadcrumbs } from '../../components';
+import {
+  ConnectionCreatorBreadcrumbs,
+  WithConnectorForm,
+} from '../../components';
 import resolvers from '../../resolvers';
-import { WithConfigurationForm } from '../../shared';
 
 export interface IConfigurationPageRouteParams {
   connectorId: string;
@@ -44,9 +51,11 @@ export default class ConfigurationPage extends React.Component {
                     );
                   };
                   return (
-                    <WithConfigurationForm connector={data} onSave={onSave}>
+                    <WithConnectorForm connector={data} onSave={onSave}>
                       {({
-                        form,
+                        fields,
+                        handleSubmit,
+                        validationResults,
                         submitForm,
                         isSubmitting,
                         isValid,
@@ -58,7 +67,15 @@ export default class ConfigurationPage extends React.Component {
                             <PageTitle title={'Configure connection'} />
                             <ConnectionCreatorLayout
                               header={<ConnectionCreatorBreadcrumbs step={2} />}
-                              content={form}
+                              content={
+                                <ConnectorConfigurationForm
+                                  i18nFormTitle={data.name}
+                                  handleSubmit={handleSubmit}
+                                  validationResults={validationResults}
+                                >
+                                  {fields}
+                                </ConnectorConfigurationForm>
+                              }
                               backHref={resolvers.create.selectConnector()}
                               cancelHref={resolvers.connections()}
                               onNext={submitForm}
@@ -81,7 +98,7 @@ export default class ConfigurationPage extends React.Component {
                           </>
                         );
                       }}
-                    </WithConfigurationForm>
+                    </WithConnectorForm>
                   );
                 }}
               </WithLoader>
