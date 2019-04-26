@@ -64,6 +64,7 @@ const formDefinition = {
   },
   clientNumber: {
     componentProperty: true,
+    controlHint: 'This thingie here has a tooltip just for the control',
     defaultValue: '5',
     deprecated: false,
     displayName: 'Client Number',
@@ -100,6 +101,7 @@ const formDefinition = {
     displayName: 'Log everything',
     javaType: 'boolean',
     kind: 'parameter',
+    labelHint: 'Some label hint or whatever',
     order: 2,
     required: false,
     secret: false,

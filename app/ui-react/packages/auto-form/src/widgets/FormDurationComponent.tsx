@@ -1,6 +1,7 @@
 import {
   ControlLabel,
   DropdownButton,
+  FieldLevelHelp,
   Form,
   FormGroup,
   HelpBlock,
@@ -104,6 +105,11 @@ export class FormDurationComponent extends React.Component<
         validationState={getValidationState(this.props)}
       >
         <ControlLabel>{this.props.property.displayName}</ControlLabel>
+        {this.props.property.labelHint && (
+          <ControlLabel>
+            <FieldLevelHelp content={this.props.property.labelHint} />
+          </ControlLabel>
+        )}
         <Form.InputGroup>
           <Form.FormControl
             min={0}
@@ -120,6 +126,7 @@ export class FormDurationComponent extends React.Component<
             onChange={this.handleChange}
             onBlur={this.handleBlur}
             inputRef={this.receiveInputRef}
+            title={this.props.property.controlHint}
           />
           <DropdownButton
             id={this.props.field.name + '-duration'}

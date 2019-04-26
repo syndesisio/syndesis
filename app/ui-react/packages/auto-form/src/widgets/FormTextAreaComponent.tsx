@@ -1,5 +1,6 @@
 import {
   ControlLabel,
+  FieldLevelHelp,
   FormControl,
   FormGroup,
   HelpBlock,
@@ -16,12 +17,18 @@ export const FormTextAreaComponent: React.FunctionComponent<
     validationState={getValidationState(props)}
   >
     <ControlLabel>{props.property.displayName}</ControlLabel>
+    {props.property.labelHint && (
+      <ControlLabel>
+        <FieldLevelHelp content={props.property.labelHint} />
+      </ControlLabel>
+    )}
     <FormControl
       {...props.property.fieldAttributes}
       {...props.field}
       data-testid={props.field.name}
       disabled={props.form.isSubmitting || props.property.disabled}
       componentClass="textarea"
+      title={props.property.controlHint}
     />
     <HelpBlock>
       {props.property.description}

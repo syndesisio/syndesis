@@ -28,17 +28,21 @@ export function toFormDefinition(properties: IConfigurationProperties) {
  * @param property
  */
 export function toFormDefinitionProperty(property: IConfigurationProperty) {
-  // yes, this type coercion is needed because property
   const {
     cols,
     max,
     min,
     multiple,
     rows,
+    controlHint,
+    controlTooltip,
+    labelHint,
+    labelTooltip,
     ...formDefinitionProperty
-  } = property;
+  } = property as any; // needed, ConfigurationProperty is a lie
   return {
     ...formDefinitionProperty,
+    controlHint: controlHint || controlTooltip,
     fieldAttributes: {
       cols,
       max,
@@ -46,5 +50,6 @@ export function toFormDefinitionProperty(property: IConfigurationProperty) {
       multiple,
       rows,
     },
+    labelHint: labelHint || labelTooltip,
   } as IFormDefinitionProperty;
 }

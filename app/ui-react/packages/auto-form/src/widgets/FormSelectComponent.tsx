@@ -1,5 +1,6 @@
 import {
   ControlLabel,
+  FieldLevelHelp,
   FormControl,
   FormGroup,
   HelpBlock,
@@ -27,8 +28,16 @@ export const FormSelectComponent: React.FunctionComponent<
     }
   };
   return (
-    <FormGroup controlId={field} validationState={getValidationState(props)}>
+    <FormGroup
+      controlId={field.name}
+      validationState={getValidationState(props)}
+    >
       <ControlLabel>{props.property.displayName}</ControlLabel>
+      {props.property.labelHint && (
+        <ControlLabel>
+          <FieldLevelHelp content={props.property.labelHint} />
+        </ControlLabel>
+      )}
       <FormControl
         {...props.property.fieldAttributes}
         {...props.field}
@@ -37,6 +46,7 @@ export const FormSelectComponent: React.FunctionComponent<
         data-testid={props.field.name}
         disabled={props.form.isSubmitting || props.property.disabled}
         componentClass="select"
+        title={props.property.controlHint}
       >
         {props.property.enum &&
           props.property.enum.map((opt: any) => (

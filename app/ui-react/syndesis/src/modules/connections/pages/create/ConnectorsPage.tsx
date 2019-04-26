@@ -47,7 +47,7 @@ export default class ConnectorsPage extends React.Component {
                               description={connector.description || ''}
                               icon={getConnectionIcon(
                                 process.env.PUBLIC_URL,
-                                connector
+                                connector as any /* todo work around OptionalInt issue */
                               )}
                               href={resolvers.create.configureConnector({
                                 connector,
