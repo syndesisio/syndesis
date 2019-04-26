@@ -23,6 +23,7 @@ import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExt
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
+import org.apache.camel.util.ObjectHelper;
 
 import com.amazonaws.SdkClientException;
 import com.amazonaws.auth.AWSCredentials;
@@ -52,7 +53,10 @@ public class AWSSQSVerifierExtension extends DefaultComponentVerifierExtension {
 
         // Validate using the catalog
 
-        super.verifyParametersAgainstCatalog(builder, parameters);
+        if (ObjectHelper.isEmpty(parameters.get("secretKey")) || ObjectHelper.isEmpty(parameters.get("accessKey"))) {
+            builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.GENERIC,
+                    "You must specify a secretKey and an accessKey").parameterKey("secretKey").parameterKey("accessKey").build());
+        }
 
         return builder.build();
     }

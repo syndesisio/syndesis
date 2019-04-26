@@ -80,10 +80,22 @@
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "Delay sending messages for a number of seconds",
-                "order": "3",
+                "order": "4",
                 "required": false,
                 "secret": false,
                 "type": "integer"
+              },
+              "queueNameOrArn": {
+                "deprecated": false,
+                "displayName": "Queue Name Or Amazon Resource Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Queue name or ARN. If the queue does not exist, it will be created.",
+                "order": "3",
+                "required": true,
+                "secret": false,
+                "type": "string"
               }
             }
           }
@@ -188,10 +200,22 @@
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "Delay sending messages for a number of seconds",
-                "order": "3",
+                "order": "4",
                 "required": false,
                 "secret": false,
                 "type": "integer"
+              },
+              "queueNameOrArn": {
+                "deprecated": false,
+                "displayName": "Queue Name Or Amazon Resource Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Queue name or ARN. If the queue does not exist, it will be created.",
+                "order": "3",
+                "required": true,
+                "secret": false,
+                "type": "string"
               }
             }
           }
@@ -246,7 +270,7 @@
                 "kind": "parameter",
                 "label": "consumer",
                 "labelHint": "Delete message from SQS after it has been read.",
-                "order": "4",
+                "order": "5",
                 "required": false,
                 "secret": false,
                 "type": "boolean"
@@ -260,7 +284,7 @@
                 "kind": "parameter",
                 "label": "consumer",
                 "labelHint": "Whether or not to send the DeleteMessage to the SQS queue if an exchange fails to get through a filter. If false and exchange does not make it through a Camel filter upstream in the route, then don't send DeleteMessage.",
-                "order": "5",
+                "order": "6",
                 "required": false,
                 "secret": false,
                 "type": "boolean"
@@ -278,6 +302,18 @@
                 "required": false,
                 "secret": false,
                 "type": "integer"
+              },
+              "queueNameOrArn": {
+                "deprecated": false,
+                "displayName": "Queue Name Or Amazon Resource Name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Queue name or ARN. If the queue does not exist, it will be created.",
+                "order": "4",
+                "required": true,
+                "secret": false,
+                "type": "string"
               }
             }
           }
@@ -309,18 +345,6 @@
       "labelHint": "Amazon AWS Access Key",
       "order": "1",
       "raw": true,
-      "required": true,
-      "secret": false,
-      "type": "string"
-    },
-    "queueNameOrArn": {
-      "deprecated": false,
-      "displayName": "Queue Name Or Amazon Resource Name",
-      "group": "common",
-      "javaType": "java.lang.String",
-      "kind": "path",
-      "labelHint": "Queue name or ARN. If the queue does not exist, it will be created.",
-      "order": "4",
       "required": true,
       "secret": false,
       "type": "string"
