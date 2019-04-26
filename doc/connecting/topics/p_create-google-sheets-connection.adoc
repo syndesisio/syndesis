@@ -9,7 +9,7 @@ the Google Sheets spreadsheets that are associated with one
 particular Google account, which you choose. After you create a Google Sheets connection, you can
 add it to multiple integrations.
 
-.Prerequisite
+.Prerequisites
 * You 
 link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[registered {prodname} as a Google client application] 
 and enabled the Google Sheets API. 

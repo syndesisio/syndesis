@@ -24,7 +24,8 @@ need rather than all three APIs. At a later time, if you need to create connecti
 to the applications whose APIs you did not enable, you can return here and 
 follow the instructions to enable their APIs. 
 
-[CAUTION]
+[IMPORTANT]
+====
 Be careful if you choose to use the Google client ID and Google client 
 secret that you are using for some other, non-{prodname}, OAuth client. 
 {prodname} requires offline access that is requested on the first OAuth 
@@ -33,9 +34,10 @@ and did not request offline access, then {prodname} cannot obtain
 offline access on subsequent OAuth exchanges. If you are unsure 
 whether offline access was requested on the first exchange, 
 create a new Google client ID and secret for {prodname}.
+====
 
-.Prerequisite
-You must be able to sign in to the Google account that you want to
+.Prerequisites
+* You must be able to sign in to the Google account that you want to
 use to register {prodname} as a Google client application.
 
 .Procedure
@@ -129,6 +131,7 @@ All connections from {prodname} to Google applications use the same Google
 client ID and Google client secret. 
 
 [IMPORTANT]
+====
 The Google client ID and Google client secret contain token refresh
 information that ensures that your connections to Google applications, and integrations
 that have connections to Google applications continuously work correctly.
@@ -136,3 +139,4 @@ Consequently, you should *not* obtain new credentials. If you do, then you
 would need to recreate each Google connection, replace the old
 connections with new connections, and re-publish each
 integration that uses a Google connection.
+====

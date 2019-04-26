@@ -20,8 +20,8 @@ Between polls, if there are no changes to the sheet values that the
 connection is configured to return, then 
 the next poll returns the same values as the previous poll. 
 
-.Prerequisite
-You created a Google Sheets connection that is authorized to access 
+.Prerequisites
+* You created a Google Sheets connection that is authorized to access 
 the spreadsheet that you want to obtain data from. 
 
 .Procedure
