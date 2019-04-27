@@ -4,7 +4,6 @@ import {
   IntegrationMetricsSummary,
   IntegrationOverview,
   Step,
-  WithId,
 } from './models';
 
 /**
@@ -16,10 +15,15 @@ import {
  *
  */
 
-// TODO remove when these values are advertised by the swagger
+export interface IConfigurationProperties {
+  [name: string]: IConfigurationProperty;
+}
+
+// In reality ConfigurationProperty doesn't advertise everything
 export interface IConfigurationProperty extends ConfigurationProperty {
   required?: boolean;
   secret?: boolean;
+  [name: string]: any;
 }
 
 // Extended connection interface to add support for the 'iconFile' property

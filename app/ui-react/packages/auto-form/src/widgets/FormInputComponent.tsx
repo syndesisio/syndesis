@@ -1,5 +1,6 @@
 import {
   ControlLabel,
+  FieldLevelHelp,
   FormControl,
   FormGroup,
   HelpBlock,
@@ -16,6 +17,11 @@ export const FormInputComponent: React.FunctionComponent<
     validationState={getValidationState(props)}
   >
     <ControlLabel>{props.property.displayName}</ControlLabel>
+    {props.property.labelHint && (
+      <ControlLabel>
+        <FieldLevelHelp content={props.property.labelHint} />
+      </ControlLabel>
+    )}
     <FormControl
       {...props.property.fieldAttributes}
       {...props.field}
@@ -24,6 +30,7 @@ export const FormInputComponent: React.FunctionComponent<
       placeholder={props.property.placeholder}
       type={props.type || 'text'}
       onChange={props.field.onChange}
+      title={props.property.controlHint}
     />
     <HelpBlock>
       {props.property.description}

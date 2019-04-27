@@ -7,12 +7,13 @@ import {
   getConnectionConnector,
   getConnectorActions,
 } from '@syndesis/api';
-import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
+import { AutoForm } from '@syndesis/auto-form';
 import { Action, ConnectionOverview } from '@syndesis/models';
 import {
   IntegrationEditorForm,
   IntegrationEditorNothingToConfigure,
 } from '@syndesis/ui';
+import { toFormDefinition } from '@syndesis/utils';
 import * as React from 'react';
 
 export interface IWithConfigurationFormChildrenProps {
@@ -138,7 +139,7 @@ export class WithConfigurationForm extends React.Component<
       return (
         <AutoForm<{ [key: string]: string }>
           i18nRequiredProperty={'* Required field'}
-          definition={definition as IFormDefinition}
+          definition={toFormDefinition(definition)}
           initialValue={this.props.initialValue!}
           onSave={onSave}
           key={this.props.configurationStep}
