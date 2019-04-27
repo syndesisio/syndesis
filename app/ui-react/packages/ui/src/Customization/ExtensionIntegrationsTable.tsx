@@ -1,3 +1,4 @@
+import { Text } from '@patternfly/react-core';
 import { Row, Table } from 'patternfly-react';
 import * as React from 'react';
 
@@ -74,7 +75,7 @@ export class ExtensionIntegrationsTable extends React.Component<
       <div className="extension-group">
         <Row>
           <div className="col-xs-offset-1 col-xs-11">
-            <p>{this.props.i18nUsageMessage}</p>
+            <Text>{this.props.i18nUsageMessage}</Text>
             {this.props.data.length !== 0 ? (
               <Table.PfProvider
                 striped={true}

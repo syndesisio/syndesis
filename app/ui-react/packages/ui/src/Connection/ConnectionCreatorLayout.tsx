@@ -75,12 +75,15 @@ export const ConnectionCreatorLayout: React.FunctionComponent<
 }: IConnectionCreatorProps) => {
   return (
     <div
-      className={classnames('wizard-pf-body integration-editor-layout', {
-        'has-footer': true,
-      })}
+      className={classnames(
+        'wizard-pf-body integration-editor-layout syn-scrollable',
+        {
+          'has-footer': true,
+        }
+      )}
     >
       {header}
-      <div className="wizard-pf-row integration-editor-layout__body">
+      <div className="wizard-pf-row integration-editor-layout__body syn-scrollable--body">
         <div
           className={
             'wizard-pf-main cards-pf integration-editor-layout__contentWrapper'

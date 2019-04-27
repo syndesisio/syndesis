@@ -1,32 +1,47 @@
-// tslint:disable react-unused-props-and-state
-// remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
-import { Icon, Masthead } from 'patternfly-react';
+import { Dropdown, DropdownToggle } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IAppTopMenuProps {
   username: string;
+  children: any;
+}
+
+export interface IAppTopMenuState {
+  isOpen: boolean;
 }
 
 /**
- * A component to show breadcrumbs. All its children will be wrapped in a tag
- * that will automatically handle the active/inactive state by setting the
- * appropriate class to the wrapper.
- *
- * It's suggested to use only anchors or spans as children node.
+ * A component to show the logged in user menu.
  */
-export const AppTopMenu: React.FunctionComponent<IAppTopMenuProps> = ({
-  username,
-  children,
-}) => (
-  <Masthead.Dropdown
-    id="app-user-dropdown"
-    title={[
-      <span className="dropdown-title" key="dropdown-title">
-        <Icon type={'fa'} name={'user'} />
-        &nbsp;{username}
-      </span>,
-    ]}
-  >
-    {children}
-  </Masthead.Dropdown>
-);
+export class AppTopMenu extends React.Component<
+  IAppTopMenuProps,
+  IAppTopMenuState
+> {
+  public state = {
+    isOpen: false,
+  };
+  public onToggle = (isOpen: boolean) => {
+    this.setState({
+      isOpen,
+    });
+  };
+  public onSelect = (event: React.SyntheticEvent<HTMLDivElement, Event>) => {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+  };
+  public render() {
+    const { children, username } = this.props;
+    return (
+      <Dropdown
+        isPlain={true}
+        onSelect={this.onSelect}
+        toggle={
+          <DropdownToggle onToggle={this.onToggle}>{username}</DropdownToggle>
+        }
+        isOpen={this.state.isOpen}
+        dropdownItems={React.Children.toArray(children)}
+      />
+    );
+  }
+}

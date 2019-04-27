@@ -1,3 +1,4 @@
+import { Text } from '@patternfly/react-core';
 import { Grid, Icon, ListViewIcon } from 'patternfly-react';
 import * as React from 'react';
 
@@ -25,7 +26,7 @@ export class IntegrationStepsHorizontalView extends React.Component<
                 <>
                   <ListViewIcon name={'cube'} className="step-icon" />
                   <span>
-                    <p>{this.props.steps[0].name}</p>
+                    <Text>{this.props.steps[0].name}</Text>
                   </span>
                 </>
               ) : null}
@@ -39,7 +40,7 @@ export class IntegrationStepsHorizontalView extends React.Component<
                   <Grid.Col xsHidden={true} md={4}>
                     <span>
                       <Icon name={'cube'} className="step-icon" />
-                      <p key={index}>{opt.name}</p>
+                      <Text key={index}>{opt.name}</Text>
                     </span>
                   </Grid.Col>
                 </div>

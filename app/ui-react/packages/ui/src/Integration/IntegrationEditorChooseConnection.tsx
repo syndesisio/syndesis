@@ -1,3 +1,4 @@
+import { Text, Title } from '@patternfly/react-core';
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Container } from '../Layout';
@@ -26,9 +27,9 @@ export class IntegrationEditorChooseConnection extends React.Component<
   public render() {
     return (
       <>
-        <Container>
-          <h1>{this.props.i18nTitle}</h1>
-          <p>{this.props.i18nSubtitle}</p>
+        <Container className="pf-u-my-md">
+          <Title size="xl">{this.props.i18nTitle}</Title>
+          <Text>{this.props.i18nSubtitle}</Text>
         </Container>
         <Container>
           <ListView>{this.props.children}</ListView>

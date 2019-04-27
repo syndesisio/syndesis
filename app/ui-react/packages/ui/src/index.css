@@ -1,10 +1,47 @@
+/* pf3 modules */
 @import url('~patternfly/dist/css/patternfly.css');
 @import url('~patternfly/dist/css/patternfly-additions.css');
 @import url('~patternfly-react/dist/css/patternfly-react.css');
 
-.layout-pf body {
-  min-height: 100vh;
-  display: flex;
+/* selective pf4 base styles */
+@import url('~@patternfly/patternfly/patternfly-variables.css');
+@import url('~@patternfly/patternfly/patternfly-shield-noninheritable.css');
+@import url('~@patternfly/patternfly/patternfly-common.css');
+@import url('~@patternfly/patternfly/patternfly-globals.css');
+@import url('~@patternfly/patternfly/utilities/Spacing/spacing.css');
+
+/* selective pf4 component specific stylesheets */
+@import url('~@patternfly/patternfly/components/Page/page.css');
+@import url('~@patternfly/patternfly/components/Nav/nav.css');
+@import url('~@patternfly/patternfly/components/Dropdown/dropdown.css');
+
+:root {
+  --pf-global--link--Color: #0088ce;
+  --pf-c-nav__list-link--m-current--after--BackgroundColor: #0088ce;
+  --pf-global--link--Color--hover: #00659c;
+}
+
+.pf-c-dropdown {
+  --pf-c-dropdown__toggle--FontSize: var(--pf-global--FontSize--xs);
+}
+
+.pf-c-page {
+  width: 100%;
+  height: 100vh;
+}
+
+.pf-c-page__main-section {
+  --pf-c-page__main-section--BackgroundColor: #e1e1e1;
+}
+
+.pf-c-dropdown__menu-item {
+  --pf-c-dropdown__menu-item--FontSize: var(--pf-global--FontSize--xs);
+}
+
+body {
+  font-size: var(--pf-global--FontSize--sm);
+  line-height: var(--pf-global--LineHeight--sm);
+  color: var(--pf-global--Color--100);
 }
 
 #root {
@@ -12,16 +49,8 @@
   display: flex;
 }
 
-.layout-pf.layout-pf-with-secondary-horizontal-nav body {
-  padding-top: 110px;
-}
-
 .navbar-pf .navbar-utility > li > button {
   padding: 9px 10px;
-}
-
-.layout-pf.layout-pf-fixed .container-pf-nav-pf-vertical {
-  flex: 1;
 }
 
 .blank-slate-pf .blank-slate-pf-secondary-action a {
@@ -40,4 +69,20 @@
 
 .modal-body > div {
   width: 100%;
+}
+
+.list-view-pf-stacked .list-group-item-heading,
+.label {
+  font-size: var(--pf-global--FontSize--xs);
+}
+
+.syn-scrollable {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.syn-scrollable--body {
+  flex: 1 1 auto;
+  overflow: auto;
 }

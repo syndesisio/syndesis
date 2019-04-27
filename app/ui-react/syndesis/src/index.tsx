@@ -22,7 +22,7 @@ ReactDOM.render(
               {
                 component: DashboardModule,
                 exact: true,
-                icon: 'fa fa-tachometer',
+                icon: 'fa fa-tachometer-alt',
                 label: t('Home'),
                 to: '/',
               },

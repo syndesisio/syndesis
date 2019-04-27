@@ -1,3 +1,4 @@
+import { Text, Title } from '@patternfly/react-core';
 import * as H from 'history';
 import { Card, DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
@@ -140,15 +141,16 @@ export class ConnectionCard extends React.PureComponent<
                 <div className="connection-card__icon">
                   <img src={this.props.icon} alt={this.props.name} width={46} />
                 </div>
-                <div
+                <Title
+                  size="lg"
                   className="connection-card__title h2"
                   data-testid="connection-card-title"
                 >
                   {this.props.name}
-                </div>
-                <p className="connection-card__description">
+                </Title>
+                <Text className="connection-card__description">
                   {this.props.description}
-                </p>
+                </Text>
               </div>
             </Card.Body>
           </Link>

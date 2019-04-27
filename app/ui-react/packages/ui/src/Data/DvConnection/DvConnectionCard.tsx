@@ -1,3 +1,4 @@
+import { Text } from '@patternfly/react-core';
 import { Card, Label } from 'patternfly-react';
 import * as React from 'react';
 
@@ -71,9 +72,9 @@ export class DvConnectionCard extends React.PureComponent<
               >
                 {this.props.name}
               </div>
-              <p className="dv-connection-card__description">
+              <Text className="dv-connection-card__description">
                 {this.props.description}
-              </p>
+              </Text>
             </div>
           </Card.Body>
         </Card>

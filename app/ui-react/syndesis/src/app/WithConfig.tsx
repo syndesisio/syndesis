@@ -22,8 +22,6 @@ export interface IConfigFile {
   branding: {
     logoWhiteBg: string;
     logoDarkBg: string;
-    iconWhiteBg: string;
-    iconDarkBg: string;
     appName: string;
     favicon32: string;
     favicon16: string;
