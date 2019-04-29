@@ -143,7 +143,7 @@ export class DetailsPage extends React.Component<
                                   : [];
                                 const editAction: IIntegrationAction = {
                                   href: resolvers.integration.edit.index({
-                                    flow: '0',
+                                    flowId: '0',
                                     integration: data,
                                   }),
                                   label: 'Edit',
@@ -266,7 +266,7 @@ export class DetailsPage extends React.Component<
                                       integration={data}
                                     />
                                     <IntegrationDetailSteps
-                                      steps={getSteps(data, 0)}
+                                      steps={getSteps(data, data.flows![0].id!)}
                                     />
                                     <IntegrationDetailDescription
                                       description={data.description}

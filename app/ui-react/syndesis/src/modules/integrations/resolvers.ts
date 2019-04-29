@@ -51,7 +51,7 @@ export const configureIndexMapper = ({
   integration,
 }: IEditorIndex) => ({
   params: {
-    flowId,
+    flowId: flowId ? flowId : integration.flows![0].id!,
     ...(integration && integration.id ? { integrationId: integration.id } : {}),
   } as IBaseRouteParams,
   state: {
