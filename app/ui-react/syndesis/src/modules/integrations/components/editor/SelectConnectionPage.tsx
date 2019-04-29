@@ -4,6 +4,7 @@ import {
   getExtensionIcon,
   getStepKindIcon,
   getSteps,
+  visibleStepsByPosition,
   WithConnections,
   WithExtensions,
   WithSteps,
@@ -46,12 +47,38 @@ export function toStepKindCollection(
       icon: getConnectionIcon(process.env.PUBLIC_URL, c),
       properties: undefined,
     })),
-    ...extensions.map(e => ({
-      ...e,
-      description: e.description || '',
-      icon: `${process.env.PUBLIC_URL}${getExtensionIcon(e)}`,
-      properties: undefined,
-    })),
+    ...extensions.reduce(
+      (extentionsByAction, extension) => {
+        extension.actions.forEach(a => {
+          let properties = {};
+          if (
+            a.descriptor &&
+            Array.isArray(a.descriptor.propertyDefinitionSteps)
+          ) {
+            properties = a.descriptor.propertyDefinitionSteps.reduce(
+              (acc, current) => {
+                return { ...acc, ...current.properties };
+              },
+              {}
+            );
+          }
+          if (a.actionType === 'step') {
+            extentionsByAction.push({
+              action: a,
+              configuredProperties: undefined,
+              description: a.description || '',
+              extension,
+              icon: `${process.env.PUBLIC_URL}${getExtensionIcon(extension)}`,
+              name: a.name,
+              properties,
+              stepKind: 'extension',
+            });
+          }
+        });
+        return extentionsByAction;
+      },
+      [] as IUIStep[]
+    ),
     ...steps.map(s => ({
       ...s,
       icon: `${process.env.PUBLIC_URL}${getStepKindIcon(s.stepKind)}`,
@@ -109,9 +136,8 @@ export class SelectConnectionPage extends React.Component<
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
         {(params, state, { history }) => {
-          const { flow, position } = params;
+          const { flowId, position } = params;
           const { integration = getEmptyIntegration() } = state;
-          const flowAsNumber = parseInt(flow, 10) || 0;
           const positionAsNumber = parseInt(position, 10) || 0;
           const onStepClick = (connectionOrStep: ConnectionOverview | Step) => {
             const stepKind = getStepKind(connectionOrStep);
@@ -119,17 +145,20 @@ export class SelectConnectionPage extends React.Component<
               case 'api-provider':
                 history.push(this.props.apiProviderHref(params, state));
                 break;
-              default:
+              case 'endpoint':
                 history.push(
                   this.props.connectionHref(
                     connectionOrStep as ConnectionOverview,
-                    params,
+                    {
+                      ...params,
+                    },
                     state
                   )
                 );
                 break;
             }
           };
+          const integrationSteps = getSteps(integration, flowId);
           return (
             <>
               <PageTitle title={'Choose a connection'} />
@@ -137,7 +166,7 @@ export class SelectConnectionPage extends React.Component<
                 header={this.props.header}
                 sidebar={this.props.sidebar({
                   activeIndex: positionAsNumber,
-                  steps: getSteps(integration, flowAsNumber),
+                  steps: integrationSteps,
                 })}
                 content={
                   <WithConnections>
@@ -170,36 +199,45 @@ export class SelectConnectionPage extends React.Component<
                                 >
                                   {() => (
                                     <>
-                                      {toStepKindCollection(
-                                        positionAsNumber === 0
-                                          ? connectionsData.connectionsWithFromAction
-                                          : connectionsData.connectionsWithToAction,
-                                        extensionsData.items,
-                                        steps
-                                      ).map((step, idx) => (
-                                        <IntegrationEditorConnectionsListItem
-                                          key={idx}
-                                          integrationName={step.name}
-                                          integrationDescription={
-                                            step.description ||
-                                            'No description available.'
-                                          }
-                                          icon={
-                                            <img
-                                              src={step.icon}
-                                              width={24}
-                                              height={24}
-                                            />
-                                          }
-                                          actions={
-                                            <ButtonLink
-                                              onClick={() => onStepClick(step)}
-                                            >
-                                              Select
-                                            </ButtonLink>
-                                          }
-                                        />
-                                      ))}
+                                      {(visibleStepsByPosition(
+                                        integration,
+                                        flowId,
+                                        toStepKindCollection(
+                                          positionAsNumber === 0
+                                            ? connectionsData.connectionsWithFromAction
+                                            : connectionsData.connectionsWithToAction,
+                                          extensionsData.items,
+                                          steps
+                                        ),
+                                        positionAsNumber
+                                      ) as IUIStep[]).map(
+                                        (step, idx: number) => (
+                                          <IntegrationEditorConnectionsListItem
+                                            key={idx}
+                                            integrationName={step.name}
+                                            integrationDescription={
+                                              step.description ||
+                                              'No description available.'
+                                            }
+                                            icon={
+                                              <img
+                                                src={step.icon}
+                                                width={24}
+                                                height={24}
+                                              />
+                                            }
+                                            actions={
+                                              <ButtonLink
+                                                onClick={() =>
+                                                  onStepClick(step)
+                                                }
+                                              >
+                                                Select
+                                              </ButtonLink>
+                                            }
+                                          />
+                                        )
+                                      )}
                                       <IntegrationEditorConnectionsListItem
                                         integrationName={''}
                                         integrationDescription={''}

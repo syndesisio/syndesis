@@ -156,7 +156,7 @@ export class Integrations extends React.Component<
                               try {
                                 const editAction: IIntegrationAction = {
                                   href: resolvers.integration.edit.index({
-                                    flow: '0',
+                                    flowId: mi.integration.flows![0].id!,
                                     integration: mi.integration,
                                   }),
                                   label: 'Edit',

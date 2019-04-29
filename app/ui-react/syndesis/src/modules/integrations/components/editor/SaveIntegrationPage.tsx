@@ -43,7 +43,7 @@ export class SaveIntegrationPage extends React.Component<
   public render() {
     return (
       <WithRouteData<ISaveIntegrationRouteParams, ISaveIntegrationRouteState>>
-        {({ flow }, { integration }, { history }) => (
+        {({ flowId }, { integration }, { history }) => (
           <WithIntegrationHelpers>
             {({ saveIntegration }) => {
               const onSave = async (
@@ -111,10 +111,13 @@ export class SaveIntegrationPage extends React.Component<
                         </>
                       }
                       cancelHref={this.props.cancelHref(
-                        { flow },
+                        { flowId },
                         { integration }
                       )}
-                      backHref={this.props.backHref({ flow }, { integration })}
+                      backHref={this.props.backHref(
+                        { flowId },
+                        { integration }
+                      )}
                       onNext={submitForm}
                       isNextDisabled={dirty && !isValid}
                       isNextLoading={isSubmitting}

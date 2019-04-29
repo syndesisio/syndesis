@@ -32,7 +32,7 @@ const stepRoutes = {
  * Both the integration creator and editor share the same routes when the creator
  * reaches the third step in the wizard. This object is to keep them DRY.
  */
-const editorRoutes = include('flow/:flow', {
+const editorRoutes = include('flow/:flowId', {
   index: 'add-step',
   addStep: include('position/:position/connection', stepRoutes),
   editStep: include('position/:position/edit-connection', stepRoutes),
@@ -45,8 +45,8 @@ export default include('/integrations', {
   manageCicd: include('manageCicd', { root: '' }),
   import: include('import', { root: '' }),
   create: include('create', {
-    start: include('start/flow/:flow/position/:position', stepRoutes),
-    finish: include('finish/flow/:flow/position/:position', stepRoutes),
+    start: include('start/flow/:flowId/position/:position', stepRoutes),
+    finish: include('finish/flow/:flowId/position/:position', stepRoutes),
     configure: include('configure', editorRoutes),
     root: '',
   }),

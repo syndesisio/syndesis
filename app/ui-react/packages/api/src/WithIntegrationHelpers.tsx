@@ -16,7 +16,7 @@ type UpdateOrAddConnection = (
   integration: Integration,
   connection: Connection,
   action: Action,
-  flow: number,
+  flowId: string,
   position: number,
   configuredProperties: any
 ) => Promise<Integration>;
@@ -171,7 +171,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     integration: Integration,
     connection: Connection,
     action: Action,
-    flow: number,
+    flowId: string,
     position: number,
     configuredProperties: any
   ): Promise<Integration> {
@@ -185,13 +185,18 @@ export class WithIntegrationHelpersWrapped extends React.Component<
         action,
         configuredProperties,
         connection,
-        id: draft.flows![flow].id,
+        id: flowId,
       };
       if (actionDescriptor) {
         step.action!.descriptor = actionDescriptor;
       }
       step.stepKind = 'endpoint';
-      draft.flows![flow].steps!.splice(position, 0, step);
+      draft.flows = draft.flows!.map(f => {
+        if (f.id === flowId) {
+          f.steps!.splice(position, 0, step);
+        }
+        return f;
+      });
       draft.tags = Array.from(new Set([...(draft.tags || []), connection.id!]));
     });
   }
@@ -267,7 +272,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     integration: Integration,
     connection: Connection,
     action: Action,
-    flow: number,
+    flowId: string,
     position: number,
     configuredProperties: any
   ): Promise<Integration> {
@@ -281,20 +286,25 @@ export class WithIntegrationHelpersWrapped extends React.Component<
         action,
         configuredProperties,
         connection,
-        id: draft.flows![flow].id,
+        id: flowId,
       };
       if (actionDescriptor) {
         step.action!.descriptor = actionDescriptor;
       }
       step.stepKind = 'endpoint';
-      draft.flows![flow].steps![position] = step;
+      draft.flows = draft.flows!.map(f => {
+        if (f.id === flowId) {
+          f.steps![position] = step;
+        }
+        return f;
+      });
     });
   }
   public async updateOrAddConnection(
     integration: Integration,
     connection: Connection,
     action: Action,
-    flow: number,
+    flowId: string,
     position: number,
     configuredProperties: any
   ): Promise<Integration> {
@@ -308,20 +318,25 @@ export class WithIntegrationHelpersWrapped extends React.Component<
         action,
         configuredProperties,
         connection,
-        id: draft.flows![flow].id,
+        id: flowId,
       };
       if (actionDescriptor) {
         step.action!.descriptor = actionDescriptor;
       }
       step.stepKind = 'endpoint';
-      if (draft.flows![flow].steps![position]) {
-        draft.flows![flow].steps![position] = step;
-      } else {
-        draft.flows![flow].steps!.splice(position, 0, step);
-        draft.tags = Array.from(
-          new Set([...(draft.tags || []), connection.id!])
-        );
-      }
+      draft.flows = draft.flows!.map(f => {
+        if (f.id === flowId) {
+          if (f.steps![position]) {
+            f.steps![position] = step;
+          } else {
+            f.steps!.splice(position, 0, step);
+            draft.tags = Array.from(
+              new Set([...(draft.tags || []), connection.id!])
+            );
+          }
+        }
+        return f;
+      });
     });
   }
 
