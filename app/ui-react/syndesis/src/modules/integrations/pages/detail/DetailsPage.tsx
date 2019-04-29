@@ -30,21 +30,32 @@ import { IntegrationDetailNavBar } from '../../shared';
 /**
  * @integrationId - the ID of the integration for which details are being displayed.
  */
-export interface IDetailsPageProps {
+export interface IIntegrationDetailsRouteParams {
+  integrationId: string;
+}
+
+export interface IIntegrationDetailsRouteState {
+  integration?: IIntegrationOverviewWithDraft;
+}
+
+/**
+ * @integrationId - the ID of the integration for which details are being displayed.
+ */
+export interface IIntegrationDetailsPageProps {
   error: boolean;
   integration: IIntegrationOverviewWithDraft;
   integrationId: string;
   loading: boolean;
 }
 
-export interface IDetailsPageState {
+export interface IIntegrationDetailsPageState {
   handleAction?: () => void;
   integration?: IIntegrationOverviewWithDraft;
   promptDialogButtonText?: string;
   promptDialogIcon?: ConfirmationIconType;
   promptDialogText?: string;
   promptDialogTitle?: string;
-  showPromptDialog: boolean;
+  showPromptDialog?: boolean;
 }
 
 interface IPromptActionOptions {
@@ -64,10 +75,10 @@ interface IPromptActionOptions {
  *
  */
 export class DetailsPage extends React.Component<
-  IDetailsPageProps,
-  IDetailsPageState
+  IIntegrationDetailsPageProps,
+  IIntegrationDetailsPageState
 > {
-  public constructor(props: IDetailsPageProps) {
+  public constructor(props: IIntegrationDetailsPageProps) {
     super(props);
     this.state = {
       showPromptDialog: false,
@@ -104,8 +115,8 @@ export class DetailsPage extends React.Component<
 
   public render() {
     return (
-      <WithRouteData<IDetailsPageProps, IDetailsPageState>>
-        {({ integrationId }, { integration }, { history }) => {
+      <WithRouteData<IIntegrationDetailsRouteParams, null>>
+        {({ integrationId }) => {
           return (
             <WithIntegrationHelpers>
               {({
@@ -115,10 +126,7 @@ export class DetailsPage extends React.Component<
                 undeployIntegration,
               }) => {
                 return (
-                  <WithIntegration
-                    integrationId={integrationId}
-                    initialValue={integration}
-                  >
+                  <WithIntegration integrationId={integrationId}>
                     {({ data, hasData, error }) => (
                       <WithLoader
                         error={error}
@@ -246,7 +254,7 @@ export class DetailsPage extends React.Component<
                                       }
                                       i18nTitle={this.state.promptDialogTitle!}
                                       icon={this.state.promptDialogIcon!}
-                                      showDialog={this.state.showPromptDialog}
+                                      showDialog={this.state.showPromptDialog!}
                                       onCancel={this.handleActionCancel}
                                       onConfirm={this.handleAction}
                                     />

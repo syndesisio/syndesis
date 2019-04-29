@@ -226,7 +226,11 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
         <WithClosedNavigation>
           <Breadcrumb>
             <Link to={resolvers.list()}>Integrations</Link>
-            <Link to={resolvers.integration.details({ integration })}>
+            <Link
+              to={resolvers.integration.details({
+                integrationId: integration.id!,
+              })}
+            >
               {integration.name}
             </Link>
             <span>Add to integration</span>
