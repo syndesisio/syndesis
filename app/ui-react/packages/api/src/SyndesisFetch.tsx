@@ -8,6 +8,7 @@ export interface ISyndesisFetchProps<T> {
   contentType?: string;
   url: string;
   stream?: boolean;
+  headers?: { [name: string]: string };
   defaultValue: T;
   initialValue?: T;
   children(props: IFetchRenderProps<T>): any;
@@ -25,7 +26,9 @@ export class SyndesisFetch<T> extends React.Component<ISyndesisFetchProps<T>> {
           <FetchOrStream
             baseUrl={apiUri}
             url={url}
-            headers={headers}
+            headers={{
+              ...(props.headers || headers),
+            }}
             {...props}
           />
         )}

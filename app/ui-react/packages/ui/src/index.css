@@ -14,11 +14,14 @@
 @import url('~@patternfly/patternfly/components/Page/page.css');
 @import url('~@patternfly/patternfly/components/Nav/nav.css');
 @import url('~@patternfly/patternfly/components/Dropdown/dropdown.css');
+@import url('~@patternfly/patternfly/components/AboutModalBox/about-modal-box.css');
+@import url('~@patternfly/patternfly/components/BackgroundImage/background-image.css');
 
 :root {
   --pf-global--link--Color: #0088ce;
   --pf-c-nav__list-link--m-current--after--BackgroundColor: #0088ce;
   --pf-global--link--Color--hover: #00659c;
+  --pf-c-backdrop--Color: rgba(3,3,3,.62);
 }
 
 .pf-c-dropdown {
@@ -85,4 +88,12 @@ body {
 .syn-scrollable--body {
   flex: 1 1 auto;
   overflow: auto;
+}
+
+.pf-c-backdrop {
+  background-color: var(--pf-c-backdrop--Color);
+}
+
+.pf-c-about-modal-box__content dd {
+  word-break: break-word;
 }

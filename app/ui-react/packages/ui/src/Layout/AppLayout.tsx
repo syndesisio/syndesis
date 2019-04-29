@@ -7,6 +7,7 @@ import {
   PageSidebar,
 } from '@patternfly/react-core';
 import * as React from 'react';
+import { HelpDropdown } from '../Shared/HelpDropdown';
 
 export interface ILayoutBase {
   pictograph: any;
@@ -16,6 +17,7 @@ export interface ILayoutBase {
   showNavigation: boolean;
   onNavigationCollapse(): void;
   onNavigationExpand(): void;
+  onShowAboutModal(): void;
 }
 
 export interface ILayoutState {
@@ -30,6 +32,7 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
   showNavigation,
   onNavigationCollapse,
   onNavigationExpand,
+  onShowAboutModal,
   children,
 }) => {
   const onNavToggle = showNavigation
@@ -41,7 +44,19 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
         <PageHeader
           logo={pictograph}
           logoProps={{ href: logoHref }}
-          toolbar={appNav}
+          toolbar={
+            <>
+              {
+                <HelpDropdown
+                  isOpen={false}
+                  launchAboutModal={() => {
+                    onShowAboutModal();
+                  }}
+                />
+              }
+              {appNav}
+            </>
+          }
           showNavToggle={true}
           isNavOpen={showNavigation}
           onNavToggle={onNavToggle}
@@ -62,3 +77,4 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
     </Page>
   );
 };
+

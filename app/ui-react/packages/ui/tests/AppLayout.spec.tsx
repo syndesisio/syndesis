@@ -4,10 +4,12 @@ import { render } from 'react-testing-library';
 import { AppLayout, PfVerticalNavItem } from '../src/';
 
 export default describe('ConnectionCard', () => {
+  const modalHandler = jest.fn();
   const testComponent = (
     <MemoryRouter>
       <AppLayout
         pictograph={'Syndesis'}
+        onShowAboutModal={modalHandler}
         appNav={<div data-testid="appnav">appnav</div>}
         verticalNav={[
           <PfVerticalNavItem

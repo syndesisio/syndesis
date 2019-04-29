@@ -15,6 +15,14 @@ import {
  *
  */
 
+export interface IApiVersion {
+  version: string;
+  'commit-id': string;
+  'build-id': string;
+  camelversion: string;
+  camelkruntimeversion: string;
+}
+
 export interface IConfigurationProperties {
   [name: string]: IConfigurationProperty;
 }
