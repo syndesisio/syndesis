@@ -355,7 +355,7 @@ export class Integrations extends React.Component<
                                         integrationId={mi.integration!.id!}
                                         actions={actions}
                                         detailsHref={resolvers.integration.details(
-                                          { integration: mi.integration }
+                                          { integrationId: mi.integration.id! }
                                         )}
                                       />
                                     }
