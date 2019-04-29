@@ -96,7 +96,9 @@ export class SelectViewsPage extends React.Component<
                 );
               };
               return (
-                <WithViewEditorStates>
+                <WithViewEditorStates
+                  idPattern={virtualization.serviceVdbName + '*'}
+                >
                   {({ data, hasData, error }) => (
                     <ViewsCreateLayout
                       header={<ViewsCreateSteps step={2} />}

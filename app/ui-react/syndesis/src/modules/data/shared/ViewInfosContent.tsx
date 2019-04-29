@@ -15,7 +15,7 @@ import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import { generateViewInfos } from './VirtualizationUtils';
 
-function getFilteredAndSortedSchemaNodes(
+function getFilteredAndSortedViewInfos(
   schemaNodes: SchemaNode[],
   activeFilters: IActiveFilter[],
   currentSortType: string,
@@ -110,7 +110,7 @@ export class ViewInfosContent extends React.Component<IViewInfosContentProps> {
             defaultSortType={sortByName}
           >
             {helpers => {
-              const filteredAndSorted = getFilteredAndSortedSchemaNodes(
+              const filteredAndSorted = getFilteredAndSortedViewInfos(
                 data,
                 helpers.activeFilters,
                 helpers.currentSortType,
