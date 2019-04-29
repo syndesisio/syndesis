@@ -58,9 +58,11 @@ export class FormDurationComponent extends React.Component<
   private inputField: HTMLInputElement = undefined as any;
   constructor(props: IFormControl) {
     super(props);
+    // find the highest duration that keeps the duration above 1
     const index =
-      durations.findIndex(d => !(this.props.field.value / d.value >= 1)) - 1;
-    const duration = durations[index] || durations[0];
+      durations.findIndex(d => !(this.props.field.value / d.value >= 1.0)) - 1;
+    // if the index is invalid than we use the highest available duration.
+    const duration = durations[index] || durations[durations.length - 1];
     this.state = {
       duration,
     };
