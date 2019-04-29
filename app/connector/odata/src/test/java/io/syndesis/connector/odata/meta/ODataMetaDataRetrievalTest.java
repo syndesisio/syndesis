@@ -15,16 +15,17 @@
  */
 package io.syndesis.connector.odata.meta;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
-import static org.assertj.core.api.Assertions.assertThat;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.apache.camel.spi.FactoryFinder;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +41,7 @@ import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
 import io.syndesis.connector.odata.AbstractODataTest;
 import io.syndesis.connector.odata.server.ODataTestServer;
+import io.syndesis.connector.support.verifier.api.MetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 
@@ -101,6 +103,22 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
         assertThat(specSchema).isInstanceOf(ObjectSchema.class);
         ObjectSchema specObjSchema = specSchema.asObjectSchema();
         assertEquals(4, specObjSchema.getProperties().size());
+    }
+
+    @Test
+    public void testFindingAdapter() throws Exception {
+        String resourcePath = "META-INF/syndesis/connector/meta/";
+        String connectorId = "odata";
+        CamelContext context = new DefaultCamelContext();
+
+        FactoryFinder finder = context.getFactoryFinder(resourcePath);
+        assertThat(finder).isNotNull();
+
+        Class<?> type = finder.findClass(connectorId);
+        assertThat(type).isEqualTo(ODataMetaDataRetrieval.class);
+
+        MetadataRetrieval adapter = (MetadataRetrieval) context.getInjector().newInstance(type);
+        assertThat(adapter).isNotNull();
     }
 
     @Test
