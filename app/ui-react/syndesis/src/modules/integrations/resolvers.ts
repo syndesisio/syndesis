@@ -259,7 +259,7 @@ export const integrationDetailsResolver = makeResolver<
   null
 >(routes.integration.details, ({ integrationId }) => ({
   params: {
-    integrationId: integrationId,
+    integrationId,
   },
 }));
 

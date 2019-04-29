@@ -13,12 +13,13 @@ export class IntegrationDetailDescription extends React.PureComponent<
   public render() {
     return (
       <div>
-        {this.props.description ? (
-          <Text>
-            {this.props.description}&nbsp;
-            <Icon name={'pencil'} />
-          </Text>
-        ) : null}
+        <Text>
+          {this.props.description
+            ? this.props.description
+            : this.props.i18nNoDescription}
+          &nbsp;
+          <Icon name={'pencil'} />
+        </Text>
       </div>
     );
   }
