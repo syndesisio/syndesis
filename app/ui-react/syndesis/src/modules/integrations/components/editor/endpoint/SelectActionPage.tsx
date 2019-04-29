@@ -53,8 +53,7 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
   public render() {
     return (
       <WithRouteData<ISelectActionRouteParams, ISelectActionRouteState>>
-        {({ connectionId, flow, position }, { connection, integration }) => {
-          const flowAsNumber = parseInt(flow, 10);
+        {({ connectionId, flowId, position }, { connection, integration }) => {
           const positionAsNumber = parseInt(position, 10);
           return (
             <WithConnection id={connectionId} initialValue={connection}>
@@ -73,7 +72,7 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           connection: connection as IConnectionWithIconFile,
-                          steps: getSteps(integration, flowAsNumber),
+                          steps: getSteps(integration, flowId),
                         })}
                         content={
                           <IntegrationEditorChooseAction
@@ -98,7 +97,7 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                                     <ButtonLink
                                       href={this.props.selectHref(
                                         a.id!,
-                                        { connectionId, flow, position },
+                                        { connectionId, flowId, position },
                                         { connection, integration }
                                       )}
                                     >
@@ -112,13 +111,13 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                         backHref={
                           this.props.backHref
                             ? this.props.backHref(
-                                { connectionId, flow, position },
+                                { connectionId, flowId, position },
                                 { connection, integration }
                               )
                             : undefined
                         }
                         cancelHref={this.props.cancelHref(
-                          { connectionId, flow, position },
+                          { connectionId, flowId, position },
                           { connection, integration }
                         )}
                       />

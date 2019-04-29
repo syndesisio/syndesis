@@ -1,5 +1,5 @@
 import { getEmptyIntegration, getStepIcon } from '../../src';
-import { Integration, IConnectionWithIconFile, Step } from '@syndesis/models';
+import { IConnectionWithIconFile, Integration, Step } from '@syndesis/models';
 import expect = require('expect');
 
 export default describe('integrationFunctions', () => {
@@ -16,7 +16,7 @@ export default describe('integrationFunctions', () => {
       ...getEmptyIntegration(),
       flows: [
         {
-          id: '',
+          id: 'id',
           steps: [
             {
               connection: {
@@ -27,7 +27,7 @@ export default describe('integrationFunctions', () => {
         },
       ],
     } as Integration;
-    const iconPath = getStepIcon('', integration, 0, 0);
+    const iconPath = getStepIcon('', integration, 'id', 0);
     expect(iconPath).toBe('data:blah');
   });
   it('Should return a valid icon URL for a legacy connection', () => {
@@ -35,7 +35,7 @@ export default describe('integrationFunctions', () => {
       ...getEmptyIntegration(),
       flows: [
         {
-          id: '',
+          id: 'id',
           steps: [
             {
               connection: {
@@ -46,7 +46,7 @@ export default describe('integrationFunctions', () => {
         },
       ],
     } as Integration;
-    const iconPath = getStepIcon('', integration, 0, 0);
+    const iconPath = getStepIcon('', integration, 'id', 0);
     expect(iconPath).toBe('./../../icons/blah.connection.png');
   });
   it('Should return a valid icon URL for a connection that references a db entity', () => {
@@ -54,19 +54,19 @@ export default describe('integrationFunctions', () => {
       ...getEmptyIntegration(),
       flows: [
         {
-          id: '',
+          id: 'id',
           steps: [
             {
               connection: {
-                id: 'foo',
                 icon: 'db:blah',
+                id: 'foo',
               },
             },
           ],
         },
       ],
     } as Integration;
-    const iconPath = getStepIcon('', integration, 0, 0);
+    const iconPath = getStepIcon('', integration, 'id', 0);
     expect(iconPath).toBe('/connectors/foo/icon?db:blah');
   });
   it('Should return a valid icon URL for a connection that references a db entity', () => {
@@ -74,19 +74,19 @@ export default describe('integrationFunctions', () => {
       ...getEmptyIntegration(),
       flows: [
         {
-          id: '',
+          id: 'id',
           steps: [
             {
               connection: {
-                id: 'foo',
                 icon: 'db:blah',
+                id: 'foo',
               },
             },
           ],
         },
       ],
     } as Integration;
-    const iconPath = getStepIcon('', integration, 0, 0);
+    const iconPath = getStepIcon('', integration, 'id', 0);
     expect(iconPath).toBe('/connectors/foo/icon?db:blah');
   });
   it('Should return a valid icon URL for a connection that references a db entity', () => {
@@ -94,19 +94,19 @@ export default describe('integrationFunctions', () => {
       ...getEmptyIntegration(),
       flows: [
         {
-          id: '',
+          id: 'id',
           steps: [
             {
               connection: {
-                id: 'foo',
                 icon: 'extension:blah',
+                id: 'foo',
               },
             },
           ],
         },
       ],
     } as Integration;
-    const iconPath = getStepIcon('', integration, 0, 0);
+    const iconPath = getStepIcon('', integration, 'id', 0);
     expect(iconPath).toBe('/connectors/foo/icon?extension:blah');
   });
   it('Should return a valid icon URL for a connection with an icon file', () => {
@@ -114,19 +114,19 @@ export default describe('integrationFunctions', () => {
       ...getEmptyIntegration(),
       flows: [
         {
-          id: '',
+          id: 'id',
           steps: [
             {
               connection: {
-                iconFile: new File([], 'foo'),
                 icon: '',
+                iconFile: new File([], 'foo'),
               } as IConnectionWithIconFile,
             },
           ],
         },
       ],
     } as Integration;
-    const iconPath = getStepIcon('', integration, 0, 0);
+    const iconPath = getStepIcon('', integration, 'id', 0);
     expect(iconPath).toBe('foo');
   });
   it('Should return a valid icon URL for an extension step', () => {
@@ -134,7 +134,7 @@ export default describe('integrationFunctions', () => {
       ...getEmptyIntegration(),
       flows: [
         {
-          id: '',
+          id: 'id',
           steps: [
             {
               extension: {
@@ -145,7 +145,7 @@ export default describe('integrationFunctions', () => {
         },
       ],
     } as Integration;
-    const iconPath = getStepIcon('', integration, 0, 0);
+    const iconPath = getStepIcon('', integration, 'id', 0);
     expect(iconPath).toBe('blah');
   });
   it('Should return a valid icon URL for a step', () => {
@@ -153,7 +153,7 @@ export default describe('integrationFunctions', () => {
       ...getEmptyIntegration(),
       flows: [
         {
-          id: '',
+          id: 'id',
           steps: [
             {
               stepKind: 'log',
@@ -162,7 +162,7 @@ export default describe('integrationFunctions', () => {
         },
       ],
     } as Integration;
-    const iconPath = getStepIcon('', integration, 0, 0);
+    const iconPath = getStepIcon('', integration, 'id', 0);
     expect(iconPath).toBe('/icons/steps/log.svg');
   });
 });

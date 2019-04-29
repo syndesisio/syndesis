@@ -67,7 +67,7 @@ export class ConfigureActionPage extends React.Component<
             IConfigureActionRouteState
           >>
             {(
-              { actionId, flow, step = '0', position },
+              { actionId, flowId, step = '0', position },
               {
                 configuredProperties,
                 connection,
@@ -77,7 +77,6 @@ export class ConfigureActionPage extends React.Component<
               { history }
             ) => {
               const stepAsNumber = parseInt(step, 10);
-              const flowAsNumber = parseInt(flow, 10);
               const positionAsNumber = parseInt(position, 10);
               const onUpdatedIntegration = async ({
                 action,
@@ -91,7 +90,7 @@ export class ConfigureActionPage extends React.Component<
                   updatedIntegration || integration,
                   connection,
                   action,
-                  flowAsNumber,
+                  flowId,
                   positionAsNumber,
                   values
                 );
@@ -100,7 +99,7 @@ export class ConfigureActionPage extends React.Component<
                     this.props.nextStepHref(
                       {
                         actionId,
-                        flow,
+                        flowId,
                         position,
                         step: `${stepAsNumber + 1}`,
                       },
@@ -116,7 +115,7 @@ export class ConfigureActionPage extends React.Component<
                   history.push(
                     this.props.postConfigureHref(
                       updatedIntegration,
-                      { actionId, flow, step, position },
+                      { actionId, flowId, step, position },
                       {
                         configuredProperties,
                         connection,
@@ -144,11 +143,14 @@ export class ConfigureActionPage extends React.Component<
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           connection,
-                          steps: getSteps(updatedIntegration || integration, 0),
+                          steps: getSteps(
+                            updatedIntegration || integration,
+                            flowId
+                          ),
                         })}
                         content={form}
                         backHref={this.props.backHref(
-                          { actionId, flow, step, position },
+                          { actionId, flowId, step, position },
                           {
                             configuredProperties,
                             connection,
@@ -157,7 +159,7 @@ export class ConfigureActionPage extends React.Component<
                           }
                         )}
                         cancelHref={this.props.cancelHref(
-                          { actionId, flow, step, position },
+                          { actionId, flowId, step, position },
                           {
                             configuredProperties,
                             connection,

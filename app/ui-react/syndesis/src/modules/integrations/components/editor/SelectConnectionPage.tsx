@@ -1,10 +1,10 @@
 import {
-  visibleStepsByPosition,
   getConnectionIcon,
   getEmptyIntegration,
   getExtensionIcon,
   getStepKindIcon,
   getSteps,
+  visibleStepsByPosition,
   WithConnections,
   WithExtensions,
   WithSteps,
@@ -136,9 +136,8 @@ export class SelectConnectionPage extends React.Component<
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
         {(params, state, { history }) => {
-          const { flow, position } = params;
+          const { flowId, position } = params;
           const { integration = getEmptyIntegration() } = state;
-          const flowAsNumber = parseInt(flow, 10) || 0;
           const positionAsNumber = parseInt(position, 10) || 0;
           const onStepClick = (connectionOrStep: ConnectionOverview | Step) => {
             const stepKind = getStepKind(connectionOrStep);
@@ -146,18 +145,20 @@ export class SelectConnectionPage extends React.Component<
               case 'api-provider':
                 history.push(this.props.apiProviderHref(params, state));
                 break;
-              default:
+              case 'endpoint':
                 history.push(
                   this.props.connectionHref(
                     connectionOrStep as ConnectionOverview,
-                    params,
+                    {
+                      ...params,
+                    },
                     state
                   )
                 );
                 break;
             }
           };
-          const integrationSteps = getSteps(integration, flowAsNumber);
+          const integrationSteps = getSteps(integration, flowId);
           return (
             <>
               <PageTitle title={'Choose a connection'} />
@@ -200,7 +201,7 @@ export class SelectConnectionPage extends React.Component<
                                     <>
                                       {(visibleStepsByPosition(
                                         integration,
-                                        flow,
+                                        flowId,
                                         toStepKindCollection(
                                           positionAsNumber === 0
                                             ? connectionsData.connectionsWithFromAction

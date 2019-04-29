@@ -1,8 +1,4 @@
-import {
-  getConnectionIcon,
-  getEmptyIntegration,
-  getSteps,
-} from '@syndesis/api';
+import { getConnectionIcon } from '@syndesis/api';
 import {
   Breadcrumb,
   IntegrationFlowStepGeneric,
@@ -197,28 +193,18 @@ const startStepConfigureActionPage = (
         )}
       </IntegrationVerticalFlow>
     )}
-    postConfigureHref={(integration, params) =>
-      resolvers.create.finish.selectStep({
+    postConfigureHref={(integration, params, state) => {
+      return resolvers.create.finish.selectStep({
         integration,
         ...params,
         position: '1',
-      })
-    }
+      });
+    }}
   />
 );
 
 const finishStepSelectConnectionPage = (
   <SelectConnectionPage
-    backHref={(p, s) => {
-      const startStep = getSteps(s.integration, 0)[0];
-      return resolvers.create.start.connection.configureAction({
-        ...p,
-        ...s,
-        actionId: startStep.action!.id!,
-        connection: startStep.connection!,
-        integration: getEmptyIntegration(), // reset the integration object to force a re-add of the step, to avoid multiple steps being appended
-      });
-    }}
     cancelHref={resolvers.list}
     header={<IntegrationCreatorBreadcrumbs step={2} />}
     apiProviderHref={(p, s) => ({ pathname: 'todo' })}

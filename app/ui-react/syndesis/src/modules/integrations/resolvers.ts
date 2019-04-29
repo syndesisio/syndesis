@@ -29,7 +29,7 @@ import {
 import routes from './routes';
 
 interface IEditorIndex {
-  flow: string;
+  flowId: string;
   integration: Integration;
 }
 
@@ -47,9 +47,12 @@ interface IEditorConfigureAction extends IEditorSelectAction {
   updatedIntegration?: Integration;
 }
 
-export const configureIndexMapper = ({ flow, integration }: IEditorIndex) => ({
+export const configureIndexMapper = ({
+  flowId,
+  integration,
+}: IEditorIndex) => ({
   params: {
-    flow,
+    flowId,
     ...(integration && integration.id ? { integrationId: integration.id } : {}),
   } as IBaseRouteParams,
   state: {
@@ -90,6 +93,7 @@ export const configureSelectActionMapper = ({
 
 export const configureConfigureActionMapper = ({
   actionId,
+  flowId,
   step,
   integration,
   updatedIntegration,
@@ -98,11 +102,12 @@ export const configureConfigureActionMapper = ({
 }: IEditorConfigureAction) => {
   const { params, state } = configureSelectActionMapper({
     ...rest,
+    flowId,
     integration,
     position,
   });
   const positionAsNumber = parseInt(position, 10);
-  const stepObject = getStep(integration, 0, positionAsNumber) || {};
+  const stepObject = getStep(integration, flowId, positionAsNumber) || {};
   return {
     params: {
       ...params,
@@ -129,13 +134,14 @@ export const createStartSelectStepResolver = makeResolverNoParamsWithDefaults<
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState
 >(routes.create.start.selectStep, () => {
+  const integration = getEmptyIntegration();
   return {
     params: {
-      flow: '0',
+      flowId: integration.flows![0].id!,
       position: '0',
     },
     state: {
-      integration: getEmptyIntegration(),
+      integration,
     },
   };
 });

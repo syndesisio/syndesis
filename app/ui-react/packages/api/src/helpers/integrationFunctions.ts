@@ -104,37 +104,44 @@ export function canDeactivate(integration: IntegrationOverview) {
 /**
  * returns the list of steps of the provided integration.
  *
- * @param value
- * @param flow
+ * @param integration
+ * @param flowId
  *
  * @todo make the returned object immutable to avoid uncontrolled changes
  */
-export function getSteps(integration: Integration, flow: number): Step[] {
+export function getSteps(integration: Integration, flowId: string): Step[] {
   try {
-    return integration.flows![flow].steps!;
+    const flow = getFlow(integration, flowId);
+    return flow!.steps!;
   } catch (e) {
-    throw new Error(`Can't find steps in position flow:${flow}`);
+    return [];
   }
 }
 
 /**
  * returns a specific step of the provided integration.
  *
- * @param value
- * @param flow
+ * @param integration
+ * @param flowId
+ * @param step
  *
  * @todo make the returned object immutable to avoid uncontrolled changes
  */
 
 export function getStep(
   integration: Integration,
-  flow: number,
+  flowId: string,
   step: number
 ): Step {
   try {
-    return integration.flows![flow].steps![step];
+    const flow = getFlow(integration, flowId);
+    return flow!.steps![step];
   } catch (e) {
-    throw new Error(`Can't find a step in position flow:${flow} step:${step}`);
+    throw new Error(
+      `Can't find a step ${step} for flow ${flowId} in integration ${
+        integration.id
+      }`
+    );
   }
 }
 
@@ -143,7 +150,8 @@ export function getStep(
  * @param integration
  */
 export function getStartIcon(apiUri: string, integration: Integration) {
-  return getStepIcon(apiUri, integration, 0, 0);
+  const flow = integration.flows![0];
+  return getStepIcon(apiUri, integration, flow.id!, 0);
 }
 
 /**
@@ -152,7 +160,7 @@ export function getStartIcon(apiUri: string, integration: Integration) {
  */
 export function getFinishIcon(apiUri: string, integration: Integration) {
   const flow = integration.flows![0];
-  return getStepIcon(apiUri, integration, 0, flow.steps!.length - 1);
+  return getStepIcon(apiUri, integration, flow.id!, flow.steps!.length - 1);
 }
 
 export function getExtensionIcon(extension: Extension) {
@@ -165,17 +173,18 @@ export function getStepKindIcon(stepKind: Step['stepKind']) {
 
 /**
  * Returns the icon for the supplied step index of the supplied flow index
+ * @param apiUri
  * @param integration
- * @param flowIndex
+ * @param flowId
  * @param stepIndex
  */
 export function getStepIcon(
   apiUri: string,
   integration: Integration,
-  flowIndex: number,
+  flowId: string,
   stepIndex: number
 ): string {
-  const step = getStep(integration, flowIndex, stepIndex);
+  const step = getStep(integration, flowId, stepIndex);
   // The step is a connection
   if (step.connection) {
     const connection = step.connection as IConnectionWithIconFile;

@@ -42,7 +42,7 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
   public render() {
     return (
       <WithRouteData<IBaseRouteParams, IBaseRouteState>>
-        {({ flow }, { integration }) => (
+        {({ flowId }, { integration }) => (
           <IntegrationEditorLayout
             header={this.props.header}
             content={
@@ -55,11 +55,11 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                     integration as well.
                   </p>
                   <IntegrationEditorStepAdder
-                    steps={getSteps(integration, 0)}
+                    steps={getSteps(integration, flowId)}
                     addStepHref={position =>
                       this.props.getEditAddStepHref(
                         position,
-                        { flow },
+                        { flowId },
                         { integration }
                       )
                     }
@@ -67,7 +67,7 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                       this.props.getEditConfigureStepHrefCallback(
                         stepIdx,
                         step,
-                        { flow },
+                        { flowId },
                         { integration }
                       )
                     }
@@ -75,8 +75,8 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                 </Container>
               </>
             }
-            cancelHref={this.props.cancelHref({ flow }, { integration })}
-            nextHref={this.props.nextHref({ flow }, { integration })}
+            cancelHref={this.props.cancelHref({ flowId }, { integration })}
+            nextHref={this.props.nextHref({ flowId }, { integration })}
           />
         )}
       </WithRouteData>

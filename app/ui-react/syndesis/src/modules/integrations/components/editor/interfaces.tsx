@@ -7,7 +7,7 @@ import { ConnectionOverview, Integration } from '@syndesis/models';
  * @param step - the configuration step when configuring a multi-page connection.
  */
 export interface IConfigureActionRouteParams {
-  flow: string;
+  flowId: string;
   position: string;
   actionId: string;
   step: string;
@@ -34,7 +34,7 @@ export interface IConfigureActionRouteState {
  * flow.
  */
 export interface ISelectActionRouteParams {
-  flow: string;
+  flowId: string;
   connectionId: string;
   position: string;
 }
@@ -54,7 +54,7 @@ export interface ISelectActionRouteState {
  * flow.
  */
 export interface ISelectConnectionRouteParams {
-  flow: string;
+  flowId: string;
   position: string;
 }
 
@@ -67,7 +67,7 @@ export interface ISelectConnectionRouteState {
 }
 
 export interface IBaseRouteParams {
-  flow: string;
+  flowId: string;
 }
 
 export interface IBaseRouteState {
@@ -81,7 +81,7 @@ export interface IBaseRouteState {
  * @param integration - the integration object.
  */
 export interface ISaveIntegrationRouteParams {
-  flow: string;
+  flowId: string;
 }
 
 export interface ISaveIntegrationForm {
