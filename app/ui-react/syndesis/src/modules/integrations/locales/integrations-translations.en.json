@@ -14,7 +14,7 @@
   "DEPLOYING": "Deploying",
   "STARTING": "Starting",
   "ManageCiCd": "Manage CI/CD",
-  "ConfirmRemoveTag": "Are you sure you want to remove the {name} tag",
+  "ConfirmRemoveTag": "Are you sure you want to remove the {{name}} tag",
   "ConfirmRemoveTagDetail": "This change will be applied to all integrations.  Removing a tag will unassociate it across integrations and then delete it.  No integrations will be deleted.",
   "AddTagDialogTitle": "Add Tag Name",
   "AddTagDialogDescription": "The following changes will be applied to all integrations.",
