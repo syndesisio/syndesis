@@ -82,9 +82,9 @@ export class ListViewToolbar extends React.Component<IListViewToolbarProps> {
         </Sort>
         <Toolbar.RightContent>{this.props.children}</Toolbar.RightContent>
         <Toolbar.Results>
-          <h5>{this.props.i18nResultsCount}</h5>
           {this.props.activeFilters && this.props.activeFilters.length > 0 && (
             <>
+              <h5>{this.props.i18nResultsCount}</h5>
               <Filter.ActiveLabel>Active Filters:</Filter.ActiveLabel>
               <Filter.List>
                 {this.props.activeFilters.map((item: IActiveFilter, index) => (
