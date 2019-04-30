@@ -10,14 +10,14 @@ export interface IIntegrationAction {
   label: string | JSX.Element;
 }
 
-export interface IIntegrationsListItemActionsProps {
+export interface IIntegrationActionsProps {
   integrationId: string;
   actions: IIntegrationAction[];
   detailsHref?: H.LocationDescriptor;
 }
 
-export class IntegrationsListItemActions extends React.Component<
-  IIntegrationsListItemActionsProps
+export class IntegrationActions extends React.Component<
+  IIntegrationActionsProps
 > {
   public render() {
     return (

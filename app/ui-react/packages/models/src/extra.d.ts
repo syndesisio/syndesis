@@ -32,6 +32,10 @@ export interface IConnectionWithIconFile extends Connection {
   iconFile?: File;
 }
 
+export interface IIntegrationOverviewWithDraft extends IntegrationOverview {
+  isDraft: boolean;
+}
+
 export interface IntegrationWithOverview {
   integration: IntegrationOverview;
   overview?: IntegrationMetricsSummary;

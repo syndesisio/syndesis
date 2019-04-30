@@ -1,9 +1,4 @@
-.integration-steps-horizontal-view {
-  max-width: 300px;
-  text-align: center;
-}
-
-.integration-steps-horizontal-view .step-icon {
+.integration-steps-horizontal-item .step-icon {
   border-radius: 100px;
   width: 55px;
   height: 55px;
@@ -16,7 +11,11 @@
   border: 3px solid #0088ce;
 }
 
-.integration-steps-horizontal-view .step-arrow {
+.integration-steps-horizontal-item__arrow, .integration-steps-horizontal-item__icon {
+  padding: 0;
+}
+
+.integration-steps-horizontal-item .step-arrow {
   position: absolute;
   top: 28px;
   -webkit-transform: translate(50%,-50%);

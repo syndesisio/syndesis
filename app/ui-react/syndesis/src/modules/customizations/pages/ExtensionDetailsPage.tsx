@@ -1,5 +1,5 @@
 import { WithExtension, WithExtensionHelpers } from '@syndesis/api';
-import { Action, Extension, Integration } from '@syndesis/models';
+import { Action, Extension } from '@syndesis/models';
 import {
   Breadcrumb,
   ExtensionDetail,
@@ -61,9 +61,7 @@ export default class ExtensionDetailsPage extends React.Component {
             // redirect to the integration detail page
             history.push(
               resolvers.integrations.integration.details({
-                integration: {
-                  id: selectedIntegrationId,
-                } as Integration,
+                integrationId: selectedIntegrationId,
               })
             );
           };

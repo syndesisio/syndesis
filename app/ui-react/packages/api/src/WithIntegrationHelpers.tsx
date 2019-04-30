@@ -383,7 +383,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
 }
 
 /**
- * This component provides provides through a render propr a number of helper
+ * This component provides through a render prop a number of helper
  * functions useful when working with an integration.
  *
  * Some of these helpers are available also as stand-alone functions

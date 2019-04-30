@@ -21,8 +21,7 @@ import {
 import {
   IActivityPageParams,
   IActivityPageState,
-  IDetailsPageParams,
-  IDetailsPageState,
+  IIntegrationDetailsRouteParams,
   IMetricsPageParams,
   IMetricsPageState,
 } from './pages/detail';
@@ -52,7 +51,7 @@ export const configureIndexMapper = ({
   integration,
 }: IEditorIndex) => ({
   params: {
-    flowId,
+    flowId: flowId ? flowId : integration.flows![0].id!,
     ...(integration && integration.id ? { integrationId: integration.id } : {}),
   } as IBaseRouteParams,
   state: {
@@ -255,15 +254,12 @@ export const integrationActivityResolver = makeResolver<
 }));
 
 export const integrationDetailsResolver = makeResolver<
-  { integration: Integration },
-  IDetailsPageParams,
-  IDetailsPageState
->(routes.integration.details, ({ integration }) => ({
+  { integrationId: string },
+  IIntegrationDetailsRouteParams,
+  null
+>(routes.integration.details, ({ integrationId }) => ({
   params: {
-    integrationId: integration.id!,
-  },
-  state: {
-    integration,
+    integrationId,
   },
 }));
 

@@ -3,7 +3,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { AggregatedMetricCard } from '../../src';
 
-const stories = storiesOf('Dashboard/AggregatedMetricCard', module);
+const stories = storiesOf('Shared/AggregatedMetricCard', module);
 
 stories.add('sample usage', () => (
   <div style={{ width: 200 }}>

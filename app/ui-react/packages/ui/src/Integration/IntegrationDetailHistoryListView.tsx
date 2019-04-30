@@ -4,7 +4,8 @@ import * as React from 'react';
 import './IntegrationDetailHistoryListView.css';
 
 export interface IIntegrationDetailHistoryListViewProps {
-  integrationIsDraft: boolean;
+  hasHistory: boolean;
+  isDraft: boolean;
   i18nTextBtnEdit?: string;
   i18nTextBtnPublish?: string;
   i18nTextDraft?: string;
@@ -21,7 +22,7 @@ export class IntegrationDetailHistoryListView extends React.Component<
         key={1}
         className="integration-detail-history-list-view"
       >
-        {this.props.integrationIsDraft ? (
+        {this.props.isDraft ? (
           <Grid.Row className="show-grid">
             <Grid.Col
               xs={2}
@@ -46,7 +47,7 @@ export class IntegrationDetailHistoryListView extends React.Component<
           </Grid.Row>
         ) : null}
 
-        {this.props.children ? (
+        {this.props.children && this.props.hasHistory === true ? (
           <Grid.Row className="show-grid">
             <Grid.Col
               xs={2}

@@ -12,9 +12,9 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
   IIntegrationAction,
+  IntegrationActions,
   IntegrationsList,
   IntegrationsListItem,
-  IntegrationsListItemActions,
   IntegrationsListItemUnreadable,
   IntegrationsListSkeleton,
 } from '@syndesis/ui';
@@ -351,11 +351,11 @@ export class Integrations extends React.Component<
                                       mi.integration
                                     )}
                                     actions={
-                                      <IntegrationsListItemActions
+                                      <IntegrationActions
                                         integrationId={mi.integration!.id!}
                                         actions={actions}
                                         detailsHref={resolvers.integration.details(
-                                          { integration: mi.integration }
+                                          { integrationId: mi.integration.id! }
                                         )}
                                       />
                                     }

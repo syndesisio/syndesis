@@ -60,6 +60,7 @@
       "uploadFileFailureMessage": "<span>File '<strong>{{fileName}}</strong>' could not be uploaded</span>",
       "Usage": "Usage",
       "Validate": "Validate",
+      "Version": "Version",
       "viewLogs": "View Logs",
       "links": {
         "contactus": "//access.redhat.com/support/cases/#/case/new",

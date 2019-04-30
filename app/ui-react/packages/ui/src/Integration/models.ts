@@ -15,3 +15,13 @@ export const LOGS = 'LOGS';
 export const EVENTS = 'EVENTS';
 
 export type LinkType = 'LOGS' | 'EVENTS';
+
+export interface IIntegrationDetailHistoryItem {
+  updatedAt: string;
+  version: number;
+}
+
+export interface IIntegrationDetailHistory {
+  draft: boolean;
+  items: IIntegrationDetailHistoryItem[];
+}
