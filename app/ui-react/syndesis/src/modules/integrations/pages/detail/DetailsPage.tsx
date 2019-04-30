@@ -7,6 +7,7 @@ import {
 } from '@syndesis/api';
 import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import {
+  Breadcrumb,
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
@@ -19,11 +20,12 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import {
   IntegrationDetailHistory,
   IntegrationDetailSteps,
 } from '../../components';
-import resolvers from '../../resolvers';
+import resolvers from '../../../resolvers';
 import { IntegrationDetailNavBar } from '../../shared';
 
 /**
@@ -141,10 +143,12 @@ export class DetailsPage extends React.Component<
                                   ? data.deployments
                                   : [];
                                 const editAction: IIntegrationAction = {
-                                  href: resolvers.integration.edit.index({
-                                    flowId: '0',
-                                    integration: data,
-                                  }),
+                                  href: resolvers.integrations.integration.edit.index(
+                                    {
+                                      flowId: '0',
+                                      integration: data,
+                                    }
+                                  ),
                                   label: 'Edit',
                                 };
                                 const startAction: IIntegrationAction = {
@@ -245,6 +249,17 @@ export class DetailsPage extends React.Component<
 
                                 return (
                                   <>
+                                    <Breadcrumb>
+                                      <Link to={resolvers.dashboard.root()}>
+                                        {t('shared:Home')}
+                                      </Link>
+                                      <Link to={resolvers.integrations.list()}>
+                                        {t('shared:Integrations')}
+                                      </Link>
+                                      <span>
+                                        {t('integrations:detail:pageTitle')}
+                                      </span>
+                                    </Breadcrumb>
                                     <ConfirmationDialog
                                       buttonStyle={
                                         ConfirmationButtonStyle.NORMAL
