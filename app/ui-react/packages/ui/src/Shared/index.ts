@@ -1,3 +1,4 @@
+export * from './AggregatedMetricCard';
 export * from './ConfirmationDialog';
 export * from './Dialog';
 export * from './DndFileChooser';
