@@ -39,11 +39,11 @@ whose flow you want to edit.
 .. In the flow visualization panel on the left, if this is the 
 first step that you are adding, click the
 plus sign. If this is not the first additional step, click the 
-plus sign in the location where you want to add a connection. 
+plus sign where you want to add a connection. 
 .. On the *Choose a Step* page, click the connection that you want 
 to add to this flow. 
 .. Click the action that you want this connection to perform.  
-.. Configure the action. 
+.. Configure the action by entering data in the labeled fields. 
 .. Click *Done*. 
 .. In the upper right, click *Save*. 
 
@@ -56,7 +56,7 @@ before you continue.
 .. In the flow visualization panel on the left, click the
 plus sign that is in the location where you want to add a step. 
 .. On the *Choose a Step* page, click the step that you want to add. 
-.. Configure the step. 
+.. Configure the step by entering data in the labeled fields. 
 .. Click *Done*. 
 .. In the upper right, click *Save*. 
 
@@ -119,7 +119,7 @@ image:images/operations-dropdown-list.jpg[operations]
 Or, select *Go to Operations List* to select another operation from there. 
 Controls at the top of the operations list let you display
 operations according to criteria that you choose. 
-+
+
 Repeat this procedure to edit another operation's 
 flow.
 
