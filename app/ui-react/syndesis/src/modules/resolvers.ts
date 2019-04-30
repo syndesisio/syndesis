@@ -3,6 +3,7 @@ import customizations from './customizations/resolvers';
 import dashboard from './dashboard/resolvers';
 import data from './data/resolvers';
 import integrations from './integrations/resolvers';
+import settings from './settings/resolvers';
 
 export default {
   connections,
@@ -10,4 +11,5 @@ export default {
   dashboard,
   data,
   integrations,
+  settings,
 };

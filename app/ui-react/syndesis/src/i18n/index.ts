@@ -17,6 +17,7 @@ const options = {
       dashboard: en.en.modules.dashboard,
       data: en.en.modules.data,
       integrations: en.en.modules.integrations,
+      settings: en.en.modules.settings,
       shared: en.en.shared,
     },
     it: {
@@ -26,6 +27,7 @@ const options = {
       dashboard: it.it.modules.dashboard,
       data: it.it.modules.data,
       integrations: it.it.modules.integrations,
+      settings: it.it.modules.settings,
       shared: it.it.shared,
     },
   },
@@ -34,7 +36,14 @@ const options = {
   fallbackLng: process.env.NODE_ENV === 'production' ? 'en' : 'it',
   fallbackNS: ['shared'],
   keySeparator: '.',
-  ns: ['shared', 'app', 'customizations', 'dashboard', 'integrations'],
+  ns: [
+    'shared',
+    'app',
+    'customizations',
+    'dashboard',
+    'integrations',
+    'settings',
+  ],
 } as i18n.InitOptions;
 
 i18n.use(LanguageDetector).init(options);

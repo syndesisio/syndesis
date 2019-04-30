@@ -10,6 +10,7 @@ import { CustomizationsModule } from './modules/customizations';
 import { DashboardModule } from './modules/dashboard';
 import { DataModule } from './modules/data';
 import { IntegrationsModule } from './modules/integrations';
+import { SettingsModule } from './modules/settings';
 import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
@@ -50,12 +51,12 @@ ReactDOM.render(
                 label: t('Data'),
                 to: '/data',
               },
-              // {
-              // component: TODO,
-              // icon: 'pficon pficon-settings',
-              // label: t('Settings'),
-              // to: '/settings',
-              // },
+              {
+                component: SettingsModule,
+                icon: 'pficon pficon-settings',
+                label: t('Settings'),
+                to: '/settings',
+              },
             ]}
           />
         )}

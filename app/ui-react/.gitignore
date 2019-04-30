@@ -15,6 +15,7 @@ syndesis/tapes/ht*
 
 # @syndesis/models
 packages/models/src/models.d.ts
+packages/models/src/models-internal.d.ts
 
 # dependencies
 node_modules

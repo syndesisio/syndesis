@@ -6,4 +6,5 @@ export * from './Dashboard';
 export * from './Data';
 export * from './Integration';
 export * from './Layout';
+export * from './Settings';
 export * from './Shared';

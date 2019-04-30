@@ -6,7 +6,8 @@
       "customizations": {},
       "dashboard": {},
       "data": {},
-      "integrations": {}
+      "integrations": {},
+      "settings": {}
     },
     "shared": {
       "Actions": "Actions",

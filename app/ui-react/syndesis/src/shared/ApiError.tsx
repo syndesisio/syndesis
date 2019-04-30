@@ -12,10 +12,10 @@ export const ApiError: React.SFC<IApiErrorProps> = props => (
     {t => (
       <UnrecoverableError
         i18nTitle={t('error.title')}
-        i18nInfo={'error.info'}
-        i18nHelp={'error.help'}
-        i18nRefreshLabel={'error.refreshButton'}
-        i18nReportIssue={'error.reportIssueButton'}
+        i18nInfo={t('error.info')}
+        i18nHelp={t('error.help')}
+        i18nRefreshLabel={t('error.refreshButton')}
+        i18nReportIssue={t('error.reportIssueButton')}
         error={props.error}
         errorInfo={props.errorInfo}
       />
