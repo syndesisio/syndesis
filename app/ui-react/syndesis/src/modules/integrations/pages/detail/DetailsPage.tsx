@@ -226,11 +226,16 @@ export class DetailsPage extends React.Component<
                                 };
 
                                 const actions: IIntegrationAction[] = [];
-                                if (canEdit(data)) {
-                                  actions.push(editAction);
-                                }
+                                const draftActions: IIntegrationAction[] = [];
                                 if (canActivate(data)) {
-                                  actions.push(startAction);
+                                  data.isDraft
+                                    ? draftActions.push(startAction)
+                                    : actions.push(startAction);
+                                }
+                                if (canEdit(data)) {
+                                  data.isDraft
+                                    ? draftActions.push(editAction)
+                                    : actions.push(editAction);
                                 }
                                 if (canDeactivate(data)) {
                                   actions.push(stopAction);
@@ -274,6 +279,7 @@ export class DetailsPage extends React.Component<
                                       )}
                                     />
                                     <IntegrationDetailHistoryListView
+                                      actions={draftActions}
                                       hasHistory={deployments.length > 0}
                                       isDraft={data.isDraft}
                                       i18nTextBtnEdit={t('shared:Edit')}

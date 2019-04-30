@@ -8,8 +8,8 @@ import { Translation } from 'react-i18next';
 
 export interface IIntegrationDetailDeploymentsProps {
   actions: any;
-  integrationId: string;
   deployments: IntegrationDeploymentOverview[];
+  integrationId: string;
   updatedAt: number;
   version: number;
 }

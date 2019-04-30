@@ -3,13 +3,16 @@ import * as React from 'react';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
   /**
-   * Dropdown actions menu
+   * If the integration is a draft, it renders a set of actionable buttons,
+   * labeled 'Edit' and 'Publish'
+   * If the integration is not a draft, it renders a dropdown actions menu
+   * based on the IntegrationActions component
    */
   actions: any;
   /**
    * The current state of the integration.
    */
-  currentState?: string;
+  currentState: string;
   /**
    * The last date the integration was updated.
    */
