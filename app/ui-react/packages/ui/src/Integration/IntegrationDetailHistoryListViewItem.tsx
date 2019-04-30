@@ -7,6 +7,10 @@ export interface IIntegrationDetailHistoryListViewItemProps {
    */
   actions: any;
   /**
+   * Checks if it's the first item in the list of deployments.
+   */
+
+  /**
    * The last date the integration was updated.
    */
   updatedAt?: number;
