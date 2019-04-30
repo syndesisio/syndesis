@@ -25,14 +25,16 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
+import { Omit } from 'react-router';
 import { ApiError, PageTitle } from '../../../../shared';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
 } from './interfaces';
 
-export interface IUIStep extends StepKind {
+export interface IUIStep extends Omit<StepKind, 'stepKind'> {
   icon: string;
+  stepKind: 'api-provider' | StepKind['stepKind'];
 }
 
 export function toStepKindCollection(
@@ -41,12 +43,17 @@ export function toStepKindCollection(
   steps: StepKind[]
 ): IUIStep[] {
   return [
-    ...connections.map(c => ({
-      ...c,
-      description: c.description || '',
-      icon: getConnectionIcon(process.env.PUBLIC_URL, c),
-      properties: undefined,
-    })),
+    ...connections.map(
+      c =>
+        ({
+          ...c,
+          description: c.description || '',
+          icon: getConnectionIcon(process.env.PUBLIC_URL, c),
+          properties: undefined,
+          stepKind:
+            c.connectorId === 'api-provider' ? 'api-provider' : 'endpoint',
+        } as IUIStep)
+    ),
     ...extensions.reduce(
       (extentionsByAction, extension) => {
         extension.actions.forEach(a => {
@@ -82,19 +89,18 @@ export function toStepKindCollection(
     ...steps.map(s => ({
       ...s,
       icon: `${process.env.PUBLIC_URL}${getStepKindIcon(s.stepKind)}`,
+      stepKind: s.stepKind,
     })),
-  ].sort((a, b) => a.name.localeCompare(b.name));
+  ]
+    .filter(s => !!s.stepKind) // this should never happen
+    .sort((a, b) => a.name.localeCompare(b.name));
 }
 
-export const getStepKind = (stepOrConnection: ConnectionOverview | Step) => {
-  if ((stepOrConnection as ConnectionOverview).connectorId === 'api-provider') {
-    return 'api-provider';
-  }
-  if ((stepOrConnection as Step).stepKind) {
-    // not a connection
-  }
-  return 'endpoint';
-};
+type StepKindHrefCallback = (
+  connection: ConnectionOverview,
+  p: ISelectConnectionRouteParams,
+  s: ISelectConnectionRouteState
+) => H.LocationDescriptorObject;
 
 export interface ISelectConnectionPageProps {
   backHref?: (
@@ -106,15 +112,13 @@ export interface ISelectConnectionPageProps {
     s: ISelectConnectionRouteState
   ) => H.LocationDescriptor;
   header: React.ReactNode;
-  apiProviderHref: (
-    p: ISelectConnectionRouteParams,
-    s: ISelectConnectionRouteState
-  ) => H.LocationDescriptorObject;
-  connectionHref: (
-    connection: ConnectionOverview,
-    p: ISelectConnectionRouteParams,
-    s: ISelectConnectionRouteState
-  ) => H.LocationDescriptorObject;
+  apiProviderHref: StepKindHrefCallback;
+  connectionHref: StepKindHrefCallback;
+  filterHref: StepKindHrefCallback;
+  extensionHref: StepKindHrefCallback;
+  mapperHref: StepKindHrefCallback;
+  templateHref: StepKindHrefCallback;
+  stepHref: StepKindHrefCallback;
   sidebar: (props: { steps: Step[]; activeIndex: number }) => React.ReactNode;
 }
 
@@ -135,27 +139,38 @@ export class SelectConnectionPage extends React.Component<
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {(params, state, { history }) => {
+        {(params, state) => {
           const { flowId, position } = params;
           const { integration = getEmptyIntegration() } = state;
           const positionAsNumber = parseInt(position, 10) || 0;
-          const onStepClick = (connectionOrStep: ConnectionOverview | Step) => {
-            const stepKind = getStepKind(connectionOrStep);
-            switch (stepKind) {
+          const getStepHref = (step: IUIStep) => {
+            switch (step.stepKind) {
               case 'api-provider':
-                history.push(this.props.apiProviderHref(params, state));
-                break;
+                return this.props.apiProviderHref(step, params, state);
               case 'endpoint':
-                history.push(
-                  this.props.connectionHref(
-                    connectionOrStep as ConnectionOverview,
-                    {
-                      ...params,
-                    },
-                    state
-                  )
+              case 'connector':
+                return this.props.connectionHref(
+                  step as ConnectionOverview,
+                  params,
+                  state
                 );
-                break;
+              case 'expressionFilter':
+              case 'ruleFilter':
+                return this.props.filterHref(step, params, state);
+              case 'extension':
+                return this.props.extensionHref(step, params, state);
+              case 'mapper':
+                return this.props.mapperHref(step, params, state);
+              case 'headers':
+                throw new Error(`Can't handle stepKind ${step.stepKind}`);
+              case 'template':
+                return this.props.templateHref(step, params, state);
+              case 'choice':
+              case 'split':
+              case 'aggregate':
+              case 'log':
+              default:
+                return this.props.stepHref(step, params, state);
             }
           };
           const integrationSteps = getSteps(integration, flowId);
@@ -208,7 +223,7 @@ export class SelectConnectionPage extends React.Component<
                                             : connectionsData.connectionsWithToAction,
                                           extensionsData.items,
                                           steps
-                                        ),
+                                        ) as StepKind[],
                                         positionAsNumber
                                       ) as IUIStep[]).map(
                                         (step, idx: number) => (
@@ -228,9 +243,7 @@ export class SelectConnectionPage extends React.Component<
                                             }
                                             actions={
                                               <ButtonLink
-                                                onClick={() =>
-                                                  onStepClick(step)
-                                                }
+                                                href={getStepHref(step)}
                                               >
                                                 Select
                                               </ButtonLink>

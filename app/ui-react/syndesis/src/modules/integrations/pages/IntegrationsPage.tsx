@@ -131,7 +131,7 @@ export class IntegrationsPage extends React.Component {
                         <>
                           <PageTitle title={t('shared:Integrations')} />
                           <IntegrationsListView
-                            linkToIntegrationImport={'/integrations/import'}
+                            linkToIntegrationImport={resolvers.import()}
                             linkToManageCiCd={resolvers.manageCicd.root()}
                             linkToIntegrationCreation={resolvers.create.start.selectStep()}
                             filterTypes={getFilterTypes(
