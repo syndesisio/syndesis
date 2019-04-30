@@ -131,8 +131,6 @@ storiesOf('Integration/Detail', module)
         <IntegrationDetailHistoryListView
           hasHistory={true}
           isDraft={false}
-          i18nTextBtnEdit={'Edit'}
-          i18nTextBtnPublish={'Publish'}
           i18nTextDraft={'Draft'}
           i18nTextHistory={'History'}
           children={[

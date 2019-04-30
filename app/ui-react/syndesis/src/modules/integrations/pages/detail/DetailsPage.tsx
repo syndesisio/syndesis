@@ -282,8 +282,6 @@ export class DetailsPage extends React.Component<
                                       actions={draftActions}
                                       hasHistory={deployments.length > 0}
                                       isDraft={data.isDraft}
-                                      i18nTextBtnEdit={t('shared:Edit')}
-                                      i18nTextBtnPublish={t('shared:Publish')}
                                       i18nTextDraft={t('shared:Draft')}
                                       i18nTextHistory={t(
                                         'integrations:detail:History'

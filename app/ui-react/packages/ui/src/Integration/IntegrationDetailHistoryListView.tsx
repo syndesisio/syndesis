@@ -1,16 +1,13 @@
 import { Grid, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
-
-import './IntegrationDetailHistoryListView.css';
 import { IIntegrationAction } from './IntegrationActions';
+import './IntegrationDetailHistoryListView.css';
 
 export interface IIntegrationDetailHistoryListViewProps {
   actions?: IIntegrationAction[];
   hasHistory: boolean;
   isDraft: boolean;
-  i18nTextBtnEdit?: string;
-  i18nTextBtnPublish?: string;
   i18nTextDraft?: string;
   i18nTextHistory?: string;
 }
