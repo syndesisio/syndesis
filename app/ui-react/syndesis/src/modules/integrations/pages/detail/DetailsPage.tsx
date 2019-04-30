@@ -2,7 +2,6 @@ import {
   canActivate,
   canDeactivate,
   canEdit,
-  getSteps,
   WithIntegration,
   WithIntegrationHelpers,
 } from '@syndesis/api';
@@ -266,7 +265,7 @@ export class DetailsPage extends React.Component<
                                       integration={data}
                                     />
                                     <IntegrationDetailSteps
-                                      steps={getSteps(data, data.flows![0].id!)}
+                                      integration={data}
                                     />
                                     <IntegrationDetailDescription
                                       description={data.description}

@@ -1,4 +1,5 @@
-import { Step } from '@syndesis/models';
+import { getStepIcon, getSteps } from '@syndesis/api';
+import { Integration } from '@syndesis/models';
 import {
   IntegrationStepsHorizontalItem,
   IntegrationStepsHorizontalView,
@@ -6,14 +7,15 @@ import {
 import * as React from 'react';
 
 export interface IIntegrationDetailStepsProps {
-  steps: Step[];
+  integration: Integration;
 }
 
 export class IntegrationDetailSteps extends React.Component<
   IIntegrationDetailStepsProps
 > {
   public render() {
-    const steps = this.props.steps ? this.props.steps : [];
+    const flowId = this.props.integration.flows![0].id!;
+    const steps = getSteps(this.props.integration, flowId);
 
     return (
       <IntegrationStepsHorizontalView>
@@ -27,6 +29,12 @@ export class IntegrationDetailSteps extends React.Component<
             <React.Fragment key={idx}>
               <IntegrationStepsHorizontalItem
                 name={stepName}
+                icon={getStepIcon(
+                  process.env.PUBLIC_URL,
+                  this.props.integration,
+                  flowId,
+                  idx
+                )}
                 isFirst={isFirst}
               />
             </React.Fragment>
