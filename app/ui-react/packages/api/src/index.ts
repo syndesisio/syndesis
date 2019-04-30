@@ -22,6 +22,8 @@ export * from './WithConnection';
 export * from './WithConnectionHelpers';
 export * from './WithConnector';
 export * from './WithConnectors';
+export * from './WithOAuthAppHelpers';
+export * from './WithOAuthApps';
 export * from './WithPolling';
 export * from './WithChangeListener';
 export * from './WithServerEvents';

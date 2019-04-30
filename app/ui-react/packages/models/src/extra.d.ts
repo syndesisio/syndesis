@@ -63,3 +63,8 @@ export interface StepKind extends Step {
   properties: any;
   visible?: (position: number, previous: Step[], subsequent: Step[]) => boolean;
 }
+
+export interface IListResult<T> {
+  items?: T[];
+  totalCount?: number;
+}

@@ -10,12 +10,18 @@ import dataEn from '../../modules/data/locales/data-translations.en.json';
 import dataIt from '../../modules/data/locales/data-translations.it.json';
 import integrationsEn from '../../modules/integrations/locales/integrations-translations.en.json';
 import integrationsIt from '../../modules/integrations/locales/integrations-translations.it.json';
+import settingsEn from '../../modules/settings/locales/settings-translations.en.json';
+import settingsIt from '../../modules/settings/locales/settings-translations.it.json';
 import en from './shared-translations.en.json';
 import it from './shared-translations.it.json';
 
 // app
 en.en.app = appEn;
 it.it.app = appIt;
+
+// settings
+en.en.modules.settings = settingsEn;
+it.it.modules.settings = settingsIt;
 
 // connections
 en.en.modules.connections = connectionsEn;
