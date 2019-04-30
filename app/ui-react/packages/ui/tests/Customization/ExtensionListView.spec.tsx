@@ -78,9 +78,6 @@ export default describe('ExtensionListView', () => {
       }
     });
 
-    // results message
-    expect(queryAllByText(resultCountMessage)).toHaveLength(1);
-
     // title
     expect(queryAllByText(title)).toHaveLength(1);
 
@@ -150,9 +147,6 @@ export default describe('ExtensionListView', () => {
     // import button in toolbar
     expect(queryAllByText(importText)).toHaveLength(1);
     expect(getByText(importText)).toHaveAttribute('href', importExtensionLink);
-
-    // results message
-    expect(queryAllByText(resultCountMessage)).toHaveLength(1);
 
     // title
     expect(queryAllByText(title)).toHaveLength(1);
