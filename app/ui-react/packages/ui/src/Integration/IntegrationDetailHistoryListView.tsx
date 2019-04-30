@@ -47,7 +47,7 @@ export class IntegrationDetailHistoryListView extends React.Component<
           </Grid.Row>
         ) : null}
 
-        {this.props.children && this.props.hasHistory === true ? (
+        {this.props.children && this.props.hasHistory ? (
           <Grid.Row className="show-grid">
             <Grid.Col
               xs={2}

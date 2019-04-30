@@ -7,9 +7,9 @@ export interface IIntegrationDetailHistoryListViewItemProps {
    */
   actions: any;
   /**
-   * Checks if it's the first item in the list of deployments.
+   * The current state of the integration.
    */
-
+  currentState?: string;
   /**
    * The last date the integration was updated.
    */
@@ -32,6 +32,34 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
   IIntegrationDetailHistoryListViewItemProps
 > {
   public render() {
+    function getIntegrationState(currentState: string) {
+      let states = {
+        Pending: null,
+        Published: () => {
+          return (
+            <ListView.Icon
+              type="pf"
+              name="ok"
+              size={'sm'}
+              className="list-view-pf-icon-success"
+            />
+          );
+        },
+        Unpublished: null,
+        Error: () => {
+          return (
+            <ListView.Icon
+              type="pf"
+              size={'sm'}
+              className="pficon pficon-error-circle-o"
+            />
+          );
+        },
+      };
+
+      return states[currentState] || null;
+    }
+
     return (
       <ListViewItem
         actions={this.props.actions}
@@ -46,15 +74,7 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
             {this.props.updatedAt}
           </ListViewInfoItem>,
         ]}
-        leftContent={
-          // TODO: If first item and current deployment, show status icon
-          <ListView.Icon
-            type="pf"
-            name="ok"
-            size="sm"
-            className="list-view-pf-icon-success"
-          />
-        }
+        leftContent={getIntegrationState(this.props.currentState!)}
         stacked={false}
       />
     );

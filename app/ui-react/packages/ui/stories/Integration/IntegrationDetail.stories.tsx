@@ -150,6 +150,7 @@ storiesOf('Integration/Detail', module)
             <IntegrationDetailHistoryListViewItem
               key={idx}
               actions={action('onActionClicked')}
+              currentState={'Published'}
               i18nTextLastPublished={'Last published on '}
               i18nTextVersion={'Version'}
               updatedAt={deployment.updatedAt}
