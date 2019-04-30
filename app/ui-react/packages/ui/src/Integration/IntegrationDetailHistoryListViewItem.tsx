@@ -33,7 +33,16 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
 > {
   public render() {
     function getIntegrationState(currentState: string) {
-      let states = {
+      const states = {
+        Error: () => {
+          return (
+            <ListView.Icon
+              type="pf"
+              size={'sm'}
+              className="pficon pficon-error-circle-o"
+            />
+          );
+        },
         Pending: null,
         Published: () => {
           return (
@@ -46,15 +55,6 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
           );
         },
         Unpublished: null,
-        Error: () => {
-          return (
-            <ListView.Icon
-              type="pf"
-              size={'sm'}
-              className="pficon pficon-error-circle-o"
-            />
-          );
-        },
       };
 
       return states[currentState] || null;
