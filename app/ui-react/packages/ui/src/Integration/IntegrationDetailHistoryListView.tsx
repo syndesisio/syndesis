@@ -1,13 +1,13 @@
-import { Button, Grid, ListView, ListViewItem } from 'patternfly-react';
+import { Grid, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
-
+import { ButtonLink } from '../Layout';
+import { IIntegrationAction } from './IntegrationActions';
 import './IntegrationDetailHistoryListView.css';
 
 export interface IIntegrationDetailHistoryListViewProps {
+  actions?: IIntegrationAction[];
   hasHistory: boolean;
   isDraft: boolean;
-  i18nTextBtnEdit?: string;
-  i18nTextBtnPublish?: string;
   i18nTextDraft?: string;
   i18nTextHistory?: string;
 }
@@ -36,10 +36,13 @@ export class IntegrationDetailHistoryListView extends React.Component<
                 key={1}
                 heading={this.props.i18nTextDraft}
                 actions={
-                  <>
-                    <Button>{this.props.i18nTextBtnPublish}</Button>
-                    <Button>{this.props.i18nTextBtnEdit}</Button>
-                  </>
+                  this.props.actions
+                    ? this.props.actions.map((a, idx) => (
+                        <ButtonLink key={idx} to={a.href} onClick={a.onClick}>
+                          {a.label}
+                        </ButtonLink>
+                      ))
+                    : null
                 }
                 stacked={false}
               />
@@ -47,7 +50,7 @@ export class IntegrationDetailHistoryListView extends React.Component<
           </Grid.Row>
         ) : null}
 
-        {this.props.children && this.props.hasHistory === true ? (
+        {this.props.children && this.props.hasHistory ? (
           <Grid.Row className="show-grid">
             <Grid.Col
               xs={2}

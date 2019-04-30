@@ -1,4 +1,4 @@
-import { Grid, Icon, ListViewIcon } from 'patternfly-react';
+import { Grid, Icon } from 'patternfly-react';
 import * as React from 'react';
 
 import './IntegrationStepsHorizontalItem.css';
@@ -8,6 +8,10 @@ export interface IIntegrationStepsHorizontalItemProps {
    * The name of the connector used for the step.
    */
   name?: string;
+  /**
+   * The icon of the step.
+   */
+  icon?: string;
   /**
    * The boolean value that determines if the step
    * is the first in the steps array.
@@ -35,7 +39,7 @@ export class IntegrationStepsHorizontalItem extends React.Component<
           md={1}
           className="integration-steps-horizontal-item__icon"
         >
-          <ListViewIcon name={'cube'} className="step-icon" />
+          <img src={this.props.icon} className="step-icon" />
           <p>{this.props.name}</p>
         </Grid.Col>
       </div>

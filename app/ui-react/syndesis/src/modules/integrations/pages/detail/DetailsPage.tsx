@@ -2,7 +2,6 @@ import {
   canActivate,
   canDeactivate,
   canEdit,
-  getSteps,
   WithIntegration,
   WithIntegrationHelpers,
 } from '@syndesis/api';
@@ -227,11 +226,16 @@ export class DetailsPage extends React.Component<
                                 };
 
                                 const actions: IIntegrationAction[] = [];
-                                if (canEdit(data)) {
-                                  actions.push(editAction);
-                                }
+                                const draftActions: IIntegrationAction[] = [];
                                 if (canActivate(data)) {
-                                  actions.push(startAction);
+                                  data.isDraft
+                                    ? draftActions.push(startAction)
+                                    : actions.push(startAction);
+                                }
+                                if (canEdit(data)) {
+                                  data.isDraft
+                                    ? draftActions.push(editAction)
+                                    : actions.push(editAction);
                                 }
                                 if (canDeactivate(data)) {
                                   actions.push(stopAction);
@@ -266,7 +270,7 @@ export class DetailsPage extends React.Component<
                                       integration={data}
                                     />
                                     <IntegrationDetailSteps
-                                      steps={getSteps(data, data.flows![0].id!)}
+                                      integration={data}
                                     />
                                     <IntegrationDetailDescription
                                       description={data.description}
@@ -275,10 +279,9 @@ export class DetailsPage extends React.Component<
                                       )}
                                     />
                                     <IntegrationDetailHistoryListView
+                                      actions={draftActions}
                                       hasHistory={deployments.length > 0}
                                       isDraft={data.isDraft}
-                                      i18nTextBtnEdit={t('shared:Edit')}
-                                      i18nTextBtnPublish={t('shared:Publish')}
                                       i18nTextDraft={t('shared:Draft')}
                                       i18nTextHistory={t(
                                         'integrations:detail:History'

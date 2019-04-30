@@ -8,8 +8,8 @@ import { Translation } from 'react-i18next';
 
 export interface IIntegrationDetailDeploymentsProps {
   actions: any;
-  integrationId: string;
   deployments: IntegrationDeploymentOverview[];
+  integrationId: string;
   updatedAt: number;
   version: number;
 }
@@ -32,6 +32,7 @@ export class IntegrationDetailHistory extends React.Component<
                     actions={this.props.actions}
                   />
                 }
+                currentState={deployment.currentState!}
                 i18nTextLastPublished={t('integrations:detail:lastPublished')}
                 i18nTextVersion={t('shared:Version')}
                 updatedAt={deployment.updatedAt}
