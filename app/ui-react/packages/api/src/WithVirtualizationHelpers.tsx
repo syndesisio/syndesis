@@ -67,6 +67,7 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
     const newVirtualization = {
       keng__dataPath: `${WORKSPACE_ROOT}${this.props.username}/${virtName}`,
       keng__id: `${virtName}`,
+      serviceVdbName: `${virtName}`.toLowerCase() + 'vdb',
       tko__description: virtDesc ? `${virtDesc}` : '',
     } as RestDataService;
 
