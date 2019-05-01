@@ -25,16 +25,15 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
-import { Omit } from 'react-router';
 import { ApiError, PageTitle } from '../../../../shared';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
 } from './interfaces';
 
-export interface IUIStep extends Omit<StepKind, 'stepKind'> {
+export interface IUIStep extends StepKind {
   icon: string;
-  stepKind: 'api-provider' | StepKind['stepKind'];
+  uiStepKind: 'api-provider' | StepKind['stepKind'];
 }
 
 export function toStepKindCollection(
@@ -50,7 +49,7 @@ export function toStepKindCollection(
           description: c.description || '',
           icon: getConnectionIcon(process.env.PUBLIC_URL, c),
           properties: undefined,
-          stepKind:
+          uiStepKind:
             c.connectorId === 'api-provider' ? 'api-provider' : 'endpoint',
         } as IUIStep)
     ),
@@ -79,6 +78,7 @@ export function toStepKindCollection(
               name: a.name,
               properties,
               stepKind: 'extension',
+              uiStepKind: 'extension',
             });
           }
         });
@@ -89,10 +89,10 @@ export function toStepKindCollection(
     ...steps.map(s => ({
       ...s,
       icon: `${process.env.PUBLIC_URL}${getStepKindIcon(s.stepKind)}`,
-      stepKind: s.stepKind,
+      uiStepKind: s.stepKind,
     })),
   ]
-    .filter(s => !!s.stepKind) // this should never happen
+    .filter(s => !!s.uiStepKind) // this should never happen
     .sort((a, b) => a.name.localeCompare(b.name));
 }
 
@@ -144,7 +144,7 @@ export class SelectConnectionPage extends React.Component<
           const { integration = getEmptyIntegration() } = state;
           const positionAsNumber = parseInt(position, 10) || 0;
           const getStepHref = (step: IUIStep) => {
-            switch (step.stepKind) {
+            switch (step.uiStepKind) {
               case 'api-provider':
                 return this.props.apiProviderHref(step, params, state);
               case 'endpoint':
@@ -207,62 +207,64 @@ export class SelectConnectionPage extends React.Component<
                                 <WithLoader
                                   error={connectionsError || extensionsError}
                                   loading={
-                                    !hasConnectionsData && !hasExtensionsData
+                                    !hasConnectionsData || !hasExtensionsData
                                   }
                                   loaderChildren={<IntegrationsListSkeleton />}
                                   errorChildren={<ApiError />}
                                 >
-                                  {() => (
-                                    <>
-                                      {(visibleStepsByPosition(
-                                        integration,
-                                        flowId,
-                                        toStepKindCollection(
-                                          positionAsNumber === 0
-                                            ? connectionsData.connectionsWithFromAction
-                                            : connectionsData.connectionsWithToAction,
-                                          extensionsData.items,
-                                          steps
-                                        ) as StepKind[],
-                                        positionAsNumber
-                                      ) as IUIStep[]).map(
-                                        (step, idx: number) => (
-                                          <IntegrationEditorConnectionsListItem
-                                            key={idx}
-                                            integrationName={step.name}
-                                            integrationDescription={
-                                              step.description ||
-                                              'No description available.'
-                                            }
-                                            icon={
-                                              <img
-                                                src={step.icon}
-                                                width={24}
-                                                height={24}
-                                              />
-                                            }
-                                            actions={
-                                              <ButtonLink
-                                                href={getStepHref(step)}
-                                              >
-                                                Select
-                                              </ButtonLink>
-                                            }
-                                          />
-                                        )
-                                      )}
-                                      <IntegrationEditorConnectionsListItem
-                                        integrationName={''}
-                                        integrationDescription={''}
-                                        icon={''}
-                                        actions={
-                                          <ButtonLink href={'#'}>
-                                            Create connection
-                                          </ButtonLink>
-                                        }
-                                      />
-                                    </>
-                                  )}
+                                  {() => {
+                                    const stepKinds = toStepKindCollection(
+                                      positionAsNumber === 0
+                                        ? connectionsData.connectionsWithFromAction
+                                        : connectionsData.connectionsWithToAction,
+                                      extensionsData.items,
+                                      steps
+                                    );
+                                    const visibleSteps = visibleStepsByPosition(
+                                      stepKinds as StepKind[],
+                                      positionAsNumber
+                                    ) as IUIStep[];
+                                    return (
+                                      <>
+                                        {visibleSteps.map(
+                                          (step, idx: number) => (
+                                            <IntegrationEditorConnectionsListItem
+                                              key={idx}
+                                              integrationName={step.name}
+                                              integrationDescription={
+                                                step.description ||
+                                                'No description available.'
+                                              }
+                                              icon={
+                                                <img
+                                                  src={step.icon}
+                                                  width={24}
+                                                  height={24}
+                                                />
+                                              }
+                                              actions={
+                                                <ButtonLink
+                                                  href={getStepHref(step)}
+                                                >
+                                                  Select
+                                                </ButtonLink>
+                                              }
+                                            />
+                                          )
+                                        )}
+                                        <IntegrationEditorConnectionsListItem
+                                          integrationName={''}
+                                          integrationDescription={''}
+                                          icon={''}
+                                          actions={
+                                            <ButtonLink href={'#'}>
+                                              Create connection
+                                            </ButtonLink>
+                                          }
+                                        />
+                                      </>
+                                    );
+                                  }}
                                 </WithLoader>
                               </IntegrationEditorChooseConnection>
                             )}
