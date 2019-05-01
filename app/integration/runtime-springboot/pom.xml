@@ -101,6 +101,7 @@
     <dependency>
       <groupId>io.syndesis.common</groupId>
       <artifactId>jaeger-spring-boot-starter</artifactId>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>io.opentracing</groupId>
