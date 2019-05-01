@@ -34,14 +34,14 @@ export class IntegrationDetailHistory extends React.Component<
                     pullRight={true}
                   >
                     {this.props.actions.map(
-                      (a: IIntegrationAction, idx: number) => (
-                        <li role={'presentation'} key={idx}>
+                      (a: IIntegrationAction, index: number) => (
+                        <li role={'presentation'} key={index}>
                           {a.href ? (
                             <Link
                               to={a.href}
                               onClick={a.onClick}
                               role={'menuitem'}
-                              tabIndex={idx + 1}
+                              tabIndex={index + 1}
                             >
                               {a.label}
                             </Link>
@@ -50,7 +50,7 @@ export class IntegrationDetailHistory extends React.Component<
                               href={'javascript:void(0)'}
                               onClick={a.onClick}
                               role={'menuitem'}
-                              tabIndex={idx + 1}
+                              tabIndex={index + 1}
                             >
                               {a.label}
                             </a>

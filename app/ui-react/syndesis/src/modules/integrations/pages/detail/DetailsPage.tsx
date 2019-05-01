@@ -6,8 +6,6 @@ import {
 } from '@syndesis/api';
 import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import {
-  Breadcrumb,
-  ButtonLink,
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
@@ -17,11 +15,11 @@ import {
   IntegrationDetailInfo,
   Loader,
 } from '@syndesis/ui';
+import { IntegrationDetailBreadcrumb } from '@syndesis/ui/src/Integration/IntegrationDetailBreadcrumb';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
-import { DropdownKebab } from 'patternfly-react';
+
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { Link } from 'react-router-dom';
 import { PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import {
@@ -351,68 +349,29 @@ export class DetailsPage extends React.Component<
                                           'integrations:detail:pageTitle'
                                         )}
                                       />
-                                      <Breadcrumb>
-                                        <Link to={resolvers.dashboard.root()}>
-                                          {t('shared:Home')}
-                                        </Link>
-                                        <Link
-                                          to={resolvers.integrations.list()}
-                                        >
-                                          {t('shared:Integrations')}
-                                        </Link>
-                                        <span>
-                                          {t('integrations:detail:pageTitle')}
-                                        </span>
-                                        <div className={'pull-right'}>
-                                          <ButtonLink
-                                            to={exportAction.href}
-                                            onClick={exportAction.onClick}
-                                            children={exportAction.label}
-                                          />
-                                          <ButtonLink
-                                            to={editAction.href}
-                                            onClick={editAction.onClick}
-                                            children={editAction.label}
-                                          />
-                                          <DropdownKebab
-                                            id={`integration-${
-                                              data.id
-                                            }-action-menu`}
-                                            pullRight={true}
-                                          >
-                                            {breadcrumbMenuActions.map(
-                                              (a, idx) => (
-                                                <li
-                                                  role={'presentation'}
-                                                  key={idx}
-                                                >
-                                                  {a.href ? (
-                                                    <Link
-                                                      to={a.href}
-                                                      onClick={a.onClick}
-                                                      role={'menuitem'}
-                                                      tabIndex={idx + 1}
-                                                    >
-                                                      {a.label}
-                                                    </Link>
-                                                  ) : (
-                                                    <a
-                                                      href={
-                                                        'javascript:void(0)'
-                                                      }
-                                                      onClick={a.onClick}
-                                                      role={'menuitem'}
-                                                      tabIndex={idx + 1}
-                                                    >
-                                                      {a.label}
-                                                    </a>
-                                                  )}
-                                                </li>
-                                              )
-                                            )}
-                                          </DropdownKebab>
-                                        </div>
-                                      </Breadcrumb>
+
+                                      <IntegrationDetailBreadcrumb
+                                        editHref={editAction.href}
+                                        editLabel={editAction.label}
+                                        exportAction={exportAction.onClick}
+                                        exportHref={exportAction.href}
+                                        exportLabel={exportAction.label}
+                                        homeHref={resolvers.dashboard.root()}
+                                        i18nHome={t('shared:Home')}
+                                        i18nIntegrations={t(
+                                          'shared:Integrations'
+                                        )}
+                                        i18nPageTitle={t(
+                                          'integrations:detail:pageTitle'
+                                        )}
+                                        integrationId={data.id}
+                                        integrationsHref={resolvers.integrations.list()}
+                                        menuActions={breadcrumbMenuActions}
+                                        pageTitle={t(
+                                          'integrations:detail:pageTitle'
+                                        )}
+                                      />
+
                                       <IntegrationDetailInfo
                                         name={data.name}
                                         version={data.version}

@@ -6,6 +6,7 @@ export * from './IntegrationActionSelectorCard';
 export * from './IntegrationDetailActivity';
 export * from './IntegrationDetailActivityItem';
 export * from './IntegrationDetailActivityItemSteps';
+export * from './IntegrationDetailBreadcrumb';
 export * from './IntegrationDetailDescription';
 export * from './IntegrationDetailEditableName';
 export * from './IntegrationDetailHistoryListView';
