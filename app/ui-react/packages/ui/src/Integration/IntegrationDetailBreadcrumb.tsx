@@ -7,8 +7,7 @@ import * as H from 'history';
 import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { ButtonLink } from '../../dist/ui/src/Layout';
-import { Breadcrumb } from '../Layout';
+import { Breadcrumb, ButtonLink } from '../Layout';
 
 export interface IIntegrationMenuActions {
   href?: H.LocationDescriptor;
