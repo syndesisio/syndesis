@@ -1,7 +1,6 @@
 import {
   canActivate,
   canDeactivate,
-  canEdit,
   WithIntegration,
   WithIntegrationHelpers,
 } from '@syndesis/api';
@@ -261,13 +260,9 @@ export class DetailsPage extends React.Component<
                                   breadcrumbMenuActions.push(startAction);
                                 }
 
-                                if (data.currentState !== 'Pending') {
-                                  data.isDraft
-                                    ? draftBtnActions.push(editAction)
-                                    : null;
-                                  actions.push(editAction);
-                                  breadcrumbBtnActions.push(editAction);
-                                }
+                                actions.push(editAction);
+                                breadcrumbBtnActions.push(editAction);
+                                draftBtnActions.push(editAction);
 
                                 if (canDeactivate(data)) {
                                   actions.push(stopAction);
@@ -298,15 +293,16 @@ export class DetailsPage extends React.Component<
                                         {t('integrations:detail:pageTitle')}
                                       </span>
                                       <div className={'pull-right'}>
-                                        {breadcrumbBtnActions.map((a, idx) => (
-                                          <ButtonLink
-                                            key={idx}
-                                            to={a.href}
-                                            onClick={a.onClick}
-                                          >
-                                            {a.label}
-                                          </ButtonLink>
-                                        ))}
+                                        <ButtonLink
+                                          to={exportAction.href}
+                                          onClick={exportAction.onClick}
+                                          children={exportAction.label}
+                                        />
+                                        <ButtonLink
+                                          to={editAction.href}
+                                          onClick={editAction.onClick}
+                                          children={editAction.label}
+                                        />
                                         <DropdownKebab
                                           id={`integration-${
                                             data.id
