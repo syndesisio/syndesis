@@ -230,15 +230,10 @@ export const createConfigureEditStepConfigureActionResolver = makeResolver<
 );
 
 export const createConfigureEditStepSaveAndPublishResolver = makeResolver<
-  { integration: Integration },
-  null,
+  IEditorIndex,
+  ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState
->(routes.create.configure.saveAndPublish, ({ integration }) => ({
-  params: null,
-  state: {
-    integration,
-  },
-}));
+>(routes.create.configure.saveAndPublish, configureIndexMapper);
 
 export const integrationActivityResolver = makeResolver<
   { integration: Integration },
@@ -330,7 +325,11 @@ export const metricsResolver = makeResolver<
   },
 }));
 
-export default {
+type RouteResolver<T> = {
+  [K in keyof T]: T[K] extends string ? any : RouteResolver<T[K]>
+};
+
+const resolvers: RouteResolver<typeof routes> = {
   list: listResolver,
   manageCicd: {
     root: manageCicdResolver,
@@ -342,55 +341,139 @@ export default {
       connection: {
         selectAction: createStartSelectActionResolver,
         configureAction: createStartConfigureActionResolver,
+        describeData: () => 'describeData',
       },
+      apiProvider: {
+        upload: makeResolverNoParams(routes.create.start.apiProvider.upload),
+        review: () => 'review',
+        edit: () => 'edit',
+      },
+      basicFilter: () => 'basicFilter',
+      dataMapper: () => 'dataMapper',
+      template: () => 'template',
+      step: () => 'step',
+      extension: () => 'extension',
     },
     finish: {
       selectStep: createFinishSelectStepResolver,
       connection: {
         selectAction: createFinishSelectActionResolver,
         configureAction: createFinishConfigureActionResolver,
+        describeData: () => 'describeData',
       },
+      apiProvider: {
+        upload: makeResolverNoParams(routes.create.finish.apiProvider.upload),
+        review: () => 'review',
+        edit: () => 'edit',
+      },
+      basicFilter: () => 'basicFilter',
+      dataMapper: () => 'dataMapper',
+      template: () => 'template',
+      step: () => 'step',
+      extension: () => 'extension',
     },
     configure: {
+      root: createRootResolver,
       index: createConfigureIndexResolver,
       addStep: {
         selectStep: createConfigureAddStepSelectStepResolver,
         connection: {
           selectAction: createConfigureAddStepSelectActionResolver,
           configureAction: createConfigureAddStepConfigureActionResolver,
+          describeData: () => 'describeData',
         },
+        apiProvider: {
+          upload: makeResolverNoParams(
+            routes.create.configure.addStep.apiProvider.upload
+          ),
+          review: () => 'review',
+          edit: () => 'edit',
+        },
+        basicFilter: () => 'basicFilter',
+        dataMapper: () => 'dataMapper',
+        template: () => 'template',
+        step: () => 'step',
+        extension: () => 'extension',
       },
       editStep: {
-        index: 'todo',
+        selectStep: () => {
+          throw new Error('this route should not be used');
+        },
         connection: {
           selectAction: createConfigureEditStepSelectActionResolver,
           configureAction: createConfigureEditStepConfigureActionResolver,
+          describeData: () => 'describeData',
         },
+        apiProvider: {
+          upload: makeResolverNoParams(
+            routes.create.configure.editStep.apiProvider.upload
+          ),
+          review: () => 'review',
+          edit: () => 'edit',
+        },
+        basicFilter: () => 'basicFilter',
+        dataMapper: () => 'dataMapper',
+        template: () => 'template',
+        step: () => 'step',
+        extension: () => 'extension',
       },
       saveAndPublish: createConfigureEditStepSaveAndPublishResolver,
     },
   },
   integration: {
+    root: createRootResolver,
     activity: integrationActivityResolver,
     details: integrationDetailsResolver,
     edit: {
+      root: createRootResolver,
       index: integrationEditIndexResolver,
       addStep: {
         selectStep: integrationEditAddStepSelectStepResolver,
         connection: {
           selectAction: integrationEditAddStepSelectActionResolver,
           configureAction: integrationEditAddStepConfigureActionResolver,
+          describeData: () => 'describeData',
         },
+        apiProvider: {
+          upload: makeResolverNoParams(
+            routes.integration.edit.addStep.apiProvider.upload
+          ),
+          review: () => 'review',
+          edit: () => 'edit',
+        },
+        basicFilter: () => 'basicFilter',
+        dataMapper: () => 'dataMapper',
+        template: () => 'template',
+        step: () => 'step',
+        extension: () => 'extension',
       },
       editStep: {
-        index: 'todo',
+        selectStep: () => {
+          throw new Error('this route should not be used');
+        },
         connection: {
           selectAction: integrationEditEditStepSelectActionResolver,
           configureAction: integrationEditEditStepConfigureActionResolver,
+          describeData: () => 'describeData',
         },
+        apiProvider: {
+          upload: makeResolverNoParams(
+            routes.integration.edit.editStep.apiProvider.upload
+          ),
+          review: () => 'review',
+          edit: () => 'edit',
+        },
+        basicFilter: () => 'basicFilter',
+        dataMapper: () => 'dataMapper',
+        template: () => 'template',
+        step: () => 'step',
+        extension: () => 'extension',
       },
       saveAndPublish: integrationEditSaveAndPublish,
     },
     metrics: metricsResolver,
   },
+  import: makeResolverNoParams(routes.import),
 };
+
+export default resolvers;

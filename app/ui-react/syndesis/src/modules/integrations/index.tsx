@@ -39,7 +39,7 @@ export class IntegrationsModule extends React.Component {
           exact={true}
           component={ManageCiCdPage}
         />
-        <Route path={routes.import.root} exact={true} component={ImportPage} />
+        <Route path={routes.import} exact={true} component={ImportPage} />
         <Route path={routes.create.root} component={IntegrationCreatorApp} />
         <Route
           path={routes.integration.edit.root}

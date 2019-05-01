@@ -6,10 +6,9 @@ const stepRoutes = {
   selectStep: '',
   // if selected step is api provider
   apiProvider: include('api-provider', {
-    specification: 'specification',
+    upload: '',
     review: 'review',
     edit: 'edit',
-    save: 'save',
   }),
   // if selected step kind is data mapper
   dataMapper: 'mapper',
@@ -19,10 +18,12 @@ const stepRoutes = {
   template: 'template',
   // if selected step kind is step
   step: 'step',
+  // if selected step kind is step
+  extension: 'extension',
   // if selected step kind is endpoint
   connection: include('connection/:connectionId', {
-    selectAction: 'action',
-    configureAction: 'action/:actionId/step/:step',
+    selectAction: '',
+    configureAction: ':actionId/:step',
     // if 'any' data shape
     describeData: 'describe-data/:position/:direction(input|output)',
   }),
@@ -32,10 +33,10 @@ const stepRoutes = {
  * Both the integration creator and editor share the same routes when the creator
  * reaches the third step in the wizard. This object is to keep them DRY.
  */
-const editorRoutes = include('flow/:flowId', {
+const editorRoutes = include(':flowId', {
   index: 'add-step',
-  addStep: include('position/:position/connection', stepRoutes),
-  editStep: include('position/:position/edit-connection', stepRoutes),
+  addStep: include(':position/add', stepRoutes),
+  editStep: include(':position/edit', stepRoutes),
   saveAndPublish: 'save',
   root: '',
 });
@@ -43,10 +44,10 @@ const editorRoutes = include('flow/:flowId', {
 export default include('/integrations', {
   list: '',
   manageCicd: include('manageCicd', { root: '' }),
-  import: include('import', { root: '' }),
+  import: 'import',
   create: include('create', {
-    start: include('start/flow/:flowId/position/:position', stepRoutes),
-    finish: include('finish/flow/:flowId/position/:position', stepRoutes),
+    start: include('start/:flowId/:position', stepRoutes),
+    finish: include('finish/:flowId/:position', stepRoutes),
     configure: include('configure', editorRoutes),
     root: '',
   }),

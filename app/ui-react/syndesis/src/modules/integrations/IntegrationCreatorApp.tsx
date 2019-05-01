@@ -1,3 +1,4 @@
+/* tslint:disable:object-literal-sort-keys */
 import { getConnectionIcon } from '@syndesis/api';
 import {
   Breadcrumb,
@@ -14,6 +15,10 @@ import {
   IntegrationEditorSidebar,
 } from './components';
 import { AddStepPage } from './components/editor/AddStepPage';
+import { ReviewPage } from './components/editor/api-provider/EditPage';
+import { EditPage } from './components/editor/api-provider/ReviewPage';
+import { UploadPage } from './components/editor/api-provider/UploadPage';
+import { EditorApp } from './components/editor/EditorApp';
 import { ConfigureActionPage } from './components/editor/endpoint/ConfigureActionPage';
 import { SelectActionPage } from './components/editor/endpoint/SelectActionPage';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
@@ -63,7 +68,7 @@ const startStepSelectConnectionPage = (
   <SelectConnectionPage
     cancelHref={resolvers.list}
     header={<IntegrationCreatorBreadcrumbs step={1} />}
-    apiProviderHref={(p, s) => ({ pathname: 'todo' })}
+    apiProviderHref={resolvers.create.start.apiProvider.upload}
     connectionHref={(connection, params, state) =>
       resolvers.create.start.connection.selectAction({
         connection,
@@ -71,6 +76,11 @@ const startStepSelectConnectionPage = (
         ...state,
       })
     }
+    filterHref={resolvers.create.start.basicFilter}
+    extensionHref={resolvers.create.start.extension}
+    mapperHref={resolvers.create.start.dataMapper}
+    templateHref={resolvers.create.start.template}
+    stepHref={resolvers.create.start.step}
     sidebar={() => (
       <IntegrationVerticalFlow>
         {({ expanded }) => (
@@ -207,7 +217,7 @@ const finishStepSelectConnectionPage = (
   <SelectConnectionPage
     cancelHref={resolvers.list}
     header={<IntegrationCreatorBreadcrumbs step={2} />}
-    apiProviderHref={(p, s) => ({ pathname: 'todo' })}
+    apiProviderHref={resolvers.create.finish.apiProvider.upload}
     connectionHref={(connection, params, state) =>
       resolvers.create.finish.connection.selectAction({
         connection,
@@ -215,6 +225,11 @@ const finishStepSelectConnectionPage = (
         ...state,
       })
     }
+    filterHref={resolvers.create.finish.basicFilter}
+    extensionHref={resolvers.create.finish.extension}
+    mapperHref={resolvers.create.finish.dataMapper}
+    templateHref={resolvers.create.finish.template}
+    stepHref={resolvers.create.finish.step}
     sidebar={({ steps }) => (
       <IntegrationVerticalFlow>
         {({ expanded }) => {
@@ -386,7 +401,7 @@ const addStepSelectConnectionPage = (
   <SelectConnectionPage
     cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
     header={<IntegrationCreatorBreadcrumbs step={3} />}
-    apiProviderHref={(p, s) => ({ pathname: 'todo' })}
+    apiProviderHref={resolvers.create.configure.addStep.apiProvider.upload}
     connectionHref={(connection, p, s) =>
       resolvers.create.configure.addStep.connection.selectAction({
         connection,
@@ -394,6 +409,11 @@ const addStepSelectConnectionPage = (
         ...s,
       })
     }
+    filterHref={resolvers.create.configure.addStep.basicFilter}
+    extensionHref={resolvers.create.configure.addStep.extension}
+    mapperHref={resolvers.create.configure.addStep.dataMapper}
+    templateHref={resolvers.create.configure.addStep.template}
+    stepHref={resolvers.create.configure.addStep.step}
     sidebar={({ steps, activeIndex }) => (
       <IntegrationEditorSidebar
         steps={steps}
@@ -521,6 +541,8 @@ const editStepConfigureActionPage = (
   />
 );
 
+const TODO: React.FunctionComponent = () => <>TODO</>;
+
 /**
  * Entry point for the integration creator app. This is shown when an user clicks
  * the "Create integration" button somewhere in the app.
@@ -549,79 +571,194 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
         <span>New integration</span>
       </Breadcrumb>
       <Switch>
-        {/* step 1.1 */}
-        <Route
-          path={routes.create.start.selectStep}
-          exact={true}
-          children={startStepSelectConnectionPage}
-        />
-        {/* step 1.2 */}
-        <Route
-          path={routes.create.start.connection.selectAction}
-          exact={true}
-          children={startStepSelectActionPage}
-        />
-        {/* step 1.3 */}
-        <Route
-          path={routes.create.start.connection.configureAction}
-          exact={true}
-          children={startStepConfigureActionPage}
-        />
-        {/* step 2.1 */}
-        <Route
-          path={routes.create.finish.selectStep}
-          exact={true}
-          children={finishStepSelectConnectionPage}
-        />
-        {/* step 2.2 */}
-        <Route
-          path={routes.create.finish.connection.selectAction}
-          exact={true}
-          children={finishStepSelectActionPage}
-        />
-        {/* step 2.3 */}
-        <Route
-          path={routes.create.finish.connection.configureAction}
-          exact={true}
-          children={finishStepConfigureActionPage}
-        />
-        {/* step 3: index */}
+        {/* start step */}
+        <Route path={routes.create.start.selectStep}>
+          <EditorApp
+            selectStepPath={routes.create.start.selectStep}
+            selectStepChildren={startStepSelectConnectionPage}
+            endpointEditor={{
+              selectActionPath: routes.create.start.connection.selectAction,
+              selectActionChildren: startStepSelectActionPage,
+              configureActionPath:
+                routes.create.start.connection.configureAction,
+              configureActionChildren: startStepConfigureActionPage,
+              describeDataPath: routes.create.start.connection.describeData,
+              describeDataChildren: TODO,
+            }}
+            apiProvider={{
+              uploadPath: routes.create.start.apiProvider.upload,
+              uploadChildren: <UploadPage />,
+              reviewPath: routes.create.start.apiProvider.review,
+              reviewChildren: <ReviewPage />,
+              editPath: routes.create.start.apiProvider.edit,
+              editChildren: <EditPage />,
+            }}
+            template={{
+              templatePath: routes.create.start.template,
+              templateChildren: TODO,
+            }}
+            dataMapper={{
+              mapperPath: routes.create.start.dataMapper,
+              mapperChildren: TODO,
+            }}
+            basicFilter={{
+              filterPath: routes.create.start.basicFilter,
+              filterChildren: TODO,
+            }}
+            step={{
+              configurePath: routes.create.start.step,
+              configureChildren: TODO,
+            }}
+            extension={{
+              configurePath: routes.create.start.extension,
+              configureChildren: TODO,
+            }}
+          />
+        </Route>
+
+        {/* finish step */}
+        <Route path={routes.create.finish.selectStep}>
+          <EditorApp
+            selectStepPath={routes.create.finish.selectStep}
+            selectStepChildren={finishStepSelectConnectionPage}
+            endpointEditor={{
+              selectActionPath: routes.create.finish.connection.selectAction,
+              selectActionChildren: finishStepSelectActionPage,
+              configureActionPath:
+                routes.create.finish.connection.configureAction,
+              configureActionChildren: finishStepConfigureActionPage,
+              describeDataPath: routes.create.finish.connection.describeData,
+              describeDataChildren: TODO,
+            }}
+            apiProvider={{
+              uploadPath: routes.create.finish.apiProvider.upload,
+              uploadChildren: <UploadPage />,
+              reviewPath: routes.create.finish.apiProvider.review,
+              reviewChildren: <ReviewPage />,
+              editPath: routes.create.finish.apiProvider.edit,
+              editChildren: <EditPage />,
+            }}
+            template={{
+              templatePath: routes.create.finish.template,
+              templateChildren: TODO,
+            }}
+            dataMapper={{
+              mapperPath: routes.create.finish.dataMapper,
+              mapperChildren: TODO,
+            }}
+            basicFilter={{
+              filterPath: routes.create.finish.basicFilter,
+              filterChildren: TODO,
+            }}
+            step={{
+              configurePath: routes.create.finish.step,
+              configureChildren: TODO,
+            }}
+            extension={{
+              configurePath: routes.create.finish.extension,
+              configureChildren: TODO,
+            }}
+          />
+        </Route>
+
         <Route
           path={routes.create.configure.index}
           exact={true}
           children={addStepPage}
         />
-        {/* step 3: add connection.1 */}
-        <Route
-          path={routes.create.configure.addStep.selectStep}
-          exact={true}
-          children={addStepSelectConnectionPage}
-        />
-        {/* step 3: add connection.2 */}
-        <Route
-          path={routes.create.configure.addStep.connection.selectAction}
-          exact={true}
-          children={addStepSelectActionPage}
-        />
-        {/* step 3: add connection.3 */}
-        <Route
-          path={routes.create.configure.addStep.connection.configureAction}
-          exact={true}
-          children={addStepConfigureActionPage}
-        />
-        {/* step 3: edit connection.2 (this is optional and can be reached only from the configuration page), must be declared before the configure route */}
-        <Route
-          path={routes.create.configure.editStep.connection.selectAction}
-          exact={true}
-          children={editStepSelectActionPage}
-        />
-        {/* step 3: edit connection.1 (when editing we link directly to the configuration step) */}
-        <Route
-          path={routes.create.configure.editStep.connection.configureAction}
-          exact={true}
-          children={editStepConfigureActionPage}
-        />
-        {/* step 4 */}
+
+        {/* add step */}
+        <Route path={routes.create.configure.addStep.selectStep}>
+          <EditorApp
+            selectStepPath={routes.create.configure.addStep.selectStep}
+            selectStepChildren={addStepSelectConnectionPage}
+            endpointEditor={{
+              selectActionPath:
+                routes.create.configure.addStep.connection.selectAction,
+              selectActionChildren: addStepSelectActionPage,
+              configureActionPath:
+                routes.create.configure.addStep.connection.configureAction,
+              configureActionChildren: addStepConfigureActionPage,
+              describeDataPath:
+                routes.create.configure.addStep.connection.describeData,
+              describeDataChildren: TODO,
+            }}
+            apiProvider={{
+              uploadPath: routes.create.configure.addStep.apiProvider.upload,
+              uploadChildren: <UploadPage />,
+              reviewPath: routes.create.configure.addStep.apiProvider.review,
+              reviewChildren: <ReviewPage />,
+              editPath: routes.create.configure.addStep.apiProvider.edit,
+              editChildren: <EditPage />,
+            }}
+            template={{
+              templatePath: routes.create.configure.addStep.template,
+              templateChildren: TODO,
+            }}
+            dataMapper={{
+              mapperPath: routes.create.configure.addStep.dataMapper,
+              mapperChildren: TODO,
+            }}
+            basicFilter={{
+              filterPath: routes.create.configure.addStep.basicFilter,
+              filterChildren: TODO,
+            }}
+            step={{
+              configurePath: routes.create.configure.addStep.step,
+              configureChildren: TODO,
+            }}
+            extension={{
+              configurePath: routes.create.configure.addStep.extension,
+              configureChildren: TODO,
+            }}
+          />
+        </Route>
+
+        {/* edit step */}
+        <Route path={routes.create.configure.editStep.selectStep}>
+          <EditorApp
+            endpointEditor={{
+              selectActionPath:
+                routes.create.configure.editStep.connection.selectAction,
+              selectActionChildren: editStepSelectActionPage,
+              configureActionPath:
+                routes.create.configure.editStep.connection.configureAction,
+              configureActionChildren: editStepConfigureActionPage,
+              describeDataPath:
+                routes.create.configure.editStep.connection.describeData,
+              describeDataChildren: TODO,
+            }}
+            apiProvider={{
+              uploadPath: routes.create.configure.editStep.apiProvider.upload,
+              uploadChildren: <UploadPage />,
+              reviewPath: routes.create.configure.editStep.apiProvider.review,
+              reviewChildren: <ReviewPage />,
+              editPath: routes.create.configure.editStep.apiProvider.edit,
+              editChildren: <EditPage />,
+            }}
+            template={{
+              templatePath: routes.create.configure.editStep.template,
+              templateChildren: TODO,
+            }}
+            dataMapper={{
+              mapperPath: routes.create.configure.editStep.dataMapper,
+              mapperChildren: TODO,
+            }}
+            basicFilter={{
+              filterPath: routes.create.configure.editStep.basicFilter,
+              filterChildren: TODO,
+            }}
+            step={{
+              configurePath: routes.create.configure.editStep.step,
+              configureChildren: TODO,
+            }}
+            extension={{
+              configurePath: routes.create.configure.editStep.extension,
+              configureChildren: TODO,
+            }}
+          />
+        </Route>
+
         <Route
           path={routes.create.configure.saveAndPublish}
           exact={true}

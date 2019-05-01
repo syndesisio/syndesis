@@ -228,10 +228,13 @@ export function getLastPosition(integration: Integration, flowId: string) {
   if (!flow.steps) {
     return undefined;
   }
-  if (flow.steps.length <= 1) {
+  return getStepsLastPosition(flow.steps);
+}
+export function getStepsLastPosition(steps: Step[]) {
+  if (steps.length <= 1) {
     return 1;
   }
-  return flow.steps.length - 1;
+  return steps.length - 1;
 }
 
 /**
@@ -239,18 +242,13 @@ export function getLastPosition(integration: Integration, flowId: string) {
  * @param steps
  * @param position
  */
-export function filterStepsByPosition(
-  integration: Integration,
-  flowId: string,
-  steps: StepKind[],
-  position: number
-) {
+export function filterStepsByPosition(steps: StepKind[], position: number) {
   if (typeof position === 'undefined' || !steps) {
     // safety net
     return steps;
   }
   const atStart = position === 0;
-  const atEnd = getLastPosition(integration, flowId) === position;
+  const atEnd = getStepsLastPosition(steps) === position;
   return steps.filter(step => {
     // Hide steps that are marked as such, and specifically the log connection
     if (
@@ -319,15 +317,10 @@ export function filterStepsByPosition(
  * @param steps
  * @param position
  */
-export function visibleStepsByPosition(
-  integration: Integration,
-  flowId: string,
-  steps: StepKind[],
-  position: number
-) {
-  const previousSteps = getPreviousSteps(integration, flowId, position);
-  const subsequentSteps = getSubsequentSteps(integration, flowId, position);
-  return filterStepsByPosition(integration, flowId, steps, position).filter(s =>
+export function visibleStepsByPosition(steps: StepKind[], position: number) {
+  const previousSteps = steps.slice(0, position);
+  const subsequentSteps = steps.slice(position + 1);
+  return filterStepsByPosition(steps, position).filter(s =>
     s.visible
       ? typeof s.visible === 'function'
         ? s.visible(position, previousSteps, subsequentSteps)

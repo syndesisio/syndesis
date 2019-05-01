@@ -27,7 +27,7 @@ export class IntegrationEditorChooseAction extends React.Component<
     return (
       <>
         <Container className="pf-u-my-md">
-          <Title size="xl">{this.props.i18nTitle} - Choose Action</Title>
+          <Title size="xl">{this.props.i18nTitle}</Title>
           <Text>{this.props.i18nSubtitle}</Text>
         </Container>
         <Container>
