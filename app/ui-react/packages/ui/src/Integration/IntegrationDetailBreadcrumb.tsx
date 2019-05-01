@@ -23,7 +23,6 @@ export interface IIntegrationDetailBreadcrumbProps {
   integrationId?: string;
   integrationsHref?: H.LocationDescriptor;
   menuActions?: IIntegrationMenuActions[];
-  pageTitle: string;
 }
 
 export class IntegrationDetailBreadcrumb extends React.Component<

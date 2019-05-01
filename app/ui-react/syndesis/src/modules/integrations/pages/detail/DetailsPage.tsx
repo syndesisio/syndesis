@@ -13,6 +13,8 @@ import {
   IntegrationDetailBreadcrumb,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
+  IntegrationDetailHistoryListViewItem,
+  IntegrationDetailHistoryListViewItemActions,
   IntegrationDetailInfo,
   Loader,
 } from '@syndesis/ui';
@@ -22,10 +24,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
-import {
-  IntegrationDetailHistory,
-  IntegrationDetailSteps,
-} from '../../components';
+import { IntegrationDetailSteps } from '../../components';
 import { TagIntegrationDialogWrapper } from '../../components/TagIntegrationDialogWrapper';
 import { IntegrationDetailNavBar } from '../../shared';
 
@@ -264,7 +263,6 @@ export class DetailsPage extends React.Component<
                                  * Array of actions for the breadcrumb.
                                  * One for the buttons, another for the dropdown menu.
                                  */
-                                const breadcrumbBtnActions: IIntegrationAction[] = [];
                                 const breadcrumbMenuActions: IIntegrationAction[] = [];
 
                                 /**
@@ -273,18 +271,13 @@ export class DetailsPage extends React.Component<
                                  */
                                 const draftBtnActions: IIntegrationAction[] = [];
 
-                                breadcrumbBtnActions.push(exportAction);
-
                                 if (canActivate(data)) {
-                                  data.isDraft
-                                    ? draftBtnActions.push(startAction)
-                                    : null;
                                   actions.push(startAction);
                                   breadcrumbMenuActions.push(startAction);
+                                  draftBtnActions.push(startAction);
                                 }
 
                                 actions.push(editAction);
-                                breadcrumbBtnActions.push(editAction);
                                 draftBtnActions.push(editAction);
 
                                 if (canDeactivate(data)) {
@@ -389,15 +382,32 @@ export class DetailsPage extends React.Component<
                                       i18nTextHistory={t(
                                         'integrations:detail:History'
                                       )}
-                                      children={
-                                        <IntegrationDetailHistory
-                                          actions={actions}
-                                          deployments={deployments}
-                                          integrationId={data.id!}
-                                          updatedAt={data.updatedAt!}
-                                          version={data.version!}
-                                        />
-                                      }
+                                      children={deployments.map(
+                                        (deployment, idx) => {
+                                          return (
+                                            <IntegrationDetailHistoryListViewItem
+                                              key={idx}
+                                              actions={
+                                                <IntegrationDetailHistoryListViewItemActions
+                                                  actions={actions}
+                                                  integrationId={data.id!}
+                                                />
+                                              }
+                                              currentState={
+                                                deployment.currentState!
+                                              }
+                                              i18nTextLastPublished={t(
+                                                'integrations:detail:lastPublished'
+                                              )}
+                                              i18nTextVersion={t(
+                                                'shared:Version'
+                                              )}
+                                              updatedAt={deployment.updatedAt}
+                                              version={deployment.version}
+                                            />
+                                          );
+                                        }
+                                      )}
                                     />
                                   </>
                                 );

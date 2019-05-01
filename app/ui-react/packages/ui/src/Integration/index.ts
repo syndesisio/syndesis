@@ -11,6 +11,7 @@ export * from './IntegrationDetailDescription';
 export * from './IntegrationDetailEditableName';
 export * from './IntegrationDetailHistoryListView';
 export * from './IntegrationDetailHistoryListViewItem';
+export * from './IntegrationDetailHistoryListViewItemActions';
 export * from './IntegrationDetailInfo';
 export * from './IntegrationDetailMetrics';
 export * from './IntegrationEditorActionsListItem';
