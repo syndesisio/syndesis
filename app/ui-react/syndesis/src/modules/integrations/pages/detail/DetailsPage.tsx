@@ -8,10 +8,12 @@ import {
 import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import {
   Breadcrumb,
+  ButtonLink,
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
   IIntegrationAction,
+  IntegrationActions,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
   IntegrationDetailInfo,
@@ -21,6 +23,7 @@ import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { PageTitle } from '../../../../shared';
 import resolvers from '../../../resolvers';
 import {
   IntegrationDetailHistory,
@@ -228,27 +231,62 @@ export class DetailsPage extends React.Component<
                                       `${data.name}-export.zip`
                                     ),
                                 };
+                                const cicdAction: IIntegrationAction = {
+                                  label: 'CI/CD',
+                                  onClick: () => console.log('Hello'),
+                                };
 
                                 const actions: IIntegrationAction[] = [];
-                                const draftActions: IIntegrationAction[] = [];
+
+                                /**
+                                 * Array of actions for the breadcrumb.
+                                 * One for the buttons, another for the dropdown menu.
+                                 */
+                                const breadcrumbBtnActions: IIntegrationAction[] = [];
+                                const breadcrumbMenuActions: IIntegrationAction[] = [];
+
+                                /**
+                                 * Array of actions for Draft integrations.
+                                 * This is specifically for the inline buttons on the Details tab.
+                                 */
+                                const draftBtnActions: IIntegrationAction[] = [];
+
+                                breadcrumbBtnActions.push(exportAction);
+
                                 if (canActivate(data)) {
                                   data.isDraft
-                                    ? draftActions.push(startAction)
-                                    : actions.push(startAction);
+                                    ? draftBtnActions.push(startAction)
+                                    : null;
+                                  actions.push(startAction);
+                                  breadcrumbMenuActions.push(startAction);
                                 }
+
                                 if (canEdit(data)) {
                                   data.isDraft
-                                    ? draftActions.push(editAction)
-                                    : actions.push(editAction);
+                                    ? draftBtnActions.push(editAction)
+                                    : null;
+                                  actions.push(editAction);
+                                  breadcrumbBtnActions.push(editAction);
                                 }
+
                                 if (canDeactivate(data)) {
                                   actions.push(stopAction);
+                                  breadcrumbMenuActions.push(stopAction);
                                 }
+
                                 actions.push(deleteAction);
+                                breadcrumbMenuActions.push(deleteAction);
+
                                 actions.push(exportAction);
+
+                                actions.push(cicdAction);
+                                breadcrumbMenuActions.push(cicdAction);
 
                                 return (
                                   <>
+                                    <PageTitle
+                                      title={t('integrations:detail:pageTitle')}
+                                    />
                                     <Breadcrumb>
                                       <Link to={resolvers.dashboard.root()}>
                                         {t('shared:Home')}
@@ -259,6 +297,21 @@ export class DetailsPage extends React.Component<
                                       <span>
                                         {t('integrations:detail:pageTitle')}
                                       </span>
+                                      <div className={'pull-right'}>
+                                        {breadcrumbBtnActions.map((a, idx) => (
+                                          <ButtonLink
+                                            key={idx}
+                                            to={a.href}
+                                            onClick={a.onClick}
+                                          >
+                                            {a.label}
+                                          </ButtonLink>
+                                        ))}
+                                        <IntegrationActions
+                                          integrationId={data.id!}
+                                          actions={breadcrumbMenuActions}
+                                        />
+                                      </div>
                                     </Breadcrumb>
                                     <ConfirmationDialog
                                       buttonStyle={
@@ -294,7 +347,7 @@ export class DetailsPage extends React.Component<
                                       )}
                                     />
                                     <IntegrationDetailHistoryListView
-                                      actions={draftActions}
+                                      actions={draftBtnActions}
                                       hasHistory={deployments.length > 0}
                                       isDraft={data.isDraft}
                                       i18nTextDraft={t('shared:Draft')}

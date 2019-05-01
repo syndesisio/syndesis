@@ -11,6 +11,7 @@
     "shared": {
       "Actions": "Actions",
       "Cancel": "Cancel",
+      "CiCd": "CI/CD",
       "Connection": "Connection",
       "Connections": "Connections",
       "Connector": "Connector",
