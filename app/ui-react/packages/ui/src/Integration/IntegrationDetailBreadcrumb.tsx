@@ -4,7 +4,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, ButtonLink } from '../Layout';
 
-export interface IIntegrationMenuActions {
+interface IBreadcrumbMenuActions {
   href?: H.LocationDescriptor;
   onClick?: (e: React.MouseEvent<any>) => any;
   label: string | JSX.Element;
@@ -22,7 +22,7 @@ export interface IIntegrationDetailBreadcrumbProps {
   i18nPageTitle?: string;
   integrationId?: string;
   integrationsHref?: H.LocationDescriptor;
-  menuActions?: IIntegrationMenuActions[];
+  menuActions?: IBreadcrumbMenuActions[];
 }
 
 export class IntegrationDetailBreadcrumb extends React.Component<
