@@ -13,13 +13,13 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
   IIntegrationAction,
-  IntegrationActions,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
   IntegrationDetailInfo,
   Loader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
+import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -261,7 +261,7 @@ export class DetailsPage extends React.Component<
                                   breadcrumbMenuActions.push(startAction);
                                 }
 
-                                if (canEdit(data)) {
+                                if (data.currentState !== 'Pending') {
                                   data.isDraft
                                     ? draftBtnActions.push(editAction)
                                     : null;
@@ -307,10 +307,41 @@ export class DetailsPage extends React.Component<
                                             {a.label}
                                           </ButtonLink>
                                         ))}
-                                        <IntegrationActions
-                                          integrationId={data.id!}
-                                          actions={breadcrumbMenuActions}
-                                        />
+                                        <DropdownKebab
+                                          id={`integration-${
+                                            data.id
+                                          }-action-menu`}
+                                          pullRight={true}
+                                        >
+                                          {breadcrumbMenuActions.map(
+                                            (a, idx) => (
+                                              <li
+                                                role={'presentation'}
+                                                key={idx}
+                                              >
+                                                {a.href ? (
+                                                  <Link
+                                                    to={a.href}
+                                                    onClick={a.onClick}
+                                                    role={'menuitem'}
+                                                    tabIndex={idx + 1}
+                                                  >
+                                                    {a.label}
+                                                  </Link>
+                                                ) : (
+                                                  <a
+                                                    href={'javascript:void(0)'}
+                                                    onClick={a.onClick}
+                                                    role={'menuitem'}
+                                                    tabIndex={idx + 1}
+                                                  >
+                                                    {a.label}
+                                                  </a>
+                                                )}
+                                              </li>
+                                            )
+                                          )}
+                                        </DropdownKebab>
                                       </div>
                                     </Breadcrumb>
                                     <ConfirmationDialog
