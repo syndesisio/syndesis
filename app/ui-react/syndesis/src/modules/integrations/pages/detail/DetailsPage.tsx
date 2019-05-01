@@ -28,6 +28,7 @@ import {
   IntegrationDetailHistory,
   IntegrationDetailSteps,
 } from '../../components';
+import { TagIntegrationDialogWrapper } from '../../components/TagIntegrationDialogWrapper';
 import { IntegrationDetailNavBar } from '../../shared';
 
 /**
@@ -58,7 +59,9 @@ export interface IIntegrationDetailsPageState {
   promptDialogIcon?: ConfirmationIconType;
   promptDialogText?: string;
   promptDialogTitle?: string;
-  showPromptDialog?: boolean;
+  showActionPromptDialog: boolean;
+  showCiCdPromptDialog: boolean;
+  targetIntegrationId?: string;
 }
 
 interface IPromptActionOptions {
@@ -84,23 +87,31 @@ export class DetailsPage extends React.Component<
   public constructor(props: IIntegrationDetailsPageProps) {
     super(props);
     this.state = {
-      showPromptDialog: false,
+      showActionPromptDialog: false,
+      showCiCdPromptDialog: false,
     };
     this.handleAction = this.handleAction.bind(this);
     this.handleActionCancel = this.handleActionCancel.bind(this);
     this.promptForAction = this.promptForAction.bind(this);
+    this.closeCiCdDialog = this.closeCiCdDialog.bind(this);
+  }
+
+  public closeCiCdDialog() {
+    this.setState({
+      showCiCdPromptDialog: false,
+    });
   }
 
   public handleActionCancel() {
     this.setState({
-      showPromptDialog: false,
+      showActionPromptDialog: false,
     });
   }
 
   public handleAction() {
     const action = this.state.handleAction;
     this.setState({
-      showPromptDialog: false,
+      showActionPromptDialog: false,
     });
     if (typeof action === 'function') {
       action.apply(this);
@@ -111,8 +122,19 @@ export class DetailsPage extends React.Component<
 
   public promptForAction(options: IPromptActionOptions) {
     this.setState({
-      ...options,
-      showPromptDialog: true,
+      handleAction: options.handleAction,
+      promptDialogButtonText: options.promptDialogButtonText,
+      promptDialogIcon: options.promptDialogIcon,
+      promptDialogText: options.promptDialogText,
+      promptDialogTitle: options.promptDialogTitle,
+      showActionPromptDialog: true,
+    });
+  }
+
+  public promptForCiCd(targetIntegrationId: string) {
+    this.setState({
+      showCiCdPromptDialog: true,
+      targetIntegrationId,
     });
   }
 
@@ -127,279 +149,314 @@ export class DetailsPage extends React.Component<
                 deployIntegration,
                 exportIntegration,
                 undeployIntegration,
+                tagIntegration,
               }) => {
                 return (
-                  <WithIntegration integrationId={integrationId}>
-                    {({ data, hasData, error }) => (
-                      <WithLoader
-                        error={error}
-                        loading={!hasData}
-                        loaderChildren={<Loader />}
-                        errorChildren={<div>TODO</div>}
-                      >
-                        {() => (
-                          <div>
-                            <Translation ns={['integrations', 'shared']}>
-                              {t => {
-                                const deployments = data.deployments
-                                  ? data.deployments
-                                  : [];
-                                const editAction: IIntegrationAction = {
-                                  href: resolvers.integrations.integration.edit.index(
-                                    {
-                                      flowId: '0',
-                                      integration: data,
-                                    }
-                                  ),
-                                  label: 'Edit',
-                                };
-                                const startAction: IIntegrationAction = {
-                                  label: 'Start',
-                                  onClick: () =>
-                                    this.promptForAction({
-                                      handleAction: () =>
-                                        deployIntegration(
-                                          data.id!,
-                                          data.version!,
-                                          false
-                                        ),
-                                      promptDialogButtonStyle:
-                                        ConfirmationButtonStyle.NORMAL,
-                                      promptDialogButtonText: t('shared:Start'),
-                                      promptDialogIcon:
-                                        ConfirmationIconType.NONE,
-                                      promptDialogText: t(
-                                        'integrations:publishIntegrationModal',
-                                        { name: data.name }
-                                      ),
-                                      promptDialogTitle: t(
-                                        'integrations:publishIntegrationModalTitle'
-                                      ),
-                                    } as IPromptActionOptions),
-                                };
-                                const stopAction: IIntegrationAction = {
-                                  label: 'Stop',
-                                  onClick: () =>
-                                    this.promptForAction({
-                                      handleAction: () =>
-                                        undeployIntegration(
-                                          data.id!,
-                                          data.version!
-                                        ),
-                                      promptDialogButtonStyle:
-                                        ConfirmationButtonStyle.NORMAL,
-                                      promptDialogButtonText: t('shared:Stop'),
-                                      promptDialogIcon:
-                                        ConfirmationIconType.NONE,
-                                      promptDialogText: t(
-                                        'integrations:unpublishIntegrationModal',
-                                        { name: data.name }
-                                      ),
-                                      promptDialogTitle: t(
-                                        'integrations:unpublishIntegrationModalTitle'
-                                      ),
-                                    } as IPromptActionOptions),
-                                };
-                                const deleteAction: IIntegrationAction = {
-                                  label: 'Delete',
-                                  onClick: () =>
-                                    this.promptForAction({
-                                      handleAction: () =>
-                                        deleteIntegration(data.id!),
-                                      promptDialogButtonStyle:
-                                        ConfirmationButtonStyle.DANGER,
-                                      promptDialogButtonText: t(
-                                        'shared:Delete'
-                                      ),
-                                      promptDialogIcon:
-                                        ConfirmationIconType.DANGER,
-                                      promptDialogText: t(
-                                        'integrations:deleteIntegrationModal',
-                                        { name: data.name }
-                                      ),
-                                      promptDialogTitle: t(
-                                        'integrations:deleteIntegrationModalTitle'
-                                      ),
-                                    } as IPromptActionOptions),
-                                };
-                                const exportAction: IIntegrationAction = {
-                                  label: 'Export',
-                                  onClick: () =>
-                                    exportIntegration(
-                                      data.id!,
-                                      `${data.name}-export.zip`
+                  <>
+                    <WithIntegration integrationId={integrationId}>
+                      {({ data, hasData, error }) => (
+                        <WithLoader
+                          error={error}
+                          loading={!hasData}
+                          loaderChildren={<Loader />}
+                          errorChildren={<div>TODO</div>}
+                        >
+                          {() => (
+                            <div>
+                              <Translation ns={['integrations', 'shared']}>
+                                {t => {
+                                  const deployments = data.deployments
+                                    ? data.deployments
+                                    : [];
+                                  const editAction: IIntegrationAction = {
+                                    href: resolvers.integrations.integration.edit.index(
+                                      {
+                                        flowId: '0',
+                                        integration: data,
+                                      }
                                     ),
-                                };
-                                const cicdAction: IIntegrationAction = {
-                                  label: 'CI/CD',
-                                  onClick: () => console.log('Hello'),
-                                };
+                                    label: 'Edit',
+                                  };
+                                  const startAction: IIntegrationAction = {
+                                    label: 'Start',
+                                    onClick: () =>
+                                      this.promptForAction({
+                                        handleAction: () =>
+                                          deployIntegration(
+                                            data.id!,
+                                            data.version!,
+                                            false
+                                          ),
+                                        promptDialogButtonStyle:
+                                          ConfirmationButtonStyle.NORMAL,
+                                        promptDialogButtonText: t(
+                                          'shared:Start'
+                                        ),
+                                        promptDialogIcon:
+                                          ConfirmationIconType.NONE,
+                                        promptDialogText: t(
+                                          'integrations:publishIntegrationModal',
+                                          { name: data.name }
+                                        ),
+                                        promptDialogTitle: t(
+                                          'integrations:publishIntegrationModalTitle'
+                                        ),
+                                      } as IPromptActionOptions),
+                                  };
+                                  const stopAction: IIntegrationAction = {
+                                    label: 'Stop',
+                                    onClick: () =>
+                                      this.promptForAction({
+                                        handleAction: () =>
+                                          undeployIntegration(
+                                            data.id!,
+                                            data.version!
+                                          ),
+                                        promptDialogButtonStyle:
+                                          ConfirmationButtonStyle.NORMAL,
+                                        promptDialogButtonText: t(
+                                          'shared:Stop'
+                                        ),
+                                        promptDialogIcon:
+                                          ConfirmationIconType.NONE,
+                                        promptDialogText: t(
+                                          'integrations:unpublishIntegrationModal',
+                                          { name: data.name }
+                                        ),
+                                        promptDialogTitle: t(
+                                          'integrations:unpublishIntegrationModalTitle'
+                                        ),
+                                      } as IPromptActionOptions),
+                                  };
+                                  const deleteAction: IIntegrationAction = {
+                                    label: 'Delete',
+                                    onClick: () =>
+                                      this.promptForAction({
+                                        handleAction: () =>
+                                          deleteIntegration(data.id!),
+                                        promptDialogButtonStyle:
+                                          ConfirmationButtonStyle.DANGER,
+                                        promptDialogButtonText: t(
+                                          'shared:Delete'
+                                        ),
+                                        promptDialogIcon:
+                                          ConfirmationIconType.DANGER,
+                                        promptDialogText: t(
+                                          'integrations:deleteIntegrationModal',
+                                          { name: data.name }
+                                        ),
+                                        promptDialogTitle: t(
+                                          'integrations:deleteIntegrationModalTitle'
+                                        ),
+                                      } as IPromptActionOptions),
+                                  };
+                                  const exportAction: IIntegrationAction = {
+                                    label: 'Export',
+                                    onClick: () =>
+                                      exportIntegration(
+                                        data.id!,
+                                        `${data.name}-export.zip`
+                                      ),
+                                  };
+                                  const ciCdAction: IIntegrationAction = {
+                                    label: 'Manage CI/CD',
+                                    onClick: () => {
+                                      this.promptForCiCd(data.id!);
+                                    },
+                                  };
 
-                                const actions: IIntegrationAction[] = [];
+                                  const actions: IIntegrationAction[] = [];
 
-                                /**
-                                 * Array of actions for the breadcrumb.
-                                 * One for the buttons, another for the dropdown menu.
-                                 */
-                                const breadcrumbBtnActions: IIntegrationAction[] = [];
-                                const breadcrumbMenuActions: IIntegrationAction[] = [];
+                                  /**
+                                   * Array of actions for the breadcrumb.
+                                   * One for the buttons, another for the dropdown menu.
+                                   */
+                                  const breadcrumbBtnActions: IIntegrationAction[] = [];
+                                  const breadcrumbMenuActions: IIntegrationAction[] = [];
 
-                                /**
-                                 * Array of actions for Draft integrations.
-                                 * This is specifically for the inline buttons on the Details tab.
-                                 */
-                                const draftBtnActions: IIntegrationAction[] = [];
+                                  /**
+                                   * Array of actions for Draft integrations.
+                                   * This is specifically for the inline buttons on the Details tab.
+                                   */
+                                  const draftBtnActions: IIntegrationAction[] = [];
 
-                                breadcrumbBtnActions.push(exportAction);
+                                  breadcrumbBtnActions.push(exportAction);
 
-                                if (canActivate(data)) {
-                                  data.isDraft
-                                    ? draftBtnActions.push(startAction)
-                                    : null;
-                                  actions.push(startAction);
-                                  breadcrumbMenuActions.push(startAction);
-                                }
+                                  if (canActivate(data)) {
+                                    data.isDraft
+                                      ? draftBtnActions.push(startAction)
+                                      : null;
+                                    actions.push(startAction);
+                                    breadcrumbMenuActions.push(startAction);
+                                  }
 
-                                actions.push(editAction);
-                                breadcrumbBtnActions.push(editAction);
-                                draftBtnActions.push(editAction);
+                                  actions.push(editAction);
+                                  breadcrumbBtnActions.push(editAction);
+                                  draftBtnActions.push(editAction);
 
-                                if (canDeactivate(data)) {
-                                  actions.push(stopAction);
-                                  breadcrumbMenuActions.push(stopAction);
-                                }
+                                  if (canDeactivate(data)) {
+                                    actions.push(stopAction);
+                                    breadcrumbMenuActions.push(stopAction);
+                                  }
 
-                                actions.push(deleteAction);
-                                breadcrumbMenuActions.push(deleteAction);
+                                  actions.push(deleteAction);
+                                  breadcrumbMenuActions.push(deleteAction);
 
-                                actions.push(exportAction);
+                                  actions.push(exportAction);
 
-                                actions.push(cicdAction);
-                                breadcrumbMenuActions.push(cicdAction);
+                                  actions.push(ciCdAction);
+                                  breadcrumbMenuActions.push(ciCdAction);
 
-                                return (
-                                  <>
-                                    <PageTitle
-                                      title={t('integrations:detail:pageTitle')}
-                                    />
-                                    <Breadcrumb>
-                                      <Link to={resolvers.dashboard.root()}>
-                                        {t('shared:Home')}
-                                      </Link>
-                                      <Link to={resolvers.integrations.list()}>
-                                        {t('shared:Integrations')}
-                                      </Link>
-                                      <span>
-                                        {t('integrations:detail:pageTitle')}
-                                      </span>
-                                      <div className={'pull-right'}>
-                                        <ButtonLink
-                                          to={exportAction.href}
-                                          onClick={exportAction.onClick}
-                                          children={exportAction.label}
+                                  return (
+                                    <>
+                                      {this.state.showCiCdPromptDialog && (
+                                        <TagIntegrationDialogWrapper
+                                          manageCiCdHref={resolvers.integrations.manageCicd.root()}
+                                          tagIntegration={tagIntegration}
+                                          targetIntegrationId={
+                                            this.state.targetIntegrationId!
+                                          }
+                                          onSave={this.closeCiCdDialog}
+                                          onHide={this.closeCiCdDialog}
                                         />
-                                        <ButtonLink
-                                          to={editAction.href}
-                                          onClick={editAction.onClick}
-                                          children={editAction.label}
-                                        />
-                                        <DropdownKebab
-                                          id={`integration-${
-                                            data.id
-                                          }-action-menu`}
-                                          pullRight={true}
-                                        >
-                                          {breadcrumbMenuActions.map(
-                                            (a, idx) => (
-                                              <li
-                                                role={'presentation'}
-                                                key={idx}
-                                              >
-                                                {a.href ? (
-                                                  <Link
-                                                    to={a.href}
-                                                    onClick={a.onClick}
-                                                    role={'menuitem'}
-                                                    tabIndex={idx + 1}
-                                                  >
-                                                    {a.label}
-                                                  </Link>
-                                                ) : (
-                                                  <a
-                                                    href={'javascript:void(0)'}
-                                                    onClick={a.onClick}
-                                                    role={'menuitem'}
-                                                    tabIndex={idx + 1}
-                                                  >
-                                                    {a.label}
-                                                  </a>
-                                                )}
-                                              </li>
-                                            )
+                                      )}
+                                      {this.state.showActionPromptDialog && (
+                                        <ConfirmationDialog
+                                          buttonStyle={
+                                            ConfirmationButtonStyle.NORMAL
+                                          }
+                                          i18nCancelButtonText={t(
+                                            'shared:Cancel'
                                           )}
-                                        </DropdownKebab>
-                                      </div>
-                                    </Breadcrumb>
-                                    <ConfirmationDialog
-                                      buttonStyle={
-                                        ConfirmationButtonStyle.NORMAL
-                                      }
-                                      i18nCancelButtonText={t('shared:Cancel')}
-                                      i18nConfirmButtonText={
-                                        this.state.promptDialogButtonText!
-                                      }
-                                      i18nConfirmationMessage={
-                                        this.state.promptDialogText!
-                                      }
-                                      i18nTitle={this.state.promptDialogTitle!}
-                                      icon={this.state.promptDialogIcon!}
-                                      showDialog={this.state.showPromptDialog!}
-                                      onCancel={this.handleActionCancel}
-                                      onConfirm={this.handleAction}
-                                    />
-                                    <IntegrationDetailInfo
-                                      name={data.name}
-                                      version={data.version}
-                                    />
-                                    <IntegrationDetailNavBar
-                                      integration={data}
-                                    />
-                                    <IntegrationDetailSteps
-                                      integration={data}
-                                    />
-                                    <IntegrationDetailDescription
-                                      description={data.description}
-                                      i18nNoDescription={t(
-                                        'integrations:detail:noDescription'
-                                      )}
-                                    />
-                                    <IntegrationDetailHistoryListView
-                                      actions={draftBtnActions}
-                                      hasHistory={deployments.length > 0}
-                                      isDraft={data.isDraft}
-                                      i18nTextDraft={t('shared:Draft')}
-                                      i18nTextHistory={t(
-                                        'integrations:detail:History'
-                                      )}
-                                      children={
-                                        <IntegrationDetailHistory
-                                          actions={actions}
-                                          deployments={deployments}
-                                          integrationId={data.id!}
-                                          updatedAt={data.updatedAt!}
-                                          version={data.version!}
+                                          i18nConfirmButtonText={
+                                            this.state.promptDialogButtonText!
+                                          }
+                                          i18nConfirmationMessage={
+                                            this.state.promptDialogText!
+                                          }
+                                          i18nTitle={
+                                            this.state.promptDialogTitle!
+                                          }
+                                          icon={this.state.promptDialogIcon!}
+                                          showDialog={
+                                            this.state.showActionPromptDialog!
+                                          }
+                                          onCancel={this.handleActionCancel}
+                                          onConfirm={this.handleAction}
                                         />
-                                      }
-                                    />
-                                  </>
-                                );
-                              }}
-                            </Translation>
-                          </div>
-                        )}
-                      </WithLoader>
-                    )}
-                  </WithIntegration>
+                                      )}
+
+                                      <PageTitle
+                                        title={t(
+                                          'integrations:detail:pageTitle'
+                                        )}
+                                      />
+                                      <Breadcrumb>
+                                        <Link to={resolvers.dashboard.root()}>
+                                          {t('shared:Home')}
+                                        </Link>
+                                        <Link
+                                          to={resolvers.integrations.list()}
+                                        >
+                                          {t('shared:Integrations')}
+                                        </Link>
+                                        <span>
+                                          {t('integrations:detail:pageTitle')}
+                                        </span>
+                                        <div className={'pull-right'}>
+                                          <ButtonLink
+                                            to={exportAction.href}
+                                            onClick={exportAction.onClick}
+                                            children={exportAction.label}
+                                          />
+                                          <ButtonLink
+                                            to={editAction.href}
+                                            onClick={editAction.onClick}
+                                            children={editAction.label}
+                                          />
+                                          <DropdownKebab
+                                            id={`integration-${
+                                              data.id
+                                            }-action-menu`}
+                                            pullRight={true}
+                                          >
+                                            {breadcrumbMenuActions.map(
+                                              (a, idx) => (
+                                                <li
+                                                  role={'presentation'}
+                                                  key={idx}
+                                                >
+                                                  {a.href ? (
+                                                    <Link
+                                                      to={a.href}
+                                                      onClick={a.onClick}
+                                                      role={'menuitem'}
+                                                      tabIndex={idx + 1}
+                                                    >
+                                                      {a.label}
+                                                    </Link>
+                                                  ) : (
+                                                    <a
+                                                      href={
+                                                        'javascript:void(0)'
+                                                      }
+                                                      onClick={a.onClick}
+                                                      role={'menuitem'}
+                                                      tabIndex={idx + 1}
+                                                    >
+                                                      {a.label}
+                                                    </a>
+                                                  )}
+                                                </li>
+                                              )
+                                            )}
+                                          </DropdownKebab>
+                                        </div>
+                                      </Breadcrumb>
+                                      <IntegrationDetailInfo
+                                        name={data.name}
+                                        version={data.version}
+                                      />
+                                      <IntegrationDetailNavBar
+                                        integration={data}
+                                      />
+                                      <IntegrationDetailSteps
+                                        integration={data}
+                                      />
+                                      <IntegrationDetailDescription
+                                        description={data.description}
+                                        i18nNoDescription={t(
+                                          'integrations:detail:noDescription'
+                                        )}
+                                      />
+                                      <IntegrationDetailHistoryListView
+                                        actions={draftBtnActions}
+                                        hasHistory={deployments.length > 0}
+                                        isDraft={data.isDraft}
+                                        i18nTextDraft={t('shared:Draft')}
+                                        i18nTextHistory={t(
+                                          'integrations:detail:History'
+                                        )}
+                                        children={
+                                          <IntegrationDetailHistory
+                                            actions={actions}
+                                            deployments={deployments}
+                                            integrationId={data.id!}
+                                            updatedAt={data.updatedAt!}
+                                            version={data.version!}
+                                          />
+                                        }
+                                      />
+                                    </>
+                                  );
+                                }}
+                              </Translation>
+                            </div>
+                          )}
+                        </WithLoader>
+                      )}
+                    </WithIntegration>
+                  </>
                 );
               }}
             </WithIntegrationHelpers>
