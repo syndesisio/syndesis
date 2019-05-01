@@ -353,9 +353,6 @@ export class DetailsPage extends React.Component<
                                       integrationId={data.id}
                                       integrationsHref={resolvers.integrations.list()}
                                       menuActions={breadcrumbMenuActions}
-                                      pageTitle={t(
-                                        'integrations:detail:pageTitle'
-                                      )}
                                     />
 
                                     <IntegrationDetailInfo
