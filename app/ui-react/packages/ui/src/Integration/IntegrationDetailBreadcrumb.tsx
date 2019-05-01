@@ -1,8 +1,3 @@
-/**
- * Breadcrumb UI component used across all tabs
- * in the Integration Details page.
- */
-
 import * as H from 'history';
 import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
@@ -27,9 +22,6 @@ export interface IIntegrationDetailBreadcrumbProps {
   i18nPageTitle?: string;
   integrationId?: string;
   integrationsHref?: H.LocationDescriptor;
-  /**
-   * Actions to be used in the dropdown menu
-   */
   menuActions?: IIntegrationMenuActions[];
   pageTitle: string;
 }
