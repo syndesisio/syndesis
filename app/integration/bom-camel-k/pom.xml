@@ -20,7 +20,7 @@
 
   <groupId>io.syndesis.integration</groupId>
   <artifactId>integration-bom-camel-k</artifactId>
-  <version>1.7-SNAPSHOT</version>
+  <version>1.6-SNAPSHOT</version>
   <name>Integration :: Camel K :: Bill of Materials (BOM)</name>
   <description>Syndesis :: Integration :: ${project.name}</description>
 
