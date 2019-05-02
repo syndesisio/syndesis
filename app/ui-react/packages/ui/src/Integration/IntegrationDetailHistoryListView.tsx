@@ -1,15 +1,19 @@
+import * as H from 'history';
 import { Grid, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
-import { IIntegrationAction } from './IntegrationActions';
 import './IntegrationDetailHistoryListView.css';
 
 export interface IIntegrationDetailHistoryListViewProps {
-  actions?: IIntegrationAction[];
+  editHref?: H.LocationDescriptor;
+  editLabel?: string | JSX.Element;
   hasHistory: boolean;
   isDraft: boolean;
   i18nTextDraft?: string;
   i18nTextHistory?: string;
+  publishAction?: (e: React.MouseEvent<any>) => any;
+  publishHref?: H.LocationDescriptor;
+  publishLabel?: string | JSX.Element;
 }
 
 export class IntegrationDetailHistoryListView extends React.Component<
@@ -36,13 +40,17 @@ export class IntegrationDetailHistoryListView extends React.Component<
                 key={1}
                 heading={this.props.i18nTextDraft}
                 actions={
-                  this.props.actions
-                    ? this.props.actions.map((a, idx) => (
-                        <ButtonLink key={idx} to={a.href} onClick={a.onClick}>
-                          {a.label}
-                        </ButtonLink>
-                      ))
-                    : null
+                  <>
+                    <ButtonLink
+                      to={this.props.publishHref}
+                      onClick={this.props.publishAction}
+                      children={this.props.publishLabel}
+                    />
+                    <ButtonLink
+                      href={this.props.editHref}
+                      children={this.props.editLabel}
+                    />
+                  </>
                 }
                 stacked={false}
               />

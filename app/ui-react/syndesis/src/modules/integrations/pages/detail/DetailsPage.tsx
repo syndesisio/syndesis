@@ -9,7 +9,7 @@ import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
-  IIntegrationAction,
+  IMenuActions,
   IntegrationDetailBreadcrumb,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
@@ -164,7 +164,7 @@ export class DetailsPage extends React.Component<
                                 const deployments = data.deployments
                                   ? data.deployments
                                   : [];
-                                const editAction: IIntegrationAction = {
+                                const editAction: IMenuActions = {
                                   href: resolvers.integrations.integration.edit.index(
                                     {
                                       flowId: '0',
@@ -173,7 +173,7 @@ export class DetailsPage extends React.Component<
                                   ),
                                   label: 'Edit',
                                 };
-                                const startAction: IIntegrationAction = {
+                                const startAction: IMenuActions = {
                                   label: 'Start',
                                   onClick: () =>
                                     this.promptForAction({
@@ -197,7 +197,7 @@ export class DetailsPage extends React.Component<
                                       ),
                                     } as IPromptActionOptions),
                                 };
-                                const stopAction: IIntegrationAction = {
+                                const stopAction: IMenuActions = {
                                   label: 'Stop',
                                   onClick: () =>
                                     this.promptForAction({
@@ -220,7 +220,7 @@ export class DetailsPage extends React.Component<
                                       ),
                                     } as IPromptActionOptions),
                                 };
-                                const deleteAction: IIntegrationAction = {
+                                const deleteAction: IMenuActions = {
                                   label: 'Delete',
                                   onClick: () =>
                                     this.promptForAction({
@@ -242,7 +242,7 @@ export class DetailsPage extends React.Component<
                                       ),
                                     } as IPromptActionOptions),
                                 };
-                                const exportAction: IIntegrationAction = {
+                                const exportAction: IMenuActions = {
                                   label: 'Export',
                                   onClick: () =>
                                     exportIntegration(
@@ -250,35 +250,32 @@ export class DetailsPage extends React.Component<
                                       `${data.name}-export.zip`
                                     ),
                                 };
-                                const ciCdAction: IIntegrationAction = {
+                                const ciCdAction: IMenuActions = {
                                   label: 'Manage CI/CD',
                                   onClick: () => {
                                     this.promptForCiCd(data.id!);
                                   },
                                 };
 
-                                const actions: IIntegrationAction[] = [];
+                                const actions: IMenuActions[] = [];
 
                                 /**
                                  * Array of actions for the breadcrumb.
                                  * One for the buttons, another for the dropdown menu.
                                  */
-                                const breadcrumbMenuActions: IIntegrationAction[] = [];
+                                const breadcrumbMenuActions: IMenuActions[] = [];
 
                                 /**
                                  * Array of actions for Draft integrations.
                                  * This is specifically for the inline buttons on the Details tab.
                                  */
-                                const draftBtnActions: IIntegrationAction[] = [];
 
                                 if (canActivate(data)) {
                                   actions.push(startAction);
                                   breadcrumbMenuActions.push(startAction);
-                                  draftBtnActions.push(startAction);
                                 }
 
                                 actions.push(editAction);
-                                draftBtnActions.push(editAction);
 
                                 if (canDeactivate(data)) {
                                   actions.push(stopAction);
@@ -372,13 +369,29 @@ export class DetailsPage extends React.Component<
                                       )}
                                     />
                                     <IntegrationDetailHistoryListView
-                                      actions={draftBtnActions}
+                                      editHref={editAction.href}
+                                      editLabel={editAction.label}
                                       hasHistory={deployments.length > 0}
                                       isDraft={data.isDraft}
                                       i18nTextDraft={t('shared:Draft')}
                                       i18nTextHistory={t(
                                         'integrations:detail:History'
                                       )}
+                                      publishAction={
+                                        canActivate(data)
+                                          ? startAction.onClick
+                                          : undefined
+                                      }
+                                      publishHref={
+                                        canActivate(data)
+                                          ? startAction.href
+                                          : undefined
+                                      }
+                                      publishLabel={
+                                        canActivate(data)
+                                          ? t('shared:Publish')
+                                          : undefined
+                                      }
                                       children={deployments.map(
                                         (deployment, idx) => {
                                           return (
