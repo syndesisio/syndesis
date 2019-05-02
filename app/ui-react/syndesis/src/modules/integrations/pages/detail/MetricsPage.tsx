@@ -1,8 +1,15 @@
+import { WithMonitoredIntegration } from '@syndesis/api';
 import { Integration } from '@syndesis/models';
-import { WithRouteData } from '@syndesis/utils';
+import { Loader } from '@syndesis/ui';
+import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { IntegrationDetailNavBar } from '../../shared';
+import { AppContext } from '../../../../app';
+import { ApiError, PageTitle } from '../../../../shared';
+import {
+  IntegrationDetailHeader,
+  WithIntegrationActions,
+} from '../../components';
 
 /**
  * @integrationId - the ID of the integration for which details are being displayed.
@@ -25,18 +32,67 @@ export interface IMetricsPageState {
 export class MetricsPage extends React.Component {
   public render() {
     return (
-      <WithRouteData<IMetricsPageParams, IMetricsPageState>>
-        {({ integrationId }, { integration }, { history }) => {
-          return (
-            <div>
-              <Translation ns={['integration', 'shared']}>
-                {t => <IntegrationDetailNavBar integration={integration} />}
-              </Translation>
-              <p>This is the Integration Detail Metrics page.</p>
-            </div>
-          );
-        }}
-      </WithRouteData>
+      <Translation ns={['integrations', 'shared']}>
+        {t => (
+          <AppContext.Consumer>
+            {({ getPodLogUrl }) => (
+              <WithRouteData<IMetricsPageParams, IMetricsPageState>>
+                {({ integrationId }, { integration }, { history }) => {
+                  return (
+                    <WithMonitoredIntegration integrationId={integrationId}>
+                      {({ data, hasData, error }) => (
+                        <WithLoader
+                          error={error}
+                          loading={!hasData}
+                          loaderChildren={<Loader />}
+                          errorChildren={<ApiError />}
+                        >
+                          {() => (
+                            <WithIntegrationActions
+                              integration={data.integration}
+                            >
+                              {({
+                                ciCdAction,
+                                editAction,
+                                deleteAction,
+                                exportAction,
+                                startAction,
+                                stopAction,
+                              }) => {
+                                return (
+                                  <>
+                                    <PageTitle
+                                      title={t('integrations:detail:pageTitle')}
+                                    />
+                                    <IntegrationDetailHeader
+                                      data={data}
+                                      startAction={startAction}
+                                      stopAction={stopAction}
+                                      deleteAction={deleteAction}
+                                      ciCdAction={ciCdAction}
+                                      editAction={editAction}
+                                      exportAction={exportAction}
+                                      getPodLogUrl={getPodLogUrl}
+                                    />
+                                    <p>
+                                      This is the Integration Detail Metrics
+                                      page.
+                                    </p>
+                                  </>
+                                );
+                              }}
+                            </WithIntegrationActions>
+                          )}
+                        </WithLoader>
+                      )}
+                    </WithMonitoredIntegration>
+                  );
+                }}
+              </WithRouteData>
+            )}
+          </AppContext.Consumer>
+        )}
+      </Translation>
     );
   }
 }
