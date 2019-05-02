@@ -25,10 +25,6 @@ export interface IIntegrationDetailsRouteParams {
   integrationId: string;
 }
 
-export interface IIntegrationDetailsRouteState {
-  integration?: IIntegrationOverviewWithDraft;
-}
-
 /**
  * @integrationId - the ID of the integration for which details are being displayed.
  */

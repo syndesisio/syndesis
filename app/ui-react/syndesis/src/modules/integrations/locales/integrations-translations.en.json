@@ -55,6 +55,13 @@
     "pageTitle": "Integration Summary",
     "replaceDraft": "Replace Draft"
   },
+  "metrics": {
+    "lastProcessed": "Last Processed",
+    "since": "Since ",
+    "totalErrors": "Total Errors",
+    "totalMessages": "Total Messages",
+    "uptime": "Uptime"
+  },
   "alerts": {
     "modified": "A connection associated with this integration has been modified. To incorporate the changes, please edit the integration.",
     "obsolete": "The published integration has become obsolete and its recommended it should be republished."

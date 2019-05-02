@@ -20,6 +20,7 @@ export * from './WithIntegrations';
 export * from './WithIntegrationTags';
 export * from './WithMonitoredIntegration';
 export * from './WithMonitoredIntegrations';
+export * from './WithIntegrationMetrics';
 export * from './WithIntegrationsMetrics';
 export * from './WithConnections';
 export * from './WithConnection';

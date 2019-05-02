@@ -22,8 +22,7 @@ import {
   IActivityPageParams,
   IActivityPageState,
   IIntegrationDetailsRouteParams,
-  IMetricsPageParams,
-  IMetricsPageState,
+  IMetricsRouteParams,
 } from './pages/detail';
 import routes from './routes';
 
@@ -313,15 +312,12 @@ export const integrationEditSaveAndPublish = makeResolver<
 >(routes.integration.edit.saveAndPublish, configureIndexMapper);
 
 export const metricsResolver = makeResolver<
-  { integration: Integration },
-  IMetricsPageParams,
-  IMetricsPageState
->(routes.integration.metrics, ({ integration }) => ({
+  { integrationId: string },
+  IMetricsRouteParams,
+  null
+>(routes.integration.metrics, ({ integrationId }) => ({
   params: {
-    integrationId: integration.id!,
-  },
-  state: {
-    integration,
+    integrationId,
   },
 }));
 

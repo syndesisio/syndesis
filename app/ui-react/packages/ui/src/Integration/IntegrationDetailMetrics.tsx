@@ -13,17 +13,23 @@ import {
 import * as React from 'react';
 
 export interface IIntegrationDetailMetricsProps {
-  errorMessagesCount?: number;
-  okMessagesCount?: number;
-  totalMessages?: number;
-  uptimeStart: number;
+  i18nLastProcessed: string;
+  i18nSince: string;
+  i18nTotalErrors: string;
+  i18nTotalMessages: string;
+  i18nUptime: string;
+  errors?: number;
+  lastProcessed?: string;
+  messages?: number;
+  start?: string;
 }
 
 export class IntegrationDetailMetrics extends React.Component<
   IIntegrationDetailMetricsProps
 > {
   public render() {
-    const startAsDate = new Date(this.props.uptimeStart);
+    const okMessagesCount = this.props.messages! - this.props.errors!;
+    const startAsDate = new Date(this.props.start!);
     const startAsHuman = startAsDate.toLocaleString();
 
     return (
@@ -33,19 +39,19 @@ export class IntegrationDetailMetrics extends React.Component<
             <Card accented={true} aggregated={true} matchHeight={true}>
               <CardTitle>
                 <Icon type="pf" name="error-circle-o" />
-                {this.props.errorMessagesCount}
+                {this.props.errors}
               </CardTitle>
-              <CardBody>Total Errors</CardBody>
+              <CardBody>{this.props.i18nTotalErrors}</CardBody>
             </Card>
           </Col>
           <Col xs={6} sm={3} md={3}>
             <Card accented={true} aggregated={true} matchHeight={true}>
               <CardTitle>
                 <Icon name="shield" />
-                Last Processed
+                {this.props.i18nLastProcessed}
               </CardTitle>
               <CardBody>
-                <h2>n/a</h2>
+                <h2>{this.props.lastProcessed}</h2>
               </CardBody>
             </Card>
           </Col>
@@ -53,19 +59,19 @@ export class IntegrationDetailMetrics extends React.Component<
             <Card accented={true} aggregated={true} matchHeight={true}>
               <CardTitle>
                 <AggregateStatusCount>
-                  {this.props.totalMessages}&nbsp;
+                  {this.props.messages}&nbsp;
                 </AggregateStatusCount>
-                Total Messages
+                {this.props.i18nTotalMessages}
               </CardTitle>
               <CardBody>
                 <AggregateStatusNotifications>
                   <AggregateStatusNotification>
                     <Icon type="pf" name="ok" />
-                    {this.props.okMessagesCount}&nbsp;
+                    {okMessagesCount}&nbsp;
                   </AggregateStatusNotification>
                   <AggregateStatusNotification>
                     <Icon type="pf" name="error-circle-o" />
-                    {this.props.errorMessagesCount}
+                    {this.props.errors}
                   </AggregateStatusNotification>
                 </AggregateStatusNotifications>
               </CardBody>
@@ -74,8 +80,11 @@ export class IntegrationDetailMetrics extends React.Component<
           <Col xs={6} sm={3} md={3}>
             <Card accented={true} aggregated={true} matchHeight={true}>
               <Card.Title className={'text-left'}>
-                <small className={'pull-right'}>Since {startAsHuman}</small>
-                <div>Uptime</div>
+                <small className={'pull-right'}>
+                  {this.props.i18nSince}
+                  {startAsHuman}
+                </small>
+                <div>{this.props.i18nUptime}</div>
               </Card.Title>
               <Card.Body>
                 <></>

@@ -200,10 +200,15 @@ storiesOf('Integration/Detail', module)
           </TabBar>
         </Container>
         <IntegrationDetailMetrics
-          errorMessagesCount={2}
-          okMessagesCount={2425}
-          totalMessages={26126}
-          uptimeStart={5358454957349}
+          i18nLastProcessed={'Last Processed'}
+          i18nSince={'Since '}
+          i18nTotalErrors={'Total Errors'}
+          i18nTotalMessages={'Total Messages'}
+          i18nUptime={'Uptime'}
+          errors={2}
+          lastProcessed={'2 May 2019 08:19:42 GMT'}
+          messages={26126}
+          start={'2 May 2019 08:19:42 GMT'}
         />
       </>
     </Router>
