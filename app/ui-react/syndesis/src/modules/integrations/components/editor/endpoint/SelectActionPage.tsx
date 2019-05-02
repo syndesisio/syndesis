@@ -17,15 +17,10 @@ import {
 } from '../interfaces';
 
 export interface ISelectActionPageProps {
-  backHref?: (
-    p: ISelectActionRouteParams,
-    s: ISelectActionRouteState
-  ) => H.LocationDescriptor;
   cancelHref: (
     p: ISelectActionRouteParams,
     s: ISelectActionRouteState
   ) => H.LocationDescriptor;
-  header: React.ReactNode;
   sidebar: (props: {
     steps: Step[];
     activeIndex: number;
@@ -68,7 +63,6 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                     <>
                       <PageTitle title={'Choose an action'} />
                       <IntegrationEditorLayout
-                        header={this.props.header}
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           connection: connection as IConnectionWithIconFile,
@@ -107,14 +101,6 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                                 />
                               ))}
                           </IntegrationEditorChooseAction>
-                        }
-                        backHref={
-                          this.props.backHref
-                            ? this.props.backHref(
-                                { connectionId, flowId, position },
-                                { connection, integration }
-                              )
-                            : undefined
                         }
                         cancelHref={this.props.cancelHref(
                           { connectionId, flowId, position },

@@ -1,9 +1,8 @@
 import { Text, Title } from '@patternfly/react-core';
-import * as H from '@syndesis/history';
 import * as React from 'react';
-import { ButtonLink, Container } from '../Layout';
+import { Container } from '../Layout';
 
-export interface IIntegrationEditorFormProps {
+export interface IIntegrationSaveFormProps {
   /**
    * The internationalized title.
    */
@@ -17,27 +16,22 @@ export interface IIntegrationEditorFormProps {
    */
   i18nFormTitle?: string;
 
-  i18nNext: string;
-  i18nChooseAction: string;
   /**
    * The callback fired when submitting the form.
    * @param e
    */
-  isValid: boolean;
-  chooseActionHref: H.LocationDescriptor;
   handleSubmit: (e?: any) => void;
-  submitForm: (e?: any) => void;
 }
 
 /**
  * A component to render a save form, to be used in the integration
  * editor. This does *not* build the form itself, form's field should be passed
  * as the `children` value.
- * @see [i18nTitle]{@link IIntegrationEditorFormProps#i18nTitle}
- * @see [i18nSubtitle]{@link IIntegrationEditorFormProps#i18nSubtitle}
+ * @see [i18nTitle]{@link IIntegrationSaveFormProps#i18nTitle}
+ * @see [i18nSubtitle]{@link IIntegrationSaveFormProps#i18nSubtitle}
  */
-export class IntegrationEditorForm extends React.Component<
-  IIntegrationEditorFormProps
+export class IntegrationSaveForm extends React.Component<
+  IIntegrationSaveFormProps
 > {
   public render() {
     return (
@@ -61,19 +55,6 @@ export class IntegrationEditorForm extends React.Component<
                 )}
                 <div className="card-pf-body">
                   <Container>{this.props.children}</Container>
-                </div>
-                <div className="card-pf-footer">
-                  <ButtonLink href={this.props.chooseActionHref}>
-                    <i className={'fa fa-chevron-left'} />{' '}
-                    {this.props.i18nChooseAction}
-                  </ButtonLink>
-                  <ButtonLink
-                    onClick={this.props.submitForm}
-                    disabled={!this.props.isValid}
-                    as={'primary'}
-                  >
-                    {this.props.i18nNext}
-                  </ButtonLink>
                 </div>
               </div>
             </div>

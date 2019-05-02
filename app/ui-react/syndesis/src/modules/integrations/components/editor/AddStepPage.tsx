@@ -16,8 +16,7 @@ export interface IAddStepPageProps extends IGetStepHrefs {
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
-  header: React.ReactNode;
-  nextHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
+  saveHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
 }
 
 /**
@@ -39,7 +38,6 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
       <WithRouteData<IBaseRouteParams, IBaseRouteState>>
         {({ flowId }, { integration }) => (
           <IntegrationEditorLayout
-            header={this.props.header}
             content={
               <>
                 <PageTitle title={'Save or add step'} />
@@ -71,7 +69,8 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
               </>
             }
             cancelHref={this.props.cancelHref({ flowId }, { integration })}
-            nextHref={this.props.nextHref({ flowId }, { integration })}
+            saveHref={this.props.saveHref({ flowId }, { integration })}
+            publishHref={this.props.saveHref({ flowId }, { integration })}
           />
         )}
       </WithRouteData>

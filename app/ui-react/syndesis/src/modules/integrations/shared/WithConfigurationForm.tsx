@@ -8,6 +8,7 @@ import {
   getConnectorActions,
 } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
+import * as H from '@syndesis/history';
 import { Action, ConnectionOverview } from '@syndesis/models';
 import {
   IntegrationEditorForm,
@@ -78,6 +79,7 @@ export interface IWithConfigurationFormProps {
    */
   initialValue?: { [key: string]: string };
 
+  chooseActionHref: H.LocationDescriptor;
   /**
    * the render prop that will receive the ready-to-be-rendered form and some
    * helpers.
@@ -153,7 +155,12 @@ export class WithConfigurationForm extends React.Component<
                     'Fill in the required information for the selected action.'
                   }
                   i18nFormTitle={`${action.name} - ${action.description}`}
+                  i18nChooseAction={'Choose Action'}
+                  i18nNext={'Next'}
+                  isValid={isValid}
+                  submitForm={submitForm}
                   handleSubmit={handleSubmit}
+                  chooseActionHref={this.props.chooseActionHref}
                 >
                   {fields}
                 </IntegrationEditorForm>

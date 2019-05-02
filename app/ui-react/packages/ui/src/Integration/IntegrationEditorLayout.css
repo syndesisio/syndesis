@@ -1,13 +1,9 @@
 .integration-editor-layout {
-  height: calc(100% - 36px - 60px);
+  height: calc(100% - 34px);
 }
 
-.integration-editor-layout__body {
-  max-height: none;
-}
-
-.integration-editor-layout.has-footer .integration-editor-layout__body {
-  height: calc(100vh - 60px - 36px - 57px - 61px);
+.integration-editor-layout .integration-editor-layout__body {
+  height: calc(100vh - 60px - 26px - 36px - 57px - 61px);
   max-height: none;
 }
 
@@ -17,8 +13,8 @@
     max-height: none;
   }
 
-  .integration-editor-layout.has-footer .integration-editor-layout__body {
-    height: calc(100vh - 121px - 60px - 36px - 61px);
+  .integration-editor-layout .integration-editor-layout__body {
+    height: calc(100vh - 121px - 26px - 60px - 36px - 61px);
     max-height: none;
   }
 }

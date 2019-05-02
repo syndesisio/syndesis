@@ -1,7 +1,6 @@
 // tslint:disable react-unused-props-and-state
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
 import * as H from '@syndesis/history';
-import classnames from 'classnames';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../Layout';
 import './IntegrationEditorLayout.css';
@@ -13,37 +12,36 @@ import './IntegrationEditorLayout.css';
  * will be shown.
  * @param content - the main content of the wizard. In case of overflow, only
  * the body will scroll.
- * @param onCancel - if passed, the Cancel button will be render as a `button`
+ * @param onPublish - if passed, the Cancel button will be render as a `button`
  * and this callback will be used as its `onClick` handler.
- * @param onBack - if passed, the Back button will be render as a `button`
+ * @param onCancel - if passed, the Back button will be render as a `button`
  * and this callback will be used as its `onClick` handler.
- * @param onNext - if passed, the Next button will be render as a `button`
+ * @param onSave - if passed, the Next button will be render as a `button`
  * and this callback will be used as its `onClick` handler.
  * @param cancelHref - if passed, the Cancel button will be render as a `Link`
  * using this as its `to` parameter.
  * @param backHref - if passed, the Back button will be render as a `Link`
  * using this as its `to` parameter.
- * @param nextHref - if passed, the Next button will be render as a `Link`
  * using this as its `to` parameter.
- * @param isNextLoading - if set to true, a `Loading` component will be shown
+ * @param isSaveLoading - if set to true, a `Loading` component will be shown
  * inside the Next button before its label. The button will also be disabled.
- * @param isNextDisabled - if set to true, the Next button will be disabled.
+ * @param isSaveDisabled - if set to true, the Next button will be disabled.
  * @param isLastStep - if set to true, it changes the Next button label to
  * 'Done'.
  */
 export interface IIntegrationEditorLayoutProps {
-  header: React.ReactNode;
   sidebar?: React.ReactNode;
   content: React.ReactNode;
   onCancel?: (e: React.MouseEvent<any>) => void;
-  onBack?: (e: React.MouseEvent<any>) => void;
-  onNext?: (e: React.MouseEvent<any>) => void;
+  onPublish?: (e: React.MouseEvent<any>) => void;
+  onSave?: (e: React.MouseEvent<any>) => void;
+  saveHref?: H.LocationDescriptor;
   cancelHref?: H.LocationDescriptor;
-  backHref?: H.LocationDescriptor;
-  nextHref?: H.LocationDescriptor;
-  isNextDisabled?: boolean;
-  isNextLoading?: boolean;
-  isLastStep?: boolean;
+  publishHref?: H.LocationDescriptor;
+  isSaveDisabled?: boolean;
+  isSaveLoading?: boolean;
+  isPublishDisabled?: boolean;
+  isPublishLoading?: boolean;
 }
 
 /**
@@ -60,29 +58,63 @@ export interface IIntegrationEditorLayoutProps {
 export const IntegrationEditorLayout: React.FunctionComponent<
   IIntegrationEditorLayoutProps
 > = ({
-  header,
   sidebar,
   content,
+  onPublish,
   onCancel,
-  onBack,
-  onNext,
+  onSave,
+  saveHref,
   cancelHref,
-  backHref,
-  nextHref,
-  isNextLoading,
-  isNextDisabled,
-  isLastStep = false,
+  publishHref,
+  isSaveLoading,
+  isSaveDisabled,
+  isPublishLoading,
+  isPublishDisabled,
 }: IIntegrationEditorLayoutProps) => {
   return (
-    <div
-      className={classnames(
-        'wizard-pf-body integration-editor-layout syn-scrollable',
-        {
-          'has-footer': true,
-        }
-      )}
-    >
-      {header}
+    <div className={'wizard-pf-body integration-editor-layout syn-scrollable'}>
+      <div className="wizard-pf-toolbar integration-editor-layout__header">
+        <div className="container-fluid">
+          <div className="row toolbar-pf">
+            <div className="toolbar-pf-actions">
+              <div className="form-group toolbar-pf-filter">
+                <strong>
+                  <span>Integration</span>
+                </strong>
+              </div>
+              <div className="toolbar-pf-action-right">
+                {(cancelHref || onCancel) && (
+                  <ButtonLink onClick={onCancel} href={cancelHref}>
+                    <i className="fa fa-angle-left" /> Cancel
+                  </ButtonLink>
+                )}
+                {(saveHref || onSave) && (
+                  <ButtonLink
+                    onClick={onSave}
+                    href={saveHref}
+                    disabled={isSaveLoading || isSaveDisabled}
+                  >
+                    {isSaveLoading ? (
+                      <Loader size={'xs'} inline={true} />
+                    ) : null}
+                    Save
+                  </ButtonLink>
+                )}
+                {(publishHref || onPublish) && (
+                  <ButtonLink
+                    onClick={onPublish}
+                    href={publishHref}
+                    as={'primary'}
+                    disabled={isPublishLoading || isPublishDisabled}
+                  >
+                    Publish
+                  </ButtonLink>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div className="wizard-pf-row integration-editor-layout__body syn-scrollable--body">
         <div className="wizard-pf-sidebar">{sidebar}</div>
         <div
@@ -92,38 +124,6 @@ export const IntegrationEditorLayout: React.FunctionComponent<
         >
           <div className="integration-editor-layout__content">{content}</div>
         </div>
-      </div>
-      <div className="wizard-pf-footer integration-editor-layout__footer">
-        <ButtonLink
-          onClick={onBack}
-          href={backHref}
-          className={'wizard-pf-back'}
-        >
-          <i className="fa fa-angle-left" /> Back
-        </ButtonLink>
-        <ButtonLink
-          onClick={onNext}
-          href={nextHref}
-          as={'primary'}
-          className={'wizard-pf-next'}
-          disabled={isNextLoading || isNextDisabled}
-        >
-          {isNextLoading ? <Loader size={'xs'} inline={true} /> : null}
-          {isLastStep ? (
-            'Done'
-          ) : (
-            <>
-              Next <i className="fa fa-angle-right" />
-            </>
-          )}
-        </ButtonLink>
-        <ButtonLink
-          onClick={onCancel}
-          href={cancelHref}
-          className={'wizard-pf-cancel'}
-        >
-          Cancel
-        </ButtonLink>
       </div>
     </div>
   );
