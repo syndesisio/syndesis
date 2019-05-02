@@ -3,12 +3,7 @@ import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, ButtonLink } from '../Layout';
-
-interface IBreadcrumbMenuActions {
-  href?: H.LocationDescriptor;
-  onClick?: (e: React.MouseEvent<any>) => any;
-  label: string | JSX.Element;
-}
+import { IMenuActions } from '../Shared';
 
 export interface IIntegrationDetailBreadcrumbProps {
   editHref?: H.LocationDescriptor;
@@ -22,7 +17,7 @@ export interface IIntegrationDetailBreadcrumbProps {
   i18nPageTitle?: string;
   integrationId?: string;
   integrationsHref?: H.LocationDescriptor;
-  menuActions?: IBreadcrumbMenuActions[];
+  menuActions?: IMenuActions[];
 }
 
 export class IntegrationDetailBreadcrumb extends React.Component<

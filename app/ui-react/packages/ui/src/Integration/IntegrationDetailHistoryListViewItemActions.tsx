@@ -1,16 +1,10 @@
-import * as H from 'history';
 import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
-export interface IIntegrationMenuActions {
-  href?: H.LocationDescriptor;
-  onClick?: (e: React.MouseEvent<any>) => any;
-  label: string | JSX.Element;
-}
+import { IMenuActions } from '../Shared';
 
 export interface IIntegrationDetailHistoryListViewItemActionsProps {
-  actions: IIntegrationMenuActions[];
+  actions: IMenuActions[];
   integrationId: string;
 }
 
