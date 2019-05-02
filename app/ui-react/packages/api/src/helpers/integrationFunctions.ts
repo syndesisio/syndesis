@@ -151,7 +151,7 @@ export function getStep(
  */
 export function getStartIcon(apiUri: string, integration: Integration) {
   const flow = integration.flows![0];
-  return getStepIcon(apiUri, integration, flow.id!, 0);
+  return getIntegrationStepIcon(apiUri, integration, flow.id!, 0);
 }
 
 /**
@@ -160,7 +160,12 @@ export function getStartIcon(apiUri: string, integration: Integration) {
  */
 export function getFinishIcon(apiUri: string, integration: Integration) {
   const flow = integration.flows![0];
-  return getStepIcon(apiUri, integration, flow.id!, flow.steps!.length - 1);
+  return getIntegrationStepIcon(
+    apiUri,
+    integration,
+    flow.id!,
+    flow.steps!.length - 1
+  );
 }
 
 export function getExtensionIcon(extension: Extension) {
@@ -178,14 +183,22 @@ export function getStepKindIcon(stepKind: Step['stepKind']) {
  * @param flowId
  * @param stepIndex
  */
-export function getStepIcon(
+export function getIntegrationStepIcon(
   apiUri: string,
   integration: Integration,
   flowId: string,
   stepIndex: number
 ): string {
   const step = getStep(integration, flowId, stepIndex);
-  // The step is a connection
+  return getStepIcon(apiUri, step);
+}
+
+/**
+ * Returns the icon for the supplied step
+ * @param apiUri
+ * @param step
+ */
+export function getStepIcon(apiUri: string, step: Step): string {
   if (step.connection) {
     const connection = step.connection as IConnectionWithIconFile;
     return getConnectionIcon(apiUri, connection);

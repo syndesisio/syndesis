@@ -1,4 +1,4 @@
-import { getStepIcon, getSteps } from '@syndesis/api';
+import { getIntegrationStepIcon, getSteps } from '@syndesis/api';
 import { Integration } from '@syndesis/models';
 import {
   IntegrationStepsHorizontalItem,
@@ -29,7 +29,7 @@ export class IntegrationDetailSteps extends React.Component<
             <React.Fragment key={idx}>
               <IntegrationStepsHorizontalItem
                 name={stepName}
-                icon={getStepIcon(
+                icon={getIntegrationStepIcon(
                   process.env.PUBLIC_URL,
                   this.props.integration,
                   flowId,

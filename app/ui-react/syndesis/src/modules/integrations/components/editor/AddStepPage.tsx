@@ -7,17 +7,12 @@ import * as React from 'react';
 import { PageTitle } from '../../../../shared';
 import { IntegrationEditorStepAdder } from '../IntegrationEditorStepAdder';
 import { IBaseRouteParams, IBaseRouteState } from './interfaces';
+import { getStepHref, IGetStepHrefs } from './utils';
 
-export interface IAddStepPageProps {
+export interface IAddStepPageProps extends IGetStepHrefs {
   cancelHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
   getEditAddStepHref: (
     position: number,
-    p: IBaseRouteParams,
-    s: IBaseRouteState
-  ) => H.LocationDescriptor;
-  getEditConfigureStepHrefCallback: (
-    stepIdx: number,
-    step: Step,
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
@@ -63,12 +58,12 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                         { integration }
                       )
                     }
-                    configureStepHref={(stepIdx: number, step: Step) =>
-                      this.props.getEditConfigureStepHrefCallback(
-                        stepIdx,
+                    configureStepHref={(position: number, step: Step) =>
+                      getStepHref(
                         step,
-                        { flowId },
-                        { integration }
+                        { flowId, position: `${position}` },
+                        { integration },
+                        this.props
                       )
                     }
                   />
