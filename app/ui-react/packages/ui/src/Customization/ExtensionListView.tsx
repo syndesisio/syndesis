@@ -1,5 +1,5 @@
 import { Text, Title } from '@patternfly/react-core';
-import * as H from 'history';
+import * as H from '@syndesis/history';
 import {
   EmptyState,
   ListView,

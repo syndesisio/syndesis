@@ -6,6 +6,7 @@ import {
   WithExtensions,
   WithSteps,
 } from '@syndesis/api';
+import * as H from '@syndesis/history';
 import { Step, StepKind } from '@syndesis/models';
 import {
   ButtonLink,
@@ -15,7 +16,6 @@ import {
   IntegrationsListSkeleton,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
-import * as H from 'history';
 import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../shared';
 import {

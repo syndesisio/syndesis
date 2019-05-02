@@ -1,4 +1,4 @@
-import * as H from 'history';
+import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, Container } from '../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../Shared';

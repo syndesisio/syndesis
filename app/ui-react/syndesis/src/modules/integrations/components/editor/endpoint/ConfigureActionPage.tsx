@@ -1,8 +1,8 @@
 import { getSteps, WithIntegrationHelpers } from '@syndesis/api';
+import * as H from '@syndesis/history';
 import { Connection, Integration, Step } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
-import * as H from 'history';
 import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 import {

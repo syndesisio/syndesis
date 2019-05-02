@@ -1,4 +1,4 @@
-import * as H from 'history';
+import * as H from '@syndesis/history';
 import * as React from 'react';
 import { Route } from 'react-router';
 import { Link } from 'react-router-dom';

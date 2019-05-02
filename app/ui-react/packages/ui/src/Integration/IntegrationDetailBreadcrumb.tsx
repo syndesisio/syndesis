@@ -1,5 +1,5 @@
 import { Level, LevelItem } from '@patternfly/react-core';
-import * as H from 'history';
+import * as H from '@syndesis/history';
 import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';

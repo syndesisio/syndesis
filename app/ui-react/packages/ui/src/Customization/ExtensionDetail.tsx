@@ -1,5 +1,5 @@
 import { Title, TitleLevel } from '@patternfly/react-core';
-import * as H from 'history';
+import * as H from '@syndesis/history';
 import {
   Button,
   Card,
