@@ -16,10 +16,10 @@ export interface IMessageEvent {
 export interface IWithEventsProps {
   apiUri: string;
   headers: IFetchHeaders;
-  children(props: IWithEventsState): any;
+  children(props: IWithServerEventsChildrenProps): any;
 }
 
-export interface IWithEventsState {
+export interface IWithServerEventsChildrenProps {
   registerChangeListener: (listener: (event: IChangeEvent) => void) => void;
   registerMessageListener: (listener: (event: IMessageEvent) => void) => void;
   unregisterChangeListener: (listener: (event: IChangeEvent) => void) => void;
@@ -28,10 +28,7 @@ export interface IWithEventsState {
 
 const RECONNECT_TIME = 5000;
 
-export class WithServerEvents extends React.Component<
-  IWithEventsProps,
-  IWithEventsState
-> {
+export class WithServerEvents extends React.Component<IWithEventsProps> {
   private starting = false;
   private started = false;
   private unmounting = false;
@@ -77,6 +74,14 @@ export class WithServerEvents extends React.Component<
     this.close();
     this.changeListeners = [];
     this.messageListeners = [];
+  }
+
+  public shouldComponentUpdate(
+    nextProps: Readonly<IWithEventsProps>,
+    nextState: Readonly<{}>,
+    nextContext: any
+  ): boolean {
+    return false;
   }
 
   public render() {

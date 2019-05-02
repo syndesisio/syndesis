@@ -2,11 +2,11 @@ import { ApiContext, ServerEventsContext } from '@syndesis/api';
 import * as React from 'react';
 import { I18nextProvider } from 'react-i18next';
 import i18n from '../../i18n';
-import { IAppBaseProps, IAppBaseState } from '../App';
+import { IAppBaseProps } from '../App';
 import { AppContext } from '../AppContext';
 import { WithConfig } from '../WithConfig';
 
-export class App extends React.Component<IAppBaseProps, IAppBaseState> {
+export class App extends React.Component<IAppBaseProps> {
   public render() {
     return (
       <I18nextProvider i18n={i18n}>
@@ -16,10 +16,6 @@ export class App extends React.Component<IAppBaseProps, IAppBaseState> {
               value={{
                 config: config!,
                 getPodLogUrl: () => '',
-                hideNavigation: () => void 0,
-                logout: () => void 0,
-                pushNotification: () => void 0,
-                showNavigation: () => void 0,
               }}
             >
               <ApiContext.Provider

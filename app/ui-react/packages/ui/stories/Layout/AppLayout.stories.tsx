@@ -16,7 +16,6 @@ stories.add('sample usage', () => (
   <div className={'layout-pf layout-pf-fixed'}>
     <MemoryRouter initialEntries={['/test']}>
       <AppLayout
-        appTitle={text('Application title', 'Syndesis')}
         onNavigationCollapse={() => null}
         onNavigationExpand={() => null}
         showNavigation={true}

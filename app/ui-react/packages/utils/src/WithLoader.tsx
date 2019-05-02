@@ -51,7 +51,7 @@ export interface IWithLoaderState {
  * @see [errorChildren]{@link IWithLoaderProps#errorChildren}
  * @see [children]{@link IWithLoaderProps#children}
  */
-export class WithLoader extends React.Component<
+export class WithLoader extends React.PureComponent<
   IWithLoaderProps,
   IWithLoaderState
 > {
