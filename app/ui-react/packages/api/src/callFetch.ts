@@ -52,7 +52,7 @@ export function callFetch({
   includeReferrerPolicy = true,
   stringifyBody = true,
 }: IFetch) {
-  if (includeAccept) {
+  if (includeAccept && !('Accept' in headers)) {
     const acceptId = 'Accept';
     headers[acceptId] = accept;
   }

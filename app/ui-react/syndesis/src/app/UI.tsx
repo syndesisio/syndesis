@@ -1,3 +1,4 @@
+import { WithApiVersion } from '@syndesis/api';
 import {
   AppLayout,
   AppTopMenu,
@@ -7,6 +8,7 @@ import {
   PfDropdownItem,
   PfVerticalNavItem,
 } from '@syndesis/ui';
+import { AboutModal, AboutModalContent } from '@syndesis/ui';
 import { WithRouter } from '@syndesis/utils';
 import { useState } from 'react';
 import * as React from 'react';
@@ -21,10 +23,19 @@ export interface IAppUIProps {
   routes: IAppRoute[];
 }
 
+export interface IAppUIState {
+  showAboutModal: boolean;
+}
+
 export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
   const [showNavigation, setShowNavigation] = useState(true);
   const onHideNavigation = () => setShowNavigation(false);
   const onShowNavigation = () => setShowNavigation(true);
+
+  const [showAboutModal, setShowAboutModal] = useState(false);
+  const toggleAboutModal = () => {
+    setShowAboutModal(!showAboutModal);
+  };
 
   const [notifications, setNotifications] = useState<INotification[]>([]);
   const pushNotification = (msg: string, type: INotificationType) => {
@@ -52,61 +63,98 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
       }}
     >
       <Translation ns={['app', 'shared']}>
-        {t => (
-          <AppLayout
-            appNav={
-              <AppTopMenu username={'developer'}>
-                <PfDropdownItem>
-                  <Link
-                    to={'/logout'}
-                    className="pf-c-dropdown__menu-item"
-                    children={t('Logout')}
-                  />
-                </PfDropdownItem>
-              </AppTopMenu>
-            }
-            verticalNav={routes.map(({ exact, icon, label, to }, index) => (
-              <PfVerticalNavItem
-                exact={exact}
-                icon={icon}
-                label={t(label)}
-                to={to}
-                key={index}
-                data-testid={`navbar-link-${to}`}
-              />
-            ))}
-            pictograph={
-              <img src={logo} alt="Syndesis" style={{ minWidth: '164px' }} />
-            }
-            logoHref={'/'}
-            showNavigation={showNavigation}
-            onNavigationCollapse={onHideNavigation}
-            onNavigationExpand={onShowNavigation}
-          >
-            <Notifications
-              notifications={notifications}
-              notificationTimerDelay={8000}
-              removeNotificationAction={onRemoveNotification}
-            />
-            <WithRouter>
-              {({ match }) => (
-                <WithErrorBoundary key={match.url}>
-                  <Switch>
-                    {routes.map(({ to, exact, component }, index) => (
-                      <Route
-                        path={to}
-                        exact={exact}
-                        component={component}
-                        key={index}
-                      />
-                    ))}
-                    <Route component={PageNotFound} />
-                  </Switch>
-                </WithErrorBoundary>
+        {t => {
+          const productName = 'Syndesis';
+          return (
+            <>
+              {showAboutModal && (
+                <AboutModal
+                  trademark={''}
+                  productName={productName}
+                  isModalOpen={showAboutModal}
+                  handleModalToggle={toggleAboutModal}
+                  brandImg={'https://avatars0.githubusercontent.com/u/23079786'}
+                >
+                  <WithApiVersion>
+                    {({ data }) => {
+                      const {
+                        'commit-id': commitId,
+                        'build-id': buildId,
+                        version,
+                      } = data;
+                      return (
+                        <AboutModalContent
+                          version={version}
+                          buildId={buildId}
+                          commitId={commitId}
+                          productName={productName}
+                        />
+                      );
+                    }}
+                  </WithApiVersion>
+                </AboutModal>
               )}
-            </WithRouter>
-          </AppLayout>
-        )}
+              <AppLayout
+                onShowAboutModal={toggleAboutModal}
+                appNav={
+                  <AppTopMenu username={'developer'}>
+                    <PfDropdownItem>
+                      <Link
+                        to={'/logout'}
+                        className="pf-c-dropdown__menu-item"
+                        children={t('Logout')}
+                      />
+                    </PfDropdownItem>
+                  </AppTopMenu>
+                }
+                verticalNav={routes.map(({ exact, icon, label, to }, index) => (
+                  <PfVerticalNavItem
+                    exact={exact}
+                    icon={icon}
+                    label={t(label)}
+                    to={to}
+                    key={index}
+                    data-testid={`navbar-link-${to}`}
+                  />
+                ))}
+                pictograph={
+                  <img
+                    src={logo}
+                    alt="Syndesis"
+                    style={{ minWidth: '164px' }}
+                  />
+                }
+                logoHref={'/'}
+                showNavigation={showNavigation}
+                onNavigationCollapse={onHideNavigation}
+                onNavigationExpand={onShowNavigation}
+              >
+                <Notifications
+                  notifications={notifications}
+                  notificationTimerDelay={8000}
+                  removeNotificationAction={onRemoveNotification}
+                />
+                <WithRouter>
+                  {({ match }) => (
+                    <WithErrorBoundary key={match.url}>
+                      <Switch>
+                        {routes.map(({ to, exact, component }, index) => (
+                          <Route
+                            path={to}
+                            exact={exact}
+                            component={component}
+                            key={index}
+                          />
+                        ))}
+                        <Route component={PageNotFound} />
+                      </Switch>
+                    </WithErrorBoundary>
+                  )}
+                </WithRouter>
+              </AppLayout>
+            </>
+          );
+        }}
       </Translation>
     </UIContext.Provider>
   );
