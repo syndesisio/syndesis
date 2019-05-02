@@ -1,11 +1,15 @@
 import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import * as React from 'react';
 import { IFetchState } from './Fetch';
+import { ServerEventsContext } from './ServerEventsContext';
 import { SyndesisFetch } from './SyndesisFetch';
+import { WithChangeListener } from './WithChangeListener';
+import { IChangeEvent } from './WithServerEvents';
 
 export interface IWithIntegrationProps {
   integrationId: string;
   initialValue?: IIntegrationOverviewWithDraft;
+  disableUpdates?: boolean;
   children(props: IFetchState<IIntegrationOverviewWithDraft>): any;
 }
 
@@ -14,6 +18,16 @@ export interface IWithIntegrationProps {
  * @see [integrationId]{@link IWithIntegrationProps#integrationId}
  */
 export class WithIntegration extends React.Component<IWithIntegrationProps> {
+  public constructor(props: IWithIntegrationProps) {
+    super(props);
+    this.changeFilter = this.changeFilter.bind(this);
+  }
+  public changeFilter(change: IChangeEvent) {
+    return (
+      change.kind.startsWith('integration') &&
+      change.id.startsWith(this.props.integrationId)
+    );
+  }
   public render() {
     return (
       <SyndesisFetch<IIntegrationOverviewWithDraft>
@@ -24,7 +38,24 @@ export class WithIntegration extends React.Component<IWithIntegrationProps> {
         }}
         initialValue={this.props.initialValue}
       >
-        {({ response }) => this.props.children(response)}
+        {({ read, response }) =>
+          this.props.disableUpdates ? (
+            this.props.children(response)
+          ) : (
+            <ServerEventsContext.Consumer>
+              {({ registerChangeListener, unregisterChangeListener }) => (
+                <WithChangeListener
+                  read={read}
+                  registerChangeListener={registerChangeListener}
+                  unregisterChangeListener={unregisterChangeListener}
+                  filter={this.changeFilter}
+                >
+                  {() => this.props.children(response)}
+                </WithChangeListener>
+              )}
+            </ServerEventsContext.Consumer>
+          )
+        }
       </SyndesisFetch>
     );
   }
