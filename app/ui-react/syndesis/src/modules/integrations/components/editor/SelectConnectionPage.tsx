@@ -1,20 +1,12 @@
 import {
-  getConnectionIcon,
   getEmptyIntegration,
-  getExtensionIcon,
-  getStepKindIcon,
   getSteps,
   visibleStepsByPosition,
   WithConnections,
   WithExtensions,
   WithSteps,
 } from '@syndesis/api';
-import {
-  ConnectionOverview,
-  Extension,
-  Step,
-  StepKind,
-} from '@syndesis/models';
+import { Step, StepKind } from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorChooseConnection,
@@ -29,80 +21,11 @@ import { ApiError, PageTitle } from '../../../../shared';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
+  IUIStep,
 } from './interfaces';
+import { getStepHref, IGetStepHrefs, toStepKindCollection } from './utils';
 
-export interface IUIStep extends StepKind {
-  icon: string;
-  uiStepKind: 'api-provider' | StepKind['stepKind'];
-}
-
-export function toStepKindCollection(
-  connections: ConnectionOverview[],
-  extensions: Extension[],
-  steps: StepKind[]
-): IUIStep[] {
-  return [
-    ...connections.map(
-      c =>
-        ({
-          ...c,
-          description: c.description || '',
-          icon: getConnectionIcon(process.env.PUBLIC_URL, c),
-          properties: undefined,
-          uiStepKind:
-            c.connectorId === 'api-provider' ? 'api-provider' : 'endpoint',
-        } as IUIStep)
-    ),
-    ...extensions.reduce(
-      (extentionsByAction, extension) => {
-        extension.actions.forEach(a => {
-          let properties = {};
-          if (
-            a.descriptor &&
-            Array.isArray(a.descriptor.propertyDefinitionSteps)
-          ) {
-            properties = a.descriptor.propertyDefinitionSteps.reduce(
-              (acc, current) => {
-                return { ...acc, ...current.properties };
-              },
-              {}
-            );
-          }
-          if (a.actionType === 'step') {
-            extentionsByAction.push({
-              action: a,
-              configuredProperties: undefined,
-              description: a.description || '',
-              extension,
-              icon: `${process.env.PUBLIC_URL}${getExtensionIcon(extension)}`,
-              name: a.name,
-              properties,
-              stepKind: 'extension',
-              uiStepKind: 'extension',
-            });
-          }
-        });
-        return extentionsByAction;
-      },
-      [] as IUIStep[]
-    ),
-    ...steps.map(s => ({
-      ...s,
-      icon: `${process.env.PUBLIC_URL}${getStepKindIcon(s.stepKind)}`,
-      uiStepKind: s.stepKind,
-    })),
-  ]
-    .filter(s => !!s.uiStepKind) // this should never happen
-    .sort((a, b) => a.name.localeCompare(b.name));
-}
-
-type StepKindHrefCallback = (
-  connection: ConnectionOverview,
-  p: ISelectConnectionRouteParams,
-  s: ISelectConnectionRouteState
-) => H.LocationDescriptorObject;
-
-export interface ISelectConnectionPageProps {
+export interface ISelectConnectionPageProps extends IGetStepHrefs {
   backHref?: (
     p: ISelectConnectionRouteParams,
     s: ISelectConnectionRouteState
@@ -112,13 +35,6 @@ export interface ISelectConnectionPageProps {
     s: ISelectConnectionRouteState
   ) => H.LocationDescriptor;
   header: React.ReactNode;
-  apiProviderHref: StepKindHrefCallback;
-  connectionHref: StepKindHrefCallback;
-  filterHref: StepKindHrefCallback;
-  extensionHref: StepKindHrefCallback;
-  mapperHref: StepKindHrefCallback;
-  templateHref: StepKindHrefCallback;
-  stepHref: StepKindHrefCallback;
   sidebar: (props: { steps: Step[]; activeIndex: number }) => React.ReactNode;
 }
 
@@ -143,36 +59,6 @@ export class SelectConnectionPage extends React.Component<
           const { flowId, position } = params;
           const { integration = getEmptyIntegration() } = state;
           const positionAsNumber = parseInt(position, 10) || 0;
-          const getStepHref = (step: IUIStep) => {
-            switch (step.uiStepKind) {
-              case 'api-provider':
-                return this.props.apiProviderHref(step, params, state);
-              case 'endpoint':
-              case 'connector':
-                return this.props.connectionHref(
-                  step as ConnectionOverview,
-                  params,
-                  state
-                );
-              case 'expressionFilter':
-              case 'ruleFilter':
-                return this.props.filterHref(step, params, state);
-              case 'extension':
-                return this.props.extensionHref(step, params, state);
-              case 'mapper':
-                return this.props.mapperHref(step, params, state);
-              case 'headers':
-                throw new Error(`Can't handle stepKind ${step.stepKind}`);
-              case 'template':
-                return this.props.templateHref(step, params, state);
-              case 'choice':
-              case 'split':
-              case 'aggregate':
-              case 'log':
-              default:
-                return this.props.stepHref(step, params, state);
-            }
-          };
           const integrationSteps = getSteps(integration, flowId);
           return (
             <>
@@ -244,7 +130,12 @@ export class SelectConnectionPage extends React.Component<
                                               }
                                               actions={
                                                 <ButtonLink
-                                                  href={getStepHref(step)}
+                                                  href={getStepHref(
+                                                    step,
+                                                    params,
+                                                    state,
+                                                    this.props
+                                                  )}
                                                 >
                                                   Select
                                                 </ButtonLink>

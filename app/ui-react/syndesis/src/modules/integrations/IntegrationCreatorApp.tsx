@@ -36,15 +36,20 @@ const addStepPage = (
         ...s,
       })
     }
-    getEditConfigureStepHrefCallback={(stepIdx, step, p, s) =>
+    apiProviderHref={resolvers.create.configure.editStep.apiProvider.review}
+    connectionHref={(step, params, state) =>
       resolvers.create.configure.editStep.connection.configureAction({
         actionId: step.action!.id!,
         connection: step.connection!,
-        position: `${stepIdx}`,
-        ...p,
-        ...s,
+        ...params,
+        ...state,
       })
     }
+    filterHref={resolvers.create.configure.editStep.basicFilter}
+    extensionHref={resolvers.create.configure.editStep.extension}
+    mapperHref={resolvers.create.configure.editStep.dataMapper}
+    templateHref={resolvers.create.configure.editStep.template}
+    stepHref={resolvers.create.configure.editStep.step}
     header={<IntegrationCreatorBreadcrumbs step={3} />}
     nextHref={(p, s) =>
       resolvers.create.configure.saveAndPublish({

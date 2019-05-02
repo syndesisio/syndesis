@@ -1,4 +1,4 @@
-import { ConnectionOverview, Integration } from '@syndesis/models';
+import { ConnectionOverview, Integration, StepKind } from '@syndesis/models';
 
 /**
  * @param actionId - the ID of the action selected in the previous step.
@@ -94,4 +94,9 @@ export interface ISaveIntegrationForm {
  */
 export interface ISaveIntegrationRouteState {
   integration: Integration;
+}
+
+export interface IUIStep extends StepKind {
+  icon: string;
+  uiStepKind: 'api-provider' | StepKind['stepKind'];
 }

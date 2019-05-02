@@ -116,7 +116,7 @@ export const configureConfigureActionMapper = ({
     state: {
       ...state,
       updatedIntegration,
-      configuredProperties: stepObject.configuredProperties,
+      configuredProperties: stepObject.configuredProperties || {},
     } as IConfigureActionRouteState,
   };
 };

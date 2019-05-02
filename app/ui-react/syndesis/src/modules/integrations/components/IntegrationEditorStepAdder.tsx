@@ -1,3 +1,4 @@
+import { getStepIcon } from '@syndesis/api';
 import { Step } from '@syndesis/models';
 import {
   ButtonLink,
@@ -51,9 +52,15 @@ export class IntegrationEditorStepAdder extends React.Component<
           return (
             <React.Fragment key={idx}>
               <IntegrationEditorStepsListItem
-                stepName={s.connection!.connector!.name}
-                stepDescription={s.action!.name}
-                icon={<img src={s.connection!.icon} width={24} height={24} />}
+                stepName={s.name!}
+                stepDescription={s.action ? s.action.name : ''}
+                icon={
+                  <img
+                    src={getStepIcon(process.env.PUBLIC_URL, s)}
+                    width={24}
+                    height={24}
+                  />
+                }
                 actions={
                   <>
                     <ButtonLink href={this.props.configureStepHref(idx, s)}>
