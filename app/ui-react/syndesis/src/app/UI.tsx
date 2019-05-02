@@ -73,7 +73,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                   productName={productName}
                   isModalOpen={showAboutModal}
                   handleModalToggle={toggleAboutModal}
-                  brandImg="https://avatars0.githubusercontent.com/u/23079786"
+                  brandImg="/images/syndesis-favicon.png"
                 >
                   <WithApiVersion>
                     {({ data }) => {
