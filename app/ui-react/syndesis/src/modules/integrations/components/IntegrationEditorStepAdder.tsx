@@ -1,4 +1,5 @@
 import { getStepIcon } from '@syndesis/api';
+import * as H from '@syndesis/history';
 import { Step } from '@syndesis/models';
 import {
   ButtonLink,
@@ -6,7 +7,6 @@ import {
   IntegrationEditorStepsListItem,
   IntegrationFlowAddStep,
 } from '@syndesis/ui';
-import * as H from 'history';
 import * as React from 'react';
 
 export interface IIntegrationEditorStepAdderProps {

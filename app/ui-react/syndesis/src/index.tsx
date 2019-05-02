@@ -3,12 +3,13 @@ import {
   ServerEventsContext,
   WithServerEvents,
 } from '@syndesis/api';
+import { createBrowserHistory } from '@syndesis/history';
 import { Loader, UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { I18nextProvider, Translation } from 'react-i18next';
-import { BrowserRouter as Router } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import { App } from './app';
 import { WithConfig } from './app/WithConfig';
 import i18n from './i18n';
@@ -22,7 +23,7 @@ import { SettingsModule } from './modules/settings';
 import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
-  <Router>
+  <Router history={createBrowserHistory()}>
     <I18nextProvider i18n={i18n}>
       <WithConfig>
         {({ config, loading, error }) => (

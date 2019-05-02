@@ -1,4 +1,5 @@
 import { getConnectionIcon, WithConnectionHelpers } from '@syndesis/api';
+import * as H from '@syndesis/history';
 import { Connection } from '@syndesis/models';
 import {
   ConnectionCard,
@@ -7,7 +8,6 @@ import {
   ConnectionSkeleton,
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
-import * as H from 'history';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { UIContext } from '../../../app';

@@ -3,13 +3,13 @@ import {
   getExtensionIcon,
   getStepKindIcon,
 } from '@syndesis/api';
+import * as H from '@syndesis/history';
 import {
   ConnectionOverview,
   Extension,
   Step,
   StepKind,
 } from '@syndesis/models';
-import * as H from 'history';
 import { IAddStepPageProps } from './AddStepPage';
 import {
   ISelectConnectionRouteParams,

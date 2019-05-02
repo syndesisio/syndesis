@@ -1,0 +1,26 @@
+language: node_js
+node_js: node
+cache: npm
+env:
+- TEST_ENV=cjs BUILD_ENV=cjs
+- TEST_ENV=umd BUILD_ENV=umd
+- TEST_ENV=source
+before_script:
+- ([[ -z "$BUILD_ENV" ]] || npm run build)
+script:
+- npm run lint
+- npm test
+jobs:
+  include:
+  - stage: Release
+    if: tag =~ ^v[0-9]
+    env: NPM_TAG=$([[ "$TRAVIS_TAG" == *-* ]] && echo "next" || echo "latest")
+    script: echo "Releasing $TRAVIS_TAG to npm with tag \"$NPM_TAG\" ..."
+    deploy:
+      provider: npm
+      skip_cleanup: true
+      tag: "$NPM_TAG"
+      email: npm@mjackson.me
+      api_key: "$NPM_TOKEN"
+      on:
+        tags: true

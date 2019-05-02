@@ -1,9 +1,9 @@
 import { setIntegrationName, WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
+import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
 import { IntegrationEditorForm, IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
-import * as H from 'history';
 import * as React from 'react';
 import { PageTitle } from '../../../../shared';
 import {

@@ -1,4 +1,4 @@
-import * as H from 'history';
+import * as H from '@syndesis/history';
 import { EmptyState } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../Layout';

@@ -1,4 +1,5 @@
 import { getSteps, WithConnection } from '@syndesis/api';
+import * as H from '@syndesis/history';
 import { IConnectionWithIconFile, Step } from '@syndesis/models';
 import {
   ButtonLink,
@@ -8,7 +9,6 @@ import {
   Loader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
-import * as H from 'history';
 import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../../shared';
 import {

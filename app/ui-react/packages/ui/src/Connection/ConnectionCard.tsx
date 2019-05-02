@@ -1,5 +1,5 @@
 import { Text, Title } from '@patternfly/react-core';
-import * as H from 'history';
+import * as H from '@syndesis/history';
 import { Card, DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
