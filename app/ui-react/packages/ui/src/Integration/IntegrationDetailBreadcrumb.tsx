@@ -1,9 +1,11 @@
+import { Level, LevelItem } from '@patternfly/react-core';
 import * as H from 'history';
 import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, ButtonLink } from '../Layout';
 import { IMenuActions } from '../Shared';
+import './IntegrationDetailBreadcrumb.css';
 
 export interface IIntegrationDetailBreadcrumbProps {
   editHref?: H.LocationDescriptor;
@@ -25,54 +27,64 @@ export class IntegrationDetailBreadcrumb extends React.Component<
 > {
   public render() {
     return (
-      <Breadcrumb>
-        <Link to={this.props.homeHref!}>{this.props.i18nHome}</Link>
-        <Link to={this.props.integrationsHref!}>
-          {this.props.i18nIntegrations}
-        </Link>
-        <span>{this.props.i18nPageTitle}</span>
-        <div className={'pull-right'}>
-          <ButtonLink
-            to={this.props.exportHref}
-            onClick={this.props.exportAction}
-            children={this.props.exportLabel}
-          />
-          <ButtonLink
-            href={this.props.editHref}
-            children={this.props.editLabel}
-          />
-          <DropdownKebab
-            id={`integration-${this.props.integrationId}-action-menu`}
-            pullRight={true}
-          >
-            {this.props.menuActions
-              ? this.props.menuActions.map((a, idx) => (
-                  <li role={'presentation'} key={idx}>
-                    {a.href ? (
-                      <Link
-                        to={a.href}
-                        onClick={a.onClick}
-                        role={'menuitem'}
-                        tabIndex={idx + 1}
-                      >
-                        {a.label}
-                      </Link>
-                    ) : (
-                      <a
-                        href={'javascript:void(0)'}
-                        onClick={a.onClick}
-                        role={'menuitem'}
-                        tabIndex={idx + 1}
-                      >
-                        {a.label}
-                      </a>
-                    )}
-                  </li>
-                ))
-              : null}
-          </DropdownKebab>
-        </div>
-      </Breadcrumb>
+      <Level gutter={'md'} className={'integration-detail__breadcrumb'}>
+        <LevelItem>
+          <Breadcrumb>
+            <span>
+              <Link to={this.props.homeHref!}>{this.props.i18nHome}</Link>
+            </span>
+            <span>
+              <Link to={this.props.integrationsHref!}>
+                {this.props.i18nIntegrations}
+              </Link>
+            </span>
+            <span>{this.props.i18nPageTitle}</span>
+          </Breadcrumb>
+        </LevelItem>
+        <LevelItem>
+          <>
+            <ButtonLink
+              to={this.props.exportHref}
+              onClick={this.props.exportAction}
+              children={this.props.exportLabel}
+            />
+            <ButtonLink
+              href={this.props.editHref}
+              children={this.props.editLabel}
+            />
+            <DropdownKebab
+              id={`integration-${this.props.integrationId}-action-menu`}
+              pullRight={true}
+            >
+              {this.props.menuActions
+                ? this.props.menuActions.map((a, idx) => (
+                    <li role={'presentation'} key={idx}>
+                      {a.href ? (
+                        <Link
+                          to={a.href}
+                          onClick={a.onClick}
+                          role={'menuitem'}
+                          tabIndex={idx + 1}
+                        >
+                          {a.label}
+                        </Link>
+                      ) : (
+                        <a
+                          href={'javascript:void(0)'}
+                          onClick={a.onClick}
+                          role={'menuitem'}
+                          tabIndex={idx + 1}
+                        >
+                          {a.label}
+                        </a>
+                      )}
+                    </li>
+                  ))
+                : null}
+            </DropdownKebab>
+          </>
+        </LevelItem>
+      </Level>
     );
   }
 }
