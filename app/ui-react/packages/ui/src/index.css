@@ -99,12 +99,6 @@ body {
   word-break: break-word;
 }
 
-.pf-c-about-modal-box__hero {
-  --pf-c-about-modal-box__hero--sm--BackgroundImage: url('/images/pf4-downstream-bg.svg');
-  --pf-c-about-modal-box__hero--sm--BackgroundSize: contain;
-  --pf-c-about-modal-box__hero--sm--BackgroundPosition: 90% 100%;
-}
-
 .pf-c-content {
   --pf-c-content--FontSize: var(--pf-global--FontSize--sm);
 }
