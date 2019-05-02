@@ -69,7 +69,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
             <>
               {showAboutModal && (
                 <AboutModal
-                  trademark={'Red Hat'}
+                  trademark={''}
                   productName={productName}
                   isModalOpen={showAboutModal}
                   handleModalToggle={toggleAboutModal}

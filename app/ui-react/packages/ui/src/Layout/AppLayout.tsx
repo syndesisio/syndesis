@@ -48,6 +48,7 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
             <>
               {
                 <HelpDropdown
+                  className="syn-help-dropdown"
                   isOpen={false}
                   launchAboutModal={() => {
                     onShowAboutModal();
@@ -77,4 +78,3 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
     </Page>
   );
 };
-

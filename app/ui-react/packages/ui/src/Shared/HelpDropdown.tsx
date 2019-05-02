@@ -6,9 +6,11 @@ import {
   DropdownToggle,
 } from '@patternfly/react-core';
 import { HelpIcon } from '@patternfly/react-icons';
+import classNames from 'classnames';
 import * as React from 'react';
 
 export interface IHelpDropdownProps {
+  className?: string;
   isOpen: boolean;
   launchAboutModal: any;
 }
@@ -61,7 +63,11 @@ export class HelpDropdown extends React.Component<
           position={DropdownPosition.right}
           onSelect={this.onSelect}
           toggle={
-            <DropdownToggle iconComponent={null} onToggle={this.onToggle}>
+            <DropdownToggle
+              className={classNames('', this.props.className)}
+              iconComponent={null}
+              onToggle={this.onToggle}
+            >
               <HelpIcon />
             </DropdownToggle>
           }
