@@ -6,6 +6,7 @@ export * from './GenericTable';
 export * from './InlineTextEdit';
 export * from './ListViewToolbar';
 export * from './LogViewer';
+export * from './models';
 export * from './Notifications';
 export * from './SimplePageHeader';
 export * from './ProgressWithLink';

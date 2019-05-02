@@ -1,7 +1,6 @@
 import {
   canActivate,
   canDeactivate,
-  canEdit,
   WithIntegration,
   WithIntegrationHelpers,
 } from '@syndesis/api';
@@ -10,20 +9,23 @@ import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
-  IIntegrationAction,
+  IMenuActions,
+  IntegrationDetailBreadcrumb,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
+  IntegrationDetailHistoryListViewItem,
+  IntegrationDetailHistoryListViewItemActions,
   IntegrationDetailInfo,
   Loader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
+
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import {
-  IntegrationDetailHistory,
-  IntegrationDetailSteps,
-} from '../../components';
-import resolvers from '../../resolvers';
+import { PageTitle } from '../../../../shared';
+import resolvers from '../../../resolvers';
+import { IntegrationDetailSteps } from '../../components';
+import { TagIntegrationDialogWrapper } from '../../components/TagIntegrationDialogWrapper';
 import { IntegrationDetailNavBar } from '../../shared';
 
 /**
@@ -54,7 +56,9 @@ export interface IIntegrationDetailsPageState {
   promptDialogIcon?: ConfirmationIconType;
   promptDialogText?: string;
   promptDialogTitle?: string;
-  showPromptDialog?: boolean;
+  showActionPromptDialog: boolean;
+  showCiCdPromptDialog: boolean;
+  targetIntegrationId?: string;
 }
 
 interface IPromptActionOptions {
@@ -80,23 +84,31 @@ export class DetailsPage extends React.Component<
   public constructor(props: IIntegrationDetailsPageProps) {
     super(props);
     this.state = {
-      showPromptDialog: false,
+      showActionPromptDialog: false,
+      showCiCdPromptDialog: false,
     };
     this.handleAction = this.handleAction.bind(this);
     this.handleActionCancel = this.handleActionCancel.bind(this);
     this.promptForAction = this.promptForAction.bind(this);
+    this.closeCiCdDialog = this.closeCiCdDialog.bind(this);
+  }
+
+  public closeCiCdDialog() {
+    this.setState({
+      showCiCdPromptDialog: false,
+    });
   }
 
   public handleActionCancel() {
     this.setState({
-      showPromptDialog: false,
+      showActionPromptDialog: false,
     });
   }
 
   public handleAction() {
     const action = this.state.handleAction;
     this.setState({
-      showPromptDialog: false,
+      showActionPromptDialog: false,
     });
     if (typeof action === 'function') {
       action.apply(this);
@@ -107,8 +119,19 @@ export class DetailsPage extends React.Component<
 
   public promptForAction(options: IPromptActionOptions) {
     this.setState({
-      ...options,
-      showPromptDialog: true,
+      handleAction: options.handleAction,
+      promptDialogButtonText: options.promptDialogButtonText,
+      promptDialogIcon: options.promptDialogIcon,
+      promptDialogText: options.promptDialogText,
+      promptDialogTitle: options.promptDialogTitle,
+      showActionPromptDialog: true,
+    });
+  }
+
+  public promptForCiCd(targetIntegrationId: string) {
+    this.setState({
+      showCiCdPromptDialog: true,
+      targetIntegrationId,
     });
   }
 
@@ -123,6 +146,7 @@ export class DetailsPage extends React.Component<
                 deployIntegration,
                 exportIntegration,
                 undeployIntegration,
+                tagIntegration,
               }) => {
                 return (
                   <WithIntegration integrationId={integrationId}>
@@ -140,14 +164,16 @@ export class DetailsPage extends React.Component<
                                 const deployments = data.deployments
                                   ? data.deployments
                                   : [];
-                                const editAction: IIntegrationAction = {
-                                  href: resolvers.integration.edit.index({
-                                    flowId: '0',
-                                    integration: data,
-                                  }),
+                                const editAction: IMenuActions = {
+                                  href: resolvers.integrations.integration.edit.index(
+                                    {
+                                      flowId: '0',
+                                      integration: data,
+                                    }
+                                  ),
                                   label: 'Edit',
                                 };
-                                const startAction: IIntegrationAction = {
+                                const startAction: IMenuActions = {
                                   label: 'Start',
                                   onClick: () =>
                                     this.promptForAction({
@@ -171,7 +197,7 @@ export class DetailsPage extends React.Component<
                                       ),
                                     } as IPromptActionOptions),
                                 };
-                                const stopAction: IIntegrationAction = {
+                                const stopAction: IMenuActions = {
                                   label: 'Stop',
                                   onClick: () =>
                                     this.promptForAction({
@@ -194,7 +220,7 @@ export class DetailsPage extends React.Component<
                                       ),
                                     } as IPromptActionOptions),
                                 };
-                                const deleteAction: IIntegrationAction = {
+                                const deleteAction: IMenuActions = {
                                   label: 'Delete',
                                   onClick: () =>
                                     this.promptForAction({
@@ -216,7 +242,7 @@ export class DetailsPage extends React.Component<
                                       ),
                                     } as IPromptActionOptions),
                                 };
-                                const exportAction: IIntegrationAction = {
+                                const exportAction: IMenuActions = {
                                   label: 'Export',
                                   onClick: () =>
                                     exportIntegration(
@@ -224,44 +250,108 @@ export class DetailsPage extends React.Component<
                                       `${data.name}-export.zip`
                                     ),
                                 };
+                                const ciCdAction: IMenuActions = {
+                                  label: 'Manage CI/CD',
+                                  onClick: () => {
+                                    this.promptForCiCd(data.id!);
+                                  },
+                                };
 
-                                const actions: IIntegrationAction[] = [];
-                                const draftActions: IIntegrationAction[] = [];
+                                const actions: IMenuActions[] = [];
+
+                                /**
+                                 * Array of actions for the breadcrumb.
+                                 * One for the buttons, another for the dropdown menu.
+                                 */
+                                const breadcrumbMenuActions: IMenuActions[] = [];
+
+                                /**
+                                 * Array of actions for Draft integrations.
+                                 * This is specifically for the inline buttons on the Details tab.
+                                 */
+
                                 if (canActivate(data)) {
-                                  data.isDraft
-                                    ? draftActions.push(startAction)
-                                    : actions.push(startAction);
+                                  actions.push(startAction);
+                                  breadcrumbMenuActions.push(startAction);
                                 }
-                                if (canEdit(data)) {
-                                  data.isDraft
-                                    ? draftActions.push(editAction)
-                                    : actions.push(editAction);
-                                }
+
+                                actions.push(editAction);
+
                                 if (canDeactivate(data)) {
                                   actions.push(stopAction);
+                                  breadcrumbMenuActions.push(stopAction);
                                 }
+
                                 actions.push(deleteAction);
+                                breadcrumbMenuActions.push(deleteAction);
+
                                 actions.push(exportAction);
+
+                                actions.push(ciCdAction);
+                                breadcrumbMenuActions.push(ciCdAction);
 
                                 return (
                                   <>
-                                    <ConfirmationDialog
-                                      buttonStyle={
-                                        ConfirmationButtonStyle.NORMAL
-                                      }
-                                      i18nCancelButtonText={t('shared:Cancel')}
-                                      i18nConfirmButtonText={
-                                        this.state.promptDialogButtonText!
-                                      }
-                                      i18nConfirmationMessage={
-                                        this.state.promptDialogText!
-                                      }
-                                      i18nTitle={this.state.promptDialogTitle!}
-                                      icon={this.state.promptDialogIcon!}
-                                      showDialog={this.state.showPromptDialog!}
-                                      onCancel={this.handleActionCancel}
-                                      onConfirm={this.handleAction}
+                                    {this.state.showCiCdPromptDialog && (
+                                      <TagIntegrationDialogWrapper
+                                        manageCiCdHref={resolvers.integrations.manageCicd.root()}
+                                        tagIntegration={tagIntegration}
+                                        targetIntegrationId={
+                                          this.state.targetIntegrationId!
+                                        }
+                                        onSave={this.closeCiCdDialog}
+                                        onHide={this.closeCiCdDialog}
+                                      />
+                                    )}
+                                    {this.state.showActionPromptDialog && (
+                                      <ConfirmationDialog
+                                        buttonStyle={
+                                          ConfirmationButtonStyle.NORMAL
+                                        }
+                                        i18nCancelButtonText={t(
+                                          'shared:Cancel'
+                                        )}
+                                        i18nConfirmButtonText={
+                                          this.state.promptDialogButtonText!
+                                        }
+                                        i18nConfirmationMessage={
+                                          this.state.promptDialogText!
+                                        }
+                                        i18nTitle={
+                                          this.state.promptDialogTitle!
+                                        }
+                                        icon={this.state.promptDialogIcon!}
+                                        showDialog={
+                                          this.state.showActionPromptDialog!
+                                        }
+                                        onCancel={this.handleActionCancel}
+                                        onConfirm={this.handleAction}
+                                      />
+                                    )}
+
+                                    <PageTitle
+                                      title={t('integrations:detail:pageTitle')}
                                     />
+
+                                    <IntegrationDetailBreadcrumb
+                                      editHref={editAction.href}
+                                      editLabel={editAction.label}
+                                      exportAction={exportAction.onClick}
+                                      exportHref={exportAction.href}
+                                      exportLabel={exportAction.label}
+                                      homeHref={resolvers.dashboard.root()}
+                                      i18nHome={t('shared:Home')}
+                                      i18nIntegrations={t(
+                                        'shared:Integrations'
+                                      )}
+                                      i18nPageTitle={t(
+                                        'integrations:detail:pageTitle'
+                                      )}
+                                      integrationId={data.id}
+                                      integrationsHref={resolvers.integrations.list()}
+                                      menuActions={breadcrumbMenuActions}
+                                    />
+
                                     <IntegrationDetailInfo
                                       name={data.name}
                                       version={data.version}
@@ -279,22 +369,55 @@ export class DetailsPage extends React.Component<
                                       )}
                                     />
                                     <IntegrationDetailHistoryListView
-                                      actions={draftActions}
+                                      editHref={editAction.href}
+                                      editLabel={editAction.label}
                                       hasHistory={deployments.length > 0}
                                       isDraft={data.isDraft}
                                       i18nTextDraft={t('shared:Draft')}
                                       i18nTextHistory={t(
                                         'integrations:detail:History'
                                       )}
-                                      children={
-                                        <IntegrationDetailHistory
-                                          actions={actions}
-                                          deployments={deployments}
-                                          integrationId={data.id!}
-                                          updatedAt={data.updatedAt!}
-                                          version={data.version!}
-                                        />
+                                      publishAction={
+                                        canActivate(data)
+                                          ? startAction.onClick
+                                          : undefined
                                       }
+                                      publishHref={
+                                        canActivate(data)
+                                          ? startAction.href
+                                          : undefined
+                                      }
+                                      publishLabel={
+                                        canActivate(data)
+                                          ? t('shared:Publish')
+                                          : undefined
+                                      }
+                                      children={deployments.map(
+                                        (deployment, idx) => {
+                                          return (
+                                            <IntegrationDetailHistoryListViewItem
+                                              key={idx}
+                                              actions={
+                                                <IntegrationDetailHistoryListViewItemActions
+                                                  actions={actions}
+                                                  integrationId={data.id!}
+                                                />
+                                              }
+                                              currentState={
+                                                deployment.currentState!
+                                              }
+                                              i18nTextLastPublished={t(
+                                                'integrations:detail:lastPublished'
+                                              )}
+                                              i18nTextVersion={t(
+                                                'shared:Version'
+                                              )}
+                                              updatedAt={deployment.updatedAt}
+                                              version={deployment.version}
+                                            />
+                                          );
+                                        }
+                                      )}
                                     />
                                   </>
                                 );
