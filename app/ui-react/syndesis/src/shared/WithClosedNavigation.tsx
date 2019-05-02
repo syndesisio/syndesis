@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AppContext } from '../app';
+import { UIContext } from '../app';
 
 /**
  * This component will automatically close the app left navigation bar when
@@ -11,7 +11,7 @@ import { AppContext } from '../app';
  * events that will lead to a bad UX.
  */
 export const WithClosedNavigation: React.FunctionComponent = ({ children }) => {
-  const context = React.useContext(AppContext);
+  const context = React.useContext(UIContext);
   React.useEffect(() => {
     context.hideNavigation();
 

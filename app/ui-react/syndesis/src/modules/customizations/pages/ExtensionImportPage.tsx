@@ -13,7 +13,7 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { AppContext } from '../../../app';
+import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import resolvers from '../../resolvers';
 import { getExtensionTypeName } from '../customizationsUtils';
@@ -95,7 +95,7 @@ export default class ExtensionImportPage extends React.Component<
 
   public render() {
     return (
-      <AppContext.Consumer>
+      <UIContext.Consumer>
         {({ pushNotification }) => {
           const onDndUploadRejectedHandler = (failedFileName: string) => {
             const text = i18n.t(
@@ -285,7 +285,7 @@ export default class ExtensionImportPage extends React.Component<
             </WithRouteData>
           );
         }}
-      </AppContext.Consumer>
+      </UIContext.Consumer>
     );
   }
 }

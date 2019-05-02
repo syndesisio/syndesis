@@ -15,7 +15,7 @@ import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { AppContext } from '../../../app';
+import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import resolvers from '../../resolvers';
@@ -58,7 +58,7 @@ export class ConnectionDetailsPage extends React.Component<
 
   public render() {
     return (
-      <AppContext.Consumer>
+      <UIContext.Consumer>
         {({ pushNotification }) => {
           return (
             <WithRouteData<
@@ -316,7 +316,7 @@ export class ConnectionDetailsPage extends React.Component<
             </WithRouteData>
           );
         }}
-      </AppContext.Consumer>
+      </UIContext.Consumer>
     );
   }
 }

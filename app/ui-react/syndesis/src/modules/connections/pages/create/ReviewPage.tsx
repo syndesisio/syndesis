@@ -7,7 +7,7 @@ import {
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { AppContext } from '../../../../app';
+import { UIContext } from '../../../../app';
 import { PageTitle } from '../../../../shared';
 import { ConnectionCreatorBreadcrumbs } from '../../components';
 import resolvers from '../../resolvers';
@@ -25,7 +25,7 @@ export interface IReviewPageRouteState {
 export default class ReviewPage extends React.Component {
   public render() {
     return (
-      <AppContext.Consumer>
+      <UIContext.Consumer>
         {({ pushNotification }) => (
           <WithRouteData<null, IReviewPageRouteState>>
             {(_, { connector, configuredProperties }, { history }) => (
@@ -114,7 +114,7 @@ export default class ReviewPage extends React.Component {
             )}
           </WithRouteData>
         )}
-      </AppContext.Consumer>
+      </UIContext.Consumer>
     );
   }
 }

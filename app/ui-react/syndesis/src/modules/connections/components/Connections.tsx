@@ -10,7 +10,7 @@ import { WithLoader } from '@syndesis/utils';
 import * as H from 'history';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { AppContext } from '../../../app';
+import { UIContext } from '../../../app';
 import { ApiError } from '../../../shared';
 
 export interface IConnectionsProps {
@@ -25,7 +25,7 @@ export interface IConnectionsProps {
 export class Connections extends React.Component<IConnectionsProps> {
   public render() {
     return (
-      <AppContext.Consumer>
+      <UIContext.Consumer>
         {({ pushNotification }) => {
           return (
             <Translation ns={['connections', 'shared']}>
@@ -82,7 +82,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                                     description={c.description || ''}
                                     icon={getConnectionIcon(
                                       process.env.PUBLIC_URL,
-                                      c,
+                                      c
                                     )}
                                     href={this.props.getConnectionHref(c)}
                                     menuProps={
@@ -125,7 +125,7 @@ export class Connections extends React.Component<IConnectionsProps> {
             </Translation>
           );
         }}
-      </AppContext.Consumer>
+      </UIContext.Consumer>
     );
   }
 }
