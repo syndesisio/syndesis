@@ -54,7 +54,6 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
       <Translation ns={['app', 'shared']}>
         {t => (
           <AppLayout
-            appTitle={'Syndesis'}
             appNav={
               <AppTopMenu username={'developer'}>
                 <PfDropdownItem>

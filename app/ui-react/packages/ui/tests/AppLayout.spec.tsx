@@ -7,7 +7,6 @@ export default describe('ConnectionCard', () => {
   const testComponent = (
     <MemoryRouter>
       <AppLayout
-        appTitle={'Syndesis'}
         pictograph={'Syndesis'}
         appNav={<div data-testid="appnav">appnav</div>}
         verticalNav={[
