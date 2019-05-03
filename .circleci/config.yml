@@ -76,7 +76,7 @@ jobs:
     executor: docker-publish/docker
     steps:
       - attach_workspace:
-          at: ~/
+          at: ~/project
       - setup_remote_docker
       - docker-publish/check
       - docker-publish/build:
