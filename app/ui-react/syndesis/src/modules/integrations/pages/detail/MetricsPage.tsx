@@ -1,6 +1,9 @@
-import { WithMonitoredIntegration } from '@syndesis/api';
-import { Integration } from '@syndesis/models';
-import { Loader } from '@syndesis/ui';
+import {
+  WithIntegrationMetrics,
+  WithMonitoredIntegration,
+} from '@syndesis/api';
+import { IIntegrationOverviewWithDraft } from '@syndesis/models';
+import { IntegrationDetailMetrics, Loader } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -14,12 +17,19 @@ import {
 /**
  * @integrationId - the ID of the integration for which details are being displayed.
  */
-export interface IMetricsPageParams {
+export interface IMetricsRouteParams {
+  integrationId: string;
+}
+
+/**
+ * @integrationId - the ID of the integration for which details are being displayed.
+ */
+export interface IMetricsPageProps {
   integrationId: string;
 }
 
 export interface IMetricsPageState {
-  integration: Integration;
+  integration?: IIntegrationOverviewWithDraft;
 }
 
 /**
@@ -29,61 +39,93 @@ export interface IMetricsPageState {
  * or an integration object set via the state.
  *
  */
-export class MetricsPage extends React.Component {
+export class MetricsPage extends React.Component<
+  IMetricsPageProps,
+  IMetricsPageState
+> {
+  public constructor(props: IMetricsPageProps) {
+    super(props);
+  }
+
   public render() {
     return (
       <Translation ns={['integrations', 'shared']}>
         {t => (
           <AppContext.Consumer>
             {({ getPodLogUrl }) => (
-              <WithRouteData<IMetricsPageParams, IMetricsPageState>>
-                {({ integrationId }, { integration }, { history }) => {
+              <WithRouteData<IMetricsRouteParams, null>>
+                {({ integrationId }) => {
                   return (
                     <WithMonitoredIntegration integrationId={integrationId}>
                       {({ data, hasData, error }) => (
-                        <WithLoader
-                          error={error}
-                          loading={!hasData}
-                          loaderChildren={<Loader />}
-                          errorChildren={<ApiError />}
-                        >
-                          {() => (
-                            <WithIntegrationActions
-                              integration={data.integration}
+                        <WithIntegrationMetrics integrationId={integrationId}>
+                          {({ data: metricsData }) => (
+                            <WithLoader
+                              error={error}
+                              loading={!hasData}
+                              loaderChildren={<Loader />}
+                              errorChildren={<ApiError />}
                             >
-                              {({
-                                ciCdAction,
-                                editAction,
-                                deleteAction,
-                                exportAction,
-                                startAction,
-                                stopAction,
-                              }) => {
-                                return (
-                                  <>
-                                    <PageTitle
-                                      title={t('integrations:detail:pageTitle')}
-                                    />
-                                    <IntegrationDetailHeader
-                                      data={data}
-                                      startAction={startAction}
-                                      stopAction={stopAction}
-                                      deleteAction={deleteAction}
-                                      ciCdAction={ciCdAction}
-                                      editAction={editAction}
-                                      exportAction={exportAction}
-                                      getPodLogUrl={getPodLogUrl}
-                                    />
-                                    <p>
-                                      This is the Integration Detail Metrics
-                                      page.
-                                    </p>
-                                  </>
-                                );
-                              }}
-                            </WithIntegrationActions>
+                              {() => (
+                                <WithIntegrationActions
+                                  integration={data.integration}
+                                >
+                                  {({
+                                    ciCdAction,
+                                    editAction,
+                                    deleteAction,
+                                    exportAction,
+                                    startAction,
+                                    stopAction,
+                                  }) => {
+                                    return (
+                                      <>
+                                        <PageTitle
+                                          title={t(
+                                            'integrations:detail:pageTitle'
+                                          )}
+                                        />
+                                        <IntegrationDetailHeader
+                                          data={data}
+                                          startAction={startAction}
+                                          stopAction={stopAction}
+                                          deleteAction={deleteAction}
+                                          ciCdAction={ciCdAction}
+                                          editAction={editAction}
+                                          exportAction={exportAction}
+                                          getPodLogUrl={getPodLogUrl}
+                                        />
+                                        <IntegrationDetailMetrics
+                                          i18nUptime={t(
+                                            'integrations:metrics:uptime'
+                                          )}
+                                          i18nTotalMessages={t(
+                                            'integrations:metrics:totalMessages'
+                                          )}
+                                          i18nTotalErrors={t(
+                                            'integrations:metrics:totalErrors'
+                                          )}
+                                          i18nSince={t(
+                                            'integrations:metrics:since'
+                                          )}
+                                          i18nLastProcessed={t(
+                                            'integrations:metrics:lastProcessed'
+                                          )}
+                                          errors={metricsData.errors}
+                                          lastProcessed={
+                                            metricsData.lastProcessed
+                                          }
+                                          messages={metricsData.messages}
+                                          start={metricsData.start}
+                                        />
+                                      </>
+                                    );
+                                  }}
+                                </WithIntegrationActions>
+                              )}
+                            </WithLoader>
                           )}
-                        </WithLoader>
+                        </WithIntegrationMetrics>
                       )}
                     </WithMonitoredIntegration>
                   );

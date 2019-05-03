@@ -53,7 +53,7 @@ export class IntegrationDetailNavBar extends React.Component<
               <TabBarItem
                 label={'Metrics'}
                 to={resolvers.integration.metrics({
-                  integration,
+                  integrationId: integration.id!,
                 })}
               />
             </TabBar>
