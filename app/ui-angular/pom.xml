@@ -35,6 +35,7 @@
     <yarn-install-args />
     <yarn-verbose />
     <npm-verbose />
+    <docker-base-image>centos/nginx-114-centos7</docker-base-image>
   </properties>
 
   <build>
