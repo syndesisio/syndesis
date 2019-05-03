@@ -2,10 +2,11 @@
   "en": {
     "app": {},
     "modules": {
+      "apiClientConnectors": {},
       "connections": {},
-      "customizations": {},
       "dashboard": {},
       "data": {},
+      "extensions": {},
       "integrations": {},
       "settings": {}
     },

@@ -1,6 +1,7 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import { getEmptyIntegration, getStep } from '@syndesis/api';
 import { ConnectionOverview, Integration } from '@syndesis/models';
+import { IIntegrationOverviewWithDraft } from '@syndesis/models/src';
 import {
   makeResolver,
   makeResolverNoParams,
@@ -19,11 +20,9 @@ import {
   ISelectConnectionRouteState,
 } from './components/editor/interfaces';
 import {
-  IActivityPageParams,
-  IActivityPageState,
-  IIntegrationDetailsRouteParams,
-  IMetricsRouteParams,
-} from './pages/detail';
+  IDetailsRouteParams,
+  IDetailsRouteState,
+} from './pages/detail/interfaces';
 import routes from './routes';
 
 interface IEditorIndex {
@@ -235,12 +234,12 @@ export const createConfigureEditStepSaveAndPublishResolver = makeResolver<
 >(routes.create.configure.saveAndPublish, configureIndexMapper);
 
 export const integrationActivityResolver = makeResolver<
-  { integration: Integration },
-  IActivityPageParams,
-  IActivityPageState
->(routes.integration.activity, ({ integration }) => ({
+  { integrationId: string; integration?: IIntegrationOverviewWithDraft },
+  IDetailsRouteParams,
+  IDetailsRouteState
+>(routes.integration.activity, ({ integrationId, integration }) => ({
   params: {
-    integrationId: integration.id!,
+    integrationId,
   },
   state: {
     integration,
@@ -248,12 +247,15 @@ export const integrationActivityResolver = makeResolver<
 }));
 
 export const integrationDetailsResolver = makeResolver<
-  { integrationId: string },
-  IIntegrationDetailsRouteParams,
-  null
->(routes.integration.details, ({ integrationId }) => ({
+  { integrationId: string; integration?: IIntegrationOverviewWithDraft },
+  IDetailsRouteParams,
+  IDetailsRouteState
+>(routes.integration.details, ({ integrationId, integration }) => ({
   params: {
     integrationId,
+  },
+  state: {
+    integration,
   },
 }));
 
@@ -312,12 +314,15 @@ export const integrationEditSaveAndPublish = makeResolver<
 >(routes.integration.edit.saveAndPublish, configureIndexMapper);
 
 export const metricsResolver = makeResolver<
-  { integrationId: string },
-  IMetricsRouteParams,
-  null
->(routes.integration.metrics, ({ integrationId }) => ({
+  { integrationId: string; integration?: IIntegrationOverviewWithDraft },
+  IDetailsRouteParams,
+  IDetailsRouteState
+>(routes.integration.metrics, ({ integrationId, integration }) => ({
   params: {
     integrationId,
+  },
+  state: {
+    integration,
   },
 }));
 

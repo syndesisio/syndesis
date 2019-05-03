@@ -6,19 +6,26 @@ import { AppContext } from './AppContext';
 import { UI } from './UI';
 import { IConfigFile } from './WithConfig';
 
+export type IAppRoutes = Array<IAppRoute | IAppRouteWithChildrens>;
+
 export interface IAppRoute {
   component:
     | React.ComponentType<RouteComponentProps<any>>
     | React.ComponentType<any>;
   exact?: boolean;
-  icon: string;
   label: string;
   to: string;
+  kind: 'route';
+}
+export interface IAppRouteWithChildrens {
+  label: string;
+  childrens: IAppRoute[];
+  kind: 'route-with-childrens';
 }
 
 export interface IAppBaseProps {
   config: IConfigFile;
-  routes: IAppRoute[];
+  routes: IAppRoutes;
 }
 
 export const App: React.FunctionComponent<IAppBaseProps> = ({

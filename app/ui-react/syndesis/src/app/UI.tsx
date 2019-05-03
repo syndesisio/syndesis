@@ -15,12 +15,12 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link, Route, Switch } from 'react-router-dom';
 import { PageNotFound, WithErrorBoundary } from '../shared';
-import { IAppRoute } from './App';
+import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
 import logo from './syndesis_logo_full_darkbkg.svg';
 import { UIContext } from './UIContext';
 
 export interface IAppUIProps {
-  routes: IAppRoute[];
+  routes: IAppRoutes;
 }
 
 export interface IAppUIState {
@@ -94,6 +94,11 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                   </WithApiVersion>
                 </AboutModal>
               )}
+              <Notifications
+                notifications={notifications}
+                notificationTimerDelay={8000}
+                removeNotificationAction={onRemoveNotification}
+              />
               <AppLayout
                 onShowAboutModal={toggleAboutModal}
                 appNav={
@@ -107,16 +112,35 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                     </PfDropdownItem>
                   </AppTopMenu>
                 }
-                verticalNav={routes.map(({ exact, icon, label, to }, index) => (
-                  <PfVerticalNavItem
-                    exact={exact}
-                    icon={icon}
-                    label={t(label)}
-                    to={to}
-                    key={index}
-                    data-testid={`navbar-link-${to}`}
-                  />
-                ))}
+                verticalNav={routes.map((route, index) =>
+                  !(route as IAppRouteWithChildrens).childrens ? (
+                    <PfVerticalNavItem
+                      exact={(route as IAppRoute).exact}
+                      label={t((route as IAppRoute).label)}
+                      to={(route as IAppRoute).to}
+                      key={index}
+                      data-testid={`navbar-link-${(route as IAppRoute).to}`}
+                    />
+                  ) : (
+                    <PfVerticalNavItem
+                      label={t(route.label)}
+                      key={index}
+                      to={'#'}
+                    >
+                      {(route as IAppRouteWithChildrens).childrens.map(
+                        (subRoute, subIndex) => (
+                          <PfVerticalNavItem
+                            exact={subRoute.exact}
+                            label={t(subRoute.label)}
+                            to={subRoute.to}
+                            key={subIndex}
+                            data-testid={`navbar-link-${subRoute.to}`}
+                          />
+                        )
+                      )}
+                    </PfVerticalNavItem>
+                  )
+                )}
                 pictograph={
                   <img
                     src={logo}
@@ -129,23 +153,28 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                 onNavigationCollapse={onHideNavigation}
                 onNavigationExpand={onShowNavigation}
               >
-                <Notifications
-                  notifications={notifications}
-                  notificationTimerDelay={8000}
-                  removeNotificationAction={onRemoveNotification}
-                />
                 <WithRouter>
                   {({ match }) => (
                     <WithErrorBoundary key={match.url}>
                       <Switch>
-                        {routes.map(({ to, exact, component }, index) => (
-                          <Route
-                            path={to}
-                            exact={exact}
-                            component={component}
-                            key={index}
-                          />
-                        ))}
+                        {routes
+                          .reduce(
+                            (flattenedRoutes, route) => [
+                              ...flattenedRoutes,
+                              ...(!(route as IAppRouteWithChildrens).childrens
+                                ? [route as IAppRoute]
+                                : (route as IAppRouteWithChildrens).childrens),
+                            ],
+                            [] as IAppRoute[]
+                          )
+                          .map((route, index) => (
+                            <Route
+                              path={route.to}
+                              exact={route.exact}
+                              component={route.component}
+                              key={index}
+                            />
+                          ))}
                         <Route component={PageNotFound} />
                       </Switch>
                     </WithErrorBoundary>

@@ -1,6 +1,7 @@
 import { Text } from '@patternfly/react-core';
 import { Icon } from 'patternfly-react';
 import * as React from 'react';
+import { PageSection } from '../Layout';
 
 export interface IIntegrationDetailDescriptionProps {
   description?: string;
@@ -12,7 +13,7 @@ export class IntegrationDetailDescription extends React.PureComponent<
 > {
   public render() {
     return (
-      <div>
+      <PageSection>
         <Text>
           {this.props.description
             ? this.props.description
@@ -20,7 +21,7 @@ export class IntegrationDetailDescription extends React.PureComponent<
           &nbsp;
           <Icon name={'pencil'} />
         </Text>
-      </div>
+      </PageSection>
     );
   }
 }

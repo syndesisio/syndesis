@@ -1,13 +1,18 @@
-import { Title, TitleLevel } from '@patternfly/react-core';
+import {
+  Level,
+  LevelItem,
+  PageSection,
+  Text,
+  TextContent,
+  Title,
+  TitleLevel,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import {
   Button,
   Card,
   CardBody,
-  CardHeading,
-  CardTitle,
   OverlayTrigger,
-  Row,
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
@@ -186,74 +191,69 @@ export class ExtensionDetail extends React.Component<
           onCancel={this.doCancel}
           onConfirm={this.doDelete}
         />
-        <Card matchHeight={true}>
-          <CardHeading>
-            <CardTitle>
-              <Row>
-                <Title
-                  size="xl"
-                  className={'col-sm-8 extension-detail__extensionTitle'}
-                >
+        <PageSection variant={'light'}>
+          <Level gutter={'sm'}>
+            <LevelItem>
+              <TextContent>
+                <Title size="xl" headingLevel={TitleLevel.h1}>
                   {this.props.extensionName}
-                  <span className={'extension-detail__extensionId'}>
-                    {this.props.i18nIdMessage}
-                  </span>
                 </Title>
-                <div className="col-sm-4 text-right extension-detail__titleButtons">
-                  <OverlayTrigger
-                    overlay={this.getUpdateTooltip()}
-                    placement="top"
-                  >
-                    <ButtonLink
-                      href={this.props.linkUpdateExtension}
-                      as={'primary'}
-                    >
-                      {this.props.i18nUpdate}
-                    </ButtonLink>
-                  </OverlayTrigger>
-                  <OverlayTrigger
-                    overlay={this.getDeleteTooltip()}
-                    placement="top"
-                  >
-                    <Button
-                      bsStyle="default"
-                      disabled={this.props.extensionUses !== 0}
-                      onClick={this.showDeleteDialog}
-                    >
-                      {this.props.i18nDelete}
-                    </Button>
-                  </OverlayTrigger>
-                </div>
-              </Row>
-            </CardTitle>
-          </CardHeading>
-          <CardBody>
-            <Title
-              size="md"
-              headingLevel={TitleLevel.h3}
-              className="extension-detail__sectionHeading"
-            >
-              {this.props.i18nOverviewSectionTitle}
-            </Title>
-            {this.props.overviewSection}
-            <Title
-              size="md"
-              headingLevel={TitleLevel.h3}
-              className="extension-detail__sectionHeading"
-            >
-              {this.props.i18nSupportsSectionTitle}
-            </Title>
-            {this.props.supportsSection}
-            <Title
-              size="md"
-              headingLevel={TitleLevel.h3}
-              className="extension-detail__sectionHeading"
-            >
-              {this.props.i18nUsageSectionTitle}
-            </Title>
-            {this.props.integrationsSection}
-          </CardBody>
-        </Card>
+                <Text>{this.props.i18nIdMessage}</Text>
+              </TextContent>
+            </LevelItem>
+            <LevelItem>
+              <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
+                <ButtonLink
+                  href={this.props.linkUpdateExtension}
+                  as={'primary'}
+                >
+                  {this.props.i18nUpdate}
+                </ButtonLink>
+              </OverlayTrigger>
+              <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
+                <Button
+                  bsStyle="default"
+                  disabled={this.props.extensionUses !== 0}
+                  onClick={this.showDeleteDialog}
+                >
+                  {this.props.i18nDelete}
+                </Button>
+              </OverlayTrigger>
+            </LevelItem>
+          </Level>
+        </PageSection>
+        <PageSection>
+          <Card>
+            <CardBody>
+              <Title
+                size="md"
+                headingLevel={TitleLevel.h3}
+                className="extension-detail__sectionHeading"
+              >
+                {this.props.i18nOverviewSectionTitle}
+              </Title>
+              {this.props.overviewSection}
+
+              <Title
+                size="md"
+                headingLevel={TitleLevel.h3}
+                className="extension-detail__sectionHeading"
+              >
+                {this.props.i18nSupportsSectionTitle}
+              </Title>
+              {this.props.supportsSection}
+
+              <Title
+                size="md"
+                headingLevel={TitleLevel.h3}
+                className="extension-detail__sectionHeading"
+              >
+                {this.props.i18nUsageSectionTitle}
+              </Title>
+              {this.props.integrationsSection}
+            </CardBody>
+          </Card>
+        </PageSection>
       </>
     );
   }

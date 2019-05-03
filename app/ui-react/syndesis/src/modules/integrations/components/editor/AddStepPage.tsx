@@ -1,7 +1,10 @@
 import { getSteps } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Step } from '@syndesis/models';
-import { Container, IntegrationEditorLayout } from '@syndesis/ui';
+import {
+  IntegrationEditorLayout,
+  IntegrationEditorStepsAdderHeader,
+} from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../shared';
@@ -16,8 +19,7 @@ export interface IAddStepPageProps extends IGetStepHrefs {
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
-  header: React.ReactNode;
-  nextHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
+  saveHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
 }
 
 /**
@@ -39,39 +41,33 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
       <WithRouteData<IBaseRouteParams, IBaseRouteState>>
         {({ flowId }, { integration }) => (
           <IntegrationEditorLayout
-            header={this.props.header}
             content={
               <>
                 <PageTitle title={'Save or add step'} />
-                <Container>
-                  <h1>Add to Integration</h1>
-                  <p>
-                    You can continue adding steps and connections to your
-                    integration as well.
-                  </p>
-                  <IntegrationEditorStepAdder
-                    steps={getSteps(integration, flowId)}
-                    addStepHref={position =>
-                      this.props.getEditAddStepHref(
-                        position,
-                        { flowId },
-                        { integration }
-                      )
-                    }
-                    configureStepHref={(position: number, step: Step) =>
-                      getStepHref(
-                        step,
-                        { flowId, position: `${position}` },
-                        { integration },
-                        this.props
-                      )
-                    }
-                  />
-                </Container>
+                <IntegrationEditorStepsAdderHeader />
+                <IntegrationEditorStepAdder
+                  steps={getSteps(integration, flowId)}
+                  addStepHref={position =>
+                    this.props.getEditAddStepHref(
+                      position,
+                      { flowId },
+                      { integration }
+                    )
+                  }
+                  configureStepHref={(position: number, step: Step) =>
+                    getStepHref(
+                      step,
+                      { flowId, position: `${position}` },
+                      { integration },
+                      this.props
+                    )
+                  }
+                />
               </>
             }
             cancelHref={this.props.cancelHref({ flowId }, { integration })}
-            nextHref={this.props.nextHref({ flowId }, { integration })}
+            saveHref={this.props.saveHref({ flowId }, { integration })}
+            publishHref={this.props.saveHref({ flowId }, { integration })}
           />
         )}
       </WithRouteData>

@@ -1,3 +1,4 @@
+import { NavExpandable } from '@patternfly/react-core';
 import classNames from 'classnames';
 import * as React from 'react';
 import { Route } from 'react-router';
@@ -7,7 +8,6 @@ export interface IPfVerticalNavItem {
   className?: string;
   exact?: boolean;
   isActive?: (match: any, location: any) => boolean;
-  icon: string;
   location?: any;
   strict?: boolean;
   to: string | any;
@@ -19,7 +19,6 @@ function PfVerticalNavItem({
   className,
   exact,
   isActive: isActiveProp,
-  icon,
   location,
   strict,
   to,
@@ -43,7 +42,11 @@ function PfVerticalNavItem({
       ? isActiveProp(match, childLocation)
       : match);
 
-    return (
+    return children ? (
+      <NavExpandable title={label} isActive={isActive} isExpanded={isActive}>
+        {children}
+      </NavExpandable>
+    ) : (
       <li className={'pf-c-nav__item'}>
         <Link
           to={to}
@@ -54,7 +57,6 @@ function PfVerticalNavItem({
           children={<>{label}</>}
           {...rest}
         />
-        {children}
       </li>
     );
   };

@@ -14,7 +14,6 @@ export default describe('ConnectionCard', () => {
         verticalNav={[
           <PfVerticalNavItem
             exact={true}
-            icon={'home'}
             label={'Homepage'}
             to={'#navlink'}
             key={1}

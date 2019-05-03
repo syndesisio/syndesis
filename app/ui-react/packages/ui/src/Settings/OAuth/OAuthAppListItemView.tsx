@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container } from '../../Layout';
+import { PageSection } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
 export interface IOAuthAppListItemViewProps extends IListViewToolbarProps {
@@ -10,7 +10,9 @@ export const OAuthAppListItemView: React.FunctionComponent<
   IOAuthAppListItemViewProps
 > = ({ children, ...rest }) => (
   <>
-    <ListViewToolbar {...rest} />
-    <Container>{children}</Container>
+    <PageSection noPadding={true} variant={'light'}>
+      <ListViewToolbar {...rest} />
+    </PageSection>
+    <PageSection>{children}</PageSection>
   </>
 );

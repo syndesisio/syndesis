@@ -1,6 +1,7 @@
 import { Text, Title } from '@patternfly/react-core';
+import * as H from '@syndesis/history';
 import * as React from 'react';
-import { Container } from '../Layout';
+import { ButtonLink, Container } from '../Layout';
 
 export interface IIntegrationEditorFormProps {
   /**
@@ -15,11 +16,17 @@ export interface IIntegrationEditorFormProps {
    * The internationalized form title.
    */
   i18nFormTitle?: string;
+
+  i18nNext: string;
+  i18nChooseAction: string;
   /**
    * The callback fired when submitting the form.
    * @param e
    */
+  isValid: boolean;
+  chooseActionHref: H.LocationDescriptor;
   handleSubmit: (e?: any) => void;
+  submitForm: (e?: any) => void;
 }
 
 /**
@@ -54,6 +61,19 @@ export class IntegrationEditorForm extends React.Component<
                 )}
                 <div className="card-pf-body">
                   <Container>{this.props.children}</Container>
+                </div>
+                <div className="card-pf-footer">
+                  <ButtonLink href={this.props.chooseActionHref}>
+                    <i className={'fa fa-chevron-left'} />{' '}
+                    {this.props.i18nChooseAction}
+                  </ButtonLink>
+                  <ButtonLink
+                    onClick={this.props.submitForm}
+                    disabled={!this.props.isValid}
+                    as={'primary'}
+                  >
+                    {this.props.i18nNext}
+                  </ButtonLink>
                 </div>
               </div>
             </div>

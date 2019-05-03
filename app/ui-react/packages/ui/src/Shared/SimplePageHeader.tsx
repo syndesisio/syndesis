@@ -1,11 +1,11 @@
-import { Text, Title, TitleLevel } from '@patternfly/react-core';
+import { Text, TextContent, Title, TitleLevel } from '@patternfly/react-core';
 import classnames from 'classnames';
 import * as React from 'react';
-import { Container } from '../Layout';
+import { PageSection } from '../Layout';
 
 export interface ISimplePageHeaderProps {
   i18nTitle: string;
-  i18nDescription: string;
+  i18nDescription?: string;
   className?: string;
 }
 
@@ -18,11 +18,17 @@ export const SimplePageHeader: React.FunctionComponent<
   ...rest
 }: ISimplePageHeaderProps) => {
   return (
-    <Container className={classnames('', className)} {...rest}>
-      <Title size="3xl" headingLevel={TitleLevel.h2}>
-        {i18nTitle}
-      </Title>
-      <Text>{i18nDescription}</Text>
-    </Container>
+    <PageSection
+      variant={'light'}
+      className={classnames('', className)}
+      {...rest}
+    >
+      <TextContent>
+        <Title size="2xl" headingLevel={TitleLevel.h1}>
+          {i18nTitle}
+        </Title>
+        {i18nDescription && <Text>{i18nDescription}</Text>}
+      </TextContent>
+    </PageSection>
   );
 };

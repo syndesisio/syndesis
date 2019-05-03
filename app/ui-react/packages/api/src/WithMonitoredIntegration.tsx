@@ -14,6 +14,7 @@ import { IChangeEvent } from './WithServerEvents';
 export interface IWithMonitoredIntegrationProps {
   integrationId: string;
   disableUpdates?: boolean;
+  initialValue?: IIntegrationOverviewWithDraft;
   children(props: IFetchState<IntegrationWithMonitoring>): any;
 }
 
@@ -49,6 +50,7 @@ export class WithMonitoredIntegration extends React.Component<
     return (
       <WithIntegration
         integrationId={this.props.integrationId}
+        initialValue={this.props.initialValue}
         disableUpdates={this.props.disableUpdates}
       >
         {({ data: integration, ...props }) => (

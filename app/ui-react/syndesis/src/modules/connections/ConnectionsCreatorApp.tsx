@@ -1,4 +1,4 @@
-import { Breadcrumb } from '@syndesis/ui';
+import { Breadcrumb, PageSection } from '@syndesis/ui';
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -10,29 +10,31 @@ import routes from './routes';
 export default class ConnectionsCreatorApp extends React.Component {
   public render() {
     return (
-      <WithClosedNavigation>
-        <Breadcrumb>
-          <Link to={resolvers.connections()}>Connections</Link>
-          <span>Create connection</span>
-        </Breadcrumb>
-        <Switch>
-          <Route
-            path={routes.create.selectConnector}
-            exact={true}
-            component={create.ConnectorsPage}
-          />
-          <Route
-            path={routes.create.configureConnector}
-            exact={true}
-            component={create.ConfigurationPage}
-          />
-          <Route
-            path={routes.create.review}
-            exact={true}
-            component={create.ReviewPage}
-          />
-        </Switch>
-      </WithClosedNavigation>
+      <PageSection noPadding={true}>
+        <WithClosedNavigation>
+          <Breadcrumb>
+            <Link to={resolvers.connections()}>Connections</Link>
+            <span>Create connection</span>
+          </Breadcrumb>
+          <Switch>
+            <Route
+              path={routes.create.selectConnector}
+              exact={true}
+              component={create.ConnectorsPage}
+            />
+            <Route
+              path={routes.create.configureConnector}
+              exact={true}
+              component={create.ConfigurationPage}
+            />
+            <Route
+              path={routes.create.review}
+              exact={true}
+              component={create.ReviewPage}
+            />
+          </Switch>
+        </WithClosedNavigation>
+      </PageSection>
     );
   }
 }

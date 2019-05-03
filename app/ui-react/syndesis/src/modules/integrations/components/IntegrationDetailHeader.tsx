@@ -7,6 +7,7 @@ import {
   IMenuActions,
   IntegrationDetailBreadcrumb,
   IntegrationDetailInfo,
+  PageSection,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -58,30 +59,34 @@ export const IntegrationDetailHeader: React.FunctionComponent<
             menuActions={breadcrumbMenuActions}
           />
 
-          <IntegrationDetailInfo
-            name={props.data.integration.name}
-            version={props.data.integration.version}
-            currentState={props.data.integration.currentState!}
-            targetState={props.data.integration.targetState!}
-            monitoringValue={
-              props.data.monitoring &&
-              t('integrations:' + props.data.monitoring.detailedState.value)
-            }
-            monitoringCurrentStep={
-              props.data.monitoring &&
-              props.data.monitoring.detailedState.currentStep
-            }
-            monitoringTotalSteps={
-              props.data.monitoring &&
-              props.data.monitoring.detailedState.totalSteps
-            }
-            monitoringLogUrl={props.getPodLogUrl(props.data.monitoring)}
-            i18nProgressPending={t('shared:Pending')}
-            i18nProgressStarting={t('integrations:progressStarting')}
-            i18nProgressStopping={t('integrations:progressStopping')}
-            i18nLogUrlText={t('shared:viewLogs')}
-          />
-          <IntegrationDetailNavBar integration={props.data.integration} />
+          <PageSection variant={'light'}>
+            <IntegrationDetailInfo
+              name={props.data.integration.name}
+              version={props.data.integration.version}
+              currentState={props.data.integration.currentState!}
+              targetState={props.data.integration.targetState!}
+              monitoringValue={
+                props.data.monitoring &&
+                t('integrations:' + props.data.monitoring.detailedState.value)
+              }
+              monitoringCurrentStep={
+                props.data.monitoring &&
+                props.data.monitoring.detailedState.currentStep
+              }
+              monitoringTotalSteps={
+                props.data.monitoring &&
+                props.data.monitoring.detailedState.totalSteps
+              }
+              monitoringLogUrl={props.getPodLogUrl(props.data.monitoring)}
+              i18nProgressPending={t('shared:Pending')}
+              i18nProgressStarting={t('integrations:progressStarting')}
+              i18nProgressStopping={t('integrations:progressStopping')}
+              i18nLogUrlText={t('shared:viewLogs')}
+            />
+          </PageSection>
+          <PageSection variant={'light'} noPadding={true}>
+            <IntegrationDetailNavBar integration={props.data.integration} />
+          </PageSection>
         </>
       )}
     </Translation>

@@ -2,10 +2,11 @@
   "it": {
     "app": {},
     "modules": {
+      "apiClientConnectors": {},
       "connections": {},
-      "customizations": {},
       "dashboard": {},
       "data": {},
+      "extensions": {},
       "integrations": {},
       "settings": {}
     },

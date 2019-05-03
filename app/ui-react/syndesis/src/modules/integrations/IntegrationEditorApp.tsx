@@ -7,10 +7,7 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../shared';
-import {
-  IntegrationEditorBreadcrumbs,
-  IntegrationEditorSidebar,
-} from './components';
+import { IntegrationEditorSidebar } from './components';
 import { AddStepPage } from './components/editor/AddStepPage';
 import { ReviewPage } from './components/editor/api-provider/EditPage';
 import { EditPage } from './components/editor/api-provider/ReviewPage';
@@ -47,8 +44,7 @@ const addStepPage = (
     mapperHref={resolvers.integration.edit.editStep.dataMapper}
     templateHref={resolvers.integration.edit.editStep.template}
     stepHref={resolvers.integration.edit.editStep.step}
-    header={<IntegrationEditorBreadcrumbs step={1} />}
-    nextHref={(p, s) =>
+    saveHref={(p, s) =>
       resolvers.integration.edit.saveAndPublish({
         ...p,
         ...s,
@@ -60,7 +56,6 @@ const addStepPage = (
 const selectConnectionPage = (
   <SelectConnectionPage
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
-    header={<IntegrationEditorBreadcrumbs step={1} />}
     apiProviderHref={(p, s) => ({ pathname: 'todo' })}
     connectionHref={(connection, p, s) =>
       resolvers.integration.edit.addStep.connection.selectAction({
@@ -88,9 +83,7 @@ const selectConnectionPage = (
 
 const saveIntegrationPage = (
   <SaveIntegrationPage
-    backHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
-    cancelHref={resolvers.list}
-    header={<IntegrationEditorBreadcrumbs step={2} />}
+    cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
     postSaveHref={resolvers.list}
   />
 );
@@ -98,7 +91,6 @@ const saveIntegrationPage = (
 const addStepSelectActionPage = (
   <SelectActionPage
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
-    header={<IntegrationEditorBreadcrumbs step={1} />}
     sidebar={({ connection, steps, activeIndex }) => (
       <IntegrationEditorSidebar
         steps={steps}
@@ -131,14 +123,13 @@ const addStepConfigureActionPage = (
       resolvers.integration.edit.addStep.connection.selectAction({ ...p, ...s })
     }
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
-    header={<IntegrationEditorBreadcrumbs step={1} />}
-    mode={'adding'}
     nextStepHref={(p, s) =>
       resolvers.integration.edit.addStep.connection.configureAction({
         ...p,
         ...s,
       })
     }
+    mode={'adding'}
     sidebar={({ connection, steps, activeIndex }) => (
       <IntegrationEditorSidebar
         steps={steps}
@@ -167,7 +158,6 @@ const addStepConfigureActionPage = (
 const editStepSelectActionPage = (
   <SelectActionPage
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
-    header={<IntegrationEditorBreadcrumbs step={1} />}
     sidebar={({ steps, activeIndex }) => (
       <IntegrationEditorSidebar steps={steps} activeIndex={activeIndex} />
     )}
@@ -190,7 +180,6 @@ const editStepConfigureActionPage = (
       })
     }
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
-    header={<IntegrationEditorBreadcrumbs step={1} />}
     mode={'editing'}
     nextStepHref={(p, s) =>
       resolvers.integration.edit.editStep.connection.configureAction({

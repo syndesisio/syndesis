@@ -32,7 +32,8 @@ export class IntegrationVerticalFlow extends React.Component<
   };
 
   public state = {
-    expanded: localStorage.getItem('iec-vertical-flow-expanded') === 'y',
+    expanded:
+      (localStorage.getItem('iec-vertical-flow-expanded') || 'y') === 'y',
   };
 
   constructor(props: IIntegrationVerticalFlowProps) {

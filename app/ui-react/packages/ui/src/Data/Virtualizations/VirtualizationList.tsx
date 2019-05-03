@@ -7,7 +7,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../../Layout';
+import { ButtonLink, PageSection } from '../../Layout';
 import {
   IListViewToolbarProps,
   ListViewToolbar,
@@ -68,44 +68,24 @@ export class VirtualizationList extends React.Component<
     return (
       <>
         <SimplePageHeader
-          className="container-fluid pf-u-my-md"
           i18nTitle={this.props.i18nTitle}
           i18nDescription={this.props.i18nDescription}
         />
-        <ListViewToolbar {...this.props}>
-          <div className="form-group">
-            <OverlayTrigger
-              overlay={this.getImportVirtualizationTooltip()}
-              placement="top"
-            >
-              <Button
-                bsStyle="default"
-                to={this.props.i18nImport}
-                onClick={this.handleImport}
+        <PageSection variant={'light'} noPadding={true}>
+          <ListViewToolbar {...this.props}>
+            <div className="form-group">
+              <OverlayTrigger
+                overlay={this.getImportVirtualizationTooltip()}
+                placement="top"
               >
-                {this.props.i18nImport}
-              </Button>
-            </OverlayTrigger>
-            <OverlayTrigger
-              overlay={this.getCreateVirtualizationTooltip()}
-              placement="top"
-            >
-              <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
-                {this.props.i18nLinkCreateVirtualization}
-              </ButtonLink>
-            </OverlayTrigger>
-          </div>
-        </ListViewToolbar>
-        {this.props.hasListData ? (
-          <ListView>{this.props.children}</ListView>
-        ) : (
-          <EmptyState>
-            <EmptyState.Icon />
-            <EmptyState.Title>
-              {this.props.i18nEmptyStateTitle}
-            </EmptyState.Title>
-            <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
-            <EmptyState.Action>
+                <Button
+                  bsStyle="default"
+                  to={this.props.i18nImport}
+                  onClick={this.handleImport}
+                >
+                  {this.props.i18nImport}
+                </Button>
+              </OverlayTrigger>
               <OverlayTrigger
                 overlay={this.getCreateVirtualizationTooltip()}
                 placement="top"
@@ -114,9 +94,32 @@ export class VirtualizationList extends React.Component<
                   {this.props.i18nLinkCreateVirtualization}
                 </ButtonLink>
               </OverlayTrigger>
-            </EmptyState.Action>
-          </EmptyState>
-        )}
+            </div>
+          </ListViewToolbar>
+        </PageSection>
+        <PageSection>
+          {this.props.hasListData ? (
+            <ListView>{this.props.children}</ListView>
+          ) : (
+            <EmptyState>
+              <EmptyState.Icon />
+              <EmptyState.Title>
+                {this.props.i18nEmptyStateTitle}
+              </EmptyState.Title>
+              <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
+              <EmptyState.Action>
+                <OverlayTrigger
+                  overlay={this.getCreateVirtualizationTooltip()}
+                  placement="top"
+                >
+                  <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
+                    {this.props.i18nLinkCreateVirtualization}
+                  </ButtonLink>
+                </OverlayTrigger>
+              </EmptyState.Action>
+            </EmptyState>
+          )}
+        </PageSection>
       </>
     );
   }

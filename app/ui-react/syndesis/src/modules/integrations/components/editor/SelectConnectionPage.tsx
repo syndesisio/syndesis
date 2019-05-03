@@ -9,15 +9,16 @@ import {
 import * as H from '@syndesis/history';
 import { Step, StepKind } from '@syndesis/models';
 import {
-  ButtonLink,
+  ConnectionCard,
+  ConnectionsGridCell,
   IntegrationEditorChooseConnection,
-  IntegrationEditorConnectionsListItem,
   IntegrationEditorLayout,
   IntegrationsListSkeleton,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../shared';
+import resolvers from '../../../resolvers';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
@@ -26,15 +27,10 @@ import {
 import { getStepHref, IGetStepHrefs, toStepKindCollection } from './utils';
 
 export interface ISelectConnectionPageProps extends IGetStepHrefs {
-  backHref?: (
-    p: ISelectConnectionRouteParams,
-    s: ISelectConnectionRouteState
-  ) => H.LocationDescriptor;
   cancelHref: (
     p: ISelectConnectionRouteParams,
     s: ISelectConnectionRouteState
   ) => H.LocationDescriptor;
-  header: React.ReactNode;
   sidebar: (props: { steps: Step[]; activeIndex: number }) => React.ReactNode;
 }
 
@@ -64,7 +60,6 @@ export class SelectConnectionPage extends React.Component<
             <>
               <PageTitle title={'Choose a connection'} />
               <IntegrationEditorLayout
-                header={this.props.header}
                 sidebar={this.props.sidebar({
                   activeIndex: positionAsNumber,
                   steps: integrationSteps,
@@ -114,45 +109,31 @@ export class SelectConnectionPage extends React.Component<
                                       <>
                                         {visibleSteps.map(
                                           (step, idx: number) => (
-                                            <IntegrationEditorConnectionsListItem
-                                              key={idx}
-                                              integrationName={step.name}
-                                              integrationDescription={
-                                                step.description ||
-                                                'No description available.'
-                                              }
-                                              icon={
-                                                <img
-                                                  src={step.icon}
-                                                  width={24}
-                                                  height={24}
-                                                />
-                                              }
-                                              actions={
-                                                <ButtonLink
-                                                  href={getStepHref(
-                                                    step,
-                                                    params,
-                                                    state,
-                                                    this.props
-                                                  )}
-                                                >
-                                                  Select
-                                                </ButtonLink>
-                                              }
-                                            />
+                                            <ConnectionsGridCell key={idx}>
+                                              <ConnectionCard
+                                                name={step.name}
+                                                description={
+                                                  step.description || ''
+                                                }
+                                                icon={step.icon}
+                                                href={getStepHref(
+                                                  step,
+                                                  params,
+                                                  state,
+                                                  this.props
+                                                )}
+                                              />
+                                            </ConnectionsGridCell>
                                           )
                                         )}
-                                        <IntegrationEditorConnectionsListItem
-                                          integrationName={''}
-                                          integrationDescription={''}
-                                          icon={''}
-                                          actions={
-                                            <ButtonLink href={'#'}>
-                                              Create connection
-                                            </ButtonLink>
-                                          }
-                                        />
+                                        <ConnectionsGridCell>
+                                          <ConnectionCard
+                                            name={'Create connection'}
+                                            description={''}
+                                            icon={''}
+                                            href={resolvers.connections.create.selectConnector()}
+                                          />
+                                        </ConnectionsGridCell>
                                       </>
                                     );
                                   }}
@@ -164,11 +145,6 @@ export class SelectConnectionPage extends React.Component<
                       </WithExtensions>
                     )}
                   </WithConnections>
-                }
-                backHref={
-                  this.props.backHref
-                    ? this.props.backHref(params, state)
-                    : undefined
                 }
                 cancelHref={this.props.cancelHref(params, state)}
               />

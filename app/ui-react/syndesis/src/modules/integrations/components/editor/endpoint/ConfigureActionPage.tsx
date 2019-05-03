@@ -23,7 +23,6 @@ export interface IConfigureActionPageProps {
     p: IConfigureActionRouteParams,
     s: IConfigureActionRouteState
   ) => H.LocationDescriptor;
-  header: React.ReactNode;
   mode: 'adding' | 'editing';
   nextStepHref: (
     p: IConfigureActionRouteParams,
@@ -134,12 +133,20 @@ export class ConfigureActionPage extends React.Component<
                   configurationStep={stepAsNumber}
                   initialValue={configuredProperties}
                   onUpdatedIntegration={onUpdatedIntegration}
+                  chooseActionHref={this.props.backHref(
+                    { actionId, flowId, step, position },
+                    {
+                      configuredProperties,
+                      connection,
+                      integration,
+                      updatedIntegration,
+                    }
+                  )}
                 >
                   {({ form, submitForm, isSubmitting }) => (
                     <>
                       <PageTitle title={'Configure the action'} />
                       <IntegrationEditorLayout
-                        header={this.props.header}
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           connection,
@@ -149,15 +156,6 @@ export class ConfigureActionPage extends React.Component<
                           ),
                         })}
                         content={form}
-                        backHref={this.props.backHref(
-                          { actionId, flowId, step, position },
-                          {
-                            configuredProperties,
-                            connection,
-                            integration,
-                            updatedIntegration,
-                          }
-                        )}
                         cancelHref={this.props.cancelHref(
                           { actionId, flowId, step, position },
                           {
@@ -167,8 +165,6 @@ export class ConfigureActionPage extends React.Component<
                             updatedIntegration,
                           }
                         )}
-                        onNext={submitForm}
-                        isNextLoading={isSubmitting}
                       />
                     </>
                   )}

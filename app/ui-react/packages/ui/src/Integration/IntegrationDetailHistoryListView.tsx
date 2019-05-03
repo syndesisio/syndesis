@@ -1,7 +1,7 @@
 import * as H from '@syndesis/history';
 import { Grid, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../Layout';
+import { ButtonLink, PageSection } from '../Layout';
 import './IntegrationDetailHistoryListView.css';
 
 export interface IIntegrationDetailHistoryListViewProps {
@@ -21,60 +21,62 @@ export class IntegrationDetailHistoryListView extends React.Component<
 > {
   public render() {
     return (
-      <Grid
-        fluid={true}
-        key={1}
-        className="integration-detail-history-list-view"
-      >
-        {this.props.isDraft ? (
-          <Grid.Row className="show-grid">
-            <Grid.Col
-              xs={2}
-              md={2}
-              className="integration-detail-history-list-view__description"
-            >
-              {this.props.i18nTextDraft}:
-            </Grid.Col>
-            <Grid.Col xs={10} md={10}>
-              <ListViewItem
-                key={1}
-                heading={this.props.i18nTextDraft}
-                actions={
-                  <>
-                    <ButtonLink
-                      to={this.props.publishHref}
-                      onClick={this.props.publishAction}
-                      children={this.props.publishLabel}
-                    />
-                    <ButtonLink
-                      href={this.props.editHref}
-                      children={this.props.editLabel}
-                    />
-                  </>
-                }
-                stacked={false}
-              />
-            </Grid.Col>
-          </Grid.Row>
-        ) : null}
+      <PageSection>
+        <Grid
+          fluid={true}
+          key={1}
+          className="integration-detail-history-list-view"
+        >
+          {this.props.isDraft ? (
+            <Grid.Row className="show-grid">
+              <Grid.Col
+                xs={2}
+                md={2}
+                className="integration-detail-history-list-view__description"
+              >
+                {this.props.i18nTextDraft}:
+              </Grid.Col>
+              <Grid.Col xs={10} md={10}>
+                <ListViewItem
+                  key={1}
+                  heading={this.props.i18nTextDraft}
+                  actions={
+                    <>
+                      <ButtonLink
+                        to={this.props.publishHref}
+                        onClick={this.props.publishAction}
+                        children={this.props.publishLabel}
+                      />
+                      <ButtonLink
+                        href={this.props.editHref}
+                        children={this.props.editLabel}
+                      />
+                    </>
+                  }
+                  stacked={false}
+                />
+              </Grid.Col>
+            </Grid.Row>
+          ) : null}
 
-        {this.props.children && this.props.hasHistory ? (
-          <Grid.Row className="show-grid">
-            <Grid.Col
-              xs={2}
-              md={2}
-              className="integration-detail-history-list-view__description"
-            >
-              {<span>{this.props.i18nTextHistory}:</span>}
-            </Grid.Col>
-            <Grid.Col xs={10} md={10}>
-              {this.props.children ? (
-                <ListView>{this.props.children}</ListView>
-              ) : null}
-            </Grid.Col>
-          </Grid.Row>
-        ) : null}
-      </Grid>
+          {this.props.children && this.props.hasHistory ? (
+            <Grid.Row className="show-grid">
+              <Grid.Col
+                xs={2}
+                md={2}
+                className="integration-detail-history-list-view__description"
+              >
+                {<span>{this.props.i18nTextHistory}:</span>}
+              </Grid.Col>
+              <Grid.Col xs={10} md={10}>
+                {this.props.children ? (
+                  <ListView>{this.props.children}</ListView>
+                ) : null}
+              </Grid.Col>
+            </Grid.Row>
+          ) : null}
+        </Grid>
+      </PageSection>
     );
   }
 }

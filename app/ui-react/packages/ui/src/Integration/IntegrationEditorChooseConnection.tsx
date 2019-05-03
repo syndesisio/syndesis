@@ -1,6 +1,6 @@
 import { Text, Title } from '@patternfly/react-core';
-import { ListView } from 'patternfly-react';
 import * as React from 'react';
+import { ConnectionsGrid } from '../Connection';
 import { Container } from '../Layout';
 
 export interface IIntegrationEditorChooseConnection {
@@ -32,7 +32,7 @@ export class IntegrationEditorChooseConnection extends React.Component<
           <Text>{this.props.i18nSubtitle}</Text>
         </Container>
         <Container>
-          <ListView>{this.props.children}</ListView>
+          <ConnectionsGrid>{this.props.children}</ConnectionsGrid>
         </Container>
       </>
     );

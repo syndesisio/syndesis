@@ -3,6 +3,7 @@ import { Integration } from '@syndesis/models';
 import {
   IntegrationStepsHorizontalItem,
   IntegrationStepsHorizontalView,
+  PageSection,
 } from '@syndesis/ui';
 import * as React from 'react';
 
@@ -18,29 +19,31 @@ export class IntegrationDetailSteps extends React.Component<
     const steps = getSteps(this.props.integration, flowId);
 
     return (
-      <IntegrationStepsHorizontalView>
-        {steps.map((s, idx) => {
-          const isFirst = idx === 0;
-          const stepName = s.connection!
-            ? s.connection!.connector!.name
-            : s.name;
+      <PageSection variant={'light'}>
+        <IntegrationStepsHorizontalView>
+          {steps.map((s, idx) => {
+            const isFirst = idx === 0;
+            const stepName = s.connection!
+              ? s.connection!.connector!.name
+              : s.name;
 
-          return (
-            <React.Fragment key={idx}>
-              <IntegrationStepsHorizontalItem
-                name={stepName}
-                icon={getIntegrationStepIcon(
-                  process.env.PUBLIC_URL,
-                  this.props.integration,
-                  flowId,
-                  idx
-                )}
-                isFirst={isFirst}
-              />
-            </React.Fragment>
-          );
-        })}
-      </IntegrationStepsHorizontalView>
+            return (
+              <React.Fragment key={idx}>
+                <IntegrationStepsHorizontalItem
+                  name={stepName}
+                  icon={getIntegrationStepIcon(
+                    process.env.PUBLIC_URL,
+                    this.props.integration,
+                    flowId,
+                    idx
+                  )}
+                  isFirst={isFirst}
+                />
+              </React.Fragment>
+            );
+          })}
+        </IntegrationStepsHorizontalView>
+      </PageSection>
     );
   }
 }

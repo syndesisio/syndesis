@@ -1,22 +1,21 @@
 import { WithExtensionHelpers, WithExtensions } from '@syndesis/api';
 import { Extension } from '@syndesis/models';
 import {
-  Container,
   ExtensionListItem,
   ExtensionListSkeleton,
   ExtensionListView,
   IActiveFilter,
   IFilterType,
   ISortType,
+  PageSection,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
-import { getExtensionTypeName } from '../customizationsUtils';
 import resolvers from '../resolvers';
-import CustomizationsNavBar from '../shared/CustomizationsNavBar';
+import { getExtensionTypeName } from '../utils';
 
 function getFilteredAndSortedExtensions(
   extensions: Extension[],
@@ -101,11 +100,10 @@ export default class ExtensionsPage extends React.Component {
                     );
 
                     return (
-                      <Translation ns={['customizations', 'shared']}>
+                      <Translation ns={['extensions', 'shared']}>
                         {t => (
                           <>
-                            <CustomizationsNavBar />
-                            <Container className="pf-u-my-md">
+                            <PageSection variant={'light'}>
                               <h1 className="pf-c-title pf-m-xl">
                                 {t('extension.extensionsPageTitle')}
                               </h1>
@@ -116,11 +114,11 @@ export default class ExtensionsPage extends React.Component {
                                   ),
                                 }}
                               />
-                            </Container>
+                            </PageSection>
                             <ExtensionListView
                               filterTypes={filterTypes}
                               sortTypes={sortTypes}
-                              linkImportExtension={resolvers.extensions.import()}
+                              linkImportExtension={resolvers.import()}
                               resultsCount={filteredAndSorted.length}
                               {...helpers}
                               i18nTitle={''}
@@ -168,7 +166,7 @@ export default class ExtensionsPage extends React.Component {
                                       (extension: Extension, index: number) => (
                                         <ExtensionListItem
                                           key={index}
-                                          detailsPageLink={resolvers.extensions.extension.details(
+                                          detailsPageLink={resolvers.extension.details(
                                             { extension }
                                           )}
                                           extensionDescription={
@@ -203,7 +201,7 @@ export default class ExtensionsPage extends React.Component {
                                           i18nUsedByMessage={this.getUsedByMessage(
                                             extension
                                           )}
-                                          linkUpdateExtension={resolvers.extensions.extension.update(
+                                          linkUpdateExtension={resolvers.extension.update(
                                             { extension }
                                           )}
                                           onDelete={handleDelete}

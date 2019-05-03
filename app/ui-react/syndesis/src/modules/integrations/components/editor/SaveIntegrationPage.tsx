@@ -2,7 +2,7 @@ import { setIntegrationName, WithIntegrationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
-import { IntegrationEditorForm, IntegrationEditorLayout } from '@syndesis/ui';
+import { IntegrationEditorLayout, IntegrationSaveForm } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../shared';
@@ -13,15 +13,10 @@ import {
 } from './interfaces';
 
 export interface ISaveIntegrationPageProps {
-  backHref: (
-    p: ISaveIntegrationRouteParams,
-    s: ISaveIntegrationRouteState
-  ) => H.LocationDescriptor;
   cancelHref: (
     p: ISaveIntegrationRouteParams,
     s: ISaveIntegrationRouteState
   ) => H.LocationDescriptor;
-  header: React.ReactNode;
   postSaveHref: (i: Integration) => H.LocationDescriptorObject;
 }
 
@@ -46,6 +41,7 @@ export class SaveIntegrationPage extends React.Component<
         {({ flowId }, { integration }, { history }) => (
           <WithIntegrationHelpers>
             {({ saveIntegration }) => {
+              let shouldPublish = false;
               const onSave = async (
                 { name, description }: ISaveIntegrationForm,
                 actions: any
@@ -57,6 +53,12 @@ export class SaveIntegrationPage extends React.Component<
                 // TODO: set the description
                 await saveIntegration(updatedIntegration);
                 actions.setSubmitting(false);
+
+                if (shouldPublish) {
+                  alert('TODO: publish');
+                  shouldPublish = false;
+                }
+
                 // TODO: toast notification
                 history.push(this.props.postSaveHref(updatedIntegration));
               };
@@ -95,11 +97,10 @@ export class SaveIntegrationPage extends React.Component<
                     submitForm,
                   }) => (
                     <IntegrationEditorLayout
-                      header={this.props.header}
                       content={
                         <>
                           <PageTitle title={'Save the integration'} />
-                          <IntegrationEditorForm
+                          <IntegrationSaveForm
                             i18nTitle={'Save the integration'}
                             i18nSubtitle={
                               'Update details about this integration.'
@@ -107,21 +108,22 @@ export class SaveIntegrationPage extends React.Component<
                             handleSubmit={handleSubmit}
                           >
                             {fields}
-                          </IntegrationEditorForm>
+                          </IntegrationSaveForm>
                         </>
                       }
                       cancelHref={this.props.cancelHref(
                         { flowId },
                         { integration }
                       )}
-                      backHref={this.props.backHref(
-                        { flowId },
-                        { integration }
-                      )}
-                      onNext={submitForm}
-                      isNextDisabled={dirty && !isValid}
-                      isNextLoading={isSubmitting}
-                      isLastStep={true}
+                      onSave={submitForm}
+                      isSaveDisabled={dirty && !isValid}
+                      isSaveLoading={isSubmitting}
+                      onPublish={async () => {
+                        shouldPublish = true;
+                        await submitForm();
+                      }}
+                      isPublishDisabled={dirty && !isValid}
+                      isPublishLoading={isSubmitting}
                     />
                   )}
                 </AutoForm>

@@ -3,11 +3,11 @@ import { Action, Extension } from '@syndesis/models';
 import {
   Breadcrumb,
   ButtonLink,
-  Container,
   ExtensionImportCard,
   ExtensionImportReview,
   IImportAction,
   Loader,
+  PageSection,
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -16,8 +16,7 @@ import { Link } from 'react-router-dom';
 import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import resolvers from '../../resolvers';
-import { getExtensionTypeName } from '../customizationsUtils';
-import './ExtensionImportPage.css';
+import { getExtensionTypeName } from '../utils';
 
 export interface IExtensionImportRouteProps {
   extensionId?: string;
@@ -163,118 +162,106 @@ export default class ExtensionImportPage extends React.Component<
                     const handleImport = async (importExtensionId: string) => {
                       try {
                         await importExtension(importExtensionId);
-                        history.push(
-                          resolvers.customizations.extensions.list()
-                        );
+                        history.push(resolvers.extensions.list());
                       } catch (e) {
                         // TODO: post notification
                       }
                     };
                     return (
-                      <Translation ns={['customizations', 'shared']}>
+                      <Translation ns={['extensions', 'shared']}>
                         {t => (
                           <>
-                            <Container className="col-sm-11">
-                              <Breadcrumb>
-                                <Link to={resolvers.dashboard.root()}>
-                                  {t('shared:Home')}
-                                </Link>
-                                <Link to={resolvers.customizations.root()}>
-                                  {t('shared:Customizations')}
-                                </Link>
-                                <Link
-                                  to={resolvers.customizations.extensions.list()}
+                            <Breadcrumb
+                              actions={
+                                <ButtonLink
+                                  className={'extension-import-page__action'}
+                                  href={resolvers.extensions.list()}
+                                  as={'default'}
                                 >
-                                  {t('shared:Extensions')}
-                                </Link>
-                                <span>
-                                  {t('extension.extensionImportPageTitle')}
-                                </span>
-                              </Breadcrumb>
-                            </Container>
-                            <Container
-                              className={
-                                'extension-import-page__actionContainer col-sm-1'
+                                  {t('shared:Cancel')}
+                                </ButtonLink>
                               }
                             >
-                              <ButtonLink
-                                className={'extension-import-page__action'}
-                                href={resolvers.customizations.extensions.list()}
-                                as={'default'}
-                              >
-                                {t('shared:Cancel')}
-                              </ButtonLink>
-                            </Container>
-                            {this.state.loading ? <Loader /> : null}
-                            <ExtensionImportCard
-                              dndDisabled={this.state.disableDropzone}
-                              i18nAlertMessage={this.state.i18nAlertMessage}
-                              i18nDndHelpMessage={t(
-                                'extension.importHelpMessage'
-                              )}
-                              i18nDndInstructions={t(
-                                'extension.importDndInstructions'
-                              )}
-                              i18nDndNoFileSelectedMessage={t(
-                                'extension.importNoFileSelectedMessage'
-                              )}
-                              i18nDndSelectedFileLabel={t(
-                                'extension.importSelectedFileLabel'
-                              )}
-                              i18nDndUploadFailedMessage={
-                                this.state.dndUploadFailedMessage
-                              }
-                              i18nDndUploadSuccessMessage={
-                                this.state.dndUploadSuccessMessage
-                              }
-                              i18nImportInstructions={t(
-                                'extension.importUpdateMessage'
-                              )}
-                              i18nTitle={t('extension.ImportExtension')}
-                              onDndUploadAccepted={onDndUploadAcceptedHandler}
-                              onDndUploadRejected={onDndUploadRejectedHandler}
-                            />
-                            {this.state.extension &&
-                            this.state.extension.id &&
-                            this.state.extension.extensionId ? (
-                              <ExtensionImportReview
-                                actions={this.state.extension.actions.map(
-                                  (action: Action) =>
-                                    ({
-                                      description: action.description,
-                                      name: action.name,
-                                    } as IImportAction)
+                              <Link to={resolvers.dashboard.root()}>
+                                {t('shared:Home')}
+                              </Link>
+                              <Link to={resolvers.extensions.list()}>
+                                {t('shared:Extensions')}
+                              </Link>
+                              <span>
+                                {t('extension.extensionImportPageTitle')}
+                              </span>
+                            </Breadcrumb>
+                            <PageSection>
+                              {this.state.loading ? <Loader /> : null}
+                              <ExtensionImportCard
+                                dndDisabled={this.state.disableDropzone}
+                                i18nAlertMessage={this.state.i18nAlertMessage}
+                                i18nDndHelpMessage={t(
+                                  'extension.importHelpMessage'
                                 )}
-                                cancelLink={resolvers.customizations.extensions.list()}
-                                extensionDescription={
-                                  this.state.extension.description
+                                i18nDndInstructions={t(
+                                  'extension.importDndInstructions'
+                                )}
+                                i18nDndNoFileSelectedMessage={t(
+                                  'extension.importNoFileSelectedMessage'
+                                )}
+                                i18nDndSelectedFileLabel={t(
+                                  'extension.importSelectedFileLabel'
+                                )}
+                                i18nDndUploadFailedMessage={
+                                  this.state.dndUploadFailedMessage
                                 }
-                                extensionId={this.state.extension.extensionId}
-                                extensionName={this.state.extension.name}
-                                extensionUid={this.state.extension.id}
-                                i18nActionsLabel={this.getActionsLabel()}
-                                i18nCancel={i18n.t('shared:Cancel')}
-                                i18nDescriptionLabel={i18n.t(
-                                  'shared:Description'
+                                i18nDndUploadSuccessMessage={
+                                  this.state.dndUploadSuccessMessage
+                                }
+                                i18nImportInstructions={t(
+                                  'extension.importUpdateMessage'
                                 )}
-                                i18nExtensionTypeMessage={getExtensionTypeName(
-                                  this.state.extension
-                                )}
-                                i18nIdLabel={i18n.t('shared:ID')}
-                                i18nImport={i18n.t(
-                                  'customizations:extension.ImportExtension'
-                                )}
-                                i18nNameLabel={i18n.t('shared:Name')}
-                                i18nTitle={i18n.t(
-                                  'customizations:extension.ImportReview'
-                                )}
-                                i18nTypeLabel={i18n.t('shared:Type')}
-                                i18nActionText={this.getActionText}
-                                onImport={handleImport}
+                                i18nTitle={t('extension.ImportExtension')}
+                                onDndUploadAccepted={onDndUploadAcceptedHandler}
+                                onDndUploadRejected={onDndUploadRejectedHandler}
                               />
-                            ) : (
-                              <Container />
-                            )}
+                              {this.state.extension &&
+                              this.state.extension.id &&
+                              this.state.extension.extensionId ? (
+                                <ExtensionImportReview
+                                  actions={this.state.extension.actions.map(
+                                    (action: Action) =>
+                                      ({
+                                        description: action.description,
+                                        name: action.name,
+                                      } as IImportAction)
+                                  )}
+                                  cancelLink={resolvers.extensions.list()}
+                                  extensionDescription={
+                                    this.state.extension.description
+                                  }
+                                  extensionId={this.state.extension.extensionId}
+                                  extensionName={this.state.extension.name}
+                                  extensionUid={this.state.extension.id}
+                                  i18nActionsLabel={this.getActionsLabel()}
+                                  i18nCancel={i18n.t('shared:Cancel')}
+                                  i18nDescriptionLabel={i18n.t(
+                                    'shared:Description'
+                                  )}
+                                  i18nExtensionTypeMessage={getExtensionTypeName(
+                                    this.state.extension
+                                  )}
+                                  i18nIdLabel={i18n.t('shared:ID')}
+                                  i18nImport={i18n.t(
+                                    'customizations:extension.ImportExtension'
+                                  )}
+                                  i18nNameLabel={i18n.t('shared:Name')}
+                                  i18nTitle={i18n.t(
+                                    'customizations:extension.ImportReview'
+                                  )}
+                                  i18nTypeLabel={i18n.t('shared:Type')}
+                                  i18nActionText={this.getActionText}
+                                  onImport={handleImport}
+                                />
+                              ) : null}
+                            </PageSection>
                           </>
                         )}
                       </Translation>

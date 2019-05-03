@@ -24,10 +24,10 @@ export default class ExtensionIntegrations extends React.Component<
 > {
   public getUsageMessage(uses: number): string {
     if (uses === 1) {
-      return i18n.t('customizations:usedByOne');
+      return i18n.t('extensions:usedByOne');
     }
 
-    return i18n.t('customizations:usedByMulti', {
+    return i18n.t('extensions:usedByMulti', {
       count: uses,
     });
   }
@@ -43,7 +43,7 @@ export default class ExtensionIntegrations extends React.Component<
             errorChildren={<ApiError />}
           >
             {() => (
-              <Translation ns={['customizations', 'shared']}>
+              <Translation ns={['extensions', 'shared']}>
                 {t => (
                   <ExtensionIntegrationsTable
                     i18nDescription={t('shared:Description')}
