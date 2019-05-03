@@ -9,16 +9,16 @@ export function getExtensionTypeName(extension: Extension) {
   const type = extension.extensionType;
 
   if ('Steps' === type) {
-    return i18n.t('customizations:extension.StepExtension');
+    return i18n.t('extensions:extension.StepExtension');
   }
 
   if ('Connectors' === type) {
-    return i18n.t('customizations:extension.ConnectorExtension');
+    return i18n.t('extensions:extension.ConnectorExtension');
   }
 
   if ('Libraries' === type) {
-    return i18n.t('customizations:extension.LibraryExtension');
+    return i18n.t('extensions:extension.LibraryExtension');
   }
 
-  return i18n.t('customizations:extension.unknownExtensionType');
+  return i18n.t('extensions:extension.unknownExtensionType');
 }

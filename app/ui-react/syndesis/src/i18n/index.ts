@@ -11,21 +11,21 @@ const options = {
 
   resources: {
     en: {
+      apiClientConnectors: en.en.modules.apiClientConnectors,
       app: en.en.app,
-      connections: en.en.modules.connections,
-      customizations: en.en.modules.customizations,
       dashboard: en.en.modules.dashboard,
       data: en.en.modules.data,
+      extensions: en.en.modules.extensions,
       integrations: en.en.modules.integrations,
       settings: en.en.modules.settings,
       shared: en.en.shared,
     },
     it: {
+      apiClientConnectors: it.it.modules.apiClientConnectors,
       app: it.it.app,
-      connections: it.it.modules.connections,
-      customizations: it.it.modules.customizations,
       dashboard: it.it.modules.dashboard,
       data: it.it.modules.data,
+      extensions: it.it.modules.extensions,
       integrations: it.it.modules.integrations,
       settings: it.it.modules.settings,
       shared: it.it.shared,
@@ -39,8 +39,9 @@ const options = {
   ns: [
     'shared',
     'app',
-    'customizations',
+    'apiClientConnectors',
     'dashboard',
+    'extensions',
     'integrations',
     'settings',
   ],

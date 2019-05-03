@@ -1,13 +1,17 @@
-import customizations from './customizations/routes';
+import apiClientConnectors from './apiClientConnectors/routes';
+import connections from './connections/routes';
 import dashboard from './dashboard/routes';
 import data from './data/routes';
+import extensions from './extensions/routes';
 import integrations from './integrations/routes';
 import settings from './settings/routes';
 
 export default {
-  customizations,
+  apiClientConnectors,
+  connections,
   dashboard,
   data,
+  extensions,
   integrations,
   settings,
 };

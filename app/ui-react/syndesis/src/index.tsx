@@ -10,15 +10,17 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { I18nextProvider, Translation } from 'react-i18next';
 import { Router } from 'react-router-dom';
-import { App } from './app';
+import { App, IAppRoute, IAppRouteWithChildrens } from './app';
 import { WithConfig } from './app/WithConfig';
 import i18n from './i18n';
 import './index.css';
+import { ApiClientConnectorsModule } from './modules/apiClientConnectors';
 import { ConnectionsModule } from './modules/connections';
-import { CustomizationsModule } from './modules/customizations';
 import { DashboardModule } from './modules/dashboard';
 import { DataModule } from './modules/data';
+import { ExtensionsModule } from './modules/extensions';
 import { IntegrationsModule } from './modules/integrations';
+import routes from './modules/routes';
 import { SettingsModule } from './modules/settings';
 import registerServiceWorker from './registerServiceWorker';
 
@@ -69,33 +71,43 @@ ReactDOM.render(
                                 component: DashboardModule,
                                 exact: true,
                                 label: 'Home',
-                                to: '/',
-                              },
+                                to: routes.dashboard.root,
+                              } as IAppRoute,
                               {
                                 component: IntegrationsModule,
                                 label: 'Integrations',
-                                to: '/integrations',
-                              },
+                                to: routes.integrations.list,
+                              } as IAppRoute,
                               {
                                 component: ConnectionsModule,
                                 label: 'Connections',
-                                to: '/connections',
-                              },
+                                to: routes.connections.connections,
+                              } as IAppRoute,
                               {
-                                component: CustomizationsModule,
+                                childrens: [
+                                  {
+                                    component: ApiClientConnectorsModule,
+                                    label: 'API Client Connectors',
+                                    to: routes.apiClientConnectors.list,
+                                  } as IAppRoute,
+                                  {
+                                    component: ExtensionsModule,
+                                    label: 'Extensions',
+                                    to: routes.extensions.list,
+                                  } as IAppRoute,
+                                ],
                                 label: 'Customizations',
-                                to: '/customizations',
-                              },
+                              } as IAppRouteWithChildrens,
                               {
                                 component: DataModule,
                                 label: 'Data',
-                                to: '/data',
-                              },
+                                to: routes.data.root,
+                              } as IAppRoute,
                               {
                                 component: SettingsModule,
                                 label: 'Settings',
-                                to: '/settings',
-                              },
+                                to: routes.settings.root,
+                              } as IAppRoute,
                             ]}
                           />
                         </ServerEventsContext.Provider>

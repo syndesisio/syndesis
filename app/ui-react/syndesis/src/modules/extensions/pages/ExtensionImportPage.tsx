@@ -16,8 +16,7 @@ import { Link } from 'react-router-dom';
 import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import resolvers from '../../resolvers';
-import { getExtensionTypeName } from '../customizationsUtils';
-import './ExtensionImportPage.css';
+import { getExtensionTypeName } from '../utils';
 
 export interface IExtensionImportRouteProps {
   extensionId?: string;
@@ -163,22 +162,20 @@ export default class ExtensionImportPage extends React.Component<
                     const handleImport = async (importExtensionId: string) => {
                       try {
                         await importExtension(importExtensionId);
-                        history.push(
-                          resolvers.customizations.extensions.list()
-                        );
+                        history.push(resolvers.extensions.list());
                       } catch (e) {
                         // TODO: post notification
                       }
                     };
                     return (
-                      <Translation ns={['customizations', 'shared']}>
+                      <Translation ns={['extensions', 'shared']}>
                         {t => (
                           <>
                             <Breadcrumb
                               actions={
                                 <ButtonLink
                                   className={'extension-import-page__action'}
-                                  href={resolvers.customizations.extensions.list()}
+                                  href={resolvers.extensions.list()}
                                   as={'default'}
                                 >
                                   {t('shared:Cancel')}
@@ -188,12 +185,7 @@ export default class ExtensionImportPage extends React.Component<
                               <Link to={resolvers.dashboard.root()}>
                                 {t('shared:Home')}
                               </Link>
-                              <Link to={resolvers.customizations.root()}>
-                                {t('shared:Customizations')}
-                              </Link>
-                              <Link
-                                to={resolvers.customizations.extensions.list()}
-                              >
+                              <Link to={resolvers.extensions.list()}>
                                 {t('shared:Extensions')}
                               </Link>
                               <span>
@@ -241,7 +233,7 @@ export default class ExtensionImportPage extends React.Component<
                                         name: action.name,
                                       } as IImportAction)
                                   )}
-                                  cancelLink={resolvers.customizations.extensions.list()}
+                                  cancelLink={resolvers.extensions.list()}
                                   extensionDescription={
                                     this.state.extension.description
                                   }

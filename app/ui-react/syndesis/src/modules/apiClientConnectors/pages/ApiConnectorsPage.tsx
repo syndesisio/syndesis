@@ -19,7 +19,6 @@ import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import routes from '../routes';
-import CustomizationsNavBar from '../shared/CustomizationsNavBar';
 
 function getFilteredAndSortedApiConnectors(
   apiConnectors: Connector[],
@@ -73,10 +72,10 @@ export default class ApiConnectorsPage extends React.Component {
     const numUsedBy = optionalIntValue(api.uses);
 
     if (numUsedBy === 1) {
-      return i18n.t('customizations:usedByOne');
+      return i18n.t('apiClientConnectors:usedByOne');
     }
 
-    return i18n.t('customizations:usedByMulti', { count: numUsedBy });
+    return i18n.t('apiClientConnectors:usedByMulti', { count: numUsedBy });
   }
 
   public handleDelete(apiConnectorId: string) {
@@ -106,10 +105,9 @@ export default class ApiConnectorsPage extends React.Component {
               );
 
               return (
-                <Translation ns={['customizations', 'shared']}>
+                <Translation ns={['apiClientConnectors', 'shared']}>
                   {t => (
                     <>
-                      <CustomizationsNavBar />
                       <PageSection variant={'light'}>
                         <h1 className="pf-c-title pf-m-xl">
                           {t('apiConnector.apiConnectorsPageTitle')}
@@ -125,10 +123,7 @@ export default class ApiConnectorsPage extends React.Component {
                       <ApiConnectorListView
                         filterTypes={filterTypes}
                         sortTypes={sortTypes}
-                        {...this.state}
-                        linkCreateApiConnector={
-                          routes.apiConnectors.create.upload
-                        }
+                        linkCreateApiConnector={routes.create.upload}
                         resultsCount={filteredAndSorted.length}
                         {...helpers}
                         i18nTitle={''}

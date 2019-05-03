@@ -72,7 +72,7 @@ export default class ExtensionDetailsPage extends React.Component {
                   await deleteExtension(extensionId);
                   // TODO: post toast notification
                   // display extensions list page
-                  history.push(resolvers.customizations.extensions.list());
+                  history.push(resolvers.extensions.list());
                 };
                 return (
                   <WithExtension
@@ -87,19 +87,14 @@ export default class ExtensionDetailsPage extends React.Component {
                         errorChildren={<ApiError />}
                       >
                         {() => (
-                          <Translation ns={['customizations', 'shared']}>
+                          <Translation ns={['extensions', 'shared']}>
                             {t => (
                               <>
                                 <Breadcrumb>
                                   <Link to={resolvers.dashboard.root()}>
                                     {t('shared:Home')}
                                   </Link>
-                                  <Link to={resolvers.customizations.root()}>
-                                    {t('shared:Customizations')}
-                                  </Link>
-                                  <Link
-                                    to={resolvers.customizations.extensions.list()}
-                                  >
+                                  <Link to={resolvers.extensions.list()}>
                                     {t('shared:Extensions')}
                                   </Link>
                                   <span>
@@ -160,7 +155,7 @@ export default class ExtensionDetailsPage extends React.Component {
                                       }
                                     />
                                   }
-                                  linkUpdateExtension={resolvers.customizations.extensions.extension.update(
+                                  linkUpdateExtension={resolvers.extensions.extension.update(
                                     { extension: data }
                                   )}
                                   onDelete={handleDelete}
