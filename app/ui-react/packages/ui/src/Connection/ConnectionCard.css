@@ -10,3 +10,7 @@
   flex-flow: column;
   text-align: center;
 }
+
+.connection-card__heading--no-border {
+  border-bottom: 1px solid #FFFF;
+}

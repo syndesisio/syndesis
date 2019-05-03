@@ -53,6 +53,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                         );
                       }
                     };
+
                     return (
                       <ConnectionsGrid>
                         <WithLoader
@@ -75,6 +76,30 @@ export class Connections extends React.Component<IConnectionsProps> {
                                 doDelete(c.id!, c.name); // must have an ID if deleting
                               };
 
+                              const isTechPreview =
+                                c.connector!.metadata! &&
+                                c.connector!.metadata!['tech-preview'] ===
+                                  'true';
+                              const techPreviewPopoverHtml = (
+                                <>
+                                  <a
+                                    href="https://access.redhat.com/support/offerings/techpreview"
+                                    rel="nofollow"
+                                    target="_blank"
+                                    role="link"
+                                  >
+                                    Technology Previews
+                                  </a>{' '}
+                                  provide early access to features that are not
+                                  yet supported. Feedback about these features
+                                  is welcome. Send a message to{' '}
+                                  <a href="mailto:fuse-online-tech-preview@redhat.com">
+                                    fuse-online-tech-preview@redhat.com
+                                  </a>
+                                  .
+                                </>
+                              );
+
                               return (
                                 <ConnectionsGridCell key={index}>
                                   <ConnectionCard
@@ -91,6 +116,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                                           )
                                     }
                                     href={this.props.getConnectionHref(c)}
+                                    i18nTechPreview={t('techPreview')}
                                     menuProps={
                                       this.props.includeConnectionMenu
                                         ? {
@@ -115,6 +141,10 @@ export class Connections extends React.Component<IConnectionsProps> {
                                             onDelete: handleDelete,
                                           }
                                         : undefined
+                                    }
+                                    techPreview={isTechPreview}
+                                    techPreviewPopoverHtml={
+                                      techPreviewPopoverHtml
                                     }
                                   />
                                 </ConnectionsGridCell>

@@ -13,6 +13,7 @@
   "errorValidatingDetails": "Unexpected server error validating the connection details.",
   "errorValidatingName": "Unexpected server error validating connection name.",
   "namePlaceholder": "Must enter a connection name...",
+  "techPreview": "Technology Preview",
   "usedByOne": "Used by 1 integration",
   "usedByMulti": "Used by integrations {{count}} times"
 }
