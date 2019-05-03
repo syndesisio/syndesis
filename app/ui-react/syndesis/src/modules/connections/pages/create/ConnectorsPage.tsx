@@ -52,8 +52,12 @@ export default class ConnectorsPage extends React.Component {
                               return (
                                 <ConnectionsGridCell key={index}>
                                   <ConnectionCard
+                                    configurationRequired={false}
                                     name={connector.name}
                                     description={connector.description || ''}
+                                    i18nConfigurationRequired={t(
+                                      'configurationRequired'
+                                    )}
                                     i18nTechPreview={t('techPreview')}
                                     icon={getConnectionIcon(
                                       process.env.PUBLIC_URL,

@@ -26,12 +26,14 @@ export interface IConnectionCardMenuProps {
 }
 
 export interface IConnectionProps {
-  i18nTechPreview: string;
+  configurationRequired: boolean;
   description: string;
+  href: H.LocationDescriptor;
+  i18nConfigurationRequired: string;
+  i18nTechPreview: string;
+  icon: string;
   menuProps?: IConnectionCardMenuProps;
   name: string;
-  href: H.LocationDescriptor;
-  icon: string;
   techPreview: boolean;
   techPreviewPopoverHtml?: JSX.Element;
 }
@@ -184,6 +186,18 @@ export class ConnectionCard extends React.PureComponent<
                 </Text>
               </div>
             </Card.Body>
+            {this.props.configurationRequired ? (
+              <Card.Footer
+                className={
+                  this.props.techPreview
+                    ? 'connection-card__footer--tech-preview alert alert-warning'
+                    : null
+                }
+              >
+                <Icon type={'pf'} name={'warning-triangle-o'} size={'2x'} />
+                {this.props.i18nConfigurationRequired}
+              </Card.Footer>
+            ) : null}
           </Link>
         </Card>
       </>
