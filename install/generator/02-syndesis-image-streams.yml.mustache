@@ -30,7 +30,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
+        name: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}-react
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
