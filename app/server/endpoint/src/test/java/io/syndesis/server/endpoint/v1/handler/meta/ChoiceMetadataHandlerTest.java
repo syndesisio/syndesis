@@ -75,19 +75,15 @@ public class ChoiceMetadataHandlerTest {
 
         DynamicActionMetadata metadata = metadataHandler.createMetadata(choiceStep, Collections.singletonList(previousStep), Collections.singletonList(subsequentStep));
 
+        Assert.assertNotNull(metadata.outputShape());
+        Assert.assertEquals(DataShapeKinds.NONE, metadata.outputShape().getKind());
+
         Assert.assertNotNull(metadata.inputShape());
         Assert.assertEquals(DataShapeKinds.JSON_INSTANCE, metadata.inputShape().getKind());
-        Assert.assertEquals("subsequentInput", metadata.inputShape().getDescription());
+        Assert.assertEquals("previousOutput", metadata.inputShape().getDescription());
         Assert.assertEquals(2, metadata.inputShape().getVariants().size());
-        Assert.assertEquals("variant3", metadata.inputShape().getVariants().get(0).getMetadata().get("name"));
-        Assert.assertEquals("variant4", metadata.inputShape().getVariants().get(1).getMetadata().get("name"));
-
-        Assert.assertNotNull(metadata.outputShape());
-        Assert.assertEquals(DataShapeKinds.JSON_INSTANCE, metadata.outputShape().getKind());
-        Assert.assertEquals("previousOutput", metadata.outputShape().getDescription());
-        Assert.assertEquals(2, metadata.outputShape().getVariants().size());
-        Assert.assertEquals("variant1", metadata.outputShape().getVariants().get(0).getMetadata().get("name"));
-        Assert.assertEquals("variant2", metadata.outputShape().getVariants().get(1).getMetadata().get("name"));
+        Assert.assertEquals("variant1", metadata.inputShape().getVariants().get(0).getMetadata().get("name"));
+        Assert.assertEquals("variant2", metadata.inputShape().getVariants().get(1).getMetadata().get("name"));
     }
 
     @Test
@@ -115,7 +111,7 @@ public class ChoiceMetadataHandlerTest {
         DynamicActionMetadata metadata = metadataHandler.createMetadata(choiceStep, Collections.singletonList(previousStep), Collections.singletonList(subsequentStep));
 
         Assert.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.inputShape());
-        Assert.assertEquals(StepMetadataHelper.ANY_SHAPE, metadata.outputShape());
+        Assert.assertEquals(StepMetadataHelper.NO_SHAPE, metadata.outputShape());
     }
 
     @Test

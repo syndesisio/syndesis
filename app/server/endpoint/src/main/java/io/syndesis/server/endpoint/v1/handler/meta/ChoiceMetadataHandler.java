@@ -35,17 +35,14 @@ class ChoiceMetadataHandler implements StepMetadataHandler {
 
     @Override
     public DynamicActionMetadata createMetadata(Step step, List<Step> previousSteps, List<Step> subsequentSteps) {
-        DataShape inputShape = StepMetadataHelper.getFirstWithInputShape(subsequentSteps)
-                                                    .flatMap(Step::inputDataShape)
-                                                    .orElse(StepMetadataHelper.NO_SHAPE);
-
         DataShape outputShape = StepMetadataHelper.getLastWithOutputShape(previousSteps)
                                                     .flatMap(Step::outputDataShape)
                                                     .orElse(StepMetadataHelper.NO_SHAPE);
 
         return new DynamicActionMetadata.Builder()
-                        .inputShape(inputShape)
-                        .outputShape(outputShape)
+                        .inputShape(outputShape)
+                        .outputShape(step.outputDataShape()
+                                         .orElse(StepMetadataHelper.NO_SHAPE))
                         .build();
     }
 }
