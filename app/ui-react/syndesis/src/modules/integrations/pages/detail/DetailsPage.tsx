@@ -17,23 +17,7 @@ import {
   IntegrationDetailSteps,
   WithIntegrationActions,
 } from '../../components';
-
-/**
- * @integrationId - the ID of the integration for which details are being displayed.
- */
-export interface IIntegrationDetailsRouteParams {
-  integrationId: string;
-}
-
-/**
- * @integrationId - the ID of the integration for which details are being displayed.
- */
-export interface IIntegrationDetailsPageProps {
-  error: boolean;
-  integration: IIntegrationOverviewWithDraft;
-  integrationId: string;
-  loading: boolean;
-}
+import { IDetailsRouteParams, IDetailsRouteState } from './interfaces';
 
 /**
  * This page shows the first, and default, tab of the Integration Detail page.
@@ -42,7 +26,7 @@ export interface IIntegrationDetailsPageProps {
  * or an integration object set via the state.
  *
  */
-export class DetailsPage extends React.Component<IIntegrationDetailsPageProps> {
+export class DetailsPage extends React.Component {
   public render() {
     return (
       <>
@@ -50,9 +34,12 @@ export class DetailsPage extends React.Component<IIntegrationDetailsPageProps> {
           {t => (
             <AppContext.Consumer>
               {({ getPodLogUrl }) => (
-                <WithRouteData<IIntegrationDetailsRouteParams, null>>
-                  {({ integrationId }) => (
-                    <WithMonitoredIntegration integrationId={integrationId}>
+                <WithRouteData<IDetailsRouteParams, IDetailsRouteState>>
+                  {({ integrationId }, { integration }) => (
+                    <WithMonitoredIntegration
+                      integrationId={integrationId}
+                      initialValue={integration}
+                    >
                       {({ data, hasData, error }) => (
                         <WithLoader
                           error={error}

@@ -2,7 +2,6 @@ import {
   WithIntegrationMetrics,
   WithMonitoredIntegration,
 } from '@syndesis/api';
-import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import { IntegrationDetailMetrics, Loader } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -13,24 +12,7 @@ import {
   IntegrationDetailHeader,
   WithIntegrationActions,
 } from '../../components';
-
-/**
- * @integrationId - the ID of the integration for which details are being displayed.
- */
-export interface IMetricsRouteParams {
-  integrationId: string;
-}
-
-/**
- * @integrationId - the ID of the integration for which details are being displayed.
- */
-export interface IMetricsPageProps {
-  integrationId: string;
-}
-
-export interface IMetricsPageState {
-  integration?: IIntegrationOverviewWithDraft;
-}
+import { IDetailsRouteParams, IDetailsRouteState } from './interfaces';
 
 /**
  * This page shows the second tab of the Integration Detail page.
@@ -39,14 +21,7 @@ export interface IMetricsPageState {
  * or an integration object set via the state.
  *
  */
-export class MetricsPage extends React.Component<
-  IMetricsPageProps,
-  IMetricsPageState
-> {
-  public constructor(props: IMetricsPageProps) {
-    super(props);
-  }
-
+export class MetricsPage extends React.Component {
   public render() {
     return (
       <>
@@ -54,10 +29,13 @@ export class MetricsPage extends React.Component<
           {t => (
             <AppContext.Consumer>
               {({ getPodLogUrl }) => (
-                <WithRouteData<IMetricsRouteParams, null>>
-                  {({ integrationId }) => {
+                <WithRouteData<IDetailsRouteParams, IDetailsRouteState>>
+                  {({ integrationId }, { integration }) => {
                     return (
-                      <WithMonitoredIntegration integrationId={integrationId}>
+                      <WithMonitoredIntegration
+                        integrationId={integrationId}
+                        initialValue={integration}
+                      >
                         {({ data, hasData, error }) => (
                           <WithIntegrationMetrics integrationId={integrationId}>
                             {({ data: metricsData }) => (
