@@ -50,7 +50,8 @@ import org.springframework.stereotype.Component;
 public class StepActionHandler extends BaseHandler {
 
     private final List<StepMetadataHandler> metadataHandlers = Arrays.asList(new SplitMetadataHandler(),
-                                                                             new AggregateMetadataHandler());
+                                                                             new AggregateMetadataHandler(),
+                                                                             new ChoiceMetadataHandler());
 
     public StepActionHandler(final DataManager dataMgr) {
         super(dataMgr);

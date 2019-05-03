@@ -18,6 +18,7 @@ package io.syndesis.server.endpoint.v1.handler.meta;
 
 import java.util.List;
 
+import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.connection.DynamicActionMetadata;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
@@ -25,34 +26,23 @@ import io.syndesis.common.model.integration.StepKind;
 /**
  * @author Christoph Deppisch
  */
-interface StepMetadataHandler {
+class ChoiceMetadataHandler implements StepMetadataHandler {
 
-    /**
-     * Adapt dynamic meta data for given step descriptor;
-     * @param metadata
-     * @return
-     */
-    default DynamicActionMetadata handle(DynamicActionMetadata metadata) {
-        return metadata;
+    @Override
+    public boolean canHandle(StepKind kind) {
+        return StepKind.choice.equals(kind);
     }
 
-    /**
-     * Determine if this handler can handle the specific step kind.
-     * @param kind
-     */
-    default boolean canHandle(StepKind kind) {
-        return false;
-    }
+    @Override
+    public DynamicActionMetadata createMetadata(Step step, List<Step> previousSteps, List<Step> subsequentSteps) {
+        DataShape outputShape = StepMetadataHelper.getLastWithOutputShape(previousSteps)
+                                                    .flatMap(Step::outputDataShape)
+                                                    .orElse(StepMetadataHelper.NO_SHAPE);
 
-    /**
-     * Creates dynamic metadata for given step. Is provided with list of previous steps and list of subsequent steps in order
-     * to adopt data shapes of these in dynamic metadata.
-     * @param step
-     * @param previousSteps
-     * @param subsequentSteps
-     * @return
-     */
-    default DynamicActionMetadata createMetadata(Step step, List<Step> previousSteps, List<Step> subsequentSteps) {
-        return DynamicActionMetadata.NOTHING;
+        return new DynamicActionMetadata.Builder()
+                        .inputShape(outputShape)
+                        .outputShape(step.outputDataShape()
+                                         .orElse(StepMetadataHelper.NO_SHAPE))
+                        .build();
     }
 }
