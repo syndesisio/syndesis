@@ -15,6 +15,29 @@ import {
  *
  */
 
+// this is for the logging backend
+export interface Activity {
+  logts?: string;
+  at: number;
+  pod: string;
+  ver: string;
+  status: string;
+  failed: boolean;
+  steps?: ActivityStep[];
+  metadata?: any;
+}
+
+export interface ActivityStep extends Step {
+  name: string;
+  isFailed: boolean;
+  at: number;
+  duration?: number;
+  failure?: string;
+  messages?: string[];
+  output?: string;
+  events?: any;
+}
+
 export interface IApiVersion {
   version: string;
   'commit-id': string;
