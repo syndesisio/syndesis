@@ -259,6 +259,7 @@ export default () => (
                           }
                         />
                       }
+                      i18nIntegrations={t('shared:Integrations')}
                       i18nConnections={t('shared:Connections')}
                       i18nLinkCreateConnection={t(
                         'shared:linkCreateConnection'

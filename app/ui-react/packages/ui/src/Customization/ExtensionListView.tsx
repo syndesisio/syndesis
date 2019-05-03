@@ -7,7 +7,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink, Container } from '../Layout';
+import { ButtonLink, PageSection } from '../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
 
 export interface IExtensionListViewProps extends IListViewToolbarProps {
@@ -38,16 +38,21 @@ export class ExtensionListView extends React.Component<
   public render() {
     return (
       <>
-        <ListViewToolbar {...this.props}>
-          <div className="form-group">
-            <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
-              <ButtonLink href={this.props.linkImportExtension} as={'primary'}>
-                {this.props.i18nLinkImportExtension}
-              </ButtonLink>
-            </OverlayTrigger>
-          </div>
-        </ListViewToolbar>
-        <Container>
+        <PageSection noPadding={true} variant={'light'}>
+          <ListViewToolbar {...this.props}>
+            <div className="form-group">
+              <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
+                <ButtonLink
+                  href={this.props.linkImportExtension}
+                  as={'primary'}
+                >
+                  {this.props.i18nLinkImportExtension}
+                </ButtonLink>
+              </OverlayTrigger>
+            </div>
+          </ListViewToolbar>
+        </PageSection>
+        <PageSection>
           {this.props.i18nTitle !== '' && (
             <Title size="lg">{this.props.i18nTitle}</Title>
           )}
@@ -80,7 +85,7 @@ export class ExtensionListView extends React.Component<
               </EmptyState.Action>
             </EmptyState>
           )}
-        </Container>
+        </PageSection>
       </>
     );
   }

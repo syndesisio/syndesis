@@ -6,7 +6,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink, Container } from '../Layout';
+import { ButtonLink, PageSection } from '../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
 
 export interface IApiConnectorListViewProps extends IListViewToolbarProps {
@@ -26,22 +26,24 @@ export class ApiConnectorListView extends React.Component<
   public render() {
     return (
       <>
-        <ListViewToolbar {...this.props}>
-          <div className="form-group">
-            <OverlayTrigger
-              overlay={this.getCreateConnectorTooltip()}
-              placement="top"
-            >
-              <ButtonLink
-                href={this.props.linkCreateApiConnector}
-                as={'primary'}
+        <PageSection noPadding={true} variant={'light'}>
+          <ListViewToolbar {...this.props}>
+            <div className="form-group">
+              <OverlayTrigger
+                overlay={this.getCreateConnectorTooltip()}
+                placement="top"
               >
-                {this.props.i18nLinkCreateApiConnector}
-              </ButtonLink>
-            </OverlayTrigger>
-          </div>
-        </ListViewToolbar>
-        <Container>
+                <ButtonLink
+                  href={this.props.linkCreateApiConnector}
+                  as={'primary'}
+                >
+                  {this.props.i18nLinkCreateApiConnector}
+                </ButtonLink>
+              </OverlayTrigger>
+            </div>
+          </ListViewToolbar>
+        </PageSection>
+        <PageSection>
           {this.props.i18nTitle !== '' && (
             <Title size="xl">{this.props.i18nTitle}</Title>
           )}
@@ -74,7 +76,7 @@ export class ApiConnectorListView extends React.Component<
               </EmptyState.Action>
             </EmptyState>
           )}
-        </Container>
+        </PageSection>
       </>
     );
   }

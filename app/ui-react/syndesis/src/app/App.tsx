@@ -11,7 +11,6 @@ export interface IAppRoute {
     | React.ComponentType<RouteComponentProps<any>>
     | React.ComponentType<any>;
   exact?: boolean;
-  icon: string;
   label: string;
   to: string;
 }

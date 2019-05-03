@@ -4,10 +4,10 @@ import {
   ApiConnectorListItem,
   ApiConnectorListSkeleton,
   ApiConnectorListView,
-  Container,
   IActiveFilter,
   IFilterType,
   ISortType,
+  PageSection,
 } from '@syndesis/ui';
 import {
   optionalIntValue,
@@ -110,7 +110,7 @@ export default class ApiConnectorsPage extends React.Component {
                   {t => (
                     <>
                       <CustomizationsNavBar />
-                      <Container className="pf-u-my-md">
+                      <PageSection variant={'light'}>
                         <h1 className="pf-c-title pf-m-xl">
                           {t('apiConnector.apiConnectorsPageTitle')}
                         </h1>
@@ -121,7 +121,7 @@ export default class ApiConnectorsPage extends React.Component {
                             ),
                           }}
                         />
-                      </Container>
+                      </PageSection>
                       <ApiConnectorListView
                         filterTypes={filterTypes}
                         sortTypes={sortTypes}

@@ -57,7 +57,7 @@ export class TestAtlasmapPage extends React.Component<
                     >
                       Reset
                     </ButtonLink>
-                    <ButtonLink as={'success'} disabled={!this.state.mappings}>
+                    <ButtonLink as={'primary'} disabled={!this.state.mappings}>
                       Save
                     </ButtonLink>
                   </div>

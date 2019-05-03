@@ -1,5 +1,5 @@
 .integration-editor-layout {
-  height: calc(100% - 34px);
+  height: 100%;
 }
 
 .integration-editor-layout .integration-editor-layout__body {

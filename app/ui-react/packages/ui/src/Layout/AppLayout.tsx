@@ -3,11 +3,11 @@ import {
   NavList,
   Page,
   PageHeader,
-  PageSection,
   PageSidebar,
 } from '@patternfly/react-core';
 import * as React from 'react';
 import { HelpDropdown } from '../Shared/HelpDropdown';
+import { AppLayoutContext } from './AppLayoutContext';
 
 export interface ILayoutBase {
   pictograph: any;
@@ -18,10 +18,6 @@ export interface ILayoutBase {
   onNavigationCollapse(): void;
   onNavigationExpand(): void;
   onShowAboutModal(): void;
-}
-
-export interface ILayoutState {
-  isNavOpen: boolean;
 }
 
 export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
@@ -38,43 +34,54 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
   const onNavToggle = showNavigation
     ? onNavigationCollapse
     : onNavigationExpand;
+
+  const [breadcrumb, setHasBreadcrumb] = React.useState(null);
+  const showBreadcrumb = (b: any) => setHasBreadcrumb(b);
+
   return (
-    <Page
-      header={
-        <PageHeader
-          logo={pictograph}
-          logoProps={{ href: logoHref }}
-          toolbar={
-            <>
-              {
-                <HelpDropdown
-                  className="syn-help-dropdown"
-                  isOpen={false}
-                  launchAboutModal={() => {
-                    onShowAboutModal();
-                  }}
-                />
-              }
-              {appNav}
-            </>
-          }
-          showNavToggle={true}
-          isNavOpen={showNavigation}
-          onNavToggle={onNavToggle}
-        />
-      }
-      sidebar={
-        <PageSidebar
-          nav={
-            <Nav>
-              <NavList>{verticalNav}</NavList>
-            </Nav>
-          }
-          isNavOpen={showNavigation}
-        />
-      }
+    <AppLayoutContext.Provider
+      value={{
+        showBreadcrumb,
+      }}
     >
-      <PageSection>{children}</PageSection>
-    </Page>
+      <Page
+        header={
+          <PageHeader
+            logo={pictograph}
+            logoProps={{ href: logoHref }}
+            toolbar={
+              <>
+                {
+                  <HelpDropdown
+                    className="syn-help-dropdown"
+                    isOpen={false}
+                    launchAboutModal={() => {
+                      onShowAboutModal();
+                    }}
+                  />
+                }
+                {appNav}
+              </>
+            }
+            showNavToggle={true}
+            isNavOpen={showNavigation}
+            onNavToggle={onNavToggle}
+          />
+        }
+        sidebar={
+          <PageSidebar
+            nav={
+              <Nav>
+                <NavList>{verticalNav}</NavList>
+              </Nav>
+            }
+            isNavOpen={showNavigation}
+          />
+        }
+        breadcrumb={breadcrumb}
+      >
+        {children}
+      </Page>
+    </AppLayoutContext.Provider>
   );
 };

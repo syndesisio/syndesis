@@ -140,6 +140,7 @@ export class IntegrationsPage extends React.Component {
                             sortTypes={sortTypes}
                             resultsCount={filteredAndSortedIntegrations.length}
                             {...helpers}
+                            i18nTitle={t('shared:Integrations')}
                             i18nImport={t('shared:Import')}
                             i18nManageCiCd={t('integrations:ManageCiCd')}
                             i18nLinkCreateConnection={t(

@@ -1,6 +1,5 @@
 export * from './CiCd';
 export * from './Import';
-export * from '../Shared/AggregatedMetricCard';
 export * from './IntegrationActions';
 export * from './IntegrationActionSelectorCard';
 export * from './IntegrationDetailActivity';
@@ -21,6 +20,7 @@ export * from './IntegrationEditorConnectionsListItem';
 export * from './IntegrationEditorForm';
 export * from './IntegrationEditorLayout';
 export * from './IntegrationEditorNothingToConfigure';
+export * from './IntegrationEditorStepsAdderHeader';
 export * from './IntegrationEditorStepsList';
 export * from './IntegrationEditorStepsListItem';
 export * from './IntegrationEditorWizard';

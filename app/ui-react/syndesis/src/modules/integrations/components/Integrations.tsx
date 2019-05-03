@@ -44,11 +44,11 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                         try {
                           return (
                             <WithIntegrationActions
+                              key={mi.integration.id}
                               integration={mi.integration}
                             >
                               {({ actions }) => (
                                 <IntegrationsListItem
-                                  key={mi.integration.id}
                                   integrationName={mi.integration.name}
                                   currentState={mi.integration!.currentState!}
                                   targetState={mi.integration!.targetState!}

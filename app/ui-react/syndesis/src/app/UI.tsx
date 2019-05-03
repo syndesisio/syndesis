@@ -94,6 +94,11 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                   </WithApiVersion>
                 </AboutModal>
               )}
+              <Notifications
+                notifications={notifications}
+                notificationTimerDelay={8000}
+                removeNotificationAction={onRemoveNotification}
+              />
               <AppLayout
                 onShowAboutModal={toggleAboutModal}
                 appNav={
@@ -107,10 +112,9 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                     </PfDropdownItem>
                   </AppTopMenu>
                 }
-                verticalNav={routes.map(({ exact, icon, label, to }, index) => (
+                verticalNav={routes.map(({ exact, label, to }, index) => (
                   <PfVerticalNavItem
                     exact={exact}
-                    icon={icon}
                     label={t(label)}
                     to={to}
                     key={index}
@@ -129,11 +133,6 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                 onNavigationCollapse={onHideNavigation}
                 onNavigationExpand={onShowNavigation}
               >
-                <Notifications
-                  notifications={notifications}
-                  notificationTimerDelay={8000}
-                  removeNotificationAction={onRemoveNotification}
-                />
                 <WithRouter>
                   {({ match }) => (
                     <WithErrorBoundary key={match.url}>

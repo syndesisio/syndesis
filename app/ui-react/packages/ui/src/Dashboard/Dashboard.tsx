@@ -1,9 +1,16 @@
-import { Title } from '@patternfly/react-core';
+import {
+  Level,
+  LevelItem,
+  PageSection,
+  TextContent,
+  Title,
+  TitleLevel,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { ButtonLink, Container } from '../Layout';
+import { ButtonLink } from '../Layout';
 import './Dashboard.css';
 
 export interface IIntegrationsPageProps {
@@ -19,6 +26,7 @@ export interface IIntegrationsPageProps {
   integrationBoard: JSX.Element;
   integrationUpdates: JSX.Element;
   connections: JSX.Element;
+  i18nIntegrations: string;
   i18nConnections: string;
   i18nLinkCreateConnection: string;
   i18nLinkCreateIntegration: string;
@@ -30,84 +38,84 @@ export interface IIntegrationsPageProps {
 export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
   public render() {
     return (
-      <Container>
-        <Grid fluid={true}>
-          <Grid.Row>
-            <Grid.Col sm={12}>
-              <div className={'Dashboard-header'}>
-                <Title size="lg" className={'Dashboard-header__title'}>
-                  {this.props.i18nTitle}
-                </Title>
-                <div className="Dashboard-header__actions">
-                  <ButtonLink href={this.props.linkToIntegrations}>
-                    {this.props.i18nLinkToIntegrations}
-                  </ButtonLink>
-                  <ButtonLink
-                    href={this.props.linkToIntegrationCreation}
-                    as={'primary'}
-                  >
-                    {this.props.i18nLinkCreateIntegration}
-                  </ButtonLink>
-                </div>
-              </div>
-            </Grid.Col>
-          </Grid.Row>
-        </Grid>
-        <CardGrid fluid={true} matchHeight={true}>
-          <CardGrid.Row>
-            <CardGrid.Col sm={6} md={3}>
-              {this.props.integrationsOverview}
-            </CardGrid.Col>
-            <CardGrid.Col sm={6} md={3}>
-              {this.props.connectionsOverview}
-            </CardGrid.Col>
-            <CardGrid.Col sm={6} md={3}>
-              {this.props.messagesOverview}
-            </CardGrid.Col>
-            <CardGrid.Col sm={6} md={3}>
-              {this.props.uptimeOverview}
-            </CardGrid.Col>
-          </CardGrid.Row>
-        </CardGrid>
-        <Grid fluid={true}>
-          <Grid.Row>
-            <Grid.Col sm={12}>{this.props.topIntegrations}</Grid.Col>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Col sm={12} md={6}>
-              {this.props.integrationBoard}
-            </Grid.Col>
-            <Grid.Col sm={12} md={6}>
-              {this.props.integrationUpdates}
-            </Grid.Col>
-          </Grid.Row>
-        </Grid>
-        <Grid fluid={true} style={{ marginTop: '20px' }}>
-          <Grid.Row>
-            <Grid.Col sm={12}>
-              <div className={'Dashboard-header'}>
-                <Title size="lg" className={'Dashboard-header__title'}>
-                  {this.props.i18nConnections}
-                </Title>
-                <div className="Dashboard-header__actions">
-                  <Link to={this.props.linkToConnections}>
-                    {this.props.i18nLinkToConnections}
-                  </Link>
-                  <ButtonLink
-                    href={this.props.linkToConnectionCreation}
-                    as={'primary'}
-                  >
-                    {this.props.i18nLinkCreateConnection}
-                  </ButtonLink>
-                </div>
-              </div>
-            </Grid.Col>
-          </Grid.Row>
-        </Grid>
-        <CardGrid fluid={true} matchHeight={true}>
-          <CardGrid.Row>{this.props.connections}</CardGrid.Row>
-        </CardGrid>
-      </Container>
+      <>
+        <PageSection variant={'light'}>
+          <TextContent>
+            <Title size={'2xl'} headingLevel={TitleLevel.h1}>
+              {this.props.i18nTitle}
+            </Title>
+          </TextContent>
+        </PageSection>
+        <PageSection>
+          <Level gutter={'sm'}>
+            <LevelItem>
+              <Title size={'lg'}>{this.props.i18nIntegrations}</Title>
+            </LevelItem>
+            <LevelItem>
+              <Link to={this.props.linkToIntegrations}>
+                {this.props.i18nLinkToIntegrations}
+              </Link>
+              <ButtonLink
+                href={this.props.linkToIntegrationCreation}
+                as={'primary'}
+              >
+                {this.props.i18nLinkCreateIntegration}
+              </ButtonLink>
+            </LevelItem>
+          </Level>
+          <CardGrid fluid={true} matchHeight={true}>
+            <CardGrid.Row>
+              <CardGrid.Col sm={6} md={3}>
+                {this.props.integrationsOverview}
+              </CardGrid.Col>
+              <CardGrid.Col sm={6} md={3}>
+                {this.props.connectionsOverview}
+              </CardGrid.Col>
+              <CardGrid.Col sm={6} md={3}>
+                {this.props.messagesOverview}
+              </CardGrid.Col>
+              <CardGrid.Col sm={6} md={3}>
+                {this.props.uptimeOverview}
+              </CardGrid.Col>
+            </CardGrid.Row>
+          </CardGrid>
+          <Grid fluid={true}>
+            <Grid.Row>
+              <Grid.Col sm={12}>{this.props.topIntegrations}</Grid.Col>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Col sm={12} md={6}>
+                {this.props.integrationBoard}
+              </Grid.Col>
+              <Grid.Col sm={12} md={6}>
+                {this.props.integrationUpdates}
+              </Grid.Col>
+            </Grid.Row>
+          </Grid>
+        </PageSection>
+
+        <PageSection>
+          <Level gutter={'sm'}>
+            <LevelItem>
+              <Title size={'lg'}>{this.props.i18nConnections}</Title>
+            </LevelItem>
+            <LevelItem>
+              <Link to={this.props.linkToConnections}>
+                {this.props.i18nLinkToConnections}
+              </Link>
+              <ButtonLink
+                href={this.props.linkToConnectionCreation}
+                as={'primary'}
+              >
+                {this.props.i18nLinkCreateConnection}
+              </ButtonLink>
+            </LevelItem>
+          </Level>
+          <CardGrid fluid={true} matchHeight={true}>
+            <CardGrid.Row>{this.props.connections}</CardGrid.Row>
+          </CardGrid>
+        </PageSection>
+      </>
     );
   }
 }

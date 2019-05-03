@@ -1,7 +1,7 @@
 import { Button, ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Container } from '../Layout';
+import { Container, PageSection } from '../Layout';
 
 export interface IIntegrationDetailActivityProps {
   i18nBtnRefresh: string;
@@ -15,7 +15,7 @@ export class IntegrationDetailActivity extends React.Component<
 > {
   public render() {
     return (
-      <>
+      <PageSection>
         <Container>
           <div className="pull-right">
             <Link to={this.props.linkToOpenShiftLog}>
@@ -30,7 +30,7 @@ export class IntegrationDetailActivity extends React.Component<
         {this.props.children ? (
           <ListView>{this.props.children}</ListView>
         ) : null}
-      </>
+      </PageSection>
     );
   }
 }

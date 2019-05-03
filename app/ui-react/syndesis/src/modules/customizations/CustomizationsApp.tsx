@@ -9,39 +9,41 @@ import routes from './routes';
 export default class CustomizationApp extends React.Component {
   public render() {
     return (
-      <Switch>
-        <Redirect
-          path={routes.root}
-          exact={true}
-          to={routes.apiConnectors.list}
-        />
-        <Route
-          path={routes.apiConnectors.list}
-          exact={true}
-          component={ApiConnectorsPage}
-        />
-        <Route
-          path={routes.extensions.list}
-          exact={true}
-          component={ExtensionsPage}
-        />
-        <Route
-          path={routes.extensions.import}
-          exact={true}
-          component={ExtensionImportPage}
-        />
-        // **This route must appear after import page**
-        <Route
-          path={routes.extensions.extension.details}
-          exact={true}
-          component={ExtensionDetailsPage}
-        />
-        <Route
-          path={routes.extensions.extension.update}
-          exact={true}
-          component={ExtensionImportPage}
-        />
-      </Switch>
+      <>
+        <Switch>
+          <Redirect
+            path={routes.root}
+            exact={true}
+            to={routes.apiConnectors.list}
+          />
+          <Route
+            path={routes.apiConnectors.list}
+            exact={true}
+            component={ApiConnectorsPage}
+          />
+          <Route
+            path={routes.extensions.list}
+            exact={true}
+            component={ExtensionsPage}
+          />
+          <Route
+            path={routes.extensions.import}
+            exact={true}
+            component={ExtensionImportPage}
+          />
+          // **This route must appear after import page**
+          <Route
+            path={routes.extensions.extension.details}
+            exact={true}
+            component={ExtensionDetailsPage}
+          />
+          <Route
+            path={routes.extensions.extension.update}
+            exact={true}
+            component={ExtensionImportPage}
+          />
+        </Switch>
+      </>
     );
   }
 }

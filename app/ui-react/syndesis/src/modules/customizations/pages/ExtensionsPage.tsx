@@ -1,13 +1,13 @@
 import { WithExtensionHelpers, WithExtensions } from '@syndesis/api';
 import { Extension } from '@syndesis/models';
 import {
-  Container,
   ExtensionListItem,
   ExtensionListSkeleton,
   ExtensionListView,
   IActiveFilter,
   IFilterType,
   ISortType,
+  PageSection,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -105,7 +105,7 @@ export default class ExtensionsPage extends React.Component {
                         {t => (
                           <>
                             <CustomizationsNavBar />
-                            <Container className="pf-u-my-md">
+                            <PageSection variant={'light'}>
                               <h1 className="pf-c-title pf-m-xl">
                                 {t('extension.extensionsPageTitle')}
                               </h1>
@@ -116,7 +116,7 @@ export default class ExtensionsPage extends React.Component {
                                   ),
                                 }}
                               />
-                            </Container>
+                            </PageSection>
                             <ExtensionListView
                               filterTypes={filterTypes}
                               sortTypes={sortTypes}

@@ -7,7 +7,6 @@ export interface IPfVerticalNavItem {
   className?: string;
   exact?: boolean;
   isActive?: (match: any, location: any) => boolean;
-  icon: string;
   location?: any;
   strict?: boolean;
   to: string | any;
@@ -19,7 +18,6 @@ function PfVerticalNavItem({
   className,
   exact,
   isActive: isActiveProp,
-  icon,
   location,
   strict,
   to,

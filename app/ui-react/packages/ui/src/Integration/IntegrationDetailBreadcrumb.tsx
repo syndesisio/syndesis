@@ -1,4 +1,3 @@
-import { Level, LevelItem } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
@@ -27,21 +26,8 @@ export class IntegrationDetailBreadcrumb extends React.Component<
 > {
   public render() {
     return (
-      <Level gutter={'md'} className={'integration-detail__breadcrumb'}>
-        <LevelItem>
-          <Breadcrumb>
-            <span>
-              <Link to={this.props.homeHref!}>{this.props.i18nHome}</Link>
-            </span>
-            <span>
-              <Link to={this.props.integrationsHref!}>
-                {this.props.i18nIntegrations}
-              </Link>
-            </span>
-            <span>{this.props.i18nPageTitle}</span>
-          </Breadcrumb>
-        </LevelItem>
-        <LevelItem>
+      <Breadcrumb
+        actions={
           <>
             <ButtonLink
               to={this.props.exportHref}
@@ -83,8 +69,18 @@ export class IntegrationDetailBreadcrumb extends React.Component<
                 : null}
             </DropdownKebab>
           </>
-        </LevelItem>
-      </Level>
+        }
+      >
+        <span>
+          <Link to={this.props.homeHref!}>{this.props.i18nHome}</Link>
+        </span>
+        <span>
+          <Link to={this.props.integrationsHref!}>
+            {this.props.i18nIntegrations}
+          </Link>
+        </span>
+        <span>{this.props.i18nPageTitle}</span>
+      </Breadcrumb>
     );
   }
 }

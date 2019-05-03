@@ -68,37 +68,31 @@ ReactDOM.render(
                               {
                                 component: DashboardModule,
                                 exact: true,
-                                icon: 'fa fa-tachometer-alt',
                                 label: 'Home',
                                 to: '/',
                               },
                               {
                                 component: IntegrationsModule,
-                                icon: 'pficon pficon-integration',
                                 label: 'Integrations',
                                 to: '/integrations',
                               },
                               {
                                 component: ConnectionsModule,
-                                icon: 'pficon pficon-plugged',
                                 label: 'Connections',
                                 to: '/connections',
                               },
                               {
                                 component: CustomizationsModule,
-                                icon: 'fa fa-cube',
                                 label: 'Customizations',
                                 to: '/customizations',
                               },
                               {
                                 component: DataModule,
-                                icon: 'fa fa-database',
                                 label: 'Data',
                                 to: '/data',
                               },
                               {
                                 component: SettingsModule,
-                                icon: 'pficon pficon-settings',
                                 label: 'Settings',
                                 to: '/settings',
                               },

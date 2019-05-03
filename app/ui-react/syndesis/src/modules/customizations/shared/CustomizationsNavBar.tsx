@@ -1,4 +1,4 @@
-import { Container, TabBar, TabBarItem } from '@syndesis/ui';
+import { PageSection, TabBar, TabBarItem } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import routes from '../routes';
@@ -17,11 +17,7 @@ export default class CustomizationsNavBar extends React.Component {
     return (
       <Translation ns={['customizations', 'shared']}>
         {t => (
-          <Container
-            style={{
-              background: '#fff',
-            }}
-          >
+          <PageSection variant={'light'}>
             <TabBar>
               <TabBarItem
                 label={t('apiConnector.apiConnectorsPageTitle')}
@@ -32,7 +28,7 @@ export default class CustomizationsNavBar extends React.Component {
                 to={routes.extensions.list}
               />
             </TabBar>
-          </Container>
+          </PageSection>
         )}
       </Translation>
     );

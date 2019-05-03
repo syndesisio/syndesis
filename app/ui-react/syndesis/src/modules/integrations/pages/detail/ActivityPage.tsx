@@ -33,84 +33,88 @@ export interface IActivityPageState {
 export class ActivityPage extends React.Component {
   public render() {
     return (
-      <Translation ns={['integrations', 'shared']}>
-        {t => (
-          <AppContext.Consumer>
-            {({ getPodLogUrl }) => (
-              <WithRouteData<IActivityPageParams, IActivityPageState>>
-                {({ integrationId }, { integration }, { history }) => {
-                  return (
-                    <>
-                      <WithMonitoredIntegration integrationId={integrationId}>
-                        {({ data, hasData, error }) => (
-                          <WithLoader
-                            error={error}
-                            loading={!hasData}
-                            loaderChildren={<Loader />}
-                            errorChildren={<ApiError />}
-                          >
-                            {() => (
-                              <WithIntegrationActions
-                                integration={data.integration}
-                              >
-                                {({
-                                  ciCdAction,
-                                  editAction,
-                                  deleteAction,
-                                  exportAction,
-                                  startAction,
-                                  stopAction,
-                                }) => {
-                                  return (
-                                    <>
-                                      <PageTitle
-                                        title={t(
-                                          'integrations:detail:pageTitle'
-                                        )}
-                                      />
-                                      <IntegrationDetailHeader
-                                        data={data}
-                                        startAction={startAction}
-                                        stopAction={stopAction}
-                                        deleteAction={deleteAction}
-                                        ciCdAction={ciCdAction}
-                                        editAction={editAction}
-                                        exportAction={exportAction}
-                                        getPodLogUrl={getPodLogUrl}
-                                      />
-                                      <IntegrationDetailActivity
-                                        i18nBtnRefresh={t('shared:Refresh')}
-                                        i18nLastRefresh={t(
-                                          'integrations:LastRefresh'
-                                        )}
-                                        i18nViewLogOpenShift={t(
-                                          'integrations:View Log in OpenShift'
-                                        )}
-                                        linkToOpenShiftLog={
-                                          getPodLogUrl(data.monitoring) || ''
-                                        }
-                                        children={
-                                          <ActivityPageTable
-                                            integrationId={data.integration.id!}
-                                          />
-                                        }
-                                      />
-                                    </>
-                                  );
-                                }}
-                              </WithIntegrationActions>
-                            )}
-                          </WithLoader>
-                        )}
-                      </WithMonitoredIntegration>
-                    </>
-                  );
-                }}
-              </WithRouteData>
-            )}
-          </AppContext.Consumer>
-        )}
-      </Translation>
+      <>
+        <Translation ns={['integrations', 'shared']}>
+          {t => (
+            <AppContext.Consumer>
+              {({ getPodLogUrl }) => (
+                <WithRouteData<IActivityPageParams, IActivityPageState>>
+                  {({ integrationId }, { integration }, { history }) => {
+                    return (
+                      <>
+                        <WithMonitoredIntegration integrationId={integrationId}>
+                          {({ data, hasData, error }) => (
+                            <WithLoader
+                              error={error}
+                              loading={!hasData}
+                              loaderChildren={<Loader />}
+                              errorChildren={<ApiError />}
+                            >
+                              {() => (
+                                <WithIntegrationActions
+                                  integration={data.integration}
+                                >
+                                  {({
+                                    ciCdAction,
+                                    editAction,
+                                    deleteAction,
+                                    exportAction,
+                                    startAction,
+                                    stopAction,
+                                  }) => {
+                                    return (
+                                      <>
+                                        <PageTitle
+                                          title={t(
+                                            'integrations:detail:pageTitle'
+                                          )}
+                                        />
+                                        <IntegrationDetailHeader
+                                          data={data}
+                                          startAction={startAction}
+                                          stopAction={stopAction}
+                                          deleteAction={deleteAction}
+                                          ciCdAction={ciCdAction}
+                                          editAction={editAction}
+                                          exportAction={exportAction}
+                                          getPodLogUrl={getPodLogUrl}
+                                        />
+                                        <IntegrationDetailActivity
+                                          i18nBtnRefresh={t('shared:Refresh')}
+                                          i18nLastRefresh={t(
+                                            'integrations:LastRefresh'
+                                          )}
+                                          i18nViewLogOpenShift={t(
+                                            'integrations:View Log in OpenShift'
+                                          )}
+                                          linkToOpenShiftLog={
+                                            getPodLogUrl(data.monitoring) || ''
+                                          }
+                                          children={
+                                            <ActivityPageTable
+                                              integrationId={
+                                                data.integration.id!
+                                              }
+                                            />
+                                          }
+                                        />
+                                      </>
+                                    );
+                                  }}
+                                </WithIntegrationActions>
+                              )}
+                            </WithLoader>
+                          )}
+                        </WithMonitoredIntegration>
+                      </>
+                    );
+                  }}
+                </WithRouteData>
+              )}
+            </AppContext.Consumer>
+          )}
+        </Translation>
+      </>
     );
   }
 }

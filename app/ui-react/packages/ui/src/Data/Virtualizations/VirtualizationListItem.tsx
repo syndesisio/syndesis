@@ -10,10 +10,6 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import {
-  VirtualizationPublishStatus,
-  VirtualizationPublishStatusDetail,
-} from '../';
 import { ButtonLink } from '../../Layout';
 import {
   ConfirmationButtonStyle,
@@ -28,6 +24,8 @@ import {
   SUBMITTED,
   VirtualizationPublishState,
 } from './models';
+import { VirtualizationPublishStatus } from './VirtualizationPublishStatus';
+import { VirtualizationPublishStatusDetail } from './VirtualizationPublishStatusDetail';
 
 export interface IVirtualizationListItemProps {
   currentPublishedState: VirtualizationPublishState;
