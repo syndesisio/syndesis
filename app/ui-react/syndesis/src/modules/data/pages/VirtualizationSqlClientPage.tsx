@@ -1,20 +1,19 @@
 import { WithViewEditorStates } from '@syndesis/api';
 import { RestDataService, ViewEditorState } from '@syndesis/models';
-import { Breadcrumb } from '@syndesis/ui';
+import { Breadcrumb, PageSection, ViewHeader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import resolvers from '../../resolvers';
 import {
-  HeaderView,
-  ViewSqlFormAndTable,
   VirtualizationNavBar,
+  WithVirtualizationSqlClientForm,
 } from '../shared/';
 import { getPreviewVdbName } from '../shared/VirtualizationUtils';
 
 /**
- * @param virtualizationId - the ID of the virtualization whose details are being shown by this page.
+ * @param virtualizationId - the ID of the virtualization shown by this page.
  */
 export interface IVirtualizationSqlClientPageRouteParams {
   virtualizationId: string;
@@ -22,29 +21,23 @@ export interface IVirtualizationSqlClientPageRouteParams {
 }
 
 /**
- * NOTE that this SQL query page requires
- *  1) a list of View children of the Virtualization
- *    - This list will need to be retrieved (already in the VirtualizationViewsPage)
- *  2) Views list needs to populate the View selector DropdownButton's MenuItems
- *  3) If # Views == 0
- *    - Define Example SQL statement and show query results in EMPTY STATE mode
- *  4) if # Views > 0
- *    - Select the first view
- *    - Enter a simple SQL statement like:  "SELECT * FROM view1"
- */
-
-/**
- * @param virtualizationId - the virtualization whose details are being shown by this page. If
+ * @param virtualization - the virtualization being shown by this page. If
  * exists, it must equal to the [virtualizationId]{@link IVirtualizationSqlClientPageRouteParams#virtualizationId}.
  */
-
 export interface IVirtualizationSqlClientPageRouteState {
   virtualization: RestDataService;
 }
 
+/**
+ * Page displays virtualization views and allows user run test queries against the views.
+ */
 export class VirtualizationSqlClientPage extends React.Component<
   IVirtualizationSqlClientPageRouteState
 > {
+  public handleSubmit() {
+    // TODO: finish form handling
+  }
+
   public render() {
     return (
       <WithRouteData<
@@ -67,19 +60,30 @@ export class VirtualizationSqlClientPage extends React.Component<
                     {t('data:virtualization.sqlClient')}
                   </span>
                 </Breadcrumb>
-                <HeaderView virtualizationId={virtualizationId} />
-                <VirtualizationNavBar virtualization={virtualization} />
+                <ViewHeader
+                  i18nTitle={virtualization.keng__id}
+                  i18nDescription={virtualization.tko__description}
+                />
+                <PageSection variant={'light'} noPadding={true}>
+                  <VirtualizationNavBar virtualization={virtualization} />
+                </PageSection>
                 <WithViewEditorStates
                   idPattern={virtualization.serviceVdbName + '*'}
                 >
                   {({ data, hasData, error }) => (
-                    <ViewSqlFormAndTable
+                    <WithVirtualizationSqlClientForm
                       views={data.map(
                         (editorState: ViewEditorState) =>
                           editorState.viewDefinition
                       )}
                       targetVdb={getPreviewVdbName()}
-                    />
+                      linkCreateView={resolvers.data.virtualizations.create()}
+                      linkImportViews={resolvers.data.virtualizations.views.importSource.selectConnection(
+                        { virtualization }
+                      )}
+                    >
+                      {({ form, submitForm, isSubmitting }) => <></>}
+                    </WithVirtualizationSqlClientForm>
                   )}
                 </WithViewEditorStates>
               </>
