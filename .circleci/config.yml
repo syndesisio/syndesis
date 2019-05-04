@@ -83,7 +83,8 @@ jobs:
           extra_build_args: '--ulimit nofile=1024'
           image: syndesis/syndesis-ui
           tag: latest-react
-      - docker-publish/deploy
+      - docker-publish/deploy:
+        image: syndesis/syndesis-ui:latest-react
 
   doc-deploy:
     docker:
