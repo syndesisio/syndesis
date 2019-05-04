@@ -84,7 +84,7 @@ jobs:
           image: syndesis/syndesis-ui
           tag: latest-react
       - docker-publish/deploy:
-        image: syndesis/syndesis-ui:latest-react
+          image: syndesis/syndesis-ui:latest-react
 
   doc-deploy:
     docker:
