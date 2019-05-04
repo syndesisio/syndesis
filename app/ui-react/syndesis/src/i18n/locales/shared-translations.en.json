@@ -25,6 +25,7 @@
       "Description": "Description",
       "Details": "Details",
       "Draft": "Draft",
+      "DurationMillis": "{{duration}} ms",
       "Edit": "Edit",
       "Error": "Error",
       "Export": "Export",

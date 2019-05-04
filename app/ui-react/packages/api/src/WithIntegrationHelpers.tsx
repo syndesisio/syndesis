@@ -3,6 +3,7 @@ import {
   ActionDescriptor,
   Connection,
   Integration,
+  IntegrationDeployment,
   Step,
 } from '@syndesis/models';
 import { saveAs } from 'file-saver';
@@ -87,6 +88,22 @@ export interface IWithIntegrationHelpersChildrenProps {
     isIntegrationDeployment?: boolean
   ): Promise<void>;
   /**
+   * Replaces the current draft to the one at the specified version
+   * @param id
+   * @param version
+   */
+  replaceDraft(id: string, version: string | number): Promise<void>;
+  /**
+   * Fetches the deployment of the given integration id at the given version
+   * @param id
+   * @param version
+   */
+  getDeployment(
+    id: string,
+    version: string | number
+  ): Promise<IntegrationDeployment>;
+
+  /**
    * Uploads and imports the supplied file as a new integration
    * @param file
    */
@@ -136,7 +153,9 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     this.deleteIntegration = this.deleteIntegration.bind(this);
     this.deployIntegration = this.deployIntegration.bind(this);
     this.exportIntegration = this.exportIntegration.bind(this);
+    this.getDeployment = this.getDeployment.bind(this);
     this.importIntegration = this.importIntegration.bind(this);
+    this.replaceDraft = this.replaceDraft.bind(this);
     this.saveIntegration = this.saveIntegration.bind(this);
     this.undeployIntegration = this.undeployIntegration.bind(this);
     this.updateConnection = this.updateConnection.bind(this);
@@ -199,6 +218,33 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       });
       draft.tags = Array.from(new Set([...(draft.tags || []), connection.id!]));
     });
+  }
+
+  public async getDeployment(id: string, version: string | number) {
+    const response = await callFetch({
+      headers: this.props.headers,
+      method: 'GET',
+      url: `${this.props.apiUri}/integrations/${id}/deployments/${version}`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return response.json() as IntegrationDeployment;
+  }
+
+  public async replaceDraft(id: string, version: string | number) {
+    const deployment = await this.getDeployment(id, version);
+    const response = await callFetch({
+      body: {
+        flows: deployment.spec!.flows,
+      },
+      headers: this.props.headers,
+      method: 'PATCH',
+      url: `${this.props.apiUri}/integrations/${id}`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
   }
 
   public async deleteIntegration(id: string) {
@@ -372,7 +418,9 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       deleteIntegration: this.deleteIntegration,
       deployIntegration: this.deployIntegration,
       exportIntegration: this.exportIntegration,
+      getDeployment: this.getDeployment,
       importIntegration: this.importIntegration,
+      replaceDraft: this.replaceDraft,
       saveIntegration: this.saveIntegration,
       tagIntegration: this.tagIntegration,
       undeployIntegration: this.undeployIntegration,

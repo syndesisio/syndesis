@@ -1,42 +1,34 @@
-import {
-  canActivate,
-  canDeactivate,
-  canEdit,
-  WithIntegrationHelpers,
-} from '@syndesis/api';
-import { IntegrationOverview } from '@syndesis/models';
+import { WithIntegrationHelpers } from '@syndesis/api';
+import { IntegrationDeployment } from '@syndesis/models';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
-  IIntegrationAction,
+  IMenuActions,
 } from '@syndesis/ui';
 import * as React from 'react';
+
 import { Translation } from 'react-i18next';
 import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
-import resolvers from '../resolvers';
-import { TagIntegrationDialogWrapper } from './TagIntegrationDialogWrapper';
+import { IPromptActionOptions } from './WithIntegrationActions';
 
-export interface IWithIntegrationActionsChildrenProps {
-  ciCdAction: IIntegrationAction;
-  deleteAction: IIntegrationAction;
-  editAction: IIntegrationAction;
-  exportAction: IIntegrationAction;
-  startAction: IIntegrationAction;
-  stopAction: IIntegrationAction;
-  actions: IIntegrationAction[];
+export interface IWithDeploymentActionsChildrenProps {
+  startDeploymentAction: IMenuActions;
+  stopDeploymentAction: IMenuActions;
+  replaceDraftAction: IMenuActions;
 }
 
-export interface IWithIntegrationActionsProps {
-  integration: IntegrationOverview;
-  children: (props: IWithIntegrationActionsChildrenProps) => any;
+export interface IWithDeploymentActionsProps {
+  integrationName: string;
+  integrationId: string;
+  deployment: IntegrationDeployment;
+  children: (props: IWithDeploymentActionsChildrenProps) => any;
 }
 
-export interface IWithIntegrationActionsState {
+export interface IWithDeploymentActionsState {
   showActionPromptDialog: boolean;
-  showCiCdPromptDialog: boolean;
-  targetIntegrationId?: string;
+  targetId?: string;
   promptDialogButtonText?: string;
   promptDialogIcon?: ConfirmationIconType;
   promptDialogText?: string;
@@ -44,39 +36,26 @@ export interface IWithIntegrationActionsState {
   handleAction?: () => void;
 }
 
-export interface IPromptActionOptions {
-  promptDialogButtonText: string;
-  promptDialogIcon: ConfirmationIconType;
-  promptDialogText: string;
-  promptDialogTitle: string;
-  handleAction: () => void;
-}
-
-export class WithIntegrationActions extends React.Component<
-  IWithIntegrationActionsProps,
-  IWithIntegrationActionsState
+export class WithDeploymentActions extends React.Component<
+  IWithDeploymentActionsProps,
+  IWithDeploymentActionsState
 > {
-  constructor(props: IWithIntegrationActionsProps) {
+  constructor(props: IWithDeploymentActionsProps) {
     super(props);
     this.state = {
       showActionPromptDialog: false,
-      showCiCdPromptDialog: false,
     };
     this.handleAction = this.handleAction.bind(this);
     this.handleActionCancel = this.handleActionCancel.bind(this);
     this.promptForAction = this.promptForAction.bind(this);
-    this.closeCiCdDialog = this.closeCiCdDialog.bind(this);
   }
-  public closeCiCdDialog() {
-    this.setState({
-      showCiCdPromptDialog: false,
-    });
-  }
+
   public handleActionCancel() {
     this.setState({
       showActionPromptDialog: false,
     });
   }
+
   public handleAction() {
     const action = this.state.handleAction;
     this.setState({
@@ -88,6 +67,7 @@ export class WithIntegrationActions extends React.Component<
       throw Error('Undefined action set for confirmation dialog');
     }
   }
+
   public promptForAction(options: IPromptActionOptions) {
     this.setState({
       handleAction: options.handleAction,
@@ -98,12 +78,6 @@ export class WithIntegrationActions extends React.Component<
       showActionPromptDialog: true,
     });
   }
-  public promptForCiCd(targetIntegrationId: string) {
-    this.setState({
-      showCiCdPromptDialog: true,
-      targetIntegrationId,
-    });
-  }
 
   public render() {
     return (
@@ -112,22 +86,9 @@ export class WithIntegrationActions extends React.Component<
           <UIContext.Consumer>
             {({ pushNotification }) => (
               <WithIntegrationHelpers>
-                {({
-                  deleteIntegration,
-                  deployIntegration,
-                  exportIntegration,
-                  undeployIntegration,
-                  tagIntegration,
-                }) => {
-                  const editAction: IIntegrationAction = {
-                    href: resolvers.integration.edit.index({
-                      flowId: this.props.integration.flows![0].id!,
-                      integration: this.props.integration,
-                    }),
-                    label: 'Edit',
-                  };
-                  const startAction: IIntegrationAction = {
-                    label: 'Start',
+                {({ deployIntegration, undeployIntegration, replaceDraft }) => {
+                  const startDeploymentAction: IMenuActions = {
+                    label: t('shared:Start'),
                     onClick: () =>
                       this.promptForAction({
                         handleAction: async () => {
@@ -137,9 +98,9 @@ export class WithIntegrationActions extends React.Component<
                           );
                           try {
                             await deployIntegration(
-                              this.props.integration.id!,
-                              this.props.integration.version!,
-                              false
+                              this.props.integrationId,
+                              this.props.deployment.version!,
+                              true
                             );
                           } catch (err) {
                             pushNotification(
@@ -157,16 +118,19 @@ export class WithIntegrationActions extends React.Component<
                         promptDialogButtonText: t('shared:Start'),
                         promptDialogIcon: ConfirmationIconType.NONE,
                         promptDialogText: t(
-                          'integrations:publishIntegrationModal',
-                          { name: this.props.integration.name }
+                          'integrations:publishDeploymentModal',
+                          {
+                            name: this.props.integrationName,
+                            version: this.props.deployment.version!,
+                          }
                         ),
                         promptDialogTitle: t(
-                          'integrations:publishIntegrationModalTitle'
+                          'integrations:publishDeploymentModalTitle'
                         ),
                       } as IPromptActionOptions),
                   };
-                  const stopAction: IIntegrationAction = {
-                    label: 'Stop',
+                  const stopDeploymentAction: IMenuActions = {
+                    label: t('shared:Stop'),
                     onClick: () =>
                       this.promptForAction({
                         handleAction: async () => {
@@ -178,8 +142,8 @@ export class WithIntegrationActions extends React.Component<
                           );
                           try {
                             undeployIntegration(
-                              this.props.integration.id!,
-                              this.props.integration.version!
+                              this.props.integrationId,
+                              this.props.deployment.version!
                             );
                           } catch (err) {
                             pushNotification(
@@ -198,87 +162,52 @@ export class WithIntegrationActions extends React.Component<
                         promptDialogIcon: ConfirmationIconType.NONE,
                         promptDialogText: t(
                           'integrations:unpublishIntegrationModal',
-                          { name: this.props.integration.name }
+                          { name: this.props.integrationName }
                         ),
                         promptDialogTitle: t(
                           'integrations:unpublishIntegrationModalTitle'
                         ),
                       } as IPromptActionOptions),
                   };
-                  const deleteAction: IIntegrationAction = {
-                    label: 'Delete',
+
+                  const replaceDraftAction: IMenuActions = {
+                    label: t('integrations:ReplaceDraft'),
                     onClick: () =>
                       this.promptForAction({
                         handleAction: async () => {
                           pushNotification(
-                            i18n.t('integrations:DeletingIntegrationMessage'),
+                            i18n.t('integrations:ReplacedDraftMessage'),
                             'info'
                           );
                           try {
-                            await deleteIntegration(this.props.integration.id!);
+                            await replaceDraft(
+                              this.props.integrationId,
+                              this.props.deployment.version!
+                            );
                           } catch (err) {
                             pushNotification(
-                              i18n.t(
-                                'integrations:DeletingIntegrationFailedMessage',
-                                {
-                                  error: err.errorMessage || err.message || err,
-                                }
-                              ),
+                              i18n.t('integrations:ReplaceDraftFailedMessage', {
+                                error: err.errorMessage || err.message || err,
+                              }),
                               'warning'
                             );
                           }
                         },
-                        promptDialogButtonStyle: ConfirmationButtonStyle.DANGER,
-                        promptDialogButtonText: t('shared:Delete'),
-                        promptDialogIcon: ConfirmationIconType.DANGER,
+                        promptDialogButtonStyle: ConfirmationButtonStyle.NORMAL,
+                        promptDialogButtonText: t('shared:ReplaceDraft'),
+                        promptDialogIcon: ConfirmationIconType.NONE,
                         promptDialogText: t(
-                          'integrations:deleteIntegrationModal',
-                          { name: this.props.integration.name }
+                          'integrations:ReplaceDraftModalMessage',
+                          { name: this.props.integrationName }
                         ),
                         promptDialogTitle: t(
-                          'integrations:deleteIntegrationModalTitle'
+                          'integrations:ReplaceDraftModalTitle'
                         ),
                       } as IPromptActionOptions),
                   };
-                  const exportAction: IIntegrationAction = {
-                    label: 'Export',
-                    onClick: () =>
-                      exportIntegration(
-                        this.props.integration.id!,
-                        `${this.props.integration.name}-export.zip`
-                      ),
-                  };
-                  const ciCdAction: IIntegrationAction = {
-                    label: 'Manage CI/CD',
-                    onClick: () => {
-                      this.promptForCiCd(this.props.integration.id!);
-                    },
-                  };
 
-                  const actions: IIntegrationAction[] = [];
-                  if (canEdit(this.props.integration)) {
-                    actions.push(editAction);
-                  }
-                  if (canActivate(this.props.integration)) {
-                    actions.push(startAction);
-                  }
-                  if (canDeactivate(this.props.integration)) {
-                    actions.push(stopAction);
-                  }
-                  actions.push(deleteAction);
-                  actions.push(exportAction);
-                  actions.push(ciCdAction);
                   return (
                     <>
-                      {this.state.showCiCdPromptDialog && (
-                        <TagIntegrationDialogWrapper
-                          manageCiCdHref={resolvers.manageCicd.root()}
-                          tagIntegration={tagIntegration}
-                          targetIntegrationId={this.state.targetIntegrationId!}
-                          onSave={this.closeCiCdDialog}
-                          onHide={this.closeCiCdDialog}
-                        />
-                      )}
                       {this.state.showActionPromptDialog && (
                         <ConfirmationDialog
                           buttonStyle={ConfirmationButtonStyle.NORMAL}
@@ -295,13 +224,9 @@ export class WithIntegrationActions extends React.Component<
                         />
                       )}
                       {this.props.children({
-                        actions,
-                        ciCdAction,
-                        deleteAction,
-                        editAction,
-                        exportAction,
-                        startAction,
-                        stopAction,
+                        replaceDraftAction,
+                        startDeploymentAction,
+                        stopDeploymentAction,
                       })}
                     </>
                   );

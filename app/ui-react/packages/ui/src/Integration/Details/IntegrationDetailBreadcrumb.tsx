@@ -2,8 +2,8 @@ import * as H from '@syndesis/history';
 import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, ButtonLink } from '../Layout';
-import { IMenuActions } from '../Shared';
+import { Breadcrumb, ButtonLink } from '../../Layout';
+import { IMenuActions } from '../../Shared';
 import './IntegrationDetailBreadcrumb.css';
 
 export interface IIntegrationDetailBreadcrumbProps {

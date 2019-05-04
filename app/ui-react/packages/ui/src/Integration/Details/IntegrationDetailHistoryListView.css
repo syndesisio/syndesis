@@ -10,3 +10,8 @@
 .integration-detail-history-list-view .list-view-pf-view {
     margin-top: 0;
 }
+
+.integration-detail-history-list-view .list-view-pf-left .list-view-pf-icon-sm {
+  border: none;
+  font-size: 0.8em;
+}

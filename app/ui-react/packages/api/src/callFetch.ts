@@ -3,7 +3,7 @@ export interface IFetchHeaders {
 }
 export interface IFetch {
   url: string;
-  method: 'GET' | 'PUT' | 'POST' | 'DELETE';
+  method: 'GET' | 'PATCH' | 'PUT' | 'POST' | 'DELETE';
   headers?: IFetchHeaders;
   body?: any;
 

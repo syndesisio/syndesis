@@ -1,7 +1,7 @@
 import * as H from '@syndesis/history';
 import { Grid, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink, PageSection } from '../Layout';
+import { ButtonLink, PageSection } from '../../Layout';
 import './IntegrationDetailHistoryListView.css';
 
 export interface IIntegrationDetailHistoryListViewProps {

@@ -1,4 +1,4 @@
-import { ListView, ListViewInfoItem, ListViewItem } from 'patternfly-react';
+import { ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IIntegrationDetailHistoryListViewItemProps {
@@ -16,7 +16,7 @@ export interface IIntegrationDetailHistoryListViewItemProps {
   /**
    * The last date the integration was updated.
    */
-  updatedAt?: number;
+  updatedAt?: string;
   /**
    * The version of the integration deployment.
    */
@@ -31,52 +31,35 @@ export interface IIntegrationDetailHistoryListViewItemProps {
   i18nTextVersion?: string;
 }
 
+const states = {
+  Error: <ListView.Icon type="pf" name="error-circle-o" />,
+  Pending: <ListView.Icon name="blank" />,
+  Published: <ListView.Icon type="pf" name="ok" />,
+  Unpublished: <ListView.Icon name="blank" />,
+};
+
 export class IntegrationDetailHistoryListViewItem extends React.Component<
   IIntegrationDetailHistoryListViewItemProps
 > {
   public render() {
     function getIntegrationState(currentState: string) {
-      const states = {
-        Error: () => {
-          return (
-            <ListView.Icon
-              type="pf"
-              size={'sm'}
-              className="pficon pficon-error-circle-o"
-            />
-          );
-        },
-        Pending: null,
-        Published: () => {
-          return (
-            <ListView.Icon
-              type="pf"
-              name="ok"
-              size={'sm'}
-              className="list-view-pf-icon-success"
-            />
-          );
-        },
-        Unpublished: null,
-      };
-
       return states[currentState] || null;
     }
-
     return (
       <ListViewItem
         actions={this.props.actions}
         heading={
-          <span>
-            {<span>{this.props.i18nTextVersion}:</span>} {this.props.version}
-          </span>
+          <>
+            {this.props.i18nTextVersion}: {this.props.version}
+          </>
         }
-        additionalInfo={[
-          <ListViewInfoItem key={1}>
+        description={
+          <>
             {this.props.i18nTextLastPublished}
             {this.props.updatedAt}
-          </ListViewInfoItem>,
-        ]}
+          </>
+        }
+        additionalInfo={[]}
         leftContent={getIntegrationState(this.props.currentState!)}
         stacked={false}
       />

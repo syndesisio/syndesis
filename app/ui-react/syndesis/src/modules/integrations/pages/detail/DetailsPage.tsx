@@ -1,4 +1,4 @@
-import { canActivate, WithMonitoredIntegration } from '@syndesis/api';
+import { WithMonitoredIntegration } from '@syndesis/api';
 import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import {
   IntegrationDetailDescription,
@@ -17,6 +17,7 @@ import {
   IntegrationDetailSteps,
   WithIntegrationActions,
 } from '../../components';
+import { WithDeploymentActions } from '../../components/WithDeploymentActions';
 import { IDetailsRouteParams, IDetailsRouteState } from './interfaces';
 
 /**
@@ -98,49 +99,92 @@ export class DetailsPage extends React.Component {
                                       i18nTextHistory={t(
                                         'integrations:detail:History'
                                       )}
-                                      publishAction={
-                                        canActivate(data.integration)
-                                          ? startAction.onClick
-                                          : undefined
-                                      }
-                                      publishHref={
-                                        canActivate(data.integration)
-                                          ? startAction.href
-                                          : undefined
-                                      }
-                                      publishLabel={
-                                        canActivate(data.integration)
-                                          ? t('shared:Publish')
-                                          : undefined
-                                      }
+                                      publishAction={startAction.onClick}
+                                      publishLabel={t('shared:Publish')}
                                       children={(
                                         data.integration.deployments || []
-                                      ).map((deployment, idx) => {
-                                        return (
-                                          <IntegrationDetailHistoryListViewItem
-                                            key={idx}
-                                            actions={
-                                              <IntegrationDetailHistoryListViewItemActions
-                                                actions={[]}
-                                                integrationId={
-                                                  data.integration.id!
+                                      )
+                                        .sort((a, b) => {
+                                          const aVersion =
+                                            (a || {}).version || 0;
+                                          const bVersion =
+                                            (b || {}).version || 0;
+                                          return bVersion - aVersion;
+                                        })
+                                        .map((deployment, idx) => {
+                                          const updatedAt = deployment.updatedAt
+                                            ? new Date(
+                                                deployment.updatedAt!
+                                              ).toLocaleString()
+                                            : '';
+                                          return (
+                                            <WithDeploymentActions
+                                              key={deployment.id}
+                                              integrationId={
+                                                data.integration.id!
+                                              }
+                                              integrationName={
+                                                data.integration.name
+                                              }
+                                              deployment={deployment}
+                                            >
+                                              {({
+                                                startDeploymentAction,
+                                                stopDeploymentAction,
+                                                replaceDraftAction,
+                                              }) => {
+                                                const actions = [];
+                                                if (
+                                                  data.integration.version !==
+                                                  deployment.version
+                                                ) {
+                                                  actions.push(
+                                                    replaceDraftAction
+                                                  );
                                                 }
-                                              />
-                                            }
-                                            currentState={
-                                              deployment.currentState!
-                                            }
-                                            i18nTextLastPublished={t(
-                                              'integrations:detail:lastPublished'
-                                            )}
-                                            i18nTextVersion={t(
-                                              'shared:Version'
-                                            )}
-                                            updatedAt={deployment.updatedAt}
-                                            version={deployment.version}
-                                          />
-                                        );
-                                      })}
+                                                if (
+                                                  data.integration.version ===
+                                                    deployment.version &&
+                                                  data.integration
+                                                    .currentState ===
+                                                    'Published'
+                                                ) {
+                                                  actions.push(
+                                                    stopDeploymentAction
+                                                  );
+                                                } else {
+                                                  actions.push(
+                                                    startDeploymentAction
+                                                  );
+                                                }
+                                                return (
+                                                  <IntegrationDetailHistoryListViewItem
+                                                    key={deployment.id}
+                                                    actions={
+                                                      <IntegrationDetailHistoryListViewItemActions
+                                                        actions={actions}
+                                                        integrationId={
+                                                          data.integration.id!
+                                                        }
+                                                      />
+                                                    }
+                                                    currentState={
+                                                      deployment.currentState!
+                                                    }
+                                                    i18nTextLastPublished={t(
+                                                      'integrations:detail:lastPublished'
+                                                    )}
+                                                    i18nTextVersion={t(
+                                                      'shared:Version'
+                                                    )}
+                                                    updatedAt={updatedAt}
+                                                    version={deployment.version}
+                                                  />
+                                                );
+                                              }}
+                                            </WithDeploymentActions>
+                                          );
+                                        })}
                                     />
                                   </>
                                 );

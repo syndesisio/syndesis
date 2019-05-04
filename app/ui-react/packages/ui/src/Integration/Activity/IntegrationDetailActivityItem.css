@@ -1,0 +1,11 @@
+.integration-detail-activity-item {
+  border: none;
+}
+
+.integration-detail-activity-item .list-view-pf-main-info {
+  min-height: 68px;
+}
+
+.integration-detail-activity-item .integration-detail-activity-item__status-item {
+  padding-top: 6px;
+}

@@ -11,7 +11,7 @@ import {
   Row,
 } from 'patternfly-react';
 import * as React from 'react';
-import { PageSection } from '../Layout';
+import { PageSection } from '../../Layout';
 
 export interface IIntegrationDetailMetricsProps {
   i18nLastProcessed: string;
