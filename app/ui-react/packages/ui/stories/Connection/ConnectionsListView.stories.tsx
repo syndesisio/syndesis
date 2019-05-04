@@ -68,6 +68,7 @@ stories
         onClearFilters={action('onClearFilters')}
         onToggleCurrentSortDirection={action('onToggleCurrentSortDirection')}
         onUpdateCurrentSortType={action('onUpdateCurrentSortType')}
+        i18nTitle={'Connections'}
         i18nLinkCreateConnection={text(
           'i18nLinkCreateConnection',
           'Create Connection'
@@ -103,6 +104,7 @@ stories
           onClearFilters={action('onClearFilters')}
           onToggleCurrentSortDirection={action('onToggleCurrentSortDirection')}
           onUpdateCurrentSortType={action('onUpdateCurrentSortType')}
+          i18nTitle={'Connections'}
           i18nLinkCreateConnection={text(
             'i18nLinkCreateConnection',
             'Create Connection'
