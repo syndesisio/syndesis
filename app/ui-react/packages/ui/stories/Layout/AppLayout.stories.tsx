@@ -66,14 +66,12 @@ stories.add(
               verticalNav={[
                 <PfVerticalNavItem
                   exact={true}
-                  icon={'home'}
                   label={'Homepage'}
                   to={'#test'}
                   key={1}
                 />,
                 <PfVerticalNavItem
                   exact={true}
-                  icon={'dashboard'}
                   label={'Sample'}
                   to={'#test2'}
                   key={2}

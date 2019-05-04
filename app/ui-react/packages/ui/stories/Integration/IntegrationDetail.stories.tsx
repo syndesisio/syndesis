@@ -23,7 +23,7 @@ const datePublished = Date.parse('24 Feb 2019 08:19:42 GMT');
 const activityItemsSteps1 = [
   <IntegrationDetailActivityItemSteps
     key={0}
-    duration={4}
+    duration={'4'}
     name={'Data Mapper'}
     output={'No output'}
     status={'Success'}
@@ -31,7 +31,7 @@ const activityItemsSteps1 = [
   />,
   <IntegrationDetailActivityItemSteps
     key={1}
-    duration={4}
+    duration={'4'}
     name={'Invoke stored procedure'}
     output={'No output'}
     status={'Success'}
@@ -42,7 +42,7 @@ const activityItemsSteps1 = [
 const activityItemsSteps2 = [
   <IntegrationDetailActivityItemSteps
     key={0}
-    duration={67}
+    duration={'67'}
     name={'Invoke stored procedure'}
     output={
       'io.atlasmap.api.AtlasException: java.lang.IllegalArgumentException: document cannot be null nor empty'
@@ -69,7 +69,7 @@ const activityItems = [
     i18nVersion={'Version'}
     key={0}
     time={'07:40:28'}
-    version={2}
+    version={'2'}
   />,
   <IntegrationDetailActivityItem
     steps={activityItemsSteps2}
@@ -87,7 +87,7 @@ const activityItems = [
     i18nVersion={'Version'}
     key={1}
     time={'07:40:28'}
-    version={2}
+    version={'2'}
   />,
 ];
 
@@ -100,7 +100,16 @@ storiesOf('Integration/Detail', module)
             background: '#fff',
           }}
         >
-          <IntegrationDetailInfo name={'Integration name'} version={1} />
+          <IntegrationDetailInfo
+            name={'Integration name'}
+            version={1}
+            currentState={'Published'}
+            i18nLogUrlText={'log url'}
+            i18nProgressPending={'progress pending'}
+            i18nProgressStarting={'progress starting'}
+            i18nProgressStopping={'progress stopping'}
+            targetState={'Published'}
+          />
           <TabBar>
             <TabBarItem label={'Details'} to={'#details'} />
             <TabBarItem label={'Activity'} to={'#activity'} />
@@ -151,7 +160,7 @@ storiesOf('Integration/Detail', module)
               currentState={'Published'}
               i18nTextLastPublished={'Last published on '}
               i18nTextVersion={'Version'}
-              updatedAt={deployment.updatedAt}
+              updatedAt={'' + deployment.updatedAt}
               version={deployment.version}
             />
           ))}
@@ -167,7 +176,16 @@ storiesOf('Integration/Detail', module)
             background: '#fff',
           }}
         >
-          <IntegrationDetailInfo name={'Integration name'} version={1} />
+          <IntegrationDetailInfo
+            name={'Integration name'}
+            version={1}
+            currentState={'Published'}
+            i18nLogUrlText={'log url'}
+            i18nProgressPending={'progress pending'}
+            i18nProgressStarting={'progress starting'}
+            i18nProgressStopping={'progress stopping'}
+            targetState={'Published'}
+          />
           <TabBar>
             <TabBarItem label={'Details'} to={'#details'} />
             <TabBarItem label={'Activity'} to={'#activity'} />
@@ -180,6 +198,7 @@ storiesOf('Integration/Detail', module)
           i18nViewLogOpenShift={'View Log in OpenShift'}
           linkToOpenShiftLog={'/link'}
           children={activityItems}
+          onRefresh={action('onRefresh')}
         />
       </>
     </Router>
@@ -192,7 +211,16 @@ storiesOf('Integration/Detail', module)
             background: '#fff',
           }}
         >
-          <IntegrationDetailInfo name={'Integration name'} version={1} />
+          <IntegrationDetailInfo
+            name={'Integration name'}
+            version={1}
+            currentState={'Published'}
+            i18nLogUrlText={'log url'}
+            i18nProgressPending={'progress pending'}
+            i18nProgressStarting={'progress starting'}
+            i18nProgressStopping={'progress stopping'}
+            targetState={'Published'}
+          />
           <TabBar>
             <TabBarItem label={'Details'} to={'#details'} />
             <TabBarItem label={'Activity'} to={'#activity'} />

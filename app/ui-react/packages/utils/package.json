@@ -23,7 +23,7 @@
     "jest-dom": "^3.1.3",
     "microbundle": "^0.10.1",
     "react": "^16.6.0",
-    "react-docgen-typescript-loader": "^3.0.0",
+    "react-docgen-typescript-loader": "^3.1.0",
     "react-dom": "^16.6.0",
     "react-router": "^4.3.1",
     "react-router-dom": "^4.3.1",
@@ -52,8 +52,8 @@
     "typescript": "^3.1.6"
   },
   "dependencies": {
-    "@syndesis/models": "*",
     "@syndesis/auto-form": "*",
+    "@syndesis/models": "*",
     "@syndesis/ui": "*",
     "named-urls": "^1.4.0",
     "react-fast-compare": "^2.0.2"
