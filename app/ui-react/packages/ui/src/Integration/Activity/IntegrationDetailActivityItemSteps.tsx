@@ -4,7 +4,7 @@ import * as React from 'react';
 export interface IIntegrationDetailActivityItemStepsProps {
   name?: string;
   time?: string;
-  duration?: number;
+  duration?: string;
   status?: string;
   output?: string;
 }

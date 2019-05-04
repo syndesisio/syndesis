@@ -39,7 +39,9 @@ export class IntegrationStepsHorizontalItem extends React.Component<
           md={1}
           className="integration-steps-horizontal-item__icon"
         >
-          <img src={this.props.icon} className="step-icon" />
+          <div className={'step-icon'}>
+            <img src={this.props.icon} />
+          </div>
           <p>{this.props.name}</p>
         </Grid.Col>
       </div>

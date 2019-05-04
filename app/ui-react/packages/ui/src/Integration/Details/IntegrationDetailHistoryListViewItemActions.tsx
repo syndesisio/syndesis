@@ -1,7 +1,7 @@
 import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { IMenuActions } from '../Shared';
+import { IMenuActions } from '../../Shared';
 
 export interface IIntegrationDetailHistoryListViewItemActionsProps {
   actions: IMenuActions[];

@@ -65,5 +65,14 @@
   "alerts": {
     "modified": "A connection associated with this integration has been modified. To incorporate the changes, please edit the integration.",
     "obsolete": "The published integration has become obsolete and its recommended it should be republished."
-  }
+  },
+  "ReplaceDraft": "Replace Draft",
+  "ReplaceDraftModalMessage": "Are you sure you want to to replace the current draft for the \"{{name}}\" integration?",
+  "ReplaceDraftMOdalTitle": "Replace Draft?",
+  "ReplacedDraftMessage": "<strong>Updating draft.</strong> Replacing the current draft of the integration. ",
+  "publishDeploymentModal": "Are you sure you want to start version \"{{version}}\" of integration \"{{name}}\"",
+  "publishDeploymentModalTitle": "Start Deployment?",
+  "ReplaceDraftFailedMessage": "Failed to replace the current draft: {{error}}",
+  "NoErrors": "No errors",
+  "LastRefresh": "Last refreshed at {{at}}"
 }

@@ -1,23 +1,37 @@
+.integration-steps-horizontal-item {
+  display: block;
+  text-align: center;
+}
 .integration-steps-horizontal-item .step-icon {
   border-radius: 100px;
   width: 55px;
   height: 55px;
+  padding: 10px;
   margin: 0 auto 5px;
-  background-color: #fff;
+  background-color: inherit;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 3px solid #0088ce;
 }
+.integration-steps-horizontal-item .step-icon img {
+  max-width: 24px;
+  max-height: 24px;
+}
 
 .integration-steps-horizontal-item__arrow, .integration-steps-horizontal-item__icon {
   padding: 0;
 }
 
+.integration-steps-horizontal-item__icon {
+  width: 100px;
+}
+
 .integration-steps-horizontal-item .step-arrow {
   position: absolute;
-  top: 28px;
+  top: 29px;
+  left: 37px;
   -webkit-transform: translate(50%,-50%);
   transform: translate(50%,-50%);
   font-size: 2em;

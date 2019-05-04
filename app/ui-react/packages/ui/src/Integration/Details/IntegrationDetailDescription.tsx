@@ -1,7 +1,7 @@
 import { Text } from '@patternfly/react-core';
 import { Icon } from 'patternfly-react';
 import * as React from 'react';
-import { PageSection } from '../Layout';
+import { PageSection } from '../../Layout';
 
 export interface IIntegrationDetailDescriptionProps {
   description?: string;

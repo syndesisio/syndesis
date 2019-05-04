@@ -1,6 +1,8 @@
 import { Col, Icon, ListView, Row, Table } from 'patternfly-react';
 import * as React from 'react';
 
+import './IntegrationDetailActivityItem.css';
+
 export interface IIntegrationDetailActivityItemProps {
   date: string;
   errorCount: number;
@@ -17,24 +19,40 @@ export interface IIntegrationDetailActivityItemProps {
   i18nVersion: string;
   steps: JSX.Element[];
   time: string;
-  version?: number;
+  version?: string;
 }
+
+const headerFormat = (value: string) => <Table.Heading>{value}</Table.Heading>;
+const cellFormat = (value: string) => <Table.Cell>{value}</Table.Cell>;
+const statusCellFormat = (status: string) => (
+  <Table.Cell>
+    {status === 'Success' ? (
+      <>
+        <Icon type="pf" name="ok" /> Success
+      </>
+    ) : (
+      <>
+        <Icon type="pf" name="error-circle-o" /> Error
+      </>
+    )}
+  </Table.Cell>
+);
+const outputCellFormat = (output: string) => (
+  <Table.Cell>
+    <pre>{output}</pre>
+  </Table.Cell>
+);
 
 export class IntegrationDetailActivityItem extends React.Component<
   IIntegrationDetailActivityItemProps
 > {
   public render() {
-    const headerFormat = (value: string) => (
-      <Table.Heading>{value}</Table.Heading>
-    );
-
-    const cellFormat = (value: string) => <Table.Cell>{value}</Table.Cell>;
-
     return (
       <ListView.Item
-        key={1}
+        className="integration-detail-activity-item"
+        key={this.props.time}
         actions={
-          <>
+          <div className="integration-detail-activity-item__status-item">
             {this.props.errorCount > 0 ? (
               <span>
                 <Icon type="pf" name="error-circle-o" />
@@ -48,16 +66,17 @@ export class IntegrationDetailActivityItem extends React.Component<
                 {this.props.i18nNoErrors}
               </span>
             )}
-          </>
+          </div>
         }
-        heading={this.props.date}
+        leftContent={this.props.date}
+        heading={<></>}
         description={this.props.time}
         additionalInfo={[
-          <React.Fragment key={'not-really-needed'}>
+          <ListView.InfoItem key={1}>
             {this.props.i18nVersion}
-            {'  '}
+            &nbsp;
             {this.props.version}
-          </React.Fragment>,
+          </ListView.InfoItem>,
         ]}
       >
         <Row>
@@ -100,7 +119,7 @@ export class IntegrationDetailActivityItem extends React.Component<
                   },
                   {
                     cell: {
-                      formatters: [cellFormat],
+                      formatters: [statusCellFormat],
                       property: 'status',
                     },
                     header: {
@@ -110,7 +129,7 @@ export class IntegrationDetailActivityItem extends React.Component<
                   },
                   {
                     cell: {
-                      formatters: [cellFormat],
+                      formatters: [outputCellFormat],
                       property: 'output',
                     },
                     header: {

@@ -1,10 +1,8 @@
 import * as React from 'react';
-
+import { IntegrationStatusDetail } from '../IntegrationStatusDetail';
+import { IntegrationState } from '../models';
 import { IntegrationDetailEditableName } from './IntegrationDetailEditableName';
-
 import './IntegrationDetailInfo.css';
-import { IntegrationStatusDetail } from './IntegrationStatusDetail';
-import { IntegrationState } from './models';
 
 export interface IIntegrationDetailInfoProps {
   name?: string;

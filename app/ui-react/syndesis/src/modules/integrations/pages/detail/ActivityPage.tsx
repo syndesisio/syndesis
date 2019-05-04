@@ -1,5 +1,5 @@
 import { WithMonitoredIntegration } from '@syndesis/api';
-import { IntegrationDetailActivity, Loader } from '@syndesis/ui';
+import { Loader } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -71,23 +71,10 @@ export class ActivityPage extends React.Component {
                                           exportAction={exportAction}
                                           getPodLogUrl={getPodLogUrl}
                                         />
-                                        <IntegrationDetailActivity
-                                          i18nBtnRefresh={t('shared:Refresh')}
-                                          i18nLastRefresh={t(
-                                            'integrations:LastRefresh'
-                                          )}
-                                          i18nViewLogOpenShift={t(
-                                            'integrations:View Log in OpenShift'
-                                          )}
+                                        <ActivityPageTable
+                                          integrationId={data.integration.id!}
                                           linkToOpenShiftLog={
                                             getPodLogUrl(data.monitoring) || ''
-                                          }
-                                          children={
-                                            <ActivityPageTable
-                                              integrationId={
-                                                data.integration.id!
-                                              }
-                                            />
                                           }
                                         />
                                       </>

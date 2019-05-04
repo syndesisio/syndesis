@@ -6,15 +6,16 @@ import {
   Step,
 } from '@syndesis/models';
 import {
+  IntegrationDetailActivity,
   IntegrationDetailActivityItem,
   IntegrationDetailActivityItemSteps,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import i18n from '../../../../i18n';
 
 export interface IActivityPagetableProps {
   integrationId: string;
+  linkToOpenShiftLog: string;
 }
 
 interface IExtendedActivity extends Activity {
@@ -51,18 +52,17 @@ export class ActivityPageTable extends React.Component<
             {({
               activities: activitiesBase,
               deployments: deploymentsBase,
-              // fetchActivities,
-              // fetchDeployments,
+              fetchActivities,
+              fetchDeployments,
             }) => {
               const activities = activitiesBase as IExtendedActivity[];
               const integrationDeployments = (deploymentsBase ||
                 []) as IExtendedDeployment[];
-              /*
+
               const refresh = async () => {
                 await fetchActivities();
                 await fetchDeployments();
               };
-              */
 
               activities.forEach((activity: IExtendedActivity) => {
                 if (activity.steps && Array.isArray(activity.steps)) {
@@ -100,39 +100,66 @@ export class ActivityPageTable extends React.Component<
                   });
                 }
               });
+              const lastRefreshed = new Date().toLocaleString();
 
               return (
                 <>
-                  {activities.map(
-                    (activity: IExtendedActivity, activityIndex: number) => (
-                      <IntegrationDetailActivityItem
-                        key={activityIndex}
-                        date={new Date(activity.at!).getDate().toLocaleString()}
-                        errorCount={activity.failed ? 1 : 0}
-                        i18nErrorsFound={t('integrations:ErrorsFound')}
-                        i18nNoErrors={t('integrations:NoErrors')}
-                        i18nNoSteps={t('integrations:NoSteps')}
-                        i18nVersion={t('shared:Version')}
-                        steps={(activity.steps || []).map(
-                          (step: IExtendedActivityStep, stepIndex: number) => (
-                            <IntegrationDetailActivityItemSteps
-                              key={stepIndex}
-                              duration={step.duration}
-                              name={step.name || ''}
-                              output={step.output}
-                              status={
-                                step.isFailed
-                                  ? i18n.t('shared:Error')
-                                  : i18n.t('shared:Success')
-                              }
-                            />
-                          )
-                        )}
-                        time={new Date(activity.at).getTime().toLocaleString()}
-                        version={activity.version}
-                      />
-                    )
-                  )}
+                  <IntegrationDetailActivity
+                    i18nBtnRefresh={t('shared:Refresh')}
+                    i18nLastRefresh={t('integrations:LastRefresh', {
+                      at: lastRefreshed,
+                    })}
+                    i18nViewLogOpenShift={t(
+                      'integrations:View Log in OpenShift'
+                    )}
+                    linkToOpenShiftLog={this.props.linkToOpenShiftLog}
+                    onRefresh={refresh}
+                    children={activities.map(
+                      (activity: IExtendedActivity, activityIndex: number) => {
+                        const date = new Date(
+                          activity.at!
+                        ).toLocaleDateString();
+                        const time = new Date(
+                          activity.at!
+                        ).toLocaleTimeString();
+
+                        return (
+                          <IntegrationDetailActivityItem
+                            key={activityIndex}
+                            date={date}
+                            errorCount={activity.failed ? 1 : 0}
+                            i18nErrorsFound={t('integrations:ErrorsFound')}
+                            i18nNoErrors={t('integrations:NoErrors')}
+                            i18nNoSteps={t('integrations:NoSteps')}
+                            i18nVersion={t('shared:Version')}
+                            steps={(activity.steps || []).map(
+                              (
+                                step: IExtendedActivityStep,
+                                stepIndex: number
+                              ) => (
+                                <IntegrationDetailActivityItemSteps
+                                  key={stepIndex}
+                                  duration={t('shared:DurationMillis', {
+                                    duration: (step.duration || 0) / 1000000,
+                                  })}
+                                  name={step.name || ''}
+                                  output={step.output}
+                                  time={new Date(step.at!).toLocaleString()}
+                                  status={
+                                    step.isFailed
+                                      ? t('shared:Error')
+                                      : t('shared:Success')
+                                  }
+                                />
+                              )
+                            )}
+                            time={time}
+                            version={activity.ver!}
+                          />
+                        );
+                      }
+                    )}
+                  />
                 </>
               );
             }}
