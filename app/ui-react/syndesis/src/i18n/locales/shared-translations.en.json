@@ -66,6 +66,8 @@
       "Validate": "Validate",
       "Version": "Version",
       "viewLogs": "View Logs",
+      "HideDetails": "Hide Details",
+      "ShowDetails": "Show Details",
       "links": {
         "contactus": "//access.redhat.com/support/cases/#/case/new",
         "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online",
@@ -91,7 +93,20 @@
         "help": "If you think this is a bug, please report the issue.",
         "refreshButton": "Take me home",
         "reportIssueButton": "Report the issue"
-      }
+      },
+      "syndesis000": "An unknown error has occurred",
+      "syndesis001": "There are parameter updates. Click <strong>Edit</strong> to update parameter settings.",
+      "syndesis002": "One or more properties have been updated or removed",
+      "syndesis003": "The connector associated with this connection has been deleted",
+      "syndesis004": "The associated extension has been deleted",
+      "syndesis005": "The associated action has been deleted",
+      "syndesis006": "One or more required properties is not set",
+      "syndesis007": "Secrets for this connection need to be updated",
+      "syndesis008": "There has been a validation error",
+      "syndesis009": "A connection has been deleted from this integration",
+      "syndesis010": "Multiple extensions installed",
+      "syndesis011": "A connection associated with this integration has been modified. To incorporate the changes, please edit the integration.",
+      "syndesis012": "The published integration has become obsolete and its recommended it should be republished."
     }
   }
 }

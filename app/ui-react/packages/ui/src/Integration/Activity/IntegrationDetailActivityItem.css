@@ -9,3 +9,8 @@
 .integration-detail-activity-item .integration-detail-activity-item__status-item {
   padding-top: 6px;
 }
+
+.integration-detail-activity-item .integration-detail-activity-item-step-output {
+  border: none;
+  padding-top: 2px;
+}

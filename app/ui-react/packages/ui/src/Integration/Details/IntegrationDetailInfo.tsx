@@ -1,11 +1,10 @@
 import * as React from 'react';
 import { IntegrationStatusDetail } from '../IntegrationStatusDetail';
 import { IntegrationState } from '../models';
-import { IntegrationDetailEditableName } from './IntegrationDetailEditableName';
 import './IntegrationDetailInfo.css';
 
 export interface IIntegrationDetailInfoProps {
-  name?: string;
+  name?: React.ReactNode;
   version?: number;
   currentState: IntegrationState;
   targetState: IntegrationState;
@@ -25,7 +24,7 @@ export class IntegrationDetailInfo extends React.PureComponent<
   public render() {
     return (
       <div className="integration-detail-info">
-        <IntegrationDetailEditableName name={this.props.name} />
+        {this.props.name}
         <>
           {this.props.currentState === 'Pending' && (
             <IntegrationStatusDetail
@@ -42,6 +41,7 @@ export class IntegrationDetailInfo extends React.PureComponent<
           )}
           {this.props.currentState === 'Published' && this.props.version && (
             <>
+              &nbsp;&nbsp;&nbsp;&nbsp;
               <span className="pficon pficon-ok" />
               &nbsp;Published version {this.props.version}
             </>

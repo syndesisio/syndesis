@@ -22,7 +22,8 @@ export interface IIntegrationDetailMetricsProps {
   errors?: number;
   lastProcessed?: string;
   messages?: number;
-  start?: string;
+  start?: number;
+  durationDifference?: string;
 }
 
 export class IntegrationDetailMetrics extends React.Component<
@@ -35,7 +36,7 @@ export class IntegrationDetailMetrics extends React.Component<
 
     return (
       <PageSection>
-        <CardGrid fluid={true}>
+        <CardGrid fluid={true} matchHeight={true}>
           <Row style={{ marginBottom: '20px', marginTop: '20px' }}>
             <Col xs={6} sm={3} md={3}>
               <Card accented={true} aggregated={true} matchHeight={true}>
@@ -89,7 +90,7 @@ export class IntegrationDetailMetrics extends React.Component<
                   <div>{this.props.i18nUptime}</div>
                 </Card.Title>
                 <Card.Body>
-                  <></>
+                  <h4>{this.props.durationDifference}</h4>
                 </Card.Body>
               </Card>
             </Col>

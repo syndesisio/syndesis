@@ -10,6 +10,7 @@ import {
   IntegrationDetailActivityItem,
   IntegrationDetailActivityItemSteps,
 } from '@syndesis/ui';
+import { toDurationString } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 
@@ -139,9 +140,10 @@ export class ActivityPageTable extends React.Component<
                               ) => (
                                 <IntegrationDetailActivityItemSteps
                                   key={stepIndex}
-                                  duration={t('shared:DurationMillis', {
-                                    duration: (step.duration || 0) / 1000000,
-                                  })}
+                                  duration={toDurationString(
+                                    step.duration!,
+                                    'ns'
+                                  )}
                                   name={step.name || ''}
                                   output={step.output}
                                   time={new Date(step.at!).toLocaleString()}
