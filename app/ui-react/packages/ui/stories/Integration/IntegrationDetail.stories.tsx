@@ -236,7 +236,7 @@ storiesOf('Integration/Detail', module)
           errors={2}
           lastProcessed={'2 May 2019 08:19:42 GMT'}
           messages={26126}
-          start={'2 May 2019 08:19:42 GMT'}
+          start={2323342333}
         />
       </>
     </Router>

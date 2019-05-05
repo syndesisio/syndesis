@@ -3,7 +3,11 @@ import {
   WithMonitoredIntegration,
 } from '@syndesis/api';
 import { IntegrationDetailMetrics, Loader } from '@syndesis/ui';
-import { WithLoader, WithRouteData } from '@syndesis/utils';
+import {
+  toDurationDifferenceString,
+  WithLoader,
+  WithRouteData,
+} from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { AppContext } from '../../../../app';
@@ -92,10 +96,21 @@ export class MetricsPage extends React.Component {
                                             )}
                                             errors={metricsData.errors}
                                             lastProcessed={
-                                              metricsData.lastProcessed
+                                              typeof metricsData.lastProcessed !==
+                                              'undefined'
+                                                ? new Date(
+                                                    metricsData.lastProcessed
+                                                  ).toLocaleString()
+                                                : t('shared:NA')
                                             }
                                             messages={metricsData.messages}
-                                            start={metricsData.start}
+                                            start={parseInt(
+                                              metricsData.start!,
+                                              10
+                                            )}
+                                            durationDifference={toDurationDifferenceString(
+                                              parseInt(metricsData.start!, 10)
+                                            )}
                                           />
                                         </>
                                       );

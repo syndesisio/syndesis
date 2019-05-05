@@ -39,7 +39,7 @@ const statusCellFormat = (status: string) => (
 );
 const outputCellFormat = (output: string) => (
   <Table.Cell>
-    <pre>{output}</pre>
+    <pre className="integration-detail-activity-item-step-output">{output}</pre>
   </Table.Cell>
 );
 

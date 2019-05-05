@@ -104,6 +104,13 @@ export interface IWithIntegrationHelpersChildrenProps {
   ): Promise<IntegrationDeployment>;
 
   /**
+   * Patches an integration using the supplied attributes
+   *
+   * @param id
+   * @param options
+   */
+  setAttributes(id: string, options: any): Promise<void>;
+  /**
    * Uploads and imports the supplied file as a new integration
    * @param file
    */
@@ -161,6 +168,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     this.updateConnection = this.updateConnection.bind(this);
     this.updateOrAddConnection = this.updateOrAddConnection.bind(this);
     this.tagIntegration = this.tagIntegration.bind(this);
+    this.setAttributes = this.setAttributes.bind(this);
   }
 
   public async getActionDescriptor(
@@ -232,12 +240,9 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     return response.json() as IntegrationDeployment;
   }
 
-  public async replaceDraft(id: string, version: string | number) {
-    const deployment = await this.getDeployment(id, version);
+  public async setAttributes(id: string, options: any) {
     const response = await callFetch({
-      body: {
-        flows: deployment.spec!.flows,
-      },
+      body: options,
       headers: this.props.headers,
       method: 'PATCH',
       url: `${this.props.apiUri}/integrations/${id}`,
@@ -245,6 +250,13 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     if (!response.ok) {
       throw new Error(response.statusText);
     }
+  }
+
+  public async replaceDraft(id: string, version: string | number) {
+    const deployment = await this.getDeployment(id, version);
+    await this.setAttributes(id, {
+      flows: deployment.spec!.flows,
+    });
   }
 
   public async deleteIntegration(id: string) {
@@ -422,6 +434,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       importIntegration: this.importIntegration,
       replaceDraft: this.replaceDraft,
       saveIntegration: this.saveIntegration,
+      setAttributes: this.setAttributes,
       tagIntegration: this.tagIntegration,
       undeployIntegration: this.undeployIntegration,
       updateConnection: this.updateConnection,

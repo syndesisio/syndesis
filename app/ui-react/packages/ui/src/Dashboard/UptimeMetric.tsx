@@ -3,6 +3,7 @@ import * as React from 'react';
 
 export interface IUptimeMetricProps {
   start: number;
+  durationDifference: string;
   i18nTitle: string;
 }
 
@@ -16,7 +17,9 @@ export class UptimeMetric extends React.PureComponent<IUptimeMetricProps> {
           <small className={'pull-right'}>since {startAsHuman}</small>
           <div>{this.props.i18nTitle}</div>
         </Card.Title>
-        <Card.Body>TODO</Card.Body>
+        <Card.Body>
+          <h4>{this.props.durationDifference}</h4>
+        </Card.Body>
       </Card>
     );
   }

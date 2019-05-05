@@ -15,7 +15,7 @@ import {
   TopIntegrationsCard,
   UptimeMetric,
 } from '@syndesis/ui';
-import { WithLoader } from '@syndesis/utils';
+import { toDurationDifferenceString, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { ApiError } from '../../../shared';
@@ -169,6 +169,9 @@ export default () => (
                       uptimeOverview={
                         <UptimeMetric
                           start={parseInt(metricsData.start!, 10)}
+                          durationDifference={toDurationDifferenceString(
+                            parseInt(metricsData.start!, 10)
+                          )}
                           i18nTitle={t('titleUptimeMetric')}
                         />
                       }

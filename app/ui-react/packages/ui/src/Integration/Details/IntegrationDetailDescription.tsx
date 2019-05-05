@@ -1,11 +1,9 @@
 import { Text } from '@patternfly/react-core';
-import { Icon } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../Layout';
 
 export interface IIntegrationDetailDescriptionProps {
-  description?: string;
-  i18nNoDescription?: string;
+  description: React.ReactNode;
 }
 
 export class IntegrationDetailDescription extends React.PureComponent<
@@ -14,13 +12,7 @@ export class IntegrationDetailDescription extends React.PureComponent<
   public render() {
     return (
       <PageSection>
-        <Text>
-          {this.props.description
-            ? this.props.description
-            : this.props.i18nNoDescription}
-          &nbsp;
-          <Icon name={'pencil'} />
-        </Text>
+        <Text>{this.props.description}</Text>
       </PageSection>
     );
   }

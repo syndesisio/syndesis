@@ -1,6 +1,10 @@
-import { WithMonitoredIntegration } from '@syndesis/api';
+import {
+  WithIntegrationHelpers,
+  WithMonitoredIntegration,
+} from '@syndesis/api';
 import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import {
+  InlineTextEdit,
   IntegrationDetailDescription,
   IntegrationDetailHistoryListView,
   IntegrationDetailHistoryListViewItem,
@@ -78,12 +82,43 @@ export class DetailsPage extends React.Component {
                                     <IntegrationDetailSteps
                                       integration={data.integration}
                                     />
-                                    <IntegrationDetailDescription
-                                      description={data.integration.description}
-                                      i18nNoDescription={t(
-                                        'integrations:detail:noDescription'
-                                      )}
-                                    />
+                                    <WithIntegrationHelpers>
+                                      {({ setAttributes }) => {
+                                        const handleChange = async (
+                                          description: string
+                                        ) => {
+                                          try {
+                                            await setAttributes(
+                                              data.integration.id!,
+                                              {
+                                                description,
+                                              }
+                                            );
+                                            return true;
+                                          } catch (err) {
+                                            return false;
+                                          }
+                                        };
+                                        return (
+                                          <IntegrationDetailDescription
+                                            description={
+                                              <InlineTextEdit
+                                                value={
+                                                  data.integration
+                                                    .description ||
+                                                  t(
+                                                    'integrations:detail:noDescription'
+                                                  )
+                                                }
+                                                allowEditing={true}
+                                                isTextArea={true}
+                                                onChange={handleChange}
+                                              />
+                                            }
+                                          />
+                                        );
+                                      }}
+                                    </WithIntegrationHelpers>
                                     <IntegrationDetailHistoryListView
                                       editHref={editAction.href}
                                       editLabel={editAction.label}
