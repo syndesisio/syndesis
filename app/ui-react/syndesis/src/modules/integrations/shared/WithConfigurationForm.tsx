@@ -150,10 +150,6 @@ export class WithConfigurationForm extends React.Component<
             this.props.children({
               form: (
                 <IntegrationEditorForm
-                  i18nTitle={'Configure action'}
-                  i18nSubtitle={
-                    'Fill in the required information for the selected action.'
-                  }
                   i18nFormTitle={`${action.name} - ${action.description}`}
                   i18nChooseAction={'Choose Action'}
                   i18nNext={'Next'}
@@ -188,10 +184,6 @@ export class WithConfigurationForm extends React.Component<
     return this.props.children({
       form: (
         <IntegrationEditorNothingToConfigure
-          i18nTitle={'Configure action'}
-          i18nSubtitle={
-            'Fill in the required information for the selected action.'
-          }
           i18nAlert={'There are no properties to configure for this action.'}
         />
       ),

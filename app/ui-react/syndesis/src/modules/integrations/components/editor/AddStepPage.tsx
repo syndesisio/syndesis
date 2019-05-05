@@ -1,10 +1,7 @@
 import { getSteps } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Step } from '@syndesis/models';
-import {
-  IntegrationEditorLayout,
-  IntegrationEditorStepsAdderHeader,
-} from '@syndesis/ui';
+import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../shared';
@@ -40,11 +37,14 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
     return (
       <WithRouteData<IBaseRouteParams, IBaseRouteState>>
         {({ flowId }, { integration }) => (
-          <IntegrationEditorLayout
-            content={
-              <>
-                <PageTitle title={'Save or add step'} />
-                <IntegrationEditorStepsAdderHeader />
+          <>
+            <PageTitle title={'Save or add step'} />
+            <IntegrationEditorLayout
+              title={'Add to Integration'}
+              description={
+                'You can continue adding steps and connections to your integration as well.'
+              }
+              content={
                 <IntegrationEditorStepAdder
                   steps={getSteps(integration, flowId)}
                   addStepHref={position =>
@@ -63,12 +63,12 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                     )
                   }
                 />
-              </>
-            }
-            cancelHref={this.props.cancelHref({ flowId }, { integration })}
-            saveHref={this.props.saveHref({ flowId }, { integration })}
-            publishHref={this.props.saveHref({ flowId }, { integration })}
-          />
+              }
+              cancelHref={this.props.cancelHref({ flowId }, { integration })}
+              saveHref={this.props.saveHref({ flowId }, { integration })}
+              publishHref={this.props.saveHref({ flowId }, { integration })}
+            />
+          </>
         )}
       </WithRouteData>
     );
