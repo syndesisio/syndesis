@@ -1,8 +1,16 @@
 // tslint:disable react-unused-props-and-state
 // remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
+import {
+  Level,
+  LevelItem,
+  Text,
+  TextContent,
+  Title,
+  TitleLevel,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
-import { ButtonLink, Loader } from '../Layout';
+import { ButtonLink, Loader, PageSection } from '../Layout';
 import './IntegrationEditorLayout.css';
 
 /**
@@ -30,6 +38,8 @@ import './IntegrationEditorLayout.css';
  * 'Done'.
  */
 export interface IIntegrationEditorLayoutProps {
+  title: React.ReactNode;
+  description?: React.ReactNode;
   sidebar?: React.ReactNode;
   content: React.ReactNode;
   onCancel?: (e: React.MouseEvent<any>) => void;
@@ -58,6 +68,8 @@ export interface IIntegrationEditorLayoutProps {
 export const IntegrationEditorLayout: React.FunctionComponent<
   IIntegrationEditorLayoutProps
 > = ({
+  title,
+  description,
   sidebar,
   content,
   onPublish,
@@ -74,46 +86,45 @@ export const IntegrationEditorLayout: React.FunctionComponent<
   return (
     <div className={'wizard-pf-body integration-editor-layout syn-scrollable'}>
       <div className="wizard-pf-toolbar integration-editor-layout__header">
-        <div className="container-fluid">
-          <div className="row toolbar-pf">
-            <div className="toolbar-pf-actions">
-              <div className="form-group toolbar-pf-filter">
-                <strong>
-                  <span>Integration</span>
-                </strong>
-              </div>
-              <div className="toolbar-pf-action-right">
-                {(cancelHref || onCancel) && (
-                  <ButtonLink onClick={onCancel} href={cancelHref}>
-                    <i className="fa fa-angle-left" /> Cancel
-                  </ButtonLink>
-                )}
-                {(saveHref || onSave) && (
-                  <ButtonLink
-                    onClick={onSave}
-                    href={saveHref}
-                    disabled={isSaveLoading || isSaveDisabled}
-                  >
-                    {isSaveLoading ? (
-                      <Loader size={'xs'} inline={true} />
-                    ) : null}
-                    Save
-                  </ButtonLink>
-                )}
-                {(publishHref || onPublish) && (
-                  <ButtonLink
-                    onClick={onPublish}
-                    href={publishHref}
-                    as={'primary'}
-                    disabled={isPublishLoading || isPublishDisabled}
-                  >
-                    Publish
-                  </ButtonLink>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
+        <PageSection variant={'light'}>
+          <Level gutter={'sm'}>
+            <LevelItem>
+              <TextContent>
+                <Title size={'2xl'} headingLevel={TitleLevel.h1}>
+                  {title}
+                </Title>
+                {description && <Text>{description}</Text>}
+              </TextContent>
+            </LevelItem>
+            <LevelItem>
+              {(cancelHref || onCancel) && (
+                <ButtonLink onClick={onCancel} href={cancelHref}>
+                  <i className="fa fa-angle-left" /> Cancel
+                </ButtonLink>
+              )}
+              {(saveHref || onSave) && (
+                <ButtonLink
+                  onClick={onSave}
+                  href={saveHref}
+                  disabled={isSaveLoading || isSaveDisabled}
+                >
+                  {isSaveLoading ? <Loader size={'xs'} inline={true} /> : null}
+                  Save
+                </ButtonLink>
+              )}
+              {(publishHref || onPublish) && (
+                <ButtonLink
+                  onClick={onPublish}
+                  href={publishHref}
+                  as={'primary'}
+                  disabled={isPublishLoading || isPublishDisabled}
+                >
+                  Publish
+                </ButtonLink>
+              )}
+            </LevelItem>
+          </Level>
+        </PageSection>
       </div>
       <div className="wizard-pf-row integration-editor-layout__body syn-scrollable--body">
         <div className="wizard-pf-sidebar">{sidebar}</div>

@@ -16,6 +16,7 @@
 @import url('~@patternfly/patternfly/components/Dropdown/dropdown.css');
 @import url('~@patternfly/patternfly/components/AboutModalBox/about-modal-box.css');
 @import url('~@patternfly/patternfly/components/BackgroundImage/background-image.css');
+@import url('~@patternfly/patternfly/components/Content/content.css');
 
 :root {
   --pf-global--link--Color: #0088ce;

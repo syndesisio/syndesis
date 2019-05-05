@@ -143,10 +143,14 @@ export class ConfigureActionPage extends React.Component<
                     }
                   )}
                 >
-                  {({ form, submitForm, isSubmitting }) => (
+                  {({ form }) => (
                     <>
                       <PageTitle title={'Configure the action'} />
                       <IntegrationEditorLayout
+                        title={'Configure the action'}
+                        description={
+                          'Fill in the required information for the selected action.'
+                        }
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           connection,

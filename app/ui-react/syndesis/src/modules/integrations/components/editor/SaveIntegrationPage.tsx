@@ -96,35 +96,31 @@ export class SaveIntegrationPage extends React.Component<
                     isValid,
                     submitForm,
                   }) => (
-                    <IntegrationEditorLayout
-                      content={
-                        <>
-                          <PageTitle title={'Save the integration'} />
-                          <IntegrationSaveForm
-                            i18nTitle={'Save the integration'}
-                            i18nSubtitle={
-                              'Update details about this integration.'
-                            }
-                            handleSubmit={handleSubmit}
-                          >
+                    <>
+                      <PageTitle title={'Save the integration'} />
+                      <IntegrationEditorLayout
+                        title={'Save the integration'}
+                        description={'Update details about this integration.'}
+                        content={
+                          <IntegrationSaveForm handleSubmit={handleSubmit}>
                             {fields}
                           </IntegrationSaveForm>
-                        </>
-                      }
-                      cancelHref={this.props.cancelHref(
-                        { flowId },
-                        { integration }
-                      )}
-                      onSave={submitForm}
-                      isSaveDisabled={dirty && !isValid}
-                      isSaveLoading={isSubmitting}
-                      onPublish={async () => {
-                        shouldPublish = true;
-                        await submitForm();
-                      }}
-                      isPublishDisabled={dirty && !isValid}
-                      isPublishLoading={isSubmitting}
-                    />
+                        }
+                        cancelHref={this.props.cancelHref(
+                          { flowId },
+                          { integration }
+                        )}
+                        onSave={submitForm}
+                        isSaveDisabled={dirty && !isValid}
+                        isSaveLoading={isSubmitting}
+                        onPublish={async () => {
+                          shouldPublish = true;
+                          await submitForm();
+                        }}
+                        isPublishDisabled={dirty && !isValid}
+                        isPublishLoading={isSubmitting}
+                      />
+                    </>
                   )}
                 </AutoForm>
               );

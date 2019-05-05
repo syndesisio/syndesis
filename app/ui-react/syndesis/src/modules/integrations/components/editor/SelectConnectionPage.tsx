@@ -60,6 +60,10 @@ export class SelectConnectionPage extends React.Component<
             <>
               <PageTitle title={'Choose a connection'} />
               <IntegrationEditorLayout
+                title={'Choose a connection'}
+                description={
+                  'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
+                }
                 sidebar={this.props.sidebar({
                   activeIndex: positionAsNumber,
                   steps: integrationSteps,
@@ -79,12 +83,7 @@ export class SelectConnectionPage extends React.Component<
                         }) => (
                           <WithSteps>
                             {({ items: steps }) => (
-                              <IntegrationEditorChooseConnection
-                                i18nTitle={'Choose a connection'}
-                                i18nSubtitle={
-                                  'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
-                                }
-                              >
+                              <IntegrationEditorChooseConnection>
                                 <WithLoader
                                   error={connectionsError || extensionsError}
                                   loading={

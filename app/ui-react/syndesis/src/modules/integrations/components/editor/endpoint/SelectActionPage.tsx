@@ -63,18 +63,17 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                     <>
                       <PageTitle title={'Choose an action'} />
                       <IntegrationEditorLayout
+                        title={'Choose an action'}
+                        description={
+                          'Choose an action for the selected connection.'
+                        }
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           connection: connection as IConnectionWithIconFile,
                           steps: getSteps(integration, flowId),
                         })}
                         content={
-                          <IntegrationEditorChooseAction
-                            i18nTitle={`${connection.name} - Choose Action`}
-                            i18nSubtitle={
-                              'Choose an action for the selected connectionName.'
-                            }
-                          >
+                          <IntegrationEditorChooseAction>
                             {(positionAsNumber > 0
                               ? data.actionsWithTo
                               : data.actionsWithFrom
