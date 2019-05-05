@@ -62,96 +62,128 @@ export const IntegrationDetailHeader: React.FunctionComponent<
 
   return (
     <Translation ns={['integrations', 'shared']}>
-      {t => (
-        <>
-          <IntegrationDetailBreadcrumb
-            editHref={props.editAction.href}
-            editLabel={props.editAction.label}
-            exportAction={props.exportAction.onClick}
-            exportHref={props.exportAction.href}
-            exportLabel={props.exportAction.label}
-            homeHref={resolvers.dashboard.root()}
-            i18nHome={t('shared:Home')}
-            i18nIntegrations={t('shared:Integrations')}
-            i18nPageTitle={t('integrations:detail:pageTitle')}
-            integrationId={props.data.integration.id}
-            integrationsHref={resolvers.integrations.list()}
-            menuActions={breadcrumbMenuActions}
-          />
-
-          <PageSection variant={'light'}>
-            <IntegrationDetailInfo
-              name={
-                <WithIntegrationHelpers>
-                  {({ setAttributes }) => {
-                    const handleChange = async (name: string) => {
-                      try {
-                        await setAttributes(props.data.integration.id!, {
-                          name,
-                        });
-                        return true;
-                      } catch (err) {
-                        return false;
-                      }
-                    };
-                    return (
-                      <IntegrationDetailEditableName
-                        name={
-                          <InlineTextEdit
-                            value={props.data.integration.name}
-                            allowEditing={true}
-                            isTextArea={false}
-                            onChange={handleChange}
-                          />
-                        }
-                      />
-                    );
-                  }}
-                </WithIntegrationHelpers>
-              }
-              version={props.data.integration.version}
-              currentState={props.data.integration.currentState!}
-              targetState={props.data.integration.targetState!}
-              monitoringValue={
-                props.data.monitoring &&
-                t('integrations:' + props.data.monitoring.detailedState.value)
-              }
-              monitoringCurrentStep={
-                props.data.monitoring &&
-                props.data.monitoring.detailedState.currentStep
-              }
-              monitoringTotalSteps={
-                props.data.monitoring &&
-                props.data.monitoring.detailedState.totalSteps
-              }
-              monitoringLogUrl={props.getPodLogUrl(props.data.monitoring)}
-              i18nProgressPending={t('shared:Pending')}
-              i18nProgressStarting={t('integrations:progressStarting')}
-              i18nProgressStopping={t('integrations:progressStopping')}
-              i18nLogUrlText={t('shared:viewLogs')}
+      {t => {
+        const bbMap = (
+          (props.data.integration.board &&
+            props.data.integration.board.messages) ||
+          []
+        ).reduce((acc, current, index, arr) => {
+          try {
+            if (!current) {
+              return acc;
+            }
+            const key = current.code || current.message;
+            if (!key || key === '') {
+              return acc;
+            }
+            if (!(key in acc)) {
+              acc[key] = current;
+              return acc;
+            }
+            acc[key].detail += (
+              acc[key].detail +
+              '\n\n' +
+              current.detail
+            ).substring(0, 256);
+          } catch (err) {
+            // skip that one and keep going
+          }
+          return acc;
+        }, {});
+        const bulletinBoards = Object.keys(bbMap).map(
+          (key: string) => bbMap[key]
+        );
+        return (
+          <>
+            <IntegrationDetailBreadcrumb
+              editHref={props.editAction.href}
+              editLabel={props.editAction.label}
+              exportAction={props.exportAction.onClick}
+              exportHref={props.exportAction.href}
+              exportLabel={props.exportAction.label}
+              homeHref={resolvers.dashboard.root()}
+              i18nHome={t('shared:Home')}
+              i18nIntegrations={t('shared:Integrations')}
+              i18nPageTitle={t('integrations:detail:pageTitle')}
+              integrationId={props.data.integration.id}
+              integrationsHref={resolvers.integrations.list()}
+              menuActions={breadcrumbMenuActions}
             />
-          </PageSection>
-          <PageSection variant={'light'}>
-            {(
-              (props.data.integration.board &&
-                props.data.integration.board.messages) ||
-              []
-            ).map((message: LeveledMessage, index) => (
-              <IntegrationBulletinBoardAlert
-                key={index}
-                level={toAlertLevel(message.level || 'INFO')}
-                message={t(`shared:${message.code!.toLocaleLowerCase()}`)}
-                detail={message.detail}
-                i18nTextExpanded={t('shared:HideDetails')}
-                i18nTextCollapsed={t('shared:ShowDetails')}
+
+            <PageSection variant={'light'}>
+              <IntegrationDetailInfo
+                name={
+                  <WithIntegrationHelpers>
+                    {({ setAttributes }) => {
+                      const handleChange = async (name: string) => {
+                        try {
+                          await setAttributes(props.data.integration.id!, {
+                            name,
+                          });
+                          return true;
+                        } catch (err) {
+                          return false;
+                        }
+                      };
+                      return (
+                        <IntegrationDetailEditableName
+                          name={
+                            <InlineTextEdit
+                              value={props.data.integration.name}
+                              allowEditing={true}
+                              isTextArea={false}
+                              onChange={handleChange}
+                            />
+                          }
+                        />
+                      );
+                    }}
+                  </WithIntegrationHelpers>
+                }
+                version={props.data.integration.version}
+                currentState={props.data.integration.currentState!}
+                targetState={props.data.integration.targetState!}
+                monitoringValue={
+                  props.data.monitoring &&
+                  t('integrations:' + props.data.monitoring.detailedState.value)
+                }
+                monitoringCurrentStep={
+                  props.data.monitoring &&
+                  props.data.monitoring.detailedState.currentStep
+                }
+                monitoringTotalSteps={
+                  props.data.monitoring &&
+                  props.data.monitoring.detailedState.totalSteps
+                }
+                monitoringLogUrl={props.getPodLogUrl(props.data.monitoring)}
+                i18nProgressPending={t('shared:Pending')}
+                i18nProgressStarting={t('integrations:progressStarting')}
+                i18nProgressStopping={t('integrations:progressStopping')}
+                i18nLogUrlText={t('shared:viewLogs')}
               />
-            ))}
-          </PageSection>
-          <PageSection variant={'light'} noPadding={true}>
-            <IntegrationDetailNavBar integration={props.data.integration} />
-          </PageSection>
-        </>
-      )}
+            </PageSection>
+            <PageSection variant={'light'}>
+              {bulletinBoards.map((message: LeveledMessage, index) => (
+                <IntegrationBulletinBoardAlert
+                  key={index}
+                  level={toAlertLevel(message.level || 'INFO')}
+                  message={
+                    message.message
+                      ? message.message
+                      : t(`shared:${message.code!.toLocaleLowerCase()}`)
+                  }
+                  detail={message.detail}
+                  i18nTextExpanded={t('shared:HideDetails')}
+                  i18nTextCollapsed={t('shared:ShowDetails')}
+                />
+              ))}
+            </PageSection>
+            <PageSection variant={'light'} noPadding={true}>
+              <IntegrationDetailNavBar integration={props.data.integration} />
+            </PageSection>
+          </>
+        );
+      }}
     </Translation>
   );
 };
