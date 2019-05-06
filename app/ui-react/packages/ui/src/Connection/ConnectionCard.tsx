@@ -1,10 +1,11 @@
-import { Level, LevelItem, Popover, Text, Title } from '@patternfly/react-core';
+import { Level, LevelItem, Text, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import {
   Card,
   DropdownKebab,
   Icon,
   OverlayTrigger,
+  Popover,
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
@@ -120,7 +121,7 @@ export class ConnectionCard extends React.PureComponent<
             <Card.Heading
               className={
                 this.props.techPreview
-                  ? null
+                  ? 'connection-card__heading--tech-preview'
                   : 'connection-card__heading--no-border'
               }
             >
@@ -130,14 +131,16 @@ export class ConnectionCard extends React.PureComponent<
                   <LevelItem>
                     {this.props.i18nTechPreview}
                     {'  '}
-                    <Popover
-                      bodyContent={
-                        <div>{this.props.techPreviewPopoverHtml}</div>
+                    <OverlayTrigger
+                      overlay={
+                        <Popover id={'techPreview'}>
+                          {this.props.techPreviewPopoverHtml}
+                        </Popover>
                       }
-                      aria-label={'Tech Preview Popover'}
+                      trigger={['click']}
                     >
                       <Icon type={'pf'} name={'info'} />
-                    </Popover>
+                    </OverlayTrigger>
                   </LevelItem>
                 </Level>
               ) : (
@@ -228,7 +231,7 @@ export class ConnectionCard extends React.PureComponent<
                 }
               >
                 <Icon type={'pf'} name={'warning-triangle-o'} size={'2x'} />
-                {this.props.i18nConfigurationRequired}
+                <span>{this.props.i18nConfigurationRequired}</span>
               </Card.Footer>
             ) : null}
           </Link>
