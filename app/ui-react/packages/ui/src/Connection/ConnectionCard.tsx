@@ -33,16 +33,16 @@ export interface IConnectionCardMenuProps {
 }
 
 export interface IConnectionProps {
-  configurationRequired: boolean;
+  configurationRequired?: boolean;
   description: string;
   href: H.LocationDescriptor;
-  i18nCannotDelete: string;
-  i18nConfigurationRequired: string;
-  i18nTechPreview: string;
+  i18nCannotDelete?: string;
+  i18nConfigurationRequired?: string;
+  i18nTechPreview?: string;
   icon: string;
   menuProps?: IConnectionCardMenuProps;
   name: string;
-  techPreview: boolean;
+  techPreview?: boolean;
   techPreviewPopoverHtml?: JSX.Element;
 }
 
@@ -138,6 +138,7 @@ export class ConnectionCard extends React.PureComponent<
                         </Popover>
                       }
                       trigger={['click']}
+                      rootClose
                     >
                       <Icon type={'pf'} name={'info'} />
                     </OverlayTrigger>
