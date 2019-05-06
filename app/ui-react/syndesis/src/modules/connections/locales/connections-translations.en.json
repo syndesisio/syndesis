@@ -1,5 +1,6 @@
 {
   "connectionListDescription": "This description has not yet been actually defined, please send help.",
+  "cannotDelete": "Unable to delete this connection as it is being used by one or more integrations",
   "connectionCardMenuTitle": "Connection Actions",
   "connectionDeletedFailed": "An error occurred deleting connection \"{{connectionName}}.\" Details: {{details}}",
   "connectionDeletedSuccess": "Connection \"{{connectionName}}\" was successfully deleted.",

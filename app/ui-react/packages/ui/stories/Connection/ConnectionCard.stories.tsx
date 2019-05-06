@@ -69,6 +69,9 @@ stories.add('with menu', () => (
         configurationRequired={false}
         description={text('description', 'Sample connection description')}
         href={text('#example') || ''}
+        i18nCannotDelete={
+          'Unable to delete this connection as it is being used by one or more integrations'
+        }
         i18nConfigurationRequired={'Configuration Required'}
         i18nTechPreview={'Technology Preview'}
         icon={text(
@@ -91,6 +94,9 @@ stories.add('tech preview and configuration required', () => (
         configurationRequired={true}
         description={text('description', 'Sample connection description')}
         href={text('#example') || ''}
+        i18nCannotDelete={
+          'Unable to delete this connection as it is being used by one or more integrations'
+        }
         i18nConfigurationRequired={'Configuration Required'}
         i18nTechPreview={'Technology Preview'}
         icon={text(

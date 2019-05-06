@@ -124,6 +124,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                                           )
                                     }
                                     href={this.props.getConnectionHref(c)}
+                                    i18nCannotDelete={t('cannotDelete')}
                                     i18nConfigurationRequired={t(
                                       'configurationRequired'
                                     )}

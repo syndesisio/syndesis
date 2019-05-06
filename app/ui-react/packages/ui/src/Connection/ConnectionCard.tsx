@@ -1,6 +1,12 @@
 import { Level, LevelItem, Popover, Text, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { Card, DropdownKebab, Icon } from 'patternfly-react';
+import {
+  Card,
+  DropdownKebab,
+  Icon,
+  OverlayTrigger,
+  Tooltip,
+} from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -29,6 +35,7 @@ export interface IConnectionProps {
   configurationRequired: boolean;
   description: string;
   href: H.LocationDescriptor;
+  i18nCannotDelete: string;
   i18nConfigurationRequired: string;
   i18nTechPreview: string;
   icon: string;
@@ -80,6 +87,14 @@ export class ConnectionCard extends React.PureComponent<
     this.setState({
       showDeleteDialog: true,
     });
+  }
+
+  public getCannotDeleteTooltip() {
+    return (
+      <Tooltip id="cannotDelete">
+        {this.props.configurationRequired ? this.props.i18nCannotDelete : null}
+      </Tooltip>
+    );
   }
 
   public render() {
@@ -155,14 +170,32 @@ export class ConnectionCard extends React.PureComponent<
                     role={'presentation'}
                     key={2}
                   >
-                    <a
-                      href={'javascript:void(0)'}
-                      onClick={this.showDeleteDialog}
-                      role={'menuitem'}
-                      tabIndex={3}
-                    >
-                      {this.props.menuProps.i18nDeleteLabel}
-                    </a>
+                    <>
+                      {this.props.configurationRequired ? (
+                        <OverlayTrigger
+                          overlay={this.getCannotDeleteTooltip()}
+                          placement="bottom"
+                        >
+                          <a
+                            href={'javascript:void(0)'}
+                            onClick={this.showDeleteDialog}
+                            role={'menuitem'}
+                            tabIndex={3}
+                          >
+                            {this.props.menuProps.i18nDeleteLabel}
+                          </a>
+                        </OverlayTrigger>
+                      ) : (
+                        <a
+                          href={'javascript:void(0)'}
+                          onClick={this.showDeleteDialog}
+                          role={'menuitem'}
+                          tabIndex={3}
+                        >
+                          {this.props.menuProps.i18nDeleteLabel}
+                        </a>
+                      )}
+                    </>
                   </li>
                 </DropdownKebab>
               </div>

@@ -55,6 +55,7 @@ export default class ConnectorsPage extends React.Component {
                                     configurationRequired={false}
                                     name={connector.name}
                                     description={connector.description || ''}
+                                    i18nCannotDelete={t('cannotDelete')}
                                     i18nConfigurationRequired={t(
                                       'configurationRequired'
                                     )}
