@@ -37,10 +37,34 @@ export class ExtensionListView extends React.Component<
 
   public render() {
     return (
-      <>
-        <PageSection noPadding={true} variant={'light'}>
-          <ListViewToolbar {...this.props}>
-            <div className="form-group">
+      <PageSection>
+        <ListViewToolbar {...this.props}>
+          <div className="form-group">
+            <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
+              <ButtonLink href={this.props.linkImportExtension} as={'primary'}>
+                {this.props.i18nLinkImportExtension}
+              </ButtonLink>
+            </OverlayTrigger>
+          </div>
+        </ListViewToolbar>
+        {this.props.i18nTitle !== '' && (
+          <Title size="lg">{this.props.i18nTitle}</Title>
+        )}
+        {this.props.i18nDescription !== '' && (
+          <Text
+            dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
+          />
+        )}
+        {this.props.children ? (
+          <ListView>{this.props.children}</ListView>
+        ) : (
+          <EmptyState>
+            <EmptyState.Icon />
+            <EmptyState.Title>
+              {this.props.i18nEmptyStateTitle}
+            </EmptyState.Title>
+            <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
+            <EmptyState.Action>
               <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
                 <ButtonLink
                   href={this.props.linkImportExtension}
@@ -49,44 +73,10 @@ export class ExtensionListView extends React.Component<
                   {this.props.i18nLinkImportExtension}
                 </ButtonLink>
               </OverlayTrigger>
-            </div>
-          </ListViewToolbar>
-        </PageSection>
-        <PageSection>
-          {this.props.i18nTitle !== '' && (
-            <Title size="lg">{this.props.i18nTitle}</Title>
-          )}
-          {this.props.i18nDescription !== '' && (
-            <Text
-              dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
-            />
-          )}
-          {this.props.children ? (
-            <ListView>{this.props.children}</ListView>
-          ) : (
-            <EmptyState>
-              <EmptyState.Icon />
-              <EmptyState.Title>
-                {this.props.i18nEmptyStateTitle}
-              </EmptyState.Title>
-              <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
-              <EmptyState.Action>
-                <OverlayTrigger
-                  overlay={this.getImportTooltip()}
-                  placement="top"
-                >
-                  <ButtonLink
-                    href={this.props.linkImportExtension}
-                    as={'primary'}
-                  >
-                    {this.props.i18nLinkImportExtension}
-                  </ButtonLink>
-                </OverlayTrigger>
-              </EmptyState.Action>
-            </EmptyState>
-          )}
-        </PageSection>
-      </>
+            </EmptyState.Action>
+          </EmptyState>
+        )}
+      </PageSection>
     );
   }
 }

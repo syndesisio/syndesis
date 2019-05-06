@@ -60,6 +60,14 @@ export class SelectConnectionPage extends React.Component<
             <>
               <PageTitle title={'Choose a connection'} />
               <IntegrationEditorLayout
+                integrationName={integration.name}
+                integrationDescription={integration.description}
+                i18nIntegrationNamePlaceholder={'Click to set a name'}
+                i18nIntegrationDescriptionPlaceholder={
+                  'Click to set a description'
+                }
+                onIntegrationNameChange={() => Promise.resolve(true)}
+                onIntegrationDescriptionChange={() => Promise.resolve(true)}
                 title={'Choose a connection'}
                 description={
                   'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'

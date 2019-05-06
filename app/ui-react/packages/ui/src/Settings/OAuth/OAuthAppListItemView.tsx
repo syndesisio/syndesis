@@ -9,10 +9,8 @@ export interface IOAuthAppListItemViewProps extends IListViewToolbarProps {
 export const OAuthAppListItemView: React.FunctionComponent<
   IOAuthAppListItemViewProps
 > = ({ children, ...rest }) => (
-  <>
-    <PageSection noPadding={true} variant={'light'}>
-      <ListViewToolbar {...rest} />
-    </PageSection>
-    <PageSection>{children}</PageSection>
-  </>
+  <PageSection>
+    <ListViewToolbar {...rest} />
+    {children}
+  </PageSection>
 );

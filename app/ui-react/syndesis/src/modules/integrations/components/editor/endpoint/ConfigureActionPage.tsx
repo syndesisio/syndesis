@@ -147,6 +147,16 @@ export class ConfigureActionPage extends React.Component<
                     <>
                       <PageTitle title={'Configure the action'} />
                       <IntegrationEditorLayout
+                        integrationName={integration.name}
+                        integrationDescription={integration.description}
+                        i18nIntegrationNamePlaceholder={'Click to set a name'}
+                        i18nIntegrationDescriptionPlaceholder={
+                          'Click to set a description'
+                        }
+                        onIntegrationNameChange={() => Promise.resolve(true)}
+                        onIntegrationDescriptionChange={() =>
+                          Promise.resolve(true)
+                        }
                         title={'Configure the action'}
                         description={
                           'Fill in the required information for the selected action.'

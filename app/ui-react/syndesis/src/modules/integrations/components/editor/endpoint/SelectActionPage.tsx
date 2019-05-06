@@ -63,6 +63,16 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                     <>
                       <PageTitle title={'Choose an action'} />
                       <IntegrationEditorLayout
+                        integrationName={integration.name}
+                        integrationDescription={integration.description}
+                        i18nIntegrationNamePlaceholder={'Click to set a name'}
+                        i18nIntegrationDescriptionPlaceholder={
+                          'Click to set a description'
+                        }
+                        onIntegrationNameChange={() => Promise.resolve(true)}
+                        onIntegrationDescriptionChange={() =>
+                          Promise.resolve(true)
+                        }
                         title={'Choose an action'}
                         description={
                           'Choose an action for the selected connection.'

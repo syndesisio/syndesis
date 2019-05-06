@@ -67,7 +67,7 @@ export class ConnectionsWithToolbar extends React.Component<
 
   public render() {
     return (
-      <Translation ns={['shared']}>
+      <Translation ns={['connections', 'shared']}>
         {t => (
           <WithListViewToolbarHelpers
             defaultFilterType={filterByName}
@@ -89,6 +89,7 @@ export class ConnectionsWithToolbar extends React.Component<
                   resultsCount={filteredAndSortedConnections.length}
                   {...helpers}
                   i18nTitle={t('shared:Connections')}
+                  i18nDescription={t('connectionListDescription')}
                   i18nLinkCreateConnection={t('shared:linkCreateConnection')}
                   i18nResultsCount={t('shared:resultsCount', {
                     count: filteredAndSortedConnections.length,

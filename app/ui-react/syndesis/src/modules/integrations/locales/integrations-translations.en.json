@@ -1,4 +1,5 @@
 {
+  "integrationListDescription": "This description has not yet been actually defined, please send help.",
   "publishIntegrationModal": "Are you sure you want to start the \"{{name}}\" integration?",
   "publishIntegrationModalTitle": "Confirm Start?",
   "unpublishIntegrationModal": "Are you sure you want to stop the \"{{name}}\" integration?",

@@ -273,6 +273,7 @@ export default () => (
                       i18nLinkToConnections={t('linkToConnections')}
                       i18nLinkToIntegrations={t('linkToIntegrations')}
                       i18nTitle={t('title')}
+                      i18nDescription={t('description')}
                     />
                   )}
                 </Translation>

@@ -107,3 +107,7 @@ body {
 .pf-c-dropdown__toggle.syn-help-dropdown {
   --pf-c-dropdown__toggle--FontSize: var(--pf-global--FontSize--md);
 }
+
+.list-view-pf-view {
+  margin-top: 0;
+}

@@ -40,6 +40,14 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
           <>
             <PageTitle title={'Save or add step'} />
             <IntegrationEditorLayout
+              integrationName={integration.name}
+              integrationDescription={integration.description}
+              i18nIntegrationNamePlaceholder={'Click to set a name'}
+              i18nIntegrationDescriptionPlaceholder={
+                'Click to set a description'
+              }
+              onIntegrationNameChange={() => Promise.resolve(true)}
+              onIntegrationDescriptionChange={() => Promise.resolve(true)}
               title={'Add to Integration'}
               description={
                 'You can continue adding steps and connections to your integration as well.'

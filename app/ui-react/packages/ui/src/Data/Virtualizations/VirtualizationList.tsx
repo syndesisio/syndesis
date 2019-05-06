@@ -71,7 +71,7 @@ export class VirtualizationList extends React.Component<
           i18nTitle={this.props.i18nTitle}
           i18nDescription={this.props.i18nDescription}
         />
-        <PageSection variant={'light'} noPadding={true}>
+        <PageSection>
           <ListViewToolbar {...this.props}>
             <div className="form-group">
               <OverlayTrigger
@@ -96,8 +96,6 @@ export class VirtualizationList extends React.Component<
               </OverlayTrigger>
             </div>
           </ListViewToolbar>
-        </PageSection>
-        <PageSection>
           {this.props.hasListData ? (
             <ListView>{this.props.children}</ListView>
           ) : (

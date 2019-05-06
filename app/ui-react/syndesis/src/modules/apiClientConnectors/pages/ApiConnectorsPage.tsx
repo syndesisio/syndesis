@@ -7,7 +7,7 @@ import {
   IActiveFilter,
   IFilterType,
   ISortType,
-  PageSection,
+  SimplePageHeader,
 } from '@syndesis/ui';
 import {
   optionalIntValue,
@@ -108,18 +108,12 @@ export default class ApiConnectorsPage extends React.Component {
                 <Translation ns={['apiClientConnectors', 'shared']}>
                   {t => (
                     <>
-                      <PageSection variant={'light'}>
-                        <h1 className="pf-c-title pf-m-xl">
-                          {t('apiConnector.apiConnectorsPageTitle')}
-                        </h1>
-                        <p
-                          dangerouslySetInnerHTML={{
-                            __html: t(
-                              'apiConnector.apiConnectorsPageDescription'
-                            ),
-                          }}
-                        />
-                      </PageSection>
+                      <SimplePageHeader
+                        i18nTitle={t('apiConnector.apiConnectorsPageTitle')}
+                        i18nDescription={t(
+                          'apiConnector.apiConnectorsPageDescription'
+                        )}
+                      />
                       <ApiConnectorListView
                         filterTypes={filterTypes}
                         sortTypes={sortTypes}

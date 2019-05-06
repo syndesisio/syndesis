@@ -11,23 +11,18 @@ export interface ICiCdListViewProps extends IListViewToolbarProps {
 export class CiCdListView extends React.Component<ICiCdListViewProps> {
   public render() {
     return (
-      <>
-        <PageSection variant={'light'} noPadding={true}>
-          <ListViewToolbar {...this.props}>
-            <div className="form-group">
-              {this.props.resultsCount !== 0 && (
-                <Button
-                  className="btn btn-primary"
-                  onClick={this.props.onAddNew}
-                >
-                  {this.props.i18nAddNewButtonText}
-                </Button>
-              )}
-            </div>
-          </ListViewToolbar>
-        </PageSection>
-        <PageSection>{this.props.children}</PageSection>
-      </>
+      <PageSection>
+        <ListViewToolbar {...this.props}>
+          <div className="form-group">
+            {this.props.resultsCount !== 0 && (
+              <Button className="btn btn-primary" onClick={this.props.onAddNew}>
+                {this.props.i18nAddNewButtonText}
+              </Button>
+            )}
+          </div>
+        </ListViewToolbar>
+        {this.props.children}
+      </PageSection>
     );
   }
 }

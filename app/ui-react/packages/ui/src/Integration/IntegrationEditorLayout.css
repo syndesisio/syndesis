@@ -2,6 +2,10 @@
   height: 100%;
 }
 
+.integration-editor-layout__header {
+  background-color: transparent;
+}
+
 .integration-editor-layout .integration-editor-layout__body {
   height: calc(100vh - 60px - 26px - 36px - 57px - 61px);
   max-height: none;

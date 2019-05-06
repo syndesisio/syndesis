@@ -1,4 +1,5 @@
 {
+  "connectionListDescription": "This description has not yet been actually defined, please send help.",
   "connectionCardMenuTitle": "Connection Actions",
   "connectionDeletedFailed": "An error occurred deleting connection \"{{connectionName}}.\" Details: {{details}}",
   "connectionDeletedSuccess": "Connection \"{{connectionName}}\" was successfully deleted.",

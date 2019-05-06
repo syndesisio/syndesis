@@ -13,6 +13,7 @@ const options = {
     en: {
       apiClientConnectors: en.en.modules.apiClientConnectors,
       app: en.en.app,
+      connections: en.en.modules.connections,
       dashboard: en.en.modules.dashboard,
       data: en.en.modules.data,
       extensions: en.en.modules.extensions,
@@ -23,6 +24,7 @@ const options = {
     it: {
       apiClientConnectors: it.it.modules.apiClientConnectors,
       app: it.it.app,
+      connections: it.it.modules.connections,
       dashboard: it.it.modules.dashboard,
       data: it.it.modules.data,
       extensions: it.it.modules.extensions,

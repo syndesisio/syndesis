@@ -32,6 +32,7 @@ it('renders the heading', () => {
         onToggleCurrentSortDirection={noop}
         onUpdateCurrentSortType={noop}
         i18nTitle={'Connections'}
+        i18nDescription={'Some description'}
         i18nLinkCreateConnection="Create Connection"
         i18nResultsCount="0 Results"
       />

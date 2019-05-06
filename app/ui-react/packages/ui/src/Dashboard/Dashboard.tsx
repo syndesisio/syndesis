@@ -1,16 +1,10 @@
-import {
-  Level,
-  LevelItem,
-  PageSection,
-  TextContent,
-  Title,
-  TitleLevel,
-} from '@patternfly/react-core';
+import { Level, LevelItem, PageSection, Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { CardGrid, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ButtonLink } from '../Layout';
+import { SimplePageHeader } from '../Shared';
 import './Dashboard.css';
 
 export interface IIntegrationsPageProps {
@@ -33,19 +27,17 @@ export interface IIntegrationsPageProps {
   i18nLinkToConnections: string;
   i18nLinkToIntegrations: string;
   i18nTitle: string;
+  i18nDescription: string;
 }
 
 export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
   public render() {
     return (
       <>
-        <PageSection variant={'light'}>
-          <TextContent>
-            <Title size={'2xl'} headingLevel={TitleLevel.h1}>
-              {this.props.i18nTitle}
-            </Title>
-          </TextContent>
-        </PageSection>
+        <SimplePageHeader
+          i18nTitle={this.props.i18nTitle}
+          i18nDescription={this.props.i18nDescription}
+        />
         <PageSection>
           <Level gutter={'sm'}>
             <LevelItem>
