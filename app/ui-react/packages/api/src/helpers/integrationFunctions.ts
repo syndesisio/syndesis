@@ -1,12 +1,13 @@
 import {
+  Connection,
+  ConnectorAction,
   Extension,
   IConnectionWithIconFile,
   Integration,
   IntegrationOverview,
   Step,
+  StepKind,
 } from '@syndesis/models';
-import { Connection, ConnectorAction, StepKind } from '@syndesis/models/src';
-import { key } from '@syndesis/utils';
 import produce from 'immer';
 import {
   ADVANCED_FILTER,
@@ -19,6 +20,7 @@ import {
   TEMPLATE,
 } from '../constants';
 import { getConnectionIcon } from './connectionFunctions';
+import { key } from '@syndesis/utils';
 
 export const NEW_INTEGRATION = {
   name: '',

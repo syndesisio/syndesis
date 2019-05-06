@@ -50,7 +50,7 @@
     "tslint-config-prettier": "^1.18.0",
     "tslint-microsoft-contrib": "^6.0.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.2.0",
+    "typescript": "^3.4.5",
     "yalc": "^1.0.0-pre.27"
   },
   "husky": {

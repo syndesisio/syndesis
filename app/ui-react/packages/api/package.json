@@ -34,7 +34,7 @@
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.16.0",
     "tslint-react": "^3.6.0",
-    "typescript": "^3.1.6"
+    "typescript": "^3.4.5"
   },
   "scripts": {
     "lint": "tslint -c ../../tslint.json --project .",
@@ -47,15 +47,14 @@
   "peerDependencies": {
     "patternfly-react": "^2.29.2",
     "react": "^16.6.0",
-    "react-dom": "^16.6.0",
-    "typescript": "^3.1.6"
+    "react-dom": "^16.6.0"
   },
   "dependencies": {
     "@syndesis/models": "*",
     "@syndesis/utils": "*",
     "deepmerge": "^3.2.0",
     "file-saver": "^2.0.1",
-    "immer": "^2.0.0",
+    "immer": "^3.1.1",
     "react-fast-compare": "^2.0.2"
   },
   "jest": {
