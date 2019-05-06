@@ -10,8 +10,10 @@ import { StepKind } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { PageTitle } from '../../../../shared';
+import { Translation } from 'react-i18next';
+import { ApiError, PageTitle } from '../../../../shared';
 import { ConnectionsWithToolbar } from '../../../connections/components';
+import resolvers from '../../../resolvers';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
@@ -71,17 +73,13 @@ export class SelectConnectionPage extends React.Component<
                   steps: toUIStepKindCollection(integrationSteps),
                 })}
                 content={
-                  <WithConnections>
-                    {({
-                      data: connectionsData,
-                      hasData: hasConnectionsData,
-                      error: connectionsError,
-                    }) => (
-                      <WithExtensions>
+                  <Translation ns={['connections', 'shared']}>
+                    {t => (
+                      <WithConnections>
                         {({
-                          data: extensionsData,
-                          hasData: hasExtensionsData,
-                          error: extensionsError,
+                          data: connectionsData,
+                          hasData: hasConnectionsData,
+                          error: connectionsError,
                         }) => (
                           <WithSteps>
                             {({ items: steps }) => {
@@ -112,9 +110,9 @@ export class SelectConnectionPage extends React.Component<
                             }}
                           </WithSteps>
                         )}
-                      </WithExtensions>
+                      </WithConnections>
                     )}
-                  </WithConnections>
+                  </Translation>
                 }
                 cancelHref={this.props.cancelHref(params, state)}
               />

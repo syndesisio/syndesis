@@ -133,12 +133,10 @@ export class ConnectionCard extends React.PureComponent<
                     {'  '}
                     <OverlayTrigger
                       overlay={
-                        <Popover id={'techPreview'}>
-                          {this.props.techPreviewPopoverHtml}
-                        </Popover>
+                        <Popover>{this.props.techPreviewPopoverHtml}</Popover>
                       }
                       trigger={['click']}
-                      rootClose
+                      rootClose={true}
                     >
                       <Icon type={'pf'} name={'info'} />
                     </OverlayTrigger>
@@ -174,22 +172,11 @@ export class ConnectionCard extends React.PureComponent<
                     role={'presentation'}
                     key={2}
                   >
-                    <>
-                      {this.props.configurationRequired ? (
-                        <OverlayTrigger
-                          overlay={this.getCannotDeleteTooltip()}
-                          placement="bottom"
-                        >
-                          <a
-                            href={'javascript:void(0)'}
-                            onClick={this.showDeleteDialog}
-                            role={'menuitem'}
-                            tabIndex={3}
-                          >
-                            {this.props.menuProps.i18nDeleteLabel}
-                          </a>
-                        </OverlayTrigger>
-                      ) : (
+                    {this.props.configurationRequired ? (
+                      <OverlayTrigger
+                        overlay={this.getCannotDeleteTooltip()}
+                        placement="bottom"
+                      >
                         <a
                           href={'javascript:void(0)'}
                           onClick={this.showDeleteDialog}
@@ -198,8 +185,17 @@ export class ConnectionCard extends React.PureComponent<
                         >
                           {this.props.menuProps.i18nDeleteLabel}
                         </a>
-                      )}
-                    </>
+                      </OverlayTrigger>
+                    ) : (
+                      <a
+                        href={'javascript:void(0)'}
+                        onClick={this.showDeleteDialog}
+                        role={'menuitem'}
+                        tabIndex={3}
+                      >
+                        {this.props.menuProps.i18nDeleteLabel}
+                      </a>
+                    )}
                   </li>
                 </DropdownKebab>
               </div>
