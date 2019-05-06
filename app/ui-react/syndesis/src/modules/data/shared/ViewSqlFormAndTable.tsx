@@ -36,15 +36,13 @@ export class ViewSqlFormAndTable extends React.Component<
   }
 
   public setQueryResults(results: QueryResults) {
-    {
-      results && results.columns.length > 0
-        ? this.setState({
-            queryResults: results,
-          })
-        : this.setState({
-            queryResults: ViewSqlForm.queryResultsEmpty,
-          });
-    }
+    results && results.columns.length > 0
+      ? this.setState({
+          queryResults: results,
+        })
+      : this.setState({
+          queryResults: ViewSqlForm.queryResultsEmpty,
+        });
   }
 
   public render() {

@@ -43,15 +43,15 @@ const StepOverview: React.FunctionComponent<IStepOverviewProps> = ({
   </div>
 );
 
-export interface IntegrationFlowStepDetailsChildrenProps {
+export interface IIntegrationFlowStepDetailsChildrenProps {
   Title: React.FunctionComponent;
   GenericDescription: React.FunctionComponent;
   StepOverview: React.FunctionComponent<IStepOverviewProps>;
 }
 
-export interface IntegrationFlowStepDetailsProps {
+export interface IIntegrationFlowStepDetailsProps {
   active?: boolean;
-  children(props: IntegrationFlowStepDetailsChildrenProps): any;
+  children(props: IIntegrationFlowStepDetailsChildrenProps): any;
 }
 
 /**
@@ -59,7 +59,7 @@ export interface IntegrationFlowStepDetailsProps {
  * inside a step element of the integration editor sidebar.
  */
 export class IntegrationFlowStepDetails extends React.Component<
-  IntegrationFlowStepDetailsProps
+  IIntegrationFlowStepDetailsProps
 > {
   public static defaultProps = {
     active: false,

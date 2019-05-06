@@ -97,7 +97,7 @@ export default describe('ExtensionDetail', () => {
       </Router>
     );
 
-    const { getByRole, getByText } = render(comp);
+    const { getAllByRole, getByText } = render(comp);
     const deleteButton = getByText(deleteLabel);
     expect(deleteButton).not.toHaveAttribute('disabled'); // delete should be enabled
 
@@ -105,7 +105,7 @@ export default describe('ExtensionDetail', () => {
     fireEvent.click(deleteButton);
 
     // click the confirmation dialog delete button and make sure callback is called
-    const dialog = getByRole('dialog');
+    const dialog = getAllByRole('dialog')[0];
     fireEvent.click(getDialogButton(dialog, deleteLabel));
     expect(mockOnDelete).toHaveBeenCalledTimes(1);
   });
@@ -117,7 +117,7 @@ export default describe('ExtensionDetail', () => {
         <ExtensionDetail {...props} extensionUses={0} />
       </Router>
     );
-    const { getByRole, getByText, queryByRole } = render(comp);
+    const { getAllByRole, getByText, queryByRole } = render(comp);
     const deleteButton = getByText(deleteLabel);
     expect(deleteButton).not.toHaveAttribute('disabled'); // delete should be enabled
 
@@ -125,7 +125,7 @@ export default describe('ExtensionDetail', () => {
     fireEvent.click(deleteButton);
 
     // click the confirmation dialog cancel button and make sure dialog disappears
-    const dialog = getByRole('dialog');
+    const dialog = getAllByRole('dialog')[0];
     fireEvent.click(getDialogButton(dialog, cancelLabel));
     await wait(() => expect(queryByRole('dialog')).toBeNull());
   });

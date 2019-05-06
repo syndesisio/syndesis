@@ -18,6 +18,6 @@ export const WithClosedNavigation: React.FunctionComponent = ({ children }) => {
     return () => {
       context.showNavigation();
     };
-  }, []);
+  }, [context]);
   return <>{children}</>;
 };

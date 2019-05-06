@@ -93,6 +93,7 @@ export class IntegrationEditorSidebar extends React.Component<
                   <IntegrationFlowStepWithOverview
                     icon={
                       <img
+                        alt={'Step'}
                         src={getConnectionIcon(
                           process.env.PUBLIC_URL,
                           s.connection!

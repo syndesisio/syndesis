@@ -115,10 +115,6 @@ export class WithConfigurationForm extends React.Component<
     initialValue: {},
   };
 
-  constructor(props: IWithConfigurationFormProps) {
-    super(props);
-  }
-
   public renderConfigurationForm(action: Action): JSX.Element | null {
     try {
       const descriptor = getActionDescriptor(action);

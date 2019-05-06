@@ -1,6 +1,6 @@
 import { render } from 'react-testing-library';
 import * as React from 'react';
-import { Fetch } from '../src';
+import { Fetch } from '../src/Fetch';
 
 export default describe('Fetch', function() {
   const testComponent = (

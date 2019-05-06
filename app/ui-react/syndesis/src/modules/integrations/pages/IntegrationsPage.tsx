@@ -40,7 +40,7 @@ function getFilteredAndSortedIntegrations(
           );
           return connectionNames.reduce(
             (found, n) => found || n.includes(valueToLower),
-            false
+            false as boolean
           );
         }
         return false;

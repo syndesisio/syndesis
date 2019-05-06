@@ -119,6 +119,7 @@ const startStepSelectActionPage = (
             <IntegrationFlowStepGeneric
               icon={
                 <img
+                  alt={'Step icon'}
                   src={getConnectionIcon(process.env.PUBLIC_URL, connection)}
                   width={24}
                   height={24}
@@ -174,6 +175,7 @@ const startStepConfigureActionPage = (
             <IntegrationFlowStepGeneric
               icon={
                 <img
+                  alt={'Step icon'}
                   src={getConnectionIcon(process.env.PUBLIC_URL, connection)}
                   width={24}
                   height={24}
@@ -234,6 +236,7 @@ const finishStepSelectConnectionPage = (
               <IntegrationFlowStepWithOverview
                 icon={
                   <img
+                    alt={'Step icon'}
                     src={getConnectionIcon(
                       process.env.PUBLIC_URL,
                       startAction.connection!
@@ -278,6 +281,7 @@ const finishStepSelectActionPage = (
               <IntegrationFlowStepWithOverview
                 icon={
                   <img
+                    alt={'Step icon'}
                     src={getConnectionIcon(
                       process.env.PUBLIC_URL,
                       startAction.connection!
@@ -297,6 +301,7 @@ const finishStepSelectActionPage = (
               <IntegrationFlowStepGeneric
                 icon={
                   <img
+                    alt={'Step icon'}
                     src={getConnectionIcon(process.env.PUBLIC_URL, connection)}
                     width={24}
                     height={24}
@@ -345,6 +350,7 @@ const finishStepConfigureActionPage = (
               <IntegrationFlowStepWithOverview
                 icon={
                   <img
+                    alt={'Step icon'}
                     src={getConnectionIcon(
                       process.env.PUBLIC_URL,
                       startAction.connection!
@@ -364,6 +370,7 @@ const finishStepConfigureActionPage = (
               <IntegrationFlowStepGeneric
                 icon={
                   <img
+                    alt={'Step icon'}
                     src={getConnectionIcon(process.env.PUBLIC_URL, connection)}
                     width={24}
                     height={24}
@@ -426,6 +433,7 @@ const addStepSelectActionPage = (
         addAtIndex={activeIndex}
         addIcon={
           <img
+            alt={'Step icon'}
             src={getConnectionIcon(process.env.PUBLIC_URL, connection)}
             height={24}
             width={24}
@@ -465,6 +473,7 @@ const addStepConfigureActionPage = (
         addAtIndex={activeIndex}
         addIcon={
           <img
+            alt={'Step icon'}
             src={getConnectionIcon(process.env.PUBLIC_URL, connection)}
             height={24}
             width={24}

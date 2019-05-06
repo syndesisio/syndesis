@@ -53,11 +53,9 @@ export class ViewSqlForm extends React.Component<
   }
 
   public updateQueryResults(results: QueryResults) {
-    {
-      results && results.columns.length > 0
-        ? this.setState({ queryResults: results })
-        : this.setState({ queryResults: ViewSqlForm.queryResultsEmpty });
-    }
+    results && results.columns.length > 0
+      ? this.setState({ queryResults: results })
+      : this.setState({ queryResults: ViewSqlForm.queryResultsEmpty });
 
     this.props.onQueryResultsChanged(this.state.queryResults);
   }

@@ -1,6 +1,8 @@
-import { getEmptyIntegration, getIntegrationStepIcon } from '../../src';
 import { IConnectionWithIconFile, Integration, Step } from '@syndesis/models';
-import expect = require('expect');
+import {
+  getEmptyIntegration,
+  getIntegrationStepIcon,
+} from '../../src/helpers/integrationFunctions';
 
 export default describe('integrationFunctions', () => {
   // Work around missing jsdom implementation of this function for now

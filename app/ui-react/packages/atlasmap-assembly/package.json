@@ -54,7 +54,7 @@
     "build": "ng build --deployUrl=atlasmap/ --prod",
     "test:ci": "ng test --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test:watch": "ng test",
-    "lint": "ng lint",
+    "lint-disabled": "ng lint",
     "e2e": "ng e2e"
   },
   "private": true,
@@ -126,7 +126,7 @@
     "protractor": "~5.4.2",
     "puppeteer": "^1.12.2",
     "rimraf": "^2.5.4",
-    "rxjs-tslint": "^0.1.5",
+    "rxjs-tslint": "0.1.5",
     "tether": "1.4.5",
     "ts-node": "~8.0.2",
     "tsickle": "0.34.3",
