@@ -97,6 +97,7 @@ const addStepSelectActionPage = (
         addAtIndex={activeIndex}
         addIcon={
           <img
+            alt={'Add step'}
             src={getConnectionIcon(process.env.PUBLIC_URL, connection)}
             height={24}
             width={24}
@@ -136,6 +137,7 @@ const addStepConfigureActionPage = (
         addAtIndex={activeIndex}
         addIcon={
           <img
+            alt={'Add step'}
             src={getConnectionIcon(process.env.PUBLIC_URL, connection)}
             height={24}
             width={24}

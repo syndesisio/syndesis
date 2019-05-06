@@ -22,9 +22,6 @@ export interface IIntegrationsProps {
 }
 
 export class Integrations extends React.Component<IIntegrationsProps> {
-  public constructor(props: IIntegrationsProps) {
-    super(props);
-  }
   public render() {
     return (
       <Translation ns={['integrations', 'shared']}>

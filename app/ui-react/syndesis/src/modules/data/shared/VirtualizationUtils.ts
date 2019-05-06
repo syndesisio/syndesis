@@ -238,6 +238,8 @@ export function getPublishingDetails(
       publishStepDetails.stepNumber = 4;
       publishStepDetails.stepText = 'Published';
       break;
+    default:
+      break;
   }
   if (virtualization.publishLogUrl) {
     publishStepDetails.logUrl = virtualization.publishLogUrl;

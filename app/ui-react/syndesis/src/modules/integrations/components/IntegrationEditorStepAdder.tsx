@@ -56,6 +56,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                 stepDescription={s.action ? s.action.name : ''}
                 icon={
                   <img
+                    alt={'Step'}
                     src={getStepIcon(process.env.PUBLIC_URL, s)}
                     width={24}
                     height={24}

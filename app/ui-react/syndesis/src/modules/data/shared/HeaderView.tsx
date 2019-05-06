@@ -11,10 +11,6 @@ export interface IWithVirtualizationDetailHeaderProps {
 export class HeaderView extends React.Component<
   IWithVirtualizationDetailHeaderProps
 > {
-  public constructor(props: IWithVirtualizationDetailHeaderProps) {
-    super(props);
-  }
-
   public render() {
     return (
       <WithVirtualization virtualizationId={this.props.virtualizationId}>
