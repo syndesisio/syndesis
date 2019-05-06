@@ -13604,9 +13604,10 @@ methods@~1.1.2:
   version "1.1.2"
   resolved "https://registry.yarnpkg.com/methods/-/methods-1.1.2.tgz#5529a4d67654134edcc5266656835b0f851afcee"
 
-microbundle@^0.10.1:
-  version "0.10.1"
-  resolved "https://registry.yarnpkg.com/microbundle/-/microbundle-0.10.1.tgz#567d845e92fb24f14f20e79ca9909aabbbc5bb9b"
+microbundle@^0.11.0:
+  version "0.11.0"
+  resolved "https://registry.yarnpkg.com/microbundle/-/microbundle-0.11.0.tgz#266bcf4210192698c23fe3bf3581ab81d31a14d0"
+  integrity sha512-Lt2f8OhC2y2uKyJ5zA8lEEiDsIAbk6yllBuoAWLIdYVIXYqOdN9mO3DI7VW7x/fw87gdnCLIJdVtpP6kaI99LA==
   dependencies:
     "@babel/core" "^7.2.2"
     "@babel/plugin-proposal-class-properties" "7.2.1"
