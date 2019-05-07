@@ -1,11 +1,10 @@
 import { RestDataService } from '@syndesis/models';
-import { Breadcrumb, Container } from '@syndesis/ui';
+import { Breadcrumb, PageSection, ViewHeader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import resolvers from '../../resolvers';
-import { HeaderView } from '../shared';
 import { VirtualizationNavBar } from '../shared';
 
 /**
@@ -36,7 +35,7 @@ export class VirtualizationRelationshipPage extends React.Component {
           return (
             <Translation ns={['data', 'shared']}>
               {t => (
-                <div>
+                <>
                   <Breadcrumb>
                     <Link to={resolvers.dashboard.root()}>
                       {t('shared:Home')}
@@ -49,12 +48,17 @@ export class VirtualizationRelationshipPage extends React.Component {
                       {t('data:virtualization.relationship')}
                     </span>
                   </Breadcrumb>
-                  <HeaderView virtualizationId={virtualizationId} />
-                  <VirtualizationNavBar virtualization={virtualization} />
-                  <Container>
-                    <h3>Relationships are not yet implemented</h3>
-                  </Container>
-                </div>
+                  <ViewHeader
+                    i18nTitle={virtualization.keng__id}
+                    i18nDescription={virtualization.tko__description}
+                  />
+                  <PageSection variant={'light'} noPadding={true}>
+                    <VirtualizationNavBar virtualization={virtualization} />
+                  </PageSection>
+                  <PageSection>
+                    <h2>Relationships are not yet implemented</h2>
+                  </PageSection>
+                </>
               )}
             </Translation>
           );

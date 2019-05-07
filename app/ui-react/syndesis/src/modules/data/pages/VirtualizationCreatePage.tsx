@@ -1,6 +1,6 @@
 import { WithVirtualizationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { Breadcrumb, Container } from '@syndesis/ui';
+import { Breadcrumb, PageSection } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -78,12 +78,14 @@ export class VirtualizationCreatePage extends React.Component {
                           )}
                         </span>
                       </Breadcrumb>
-                      <Container>
-                        <h1>
+                      <PageSection variant={'light'}>
+                        <h1 className="pf-c-title pf-m-xl">
                           {t(
                             'data:virtualization.createDataVirtualizationTitle'
                           )}
                         </h1>
+                      </PageSection>
+                      <PageSection>
                         <AutoForm
                           definition={formDefinition}
                           initialValue={''}
@@ -106,7 +108,7 @@ export class VirtualizationCreatePage extends React.Component {
                             </React.Fragment>
                           )}
                         </AutoForm>
-                      </Container>
+                      </PageSection>
                     </>
                   )}
                 </Translation>

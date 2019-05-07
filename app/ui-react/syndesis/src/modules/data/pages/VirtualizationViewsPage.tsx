@@ -1,12 +1,11 @@
 import { WithViewEditorStates, WithVirtualizationHelpers } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
 import { ViewDefinition, ViewEditorState } from '@syndesis/models';
-import { Breadcrumb } from '@syndesis/ui';
+import { Breadcrumb, PageSection, ViewHeader } from '@syndesis/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
-import { HeaderView } from '../shared';
 import { VirtualizationNavBar } from '../shared';
 
 import {
@@ -126,7 +125,10 @@ export class VirtualizationViewsPage extends React.Component<
                       {t('data:virtualization.views')}
                     </span>
                   </Breadcrumb>
-                  <HeaderView virtualizationId={virtualizationId} />
+                  <ViewHeader
+                    i18nTitle={virtualization.keng__id}
+                    i18nDescription={virtualization.tko__description}
+                  />
                   <WithViewEditorStates
                     idPattern={virtualization.serviceVdbName + '*'}
                   >
@@ -161,9 +163,14 @@ export class VirtualizationViewsPage extends React.Component<
                                   );
                                   return (
                                     <>
-                                      <VirtualizationNavBar
-                                        virtualization={virtualization}
-                                      />
+                                      <PageSection
+                                        variant={'light'}
+                                        noPadding={true}
+                                      >
+                                        <VirtualizationNavBar
+                                          virtualization={virtualization}
+                                        />
+                                      </PageSection>
                                       <ViewList
                                         filterTypes={filterTypes}
                                         sortTypes={sortTypes}

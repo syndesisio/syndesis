@@ -1,13 +1,9 @@
 import * as H from '@syndesis/history';
-import {
-  EmptyState,
-  ListView,
-  OverlayTrigger,
-  Tooltip,
-} from 'patternfly-react';
+import { ListView, OverlayTrigger, Tooltip } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../../../Layout';
+import { ButtonLink, PageSection } from '../../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
+import { EmptyViewsState } from './EmptyViewsState';
 import './ViewList.css';
 
 export interface IViewsListProps extends IListViewToolbarProps {
@@ -34,36 +30,9 @@ export class ViewList extends React.Component<IViewsListProps> {
   public render() {
     return (
       <>
-        <ListViewToolbar {...this.props}>
-          <div className="form-group">
-            <OverlayTrigger
-              overlay={this.getImportViewsTooltip()}
-              placement="top"
-            >
-              <ButtonLink href={this.props.linkImportViewsHRef} as={'default'}>
-                {this.props.i18nImportViews}
-              </ButtonLink>
-            </OverlayTrigger>
-            <OverlayTrigger
-              overlay={this.getCreateViewTooltip()}
-              placement="top"
-            >
-              <ButtonLink href={this.props.linkCreateViewHRef} as={'primary'}>
-                {this.props.i18nCreateView}
-              </ButtonLink>
-            </OverlayTrigger>
-          </div>
-        </ListViewToolbar>
-        {this.props.hasListData ? (
-          <ListView>{this.props.children}</ListView>
-        ) : (
-          <EmptyState>
-            <EmptyState.Icon />
-            <EmptyState.Title>
-              {this.props.i18nEmptyStateTitle}
-            </EmptyState.Title>
-            <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
-            <EmptyState.Action>
+        <PageSection noPadding={true} variant={'light'}>
+          <ListViewToolbar {...this.props}>
+            <div className="form-group">
               <OverlayTrigger
                 overlay={this.getImportViewsTooltip()}
                 placement="top"
@@ -71,7 +40,6 @@ export class ViewList extends React.Component<IViewsListProps> {
                 <ButtonLink
                   href={this.props.linkImportViewsHRef}
                   as={'default'}
-                  className={'view-list-empty-state-import'}
                 >
                   {this.props.i18nImportViews}
                 </ButtonLink>
@@ -84,9 +52,25 @@ export class ViewList extends React.Component<IViewsListProps> {
                   {this.props.i18nCreateView}
                 </ButtonLink>
               </OverlayTrigger>
-            </EmptyState.Action>
-          </EmptyState>
-        )}
+            </div>
+          </ListViewToolbar>
+        </PageSection>
+        <PageSection>
+          {this.props.hasListData ? (
+            <ListView>{this.props.children}</ListView>
+          ) : (
+            <EmptyViewsState
+              i18nEmptyStateTitle={this.props.i18nEmptyStateTitle}
+              i18nEmptyStateInfo={this.props.i18nEmptyStateInfo}
+              i18nCreateView={this.props.i18nCreateView}
+              i18nCreateViewTip={this.props.i18nCreateViewTip}
+              i18nImportViews={this.props.i18nImportViews}
+              i18nImportViewsTip={this.props.i18nImportViewsTip}
+              linkCreateViewHRef={this.props.linkCreateViewHRef}
+              linkImportViewsHRef={this.props.linkImportViewsHRef}
+            />
+          )}
+        </PageSection>
       </>
     );
   }
