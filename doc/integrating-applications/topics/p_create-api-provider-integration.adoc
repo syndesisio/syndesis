@@ -4,11 +4,12 @@
 [id='create-api-provider-integration_{context}']
 = Creating an API provider integration
 
-To be able to invoke a call that triggers execution of an integration, you provide
+To create an API provider integration, provide
 an OpenAPI document (`.json`, `.yaml`, or `.yml` file) that defines the operations that the integration
-can perform. For each operation, you specify an execution flow that
-connects to applications and processes integration data according to the
-requirements for that operation. 
+can perform. {prodname} creates an execution flow for each operation. 
+Edit the flow for each operation to 
+add connections and steps that 
+process integration data according to the requirements for that operation. 
 
 .Prerequisites
 * You are able to provide or define an OpenAPI document for the REST API

@@ -2,7 +2,7 @@
 // as_trigger-integrations-with-api-calls.adoc
 
 [id='create-integration-operation-flows_{context}']
-= Creating an API provider integration's operation flows
+= Creating the operation flows for an API provider integration
 
 The OpenAPI document that defines your REST API service defines
 the operations that the service can perform. After you create an API
