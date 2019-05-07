@@ -1,4 +1,9 @@
-import { ConnectionOverview, Integration, StepKind } from '@syndesis/models';
+import {
+  ConnectionOverview,
+  DataShape,
+  Integration,
+  StepKind,
+} from '@syndesis/models';
 
 /**
  * @param actionId - the ID of the action selected in the previous step.
@@ -99,4 +104,8 @@ export interface ISaveIntegrationRouteState {
 export interface IUIStep extends StepKind {
   icon: string;
   uiStepKind: 'api-provider' | StepKind['stepKind'];
+  title: string;
+  metadata: { [key: string]: any };
+  inputDataShape?: DataShape;
+  outputDataShape?: DataShape;
 }

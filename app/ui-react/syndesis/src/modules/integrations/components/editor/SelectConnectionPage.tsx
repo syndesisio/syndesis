@@ -1,7 +1,6 @@
 import {
   getEmptyIntegration,
   getSteps,
-  visibleStepsByPosition,
   WithConnections,
   WithExtensions,
   WithSteps,
@@ -23,6 +22,7 @@ import {
   IGetStepHrefs,
   mergeConnectionsSources,
   toUIStepKindCollection,
+  visibleStepsByPosition,
 } from './utils';
 
 export interface ISelectConnectionPageProps extends IGetStepHrefs {
@@ -86,15 +86,14 @@ export class SelectConnectionPage extends React.Component<
                           <WithSteps>
                             {({ items: steps }) => {
                               const stepKinds = mergeConnectionsSources(
-                                positionAsNumber === 0
-                                  ? connectionsData.connectionsWithFromAction
-                                  : connectionsData.connectionsWithToAction,
+                                connectionsData.dangerouslyUnfilteredConnections,
                                 extensionsData.items,
                                 steps
                               );
                               const visibleSteps = visibleStepsByPosition(
                                 stepKinds as StepKind[],
-                                positionAsNumber
+                                positionAsNumber,
+                                integrationSteps
                               ) as IUIStep[];
                               return (
                                 <ConnectionsWithToolbar

@@ -1,12 +1,29 @@
 .integration-steps-horizontal-item {
-  display: block;
+  height: 100px;
+  width: 120px;
+  display: inline-block;
   text-align: center;
+  vertical-align: top;
+  position: relative;
+  padding: 0 10px;
 }
+
+.integration-steps-horizontal-item * {
+ vertical-align: center;
+}
+
+.integration-steps-horizontal-item a {
+  color: var(--pf-global--Color--100);
+}
+
+.integration-steps-horizontal-item a:hover {
+  text-decoration: none;
+}
+
 .integration-steps-horizontal-item .step-icon {
   border-radius: 100px;
   width: 55px;
   height: 55px;
-  padding: 10px;
   margin: 0 auto 5px;
   background-color: inherit;
   position: relative;
@@ -20,7 +37,8 @@
   max-height: 24px;
 }
 
-.integration-steps-horizontal-item__arrow, .integration-steps-horizontal-item__icon {
+.integration-steps-horizontal-item__arrow,
+.integration-steps-horizontal-item__icon {
   padding: 0;
 }
 
@@ -30,10 +48,10 @@
 
 .integration-steps-horizontal-item .step-arrow {
   position: absolute;
-  top: 29px;
-  left: 37px;
-  -webkit-transform: translate(50%,-50%);
-  transform: translate(50%,-50%);
+  top: 28px;
+  left: -8px;
+  -webkit-transform: translate(50%, -50%);
+  transform: translate(50%, -50%);
   font-size: 2em;
   line-height: 1;
   color: #72767b;

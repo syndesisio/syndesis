@@ -18,6 +18,7 @@ import { UploadPage } from './components/editor/api-provider/UploadPage';
 import { EditorApp } from './components/editor/EditorApp';
 import { ConfigureActionPage } from './components/editor/endpoint/ConfigureActionPage';
 import { SelectActionPage } from './components/editor/endpoint/SelectActionPage';
+import { IUIStep } from './components/editor/interfaces';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import { SelectConnectionPage } from './components/editor/SelectConnectionPage';
 import resolvers from './resolvers';
@@ -124,7 +125,7 @@ const startStepSelectActionPage = (
                   height={24}
                 />
               }
-              i18nTitle={`1. ${connection.connector!.name}`}
+              i18nTitle={`1. ${(connection as IUIStep).title}`}
               i18nTooltip={`1. ${connection.name}`}
               active={true}
               showDetails={expanded}
