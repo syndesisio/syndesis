@@ -211,9 +211,8 @@ export class ConnectionCard extends React.PureComponent<
             {this.props.configurationRequired ? (
               <Card.Footer
                 className={
-                  this.props.techPreview
-                    ? 'connection-card__footer--tech-preview alert alert-warning'
-                    : null
+                  this.props.techPreview &&
+                  'connection-card__footer--tech-preview alert alert-warning'
                 }
               >
                 <Icon type={'pf'} name={'warning-triangle-o'} size={'2x'} />
