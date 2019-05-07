@@ -1,4 +1,4 @@
-import { Level, LevelItem, Text, Title } from '@patternfly/react-core';
+import { Level, LevelItem, Text, Title, Tooltip } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import {
   Card,
@@ -6,7 +6,6 @@ import {
   Icon,
   OverlayTrigger,
   Popover,
-  Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -89,14 +88,6 @@ export class ConnectionCard extends React.PureComponent<
     });
   }
 
-  public getCannotDeleteTooltip() {
-    return (
-      <Tooltip id="cannotDelete">
-        {this.props.configurationRequired ? this.props.i18nCannotDelete : null}
-      </Tooltip>
-    );
-  }
-
   public render() {
     return (
       <>
@@ -172,9 +163,9 @@ export class ConnectionCard extends React.PureComponent<
                     key={2}
                   >
                     {this.props.configurationRequired ? (
-                      <OverlayTrigger
-                        overlay={this.getCannotDeleteTooltip()}
-                        placement="bottom"
+                      <Tooltip
+                        content={this.props.i18nCannotDelete!}
+                        position={'right'}
                       >
                         <a
                           href={'javascript:void(0)'}
@@ -184,7 +175,7 @@ export class ConnectionCard extends React.PureComponent<
                         >
                           {this.props.menuProps.i18nDeleteLabel}
                         </a>
-                      </OverlayTrigger>
+                      </Tooltip>
                     ) : (
                       <a
                         href={'javascript:void(0)'}
