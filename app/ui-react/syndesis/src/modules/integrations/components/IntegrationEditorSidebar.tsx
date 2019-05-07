@@ -1,17 +1,16 @@
-import { getConnectionIcon } from '@syndesis/api';
-import { Step } from '@syndesis/models';
 import {
   IntegrationFlowStepGeneric,
   IntegrationFlowStepWithOverview,
   IntegrationVerticalFlow,
 } from '@syndesis/ui';
 import * as React from 'react';
+import { IUIStep } from './editor/interfaces';
 
 export interface IIntegrationEditorSidebarProps {
   /**
    * the list of steps to render.
    */
-  steps: Step[];
+  steps: IUIStep[];
   /**
    * the zero-based index of a configured step that should be highlighted as
    * active.
@@ -89,28 +88,22 @@ export class IntegrationEditorSidebar extends React.Component<
             );
             return (
               <React.Fragment key={idx}>
-                {s.stepKind === 'endpoint' && (
-                  <IntegrationFlowStepWithOverview
-                    icon={
-                      <img
-                        alt={'Step'}
-                        src={getConnectionIcon(
-                          process.env.PUBLIC_URL,
-                          s.connection!
-                        )}
-                        width={24}
-                        height={24}
-                      />
-                    }
-                    i18nTitle={`${position}. ${s.action!.name}`}
-                    i18nTooltip={`${position}. ${s.action!.name}`}
-                    active={isActive}
-                    showDetails={expanded}
-                    name={s.connection!.connector!.name}
-                    action={s.action!.name}
-                    dataType={'TODO'}
-                  />
-                )}
+                <IntegrationFlowStepWithOverview
+                  icon={
+                    <img alt={'Step'} src={s.icon} width={24} height={24} />
+                  }
+                  i18nTitle={`${position}. ${(s.action
+                    ? s.action.name
+                    : undefined) || 'n/a'}`}
+                  i18nTooltip={`${position}. ${(s.action
+                    ? s.action.name
+                    : undefined) || 'n/a'}`}
+                  active={isActive}
+                  showDetails={expanded}
+                  name={s.connection ? s.connection.name : s.name}
+                  action={(s.action ? s.action.name : undefined) || 'n/a'}
+                  dataType={'TODO'}
+                />
                 {hasAddStep ? activeAddStep : null}
               </React.Fragment>
             );

@@ -1,6 +1,6 @@
 import { getSteps, WithIntegrationHelpers } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Connection, Integration, Step } from '@syndesis/models';
+import { Connection, Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -12,7 +12,9 @@ import {
 import {
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
+  IUIStep,
 } from '../interfaces';
+import { toUIStepKindCollection } from '../utils';
 
 export interface IConfigureActionPageProps {
   backHref: (
@@ -30,7 +32,7 @@ export interface IConfigureActionPageProps {
   ) => H.LocationDescriptorObject;
   sidebar: (props: {
     connection: Connection;
-    steps: Step[];
+    steps: IUIStep[];
     activeIndex: number;
   }) => React.ReactNode;
   postConfigureHref: (
@@ -164,9 +166,8 @@ export class ConfigureActionPage extends React.Component<
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           connection,
-                          steps: getSteps(
-                            updatedIntegration || integration,
-                            flowId
+                          steps: toUIStepKindCollection(
+                            getSteps(updatedIntegration || integration, flowId)
                           ),
                         })}
                         content={form}

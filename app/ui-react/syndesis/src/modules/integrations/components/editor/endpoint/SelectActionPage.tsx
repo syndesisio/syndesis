@@ -1,6 +1,6 @@
 import { getSteps, WithConnection } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { IConnectionWithIconFile, Step } from '@syndesis/models';
+import { IConnectionWithIconFile } from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorActionsListItem,
@@ -14,7 +14,9 @@ import { ApiError, PageTitle } from '../../../../../shared';
 import {
   ISelectActionRouteParams,
   ISelectActionRouteState,
+  IUIStep,
 } from '../interfaces';
+import { toUIStepKindCollection } from '../utils';
 
 export interface ISelectActionPageProps {
   cancelHref: (
@@ -22,7 +24,7 @@ export interface ISelectActionPageProps {
     s: ISelectActionRouteState
   ) => H.LocationDescriptor;
   sidebar: (props: {
-    steps: Step[];
+    steps: IUIStep[];
     activeIndex: number;
     connection: IConnectionWithIconFile;
   }) => React.ReactNode;
@@ -80,7 +82,9 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           connection: connection as IConnectionWithIconFile,
-                          steps: getSteps(integration, flowId),
+                          steps: toUIStepKindCollection(
+                            getSteps(integration, flowId)
+                          ),
                         })}
                         content={
                           <IntegrationEditorChooseAction>

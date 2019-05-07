@@ -7,7 +7,7 @@ import {
   WithSteps,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Step, StepKind } from '@syndesis/models';
+import { StepKind } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -18,14 +18,22 @@ import {
   ISelectConnectionRouteState,
   IUIStep,
 } from './interfaces';
-import { getStepHref, IGetStepHrefs, toStepKindCollection } from './utils';
+import {
+  getStepHref,
+  IGetStepHrefs,
+  mergeConnectionsSources,
+  toUIStepKindCollection,
+} from './utils';
 
 export interface ISelectConnectionPageProps extends IGetStepHrefs {
   cancelHref: (
     p: ISelectConnectionRouteParams,
     s: ISelectConnectionRouteState
   ) => H.LocationDescriptor;
-  sidebar: (props: { steps: Step[]; activeIndex: number }) => React.ReactNode;
+  sidebar: (props: {
+    steps: IUIStep[];
+    activeIndex: number;
+  }) => React.ReactNode;
 }
 
 /**
@@ -68,7 +76,7 @@ export class SelectConnectionPage extends React.Component<
                 }
                 sidebar={this.props.sidebar({
                   activeIndex: positionAsNumber,
-                  steps: integrationSteps,
+                  steps: toUIStepKindCollection(integrationSteps),
                 })}
                 content={
                   <WithConnections>
@@ -85,7 +93,7 @@ export class SelectConnectionPage extends React.Component<
                         }) => (
                           <WithSteps>
                             {({ items: steps }) => {
-                              const stepKinds = toStepKindCollection(
+                              const stepKinds = mergeConnectionsSources(
                                 positionAsNumber === 0
                                   ? connectionsData.connectionsWithFromAction
                                   : connectionsData.connectionsWithToAction,
