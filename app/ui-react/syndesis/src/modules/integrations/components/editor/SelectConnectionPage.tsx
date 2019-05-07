@@ -7,31 +7,33 @@ import {
   WithSteps,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Step, StepKind } from '@syndesis/models';
-import {
-  ConnectionCard,
-  ConnectionsGridCell,
-  IntegrationEditorChooseConnection,
-  IntegrationEditorLayout,
-  IntegrationsListSkeleton,
-} from '@syndesis/ui';
-import { WithLoader, WithRouteData } from '@syndesis/utils';
+import { StepKind } from '@syndesis/models';
+import { IntegrationEditorLayout } from '@syndesis/ui';
+import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { ApiError, PageTitle } from '../../../../shared';
-import resolvers from '../../../resolvers';
+import { PageTitle } from '../../../../shared';
+import { ConnectionsWithToolbar } from '../../../connections/components';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
   IUIStep,
 } from './interfaces';
-import { getStepHref, IGetStepHrefs, toStepKindCollection } from './utils';
+import {
+  getStepHref,
+  IGetStepHrefs,
+  mergeConnectionsSources,
+  toUIStepKindCollection,
+} from './utils';
 
 export interface ISelectConnectionPageProps extends IGetStepHrefs {
   cancelHref: (
     p: ISelectConnectionRouteParams,
     s: ISelectConnectionRouteState
   ) => H.LocationDescriptor;
-  sidebar: (props: { steps: Step[]; activeIndex: number }) => React.ReactNode;
+  sidebar: (props: {
+    steps: IUIStep[];
+    activeIndex: number;
+  }) => React.ReactNode;
 }
 
 /**
@@ -66,7 +68,7 @@ export class SelectConnectionPage extends React.Component<
                 }
                 sidebar={this.props.sidebar({
                   activeIndex: positionAsNumber,
-                  steps: integrationSteps,
+                  steps: toUIStepKindCollection(integrationSteps),
                 })}
                 content={
                   <WithConnections>
@@ -82,63 +84,33 @@ export class SelectConnectionPage extends React.Component<
                           error: extensionsError,
                         }) => (
                           <WithSteps>
-                            {({ items: steps }) => (
-                              <IntegrationEditorChooseConnection>
-                                <WithLoader
-                                  error={connectionsError || extensionsError}
+                            {({ items: steps }) => {
+                              const stepKinds = mergeConnectionsSources(
+                                positionAsNumber === 0
+                                  ? connectionsData.connectionsWithFromAction
+                                  : connectionsData.connectionsWithToAction,
+                                extensionsData.items,
+                                steps
+                              );
+                              const visibleSteps = visibleStepsByPosition(
+                                stepKinds as StepKind[],
+                                positionAsNumber
+                              ) as IUIStep[];
+                              return (
+                                <ConnectionsWithToolbar
                                   loading={
                                     !hasConnectionsData || !hasExtensionsData
                                   }
-                                  loaderChildren={<IntegrationsListSkeleton />}
-                                  errorChildren={<ApiError />}
-                                >
-                                  {() => {
-                                    const stepKinds = toStepKindCollection(
-                                      positionAsNumber === 0
-                                        ? connectionsData.connectionsWithFromAction
-                                        : connectionsData.connectionsWithToAction,
-                                      extensionsData.items,
-                                      steps
-                                    );
-                                    const visibleSteps = visibleStepsByPosition(
-                                      stepKinds as StepKind[],
-                                      positionAsNumber
-                                    ) as IUIStep[];
-                                    return (
-                                      <>
-                                        {visibleSteps.map(
-                                          (step, idx: number) => (
-                                            <ConnectionsGridCell key={idx}>
-                                              <ConnectionCard
-                                                name={step.name}
-                                                description={
-                                                  step.description || ''
-                                                }
-                                                icon={step.icon}
-                                                href={getStepHref(
-                                                  step,
-                                                  params,
-                                                  state,
-                                                  this.props
-                                                )}
-                                              />
-                                            </ConnectionsGridCell>
-                                          )
-                                        )}
-                                        <ConnectionsGridCell>
-                                          <ConnectionCard
-                                            name={'Create connection'}
-                                            description={''}
-                                            icon={''}
-                                            href={resolvers.connections.create.selectConnector()}
-                                          />
-                                        </ConnectionsGridCell>
-                                      </>
-                                    );
-                                  }}
-                                </WithLoader>
-                              </IntegrationEditorChooseConnection>
-                            )}
+                                  error={connectionsError || extensionsError}
+                                  includeConnectionMenu={false}
+                                  getConnectionHref={step =>
+                                    getStepHref(step, params, state, this.props)
+                                  }
+                                  connections={visibleSteps}
+                                  createConnectionButtonStyle={'default'}
+                                />
+                              );
+                            }}
                           </WithSteps>
                         )}
                       </WithExtensions>

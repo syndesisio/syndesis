@@ -35,10 +35,6 @@
   height: 100vh;
 }
 
-.pf-c-page__main-section {
-  --pf-c-page__main-section--BackgroundColor: #e1e1e1;
-}
-
 .pf-c-dropdown__menu-item {
   --pf-c-dropdown__menu-item--FontSize: var(--pf-global--FontSize--xs);
 }
@@ -106,4 +102,8 @@ body {
 
 .pf-c-dropdown__toggle.syn-help-dropdown {
   --pf-c-dropdown__toggle--FontSize: var(--pf-global--FontSize--md);
+}
+
+.list-view-pf-view {
+  margin-top: 0;
 }

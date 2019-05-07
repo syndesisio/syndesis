@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container } from '../Layout';
+import { Container, PageSection } from '../Layout';
 
 export interface IIntegrationSaveFormProps {
   /**
@@ -26,7 +26,7 @@ export class IntegrationSaveForm extends React.Component<
 > {
   public render() {
     return (
-      <Container>
+      <PageSection>
         <form
           className="form-horizontal required-pf"
           role="form"
@@ -43,7 +43,7 @@ export class IntegrationSaveForm extends React.Component<
             </div>
           </div>
         </form>
-      </Container>
+      </PageSection>
     );
   }
 }

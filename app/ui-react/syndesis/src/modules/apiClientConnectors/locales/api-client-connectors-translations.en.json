@@ -3,7 +3,7 @@
   "usedByOne": "Used by 1 integration",
   "usedByMulti": "Used by integrations {{count}} times",
   "apiConnector": {
-    "apiConnectorsPageDescription": "<h3><strong>$t(shared:project.name)</strong> creates an API client connector when you upload a valid OpenAPI 2.0 specification that describes the API you want to connect to.<h3>",
+    "apiConnectorsPageDescription": "<strong>$t(shared:project.name)</strong> creates an API client connector when you upload a valid OpenAPI 2.0 specification that describes the API you want to connect to.",
     "apiConnectorsPageTitle": "API Client Connectors",
     "CreateApiConnector": "Create API Connector",
     "createApiConnectorTip": "Upload file or use URL to create API connector",

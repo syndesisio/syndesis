@@ -38,8 +38,8 @@ import './IntegrationEditorLayout.css';
  * 'Done'.
  */
 export interface IIntegrationEditorLayoutProps {
-  title: React.ReactNode;
-  description?: React.ReactNode;
+  title: string;
+  description?: string;
   sidebar?: React.ReactNode;
   content: React.ReactNode;
   onCancel?: (e: React.MouseEvent<any>) => void;
@@ -84,8 +84,8 @@ export const IntegrationEditorLayout: React.FunctionComponent<
   isPublishDisabled,
 }: IIntegrationEditorLayoutProps) => {
   return (
-    <div className={'wizard-pf-body integration-editor-layout syn-scrollable'}>
-      <div className="wizard-pf-toolbar integration-editor-layout__header">
+    <div className={'integration-editor-layout'}>
+      <div className={'integration-editor-layout__header'}>
         <PageSection variant={'light'}>
           <Level gutter={'sm'}>
             <LevelItem>
@@ -93,13 +93,13 @@ export const IntegrationEditorLayout: React.FunctionComponent<
                 <Title size={'2xl'} headingLevel={TitleLevel.h1}>
                   {title}
                 </Title>
-                {description && <Text>{description}</Text>}
+                <Text>{description}</Text>
               </TextContent>
             </LevelItem>
             <LevelItem>
               {(cancelHref || onCancel) && (
                 <ButtonLink onClick={onCancel} href={cancelHref}>
-                  <i className="fa fa-angle-left" /> Cancel
+                  <i className={'fa fa-angle-left'} /> Cancel
                 </ButtonLink>
               )}
               {(saveHref || onSave) && (
@@ -126,14 +126,16 @@ export const IntegrationEditorLayout: React.FunctionComponent<
           </Level>
         </PageSection>
       </div>
-      <div className="wizard-pf-row integration-editor-layout__body syn-scrollable--body">
-        <div className="wizard-pf-sidebar">{sidebar}</div>
-        <div
-          className={
-            'wizard-pf-main cards-pf integration-editor-layout__contentWrapper'
-          }
-        >
-          <div className="integration-editor-layout__content">{content}</div>
+      <div className={'integration-editor-layout__body'}>
+        <div className={'integration-editor-layout__sidebarOuter'}>
+          <div className={'integration-editor-layout__sidebarInner'}>
+            {sidebar}
+          </div>
+        </div>
+        <div className={'integration-editor-layout__contentOuter'}>
+          <div className={'integration-editor-layout__contentInner'}>
+            {content}
+          </div>
         </div>
       </div>
     </div>

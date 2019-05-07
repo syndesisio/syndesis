@@ -31,7 +31,6 @@ it('renders the heading', () => {
         onClearFilters={noop}
         onToggleCurrentSortDirection={noop}
         onUpdateCurrentSortType={noop}
-        i18nTitle={'Connections'}
         i18nLinkCreateConnection="Create Connection"
         i18nResultsCount="0 Results"
       />

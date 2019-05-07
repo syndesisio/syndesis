@@ -30,6 +30,57 @@ export function toUIStepKind(step: Step): IUIStep['uiStepKind'] {
   return step.stepKind;
 }
 
+export function toUIStepKindCollection(steps: Step[]): IUIStep[] {
+  return steps.map(step => {
+    const uiStepKind = toUIStepKind(step);
+    switch (uiStepKind) {
+      case 'extension':
+        return {
+          ...step,
+          description: (step as Extension).description || '',
+          icon: `${process.env.PUBLIC_URL}${getExtensionIcon(
+            step as Extension
+          )}`,
+          name: step.name!,
+          properties: {},
+          uiStepKind,
+        };
+      case 'expressionFilter':
+      case 'ruleFilter':
+      case 'mapper':
+      case 'headers':
+      case 'template':
+      case 'choice':
+      case 'split':
+      case 'aggregate':
+      case 'log':
+        return {
+          ...step,
+          description: step.name!,
+          icon: `${process.env.PUBLIC_URL}${getStepKindIcon(step.stepKind)}`,
+          name: step.name!,
+          properties: {},
+          uiStepKind,
+        };
+      case 'api-provider':
+      case 'endpoint':
+      case 'connector':
+      default:
+        return {
+          ...step,
+          description: (step as ConnectionOverview).description || '',
+          icon: getConnectionIcon(
+            process.env.PUBLIC_URL,
+            step as ConnectionOverview
+          ),
+          name: step.name!,
+          properties: {},
+          uiStepKind,
+        };
+    }
+  });
+}
+
 export interface IGetStepHrefs {
   apiProviderHref: StepKindHrefCallback;
   connectionHref: StepKindHrefCallback;
@@ -71,7 +122,7 @@ export const getStepHref = (
   }
 };
 
-export function toStepKindCollection(
+export function mergeConnectionsSources(
   connections: ConnectionOverview[],
   extensions: Extension[],
   steps: StepKind[]

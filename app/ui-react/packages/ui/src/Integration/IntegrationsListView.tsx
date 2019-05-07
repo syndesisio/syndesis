@@ -1,14 +1,18 @@
-import { TextContent, Title, TitleLevel } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../Layout';
-import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
+import {
+  IListViewToolbarProps,
+  ListViewToolbar,
+  SimplePageHeader,
+} from '../Shared';
 
 export interface IIntegrationsListViewProps extends IListViewToolbarProps {
   linkToManageCiCd: H.LocationDescriptor;
   linkToIntegrationImport: H.LocationDescriptor;
   linkToIntegrationCreation: H.LocationDescriptor;
   i18nTitle: string;
+  i18nDescription: string;
   i18nManageCiCd: string;
   i18nImport: string;
   i18nLinkCreateConnection: string;
@@ -20,14 +24,11 @@ export class IntegrationsListView extends React.Component<
   public render() {
     return (
       <>
-        <PageSection variant={'light'}>
-          <TextContent>
-            <Title size={'2xl'} headingLevel={TitleLevel.h1}>
-              {this.props.i18nTitle}
-            </Title>
-          </TextContent>
-        </PageSection>
-        <PageSection noPadding={true} variant={'light'}>
+        <SimplePageHeader
+          i18nTitle={this.props.i18nTitle}
+          i18nDescription={this.props.i18nDescription}
+        />
+        <PageSection>
           <ListViewToolbar {...this.props}>
             <div className="form-group">
               <ButtonLink href={this.props.linkToManageCiCd}>
@@ -44,8 +45,8 @@ export class IntegrationsListView extends React.Component<
               </ButtonLink>
             </div>
           </ListViewToolbar>
+          {this.props.children}
         </PageSection>
-        <PageSection>{this.props.children}</PageSection>
       </>
     );
   }

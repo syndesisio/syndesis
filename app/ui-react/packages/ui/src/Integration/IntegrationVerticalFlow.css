@@ -22,6 +22,10 @@
   height: 100%;
 }
 
+.integration-vertical-flow__expand .btn:focus {
+  outline: none;
+}
+
 .integration-vertical-flow__expand .btn::before {
   content: '\00bb';
 }

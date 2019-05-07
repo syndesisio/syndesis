@@ -1,7 +1,10 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import { getEmptyIntegration, getStep } from '@syndesis/api';
-import { ConnectionOverview, Integration } from '@syndesis/models';
-import { IIntegrationOverviewWithDraft } from '@syndesis/models/src';
+import {
+  ConnectionOverview,
+  IIntegrationOverviewWithDraft,
+  Integration,
+} from '@syndesis/models';
 import {
   makeResolver,
   makeResolverNoParams,

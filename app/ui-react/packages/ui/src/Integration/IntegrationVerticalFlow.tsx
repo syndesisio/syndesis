@@ -60,7 +60,7 @@ export class IntegrationVerticalFlow extends React.Component<
           {this.props.children(this.state)}
         </div>
         <div className="integration-vertical-flow__expand">
-          <ButtonLink onClick={this.toggleExpanded} />
+          <ButtonLink onClick={this.toggleExpanded} as={'link'} />
         </div>
       </div>
     );

@@ -5,7 +5,6 @@ export * from './Activity';
 export * from './Metrics';
 export * from './IntegrationEditorActionsListItem';
 export * from './IntegrationEditorChooseAction';
-export * from './IntegrationEditorChooseConnection';
 export * from './IntegrationEditorConnectionsListItem';
 export * from './IntegrationEditorForm';
 export * from './IntegrationEditorLayout';

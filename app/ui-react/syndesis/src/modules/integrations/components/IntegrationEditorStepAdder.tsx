@@ -6,6 +6,7 @@ import {
   IntegrationEditorStepsList,
   IntegrationEditorStepsListItem,
   IntegrationFlowAddStep,
+  PageSection,
 } from '@syndesis/ui';
 import * as React from 'react';
 
@@ -47,44 +48,46 @@ export class IntegrationEditorStepAdder extends React.Component<
 > {
   public render() {
     return (
-      <IntegrationEditorStepsList>
-        {this.props.steps.map((s, idx) => {
-          return (
-            <React.Fragment key={idx}>
-              <IntegrationEditorStepsListItem
-                stepName={s.name!}
-                stepDescription={s.action ? s.action.name : ''}
-                icon={
-                  <img
-                    alt={'Step'}
-                    src={getStepIcon(process.env.PUBLIC_URL, s)}
-                    width={24}
-                    height={24}
-                  />
-                }
-                actions={
-                  <>
-                    <ButtonLink href={this.props.configureStepHref(idx, s)}>
-                      Configure
-                    </ButtonLink>
-                    <ButtonLink href={'#'} as={'danger'}>
-                      <i className="fa fa-trash" />
-                    </ButtonLink>
-                  </>
-                }
-              />
-              {idx < this.props.steps.length - 1 && (
-                <IntegrationFlowAddStep
-                  active={false}
-                  showDetails={false}
-                  addStepHref={this.props.addStepHref(idx + 1)}
-                  i18nAddStep={'Add a step'}
+      <PageSection>
+        <IntegrationEditorStepsList>
+          {this.props.steps.map((s, idx) => {
+            return (
+              <React.Fragment key={idx}>
+                <IntegrationEditorStepsListItem
+                  stepName={s.name!}
+                  stepDescription={s.action ? s.action.name : ''}
+                  icon={
+                    <img
+                      alt={'Step'}
+                      src={getStepIcon(process.env.PUBLIC_URL, s)}
+                      width={24}
+                      height={24}
+                    />
+                  }
+                  actions={
+                    <>
+                      <ButtonLink href={this.props.configureStepHref(idx, s)}>
+                        Configure
+                      </ButtonLink>
+                      <ButtonLink href={'#'} as={'danger'}>
+                        <i className="fa fa-trash" />
+                      </ButtonLink>
+                    </>
+                  }
                 />
-              )}
-            </React.Fragment>
-          );
-        })}
-      </IntegrationEditorStepsList>
+                {idx < this.props.steps.length - 1 && (
+                  <IntegrationFlowAddStep
+                    active={false}
+                    showDetails={false}
+                    addStepHref={this.props.addStepHref(idx + 1)}
+                    i18nAddStep={'Add a step'}
+                  />
+                )}
+              </React.Fragment>
+            );
+          })}
+        </IntegrationEditorStepsList>
+      </PageSection>
     );
   }
 }

@@ -27,7 +27,10 @@ const ReadWidget: React.FunctionComponent<IReadWidget> = ({
   value,
   onEdit,
 }) => (
-  <div className={classnames('inline-text-readwidget', className)}>
+  <span
+    className={classnames('inline-text-readwidget', className)}
+    onClick={allowEditing ? onEdit : undefined}
+  >
     {value}
     {allowEditing ? (
       <Icon
@@ -37,7 +40,7 @@ const ReadWidget: React.FunctionComponent<IReadWidget> = ({
         type="pf"
       />
     ) : null}
-  </div>
+  </span>
 );
 
 interface IEditWidget extends React.InputHTMLAttributes<HTMLInputElement> {

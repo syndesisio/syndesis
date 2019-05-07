@@ -7,7 +7,7 @@ import {
   IActiveFilter,
   IFilterType,
   ISortType,
-  PageSection,
+  SimplePageHeader,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -103,18 +103,12 @@ export default class ExtensionsPage extends React.Component {
                       <Translation ns={['extensions', 'shared']}>
                         {t => (
                           <>
-                            <PageSection variant={'light'}>
-                              <h1 className="pf-c-title pf-m-xl">
-                                {t('extension.extensionsPageTitle')}
-                              </h1>
-                              <p
-                                dangerouslySetInnerHTML={{
-                                  __html: t(
-                                    'extension.extensionsPageDescription'
-                                  ),
-                                }}
-                              />
-                            </PageSection>
+                            <SimplePageHeader
+                              i18nTitle={t('extension.extensionsPageTitle')}
+                              i18nDescription={t(
+                                'extension.extensionsPageDescription'
+                              )}
+                            />
                             <ExtensionListView
                               filterTypes={filterTypes}
                               sortTypes={sortTypes}

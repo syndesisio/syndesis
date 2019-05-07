@@ -2,6 +2,7 @@ import { Connection } from '@syndesis/models';
 import {
   ConnectionsListView,
   IActiveFilter,
+  IConnectionsListViewProps,
   IFilterType,
   ISortType,
 } from '@syndesis/ui';
@@ -54,7 +55,9 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export interface IConnectionsWithToolbarProps extends IConnectionsProps {
+export interface IConnectionsWithToolbarProps
+  extends IConnectionsProps,
+    Pick<IConnectionsListViewProps, 'createConnectionButtonStyle'> {
   children?: any;
 }
 
@@ -67,7 +70,7 @@ export class ConnectionsWithToolbar extends React.Component<
 
   public render() {
     return (
-      <Translation ns={['shared']}>
+      <Translation ns={['connections', 'shared']}>
         {t => (
           <WithListViewToolbarHelpers
             defaultFilterType={filterByName}
@@ -83,12 +86,14 @@ export class ConnectionsWithToolbar extends React.Component<
 
               return (
                 <ConnectionsListView
+                  createConnectionButtonStyle={
+                    this.props.createConnectionButtonStyle
+                  }
                   linkToConnectionCreate={resolvers.create.selectConnector()}
                   filterTypes={filterTypes}
                   sortTypes={sortTypes}
                   resultsCount={filteredAndSortedConnections.length}
                   {...helpers}
-                  i18nTitle={t('shared:Connections')}
                   i18nLinkCreateConnection={t('shared:linkCreateConnection')}
                   i18nResultsCount={t('shared:resultsCount', {
                     count: filteredAndSortedConnections.length,
@@ -97,7 +102,7 @@ export class ConnectionsWithToolbar extends React.Component<
                   {this.props.children}
                   <Connections
                     error={this.props.error}
-                    includeConnectionMenu={true}
+                    includeConnectionMenu={this.props.includeConnectionMenu}
                     loading={this.props.loading}
                     connections={filteredAndSortedConnections}
                     getConnectionHref={this.props.getConnectionHref}
