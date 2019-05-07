@@ -14,7 +14,7 @@ Integrations that start this way are referred to as _API provider integrations_.
 An API provider integration allows REST API clients to invoke 
 commands that trigger execution of the integration. 
 
-When {prodname} publishes an API provider integration, anyone with 
+When {prodname} publishes an API provider integration, any client with 
 network access to the integration endpoints can trigger execution of 
 the integration.
 

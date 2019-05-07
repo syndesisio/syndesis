@@ -35,10 +35,9 @@ link:{LinkFuseOnlineIntegrationGuide}#about-creating-connections_connections[inf
 . In the *Operations* list page, click the entry for an operation
 whose flow you want to edit. 
 
-. In this operation flow, to connect to another application or service: 
-.. In the flow visualization panel on the left, if this is the 
-first step that you are adding, click the
-plus sign. If this is not the first additional step, click the 
+. Add all desired connections to this flow. For each connection that you 
+want to add:
+.. In the flow visualization panel on the left, click the 
 plus sign where you want to add a connection. 
 .. On the *Choose a Step* page, click the connection that you want 
 to add to this flow. 
@@ -54,7 +53,7 @@ before you continue.
 
 . In this operation flow, to process data between connections:
 .. In the flow visualization panel on the left, click the
-plus sign that is in the location where you want to add a step. 
+plus sign where you want to add a step. 
 .. On the *Choose a Step* page, click the step that you want to add. 
 .. Configure the step by entering data in the labeled fields. 
 .. Click *Done*. 
@@ -115,10 +114,6 @@ time that you edit an operation's flow.
 and looks something like this: 
 +
 image:images/operations-dropdown-list.jpg[operations] 
-+
-Or, select *Go to Operations List* to select another operation from there. 
-Controls at the top of the operations list let you display
-operations according to criteria that you choose. 
 
 Repeat this procedure to edit another operation's 
 flow.
