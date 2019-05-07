@@ -18,18 +18,20 @@ export interface IConnectionsProps {
   includeConnectionMenu: boolean;
   loading: boolean;
   connections: ConnectionOverview[];
+
   getConnectionHref(connection: ConnectionOverview): H.LocationDescriptor;
+
   getConnectionEditHref(connection: ConnectionOverview): H.LocationDescriptor;
 }
 
 export class Connections extends React.Component<IConnectionsProps> {
   public render() {
     return (
-      <UIContext.Consumer>
-        {({ pushNotification }) => {
-          return (
-            <Translation ns={['connections', 'shared']}>
-              {t => (
+      <Translation ns={['connections', 'shared']}>
+        {t => (
+          <UIContext.Consumer>
+            {({ pushNotification }) => {
+              return (
                 <WithConnectionHelpers>
                   {({ deleteConnection }) => {
                     const doDelete = async (
@@ -168,11 +170,11 @@ export class Connections extends React.Component<IConnectionsProps> {
                     );
                   }}
                 </WithConnectionHelpers>
-              )}
-            </Translation>
-          );
-        }}
-      </UIContext.Consumer>
+              );
+            }}
+          </UIContext.Consumer>
+        )}
+      </Translation>
     );
   }
 }
