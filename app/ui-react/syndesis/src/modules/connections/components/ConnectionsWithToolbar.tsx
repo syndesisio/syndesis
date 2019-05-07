@@ -88,8 +88,6 @@ export class ConnectionsWithToolbar extends React.Component<
                   sortTypes={sortTypes}
                   resultsCount={filteredAndSortedConnections.length}
                   {...helpers}
-                  i18nTitle={t('shared:Connections')}
-                  i18nDescription={t('connectionListDescription')}
                   i18nLinkCreateConnection={t('shared:linkCreateConnection')}
                   i18nResultsCount={t('shared:resultsCount', {
                     count: filteredAndSortedConnections.length,
@@ -98,7 +96,7 @@ export class ConnectionsWithToolbar extends React.Component<
                   {this.props.children}
                   <Connections
                     error={this.props.error}
-                    includeConnectionMenu={true}
+                    includeConnectionMenu={this.props.includeConnectionMenu}
                     loading={this.props.loading}
                     connections={filteredAndSortedConnections}
                     getConnectionHref={this.props.getConnectionHref}

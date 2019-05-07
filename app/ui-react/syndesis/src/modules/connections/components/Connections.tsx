@@ -19,7 +19,7 @@ export interface IConnectionsProps {
   loading: boolean;
   connections: Connection[];
   getConnectionHref(connection: Connection): H.LocationDescriptor;
-  getConnectionEditHref(connection: Connection): H.LocationDescriptor;
+  getConnectionEditHref?(connection: Connection): H.LocationDescriptor;
 }
 
 export class Connections extends React.Component<IConnectionsProps> {
@@ -80,17 +80,22 @@ export class Connections extends React.Component<IConnectionsProps> {
                                   <ConnectionCard
                                     name={c.name}
                                     description={c.description || ''}
-                                    icon={getConnectionIcon(
-                                      process.env.PUBLIC_URL,
-                                      c
-                                    )}
+                                    icon={
+                                      // dirty hack to handle connection-like objects coming from the editor
+                                      c.icon &&
+                                      c.icon.includes(process.env.PUBLIC_URL)
+                                        ? c.icon
+                                        : getConnectionIcon(
+                                            process.env.PUBLIC_URL,
+                                            c
+                                          )
+                                    }
                                     href={this.props.getConnectionHref(c)}
                                     menuProps={
                                       this.props.includeConnectionMenu
                                         ? {
-                                            editHref: this.props.getConnectionEditHref(
-                                              c
-                                            ),
+                                            editHref: this.props
+                                              .getConnectionEditHref!(c),
                                             i18nCancelLabel: t('shared:Cancel'),
                                             i18nDeleteLabel: t('shared:Delete'),
                                             i18nDeleteModalMessage: t(

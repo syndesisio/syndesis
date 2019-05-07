@@ -181,6 +181,10 @@ export class WithConfigurationForm extends React.Component<
       form: (
         <IntegrationEditorNothingToConfigure
           i18nAlert={'There are no properties to configure for this action.'}
+          i18nChooseAction={'Choose Action'}
+          i18nNext={'Next'}
+          submitForm={submitForm}
+          chooseActionHref={this.props.chooseActionHref}
         />
       ),
       isSubmitting: false,

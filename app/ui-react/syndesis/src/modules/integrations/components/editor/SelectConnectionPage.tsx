@@ -8,17 +8,11 @@ import {
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Step, StepKind } from '@syndesis/models';
-import {
-  ConnectionCard,
-  ConnectionsGridCell,
-  IntegrationEditorChooseConnection,
-  IntegrationEditorLayout,
-  IntegrationsListSkeleton,
-} from '@syndesis/ui';
-import { WithLoader, WithRouteData } from '@syndesis/utils';
+import { IntegrationEditorLayout } from '@syndesis/ui';
+import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { ApiError, PageTitle } from '../../../../shared';
-import resolvers from '../../../resolvers';
+import { PageTitle } from '../../../../shared';
+import { ConnectionsWithToolbar } from '../../../connections/components';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
@@ -90,63 +84,32 @@ export class SelectConnectionPage extends React.Component<
                           error: extensionsError,
                         }) => (
                           <WithSteps>
-                            {({ items: steps }) => (
-                              <IntegrationEditorChooseConnection>
-                                <WithLoader
-                                  error={connectionsError || extensionsError}
+                            {({ items: steps }) => {
+                              const stepKinds = toStepKindCollection(
+                                positionAsNumber === 0
+                                  ? connectionsData.connectionsWithFromAction
+                                  : connectionsData.connectionsWithToAction,
+                                extensionsData.items,
+                                steps
+                              );
+                              const visibleSteps = visibleStepsByPosition(
+                                stepKinds as StepKind[],
+                                positionAsNumber
+                              ) as IUIStep[];
+                              return (
+                                <ConnectionsWithToolbar
                                   loading={
                                     !hasConnectionsData || !hasExtensionsData
                                   }
-                                  loaderChildren={<IntegrationsListSkeleton />}
-                                  errorChildren={<ApiError />}
-                                >
-                                  {() => {
-                                    const stepKinds = toStepKindCollection(
-                                      positionAsNumber === 0
-                                        ? connectionsData.connectionsWithFromAction
-                                        : connectionsData.connectionsWithToAction,
-                                      extensionsData.items,
-                                      steps
-                                    );
-                                    const visibleSteps = visibleStepsByPosition(
-                                      stepKinds as StepKind[],
-                                      positionAsNumber
-                                    ) as IUIStep[];
-                                    return (
-                                      <>
-                                        {visibleSteps.map(
-                                          (step, idx: number) => (
-                                            <ConnectionsGridCell key={idx}>
-                                              <ConnectionCard
-                                                name={step.name}
-                                                description={
-                                                  step.description || ''
-                                                }
-                                                icon={step.icon}
-                                                href={getStepHref(
-                                                  step,
-                                                  params,
-                                                  state,
-                                                  this.props
-                                                )}
-                                              />
-                                            </ConnectionsGridCell>
-                                          )
-                                        )}
-                                        <ConnectionsGridCell>
-                                          <ConnectionCard
-                                            name={'Create connection'}
-                                            description={''}
-                                            icon={''}
-                                            href={resolvers.connections.create.selectConnector()}
-                                          />
-                                        </ConnectionsGridCell>
-                                      </>
-                                    );
-                                  }}
-                                </WithLoader>
-                              </IntegrationEditorChooseConnection>
-                            )}
+                                  error={connectionsError || extensionsError}
+                                  includeConnectionMenu={false}
+                                  getConnectionHref={step =>
+                                    getStepHref(step, params, state, this.props)
+                                  }
+                                  connections={visibleSteps}
+                                />
+                              );
+                            }}
                           </WithSteps>
                         )}
                       </WithExtensions>

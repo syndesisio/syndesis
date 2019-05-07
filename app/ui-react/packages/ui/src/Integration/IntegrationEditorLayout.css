@@ -1,39 +1,69 @@
 .integration-editor-layout {
-  height: 100%;
+  flex: 1 0;
+  display: flex;
+  flex-flow: column;
 }
 
-.integration-editor-layout__header {
-  background-color: transparent;
+.integration-editor-layout__sidebarOuter {
+  display: none;
 }
 
-.integration-editor-layout .integration-editor-layout__body {
-  height: calc(100vh - 60px - 26px - 36px - 57px - 61px);
-  max-height: none;
+.integration-editor-layout__body {
+  display: flex;
+  flex: 1 0;
+}
+
+.integration-editor-layout__contentOuter {
+  display: flex;
+  flex-flow: column;
+}
+
+.integration-editor-layout__sectionLight,
+/* hack to make the connections toolbar match the header */
+.integration-editor-layout__contentOuter .toolbar-pf {
+  background-color: var(--pf-global--BackgroundColor--200);
 }
 
 @media (min-width: 768px) {
+  .integration-editor-layout {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+  }
+
+  .integration-editor-layout__sidebarOuter {
+    background-color: var(--pf-global--BackgroundColor--200);
+    box-shadow: rgba(3, 3, 3, 0.07) 12px 0 10px -4px;
+    flex: 0 0 auto;
+    display: flex;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .integration-editor-layout__sidebarInner {
+    background-color: var(--pf-global--BackgroundColor--200);
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: flex;
+  }
+
   .integration-editor-layout__body {
-    height: calc(100vh - 121px - 60px - 36px);
-    max-height: none;
+    flex: 1 0;
+    display: flex;
+    width: 100%;
+    overflow: hidden;
   }
 
-  .integration-editor-layout .integration-editor-layout__body {
-    height: calc(100vh - 121px - 26px - 60px - 36px - 61px);
-    max-height: none;
+  .integration-editor-layout__contentOuter {
+    overflow: auto;
+    padding: 0;
+    width: 100%;
+  }
+
+  .integration-editor-layout__contentInner {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
   }
 }
 
-.integration-editor-layout__contentWrapper {
-  overflow: auto;
-  padding: 0;
-}
 
-.integration-editor-layout__content {
-  max-width: 900px;
-  margin: auto;
-}
-
-.integration-editor-layout__footer {
-  padding: 17px 15px;
-  z-index: 1;
-}
