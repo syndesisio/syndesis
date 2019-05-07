@@ -8,3 +8,4 @@ export * from './Integration';
 export * from './Layout';
 export * from './Settings';
 export * from './Shared';
+export * from './Support';

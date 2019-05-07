@@ -11,9 +11,12 @@ stories.add('HelpDropdown', () => {
     <div className="pf-u-display-flex pf-u-align-items-flex-start pf-u-flex-wrap">
       <div className="pf-u-m-xl">
         <HelpDropdown
-          launchAboutModal={() => {
-            logDropdownItemSelection();
-          }}
+          launchConnectorsGuide={logDropdownItemSelection}
+          launchContactUs={logDropdownItemSelection}
+          launchSampleIntegrationTutorials={logDropdownItemSelection}
+          launchSupportPage={logDropdownItemSelection}
+          launchUserGuide={logDropdownItemSelection}
+          launchAboutModal={logDropdownItemSelection}
           isOpen={true}
         />
       </div>

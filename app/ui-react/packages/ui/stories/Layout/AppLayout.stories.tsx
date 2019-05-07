@@ -46,6 +46,11 @@ stories.add(
             <AppLayout
               onNavigationCollapse={() => null}
               onNavigationExpand={() => null}
+              onSelectConnectorsGuide={logDropdownItemSelection}
+              onSelectContactUs={logDropdownItemSelection}
+              onSelectSampleIntegrationTutorials={logDropdownItemSelection}
+              onSelectSupport={logDropdownItemSelection}
+              onSelectUserGuide={logDropdownItemSelection}
               onShowAboutModal={() => {
                 logDropdownItemSelection();
                 toggleAboutModal();

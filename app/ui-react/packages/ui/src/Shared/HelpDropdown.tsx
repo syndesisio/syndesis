@@ -13,6 +13,11 @@ export interface IHelpDropdownProps {
   className?: string;
   isOpen: boolean;
   launchAboutModal: any;
+  launchSupportPage: any;
+  launchSampleIntegrationTutorials: any;
+  launchUserGuide: any;
+  launchConnectorsGuide: any;
+  launchContactUs: any;
 }
 
 export interface IHelpDropdownState {
@@ -45,14 +50,39 @@ export class HelpDropdown extends React.Component<
 
   public render() {
     const { isOpen } = this.state;
+    const {
+      launchSampleIntegrationTutorials,
+      launchUserGuide,
+      launchConnectorsGuide,
+      launchSupportPage,
+      launchContactUs,
+      launchAboutModal,
+    } = this.props;
     const dropdownItems = [
       <DropdownItem
-        key="action"
+        key="sampleIntegrationTutorials"
         component="span"
-        onClick={() => {
-          this.props.launchAboutModal();
-        }}
+        onClick={launchSampleIntegrationTutorials}
       >
+        Sample Integration Tutorials
+      </DropdownItem>,
+      <DropdownItem key="userGuide" component="span" onClick={launchUserGuide}>
+        User Guide
+      </DropdownItem>,
+      <DropdownItem
+        key="connectorsGuide"
+        component="span"
+        onClick={launchConnectorsGuide}
+      >
+        Connectors Guide
+      </DropdownItem>,
+      <DropdownItem key="support" component="span" onClick={launchSupportPage}>
+        Support
+      </DropdownItem>,
+      <DropdownItem key="contactUs" component="span" onClick={launchContactUs}>
+        Contact Us
+      </DropdownItem>,
+      <DropdownItem key="action" component="span" onClick={launchAboutModal}>
         About
       </DropdownItem>,
     ];
