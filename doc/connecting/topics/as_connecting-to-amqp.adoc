@@ -37,14 +37,11 @@ To use the AMQP connector, see:
 
 * xref:create-amqp-connection_{context}[] 
 * xref:adding-amqp-connection-start_{context}[]
-* xref:adding-amqp-connection-finish_{context}[]
 * xref:adding-amqp-connection-middle_{context}[]
 
 include::p_create-amqp-connection.adoc[leveloffset=+1]
 
 include::p_adding-amqp-connection-start.adoc[leveloffset=+1]
-
-include::p_adding-amqp-connection-finish.adoc[leveloffset=+1]
 
 include::p_adding-amqp-connection-middle.adoc[leveloffset=+1]
 

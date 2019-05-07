@@ -2,16 +2,18 @@
 // as_connecting-to-amqp.adoc
 
 [id='adding-amqp-connection-middle_{context}']
-= Publishing messages to AMQP in the middle of a flow
+= Publishing messages to AMQP in the middle of a flow or to finish an integration
 
-In the middle of a flow, to publish messages to an AMQP broker,
-add an AMQP connection to the middle of the flow. 
+You can publish messages to an AMQP broker in the middle of a flow or 
+to finish a simple integration. To do this, add an AMQP connection to 
+the middle of a flow or as a simple integration's finish connection. 
 
 .Prerequisites
 * You created a connection to the AMQP broker that you want to publish 
 messages to.
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step.
+to choose a step. Or, {prodname} is prompting you to choose a 
+simple integration's finish connection. 
 
 .Procedure
 
@@ -20,7 +22,8 @@ to choose a step.
 . On the *Choose an Action* page, select one of the following actions:
 +
 * *Publish messages* to
-publish messages to the queue or topic that you specify. To configure this
+publish messages to the queue or topic that you specify without receiving
+a response. To configure this
 action:
 .. In the *Destination Name* field, enter the name of the queue or 
 topic to send messages to. 
@@ -28,8 +31,20 @@ topic to send messages to.
 .. Select *Persistent* to guarantee message delivery even if
 a connection fails. 
 +
-* *Request response using messages* to send messages to the JMS destination
-you specify and receive a response. To configure this action:
+* *Request response using messages* to publish messages to the queue or topic 
+that you specify and receive a response. 
++
+[NOTE]
+====
+When the finish connection in a simple integration is an AMQP connection 
+that performs the *Request response using messages* action, the connection 
+publishes the messages but the response is discarded. To avoid losing the 
+response, add an AMQP connection as a middle connection that performs 
+the *Request response using messages* action and finish the simple integration 
+with a log step.
+====
++
+To configure this action:
 
 .. In the *Destination Name* field, enter the name of the queue or topic 
 to send messages to. 
@@ -79,8 +94,8 @@ For example, if you select *JSON schema* then you would paste the content of
 a JSON schema file, which has a media type of `application/schema+json`.
 
 . In the *Data Type Name* field, enter a name that you choose for the
-data type. For example, suppose you are specifying a JSON schema for
-vendors. You can specify `*Vendor*` as the data type name. 
+data type. For example, if you are specifying a JSON schema for vendors 
+then you might specify `*Vendor*` as the data type name. 
 +
 You will see this data type name when you are creating 
 or editing an integration that uses the connection
