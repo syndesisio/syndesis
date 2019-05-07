@@ -4,12 +4,12 @@
 [id='overview-benefit-api-provider-integrations_{context}']
 = Benefit, overview, and workflow for creating API provider integrations
 
-API provider integrations start with a REST API service that {prodname} 
-makes available. This REST API service is defined by an OpenAPI 2.0
+An API provider integration starts with a REST API service. 
+This REST API service is defined by an OpenAPI 2.0
 document that you provide when you create an API provider integration. 
 After you publish an API provider integration,
 {prodname} deploys the REST API service on OpenShift. 
-The benefit of API provider integrations
+The benefit of a API provider integration
 is that REST API clients can invoke calls that trigger execution of the integration. 
 
 .Multiple execution flows
