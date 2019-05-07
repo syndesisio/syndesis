@@ -1,12 +1,13 @@
-import { Level, LevelItem, Text, Title, Tooltip } from '@patternfly/react-core';
-import * as H from '@syndesis/history';
 import {
-  Card,
-  DropdownKebab,
-  Icon,
-  OverlayTrigger,
+  Level,
+  LevelItem,
   Popover,
-} from 'patternfly-react';
+  Text,
+  Title,
+  Tooltip,
+} from '@patternfly/react-core';
+import * as H from '@syndesis/history';
+import { Card, DropdownKebab, Icon } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -119,17 +120,17 @@ export class ConnectionCard extends React.PureComponent<
                 <Level gutter={'md'}>
                   <LevelItem>&nbsp;</LevelItem>
                   <LevelItem>
-                    {this.props.i18nTechPreview}
+                    {this.props.i18nTechPreview!}
                     {'  '}
-                    <OverlayTrigger
-                      overlay={
-                        <Popover>{this.props.techPreviewPopoverHtml}</Popover>
+                    <Popover
+                      bodyContent={
+                        <div>{this.props.techPreviewPopoverHtml}</div>
                       }
-                      trigger={['click']}
-                      rootClose={true}
+                      aria-label={this.props.i18nTechPreview!}
+                      position={'left'}
                     >
                       <Icon type={'pf'} name={'info'} />
-                    </OverlayTrigger>
+                    </Popover>
                   </LevelItem>
                 </Level>
               ) : (
@@ -165,7 +166,7 @@ export class ConnectionCard extends React.PureComponent<
                     {this.props.configurationRequired ? (
                       <Tooltip
                         content={this.props.i18nCannotDelete!}
-                        position={'right'}
+                        position={'bottom'}
                       >
                         <a
                           href={'javascript:void(0)'}
