@@ -5,6 +5,7 @@ import { ButtonLink } from '../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
 
 export interface IConnectionsListViewProps extends IListViewToolbarProps {
+  createConnectionButtonStyle?: 'primary' | 'default';
   linkToConnectionCreate: H.LocationDescriptor;
   i18nLinkCreateConnection: string;
 }
@@ -20,7 +21,7 @@ export class ConnectionsListView extends React.Component<
             <div className="form-group">
               <ButtonLink
                 href={this.props.linkToConnectionCreate}
-                as={'primary'}
+                as={this.props.createConnectionButtonStyle || 'primary'}
               >
                 {this.props.i18nLinkCreateConnection}
               </ButtonLink>

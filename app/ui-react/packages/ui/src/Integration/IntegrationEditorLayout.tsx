@@ -3,6 +3,7 @@
 import {
   Level,
   LevelItem,
+  Text,
   TextContent,
   Title,
   TitleLevel,
@@ -10,7 +11,6 @@ import {
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, Loader, PageSection } from '../Layout';
-import { InlineTextEdit, SimplePageHeader } from '../Shared';
 import './IntegrationEditorLayout.css';
 
 /**
@@ -38,12 +38,6 @@ import './IntegrationEditorLayout.css';
  * 'Done'.
  */
 export interface IIntegrationEditorLayoutProps {
-  integrationName?: string;
-  integrationDescription?: string;
-  i18nIntegrationNamePlaceholder: string;
-  i18nIntegrationDescriptionPlaceholder: string;
-  onIntegrationNameChange: (name: string) => Promise<boolean>;
-  onIntegrationDescriptionChange: (name: string) => Promise<boolean>;
   title: string;
   description?: string;
   sidebar?: React.ReactNode;
@@ -74,12 +68,6 @@ export interface IIntegrationEditorLayoutProps {
 export const IntegrationEditorLayout: React.FunctionComponent<
   IIntegrationEditorLayoutProps
 > = ({
-  integrationName,
-  integrationDescription,
-  i18nIntegrationNamePlaceholder,
-  i18nIntegrationDescriptionPlaceholder,
-  onIntegrationNameChange,
-  onIntegrationDescriptionChange,
   title,
   description,
   sidebar,
@@ -103,21 +91,9 @@ export const IntegrationEditorLayout: React.FunctionComponent<
             <LevelItem>
               <TextContent>
                 <Title size={'2xl'} headingLevel={TitleLevel.h1}>
-                  <InlineTextEdit
-                    value={integrationName || ''}
-                    i18nPlaceholder={i18nIntegrationNamePlaceholder}
-                    allowEditing={!isSaveDisabled}
-                    isTextArea={false}
-                    onChange={onIntegrationNameChange}
-                  />
+                  {title}
                 </Title>
-                <InlineTextEdit
-                  value={integrationDescription || ''}
-                  i18nPlaceholder={i18nIntegrationDescriptionPlaceholder}
-                  allowEditing={!isSaveDisabled}
-                  isTextArea={false}
-                  onChange={onIntegrationDescriptionChange}
-                />
+                <Text>{description}</Text>
               </TextContent>
             </LevelItem>
             <LevelItem>
@@ -157,17 +133,6 @@ export const IntegrationEditorLayout: React.FunctionComponent<
           </div>
         </div>
         <div className={'integration-editor-layout__contentOuter'}>
-          <div className={'integration-editor-layout__sectionLight'}>
-            <div className={'integration-editor-layout__contentInner'}>
-              <SimplePageHeader
-                i18nTitle={title}
-                i18nDescription={description}
-                className={'integration-editor-layout__sectionLight'}
-                titleSize={'lg'}
-                titleHeadingLevel={'h2'}
-              />
-            </div>
-          </div>
           <div className={'integration-editor-layout__contentInner'}>
             {content}
           </div>

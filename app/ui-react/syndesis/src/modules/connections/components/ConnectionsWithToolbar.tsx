@@ -2,6 +2,7 @@ import { Connection } from '@syndesis/models';
 import {
   ConnectionsListView,
   IActiveFilter,
+  IConnectionsListViewProps,
   IFilterType,
   ISortType,
 } from '@syndesis/ui';
@@ -54,7 +55,9 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export interface IConnectionsWithToolbarProps extends IConnectionsProps {
+export interface IConnectionsWithToolbarProps
+  extends IConnectionsProps,
+    Pick<IConnectionsListViewProps, 'createConnectionButtonStyle'> {
   children?: any;
 }
 
@@ -83,6 +86,9 @@ export class ConnectionsWithToolbar extends React.Component<
 
               return (
                 <ConnectionsListView
+                  createConnectionButtonStyle={
+                    this.props.createConnectionButtonStyle
+                  }
                   linkToConnectionCreate={resolvers.create.selectConnector()}
                   filterTypes={filterTypes}
                   sortTypes={sortTypes}

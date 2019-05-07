@@ -99,16 +99,6 @@ export class SaveIntegrationPage extends React.Component<
                     <>
                       <PageTitle title={'Save the integration'} />
                       <IntegrationEditorLayout
-                        integrationName={integration.name}
-                        integrationDescription={integration.description}
-                        i18nIntegrationNamePlaceholder={'Click to set a name'}
-                        i18nIntegrationDescriptionPlaceholder={
-                          'Click to set a description'
-                        }
-                        onIntegrationNameChange={() => Promise.resolve(true)}
-                        onIntegrationDescriptionChange={() =>
-                          Promise.resolve(true)
-                        }
                         title={'Save the integration'}
                         description={'Update details about this integration.'}
                         content={

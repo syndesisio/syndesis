@@ -46,6 +46,10 @@
     display: flex;
   }
 
+  .integration-editor-layout__header {
+    border-bottom: 1px solid #ededed;
+  }
+
   .integration-editor-layout__body {
     flex: 1 0;
     display: flex;
