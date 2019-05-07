@@ -41,8 +41,8 @@ export interface IConnectionProps {
   icon: string;
   menuProps?: IConnectionCardMenuProps;
   name: string;
-  techPreview?: boolean;
-  techPreviewPopoverHtml?: JSX.Element;
+  techPreview: boolean;
+  techPreviewPopoverHtml: JSX.Element;
 }
 
 export interface IConnectionCardState {

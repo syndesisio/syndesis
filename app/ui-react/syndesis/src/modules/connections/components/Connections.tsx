@@ -87,25 +87,6 @@ export class Connections extends React.Component<IConnectionsProps> {
                                 c.connector!.metadata! &&
                                 c.connector!.metadata!['tech-preview'] ===
                                   'true';
-                              const techPreviewPopoverHtml = (
-                                <>
-                                  <a
-                                    href="https://access.redhat.com/support/offerings/techpreview"
-                                    rel="nofollow"
-                                    target="_blank"
-                                    role="link"
-                                  >
-                                    Technology Previews
-                                  </a>{' '}
-                                  provide early access to features that are not
-                                  yet supported. Feedback about these features
-                                  is welcome. Send a message to{' '}
-                                  <a href="mailto:fuse-online-tech-preview@redhat.com">
-                                    fuse-online-tech-preview@redhat.com
-                                  </a>
-                                  .
-                                </>
-                              );
 
                               return (
                                 <ConnectionsGridCell key={index}>
@@ -158,7 +139,11 @@ export class Connections extends React.Component<IConnectionsProps> {
                                     }
                                     techPreview={isTechPreview}
                                     techPreviewPopoverHtml={
-                                      techPreviewPopoverHtml
+                                      <span
+                                        dangerouslySetInnerHTML={t(
+                                          'techPreviewPopoverHtml'
+                                        )}
+                                      />
                                     }
                                   />
                                 </ConnectionsGridCell>

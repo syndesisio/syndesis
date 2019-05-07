@@ -81,6 +81,12 @@ export class SelectConnectionPage extends React.Component<
                           hasData: hasConnectionsData,
                           error: connectionsError,
                         }) => (
+                          <WithExtensions>
+                          {({
+                            data: extensionsData,
+                            hasData: hasExtensionsData,
+                            error: extensionsError,
+                          }) => (
                           <WithSteps>
                             {({ items: steps }) => {
                               const stepKinds = mergeConnectionsSources(
@@ -109,6 +115,8 @@ export class SelectConnectionPage extends React.Component<
                               );
                             }}
                           </WithSteps>
+                          )}
+                          </WithExtensions>
                         )}
                       </WithConnections>
                     )}
