@@ -21,18 +21,18 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import io.swagger.models.Scheme;
 import io.swagger.models.Swagger;
 import io.swagger.models.auth.AbstractSecuritySchemeDefinition;
+import io.swagger.models.auth.ApiKeyAuthDefinition;
 import io.swagger.models.auth.BasicAuthDefinition;
 import io.swagger.models.auth.OAuth2Definition;
 import io.swagger.models.auth.SecuritySchemeDefinition;
 import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
+import io.syndesis.common.model.connection.ConnectorSettings;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -44,27 +44,50 @@ enum PropertyGenerators {
 
     accessToken {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+        protected PropertyGenerator propertyGenerator() {
             return PropertyGenerators::ifHasOAuthSecurityDefinition;
         }
     },
     accessTokenExpiresAt {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+        protected PropertyGenerator propertyGenerator() {
             return PropertyGenerators::ifHasOAuthSecurityDefinition;
+        }
+    },
+    authenticationParameterName {
+        @Override
+        protected PropertyGenerator propertyGenerator() {
+            return (swagger, template, settings) -> apiKeyProperty(swagger, template, settings, ApiKeyAuthDefinition::getName);
+        }
+    },
+    authenticationParameterPlacement {
+        @Override
+        protected PropertyGenerator propertyGenerator() {
+            return (swagger, template, settings) -> securityDefinition(swagger, settings, ApiKeyAuthDefinition.class)
+                .map(definition -> new ConfigurationProperty.Builder()
+                    .createFrom(template)
+                    .getEnum(Collections.emptyList())
+                    .defaultValue(definition.getIn().toValue())
+                    .build());
+        }
+    },
+    authenticationParameterValue {
+        @Override
+        protected PropertyGenerator propertyGenerator() {
+            return PropertyGenerators::ifHasApiKeysSecurityDefinition;
         }
     },
     authenticationType {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
-            return (swagger, template) -> {
+        protected PropertyGenerator propertyGenerator() {
+            return (swagger, template, settings) -> {
                 final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
                 if (securityDefinitions == null || securityDefinitions.isEmpty()) {
                     return Optional
                         .of(new ConfigurationProperty.Builder().createFrom(template).defaultValue("none").addEnum(NO_SECURITY).build());
                 }
 
-                final PropertyValue[] enums = securityDefinitions.values().stream()//
+                final ConfigurationProperty.PropertyValue[] enums = securityDefinitions.values().stream()//
                     .map(SecuritySchemeDefinition::getType)//
                     .filter(SupportedAuthenticationTypes.SUPPORTED::contains)//
                     .map(SupportedAuthenticationTypes::valueOf)//
@@ -84,86 +107,86 @@ enum PropertyGenerators {
     },
     authorizationEndpoint {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
-            return (swagger, template) -> oauthProperty(swagger, template, OAuth2Definition::getAuthorizationUrl);
+        protected PropertyGenerator propertyGenerator() {
+            return (swagger, template, settings) -> oauthProperty(swagger, template, settings, OAuth2Definition::getAuthorizationUrl);
         }
     },
     authorizeUsingParameters {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
-            return (swagger, template) -> oauthVendorProperty(swagger, template, "x-authorize-using-parameters");
+        protected PropertyGenerator propertyGenerator() {
+            return (swagger, template, settings) -> oauthVendorProperty(swagger, template, settings, "x-authorize-using-parameters");
         }
     },
     basePath {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+        protected PropertyGenerator propertyGenerator() {
             return withDefaultValue(Swagger::getBasePath);
         }
     },
     clientId {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+        protected PropertyGenerator propertyGenerator() {
             return PropertyGenerators::ifHasOAuthSecurityDefinition;
         }
     },
     clientSecret {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+        protected PropertyGenerator propertyGenerator() {
             return PropertyGenerators::ifHasOAuthSecurityDefinition;
         }
     },
     host {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+        protected PropertyGenerator propertyGenerator() {
             return withDefaultValue(PropertyGenerators::determineHost);
         }
     },
     oauthScopes {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
-            return (swagger, template) -> oauthProperty(swagger, template,
+        protected PropertyGenerator propertyGenerator() {
+            return (swagger, template, settings) -> oauthProperty(swagger, template, settings,
                 d -> d.getScopes().keySet().stream().sorted().collect(Collectors.joining(" ")));
         }
     },
     password {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+        protected PropertyGenerator propertyGenerator() {
             return PropertyGenerators::ifHasBasicSecurityDefinition;
         }
     },
     refreshToken {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+        protected PropertyGenerator propertyGenerator() {
             return PropertyGenerators::ifHasOAuthSecurityDefinition;
         }
     },
     refreshTokenRetryStatuses {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
-            return (swagger, template) -> oauthVendorProperty(swagger, template, "x-refresh-token-retry-statuses");
+        protected PropertyGenerator propertyGenerator() {
+            return (swagger, template, settings) -> oauthVendorProperty(swagger, template, settings, "x-refresh-token-retry-statuses");
         }
     },
     specification {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+        protected PropertyGenerator propertyGenerator() {
             return PropertyGenerators::fromTemplate;
         }
     },
     tokenEndpoint {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
-            return (swagger, template) -> oauthProperty(swagger, template, OAuth2Definition::getTokenUrl);
+        protected PropertyGenerator propertyGenerator() {
+            return (swagger, template, settings) -> oauthProperty(swagger, template, settings, OAuth2Definition::getTokenUrl);
         }
     },
     tokenStrategy {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
-            return (swagger, template) -> oauthVendorProperty(swagger, template, "x-token-strategy");
+        protected PropertyGenerator propertyGenerator() {
+            return (swagger, template, settings) -> oauthVendorProperty(swagger, template, settings, "x-token-strategy");
         }
     },
     username {
         @Override
-        protected BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor() {
+        protected PropertyGenerator propertyGenerator() {
             return PropertyGenerators::ifHasBasicSecurityDefinition;
         }
     };
@@ -171,7 +194,12 @@ enum PropertyGenerators {
     private static final ConfigurationProperty.PropertyValue NO_SECURITY = new ConfigurationProperty.PropertyValue.Builder().value("none")
         .label("No Security").build();
 
-    protected abstract BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>> propertyValueExtractor();
+    @FunctionalInterface
+    interface PropertyGenerator {
+        Optional<ConfigurationProperty> generate(Swagger swagger, ConfigurationProperty template, ConnectorSettings connectorSettings);
+    }
+
+    protected abstract PropertyGenerator propertyGenerator();
 
     static String createHostUri(final String scheme, final String host, final int port) {
         try {
@@ -186,10 +214,10 @@ enum PropertyGenerators {
     }
 
     static Optional<ConfigurationProperty> createProperty(final String propertyName, final Swagger swagger,
-        final ConfigurationProperty template) {
+        final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
         final PropertyGenerators propertyGenerator = PropertyGenerators.valueOf(propertyName);
 
-        return propertyGenerator.propertyValueExtractor().apply(swagger, template);
+        return propertyGenerator.propertyGenerator().generate(swagger, template, connectorSettings);
     }
 
     static String determineHost(final Swagger swagger) {
@@ -226,6 +254,16 @@ enum PropertyGenerators {
         return createHostUri(schemeToUse, hostToUse, portToUse);
     }
 
+    private static Optional<ConfigurationProperty> apiKeyProperty(final Swagger swagger, final ConfigurationProperty template,
+        final ConnectorSettings connectorSettings,
+        final Function<ApiKeyAuthDefinition, String> defaultValueExtractor) {
+        return securityDefinition(swagger, connectorSettings, ApiKeyAuthDefinition.class)
+            .map(definition -> new ConfigurationProperty.Builder()
+                .createFrom(template)
+                .defaultValue(defaultValueExtractor.apply(definition))
+                .build());
+    }
+
     private static String determineSchemeToUse(final Swagger swagger, final URI specificationUrl) {
         final List<Scheme> schemes = swagger.getSchemes();
         final boolean noSchemes = schemes == null || schemes.isEmpty();
@@ -249,23 +287,30 @@ enum PropertyGenerators {
     }
 
     private static Optional<ConfigurationProperty> fromTemplate(@SuppressWarnings("unused") final Swagger swagger,
-        final ConfigurationProperty template) {
+        final ConfigurationProperty template, @SuppressWarnings("unused") final ConnectorSettings connectorSettings) {
         return Optional.of(template);
     }
 
+    private static Optional<ConfigurationProperty> ifHasApiKeysSecurityDefinition(final Swagger swagger,
+        final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
+        return ifHasSecurityDefinition(swagger, template, connectorSettings, ApiKeyAuthDefinition.class);
+    }
+
     private static Optional<ConfigurationProperty> ifHasBasicSecurityDefinition(final Swagger swagger,
-        final ConfigurationProperty template) {
-        return ifHasSecurityDefinition(swagger, template, BasicAuthDefinition.class);
+        final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
+        return ifHasSecurityDefinition(swagger, template, connectorSettings, BasicAuthDefinition.class);
     }
 
     private static Optional<ConfigurationProperty> ifHasOAuthSecurityDefinition(final Swagger swagger,
-        final ConfigurationProperty template) {
-        return ifHasSecurityDefinition(swagger, template, OAuth2Definition.class);
+        final ConfigurationProperty template, final ConnectorSettings connectorSettings) {
+        return ifHasSecurityDefinition(swagger, template, connectorSettings, OAuth2Definition.class);
     }
 
     private static Optional<ConfigurationProperty> ifHasSecurityDefinition(final Swagger swagger, final ConfigurationProperty template,
-        final Class<? extends AbstractSecuritySchemeDefinition> type) {
-        if (securityDefinition(swagger, type).isPresent()) {
+        final ConnectorSettings connectorSettings, final Class<? extends AbstractSecuritySchemeDefinition> type) {
+        final Optional<? extends AbstractSecuritySchemeDefinition> securityDefinition = securityDefinition(swagger, connectorSettings, type);
+
+        if (securityDefinition.isPresent()) {
             return Optional.of(template);
         }
 
@@ -273,25 +318,41 @@ enum PropertyGenerators {
     }
 
     private static Optional<ConfigurationProperty> oauthProperty(final Swagger swagger, final ConfigurationProperty template,
+        final ConnectorSettings connectorSettings,
         final Function<OAuth2Definition, String> defaultValueExtractor) {
-        return securityDefinition(swagger, OAuth2Definition.class).map(definition -> new ConfigurationProperty.Builder()
+        return securityDefinition(swagger, connectorSettings, OAuth2Definition.class).map(definition -> new ConfigurationProperty.Builder()
             .createFrom(template).defaultValue(defaultValueExtractor.apply(definition)).build());
     }
 
     private static Optional<ConfigurationProperty> oauthVendorProperty(final Swagger swagger, final ConfigurationProperty template,
+        final ConnectorSettings connectorSettings,
         final String name) {
-        return securityDefinition(swagger, OAuth2Definition.class).map(definition -> vendorExtension(definition, template, name))
+        return securityDefinition(swagger, connectorSettings, OAuth2Definition.class).map(definition -> vendorExtension(definition, template, name))
             .orElse(empty());
     }
 
-    private static <T extends AbstractSecuritySchemeDefinition> Optional<T> securityDefinition(final Swagger swagger, final Class<T> type) {
+    private static <T extends AbstractSecuritySchemeDefinition> Optional<T> securityDefinition(final Swagger swagger, final ConnectorSettings connectorSettings,
+        final Class<T> type) {
         final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
 
         if (securityDefinitions == null) {
             return empty();
         }
 
-        return securityDefinitions.values().stream().filter(type::isInstance).map(type::cast).findFirst();
+        final Optional<T> maybeSecurityDefinition = securityDefinitions.values().stream().filter(type::isInstance).map(type::cast).findFirst();
+        if (!maybeSecurityDefinition.isPresent()) {
+            return empty();
+        }
+
+        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
+        final String configuredAuthenticationType = configuredProperties.get(authenticationType.name());
+
+        final T securityDefinition = maybeSecurityDefinition.get();
+        if (configuredAuthenticationType == null || configuredAuthenticationType.equals(securityDefinition.getType())) {
+            return maybeSecurityDefinition;
+        }
+
+        return empty();
     }
 
     private static Optional<ConfigurationProperty> vendorExtension(final SecuritySchemeDefinition definition,
@@ -312,9 +373,9 @@ enum PropertyGenerators {
         return Optional.of(property);
     }
 
-    private static BiFunction<Swagger, ConfigurationProperty, Optional<ConfigurationProperty>>
+    private static PropertyGenerator
         withDefaultValue(final Function<Swagger, String> defaultValueExtractor) {
-        return (swagger, template) -> Optional
+        return (swagger, template, settings) -> Optional
             .of(new ConfigurationProperty.Builder().createFrom(template).defaultValue(defaultValueExtractor.apply(swagger)).build());
     }
 }

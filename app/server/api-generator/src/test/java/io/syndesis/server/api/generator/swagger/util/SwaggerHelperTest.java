@@ -53,7 +53,6 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
         assertThatCode(() -> JsonRecordSupport.validateKey(sanitized)).doesNotThrowAnyException();
     }
 
-
     @Test
     public void testThatAllSwaggerFilesAreValid() throws IOException {
         final String[] specifications = {"/swagger/concur.swagger.json", "/swagger/petstore.swagger.json",
@@ -114,6 +113,6 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
         final SwaggerModelInfo info = SwaggerHelper.parse(specification, APIValidationContext.CONSUMED_API);
 
         assertThat(info.getErrors()).isEmpty();
-        assertThat(info.getWarnings()).hasSize(3);
+        assertThat(info.getWarnings()).hasSize(2);
     }
 }

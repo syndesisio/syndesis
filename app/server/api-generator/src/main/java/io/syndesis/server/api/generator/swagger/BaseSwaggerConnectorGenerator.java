@@ -162,7 +162,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
         final Map<String, String> alreadyConfiguredProperties = builder.build().getConfiguredProperties();
 
         connectorTemplate.getConnectorProperties().forEach((propertyName, template) -> {
-            final Optional<ConfigurationProperty> maybeProperty = PropertyGenerators.createProperty(propertyName, swagger, template);
+            final Optional<ConfigurationProperty> maybeProperty = PropertyGenerators.createProperty(propertyName, swagger, template, connectorSettings);
 
             maybeProperty.ifPresent(property -> {
                 builder.putProperty(propertyName, property);
