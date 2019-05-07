@@ -15,7 +15,6 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../Shared';
-
 import './ConnectionCard.css';
 
 export interface IConnectionCardMenuProps {
@@ -228,7 +227,7 @@ export class ConnectionCard extends React.PureComponent<
                 }
               >
                 <Icon type={'pf'} name={'warning-triangle-o'} size={'2x'} />
-                <span>{this.props.i18nConfigurationRequired}</span>
+                {this.props.i18nConfigurationRequired}
               </Card.Footer>
             ) : null}
           </Link>
