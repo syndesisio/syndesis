@@ -69,6 +69,13 @@ export default class ConnectorsPage extends React.Component {
                                       connector,
                                     })}
                                     techPreview={isTechPreview}
+                                    techPreviewPopoverHtml={
+                                      <span
+                                        dangerouslySetInnerHTML={{
+                                          __html: t('techPreviewPopoverHtml'),
+                                        }}
+                                      />
+                                    }
                                   />
                                 </ConnectionsGridCell>
                               );

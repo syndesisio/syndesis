@@ -11,9 +11,8 @@ import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { ApiError, PageTitle } from '../../../../shared';
+import { PageTitle } from '../../../../shared';
 import { ConnectionsWithToolbar } from '../../../connections/components';
-import resolvers from '../../../resolvers';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,

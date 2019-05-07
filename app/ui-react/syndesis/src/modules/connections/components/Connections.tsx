@@ -140,9 +140,9 @@ export class Connections extends React.Component<IConnectionsProps> {
                                     techPreview={isTechPreview}
                                     techPreviewPopoverHtml={
                                       <span
-                                        dangerouslySetInnerHTML={t(
-                                          'techPreviewPopoverHtml'
-                                        )}
+                                        dangerouslySetInnerHTML={{
+                                          __html: t('techPreviewPopoverHtml'),
+                                        }}
                                       />
                                     }
                                   />
