@@ -1,4 +1,5 @@
 import {
+  ConnectionBulletinBoard,
   ConnectionOverview,
   Connector,
   DataShape,
@@ -103,6 +104,7 @@ export interface ISaveIntegrationRouteState {
 }
 
 export interface IUIStep extends StepKind {
+  board?: ConnectionBulletinBoard;
   connector?: Connector;
   icon: string;
   uiStepKind: 'api-provider' | StepKind['stepKind'];
