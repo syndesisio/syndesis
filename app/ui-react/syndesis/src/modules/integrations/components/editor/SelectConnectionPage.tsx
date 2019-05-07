@@ -13,6 +13,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { ConnectionsWithToolbar } from '../../../connections/components';
+import resolvers from '../../../connections/resolvers';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
