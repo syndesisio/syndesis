@@ -37,7 +37,7 @@ export interface IConnectionProps {
   href: H.LocationDescriptor;
   i18nCannotDelete?: string;
   i18nConfigurationRequired?: string;
-  i18nTechPreview?: string;
+  i18nTechPreview: string;
   icon: string;
   menuProps?: IConnectionCardMenuProps;
   name: string;
@@ -108,34 +108,32 @@ export class ConnectionCard extends React.PureComponent<
           />
         )}
         <Card matchHeight={true}>
-          {this.props.menuProps && (
-            <Card.Heading
-              className={
-                this.props.techPreview
-                  ? 'connection-card__heading--tech-preview'
-                  : 'connection-card__heading--no-border'
-              }
-            >
-              {this.props.techPreview ? (
-                <Level gutter={'md'}>
-                  <LevelItem>&nbsp;</LevelItem>
-                  <LevelItem>
-                    {this.props.i18nTechPreview!}
-                    {'  '}
-                    <Popover
-                      bodyContent={
-                        <div>{this.props.techPreviewPopoverHtml}</div>
-                      }
-                      aria-label={this.props.i18nTechPreview!}
-                      position={'left'}
-                    >
-                      <Icon type={'pf'} name={'info'} />
-                    </Popover>
-                  </LevelItem>
-                </Level>
-              ) : (
-                <Level gutter={'md'}>&nbsp;</Level>
-              )}
+          <Card.Heading
+            className={
+              this.props.techPreview
+                ? 'connection-card__heading--tech-preview'
+                : 'connection-card__heading--no-border'
+            }
+          >
+            {this.props.techPreview ? (
+              <Level gutter={'md'}>
+                <LevelItem>&nbsp;</LevelItem>
+                <LevelItem>
+                  {this.props.i18nTechPreview!}
+                  {'  '}
+                  <Popover
+                    bodyContent={<div>{this.props.techPreviewPopoverHtml}</div>}
+                    aria-label={this.props.i18nTechPreview!}
+                    position={'left'}
+                  >
+                    <Icon type={'pf'} name={'info'} />
+                  </Popover>
+                </LevelItem>
+              </Level>
+            ) : (
+              <Level gutter={'md'}>&nbsp;</Level>
+            )}
+            {this.props.menuProps && (
               <div className="pull-right">
                 <DropdownKebab
                   id={`connection-${this.props.name}-menu`}
@@ -190,8 +188,8 @@ export class ConnectionCard extends React.PureComponent<
                   </li>
                 </DropdownKebab>
               </div>
-            </Card.Heading>
-          )}
+            )}
+          </Card.Heading>
           <Link to={this.props.href} className={'connection-card'}>
             <Card.Body>
               <div className={'connection-card__content'}>

@@ -20,6 +20,8 @@
 
 .connection-card__heading--no-border {
   border-bottom: 1px solid #FFFF;
+  font-size: small;
+  padding: 4px;
 }
 
 .connection-card__footer--tech-preview {

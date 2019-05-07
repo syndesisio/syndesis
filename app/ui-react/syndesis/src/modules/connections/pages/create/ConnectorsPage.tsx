@@ -10,7 +10,6 @@ import {
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import i18n from '../../../../i18n';
 import { ApiError, PageTitle } from '../../../../shared';
 import { ConnectionCreatorBreadcrumbs } from '../../components';
 import resolvers from '../../resolvers';
@@ -56,11 +55,11 @@ export default class ConnectorsPage extends React.Component {
                                     configurationRequired={false}
                                     name={connector.name}
                                     description={connector.description || ''}
-                                    i18nCannotDelete={i18n.t('cannotDelete')}
-                                    i18nConfigurationRequired={i18n.t(
+                                    i18nCannotDelete={t('cannotDelete')}
+                                    i18nConfigurationRequired={t(
                                       'configurationRequired'
                                     )}
-                                    i18nTechPreview={i18n.t('techPreview')}
+                                    i18nTechPreview={t('techPreview')}
                                     icon={getConnectionIcon(
                                       process.env.PUBLIC_URL,
                                       connector as IConnectionWithIconFile

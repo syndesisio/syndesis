@@ -20,6 +20,11 @@ export default describe('ConnectionCard', () => {
         i18nTechPreview={'Technology Preview'}
         href={'/test'}
         techPreview={false}
+        techPreviewPopoverHtml={
+          <span>
+            Some popover <strong>HTML</strong>.
+          </span>
+        }
       />
     </MemoryRouter>
   );
