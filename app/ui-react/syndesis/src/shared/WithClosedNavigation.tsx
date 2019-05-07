@@ -12,12 +12,14 @@ import { UIContext } from '../app';
  */
 export const WithClosedNavigation: React.FunctionComponent = ({ children }) => {
   const context = React.useContext(UIContext);
+  // we want the effect to be run only once, so we pass the empty array to the
+  // useEffect and disable the eslint check
   React.useEffect(() => {
     context.hideNavigation();
 
     return () => {
       context.showNavigation();
     };
-  }, [context]);
+  }, []); // eslint-disable-line
   return <>{children}</>;
 };
