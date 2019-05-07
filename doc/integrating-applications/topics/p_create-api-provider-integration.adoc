@@ -4,11 +4,12 @@
 [id='create-api-provider-integration_{context}']
 = Creating an API provider integration
 
-To be able to invoke a call that triggers execution of an integration, you provide
-an OpenAPI document that defines the operations that the integration
-can perform. For each operation, you specify an execution flow that
-connects to applications and processes integration data according to the
-requirements for that operation. 
+To create an API provider integration, provide
+an OpenAPI document (`.json`, `.yaml`, or `.yml` file) that defines the operations that the integration
+can perform. {prodname} creates an execution flow for each operation. 
+Edit the flow for each operation to 
+add connections and steps that 
+process integration data according to the requirements for that operation. 
 
 .Prerequisites
 * You are able to provide or define an OpenAPI document for the REST API
@@ -17,7 +18,7 @@ operations that you want the integration to perform.
 To experiment,
 https://github.com/syndesisio/syndesis-quickstarts/blob/master/api-provider/task-api.json[download the `task-api.json` file], 
 which is an OpenAPI document for an API provider quickstart. You can
-then drag this file in when {prodname} prompts you to provide an OpenAPI
+upload this file when {prodname} prompts you to provide an OpenAPI
 document. 
 * You have a plan for the flow for each OpenAPI operation. 
 * You created a connection for each application or service that you want
@@ -27,23 +28,16 @@ to add to an operation's flow.
 
 . In {prodname}, in the left navigation panel, click *Integrations*. 
 . In the upper right, click *Create Integration*. 
-. On the *Choose a Start Connection* page, click the *API Provider* card. 
-. On the *Start integration with an API call* page, if you have an OpenAPI 2.0
-document that defines the REST API operations then upload it in one of the 
-following ways. You can edit this document as needed while you are 
-creating the API provider integration.
-+
-* Drag and drop the document that contains the schema. 
-* Click *Choose File* to navigate to and select the file that contains the
-document. 
-* Click *Use a URL* and enter the URL for a document. 
-
-+
-Or, if you need to define the OpenAPI 2.0 document, select *Create from scratch*. 
+. On the *Choose a Start Connection* page, click *API Provider*. 
+. On the *Start integration with an API call* page: 
++ 
+* If you have an OpenAPI 2.0 document that defines the REST API 
+operations, upload the OpenAPI document. 
+* If you need to define the OpenAPI 2.0 document, select *Create from scratch*. 
 
 . Click *Next*. 
 +
-* If you uploaded a document, you can review or edit the document: 
+* If you uploaded a document, review or edit it: 
 +
 .. Click *Review/Edit* to open the Apicurito editor.
 .. Review and edit as needed.
@@ -61,9 +55,6 @@ that {prodname} opens:
 For information about using the Apicurito editor, see 
 link:https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/designing_apis_with_apicurito/#create-api-definition[Designing and developing an API definition with Apicurito].
 
-. On the *Give this integration a name* page, enter a name for your integration.
-. Optionally, enter a description that helps you distinguish this integration
-from other integrations. 
-. Click *Save and continue* to display the *Operations* page. You are
-ready to 
+. Enter a name and description for your integration and click *Save and continue*. 
+You are ready to 
 link:{LinkFuseOnlineIntegrationGuide}#create-integration-operation-flows_api-provider[define a flow for each operation].
