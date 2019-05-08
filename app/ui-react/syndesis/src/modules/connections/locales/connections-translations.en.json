@@ -1,9 +1,11 @@
 {
   "connectionListDescription": "This description has not yet been actually defined, please send help.",
+  "cannotDelete": "Unable to delete this connection as it is being used by one or more integrations",
   "connectionCardMenuTitle": "Connection Actions",
   "connectionDeletedFailed": "An error occurred deleting connection \"{{connectionName}}.\" Details: {{details}}",
   "connectionDeletedSuccess": "Connection \"{{connectionName}}\" was successfully deleted.",
   "connectionDetailPageTitle": "Connection Details",
+  "configurationRequired": "Configuration Required",
   "deleteModalMessage": "Are you sure you want to delete the \"{{connectionName}}\" connection?",
   "deleteModalTitle": "Confirm Delete?",
   "descriptionPlaceholder": "Enter connection description...",
@@ -13,6 +15,8 @@
   "errorValidatingDetails": "Unexpected server error validating the connection details.",
   "errorValidatingName": "Unexpected server error validating connection name.",
   "namePlaceholder": "Must enter a connection name...",
+  "techPreview": "Technology Preview",
+  "techPreviewPopoverHtml": "<a href='https://access.redhat.com/support/offerings/techpreview' rel='nofollow' target='_blank' role='link'>Technology Previews</a> provide early access to features that are not yet supported. Feedback about these features is welcome. Send a message to <a href='mailto:fuse-online-tech-preview@redhat.com'>fuse-online-tech-preview@redhat.com</a>.",
   "usedByOne": "Used by 1 integration",
   "usedByMulti": "Used by integrations {{count}} times"
 }

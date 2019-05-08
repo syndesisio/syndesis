@@ -10,3 +10,24 @@
   flex-flow: column;
   text-align: center;
 }
+
+.connection-card__heading--tech-preview {
+  color: #363636;
+  cursor: pointer;
+  font-size: small;
+  padding: 4px;
+}
+
+.connection-card__heading--no-border {
+  border-bottom: 1px solid #FFFF;
+  font-size: small;
+  padding: 4px;
+}
+
+.connection-card__footer--tech-preview {
+  background-color: #fdf2e5;
+  border-color: #ec7a08;
+  font-size: smaller;
+  text-align: center;
+  padding: 15px;
+}

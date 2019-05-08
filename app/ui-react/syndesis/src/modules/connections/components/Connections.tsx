@@ -1,6 +1,6 @@
 import { getConnectionIcon, WithConnectionHelpers } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Connection } from '@syndesis/models';
+import { ConnectionOverview } from '@syndesis/models';
 import {
   ConnectionCard,
   ConnectionsGrid,
@@ -17,19 +17,20 @@ export interface IConnectionsProps {
   error: boolean;
   includeConnectionMenu: boolean;
   loading: boolean;
-  connections: Connection[];
-  getConnectionHref(connection: Connection): H.LocationDescriptor;
-  getConnectionEditHref?(connection: Connection): H.LocationDescriptor;
+  connections: ConnectionOverview[];
+
+  getConnectionHref(connection: ConnectionOverview): H.LocationDescriptor;
+  getConnectionEditHref?(connection: ConnectionOverview): H.LocationDescriptor;
 }
 
 export class Connections extends React.Component<IConnectionsProps> {
   public render() {
     return (
-      <UIContext.Consumer>
-        {({ pushNotification }) => {
-          return (
-            <Translation ns={['connections', 'shared']}>
-              {t => (
+      <Translation ns={['connections', 'shared']}>
+        {t => (
+          <UIContext.Consumer>
+            {({ pushNotification }) => {
+              return (
                 <WithConnectionHelpers>
                   {({ deleteConnection }) => {
                     const doDelete = async (
@@ -53,6 +54,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                         );
                       }
                     };
+
                     return (
                       <ConnectionsGrid>
                         <WithLoader
@@ -75,10 +77,25 @@ export class Connections extends React.Component<IConnectionsProps> {
                                 doDelete(c.id!, c.name); // must have an ID if deleting
                               };
 
+                              const configurationRequired =
+                                c.board &&
+                                (c.board!.notices ||
+                                  c.board!.warnings ||
+                                  c.board!.errors)! > 0;
+
+                              const isTechPreview =
+                                c.connector! && c.connector!.metadata!
+                                  ? c.connector!.metadata!['tech-preview'] ===
+                                    'true'
+                                  : false;
+
                               return (
                                 <ConnectionsGridCell key={index}>
                                   <ConnectionCard
                                     name={c.name}
+                                    configurationRequired={
+                                      configurationRequired
+                                    }
                                     description={c.description || ''}
                                     icon={
                                       // dirty hack to handle connection-like objects coming from the editor
@@ -91,6 +108,11 @@ export class Connections extends React.Component<IConnectionsProps> {
                                           )
                                     }
                                     href={this.props.getConnectionHref(c)}
+                                    i18nCannotDelete={t('cannotDelete')}
+                                    i18nConfigurationRequired={t(
+                                      'configurationRequired'
+                                    )}
+                                    i18nTechPreview={t('techPreview')}
                                     menuProps={
                                       this.props.includeConnectionMenu
                                         ? {
@@ -116,6 +138,14 @@ export class Connections extends React.Component<IConnectionsProps> {
                                           }
                                         : undefined
                                     }
+                                    techPreview={isTechPreview}
+                                    techPreviewPopoverHtml={
+                                      <span
+                                        dangerouslySetInnerHTML={{
+                                          __html: t('techPreviewPopoverHtml'),
+                                        }}
+                                      />
+                                    }
                                   />
                                 </ConnectionsGridCell>
                               );
@@ -126,11 +156,11 @@ export class Connections extends React.Component<IConnectionsProps> {
                     );
                   }}
                 </WithConnectionHelpers>
-              )}
-            </Translation>
-          );
-        }}
-      </UIContext.Consumer>
+              );
+            }}
+          </UIContext.Consumer>
+        )}
+      </Translation>
     );
   }
 }

@@ -42,6 +42,7 @@ const options = {
     'shared',
     'app',
     'apiClientConnectors',
+    'connections',
     'dashboard',
     'extensions',
     'integrations',

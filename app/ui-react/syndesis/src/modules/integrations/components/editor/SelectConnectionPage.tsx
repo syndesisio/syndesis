@@ -10,6 +10,7 @@ import { StepKind } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { ConnectionsWithToolbar } from '../../../connections/components';
 import {
@@ -71,50 +72,62 @@ export class SelectConnectionPage extends React.Component<
                   steps: toUIStepKindCollection(integrationSteps),
                 })}
                 content={
-                  <WithConnections>
-                    {({
-                      data: connectionsData,
-                      hasData: hasConnectionsData,
-                      error: connectionsError,
-                    }) => (
-                      <WithExtensions>
+                  <Translation ns={['connections', 'shared']}>
+                    {t => (
+                      <WithConnections>
                         {({
-                          data: extensionsData,
-                          hasData: hasExtensionsData,
-                          error: extensionsError,
+                          data: connectionsData,
+                          hasData: hasConnectionsData,
+                          error: connectionsError,
                         }) => (
-                          <WithSteps>
-                            {({ items: steps }) => {
-                              const stepKinds = mergeConnectionsSources(
-                                connectionsData.dangerouslyUnfilteredConnections,
-                                extensionsData.items,
-                                steps
-                              );
-                              const visibleSteps = visibleStepsByPosition(
-                                stepKinds as StepKind[],
-                                positionAsNumber,
-                                integrationSteps
-                              ) as IUIStep[];
-                              return (
-                                <ConnectionsWithToolbar
-                                  loading={
-                                    !hasConnectionsData || !hasExtensionsData
-                                  }
-                                  error={connectionsError || extensionsError}
-                                  includeConnectionMenu={false}
-                                  getConnectionHref={step =>
-                                    getStepHref(step, params, state, this.props)
-                                  }
-                                  connections={visibleSteps}
-                                  createConnectionButtonStyle={'default'}
-                                />
-                              );
-                            }}
-                          </WithSteps>
+                          <WithExtensions>
+                            {({
+                              data: extensionsData,
+                              hasData: hasExtensionsData,
+                              error: extensionsError,
+                            }) => (
+                              <WithSteps>
+                                {({ items: steps }) => {
+                                  const stepKinds = mergeConnectionsSources(
+                                    connectionsData.dangerouslyUnfilteredConnections,
+                                    extensionsData.items,
+                                    steps
+                                  );
+                                  const visibleSteps = visibleStepsByPosition(
+                                    stepKinds as StepKind[],
+                                    positionAsNumber,
+                                    integrationSteps
+                                  ) as IUIStep[];
+                                  return (
+                                    <ConnectionsWithToolbar
+                                      loading={
+                                        !hasConnectionsData ||
+                                        !hasExtensionsData
+                                      }
+                                      error={
+                                        connectionsError || extensionsError
+                                      }
+                                      includeConnectionMenu={false}
+                                      getConnectionHref={step =>
+                                        getStepHref(
+                                          step,
+                                          params,
+                                          state,
+                                          this.props
+                                        )
+                                      }
+                                      connections={visibleSteps}
+                                      createConnectionButtonStyle={'default'}
+                                    />
+                                  );
+                                }}
+                              </WithSteps>
+                            )}
+                          </WithExtensions>
                         )}
-                      </WithExtensions>
+                      </WithConnections>
                     )}
-                  </WithConnections>
+                  </Translation>
                 }
                 cancelHref={this.props.cancelHref(params, state)}
               />
