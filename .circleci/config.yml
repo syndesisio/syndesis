@@ -60,17 +60,13 @@ jobs:
           command: yarn build-storybook
 
       - persist_to_workspace:
-          root: doc
-          paths:
-            - '*'
-
-      - persist_to_workspace:
           root: ~/repo/app/ui-react
           paths:
-            - Dockerfile
-            - .dockerignore
-            - 'nginx*'
             - syndesis/build
+            - doc
+            - node_modules
+            - packages/history/cjs
+            - packages/**/dist
 
   doc-deploy:
     docker:
@@ -87,22 +83,7 @@ jobs:
           path: ~/repo
 
       - attach_workspace:
-          at: doc
-
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "yarn.lock" }}
-            # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
-
-      - run:
-          name: Install dependencies
-          command: yarn install --frozen-lockfile
-
-      - run:
-          name: Build packages
-          command: |
-            yarn build --ignore @syndesis/syndesis
+          at: ~/repo/app/ui-react
 
       - run:
           name: Build app for GH-Pages
@@ -130,22 +111,7 @@ jobs:
           path: ~/repo
 
       - attach_workspace:
-          at: doc
-
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "yarn.lock" }}
-            # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
-
-      - run:
-          name: Install dependencies
-          command: yarn install --frozen-lockfile
-
-      - run:
-          name: Build packages
-          command: |
-            yarn build --ignore @syndesis/syndesis
+          at: ~/repo/app/ui-react
 
       - run:
           name: Build app for Circle CI artifacts
