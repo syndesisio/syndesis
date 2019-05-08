@@ -30,8 +30,8 @@ to send an email.
 just before this connection and you plan to map integration data 
 to the *Send Email* fields.
 
-* Enter information in one or more fields. 
-Insert a comma between multiple email addresses. 
+* Enter information in one or more of the following *Send Email* fields. 
+Separate multiple email addresses with a comma. 
 
 .. *Email To*
 .. *Email Subject* 
