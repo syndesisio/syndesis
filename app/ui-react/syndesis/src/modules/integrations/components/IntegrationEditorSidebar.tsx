@@ -5,6 +5,7 @@ import {
 } from '@syndesis/ui';
 import * as React from 'react';
 import { IUIStep } from './editor/interfaces';
+import { getDataShapeText } from './editor/utils';
 
 export interface IIntegrationEditorSidebarProps {
   /**
@@ -92,17 +93,17 @@ export class IntegrationEditorSidebar extends React.Component<
                   icon={
                     <img alt={'Step'} src={s.icon} width={24} height={24} />
                   }
-                  i18nTitle={`${position}. ${(s.action
-                    ? s.action.name
-                    : undefined) || 'n/a'}`}
-                  i18nTooltip={`${position}. ${(s.action
-                    ? s.action.name
-                    : undefined) || 'n/a'}`}
+                  i18nTitle={`${position}. ${s.name}`}
+                  i18nTooltip={`${position}. ${s.title}`}
                   active={isActive}
                   showDetails={expanded}
-                  name={s.connection ? s.connection.name : s.name}
-                  action={(s.action ? s.action.name : undefined) || 'n/a'}
-                  dataType={'TODO'}
+                  name={s.name}
+                  action={s.action && s.action.name!}
+                  dataType={
+                    idx === 0
+                      ? getDataShapeText(s.stepKind!, s.outputDataShape)
+                      : getDataShapeText(s.stepKind!, s.inputDataShape)
+                  }
                 />
                 {hasAddStep ? activeAddStep : null}
               </React.Fragment>

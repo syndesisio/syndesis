@@ -20,11 +20,11 @@ export interface IIntegrationFlowStepWithOverviewProps
   /**
    * The name of the action used for the step.
    */
-  action: string;
+  action?: string;
   /**
    * The data-type set up for the step.
    */
-  dataType: string;
+  dataType?: string;
 }
 
 /**

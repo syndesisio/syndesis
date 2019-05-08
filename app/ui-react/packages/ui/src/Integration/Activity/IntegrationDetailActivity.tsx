@@ -3,11 +3,13 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, PageSection } from '../../Layout';
 
+import './IntegrationDetailActivity.css';
+
 export interface IIntegrationDetailActivityProps {
   i18nBtnRefresh: string;
   i18nLastRefresh: string;
   i18nViewLogOpenShift: string;
-  linkToOpenShiftLog: string;
+  linkToOpenShiftLog?: string;
   onRefresh: () => void;
 }
 
@@ -18,12 +20,18 @@ export class IntegrationDetailActivity extends React.Component<
     return (
       <PageSection>
         <Container>
-          <div className="pull-right">
-            <Link to={this.props.linkToOpenShiftLog}>
-              {this.props.i18nViewLogOpenShift}
-            </Link>
-            &nbsp;|&nbsp;
-            {this.props.i18nLastRefresh}
+          <div className="integration-detail-activity-toolbar pull-right">
+            {this.props.linkToOpenShiftLog && (
+              <>
+                <Link to={this.props.linkToOpenShiftLog}>
+                  {this.props.i18nViewLogOpenShift}
+                </Link>
+                &nbsp;|&nbsp;
+              </>
+            )}
+            <span className="integration-detail-activity-toolbar-last-refresh">
+              {this.props.i18nLastRefresh}
+            </span>
             &nbsp;&nbsp;
             <Button onClick={this.props.onRefresh}>
               {this.props.i18nBtnRefresh}

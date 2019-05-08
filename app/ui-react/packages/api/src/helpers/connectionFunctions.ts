@@ -3,6 +3,7 @@ import {
   ActionDescriptor,
   ActionDescriptorStep,
   ConfigurationProperty,
+  Connection,
   ConnectionOverview,
   Connector,
   IConnectionWithIconFile,
@@ -14,6 +15,14 @@ export function getActionsWithFrom(actions: Action[] = []) {
 
 export function getActionsWithTo(actions: Action[] = []) {
   return actions.filter(a => a.pattern === 'To');
+}
+
+export function getConnectionMetadataValue(
+  connection: Connection,
+  key: string
+) {
+  const metadata = connection.metadata || {};
+  return metadata[key];
 }
 
 export function getConnectionConnector(

@@ -103,7 +103,7 @@ const addStepSelectActionPage = (
             width={24}
           />
         }
-        addI18nTitle={`${activeIndex + 1}. ${connection.connector!.name}`}
+        addI18nTitle={`${activeIndex + 1}. ${connection.name}`}
         addI18nTooltip={`${activeIndex + 1}. ${connection.name}`}
         addI18nDescription={'Choose an action'}
       />

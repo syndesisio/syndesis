@@ -1,4 +1,9 @@
-import { getIntegrationStepIcon, getSteps } from '@syndesis/api';
+import {
+  ENDPOINT,
+  getIntegrationStepIcon,
+  getSteps,
+  HIDE_FROM_CONNECTION_PAGES,
+} from '@syndesis/api';
 import { Integration } from '@syndesis/models';
 import {
   IntegrationStepsHorizontalItem,
@@ -6,6 +11,9 @@ import {
   PageSection,
 } from '@syndesis/ui';
 import * as React from 'react';
+import resolvers from '../../resolvers';
+import { IUIStep } from './editor/interfaces';
+import { toUIStepKindCollection } from './editor/utils';
 
 export interface IIntegrationDetailStepsProps {
   integration: Integration;
@@ -21,22 +29,27 @@ export class IntegrationDetailSteps extends React.Component<
     return (
       <PageSection variant={'light'}>
         <IntegrationStepsHorizontalView>
-          {steps.map((s, idx) => {
+          {toUIStepKindCollection(steps).map((s: IUIStep, idx: number) => {
             const isFirst = idx === 0;
-            const stepName = s.connection!
-              ? s.connection!.connector!.name
-              : s.name;
+            const stepUri =
+              s.stepKind === ENDPOINT && !s.metadata[HIDE_FROM_CONNECTION_PAGES]
+                ? resolvers.connections.connection.details({
+                    connection: s.connection!,
+                  }).pathname
+                : undefined;
 
             return (
-              <React.Fragment key={idx}>
+              <React.Fragment key={s.id}>
                 <IntegrationStepsHorizontalItem
-                  name={stepName}
+                  name={s.name}
+                  title={s.title}
                   icon={getIntegrationStepIcon(
                     process.env.PUBLIC_URL,
                     this.props.integration,
                     flowId,
                     idx
                   )}
+                  href={stepUri}
                   isFirst={isFirst}
                 />
               </React.Fragment>

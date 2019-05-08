@@ -14,9 +14,9 @@ interface IStepOverviewProps {
   nameI18nLabel: string;
   name: string;
   actionI18nLabel: string;
-  action: string;
+  action?: string;
   dataTypeI18nLabel: string;
-  dataType: string;
+  dataType?: string;
 }
 
 const StepOverview: React.FunctionComponent<IStepOverviewProps> = ({
@@ -32,14 +32,18 @@ const StepOverview: React.FunctionComponent<IStepOverviewProps> = ({
       <dt>{nameI18nLabel}</dt>
       <dd>{name}</dd>
     </dl>
-    <dl className={'integration-flow-step-details__overview'}>
-      <dt>{actionI18nLabel}</dt>
-      <dd>{action}</dd>
-    </dl>
-    <dl className={'integration-flow-step-details__overview'}>
-      <dt>{dataTypeI18nLabel}</dt>
-      <dd>{dataType}</dd>
-    </dl>
+    {action && (
+      <dl className={'integration-flow-step-details__overview'}>
+        <dt>{actionI18nLabel}</dt>
+        <dd>{action}</dd>
+      </dl>
+    )}
+    {dataType && (
+      <dl className={'integration-flow-step-details__overview'}>
+        <dt>{dataTypeI18nLabel}</dt>
+        <dd>{dataType}</dd>
+      </dl>
+    )}
   </div>
 );
 
