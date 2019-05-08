@@ -1,5 +1,7 @@
 module.exports = function({ env, paths }) {
   return {
+    // disable the custom loading of sourcemaps, it's too slow
+    /*
     webpack: {
       configure: (webpackConfig, { env, paths }) => {
         webpackConfig.module.rules[2].oneOf = webpackConfig.module.rules[2].oneOf.map(
@@ -13,5 +15,6 @@ module.exports = function({ env, paths }) {
         return webpackConfig;
       },
     },
+    */
   };
 };
