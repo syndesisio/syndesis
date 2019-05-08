@@ -83,6 +83,7 @@ export class IntegrationEditPage
     nextState: RouterStateSnapshot
   ): boolean | Observable<boolean> | Promise<boolean> {
     return (
+      nextState.url.indexOf(this.currentFlowService.integration.id) !== -1 ||
       nextState.url.endsWith('operations') ||
       this.currentFlowService.dirty$.pipe(
         switchMap(dirty => {

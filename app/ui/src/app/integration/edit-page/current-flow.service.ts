@@ -41,6 +41,8 @@ import {
   INTEGRATION_SET_DATASHAPE,
   INTEGRATION_SET_CONNECTION,
   INTEGRATION_SAVED,
+  INTEGRATION_ADD_FLOW,
+  INTEGRATION_REMOVE_FLOW,
 } from '@syndesis/ui/integration/edit-page';
 import {
   setIntegrationProperty,
@@ -496,7 +498,7 @@ export class CurrentFlowService {
           { ...step },
           position
         );
-        thenFinally();
+        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
         break;
       }
       case INTEGRATION_SET_METADATA: {
@@ -589,6 +591,20 @@ export class CurrentFlowService {
           event.property,
           event.value
         );
+        thenFinally();
+        break;
+      case INTEGRATION_ADD_FLOW:
+        const flow = event.flow;
+        this.flows.push(flow);
+        thenFinally();
+        break;
+      case INTEGRATION_REMOVE_FLOW:
+        const flowId = event.flowId;
+        const toRemove = this.flows.find(item => item.id === flowId);
+
+        if (toRemove) {
+          this.flows.splice(this.flows.indexOf(toRemove), 1);
+        }
         thenFinally();
         break;
       case INTEGRATION_SAVE: {
@@ -747,7 +763,13 @@ export class CurrentFlowService {
   }
 
   set integration(i: Integration) {
-    this._integration = <Integration>i;
+    // quick hack to avoid overwriting the loaded integration
+    if (
+      !this._integration ||
+      (i.id !== this._integration.id && this.dirty$.value)
+    ) {
+      this._integration = <Integration>i;
+    }
     if (!this.flowId) {
       this.flowId = i.flows && i.flows.length > 0 ? i.flows[0].id : undefined;
     }

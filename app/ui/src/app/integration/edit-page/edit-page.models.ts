@@ -37,6 +37,8 @@ export const INTEGRATION_SET_CONNECTION = 'integration-set-connection';
 export const INTEGRATION_SET_PROPERTY = 'integration-set-property';
 export const INTEGRATION_SAVE = 'integration-save';
 export const INTEGRATION_SAVED = 'integration-saved';
+export const INTEGRATION_ADD_FLOW = 'integration-add-flow';
+export const INTEGRATION_REMOVE_FLOW = 'integration-remove-flow';
 
 // UI actions
 export const INTEGRATION_CANCEL_CLICKED = 'integration-cancel-clicked';

@@ -9,7 +9,7 @@ import { CoreModule } from '@syndesis/ui/core';
 import {
   PlatformModule,
   ActionDescriptor,
-  ActionDescriptorStep,
+  ActionDescriptorStep, ConfigurationProperty, StringMap,
 } from '@syndesis/ui/platform';
 
 import { ApiModule } from '@syndesis/ui/api';
@@ -78,5 +78,28 @@ describe('IntegrationConfigureActionComponent', () => {
       propertyDefinitionSteps,
     } as ActionDescriptor;
     expect(component.hasNoActionPropertiesToDisplay(descriptor)).toBeFalsy();
+  });
+
+  xit('only hidden properties found', () => {
+    const step: ActionDescriptorStep = {
+      properties: {
+        name: {
+          componentProperty: false,
+          deprecated: false,
+          description: 'The hidden property',
+          displayName: 'Some property',
+          javaType: 'String',
+          kind: 'parameter',
+          required: true,
+          secret: false,
+          type: 'hidden'
+        } as ConfigurationProperty
+      } as StringMap<ConfigurationProperty>,
+    } as ActionDescriptorStep;
+    const propertyDefinitionSteps: Array<ActionDescriptorStep> = [step];
+    const descriptor: ActionDescriptor = {
+      propertyDefinitionSteps,
+    } as ActionDescriptor;
+    expect(component.hasNoActionPropertiesToDisplay(descriptor)).toBeTruthy();
   });
 });

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Extensions, Step, DataShapeKinds } from '@syndesis/ui/platform';
+import { Extensions, Step, DataShapeKinds, DataShape, ActionDescriptor, Action } from '@syndesis/ui/platform';
 
 export interface StepKind extends Step {
   name: string;
@@ -27,6 +27,7 @@ export const SPLIT = 'split';
 export const AGGREGATE = 'aggregate';
 export const LOG = 'log';
 export const TEMPLATE = 'template';
+export const CONTENT_BASED_ROUTER = 'choice';
 
 @Injectable()
 export class StepStore {
@@ -94,6 +95,23 @@ $\{in.body.title\} // Evaluates true when body contains title.
       },
       configuredProperties: undefined,
     }),
+    StepStore.requiresOutputDataShape({
+      id: undefined,
+      connection: undefined,
+      action: {
+        actionType: 'step',
+        descriptor: {
+          inputDataShape: StepStore.noShape(),
+          outputDataShape: StepStore.anyShape()
+        } as ActionDescriptor
+      } as Action,
+      name: 'Conditional Flows',
+      description:
+        'Sends the message to different flows based on condition evaluation',
+      stepKind: CONTENT_BASED_ROUTER,
+      properties: {},
+      configuredProperties: undefined
+    }, true),
     {
       id: undefined,
       connection: undefined,
@@ -273,6 +291,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
   // properties in customProperties
   isCustomStep(step: Step): boolean {
     return (
+      step.stepKind === CONTENT_BASED_ROUTER ||
       step.stepKind === BASIC_FILTER ||
       step.stepKind === DATA_MAPPER ||
       step.stepKind === TEMPLATE
@@ -286,6 +305,20 @@ $\{in.body.title\} // Evaluates true when body contains title.
     // pull out attributes that aren't in the backend model
     const { description, visible, ...step } = this.getStepConfig(stepKind);
     return step;
+  }
+
+  static anyShape(): DataShape {
+    return {
+      kind: DataShapeKinds.ANY,
+      name: 'Any shape'
+    } as DataShape;
+  }
+
+  static noShape(): DataShape {
+    return {
+      kind: DataShapeKinds.NONE,
+      name: 'No shape'
+    } as DataShape;
   }
 
   static stepsHaveOutputDataShape(steps: Array<Step>): boolean {
