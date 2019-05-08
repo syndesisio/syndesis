@@ -5,9 +5,21 @@ import { AppLayout, PfVerticalNavItem } from '../src/';
 
 export default describe('ConnectionCard', () => {
   const modalHandler = jest.fn();
+  const selectSupportHandler = jest.fn();
+  const selectSampleIntegrationTutorialsHandler = jest.fn();
+  const selectUserGuideHandler = jest.fn();
+  const selectConnectorsGuideHandler = jest.fn();
+  const selectContactUsHandler = jest.fn();
   const testComponent = (
     <MemoryRouter>
       <AppLayout
+        onSelectSupport={selectSupportHandler}
+        onSelectSampleIntegrationTutorials={
+          selectSampleIntegrationTutorialsHandler
+        }
+        onSelectUserGuide={selectUserGuideHandler}
+        onSelectConnectorsGuide={selectConnectorsGuideHandler}
+        onSelectContactUs={selectContactUsHandler}
         pictograph={'Syndesis'}
         onShowAboutModal={modalHandler}
         appNav={<div data-testid="appnav">appnav</div>}

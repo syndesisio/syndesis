@@ -22,6 +22,7 @@ import { ExtensionsModule } from './modules/extensions';
 import { IntegrationsModule } from './modules/integrations';
 import routes from './modules/routes';
 import { SettingsModule } from './modules/settings';
+import { SupportModule } from './modules/support';
 import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
@@ -107,6 +108,11 @@ ReactDOM.render(
                                 component: SettingsModule,
                                 label: 'Settings',
                                 to: routes.settings.root,
+                              } as IAppRoute,
+                              {
+                                component: SupportModule,
+                                label: 'Support',
+                                to: routes.support.root,
                               } as IAppRoute,
                             ]}
                           />

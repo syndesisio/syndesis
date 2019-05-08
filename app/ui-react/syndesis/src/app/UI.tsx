@@ -14,6 +14,7 @@ import { useState } from 'react';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link, Route, Switch } from 'react-router-dom';
+import resolvers from '../modules/resolvers';
 import { PageNotFound, WithErrorBoundary } from '../shared';
 import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
 import logo from './syndesis_logo_full_darkbkg.svg';
@@ -99,88 +100,118 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                 notificationTimerDelay={8000}
                 removeNotificationAction={onRemoveNotification}
               />
-              <AppLayout
-                onShowAboutModal={toggleAboutModal}
-                appNav={
-                  <AppTopMenu username={'developer'}>
-                    <PfDropdownItem>
-                      <Link
-                        to={'/logout'}
-                        className="pf-c-dropdown__menu-item"
-                        children={t('Logout')}
-                      />
-                    </PfDropdownItem>
-                  </AppTopMenu>
-                }
-                verticalNav={routes.map((route, index) =>
-                  !(route as IAppRouteWithChildrens).childrens ? (
-                    <PfVerticalNavItem
-                      exact={(route as IAppRoute).exact}
-                      label={t((route as IAppRoute).label)}
-                      to={(route as IAppRoute).to}
-                      key={index}
-                      data-testid={`navbar-link-${(route as IAppRoute).to}`}
-                    />
-                  ) : (
-                    <PfVerticalNavItem
-                      label={t(route.label)}
-                      key={index}
-                      to={'#'}
-                    >
-                      {(route as IAppRouteWithChildrens).childrens.map(
-                        (subRoute, subIndex) => (
+              <WithRouter>
+                {({ history, match }) => {
+                  return (
+                    <AppLayout
+                      onShowAboutModal={toggleAboutModal}
+                      onSelectSupport={() => {
+                        history.push(resolvers.support.root());
+                      }}
+                      onSelectSampleIntegrationTutorials={() => {
+                        window.open(
+                          'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/fuse_online_sample_integration_tutorials/',
+                          '_blank'
+                        );
+                      }}
+                      onSelectUserGuide={() => {
+                        window.open(
+                          'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/integrating_applications_with_fuse_online',
+                          '_blank'
+                        );
+                      }}
+                      onSelectConnectorsGuide={() => {
+                        window.open(
+                          'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/connecting_fuse_online_to_applications_and_services/',
+                          '_blank'
+                        );
+                      }}
+                      onSelectContactUs={() => {
+                        window.location.href =
+                          'mailto:fuse-online-tech-preview@redhat.com';
+                      }}
+                      appNav={
+                        <AppTopMenu username={'developer'}>
+                          <PfDropdownItem>
+                            <Link
+                              to={'/logout'}
+                              className="pf-c-dropdown__menu-item"
+                              children={t('Logout')}
+                            />
+                          </PfDropdownItem>
+                        </AppTopMenu>
+                      }
+                      verticalNav={routes.map((route, index) =>
+                        !(route as IAppRouteWithChildrens).childrens ? (
                           <PfVerticalNavItem
-                            exact={subRoute.exact}
-                            label={t(subRoute.label)}
-                            to={subRoute.to}
-                            key={subIndex}
-                            data-testid={`navbar-link-${subRoute.to}`}
+                            exact={(route as IAppRoute).exact}
+                            label={t((route as IAppRoute).label)}
+                            to={(route as IAppRoute).to}
+                            key={index}
+                            data-testid={`navbar-link-${
+                              (route as IAppRoute).to
+                            }`}
                           />
+                        ) : (
+                          <PfVerticalNavItem
+                            label={t(route.label)}
+                            key={index}
+                            to={'#'}
+                          >
+                            {(route as IAppRouteWithChildrens).childrens.map(
+                              (subRoute, subIndex) => (
+                                <PfVerticalNavItem
+                                  exact={subRoute.exact}
+                                  label={t(subRoute.label)}
+                                  to={subRoute.to}
+                                  key={subIndex}
+                                  data-testid={`navbar-link-${subRoute.to}`}
+                                />
+                              )
+                            )}
+                          </PfVerticalNavItem>
                         )
                       )}
-                    </PfVerticalNavItem>
-                  )
-                )}
-                pictograph={
-                  <img
-                    src={logo}
-                    alt="Syndesis"
-                    style={{ minWidth: '164px' }}
-                  />
-                }
-                logoHref={'/'}
-                showNavigation={showNavigation}
-                onNavigationCollapse={onHideNavigation}
-                onNavigationExpand={onShowNavigation}
-              >
-                <WithRouter>
-                  {({ match }) => (
-                    <WithErrorBoundary key={match.url}>
-                      <Switch>
-                        {routes
-                          .reduce(
-                            (flattenedRoutes, route) => [
-                              ...flattenedRoutes,
-                              ...(!(route as IAppRouteWithChildrens).childrens
-                                ? [route as IAppRoute]
-                                : (route as IAppRouteWithChildrens).childrens),
-                            ],
-                            [] as IAppRoute[]
-                          )
-                          .map((route, index) => (
-                            <Route
-                              path={route.to}
-                              exact={route.exact}
-                              component={route.component}
-                              key={index}
-                            />
-                          ))}
-                        <Route component={PageNotFound} />
-                      </Switch>
-                    </WithErrorBoundary>
-                  )}
-                </WithRouter>
-              </AppLayout>
+                      pictograph={
+                        <img
+                          src={logo}
+                          alt="Syndesis"
+                          style={{ minWidth: '164px' }}
+                        />
+                      }
+                      logoHref={'/'}
+                      showNavigation={showNavigation}
+                      onNavigationCollapse={onHideNavigation}
+                      onNavigationExpand={onShowNavigation}
+                    >
+                      <WithErrorBoundary key={match.url}>
+                        <Switch>
+                          {routes
+                            .reduce(
+                              (flattenedRoutes, route) => [
+                                ...flattenedRoutes,
+                                ...(!(route as IAppRouteWithChildrens).childrens
+                                  ? [route as IAppRoute]
+                                  : (route as IAppRouteWithChildrens)
+                                      .childrens),
+                              ],
+                              [] as IAppRoute[]
+                            )
+                            .map((route, index) => (
+                              <Route
+                                path={route.to}
+                                exact={route.exact}
+                                component={route.component}
+                                key={index}
+                              />
+                            ))}
+                          <Route component={PageNotFound} />
+                        </Switch>
+                      </WithErrorBoundary>
+                    </AppLayout>
+                  );
+                }}
+              </WithRouter>
             </>
           );
         }}

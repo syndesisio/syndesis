@@ -18,6 +18,11 @@ export interface ILayoutBase {
   onNavigationCollapse(): void;
   onNavigationExpand(): void;
   onShowAboutModal(): void;
+  onSelectSupport(): void;
+  onSelectSampleIntegrationTutorials(): void;
+  onSelectUserGuide(): void;
+  onSelectConnectorsGuide(): void;
+  onSelectContactUs(): void;
 }
 
 export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
@@ -29,6 +34,11 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
   onNavigationCollapse,
   onNavigationExpand,
   onShowAboutModal,
+  onSelectSupport,
+  onSelectConnectorsGuide,
+  onSelectContactUs,
+  onSelectSampleIntegrationTutorials,
+  onSelectUserGuide,
   children,
 }) => {
   const onNavToggle = showNavigation
@@ -55,9 +65,14 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
                   <HelpDropdown
                     className="syn-help-dropdown"
                     isOpen={false}
-                    launchAboutModal={() => {
-                      onShowAboutModal();
-                    }}
+                    launchSupportPage={onSelectSupport}
+                    launchAboutModal={onShowAboutModal}
+                    launchSampleIntegrationTutorials={
+                      onSelectSampleIntegrationTutorials
+                    }
+                    launchConnectorsGuide={onSelectConnectorsGuide}
+                    launchUserGuide={onSelectUserGuide}
+                    launchContactUs={onSelectContactUs}
                   />
                 }
                 {appNav}

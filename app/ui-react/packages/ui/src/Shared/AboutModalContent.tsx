@@ -1,7 +1,9 @@
 import { TextContent, TextList, TextListItem } from '@patternfly/react-core';
+import classNames from 'classnames';
 import * as React from 'react';
 
 export interface IAboutModalContent {
+  className?: string;
   version: string;
   productName: string;
   buildId: string;
@@ -9,13 +11,14 @@ export interface IAboutModalContent {
 }
 
 function AboutModalContent({
+  className,
   productName,
   version,
   buildId,
   commitId,
 }: IAboutModalContent) {
   return (
-    <TextContent>
+    <TextContent className={classNames('', className)}>
       <TextList component="dl">
         <TextListItem component="dt">{productName}:</TextListItem>
         <TextListItem component="dd">{version}</TextListItem>

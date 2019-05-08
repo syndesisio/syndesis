@@ -41,11 +41,7 @@ export const SimplePageHeader: React.FunctionComponent<
           {i18nTitle}
         </Title>
         {i18nDescription && (
-          <Text
-            dangerouslySetInnerHTML={{
-              __html: i18nDescription,
-            }}
-          />
+          <Text dangerouslySetInnerHTML={{ __html: i18nDescription }} />
         )}
       </TextContent>
     </PageSection>
