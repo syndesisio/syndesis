@@ -18,9 +18,9 @@ import { UploadPage } from './components/editor/api-provider/UploadPage';
 import { EditorApp } from './components/editor/EditorApp';
 import { ConfigureActionPage } from './components/editor/endpoint/ConfigureActionPage';
 import { SelectActionPage } from './components/editor/endpoint/SelectActionPage';
-import { IUIStep } from './components/editor/interfaces';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import { SelectConnectionPage } from './components/editor/SelectConnectionPage';
+import { getDataShapeText, toUIStepKind } from './components/editor/utils';
 import resolvers from './resolvers';
 import routes from './routes';
 
@@ -125,7 +125,7 @@ const startStepSelectActionPage = (
                   height={24}
                 />
               }
-              i18nTitle={`1. ${(connection as IUIStep).title}`}
+              i18nTitle={`1. ${connection.name}`}
               i18nTooltip={`1. ${connection.name}`}
               active={true}
               showDetails={expanded}
@@ -230,28 +230,18 @@ const finishStepSelectConnectionPage = (
     sidebar={({ steps }) => (
       <IntegrationVerticalFlow>
         {({ expanded }) => {
-          const startAction = steps[0];
+          const s = toUIStepKind(steps[0]);
           return (
             <>
               <IntegrationFlowStepWithOverview
-                icon={
-                  <img
-                    alt={'Step icon'}
-                    src={getConnectionIcon(
-                      process.env.PUBLIC_URL,
-                      startAction.connection!
-                    )}
-                    width={24}
-                    height={24}
-                  />
-                }
-                i18nTitle={`1. ${startAction.connection!.name}`}
-                i18nTooltip={`1. ${startAction.connection!.name}`}
+                icon={<img alt={s.name} src={s.icon} width={24} height={24} />}
+                i18nTitle={`1. ${s.name}`}
+                i18nTooltip={`1. ${s.title}`}
                 active={false}
                 showDetails={expanded}
-                name={startAction.connection!.connector!.name}
-                action={startAction.connection!.name!}
-                dataType={'TODO'}
+                name={s.name}
+                action={s.action && s.action.name}
+                dataType={getDataShapeText(s.stepKind!, s.outputDataShape)}
               />
               <IntegrationFlowStepGeneric
                 icon={<i className={'fa fa-plus'} />}
@@ -275,28 +265,18 @@ const finishStepSelectActionPage = (
     sidebar={({ connection, steps }) => (
       <IntegrationVerticalFlow>
         {({ expanded }) => {
-          const startAction = steps[0];
+          const s = toUIStepKind(steps[0]);
           return (
             <>
               <IntegrationFlowStepWithOverview
-                icon={
-                  <img
-                    alt={'Step icon'}
-                    src={getConnectionIcon(
-                      process.env.PUBLIC_URL,
-                      startAction.connection!
-                    )}
-                    width={24}
-                    height={24}
-                  />
-                }
-                i18nTitle={`1. ${startAction.connection!.name}`}
-                i18nTooltip={`1. ${startAction.connection!.name}`}
+                icon={<img alt={s.name} src={s.icon} width={24} height={24} />}
+                i18nTitle={`1. ${s.name}`}
+                i18nTooltip={`1. ${s.title}`}
                 active={false}
                 showDetails={expanded}
-                name={startAction.connection!.connector!.name}
-                action={startAction.connection!.name!}
-                dataType={'TODO'}
+                name={s.name}
+                action={s.action && s.action.name}
+                dataType={getDataShapeText(s.stepKind!, s.outputDataShape)}
               />
               <IntegrationFlowStepGeneric
                 icon={
@@ -344,28 +324,18 @@ const finishStepConfigureActionPage = (
     sidebar={({ connection, steps }) => (
       <IntegrationVerticalFlow>
         {({ expanded }) => {
-          const startAction = steps[0];
+          const s = toUIStepKind(steps[0]);
           return (
             <>
               <IntegrationFlowStepWithOverview
-                icon={
-                  <img
-                    alt={'Step icon'}
-                    src={getConnectionIcon(
-                      process.env.PUBLIC_URL,
-                      startAction.connection!
-                    )}
-                    width={24}
-                    height={24}
-                  />
-                }
-                i18nTitle={`1. ${startAction.connection!.name}`}
-                i18nTooltip={`1. ${startAction.connection!.name}`}
+                icon={<img alt={s.name} src={s.icon} width={24} height={24} />}
+                i18nTitle={`1. ${s.name}`}
+                i18nTooltip={`1. ${s.title}`}
                 active={false}
                 showDetails={expanded}
-                name={startAction.connection!.connector!.name}
-                action={startAction.connection!.name!}
-                dataType={'TODO'}
+                name={s.name}
+                action={s.action && s.action.name}
+                dataType={getDataShapeText(s.stepKind!, s.outputDataShape)}
               />
               <IntegrationFlowStepGeneric
                 icon={

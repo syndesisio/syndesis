@@ -3,6 +3,7 @@
   z-index: 2;
   position: relative;
   justify-content: center;
+  margin: 5px 0;
 }
 
 .integration-flow-add-step__iconWrapper {
@@ -16,8 +17,8 @@
   position: absolute;
   width: 2px;
   background-color: #d4d4d4;
-  top: 0;
-  bottom: 0;
+  top: -5px;
+  bottom: -5px;
   left: calc(100% / 2);
   z-index: -1;
 }
