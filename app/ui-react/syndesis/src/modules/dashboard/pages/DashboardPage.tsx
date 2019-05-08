@@ -262,7 +262,6 @@ export default () => (
                           }
                         />
                       }
-                      i18nIntegrations={t('shared:Integrations')}
                       i18nConnections={t('shared:Connections')}
                       i18nLinkCreateConnection={t(
                         'shared:linkCreateConnection'
@@ -273,7 +272,6 @@ export default () => (
                       i18nLinkToConnections={t('linkToConnections')}
                       i18nLinkToIntegrations={t('linkToIntegrations')}
                       i18nTitle={t('title')}
-                      i18nDescription={t('description')}
                     />
                   )}
                 </Translation>

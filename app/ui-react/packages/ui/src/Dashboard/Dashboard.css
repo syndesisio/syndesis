@@ -1,13 +1,10 @@
-.Dashboard-header {
-  display: flex;
-  flex-flow: row nowrap;
-}
+.dashboard__header {}
 
-.Dashboard-header__title {
+.dashboard__header .header__title {
   flex: 1;
 }
 
-.Dashboard-header__actions {
+.dashboard__header .header__actions {
   display: flex;
   flex-flow: row nowrap;
   align-items: center;
@@ -15,6 +12,6 @@
   margin-bottom: 10px; /* to align it with the title */
 }
 
-.Dashboard-header__actions > * {
+.dashboard-header .header__actions > * {
   margin-left: 10px;
 }

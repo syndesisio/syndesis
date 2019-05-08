@@ -9,6 +9,8 @@
 @import url('~@patternfly/patternfly/patternfly-common.css');
 @import url('~@patternfly/patternfly/patternfly-globals.css');
 @import url('~@patternfly/patternfly/utilities/Spacing/spacing.css');
+@import url('~@patternfly/patternfly/layouts/Level/level.css');
+@import url('~@patternfly/patternfly/layouts/Split/split.css');
 
 /* selective pf4 component specific stylesheets */
 @import url('~@patternfly/patternfly/components/Page/page.css');

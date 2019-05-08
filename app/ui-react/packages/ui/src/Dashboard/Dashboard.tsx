@@ -1,6 +1,15 @@
-import { Level, LevelItem, PageSection, Title } from '@patternfly/react-core';
+import {
+  Grid,
+  GridItem,
+  Level,
+  LevelItem,
+  PageSection,
+  Split,
+  SplitItem,
+  Title,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { CardGrid, Grid } from 'patternfly-react';
+import { CardGrid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ButtonLink } from '../Layout';
@@ -20,41 +29,48 @@ export interface IIntegrationsPageProps {
   integrationBoard: JSX.Element;
   integrationUpdates: JSX.Element;
   connections: JSX.Element;
-  i18nIntegrations: string;
   i18nConnections: string;
   i18nLinkCreateConnection: string;
   i18nLinkCreateIntegration: string;
   i18nLinkToConnections: string;
   i18nLinkToIntegrations: string;
   i18nTitle: string;
-  i18nDescription: string;
 }
 
 export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
   public render() {
     return (
       <>
-        <SimplePageHeader
-          i18nTitle={this.props.i18nTitle}
-          i18nDescription={this.props.i18nDescription}
-        />
+        <PageSection className={'dashboard__header'}>
+          <Split>
+            <SplitItem isFilled={false}>
+              <SimplePageHeader
+                i18nTitle={this.props.i18nTitle}
+                titleSize={'xl'}
+                variant={'default'}
+              />
+            </SplitItem>
+            <SplitItem isFilled />
+            <SplitItem isFilled={false}>
+              <Level gutter={'sm'}>
+                <LevelItem>&nbsp;</LevelItem>
+                <LevelItem>
+                  <Link to={this.props.linkToIntegrations}>
+                    {this.props.i18nLinkToIntegrations}
+                  </Link>
+                  <ButtonLink
+                    href={this.props.linkToIntegrationCreation}
+                    as={'primary'}
+                  >
+                    {this.props.i18nLinkCreateIntegration}
+                  </ButtonLink>
+                </LevelItem>
+              </Level>
+            </SplitItem>
+          </Split>
+        </PageSection>
+
         <PageSection>
-          <Level gutter={'sm'}>
-            <LevelItem>
-              <Title size={'lg'}>{this.props.i18nIntegrations}</Title>
-            </LevelItem>
-            <LevelItem>
-              <Link to={this.props.linkToIntegrations}>
-                {this.props.i18nLinkToIntegrations}
-              </Link>
-              <ButtonLink
-                href={this.props.linkToIntegrationCreation}
-                as={'primary'}
-              >
-                {this.props.i18nLinkCreateIntegration}
-              </ButtonLink>
-            </LevelItem>
-          </Level>
           <CardGrid fluid={true} matchHeight={true}>
             <CardGrid.Row>
               <CardGrid.Col sm={6} md={3}>
@@ -71,18 +87,12 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
               </CardGrid.Col>
             </CardGrid.Row>
           </CardGrid>
-          <Grid fluid={true}>
-            <Grid.Row>
-              <Grid.Col sm={12}>{this.props.topIntegrations}</Grid.Col>
-            </Grid.Row>
-            <Grid.Row>
-              <Grid.Col sm={12} md={6}>
-                {this.props.integrationBoard}
-              </Grid.Col>
-              <Grid.Col sm={12} md={6}>
-                {this.props.integrationUpdates}
-              </Grid.Col>
-            </Grid.Row>
+          <Grid gutter={'lg'}>
+            <GridItem span={7} rowSpan={3}>
+              {this.props.topIntegrations}
+            </GridItem>
+            <GridItem span={5}>{this.props.integrationBoard}</GridItem>
+            <GridItem span={5}>{this.props.integrationUpdates}</GridItem>
           </Grid>
         </PageSection>
 
