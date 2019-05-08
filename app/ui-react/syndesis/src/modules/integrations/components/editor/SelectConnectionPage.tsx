@@ -13,7 +13,6 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { ConnectionsWithToolbar } from '../../../connections/components';
-import resolvers from '../../../connections/resolvers';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
@@ -82,40 +81,48 @@ export class SelectConnectionPage extends React.Component<
                           error: connectionsError,
                         }) => (
                           <WithExtensions>
-                          {({
-                            data: extensionsData,
-                            hasData: hasExtensionsData,
-                            error: extensionsError,
-                          }) => (
-                          <WithSteps>
-                            {({ items: steps }) => {
-                              const stepKinds = mergeConnectionsSources(
-                                connectionsData.dangerouslyUnfilteredConnections,
-                                extensionsData.items,
-                                steps
-                              );
-                              const visibleSteps = visibleStepsByPosition(
-                                stepKinds as StepKind[],
-                                positionAsNumber,
-                                integrationSteps
-                              ) as IUIStep[];
-                              return (
-                                <ConnectionsWithToolbar
-                                  loading={
-                                    !hasConnectionsData || !hasExtensionsData
-                                  }
-                                  error={connectionsError || extensionsError}
-                                  includeConnectionMenu={false}
-                                  getConnectionHref={step =>
-                                    getStepHref(step, params, state, this.props)
-                                  }
-                                  connections={visibleSteps}
-                                  createConnectionButtonStyle={'default'}
-                                />
-                              );
-                            }}
-                          </WithSteps>
-                          )}
+                            {({
+                              data: extensionsData,
+                              hasData: hasExtensionsData,
+                              error: extensionsError,
+                            }) => (
+                              <WithSteps>
+                                {({ items: steps }) => {
+                                  const stepKinds = mergeConnectionsSources(
+                                    connectionsData.dangerouslyUnfilteredConnections,
+                                    extensionsData.items,
+                                    steps
+                                  );
+                                  const visibleSteps = visibleStepsByPosition(
+                                    stepKinds as StepKind[],
+                                    positionAsNumber,
+                                    integrationSteps
+                                  ) as IUIStep[];
+                                  return (
+                                    <ConnectionsWithToolbar
+                                      loading={
+                                        !hasConnectionsData ||
+                                        !hasExtensionsData
+                                      }
+                                      error={
+                                        connectionsError || extensionsError
+                                      }
+                                      includeConnectionMenu={false}
+                                      getConnectionHref={step =>
+                                        getStepHref(
+                                          step,
+                                          params,
+                                          state,
+                                          this.props
+                                        )
+                                      }
+                                      connections={visibleSteps}
+                                      createConnectionButtonStyle={'default'}
+                                    />
+                                  );
+                                }}
+                              </WithSteps>
+                            )}
                           </WithExtensions>
                         )}
                       </WithConnections>
