@@ -1,0 +1,77 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Start a Syndesis integration flow",
+      "descriptor": {
+        "componentScheme": "direct",
+        "connectorCustomizers": [],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Flow start configuration",
+            "name": "configuration",
+            "properties": {
+              "name": {
+                "componentProperty": false,
+                "deprecated": false,
+                "description": "The flow identifier used to route messages to",
+                "displayName": "Flow ID",
+                "javaType": "String",
+                "kind": "parameter",
+                "required": true,
+                "secret": false,
+                "type": "hidden"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:flow-start",
+      "name": "Flow Start",
+      "pattern": "From",
+      "tags": []
+    },
+    {
+      "actionType": "connector",
+      "description": "End action of Syndesis integrations flow",
+      "descriptor": {
+        "componentScheme": "bean",
+        "configuredProperties": {
+          "beanName": "io.syndesis.connector.flow.NoOpBean",
+          "method": "process"
+        },
+        "connectorCustomizers": [],
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": []
+      },
+      "id": "io.syndesis:flow-end",
+      "name": "Flow End",
+      "pattern": "To"
+    }
+  ],
+  "configuredProperties": {},
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Connect with flows using direct endpoint",
+  "icon": "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDYiIGhlaWdodD0iMzkiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPjxkZWZzPjxwYXRoIGlkPSJhIiBkPSJNLjA0MS4xMTJoMTEuNjkzdjExLjY5MkguMDR6Ii8+PHBhdGggaWQ9ImMiIGQ9Ik0wIC4xMTJoMTEuNjkzdjExLjY5MkgweiIvPjwvZGVmcz48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIHRyYW5zZm9ybT0icm90YXRlKC05MCAyMy4wODYgLTEwLjkpIj48bWFzayBpZD0iYiIgZmlsbD0iI2ZmZiI+PHVzZSB4bGluazpocmVmPSIjYSIvPjwvbWFzaz48cGF0aCBkPSJNMS43NDMgMTEuODA0aDguMjg5Yy45NCAwIDEuNzAyLS43NjIgMS43MDItMS43MDJWMS44MTRjMC0uOTQtLjc2My0xLjcwMi0xLjcwMi0xLjcwMkgxLjc0M0MuODAzLjExMi4wNDEuODc0LjA0MSAxLjgxNHY4LjI4OGMwIC45NC43NjIgMS43MDIgMS43MDIgMS43MDIiIGZpbGw9IiNGRkEwMDAiIG1hc2s9InVybCgjYikiLz48L2c+PGcgdHJhbnNmb3JtPSJyb3RhdGUoLTkwIDM2LjA0NiAyLjA2KSI+PG1hc2sgaWQ9ImQiIGZpbGw9IiNmZmYiPjx1c2UgeGxpbms6aHJlZj0iI2MiLz48L21hc2s+PHBhdGggZD0iTS4yMDUgMTAuOTEzYTEuNzA5IDEuNzA5IDAgMCAwIDEuNDk3Ljg5MUg5Ljk5YTEuNyAxLjcgMCAwIDAgMS43MDMtMS43MDJWMS44MTRhMS42OTYgMS42OTYgMCAwIDAtMS4xNzYtMS42MkExLjcgMS43IDAgMCAwIDkuOTkuMTEzSDEuNzAyQy43NjIuMTEyIDAgLjg3NCAwIDEuODE0djguMjg4YzAgLjI5NC4wNzQuNTcuMjA1LjgxMSIgZmlsbD0iIzAwQTBBMCIgbWFzaz0idXJsKCNkKSIvPjwvZz48cGF0aCBkPSJNMjguMTQ1IDI0LjAyNmwyLjc3Mi0yLjc3MiAxLjE4LTEuMThhMS4xNDggMS4xNDggMCAwIDAgMC0xLjYyM2wtMS4xOC0xLjE4LTIuNzcyLTIuNzcxYTEuMTQ3IDEuMTQ3IDAgMCAwLTEuNjIzIDBsLTIuNzcyIDIuNzcyLTEuMTggMS4xOGExLjE0OCAxLjE0OCAwIDAgMCAwIDEuNjIybDEuMTggMS4xOCAyLjc3MiAyLjc3MmExLjE0NyAxLjE0NyAwIDAgMCAxLjYyMyAwTTE2LjUwNiAyNS4wNzNWMTMuNDUyYTIuMzg2IDIuMzg2IDAgMCAwLTIuMzg3LTIuMzg2SDIuNDk4YTIuMzg2IDIuMzg2IDAgMCAwLTIuMzg2IDIuMzg2djExLjYyMWEyLjM4NiAyLjM4NiAwIDAgMCAyLjM4NiAyLjM4N0gxNC4xMmEyLjM4NiAyLjM4NiAwIDAgMCAyLjM4Ny0yLjM4N00yMS4yNjcgMTguMDcybC44NC0uODRoLTQuMDJ2NC4wNjFoNC4wMmwtLjg0LS44NGExLjY4NyAxLjY4NyAwIDAgMSAwLTIuMzgxTTMzLjQ1NiA0LjM2NUgyNS43ODd2OS4xODZsLjQ3Ny0uNDc2YTEuNjg3IDEuNjg3IDAgMCAxIDIuMzgyIDBsLjU0NS41NDUuMDA1LTUuODM3aDQuOTAyVjQuMzY1aC0uNjQyek0zMy40NTYgMzAuNjg0aC00LjI3OWwuMDA1LTUuNzctLjUzNi41MzZhMS42NzMgMS42NzMgMCAwIDEtMS4xOTEuNDk0Yy0uNDUgMC0uODczLS4xNzUtMS4xOTEtLjQ5NGwtLjQ3Ni0uNDc1di4xMDNsLS4wMy0uMDA3LjAyOSA5LjAzMWg4LjMxMXYtMy40MThoLS42NDJ6IiBmaWxsPSIjMDAwIi8+PHBhdGggZmlsbC1ydWxlPSJub256ZXJvIiBkPSJNMCA0MlYtNGg0NnY0NnoiLz48L2c+PC9zdmc+Cg==",
+  "id": "flow",
+  "metadata": {
+    "hide-from-connection-pages": true
+  },
+  "name": "Flow"
+}

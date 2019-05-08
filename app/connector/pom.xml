@@ -73,6 +73,7 @@
     <module>concur</module>
     <module>kudu</module>
     <module>odata</module>
+    <module>flow</module>
   </modules>
 
   <dependencyManagement>

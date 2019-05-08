@@ -350,6 +350,11 @@
         <version>${project.version}</version>
       </dependency>
       <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-flow</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-databind</artifactId>
         <version>${jackson.databind.version}</version>

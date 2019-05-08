@@ -177,6 +177,11 @@
     </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
+      <artifactId>connector-flow</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
       <artifactId>connector-rest-swagger</artifactId>
       <scope>provided</scope>
     </dependency>
