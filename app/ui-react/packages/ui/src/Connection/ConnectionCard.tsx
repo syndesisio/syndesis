@@ -37,12 +37,12 @@ export interface IConnectionProps {
   href: H.LocationDescriptor;
   i18nCannotDelete?: string;
   i18nConfigurationRequired?: string;
-  i18nTechPreview: string;
+  i18nTechPreview?: string;
   icon: string;
   menuProps?: IConnectionCardMenuProps;
   name: string;
-  techPreview: boolean;
-  techPreviewPopoverHtml: JSX.Element;
+  techPreview?: boolean;
+  techPreviewPopoverHtml?: React.ReactNode;
 }
 
 export interface IConnectionCardState {
@@ -122,7 +122,11 @@ export class ConnectionCard extends React.PureComponent<
                   {this.props.i18nTechPreview!}
                   {'  '}
                   <Popover
-                    bodyContent={<div>{this.props.techPreviewPopoverHtml}</div>}
+                    bodyContent={
+                      <React.Fragment>
+                        {this.props.techPreviewPopoverHtml}
+                      </React.Fragment>
+                    }
                     aria-label={this.props.i18nTechPreview!}
                     position={'left'}
                   >

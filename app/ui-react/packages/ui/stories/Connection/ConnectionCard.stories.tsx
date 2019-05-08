@@ -25,7 +25,7 @@ const menuProps = {
 };
 
 const techPreviewPopoverHtml = (
-  <>
+  <div>
     <a
       href="https://access.redhat.com/support/offerings/techpreview"
       rel="nofollow"
@@ -40,7 +40,7 @@ const techPreviewPopoverHtml = (
       fuse-online-tech-preview@redhat.com
     </a>
     .
-  </>
+  </div>
 );
 
 stories.add('no menu', () => (
@@ -57,7 +57,6 @@ stories.add('no menu', () => (
       )}
       name={text('name', 'Sample connection')}
       techPreview={false}
-      techPreviewPopoverHtml={techPreviewPopoverHtml}
     />
   </MemoryRouter>
 ));
@@ -81,7 +80,6 @@ stories.add('with menu', () => (
         menuProps={menuProps}
         name={text('name', 'Sample connection')}
         techPreview={false}
-        techPreviewPopoverHtml={techPreviewPopoverHtml}
       />
     </Container>
   </MemoryRouter>
