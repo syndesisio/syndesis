@@ -2,16 +2,16 @@
 // as_connecting-to-google-calendar.adoc
 
 [id='add-google-calendar-connection-add-event_{context}']
-= Adding an event to a Google calendar 
+= Adding an event to a Google Calendar 
 
-In an integration, you can add an event to a Google calendar 
+In an integration, you can add an event to a Google Calendar 
 in the middle of a flow or to finish a simple integration.  
 To do this, add a Google Calendar connection to the middle of a flow 
 or as a simple integration's finish connection. 
 
 .Prerequisites
 * A Google Calendar connection is available and this connection
-is authorized to access the Google calendar to which you want to add an 
+is authorized to access the Google Calendar to which you want to add an 
 event.
 * You are creating or editing a flow and {prodname} is prompting you
 to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
@@ -24,7 +24,7 @@ the calendar that you want to add an event to.
 . Configure the *Create Event* action: 
 +
 .. Enter a title for the new event.
-.. Enter the name of the Google calendar to add the event to. 
+.. Enter the name of the Google Calendar to add the event to. 
 .. For the other input parameters, you can enter data or you 
 might want to map values from an event that you obtained in 
 a previous Google Calendar connection. 

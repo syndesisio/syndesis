@@ -10,12 +10,12 @@ you must register your {prodname} environment as a Google client application.
 During registration, you enable Google APIs and create credentials that
 {prodname} uses to access the Google APIs that you have enabled.
 
-With registration in place, you can create any number of connections
-to Gmail, Google Calendar, and Google Sheets. You can create any number of 
-integrations that connect to these Google applications. 
+With registration in place, you can create multiple connections
+to Gmail, Google Calendar, and Google Sheets. You can use each connection 
+in multiple integrations. 
 While each connection to a Google application uses the
 same client ID and client secret, which you obtain during registration, 
-each connection can have the authorization to access
+each connection can access
 a different Google account, which you choose. 
 
 This procedure instructs you to enable the Gmail API, the Google Calendar API, 
@@ -42,7 +42,7 @@ use to register {prodname} as a Google client application.
 
 .Procedure
 
-. In {prodname}, do the following:
+. In {prodname}:
 .. In the left navigation panel, click *Settings*.
 .. On the *Settings* page, near the top, to the right of the callback URL,
 click
@@ -51,7 +51,7 @@ copy the callback URL for your {prodname} environment to the clipboard.
 You will need this URL later in this procedure.
 . In another browser tab, go to `https://console.developers.google.com`
 and do the following:
-.. Confirm that you are signed in to the Google account that you want to
+.. Check that you are signed into the Google account that you want to
 use to register {prodname} as a Google client application.
 Or, choose a different Google account and sign in to that account.
 +
@@ -61,10 +61,8 @@ The name of the current Google project appears at the top of the Google APIs pag
 continue to the next step. To grant authorization to {prodname} in another 
 Google project, choose or create that project. 
 If this Google account does not already
-have a project, you must create one. For information about Google projects
-and how you might want to organize your use of projects, click the Google help
-icon in the upper right.
-.. Enable Google APIs as follows:
+have a project, you must create one. 
+.. Enable Google APIs:
 ... In the upper left corner, click 
 image:images/Hamburger.png[Navigation menu icon] and select
 *APIs and Services* > *Library*.
@@ -79,7 +77,7 @@ image:images/Hamburger.png[Navigation menu icon] and select
 ... If necessary, scroll down to see the *G Suite* row of cards. 
 ... Click the *Google Sheets API* card, which displays a page that indicates
 that the Google Sheets API is enabled.  
-.. Give your client application a name as follows:
+.. Give your client application a name:
 ... Click *MANAGE*. 
 ... In the page that appears, in the left navigation panel, click
 *Credentials* and then on the right, click *Credentials in APIs & Services*.
@@ -133,7 +131,7 @@ client ID and Google client secret.
 [IMPORTANT]
 ====
 The Google client ID and Google client secret contain token refresh
-information that ensures that your connections to Google applications, and integrations
+information to ensure that integrations
 that have connections to Google applications continuously work correctly.
 Consequently, you should *not* obtain new credentials. If you do, then you
 would need to recreate each Google connection, replace the old

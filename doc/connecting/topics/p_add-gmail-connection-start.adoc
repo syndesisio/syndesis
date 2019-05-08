@@ -26,9 +26,9 @@ you want to use to start the integration.
 . To configure the *Receive Email* action:
 .. In the *Delay* field, accept the default of 30 seconds or 
 specify how often you want the integration to check for new email. 
-.. In the *Labels* field, leave it blank to obtain any unread email. 
+.. Leave the *Labels* field blank to obtain any unread email. 
 To obtain only certain emails, 
-specify a comma separated list of labels that are used in the Gmail 
+specify a comma-separated list of labels that are used in the Gmail 
 account that the connection is accessing. By default, the integration obtains the 
 unread emails that have those labels. 
 .. Select *Mark as read* to ensure that the connection does not 

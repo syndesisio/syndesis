@@ -30,17 +30,14 @@ to send an email.
 just before this connection and you plan to map integration data 
 to the *Send Email* fields.
 
-* Enter information in one or more fields:
+* Enter information in one or more fields. 
+Insert a comma between multiple email addresses. 
 
-.. In the *Email To* field, enter one email address or a comma separated 
-list of email addresses to send the email to.
-.. In the *Email Subject* field, enter text that states the subject of
-the email.
-.. In the *Email Text* field, enter the message that you want to send.
-.. In the *Email cc* field, enter a comma separated list of email addresses
-to which you want to send copies of the email.
-.. In the *Email bcc* field, enter a comma separated list of email addresses
-to which you want to send blind copies of the email.
+.. *Email To*
+.. *Email Subject* 
+.. *Email Text*
+.. *Email cc*
+.. *Email bcc* 
 
 * Leave some fields blank and enter information in some fields. 
 +

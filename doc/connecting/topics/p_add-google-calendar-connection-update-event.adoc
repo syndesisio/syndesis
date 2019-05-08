@@ -2,9 +2,9 @@
 // as_connecting-to-google-calendar.adoc
 
 [id='add-google-calendar-connection-update-event_{context}']
-= Updating an event in a Google calendar 
+= Updating an event in a Google Calendar 
 
-In an integration, you can update an event in a Google calendar
+In an integration, you can update an event in a Google Calendar
 in the middle of a flow or to finish a simple integration.  
 To do this, add a Google Calendar connection to the middle of a flow 
 or as a simple integration's finish connection. 
@@ -21,7 +21,7 @@ insert a data mapper step between the two Google Calendar connections.
 
 .Prerequisites
 * A Google Calendar connection is available and this connection
-is authorized to access the Google calendar that has the event that
+is authorized to access the Google Calendar that has the event that
 you want to update.
 * In the flow, there is an earlier connection to Google Calendar 
 and that connection obtains the event that you want to update. 

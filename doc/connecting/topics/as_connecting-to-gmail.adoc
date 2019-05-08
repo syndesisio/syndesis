@@ -9,7 +9,7 @@
 To trigger execution of an integration when a particular Gmail
 account receives an email, add a Gmail connection to a simple integration as its
 start connection. In an integration, to send an email from a
-particular Gmail account, you can do either of the following: 
+particular Gmail account, do either of the following: 
 
 * Add a Gmail connection to the middle of a flow.
 * Add a Gmail connection to finish a simple integration.

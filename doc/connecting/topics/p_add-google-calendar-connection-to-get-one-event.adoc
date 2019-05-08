@@ -2,9 +2,9 @@
 // as_connecting-to-google-calendar.adoc
 
 [id='add-google-calendar-connection-to-get-one-event_{context}']
-= Obtaining a particular event from a Google calendar
+= Obtaining a particular event from a Google Calendar
 
-In an integration, you can obtain a particular Google calendar event
+In an integration, you can obtain a particular Google Calendar event
 in the middle of a follows. Obtaining a particular event is 
 useful, for example, when you want to:
 
@@ -23,7 +23,7 @@ expected to change in a future release.
 
 .Prerequisites
 * A Google Calendar connection is available and this connection
-is authorized to access the Google calendar that has the event that
+is authorized to access the Google Calendar that has the event that
 that you want to get.
 
 * You are creating or editing a flow and {prodname} is prompting you 
