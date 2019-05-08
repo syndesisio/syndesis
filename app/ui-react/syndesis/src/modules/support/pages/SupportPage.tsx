@@ -3,7 +3,7 @@ import { PageSection, SimplePageHeader, SupportPageBody } from '@syndesis/ui';
 import * as React from 'react';
 import { PageTitle } from '../../../shared';
 
-export function SupportPage() {
+export const SupportPage: React.FunctionComponent = () => {
   return (
     <>
       <PageTitle title="Support" />
@@ -33,4 +33,4 @@ export function SupportPage() {
       </PageSection>
     </>
   );
-}
+};

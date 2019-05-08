@@ -12,12 +12,12 @@ import * as React from 'react';
 export interface IHelpDropdownProps {
   className?: string;
   isOpen: boolean;
-  launchAboutModal: any;
-  launchSupportPage: any;
-  launchSampleIntegrationTutorials: any;
-  launchUserGuide: any;
-  launchConnectorsGuide: any;
-  launchContactUs: any;
+  launchAboutModal: () => void;
+  launchSupportPage: () => void;
+  launchSampleIntegrationTutorials: () => void;
+  launchUserGuide: () => void;
+  launchConnectorsGuide: () => void;
+  launchContactUs: () => void;
 }
 
 export interface IHelpDropdownState {
@@ -28,8 +28,8 @@ export class HelpDropdown extends React.Component<
   IHelpDropdownProps,
   IHelpDropdownState
 > {
-  public onToggle: any;
-  public onSelect: any;
+  public onToggle: (isOpen: boolean) => void;
+  public onSelect: () => void;
 
   constructor(props: IHelpDropdownProps) {
     super(props);
@@ -41,7 +41,7 @@ export class HelpDropdown extends React.Component<
         isOpen,
       });
     };
-    this.onSelect = (event: MouseEvent) => {
+    this.onSelect = () => {
       this.setState({
         isOpen: !this.state.isOpen,
       });

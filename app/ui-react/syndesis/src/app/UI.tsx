@@ -14,6 +14,7 @@ import { useState } from 'react';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link, Route, Switch } from 'react-router-dom';
+import resolvers from '../modules/resolvers';
 import { PageNotFound, WithErrorBoundary } from '../shared';
 import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
 import logo from './syndesis_logo_full_darkbkg.svg';
@@ -105,7 +106,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                     <AppLayout
                       onShowAboutModal={toggleAboutModal}
                       onSelectSupport={() => {
-                        history.push('support');
+                        history.push(resolvers.support.root());
                       }}
                       onSelectSampleIntegrationTutorials={() => {
                         window.open(
