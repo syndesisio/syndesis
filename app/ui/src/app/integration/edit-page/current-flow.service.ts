@@ -498,7 +498,7 @@ export class CurrentFlowService {
           { ...step },
           position
         );
-        thenFinally();
+        perhapsReconcileDataShapes(event.skipReconcile, thenFinally);
         break;
       }
       case INTEGRATION_SET_METADATA: {
