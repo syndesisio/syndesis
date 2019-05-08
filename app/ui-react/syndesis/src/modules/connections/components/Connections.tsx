@@ -20,8 +20,7 @@ export interface IConnectionsProps {
   connections: ConnectionOverview[];
 
   getConnectionHref(connection: ConnectionOverview): H.LocationDescriptor;
-
-  getConnectionEditHref(connection: ConnectionOverview): H.LocationDescriptor;
+  getConnectionEditHref?(connection: ConnectionOverview): H.LocationDescriptor;
 }
 
 export class Connections extends React.Component<IConnectionsProps> {
