@@ -9,6 +9,7 @@ import {
   PageSection,
 } from '@syndesis/ui';
 import * as React from 'react';
+import { getDataShapeText } from './editor/utils';
 
 export interface IIntegrationEditorStepAdderProps {
   /**
@@ -51,14 +52,38 @@ export class IntegrationEditorStepAdder extends React.Component<
       <PageSection>
         <IntegrationEditorStepsList>
           {this.props.steps.map((s, idx) => {
+            const inputDataShape =
+              s.action &&
+              s.action.descriptor &&
+              s.action.descriptor.inputDataShape;
+            const outputDataShape =
+              s.action &&
+              s.action.descriptor &&
+              s.action.descriptor.outputDataShape;
+            const shape =
+              idx === 0
+                ? getDataShapeText(s.stepKind!, outputDataShape)
+                : getDataShapeText(s.stepKind!, inputDataShape);
+
             return (
               <React.Fragment key={idx}>
                 <IntegrationEditorStepsListItem
-                  stepName={s.name!}
-                  stepDescription={s.action ? s.action.name : ''}
+                  stepName={s.action ? s.action!.name : s.name!}
+                  stepDescription={(s.action! && s.action!.description) || ''}
+                  additionalInfo={[
+                    <div
+                      className={
+                        'list-view-pf-additional-info-item-stacked list-view-pf-additional-info-item'
+                      }
+                      key={0}
+                    >
+                      <strong>{shape || 'n/a'}</strong>
+                      <span>Data shape</span>
+                    </div>,
+                  ]}
                   icon={
                     <img
-                      alt={'Step'}
+                      alt={s.action ? s.action!.name : s.name}
                       src={getStepIcon(process.env.PUBLIC_URL, s)}
                       width={24}
                       height={24}
