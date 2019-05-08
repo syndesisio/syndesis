@@ -62,9 +62,6 @@ jobs:
       - persist_to_workspace:
           root: ~/repo/app/ui-react
           paths:
-            - Dockerfile
-            - .dockerignore
-            - 'nginx*'
             - syndesis/build
             - doc
             - node_modules
