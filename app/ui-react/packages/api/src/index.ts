@@ -10,6 +10,7 @@ export * from './WithIntegrationHelpers';
 export * from './WithActivities';
 export * from './WithApiConnectors';
 export * from './WithApiVersion';
+export * from './WithActionDescriptor';
 export * from './WithEnvironments';
 export * from './WithEnvironmentHelpers';
 export * from './WithExtension';

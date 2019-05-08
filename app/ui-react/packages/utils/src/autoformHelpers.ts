@@ -53,3 +53,28 @@ export function toFormDefinitionProperty(property: IConfigurationProperty) {
     labelHint: labelHint || labelTooltip,
   } as IFormDefinitionProperty;
 }
+
+export function getInitialValues(properties: IConfigurationProperties) {
+  const configuredProperties = {};
+  Object.keys(properties).forEach(key => {
+    const property = properties[key];
+    if (property.value || property.defaultValue) {
+      configuredProperties[key] = property.value || property.defaultValue;
+    }
+  });
+  return configuredProperties;
+}
+
+export function validateConfiguredProperties(
+  properties: IConfigurationProperties,
+  values?: { [name: string]: any }
+) {
+  if (typeof values === 'undefined') {
+    return false;
+  }
+  const allRequiredSet = Object.keys(properties)
+    .filter(key => properties[key].required)
+    .map(key => typeof values[key] !== 'undefined')
+    .reduce((prev, curr) => curr, false);
+  return allRequiredSet;
+}

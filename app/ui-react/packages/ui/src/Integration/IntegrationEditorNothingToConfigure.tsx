@@ -40,6 +40,7 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
                   <i className={'fa fa-chevron-left'} />{' '}
                   {this.props.i18nChooseAction}
                 </ButtonLink>
+                &nbsp;
                 <ButtonLink onClick={this.props.submitForm} as={'primary'}>
                   {this.props.i18nNext}
                 </ButtonLink>

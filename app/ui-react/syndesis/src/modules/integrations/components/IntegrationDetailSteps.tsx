@@ -39,7 +39,7 @@ export class IntegrationDetailSteps extends React.Component<
                 : undefined;
 
             return (
-              <React.Fragment key={s.id}>
+              <React.Fragment key={idx + s.id!}>
                 <IntegrationStepsHorizontalItem
                   name={s.name}
                   title={s.title}

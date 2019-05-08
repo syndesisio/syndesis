@@ -1,21 +1,28 @@
 import {
   getActionById,
-  getActionDescriptor,
   getActionStep,
   getActionStepDefinition,
   getActionSteps,
   getConnectionConnector,
   getConnectorActions,
+  WithActionDescriptor,
 } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
-import { Action, ConnectionOverview } from '@syndesis/models';
+import { Action, ActionDescriptor, ConnectionOverview } from '@syndesis/models';
 import {
   IntegrationEditorForm,
   IntegrationEditorNothingToConfigure,
+  PageSectionLoader,
 } from '@syndesis/ui';
-import { toFormDefinition } from '@syndesis/utils';
+import {
+  getInitialValues,
+  toFormDefinition,
+  validateConfiguredProperties,
+  WithLoader,
+} from '@syndesis/utils';
 import * as React from 'react';
+import { ApiError } from '../../../shared';
 
 export interface IWithConfigurationFormChildrenProps {
   /**
@@ -80,16 +87,6 @@ export interface IWithConfigurationFormProps {
   initialValue?: { [key: string]: string };
 
   chooseActionHref: H.LocationDescriptor;
-  /**
-   * the render prop that will receive the ready-to-be-rendered form and some
-   * helpers.
-   *
-   * @see [form]{@link IWithConfigurationFormChildrenProps#form}
-   * @see [isValid]{@link IWithConfigurationFormChildrenProps#isValid}
-   * @see [isSubmitting]{@link IWithConfigurationFormChildrenProps#isSubmitting}
-   * @see [onSubmit]{@link IWithConfigurationFormChildrenProps#submitForm}
-   */
-  children(props: IWithConfigurationFormChildrenProps): any;
 
   /**
    * the callback that is fired after the form submit with valid values.
@@ -115,9 +112,11 @@ export class WithConfigurationForm extends React.Component<
     initialValue: {},
   };
 
-  public renderConfigurationForm(action: Action): JSX.Element | null {
+  public renderConfigurationForm(
+    action: Action,
+    descriptor: ActionDescriptor
+  ): JSX.Element | null {
     try {
-      const descriptor = getActionDescriptor(action);
       const steps = getActionSteps(descriptor);
       const step = getActionStep(steps, this.props.configurationStep);
       const definition = getActionStepDefinition(step);
@@ -128,40 +127,43 @@ export class WithConfigurationForm extends React.Component<
         actions: any
       ): Promise<void> => {
         await this.props.onUpdatedIntegration({
-          action,
+          action: { ...action, descriptor },
           moreConfigurationSteps,
           values,
         });
         actions.setSubmitting(false);
       };
+      const key = JSON.stringify(definition);
+      const allRequiredSet = validateConfiguredProperties(
+        definition,
+        this.props.initialValue
+      );
       return (
         <AutoForm<{ [key: string]: string }>
           i18nRequiredProperty={'* Required field'}
           definition={toFormDefinition(definition)}
-          initialValue={this.props.initialValue!}
+          initialValue={this.props.initialValue || getInitialValues(definition)}
           onSave={onSave}
-          key={this.props.configurationStep}
+          validate={(values: { [name: string]: any }): any => {
+            return true;
+          }}
+          key={key}
         >
-          {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
-            this.props.children({
-              form: (
-                <IntegrationEditorForm
-                  i18nFormTitle={`${action.name} - ${action.description}`}
-                  i18nChooseAction={'Choose Action'}
-                  i18nNext={'Next'}
-                  isValid={isValid}
-                  submitForm={submitForm}
-                  handleSubmit={handleSubmit}
-                  chooseActionHref={this.props.chooseActionHref}
-                >
-                  {fields}
-                </IntegrationEditorForm>
-              ),
-              isSubmitting,
-              isValid,
-              submitForm,
-            })
-          }
+          {({ dirty, fields, handleSubmit, isValid, submitForm }) => (
+            <>
+              <IntegrationEditorForm
+                i18nFormTitle={`${action.name} - ${action.description}`}
+                i18nChooseAction={'Choose Action'}
+                i18nNext={'Next'}
+                isValid={allRequiredSet || isValid}
+                submitForm={submitForm}
+                handleSubmit={handleSubmit}
+                chooseActionHref={this.props.chooseActionHref}
+              >
+                {fields}
+              </IntegrationEditorForm>
+            </>
+          )}
         </AutoForm>
       );
     } catch (e) {
@@ -169,28 +171,23 @@ export class WithConfigurationForm extends React.Component<
     }
   }
 
-  public renderNoPropertiesInfo(action: Action) {
+  public renderNoPropertiesInfo(action: Action, descriptor: ActionDescriptor) {
     const submitForm = () => {
       this.props.onUpdatedIntegration({
-        action,
+        action: { ...action, descriptor },
         moreConfigurationSteps: false,
         values: null,
       });
     };
-    return this.props.children({
-      form: (
-        <IntegrationEditorNothingToConfigure
-          i18nAlert={'There are no properties to configure for this action.'}
-          i18nChooseAction={'Choose Action'}
-          i18nNext={'Next'}
-          submitForm={submitForm}
-          chooseActionHref={this.props.chooseActionHref}
-        />
-      ),
-      isSubmitting: false,
-      isValid: true,
-      submitForm,
-    });
+    return (
+      <IntegrationEditorNothingToConfigure
+        i18nAlert={'There are no properties to configure for this action.'}
+        i18nChooseAction={'Choose Action'}
+        i18nNext={'Next'}
+        submitForm={submitForm}
+        chooseActionHref={this.props.chooseActionHref}
+      />
+    );
   }
 
   public render() {
@@ -199,8 +196,25 @@ export class WithConfigurationForm extends React.Component<
       this.props.actionId
     );
     return (
-      this.renderConfigurationForm(action) ||
-      this.renderNoPropertiesInfo(action)
+      <WithActionDescriptor
+        connectionId={this.props.connection.id!}
+        actionId={action.id!}
+        configuredProperties={{}}
+      >
+        {({ data, hasData, error }) => (
+          <WithLoader
+            error={error}
+            loading={!hasData}
+            loaderChildren={<PageSectionLoader />}
+            errorChildren={<ApiError />}
+          >
+            {() =>
+              this.renderConfigurationForm(action, data) ||
+              this.renderNoPropertiesInfo(action, data)
+            }
+          </WithLoader>
+        )}
+      </WithActionDescriptor>
     );
   }
 }

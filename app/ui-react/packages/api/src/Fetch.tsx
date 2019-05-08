@@ -23,6 +23,8 @@ export interface IFetchProps<T> {
   contentType?: string;
   defaultValue: T;
   initialValue?: T;
+  body?: any;
+  method?: 'POST' | 'GET';
   children(props: IFetchRenderProps<T>): any;
 }
 
@@ -66,9 +68,10 @@ export class Fetch<T> extends React.Component<IFetchProps<T>, IFetchState<T>> {
     try {
       this.setState({ loading: true });
       const response = await callFetch({
+        body: this.props.body,
         contentType: this.props.contentType,
         headers: this.props.headers,
-        method: 'GET',
+        method: this.props.method || 'GET',
         url: `${this.props.baseUrl}${this.props.url}`,
       });
       if (!response.ok) {
