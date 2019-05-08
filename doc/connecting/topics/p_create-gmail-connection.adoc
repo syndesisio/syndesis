@@ -26,7 +26,7 @@ you use to create one or more connections.
 . In the *Configure Connection* page, click *Connect Gmail*, 
 which takes you to a *Sign in with Gmail* page.
 +
-If *Connect Gmail* does not appear, then your {prodname} environment
+If *Connect Gmail* does not display, your {prodname} environment
 is not registered as a Google client application. See
 link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering with Google].
 When you try to create a Gmail connection and your {prodname} environment 

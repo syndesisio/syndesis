@@ -28,7 +28,7 @@ you use to create one or more connections.
 . In the *Configure Connection* page, click *Connect Google Sheets*,
 which takes you to a Google sign-in page.
 +
-If *Connect Google Sheets* does not appear, then your {prodname} environment
+If *Connect Google Sheets* does not display, then your {prodname} environment
 is not registered as a Google client application with the Google Sheets API
 enabled. See
 link:{LinkFuseOnlineConnectorGuide}#register-with-google_google[Registering with Google].
