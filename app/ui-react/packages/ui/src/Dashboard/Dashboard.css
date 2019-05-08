@@ -12,6 +12,6 @@
   margin-bottom: 10px; /* to align it with the title */
 }
 
-.dashboard-header .header__actions > * {
+.dashboard__header .header__actions > * {
   margin-left: 10px;
 }

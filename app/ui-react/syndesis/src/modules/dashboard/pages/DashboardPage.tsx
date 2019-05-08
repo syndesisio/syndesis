@@ -123,6 +123,12 @@ export default () => (
                 integrationsData.items,
                 metricsData.topIntegrations
               );
+
+              const dashboardConnections = connectionsData.connectionsForDisplay.slice(
+                0,
+                8
+              );
+
               return (
                 <Translation ns={['dashboard', 'integrations', 'shared']}>
                   {t => (
@@ -249,7 +255,7 @@ export default () => (
                           error={connectionsError}
                           includeConnectionMenu={false}
                           loading={!hasConnections}
-                          connections={connectionsData.connectionsForDisplay}
+                          connections={dashboardConnections}
                           getConnectionHref={connection =>
                             resolvers.connections.connection.details({
                               connection,

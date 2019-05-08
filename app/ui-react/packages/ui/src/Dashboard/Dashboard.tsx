@@ -3,16 +3,17 @@ import {
   GridItem,
   Level,
   LevelItem,
-  PageSection,
   Split,
   SplitItem,
+  Stack,
+  StackItem,
   Title,
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { CardGrid } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { ButtonLink } from '../Layout';
+import { ButtonLink, PageSection } from '../Layout';
 import { SimplePageHeader } from '../Shared';
 import './Dashboard.css';
 
@@ -40,84 +41,87 @@ export interface IIntegrationsPageProps {
 export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
   public render() {
     return (
-      <>
-        <PageSection className={'dashboard__header'}>
-          <Split>
-            <SplitItem isFilled={false}>
-              <SimplePageHeader
-                i18nTitle={this.props.i18nTitle}
-                titleSize={'xl'}
-                variant={'default'}
-              />
-            </SplitItem>
-            <SplitItem isFilled />
-            <SplitItem isFilled={false}>
-              <Level gutter={'sm'}>
-                <LevelItem>&nbsp;</LevelItem>
-                <LevelItem>
-                  <Link to={this.props.linkToIntegrations}>
-                    {this.props.i18nLinkToIntegrations}
-                  </Link>
-                  <ButtonLink
-                    href={this.props.linkToIntegrationCreation}
-                    as={'primary'}
-                  >
-                    {this.props.i18nLinkCreateIntegration}
-                  </ButtonLink>
-                </LevelItem>
-              </Level>
-            </SplitItem>
-          </Split>
-        </PageSection>
+      <PageSection>
+        <Stack gutter={'md'} className={'dashboard'}>
+          <StackItem isFilled={false}>
+            <Split>
+              <SplitItem isFilled={true}>
+                <SimplePageHeader
+                  i18nTitle={this.props.i18nTitle}
+                  titleSize={'xl'}
+                  variant={'default'}
+                />
+              </SplitItem>
 
-        <PageSection>
-          <CardGrid fluid={true} matchHeight={true}>
-            <CardGrid.Row>
-              <CardGrid.Col sm={6} md={3}>
-                {this.props.integrationsOverview}
-              </CardGrid.Col>
-              <CardGrid.Col sm={6} md={3}>
-                {this.props.connectionsOverview}
-              </CardGrid.Col>
-              <CardGrid.Col sm={6} md={3}>
-                {this.props.messagesOverview}
-              </CardGrid.Col>
-              <CardGrid.Col sm={6} md={3}>
-                {this.props.uptimeOverview}
-              </CardGrid.Col>
-            </CardGrid.Row>
-          </CardGrid>
-          <Grid gutter={'lg'}>
-            <GridItem span={7} rowSpan={3}>
-              {this.props.topIntegrations}
-            </GridItem>
-            <GridItem span={5}>{this.props.integrationBoard}</GridItem>
-            <GridItem span={5}>{this.props.integrationUpdates}</GridItem>
-          </Grid>
-        </PageSection>
+              <SplitItem isFilled={false}>
+                <Split gutter={'md'}>
+                  <SplitItem isFilled={false}>
+                    <Link to={this.props.linkToIntegrations}>
+                      {this.props.i18nLinkToIntegrations}
+                    </Link>
+                  </SplitItem>
+                  <SplitItem isFilled={false}>
+                    <ButtonLink
+                      href={this.props.linkToIntegrationCreation}
+                      as={'primary'}
+                    >
+                      {this.props.i18nLinkCreateIntegration}
+                    </ButtonLink>
+                  </SplitItem>
+                </Split>
+              </SplitItem>
+            </Split>
+          </StackItem>
 
-        <PageSection>
-          <Level gutter={'sm'}>
-            <LevelItem>
-              <Title size={'lg'}>{this.props.i18nConnections}</Title>
-            </LevelItem>
-            <LevelItem>
-              <Link to={this.props.linkToConnections}>
-                {this.props.i18nLinkToConnections}
-              </Link>
-              <ButtonLink
-                href={this.props.linkToConnectionCreation}
-                as={'primary'}
-              >
-                {this.props.i18nLinkCreateConnection}
-              </ButtonLink>
-            </LevelItem>
-          </Level>
-          <CardGrid fluid={true} matchHeight={true}>
-            <CardGrid.Row>{this.props.connections}</CardGrid.Row>
-          </CardGrid>
-        </PageSection>
-      </>
+          <StackItem isFilled={true} className={'dashboard__integrations'}>
+            <CardGrid fluid={true} matchHeight={true}>
+              <CardGrid.Row>
+                <CardGrid.Col sm={6} md={3}>
+                  {this.props.integrationsOverview}
+                </CardGrid.Col>
+                <CardGrid.Col sm={6} md={3}>
+                  {this.props.connectionsOverview}
+                </CardGrid.Col>
+                <CardGrid.Col sm={6} md={3}>
+                  {this.props.messagesOverview}
+                </CardGrid.Col>
+                <CardGrid.Col sm={6} md={3}>
+                  {this.props.uptimeOverview}
+                </CardGrid.Col>
+              </CardGrid.Row>
+            </CardGrid>
+            <Grid gutter={'lg'}>
+              <GridItem span={7} rowSpan={3}>
+                {this.props.topIntegrations}
+              </GridItem>
+              <GridItem span={5}>{this.props.integrationBoard}</GridItem>
+              <GridItem span={5}>{this.props.integrationUpdates}</GridItem>
+            </Grid>
+          </StackItem>
+
+          <StackItem isFilled={false} className={'dashboard__connections'}>
+            <Level gutter={'sm'}>
+              <LevelItem>
+                <Title size={'lg'}>{this.props.i18nConnections}</Title>
+              </LevelItem>
+              <LevelItem>
+                <Link to={this.props.linkToConnections}>
+                  {this.props.i18nLinkToConnections}
+                </Link>
+                <ButtonLink
+                  href={this.props.linkToConnectionCreation}
+                  as={'primary'}
+                >
+                  {this.props.i18nLinkCreateConnection}
+                </ButtonLink>
+              </LevelItem>
+            </Level>
+            <CardGrid fluid={true} matchHeight={true}>
+              <CardGrid.Row>{this.props.connections}</CardGrid.Row>
+            </CardGrid>
+          </StackItem>
+        </Stack>
+      </PageSection>
     );
   }
 }
