@@ -103,3 +103,10 @@ export interface IListResult<T> {
   items?: T[];
   totalCount?: number;
 }
+
+/**
+ * StringMap allows to model unboundered hash objects
+ */
+export interface StringMap<T> {
+  [key: string]: T;
+}

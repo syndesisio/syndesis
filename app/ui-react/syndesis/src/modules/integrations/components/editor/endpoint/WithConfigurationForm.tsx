@@ -22,7 +22,7 @@ import {
   WithLoader,
 } from '@syndesis/utils';
 import * as React from 'react';
-import { ApiError } from '../../../shared';
+import { ApiError } from '../../../../../shared';
 
 export interface IWithConfigurationFormChildrenProps {
   /**

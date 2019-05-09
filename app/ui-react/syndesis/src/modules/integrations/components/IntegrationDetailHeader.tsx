@@ -21,7 +21,7 @@ import {
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import resolvers from '../../resolvers';
-import { IntegrationDetailNavBar } from '../shared';
+import { IntegrationDetailNavBar } from './IntegrationDetailNavBar';
 
 export interface IIntegrationDetailHeaderProps {
   data: IntegrationWithMonitoring;

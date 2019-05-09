@@ -13,6 +13,31 @@ import {
  * flow.
  * @param step - the configuration step when configuring a multi-page connection.
  */
+export interface IConfigureStepRouteParams {
+  flowId: string;
+  position: string;
+}
+
+/**
+ * @param integration - the integration object, used to render the IVP.
+ * @param connection - the connection object selected in the previous step. Needed
+ * to render the IVP.
+ * @param updatedIntegration - when creating a link to this page, this should
+ * never be set. It is used by the page itself to pass the partially configured
+ * step when configuring a multi-page connection.
+ */
+export interface IConfigureStepRouteState {
+  step: StepKind;
+  integration: Integration;
+  updatedIntegration?: Integration;
+}
+
+/**
+ * @param actionId - the ID of the action selected in the previous step.
+ * @param position - the zero-based position for the new step in the integration
+ * flow.
+ * @param step - the configuration step when configuring a multi-page connection.
+ */
 export interface IConfigureActionRouteParams {
   flowId: string;
   position: string;

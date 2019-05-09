@@ -68,7 +68,7 @@ export class IntegrationEditorStepAdder extends React.Component<
             return (
               <React.Fragment key={idx}>
                 <IntegrationEditorStepsListItem
-                  stepName={s.action ? s.action!.name : s.name!}
+                  stepName={(s.action && s.action!.name) || s.name!}
                   stepDescription={(s.action! && s.action!.description) || ''}
                   additionalInfo={[
                     <div

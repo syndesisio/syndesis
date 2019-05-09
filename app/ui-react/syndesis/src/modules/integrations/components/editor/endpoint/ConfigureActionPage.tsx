@@ -6,15 +6,15 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 import {
-  IOnUpdatedIntegrationProps,
-  WithConfigurationForm,
-} from '../../../shared';
-import {
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
   IUIStep,
 } from '../interfaces';
 import { toUIStepKindCollection } from '../utils';
+import {
+  IOnUpdatedIntegrationProps,
+  WithConfigurationForm,
+} from './WithConfigurationForm';
 
 export interface IConfigureActionPageProps {
   backHref: (

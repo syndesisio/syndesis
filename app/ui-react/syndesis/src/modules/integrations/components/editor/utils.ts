@@ -324,6 +324,7 @@ export function filterStepsByPosition(steps: StepKind[], position: number) {
  * visibility status
  * @param steps
  * @param position
+ * @param flowSteps
  */
 export function visibleStepsByPosition(
   steps: StepKind[],
