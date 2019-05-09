@@ -17,10 +17,6 @@ import {
 } from './WithConfigurationForm';
 
 export interface IConfigureStepPageProps {
-  backHref: (
-    p: IConfigureStepRouteParams,
-    s: IConfigureStepRouteState
-  ) => H.LocationDescriptor;
   cancelHref: (
     p: IConfigureStepRouteParams,
     s: IConfigureStepRouteState
@@ -96,14 +92,6 @@ export class ConfigureStepPage extends React.Component<
                 <WithConfigurationForm
                   step={step}
                   onUpdatedIntegration={onUpdatedIntegration}
-                  chooseActionHref={this.props.backHref(
-                    { flowId, position },
-                    {
-                      integration,
-                      step,
-                      updatedIntegration,
-                    }
-                  )}
                 >
                   {({ form }) => (
                     <>

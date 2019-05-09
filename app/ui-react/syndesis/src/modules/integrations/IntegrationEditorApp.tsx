@@ -172,12 +172,6 @@ const addStepConfigureActionPage = (
 
 const addStepConfigureStepPage = (
   <ConfigureStepPage
-    backHref={(p, s) =>
-      resolvers.integration.edit.index({
-        ...p,
-        ...s,
-      })
-    }
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
     mode={'adding'}
     sidebar={({ steps, activeIndex }) => (
@@ -238,12 +232,6 @@ const editStepConfigureActionPage = (
 
 const editStepConfigureStepPage = (
   <ConfigureStepPage
-    backHref={(p, s) =>
-      resolvers.integration.edit.index({
-        ...p,
-        ...s,
-      })
-    }
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
     mode={'editing'}
     sidebar={({ steps, activeIndex }) => (

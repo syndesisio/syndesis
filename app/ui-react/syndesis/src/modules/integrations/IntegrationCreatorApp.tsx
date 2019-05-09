@@ -220,7 +220,6 @@ const startStepConfigureActionPage = (
 
 const startStepConfigureStepPage = (
   <ConfigureStepPage
-    backHref={(p, s) => resolvers.create.start.selectStep({ ...p, ...s })}
     cancelHref={resolvers.list}
     mode={'adding'}
     sidebar={({ step }) => (
@@ -430,7 +429,6 @@ const finishStepConfigureActionPage = (
 
 const finishStepConfigureStepPage = (
   <ConfigureStepPage
-    backHref={(p, s) => resolvers.create.finish.selectStep({ ...p, ...s })}
     cancelHref={resolvers.list}
     mode={'adding'}
     sidebar={({ step, steps }) => (
@@ -583,9 +581,6 @@ const addStepConfigureActionPage = (
 
 const addStepConfigureStepPage = (
   <ConfigureStepPage
-    backHref={(p, s) =>
-      resolvers.create.configure.addStep.selectStep({ ...p, ...s })
-    }
     cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
     mode={'adding'}
     sidebar={({ step, steps, activeIndex }) => (
@@ -660,12 +655,6 @@ const editStepConfigureActionPage = (
 
 const editStepConfigureStepPage = (
   <ConfigureStepPage
-    backHref={(p, s) =>
-      resolvers.create.configure.index({
-        ...p,
-        ...s,
-      })
-    }
     cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
     mode={'editing'}
     sidebar={({ steps, activeIndex }) => (

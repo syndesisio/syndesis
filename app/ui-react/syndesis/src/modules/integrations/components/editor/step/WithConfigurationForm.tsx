@@ -1,6 +1,5 @@
 import { ALL_STEPS } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
-import * as H from '@syndesis/history';
 import { IConfigurationProperties, StepKind } from '@syndesis/models';
 import { IntegrationEditorForm } from '@syndesis/ui';
 import { toFormDefinition } from '@syndesis/utils';
@@ -39,12 +38,6 @@ export interface IWithConfigurationFormProps {
    * the ID of the action that needs to be configured.
    */
   step: StepKind;
-  /**
-   * the values to assign to the form once rendered. These can come either from
-   * an existing integration or from the [onUpdatedIntegration]{@link IWithConfigurationFormProps#onUpdatedIntegration}
-   * callback.
-   */
-  chooseActionHref: H.LocationDescriptor;
   /**
    * the render prop that will receive the ready-to-be-rendered form and some
    * helpers.
@@ -92,13 +85,15 @@ export class WithConfigurationForm extends React.Component<
     };
     // this can throw if the stepKind is not available for any given reason. Let
     // the error boundary catch and handle this.
-    const properties =
-      this.props.step.properties ||
-      ALL_STEPS.find(s => s.stepKind === this.props.step.stepKind)!.properties;
+    const step = this.props.step.properties
+      ? this.props.step
+      : ALL_STEPS.find(s => s.stepKind === this.props.step.stepKind)!;
     return (
       <AutoForm<{ [key: string]: string }>
         i18nRequiredProperty={'* Required field'}
-        definition={toFormDefinition(properties as IConfigurationProperties)}
+        definition={toFormDefinition(
+          step.properties as IConfigurationProperties
+        )}
         initialValue={this.props.step.configuredProperties || {}}
         onSave={onSave}
         key={this.props.step.id}
@@ -107,15 +102,11 @@ export class WithConfigurationForm extends React.Component<
           this.props.children({
             form: (
               <IntegrationEditorForm
-                i18nFormTitle={`${this.props.step.name} - ${
-                  this.props.step.description
-                }`}
-                i18nChooseAction={'Choose Action'}
+                i18nFormTitle={`${step.name} - ${step.description}`}
                 i18nNext={'Next'}
                 isValid={isValid}
                 submitForm={submitForm}
                 handleSubmit={handleSubmit}
-                chooseActionHref={this.props.chooseActionHref}
               >
                 {fields}
               </IntegrationEditorForm>

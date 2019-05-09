@@ -98,19 +98,27 @@ export const IntegrationEditorLayout: React.FunctionComponent<
             </LevelItem>
             <LevelItem>
               {(cancelHref || onCancel) && (
-                <ButtonLink onClick={onCancel} href={cancelHref}>
-                  <i className={'fa fa-angle-left'} /> Cancel
-                </ButtonLink>
+                <>
+                  <ButtonLink onClick={onCancel} href={cancelHref}>
+                    Cancel
+                  </ButtonLink>
+                  &nbsp;
+                </>
               )}
               {(saveHref || onSave) && (
-                <ButtonLink
-                  onClick={onSave}
-                  href={saveHref}
-                  disabled={isSaveLoading || isSaveDisabled}
-                >
-                  {isSaveLoading ? <Loader size={'xs'} inline={true} /> : null}
-                  Save
-                </ButtonLink>
+                <>
+                  <ButtonLink
+                    onClick={onSave}
+                    href={saveHref}
+                    disabled={isSaveLoading || isSaveDisabled}
+                  >
+                    {isSaveLoading ? (
+                      <Loader size={'xs'} inline={true} />
+                    ) : null}
+                    Save
+                  </ButtonLink>
+                  &nbsp;
+                </>
               )}
               {(publishHref || onPublish) && (
                 <ButtonLink

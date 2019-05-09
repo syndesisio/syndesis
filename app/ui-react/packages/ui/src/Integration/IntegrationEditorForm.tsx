@@ -9,13 +9,13 @@ export interface IIntegrationEditorFormProps {
   i18nFormTitle?: string;
 
   i18nNext: string;
-  i18nChooseAction: string;
+  i18nBackAction?: string;
   /**
    * The callback fired when submitting the form.
    * @param e
    */
   isValid: boolean;
-  chooseActionHref: H.LocationDescriptor;
+  backActionHref?: H.LocationDescriptor;
   handleSubmit: (e?: any) => void;
   submitForm: (e?: any) => void;
 }
@@ -50,11 +50,15 @@ export class IntegrationEditorForm extends React.Component<
                   <Container>{this.props.children}</Container>
                 </div>
                 <div className="card-pf-footer">
-                  <ButtonLink href={this.props.chooseActionHref}>
-                    <i className={'fa fa-chevron-left'} />{' '}
-                    {this.props.i18nChooseAction}
-                  </ButtonLink>
-                  &nbsp;
+                  {this.props.backActionHref && (
+                    <>
+                      <ButtonLink href={this.props.backActionHref}>
+                        <i className={'fa fa-chevron-left'} />{' '}
+                        {this.props.i18nBackAction}
+                      </ButtonLink>
+                      &nbsp;
+                    </>
+                  )}
                   <ButtonLink
                     onClick={this.props.submitForm}
                     disabled={!this.props.isValid}

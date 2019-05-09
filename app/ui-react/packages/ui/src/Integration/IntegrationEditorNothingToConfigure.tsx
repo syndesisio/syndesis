@@ -9,8 +9,8 @@ export interface IIntegrationEditorNothingToConfigureProps {
    */
   i18nAlert: string;
   i18nNext: string;
-  i18nChooseAction: string;
-  chooseActionHref: H.LocationDescriptor;
+  i18nBackAction: string;
+  backActionHref: H.LocationDescriptor;
   submitForm: (e?: any) => void;
 }
 
@@ -36,9 +36,9 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
                 </Container>
               </div>
               <div className="card-pf-footer">
-                <ButtonLink href={this.props.chooseActionHref}>
+                <ButtonLink href={this.props.backActionHref}>
                   <i className={'fa fa-chevron-left'} />{' '}
-                  {this.props.i18nChooseAction}
+                  {this.props.i18nBackAction}
                 </ButtonLink>
                 &nbsp;
                 <ButtonLink onClick={this.props.submitForm} as={'primary'}>

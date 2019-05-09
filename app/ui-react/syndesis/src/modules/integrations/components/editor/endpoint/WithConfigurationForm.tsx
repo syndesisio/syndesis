@@ -153,12 +153,12 @@ export class WithConfigurationForm extends React.Component<
             <>
               <IntegrationEditorForm
                 i18nFormTitle={`${action.name} - ${action.description}`}
-                i18nChooseAction={'Choose Action'}
+                i18nBackAction={'Choose Action'}
                 i18nNext={'Next'}
                 isValid={allRequiredSet || isValid}
                 submitForm={submitForm}
                 handleSubmit={handleSubmit}
-                chooseActionHref={this.props.chooseActionHref}
+                backActionHref={this.props.chooseActionHref}
               >
                 {fields}
               </IntegrationEditorForm>
@@ -182,10 +182,10 @@ export class WithConfigurationForm extends React.Component<
     return (
       <IntegrationEditorNothingToConfigure
         i18nAlert={'There are no properties to configure for this action.'}
-        i18nChooseAction={'Choose Action'}
+        i18nBackAction={'Choose Action'}
         i18nNext={'Next'}
         submitForm={submitForm}
-        chooseActionHref={this.props.chooseActionHref}
+        backActionHref={this.props.chooseActionHref}
       />
     );
   }
