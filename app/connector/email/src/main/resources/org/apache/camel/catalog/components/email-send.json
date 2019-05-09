@@ -1,0 +1,23 @@
+{
+ "component": {
+    "kind": "component",
+    "scheme": "email-send",
+    "alternativeSchemes": "smtp,smtps",
+    "syntax": "emailS:host:port",
+    "alternativeSyntax": "emailS:username:password@host:port",
+    "title": "EMAIL SEND",
+    "description": "To send emails using smtp protocol.",
+    "label": "email (send)",
+    "deprecated": false,
+    "deprecationNote": "",
+    "async": false,
+    "consumerOnly": false,
+    "producerOnly": true,
+    "lenientProperties": false,
+    "javaType": "io.syndesis.connector.email.component.EMailComponent",
+    "firstVersion": "1.0.0",
+    "groupId": "io.syndesis.connector",
+    "artifactId": "connector-email",
+    "version": "1.7"
+  }
+}

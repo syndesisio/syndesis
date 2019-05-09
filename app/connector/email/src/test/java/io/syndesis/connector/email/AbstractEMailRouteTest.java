@@ -1,0 +1,182 @@
+/*
+ * Copyright (C) 2016 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.syndesis.connector.email;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.apache.camel.component.mock.MockEndpoint;
+import io.syndesis.common.model.Dependency;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
+import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.connector.email.model.EMailMessageModel;
+import io.syndesis.connector.email.server.EMailTestServer;
+import io.syndesis.connector.support.util.PropertyBuilder;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+
+public abstract class AbstractEMailRouteTest extends AbstractEMailTest {
+
+    protected final Step mockStep;
+
+    public AbstractEMailRouteTest() throws Exception {
+        super();
+        this.mockStep = createMockStep();
+    }
+
+    protected String componentScheme(EMailTestServer server) {
+        String protocolId = server.getProtocol();
+        assertNotNull(protocolId);
+        Protocols protocol = Protocols.getValueOf(protocolId);
+        assertNotNull(protocol);
+        return protocol.componentSchema();
+    }
+
+    protected Step createMockStep() {
+        Step mockStep = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .action(new ConnectorAction.Builder()
+                    .descriptor(new ConnectorDescriptor.Builder()
+                                .componentScheme("mock")
+                                .putConfiguredProperty("name", "result")
+                                .build())
+                    .build())
+            .build();
+        return mockStep;
+    }
+
+    protected abstract ConnectorAction createConnectorAction(Map<String, String> configuredProperties) throws Exception;
+
+    protected Integration createIntegration(Step... steps) {
+
+        Flow.Builder flowBuilder = new Flow.Builder();
+        for (Step step : steps) {
+            flowBuilder.addStep(step);
+        }
+
+        Integration odataIntegration = new Integration.Builder()
+            .id("i-LTS2tYXwF8odCm87k6gz")
+            .name("MyEMailInt")
+            .addTags("log", "email")
+            .addFlow(flowBuilder.build())
+            .build();
+        return odataIntegration;
+    }
+
+    protected static IntegrationRouteBuilder newIntegrationRouteBuilder(Integration integration) {
+        return new IntegrationRouteBuilder("") {
+            @Override
+            protected Integration loadIntegration() throws IOException {
+                return integration;
+            }
+        };
+    }
+
+    protected MockEndpoint initMockEndpoint() {
+        MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
+        result.setResultWaitTime(MOCK_TIMEOUT_MILLISECONDS);
+        return result;
+    }
+
+    protected Connector createEMailConnector(String componentScheme,
+                                             PropertyBuilder<String> configurePropBuilder,
+                                             PropertyBuilder<ConfigurationProperty> propBuilder) {
+        Connector.Builder builder = new Connector.Builder()
+            .id("email")
+            .name("EMail")
+            .componentScheme(componentScheme)
+            .description("Communicate with an EMail service")
+            .addDependency(Dependency.maven("org.apache.camel:camel-mail:latest"));
+
+        if (configurePropBuilder != null) {
+            builder.configuredProperties(configurePropBuilder.build());
+        }
+
+        if (propBuilder != null) {
+            builder.properties(propBuilder.build());
+        }
+
+        return builder.build();
+    }
+
+    protected Connector createEMailConnector(String componentScheme, PropertyBuilder<String> configurePropBuilder) {
+        return createEMailConnector(componentScheme, configurePropBuilder, null);
+    }
+
+    protected Step.Builder emailStepBuilder(Connector mailConnector, Map<String, String> configuredProperties) throws Exception {
+        if (configuredProperties == null) {
+            configuredProperties = new HashMap<>();
+        }
+
+        Step.Builder mailStepBuilder = new Step.Builder()
+            .stepKind(StepKind.endpoint)
+            .action(createConnectorAction(configuredProperties))
+            .connection(
+                            new Connection.Builder()
+                                .connector(mailConnector)
+                                .build());
+        return mailStepBuilder;
+    }
+
+    protected Step createEMailStep(Connector emailConnector) throws Exception {
+        return emailStepBuilder(emailConnector, new HashMap<>())
+                                        .build();
+    }
+
+    protected Step createEMailStep(Connector emailConnector, Map<String, String> configuredProperties) throws Exception {
+        return emailStepBuilder(emailConnector, configuredProperties)
+                                        .build();
+    }
+
+    @SuppressWarnings( "unchecked" )
+    protected <T> T extractModelFromExchgMsg(MockEndpoint result, int index, Class<T> bodyClass) {
+        Object body = result.getExchanges().get(index).getIn().getBody();
+        assertTrue(bodyClass.isInstance(body));
+        T json = (T) body;
+        return json;
+    }
+
+    protected EMailMessageModel extractModelFromExchgMsg(MockEndpoint result, int index) {
+        return extractModelFromExchgMsg(result, index, EMailMessageModel.class);
+    }
+
+    protected void assertSatisfied(MockEndpoint result) throws InterruptedException {
+        try {
+            result.assertIsSatisfied();
+        } catch (Exception ex) {
+            List<Throwable> failures = result.getFailures();
+            for (Throwable t : failures) {
+                t.printStackTrace();
+            }
+            throw ex;
+        }
+    }
+
+    protected void testResult(MockEndpoint result, int exchangeIdx, EMailMessageModel expectedModel) throws Exception {
+        EMailMessageModel actualModel = extractModelFromExchgMsg(result, exchangeIdx);
+        assertEquals(expectedModel, actualModel);
+    }
+}

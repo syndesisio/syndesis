@@ -22,9 +22,9 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.connector.odata.AbstractODataRouteTest;
-import io.syndesis.connector.odata.PropertyBuilder;
 import io.syndesis.connector.odata.component.ODataComponentFactory;
 import io.syndesis.connector.odata.customizer.ODataReadCustomizer;
+import io.syndesis.connector.support.util.PropertyBuilder;
 
 public abstract class AbstractODataReadRouteTest extends AbstractODataRouteTest {
 

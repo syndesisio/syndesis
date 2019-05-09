@@ -50,6 +50,7 @@
     <module>aws-sqs</module>
     <module>box</module>
     <module>dropbox</module>
+    <module>email</module>
     <module>ftp</module>
     <module>fhir</module>
     <module>gmail</module>

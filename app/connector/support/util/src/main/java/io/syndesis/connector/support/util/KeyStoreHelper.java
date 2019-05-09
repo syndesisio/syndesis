@@ -15,15 +15,23 @@
  */
 package io.syndesis.connector.support.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 
 /**
  * Helper class to create KeyStores from Certificates.
@@ -31,6 +39,11 @@ import java.security.SecureRandom;
  * @author dhirajsb
  */
 public class KeyStoreHelper {
+
+    /**
+     * The password for the java runtime's default keystore
+     */
+    public static final String DEFAULT_KEYSTORE_PASSWD = "changeit";
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
@@ -78,4 +91,24 @@ public class KeyStoreHelper {
         return new String(passwordChars, 0, passwordChars.length);
     }
 
+    public static KeyStore defaultKeyStore()
+        throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
+        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keyStore.load(CertificateUtil.defaultKeyStore(), DEFAULT_KEYSTORE_PASSWD.toCharArray());
+        return keyStore;
+    }
+
+    public static KeyStore createKeyStoreWithCustomCertificate(String alias, String certContent)
+        throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
+        KeyStore keyStore = defaultKeyStore();
+
+        if (certContent != null) {
+            Certificate certificate = CertificateFactory.getInstance("X.509")
+                .generateCertificate(
+                                     new ByteArrayInputStream(certContent.getBytes(Charset.defaultCharset())));
+            keyStore.setCertificateEntry(alias, certificate);
+        }
+
+        return keyStore;
+    }
 }
