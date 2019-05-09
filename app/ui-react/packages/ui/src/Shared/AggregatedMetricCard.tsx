@@ -26,9 +26,10 @@ export class AggregatedMetricCard extends React.PureComponent<
       <Card accented={true} aggregated={true} matchHeight={true}>
         <Card.Title>
           <AggregateStatusCount>
-            <span data-testid="aggregate-title">
-              {this.formatNumber(this.props.total)} {this.props.title}
+            <span data-testid="aggregate-total-count">
+              {this.formatNumber(this.props.total)}
             </span>
+            <span data-testid="aggregate-title"> {this.props.title}</span>
           </AggregateStatusCount>
         </Card.Title>
         <Card.Body>

@@ -4,7 +4,7 @@ import { AggregatedMetricCard } from '../src/Shared';
 
 export default describe('AggregatedMetricCard', () => {
   const testComponent = (
-    <AggregatedMetricCard title={'A Title'} ok={10} error={5} />
+    <AggregatedMetricCard title={'A Title'} total={15} ok={10} error={5} />
   );
 
   it('Should have the A Title title', function() {
@@ -18,5 +18,9 @@ export default describe('AggregatedMetricCard', () => {
   it('Should have 10 ok', function() {
     const { getByTestId } = render(testComponent);
     expect(getByTestId('aggregate-ok-count')).toHaveTextContent('10');
+  });
+  it('Should have 15 total', function() {
+    const { getByTestId } = render(testComponent);
+    expect(getByTestId('aggregate-total-count')).toHaveTextContent('15');
   });
 });
