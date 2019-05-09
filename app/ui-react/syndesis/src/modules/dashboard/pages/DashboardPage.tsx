@@ -15,6 +15,7 @@ import {
   TopIntegrationsCard,
   UptimeMetric,
 } from '@syndesis/ui';
+import { toShortDateAndTimeString } from '@syndesis/utils';
 import { toDurationDifferenceString, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -140,9 +141,8 @@ export default () => (
                       integrationsOverview={
                         <div data-testid="total-integrations">
                           <AggregatedMetricCard
-                            title={t('titleTotalIntegrations', {
-                              count: integrationsData.totalCount,
-                            })}
+                            title={t('titleTotalIntegrations')}
+                            total={integrationsData.totalCount}
                             ok={
                               integrationsData.totalCount -
                               integrationStatesCount.Error
@@ -164,9 +164,8 @@ export default () => (
                       messagesOverview={
                         <div data-testid="total-messages">
                           <AggregatedMetricCard
-                            title={t('titleTotalMessages', {
-                              count: metricsData.messages,
-                            })}
+                            title={t('titleTotalMessages')}
+                            total={metricsData.messages!}
                             ok={metricsData.messages! - metricsData.errors!}
                             error={metricsData.errors!}
                           />
@@ -188,12 +187,6 @@ export default () => (
                           })}
                           i18nLast30Days={t('lastNumberOfDays', {
                             numberOfDays: 30,
-                          })}
-                          i18nLast60Days={t('lastNumberOfDays', {
-                            numberOfDays: 60,
-                          })}
-                          i18nLast90Days={t('lastNumberOfDays', {
-                            numberOfDays: 90,
                           })}
                         >
                           <Integrations
@@ -240,7 +233,9 @@ export default () => (
                                   key={i.id}
                                   integrationName={i.name}
                                   integrationCurrentState={i.currentState!}
-                                  integrationDate={i.updatedAt! || i.createdAt!}
+                                  integrationDate={toShortDateAndTimeString(
+                                    i.updatedAt! || i.createdAt!
+                                  )}
                                   i18nError={t('shared:Error')}
                                   i18nPublished={t('shared:Published')}
                                   i18nUnpublished={t('shared:Unpublished')}

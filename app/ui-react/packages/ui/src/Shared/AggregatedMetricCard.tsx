@@ -11,29 +11,38 @@ export interface IAggregatedMetricProps {
   title: string;
   ok: number;
   error: number;
+  total: number;
 }
 
 export class AggregatedMetricCard extends React.PureComponent<
   IAggregatedMetricProps
 > {
+  public formatNumber(num: number) {
+    return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  }
+
   public render() {
     return (
       <Card accented={true} aggregated={true} matchHeight={true}>
         <Card.Title>
           <AggregateStatusCount>
-            <span data-testid="aggregate-title">{this.props.title}</span>
+            <span data-testid="aggregate-title">
+              {this.formatNumber(this.props.total)} {this.props.title}
+            </span>
           </AggregateStatusCount>
         </Card.Title>
         <Card.Body>
           <AggregateStatusNotifications>
             <AggregateStatusNotification>
               <Icon type="pf" name="ok" />
-              <span data-testid="aggregate-ok-count">{this.props.ok}</span>{' '}
+              <span data-testid="aggregate-ok-count">
+                {this.formatNumber(this.props.ok)}
+              </span>{' '}
             </AggregateStatusNotification>
             <AggregateStatusNotification>
               <Icon type="pf" name="error-circle-o" />
               <span data-testid="aggregate-error-count">
-                {this.props.error}
+                {this.formatNumber(this.props.error)}
               </span>
             </AggregateStatusNotification>
           </AggregateStatusNotifications>

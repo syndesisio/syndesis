@@ -41,7 +41,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
     return (
       <PageSection>
         <Stack gutter={'md'} className={'dashboard'}>
-          <StackItem isFilled={false}>
+          <StackItem isFilled={false} className={'dashboard__header'}>
             <Split>
               <SplitItem isFilled={true}>
                 <SimplePageHeader
@@ -51,9 +51,12 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 />
               </SplitItem>
 
-              <SplitItem isFilled={false}>
+              <SplitItem isFilled={false} className={'header__actions'}>
                 <Split gutter={'md'}>
-                  <SplitItem isFilled={false}>
+                  <SplitItem
+                    isFilled={false}
+                    className={'header__actions--link'}
+                  >
                     <Link to={this.props.linkToIntegrations}>
                       {this.props.i18nLinkToIntegrations}
                     </Link>
@@ -71,12 +74,8 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
             </Split>
           </StackItem>
 
-          <StackItem isFilled={true} className={'dashboard__integrations'}>
-            <CardGrid
-              fluid={true}
-              matchHeight={true}
-              className={'integrations__metrics'}
-            >
+          <StackItem isFilled={false} className={'dashboard__metrics'}>
+            <CardGrid fluid={true} matchHeight={true}>
               <CardGrid.Row>
                 <CardGrid.Col sm={6} md={3}>
                   {this.props.integrationsOverview}
@@ -92,6 +91,9 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 </CardGrid.Col>
               </CardGrid.Row>
             </CardGrid>
+          </StackItem>
+
+          <StackItem isFilled={false} className={'dashboard__integrations'}>
             <Grid gutter={'lg'}>
               <GridItem span={7} rowSpan={3}>
                 {this.props.topIntegrations}

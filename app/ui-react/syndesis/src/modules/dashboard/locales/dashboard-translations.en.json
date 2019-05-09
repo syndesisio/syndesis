@@ -11,7 +11,7 @@
   "titleIntegrationUpdates": "Recent Updates",
   "titleTopIntegrations": "Top {{count}} Integrations",
   "titleTotalConnections": "{{count}} Connections",
-  "titleTotalIntegrations": "{{count}} Integrations",
-  "titleTotalMessages": "{{count}} Messages",
+  "titleTotalIntegrations": "Integrations",
+  "titleTotalMessages": "Messages",
   "titleUptimeMetric": "Uptime"
 }

@@ -6,8 +6,6 @@ import './TopIntegrations.css';
 
 export interface ITopIntegrationsProps {
   i18nLast30Days: string;
-  i18nLast60Days: string;
-  i18nLast90Days: string;
   i18nTitle: string;
 }
 

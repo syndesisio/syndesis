@@ -65,3 +65,16 @@ export function toDurationString(
   }
   return durationStrings.join(', ').trim();
 }
+
+/***
+ *
+ * @param timestamp - Date to be formatted
+ * @return string - Formatted date as, for example, Jan 1st 23:42
+ */
+export function toShortDateAndTimeString(timestamp: number): string {
+  if (!timestamp) {
+    return 'NaN';
+  }
+
+  return moment(timestamp).format('MMM Do HH:mm');
+}

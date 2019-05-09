@@ -1,3 +1,12 @@
+.dashboard .dashboard__header {
+  margin-bottom: 0 !important;
+}
+
+.dashboard .header__actions,
+.dashboard .header__actions .header__actions--link {
+  align-self: center;
+}
+
 .dashboard__integrations .integrations__metrics {
   margin-top: 0;
 }

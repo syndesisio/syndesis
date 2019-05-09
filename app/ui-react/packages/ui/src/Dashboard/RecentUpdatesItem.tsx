@@ -7,7 +7,7 @@ import './RecentUpdatesItem.css';
 export interface IRecentUpdatesItem {
   integrationName: string;
   integrationCurrentState: IntegrationState;
-  integrationDate: number;
+  integrationDate: string;
   i18nError: string;
   i18nPublished: string;
   i18nUnpublished: string;
@@ -31,6 +31,6 @@ export const RecentUpdatesItem: React.FunctionComponent<IRecentUpdatesItem> = ({
         i18nUnpublished={i18nUnpublished}
       />
     </Grid.Col>
-    <Grid.Col sm={4}>{new Date(integrationDate).toLocaleString()}</Grid.Col>
+    <Grid.Col sm={4}>{integrationDate}</Grid.Col>
   </Grid.Row>
 );
