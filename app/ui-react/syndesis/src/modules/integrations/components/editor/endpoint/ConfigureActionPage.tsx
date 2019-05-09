@@ -129,39 +129,28 @@ export class ConfigureActionPage extends React.Component<
               };
 
               return (
-                <WithConfigurationForm
-                  connection={connection}
-                  actionId={actionId}
-                  configurationStep={stepAsNumber}
-                  initialValue={configuredProperties}
-                  onUpdatedIntegration={onUpdatedIntegration}
-                  chooseActionHref={this.props.backHref(
-                    { actionId, flowId, step, position },
-                    {
-                      configuredProperties,
-                      connection,
-                      integration,
-                      updatedIntegration,
+                <>
+                  <PageTitle title={'Configure the action'} />
+                  <IntegrationEditorLayout
+                    title={'Configure the action'}
+                    description={
+                      'Fill in the required information for the selected action.'
                     }
-                  )}
-                >
-                  {({ form }) => (
-                    <>
-                      <PageTitle title={'Configure the action'} />
-                      <IntegrationEditorLayout
-                        title={'Configure the action'}
-                        description={
-                          'Fill in the required information for the selected action.'
-                        }
-                        sidebar={this.props.sidebar({
-                          activeIndex: positionAsNumber,
-                          connection,
-                          steps: toUIStepKindCollection(
-                            getSteps(updatedIntegration || integration, flowId)
-                          ),
-                        })}
-                        content={form}
-                        cancelHref={this.props.cancelHref(
+                    sidebar={this.props.sidebar({
+                      activeIndex: positionAsNumber,
+                      connection,
+                      steps: toUIStepKindCollection(
+                        getSteps(updatedIntegration || integration, flowId)
+                      ),
+                    })}
+                    content={
+                      <WithConfigurationForm
+                        connection={connection}
+                        actionId={actionId}
+                        configurationStep={stepAsNumber}
+                        initialValue={configuredProperties}
+                        onUpdatedIntegration={onUpdatedIntegration}
+                        chooseActionHref={this.props.backHref(
                           { actionId, flowId, step, position },
                           {
                             configuredProperties,
@@ -171,9 +160,18 @@ export class ConfigureActionPage extends React.Component<
                           }
                         )}
                       />
-                    </>
-                  )}
-                </WithConfigurationForm>
+                    }
+                    cancelHref={this.props.cancelHref(
+                      { actionId, flowId, step, position },
+                      {
+                        configuredProperties,
+                        connection,
+                        integration,
+                        updatedIntegration,
+                      }
+                    )}
+                  />
+                </>
               );
             }}
           </WithRouteData>

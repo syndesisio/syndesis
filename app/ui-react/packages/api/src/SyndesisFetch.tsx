@@ -11,6 +11,8 @@ export interface ISyndesisFetchProps<T> {
   headers?: { [name: string]: string };
   defaultValue: T;
   initialValue?: T;
+  body?: any;
+  method?: 'POST' | 'GET';
   children(props: IFetchRenderProps<T>): any;
 }
 

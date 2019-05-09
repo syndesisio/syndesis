@@ -54,6 +54,7 @@ export class IntegrationEditorForm extends React.Component<
                     <i className={'fa fa-chevron-left'} />{' '}
                     {this.props.i18nChooseAction}
                   </ButtonLink>
+                  &nbsp;
                   <ButtonLink
                     onClick={this.props.submitForm}
                     disabled={!this.props.isValid}

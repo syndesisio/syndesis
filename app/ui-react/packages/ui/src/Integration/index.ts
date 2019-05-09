@@ -1,3 +1,4 @@
+export * from './editor';
 export * from './CiCd';
 export * from './Import';
 export * from './Details';

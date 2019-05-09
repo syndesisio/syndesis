@@ -71,6 +71,17 @@ export interface IWithIntegrationHelpersChildrenProps {
    */
   updateOrAddConnection: UpdateOrAddConnection;
   /**
+   * Fetches the descriptor for the specified action
+   * @param connectionId
+   * @param actionId
+   * @param configuredProperties
+   */
+  getActionDescriptor(
+    connectionId: string,
+    actionId: string,
+    configuredProperties: any
+  ): Promise<ActionDescriptor | null>;
+  /**
    * Delete the integration with the specified ID, empty response is returned
    * @param id
    */
@@ -160,6 +171,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
     this.deleteIntegration = this.deleteIntegration.bind(this);
     this.deployIntegration = this.deployIntegration.bind(this);
     this.exportIntegration = this.exportIntegration.bind(this);
+    this.getActionDescriptor = this.getActionDescriptor.bind(this);
     this.getDeployment = this.getDeployment.bind(this);
     this.importIntegration = this.importIntegration.bind(this);
     this.replaceDraft = this.replaceDraft.bind(this);
@@ -430,6 +442,7 @@ export class WithIntegrationHelpersWrapped extends React.Component<
       deleteIntegration: this.deleteIntegration,
       deployIntegration: this.deployIntegration,
       exportIntegration: this.exportIntegration,
+      getActionDescriptor: this.getActionDescriptor,
       getDeployment: this.getDeployment,
       importIntegration: this.importIntegration,
       replaceDraft: this.replaceDraft,
