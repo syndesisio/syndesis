@@ -173,7 +173,7 @@ const addStepConfigureActionPage = (
 const addStepConfigureStepPage = (
   <ConfigureStepPage
     backHref={(p, s) =>
-      resolvers.integration.edit.editStep.selectStep({
+      resolvers.integration.edit.index({
         ...p,
         ...s,
       })

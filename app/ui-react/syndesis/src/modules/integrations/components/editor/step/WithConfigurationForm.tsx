@@ -1,3 +1,4 @@
+import { ALL_STEPS } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
 import { IConfigurationProperties, StepKind } from '@syndesis/models';
@@ -89,11 +90,15 @@ export class WithConfigurationForm extends React.Component<
       });
       actions.setSubmitting(false);
     };
+    // this can throw if the stepKind is not available for any given reason. Let
+    // the error boundary catch and handle this.
+    const properties =
+      this.props.step.properties ||
+      ALL_STEPS.find(s => s.stepKind === this.props.step.stepKind)!.properties;
     return (
       <AutoForm<{ [key: string]: string }>
         i18nRequiredProperty={'* Required field'}
-        definition={toFormDefinition(this.props.step
-          .properties as IConfigurationProperties)}
+        definition={toFormDefinition(properties as IConfigurationProperties)}
         initialValue={this.props.step.configuredProperties || {}}
         onSave={onSave}
         key={this.props.step.id}
