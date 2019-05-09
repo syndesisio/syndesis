@@ -26,12 +26,17 @@ import java.nio.file.Path;
 import java.nio.file.attribute.PosixFilePermissions;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.security.KeyStore.TrustedCertificateEntry;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.SecureRandom;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
+import java.util.concurrent.ThreadLocalRandom;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 /**
  * Helper class to create KeyStores from Certificates.
@@ -39,13 +44,6 @@ import java.security.cert.CertificateFactory;
  * @author dhirajsb
  */
 public class KeyStoreHelper {
-
-    /**
-     * The password for the java runtime's default keystore
-     */
-    public static final String DEFAULT_KEYSTORE_PASSWD = "changeit";
-
-    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
 
     private final String certificate;
     private final String alias;
@@ -87,15 +85,31 @@ public class KeyStoreHelper {
     }
 
     private static String generatePassword() {
-        final int[] passwordChars = SECURE_RANDOM.ints(16, 'A', 'Z' + 1).toArray();
+        final int[] passwordChars = ThreadLocalRandom.current().ints(16, 'A', 'Z' + 1).toArray();
         return new String(passwordChars, 0, passwordChars.length);
     }
 
     public static KeyStore defaultKeyStore()
         throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
-        KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keyStore.load(CertificateUtil.defaultKeyStore(), DEFAULT_KEYSTORE_PASSWD.toCharArray());
-        return keyStore;
+
+        final KeyStore defaultKeystore = KeyStore.getInstance(KeyStore.getDefaultType());
+        defaultKeystore.load(null);
+
+        final TrustManagerFactory factory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+        factory.init((KeyStore) null);
+
+        for (final TrustManager manager : factory.getTrustManagers()) {
+            final X509TrustManager x509Manager = (X509TrustManager) manager;
+
+            final X509Certificate[] issuers = x509Manager.getAcceptedIssuers();
+            for (final X509Certificate issuer : issuers) {
+                final String alias = issuer.getSerialNumber().toString();
+                final TrustedCertificateEntry entry = new TrustedCertificateEntry(issuer);
+                defaultKeystore.setEntry(alias, entry, null);
+            }
+        }
+
+        return defaultKeystore;
     }
 
     public static KeyStore createKeyStoreWithCustomCertificate(String alias, String certContent)

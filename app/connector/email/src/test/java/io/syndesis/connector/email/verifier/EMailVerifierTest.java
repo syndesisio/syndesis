@@ -26,10 +26,6 @@ import io.syndesis.connector.support.verifier.api.VerifierResponse;
 
 public class EMailVerifierTest extends AbstractEMailTest {
 
-    public EMailVerifierTest() throws Exception {
-        super();
-    }
-
     @Test
     public void testVerifyWithServer() throws Exception {
         Map<String, Object> parameters = new HashMap<>();

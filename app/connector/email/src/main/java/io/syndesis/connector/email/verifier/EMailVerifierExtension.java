@@ -80,7 +80,7 @@ public class EMailVerifierExtension extends DefaultComponentVerifierExtension im
             JavaMailSender sender = createJavaMailSender(configuration);
             Session session = sender.getSession();
 
-            Protocols protocol = Protocols.getValueOf(configuration.getProtocol());
+            Protocol protocol = Protocol.getValueOf(configuration.getProtocol());
             if (protocol.isReceiver()) {
                 Store store = session.getStore(configuration.getProtocol());
                 try {

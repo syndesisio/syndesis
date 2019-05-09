@@ -50,6 +50,6 @@ public class EMailMetaDataTest extends AbstractEMailTest {
 
         Object payload = meta.get().getPayload();
         assertThat(payload).isInstanceOf(EMailMetadata.class);
-        assertThat(((EMailMetadata) payload).getProtocol()).isEqualTo(Protocols.getValueOf(server.getProtocol()));
+        assertThat(((EMailMetadata) payload).getProtocol()).isEqualTo(Protocol.getValueOf(server.getProtocol()));
     }
 }

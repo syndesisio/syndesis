@@ -42,7 +42,7 @@ public abstract class AbstractEMailRouteTest extends AbstractEMailTest {
 
     protected final Step mockStep;
 
-    public AbstractEMailRouteTest() throws Exception {
+    public AbstractEMailRouteTest() {
         super();
         this.mockStep = createMockStep();
     }
@@ -50,7 +50,7 @@ public abstract class AbstractEMailRouteTest extends AbstractEMailTest {
     protected String componentScheme(EMailTestServer server) {
         String protocolId = server.getProtocol();
         assertNotNull(protocolId);
-        Protocols protocol = Protocols.getValueOf(protocolId);
+        Protocol protocol = Protocol.getValueOf(protocolId);
         assertNotNull(protocol);
         return protocol.componentSchema();
     }

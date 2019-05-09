@@ -44,7 +44,7 @@ public class EMailMetaDataExtension extends AbstractMetaDataExtension implements
             .map(Object::toString)
             .orElse(null);
 
-        Protocols protocol = Protocols.getValueOf(protocolId);
+        Protocol protocol = Protocol.getValueOf(protocolId);
         if (protocol == null) {
             throw new IllegalStateException("Email connector protocol cannot be identified");
         }

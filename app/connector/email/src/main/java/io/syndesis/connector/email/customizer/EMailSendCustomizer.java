@@ -34,7 +34,7 @@ public class EMailSendCustomizer implements ComponentProxyCustomizer, EMailConst
     private String text;
     private String bcc;
     private String cc;
-    private Priorities priority;
+    private Priority priority;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
@@ -53,7 +53,7 @@ public class EMailSendCustomizer implements ComponentProxyCustomizer, EMailConst
         //
         // Will return injected data if not set
         //
-        priority = Priorities.getValueOf((String) options.get(PRIORITY));
+        priority = Priority.priorityFromId((String) options.get(PRIORITY));
     }
 
     private Object updateMail(String inputValue, Object dataValue) {
@@ -67,7 +67,7 @@ public class EMailSendCustomizer implements ComponentProxyCustomizer, EMailConst
             return inputValue;
         }
 
-        if (Priorities.INPUT_VALUES.equals(priority)) {
+        if (Priority.INPUT_VALUES.equals(priority)) {
             // Input values are given priority so don't update
             return inputValue;
         }

@@ -32,13 +32,13 @@ import io.syndesis.connector.support.util.KeyStoreHelper;
 
 public class EMailUtil implements EMailConstants {
 
-    private static boolean isSSL(String protocol) {
+    private static boolean isSecure(String protocol) {
         if (ObjectHelper.isEmpty(protocol)) {
             return false;
         }
 
-        Protocols p = Protocols.getValueOf(protocol);
-        return p != null && p.isSSL();
+        Protocol p = Protocol.getValueOf(protocol);
+        return p != null && p.isSecure();
     }
 
     private static KeyStore createKeyStore(Map<String, Object> options)
@@ -49,7 +49,7 @@ public class EMailUtil implements EMailConstants {
 
     public static SSLContextParameters createSSLContextParameters(Map<String, Object> options) {
         String protocol = (String) options.get(PROTOCOL);
-        if (! isSSL(protocol)) {
+        if (! isSecure(protocol)) {
             return null;
         }
 

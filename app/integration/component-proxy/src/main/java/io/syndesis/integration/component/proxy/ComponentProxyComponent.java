@@ -369,7 +369,7 @@ public class ComponentProxyComponent extends DefaultComponent {
         // Extract options from options that are supposed to be set at the endpoint
         // level, those options can be overridden and extended using by the query
         // parameters.
-        Collection<String> endpointProperties =getDefinition().getEndpointProperties().keySet();
+        Collection<String> endpointProperties = getDefinition().getEndpointProperties().keySet();
         for (String key : endpointProperties) {
             Object val = options.get(key);
             if (val != null) {

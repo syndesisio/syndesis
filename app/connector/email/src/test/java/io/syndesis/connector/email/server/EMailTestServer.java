@@ -95,7 +95,7 @@ public class EMailTestServer implements StringConstants {
 
     public void start() {
         if (greenMail == null) {
-            throw new IllegalStateException();
+            throw new IllegalStateException("Green mail server not initialized");
         }
 
         greenMail.start();

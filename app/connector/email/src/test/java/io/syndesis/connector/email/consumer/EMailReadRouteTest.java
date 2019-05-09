@@ -42,7 +42,6 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.util.SuppressFBWarnings;
 import io.syndesis.connector.email.AbstractEMailRouteTest;
 import io.syndesis.connector.email.component.EMailComponentFactory;
 import io.syndesis.connector.email.customizer.EMailReceiveCustomizer;
@@ -67,14 +66,10 @@ import io.syndesis.connector.support.util.PropertyBuilder;
         DirtiesContextTestExecutionListener.class
     }
 )
-@SuppressFBWarnings
+
 public class EMailReadRouteTest extends AbstractEMailRouteTest {
 
     private EMailTestServer server;
-
-    public EMailReadRouteTest() throws Exception {
-        super();
-    }
 
     @After
     @Override
@@ -107,7 +102,7 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
         server = imapServer();
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.IMAP.id())
+                                                               .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
                                                                .property(USER, TEST_USER_NAME)
@@ -137,7 +132,7 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
         server = imapServer();
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.IMAP.id())
+                                                               .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(SECURE, Boolean.toString(true))
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
@@ -167,7 +162,7 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
         server = pop3Server();
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.POP3.id())
+                                                               .property(PROTOCOL, Protocol.POP3.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
                                                                .property(USER, TEST_USER_NAME)
@@ -197,7 +192,7 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
         server = imapsServer();
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.IMAP.id())
+                                                               .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(SECURE, Boolean.toString(true))
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
@@ -229,7 +224,7 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
         server = pop3sServer();
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.POP3.id())
+                                                               .property(PROTOCOL, Protocol.POP3.id())
                                                                .property(SECURE, Boolean.toString(true))
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
@@ -270,7 +265,7 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
 
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.IMAP.id())
+                                                               .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
                                                                .property(USER, TEST_USER_NAME)
@@ -304,7 +299,7 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
         server = imapServer();
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.IMAP.id())
+                                                               .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
                                                                .property(USER, TEST_USER_NAME)
@@ -338,7 +333,7 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
         server = imapServer();
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.IMAP.id())
+                                                               .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
                                                                .property(USER, TEST_USER_NAME)
@@ -399,7 +394,7 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
 
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.IMAP.id())
+                                                               .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
                                                                .property(USER, TEST_USER_NAME)

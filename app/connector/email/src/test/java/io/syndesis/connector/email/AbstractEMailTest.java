@@ -65,7 +65,7 @@ public abstract class AbstractEMailTest implements EMailConstants {
             };
         }
 
-        @Bean(destroyMethod = "")
+        @Bean
         public PropertiesComponent properties(PropertiesParser parser) {
             PropertiesComponent pc = new PropertiesComponent();
             pc.setPropertiesParser(parser);

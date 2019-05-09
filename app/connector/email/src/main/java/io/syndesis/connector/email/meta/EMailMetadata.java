@@ -19,13 +19,13 @@ import io.syndesis.connector.email.EMailConstants;
 
 public class EMailMetadata implements EMailConstants {
 
-    private Protocols protocol;
+    private Protocol protocol;
 
-    public Protocols getProtocol() {
+    public Protocol getProtocol() {
         return protocol;
     }
 
-    public void setProtocol(Protocols protocol) {
+    public void setProtocol(Protocol protocol) {
         this.protocol = protocol;
     }
 

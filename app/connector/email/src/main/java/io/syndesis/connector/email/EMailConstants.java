@@ -66,26 +66,39 @@ public interface EMailConstants extends StringConstants {
     String TEXT_HTML = "text/html";
     String TEXT_PLAIN = "text/plain";
 
-    enum Protocols {
-        IMAP, IMAPS,
-        POP3, POP3S,
-        SMTP, SMTPS;
+    enum Protocol {
+        IMAP("imap"), IMAPS("imaps"),
+        POP3("pop3"), POP3S("pop3s"),
+        SMTP("smtp"), SMTPS("smtps");
 
-        public static Protocols getValueOf(String name) {
-            for (Protocols method : Protocols.values()) {
-                if (method.name().equalsIgnoreCase(name)) {
-                    return method;
-                }
+        private final String id;
+
+        Protocol(String id) {
+            this.id = id;
+        }
+
+        public static Protocol getValueOf(String name) {
+            if (name == null) {
+                return null;
             }
 
-            return null;
+            return valueOf(name.toUpperCase(Locale.ENGLISH));
+        }
+
+        public static Protocol toSecureProtocol(String name) {
+            if (name == null) {
+                return null;
+            }
+
+            Protocol p = getValueOf(name);
+            return p.isSecure() ? p : getValueOf(name + "s");
         }
 
         public String id() {
-            return name().toLowerCase(Locale.ENGLISH);
+            return id;
         }
 
-        public boolean isSSL() {
+        public boolean isSecure() {
             return name().endsWith("S");
         }
 
@@ -98,45 +111,53 @@ public interface EMailConstants extends StringConstants {
         }
 
         public String componentSchema() {
-            return "email" + HYPHEN + (isReceiver() ? "receive" : "send");
+            return isReceiver() ? "email-receive" : "email-send";
         }
     }
 
     enum EMailFunction {
-        READ,
-        SEND;
+        READ("read"),
+        SEND("send");
+
+        private final String id;
+        private final String connectorId;
+
+        EMailFunction(String id) {
+            this.id = id;
+            this.connectorId = "email-" + id + "-connector";
+        }
 
         public String id() {
-            return name().toLowerCase(Locale.ENGLISH);
+            return id;
         }
 
         public String connectorId() {
-            return "email" + HYPHEN + id() + HYPHEN + "connector";
+            return connectorId;
         }
     }
 
-    enum Priorities {
+    enum Priority {
         INPUT_VALUES("inputValues"),
         CONSUMED_DATA("consumedData");
 
         private final String id;
 
-        Priorities(String id) {
+        Priority(String id) {
             this.id = id;
         }
 
-        public static Priorities getValueOf(String name) {
-            if (name == null) {
+        public static Priority priorityFromId(String id) {
+            if (id == null) {
                 return CONSUMED_DATA;
             }
 
-            for (Priorities priority : Priorities.values()) {
-                if (priority.id.equalsIgnoreCase(name)) {
+            for (Priority priority : Priority.values()) {
+                if (priority.id.equalsIgnoreCase(id)) {
                     return priority;
                 }
             }
 
-            return CONSUMED_DATA;
+            return Priority.CONSUMED_DATA;
         }
 
         @Override
