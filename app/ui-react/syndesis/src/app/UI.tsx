@@ -9,15 +9,15 @@ import {
   PfDropdownItem,
   PfVerticalNavItem,
 } from '@syndesis/ui';
-import { AboutModal, AboutModalContent } from '@syndesis/ui';
-import { WithRouter } from '@syndesis/utils';
+import { AboutModal, AboutModalContent, Loader } from '@syndesis/ui';
+import { WithLoader, WithRouter } from '@syndesis/utils';
 import { useState } from 'react';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link, Route, Switch } from 'react-router-dom';
 import { Workbox } from 'workbox-window';
 import resolvers from '../modules/resolvers';
-import { PageNotFound, WithErrorBoundary } from '../shared';
+import { ApiError, PageNotFound, WithErrorBoundary } from '../shared';
 import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
 import logo from './syndesis_logo_full_darkbkg.svg';
 import { UIContext } from './UIContext';
@@ -125,19 +125,28 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                   brandImg={'https://avatars0.githubusercontent.com/u/23079786'}
                 >
                   <WithApiVersion>
-                    {({ data }) => {
+                    {({ data, error, loading }) => {
                       const {
                         'commit-id': commitId,
                         'build-id': buildId,
                         version,
                       } = data;
                       return (
-                        <AboutModalContent
-                          version={version}
-                          buildId={buildId}
-                          commitId={commitId}
-                          productName={productName}
-                        />
+                        <WithLoader
+                          error={error}
+                          loading={loading}
+                          errorChildren={<ApiError />}
+                          loaderChildren={<Loader />}
+                        >
+                          {() => (
+                            <AboutModalContent
+                              version={version}
+                              buildId={buildId}
+                              commitId={commitId}
+                              productName={productName}
+                            />
+                          )}
+                        </WithLoader>
                       );
                     }}
                   </WithApiVersion>

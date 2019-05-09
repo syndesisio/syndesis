@@ -25,6 +25,7 @@ export interface IIntegrationsListItemProps {
   i18nProgressStopping: string;
   i18nUnpublished: string;
   i18nLogUrlText: string;
+  checkboxComponent?: React.ReactNode;
 }
 
 export class IntegrationsListItem extends React.Component<
@@ -33,6 +34,7 @@ export class IntegrationsListItem extends React.Component<
   public render() {
     return (
       <ListView.Item
+        checkboxInput={this.props.checkboxComponent || undefined}
         actions={this.props.actions}
         heading={this.props.integrationName}
         description={

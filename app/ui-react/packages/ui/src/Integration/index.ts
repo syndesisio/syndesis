@@ -27,6 +27,7 @@ export * from './IntegrationStepsHorizontalView';
 export * from './IntegrationVerticalFlow';
 export * from './IntegrationsList';
 export * from './IntegrationsListItem';
+export * from './IntegrationsListItemBasic';
 export * from './IntegrationsListItemUnreadable';
 export * from './IntegrationsListSkeleton';
 export * from './IntegrationsListView';
