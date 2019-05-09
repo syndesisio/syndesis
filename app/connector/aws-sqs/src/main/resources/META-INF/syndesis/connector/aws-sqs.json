@@ -228,11 +228,11 @@
     {
       "actionType": "connector",
       "description": "Retrieve multiple messages from an SQS queue",
-      "connectorCustomizers": [
-        "io.syndesis.connector.aws.sqs.AWSSQSPollMessageCustomizer"
-      ],
       "descriptor": {
         "componentScheme": "aws-sqs",
+        "connectorCustomizers": [
+          "io.syndesis.connector.aws.sqs.AWSSQSPollMessageCustomizer"
+        ],
         "inputDataShape": {
           "kind": "none"
         },
