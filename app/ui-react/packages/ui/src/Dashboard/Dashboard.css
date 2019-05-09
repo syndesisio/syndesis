@@ -1,17 +1,3 @@
-.dashboard__header {}
-
-.dashboard__header .header__title {
-  flex: 1;
-}
-
-.dashboard__header .header__actions {
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  margin-top: 20px; /* to align it with the title */
-  margin-bottom: 10px; /* to align it with the title */
-}
-
-.dashboard__header .header__actions > * {
-  margin-left: 10px;
+.dashboard__integrations .integrations__metrics {
+  margin-top: 0;
 }

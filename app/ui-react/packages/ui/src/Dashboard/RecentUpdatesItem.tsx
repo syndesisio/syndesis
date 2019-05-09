@@ -2,6 +2,7 @@ import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationStatus } from '../Integration';
 import { IntegrationState } from '../Integration/models';
+import './RecentUpdatesItem.css';
 
 export interface IRecentUpdatesItem {
   integrationName: string;
@@ -20,7 +21,7 @@ export const RecentUpdatesItem: React.FunctionComponent<IRecentUpdatesItem> = ({
   i18nPublished,
   i18nUnpublished,
 }) => (
-  <Grid.Row>
+  <Grid.Row className={'recent-updates-item'}>
     <Grid.Col sm={5}>{integrationName}</Grid.Col>
     <Grid.Col sm={3}>
       <IntegrationStatus

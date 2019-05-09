@@ -1,8 +1,6 @@
 import {
   Grid,
   GridItem,
-  Level,
-  LevelItem,
   Split,
   SplitItem,
   Stack,
@@ -74,7 +72,11 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
           </StackItem>
 
           <StackItem isFilled={true} className={'dashboard__integrations'}>
-            <CardGrid fluid={true} matchHeight={true}>
+            <CardGrid
+              fluid={true}
+              matchHeight={true}
+              className={'integrations__metrics'}
+            >
               <CardGrid.Row>
                 <CardGrid.Col sm={6} md={3}>
                   {this.props.integrationsOverview}
@@ -100,22 +102,30 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
           </StackItem>
 
           <StackItem isFilled={false} className={'dashboard__connections'}>
-            <Level gutter={'sm'}>
-              <LevelItem>
+            <Split>
+              <SplitItem isFilled={true}>
                 <Title size={'lg'}>{this.props.i18nConnections}</Title>
-              </LevelItem>
-              <LevelItem>
-                <Link to={this.props.linkToConnections}>
-                  {this.props.i18nLinkToConnections}
-                </Link>
-                <ButtonLink
-                  href={this.props.linkToConnectionCreation}
-                  as={'primary'}
-                >
-                  {this.props.i18nLinkCreateConnection}
-                </ButtonLink>
-              </LevelItem>
-            </Level>
+              </SplitItem>
+
+              <SplitItem isFilled={false}>
+                <Split gutter={'md'}>
+                  <SplitItem isFilled={false}>
+                    <Link to={this.props.linkToConnections}>
+                      {this.props.i18nLinkToConnections}
+                    </Link>
+                  </SplitItem>
+                  <SplitItem isFilled={false}>
+                    <ButtonLink
+                      href={this.props.linkToConnectionCreation}
+                      as={'primary'}
+                    >
+                      {this.props.i18nLinkCreateConnection}
+                    </ButtonLink>
+                  </SplitItem>
+                </Split>
+              </SplitItem>
+            </Split>
+
             <CardGrid fluid={true} matchHeight={true}>
               <CardGrid.Row>{this.props.connections}</CardGrid.Row>
             </CardGrid>

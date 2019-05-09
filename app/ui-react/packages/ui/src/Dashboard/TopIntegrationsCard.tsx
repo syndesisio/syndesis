@@ -1,4 +1,5 @@
-import { Card, MenuItem } from 'patternfly-react';
+import { Split, SplitItem } from '@patternfly/react-core';
+import { Card } from 'patternfly-react';
 import * as React from 'react';
 
 import './TopIntegrations.css';
@@ -15,19 +16,16 @@ export class TopIntegrationsCard extends React.Component<
 > {
   public render() {
     return (
-      <Card accented={false} className={'TopIntegrationsCard'}>
+      <Card accented={false} className={'top-integrations'}>
         <Card.Heading>
-          <Card.DropdownButton
-            id="cardDropdownButton1"
-            title={this.props.i18nLast30Days}
-          >
-            <MenuItem eventKey="1" active={true}>
+          <Split>
+            <SplitItem isFilled={true}>
+              <Card.Title>{this.props.i18nTitle}</Card.Title>
+            </SplitItem>
+            <SplitItem isFilled={false} className={'heading__right'}>
               {this.props.i18nLast30Days}
-            </MenuItem>
-            <MenuItem eventKey="2">{this.props.i18nLast60Days}</MenuItem>
-            <MenuItem eventKey="3">{this.props.i18nLast90Days}</MenuItem>
-          </Card.DropdownButton>
-          <Card.Title>{this.props.i18nTitle}</Card.Title>
+            </SplitItem>
+          </Split>
         </Card.Heading>
         <Card.Body>{this.props.children}</Card.Body>
       </Card>
