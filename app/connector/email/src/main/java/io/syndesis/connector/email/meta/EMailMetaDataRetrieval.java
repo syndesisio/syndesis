@@ -29,7 +29,6 @@ public class EMailMetaDataRetrieval extends ComponentMetadataRetrieval implement
         return new EMailMetaDataExtension(context);
     }
 
-    @SuppressWarnings({"PMD"})
     @Override
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
         EMailMetadata emailMetadata = (EMailMetadata) metadata.getPayload();
@@ -39,26 +38,22 @@ public class EMailMetaDataRetrieval extends ComponentMetadataRetrieval implement
         // are named according to the protocol of the mail server,
         // ie. imap(s), pop3(s), smtp(s)
         //
-        Protocols protocol = emailMetadata.getProtocol();
+        Protocol protocol = emailMetadata.getProtocol();
 
-        if (actionId.endsWith(EMailFunction.READ.connectorId())) {
+        if (actionId.endsWith(EMailFunction.READ.connectorId()) && protocol.isProducer()) {
             //
             // Read action NOT applicable to SMTP connectors
             //
-            if (protocol.isProducer()) {
-                String msg = "The protocol for the selection connection is set to '" + protocol.id() +
+            String msg = "The protocol for the selection connection is set to '" + protocol.id() +
                     "'. This is not appropriate for a consuming email connector. Please amend the connector and try again.";
-                throw new IllegalStateException(msg);
-            }
-        } else if(actionId.endsWith(EMailFunction.SEND.connectorId())) {
+            throw new IllegalArgumentException(msg);
+        } else if (actionId.endsWith(EMailFunction.SEND.connectorId()) && protocol.isReceiver()) {
             //
             // Send action is only applicable to SMTP connectors
             //
-            if (protocol.isReceiver()) {
-                String msg = "The protocol of the selected connection is set to '" + protocol.id() +
+            String msg = "The protocol of the selected connection is set to '" + protocol.id() +
                     "'. Only 'smtp' is appropriate for a producing email connector. Please amend the connector and try again.";
-                throw new IllegalStateException(msg);
-            }
+            throw new IllegalArgumentException(msg);
         }
 
         return SyndesisMetadata.EMPTY;

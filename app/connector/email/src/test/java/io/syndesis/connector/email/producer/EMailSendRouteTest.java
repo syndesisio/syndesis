@@ -123,7 +123,7 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
 
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.SMTP.id())
+                                                               .property(PROTOCOL, Protocol.SMTP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
                                                                .property(USER, TEST_USER_NAME)
@@ -170,7 +170,7 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
         //
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.SMTP.id())
+                                                               .property(PROTOCOL, Protocol.SMTP.id())
                                                                .property(SECURE, Boolean.toString(true))
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
@@ -215,7 +215,7 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
 
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.SMTP.id())
+                                                               .property(PROTOCOL, Protocol.SMTP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
                                                                .property(USER, TEST_USER_NAME)
@@ -231,7 +231,7 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
         String inputValueText = "Hello, this is an email using inputted values!";
 
         PropertyBuilder<String> builder = new PropertyBuilder<>();
-        builder.property(PRIORITY, Priorities.CONSUMED_DATA.toString());
+        builder.property(PRIORITY, Priority.CONSUMED_DATA.toString());
         builder.property(MAIL_SUBJECT, inputValueSubject);
         builder.property(MAIL_TEXT, inputValueText);
 
@@ -274,7 +274,7 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
 
         Connector mailConnector = createEMailConnector(componentScheme(server),
                                                        new PropertyBuilder<String>()
-                                                               .property(PROTOCOL, Protocols.SMTP.id())
+                                                               .property(PROTOCOL, Protocol.SMTP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
                                                                .property(USER, TEST_USER_NAME)
@@ -293,7 +293,7 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
         // Change the integration's priority to prefer input values if present
         //
         PropertyBuilder<String> builder = new PropertyBuilder<>();
-        builder.property(PRIORITY, Priorities.INPUT_VALUES.toString());
+        builder.property(PRIORITY, Priority.INPUT_VALUES.toString());
         builder.property(MAIL_SUBJECT, inputValueSubject);
         builder.property(MAIL_TEXT, inputValueText);
 

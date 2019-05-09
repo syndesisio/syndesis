@@ -21,41 +21,23 @@ import javax.mail.BodyPart;
 import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.internet.MimeMultipart;
-import org.apache.camel.CamelContext;
-import org.apache.camel.CamelContextAware;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.util.ObjectHelper;
 import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import io.syndesis.connector.email.EMailConstants;
 import io.syndesis.connector.email.model.EMailMessageModel;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
-public class EMailReceiveCustomizer implements ComponentProxyCustomizer, CamelContextAware, EMailConstants {
-
-    private static final Logger LOG = LoggerFactory.getLogger(EMailReceiveCustomizer.class);
-
-    private CamelContext camelContext;
+public class EMailReceiveCustomizer implements ComponentProxyCustomizer, EMailConstants {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         component.setBeforeConsumer(this::beforeConsumer);
     }
 
-    @Override
-    public void setCamelContext(CamelContext camelContext) {
-        this.camelContext = camelContext;
-    }
-
-    @Override
-    public CamelContext getCamelContext() {
-        return this.camelContext;
-    }
-
-    private void beforeConsumer(Exchange exchange) {
+    private void beforeConsumer(Exchange exchange) throws MessagingException, IOException {
 
         final Message in = exchange.getIn();
         final EMailMessageModel mail = new EMailMessageModel();
@@ -81,7 +63,7 @@ public class EMailReceiveCustomizer implements ComponentProxyCustomizer, CamelCo
         exchange.getIn().setBody(mail);
     }
 
-    private String getPlainTextFromMultipart(Multipart multipart)  throws MessagingException, IOException{
+    private String getPlainTextFromMultipart(Multipart multipart)  throws MessagingException, IOException {
         StringBuilder result = new StringBuilder();
         int count = multipart.getCount();
         for (int i = 0; i < count; i++) {
@@ -89,10 +71,11 @@ public class EMailReceiveCustomizer implements ComponentProxyCustomizer, CamelCo
             if (bodyPart.isMimeType(TEXT_PLAIN)) {
                 result.append(NEW_LINE)
                             .append(bodyPart.getContent());
-                break; // without break same text appears twice
+                break; // without break same text can appear twice
             } else if (bodyPart.isMimeType(TEXT_HTML)) {
                 result.append(NEW_LINE)
                             .append(Jsoup.parse((String) bodyPart.getContent()).text());
+                break; // without break same text can appear twice
             } else if (bodyPart.isMimeType("application/pgp-encrypted")) {
                 //
                 // Body is encrypted so flag as such to enable easy understanding for users
@@ -109,21 +92,13 @@ public class EMailReceiveCustomizer implements ComponentProxyCustomizer, CamelCo
         return result.toString();
     }
 
-    private void textFromMessage(Message camelMessage, EMailMessageModel model) {
+    private void textFromMessage(Message camelMessage, EMailMessageModel model) throws MessagingException, IOException {
         Object content = camelMessage.getBody();
 
         if (content instanceof String) {
             content = content.toString().trim();
         } else if (content instanceof Multipart) {
-            try {
-                Multipart multipart = (Multipart) content;
-                content = getPlainTextFromMultipart(multipart);
-            } catch (Exception ex) {
-                String errorMsg = "Failed to extract text from email message";
-                LOG.error(errorMsg, ex);
-
-                content = errorMsg;
-            }
+            content = getPlainTextFromMultipart((Multipart) content);
         }
 
         model.setContent(content);

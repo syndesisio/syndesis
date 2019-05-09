@@ -17,7 +17,7 @@ package io.syndesis.connector.email.model;
 
 import io.syndesis.connector.email.EMailConstants;
 
-public class EMailMessageModel implements EMailConstants{
+public class EMailMessageModel implements EMailConstants {
 
     private String subject;
     private String from;

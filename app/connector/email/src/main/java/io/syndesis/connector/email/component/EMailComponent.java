@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Supplier;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.mail.MailComponent;
@@ -27,7 +29,6 @@ import org.apache.camel.util.ObjectHelper;
 import org.apache.camel.util.jsse.SSLContextParameters;
 import io.syndesis.connector.email.EMailConstants;
 import io.syndesis.connector.email.EMailUtil;
-import io.syndesis.connector.support.util.PropertyBuilder;
 import io.syndesis.integration.component.proxy.ComponentDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
@@ -66,11 +67,7 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
         // Will convert, for example,  imap to imaps
         // if the protocol has been specified as secure
         //
-        if (isSecure() && (protocol != null && !protocol.endsWith("s"))) {
-            return protocol + "s";
-        }
-
-        return protocol;
+        return isSecure() ? Protocol.toSecureProtocol(protocol).id() : protocol;
     }
 
     public void setProtocol(String protocol) {
@@ -149,18 +146,21 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
         this.maxResults = maxResults;
     }
 
+    private static <T, U, R> BiFunction<T, U, R> value(final Supplier<R> fn) {
+        return (t, u) -> fn.get();
+    }
+
     private Map<String, Object> bundleOptions() {
-        PropertyBuilder<Object> builder = new PropertyBuilder<Object>();
-        return builder
-            .propertyIfNotNull(PROTOCOL, getProtocol())
-            .propertyIfNotNull(HOST, getHost())
-            .propertyIfNotNull(PORT, getPort())
-            .propertyIfNotNull(USER, getUsername())
-            .propertyIfNotNull(PASSWORD, getPassword())
-            .propertyIfNotNull(SERVER_CERTIFICATE, getServerCertificate())
-            .propertyIfNotNull(UNSEEN_ONLY, isUnseenOnly())
-            .propertyIfNotNull(MAX_MESSAGES, getMaxResults())
-            .build();
+        Map<String, Object> options = new HashMap<>();
+        options.compute(PROTOCOL, value(this::getProtocol));
+        options.compute(HOST, value(this::getHost));
+        options.compute(PORT, value(this::getPort));
+        options.compute(USER, value(this::getUsername));
+        options.compute(PASSWORD, value(this::getPassword));
+        options.compute(SERVER_CERTIFICATE, value(this::getServerCertificate));
+        options.compute(UNSEEN_ONLY, value(this::isUnseenOnly));
+        options.compute(MAX_MESSAGES, value(this::getMaxResults));
+        return options;
     }
 
     @Override
@@ -209,13 +209,10 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
     }
 
     @Override
-    protected Endpoint createDelegateEndpoint(
-                                              ComponentDefinition definition, String scheme, Map<String, String> options)
-                                              throws Exception {
-
+    protected Endpoint createDelegateEndpoint(ComponentDefinition definition, String scheme, Map<String, String> options) throws Exception {
         Endpoint endpoint = super.createDelegateEndpoint(getDefinition(), scheme, options);
 
-        Protocols protocol = Protocols.getValueOf(getProtocol())    ;
+        Protocol protocol = Protocol.getValueOf(getProtocol());
         if (protocol.isReceiver()) { // only receivers are consumers
             /**
              * Need to apply these consumer properties after the creation

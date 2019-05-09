@@ -16,11 +16,7 @@
 package io.syndesis.connector.support.util;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -84,17 +80,5 @@ public final class CertificateUtil {
             // insert newline after header
             return certificate.replace("-----BEGIN CERTIFICATE-----", "-----BEGIN CERTIFICATE-----\n");
         }
-    }
-
-    /**
-     * @return the built-in java runtime's default keystore
-     * @throws FileNotFoundException
-     */
-    public static InputStream defaultKeyStore() throws FileNotFoundException {
-        return new FileInputStream(
-                                          System.getProperties()
-                                                .getProperty("java.home") + File.separator
-                                              + "lib" + File.separator + "security" + File.separator
-                                              + "cacerts");
     }
 }
