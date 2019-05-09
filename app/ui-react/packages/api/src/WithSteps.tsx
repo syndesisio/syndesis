@@ -11,7 +11,7 @@ import {
   TEMPLATE,
 } from './constants';
 
-const ALL_STEPS: StepKind[] = [
+export const ALL_STEPS: StepKind[] = [
   requiresInputOutputDataShapes(
     {
       id: undefined,

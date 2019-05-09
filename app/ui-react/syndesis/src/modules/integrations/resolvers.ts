@@ -4,6 +4,7 @@ import {
   ConnectionOverview,
   IIntegrationOverviewWithDraft,
   Integration,
+  StepKind,
 } from '@syndesis/models';
 import {
   makeResolver,
@@ -15,6 +16,8 @@ import {
   IBaseRouteState,
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
+  IConfigureStepRouteParams,
+  IConfigureStepRouteState,
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState,
   ISelectActionRouteParams,
@@ -44,6 +47,12 @@ interface IEditorSelectAction extends IEditorSelectConnection {
 interface IEditorConfigureAction extends IEditorSelectAction {
   actionId: string;
   step?: string;
+  updatedIntegration?: Integration;
+}
+
+interface IEditorConfigureStep extends IEditorIndex {
+  position: string;
+  step: StepKind;
   updatedIntegration?: Integration;
 }
 
@@ -122,6 +131,26 @@ export const configureConfigureActionMapper = ({
   };
 };
 
+export const configureConfigureStepMapper = ({
+  position,
+  step,
+  updatedIntegration,
+  ...rest
+}: IEditorConfigureStep) => {
+  const { params, state } = configureIndexMapper(rest);
+  return {
+    params: {
+      ...params,
+      position,
+    } as IConfigureActionRouteParams,
+    state: {
+      ...state,
+      step,
+      updatedIntegration,
+    } as IConfigureStepRouteState,
+  };
+};
+
 // TODO: unit test every single one of these resolvers 😫
 
 export const listResolver = makeResolverNoParams(routes.list);
@@ -161,6 +190,12 @@ export const createStartConfigureActionResolver = makeResolver<
   configureConfigureActionMapper
 );
 
+export const createStartConfigureStepResolver = makeResolver<
+  IEditorConfigureStep,
+  IConfigureStepRouteParams,
+  IConfigureStepRouteState
+>(routes.create.start.step, configureConfigureStepMapper);
+
 export const createFinishSelectStepResolver = makeResolver<
   IEditorSelectConnection,
   ISelectConnectionRouteParams,
@@ -181,6 +216,12 @@ export const createFinishConfigureActionResolver = makeResolver<
   routes.create.finish.connection.configureAction,
   configureConfigureActionMapper
 );
+
+export const createFinishConfigureStepResolver = makeResolver<
+  IEditorConfigureStep,
+  IConfigureStepRouteParams,
+  IConfigureStepRouteState
+>(routes.create.finish.step, configureConfigureStepMapper);
 
 export const createConfigureIndexResolver = makeResolver<
   IEditorIndex,
@@ -212,6 +253,12 @@ export const createConfigureAddStepConfigureActionResolver = makeResolver<
   configureConfigureActionMapper
 );
 
+export const createConfigureAddStepConfigureStepResolver = makeResolver<
+  IEditorConfigureStep,
+  IConfigureStepRouteParams,
+  IConfigureStepRouteState
+>(routes.create.configure.addStep.step, configureConfigureStepMapper);
+
 export const createConfigureEditStepSelectActionResolver = makeResolver<
   IEditorSelectAction,
   ISelectActionRouteParams,
@@ -229,6 +276,12 @@ export const createConfigureEditStepConfigureActionResolver = makeResolver<
   routes.create.configure.editStep.connection.configureAction,
   configureConfigureActionMapper
 );
+
+export const createConfigureEditStepConfigureStepResolver = makeResolver<
+  IEditorConfigureStep,
+  IConfigureStepRouteParams,
+  IConfigureStepRouteState
+>(routes.create.configure.editStep.step, configureConfigureStepMapper);
 
 export const createConfigureEditStepSaveAndPublishResolver = makeResolver<
   IEditorIndex,
@@ -292,6 +345,12 @@ export const integrationEditAddStepConfigureActionResolver = makeResolver<
   configureConfigureActionMapper
 );
 
+export const integrationEditAddStepConfigureStepResolver = makeResolver<
+  IEditorConfigureStep,
+  IConfigureStepRouteParams,
+  IConfigureStepRouteState
+>(routes.integration.edit.addStep.step, configureConfigureStepMapper);
+
 export const integrationEditEditStepSelectActionResolver = makeResolver<
   IEditorSelectAction,
   ISelectActionRouteParams,
@@ -309,6 +368,12 @@ export const integrationEditEditStepConfigureActionResolver = makeResolver<
   routes.integration.edit.editStep.connection.configureAction,
   configureConfigureActionMapper
 );
+
+export const integrationEditEditStepConfigureStepResolver = makeResolver<
+  IEditorConfigureStep,
+  IConfigureStepRouteParams,
+  IConfigureStepRouteState
+>(routes.integration.edit.editStep.step, configureConfigureStepMapper);
 
 export const integrationEditSaveAndPublish = makeResolver<
   IEditorIndex,
@@ -355,7 +420,7 @@ const resolvers: RouteResolver<typeof routes> = {
       basicFilter: () => 'basicFilter',
       dataMapper: () => 'dataMapper',
       template: () => 'template',
-      step: () => 'step',
+      step: createStartConfigureStepResolver,
       extension: () => 'extension',
     },
     finish: {
@@ -373,7 +438,7 @@ const resolvers: RouteResolver<typeof routes> = {
       basicFilter: () => 'basicFilter',
       dataMapper: () => 'dataMapper',
       template: () => 'template',
-      step: () => 'step',
+      step: createFinishConfigureStepResolver,
       extension: () => 'extension',
     },
     configure: {
@@ -396,7 +461,7 @@ const resolvers: RouteResolver<typeof routes> = {
         basicFilter: () => 'basicFilter',
         dataMapper: () => 'dataMapper',
         template: () => 'template',
-        step: () => 'step',
+        step: createConfigureAddStepConfigureStepResolver,
         extension: () => 'extension',
       },
       editStep: {
@@ -418,7 +483,7 @@ const resolvers: RouteResolver<typeof routes> = {
         basicFilter: () => 'basicFilter',
         dataMapper: () => 'dataMapper',
         template: () => 'template',
-        step: () => 'step',
+        step: createConfigureEditStepConfigureStepResolver,
         extension: () => 'extension',
       },
       saveAndPublish: createConfigureEditStepSaveAndPublishResolver,
@@ -448,7 +513,7 @@ const resolvers: RouteResolver<typeof routes> = {
         basicFilter: () => 'basicFilter',
         dataMapper: () => 'dataMapper',
         template: () => 'template',
-        step: () => 'step',
+        step: integrationEditAddStepConfigureStepResolver,
         extension: () => 'extension',
       },
       editStep: {
@@ -470,7 +535,7 @@ const resolvers: RouteResolver<typeof routes> = {
         basicFilter: () => 'basicFilter',
         dataMapper: () => 'dataMapper',
         template: () => 'template',
-        step: () => 'step',
+        step: integrationEditEditStepConfigureStepResolver,
         extension: () => 'extension',
       },
       saveAndPublish: integrationEditSaveAndPublish,

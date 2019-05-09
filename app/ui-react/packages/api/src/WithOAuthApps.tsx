@@ -1,5 +1,4 @@
-import { OAuthApp } from '@syndesis/models';
-import { IListResult } from '@syndesis/models/src';
+import { IListResult, OAuthApp } from '@syndesis/models';
 import * as React from 'react';
 import { IFetchState } from './Fetch';
 import { SyndesisFetch } from './SyndesisFetch';

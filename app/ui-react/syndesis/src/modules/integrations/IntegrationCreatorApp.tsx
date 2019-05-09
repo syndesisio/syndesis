@@ -1,5 +1,5 @@
 /* tslint:disable:object-literal-sort-keys */
-import { getConnectionIcon } from '@syndesis/api';
+import { getConnectionIcon, getStepIcon } from '@syndesis/api';
 import {
   Breadcrumb,
   IntegrationFlowStepGeneric,
@@ -20,6 +20,7 @@ import { ConfigureActionPage } from './components/editor/endpoint/ConfigureActio
 import { SelectActionPage } from './components/editor/endpoint/SelectActionPage';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import { SelectConnectionPage } from './components/editor/SelectConnectionPage';
+import { ConfigureStepPage } from './components/editor/step/ConfigureStepPage';
 import { getDataShapeText, toUIStepKind } from './components/editor/utils';
 import resolvers from './resolvers';
 import routes from './routes';
@@ -47,7 +48,13 @@ const addStepPage = (
     extensionHref={resolvers.create.configure.editStep.extension}
     mapperHref={resolvers.create.configure.editStep.dataMapper}
     templateHref={resolvers.create.configure.editStep.template}
-    stepHref={resolvers.create.configure.editStep.step}
+    stepHref={(step, params, state) =>
+      resolvers.create.configure.editStep.step({
+        step,
+        ...params,
+        ...state,
+      })
+    }
     saveHref={(p, s) =>
       resolvers.create.configure.saveAndPublish({
         ...p,
@@ -211,6 +218,54 @@ const startStepConfigureActionPage = (
   />
 );
 
+const startStepConfigureStepPage = (
+  <ConfigureStepPage
+    cancelHref={resolvers.list}
+    mode={'adding'}
+    sidebar={({ step }) => (
+      <IntegrationVerticalFlow>
+        {({ expanded }) => {
+          return (
+            <>
+              <IntegrationFlowStepGeneric
+                icon={
+                  <img
+                    alt={'Step icon'}
+                    src={getStepIcon(process.env.PUBLIC_URL, step)}
+                    width={24}
+                    height={24}
+                  />
+                }
+                i18nTitle={`1. ${step.name}`}
+                i18nTooltip={`1. ${step.description}`}
+                active={true}
+                showDetails={expanded}
+                description={'Configure the action'}
+              />
+              <IntegrationFlowStepWithOverview
+                icon={<i className={'fa fa-plus'} />}
+                i18nTitle={'2. Finish'}
+                i18nTooltip={'Finish'}
+                active={false}
+                showDetails={expanded}
+                name={'n/a'}
+                action={'n/a'}
+                dataType={'n/a'}
+              />
+            </>
+          );
+        }}
+      </IntegrationVerticalFlow>
+    )}
+    postConfigureHref={(integration, params) =>
+      resolvers.create.finish.selectStep({
+        integration,
+        ...params,
+      })
+    }
+  />
+);
+
 const finishStepSelectConnectionPage = (
   <SelectConnectionPage
     cancelHref={resolvers.list}
@@ -226,7 +281,13 @@ const finishStepSelectConnectionPage = (
     extensionHref={resolvers.create.finish.extension}
     mapperHref={resolvers.create.finish.dataMapper}
     templateHref={resolvers.create.finish.template}
-    stepHref={resolvers.create.finish.step}
+    stepHref={(step, params, state) =>
+      resolvers.create.finish.step({
+        step,
+        ...params,
+        ...state,
+      })
+    }
     sidebar={({ steps }) => (
       <IntegrationVerticalFlow>
         {({ expanded }) => {
@@ -366,6 +427,55 @@ const finishStepConfigureActionPage = (
   />
 );
 
+const finishStepConfigureStepPage = (
+  <ConfigureStepPage
+    cancelHref={resolvers.list}
+    mode={'adding'}
+    sidebar={({ step, steps }) => (
+      <IntegrationVerticalFlow>
+        {({ expanded }) => {
+          const s = toUIStepKind(steps[0]);
+          return (
+            <>
+              <IntegrationFlowStepWithOverview
+                icon={<img alt={s.name} src={s.icon} width={24} height={24} />}
+                i18nTitle={`1. ${s.name}`}
+                i18nTooltip={`1. ${s.title}`}
+                active={false}
+                showDetails={expanded}
+                name={s.name}
+                action={s.action && s.action.name}
+                dataType={getDataShapeText(s.stepKind!, s.outputDataShape)}
+              />
+              <IntegrationFlowStepGeneric
+                icon={
+                  <img
+                    alt={'Step icon'}
+                    src={getStepIcon(process.env.PUBLIC_URL, step)}
+                    width={24}
+                    height={24}
+                  />
+                }
+                i18nTitle={`2. ${step.name}`}
+                i18nTooltip={`2. ${step.description}`}
+                active={true}
+                showDetails={expanded}
+                description={'Configure the action'}
+              />
+            </>
+          );
+        }}
+      </IntegrationVerticalFlow>
+    )}
+    postConfigureHref={(integration, params) =>
+      resolvers.create.configure.index({
+        integration,
+        ...params,
+      })
+    }
+  />
+);
+
 const addStepSelectConnectionPage = (
   <SelectConnectionPage
     cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
@@ -381,7 +491,13 @@ const addStepSelectConnectionPage = (
     extensionHref={resolvers.create.configure.addStep.extension}
     mapperHref={resolvers.create.configure.addStep.dataMapper}
     templateHref={resolvers.create.configure.addStep.template}
-    stepHref={resolvers.create.configure.addStep.step}
+    stepHref={(step, params, state) =>
+      resolvers.create.configure.addStep.step({
+        step,
+        ...params,
+        ...state,
+      })
+    }
     sidebar={({ steps, activeIndex }) => (
       <IntegrationEditorSidebar
         steps={steps}
@@ -463,6 +579,36 @@ const addStepConfigureActionPage = (
   />
 );
 
+const addStepConfigureStepPage = (
+  <ConfigureStepPage
+    cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
+    mode={'adding'}
+    sidebar={({ step, steps, activeIndex }) => (
+      <IntegrationEditorSidebar
+        steps={steps}
+        addAtIndex={activeIndex}
+        addIcon={
+          <img
+            alt={'Step icon'}
+            src={getStepIcon(process.env.PUBLIC_URL, step)}
+            height={24}
+            width={24}
+          />
+        }
+        addI18nTitle={`${activeIndex + 1}. ${step.name}`}
+        addI18nTooltip={`${activeIndex + 1}. ${step.description}`}
+        addI18nDescription={'Configure the action'}
+      />
+    )}
+    postConfigureHref={(integration, params) =>
+      resolvers.create.configure.index({
+        integration,
+        ...params,
+      })
+    }
+  />
+);
+
 const editStepSelectActionPage = (
   <SelectActionPage
     cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
@@ -495,6 +641,22 @@ const editStepConfigureActionPage = (
         ...s,
       })
     }
+    sidebar={({ steps, activeIndex }) => (
+      <IntegrationEditorSidebar steps={steps} activeIndex={activeIndex} />
+    )}
+    postConfigureHref={(integration, params) =>
+      resolvers.create.configure.index({
+        integration,
+        ...params,
+      })
+    }
+  />
+);
+
+const editStepConfigureStepPage = (
+  <ConfigureStepPage
+    cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
+    mode={'editing'}
     sidebar={({ steps, activeIndex }) => (
       <IntegrationEditorSidebar steps={steps} activeIndex={activeIndex} />
     )}
@@ -573,7 +735,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
             }}
             step={{
               configurePath: routes.create.start.step,
-              configureChildren: TODO,
+              configureChildren: startStepConfigureStepPage,
             }}
             extension={{
               configurePath: routes.create.start.extension,
@@ -618,7 +780,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
             }}
             step={{
               configurePath: routes.create.finish.step,
-              configureChildren: TODO,
+              configureChildren: finishStepConfigureStepPage,
             }}
             extension={{
               configurePath: routes.create.finish.extension,
@@ -671,7 +833,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
             }}
             step={{
               configurePath: routes.create.configure.addStep.step,
-              configureChildren: TODO,
+              configureChildren: addStepConfigureStepPage,
             }}
             extension={{
               configurePath: routes.create.configure.addStep.extension,
@@ -716,7 +878,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
             }}
             step={{
               configurePath: routes.create.configure.editStep.step,
-              configureChildren: TODO,
+              configureChildren: editStepConfigureStepPage,
             }}
             extension={{
               configurePath: routes.create.configure.editStep.extension,
