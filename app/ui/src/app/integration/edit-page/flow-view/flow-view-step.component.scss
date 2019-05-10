@@ -131,6 +131,8 @@
     cursor: pointer;
     top: 0;
     right: 0;
+    min-width: 1.8em;
+    min-height: 1.8em;
     transform: translate(25%, -25%);
 
     &::before {
