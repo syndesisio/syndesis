@@ -2,6 +2,7 @@ import { WithApiVersion } from '@syndesis/api';
 import {
   AppLayout,
   AppTopMenu,
+  ButtonLink,
   INotification,
   INotificationType,
   Notifications,
@@ -14,6 +15,7 @@ import { useState } from 'react';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link, Route, Switch } from 'react-router-dom';
+import { Workbox } from 'workbox-window';
 import resolvers from '../modules/resolvers';
 import { PageNotFound, WithErrorBoundary } from '../shared';
 import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
@@ -39,12 +41,17 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
   };
 
   const [notifications, setNotifications] = useState<INotification[]>([]);
-  const pushNotification = (msg: string, type: INotificationType) => {
+  const pushNotification = (
+    msg: React.ReactNode,
+    type: INotificationType,
+    persistent: boolean = false
+  ) => {
     setNotifications([
       ...notifications,
       {
         key: Date.now().toString(),
         message: msg,
+        persistent,
         type,
       },
     ]);
@@ -54,6 +61,47 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
       notifications.filter((n: INotification) => n.key !== notification.key)
     );
   };
+
+  React.useEffect(() => {
+    let refreshNotificationDisplayed = false;
+    // tslint:disable
+    if ('serviceWorker' in navigator) {
+      const wb = new Workbox('/service-worker.js');
+
+      const refreshApp = () => {
+        wb.addEventListener('controlling', event => {
+          window.location.reload();
+        });
+        // Send a message telling the service worker to skip waiting.
+        // This will trigger the `controlling` event handler above.
+        wb.messageSW({ type: 'SKIP_WAITING' });
+      };
+
+      wb.addEventListener('waiting', event => {
+        if (!refreshNotificationDisplayed) {
+          refreshNotificationDisplayed = true;
+          pushNotification(
+            <>
+              <div className="pull-right toast-pf-action">
+                <ButtonLink
+                  onClick={refreshApp}
+                  as={'link'}
+                  style={{ padding: 0, border: 0 }}
+                >
+                  Reload
+                </ButtonLink>
+              </div>
+              A new version is available.
+            </>,
+            'warning',
+            true
+          );
+        }
+      });
+
+      wb.register();
+    }
+  }, []); // eslint-disable-line
 
   return (
     <UIContext.Provider

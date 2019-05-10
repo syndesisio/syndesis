@@ -9,7 +9,8 @@ export type INotificationType = 'success' | 'info' | 'warning' | 'error';
 
 export interface INotification {
   key: string;
-  message: string;
+  message: React.ReactNode;
+  persistent: boolean;
   type: INotificationType;
 }
 
@@ -27,18 +28,22 @@ export class Notifications extends React.Component<INotificationsProps> {
           <TimedToastNotification
             key={notification.key}
             type={notification.type}
-            persistent={false}
+            persistent={notification.persistent}
             onDismiss={this.props.removeNotificationAction.bind(
               this,
               notification
             )}
             timerdelay={this.props.notificationTimerDelay}
           >
-            <Container
-              dangerouslySetInnerHTML={{
-                __html: notification.message,
-              }}
-            />
+            {typeof notification.message === 'string' ? (
+              <Container
+                dangerouslySetInnerHTML={{
+                  __html: notification.message,
+                }}
+              />
+            ) : (
+              <Container>{notification.message}</Container>
+            )}
           </TimedToastNotification>
         ))}
       </ToastNotificationList>

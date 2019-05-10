@@ -213,6 +213,7 @@ export class DndFileChooser extends React.Component<
     const notifications = rejectedFiles.map(file => ({
       key: file.name,
       message: this.props.onUploadRejected(file.name),
+      persistent: false,
       type: 'error' as INotificationType,
     }));
 
