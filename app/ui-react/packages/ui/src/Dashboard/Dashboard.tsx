@@ -93,15 +93,17 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
             </CardGrid>
           </StackItem>
 
-          <StackItem isFilled={false} className={'dashboard__integrations'}>
-            <Grid gutter={'lg'}>
-              <GridItem span={7} rowSpan={3}>
-                {this.props.topIntegrations}
-              </GridItem>
-              <GridItem span={5}>{this.props.integrationBoard}</GridItem>
-              <GridItem span={5}>{this.props.integrationUpdates}</GridItem>
-            </Grid>
-          </StackItem>
+          <PageSection>
+            <StackItem isFilled={false} className={'dashboard__integrations'}>
+              <Grid gutter={'sm'}>
+                <GridItem span={7} rowSpan={3} sm={12}>
+                  {this.props.topIntegrations}
+                </GridItem>
+                <GridItem sm={6}>{this.props.integrationBoard}</GridItem>
+                <GridItem sm={6}>{this.props.integrationUpdates}</GridItem>
+              </Grid>
+            </StackItem>
+          </PageSection>
 
           <StackItem isFilled={false} className={'dashboard__connections'}>
             <Split>
