@@ -1,3 +1,7 @@
-.recent-updates-item {
+.recent-updates-item div {
   padding: 10px 0;
+}
+
+.recent-updates-item__status {
+  margin-right: 0 !important;
 }

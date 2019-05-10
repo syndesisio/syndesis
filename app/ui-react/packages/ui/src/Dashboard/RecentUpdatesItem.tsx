@@ -1,4 +1,4 @@
-import { Grid } from 'patternfly-react';
+import { Level, LevelItem } from '@patternfly/react-core';
 import * as React from 'react';
 import { IntegrationStatus } from '../Integration';
 import { IntegrationState } from '../Integration/models';
@@ -21,16 +21,16 @@ export const RecentUpdatesItem: React.FunctionComponent<IRecentUpdatesItem> = ({
   i18nPublished,
   i18nUnpublished,
 }) => (
-  <Grid.Row className={'recent-updates-item'}>
-    <Grid.Col sm={5}>{integrationName}</Grid.Col>
-    <Grid.Col sm={3}>
+  <Level gutter={'md'} className={'recent-updates-item'}>
+    <LevelItem>{integrationName}</LevelItem>
+    <LevelItem>
       <IntegrationStatus
         currentState={integrationCurrentState}
         i18nError={i18nError}
         i18nPublished={i18nPublished}
         i18nUnpublished={i18nUnpublished}
       />
-    </Grid.Col>
-    <Grid.Col sm={4}>{integrationDate}</Grid.Col>
-  </Grid.Row>
+    </LevelItem>
+    <LevelItem>{integrationDate}</LevelItem>
+  </Level>
 );
