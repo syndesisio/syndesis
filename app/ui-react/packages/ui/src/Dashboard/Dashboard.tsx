@@ -35,7 +35,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
         <SimplePageHeader i18nTitle={this.props.i18nTitle} titleSize={'xl'} />
         <PageSection>
           <Grid fluid={true}>
-            <Grid.Row className={'show-grid dashboard__integration__actions'}>
+            <Grid.Row className={'show-grid dashboard__integrations__actions'}>
               <Grid.Col xs={6} xsOffset={6}>
                 <ButtonLink
                   href={this.props.linkToIntegrationCreation}
