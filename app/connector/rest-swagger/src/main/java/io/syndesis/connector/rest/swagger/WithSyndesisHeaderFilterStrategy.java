@@ -15,37 +15,28 @@
  */
 package io.syndesis.connector.rest.swagger;
 
-import java.util.Map;
+import java.util.function.Consumer;
 
-import org.apache.camel.CamelContext;
-import org.apache.camel.Producer;
-import org.apache.camel.component.http4.HttpComponent;
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
+
 import org.apache.camel.component.http4.HttpEndpoint;
 import org.apache.camel.component.http4.HttpProducer;
-import org.apache.camel.impl.DefaultHeaderFilterStrategy;
-import org.apache.camel.spi.RestConfiguration;
 
-public final class WithSyndesisHeaderFilterStrategy extends HttpComponent {
-
-    private final DefaultHeaderFilterStrategy globalFilter;
-
-    public WithSyndesisHeaderFilterStrategy(final DefaultHeaderFilterStrategy globalFilter) {
-        this.globalFilter = globalFilter;
-    }
+public final class WithSyndesisHeaderFilterStrategy implements Consumer<HttpProducer> {
 
     @Override
-    @SuppressWarnings({"PMD.ExcessiveParameterList", "PMD.UseObjectForClearerAPI"})
-    public Producer createProducer(final CamelContext camelContext, final String host, final String verb, final String basePath, final String uriTemplate,
-        final String queryParameters, final String consumes, final String produces, final RestConfiguration configuration,
-        final Map<String, Object> parameters) throws Exception {
-
-        final HttpProducer producer = (HttpProducer) super.createProducer(camelContext, host, verb, basePath, uriTemplate, queryParameters, consumes,
-            produces, configuration, parameters);
+    public void accept(final HttpProducer producer) {
+        // HttpComponent::createProducer will ignore any
+        // HttpHeaderFilterStrategy set on the component/endpoint and set
+        // it's own HttpRestHeaderFilterStrategy which cannot be influenced
+        // in any way, here we're getting the reference to the endpoint
+        // that's created in the createProducer and modifying the configured
+        // DefaultHeaderFilterStrategy with the configuration from our
+        // global HeaderFilterStrategy. This way we can filter out any HTTP
+        // headers we do not wish to receive or send via HTTP (such as
+        // Syndesis.*)
         final HttpEndpoint endpoint = producer.getEndpoint();
-        endpoint.getHeaderFilterStrategy();
 
-        endpoint.setHeaderFilterStrategy(globalFilter);
-
-        return producer;
+        endpoint.setHeaderFilterStrategy(SyndesisHeaderStrategy.INSTANCE);
     }
 }

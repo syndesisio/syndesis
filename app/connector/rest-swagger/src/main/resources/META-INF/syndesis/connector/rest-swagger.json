@@ -49,6 +49,40 @@
       "javaType": "java.lang.Long",
       "type": "hidden"
     },
+    "authenticationParameterName": {
+      "description": "Name of the API key parameter",
+      "displayName": "API key parameter name",
+      "javaType": "java.lang.String",
+      "order": 2,
+      "required": true,
+      "type": "hidden"
+    },
+    "authenticationParameterPlacement": {
+      "displayName": "Placement of the API key parameter",
+      "enum": [
+        {
+          "label": "header",
+          "value": "header"
+        },
+        {
+          "label": "query",
+          "value": "query"
+        }
+      ],
+      "javaType": "java.lang.String",
+      "order": 4,
+      "required": true,
+      "type": "hidden"
+    },
+    "authenticationParameterValue": {
+      "description": "Value of the API key authentication parameter",
+      "displayName": "API key",
+      "javaType": "java.lang.String",
+      "order": 3,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
     "authenticationType": {
       "displayName": "Authentication type",
       "enum": [
@@ -63,6 +97,10 @@
         {
           "label": "oauth2",
           "value": "oauth2"
+        },
+        {
+          "label": "parameter",
+          "value": "parameter"
         }
       ],
       "javaType": "java.lang.String",
@@ -70,7 +108,7 @@
       "tags": [
         "authentication-type"
       ],
-      "type": "string"
+      "type": "hidden"
     },
     "authorizationEndpoint": {
       "description": "URL for the start of the OAuth flow",

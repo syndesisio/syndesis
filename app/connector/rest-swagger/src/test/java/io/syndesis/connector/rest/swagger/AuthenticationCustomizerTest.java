@@ -92,6 +92,31 @@ public class AuthenticationCustomizerTest {
     }
 
     @Test
+    public void shouldSetParameterAuthenticationHeader() throws Exception {
+        final AuthenticationCustomizer customizer = new AuthenticationCustomizer();
+
+        final Map<String, Object> options = new HashMap<>();
+        options.put("authenticationType", AuthenticationType.parameter);
+        options.put("authenticationParameterName", "apiKey");
+        options.put("authenticationParameterValue", "{{key}}");
+        options.put("authenticationParameterPlacement", "header");
+
+        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final CamelContext context = mock(CamelContext.class);
+        component.setCamelContext(context);
+
+        when(context.resolvePropertyPlaceholders("apiKey")).thenReturn("apiKey");
+        when(context.resolvePropertyPlaceholders("{{key}}")).thenReturn("dolphins");
+        when(context.resolvePropertyPlaceholders("header")).thenReturn("header");
+
+        customizer.customize(component, options);
+
+        assertThat(options).doesNotContainKeys("authenticationParameterName", "authenticationParameterValue", "authenticationParameterPlacement");
+
+        assertHeaderSetTo(component, "apiKey", "dolphins");
+    }
+
+    @Test
     public void shouldSetRefreshOAuth2Token() throws Exception {
         wiremock.givenThat(post("/oauth/authorize")
             .withRequestBody(equalTo("refresh_token=refresh-token&grant_type=refresh_token"))
@@ -125,6 +150,10 @@ public class AuthenticationCustomizerTest {
     }
 
     private static void assertAuthorizationHeaderSetTo(final ComponentProxyComponent component, final String value) throws Exception {
+        assertHeaderSetTo(component, "Authorization", value);
+    }
+
+    private static void assertHeaderSetTo(final ComponentProxyComponent component, final String headerName, final String headerValue) throws Exception {
         final Processor processor = component.getBeforeProducer();
 
         final Exchange exchange = mock(Exchange.class);
@@ -141,7 +170,7 @@ public class AuthenticationCustomizerTest {
 
         processor.process(exchange);
 
-        verify(message).setHeader("Authorization", value);
+        verify(message).setHeader(headerName, headerValue);
     }
 
 }

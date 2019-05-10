@@ -23,8 +23,6 @@ import org.apache.camel.Endpoint;
 
 public final class SwaggerProxyComponent extends ComponentProxyComponent {
 
-    private Configuration configuration;
-
     private Function<Endpoint, Endpoint> endpointOverride = Function.identity();
 
     public SwaggerProxyComponent(final String componentId, final String componentScheme) {
@@ -35,13 +33,6 @@ public final class SwaggerProxyComponent extends ComponentProxyComponent {
     public Endpoint createEndpoint(final String uri) throws Exception {
         final Endpoint endpoint = super.createEndpoint(uri);
 
-        if (configuration == null) {
-            // AuthenticationCustomizer did not invoke setConfiguration
-            // meaning we don't need to wrap the endpoint as no
-            // authentication is to be performed
-            return endpoint;
-        }
-
         return endpointOverride.apply(endpoint);
     }
 
@@ -49,7 +40,4 @@ public final class SwaggerProxyComponent extends ComponentProxyComponent {
         this.endpointOverride = endpointOverride;
     }
 
-    public void setConfiguration(final Configuration configuration) {
-        this.configuration = configuration;
-    }
 }

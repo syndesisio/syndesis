@@ -181,6 +181,44 @@ public class RestSwaggerConnectorIntegrationTest {
     }
 
     @Test
+    public void shouldPassAuthenticationParameterHeader() throws Exception {
+        wiremock.givenThat(get("/v2/user/logout")
+            .withHeader("apiKey", equalTo("supersecret"))
+            .willReturn(ok()));
+
+        assertThat(context.createProducerTemplate().requestBody("direct:headerAuth", null, String.class))
+            .isEqualTo("");
+
+        wiremock.verify(getRequestedFor(urlEqualTo("/v2/user/logout"))
+            .withHeader("apiKey", equalTo("supersecret"))
+            .withRequestBody(WireMock.equalTo("")));
+    }
+
+    @Test
+    public void shouldPassAuthenticationQueryParameter() throws Exception {
+        wiremock.givenThat(get("/v2/secured/user/logout?api_key=supersecret")
+            .willReturn(ok()));
+
+        assertThat(context.createProducerTemplate().requestBody("direct:queryParamAuth", null, String.class))
+            .isEqualTo("");
+
+        wiremock.verify(getRequestedFor(urlEqualTo("/v2/secured/user/logout?api_key=supersecret"))
+            .withRequestBody(WireMock.equalTo("")));
+    }
+
+    @Test
+    public void shouldPassAuthenticationQueryParameterAlongWithOtherParameters() throws Exception {
+        wiremock.givenThat(get("/v2/secured/pet/findByStatus?api_key=supersecret&status=available")
+            .willReturn(ok()));
+
+        assertThat(context.createProducerTemplate().requestBody("direct:additionalQueryParamAuth", "{\"parameters\":{\"status\":\"available\"}}", String.class))
+            .isEqualTo("");
+
+        wiremock.verify(getRequestedFor(urlEqualTo("/v2/secured/pet/findByStatus?api_key=supersecret&status=available"))
+            .withRequestBody(WireMock.equalTo("")));
+    }
+
+    @Test
     public void shouldPassBasicAuthorizationHeader() throws Exception {
         wiremock.givenThat(get("/v2/user/logout")
             .withBasicAuth("luser", "supersecret")
@@ -301,6 +339,22 @@ public class RestSwaggerConnectorIntegrationTest {
         context.stop();
     }
 
+    private Flow additionalQueryParameterAuthenticationFlow() {
+        final Step queryParameterAuth = operation("apiKeyFindPetsByStatus", JSON_SCHEMA_SHAPE, NONE_SHAPE).builder()
+            .connection(connection.builder()
+                .putConfiguredProperty("authenticationType", AuthenticationType.parameter.name())
+                .putConfiguredProperty("authenticationParameterName", "api_key")
+                .putConfiguredProperty("authenticationParameterValue", "ENC:_key_")
+                .putConfiguredProperty("authenticationParameterPlacement", "query")
+                .build())
+            .build();
+
+        return new Flow.Builder()
+            .addStep(direct("additionalQueryParamAuth"))
+            .addStep(queryParameterAuth)
+            .build();
+    }
+
     private Flow basicAuthorizationFlow() {
         final Step apiBasicAuth = operation("logoutUser", NONE_SHAPE, NONE_SHAPE).builder()
             .connection(connection.builder()
@@ -329,6 +383,9 @@ public class RestSwaggerConnectorIntegrationTest {
                 .build()))
             .addFlow(oAuthRefreshFlow())
             .addFlow(oAuthRetryFlow())
+            .addFlow(headerAuthenticationFlow())
+            .addFlow(queryParameterAuthenticationFlow())
+            .addFlow(additionalQueryParameterAuthenticationFlow())
             .build();
     }
 
@@ -358,6 +415,12 @@ public class RestSwaggerConnectorIntegrationTest {
                 properties.put("flow-7.rest-swagger-1.accessToken", "access-token");
                 properties.put("flow-7.rest-swagger-1.refreshToken", "refresh-token");
 
+                properties.put("flow-8.rest-swagger-1.authenticationParameterValue", "supersecret");
+
+                properties.put("flow-9.rest-swagger-1.authenticationParameterValue", "supersecret");
+
+                properties.put("flow-10.rest-swagger-1.authenticationParameterValue", "supersecret");
+
                 final PropertiesComponent propertiesComponent = new PropertiesComponent();
                 propertiesComponent.setInitialProperties(properties);
 
@@ -375,6 +438,22 @@ public class RestSwaggerConnectorIntegrationTest {
                 return createIntegration();
             }
         };
+    }
+
+    private Flow headerAuthenticationFlow() {
+        final Step headerParameterAuth = operation("logoutUser", NONE_SHAPE, NONE_SHAPE).builder()
+            .connection(connection.builder()
+                .putConfiguredProperty("authenticationType", AuthenticationType.parameter.name())
+                .putConfiguredProperty("authenticationParameterName", "apiKey")
+                .putConfiguredProperty("authenticationParameterValue", "ENC:_key_")
+                .putConfiguredProperty("authenticationParameterPlacement", "header")
+                .build())
+            .build();
+
+        return new Flow.Builder()
+            .addStep(direct("headerAuth"))
+            .addStep(headerParameterAuth)
+            .build();
     }
 
     private Flow oAuthAuthorizationFlow() {
@@ -445,6 +524,22 @@ public class RestSwaggerConnectorIntegrationTest {
                     .build())
                 .build())
             .connection(connection)
+            .build();
+    }
+
+    private Flow queryParameterAuthenticationFlow() {
+        final Step queryParameterAuth = operation("apiKeyLogoutUser", NONE_SHAPE, NONE_SHAPE).builder()
+            .connection(connection.builder()
+                .putConfiguredProperty("authenticationType", AuthenticationType.parameter.name())
+                .putConfiguredProperty("authenticationParameterName", "api_key")
+                .putConfiguredProperty("authenticationParameterValue", "ENC:_key_")
+                .putConfiguredProperty("authenticationParameterPlacement", "query")
+                .build())
+            .build();
+
+        return new Flow.Builder()
+            .addStep(direct("queryParamAuth"))
+            .addStep(queryParameterAuth)
             .build();
     }
 

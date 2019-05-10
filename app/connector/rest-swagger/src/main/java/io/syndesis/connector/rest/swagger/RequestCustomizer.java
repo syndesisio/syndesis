@@ -23,7 +23,6 @@ import io.syndesis.common.model.OutputDataShapeAware;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import io.syndesis.integration.component.proxy.Processors;
-import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 
 import org.apache.camel.CamelContext;
 
@@ -40,16 +39,7 @@ public final class RequestCustomizer implements ComponentProxyCustomizer, InputD
         final CamelContext camelContext = component.getCamelContext();
 
         if (!camelContext.getComponentNames().contains(DELEGATE_COMPONENT_NAME)) {
-            // HttpComponent::createProducer will ignore any
-            // HttpHeaderFilterStrategy set on the component/endpoint and set
-            // it's own HttpRestHeaderFilterStrategy which cannot be influenced
-            // in any way, here we're getting the reference to the endpoint
-            // that's created in the createProducer and modifying the configured
-            // DefaultHeaderFilterStrategy with the configuration from our
-            // global HeaderFilterStrategy. This way we can filter out any HTTP
-            // headers we do not wish to receive or send via HTTP (such as
-            // Syndesis.*)
-            final WithSyndesisHeaderFilterStrategy delegate = new WithSyndesisHeaderFilterStrategy(new SyndesisHeaderStrategy());
+            final SyndesisRestSwaggerComponent delegate = new SyndesisRestSwaggerComponent();
             camelContext.addComponent(DELEGATE_COMPONENT_NAME, delegate);
         }
 

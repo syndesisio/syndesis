@@ -19,6 +19,7 @@ import java.util.Map;
 
 import io.syndesis.connector.rest.swagger.auth.basic.Basic;
 import io.syndesis.connector.rest.swagger.auth.oauth.OAuth;
+import io.syndesis.connector.rest.swagger.auth.parameter.Parameter;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
@@ -38,16 +39,20 @@ public class AuthenticationCustomizer implements ComponentProxyCustomizer {
 
             final CamelContext context = component.getCamelContext();
             final Configuration configuration = new Configuration(this, context, options);
-            component.setConfiguration(configuration);
 
-            if (authenticationType == AuthenticationType.oauth2) {
+            switch (authenticationType) {
+            case oauth2:
                 OAuth.setup(component, configuration);
-            } else if (authenticationType == AuthenticationType.basic) {
+                break;
+            case basic:
                 Basic.setup(component, configuration);
-            } else {
+                break;
+            case parameter:
+                Parameter.setup(component, configuration);
+                break;
+            default:
                 throw new IllegalStateException("Unsupported authentication type: " + authenticationType);
             }
-
         });
     }
 

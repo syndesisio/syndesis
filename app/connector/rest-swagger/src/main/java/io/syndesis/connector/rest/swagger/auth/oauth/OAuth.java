@@ -38,7 +38,7 @@ public final class OAuth {
             Processors.addBeforeProducer(component, new OAuthRefreshTokenProcessor(state, configuration));
 
             final OAuthRefreshTokenOnFailProcessor refreshOnFailure = new OAuthRefreshTokenOnFailProcessor(state, configuration);
-            component.overrideEndpoint(e -> new OAuthRefreshingEndpoint(component, e, refreshOnFailure));
+            component.overrideEndpoint(endpoint -> new OAuthRefreshingEndpoint(component, endpoint, refreshOnFailure));
         } else {
             final String authorizationHeaderValue = "Bearer " + configuration.stringOption("accessToken");
             Processors.addBeforeProducer(component, new SetAuthorizationHeader(authorizationHeaderValue));

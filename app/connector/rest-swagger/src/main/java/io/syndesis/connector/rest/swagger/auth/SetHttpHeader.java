@@ -15,10 +15,21 @@
  */
 package io.syndesis.connector.rest.swagger.auth;
 
-public final class SetAuthorizationHeader extends SetHttpHeader {
+import io.syndesis.integration.runtime.util.SyndesisHeaderStrategy;
 
-    public SetAuthorizationHeader(final String authorizationHeaderValue) {
-        super("Authorization", authorizationHeaderValue);
+import org.apache.camel.Exchange;
+
+public class SetHttpHeader extends SetHeader {
+
+    public SetHttpHeader(final String headerName, final String headerValue) {
+        super(headerName, headerValue);
+    }
+
+    @Override
+    public void process(final Exchange exchange) throws Exception {
+        super.process(exchange);
+
+        SyndesisHeaderStrategy.whitelist(exchange, headerName);
     }
 
 }
