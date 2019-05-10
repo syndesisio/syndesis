@@ -1,10 +1,10 @@
 import { WithVirtualizationConnectionStatuses } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
-import { ViewsCreateLayout } from '@syndesis/ui';
+import { ViewsImportLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import resolvers from '../../../resolvers';
-import { DvConnectionsWithToolbar, ViewsCreateSteps } from '../../shared';
+import { DvConnectionsWithToolbar, ViewsImportSteps } from '../../shared';
 
 /**
  * @param virtualizationId - the ID of the virtualization for the wizard
@@ -50,8 +50,8 @@ export class SelectConnectionPage extends React.Component<
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
         {({ virtualizationId }, { virtualization }, { history }) => (
-          <ViewsCreateLayout
-            header={<ViewsCreateSteps step={1} />}
+          <ViewsImportLayout
+            header={<ViewsImportSteps step={1} />}
             content={
               <WithVirtualizationConnectionStatuses>
                 {({ data, hasData, error }) => (

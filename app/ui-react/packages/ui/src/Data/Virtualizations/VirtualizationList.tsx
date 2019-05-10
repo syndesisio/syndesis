@@ -96,6 +96,8 @@ export class VirtualizationList extends React.Component<
               </OverlayTrigger>
             </div>
           </ListViewToolbar>
+        </PageSection>
+        <PageSection noPadding={true}>
           {this.props.hasListData ? (
             <ListView>{this.props.children}</ListView>
           ) : (

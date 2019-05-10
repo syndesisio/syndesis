@@ -8,16 +8,16 @@ import i18n from '../../i18n';
 import { WithClosedNavigation } from '../../shared';
 import resolvers from '../resolvers';
 import routes from '../routes';
-import { SelectConnectionPage, SelectViewsPage } from './pages/views';
+import { SelectConnectionPage, SelectViewsPage } from './pages/viewsImport';
 
-export interface ICreateViewsAppRouteState {
+export interface IViewsImportAppRouteState {
   virtualization: RestDataService;
 }
 
-export default class CreateViewsApp extends React.Component {
+export default class ViewsImportApp extends React.Component {
   public render() {
     return (
-      <WithRouteData<null, ICreateViewsAppRouteState>>
+      <WithRouteData<null, IViewsImportAppRouteState>>
         {(_, { virtualization }) => (
           <WithClosedNavigation>
             <Breadcrumb>

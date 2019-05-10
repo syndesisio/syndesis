@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
-import CreateViewsApp from './CreateViewsApp';
 import {
   VirtualizationCreatePage,
   VirtualizationMetricsPage,
@@ -10,6 +9,8 @@ import {
   VirtualizationViewsPage,
 } from './pages';
 import routes from './routes';
+import ViewCreateApp from './ViewCreateApp';
+import ViewsImportApp from './ViewsImportApp';
 
 export class DataModule extends React.Component {
   public render() {
@@ -23,7 +24,11 @@ export class DataModule extends React.Component {
           />
           <Route
             path={routes.virtualizations.virtualization.views.importSource.root}
-            component={CreateViewsApp}
+            component={ViewsImportApp}
+          />
+          <Route
+            path={routes.virtualizations.virtualization.views.createView.root}
+            component={ViewCreateApp}
           />
           <Route
             path={routes.virtualizations.create}

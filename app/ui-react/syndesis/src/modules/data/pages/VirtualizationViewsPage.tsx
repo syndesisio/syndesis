@@ -134,8 +134,7 @@ export class VirtualizationViewsPage extends React.Component<
                   >
                     {({ data, hasData, error, read }) => {
                       return (
-                        // TODO need to retrieve real username here
-                        <WithVirtualizationHelpers username="developer">
+                        <WithVirtualizationHelpers>
                           {({ deleteView }) => {
                             const handleDeleteView = async (
                               viewName: string
@@ -208,70 +207,72 @@ export class VirtualizationViewsPage extends React.Component<
                                             count: filteredAndSorted.length,
                                           }
                                         )}
-                                        // TODO - Point to views.create when available
-                                        linkCreateViewHRef={resolvers.data.virtualizations.create()}
+                                        linkCreateViewHRef={resolvers.data.virtualizations.views.createView.selectSources(
+                                          { virtualization }
+                                        )}
                                         linkImportViewsHRef={resolvers.data.virtualizations.views.importSource.selectConnection(
                                           { virtualization }
                                         )}
                                         onImportView={this.handleImportView}
                                         hasListData={data.length > 0}
-                                      />
-                                      <WithLoader
-                                        error={error}
-                                        loading={!hasData}
-                                        loaderChildren={
-                                          <ViewListSkeleton
-                                            width={800}
-                                            style={{
-                                              backgroundColor: '#FFF',
-                                              marginTop: 30,
-                                            }}
-                                          />
-                                        }
-                                        errorChildren={<ApiError />}
                                       >
-                                        {() =>
-                                          filteredAndSorted
-                                            .filter((view: ViewDefinition) =>
-                                              this.filterUndefinedId(view)
-                                            )
-                                            .map(
-                                              (
-                                                view: ViewDefinition,
-                                                index: number
-                                              ) => (
-                                                <ViewListItem
-                                                  key={index}
-                                                  viewName={view.viewName}
-                                                  viewDescription={
-                                                    view.keng__description
-                                                  }
-                                                  i18nCancelText={t(
-                                                    'shared:Cancel'
-                                                  )}
-                                                  i18nDelete={t(
-                                                    'shared:Delete'
-                                                  )}
-                                                  i18nDeleteModalMessage={t(
-                                                    'virtualization.deleteViewModalMessage',
-                                                    {
-                                                      name: view.viewName,
-                                                    }
-                                                  )}
-                                                  i18nDeleteModalTitle={t(
-                                                    'virtualization.deleteModalTitle'
-                                                  )}
-                                                  i18nEdit={t('shared:Edit')}
-                                                  i18nEditTip={t(
-                                                    'view.editViewTip'
-                                                  )}
-                                                  onDelete={handleDeleteView}
-                                                  onEdit={this.handleEditView}
-                                                />
+                                        <WithLoader
+                                          error={error}
+                                          loading={!hasData}
+                                          loaderChildren={
+                                            <ViewListSkeleton
+                                              width={800}
+                                              style={{
+                                                backgroundColor: '#FFF',
+                                                marginTop: 30,
+                                              }}
+                                            />
+                                          }
+                                          errorChildren={<ApiError />}
+                                        >
+                                          {() =>
+                                            filteredAndSorted
+                                              .filter((view: ViewDefinition) =>
+                                                this.filterUndefinedId(view)
                                               )
-                                            )
-                                        }
-                                      </WithLoader>
+                                              .map(
+                                                (
+                                                  view: ViewDefinition,
+                                                  index: number
+                                                ) => (
+                                                  <ViewListItem
+                                                    key={index}
+                                                    viewName={view.viewName}
+                                                    viewDescription={
+                                                      view.keng__description
+                                                    }
+                                                    i18nCancelText={t(
+                                                      'shared:Cancel'
+                                                    )}
+                                                    i18nDelete={t(
+                                                      'shared:Delete'
+                                                    )}
+                                                    i18nDeleteModalMessage={t(
+                                                      'virtualization.deleteViewModalMessage',
+                                                      {
+                                                        name: view.viewName,
+                                                      }
+                                                    )}
+                                                    i18nDeleteModalTitle={t(
+                                                      'virtualization.deleteModalTitle'
+                                                    )}
+                                                    i18nEdit={t('shared:Edit')}
+                                                    i18nEditTip={t(
+                                                      'view.editViewTip'
+                                                    )}
+                                                    onDelete={handleDeleteView}
+                                                    onEdit={this.handleEditView}
+                                                  />
+                                                )
+                                              )
+                                          }
+                                        </WithLoader>
+                                      </ViewList>
                                     </>
                                   );
                                 }}

@@ -4,7 +4,7 @@ import * as H from '@syndesis/history';
 import classnames from 'classnames';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../../../Layout';
-import './ViewsCreateLayout.css';
+import './ViewsImportLayout.css';
 
 /**
  * @param header - a PatternFly Wizard Steps component.
@@ -29,7 +29,7 @@ import './ViewsCreateLayout.css';
  * @param isLastStep - if set to true, it changes the Next button label to
  * 'Done'.
  */
-export interface IViewsCreateLayoutProps {
+export interface IViewsImportLayoutProps {
   header: JSX.Element;
   content: JSX.Element;
   onCancel?: (e: React.MouseEvent<any>) => void;
@@ -45,7 +45,7 @@ export interface IViewsCreateLayoutProps {
 }
 
 /**
- * Provides the layout for the views create wizard. It uses the PatternFly Wizard
+ * Provides the layout for the views import wizard. It uses the PatternFly Wizard
  * component under the hood.
  * The footer is pre-defined and follows the PF Wizard pattern, with
  * Cancel/Previous/Next buttons.
@@ -55,8 +55,8 @@ export interface IViewsCreateLayoutProps {
  * height and show the right scrollbars.
  * We should really find a smarter way to handle this.
  */
-export const ViewsCreateLayout: React.FunctionComponent<
-  IViewsCreateLayoutProps
+export const ViewsImportLayout: React.FunctionComponent<
+  IViewsImportLayoutProps
 > = ({
   header,
   content,
@@ -70,24 +70,24 @@ export const ViewsCreateLayout: React.FunctionComponent<
   isNextLoading,
   isNextDisabled,
   isLastStep = false,
-}: IViewsCreateLayoutProps) => {
+}: IViewsImportLayoutProps) => {
   return (
     <div
-      className={classnames('wizard-pf-body views-create-layout', {
+      className={classnames('wizard-pf-body views-import-layout', {
         'has-footer': true,
       })}
     >
       {header}
-      <div className="wizard-pf-row views-create-layout__body">
+      <div className="wizard-pf-row views-import-layout__body">
         <div
           className={
-            'wizard-pf-main cards-pf views-create-layout__contentWrapper'
+            'wizard-pf-main cards-pf views-import-layout__contentWrapper'
           }
         >
-          <div className="views-create-layout__content">{content}</div>
+          <div className="views-import-layout__content">{content}</div>
         </div>
       </div>
-      <div className="wizard-pf-footer views-create-layout__footer">
+      <div className="wizard-pf-footer views-import-layout__footer">
         <ButtonLink
           onClick={onBack}
           href={backHref}

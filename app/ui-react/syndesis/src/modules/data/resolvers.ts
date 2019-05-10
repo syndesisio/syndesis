@@ -1,5 +1,5 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
-import { RestDataService } from '@syndesis/models';
+import { RestDataService, SchemaNodeInfo } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import routes from './routes';
 
@@ -18,6 +18,37 @@ export default {
           },
         })
       ),
+      createView: {
+        root: makeResolverNoParams(
+          routes.virtualizations.virtualization.views.createView.root
+        ),
+        selectSources: makeResolver<{ virtualization: RestDataService }>(
+          routes.virtualizations.virtualization.views.createView.selectSources,
+          ({ virtualization }) => ({
+            params: {
+              virtualizationId: virtualization.keng__id,
+            },
+            state: {
+              virtualization,
+            },
+          })
+        ),
+        selectName: makeResolver<{
+          schemaNodeInfo: SchemaNodeInfo;
+          virtualization: RestDataService;
+        }>(
+          routes.virtualizations.virtualization.views.createView.selectName,
+          ({ schemaNodeInfo, virtualization }) => ({
+            params: {
+              virtualizationId: virtualization.keng__id,
+            },
+            state: {
+              schemaNodeInfo,
+              virtualization,
+            },
+          })
+        ),
+      },
       importSource: {
         root: makeResolverNoParams(
           routes.virtualizations.virtualization.views.importSource.root
