@@ -53,12 +53,12 @@
                 "displayName": "Message Deduplication Id strategy",
                 "enum": [
                   {
-                    "label": "ExchangeIdMessageDeduplicationIdStrategy",
-                    "value": "useExchangeId"
-                  },
-                  {
                     "label": "NullMessageDeduplicationIdStrategy",
                     "value": "useContentBasedDeduplication"
+                  },
+                  {
+                    "label": "ExchangeIdMessageDeduplicationIdStrategy",
+                    "value": "useExchangeId"
                   }
                 ],
                 "group": "producer",
@@ -173,12 +173,12 @@
                 "displayName": "Message Deduplication Id strategy",
                 "enum": [
                   {
-                    "label": "ExchangeIdMessageDeduplicationIdStrategy",
-                    "value": "useExchangeId"
-                  },
-                  {
                     "label": "NullMessageDeduplicationIdStrategy",
                     "value": "useContentBasedDeduplication"
+                  },
+                  {
+                    "label": "ExchangeIdMessageDeduplicationIdStrategy",
+                    "value": "useExchangeId"
                   }
                 ],
                 "group": "producer",
