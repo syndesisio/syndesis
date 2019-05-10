@@ -33,6 +33,7 @@ import {
   Connection,
   IntegrationSupportService,
   Step,
+  Flow,
   key
 } from '@syndesis/ui/platform';
 import { Router } from '@angular/router';
@@ -200,7 +201,8 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy {
   }
 
   createDefaultFlow() {
-    this.doCreateFlow(flowId => this.form.controls.defaultFlow.get('defaultFlow').setValue(flowId));
+    this.doCreateFlow('Default Flow', 'default', 'Use this as default',
+        flowId => this.form.controls.defaultFlow.get('defaultFlow').setValue(flowId));
   }
 
   removeDefaultFlow(): void {
@@ -248,31 +250,33 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy {
   }
 
   createFlow() {
-    this.doCreateFlow(flowId => this.addFlow(flowId));
+    this.doCreateFlow('Conditional Flow', 'conditional', '* To be defined *', flowId => this.addFlow(flowId));
   }
 
-  doCreateFlow(then: (flowId: string) => void) {
+  doCreateFlow(name: string, type: string, description: string, then: (flowId: string) => void) {
     const currentFlow = this.currentFlowService.currentFlow;
     const mainFlowId = currentFlow.id;
     const flowId = key();
-    const targetFlowName = 'From ' + (currentFlow.name || mainFlowId);
-
     this.connectionService.get('flow')
       .subscribe(entity => {
         this.currentFlowService.events.emit({
           kind: INTEGRATION_ADD_FLOW,
           flow: {
-            name: targetFlowName,
+            name: name,
             id: flowId,
+            description: description,
+            connections: [],
             steps: [
               this.createFlowStart(flowId, entity),
               this.createFlowEnd(entity)
             ],
             metadata: {
+              excerpt: '',
               mainFlowId: mainFlowId,
-              type: 'cbr-flow'
+              stepId: this.step.id,
+              type: type
             }
-          },
+          } as Flow,
           onSave: () => {
             then(flowId);
             this.onChange();
@@ -337,6 +341,13 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy {
       default: this.form.controls.defaultFlow.get('defaultFlow').value,
       flows: formGroupObj.flowOptions
     };
+
+    formattedProperties.flows.forEach(option => {
+      const subflow = this.currentFlowService.flows.find(flow => flow.id === option.flow);
+      if (subflow) {
+        subflow.description = option.condition;
+      }
+    });
 
     this.configuredPropertiesChange.emit(formattedProperties);
   }

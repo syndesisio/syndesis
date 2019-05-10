@@ -33,9 +33,9 @@
                   type="text"
                   [attr.list]="'path-list-' + i"
                   placeholder="Condition">
-                <span class="help-block" [textContent]="flowSet.controls.condition.value ? '' : 'Provide a condition that you want to evaluate.'"></span>
-                <span *ngIf="!flowSet.controls.condition.pristine && flowSet.controls.condition.errors?.required" class="help-block error">Condition is required</span>
-                <span *ngIf="flowSet.controls.condition.errors?.maxlength" class="help-block error">Maximum characters exceeded</span>
+                <span class="help-block" [textContent]="editMode ? 'Provide a condition that you want to evaluate.' : ''"></span>
+                <span *ngIf="editMode && flowSet.controls.condition.dirty && flowSet.controls.condition.errors?.required" class="help-block error">Condition is required</span>
+                <span *ngIf="editMode && flowSet.controls.condition.errors?.maxlength" class="help-block error">Maximum characters exceeded</span>
               </div>
               <div *ngIf="!editMode" class="col-sm-12 col-md-2">
                 <button
@@ -86,10 +86,10 @@
                   <input
                     formControlName="defaultFlowEnabled"
                     type="checkbox"
-                    (change)="toggleDefaultFlow()"> Use default flow
+                    (change)="toggleDefaultFlow()"> Use a default flow
                 </label>
               </div>
-              <span class="help-block">Use this flow when no other condition matches.</span>
+              <span class="help-block" [textContent]="editMode ? 'Use this flow when no other condition matches.' : ''"></span>
             </div>
             <div *ngIf="!editMode" class="col-sm-12 col-md-2">
               <button

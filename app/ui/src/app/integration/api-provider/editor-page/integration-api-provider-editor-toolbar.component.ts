@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { FlowToolbarComponent } from '../../edit-page';
-import { Flow } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-api-provider-operation-editor-toolbar',
@@ -10,10 +9,4 @@ import { Flow } from '@syndesis/ui/platform';
 export class ApiProviderOperationsToolbarComponent extends FlowToolbarComponent {
   @Input()
   showOperationsButton = false;
-
-  @Input()
-  flows: Flow[] = [];
-
-  @Input()
-  currentFlow: Flow = undefined;
 }
