@@ -46,6 +46,7 @@ export const ButtonLink: React.FunctionComponent<IButtonLinkProps> = ({
       onClick={onClick}
       className={className}
       disabled={disabled || (!onClick && !href)}
+      {...props}
     >
       {children}
     </button>
