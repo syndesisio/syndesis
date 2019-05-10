@@ -21,6 +21,7 @@ import { SelectActionPage } from './components/editor/endpoint/SelectActionPage'
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import { SelectConnectionPage } from './components/editor/SelectConnectionPage';
 import { ConfigureStepPage } from './components/editor/step/ConfigureStepPage';
+import { TemplateStepPage } from './components/editor/template/TemplateStepPage';
 import { getDataShapeText, toUIStepKind } from './components/editor/utils';
 import resolvers from './resolvers';
 import routes from './routes';
@@ -46,7 +47,13 @@ const addStepPage = (
     }
     filterHref={resolvers.create.configure.editStep.basicFilter}
     mapperHref={resolvers.create.configure.editStep.dataMapper}
-    templateHref={resolvers.create.configure.editStep.template}
+    templateHref={(step, params, state) =>
+      resolvers.create.configure.editStep.template({
+        step,
+        ...params,
+        ...state,
+      })
+    }
     stepHref={(step, params, state) =>
       resolvers.create.configure.editStep.step({
         step,
@@ -486,7 +493,13 @@ const addStepSelectConnectionPage = (
     }
     filterHref={resolvers.create.configure.addStep.basicFilter}
     mapperHref={resolvers.create.configure.addStep.dataMapper}
-    templateHref={resolvers.create.configure.addStep.template}
+    templateHref={(step, params, state) =>
+      resolvers.create.configure.addStep.template({
+        step,
+        ...params,
+        ...state,
+      })
+    }
     stepHref={(step, params, state) =>
       resolvers.create.configure.addStep.step({
         step,
@@ -665,6 +678,38 @@ const editStepConfigureStepPage = (
   />
 );
 
+const addTemplateStepPage = (
+  <TemplateStepPage
+    mode={'adding'}
+    cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
+    sidebar={({ steps, activeIndex }) => (
+      <IntegrationEditorSidebar steps={steps} activeIndex={activeIndex} />
+    )}
+    postConfigureHref={(integration, params) =>
+      resolvers.create.configure.index({
+        integration,
+        ...params,
+      })
+    }
+  />
+);
+
+const editTemplateStepPage = (
+  <TemplateStepPage
+    mode={'editing'}
+    cancelHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
+    sidebar={({ steps, activeIndex }) => (
+      <IntegrationEditorSidebar steps={steps} activeIndex={activeIndex} />
+    )}
+    postConfigureHref={(integration, params) =>
+      resolvers.create.configure.index({
+        integration,
+        ...params,
+      })
+    }
+  />
+);
+
 const TODO: React.FunctionComponent = () => <>TODO</>;
 
 /**
@@ -719,7 +764,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
             }}
             template={{
               templatePath: routes.create.start.template,
-              templateChildren: TODO,
+              templateChildren: addTemplateStepPage,
             }}
             dataMapper={{
               mapperPath: routes.create.start.dataMapper,
@@ -764,7 +809,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
             }}
             template={{
               templatePath: routes.create.finish.template,
-              templateChildren: TODO,
+              templateChildren: addTemplateStepPage,
             }}
             dataMapper={{
               mapperPath: routes.create.finish.dataMapper,
@@ -817,7 +862,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
             }}
             template={{
               templatePath: routes.create.configure.addStep.template,
-              templateChildren: TODO,
+              templateChildren: addTemplateStepPage,
             }}
             dataMapper={{
               mapperPath: routes.create.configure.addStep.dataMapper,
@@ -862,7 +907,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
             }}
             template={{
               templatePath: routes.create.configure.editStep.template,
-              templateChildren: TODO,
+              templateChildren: editTemplateStepPage,
             }}
             dataMapper={{
               mapperPath: routes.create.configure.editStep.dataMapper,

@@ -26,6 +26,7 @@ export class IntegrationDetailInfo extends React.PureComponent<
       <div className="integration-detail-info">
         {this.props.name}
         <>
+          &nbsp;&nbsp;&nbsp;&nbsp;
           {this.props.currentState === 'Pending' && (
             <IntegrationStatusDetail
               targetState={this.props.targetState}
@@ -41,7 +42,6 @@ export class IntegrationDetailInfo extends React.PureComponent<
           )}
           {this.props.currentState === 'Published' && this.props.version && (
             <>
-              &nbsp;&nbsp;&nbsp;&nbsp;
               <span className="pficon pficon-ok" />
               &nbsp;Published version {this.props.version}
             </>
