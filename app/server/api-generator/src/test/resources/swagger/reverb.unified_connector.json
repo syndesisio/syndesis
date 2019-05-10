@@ -4771,7 +4771,7 @@
       "tags": [
         "authentication-type"
       ],
-      "type": "string"
+      "type": "hidden"
     },
     "authorizationEndpoint": {
       "componentProperty": true,

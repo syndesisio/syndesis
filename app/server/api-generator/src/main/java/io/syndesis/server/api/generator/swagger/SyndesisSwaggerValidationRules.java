@@ -49,7 +49,7 @@ import io.syndesis.server.api.generator.APIValidationContext;
  */
 public final class SyndesisSwaggerValidationRules implements Function<SwaggerModelInfo, SwaggerModelInfo> {
 
-    private static final Set<String> SUPPORTED_CONSUMED_AUTH_TYPES = new HashSet<>(Arrays.asList("basic", "oauth2"));
+    private static final Set<String> SUPPORTED_CONSUMED_AUTH_TYPES = new HashSet<>(Arrays.asList("apiKey", "basic", "oauth2"));
 
     private final List<Function<SwaggerModelInfo, SwaggerModelInfo>> rules = new ArrayList<>();
 

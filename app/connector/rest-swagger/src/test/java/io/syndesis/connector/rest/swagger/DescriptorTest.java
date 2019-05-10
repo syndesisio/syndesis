@@ -28,6 +28,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.Json;
+import io.syndesis.connector.rest.swagger.auth.parameter.Parameter.Placement;
 
 import org.apache.camel.CamelContext;
 import org.junit.Test;
@@ -64,10 +65,35 @@ public class DescriptorTest {
                 .javaType("java.lang.Long")
                 .type("hidden")
                 .build())
+            .putProperty("authenticationParameterName", new ConfigurationProperty.Builder()
+                .description("Name of the API key parameter")
+                .displayName("API key parameter name")
+                .javaType("java.lang.String")
+                .order(2)
+                .required(true)
+                .type("hidden")
+                .build())
+            .putProperty("authenticationParameterPlacement", new ConfigurationProperty.Builder()
+                .displayName("Placement of the API key parameter")
+                .addAllEnum(Stream.of(Placement.values()).map(p -> new PropertyValue.Builder().label(p.toString()).value(p.toString()).build())::iterator)
+                .javaType("java.lang.String")
+                .order(4)
+                .required(true)
+                .type("hidden")
+                .build())
+            .putProperty("authenticationParameterValue", new ConfigurationProperty.Builder()
+                .description("Value of the API key authentication parameter")
+                .displayName("API key")
+                .javaType("java.lang.String")
+                .order(3)
+                .required(true)
+                .secret(true)
+                .type("string")
+                .build())
             .putProperty("authenticationType", new ConfigurationProperty.Builder()
                 .displayName("Authentication type")
                 .addTag("authentication-type")
-                .type("string")
+                .type("hidden")
                 .javaType("java.lang.String")
                 .order(1)
                 .addAllEnum(Stream.of(AuthenticationType.values())

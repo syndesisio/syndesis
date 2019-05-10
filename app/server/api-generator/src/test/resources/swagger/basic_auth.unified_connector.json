@@ -77,7 +77,7 @@
       "tags": [
         "authentication-type"
       ],
-      "type": "string"
+      "type": "hidden"
     },
     "basePath": {
       "componentProperty": true,

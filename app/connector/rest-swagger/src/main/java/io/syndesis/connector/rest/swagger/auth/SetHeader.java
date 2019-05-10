@@ -15,10 +15,25 @@
  */
 package io.syndesis.connector.rest.swagger.auth;
 
-public final class SetAuthorizationHeader extends SetHttpHeader {
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.Processor;
 
-    public SetAuthorizationHeader(final String authorizationHeaderValue) {
-        super("Authorization", authorizationHeaderValue);
+public class SetHeader implements Processor {
+
+    final String headerName;
+
+    final String headerValue;
+
+    public SetHeader(final String headerName, final String headerValue) {
+        this.headerName = headerName;
+        this.headerValue = headerValue;
+    }
+
+    @Override
+    public void process(final Exchange exchange) throws Exception {
+        final Message in = exchange.getIn();
+        in.setHeader(headerName, headerValue);
     }
 
 }

@@ -605,7 +605,6 @@
   ],
   "componentScheme": "rest-swagger",
   "configuredProperties": {
-    "authenticationType": "oauth2",
     "authorizationEndpoint": "http://petstore.swagger.io/oauth/dialog",
     "basePath": "/v2",
     "host": "http://petstore.swagger.io",
@@ -669,13 +668,42 @@
       "secret": false,
       "type": "hidden"
     },
+    "authenticationParameterName": {
+      "defaultValue": "api_key",
+      "description": "Name of the API key parameter",
+      "displayName": "API key parameter name",
+      "javaType": "java.lang.String",
+      "order": 2,
+      "required": true,
+      "type": "hidden"
+    },
+    "authenticationParameterPlacement": {
+      "defaultValue": "header",
+      "displayName": "Placement of the API key parameter",
+      "javaType": "java.lang.String",
+      "order": 4,
+      "required": true,
+      "type": "hidden"
+    },
+    "authenticationParameterValue": {
+      "description": "Value of the API key authentication parameter",
+      "displayName": "API key",
+      "javaType": "java.lang.String",
+      "order": 3,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
     "authenticationType": {
       "componentProperty": true,
-      "defaultValue": "oauth2",
       "deprecated": false,
       "description": "Type of authentication used to connect to the API",
       "displayName": "Authentication Type",
       "enum": [
+        {
+          "label": "API Key",
+          "value": "apiKey"
+        },
         {
           "label": "OAuth 2.0",
           "value": "oauth2"
@@ -691,7 +719,7 @@
       "tags": [
         "authentication-type"
       ],
-      "type": "string"
+      "type": "hidden"
     },
     "authorizationEndpoint": {
       "componentProperty": true,

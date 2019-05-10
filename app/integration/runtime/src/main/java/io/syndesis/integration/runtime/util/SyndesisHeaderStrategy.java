@@ -23,6 +23,8 @@ import org.apache.camel.http.common.HttpHeaderFilterStrategy;
 
 public final class SyndesisHeaderStrategy extends HttpHeaderFilterStrategy {
 
+    public static final SyndesisHeaderStrategy INSTANCE = new SyndesisHeaderStrategy();
+
     public static final String WHITELISTED_HEADERS = "syndesis-whitelisted-headers";
 
     /**
@@ -33,13 +35,17 @@ public final class SyndesisHeaderStrategy extends HttpHeaderFilterStrategy {
      */
     @Override
     public boolean applyFilterToCamelHeaders(final String headerName, final Object headerValue, final Exchange exchange) {
-        final Collection<String> whitelisted = whitelisted(exchange);
-
-        if (whitelisted != null && whitelisted.contains(headerName)) {
+        if (isWhitelisted(exchange, headerName)) {
             return false; // allow the header
         }
 
         return super.applyFilterToCamelHeaders(headerName, headerValue, exchange);
+    }
+
+    public static boolean isWhitelisted(final Exchange exchange, String headerName) {
+        final Collection<String> whitelisted = whitelisted(exchange);
+
+        return whitelisted != null && whitelisted.contains(headerName);
     }
 
     @Override

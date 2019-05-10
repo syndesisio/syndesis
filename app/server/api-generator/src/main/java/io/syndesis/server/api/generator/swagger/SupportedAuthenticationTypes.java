@@ -23,7 +23,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 
 @SuppressWarnings("ImmutableEnumChecker")
 enum SupportedAuthenticationTypes {
-    basic("HTTP Basic Authentication"), oauth2("OAuth 2.0");
+    apiKey("API Key"), basic("HTTP Basic Authentication"), oauth2("OAuth 2.0");
 
     static final Set<String> SUPPORTED = Arrays.stream(SupportedAuthenticationTypes.values()).map(SupportedAuthenticationTypes::name)
         .collect(Collectors.toSet());
