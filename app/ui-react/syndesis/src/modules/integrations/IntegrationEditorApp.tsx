@@ -41,7 +41,6 @@ const addStepPage = (
       })
     }
     filterHref={resolvers.integration.edit.editStep.basicFilter}
-    extensionHref={resolvers.integration.edit.editStep.extension}
     mapperHref={resolvers.integration.edit.editStep.dataMapper}
     templateHref={resolvers.integration.edit.editStep.template}
     stepHref={(step, params, state) =>
@@ -72,7 +71,6 @@ const selectConnectionPage = (
       })
     }
     filterHref={resolvers.integration.edit.addStep.basicFilter}
-    extensionHref={resolvers.integration.edit.addStep.extension}
     mapperHref={resolvers.integration.edit.addStep.dataMapper}
     templateHref={resolvers.integration.edit.addStep.template}
     stepHref={(step, params, state) =>

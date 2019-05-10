@@ -1,6 +1,11 @@
-import { ALL_STEPS } from '@syndesis/api';
+import {
+  ALL_STEPS,
+  getActionStep,
+  getActionStepDefinition,
+  getActionSteps,
+} from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
-import { IConfigurationProperties, StepKind } from '@syndesis/models';
+import { StepKind } from '@syndesis/models';
 import { IntegrationEditorForm } from '@syndesis/ui';
 import { toFormDefinition } from '@syndesis/utils';
 import * as React from 'react';
@@ -83,17 +88,25 @@ export class WithConfigurationForm extends React.Component<
       });
       actions.setSubmitting(false);
     };
-    // this can throw if the stepKind is not available for any given reason. Let
-    // the error boundary catch and handle this.
-    const step = this.props.step.properties
+    let step = this.props.step.properties
       ? this.props.step
-      : ALL_STEPS.find(s => s.stepKind === this.props.step.stepKind)!;
+      : ALL_STEPS.find(s => s.stepKind === this.props.step.stepKind);
+
+    let definition;
+
+    // if step is undefined, maybe we are dealing with an extension
+    if (!step) {
+      const steps = getActionSteps(this.props.step.action!.descriptor!);
+      const actionStep = getActionStep(steps, 0);
+      definition = getActionStepDefinition(actionStep);
+      step = this.props.step;
+    } else {
+      definition = step.properties;
+    }
     return (
       <AutoForm<{ [key: string]: string }>
         i18nRequiredProperty={'* Required field'}
-        definition={toFormDefinition(
-          step.properties as IConfigurationProperties
-        )}
+        definition={toFormDefinition(definition)}
         initialValue={this.props.step.configuredProperties || {}}
         onSave={onSave}
         key={this.props.step.id}
@@ -102,7 +115,11 @@ export class WithConfigurationForm extends React.Component<
           this.props.children({
             form: (
               <IntegrationEditorForm
-                i18nFormTitle={`${step.name} - ${step.description}`}
+                i18nFormTitle={
+                  step!.description
+                    ? `${step!.name} - ${step!.description}`
+                    : step!.name
+                }
                 i18nNext={'Next'}
                 isValid={isValid}
                 submitForm={submitForm}

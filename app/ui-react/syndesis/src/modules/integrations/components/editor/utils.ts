@@ -152,7 +152,6 @@ export interface IGetStepHrefs {
   apiProviderHref: StepKindHrefCallback;
   connectionHref: StepKindHrefCallback;
   filterHref: StepKindHrefCallback;
-  extensionHref: StepKindHrefCallback;
   mapperHref: StepKindHrefCallback;
   templateHref: StepKindHrefCallback;
   stepHref: StepKindHrefCallback;
@@ -177,12 +176,11 @@ export const getStepHref = (
       return hrefs.apiProviderHref(step, params, state);
     case 'ruleFilter':
       return hrefs.filterHref(step, params, state);
-    case 'extension':
-      return hrefs.extensionHref(step, params, state);
     case 'mapper':
       return hrefs.mapperHref(step, params, state);
     case 'template':
       return hrefs.templateHref(step, params, state);
+    case 'extension':
     default:
       return hrefs.stepHref(step, params, state);
   }
