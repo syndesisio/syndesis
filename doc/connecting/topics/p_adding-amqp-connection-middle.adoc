@@ -49,6 +49,12 @@ To configure this action:
 .. In the *Destination Name* field, enter the name of the queue or topic 
 to send messages to. 
 .. For the *Destination Type*, accept *Queue* or select *Topic*.
+
+
+.. In the *Durable Subscription ID* field, to allow connections to 
+close and reopen without missing messages, enter the durable
+subscription ID. The destination type must be a topic. 
+
 .. In the *Message Selector* field, if you want to receive only responses 
 that satisfy a particular condition, enter a filter expression. 
 +
@@ -62,17 +68,6 @@ The message selector in the following example selects any message that has a
 The message consumer receives only those messages whose headers and 
 properties match the message selector expression. A message selector cannot select messages on 
 the basis of the content of the message body.
-
-
-.. In the *Named Reply To* field, enter the name of
-a queue or topic. The destination sends its response
-to this queue or topic. 
-.. Select *Persistent* to guarantee message delivery even if
-a connection fails.  
-.. In the *Response Time Out* field, specify the number of milliseconds that this 
-connection waits for a 
-response message before throwing a runtime exception. 
-The default is 5000 milliseconds (5 seconds).
 
 . Click *Next* to specify the action's input and output type. 
 
