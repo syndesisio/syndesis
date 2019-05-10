@@ -45,7 +45,6 @@ const addStepPage = (
       })
     }
     filterHref={resolvers.create.configure.editStep.basicFilter}
-    extensionHref={resolvers.create.configure.editStep.extension}
     mapperHref={resolvers.create.configure.editStep.dataMapper}
     templateHref={resolvers.create.configure.editStep.template}
     stepHref={(step, params, state) =>
@@ -83,7 +82,6 @@ const startStepSelectConnectionPage = (
       })
     }
     filterHref={resolvers.create.start.basicFilter}
-    extensionHref={resolvers.create.start.extension}
     mapperHref={resolvers.create.start.dataMapper}
     templateHref={resolvers.create.start.template}
     stepHref={resolvers.create.start.step}
@@ -278,7 +276,6 @@ const finishStepSelectConnectionPage = (
       })
     }
     filterHref={resolvers.create.finish.basicFilter}
-    extensionHref={resolvers.create.finish.extension}
     mapperHref={resolvers.create.finish.dataMapper}
     templateHref={resolvers.create.finish.template}
     stepHref={(step, params, state) =>
@@ -488,7 +485,6 @@ const addStepSelectConnectionPage = (
       })
     }
     filterHref={resolvers.create.configure.addStep.basicFilter}
-    extensionHref={resolvers.create.configure.addStep.extension}
     mapperHref={resolvers.create.configure.addStep.dataMapper}
     templateHref={resolvers.create.configure.addStep.template}
     stepHref={(step, params, state) =>
