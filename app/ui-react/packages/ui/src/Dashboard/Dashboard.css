@@ -1,12 +1,8 @@
-.dashboard .dashboard__header {
-  margin-bottom: 0 !important;
+.dashboard__connections__actions .view,
+.dashboard__integration__actions .view {
+  padding: 0.3em 0.8em;
 }
 
-.dashboard .header__actions,
-.dashboard .header__actions .header__actions--link {
-  align-self: center;
-}
-
-.dashboard__integrations .integrations__metrics {
-  margin-top: 0;
+.dashboard__connections__actions {
+  padding: 0 10px;
 }
