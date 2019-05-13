@@ -24,6 +24,8 @@ import {
   ISelectActionRouteState,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
+  ITemplateStepRouteParams,
+  ITemplateStepRouteState,
 } from './components/editor/interfaces';
 import {
   IDetailsRouteParams,
@@ -151,6 +153,26 @@ export const configureConfigureStepMapper = ({
   };
 };
 
+export const configureTemplateStepMapper = ({
+  position,
+  step,
+  updatedIntegration,
+  ...rest
+}: IEditorConfigureStep) => {
+  const { params, state } = configureIndexMapper(rest);
+  return {
+    params: {
+      ...params,
+      position,
+    } as ITemplateStepRouteParams,
+    state: {
+      ...state,
+      step,
+      updatedIntegration,
+    } as ITemplateStepRouteState,
+  };
+};
+
 // TODO: unit test every single one of these resolvers 😫
 
 export const listResolver = makeResolverNoParams(routes.list);
@@ -259,6 +281,12 @@ export const createConfigureAddStepConfigureStepResolver = makeResolver<
   IConfigureStepRouteState
 >(routes.create.configure.addStep.step, configureConfigureStepMapper);
 
+export const createConfigureAddStepTemplateStepResolver = makeResolver<
+  IEditorConfigureStep,
+  ITemplateStepRouteParams,
+  ITemplateStepRouteState
+>(routes.create.configure.addStep.template, configureTemplateStepMapper);
+
 export const createConfigureEditStepSelectActionResolver = makeResolver<
   IEditorSelectAction,
   ISelectActionRouteParams,
@@ -288,6 +316,12 @@ export const createConfigureEditStepSaveAndPublishResolver = makeResolver<
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState
 >(routes.create.configure.saveAndPublish, configureIndexMapper);
+
+export const createConfigureEditStepTemplateStepResolver = makeResolver<
+  IEditorConfigureStep,
+  ITemplateStepRouteParams,
+  ITemplateStepRouteState
+>(routes.create.configure.editStep.template, configureTemplateStepMapper);
 
 export const integrationActivityResolver = makeResolver<
   { integrationId: string; integration?: IIntegrationOverviewWithDraft },
@@ -351,6 +385,12 @@ export const integrationEditAddStepConfigureStepResolver = makeResolver<
   IConfigureStepRouteState
 >(routes.integration.edit.addStep.step, configureConfigureStepMapper);
 
+export const integrationEditAddStepTemplateStepResolver = makeResolver<
+  IEditorConfigureStep,
+  ITemplateStepRouteParams,
+  ITemplateStepRouteState
+>(routes.integration.edit.addStep.template, configureTemplateStepMapper);
+
 export const integrationEditEditStepSelectActionResolver = makeResolver<
   IEditorSelectAction,
   ISelectActionRouteParams,
@@ -374,6 +414,12 @@ export const integrationEditEditStepConfigureStepResolver = makeResolver<
   IConfigureStepRouteParams,
   IConfigureStepRouteState
 >(routes.integration.edit.editStep.step, configureConfigureStepMapper);
+
+export const integrationEditEditStepTemplateStepResolver = makeResolver<
+  IEditorConfigureStep,
+  ITemplateStepRouteParams,
+  ITemplateStepRouteState
+>(routes.integration.edit.editStep.template, configureTemplateStepMapper);
 
 export const integrationEditSaveAndPublish = makeResolver<
   IEditorIndex,
@@ -460,7 +506,7 @@ const resolvers: RouteResolver<typeof routes> = {
         },
         basicFilter: () => 'basicFilter',
         dataMapper: () => 'dataMapper',
-        template: () => 'template',
+        template: createConfigureAddStepTemplateStepResolver,
         step: createConfigureAddStepConfigureStepResolver,
         extension: () => 'extension',
       },
@@ -482,7 +528,7 @@ const resolvers: RouteResolver<typeof routes> = {
         },
         basicFilter: () => 'basicFilter',
         dataMapper: () => 'dataMapper',
-        template: () => 'template',
+        template: createConfigureEditStepTemplateStepResolver,
         step: createConfigureEditStepConfigureStepResolver,
         extension: () => 'extension',
       },
@@ -512,7 +558,7 @@ const resolvers: RouteResolver<typeof routes> = {
         },
         basicFilter: () => 'basicFilter',
         dataMapper: () => 'dataMapper',
-        template: () => 'template',
+        template: integrationEditAddStepTemplateStepResolver,
         step: integrationEditAddStepConfigureStepResolver,
         extension: () => 'extension',
       },
@@ -534,7 +580,7 @@ const resolvers: RouteResolver<typeof routes> = {
         },
         basicFilter: () => 'basicFilter',
         dataMapper: () => 'dataMapper',
-        template: () => 'template',
+        template: integrationEditEditStepTemplateStepResolver,
         step: integrationEditEditStepConfigureStepResolver,
         extension: () => 'extension',
       },

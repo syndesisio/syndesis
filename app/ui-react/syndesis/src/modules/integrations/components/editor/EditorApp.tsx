@@ -5,6 +5,7 @@ import { EditPage } from './api-provider/ReviewPage';
 import { UploadPage } from './api-provider/UploadPage';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
 import { SelectActionPage } from './endpoint/SelectActionPage';
+import { TemplateStepPage } from './template/TemplateStepPage';
 
 export interface IEndpointEditorAppProps {
   selectActionPath: string;
@@ -68,7 +69,7 @@ export const ApiProviderApp: React.FunctionComponent<
 
 export interface ITemplateAppProps {
   templatePath: string;
-  templateChildren: React.ReactNode;
+  templateChildren: React.ReactElement<TemplateStepPage>;
 }
 export const TemplateApp: React.FunctionComponent<
   ITemplateAppProps

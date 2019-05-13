@@ -4,7 +4,6 @@ import {
   ActionDescriptorStep,
   ConfigurationProperty,
   Connection,
-  ConnectorAction,
   DataShape,
   Extension,
   Flow,
@@ -16,17 +15,7 @@ import {
 } from '@syndesis/models';
 import { key } from '@syndesis/utils';
 import produce from 'immer';
-import {
-  ADVANCED_FILTER,
-  AGGREGATE,
-  BASIC_FILTER,
-  DATA_MAPPER,
-  DataShapeKinds,
-  ENDPOINT,
-  HIDE_FROM_STEP_SELECT,
-  SPLIT,
-  TEMPLATE,
-} from '../constants';
+import { AGGREGATE, DataShapeKinds, ENDPOINT } from '../constants';
 import { getConnectionIcon } from './connectionFunctions';
 
 export const NEW_INTEGRATION = {
@@ -360,78 +349,6 @@ export function isActionOutputShapeless(descriptor: ActionDescriptor) {
     outputDataShape.kind &&
     outputDataShape.kind.toLowerCase() === DataShapeKinds.ANY
   );
-}
-
-/**
- * Filters connections based on the supplied position in the step array
- * @param steps
- * @param position
- */
-export function filterStepsByPosition(
-  integration: Integration,
-  flowId: string,
-  steps: Array<Step | Connection>,
-  position: number
-) {
-  if (typeof position === 'undefined' || !steps) {
-    // safety net
-    return steps;
-  }
-  const atStart = position === 0;
-  const atEnd = getLastPosition(integration, flowId) === position;
-  return steps.filter((step: any) => {
-    // Hide steps that are marked as such, and specifically the log connection
-    if (
-      (typeof step.connection !== 'undefined' &&
-        typeof step.connection.metadata !== 'undefined' &&
-        step.connection.metadata[HIDE_FROM_STEP_SELECT]) ||
-      (typeof step.metadata !== 'undefined' &&
-        step.metadata[HIDE_FROM_STEP_SELECT]) ||
-      step.connectorId === 'log'
-    ) {
-      return false;
-    }
-    // Special handling for the beginning of a flow
-    if (atStart) {
-      // At the moment only endpoints can be at the start
-      if ('stepKind' in step) {
-        return false;
-      }
-      if (!('connector' in step)) {
-        // it's not a connection
-        return true;
-      }
-      return step.connector.actions.some((action: ConnectorAction) => {
-        return action.pattern === 'From';
-      });
-    }
-    // Special handling for the end of a flow
-    if (atEnd) {
-      // Several step kinds aren't usable at the end of a flow
-      switch ((step as Step).stepKind) {
-        case DATA_MAPPER:
-        case BASIC_FILTER:
-        case ADVANCED_FILTER:
-        case SPLIT:
-        case AGGREGATE:
-        case TEMPLATE:
-          return false;
-        default:
-      }
-    }
-    if ((step as Connection).connectorId === 'api-provider') {
-      // api provider can be used only for From actions
-      return false;
-    }
-    // All non-connection steps can be shown, except the above
-    if ('stepKind' in step && (step as Step).stepKind !== ENDPOINT) {
-      return true;
-    }
-    // Only show connections that have at least one action that accepts data
-    return (step as Connection).connector!.actions.some(action => {
-      return action.pattern === 'To';
-    });
-  });
 }
 
 /**

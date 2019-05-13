@@ -18,6 +18,7 @@ import { SelectActionPage } from './components/editor/endpoint/SelectActionPage'
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import { SelectConnectionPage } from './components/editor/SelectConnectionPage';
 import { ConfigureStepPage } from './components/editor/step/ConfigureStepPage';
+import { TemplateStepPage } from './components/editor/template/TemplateStepPage';
 import resolvers from './resolvers';
 import routes from './routes';
 
@@ -42,7 +43,13 @@ const addStepPage = (
     }
     filterHref={resolvers.integration.edit.editStep.basicFilter}
     mapperHref={resolvers.integration.edit.editStep.dataMapper}
-    templateHref={resolvers.integration.edit.editStep.template}
+    templateHref={(step, params, state) =>
+      resolvers.integration.edit.editStep.template({
+        step,
+        ...params,
+        ...state,
+      })
+    }
     stepHref={(step, params, state) =>
       resolvers.integration.edit.editStep.step({
         step,
@@ -72,7 +79,13 @@ const selectConnectionPage = (
     }
     filterHref={resolvers.integration.edit.addStep.basicFilter}
     mapperHref={resolvers.integration.edit.addStep.dataMapper}
-    templateHref={resolvers.integration.edit.addStep.template}
+    templateHref={(step, params, state) =>
+      resolvers.integration.edit.addStep.template({
+        step,
+        ...params,
+        ...state,
+      })
+    }
     stepHref={(step, params, state) =>
       resolvers.integration.edit.addStep.step({
         step,
@@ -244,6 +257,38 @@ const editStepConfigureStepPage = (
   />
 );
 
+const addTemplateStepPage = (
+  <TemplateStepPage
+    cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
+    mode={'adding'}
+    sidebar={({ steps, activeIndex }) => (
+      <IntegrationEditorSidebar steps={steps} activeIndex={activeIndex} />
+    )}
+    postConfigureHref={(integration, params) =>
+      resolvers.integration.edit.index({
+        integration,
+        ...params,
+      })
+    }
+  />
+);
+
+const editTemplateStepPage = (
+  <TemplateStepPage
+    cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
+    mode={'editing'}
+    sidebar={({ steps, activeIndex }) => (
+      <IntegrationEditorSidebar steps={steps} activeIndex={activeIndex} />
+    )}
+    postConfigureHref={(integration, params) =>
+      resolvers.integration.edit.index({
+        integration,
+        ...params,
+      })
+    }
+  />
+);
+
 export interface IIntegrationEditorAppRouteState {
   integration: Integration;
 }
@@ -321,7 +366,7 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                 }}
                 template={{
                   templatePath: routes.integration.edit.addStep.template,
-                  templateChildren: TODO,
+                  templateChildren: addTemplateStepPage,
                 }}
                 dataMapper={{
                   mapperPath: routes.integration.edit.addStep.dataMapper,
@@ -368,7 +413,7 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                 }}
                 template={{
                   templatePath: routes.integration.edit.editStep.template,
-                  templateChildren: TODO,
+                  templateChildren: editTemplateStepPage,
                 }}
                 dataMapper={{
                   mapperPath: routes.integration.edit.editStep.dataMapper,

@@ -90,6 +90,17 @@ export interface ISelectConnectionRouteParams {
   position: string;
 }
 
+export interface ITemplateStepRouteParams {
+  flowId: string;
+  position: string;
+}
+
+export interface ITemplateStepRouteState {
+  step: StepKind;
+  integration: Integration;
+  updatedIntegration?: Integration;
+}
+
 /**
  * @param integration - the integration object coming from step 3.index, used to
  * render the IVP.
