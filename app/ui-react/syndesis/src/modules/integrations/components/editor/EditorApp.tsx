@@ -2,7 +2,7 @@
 import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
 import * as React from 'react';
-import resolvers, { RouteResolver } from '../../resolvers';
+import { RouteResolver } from '../../resolvers';
 import { ReviewPage } from './api-provider/EditPage';
 import { EditPage } from './api-provider/ReviewPage';
 import { UploadPage } from './api-provider/UploadPage';
@@ -60,22 +60,32 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       }
       filterHref={appResolvers.basicFilter}
       mapperHref={appResolvers.dataMapper}
-      templateHref={appResolvers.template}
-      stepHref={(step, params, state) =>
-        resolvers.create.finish.step({
+      templateHref={(step, params, state) =>
+        appResolvers.template({
           step,
           ...params,
           ...state,
         })
       }
-      sidebar={props => <EditorSidebar {...props} />}
+      stepHref={(step, params, state) =>
+        appResolvers.step({
+          step,
+          ...params,
+          ...state,
+        })
+      }
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
     />
   );
 
   const selectActionPage = (
     <SelectActionPage
       cancelHref={appResolvers.selectStep}
-      sidebar={props => <EditorSidebar {...props} />}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
       selectHref={(actionId, p, s) =>
         appResolvers.connection.configureAction({
           actionId,
@@ -89,7 +99,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
   const configureActionPage = (
     <ConfigureActionPage
       backHref={(p, s) => appResolvers.connection.selectAction({ ...p, ...s })}
-      cancelHref={resolvers.list}
+      cancelHref={cancelHref}
       mode={mode}
       nextStepHref={(p, s) =>
         appResolvers.connection.configureAction({
@@ -97,7 +107,9 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           ...s,
         })
       }
-      sidebar={props => <EditorSidebar {...props} />}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
       postConfigureHref={postConfigureHref}
     />
   );
@@ -106,7 +118,9 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     <TemplateStepPage
       mode={mode}
       cancelHref={cancelHref}
-      sidebar={props => <EditorSidebar {...props} />}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
       postConfigureHref={postConfigureHref}
     />
   );
@@ -115,7 +129,9 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     <ConfigureStepPage
       cancelHref={cancelHref}
       mode={mode}
-      sidebar={props => <EditorSidebar {...props} />}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
       postConfigureHref={postConfigureHref}
     />
   );

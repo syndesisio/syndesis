@@ -115,7 +115,12 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                 mode={'adding'}
                 appStepRoutes={routes.integration.edit.addStep}
                 appResolvers={resolvers.integration.edit.addStep}
-                cancelHref={resolvers.list}
+                cancelHref={(params, state) =>
+                  resolvers.integration.edit.index({
+                    ...params,
+                    ...state,
+                  })
+                }
                 postConfigureHref={(updatedIntegration, params) =>
                   resolvers.integration.edit.index({
                     integration: updatedIntegration,
@@ -131,7 +136,12 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                 mode={'editing'}
                 appStepRoutes={routes.integration.edit.editStep}
                 appResolvers={resolvers.integration.edit.editStep}
-                cancelHref={resolvers.list}
+                cancelHref={(params, state) =>
+                  resolvers.integration.edit.index({
+                    ...params,
+                    ...state,
+                  })
+                }
                 postConfigureHref={(updatedIntegration, params) =>
                   resolvers.integration.edit.index({
                     integration: updatedIntegration,

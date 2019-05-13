@@ -11,6 +11,8 @@ import { getDataShapeText, toUIStepCollection } from './utils';
 function makeActiveStep(
   position: number,
   expanded: boolean,
+  title: string,
+  tooltip: string,
   activeStep?: IUIStep
 ) {
   return activeStep ? (
@@ -39,11 +41,11 @@ function makeActiveStep(
   ) : (
     <IntegrationFlowStepGeneric
       icon={<i className={'fa fa-plus'} />}
-      i18nTitle={`${position}. Finish`}
-      i18nTooltip={'Finish'}
+      i18nTitle={`${position}. ${title}`}
+      i18nTooltip={tooltip}
       active={true}
       showDetails={expanded}
-      description={'Choose a connection'}
+      description={tooltip}
     />
   );
 }
@@ -53,11 +55,11 @@ export interface IEditorSidebarProps {
   activeStep?: IUIStep;
   activeIndex: number;
 }
-export const EditorSidebar: React.FunctionComponent<IEditorSidebarProps> = ({
-  activeIndex,
-  activeStep,
-  steps,
-}) => {
+export const EditorSidebar: React.FunctionComponent<
+  IEditorSidebarProps & {
+    isAdding: boolean;
+  }
+> = ({ activeIndex, activeStep, steps, isAdding }) => {
   const UISteps = toUIStepCollection(steps);
   return (
     <IntegrationVerticalFlow>
@@ -65,7 +67,13 @@ export const EditorSidebar: React.FunctionComponent<IEditorSidebarProps> = ({
         if (UISteps.length === 0) {
           return (
             <>
-              {makeActiveStep(1, expanded, activeStep)}
+              {makeActiveStep(
+                1,
+                expanded,
+                'Start',
+                'Choose a step',
+                activeStep
+              )}
               <IntegrationFlowStepGeneric
                 icon={<i className={'fa fa-plus'} />}
                 i18nTitle={'2. Finish'}
@@ -99,7 +107,13 @@ export const EditorSidebar: React.FunctionComponent<IEditorSidebarProps> = ({
                   startStep.outputDataShape
                 )}
               />
-              {makeActiveStep(2, expanded, activeStep)}
+              {makeActiveStep(
+                2,
+                expanded,
+                'Finish',
+                'Choose a step',
+                activeStep
+              )}
             </>
           );
         } else {
@@ -107,9 +121,10 @@ export const EditorSidebar: React.FunctionComponent<IEditorSidebarProps> = ({
             <>
               {UISteps.map((s, idx) => {
                 const isActive = idx === activeIndex;
-                const hasAddStep = activeIndex === idx + 1;
+                const hasAddStep = isAdding && activeIndex === idx + 1;
                 const isAfterActiveAddStep = activeIndex - 1 < idx;
-                const position = isAfterActiveAddStep ? idx + 2 : idx + 1;
+                const position =
+                  isAdding && isAfterActiveAddStep ? idx + 2 : idx + 1;
 
                 return (
                   <React.Fragment key={idx}>
@@ -119,7 +134,9 @@ export const EditorSidebar: React.FunctionComponent<IEditorSidebarProps> = ({
                       }
                       i18nTitle={`${position}. ${s.name}`}
                       i18nTooltip={`${position}. ${s.title}`}
-                      active={isActive && !isAfterActiveAddStep}
+                      active={
+                        isAdding ? isActive && !isAfterActiveAddStep : isActive
+                      }
                       showDetails={expanded}
                       name={s.name}
                       action={s.action && s.action.name!}
@@ -130,7 +147,13 @@ export const EditorSidebar: React.FunctionComponent<IEditorSidebarProps> = ({
                       }
                     />
                     {hasAddStep
-                      ? makeActiveStep(position, expanded, activeStep)
+                      ? makeActiveStep(
+                          position + 1,
+                          expanded,
+                          'Set up this step',
+                          'Choose a step',
+                          activeStep
+                        )
                       : null}
                   </React.Fragment>
                 );
