@@ -1,7 +1,7 @@
 /* tslint:disable:object-literal-sort-keys */
 import { include } from 'named-urls';
 
-const stepRoutes = {
+export const stepRoutes = {
   // step 1
   selectStep: '',
   // if selected step is api provider
