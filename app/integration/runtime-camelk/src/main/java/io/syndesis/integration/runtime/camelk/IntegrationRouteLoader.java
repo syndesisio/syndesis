@@ -15,24 +15,23 @@
  */
 package io.syndesis.integration.runtime.camelk;
 
-import java.util.Arrays;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
+import io.syndesis.integration.runtime.logging.IntegrationLoggingActivityTrackingPolicyFactory;
+import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.k.RoutesLoader;
+import org.apache.camel.k.Runtime;
+import org.apache.camel.k.Source;
+import org.apache.camel.k.support.URIResolver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ServiceLoader;
 import java.util.Set;
-
-import org.apache.camel.builder.RouteBuilder;
-import org.apache.camel.k.RoutesLoader;
-import org.apache.camel.k.Runtime;
-import org.apache.camel.k.Source;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingActivityTrackingPolicyFactory;
 
 public class IntegrationRouteLoader implements RoutesLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationRouteLoader.class);
@@ -55,22 +54,22 @@ public class IntegrationRouteLoader implements RoutesLoader {
 
     @Override
     public RouteBuilder load(Runtime.Registry runtimeRegistry, Source source) throws Exception {
-        if(activityTracker == null) {
+        if (activityTracker == null) {
             LOGGER.info("Loading ActivityTracker from Camel RuntimeRegistry.");
             activityTracker = runtimeRegistry.lookup("activityTracker", ActivityTracker.class);
         }
-        if(activityTracker == null){
+        if (activityTracker == null) {
             LOGGER.info("ActivityTracker not provided or not found in Camel RuntimeRegistry, using new instance of ActivityTracker.SysOut() .");
             activityTracker = new ActivityTracker.SysOut();
         }
 
-        if(integrationStepHandlers == null){
+        if (integrationStepHandlers == null) {
             LOGGER.info("Loading IntegrationStepHandlers with ServiceLoader.");
             integrationStepHandlers = new HashSet<>();
             ServiceLoader.load(IntegrationStepHandler.class).forEach(integrationStepHandlers::add);
             LOGGER.info("{} IntegrationStepHandlers loaded.", integrationStepHandlers.size());
         }
 
-        return new IntegrationRouteBuilder(source.getLocation(), integrationStepHandlers, Arrays.asList(new IntegrationLoggingActivityTrackingPolicyFactory(activityTracker)));
+        return new IntegrationRouteBuilder(ctx -> URIResolver.resolve(ctx, source), integrationStepHandlers, Collections.singletonList(new IntegrationLoggingActivityTrackingPolicyFactory(activityTracker)));
     }
 }

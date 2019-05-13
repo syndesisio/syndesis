@@ -69,6 +69,7 @@ import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
 import io.syndesis.server.endpoint.v1.VersionService;
 import io.syndesis.server.openshift.OpenShiftService;
+import joptsimple.internal.Strings;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -208,7 +209,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         //TODO: maybe add owner reference
         Secret secret = new SecretBuilder()
             .withNewMetadata()
-                .withName(Names.sanitize(integration.getId().get()))
+                .withName(CamelKSupport.integrationName(integration.getName()))
             .endMetadata()
             .addToStringData("application.properties", CamelKSupport.propsToString(applicationProperties))
             .build();
@@ -254,7 +255,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         //add customizers
         integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
             .type("property")
-            .value("camel.k.customizer=" + String.join(",", customizers))
+            .value("camel.k.customizer=" + Strings.join(customizers, ","))
             .build());
 
         //TODO: make all this configurable, where makes sense
@@ -277,7 +278,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             .build());
         integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
             .type("secret")
-            .value(Names.sanitize(integration.getId().get()))
+            .value(CamelKSupport.integrationName(integration.getName()))
             .build());
         integrationSpecBuilder.putTraits(
             "jolokia",
@@ -311,6 +312,10 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
                 .putConfiguration("target-annotations", "prometheus.io/port"+","
                                                     +"prometheus.io/scrape")
                 .build());
+
+        this.configuration.getCamelk().getEnvironment().forEach((k, v) -> {
+            integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder().type("env").value(k + "=" + v).build());
+        });
 
         //add dependencies
         integrationSpecBuilder.addDependencies("bom:io.syndesis.integration/integration-bom-camel-k/pom/"+versionService.getVersion());
