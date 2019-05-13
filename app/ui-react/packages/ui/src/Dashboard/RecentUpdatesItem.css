@@ -1,7 +1,11 @@
 
 
 .recent-updates-item .list-view-pf-main-info {
-  display: inline-table;
+  display: initial;
+}
+
+.recent-updates-item .list-view-pf-description {
+  float: right;
 }
 
 .recent-updates-item .list-view-pf-left {
