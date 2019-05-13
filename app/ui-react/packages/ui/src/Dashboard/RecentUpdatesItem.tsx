@@ -22,8 +22,8 @@ export const RecentUpdatesItem: React.FunctionComponent<IRecentUpdatesItem> = ({
   i18nUnpublished,
 }) => (
   <Grid.Row xs={12} className={'recent-updates-item'}>
-    <Grid.Col sm={5}>{integrationName}</Grid.Col>
-    <Grid.Col sm={3}>
+    <Grid.Col xs={5}>{integrationName}</Grid.Col>
+    <Grid.Col xs={3}>
       <IntegrationStatus
         currentState={integrationCurrentState}
         i18nError={i18nError}
@@ -31,6 +31,6 @@ export const RecentUpdatesItem: React.FunctionComponent<IRecentUpdatesItem> = ({
         i18nUnpublished={i18nUnpublished}
       />
     </Grid.Col>
-    <Grid.Col sm={4}>{integrationDate}</Grid.Col>
+    <Grid.Col xs={4}>{integrationDate}</Grid.Col>
   </Grid.Row>
 );
