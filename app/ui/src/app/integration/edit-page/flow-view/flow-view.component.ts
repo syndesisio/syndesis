@@ -73,6 +73,10 @@ export class FlowViewComponent implements OnInit, OnDestroy {
     return this.currentFlowService.getMiddleSteps();
   }
 
+  isSubFlow() {
+    return this.currentFlowService.isSubFlow();
+  }
+
   isApiProvider() {
     return this.currentFlowService.isApiProvider();
   }

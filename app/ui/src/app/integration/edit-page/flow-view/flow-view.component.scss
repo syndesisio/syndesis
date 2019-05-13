@@ -65,6 +65,7 @@
           cursor: pointer;
         }
 
+        .flow-end,
         &:not(:last-child) .icon-container {
           padding-bottom: 70px;
           height: 125px;
@@ -80,6 +81,40 @@
             transform: translateX(-50%);
           }
         }
+      }
+    }
+
+    .flow-begin {
+      .icon-container {
+        height: 55px;
+        padding-bottom: 55px;
+      }
+    }
+
+    .flow-start {
+      left: -39px;
+      top: -30px;
+
+      .icon-container {
+        -ms-transform: rotate(115deg); /* IE 9 */
+        -webkit-transform: rotate(115deg); /* Safari */
+        transform: rotate(115deg);
+        height: 88px;
+        padding-bottom: 88px;
+        margin-bottom: -55px
+      }
+    }
+
+    .flow-finish {
+      left: -39px;
+      top: -26px;
+
+      .icon-container {
+        -ms-transform: rotate(65deg); /* IE 9 */
+        -webkit-transform: rotate(65deg); /* Safari */
+        transform: rotate(65deg);
+        height: 88px;
+        padding-bottom: 88px;
       }
     }
 
