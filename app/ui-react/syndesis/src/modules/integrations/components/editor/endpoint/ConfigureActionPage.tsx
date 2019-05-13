@@ -1,16 +1,20 @@
-import { getSteps, WithIntegrationHelpers } from '@syndesis/api';
+import {
+  getConnectionIcon,
+  getSteps,
+  WithIntegrationHelpers,
+} from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Connection, Integration } from '@syndesis/models';
+import { Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
+import { IEditorSidebarProps } from '../EditorSidebar';
 import {
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
-  IUIStep,
 } from '../interfaces';
-import { toUIStepKindCollection } from '../utils';
+import { toUIStep, toUIStepCollection } from '../utils';
 import {
   IOnUpdatedIntegrationProps,
   WithConfigurationForm,
@@ -30,11 +34,7 @@ export interface IConfigureActionPageProps {
     p: IConfigureActionRouteParams,
     s: IConfigureActionRouteState
   ) => H.LocationDescriptorObject;
-  sidebar: (props: {
-    connection: Connection;
-    steps: IUIStep[];
-    activeIndex: number;
-  }) => React.ReactNode;
+  sidebar: (props: IEditorSidebarProps) => React.ReactNode;
   postConfigureHref: (
     integration: Integration,
     p: IConfigureActionRouteParams,
@@ -138,10 +138,14 @@ export class ConfigureActionPage extends React.Component<
                     }
                     sidebar={this.props.sidebar({
                       activeIndex: positionAsNumber,
-                      connection,
-                      steps: toUIStepKindCollection(
-                        getSteps(updatedIntegration || integration, flowId)
-                      ),
+                      activeStep: {
+                        ...toUIStep(connection),
+                        icon: getConnectionIcon(
+                          process.env.PUBLIC_URL,
+                          connection
+                        ),
+                      },
+                      steps: toUIStepCollection(getSteps(integration, flowId)),
                     })}
                     content={
                       <WithConfigurationForm

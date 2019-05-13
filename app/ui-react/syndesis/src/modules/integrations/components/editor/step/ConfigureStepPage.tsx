@@ -1,16 +1,16 @@
 import { getSteps, WithIntegrationHelpers } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Integration, StepKind } from '@syndesis/models';
+import { Integration } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
+import { IEditorSidebarProps } from '../EditorSidebar';
 import {
   IConfigureStepRouteParams,
   IConfigureStepRouteState,
-  IUIStep,
 } from '../interfaces';
-import { toUIStepKindCollection } from '../utils';
+import { toUIStep, toUIStepCollection } from '../utils';
 import {
   IOnUpdatedIntegrationProps,
   WithConfigurationForm,
@@ -22,11 +22,7 @@ export interface IConfigureStepPageProps {
     s: IConfigureStepRouteState
   ) => H.LocationDescriptor;
   mode: 'adding' | 'editing';
-  sidebar: (props: {
-    step: StepKind;
-    steps: IUIStep[];
-    activeIndex: number;
-  }) => React.ReactNode;
+  sidebar: (props: IEditorSidebarProps) => React.ReactNode;
   postConfigureHref: (
     integration: Integration,
     p: IConfigureStepRouteParams,
@@ -103,8 +99,8 @@ export class ConfigureStepPage extends React.Component<
                         }
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
-                          step,
-                          steps: toUIStepKindCollection(
+                          activeStep: toUIStep(step),
+                          steps: toUIStepCollection(
                             getSteps(updatedIntegration || integration, flowId)
                           ),
                         })}

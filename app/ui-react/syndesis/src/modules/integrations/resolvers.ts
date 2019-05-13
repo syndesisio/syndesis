@@ -26,6 +26,7 @@ import {
   ISelectConnectionRouteState,
   ITemplateStepRouteParams,
   ITemplateStepRouteState,
+  stepRoutes,
 } from './components/editor/interfaces';
 import {
   IDetailsRouteParams,
@@ -173,155 +174,54 @@ export const configureTemplateStepMapper = ({
   };
 };
 
+export function makeEditorStepRoutesResolvers(
+  esr: typeof stepRoutes
+): RouteResolver<typeof stepRoutes> {
+  return {
+    selectStep: makeResolver<
+      IEditorSelectConnection,
+      ISelectConnectionRouteParams,
+      ISelectConnectionRouteState
+    >(esr.selectStep, configureSelectConnectionMapper),
+    connection: {
+      selectAction: makeResolver<
+        IEditorSelectAction,
+        ISelectActionRouteParams,
+        ISelectConnectionRouteState
+      >(esr.connection.selectAction, configureSelectActionMapper),
+      configureAction: makeResolver<
+        IEditorConfigureAction,
+        IConfigureActionRouteParams,
+        IConfigureActionRouteState
+      >(esr.connection.configureAction, configureConfigureActionMapper),
+      describeData: () => 'describeData',
+    },
+    apiProvider: {
+      upload: makeResolverNoParams(esr.apiProvider.upload),
+      review: () => 'review',
+      edit: () => 'edit',
+    },
+    basicFilter: () => 'basicFilter',
+    dataMapper: () => 'dataMapper',
+    template: makeResolver<
+      IEditorConfigureStep,
+      ITemplateStepRouteParams,
+      ITemplateStepRouteState
+    >(esr.template, configureTemplateStepMapper),
+    step: makeResolver<
+      IEditorConfigureStep,
+      IConfigureStepRouteParams,
+      IConfigureStepRouteState
+    >(esr.step, configureConfigureStepMapper),
+    extension: () => 'extension',
+  };
+}
+
 // TODO: unit test every single one of these resolvers 😫
 
 export const listResolver = makeResolverNoParams(routes.list);
 
 export const manageCicdResolver = makeResolverNoParams(routes.manageCicd.root);
-
-export const createRootResolver = makeResolverNoParams(routes.create.root);
-
-export const createStartSelectStepResolver = makeResolverNoParamsWithDefaults<
-  ISelectConnectionRouteParams,
-  ISelectConnectionRouteState
->(routes.create.start.selectStep, () => {
-  const integration = getEmptyIntegration();
-  return {
-    params: {
-      flowId: integration.flows![0].id!,
-      position: '0',
-    },
-    state: {
-      integration,
-    },
-  };
-});
-
-export const createStartSelectActionResolver = makeResolver<
-  IEditorSelectAction,
-  ISelectActionRouteParams,
-  ISelectActionRouteState
->(routes.create.start.connection.selectAction, configureSelectActionMapper);
-
-export const createStartConfigureActionResolver = makeResolver<
-  IEditorConfigureAction,
-  IConfigureActionRouteParams,
-  IConfigureActionRouteState
->(
-  routes.create.start.connection.configureAction,
-  configureConfigureActionMapper
-);
-
-export const createStartConfigureStepResolver = makeResolver<
-  IEditorConfigureStep,
-  IConfigureStepRouteParams,
-  IConfigureStepRouteState
->(routes.create.start.step, configureConfigureStepMapper);
-
-export const createFinishSelectStepResolver = makeResolver<
-  IEditorSelectConnection,
-  ISelectConnectionRouteParams,
-  ISelectConnectionRouteState
->(routes.create.finish.selectStep, configureSelectConnectionMapper);
-
-export const createFinishSelectActionResolver = makeResolver<
-  IEditorSelectAction,
-  ISelectActionRouteParams,
-  ISelectActionRouteState
->(routes.create.finish.connection.selectAction, configureSelectActionMapper);
-
-export const createFinishConfigureActionResolver = makeResolver<
-  IEditorConfigureAction,
-  IConfigureActionRouteParams,
-  IConfigureActionRouteState
->(
-  routes.create.finish.connection.configureAction,
-  configureConfigureActionMapper
-);
-
-export const createFinishConfigureStepResolver = makeResolver<
-  IEditorConfigureStep,
-  IConfigureStepRouteParams,
-  IConfigureStepRouteState
->(routes.create.finish.step, configureConfigureStepMapper);
-
-export const createConfigureIndexResolver = makeResolver<
-  IEditorIndex,
-  IBaseRouteParams,
-  IBaseRouteState
->(routes.create.configure.index, configureIndexMapper);
-
-export const createConfigureAddStepSelectStepResolver = makeResolver<
-  IEditorSelectConnection,
-  ISelectConnectionRouteParams,
-  ISelectConnectionRouteState
->(routes.create.configure.addStep.selectStep, configureSelectConnectionMapper);
-
-export const createConfigureAddStepSelectActionResolver = makeResolver<
-  IEditorSelectAction,
-  ISelectActionRouteParams,
-  ISelectActionRouteState
->(
-  routes.create.configure.addStep.connection.selectAction,
-  configureSelectActionMapper
-);
-
-export const createConfigureAddStepConfigureActionResolver = makeResolver<
-  IEditorConfigureAction,
-  IConfigureActionRouteParams,
-  IConfigureActionRouteState
->(
-  routes.create.configure.addStep.connection.configureAction,
-  configureConfigureActionMapper
-);
-
-export const createConfigureAddStepConfigureStepResolver = makeResolver<
-  IEditorConfigureStep,
-  IConfigureStepRouteParams,
-  IConfigureStepRouteState
->(routes.create.configure.addStep.step, configureConfigureStepMapper);
-
-export const createConfigureAddStepTemplateStepResolver = makeResolver<
-  IEditorConfigureStep,
-  ITemplateStepRouteParams,
-  ITemplateStepRouteState
->(routes.create.configure.addStep.template, configureTemplateStepMapper);
-
-export const createConfigureEditStepSelectActionResolver = makeResolver<
-  IEditorSelectAction,
-  ISelectActionRouteParams,
-  ISelectActionRouteState
->(
-  routes.create.configure.editStep.connection.selectAction,
-  configureSelectActionMapper
-);
-
-export const createConfigureEditStepConfigureActionResolver = makeResolver<
-  IEditorConfigureAction,
-  IConfigureActionRouteParams,
-  IConfigureActionRouteState
->(
-  routes.create.configure.editStep.connection.configureAction,
-  configureConfigureActionMapper
-);
-
-export const createConfigureEditStepConfigureStepResolver = makeResolver<
-  IEditorConfigureStep,
-  IConfigureStepRouteParams,
-  IConfigureStepRouteState
->(routes.create.configure.editStep.step, configureConfigureStepMapper);
-
-export const createConfigureEditStepSaveAndPublishResolver = makeResolver<
-  IEditorIndex,
-  ISaveIntegrationRouteParams,
-  ISaveIntegrationRouteState
->(routes.create.configure.saveAndPublish, configureIndexMapper);
-
-export const createConfigureEditStepTemplateStepResolver = makeResolver<
-  IEditorConfigureStep,
-  ITemplateStepRouteParams,
-  ITemplateStepRouteState
->(routes.create.configure.editStep.template, configureTemplateStepMapper);
 
 export const integrationActivityResolver = makeResolver<
   { integrationId: string; integration?: IIntegrationOverviewWithDraft },
@@ -349,84 +249,6 @@ export const integrationDetailsResolver = makeResolver<
   },
 }));
 
-export const integrationEditIndexResolver = makeResolver<
-  IEditorIndex,
-  IBaseRouteParams,
-  IBaseRouteState
->(routes.integration.edit.index, configureIndexMapper);
-
-export const integrationEditAddStepSelectStepResolver = makeResolver<
-  IEditorSelectConnection,
-  ISelectConnectionRouteParams,
-  ISelectConnectionRouteState
->(routes.integration.edit.addStep.selectStep, configureSelectConnectionMapper);
-
-export const integrationEditAddStepSelectActionResolver = makeResolver<
-  IEditorSelectAction,
-  ISelectActionRouteParams,
-  ISelectConnectionRouteState
->(
-  routes.integration.edit.addStep.connection.selectAction,
-  configureSelectActionMapper
-);
-
-export const integrationEditAddStepConfigureActionResolver = makeResolver<
-  IEditorConfigureAction,
-  IConfigureActionRouteParams,
-  IConfigureActionRouteState
->(
-  routes.integration.edit.addStep.connection.configureAction,
-  configureConfigureActionMapper
-);
-
-export const integrationEditAddStepConfigureStepResolver = makeResolver<
-  IEditorConfigureStep,
-  IConfigureStepRouteParams,
-  IConfigureStepRouteState
->(routes.integration.edit.addStep.step, configureConfigureStepMapper);
-
-export const integrationEditAddStepTemplateStepResolver = makeResolver<
-  IEditorConfigureStep,
-  ITemplateStepRouteParams,
-  ITemplateStepRouteState
->(routes.integration.edit.addStep.template, configureTemplateStepMapper);
-
-export const integrationEditEditStepSelectActionResolver = makeResolver<
-  IEditorSelectAction,
-  ISelectActionRouteParams,
-  ISelectActionRouteState
->(
-  routes.integration.edit.editStep.connection.selectAction,
-  configureSelectActionMapper
-);
-
-export const integrationEditEditStepConfigureActionResolver = makeResolver<
-  IEditorConfigureAction,
-  IConfigureActionRouteParams,
-  IConfigureActionRouteState
->(
-  routes.integration.edit.editStep.connection.configureAction,
-  configureConfigureActionMapper
-);
-
-export const integrationEditEditStepConfigureStepResolver = makeResolver<
-  IEditorConfigureStep,
-  IConfigureStepRouteParams,
-  IConfigureStepRouteState
->(routes.integration.edit.editStep.step, configureConfigureStepMapper);
-
-export const integrationEditEditStepTemplateStepResolver = makeResolver<
-  IEditorConfigureStep,
-  ITemplateStepRouteParams,
-  ITemplateStepRouteState
->(routes.integration.edit.editStep.template, configureTemplateStepMapper);
-
-export const integrationEditSaveAndPublish = makeResolver<
-  IEditorIndex,
-  ISaveIntegrationRouteParams,
-  ISaveIntegrationRouteState
->(routes.integration.edit.saveAndPublish, configureIndexMapper);
-
 export const metricsResolver = makeResolver<
   { integrationId: string; integration?: IIntegrationOverviewWithDraft },
   IDetailsRouteParams,
@@ -440,7 +262,7 @@ export const metricsResolver = makeResolver<
   },
 }));
 
-type RouteResolver<T> = {
+export type RouteResolver<T> = {
   [K in keyof T]: T[K] extends string ? any : RouteResolver<T[K]>
 };
 
@@ -450,141 +272,58 @@ const resolvers: RouteResolver<typeof routes> = {
     root: manageCicdResolver,
   },
   create: {
-    root: createRootResolver,
+    root: makeResolverNoParams(routes.create.root),
     start: {
-      selectStep: createStartSelectStepResolver,
-      connection: {
-        selectAction: createStartSelectActionResolver,
-        configureAction: createStartConfigureActionResolver,
-        describeData: () => 'describeData',
-      },
-      apiProvider: {
-        upload: makeResolverNoParams(routes.create.start.apiProvider.upload),
-        review: () => 'review',
-        edit: () => 'edit',
-      },
-      basicFilter: () => 'basicFilter',
-      dataMapper: () => 'dataMapper',
-      template: () => 'template',
-      step: createStartConfigureStepResolver,
-      extension: () => 'extension',
+      ...makeEditorStepRoutesResolvers(routes.create.start),
+      selectStep: makeResolverNoParamsWithDefaults<
+        ISelectConnectionRouteParams,
+        ISelectConnectionRouteState
+      >(routes.create.start.selectStep, () => {
+        const integration = getEmptyIntegration();
+        return {
+          params: {
+            flowId: integration.flows![0].id!,
+            position: '0',
+          },
+          state: {
+            integration,
+          },
+        };
+      }),
     },
-    finish: {
-      selectStep: createFinishSelectStepResolver,
-      connection: {
-        selectAction: createFinishSelectActionResolver,
-        configureAction: createFinishConfigureActionResolver,
-        describeData: () => 'describeData',
-      },
-      apiProvider: {
-        upload: makeResolverNoParams(routes.create.finish.apiProvider.upload),
-        review: () => 'review',
-        edit: () => 'edit',
-      },
-      basicFilter: () => 'basicFilter',
-      dataMapper: () => 'dataMapper',
-      template: () => 'template',
-      step: createFinishConfigureStepResolver,
-      extension: () => 'extension',
-    },
+    finish: makeEditorStepRoutesResolvers(routes.create.finish),
     configure: {
-      root: createRootResolver,
-      index: createConfigureIndexResolver,
-      addStep: {
-        selectStep: createConfigureAddStepSelectStepResolver,
-        connection: {
-          selectAction: createConfigureAddStepSelectActionResolver,
-          configureAction: createConfigureAddStepConfigureActionResolver,
-          describeData: () => 'describeData',
-        },
-        apiProvider: {
-          upload: makeResolverNoParams(
-            routes.create.configure.addStep.apiProvider.upload
-          ),
-          review: () => 'review',
-          edit: () => 'edit',
-        },
-        basicFilter: () => 'basicFilter',
-        dataMapper: () => 'dataMapper',
-        template: createConfigureAddStepTemplateStepResolver,
-        step: createConfigureAddStepConfigureStepResolver,
-        extension: () => 'extension',
-      },
-      editStep: {
-        selectStep: () => {
-          throw new Error('this route should not be used');
-        },
-        connection: {
-          selectAction: createConfigureEditStepSelectActionResolver,
-          configureAction: createConfigureEditStepConfigureActionResolver,
-          describeData: () => 'describeData',
-        },
-        apiProvider: {
-          upload: makeResolverNoParams(
-            routes.create.configure.editStep.apiProvider.upload
-          ),
-          review: () => 'review',
-          edit: () => 'edit',
-        },
-        basicFilter: () => 'basicFilter',
-        dataMapper: () => 'dataMapper',
-        template: createConfigureEditStepTemplateStepResolver,
-        step: createConfigureEditStepConfigureStepResolver,
-        extension: () => 'extension',
-      },
-      saveAndPublish: createConfigureEditStepSaveAndPublishResolver,
+      root: makeResolverNoParams(routes.create.configure.root),
+      index: makeResolver<IEditorIndex, IBaseRouteParams, IBaseRouteState>(
+        routes.create.configure.index,
+        configureIndexMapper
+      ),
+      addStep: makeEditorStepRoutesResolvers(routes.create.configure.addStep),
+      editStep: makeEditorStepRoutesResolvers(routes.create.configure.editStep),
+      saveAndPublish: makeResolver<
+        IEditorIndex,
+        ISaveIntegrationRouteParams,
+        ISaveIntegrationRouteState
+      >(routes.create.configure.saveAndPublish, configureIndexMapper),
     },
   },
   integration: {
-    root: createRootResolver,
+    root: makeResolverNoParams(routes.integration.root),
     activity: integrationActivityResolver,
     details: integrationDetailsResolver,
     edit: {
-      root: createRootResolver,
-      index: integrationEditIndexResolver,
-      addStep: {
-        selectStep: integrationEditAddStepSelectStepResolver,
-        connection: {
-          selectAction: integrationEditAddStepSelectActionResolver,
-          configureAction: integrationEditAddStepConfigureActionResolver,
-          describeData: () => 'describeData',
-        },
-        apiProvider: {
-          upload: makeResolverNoParams(
-            routes.integration.edit.addStep.apiProvider.upload
-          ),
-          review: () => 'review',
-          edit: () => 'edit',
-        },
-        basicFilter: () => 'basicFilter',
-        dataMapper: () => 'dataMapper',
-        template: integrationEditAddStepTemplateStepResolver,
-        step: integrationEditAddStepConfigureStepResolver,
-        extension: () => 'extension',
-      },
-      editStep: {
-        selectStep: () => {
-          throw new Error('this route should not be used');
-        },
-        connection: {
-          selectAction: integrationEditEditStepSelectActionResolver,
-          configureAction: integrationEditEditStepConfigureActionResolver,
-          describeData: () => 'describeData',
-        },
-        apiProvider: {
-          upload: makeResolverNoParams(
-            routes.integration.edit.editStep.apiProvider.upload
-          ),
-          review: () => 'review',
-          edit: () => 'edit',
-        },
-        basicFilter: () => 'basicFilter',
-        dataMapper: () => 'dataMapper',
-        template: integrationEditEditStepTemplateStepResolver,
-        step: integrationEditEditStepConfigureStepResolver,
-        extension: () => 'extension',
-      },
-      saveAndPublish: integrationEditSaveAndPublish,
+      root: makeResolverNoParams(routes.integration.edit.root),
+      index: makeResolver<IEditorIndex, IBaseRouteParams, IBaseRouteState>(
+        routes.integration.edit.index,
+        configureIndexMapper
+      ),
+      addStep: makeEditorStepRoutesResolvers(routes.integration.edit.addStep),
+      editStep: makeEditorStepRoutesResolvers(routes.integration.edit.editStep),
+      saveAndPublish: makeResolver<
+        IEditorIndex,
+        ISaveIntegrationRouteParams,
+        ISaveIntegrationRouteState
+      >(routes.integration.edit.saveAndPublish, configureIndexMapper),
     },
     metrics: metricsResolver,
   },

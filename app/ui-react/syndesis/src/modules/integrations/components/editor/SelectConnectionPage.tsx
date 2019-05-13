@@ -13,6 +13,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { ConnectionsWithToolbar } from '../../../connections/components';
+import { IEditorSidebarProps } from './EditorSidebar';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
@@ -22,7 +23,7 @@ import {
   getStepHref,
   IGetStepHrefs,
   mergeConnectionsSources,
-  toUIStepKindCollection,
+  toUIStepCollection,
   visibleStepsByPosition,
 } from './utils';
 
@@ -31,10 +32,7 @@ export interface ISelectConnectionPageProps extends IGetStepHrefs {
     p: ISelectConnectionRouteParams,
     s: ISelectConnectionRouteState
   ) => H.LocationDescriptor;
-  sidebar: (props: {
-    steps: IUIStep[];
-    activeIndex: number;
-  }) => React.ReactNode;
+  sidebar: (props: IEditorSidebarProps) => React.ReactNode;
 }
 
 /**
@@ -69,7 +67,7 @@ export class SelectConnectionPage extends React.Component<
                 }
                 sidebar={this.props.sidebar({
                   activeIndex: positionAsNumber,
-                  steps: toUIStepKindCollection(integrationSteps),
+                  steps: toUIStepCollection(integrationSteps),
                 })}
                 content={
                   <Translation ns={['connections', 'shared']}>

@@ -9,12 +9,12 @@ import {
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
+import { IEditorSidebarProps } from '../EditorSidebar';
 import {
   ITemplateStepRouteParams,
   ITemplateStepRouteState,
-  IUIStep,
 } from '../interfaces';
-import { toUIStepKindCollection } from '../utils';
+import { toUIStep, toUIStepCollection } from '../utils';
 import { WithTemplater } from './WithTemplater';
 
 export interface ITemplateStepPageProps {
@@ -23,10 +23,7 @@ export interface ITemplateStepPageProps {
     p: ITemplateStepRouteParams,
     s: ITemplateStepRouteState
   ) => H.LocationDescriptor;
-  sidebar: (props: {
-    steps: IUIStep[];
-    activeIndex: number;
-  }) => React.ReactNode;
+  sidebar: (props: IEditorSidebarProps) => React.ReactNode;
   postConfigureHref: (
     integration: Integration,
     p: ITemplateStepRouteParams,
@@ -84,7 +81,8 @@ export class TemplateStepPage extends React.Component<ITemplateStepPageProps> {
                     }
                     sidebar={this.props.sidebar({
                       activeIndex: positionAsNumber,
-                      steps: toUIStepKindCollection(
+                      activeStep: toUIStep(step),
+                      steps: toUIStepCollection(
                         getSteps(updatedIntegration || integration, flowId)
                       ),
                     })}

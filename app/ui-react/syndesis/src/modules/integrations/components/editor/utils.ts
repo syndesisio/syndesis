@@ -42,7 +42,7 @@ export function getStepKind(step: Step): IUIStep['uiStepKind'] {
   return step.stepKind;
 }
 
-export function toUIStepKind(step: Step): IUIStep {
+export function toUIStep(step: Step): IUIStep {
   const uiStepKind = getStepKind(step);
   const inputDataShape =
     step.action &&
@@ -121,8 +121,8 @@ export function toUIStepKind(step: Step): IUIStep {
   }
 }
 
-export function toUIStepKindCollection(steps: Step[]): IUIStep[] {
-  return steps.map(toUIStepKind);
+export function toUIStepCollection(steps: Step[]): IUIStep[] {
+  return steps.map(toUIStep);
 }
 
 export function getDataShapeText(stepKind: string, dataShape?: DataShape) {
@@ -193,7 +193,7 @@ export function mergeConnectionsSources(
 ): IUIStep[] {
   return [
     ...connections.map(connection =>
-      toUIStepKind({
+      toUIStep({
         connection,
         name: connection.name,
         stepKind: ENDPOINT,
@@ -216,7 +216,7 @@ export function mergeConnectionsSources(
           }
           if (a.actionType === 'step') {
             extentionsByAction.push(
-              toUIStepKind({
+              toUIStep({
                 action: a,
                 configuredProperties: undefined,
                 description: a.description || '',
@@ -235,7 +235,7 @@ export function mergeConnectionsSources(
       },
       [] as IUIStep[]
     ),
-    ...steps.map(s => toUIStepKind(s)),
+    ...steps.map(s => toUIStep(s)),
   ]
     .filter(s => !!s.uiStepKind) // this should never happen
     .sort((a, b) => a.name.localeCompare(b.name));
