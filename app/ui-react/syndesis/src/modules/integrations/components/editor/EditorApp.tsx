@@ -1,232 +1,167 @@
+/* tslint:disable:object-literal-sort-keys */
+import * as H from '@syndesis/history';
+import { Integration } from '@syndesis/models';
 import * as React from 'react';
-import { Route, Switch } from 'react-router';
+import resolvers, { RouteResolver } from '../../resolvers';
 import { ReviewPage } from './api-provider/EditPage';
 import { EditPage } from './api-provider/ReviewPage';
 import { UploadPage } from './api-provider/UploadPage';
+import { EditorRoutes } from './EditorRoutes';
+import { EditorSidebar } from './EditorSidebar';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
 import { SelectActionPage } from './endpoint/SelectActionPage';
+import {
+  IConfigureActionRouteParams,
+  IConfigureActionRouteState,
+  ISelectConnectionRouteParams,
+  ISelectConnectionRouteState,
+  ITemplateStepRouteParams,
+  ITemplateStepRouteState,
+  stepRoutes,
+} from './interfaces';
+import { SelectConnectionPage } from './SelectConnectionPage';
+import { ConfigureStepPage } from './step/ConfigureStepPage';
 import { TemplateStepPage } from './template/TemplateStepPage';
 
-export interface IEndpointEditorAppProps {
-  selectActionPath: string;
-  selectActionChildren: React.ReactElement<SelectActionPage>;
-  configureActionPath: string;
-  configureActionChildren: React.ReactElement<ConfigureActionPage>;
-  describeDataPath: string;
-  describeDataChildren: React.ReactNode;
+const TODO: React.FunctionComponent = () => <>TODO</>;
+
+export interface IEditorApp {
+  mode: 'adding' | 'editing';
+  appStepRoutes: typeof stepRoutes;
+  appResolvers: RouteResolver<typeof stepRoutes>;
+  cancelHref: (
+    p: ISelectConnectionRouteParams,
+    s: ISelectConnectionRouteState
+  ) => H.LocationDescriptor;
+  postConfigureHref: (
+    integration: Integration,
+    p: ITemplateStepRouteParams | IConfigureActionRouteParams,
+    s: ITemplateStepRouteState | IConfigureActionRouteState
+  ) => H.LocationDescriptorObject;
 }
-export const EndpointEditorApp: React.FunctionComponent<
-  IEndpointEditorAppProps
-> = props => {
-  return (
-    <Switch>
-      <Route
-        path={props.selectActionPath}
-        exact={true}
-        children={props.selectActionChildren}
-      />
-      <Route
-        path={props.configureActionPath}
-        exact={true}
-        children={props.configureActionChildren}
-      />
-      <Route
-        path={props.describeDataPath}
-        exact={true}
-        children={props.describeDataChildren}
-      />
-    </Switch>
+
+export const EditorApp: React.FunctionComponent<IEditorApp> = ({
+  mode,
+  appStepRoutes,
+  appResolvers,
+  cancelHref,
+  postConfigureHref,
+}) => {
+  const selectStepChildren = (
+    <SelectConnectionPage
+      cancelHref={cancelHref}
+      apiProviderHref={appResolvers.apiProvider.upload}
+      connectionHref={(connection, params, state) =>
+        appResolvers.connection.selectAction({
+          connection,
+          ...params,
+          ...state,
+        })
+      }
+      filterHref={appResolvers.basicFilter}
+      mapperHref={appResolvers.dataMapper}
+      templateHref={appResolvers.template}
+      stepHref={(step, params, state) =>
+        resolvers.create.finish.step({
+          step,
+          ...params,
+          ...state,
+        })
+      }
+      sidebar={props => <EditorSidebar {...props} />}
+    />
   );
-};
 
-export interface IApiProviderAppProps {
-  uploadPath: string;
-  uploadChildren: React.ReactElement<UploadPage>;
-  reviewPath: string;
-  reviewChildren: React.ReactElement<ReviewPage>;
-  editPath: string;
-  editChildren: React.ReactElement<EditPage>;
-}
-export const ApiProviderApp: React.FunctionComponent<
-  IApiProviderAppProps
-> = props => {
-  return (
-    <Switch>
-      <Route
-        path={props.uploadPath}
-        exact={true}
-        children={props.uploadChildren}
-      />
-      <Route
-        path={props.reviewPath}
-        exact={true}
-        children={props.reviewChildren}
-      />
-      <Route path={props.editPath} exact={true} children={props.editChildren} />
-    </Switch>
+  const selectActionPage = (
+    <SelectActionPage
+      cancelHref={appResolvers.selectStep}
+      sidebar={props => <EditorSidebar {...props} />}
+      selectHref={(actionId, p, s) =>
+        appResolvers.connection.configureAction({
+          actionId,
+          ...p,
+          ...s,
+        })
+      }
+    />
   );
-};
 
-export interface ITemplateAppProps {
-  templatePath: string;
-  templateChildren: React.ReactElement<TemplateStepPage>;
-}
-export const TemplateApp: React.FunctionComponent<
-  ITemplateAppProps
-> = props => {
-  return (
-    <Switch>
-      <Route
-        path={props.templatePath}
-        exact={true}
-        children={props.templateChildren}
-      />
-    </Switch>
+  const configureActionPage = (
+    <ConfigureActionPage
+      backHref={(p, s) => appResolvers.connection.selectAction({ ...p, ...s })}
+      cancelHref={resolvers.list}
+      mode={mode}
+      nextStepHref={(p, s) =>
+        appResolvers.connection.configureAction({
+          ...p,
+          ...s,
+        })
+      }
+      sidebar={props => <EditorSidebar {...props} />}
+      postConfigureHref={postConfigureHref}
+    />
   );
-};
 
-export interface IBasicFilterAppProps {
-  filterPath: string;
-  filterChildren: React.ReactNode;
-}
-export const BasicFilterApp: React.FunctionComponent<
-  IBasicFilterAppProps
-> = props => {
-  return (
-    <Switch>
-      <Route
-        path={props.filterPath}
-        exact={true}
-        children={props.filterChildren}
-      />
-    </Switch>
+  const templateStepPage = (
+    <TemplateStepPage
+      mode={mode}
+      cancelHref={cancelHref}
+      sidebar={props => <EditorSidebar {...props} />}
+      postConfigureHref={postConfigureHref}
+    />
   );
-};
 
-export interface IDataMapperAppProps {
-  mapperPath: string;
-  mapperChildren: React.ReactNode;
-}
-export const DataMapperApp: React.FunctionComponent<
-  IDataMapperAppProps
-> = props => {
-  return (
-    <Switch>
-      <Route
-        path={props.mapperPath}
-        exact={true}
-        children={props.mapperChildren}
-      />
-    </Switch>
+  const configureStepPage = (
+    <ConfigureStepPage
+      cancelHref={cancelHref}
+      mode={mode}
+      sidebar={props => <EditorSidebar {...props} />}
+      postConfigureHref={postConfigureHref}
+    />
   );
-};
 
-export interface IStepAppProps {
-  configurePath: string;
-  configureChildren: React.ReactNode;
-}
-export const StepApp: React.FunctionComponent<IStepAppProps> = props => {
   return (
-    <Switch>
-      <Route
-        path={props.configurePath}
-        exact={true}
-        children={props.configureChildren}
+    <>
+      <EditorRoutes
+        selectStepPath={appStepRoutes.selectStep}
+        selectStepChildren={selectStepChildren}
+        endpointEditor={{
+          selectActionPath: appStepRoutes.connection.selectAction,
+          selectActionChildren: selectActionPage,
+          configureActionPath: appStepRoutes.connection.configureAction,
+          configureActionChildren: configureActionPage,
+          describeDataPath: appStepRoutes.connection.describeData,
+          describeDataChildren: TODO,
+        }}
+        apiProvider={{
+          uploadPath: appStepRoutes.apiProvider.upload,
+          uploadChildren: <UploadPage />,
+          reviewPath: appStepRoutes.apiProvider.review,
+          reviewChildren: <ReviewPage />,
+          editPath: appStepRoutes.apiProvider.edit,
+          editChildren: <EditPage />,
+        }}
+        template={{
+          templatePath: appStepRoutes.template,
+          templateChildren: templateStepPage,
+        }}
+        dataMapper={{
+          mapperPath: appStepRoutes.dataMapper,
+          mapperChildren: TODO,
+        }}
+        basicFilter={{
+          filterPath: appStepRoutes.basicFilter,
+          filterChildren: TODO,
+        }}
+        step={{
+          configurePath: appStepRoutes.step,
+          configureChildren: configureStepPage,
+        }}
+        extension={{
+          configurePath: appStepRoutes.extension,
+          configureChildren: TODO,
+        }}
       />
-    </Switch>
-  );
-};
-
-export interface IExtensionAppProps {
-  configurePath: string;
-  configureChildren: React.ReactNode;
-}
-export const ExtensionApp: React.FunctionComponent<
-  IExtensionAppProps
-> = props => {
-  return (
-    <Switch>
-      <Route
-        path={props.configurePath}
-        exact={true}
-        children={props.configureChildren}
-      />
-    </Switch>
-  );
-};
-
-export interface IEditorAppProps {
-  selectStepPath?: string;
-  selectStepChildren?: React.ReactNode;
-  endpointEditor: IEndpointEditorAppProps;
-  apiProvider: IApiProviderAppProps;
-  template: ITemplateAppProps;
-  dataMapper: IDataMapperAppProps;
-  basicFilter: IBasicFilterAppProps;
-  step: IStepAppProps;
-  extension: IExtensionAppProps;
-}
-export const EditorApp: React.FunctionComponent<IEditorAppProps> = props => {
-  return (
-    <Switch>
-      {props.selectStepPath && props.selectStepChildren ? (
-        <Route
-          path={props.selectStepPath}
-          exact={true}
-          children={props.selectStepChildren}
-        />
-      ) : null}
-
-      <Route path={props.endpointEditor.selectActionPath}>
-        <EndpointEditorApp
-          selectActionPath={props.endpointEditor.selectActionPath}
-          selectActionChildren={props.endpointEditor.selectActionChildren}
-          configureActionPath={props.endpointEditor.configureActionPath}
-          configureActionChildren={props.endpointEditor.configureActionChildren}
-          describeDataPath={props.endpointEditor.describeDataPath}
-          describeDataChildren={props.endpointEditor.describeDataChildren}
-        />
-      </Route>
-      <Route path={props.apiProvider.uploadPath}>
-        <ApiProviderApp
-          uploadPath={props.apiProvider.uploadPath}
-          uploadChildren={props.apiProvider.uploadChildren}
-          reviewPath={props.apiProvider.reviewPath}
-          reviewChildren={props.apiProvider.reviewChildren}
-          editPath={props.apiProvider.editPath}
-          editChildren={props.apiProvider.editChildren}
-        />
-      </Route>
-      <Route path={props.template.templatePath}>
-        <TemplateApp
-          templatePath={props.template.templatePath}
-          templateChildren={props.template.templateChildren}
-        />
-      </Route>
-      <Route path={props.dataMapper.mapperPath}>
-        <DataMapperApp
-          mapperPath={props.dataMapper.mapperPath}
-          mapperChildren={props.dataMapper.mapperChildren}
-        />
-      </Route>
-      <Route path={props.basicFilter.filterPath}>
-        <BasicFilterApp
-          filterPath={props.basicFilter.filterPath}
-          filterChildren={props.basicFilter.filterChildren}
-        />
-      </Route>
-      <Route path={props.step.configurePath}>
-        <StepApp
-          configurePath={props.step.configurePath}
-          configureChildren={props.step.configureChildren}
-        />
-      </Route>
-      <Route path={props.extension.configurePath}>
-        <ExtensionApp
-          configurePath={props.extension.configurePath}
-          configureChildren={props.extension.configureChildren}
-        />
-      </Route>
-    </Switch>
+    </>
   );
 };

@@ -1,6 +1,5 @@
-import { getSteps, WithConnection } from '@syndesis/api';
+import { getConnectionIcon, getSteps, WithConnection } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { IConnectionWithIconFile } from '@syndesis/models';
 import {
   ButtonLink,
   IntegrationEditorActionsListItem,
@@ -11,23 +10,19 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../../shared';
+import { IEditorSidebarProps } from '../EditorSidebar';
 import {
   ISelectActionRouteParams,
   ISelectActionRouteState,
-  IUIStep,
 } from '../interfaces';
-import { toUIStepKindCollection } from '../utils';
+import { toUIStep, toUIStepCollection } from '../utils';
 
 export interface ISelectActionPageProps {
   cancelHref: (
     p: ISelectActionRouteParams,
     s: ISelectActionRouteState
   ) => H.LocationDescriptor;
-  sidebar: (props: {
-    steps: IUIStep[];
-    activeIndex: number;
-    connection: IConnectionWithIconFile;
-  }) => React.ReactNode;
+  sidebar: (props: IEditorSidebarProps) => React.ReactNode;
   selectHref: (
     actionId: string,
     p: ISelectActionRouteParams,
@@ -71,8 +66,14 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                         }
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
-                          connection: connection as IConnectionWithIconFile,
-                          steps: toUIStepKindCollection(
+                          activeStep: {
+                            ...toUIStep(connection),
+                            icon: getConnectionIcon(
+                              process.env.PUBLIC_URL,
+                              connection
+                            ),
+                          },
+                          steps: toUIStepCollection(
                             getSteps(integration, flowId)
                           ),
                         })}

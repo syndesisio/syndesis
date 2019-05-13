@@ -26,12 +26,13 @@ import {
   ISelectConnectionRouteState,
   ITemplateStepRouteParams,
   ITemplateStepRouteState,
+  stepRoutes,
 } from './components/editor/interfaces';
 import {
   IDetailsRouteParams,
   IDetailsRouteState,
 } from './pages/detail/interfaces';
-import routes, { stepRoutes } from './routes';
+import routes from './routes';
 
 interface IEditorIndex {
   flowId: string;
@@ -261,7 +262,7 @@ export const metricsResolver = makeResolver<
   },
 }));
 
-type RouteResolver<T> = {
+export type RouteResolver<T> = {
   [K in keyof T]: T[K] extends string ? any : RouteResolver<T[K]>
 };
 

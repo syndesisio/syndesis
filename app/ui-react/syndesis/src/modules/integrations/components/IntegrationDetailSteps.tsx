@@ -13,7 +13,7 @@ import {
 import * as React from 'react';
 import resolvers from '../../resolvers';
 import { IUIStep } from './editor/interfaces';
-import { toUIStepKindCollection } from './editor/utils';
+import { toUIStepCollection } from './editor/utils';
 
 export interface IIntegrationDetailStepsProps {
   integration: Integration;
@@ -29,7 +29,7 @@ export class IntegrationDetailSteps extends React.Component<
     return (
       <PageSection variant={'light'}>
         <IntegrationStepsHorizontalView>
-          {toUIStepKindCollection(steps).map((s: IUIStep, idx: number) => {
+          {toUIStepCollection(steps).map((s: IUIStep, idx: number) => {
             const isFirst = idx === 0;
             const stepUri =
               s.stepKind === ENDPOINT && !s.metadata[HIDE_FROM_CONNECTION_PAGES]
