@@ -5,6 +5,8 @@ import { IntegrationStatus } from './IntegrationStatus';
 import { IntegrationStatusDetail } from './IntegrationStatusDetail';
 import { IntegrationState } from './models';
 
+import './IntegrationListItem.css';
+
 export interface IIntegrationsListItemProps {
   integrationName: string;
   currentState: IntegrationState;
@@ -35,12 +37,13 @@ export class IntegrationsListItem extends React.Component<
       <ListView.Item
         actions={this.props.actions}
         heading={this.props.integrationName}
+        className={'integration-list-item'}
         description={
           this.props.isConfigurationRequired ? (
-            <>
+            <div className={'config-required'}>
               <Icon type={'pf'} name={'warning-triangle-o'} />
               {this.props.i18nConfigurationRequired}
-            </>
+            </div>
           ) : (
             ''
           )

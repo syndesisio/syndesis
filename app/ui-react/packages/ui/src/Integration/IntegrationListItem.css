@@ -1,0 +1,11 @@
+.integration-list-item {
+  cursor: pointer;
+}
+
+.integration-list-item .config-required {
+  font-size: smaller;
+}
+
+.integration-list-item .config-required .pficon {
+  padding-right: 5px;
+}
