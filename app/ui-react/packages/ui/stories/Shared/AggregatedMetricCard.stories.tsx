@@ -9,6 +9,7 @@ stories.add('sample usage', () => (
   <div style={{ width: 200 }}>
     <AggregatedMetricCard
       title={text('title', 'A Title')}
+      total={number('total', 15)}
       ok={number('ok', 10)}
       error={number('error', 5)}
     />

@@ -15,6 +15,7 @@ import {
   TopIntegrationsCard,
   UptimeMetric,
 } from '@syndesis/ui';
+import { toShortDateAndTimeString } from '@syndesis/utils';
 import { toDurationDifferenceString, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -123,6 +124,12 @@ export default () => (
                 integrationsData.items,
                 metricsData.topIntegrations
               );
+
+              const dashboardConnections = connectionsData.connectionsForDisplay.slice(
+                0,
+                8
+              );
+
               return (
                 <Translation ns={['dashboard', 'integrations', 'shared']}>
                   {t => (
@@ -134,9 +141,8 @@ export default () => (
                       integrationsOverview={
                         <div data-testid="total-integrations">
                           <AggregatedMetricCard
-                            title={t('titleTotalIntegrations', {
-                              count: integrationsData.totalCount,
-                            })}
+                            title={t('titleTotalIntegrations')}
+                            total={integrationsData.totalCount}
                             ok={
                               integrationsData.totalCount -
                               integrationStatesCount.Error
@@ -158,9 +164,8 @@ export default () => (
                       messagesOverview={
                         <div data-testid="total-messages">
                           <AggregatedMetricCard
-                            title={t('titleTotalMessages', {
-                              count: metricsData.messages,
-                            })}
+                            title={t('titleTotalMessages')}
+                            total={metricsData.messages!}
                             ok={metricsData.messages! - metricsData.errors!}
                             error={metricsData.errors!}
                           />
@@ -182,12 +187,6 @@ export default () => (
                           })}
                           i18nLast30Days={t('lastNumberOfDays', {
                             numberOfDays: 30,
-                          })}
-                          i18nLast60Days={t('lastNumberOfDays', {
-                            numberOfDays: 60,
-                          })}
-                          i18nLast90Days={t('lastNumberOfDays', {
-                            numberOfDays: 90,
                           })}
                         >
                           <Integrations
@@ -234,7 +233,9 @@ export default () => (
                                   key={i.id}
                                   integrationName={i.name}
                                   integrationCurrentState={i.currentState!}
-                                  integrationDate={i.updatedAt! || i.createdAt!}
+                                  integrationDate={toShortDateAndTimeString(
+                                    i.updatedAt! || i.createdAt!
+                                  )}
                                   i18nError={t('shared:Error')}
                                   i18nPublished={t('shared:Published')}
                                   i18nUnpublished={t('shared:Unpublished')}
@@ -249,7 +250,7 @@ export default () => (
                           error={connectionsError}
                           includeConnectionMenu={false}
                           loading={!hasConnections}
-                          connections={connectionsData.connectionsForDisplay}
+                          connections={dashboardConnections}
                           getConnectionHref={connection =>
                             resolvers.connections.connection.details({
                               connection,
@@ -262,7 +263,6 @@ export default () => (
                           }
                         />
                       }
-                      i18nIntegrations={t('shared:Integrations')}
                       i18nConnections={t('shared:Connections')}
                       i18nLinkCreateConnection={t(
                         'shared:linkCreateConnection'
@@ -273,7 +273,6 @@ export default () => (
                       i18nLinkToConnections={t('linkToConnections')}
                       i18nLinkToIntegrations={t('linkToIntegrations')}
                       i18nTitle={t('title')}
-                      i18nDescription={t('description')}
                     />
                   )}
                 </Translation>

@@ -1,9 +1,9 @@
-import { Level, LevelItem, PageSection, Title } from '@patternfly/react-core';
+import { Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { CardGrid, Grid } from 'patternfly-react';
+import { CardGrid, Grid, ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { ButtonLink } from '../Layout';
+import { ButtonLink, PageSection } from '../Layout';
 import { SimplePageHeader } from '../Shared';
 import './Dashboard.css';
 
@@ -20,92 +20,95 @@ export interface IIntegrationsPageProps {
   integrationBoard: JSX.Element;
   integrationUpdates: JSX.Element;
   connections: JSX.Element;
-  i18nIntegrations: string;
   i18nConnections: string;
   i18nLinkCreateConnection: string;
   i18nLinkCreateIntegration: string;
   i18nLinkToConnections: string;
   i18nLinkToIntegrations: string;
   i18nTitle: string;
-  i18nDescription: string;
 }
 
 export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
   public render() {
     return (
       <>
-        <SimplePageHeader
-          i18nTitle={this.props.i18nTitle}
-          i18nDescription={this.props.i18nDescription}
-        />
+        <SimplePageHeader i18nTitle={this.props.i18nTitle} titleSize={'xl'} />
         <PageSection>
-          <Level gutter={'sm'}>
-            <LevelItem>
-              <Title size={'lg'}>{this.props.i18nIntegrations}</Title>
-            </LevelItem>
-            <LevelItem>
-              <Link to={this.props.linkToIntegrations}>
-                {this.props.i18nLinkToIntegrations}
-              </Link>
-              <ButtonLink
-                href={this.props.linkToIntegrationCreation}
-                as={'primary'}
-              >
-                {this.props.i18nLinkCreateIntegration}
-              </ButtonLink>
-            </LevelItem>
-          </Level>
-          <CardGrid fluid={true} matchHeight={true}>
-            <CardGrid.Row>
-              <CardGrid.Col sm={6} md={3}>
-                {this.props.integrationsOverview}
-              </CardGrid.Col>
-              <CardGrid.Col sm={6} md={3}>
-                {this.props.connectionsOverview}
-              </CardGrid.Col>
-              <CardGrid.Col sm={6} md={3}>
-                {this.props.messagesOverview}
-              </CardGrid.Col>
-              <CardGrid.Col sm={6} md={3}>
-                {this.props.uptimeOverview}
-              </CardGrid.Col>
-            </CardGrid.Row>
-          </CardGrid>
           <Grid fluid={true}>
-            <Grid.Row>
-              <Grid.Col sm={12}>{this.props.topIntegrations}</Grid.Col>
+            <Grid.Row className={'show-grid dashboard__integrations__actions'}>
+              <Grid.Col xs={6} xsOffset={6}>
+                <ButtonLink
+                  href={this.props.linkToIntegrationCreation}
+                  as={'primary'}
+                  className={'pull-right'}
+                >
+                  {this.props.i18nLinkCreateIntegration}
+                </ButtonLink>
+                <Link
+                  to={this.props.linkToIntegrations}
+                  className={'pull-right view'}
+                >
+                  {this.props.i18nLinkToIntegrations}
+                </Link>
+              </Grid.Col>
             </Grid.Row>
-            <Grid.Row>
-              <Grid.Col sm={12} md={6}>
+
+            <Grid.Row className={'dashboard__metrics'}>
+              <CardGrid fluid={true} matchHeight={true}>
+                <CardGrid.Row>
+                  <CardGrid.Col sm={6} md={3}>
+                    {this.props.integrationsOverview}
+                  </CardGrid.Col>
+                  <CardGrid.Col sm={6} md={3}>
+                    {this.props.connectionsOverview}
+                  </CardGrid.Col>
+                  <CardGrid.Col sm={6} md={3}>
+                    {this.props.messagesOverview}
+                  </CardGrid.Col>
+                  <CardGrid.Col sm={6} md={3}>
+                    {this.props.uptimeOverview}
+                  </CardGrid.Col>
+                </CardGrid.Row>
+              </CardGrid>
+            </Grid.Row>
+
+            <Grid.Row className={'dashboard__integrations'}>
+              <Grid.Col sm={12} md={7}>
+                {this.props.topIntegrations}
+              </Grid.Col>
+              <Grid.Col sm={12} md={5}>
                 {this.props.integrationBoard}
               </Grid.Col>
-              <Grid.Col sm={12} md={6}>
-                {this.props.integrationUpdates}
+              <Grid.Col sm={12} md={5}>
+                <ListView>{this.props.integrationUpdates}</ListView>
               </Grid.Col>
             </Grid.Row>
-          </Grid>
-        </PageSection>
 
-        <PageSection>
-          <Level gutter={'sm'}>
-            <LevelItem>
-              <Title size={'lg'}>{this.props.i18nConnections}</Title>
-            </LevelItem>
-            <LevelItem>
-              <Link to={this.props.linkToConnections}>
-                {this.props.i18nLinkToConnections}
-              </Link>
+            <Grid.Row className={'dashboard__connections__actions'}>
+              <Title size={'lg'} className={'pull-left'}>
+                {this.props.i18nConnections}
+              </Title>
               <ButtonLink
                 href={this.props.linkToConnectionCreation}
                 as={'primary'}
+                className={'pull-right'}
               >
                 {this.props.i18nLinkCreateConnection}
               </ButtonLink>
-            </LevelItem>
-          </Level>
-          <CardGrid fluid={true} matchHeight={true}>
-            <CardGrid.Row>{this.props.connections}</CardGrid.Row>
-          </CardGrid>
+              <Link
+                to={this.props.linkToConnections}
+                className={'pull-right view'}
+              >
+                {this.props.i18nLinkToConnections}
+              </Link>
+            </Grid.Row>
+
+            <Grid.Row>
+              <CardGrid fluid={true} matchHeight={true}>
+                <CardGrid.Row>{this.props.connections}</CardGrid.Row>
+              </CardGrid>
+            </Grid.Row>
+          </Grid>
         </PageSection>
       </>
     );
