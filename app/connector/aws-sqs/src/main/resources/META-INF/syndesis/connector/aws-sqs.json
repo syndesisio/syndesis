@@ -254,7 +254,7 @@
                 "javaType": "long",
                 "kind": "parameter",
                 "label": "consumer,scheduler",
-                "labelHint": "Milliseconds before the next poll. You can also specify time values using units such as 60s (60 seconds) 5m30s (5 minutes and 30 seconds) and 1h (1 hour).",
+                "labelHint": "How often the queue should be polled.",
                 "optionalPrefix": "consumer.",
                 "order": "1",
                 "required": false,
@@ -278,7 +278,7 @@
               "deleteIfFiltered": {
                 "defaultValue": true,
                 "deprecated": false,
-                "displayName": "Obtain messages and delete the message if the it does make it through a Camel filter.",
+                "displayName": "Obtain messages and delete the message if it does make it through a Camel filter.",
                 "group": "consumer",
                 "javaType": "boolean",
                 "kind": "parameter",
