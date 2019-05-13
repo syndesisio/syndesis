@@ -107,12 +107,12 @@ export class ConnectionCard extends React.PureComponent<
             onConfirm={this.doDelete}
           />
         )}
-        <Card matchHeight={true}>
+        <Card matchHeight={true} className={'connection-card'}>
           <Card.Heading
             className={
               this.props.techPreview
-                ? 'connection-card__heading--tech-preview'
-                : 'connection-card__heading--no-border'
+                ? 'connection-card__heading connection-card__heading--tech-preview'
+                : 'connection-card__heading connection-card__heading--no-border'
             }
           >
             {this.props.techPreview ? (
@@ -138,7 +138,7 @@ export class ConnectionCard extends React.PureComponent<
               <Level gutter={'md'}>&nbsp;</Level>
             )}
             {this.props.menuProps && (
-              <div className="pull-right">
+              <div className="heading__dropdown pull-right">
                 <DropdownKebab
                   id={`connection-${this.props.name}-menu`}
                   pullRight={true}
@@ -194,9 +194,9 @@ export class ConnectionCard extends React.PureComponent<
               </div>
             )}
           </Card.Heading>
-          <Link to={this.props.href} className={'connection-card'}>
+          <Link to={this.props.href} className={'connection-card__content'}>
             <Card.Body>
-              <div className={'connection-card__content'}>
+              <div className={'connection-card__body'}>
                 <div className="connection-card__icon">
                   <img src={this.props.icon} alt={this.props.name} width={46} />
                 </div>
@@ -212,17 +212,16 @@ export class ConnectionCard extends React.PureComponent<
                 </Text>
               </div>
             </Card.Body>
-            {this.props.configurationRequired ? (
+            {this.props.configurationRequired && (
               <Card.Footer
                 className={
-                  this.props.techPreview &&
-                  'connection-card__footer--tech-preview alert alert-warning'
+                  'connection-card__footer--config-required alert alert-warning'
                 }
               >
                 <Icon type={'pf'} name={'warning-triangle-o'} size={'2x'} />
                 {this.props.i18nConfigurationRequired}
               </Card.Footer>
-            ) : null}
+            )}
           </Link>
         </Card>
       </>
