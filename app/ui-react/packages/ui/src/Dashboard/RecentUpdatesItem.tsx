@@ -1,4 +1,4 @@
-import { ListView } from 'patternfly-react';
+import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationStatus } from '../Integration';
 import { IntegrationState } from '../Integration/models';
@@ -21,19 +21,16 @@ export const RecentUpdatesItem: React.FunctionComponent<IRecentUpdatesItem> = ({
   i18nPublished,
   i18nUnpublished,
 }) => (
-  <ListView.Item
-    key={integrationName}
-    className={'recent-updates-item'}
-    leftContent={integrationName}
-    actions={integrationDate}
-    description={
+  <Grid.Row xs={12} className={'recent-updates-item'}>
+    <Grid.Col sm={5}>{integrationName}</Grid.Col>
+    <Grid.Col sm={3}>
       <IntegrationStatus
         currentState={integrationCurrentState}
         i18nError={i18nError}
         i18nPublished={i18nPublished}
         i18nUnpublished={i18nUnpublished}
       />
-    }
-    stacked={false}
-  />
+    </Grid.Col>
+    <Grid.Col sm={4}>{integrationDate}</Grid.Col>
+  </Grid.Row>
 );

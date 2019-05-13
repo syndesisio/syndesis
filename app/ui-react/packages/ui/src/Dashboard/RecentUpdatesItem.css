@@ -1,20 +1,10 @@
 
-
-.recent-updates-item .list-view-pf-main-info {
-  display: initial;
+.recent-updates-item {
+  cursor: pointer;
+  font-size: smaller;
+  padding: 10px 0;
 }
 
-.recent-updates-item .list-view-pf-description {
-  float: right;
-}
-
-.recent-updates-item .list-view-pf-left {
-  padding-right: 0;
-  text-align: left;
-  width: 50%;
-}
-
-.recent-updates-item .list-view-pf-body {
-  display: table-cell;
-  width: 40%;
+.recent-updates-item:hover {
+  background: rgba(214,238,250,.36);
 }
