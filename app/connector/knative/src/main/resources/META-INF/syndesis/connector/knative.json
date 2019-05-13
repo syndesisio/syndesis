@@ -162,7 +162,8 @@
   "id": "knative",
   "name": "Knative",
   "metadata": {
-    "hide-from-connection-pages": true
+    "hide-from-connection-pages": true,
+    "tech-preview": true
   },
   "properties": {}
 }
