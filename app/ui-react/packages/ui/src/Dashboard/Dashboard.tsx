@@ -1,6 +1,6 @@
 import { Title } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { CardGrid, Grid } from 'patternfly-react';
+import { CardGrid, Grid, ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ButtonLink, PageSection } from '../Layout';
@@ -80,7 +80,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 {this.props.integrationBoard}
               </Grid.Col>
               <Grid.Col sm={12} md={5}>
-                {this.props.integrationUpdates}
+                <ListView>{this.props.integrationUpdates}</ListView>
               </Grid.Col>
             </Grid.Row>
 

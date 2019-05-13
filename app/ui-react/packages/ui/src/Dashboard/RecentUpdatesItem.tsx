@@ -1,4 +1,4 @@
-import { Level, LevelItem } from '@patternfly/react-core';
+import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationStatus } from '../Integration';
 import { IntegrationState } from '../Integration/models';
@@ -21,16 +21,19 @@ export const RecentUpdatesItem: React.FunctionComponent<IRecentUpdatesItem> = ({
   i18nPublished,
   i18nUnpublished,
 }) => (
-  <Level gutter={'md'} className={'recent-updates-item'}>
-    <LevelItem>{integrationName}</LevelItem>
-    <LevelItem>
+  <ListView.Item
+    key={integrationName}
+    className={'recent-updates-item'}
+    leftContent={integrationName}
+    actions={integrationDate}
+    description={
       <IntegrationStatus
         currentState={integrationCurrentState}
         i18nError={i18nError}
         i18nPublished={i18nPublished}
         i18nUnpublished={i18nUnpublished}
       />
-    </LevelItem>
-    <LevelItem>{integrationDate}</LevelItem>
-  </Level>
+    }
+    stacked={false}
+  />
 );
