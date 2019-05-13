@@ -16,6 +16,10 @@
     Add an aggregate step to aggregate or group data after a split step.
   </ng-template>
 
+  <ng-template #flowsPopover>
+    Step defines {{ stepFlowCount }} flows.
+  </ng-template>
+
   <!-- Icon -->
   <div class="icon-container" (click)="gotoPageFor(step)">
     <div
@@ -81,6 +85,21 @@
       (click)="toggleAddDatamapperInfo(); $event.stopPropagation()"
       container="body"
     >
+    </span>
+
+    <span
+      class="badge step-badge step-suggestion"
+      *ngIf="stepFlowCount > 0"
+      [popover]="flowsPopover"
+      popoverTitle="Number of flows"
+      #datamapperInfoPop="bs-popover"
+      triggers=""
+      placement="right"
+      outsideClick="true"
+      (click)="toggleAddDatamapperInfo(); $event.stopPropagation()"
+      container="body"
+    >
+    {{ stepFlowCount }}
     </span>
   </div>
 

@@ -22,6 +22,8 @@
         </ol>
 
         <syndesis-integration-flow-toolbar
+          [currentFlow]="currentFlowService.currentFlow$ | async"
+          [flows]="currentFlowService.flows$ | async"
           [hideButtons]="currentFlowService.isApiProvider()"
         ></syndesis-integration-flow-toolbar>
       </div>

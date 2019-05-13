@@ -9,7 +9,7 @@ import {
   INTEGRATION_INSERT_DATAMAPPER,
 } from '@syndesis/ui/integration/edit-page';
 import { INTEGRATION_DELETE_PROMPT } from '../edit-page.models';
-import { SPLIT, ENDPOINT, LOG } from '@syndesis/ui/store';
+import { SPLIT, ENDPOINT, LOG, CONTENT_BASED_ROUTER } from '@syndesis/ui/store';
 
 @Component({
   selector: 'syndesis-integration-flow-view-step',
@@ -41,6 +41,7 @@ export class FlowViewStepComponent implements OnChanges {
   previousStepShouldDefineDataShape = false;
   shouldAddDatamapper = false;
   isUnclosedSplit = false;
+  stepFlowCount = 0;
 
   constructor(
     public currentFlowService: CurrentFlowService,
@@ -334,12 +335,22 @@ export class FlowViewStepComponent implements OnChanges {
     this.previousStepShouldDefineDataShape = false;
     this.shouldAddDatamapper = false;
 
+    if (!this.step || !this.step.action || !this.step.action.descriptor) {
+      return;
+    }
+
     this.isUnclosedSplit =
       this.step.stepKind === SPLIT &&
       this.currentFlowService.getNextAggregateStep(this.position) === undefined;
 
-    if (!this.step || !this.step.action || !this.step.action.descriptor) {
-      return;
+    if (this.step.stepKind === CONTENT_BASED_ROUTER &&
+        this.step.configuredProperties) {
+      const flowCountExpression = /"flow":/g;
+      this.stepFlowCount = ((this.step.configuredProperties['flows'] || '').match(flowCountExpression) || []).length;
+
+      if (this.step.configuredProperties['default'] && this.step.configuredProperties['default'].length) {
+        this.stepFlowCount++;
+      }
     }
 
     if (
