@@ -1,6 +1,11 @@
-import { getSteps, WithIntegrationHelpers } from '@syndesis/api';
+import {
+  getSteps,
+  setActionOnStep,
+  TEMPLATE,
+  WithIntegrationHelpers,
+} from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Integration, StringMap } from '@syndesis/models';
+import { Integration, Step, StepKind, StringMap } from '@syndesis/models';
 import {
   IntegrationEditorLayout,
   TemplateStepCard,
@@ -43,14 +48,22 @@ export class TemplateStepPage extends React.Component<ITemplateStepPageProps> {
               { history }
             ) => {
               const positionAsNumber = parseInt(position, 10);
+              let isValid = true;
+              const handleUpdateLinting = (
+                unsortedAnnotations: any[],
+                annotations: any[]
+              ) => {
+                isValid = annotations.length === 0;
+              };
               const onUpdatedIntegration = async ({
+                action,
                 values,
               }: StringMap<any>) => {
                 updatedIntegration = await (this.props.mode === 'adding'
                   ? addStep
                   : updateStep)(
                   updatedIntegration || integration,
-                  step,
+                  setActionOnStep(step as Step, action, TEMPLATE) as StepKind,
                   flowId,
                   positionAsNumber,
                   values
@@ -91,11 +104,12 @@ export class TemplateStepPage extends React.Component<ITemplateStepPageProps> {
                         initialLanguage={language as TemplateType}
                         initialText={template}
                         onUpdatedIntegration={onUpdatedIntegration}
+                        onUpdateLinting={handleUpdateLinting}
                       >
                         {({ controls, submitForm }) => (
                           <TemplateStepCard
                             i18nDone={'Done'}
-                            isValid={true}
+                            isValid={isValid}
                             submitForm={submitForm}
                           >
                             {controls}
