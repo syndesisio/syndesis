@@ -692,6 +692,15 @@ export class CurrentFlowService {
     return false;
   }
 
+  isSubFlow() {
+    try {
+      return this.getStartStep().connection.connectorId === 'flow';
+    } catch (e) {
+      // ignore
+    }
+    return false;
+  }
+
   /**
    * Examine the state of the current flow and make the user fill in the blanks as needed
    * @param route

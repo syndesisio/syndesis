@@ -29,6 +29,19 @@
         class="flow-view-container syn-scrollable--body"
         [ngClass]="{ collapsed: isCollapsed }"
       >
+        <ng-container *ngIf="isSubFlow()">
+          <div class="step flow-start">
+            <div class="flow-view-step">
+              <div class="icon-container"></div>
+            </div>
+          </div>
+          <div class="step flow-begin">
+            <div class="flow-view-step">
+              <div class="icon-container"></div>
+            </div>
+          </div>
+        </ng-container>
+
         <!-- First Step -->
         <div class="step start">
           <syndesis-integration-flow-view-step
@@ -86,6 +99,14 @@
               [currentPosition]="currentPosition"
               [currentState]="currentState"
             ></syndesis-integration-flow-view-step>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="isSubFlow()">
+          <div class="step flow-finish">
+            <div class="flow-view-step">
+              <div class="icon-container flow-end"></div>
+            </div>
           </div>
         </ng-container>
 
