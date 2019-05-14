@@ -70,10 +70,10 @@ export default class ExtensionsPage extends React.Component {
     const numUsedBy = extension.uses as number;
 
     if (numUsedBy === 1) {
-      return i18n.t('customizations:usedByOne');
+      return i18n.t('extensions:usedByOne');
     }
 
-    return i18n.t('customizations:usedByMulti', { count: numUsedBy });
+    return i18n.t('extensions:usedByMulti', { count: numUsedBy });
   }
 
   public render() {

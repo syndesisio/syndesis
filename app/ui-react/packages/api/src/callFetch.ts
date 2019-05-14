@@ -40,6 +40,10 @@ export interface IFetch {
   stringifyBody?: boolean;
 }
 
+const referrerPolicyId = 'referrerPolicy';
+const acceptId = 'Accept';
+const contentTypeId = 'Content-Type';
+
 export function callFetch({
   url,
   method,
@@ -52,26 +56,23 @@ export function callFetch({
   includeReferrerPolicy = true,
   stringifyBody = true,
 }: IFetch) {
-  if (includeAccept && !('Accept' in headers)) {
-    const acceptId = 'Accept';
+  if (includeAccept && !(acceptId in headers)) {
     headers[acceptId] = accept;
   }
-
-  if (includeContentType) {
-    const contentTypeId = 'Content-Type';
+  if (includeContentType && !(contentTypeId in headers)) {
     headers[contentTypeId] = contentType;
   }
-
-  if (includeReferrerPolicy) {
-    const referrerPolicyId = 'referrerPolicy';
+  if (includeReferrerPolicy && !(referrerPolicyId in headers)) {
     headers[referrerPolicyId] = 'no-referrer';
   }
-
+  const data =
+    headers[contentTypeId] &&
+    headers[contentTypeId].includes('application/json') &&
+    stringifyBody
+      ? JSON.stringify(body)
+      : body;
   return fetch(url, {
-    body:
-      contentType.includes('application/json') && stringifyBody
-        ? JSON.stringify(body)
-        : body,
+    body: data,
     cache: 'no-cache',
     credentials: 'include',
     headers: {
