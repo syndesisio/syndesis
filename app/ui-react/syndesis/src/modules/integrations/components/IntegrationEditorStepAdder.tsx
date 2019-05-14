@@ -9,6 +9,7 @@ import {
   PageSection,
 } from '@syndesis/ui';
 import * as React from 'react';
+import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import {
   toUIIntegrationStepCollection,
@@ -62,6 +63,8 @@ export class IntegrationEditorStepAdder extends React.Component<
 > {
   public render() {
     return (
+      <Translation ns={['integrations', 'shared']}>
+        {t => (
       <PageSection>
         <IntegrationEditorStepsList>
           {toUIIntegrationStepCollection(
@@ -114,13 +117,15 @@ export class IntegrationEditorStepAdder extends React.Component<
                   active={false}
                   showDetails={false}
                   addStepHref={this.props.addStepHref(idx + 1)}
-                  i18nAddStep={'Add a step'}
+                  i18nAddStep={t('integrations:editor:addStep')}
                 />
               )}
             </React.Fragment>
           ))}
         </IntegrationEditorStepsList>
       </PageSection>
+          )}
+          </Translation>
     );
   }
 }

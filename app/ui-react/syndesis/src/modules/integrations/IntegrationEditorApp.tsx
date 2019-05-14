@@ -109,7 +109,6 @@ export interface IIntegrationEditorAppRouteState {
  * [1] https://reactjs.org/docs/error-boundaries.html
  *
  * @todo add an error handler!
- * @todo i18n everywhere!
  */
 export const IntegrationEditorApp: React.FunctionComponent = () => {
   return (

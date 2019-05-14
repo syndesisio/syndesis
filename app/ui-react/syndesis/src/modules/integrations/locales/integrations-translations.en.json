@@ -69,8 +69,10 @@
     "obsolete": "The published integration has become obsolete and its recommended it should be republished."
   },
   "editor": {
+    "addStep": "Add a step",
     "addStepDescription": "You can continue adding steps and connections to your integration as well.",
     "addToIntegration": "Add to Integration",
+    "dataShape": "Data Shape",
     "saveOrAddStep": "Save or Add Step"
   },
   "ReplaceDraft": "Replace Draft",
