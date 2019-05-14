@@ -24,6 +24,7 @@
     "@storybook/react": "^5.0.11",
     "@storybook/theming": "^5.0.11",
     "@types/classnames": "^2.2.6",
+    "@types/codemirror": "^0.0.74",
     "@types/expect": "^1.20.3",
     "@types/jest": "^24.0.11",
     "@types/patternfly-react": "*",
