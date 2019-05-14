@@ -57,6 +57,7 @@ export interface IConnectionsResponse {
 
 export interface IWithConnectionsProps {
   disableUpdates?: boolean;
+  debounceWait?: number;
   children(props: IFetchState<IConnectionsResponse>): any;
 }
 
@@ -102,6 +103,7 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
                   read={read}
                   registerChangeListener={registerChangeListener}
                   unregisterChangeListener={unregisterChangeListener}
+                  debounceWait={this.props.debounceWait}
                   filter={this.changeFilter}
                 >
                   {() => this.props.children(transformResponse(response))}
