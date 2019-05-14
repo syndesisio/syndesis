@@ -22,33 +22,45 @@ interface IButtonLinkProps {
   [key: string]: any;
 }
 
-export const ButtonLink: React.FunctionComponent<IButtonLinkProps> = ({
-  onClick,
-  href,
-  className,
-  disabled,
-  as = 'default',
-  size,
-  children,
-  ...props
-}) => {
-  className = classnames('btn', `btn-${as}`, className, {
-    'btn-lg': size === 'lg',
-    'btn-sm': size === 'sm',
-    'btn-xs': size === 'xs',
-  });
-  return href && !disabled ? (
-    <Link to={href} onClick={onClick} className={className} {...props}>
-      {children}
-    </Link>
-  ) : (
-    <button
-      onClick={onClick}
-      className={className}
-      disabled={disabled || (!onClick && !href)}
-      {...props}
-    >
-      {children}
-    </button>
-  );
-};
+export const ButtonLink = React.forwardRef<any, IButtonLinkProps>(
+  (
+    {
+      onClick,
+      href,
+      className,
+      disabled,
+      as = 'default',
+      size,
+      children,
+      ...props
+    },
+    ref
+  ) => {
+    className = classnames('btn', `btn-${as}`, className, {
+      'btn-lg': size === 'lg',
+      'btn-sm': size === 'sm',
+      'btn-xs': size === 'xs',
+    });
+    return href && !disabled ? (
+      <Link
+        to={href}
+        onClick={onClick}
+        className={className}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </Link>
+    ) : (
+      <button
+        onClick={onClick}
+        className={className}
+        disabled={disabled || (!onClick && !href)}
+        ref={ref}
+        {...props}
+      >
+        {children}
+      </button>
+    );
+  }
+);

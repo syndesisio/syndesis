@@ -6,6 +6,8 @@ import {
   DataShapeKinds,
   ENDPOINT,
   getExtensionIcon,
+  getNextAggregateStep,
+  getPreviousStepWithDataShape,
   getStepIcon,
   getStepsLastPosition,
   HIDE_FROM_STEP_SELECT,
@@ -26,6 +28,7 @@ import { IAddStepPageProps } from './AddStepPage';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
+  IUIIntegrationStep,
   IUIStep,
 } from './interfaces';
 
@@ -123,6 +126,69 @@ export function toUIStep(step: Step): IUIStep {
 
 export function toUIStepCollection(steps: Step[]): IUIStep[] {
   return steps.map(toUIStep);
+}
+
+export function isSameDataShape(one: DataShape, other: DataShape): boolean {
+  if (!one || !other) {
+    return false;
+  }
+  return (
+    one.kind === other.kind &&
+    one.type === other.type &&
+    one.specification === other.specification
+  );
+}
+
+export function toUIIntegrationStepCollection(
+  steps: IUIStep[]
+): IUIIntegrationStep[] {
+  return steps.map((step, position) => {
+    let previousStepShouldDefineDataShape = false;
+    let shouldAddDataMapper = false;
+    const isUnclosedSplit =
+      step.stepKind === SPLIT &&
+      getNextAggregateStep(steps, position) === undefined;
+
+    const shape =
+      position === 0
+        ? getDataShapeText(step.stepKind!, step.outputDataShape)
+        : getDataShapeText(step.stepKind!, step.inputDataShape);
+
+    if (step.action && step.action.descriptor) {
+      const inputDataShape = step.action.descriptor.inputDataShape;
+      if (
+        position > 0 &&
+        inputDataShape &&
+        ![
+          DataShapeKinds.ANY.toUpperCase(),
+          DataShapeKinds.NONE.toUpperCase(),
+        ].includes(inputDataShape.kind!)
+      ) {
+        const prev = getPreviousStepWithDataShape(steps, position);
+        if (
+          prev &&
+          prev.action &&
+          prev.action.descriptor &&
+          prev.action.descriptor.outputDataShape
+        ) {
+          const prevOutDataShape = prev.action.descriptor.outputDataShape;
+          if (DataShapeKinds.ANY.toLowerCase() === prevOutDataShape.kind) {
+            previousStepShouldDefineDataShape = true;
+          } else if (!isSameDataShape(inputDataShape, prevOutDataShape)) {
+            shouldAddDataMapper = true;
+          }
+        }
+      }
+    }
+
+    return {
+      ...step,
+      isUnclosedSplit,
+      previousStepShouldDefineDataShape,
+      shape,
+      shouldAddDataMapper,
+    };
+  });
 }
 
 export function getDataShapeText(stepKind: string, dataShape?: DataShape) {

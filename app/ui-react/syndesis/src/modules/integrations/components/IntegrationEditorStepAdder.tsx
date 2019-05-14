@@ -9,13 +9,23 @@ import {
   PageSection,
 } from '@syndesis/ui';
 import * as React from 'react';
-import { getDataShapeText } from './editor/utils';
+import { Link } from 'react-router-dom';
+import {
+  toUIIntegrationStepCollection,
+  toUIStepCollection,
+} from './editor/utils';
 
 export interface IIntegrationEditorStepAdderProps {
   /**
    * the list of steps to render.
    */
   steps: Step[];
+  /**
+   * a callback to get the `LocationDescriptor` that should be reached when
+   * clicking the 'Add a data mapping step' link
+   * @param idx - the zero-based index where a new connection should be added
+   */
+  addDataMapperStepHref: (idx: number) => H.LocationDescriptor;
   /**
    * a callback to get the `LocationDescriptor` that should be reached when
    * clicking the Add Connection button
@@ -51,66 +61,60 @@ export class IntegrationEditorStepAdder extends React.Component<
     return (
       <PageSection>
         <IntegrationEditorStepsList>
-          {this.props.steps.map((s, idx) => {
-            const inputDataShape =
-              s.action &&
-              s.action.descriptor &&
-              s.action.descriptor.inputDataShape;
-            const outputDataShape =
-              s.action &&
-              s.action.descriptor &&
-              s.action.descriptor.outputDataShape;
-            const shape =
-              idx === 0
-                ? getDataShapeText(s.stepKind!, outputDataShape)
-                : getDataShapeText(s.stepKind!, inputDataShape);
-
-            return (
-              <React.Fragment key={idx}>
-                <IntegrationEditorStepsListItem
-                  stepName={(s.action && s.action!.name) || s.name!}
-                  stepDescription={(s.action! && s.action!.description) || ''}
-                  additionalInfo={[
-                    <div
-                      className={
-                        'list-view-pf-additional-info-item-stacked list-view-pf-additional-info-item'
-                      }
-                      key={0}
-                    >
-                      <strong>{shape || 'n/a'}</strong>
-                      <span>Data shape</span>
-                    </div>,
-                  ]}
-                  icon={
-                    <img
-                      alt={s.action ? s.action!.name : s.name}
-                      src={getStepIcon(process.env.PUBLIC_URL, s)}
-                      width={24}
-                      height={24}
-                    />
-                  }
-                  actions={
+          {toUIIntegrationStepCollection(
+            toUIStepCollection(this.props.steps)
+          ).map((s, idx) => (
+            <React.Fragment key={idx}>
+              <IntegrationEditorStepsListItem
+                stepName={(s.action && s.action!.name) || s.name!}
+                stepDescription={(s.action! && s.action!.description) || ''}
+                shape={s.shape || 'n/a'}
+                icon={getStepIcon(process.env.PUBLIC_URL, s)}
+                showWarning={
+                  s.shouldAddDataMapper || s.previousStepShouldDefineDataShape
+                }
+                i18nWarningTitle={'Data Type Mismatch'}
+                i18nWarningMessage={
+                  s.previousStepShouldDefineDataShape ? (
                     <>
-                      <ButtonLink href={this.props.configureStepHref(idx, s)}>
-                        Configure
-                      </ButtonLink>
-                      <ButtonLink href={'#'} as={'danger'}>
-                        <i className="fa fa-trash" />
-                      </ButtonLink>
+                      <a>Define the data type</a> for the previous step to
+                      resolve this warning.
                     </>
-                  }
+                  ) : (
+                    <>
+                      <Link to={this.props.addDataMapperStepHref(idx - 1)}>
+                        Add a data mapping step
+                      </Link>{' '}
+                      before this connection to resolve the difference.
+                    </>
+                  )
+                }
+                actions={
+                  <>
+                    <ButtonLink
+                      href={this.props.configureStepHref(
+                        idx,
+                        this.props.steps[idx]
+                      )}
+                    >
+                      Configure
+                    </ButtonLink>
+                    <ButtonLink href={'#'} as={'danger'}>
+                      <i className="fa fa-trash" />
+                    </ButtonLink>
+                  </>
+                }
+              />
+              {idx < this.props.steps.length - 1 && (
+                <IntegrationFlowAddStep
+                  active={false}
+                  showDetails={false}
+                  addStepHref={this.props.addStepHref(idx + 1)}
+                  i18nAddStep={'Add a step'}
                 />
-                {idx < this.props.steps.length - 1 && (
-                  <IntegrationFlowAddStep
-                    active={false}
-                    showDetails={false}
-                    addStepHref={this.props.addStepHref(idx + 1)}
-                    i18nAddStep={'Add a step'}
-                  />
-                )}
-              </React.Fragment>
-            );
-          })}
+              )}
+            </React.Fragment>
+          ))}
         </IntegrationEditorStepsList>
       </PageSection>
     );

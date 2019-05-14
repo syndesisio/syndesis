@@ -154,6 +154,13 @@ export interface IUIStep extends StepKind {
   outputDataShape?: DataShape;
 }
 
+export interface IUIIntegrationStep extends IUIStep {
+  shape: string | undefined;
+  previousStepShouldDefineDataShape: boolean;
+  shouldAddDataMapper: boolean;
+  isUnclosedSplit: boolean;
+}
+
 export const stepRoutes = {
   // step 1
   selectStep: '',

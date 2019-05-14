@@ -1,4 +1,4 @@
-import { getSteps } from '@syndesis/api';
+import { createStep, getSteps } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Step } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
@@ -47,6 +47,17 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
               content={
                 <IntegrationEditorStepAdder
                   steps={getSteps(integration, flowId)}
+                  addDataMapperStepHref={position =>
+                    getStepHref(
+                      {
+                        ...createStep(),
+                        stepKind: 'mapper',
+                      },
+                      { flowId, position: `${position}` },
+                      { integration },
+                      this.props
+                    )
+                  }
                   addStepHref={position =>
                     this.props.getEditAddStepHref(
                       position,

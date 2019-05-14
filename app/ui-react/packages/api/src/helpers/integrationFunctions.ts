@@ -844,17 +844,22 @@ export function getMiddleSteps(integration: Integration, flowId: string) {
  * @param flowId
  * @param position
  */
-export function getSubsequentSteps(
+export function getIntegrationSubsequentSteps(
   integration: Integration,
   flowId: string,
   position: number
 ) {
-  const flow = getFlow(integration, flowId);
-  if (!flow!.steps) {
-    // TODO following semantics for now, this should throw an error
-    return undefined;
-  }
-  return flow!.steps.slice(position + 1);
+  const steps = getSteps(integration, flowId);
+  return getSubsequentSteps(steps, position);
+}
+
+/**
+ * Get an array of steps from the flow after the given position
+ * @param steps
+ * @param position
+ */
+export function getSubsequentSteps(steps: Step[], position: number) {
+  return steps.slice(position + 1);
 }
 
 /**
@@ -863,17 +868,21 @@ export function getSubsequentSteps(
  * @param flowId
  * @param position
  */
-export function getPreviousSteps(
+export function getPreviousIntegrationSteps(
   integration: Integration,
   flowId: string,
   position: number
 ) {
-  const flow = getFlow(integration, flowId);
-  if (!flow!.steps) {
-    // TODO following semantics for now, this should throw an error
-    return undefined;
-  }
-  return flow!.steps.slice(0, position);
+  const steps = getSteps(integration, flowId);
+  return getPreviousSteps(steps, position);
+}
+/**
+ * Get an array of steps from the flow before the given position
+ * @param steps
+ * @param position
+ */
+export function getPreviousSteps(steps: Step[], position: number) {
+  return steps.slice(0, position);
 }
 
 /**
@@ -887,7 +896,7 @@ export function getSubsequentConnections(
   flowId: string,
   position: number
 ) {
-  const steps = getSubsequentSteps(integration, flowId, position);
+  const steps = getIntegrationSubsequentSteps(integration, flowId, position);
   if (steps) {
     return steps.filter(s => s.stepKind === ENDPOINT);
   }
@@ -906,7 +915,7 @@ export function getPreviousConnections(
   flowId: string,
   position: number
 ) {
-  const steps = getPreviousSteps(integration, flowId, position);
+  const steps = getPreviousIntegrationSteps(integration, flowId, position);
   if (steps) {
     return steps.filter(s => s.stepKind === ENDPOINT);
   }
@@ -955,7 +964,7 @@ export function getSubsequentStepsWithDataShape(
   flowId: string,
   position: number
 ): Array<{ step: Step; index: number }> {
-  const steps = getSubsequentSteps(integration, flowId, position);
+  const steps = getIntegrationSubsequentSteps(integration, flowId, position);
   if (steps) {
     return steps
       .map((step, index) => {
@@ -973,14 +982,26 @@ export function getSubsequentStepsWithDataShape(
  * @param flowId
  * @param position
  */
-export function getPreviousStepsWithDataShape(
+export function getPreviousIntegrationStepsWithDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ): Array<{ step: Step; index: number }> {
-  const steps = getPreviousSteps(integration, flowId, position);
-  if (steps) {
-    return steps
+  const steps = getSteps(integration, flowId);
+  return getPreviousStepsWithDataShape(steps || [], position);
+}
+/**
+ * Return all steps before the given position that have a data shape
+ * @param steps
+ * @param position
+ */
+export function getPreviousStepsWithDataShape(
+  steps: Step[],
+  position: number
+): Array<{ step: Step; index: number }> {
+  const previousSteps = getPreviousSteps(steps, position);
+  if (previousSteps) {
+    return previousSteps
       .map((step, index) => {
         return { step, index };
       })
@@ -996,12 +1017,16 @@ export function getPreviousStepsWithDataShape(
  * @param flowId
  * @param position
  */
-export function getPreviousStepIndexWithDataShape(
+export function getPreviousIntegrationStepIndexWithDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ) {
-  const steps = getPreviousStepsWithDataShape(integration, flowId, position);
+  const steps = getPreviousIntegrationStepsWithDataShape(
+    integration,
+    flowId,
+    position
+  );
   if (steps && steps.length) {
     return steps.reverse()[0].index;
   }
@@ -1014,14 +1039,24 @@ export function getPreviousStepIndexWithDataShape(
  * @param flowId
  * @param position
  */
-export function getPreviousStepWithDataShape(
+export function getPreviousIntegrationStepWithDataShape(
   integration: Integration,
   flowId: string,
   position: number
 ) {
-  const steps = getPreviousStepsWithDataShape(integration, flowId, position);
-  if (steps && steps.length) {
-    return steps.reverse()[0].step;
+  const steps = getSteps(integration, flowId);
+  return getPreviousStepWithDataShape(steps || [], position);
+}
+
+/**
+ * Returns the first previous step that has a data shape
+ * @param steps
+ * @param position
+ */
+export function getPreviousStepWithDataShape(steps: Step[], position: number) {
+  const previousSteps = getPreviousStepsWithDataShape(steps, position);
+  if (previousSteps && previousSteps.length) {
+    return previousSteps.reverse()[0].step;
   }
   return undefined;
 }
@@ -1102,14 +1137,27 @@ export function validateFlow(
  * @param flowId
  * @param position
  */
-export function getNextAggregateStep(
+export function getIntegrationNextAggregateStep(
   integration: Integration,
   flowId: string,
   position: number
 ): Step | undefined {
-  const steps = getSubsequentSteps(integration, flowId, position);
-  if (steps && steps.length) {
-    return steps.filter(s => s.stepKind === AGGREGATE)[0];
+  const steps = getIntegrationSubsequentSteps(integration, flowId, position);
+  return getNextAggregateStep(steps || [], position);
+}
+
+/**
+ * Finds the closest step of type 'Aggregate' after the provided position.
+ * @param steps
+ * @param position
+ */
+export function getNextAggregateStep(
+  steps: Step[],
+  position: number
+): Step | undefined {
+  const subsequentSteps = getSubsequentSteps(steps, position);
+  if (subsequentSteps && subsequentSteps.length) {
+    return subsequentSteps.filter(s => s.stepKind === AGGREGATE)[0];
   }
   return undefined;
 }
