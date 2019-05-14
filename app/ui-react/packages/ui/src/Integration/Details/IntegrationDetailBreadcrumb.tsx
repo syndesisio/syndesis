@@ -34,7 +34,9 @@ export class IntegrationDetailBreadcrumb extends React.Component<
               onClick={this.props.exportAction}
               children={this.props.exportLabel}
             />
+            &nbsp;&nbsp;
             <ButtonLink
+              className="btn btn-primary"
               href={this.props.editHref}
               children={this.props.editLabel}
             />

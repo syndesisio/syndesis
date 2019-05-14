@@ -93,7 +93,7 @@ export class ActivityPageTable extends React.Component<
 
                     const errorMessages = [
                       null,
-                      ...step.messages!,
+                      ...(step.messages || []),
                       step.failure,
                     ].filter(messages => !!messages);
                     step.output =

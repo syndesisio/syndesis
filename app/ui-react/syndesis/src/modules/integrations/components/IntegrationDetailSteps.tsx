@@ -27,7 +27,7 @@ export class IntegrationDetailSteps extends React.Component<
     const steps = getSteps(this.props.integration, flowId);
 
     return (
-      <PageSection variant={'light'}>
+      <PageSection>
         <IntegrationStepsHorizontalView>
           {toUIStepCollection(steps).map((s: IUIStep, idx: number) => {
             const isFirst = idx === 0;

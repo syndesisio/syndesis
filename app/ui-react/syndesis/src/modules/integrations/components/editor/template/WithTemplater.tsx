@@ -5,6 +5,7 @@ import {
   TemplateStepTemplateEditor,
   TemplateStepTypeSelector,
   TemplateType,
+  WithDropzone,
 } from '@syndesis/ui';
 import { key } from '@syndesis/utils';
 import * as React from 'react';
@@ -35,6 +36,7 @@ export interface IWithTemplaterProps {
 export interface IWithTemplaterState {
   language: TemplateType;
   text: string;
+  fileErrorMessage?: string;
 }
 
 const linters = {
@@ -86,6 +88,8 @@ export class WithTemplater extends React.Component<
   private linter: AbstractLanguageLint;
   private editor: ITextEditor | undefined;
   private action: Action | undefined;
+  private fileInput = React.createRef<HTMLInputElement>();
+
   constructor(props: IWithTemplaterProps) {
     super(props);
     this.state = {
@@ -96,6 +100,34 @@ export class WithTemplater extends React.Component<
     this.handleTemplateTypeChange = this.handleTemplateTypeChange.bind(this);
     this.handleEditorChange = this.handleEditorChange.bind(this);
     this.handleEditorDidMount = this.handleEditorDidMount.bind(this);
+    this.handleDropAccepted = this.handleDropAccepted.bind(this);
+    this.handleDropRejected = this.handleDropRejected.bind(this);
+    this.handleClickBrowse = this.handleClickBrowse.bind(this);
+  }
+  public handleClickBrowse() {
+    this.fileInput.current!.click();
+  }
+  public handleDropAccepted(files: File[]) {
+    // just take the last element
+    const file = files.pop();
+    if (typeof file === 'undefined') {
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const text = reader.result as string;
+      this.updateEditor(text);
+    };
+    reader.readAsText(file);
+  }
+  public handleDropRejected(files: File[]) {
+    const file = files.pop();
+    if (typeof file === 'undefined') {
+      return;
+    }
+    this.setState({
+      fileErrorMessage: `Could not accept "${file.name}"`,
+    });
   }
   public handleEditorDidMount(editor: ITextEditor) {
     this.editor = editor;
@@ -112,8 +144,7 @@ export class WithTemplater extends React.Component<
     this.setState({ language: newType });
   }
   public handleEditorChange(editor: ITextEditor, data: any, text: string) {
-    this.buildAction(this.state.text);
-    this.setState({ text });
+    this.updateEditor(text);
   }
   public render() {
     const submitForm = () => {
@@ -135,21 +166,36 @@ export class WithTemplater extends React.Component<
           templateType={this.state.language as TemplateType}
           onTemplateTypeChange={this.handleTemplateTypeChange}
         />
-        <TemplateStepTemplateEditor
-          mode={this.state.language}
-          i18nFileUploadLimit={'Max: 1 file (up to 1MB)'}
-          textEditorDescription={
-            <>
-              Drag and drop a file, paste in text, or start typing in the text
-              editor below to add a template. If you already have a template
-              file, browse to upload the file.
-            </>
-          }
-          initialValue={this.state.text}
-          onChange={this.handleEditorChange}
-          onUpdateLinting={this.props.onUpdateLinting}
-          editorDidMount={this.handleEditorDidMount}
-        />
+        <WithDropzone
+          allowMultiple={false}
+          disableDropzone={false}
+          maxSize={1024 * 1000}
+          onDropAccepted={this.handleDropAccepted}
+          onDropRejected={this.handleDropRejected}
+        >
+          {({ getRootProps, getInputProps }) => (
+            <div {...getRootProps({ className: 'dropzone' })}>
+              <input {...getInputProps()} ref={this.fileInput} />
+              <TemplateStepTemplateEditor
+                mode={this.state.language}
+                i18nFileUploadLimit={'Max: 1 file (up to 1MB)'}
+                textEditorDescription={
+                  <>
+                    Drag and drop a file, paste in text, or start typing in the
+                    text editor below to add a template. If you already have a
+                    template file,{/* eslint-disable-next-line */ ' '}
+                    <a onClick={this.handleClickBrowse}>browse to upload</a> the
+                    file.
+                  </>
+                }
+                initialValue={this.state.text}
+                onChange={this.handleEditorChange}
+                onUpdateLinting={this.props.onUpdateLinting}
+                editorDidMount={this.handleEditorDidMount}
+              />
+            </div>
+          )}
+        </WithDropzone>
       </>
     );
     return this.props.children({
@@ -186,5 +232,9 @@ export class WithTemplater extends React.Component<
     } catch (err) {
       // ignore
     }
+  }
+  private updateEditor(text: string) {
+    this.buildAction(text);
+    this.setState({ fileErrorMessage: undefined, text });
   }
 }

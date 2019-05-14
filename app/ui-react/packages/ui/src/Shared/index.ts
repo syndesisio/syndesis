@@ -16,3 +16,4 @@ export * from './ProgressWithLink';
 export * from './PfDropdownItem';
 export * from './TextEditor';
 export * from './UnrecoverableError';
+export * from './WithDropzone';
