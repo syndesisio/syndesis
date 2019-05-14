@@ -109,10 +109,10 @@ const sortTypes: ISortType[] = [sortByName, sortByStatus];
 export class IntegrationsPage extends React.Component {
   public render() {
     return (
-      <WithMonitoredIntegrations>
-        {({ data: integrationsData, hasData, error }) => (
-          <WithConnections>
-            {({ data: connectionsData }) => (
+      <WithConnections debounceWait={500}>
+        {({ data: connectionsData }) => (
+          <WithMonitoredIntegrations>
+            {({ data: integrationsData, hasData, error }) => (
               <Translation ns={['integrations', 'shared']}>
                 {t => (
                   <WithListViewToolbarHelpers
@@ -164,9 +164,9 @@ export class IntegrationsPage extends React.Component {
                 )}
               </Translation>
             )}
-          </WithConnections>
+          </WithMonitoredIntegrations>
         )}
-      </WithMonitoredIntegrations>
+      </WithConnections>
     );
   }
 }
