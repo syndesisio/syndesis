@@ -4,6 +4,7 @@ import { Step } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { IntegrationEditorStepAdder } from '../IntegrationEditorStepAdder';
 import { IBaseRouteParams, IBaseRouteState } from './interfaces';
@@ -14,12 +15,12 @@ export interface IAddStepPageProps extends IGetStepHrefs {
   getAddMapperStepHref: (
     position: number,
     p: IBaseRouteParams,
-    s: IBaseRouteState
+    s: IBaseRouteState,
   ) => H.LocationDescriptor;
   getEditAddStepHref: (
     position: number,
     p: IBaseRouteParams,
-    s: IBaseRouteState
+    s: IBaseRouteState,
   ) => H.LocationDescriptor;
   saveHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
 }
@@ -34,55 +35,60 @@ export interface IAddStepPageProps extends IGetStepHrefs {
  * undefined.
  *
  * @todo make this page shareable by making the [integration]{@link IBaseRouteState#integration}
- * optinal and adding a WithIntegration component to retrieve the integration
+ * optional and adding a WithIntegration component to retrieve the integration
  * from the backend
  */
 export class AddStepPage extends React.Component<IAddStepPageProps> {
   public render() {
     return (
-      <WithRouteData<IBaseRouteParams, IBaseRouteState>>
-        {({ flowId }, { integration }) => (
-          <>
-            <PageTitle title={'Save or add step'} />
-            <IntegrationEditorLayout
-              title={'Add to Integration'}
-              description={
-                'You can continue adding steps and connections to your integration as well.'
-              }
-              content={
-                <IntegrationEditorStepAdder
-                  steps={getSteps(integration, flowId)}
-                  addDataMapperStepHref={position =>
-                    this.props.getAddMapperStepHref(
-                      position,
-                      { flowId },
-                      { integration }
-                    )
-                  }
-                  addStepHref={position =>
-                    this.props.getEditAddStepHref(
-                      position,
-                      { flowId },
-                      { integration }
-                    )
-                  }
-                  configureStepHref={(position: number, step: Step) =>
-                    getStepHref(
-                      step,
-                      { flowId, position: `${position}` },
-                      { integration },
-                      this.props
-                    )
+      <Translation ns={['integrations']}>
+        {t => (
+          <WithRouteData<IBaseRouteParams, IBaseRouteState>>
+            {({ flowId }, { integration }) => (
+              <>
+                <PageTitle title={t('integrations:editor:saveOrAddStep')}/>
+                <IntegrationEditorLayout
+                  title={t('integrations:editor:addToIntegration')}
+                  description={t('integrations:editor:addStepDescription')}
+                  content={
+                    <IntegrationEditorStepAdder
+                      steps={getSteps(integration, flowId)}
+                      addDataMapperStepHref={position =>
+                        this.props.getAddMapperStepHref(
+                          position,
+                          { flowId },
+                          { integration },
+                        )
+                      }
+                      addStepHref={position =>
+                        this.props.getEditAddStepHref(
+                          position,
+                          { flowId },
+                          { integration },
+                        )
+                      }
+                      configureStepHref={(position: number, step: Step) =>
+                        getStepHref(
+                          step,
+                          { flowId, position: `${position}` },
+                          { integration },
+                          this.props,
+                        )
+                      }
+                      cancelHref={this.props.cancelHref(
+                        { flowId },
+                        { integration },
+                      )}
+                      saveHref={this.props.saveHref({ flowId }, { integration })}
+                      publishHref={this.props.saveHref({ flowId }, { integration })}
+                    />
                   }
                 />
-              }
-              cancelHref={this.props.cancelHref({ flowId }, { integration })}
-              saveHref={this.props.saveHref({ flowId }, { integration })}
-              publishHref={this.props.saveHref({ flowId }, { integration })}
-            />
-          </>
+              </>
+            )}
+          </WithRouteData>
         )}
-      </WithRouteData>
+      </Translation>
     );
   }
 }

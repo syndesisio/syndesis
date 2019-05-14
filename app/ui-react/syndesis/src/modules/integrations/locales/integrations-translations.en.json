@@ -68,6 +68,11 @@
     "modified": "A connection associated with this integration has been modified. To incorporate the changes, please edit the integration.",
     "obsolete": "The published integration has become obsolete and its recommended it should be republished."
   },
+  "editor": {
+    "addStepDescription": "You can continue adding steps and connections to your integration as well.",
+    "addToIntegration": "Add to Integration",
+    "saveOrAddStep": "Save or Add Step"
+  },
   "ReplaceDraft": "Replace Draft",
   "ReplaceDraftModalMessage": "Are you sure you want to to replace the current draft for the \"{{name}}\" integration?",
   "ReplaceDraftMOdalTitle": "Replace Draft?",
