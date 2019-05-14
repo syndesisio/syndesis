@@ -54,15 +54,16 @@ export interface IEditorSidebarProps {
   steps: Step[];
   activeStep?: IUIStep;
   activeIndex: number;
+  initialExpanded?: boolean;
 }
 export const EditorSidebar: React.FunctionComponent<
   IEditorSidebarProps & {
     isAdding: boolean;
   }
-> = ({ activeIndex, activeStep, steps, isAdding }) => {
+> = ({ activeIndex, activeStep, initialExpanded, steps, isAdding }) => {
   const UISteps = toUIStepCollection(steps);
   return (
-    <IntegrationVerticalFlow>
+    <IntegrationVerticalFlow initialExpanded={initialExpanded}>
       {({ expanded }) => {
         if (UISteps.length === 0) {
           return (

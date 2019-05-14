@@ -1,16 +1,20 @@
 import {
   ADVANCED_FILTER,
   AGGREGATE,
+  API_PROVIDER,
   BASIC_FILTER,
+  CONNECTOR,
   DATA_MAPPER,
   DataShapeKinds,
   ENDPOINT,
+  EXTENSION,
   getExtensionIcon,
   getNextAggregateStep,
   getPreviousStepWithDataShape,
   getStepIcon,
   getStepsLastPosition,
   HIDE_FROM_STEP_SELECT,
+  LOG,
   SPLIT,
   TEMPLATE,
 } from '@syndesis/api';
@@ -56,7 +60,7 @@ export function toUIStep(step: Step): IUIStep {
     step.action.descriptor &&
     step.action.descriptor.outputDataShape;
   switch (uiStepKind) {
-    case 'extension':
+    case EXTENSION:
       // An extension needs special mapping
       return {
         ...step,
@@ -77,9 +81,9 @@ export function toUIStep(step: Step): IUIStep {
         title: step.name!,
         uiStepKind,
       };
-    case 'api-provider':
-    case 'endpoint':
-    case 'connector':
+    case API_PROVIDER:
+    case ENDPOINT:
+    case CONNECTOR:
       // this step is a Connection step
       return {
         ...step,
@@ -229,8 +233,8 @@ export const getStepHref = (
   hrefs: IGetStepHrefs
 ) => {
   switch (getStepKind(step)) {
-    case 'endpoint':
-    case 'connector':
+    case ENDPOINT:
+    case CONNECTOR:
       return hrefs.connectionHref(
         typeof (step as IUIStep).uiStepKind !== 'undefined'
           ? (step as IUIStep).connection!
@@ -238,15 +242,15 @@ export const getStepHref = (
         params,
         state
       );
-    case 'api-provider':
+    case API_PROVIDER:
       return hrefs.apiProviderHref(step, params, state);
-    case 'ruleFilter':
+    case BASIC_FILTER:
       return hrefs.filterHref(step, params, state);
-    case 'mapper':
+    case DATA_MAPPER:
       return hrefs.mapperHref(step, params, state);
-    case 'template':
+    case TEMPLATE:
       return hrefs.templateHref(step, params, state);
-    case 'extension':
+    case EXTENSION:
     default:
       return hrefs.stepHref(step, params, state);
   }
@@ -291,7 +295,7 @@ export function mergeConnectionsSources(
                 metadata: (extension.metadata as { [name: string]: any }) || {},
                 name: a.name,
                 properties,
-                stepKind: 'extension',
+                stepKind: EXTENSION,
                 title: a.name,
               } as StepKind)
             );
@@ -327,14 +331,14 @@ export function filterStepsByPosition(steps: StepKind[], position: number) {
         step.connection.metadata[HIDE_FROM_STEP_SELECT]) ||
       (typeof step.metadata !== 'undefined' &&
         step.metadata[HIDE_FROM_STEP_SELECT]) ||
-      (step.connection || (step as Connection)).connectorId === 'log'
+      (step.connection || (step as Connection)).connectorId === LOG
     ) {
       return false;
     }
     // Special handling for the beginning of a flow
     if (atStart) {
       // At the moment only endpoints can be at the start
-      if (step.stepKind !== 'endpoint') {
+      if (step.stepKind !== ENDPOINT) {
         return false;
       }
       if ((step.connection || (step as Connection)).connector) {
@@ -362,7 +366,7 @@ export function filterStepsByPosition(steps: StepKind[], position: number) {
       }
     }
     if (
-      (step.connection || (step as Connection)).connectorId === 'api-provider'
+      (step.connection || (step as Connection)).connectorId === API_PROVIDER
     ) {
       // api provider can be used only for From actions
       return false;

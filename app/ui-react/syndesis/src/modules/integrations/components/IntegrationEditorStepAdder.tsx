@@ -82,7 +82,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                     </>
                   ) : (
                     <>
-                      <Link to={this.props.addDataMapperStepHref(idx - 1)}>
+                      <Link to={this.props.addDataMapperStepHref(idx)}>
                         Add a data mapping step
                       </Link>{' '}
                       before this connection to resolve the difference.

@@ -29,7 +29,13 @@ const addStepPage = (
       })
     }
     filterHref={resolvers.create.configure.editStep.basicFilter}
-    mapperHref={resolvers.create.configure.editStep.dataMapper}
+    mapperHref={(step, params, state) =>
+      resolvers.create.configure.addStep.dataMapper({
+        step,
+        ...params,
+        ...state,
+      })
+    }
     templateHref={(step, params, state) =>
       resolvers.create.configure.editStep.template({
         step,

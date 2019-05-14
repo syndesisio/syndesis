@@ -1,4 +1,4 @@
-import { createStep, getSteps } from '@syndesis/api';
+import { ALL_STEPS, DATA_MAPPER, createStep, getSteps } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Step } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
@@ -51,7 +51,7 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                     getStepHref(
                       {
                         ...createStep(),
-                        stepKind: 'mapper',
+                        ...ALL_STEPS.find(s => s.stepKind === DATA_MAPPER),
                       },
                       { flowId, position: `${position}` },
                       { integration },

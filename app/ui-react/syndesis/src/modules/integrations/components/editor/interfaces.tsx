@@ -1,4 +1,4 @@
-/* tslint:disable:object-literal-sort-keys */
+/* tslint:disable:object-literal-sort-keys no-empty-interface */
 import {
   ConnectionBulletinBoard,
   ConnectionOverview,
@@ -92,16 +92,10 @@ export interface ISelectConnectionRouteParams {
   position: string;
 }
 
-export interface ITemplateStepRouteParams {
-  flowId: string;
-  position: string;
-}
-
-export interface ITemplateStepRouteState {
-  step: StepKind;
-  integration: Integration;
-  updatedIntegration?: Integration;
-}
+export interface ITemplateStepRouteParams extends IConfigureStepRouteParams {}
+export interface ITemplateStepRouteState extends IConfigureStepRouteState {}
+export interface IDataMapperRouteParams extends IConfigureStepRouteParams {}
+export interface IDataMapperRouteState extends IConfigureStepRouteState {}
 
 /**
  * @param integration - the integration object coming from step 3.index, used to

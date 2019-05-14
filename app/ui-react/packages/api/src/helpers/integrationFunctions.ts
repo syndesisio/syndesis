@@ -1005,7 +1005,8 @@ export function getPreviousStepsWithDataShape(
       .map((step, index) => {
         return { step, index };
       })
-      .filter(indexedStep => hasDataShape(indexedStep.step, false));
+      .filter(indexedStep => hasDataShape(indexedStep.step, false))
+      .sort((a, b) => b.index - a.index);
   }
   // TODO preserving semantics for now
   return [];
@@ -1067,7 +1068,7 @@ export function getPreviousStepWithDataShape(steps: Step[], position: number) {
  * @param flowId
  * @param position
  */
-export function getSubsequentStepWithDataShape(
+export function getSubsequentIntegrationStepWithDataShape(
   integration: Integration,
   flowId: string,
   position: number
