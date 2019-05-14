@@ -39,13 +39,11 @@ export class IntegrationsListItem extends React.Component<
         heading={this.props.integrationName}
         className={'integration-list-item'}
         description={
-          this.props.isConfigurationRequired ? (
+          this.props.isConfigurationRequired && (
             <div className={'config-required'}>
               <Icon type={'pf'} name={'warning-triangle-o'} />
               {this.props.i18nConfigurationRequired}
             </div>
-          ) : (
-            ''
           )
         }
         additionalInfo={[
