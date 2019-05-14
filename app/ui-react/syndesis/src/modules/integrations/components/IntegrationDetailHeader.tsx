@@ -97,7 +97,7 @@ export const IntegrationDetailHeader: React.FunctionComponent<
           <>
             <IntegrationDetailBreadcrumb
               editHref={props.editAction.href}
-              editLabel={props.editAction.label}
+              editLabel={t('integrations:EditIntegration')}
               exportAction={props.exportAction.onClick}
               exportHref={props.exportAction.href}
               exportLabel={props.exportAction.label}

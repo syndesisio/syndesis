@@ -1,9 +1,9 @@
 import { Grid, Icon } from 'patternfly-react';
 import * as React from 'react';
-import Dropzone from 'react-dropzone';
 import { Container } from '../Layout/Container';
 import './DndFileChooser.css';
 import { INotification, INotificationType } from './Notifications';
+import { WithDropzone } from './WithDropzone';
 
 /**
  * The properties of the `DndFileChooser`.
@@ -229,10 +229,10 @@ export class DndFileChooser extends React.Component<
 
   public render() {
     return (
-      <Dropzone
-        accept={this.props.fileExtensions}
-        disabled={this.props.disableDropzone}
-        multiple={this.props.allowMultiple}
+      <WithDropzone
+        fileExtensions={this.props.fileExtensions}
+        disableDropzone={this.props.disableDropzone}
+        allowMultiple={this.props.allowMultiple}
         onDropAccepted={this.handleAcceptedFiles}
         onDropRejected={this.handleRejectedFiles}
       >
@@ -279,7 +279,7 @@ export class DndFileChooser extends React.Component<
             </Grid>
           </Container>
         )}
-      </Dropzone>
+      </WithDropzone>
     );
   }
 }

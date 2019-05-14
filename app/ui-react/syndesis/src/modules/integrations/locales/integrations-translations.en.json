@@ -19,6 +19,7 @@
   "ConfirmRemoveTagDetail": "This change will be applied to all integrations.  Removing a tag will unassociate it across integrations and then delete it.  No integrations will be deleted.",
   "AddTagDialogTitle": "Add Tag Name",
   "AddTagDialogDescription": "The following changes will be applied to all integrations.",
+  "EditIntegration": "Edit Integration",
   "EditTagDialogTitle": "Edit Tag",
   "EditTagDialogDescription": "The following changes will be applied to all integrations.",
   "TagName": "Tag Name",

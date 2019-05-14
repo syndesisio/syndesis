@@ -10,6 +10,7 @@ import {
   IntegrationDetailHistoryListViewItem,
   IntegrationDetailHistoryListViewItemActions,
   Loader,
+  PageSection,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -49,7 +50,11 @@ export class DetailsPage extends React.Component {
                         <WithLoader
                           error={error}
                           loading={!hasData}
-                          loaderChildren={<Loader />}
+                          loaderChildren={
+                            <PageSection>
+                              <Loader />
+                            </PageSection>
+                          }
                           errorChildren={<ApiError />}
                         >
                           {() => (

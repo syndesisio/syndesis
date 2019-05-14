@@ -1,4 +1,5 @@
 import { Text, TextContent } from '@patternfly/react-core';
+import { Alert } from 'patternfly-react';
 import * as React from 'react';
 import { ITextEditor, TextEditor } from '../../../../Shared';
 import { TemplateType } from './TemplateStepTypeSelector';
@@ -9,6 +10,7 @@ interface ITemplateStepTemplateEditorProps {
   onChange: (editor: ITextEditor, data: any, value: string) => void;
   initialValue: string;
   i18nFileUploadLimit: string;
+  invalidFileMessage?: string;
   editorDidMount?: (editor: ITextEditor) => void;
   onUpdateLinting?: (
     unsortedAnnotations: any[],
@@ -22,6 +24,7 @@ export class TemplateStepTemplateEditor extends React.Component<
 > {
   public render() {
     const editorOptions = {
+      dragDrop: false,
       gutters: ['CodeMirror-lint-markers'],
       lineNumbers: true,
       lineWrapping: true,
@@ -48,6 +51,15 @@ export class TemplateStepTemplateEditor extends React.Component<
             </small>
           </Text>
         </TextContent>
+        {this.props.invalidFileMessage && this.props.invalidFileMessage !== '' && (
+          <Alert type="warning">
+            <span
+              dangerouslySetInnerHTML={{
+                __html: this.props.invalidFileMessage,
+              }}
+            />
+          </Alert>
+        )}
         <TextEditor
           onChange={this.props.onChange}
           options={editorOptions}
