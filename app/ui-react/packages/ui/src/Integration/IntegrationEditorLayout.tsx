@@ -99,7 +99,11 @@ export const IntegrationEditorLayout: React.FunctionComponent<
             <LevelItem>
               {(cancelHref || onCancel) && (
                 <>
-                  <ButtonLink onClick={onCancel} href={cancelHref}>
+                  <ButtonLink
+                    id={'integration-editor-cancel-button'}
+                    onClick={onCancel}
+                    href={cancelHref}
+                  >
                     Cancel
                   </ButtonLink>
                   &nbsp;
@@ -108,6 +112,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
               {(saveHref || onSave) && (
                 <>
                   <ButtonLink
+                    id={'integration-editor-save-button'}
                     onClick={onSave}
                     href={saveHref}
                     disabled={isSaveLoading || isSaveDisabled}
@@ -122,6 +127,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
               )}
               {(publishHref || onPublish) && (
                 <ButtonLink
+                  id={'integration-editor-publish-button'}
                   onClick={onPublish}
                   href={publishHref}
                   as={'primary'}
