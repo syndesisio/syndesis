@@ -1,3 +1,4 @@
+import { WithUser } from '@syndesis/api';
 import { IntegrationMonitoring } from '@syndesis/models';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -62,14 +63,19 @@ export const App: React.FunctionComponent<IAppBaseProps> = ({
   };
 
   return (
-    <AppContext.Provider
-      value={{
-        config,
-        getPodLogUrl,
-        logout,
-      }}
-    >
-      <UI routes={routes} />
-    </AppContext.Provider>
+    <WithUser>
+      {({ data }) => (
+        <AppContext.Provider
+          value={{
+            config,
+            getPodLogUrl,
+            logout,
+            user: data,
+          }}
+        >
+          <UI routes={routes} />
+        </AppContext.Provider>
+      )}
+    </WithUser>
   );
 };

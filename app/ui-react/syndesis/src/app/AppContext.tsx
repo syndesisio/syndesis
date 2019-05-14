@@ -1,8 +1,9 @@
-import { IntegrationMonitoring } from '@syndesis/models';
+import { IntegrationMonitoring, User } from '@syndesis/models';
 import * as React from 'react';
 import { IConfigFile } from './WithConfig';
 
 export interface IAppContext {
+  user: User;
   config: IConfigFile;
   getPodLogUrl: (
     monitoring: IntegrationMonitoring | undefined
