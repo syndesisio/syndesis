@@ -26,4 +26,9 @@ public class SQSMessage {
     public void setMessage(String message) {
         this.message = message;
     }
+
+    @Override
+    public String toString() {
+        return "SQSMessage [message=" + message + "]";
+    }
 }
