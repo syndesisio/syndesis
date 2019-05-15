@@ -10,7 +10,7 @@ This example describes two simple integrations:
 cases from Salesforce and adds them as incidents to ServiceNow. 
 
 * The other integration obtains updated
-cases from Salesforce and then updates a corresponding
+cases from Salesforce and updates a corresponding
 incident in ServiceNow. 
 
 .Prerequisite (in ServiceNow)
@@ -20,7 +20,7 @@ This implicitly creates a ServiceNow import set, which is required for
 an integration to add data to ServiceNow. For this example:
 
 * The name of the web service is *Cases from Salesforce*.
-* The service's target table is *Incidents*. This is the table that
+* The service's target table is *Incidents*. This table 
 contains the data to be updated.
 * The import set has the same schema as the *Incidents* table
 because of the selection of *Copy fields from target table*. The name of the
@@ -30,8 +30,8 @@ import set to the *Incidents* target table because of the selection of
 *Create transform map*.
 
 * In the import set, the correlation field is `correlation_Id` because 
-of the selection of the `correlation_Id` field followed by selection of the
-*Coalesce* checkbox.
+of the selection of the `correlation_Id` field followed by selection of 
+*Coalesce*.
 
 .Procedure overview (in {prodname})
 In {prodname}, you create the Salesforce and ServiceNow connections.
@@ -86,10 +86,7 @@ its subject.
 Click its *Activity* tab to see that {prodname} executed the integration once. 
 . In ServiceNow, view the *Incidents* table and expand the entry for the
 incident that was previously new. You should
-see that this incident, has an updated `short_description` value. 
+see that this incident has an updated `short_description` value. 
 ServiceNow checks the import set entry for the value of its `correlation_Id`. If
-this value already exists in the *Incidents* table, then ServiceNow updates 
+this value already exists in the *Incidents* table, ServiceNow updates 
 the incident that has that value. 
-
-
-. 

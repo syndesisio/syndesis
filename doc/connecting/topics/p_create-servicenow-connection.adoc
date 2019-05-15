@@ -11,10 +11,10 @@ you must create a ServiceNow connection.
 
 * A ServiceNow administrator at your site must have created a 
 ServiceNow account for you. 
-* You must know the URL for your ServiceNow instance as well 
+* You must know the URL for your ServiceNow instance and 
 your ServiceNow user name and password. 
 * If the ServiceNow administrator also created a ServiceNow
-client ID and client secret for you, then you must know these values.
+client ID and client secret for you, you must know these values.
 
 .Procedure
 
@@ -27,7 +27,7 @@ display any available connections.
 .. In the *Instance Name* field, enter the name of the ServiceNow instance
 that you want to obtain records from or copy records to. For example,
 if the URL for your ServiceNow instance is 
-`\https://abc12345.service-now.com` then the instance name is `abc12345`.
+`\https://abc12345.service-now.com`, the instance name is `abc12345`.
 .. In the *User Name* field, enter your ServiceNow user name. 
 .. In the *User Password* field, enter your ServiceNow password.
 .. Optionally, in the *Client ID* field, enter your client ID if you
@@ -36,12 +36,12 @@ received one from your ServiceNow administrator.
 received one from your ServiceNow administrator. 
 
 .. Click *Validate*. {prodname} immediately tries to validate the
-connection and displays a message that indicates whether or not
-validation is successful. If validation fails, revise the configuration
+connection and displays a message that indicates whether 
+validation is successful. If validation fails, update the configuration
 details as needed and try again.
 .. When validation is successful, click *Next*.
-. In the *Connection Name* field, enter your choice of a name that
-helps you distinguish this connection from any other connections.
+. In the *Connection Name* field, enter a name that
+helps you distinguish this connection from other connections.
 For example, enter `*ServiceNow Con 1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,

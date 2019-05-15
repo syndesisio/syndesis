@@ -7,6 +7,7 @@
 In a {prodname} integration, a ServiceNow connection cannot directly 
 update a ServiceNow table. To update ServiceNow data in an integration, 
 a prerequisite is an import set that stages updates for a ServiceNow table. 
+
 Often, the easiest way to create an import set is for
 a ServiceNow administrator to create a ServiceNow 
 inbound web service. This implicitly creates a ServiceNow import set. The 
@@ -22,7 +23,7 @@ You must have ServiceNow administrative privileges.
 
 . In ServiceNow, search for `web services`. 
 . In the results, under *System Web Services* > *Inbound*, click *Create New*. 
-. In the *Create Web Service* page, enter the required information, including:
+. In the *Create Web Service* page:
 .. In the *Label* field, specify the display name for the web service. 
 The web service's import set will also have this name. 
 .. In the *Target table* field, select the ServiceNow table that this service updates. 
@@ -32,7 +33,7 @@ updating the target table.
 .. Select *Create transform map*. This map enables ServiceNow to copy and 
 transform data from the import set to the target table. 
 
-. Click *Create* to create the web service. 
+. Click *Create*. 
 . In the next display, under *Related Links*, click *Auto Map Matching Fields* to 
 display a list of fields in the target table that you selected. 
 . Select one target table field to be the correlation (or coalesce) field. 
@@ -41,7 +42,7 @@ When the value of the correlation field in a record in the import set
 matches the value of a correlation field in the target table, 
 ServiceNow updates that record in the target table rather than creating a new record. 
 
-. Select the *Coalesce* checkbox to identify the field that you just selected
+. Select *Coalesce* to identify the field that you just selected
 as the correlation field. Without a correlation field, ServiceNow adds each 
 record in the import set to the target table.
 . Click *Update*.

@@ -38,5 +38,5 @@ In the integration visualization panel,
 {prodname} displays 
 image:shared/images/WarningIcon.png[Data Type Mismatch] on the
 connection. In most integrations, you need to map a source field 
-to the target field that is used as the correlation field in the 
+to the target field used as the correlation field in the 
 ServiceNow table. 

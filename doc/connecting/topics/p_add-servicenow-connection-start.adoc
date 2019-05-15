@@ -33,7 +33,7 @@ query. For example, consider the `state=1^impact=2` query on a table
 that keeps records about incidents. This query returns records for  new
 incidents (`state=1`) that have a medium impact (`impact=2`). 
 If you do not enter a query and the records in the table do not change,  
-then the connection obtains the same records every time. 
+the connection obtains the same records every time. 
 .. In the *Limit of elements per page* field, enter the maximum number of
 records that you want the connection to obtain. In this release, 
 you must enter a value, the recommendation is to enter `1000` or less, 
