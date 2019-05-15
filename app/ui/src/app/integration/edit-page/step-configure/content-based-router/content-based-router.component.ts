@@ -17,12 +17,13 @@
 import {
   Component,
   ViewEncapsulation,
-  OnDestroy, Input, Output, EventEmitter, OnChanges
+  OnDestroy, Input, Output, EventEmitter, OnChanges, OnInit
 } from '@angular/core';
 
 import {
   ContentBasedRouter,
   CurrentFlowService,
+  FlowPageService,
   FlowOption,
   INTEGRATION_ADD_FLOW,
   INTEGRATION_REMOVE_FLOW,
@@ -36,10 +37,11 @@ import {
   Flow,
   key
 } from '@syndesis/ui/platform';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ConnectionService } from '@syndesis/ui/store';
+import { ModalService } from '@syndesis/ui/common';
 
 @Component({
   selector: 'syndesis-content-based-router',
@@ -47,7 +49,7 @@ import { ConnectionService } from '@syndesis/ui/store';
   encapsulation: ViewEncapsulation.None,
   styleUrls: ['./content-based-router.component.scss']
 })
-export class ContentBasedRouterComponent implements OnChanges, OnDestroy {
+export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit {
   form: FormGroup;
   flowOptions: any = [];
 
@@ -81,17 +83,20 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy {
   constructor(
     private currentFlowService: CurrentFlowService,
     public integrationSupportService: IntegrationSupportService,
+    public flowPageService: FlowPageService,
+    public route: ActivatedRoute,
     private router: Router,
     private connectionService: ConnectionService,
-    private fb: FormBuilder
+    private fb: FormBuilder,
+    private modalService: ModalService
   ) {
     // nothing to do
   }
+
   // this can be valid even if we can't fetch the form data
   initForm(
     configuredProperties?: ContentBasedRouter,
   ): void {
-
     let configuredFlows: FlowOption[] = undefined;
     const configuredFlowGroups = [];
     const configuredDefaultFlow = (configuredProperties && configuredProperties.default)
@@ -158,6 +163,24 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy {
 
     // Fetch our form data
     this.initForm(this.configuredProperties);
+  }
+
+  ngOnInit(): void {
+    // setTimeout needed so that the prompt template is available
+    // and ExpressionChangedAfterItHasBeenCheckedError is not thrown
+    setTimeout(() => {
+      if (!this.currentFlowService.isSaved()) {
+        this.modalService
+          .show('save-cbr-integration-prompt').then(modal => {
+          if (modal.result) {
+            this.flowPageService.save(this.route);
+          } else {
+            this.flowPageService.cancel();
+          }
+        });
+      }
+    });
+    this.step = this.currentFlowService.getStep(this.position);
   }
 
   ngOnDestroy(): void {
@@ -299,7 +322,6 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy {
     };
 
     this.adaptOutputShape(step);
-
     return step;
   }
 

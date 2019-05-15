@@ -15,6 +15,7 @@ import {
   ],
 })
 export class IntegrationBasicsComponent implements OnInit, OnDestroy {
+  private targetUrl: string;
   constructor(
     public currentFlowService: CurrentFlowService,
     public flowPageService: FlowPageService,
@@ -52,10 +53,14 @@ export class IntegrationBasicsComponent implements OnInit, OnDestroy {
   }
 
   continue() {
-    this.router.navigate(['save-or-add-step'], {
-      queryParams: { validate: true },
-      relativeTo: this.route.parent,
-    });
+    if (this.targetUrl != null) {
+      this.router.navigateByUrl(this.targetUrl);
+    } else {
+      this.router.navigate(['save-or-add-step'], {
+        queryParams: { validate: true },
+        relativeTo: this.route.parent,
+      });
+    }
   }
 
   get name(): string {
@@ -102,6 +107,8 @@ export class IntegrationBasicsComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.flowPageService.initialize();
     this.flowPageService.showCancel = false;
+
+    this.route.queryParamMap.subscribe(params => this.targetUrl = params.get('targetUrl'));
   }
 
   ngOnDestroy() {

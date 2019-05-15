@@ -14,6 +14,13 @@
   ~ limitations under the License.
   -->
 
+<syndesis-modal
+  id="save-cbr-integration-prompt"
+  title="Save integration"
+  message="In order to add Content Based Router you need to save the integration first."
+>
+</syndesis-modal>
+
 <div *ngIf="form">
   <syndesis-loading [loading]="loading" [content]="content">
     <ng-template #content>
@@ -102,7 +109,6 @@
             </div>
           </div>
         </fieldset>
-
       </form>
     </ng-template>
   </syndesis-loading>
