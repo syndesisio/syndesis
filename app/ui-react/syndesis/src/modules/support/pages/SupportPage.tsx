@@ -65,7 +65,7 @@ export const SupportPage: React.FunctionComponent = () => {
                           return (
                             <article className="pf-c-card">
                               <DownloadDiagnostics>
-                                <div className="support-form pf-u-my-xl">
+                                <div className="support-form pf-u-my-md container-fluid">
                                   <div className="radio">
                                     <label htmlFor="alllogs">
                                       <input
