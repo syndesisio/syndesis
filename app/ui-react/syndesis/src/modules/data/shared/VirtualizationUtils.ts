@@ -2,6 +2,7 @@ import {
   Connection,
   ProjectedColumn,
   RestDataService,
+  RestVdbModel,
   SchemaNode,
   SchemaNodeInfo,
   ViewDefinition,
@@ -32,6 +33,20 @@ export enum DvConnectionSelection {
  */
 export function getPreviewVdbName(): string {
   return PREVIEW_VDB_NAME;
+}
+
+/**
+ * Get the DDL for the specified model view
+ */
+export function getViewDdl(vdbModel: RestVdbModel, viewName: string): string {
+  const views = vdbModel.keng__ddl.split('CREATE VIEW ');
+  if (views.length > 0) {
+    const viewDdl = views.find(view => view.startsWith(viewName));
+    if (viewDdl) {
+      return 'CREATE VIEW ' + viewDdl;
+    }
+  }
+  return 'CREATE VIEW';
 }
 
 /**
@@ -204,17 +219,20 @@ export function generateViewEditorStates(
  * @param projectedCols projected columns for the view
  * @param srcPaths paths for the sources used in the view
  * @param description the (optional) view description
+ * @param viewDdl the (optional) view DDL
  */
 function getViewEditorState(
   serviceVdbName: string,
   name: string,
   projectedCols: ProjectedColumn[],
   srcPaths: string[],
-  description?: string
+  description?: string,
+  viewDdl?: string
 ) {
   // View Definition
   const viewDefn: ViewDefinition = {
     compositions: [],
+    ddl: viewDdl ? viewDdl : '',
     isComplete: true,
     keng__description: description ? description : '',
     projectedColumns: projectedCols,

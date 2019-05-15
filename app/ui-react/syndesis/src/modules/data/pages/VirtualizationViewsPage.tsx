@@ -97,11 +97,6 @@ export class VirtualizationViewsPage extends React.Component<
     alert('Import view ' + viewName);
   }
 
-  public handleEditView() {
-    // TODO: implement handleEdit
-    alert('Edit view ');
-  }
-
   public render() {
     return (
       <WithRouteData<
@@ -238,42 +233,51 @@ export class VirtualizationViewsPage extends React.Component<
                                         >
                                           {() =>
                                             filteredAndSorted
-                                              .filter((view: ViewDefinition) =>
-                                                this.filterUndefinedId(view)
+                                              .filter((viewDefinition: ViewDefinition) =>
+                                                this.filterUndefinedId(viewDefinition)
                                               )
                                               .map(
                                                 (
-                                                  view: ViewDefinition,
+                                                  viewDefinition: ViewDefinition,
                                                   index: number
                                                 ) => (
-                                                  <ViewListItem
-                                                    key={index}
-                                                    viewName={view.viewName}
-                                                    viewDescription={
-                                                      view.keng__description
-                                                    }
-                                                    i18nCancelText={t(
-                                                      'shared:Cancel'
-                                                    )}
-                                                    i18nDelete={t(
-                                                      'shared:Delete'
-                                                    )}
-                                                    i18nDeleteModalMessage={t(
-                                                      'virtualization.deleteViewModalMessage',
-                                                      {
-                                                        name: view.viewName,
+                                                    <ViewListItem
+                                                      key={index}
+                                                      viewName={
+                                                        viewDefinition.viewName
                                                       }
-                                                    )}
-                                                    i18nDeleteModalTitle={t(
-                                                      'virtualization.deleteModalTitle'
-                                                    )}
-                                                    i18nEdit={t('shared:Edit')}
-                                                    i18nEditTip={t(
-                                                      'view.editViewTip'
-                                                    )}
-                                                    onDelete={handleDeleteView}
-                                                    onEdit={this.handleEditView}
-                                                  />
+                                                      viewDescription={
+                                                        viewDefinition.keng__description
+                                                      }
+                                                      viewEditPageLink={resolvers.data.virtualizations.views.edit(
+                                                        {
+                                                          virtualization,
+                                                          // tslint:disable-next-line: object-literal-sort-keys
+                                                          viewDefinition,
+                                                        }
+                                                      )}
+                                                      i18nCancelText={t(
+                                                        'shared:Cancel'
+                                                      )}
+                                                      i18nDelete={t(
+                                                        'shared:Delete'
+                                                      )}
+                                                      i18nDeleteModalMessage={t(
+                                                        'virtualization.deleteViewModalMessage',
+                                                        {
+                                                          name:
+                                                            viewDefinition.viewName,
+                                                        }
+                                                      )}
+                                                      i18nDeleteModalTitle={t(
+                                                        'virtualization.deleteModalTitle'
+                                                      )}
+                                                      i18nEdit={t('shared:Edit')}
+                                                      i18nEditTip={t(
+                                                        'view.editViewTip'
+                                                      )}
+                                                      onDelete={handleDeleteView}
+                                                    />
                                                 )
                                               )
                                           }

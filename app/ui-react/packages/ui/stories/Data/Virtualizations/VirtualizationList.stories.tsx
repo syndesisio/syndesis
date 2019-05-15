@@ -55,6 +55,7 @@ const viewItems = [
     key="viewListItem1"
     viewName={viewName1}
     viewDescription={viewDescription1}
+    viewEditPageLink={''}
     i18nCancelText={'Cancel'}
     i18nDelete={deleteText}
     i18nDeleteTip={deleteText}
@@ -63,12 +64,12 @@ const viewItems = [
     i18nEdit={editText}
     i18nEditTip={editTip1}
     onDelete={action(deleteText)}
-    onEdit={action(editText)}
   />,
   <ViewListItem
     key="viewListItem2"
     viewName={viewName2}
     viewDescription={viewDescription2}
+    viewEditPageLink={''}
     i18nCancelText={'Cancel'}
     i18nDelete={deleteText}
     i18nDeleteTip={deleteText}
@@ -77,7 +78,6 @@ const viewItems = [
     i18nEdit={editText}
     i18nEditTip={editTip1}
     onDelete={action(deleteText)}
-    onEdit={action(editText)}
   />,
 ];
 

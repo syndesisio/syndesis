@@ -8,6 +8,8 @@ export * from './DvConnection/DvConnectionSkeleton';
 export * from './DvConnection/DvConnectionsListView';
 export * from './Virtualizations/Views/EmptyViewsState';
 export * from './Virtualizations/Views/SchemaNodeListItem';
+export * from './Virtualizations/Views/ViewEditContent';
+export * from './Virtualizations/Views/ViewEditHeader';
 export * from './Virtualizations/Views/ViewHeader';
 export * from './Virtualizations/Views/ViewInfoList';
 export * from './Virtualizations/Views/ViewInfoListItem';

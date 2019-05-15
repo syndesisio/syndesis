@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router';
 import {
+  ViewEditPage,
   VirtualizationCreatePage,
   VirtualizationMetricsPage,
   VirtualizationRelationshipPage,
@@ -29,6 +30,11 @@ export class DataModule extends React.Component {
           <Route
             path={routes.virtualizations.virtualization.views.createView.root}
             component={ViewCreateApp}
+          />
+          <Route
+            path={routes.virtualizations.virtualization.views.edit.root}
+            exact={true}
+            component={ViewEditPage}
           />
           <Route
             path={routes.virtualizations.create}

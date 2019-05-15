@@ -15,7 +15,6 @@ const deleteTip = 'Delete ' + viewName + ' view';
 const deleteActionText = 'Delete ' + viewName + ' View';
 const editText = 'Edit';
 const editTip = 'Edit ' + viewName + ' view';
-const editActionText = 'Edit ' + viewName + ' View';
 
 const sampleViewNotes =
   '- Verify view icon is showing on the left\n' +
@@ -30,10 +29,6 @@ const sampleViewNotes =
   '"\n' +
   '- Verify the edit button tooltip is "' +
   editTip +
-  '"\n' +
-  '- Verify clicking the Edit button prints "' +
-  editActionText +
-  '" in the ACTION LOGGER' +
   '"\n' +
   '- Verify the kebab menu contains action "' +
   deleteText +
@@ -51,6 +46,7 @@ stories.add(
     <ViewListItem
       viewName={text('viewName', viewName)}
       viewDescription={text('viewDescription', viewDescription)}
+      viewEditPageLink={''}
       viewIcon={text('icon', null)}
       i18nCancelText={'Cancel'}
       i18nDelete={text('deleteText', deleteText)}
@@ -60,7 +56,6 @@ stories.add(
       i18nEdit={text('editText', editText)}
       i18nEditTip={text('editTip', editTip)}
       onDelete={action(deleteActionText)}
-      onEdit={action(editActionText)}
     />
   ))
 );

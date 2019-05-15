@@ -1,5 +1,5 @@
+import * as H from '@syndesis/history';
 import {
-  Button,
   DropdownKebab,
   ListViewIcon,
   ListViewItem,
@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
+import { ButtonLink } from '../../../Layout';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
@@ -18,6 +19,7 @@ export interface IViewListItemProps {
   viewDescription: string;
   viewIcon?: string;
   viewName: string;
+  viewEditPageLink: H.LocationDescriptor;
   i18nCancelText: string;
   i18nDelete: string;
   i18nDeleteTip?: string;
@@ -26,7 +28,6 @@ export interface IViewListItemProps {
   i18nEdit: string;
   i18nEditTip?: string;
   onDelete: (viewName: string) => void;
-  onEdit: (viewName: string) => void;
 }
 
 export interface IViewListItemState {
@@ -65,13 +66,9 @@ export class ViewListItem extends React.Component<
           actions={
             <div className="form-group">
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
-                <Button
-                  data-testid={'view-list-item-edit'}
-                  bsStyle="default"
-                  onClick={this.handleEdit}
-                >
+                <ButtonLink href={this.props.viewEditPageLink} as={'default'}>
                   {this.props.i18nEdit}
-                </Button>
+                </ButtonLink>
               </OverlayTrigger>
               <DropdownKebab
                 id={`view-${this.props.viewName}-action-menu`}
@@ -135,12 +132,6 @@ export class ViewListItem extends React.Component<
       showDeleteDialog: false, // hide dialog
     });
   }
-
-  private handleEdit = () => {
-    if (this.props.viewName) {
-      this.props.onEdit(this.props.viewName);
-    }
-  };
 
   private showDeleteDialog() {
     this.setState({

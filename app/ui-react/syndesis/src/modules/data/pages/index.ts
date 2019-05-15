@@ -1,3 +1,4 @@
+export * from './ViewEditPage';
 export * from './VirtualizationCreatePage';
 export * from './VirtualizationMetricsPage';
 export * from './VirtualizationRelationshipPage';
