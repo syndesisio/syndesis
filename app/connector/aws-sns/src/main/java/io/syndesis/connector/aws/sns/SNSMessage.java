@@ -35,4 +35,9 @@ public class SNSMessage {
     public void setSubject(String subject) {
         this.subject = subject;
     }
+
+    @Override
+    public String toString() {
+        return "SNSMessage [message=" + message + ", subject=" + subject + "]";
+    }
 }
