@@ -451,18 +451,6 @@
         </executions>
       </plugin>
 
-      <!-- ToDo remove once camel component made it into the fuse build -->
-      <plugin>
-        <groupId>org.basepom.maven</groupId>
-        <artifactId>duplicate-finder-maven-plugin</artifactId>
-        <configuration>
-          <ignoredResourcePatterns>
-            <ignore>org/apache/camel/catalog/components/google-sheets-stream.json</ignore>
-            <ignore>org/apache/camel/catalog/components/google-sheets.json</ignore>
-            <ignore>features.xml</ignore>
-          </ignoredResourcePatterns>
-        </configuration>
-      </plugin>
     </plugins>
   </build>
 
