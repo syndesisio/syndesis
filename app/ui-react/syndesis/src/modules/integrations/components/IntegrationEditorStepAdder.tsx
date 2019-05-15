@@ -43,8 +43,10 @@ export interface IIntegrationEditorStepAdderProps {
   // tslint:disable-next-line:react-unused-props-and-state
   configureStepHref: (
     stepIdx: number,
-    step: Step
+    step: Step,
   ) => H.LocationDescriptorObject;
+  i18nConfirmRemoveButtonText: string;
+  openRemoveDialog: (name: string) => void;
 }
 
 /**
@@ -58,74 +60,72 @@ export interface IIntegrationEditorStepAdderProps {
  *
  * @todo add the delete step button
  */
-export class IntegrationEditorStepAdder extends React.Component<
-  IIntegrationEditorStepAdderProps
-> {
+export class IntegrationEditorStepAdder extends React.Component<IIntegrationEditorStepAdderProps> {
   public render() {
     return (
       <Translation ns={['integrations', 'shared']}>
         {t => (
-      <PageSection>
-        <IntegrationEditorStepsList>
-          {toUIIntegrationStepCollection(
-            toUIStepCollection(this.props.steps)
-          ).map((s, idx) => (
-            <React.Fragment key={idx}>
-              <IntegrationEditorStepsListItem
-                stepName={(s.action && s.action.name) || s.name!}
-                stepDescription={(s.action! && s.action!.description) || ''}
-                action={(s.action && s.action.name) || 'n/a'}
-                shape={s.shape || 'n/a'}
-                icon={getStepIcon(process.env.PUBLIC_URL, s)}
-                showWarning={
-                  s.shouldAddDataMapper || s.previousStepShouldDefineDataShape
-                }
-                i18nWarningTitle={'Data Type Mismatch'}
-                i18nWarningMessage={
-                  s.previousStepShouldDefineDataShape ? (
-                    <>
-                      <a href={'/todo'}>Define the data type</a> for the
-                      previous step to resolve this warning.
-                    </>
-                  ) : (
-                    <>
-                      <Link to={this.props.addDataMapperStepHref(idx)}>
-                        Add a data mapping step
-                      </Link>{' '}
-                      before this connection to resolve the difference.
-                    </>
-                  )
-                }
-                actions={
-                  <>
-                    <ButtonLink
-                      href={this.props.configureStepHref(
-                        idx,
-                        this.props.steps[idx]
-                      )}
-                    >
-                      Configure
-                    </ButtonLink>
-                    <ButtonLink href={'#'} as={'danger'}>
-                      <i className="fa fa-trash" />
-                    </ButtonLink>
-                  </>
-                }
-              />
-              {idx < this.props.steps.length - 1 && (
-                <IntegrationFlowAddStep
-                  active={false}
-                  showDetails={false}
-                  addStepHref={this.props.addStepHref(idx + 1)}
-                  i18nAddStep={t('integrations:editor:addStep')}
-                />
-              )}
-            </React.Fragment>
-          ))}
-        </IntegrationEditorStepsList>
-      </PageSection>
-          )}
-          </Translation>
+          <PageSection>
+            <IntegrationEditorStepsList>
+              {toUIIntegrationStepCollection(
+                toUIStepCollection(this.props.steps),
+              ).map((s, idx) => (
+                <React.Fragment key={idx}>
+                  <IntegrationEditorStepsListItem
+                    stepName={(s.action && s.action.name) || s.name!}
+                    stepDescription={(s.action! && s.action!.description) || ''}
+                    action={(s.action && s.action.name) || 'n/a'}
+                    shape={s.shape || 'n/a'}
+                    icon={getStepIcon(process.env.PUBLIC_URL, s)}
+                    showWarning={
+                      s.shouldAddDataMapper || s.previousStepShouldDefineDataShape
+                    }
+                    i18nWarningTitle={'Data Type Mismatch'}
+                    i18nWarningMessage={
+                      s.previousStepShouldDefineDataShape ? (
+                        <>
+                          <a href={'/todo'}>Define the data type</a> for the
+                          previous step to resolve this warning.
+                        </>
+                      ) : (
+                        <>
+                          <Link to={this.props.addDataMapperStepHref(idx)}>
+                            Add a data mapping step
+                          </Link>{' '}
+                          before this connection to resolve the difference.
+                        </>
+                      )
+                    }
+                    actions={
+                      <>
+                        <ButtonLink
+                          href={this.props.configureStepHref(
+                            idx,
+                            this.props.steps[idx],
+                          )}
+                        >
+                          Configure
+                        </ButtonLink>
+                        <ButtonLink href={'#'} as={'danger'}>
+                          <i className="fa fa-trash"/>
+                        </ButtonLink>
+                      </>
+                    }
+                  />
+                  {idx < this.props.steps.length - 1 && (
+                    <IntegrationFlowAddStep
+                      active={false}
+                      showDetails={false}
+                      addStepHref={this.props.addStepHref(idx + 1)}
+                      i18nAddStep={t('integrations:editor:addStep')}
+                    />
+                  )}
+                </React.Fragment>
+              ))}
+            </IntegrationEditorStepsList>
+          </PageSection>
+        )}
+      </Translation>
     );
   }
 }

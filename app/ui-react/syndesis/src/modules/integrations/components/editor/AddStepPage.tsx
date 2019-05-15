@@ -2,6 +2,11 @@ import { getSteps } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Step } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
+import {
+  ConfirmationButtonStyle,
+  ConfirmationDialog,
+  ConfirmationIconType,
+} from '@syndesis/ui/src';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -25,6 +30,10 @@ export interface IAddStepPageProps extends IGetStepHrefs {
   saveHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
 }
 
+export interface IAddStepPageState {
+  showRemoveDialog: boolean;
+}
+
 /**
  * This page shows the steps of an existing integration.
  *
@@ -38,7 +47,38 @@ export interface IAddStepPageProps extends IGetStepHrefs {
  * optional and adding a WithIntegration component to retrieve the integration
  * from the backend
  */
-export class AddStepPage extends React.Component<IAddStepPageProps> {
+export class AddStepPage extends React.Component<IAddStepPageProps,
+  IAddStepPageState> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      showRemoveDialog: false,
+    };
+
+    this.openRemoveDialog = this.openRemoveDialog.bind(this);
+    this.closeRemoveDialog = this.closeRemoveDialog.bind(this);
+    this.handleRemoveConfirm = this.handleRemoveConfirm.bind(this);
+  }
+
+  public handleSave(name: string) {
+    if (this.state.showRemoveDialog) {
+      this.closeRemoveDialog();
+      //this.onRemoveItem(name);
+    }
+  }
+
+  public handleRemoveConfirm() {
+    //this.handleSave(this.state.what!);
+  }
+
+  public openRemoveDialog() {
+    this.setState({ showRemoveDialog: true });
+  }
+
+  public closeRemoveDialog() {
+    this.setState({ showRemoveDialog: false });
+  }
+
   public render() {
     return (
       <Translation ns={['integrations']}>
@@ -46,6 +86,22 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
           <WithRouteData<IBaseRouteParams, IBaseRouteState>>
             {({ flowId }, { integration }) => (
               <>
+                {this.state.showRemoveDialog && (
+                  <ConfirmationDialog
+                    buttonStyle={ConfirmationButtonStyle.NORMAL}
+                    icon={ConfirmationIconType.DANGER}
+                    i18nCancelButtonText={'this.props.i18nConfirmCancelButtonText'}
+                    i18nConfirmButtonText={'this.props.i18nConfirmRemoveButtonText'}
+                    i18nConfirmationMessage={''}
+                    i18nTitle={'this.props.i18nRemoveConfirmationTitle'}
+                    i18nDetailsMessage={
+                      'this.props.i18nRemoveConfirmationDetailMessage'
+                    }
+                    showDialog={this.state.showRemoveDialog}
+                    onCancel={this.closeRemoveDialog}
+                    onConfirm={this.handleRemoveConfirm}
+                  />
+                )}
                 <PageTitle title={t('integrations:editor:saveOrAddStep')}/>
                 <IntegrationEditorLayout
                   title={t('integrations:editor:addToIntegration')}
