@@ -142,7 +142,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     private void configureFlow(Flow flow, final String flowIndex) throws URISyntaxException {
         final List<Step> steps = flow.getSteps();
         final String flowId = flow.getId().orElseGet(KeyGenerator::createKey);
-        final String flowName = flow.getName();
 
         if (steps.isEmpty()) {
             return;
@@ -171,7 +170,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                 Optional<ProcessorDefinition<?>> definition = handler.handle(step, null, this, flowIndex, String.valueOf(stepIndex));
                 if (definition.isPresent()) {
                     parent = definition.get();
-                    parent = configureRouteDefinition(parent, flowName, flowId, stepId);
+                    parent = configureRouteDefinition(parent, flow, flowId, stepId);
                     parent = parent.setHeader(IntegrationLoggingConstants.FLOW_ID, constant(flowId));
 
                     if (nextStep.map(Step::getStepKind)
@@ -189,7 +188,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                     }
                 }
             } else {
-                parent = configureRouteDefinition(parent, flowName, flowId, stepId);
+                parent = configureRouteDefinition(parent, flow, flowId, stepId);
 
                 if (StepKind.aggregate.equals(step.getStepKind())) {
                     if (!splitStack.isEmpty()) {
@@ -265,28 +264,43 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         return parent;
     }
 
-    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, String flowName, String flowId, String stepId) {
+    private ProcessorDefinition<?> configureRouteDefinition(ProcessorDefinition<?> definition, Flow flow, String flowId, String stepId) {
         if (definition instanceof RouteDefinition) {
             final RouteDefinition rd = (RouteDefinition)definition;
-            final List<RoutePolicy> rp = rd.getRoutePolicies();
 
-            if (rp != null && !activityTrackingPolicyFactories.isEmpty() && rp.stream().anyMatch(activityTrackingPolicyFactories.get(0)::isInstance)) {
+            if (containsConfiguredActivityTrackingPolicies(rd)) {
                 // Route has already been configured so no need to go ahead
                 return definition;
             }
 
-            if (ObjectHelper.isNotEmpty(flowName)) {
-                rd.routeDescription(flowName);
+            if (ObjectHelper.isNotEmpty(flow.getName())) {
+                rd.routeDescription(flow.getName());
             }
 
             rd.routeId(flowId);
             for (ActivityTrackingPolicyFactory factory : activityTrackingPolicyFactories) {
-                rd.routePolicy(factory.createRoutePolicy(flowId));
+                if (factory.appliesTo(flow)) {
+                    rd.routePolicy(factory.createRoutePolicy(flowId));
+                }
             }
             rd.getInputs().get(0).id(stepId);
         }
 
         return definition;
+    }
+
+    /**
+     * Checks if given route definition has already been configured with activity tracking policies.
+     * @param routeDefinition the route definition to evaluate.
+     * @return true if activity tracking policies have already been configured on given route definition.
+     */
+    private boolean containsConfiguredActivityTrackingPolicies(RouteDefinition routeDefinition) {
+        List<RoutePolicy> routePolicies = routeDefinition.getRoutePolicies();
+        if (ObjectHelper.isEmpty(routePolicies)) {
+            return false;
+        }
+
+        return activityTrackingPolicyFactories.stream().anyMatch(policyFactory -> routePolicies.stream().anyMatch(policyFactory::isInstance));
     }
 
     private ProcessorDefinition<PipelineDefinition> createPipeline(ProcessorDefinition<?> parent, String stepId) {

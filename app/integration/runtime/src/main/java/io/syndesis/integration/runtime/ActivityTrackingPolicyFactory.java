@@ -15,12 +15,31 @@
  */
 package io.syndesis.integration.runtime;
 
+import io.syndesis.common.model.integration.Flow;
 import org.apache.camel.spi.RoutePolicy;
 
-/**
- *
- */
 public interface ActivityTrackingPolicyFactory {
+
+    /**
+     * Factory method creating new route policy instance.
+     * @param flowId
+     * @return
+     */
     RoutePolicy createRoutePolicy(String flowId);
+
+    /**
+     * Checks whether this factory produces the given route policy.
+     * @param routePolicy the policy to evaluate.
+     * @return true if given route policy is produced by this factory.
+     */
     boolean isInstance(RoutePolicy routePolicy);
+
+    /**
+     * Evaluates if this policy factory applies to the given flow.
+     * @param flow given flow that this policy should apply to.
+     * @return boolean flag marking that this policy is applicable or not.
+     */
+    default boolean appliesTo(Flow flow) {
+        return true;
+    }
 }

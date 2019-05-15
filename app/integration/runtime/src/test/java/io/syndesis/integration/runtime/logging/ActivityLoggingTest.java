@@ -38,7 +38,7 @@ public class ActivityLoggingTest extends AbstractActivityLoggingTest {
             public void configure() {
                 from("direct:start")
                     .id("start")
-                    .routePolicy(new IntegrationLoggingActivityTrackingPolicy(activityTracker))
+                    .routePolicy(new IntegrationActivityTrackingPolicy(activityTracker))
                     .setHeader(IntegrationLoggingConstants.STEP_ID, KeyGenerator::createKey)
                     .pipeline()
                         .id("step:log")

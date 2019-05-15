@@ -15,28 +15,33 @@
  */
 package io.syndesis.integration.runtime.logging;
 
+import io.syndesis.common.model.integration.Flow;
+import io.syndesis.integration.runtime.ActivityTrackingPolicyFactory;
 import org.apache.camel.spi.RoutePolicy;
 
-import io.syndesis.integration.runtime.ActivityTrackingPolicyFactory;
-
 /**
- * Created by chirino on 12/7/18.
+ * @author Christoph Deppisch
  */
-public class IntegrationLoggingActivityTrackingPolicyFactory implements ActivityTrackingPolicyFactory {
+public class SubflowActivityTrackingPolicyFactory implements ActivityTrackingPolicyFactory {
 
     private final ActivityTracker tracker;
 
-    public IntegrationLoggingActivityTrackingPolicyFactory(ActivityTracker tracker){
+    public SubflowActivityTrackingPolicyFactory(ActivityTracker tracker){
         this.tracker = tracker;
     }
 
     @Override
     public RoutePolicy createRoutePolicy(String flowId) {
-        return new IntegrationLoggingActivityTrackingPolicy(tracker);
+        return new SubflowActivityTrackingPolicy(tracker);
     }
 
     @Override
     public boolean isInstance(RoutePolicy routePolicy) {
-        return IntegrationLoggingActivityTrackingPolicy.class.isInstance(routePolicy);
+        return SubflowActivityTrackingPolicy.class.isInstance(routePolicy);
+    }
+
+    @Override
+    public boolean appliesTo(Flow flow) {
+        return flow.isSubFlow();
     }
 }
