@@ -18,22 +18,21 @@ package io.syndesis.common.model.integration;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
-
 import org.immutables.value.Value;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = Flow.Builder.class)
@@ -42,6 +41,23 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
 
     class Builder extends ImmutableFlow.Builder {
         // allow access to ImmutableIntegration.Builder
+    }
+
+    enum MetadataKey {
+        TYPE;
+
+        public String value() {
+            return name().toLowerCase(Locale.US);
+        }
+    }
+
+    enum MetadataValue {
+        PRIMARY,
+        SUBFLOW;
+
+        public String value() {
+            return name().toLowerCase(Locale.US);
+        }
     }
 
     @Value.Default
@@ -89,5 +105,18 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
         return getSteps().stream()
             .flatMap(s -> s.getExtensionIds().stream())
             .collect(Collectors.toSet());
+    }
+
+    @JsonIgnore
+    default boolean isPrimary() {
+        return getMetadata().isEmpty() || getMetadata(MetadataKey.TYPE.value(), MetadataValue.PRIMARY.value())
+                                            .equals(MetadataValue.PRIMARY.value());
+    }
+
+    @JsonIgnore
+    default boolean isSubFlow() {
+        Optional<String> flowType = getMetadata(MetadataKey.TYPE.value());
+        return flowType.isPresent() &&
+                flowType.get().equals(MetadataValue.SUBFLOW.value());
     }
 }
