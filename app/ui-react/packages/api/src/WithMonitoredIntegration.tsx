@@ -68,11 +68,18 @@ export class WithMonitoredIntegration extends React.Component<
               }
               return (
                 <ServerEventsContext.Consumer>
-                  {({ registerChangeListener, unregisterChangeListener }) => (
+                  {({
+                    registerChangeListener,
+                    unregisterChangeListener,
+                    registerMessageListener,
+                    unregisterMessageListener,
+                  }) => (
                     <WithChangeListener
                       read={read}
                       registerChangeListener={registerChangeListener}
                       unregisterChangeListener={unregisterChangeListener}
+                      registerMessageListener={registerMessageListener}
+                      unregisterMessageListener={unregisterMessageListener}
                       filter={this.changeFilter}
                     >
                       {() => {

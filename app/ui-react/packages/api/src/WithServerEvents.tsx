@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { callFetch, IFetchHeaders } from './callFetch';
 
+export const EVENT_SERVICE_CONNECTED = 'connected';
+
 export interface IChangeEvent {
   action: string;
   kind: string;

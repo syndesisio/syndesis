@@ -43,11 +43,18 @@ export class WithIntegration extends React.Component<IWithIntegrationProps> {
             this.props.children(response)
           ) : (
             <ServerEventsContext.Consumer>
-              {({ registerChangeListener, unregisterChangeListener }) => (
+              {({
+                registerChangeListener,
+                unregisterChangeListener,
+                registerMessageListener,
+                unregisterMessageListener,
+              }) => (
                 <WithChangeListener
                   read={read}
                   registerChangeListener={registerChangeListener}
                   unregisterChangeListener={unregisterChangeListener}
+                  registerMessageListener={registerMessageListener}
+                  unregisterMessageListener={unregisterMessageListener}
                   filter={this.changeFilter}
                 >
                   {() => this.props.children(response)}
