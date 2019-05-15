@@ -276,9 +276,9 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
     this.doCreateFlow('Conditional Flow', 'conditional', '* To be defined *', flowId => this.addFlow(flowId));
   }
 
-  doCreateFlow(name: string, type: string, description: string, then: (flowId: string) => void) {
+  doCreateFlow(name: string, kind: string, description: string, then: (flowId: string) => void) {
     const currentFlow = this.currentFlowService.currentFlow;
-    const mainFlowId = currentFlow.id;
+    const primaryFlowId = currentFlow.id;
     const flowId = key();
     this.connectionService.get('flow')
       .subscribe(entity => {
@@ -295,9 +295,10 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
             ],
             metadata: {
               excerpt: '',
-              mainFlowId: mainFlowId,
+              primaryFlowId: primaryFlowId,
               stepId: this.step.id,
-              type: type
+              type: 'subflow',
+              kind: kind
             }
           } as Flow,
           onSave: () => {

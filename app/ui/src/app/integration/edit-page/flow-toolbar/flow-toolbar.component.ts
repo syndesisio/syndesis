@@ -57,10 +57,6 @@ export class FlowToolbarComponent implements OnInit {
     );
   }
 
-  isMainFlow(flow: Flow) {
-    return !this.isConditionalFlow(flow) && !this.isDefaultFlow(flow);
-  }
-
   getFlowName(flow: Flow) {
     if (this.isConditionalFlow(flow)) {
       return flow.name || 'Conditional Flow';
@@ -73,8 +69,20 @@ export class FlowToolbarComponent implements OnInit {
     return 'Flow';
   }
 
+  isPrimaryFlow(flow: Flow) {
+    return !this.isSubFlow(flow);
+  }
+
+  isSubFlow(flow: Flow) {
+    return flow.metadata && flow.metadata['type'] === 'subflow';
+  }
+
   isConditionalFlow(flow: Flow) {
-    return flow.metadata && flow.metadata['type'] === 'conditional';
+    return this.isSubFlow(flow) && flow.metadata['kind'] === 'conditional';
+  }
+
+  isDefaultFlow(flow: Flow) {
+    return this.isSubFlow(flow) && flow.metadata['kind'] === 'default';
   }
 
   getConditionalFlows(): Flow[] {
@@ -100,10 +108,6 @@ export class FlowToolbarComponent implements OnInit {
     return result.reduce((prev, curr) => {
       return prev.concat(curr);
     });
-  }
-
-  isDefaultFlow(flow: Flow) {
-    return flow.metadata && flow.metadata['type'] === 'default';
   }
 
   publish() {
