@@ -37,6 +37,7 @@ export * from './WithOAuthApps';
 export * from './WithPolling';
 export * from './WithServerEvents';
 export * from './WithSteps';
+export * from './WithUser';
 export * from './WithViewEditorStates';
 export * from './WithViews';
 export * from './WithVirtualization';
