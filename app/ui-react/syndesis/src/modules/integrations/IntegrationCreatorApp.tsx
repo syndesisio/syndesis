@@ -1,3 +1,4 @@
+import { ALL_STEPS, createStep, DATA_MAPPER } from '@syndesis/api';
 import { Breadcrumb } from '@syndesis/ui';
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
@@ -29,8 +30,19 @@ const addStepPage = (
       })
     }
     filterHref={resolvers.create.configure.editStep.basicFilter}
-    mapperHref={(step, params, state) =>
+    getAddMapperStepHref={(position, params, state) =>
       resolvers.create.configure.addStep.dataMapper({
+        position,
+        step: {
+          ...createStep(),
+          ...ALL_STEPS.find(s => s.stepKind === DATA_MAPPER),
+        },
+        ...params,
+        ...state,
+      })
+    }
+    mapperHref={(step, params, state) =>
+      resolvers.create.configure.editStep.dataMapper({
         step,
         ...params,
         ...state,

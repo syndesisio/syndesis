@@ -8,6 +8,7 @@ import {
   Extension,
   Flow,
   IConnectionWithIconFile,
+  IndexedStep,
   Integration,
   IntegrationOverview,
   Step,
@@ -307,7 +308,7 @@ export function hasDataShape(step: Step, isInput = false) {
   return (
     dataShape &&
     dataShape.kind &&
-    dataShape.kind.toLowerCase() !== DataShapeKinds.NONE
+    dataShape.kind.toLowerCase() !== DataShapeKinds.NONE.toLowerCase()
   );
 }
 
@@ -325,8 +326,8 @@ export function isActionShapeless(descriptor: ActionDescriptor) {
     inputDataShape &&
     outputDataShape &&
     (inputDataShape.kind && outputDataShape.kind) &&
-    (inputDataShape.kind.toLowerCase() === DataShapeKinds.ANY ||
-      outputDataShape.kind.toLowerCase() === DataShapeKinds.ANY)
+    (inputDataShape.kind.toLowerCase() === DataShapeKinds.ANY.toLowerCase() ||
+      outputDataShape.kind.toLowerCase() === DataShapeKinds.ANY.toLowerCase())
   );
 }
 
@@ -342,7 +343,7 @@ export function isActionInputShapeless(descriptor: ActionDescriptor) {
   return (
     inputDataShape &&
     inputDataShape.kind &&
-    inputDataShape.kind.toLowerCase() === DataShapeKinds.ANY
+    inputDataShape.kind.toLowerCase() === DataShapeKinds.ANY.toLowerCase()
   );
 }
 
@@ -358,7 +359,7 @@ export function isActionOutputShapeless(descriptor: ActionDescriptor) {
   return (
     outputDataShape &&
     outputDataShape.kind &&
-    outputDataShape.kind.toLowerCase() === DataShapeKinds.ANY
+    outputDataShape.kind.toLowerCase() === DataShapeKinds.ANY.toLowerCase()
   );
 }
 
@@ -513,13 +514,15 @@ export function setDescriptorOnStep(
     isUserDefinedDataShape(oldInputDataShape) ||
     (descriptor.inputDataShape &&
       descriptor.inputDataShape.kind &&
-      (descriptor.inputDataShape.kind.toLowerCase() !== DataShapeKinds.NONE &&
+      (descriptor.inputDataShape.kind.toLowerCase() !==
+        DataShapeKinds.NONE.toLowerCase() &&
         !descriptor.inputDataShape.specification));
   const preserveOutput =
     isUserDefinedDataShape(oldOutputDataShape) ||
     (descriptor.outputDataShape &&
       descriptor.outputDataShape.kind &&
-      (descriptor.outputDataShape.kind.toLowerCase() !== DataShapeKinds.NONE &&
+      (descriptor.outputDataShape.kind.toLowerCase() !==
+        DataShapeKinds.NONE.toLowerCase() &&
         !descriptor.outputDataShape.specification));
   return {
     ...step,
@@ -959,7 +962,7 @@ export function getSubsequentConnection(
  * @param flowId
  * @param position
  */
-export function getSubsequentStepsWithDataShape(
+export function getSubsequentIntegrationStepsWithDataShape(
   integration: Integration,
   flowId: string,
   position: number
@@ -986,7 +989,7 @@ export function getPreviousIntegrationStepsWithDataShape(
   integration: Integration,
   flowId: string,
   position: number
-): Array<{ step: Step; index: number }> {
+): IndexedStep[] {
   const steps = getSteps(integration, flowId);
   return getPreviousStepsWithDataShape(steps || [], position);
 }
@@ -1073,7 +1076,11 @@ export function getSubsequentIntegrationStepWithDataShape(
   flowId: string,
   position: number
 ) {
-  const steps = getSubsequentStepsWithDataShape(integration, flowId, position);
+  const steps = getSubsequentIntegrationStepsWithDataShape(
+    integration,
+    flowId,
+    position
+  );
   if (steps && steps.length) {
     return steps[0].step;
   }

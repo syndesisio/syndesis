@@ -14,19 +14,22 @@ import {
   MappingManagementService,
 } from '@atlasmap/atlasmap-data-mapper';
 
+export interface IDocumentProps {
+  id: string;
+  name: string;
+  description: string;
+  documentType: DocumentType;
+  inspectionType: InspectionType;
+  inspectionSource: string;
+  inspectionResult: string;
+  showFields: boolean;
+}
+
 export interface IInitMessagePayload {
   documentId: string;
-  inputName: string;
-  inputDescription: string;
-  inputDocumentType: DocumentType;
-  inputInspectionType: InspectionType;
-  inputDataShape: string;
-  outputName: string;
-  outputDescription: string;
-  outputDocumentType: DocumentType;
-  outputInspectionType: InspectionType;
-  outputDataShape: string;
-  mappings?: string;
+  inputDocuments: IDocumentProps[];
+  outputDocument: IDocumentProps;
+  initialMappings?: string;
 }
 
 export interface IMappingsMessagePayload {
@@ -50,17 +53,9 @@ export class AppComponent implements OnInit, OnDestroy {
 
   loading = true;
   documentId: string;
-  inputName: string;
-  inputDescription: string;
-  inputDocumentType: DocumentType;
-  inputInspectionType: InspectionType;
-  inputDataShape: string;
-  outputName: string;
-  outputDescription: string;
-  outputDocumentType: DocumentType;
-  outputInspectionType: InspectionType;
-  outputDataShape: string;
-  mappings?: string;
+  inputDocuments: IDocumentProps[];
+  outputDocument: IDocumentProps;
+  initialMappings?: string;
 
   messagePort?: MessagePort;
 
@@ -102,17 +97,9 @@ export class AppComponent implements OnInit, OnDestroy {
   onUpdateMessage(payload: IInitMessagePayload) {
     this.loading = false;
     this.documentId = payload.documentId;
-    this.inputName = payload.inputName;
-    this.inputDescription = payload.inputDescription;
-    this.inputDocumentType = payload.inputDocumentType;
-    this.inputInspectionType = payload.inputInspectionType;
-    this.inputDataShape = payload.inputDataShape;
-    this.outputName = payload.outputName;
-    this.outputDescription = payload.outputDescription;
-    this.outputDocumentType = payload.outputDocumentType;
-    this.outputInspectionType = payload.outputInspectionType;
-    this.outputDataShape = payload.outputDataShape;
-    this.mappings = payload.mappings;
+    this.inputDocuments = payload.inputDocuments;
+    this.outputDocument = payload.outputDocument;
+    this.initialMappings = payload.initialMappings;
   }
 
   onMappings(mappings: string) {

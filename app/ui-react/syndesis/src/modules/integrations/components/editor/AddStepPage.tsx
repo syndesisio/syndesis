@@ -1,4 +1,4 @@
-import { ALL_STEPS, DATA_MAPPER, createStep, getSteps } from '@syndesis/api';
+import { getSteps } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Step } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
@@ -11,6 +11,11 @@ import { getStepHref, IGetStepHrefs } from './utils';
 
 export interface IAddStepPageProps extends IGetStepHrefs {
   cancelHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
+  getAddMapperStepHref: (
+    position: number,
+    p: IBaseRouteParams,
+    s: IBaseRouteState
+  ) => H.LocationDescriptor;
   getEditAddStepHref: (
     position: number,
     p: IBaseRouteParams,
@@ -48,14 +53,10 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                 <IntegrationEditorStepAdder
                   steps={getSteps(integration, flowId)}
                   addDataMapperStepHref={position =>
-                    getStepHref(
-                      {
-                        ...createStep(),
-                        ...ALL_STEPS.find(s => s.stepKind === DATA_MAPPER),
-                      },
-                      { flowId, position: `${position}` },
-                      { integration },
-                      this.props
+                    this.props.getAddMapperStepHref(
+                      position,
+                      { flowId },
+                      { integration }
                     )
                   }
                   addStepHref={position =>

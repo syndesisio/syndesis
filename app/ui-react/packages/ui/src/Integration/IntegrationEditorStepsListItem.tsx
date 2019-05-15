@@ -2,8 +2,8 @@ import {
   ListView,
   Overlay,
   OverlayTrigger,
-  Tooltip,
   Popover,
+  Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';

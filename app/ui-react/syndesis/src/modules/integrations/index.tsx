@@ -8,7 +8,6 @@ import {
   ImportPage,
   IntegrationsPage,
   MetricsPage,
-  TestAtlasmapPage,
 } from './pages';
 import { ManageCiCdPage } from './pages/cicd';
 import routes from './routes';
@@ -46,11 +45,6 @@ export class IntegrationsModule extends React.Component {
           component={IntegrationEditorApp}
         />
         <Route path={routes.list} exact={true} component={IntegrationsPage} />
-        <Route
-          path={'/integrations/atlasmap'}
-          exact={true}
-          component={TestAtlasmapPage}
-        />
         <Route
           path={routes.integration.details}
           exact={true}

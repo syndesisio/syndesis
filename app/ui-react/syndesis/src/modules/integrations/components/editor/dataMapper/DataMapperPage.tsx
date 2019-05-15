@@ -1,17 +1,7 @@
-import {
-  DataShapeKinds,
-  getSteps,
-  getPreviousIntegrationStepWithDataShape,
-  getSubsequentIntegrationStepWithDataShape,
-  WithIntegrationHelpers,
-} from '@syndesis/api';
-import {
-  DataMapperAdapter,
-  DocumentType,
-  InspectionType,
-} from '@syndesis/atlasmap-adapter';
+import { getSteps, WithIntegrationHelpers } from '@syndesis/api';
+import { DataMapperAdapter } from '@syndesis/atlasmap-adapter';
 import * as H from '@syndesis/history';
-import { Integration, Step } from '@syndesis/models';
+import { Integration } from '@syndesis/models';
 import { IntegrationEditorLayout, PageSection } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -19,6 +9,9 @@ import { PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import { IDataMapperRouteParams, IDataMapperRouteState } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
+import { getInputDocuments, getOutputDocument } from './utils';
+
+const MAPPING_KEY = 'atlasmapping';
 
 export interface IDataMapperPageProps {
   cancelHref: (
@@ -52,75 +45,11 @@ export const DataMapperPage: React.FunctionComponent<
   IDataMapperPageProps
 > = props => {
   const [mappings, setMapping] = React.useState<string | undefined>(undefined);
-  //
-  // const onReset = () => {
-  //   console.log('onReset');
-  //   setMapping(undefined);
-  // }
 
   const onMappings = (newMappings: string) => {
-    console.log('onMappings', newMappings);
+    // tslint:disable-next-line
+    console.log('onMappings', newMappings, mappings);
     setMapping(newMappings);
-  };
-
-  const stepToProps = (step: Step, isSource: boolean) => {
-    const dataShape = isSource
-      ? step.action!.descriptor!.outputDataShape!
-      : step.action!.descriptor!.inputDataShape!;
-
-    const basicInfo = {
-      description: dataShape.description || '',
-      name: step.name!,
-      specification: dataShape.specification!,
-    };
-
-    switch (dataShape.kind!.toLowerCase()) {
-      case DataShapeKinds.JAVA:
-        return {
-          ...basicInfo,
-          documentType: DocumentType.JAVA,
-          inspectionResult: dataShape.specification,
-          inspectionSource: dataShape.type,
-          inspectionType: InspectionType.JAVA_CLASS,
-        };
-      case DataShapeKinds.JSON_INSTANCE:
-        return {
-          ...basicInfo,
-          documentType: DocumentType.JSON,
-          inspectionSource: dataShape.specification,
-          inspectionType: InspectionType.INSTANCE,
-        };
-      case DataShapeKinds.JSON_SCHEMA:
-        return {
-          ...basicInfo,
-          documentType: DocumentType.JSON,
-          inspectionSource: dataShape.specification,
-          inspectionType: InspectionType.SCHEMA,
-        };
-      case DataShapeKinds.XML_INSTANCE:
-        return {
-          ...basicInfo,
-          documentType: DocumentType.XML,
-          inspectionSource: dataShape.specification,
-          inspectionType: InspectionType.INSTANCE,
-        };
-      case DataShapeKinds.XML_SCHEMA:
-        return {
-          ...basicInfo,
-          documentType: DocumentType.XML,
-          inspectionSource: dataShape.specification,
-          inspectionType: InspectionType.SCHEMA,
-        };
-      case DataShapeKinds.XML_SCHEMA_INSPECTED:
-        return {
-          ...basicInfo,
-          documentType: DocumentType.XML,
-          inspectionResult: dataShape.specification,
-          inspectionType: InspectionType.SCHEMA,
-        };
-      default:
-        throw new Error('unsupported data shape kind');
-    }
   };
 
   return (
@@ -133,22 +62,18 @@ export const DataMapperPage: React.FunctionComponent<
             { history }
           ) => {
             const positionAsNumber = parseInt(position, 10);
-            const previousStep = getPreviousIntegrationStepWithDataShape(
+
+            const inputDocuments = getInputDocuments(
               integration,
               flowId,
-              positionAsNumber - 2
-            )!;
-            const subsequentStep = getSubsequentIntegrationStepWithDataShape(
+              positionAsNumber
+            );
+            const outputDocument = getOutputDocument(
               integration,
               flowId,
-              positionAsNumber - 1
-            )!;
-
-            console.log('prev', previousStep);
-            console.log('sub', subsequentStep);
-
-            const inputProps = stepToProps(previousStep, true);
-            const outputProps = stepToProps(subsequentStep, false);
+              props.mode === 'adding' ? positionAsNumber - 1 : positionAsNumber,
+              step.id!
+            );
 
             return (
               <>
@@ -168,17 +93,11 @@ export const DataMapperPage: React.FunctionComponent<
                     <PageSection noPadding={true}>
                       <DataMapperAdapter
                         documentId={integration.id!}
-                        inputName={inputProps.name}
-                        inputDescription={inputProps.description}
-                        inputDocumentType={inputProps.documentType}
-                        inputInspectionType={inputProps.inspectionType}
-                        inputDataShape={inputProps.specification}
-                        outputName={outputProps.name}
-                        outputDescription={outputProps.description}
-                        outputDocumentType={outputProps.documentType}
-                        outputInspectionType={outputProps.inspectionType}
-                        outputDataShape={outputProps.specification}
-                        mappings={mappings}
+                        inputDocuments={inputDocuments}
+                        outputDocument={outputDocument}
+                        initialMappings={
+                          (step.configuredProperties || {})[MAPPING_KEY]
+                        }
                         onMappings={onMappings}
                       />
                     </PageSection>

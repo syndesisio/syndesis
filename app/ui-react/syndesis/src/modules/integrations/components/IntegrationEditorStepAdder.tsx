@@ -77,8 +77,8 @@ export class IntegrationEditorStepAdder extends React.Component<
                 i18nWarningMessage={
                   s.previousStepShouldDefineDataShape ? (
                     <>
-                      <a>Define the data type</a> for the previous step to
-                      resolve this warning.
+                      <a href={'/todo'}>Define the data type</a> for the
+                      previous step to resolve this warning.
                     </>
                   ) : (
                     <>
