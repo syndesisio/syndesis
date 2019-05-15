@@ -66,7 +66,7 @@ export class Fetch<T> extends React.Component<IFetchProps<T>, IFetchState<T>> {
 
   public async read() {
     try {
-      this.setState({ loading: true });
+      this.setState({ error: false, errorMessage: undefined, loading: true });
       const response = await callFetch({
         body: this.props.body,
         contentType: this.props.contentType,

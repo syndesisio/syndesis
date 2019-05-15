@@ -98,11 +98,18 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
           }
           return (
             <ServerEventsContext.Consumer>
-              {({ registerChangeListener, unregisterChangeListener }) => (
+              {({
+                registerChangeListener,
+                unregisterChangeListener,
+                registerMessageListener,
+                unregisterMessageListener,
+              }) => (
                 <WithChangeListener
                   read={read}
                   registerChangeListener={registerChangeListener}
                   unregisterChangeListener={unregisterChangeListener}
+                  registerMessageListener={registerMessageListener}
+                  unregisterMessageListener={unregisterMessageListener}
                   debounceWait={this.props.debounceWait}
                   filter={this.changeFilter}
                 >
