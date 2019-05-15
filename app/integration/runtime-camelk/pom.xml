@@ -80,6 +80,7 @@
       <groupId>org.apache.camel.k</groupId>
       <artifactId>camel-k-adapter-camel-2</artifactId>
       <version>${camel-k-runtime.version}</version>
+      <scope>runtime</scope>
     </dependency>
 
     <dependency>
