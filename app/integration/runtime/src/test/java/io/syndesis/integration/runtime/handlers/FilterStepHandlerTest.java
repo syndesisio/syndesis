@@ -35,6 +35,7 @@ import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -65,6 +66,12 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
     @Before
     public void setupMocks() {
         reset(activityTracker);
+
+        doAnswer(invocation -> {
+            ActivityTracker.initializeTracking(invocation.getArgument(0));
+            return null;
+        }).when(activityTracker).startTracking(any(Exchange.class));
+
         doAnswer(invocation -> {
             LOGGER.debug(JsonSupport.toJsonObject(invocation.getArguments()));
             return null;
@@ -128,9 +135,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
             result.assertIsSatisfied();
 
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(allMessages.size())).startTracking(any(Exchange.class));
             verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker, times(allMessages.size())).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -193,9 +200,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
             result.assertIsSatisfied();
 
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(allMessages.size())).startTracking(any(Exchange.class));
             verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker, times(allMessages.size())).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -259,9 +266,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
             result.assertIsSatisfied();
 
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(allMessages.size())).startTracking(any(Exchange.class));
             verify(activityTracker, times(4)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker, times(allMessages.size())).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -341,9 +348,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
             result.assertIsSatisfied();
 
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(allMessages.size())).startTracking(any(Exchange.class));
             verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker, times(allMessages.size())).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -408,9 +415,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
             result.assertIsSatisfied();
 
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(allMessages.size())).startTracking(any(Exchange.class));
             verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker, times(allMessages.size())).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -478,9 +485,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
             result.assertIsSatisfied();
 
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(allMessages.size())).startTracking(any(Exchange.class));
             verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker, times(allMessages.size())).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -545,9 +552,9 @@ public class FilterStepHandlerTest extends IntegrationTestSupport {
 
             result.assertIsSatisfied();
 
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(allMessages.size())).startTracking(any(Exchange.class));
             verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(allMessages.size())).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker, times(allMessages.size())).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }

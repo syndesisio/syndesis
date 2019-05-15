@@ -77,7 +77,7 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
             in.setHeader(IntegrationLoggingConstants.STEP_TRACKER_ID, trackerId);
 
             return super.process(exchange, doneSync -> {
-                final String activityId =  exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
+                final String activityId =  ActivityTracker.getActivityId(exchange);
                 final String stepId = in.getHeader(IntegrationLoggingConstants.STEP_ID, String.class);
 
                 if (activityId != null) {

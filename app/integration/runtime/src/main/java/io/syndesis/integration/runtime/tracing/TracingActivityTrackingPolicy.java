@@ -17,13 +17,14 @@ package io.syndesis.integration.runtime.tracing;
 
 import java.util.Objects;
 
-import org.apache.camel.Exchange;
-import org.apache.camel.Route;
-
 import io.opentracing.Span;
 import io.opentracing.Tracer;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import io.syndesis.integration.runtime.util.DefaultRoutePolicy;
+import org.apache.camel.Exchange;
+import org.apache.camel.Route;
+import org.apache.camel.util.ObjectHelper;
 
 public final class TracingActivityTrackingPolicy extends DefaultRoutePolicy {
     private final Tracer tracer;
@@ -36,26 +37,27 @@ public final class TracingActivityTrackingPolicy extends DefaultRoutePolicy {
 
     @Override
     public void onExchangeBegin(Route route, Exchange exchange) {
-        String exchangeId = exchange.getExchangeId();
-        String activityId = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
-        if( activityId == null ) {
-            exchange.setProperty(IntegrationLoggingConstants.ACTIVITY_ID, exchangeId);
-            Span span = tracer
-                .buildSpan(flowId)
-                .withTag("kind", "activity")
-                .withTag("exchange", exchangeId)
-                .start();
-            exchange.setProperty(IntegrationLoggingConstants.ACTIVITY_SPAN, span);
+        String activityId = ActivityTracker.getActivityId(exchange);
+
+        if (ObjectHelper.isEmpty(activityId)) {
+            ActivityTracker.initializeTracking(exchange);
         }
+
+        Span span = tracer
+            .buildSpan(flowId)
+            .withTag("kind", "activity")
+            .withTag("exchange", activityId)
+            .start();
+        exchange.setProperty(IntegrationLoggingConstants.ACTIVITY_SPAN, span);
     }
 
     @Override
     public void onExchangeDone(Route route, Exchange exchange) {
-        final String activityId = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
-        final String exchangeId = exchange.getExchangeId();
-        if (Objects.nonNull(activityId) && Objects.equals(activityId, exchangeId)) {
+        final String activityId = ActivityTracker.getActivityId(exchange);
+
+        if (Objects.nonNull(activityId)) {
             final Span span = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_SPAN, Span.class);
-            if( span!=null ) {
+            if (span != null) {
                 span.setTag("failed", exchange.isFailed());
                 span.finish();
             }

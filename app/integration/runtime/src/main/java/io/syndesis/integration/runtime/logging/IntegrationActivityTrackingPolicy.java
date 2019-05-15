@@ -15,16 +15,14 @@
  */
 package io.syndesis.integration.runtime.logging;
 
-import java.util.Objects;
-
 import io.syndesis.integration.runtime.util.DefaultRoutePolicy;
 import org.apache.camel.Exchange;
 import org.apache.camel.Route;
 
-public final class IntegrationLoggingActivityTrackingPolicy extends DefaultRoutePolicy {
+public final class IntegrationActivityTrackingPolicy extends DefaultRoutePolicy {
     private final ActivityTracker tracker;
 
-    public IntegrationLoggingActivityTrackingPolicy(ActivityTracker tracker) {
+    public IntegrationActivityTrackingPolicy(ActivityTracker tracker) {
         this.tracker = tracker;
     }
 
@@ -34,12 +32,7 @@ public final class IntegrationLoggingActivityTrackingPolicy extends DefaultRoute
             return;
         }
 
-        exchange.setProperty(IntegrationLoggingConstants.ACTIVITY_ID, exchange.getExchangeId());
-
-        tracker.track(
-            "exchange", exchange.getExchangeId(),
-            "status", "begin"
-        );
+        tracker.startTracking(exchange);
     }
 
     @Override
@@ -48,15 +41,6 @@ public final class IntegrationLoggingActivityTrackingPolicy extends DefaultRoute
             return;
         }
 
-        final String activityId = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
-        final String exchangeId = exchange.getExchangeId();
-
-        if (Objects.nonNull(activityId) && Objects.equals(activityId, exchangeId)) {
-            tracker.track(
-                "exchange", activityId,
-                "status", "done",
-                "failed", exchange.isFailed()
-            );
-        }
+        tracker.finishTracking(exchange);
     }
 }

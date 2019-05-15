@@ -15,6 +15,10 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Step;
@@ -26,6 +30,7 @@ import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -37,10 +42,6 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -61,6 +62,12 @@ public class SplitAggregateStepHandlerTest extends IntegrationTestSupport {
     @Before
     public void setupMocks() {
         reset(activityTracker);
+
+        doAnswer(invocation -> {
+            ActivityTracker.initializeTracking(invocation.getArgument(0));
+            return null;
+        }).when(activityTracker).startTracking(any(Exchange.class));
+
         doAnswer(invocation -> {
             LOGGER.debug(JsonSupport.toJsonObject(invocation.getArguments()));
             return null;
@@ -121,9 +128,9 @@ public class SplitAggregateStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
             Assert.assertEquals(body, response);
 
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker).startTracking(any(Exchange.class));
             verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -195,9 +202,9 @@ public class SplitAggregateStepHandlerTest extends IntegrationTestSupport {
             Assert.assertEquals(body, afterSplit.getExchanges().get(0).getIn().getBody());
             Assert.assertEquals(body, response);
 
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker).startTracking(any(Exchange.class));
             verify(activityTracker, times(4)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -281,9 +288,9 @@ public class SplitAggregateStepHandlerTest extends IntegrationTestSupport {
             Assertions.assertThat(response.size()).isEqualTo(3);
             Assert.assertEquals(3L, response.size());
 
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker).startTracking(any(Exchange.class));
             verify(activityTracker, times(7)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -345,9 +352,9 @@ public class SplitAggregateStepHandlerTest extends IntegrationTestSupport {
             Assert.assertEquals(5, response.size());
             Assert.assertEquals(body, response.stream().map(Object::toString).collect(Collectors.joining()));
 
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker).startTracking(any(Exchange.class));
             verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -409,9 +416,9 @@ public class SplitAggregateStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
             Assert.assertEquals(body, response);
 
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker).startTracking(any(Exchange.class));
             verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -472,9 +479,9 @@ public class SplitAggregateStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
             Assert.assertEquals("c", response);
 
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker).startTracking(any(Exchange.class));
             verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -539,9 +546,9 @@ public class SplitAggregateStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
             Assert.assertEquals("c|b|a", response);
 
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker).startTracking(any(Exchange.class));
             verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
