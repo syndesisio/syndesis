@@ -101,16 +101,11 @@ export class DataMapperAdapter extends React.Component<
     }
   }
 
-  public updateDataMapperApp(props: IInitMessagePayload) {
+  public updateDataMapperApp(payload: IInitMessagePayload) {
     if (this.messagePort) {
       const message = {
         message: 'update',
-        payload: {
-          documentId: props.documentId,
-          initialMappings: props.initialMappings,
-          inputDocuments: props.inputDocuments,
-          outputDocument: props.outputDocument,
-        },
+        payload,
       };
       this.messagePort.postMessage(message);
     }

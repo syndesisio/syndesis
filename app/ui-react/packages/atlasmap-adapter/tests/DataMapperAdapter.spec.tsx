@@ -55,6 +55,10 @@ export default describe('DataMapperAdapter', () => {
       documentId={'document-id'}
       inputDocuments={inputDocuments}
       outputDocument={outputDocument}
+      baseJavaInspectionServiceUrl={'/whatever'}
+      baseJSONInspectionServiceUrl={'/whatever'}
+      baseMappingServiceUrl={'/whatever'}
+      baseXMLInspectionServiceUrl={'/whatever'}
       onMappings={onMappings}
     />
   );

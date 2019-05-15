@@ -39,6 +39,10 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
   @Input() inputDocuments: IDocumentProps[];
   @Input() outputDocument: IDocumentProps;
   @Input() initialMappings?: string;
+  @Input() baseJavaInspectionServiceUrl: string;
+  @Input() baseXMLInspectionServiceUrl: string;
+  @Input() baseJSONInspectionServiceUrl: string;
+  @Input() baseMappingServiceUrl: string;
   @Output() outputMappings = new EventEmitter<string>();
   @ViewChild('dataMapperComponent')
   private dataMapperComponent: DataMapperAppComponent;
@@ -73,10 +77,10 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     const c: ConfigModel = this.initializationService.cfg;
 
     // initialize base urls for our service calls
-    c.initCfg.baseJavaInspectionServiceUrl = '/api/v1/atlas/java/';
-    c.initCfg.baseXMLInspectionServiceUrl = '/api/v1/atlas/xml/';
-    c.initCfg.baseJSONInspectionServiceUrl = '/api/v1/atlas/json/';
-    c.initCfg.baseMappingServiceUrl = '/api/v1/atlas/';
+    c.initCfg.baseJavaInspectionServiceUrl = this.baseJavaInspectionServiceUrl;
+    c.initCfg.baseXMLInspectionServiceUrl = this.baseXMLInspectionServiceUrl;
+    c.initCfg.baseJSONInspectionServiceUrl = this.baseJSONInspectionServiceUrl;
+    c.initCfg.baseMappingServiceUrl = this.baseMappingServiceUrl;
 
     // // enable the navigation bar and import/export for stand-alone
     c.initCfg.disableNavbar = true;

@@ -5,6 +5,7 @@ import { Integration } from '@syndesis/models';
 import { IntegrationEditorLayout, PageSection } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { AppContext } from '../../../../../app';
 import { PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import { IDataMapperRouteParams, IDataMapperRouteState } from '../interfaces';
@@ -44,6 +45,7 @@ export interface IDataMapperPageProps {
 export const DataMapperPage: React.FunctionComponent<
   IDataMapperPageProps
 > = props => {
+  const appContext = React.useContext(AppContext);
   const [mappings, setMapping] = React.useState<string | undefined>(undefined);
 
   const onMappings = (newMappings: string) => {
@@ -97,6 +99,25 @@ export const DataMapperPage: React.FunctionComponent<
                         outputDocument={outputDocument}
                         initialMappings={
                           (step.configuredProperties || {})[MAPPING_KEY]
+                        }
+                        baseXMLInspectionServiceUrl={
+                          appContext.config.apiBase +
+                          appContext.config.datamapper
+                            .baseXMLInspectionServiceUrl
+                        }
+                        baseMappingServiceUrl={
+                          appContext.config.apiBase +
+                          appContext.config.datamapper.baseMappingServiceUrl
+                        }
+                        baseJSONInspectionServiceUrl={
+                          appContext.config.apiBase +
+                          appContext.config.datamapper
+                            .baseJSONInspectionServiceUrl
+                        }
+                        baseJavaInspectionServiceUrl={
+                          appContext.config.apiBase +
+                          appContext.config.datamapper
+                            .baseJavaInspectionServiceUrl
                         }
                         onMappings={onMappings}
                       />

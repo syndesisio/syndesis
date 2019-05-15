@@ -30,6 +30,10 @@ export interface IInitMessagePayload {
   inputDocuments: IDocumentProps[];
   outputDocument: IDocumentProps;
   initialMappings?: string;
+  baseJavaInspectionServiceUrl: string;
+  baseXMLInspectionServiceUrl: string;
+  baseJSONInspectionServiceUrl: string;
+  baseMappingServiceUrl: string;
 }
 
 export interface IMappingsMessagePayload {
@@ -56,6 +60,10 @@ export class AppComponent implements OnInit, OnDestroy {
   inputDocuments: IDocumentProps[];
   outputDocument: IDocumentProps;
   initialMappings?: string;
+  baseJavaInspectionServiceUrl: string;
+  baseXMLInspectionServiceUrl: string;
+  baseJSONInspectionServiceUrl: string;
+  baseMappingServiceUrl: string;
 
   messagePort?: MessagePort;
 
@@ -100,6 +108,10 @@ export class AppComponent implements OnInit, OnDestroy {
     this.inputDocuments = payload.inputDocuments;
     this.outputDocument = payload.outputDocument;
     this.initialMappings = payload.initialMappings;
+    this.baseJavaInspectionServiceUrl = payload.baseJavaInspectionServiceUrl;
+    this.baseXMLInspectionServiceUrl = payload.baseXMLInspectionServiceUrl;
+    this.baseJSONInspectionServiceUrl = payload.baseJSONInspectionServiceUrl;
+    this.baseMappingServiceUrl = payload.baseMappingServiceUrl;
   }
 
   onMappings(mappings: string) {

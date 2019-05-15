@@ -166,7 +166,7 @@ export function toUIIntegrationStepCollection(
         ![
           DataShapeKinds.ANY.toUpperCase(),
           DataShapeKinds.NONE.toUpperCase(),
-        ].includes(inputDataShape.kind!)
+        ].includes(inputDataShape.kind!.toUpperCase())
       ) {
         const prev = getPreviousStepWithDataShape(steps, position);
         if (
@@ -176,7 +176,10 @@ export function toUIIntegrationStepCollection(
           prev.action.descriptor.outputDataShape
         ) {
           const prevOutDataShape = prev.action.descriptor.outputDataShape;
-          if (DataShapeKinds.ANY.toLowerCase() === prevOutDataShape.kind) {
+          if (
+            DataShapeKinds.ANY.toLowerCase() ===
+            prevOutDataShape.kind!.toLowerCase()
+          ) {
             previousStepShouldDefineDataShape = true;
           } else if (!isSameDataShape(inputDataShape, prevOutDataShape)) {
             shouldAddDataMapper = true;
