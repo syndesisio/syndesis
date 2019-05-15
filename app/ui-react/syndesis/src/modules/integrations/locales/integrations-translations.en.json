@@ -72,6 +72,8 @@
     "addStep": "Add a step",
     "addStepDescription": "You can continue adding steps and connections to your integration as well.",
     "addToIntegration": "Add to Integration",
+    "confirmDeleteStepDialogBody": "Are you sure you want to delete this step from the integration?",
+    "confirmDeleteStepDialogTitle": "Confirm Delete",
     "dataShape": "Data Shape",
     "saveOrAddStep": "Save or Add Step"
   },

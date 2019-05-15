@@ -1,12 +1,9 @@
 import { getSteps } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Step } from '@syndesis/models';
-import { IntegrationEditorLayout } from '@syndesis/ui';
 import {
-  ConfirmationButtonStyle,
-  ConfirmationDialog,
-  ConfirmationIconType,
-} from '@syndesis/ui/src';
+  IntegrationEditorLayout,
+} from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -86,22 +83,6 @@ export class AddStepPage extends React.Component<IAddStepPageProps,
           <WithRouteData<IBaseRouteParams, IBaseRouteState>>
             {({ flowId }, { integration }) => (
               <>
-                {this.state.showRemoveDialog && (
-                  <ConfirmationDialog
-                    buttonStyle={ConfirmationButtonStyle.NORMAL}
-                    icon={ConfirmationIconType.DANGER}
-                    i18nCancelButtonText={'this.props.i18nConfirmCancelButtonText'}
-                    i18nConfirmButtonText={'this.props.i18nConfirmRemoveButtonText'}
-                    i18nConfirmationMessage={''}
-                    i18nTitle={'this.props.i18nRemoveConfirmationTitle'}
-                    i18nDetailsMessage={
-                      'this.props.i18nRemoveConfirmationDetailMessage'
-                    }
-                    showDialog={this.state.showRemoveDialog}
-                    onCancel={this.closeRemoveDialog}
-                    onConfirm={this.handleRemoveConfirm}
-                  />
-                )}
                 <PageTitle title={t('integrations:editor:saveOrAddStep')}/>
                 <IntegrationEditorLayout
                   title={t('integrations:editor:addToIntegration')}
@@ -137,8 +118,13 @@ export class AddStepPage extends React.Component<IAddStepPageProps,
                       )}
                       saveHref={this.props.saveHref({ flowId }, { integration })}
                       publishHref={this.props.saveHref({ flowId }, { integration })}
+                      i18nConfirmRemoveButtonText={t('shared:Yes')}
+                      openRemoveDialog={this.openRemoveDialog}
                     />
                   }
+                  showDialog={this.state.showRemoveDialog}
+                  onCancel={this.closeRemoveDialog}
+                  onConfirm={this.handleRemoveConfirm}
                 />
               </>
             )}

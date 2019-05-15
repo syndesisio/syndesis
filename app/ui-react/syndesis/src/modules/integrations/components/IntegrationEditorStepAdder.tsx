@@ -104,9 +104,9 @@ export class IntegrationEditorStepAdder extends React.Component<IIntegrationEdit
                             this.props.steps[idx],
                           )}
                         >
-                          Configure
+                          {t('shared:Configure')}
                         </ButtonLink>
-                        <ButtonLink href={'#'} as={'danger'}>
+                        <ButtonLink href={'#'} onClick={this.props.openRemoveDialog} as={'danger'}>
                           <i className="fa fa-trash"/>
                         </ButtonLink>
                       </>
