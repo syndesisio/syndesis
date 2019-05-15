@@ -50,10 +50,10 @@ import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 
+import io.syndesis.server.dao.manager.resources.DataFileProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -74,10 +74,7 @@ public class DataManager implements DataAccessObjectRegistry {
     private final EventBus eventBus;
     private final EncryptionComponent encryptionComponent;
     private final ResourceLoader resourceLoader;
-
-    @Value("${deployment.file:io/syndesis/server/dao/deployment.json}")
-    @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
-    private String dataFileName = "io/syndesis/server/dao/deployment.json";
+    private final List<DataFileProvider> dataFileProviders;
 
     private final List<DataAccessObject<?>> dataAccessObjects = new ArrayList<>();
     private final Map<Class<? extends WithId<?>>, DataAccessObject<?>> dataAccessObjectMapping = new ConcurrentHashMap<>();
@@ -88,11 +85,13 @@ public class DataManager implements DataAccessObjectRegistry {
                        List<DataAccessObject<?>> dataAccessObjects,
                        EventBus eventBus,
                        EncryptionComponent encryptionComponent,
-                       ResourceLoader resourceLoader) {
+                       ResourceLoader resourceLoader,
+                       List<DataFileProvider> dataFileProviders) {
         this.caches = caches;
         this.eventBus = eventBus;
         this.encryptionComponent = encryptionComponent;
         this.resourceLoader = resourceLoader;
+        this.dataFileProviders = dataFileProviders;
 
         if (dataAccessObjects != null) {
             this.dataAccessObjects.addAll(dataAccessObjects);
@@ -109,8 +108,8 @@ public class DataManager implements DataAccessObjectRegistry {
     public void resetDeploymentData() {
         loadData();
 
-        if (dataFileName != null) {
-            loadData(this.dataFileName);
+        for (DataFileProvider dataFileProvider : this.dataFileProviders) {
+            loadData(dataFileProvider.getDataFile());
         }
     }
 

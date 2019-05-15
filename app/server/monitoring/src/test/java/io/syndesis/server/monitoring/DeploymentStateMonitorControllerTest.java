@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
 
+import io.syndesis.server.dao.manager.resources.DefaultDataFileProvider;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -118,7 +119,7 @@ public class DeploymentStateMonitorControllerTest {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
 
         // create test Data Manager and integration deployment
-        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader);
+        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader, Collections.singletonList(new DefaultDataFileProvider()));
         dataManager.create(new IntegrationDeployment.Builder()
                 .id(DEPLOYMENT_ID)
                 .integrationId(java.util.Optional.of(INTEGRATION_ID))

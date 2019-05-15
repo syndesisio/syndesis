@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
+import io.syndesis.server.dao.manager.resources.DefaultDataFileProvider;
 import org.h2.jdbcx.JdbcDataSource;
 import org.junit.Before;
 import org.junit.Test;
@@ -82,7 +83,7 @@ public class MetricsCollectorTest {
         EncryptionComponent encryptionComponent = new EncryptionComponent(null);
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         //Create Data Manager
-        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader);
+        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader, Collections.singletonList(new DefaultDataFileProvider()));
         intMH = new IntegrationMetricsHandler(dataManager);
     }
 

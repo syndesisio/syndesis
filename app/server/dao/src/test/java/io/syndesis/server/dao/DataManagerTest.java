@@ -32,6 +32,7 @@ import io.syndesis.common.util.cache.LRUCacheManager;
 import io.syndesis.server.dao.manager.DataAccessObject;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
+import io.syndesis.server.dao.manager.resources.DefaultDataFileProvider;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class DataManagerTest {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
 
         //Create Data Manager
-        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader);
+        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader, Collections.singletonList(new DefaultDataFileProvider()));
         dataManager.init();
         dataManager.resetDeploymentData();
     }
