@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.rest.swagger.auth.parameter;
+package io.syndesis.connector.rest.swagger.auth.apikey;
 
 import io.syndesis.connector.rest.swagger.Configuration;
 import io.syndesis.connector.rest.swagger.SwaggerProxyComponent;
@@ -21,13 +21,13 @@ import io.syndesis.connector.rest.swagger.auth.SetHeader;
 import io.syndesis.connector.rest.swagger.auth.SetHttpHeader;
 import io.syndesis.integration.component.proxy.Processors;
 
-public final class Parameter {
+public final class ApiKey {
 
     public enum Placement {
         header, query
     }
 
-    private Parameter() {
+    private ApiKey() {
         // utility class
     }
 

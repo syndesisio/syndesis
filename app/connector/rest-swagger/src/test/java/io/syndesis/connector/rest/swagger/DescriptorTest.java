@@ -28,7 +28,7 @@ import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.Json;
-import io.syndesis.connector.rest.swagger.auth.parameter.Parameter.Placement;
+import io.syndesis.connector.rest.swagger.auth.apikey.ApiKey.Placement;
 
 import org.apache.camel.CamelContext;
 import org.junit.Test;

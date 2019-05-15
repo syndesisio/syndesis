@@ -96,7 +96,7 @@ public class AuthenticationCustomizerTest {
         final AuthenticationCustomizer customizer = new AuthenticationCustomizer();
 
         final Map<String, Object> options = new HashMap<>();
-        options.put("authenticationType", AuthenticationType.parameter);
+        options.put("authenticationType", AuthenticationType.apiKey);
         options.put("authenticationParameterName", "apiKey");
         options.put("authenticationParameterValue", "{{key}}");
         options.put("authenticationParameterPlacement", "header");
