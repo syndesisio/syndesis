@@ -90,8 +90,7 @@ export class VirtualizationsPage extends React.Component {
       <WithVirtualizations>
         {({ data, hasData, error, read }) => {
           return (
-            // TODO need to retrieve real username here
-            <WithVirtualizationHelpers username="developer">
+            <WithVirtualizationHelpers>
               {({
                 deleteVirtualization,
                 publishVirtualization,

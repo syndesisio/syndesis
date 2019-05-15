@@ -4,7 +4,7 @@ import { DVFetch } from './DVFetch';
 import { IFetchState } from './Fetch';
 
 export interface IWithVirtualizationConnectionSchemaProps {
-  connectionId: string;
+  connectionId?: string;
   children(props: IFetchState<SchemaNode[]>): any;
 }
 
@@ -12,11 +12,11 @@ export class WithVirtualizationConnectionSchema extends React.Component<
   IWithVirtualizationConnectionSchemaProps
 > {
   public render() {
+    const restUrl = this.props.connectionId
+      ? `metadata/${this.props.connectionId}/schema`
+      : `metadata/connection-schema`;
     return (
-      <DVFetch<SchemaNode[]>
-        url={`metadata/${this.props.connectionId}/schema`}
-        defaultValue={[]}
-      >
+      <DVFetch<SchemaNode[]> url={restUrl} defaultValue={[]}>
         {({ read, response }) => this.props.children(response)}
       </DVFetch>
     );

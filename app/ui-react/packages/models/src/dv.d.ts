@@ -53,6 +53,12 @@ export interface ViewInfo {
   viewSourceNode: SchemaNode;
 }
 
+export interface SchemaNodeInfo {
+  connectionName: string;
+  sourceName: string;
+  sourcePath: string;
+}
+
 export interface VirtualizationSourceStatus {
   sourceName: string;
   hasTeiidSource: boolean;

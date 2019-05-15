@@ -3,6 +3,7 @@ import {
   ProjectedColumn,
   RestDataService,
   SchemaNode,
+  SchemaNodeInfo,
   ViewDefinition,
   ViewEditorState,
   ViewInfo,
@@ -12,6 +13,9 @@ import {
 
 const PREVIEW_VDB_NAME = 'PreviewVdb';
 const SCHEMA_MODEL_SUFFIX = 'schemamodel';
+const PROJECTED_COLS_ALL = [
+  { name: 'ALL', selected: true, type: 'ALL' } as ProjectedColumn,
+];
 
 export enum DvConnectionStatus {
   ACTIVE = 'ACTIVE',
@@ -95,6 +99,74 @@ export function generateViewInfos(
 }
 
 /**
+ * Recursively flattens the tree structure of SchemaNodes,
+ * into an array of SchemaNodeInfos
+ * @param schemaNodeInfos the array of SchemaNodeInfos
+ * @param schemaNode the SchemaNode from which the SchemaNodeInfo is generated
+ * @param nodePath path for current SchemaNode
+ */
+export function generateSchemaNodeInfos(
+  schemaNodeInfos: SchemaNodeInfo[],
+  schemaNode: SchemaNode,
+  nodePath: string[]
+): void {
+  if (schemaNode) {
+    // Generate source path from nodePath array
+    const sourcePath: string[] = [];
+    for (const seg of nodePath) {
+      sourcePath.push(seg);
+    }
+
+    // Creates SchemaNodeInfo if the SchemaNode is queryable
+    if (schemaNode.queryable === true) {
+      // Create SchemaNodeInfo
+      const view: SchemaNodeInfo = {
+        connectionName: schemaNode.connectionName,
+        sourceName: schemaNode.name,
+        sourcePath: schemaNode.path,
+      };
+      schemaNodeInfos.push(view);
+    }
+    // Update path for next level
+    sourcePath.push(schemaNode.name);
+    // Process this nodes children
+    if (schemaNode.children && schemaNode.children.length > 0) {
+      for (const childNode of schemaNode.children) {
+        generateSchemaNodeInfos(schemaNodeInfos, childNode, sourcePath);
+      }
+    }
+  }
+}
+
+/**
+ * Generate a ViewEditorState for the supplied info
+ * @param serviceVdbName the name of the virtualization vdb
+ * @param schemaNodeInfo the SchemaNodeInfo for the view
+ * @param vwName the name for the view
+ * @param vwDescription the (optional) description for the view
+ */
+export function generateViewEditorState(
+  serviceVdbName: string,
+  schemaNodeInfo: SchemaNodeInfo,
+  vwName: string,
+  vwDescription?: string
+): ViewEditorState {
+  const srcPaths: string[] = [
+    'connection=' +
+      schemaNodeInfo.connectionName +
+      '/' +
+      schemaNodeInfo.sourcePath,
+  ];
+  return getViewEditorState(
+    serviceVdbName,
+    vwName,
+    PROJECTED_COLS_ALL,
+    srcPaths,
+    vwDescription
+  );
+}
+
+/**
  * Generates ViewEditorStates for the supplied ViewInfos
  * @param serviceVdbName the name of the virtualization vdb
  * @param viewInfos the array of ViewInfos
@@ -105,42 +177,56 @@ export function generateViewEditorStates(
 ): ViewEditorState[] {
   const editorStates: ViewEditorState[] = [];
   for (const viewInfo of viewInfos) {
-    const srcPaths: string[] = [];
     const path =
       'connection=' +
       viewInfo.connectionName +
       '/' +
       viewInfo.viewSourceNode.path;
-    srcPaths.push(path);
+    const srcPaths: string[] = [path];
 
-    // All columns are projected
-    const projCols: ProjectedColumn[] = [];
-    const projCol: ProjectedColumn = {
-      name: 'ALL',
-      selected: true,
-      type: 'ALL',
-    };
-    projCols.push(projCol);
-
-    // View Definition
-    // TODO: need to supply the description here instead of generate
-    const viewDefn: ViewDefinition = {
-      compositions: [],
-      isComplete: true,
-      keng__description: viewInfo.viewName + ' description',
-      projectedColumns: projCols,
-      sourcePaths: srcPaths,
-      viewName: viewInfo.viewName,
-    };
-
-    // ViewEditorState which is supplied to the user profile
-    const editorState: ViewEditorState = {
-      id: serviceVdbName + '.' + viewInfo.viewName,
-      viewDefinition: viewDefn,
-    };
-    editorStates.push(editorState);
+    editorStates.push(
+      getViewEditorState(
+        serviceVdbName,
+        viewInfo.viewName,
+        PROJECTED_COLS_ALL,
+        srcPaths
+      )
+    );
   }
+
   return editorStates;
+}
+
+/**
+ * Generate a ViewEditorState for the supplied values.
+ * @param serviceVdbName the name of the virtualization vdb
+ * @param name the view name
+ * @param projectedCols projected columns for the view
+ * @param srcPaths paths for the sources used in the view
+ * @param description the (optional) view description
+ */
+function getViewEditorState(
+  serviceVdbName: string,
+  name: string,
+  projectedCols: ProjectedColumn[],
+  srcPaths: string[],
+  description?: string
+) {
+  // View Definition
+  const viewDefn: ViewDefinition = {
+    compositions: [],
+    isComplete: true,
+    keng__description: description ? description : '',
+    projectedColumns: projectedCols,
+    sourcePaths: srcPaths,
+    viewName: name,
+  };
+
+  const editorState: ViewEditorState = {
+    id: serviceVdbName + '.' + name,
+    viewDefinition: viewDefn,
+  };
+  return editorState;
 }
 
 /**
@@ -290,7 +376,7 @@ function getConnectionName(sourcePath: string): string {
  * Example sourcePath: 'connection=pgConn/schema=public/table=account'
  * @param sourcePath the view definition sourcePath
  */
-function getNodeName(sourcePath: string): string {
+export function getNodeName(sourcePath: string): string {
   const segments = sourcePath.split('/');
   // Node name is the value of the last segment
   return segments[segments.length - 1].split('=')[1];

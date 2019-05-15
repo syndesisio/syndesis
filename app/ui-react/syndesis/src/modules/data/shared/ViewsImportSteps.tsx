@@ -2,14 +2,14 @@ import { WizardStep, WizardSteps } from '@syndesis/ui';
 import * as React from 'react';
 import i18n from '../../../i18n';
 
-export interface IViewsCreateStepsProps {
+export interface IViewsImportStepsProps {
   /**
    * The one-based active step number.
    */
   step: number;
 }
 
-export interface IViewsCreateStepsState {
+export interface IViewsImportStepsState {
   /**
    * Indicates if the user clicked on a step. Used to show
    * sub-steps when browsing from a mobile device.
@@ -18,20 +18,19 @@ export interface IViewsCreateStepsState {
 }
 
 /**
- * A component to display the PatternFly Wizard Steps specific to the integration
- * creator flow.
- * @see [step]{@link IViewsCreateStepsProps#step}
- * @see [subStep]{@link IViewsCreateStepsProps#subStep}
+ * A component to display the PatternFly Wizard Steps specific to the import views from data source wizard.
+ * @see [step]{@link IViewsImportStepsProps#step}
+ * @see [subStep]{@link IViewsImportStepsProps#subStep}
  */
-export class ViewsCreateSteps extends React.Component<
-  IViewsCreateStepsProps,
-  IViewsCreateStepsState
+export class ViewsImportSteps extends React.Component<
+  IViewsImportStepsProps,
+  IViewsImportStepsState
 > {
   public state = {
     active: false,
   };
 
-  constructor(props: IViewsCreateStepsProps) {
+  constructor(props: IViewsImportStepsProps) {
     super(props);
     this.toggleActive = this.toggleActive.bind(this);
   }

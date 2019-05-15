@@ -55,7 +55,7 @@ export class ViewList extends React.Component<IViewsListProps> {
             </div>
           </ListViewToolbar>
         </PageSection>
-        <PageSection>
+        <PageSection noPadding={true}>
           {this.props.hasListData ? (
             <ListView>{this.props.children}</ListView>
           ) : (

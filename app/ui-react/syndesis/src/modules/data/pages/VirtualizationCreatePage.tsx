@@ -5,6 +5,7 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { AppContext } from '../../../app';
 import i18n from '../../../i18n';
 import resolvers from '../../resolvers';
 
@@ -48,73 +49,79 @@ export class VirtualizationCreatePage extends React.Component {
     return (
       <WithRouteData<null, null>>
         {(p, s, { history }) => (
-          // TODO need to retrieve real user here
-          <WithVirtualizationHelpers username="developer">
-            {({ createVirtualization }) => {
-              const handleCreate = async (value: any) => {
-                const virtualization = await createVirtualization(
-                  value.virtName,
-                  value.virtDescription
-                );
-                // TODO: post toast notification
-                history.push(
-                  resolvers.data.virtualizations.views.root({ virtualization })
-                );
-              };
-              return (
-                <Translation ns={['data', 'shared']}>
-                  {t => (
-                    <>
-                      <Breadcrumb>
-                        <Link to={resolvers.dashboard.root()}>
-                          {t('shared:Home')}
-                        </Link>
-                        <Link to={resolvers.data.root()}>
-                          {t('shared:DataVirtualizations')}
-                        </Link>
-                        <span>
-                          {t(
-                            'data:virtualization.createDataVirtualizationTitle'
-                          )}
-                        </span>
-                      </Breadcrumb>
-                      <PageSection variant={'light'}>
-                        <h1 className="pf-c-title pf-m-xl">
-                          {t(
-                            'data:virtualization.createDataVirtualizationTitle'
-                          )}
-                        </h1>
-                      </PageSection>
-                      <PageSection>
-                        <AutoForm
-                          definition={formDefinition}
-                          initialValue={''}
-                          i18nRequiredProperty={t(
-                            'data:virtualization.requiredPropertyText'
-                          )}
-                          validate={validate}
-                          onSave={handleCreate}
-                        >
-                          {({ fields, handleSubmit }) => (
-                            <React.Fragment>
-                              {fields}
-                              <button
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={handleSubmit}
-                              >
-                                {t('shared:Create')}
-                              </button>
-                            </React.Fragment>
-                          )}
-                        </AutoForm>
-                      </PageSection>
-                    </>
-                  )}
-                </Translation>
-              );
-            }}
-          </WithVirtualizationHelpers>
+          <AppContext.Consumer>
+            {({ user }) => (
+              <WithVirtualizationHelpers>
+                {({ createVirtualization }) => {
+                  const handleCreate = async (value: any) => {
+                    const virtualization = await createVirtualization(
+                      user.username || 'developer',
+                      value.virtName,
+                      value.virtDescription
+                    );
+                    // TODO: post toast notification
+                    history.push(
+                      resolvers.data.virtualizations.views.root({
+                        virtualization,
+                      })
+                    );
+                  };
+                  return (
+                    <Translation ns={['data', 'shared']}>
+                      {t => (
+                        <>
+                          <Breadcrumb>
+                            <Link to={resolvers.dashboard.root()}>
+                              {t('shared:Home')}
+                            </Link>
+                            <Link to={resolvers.data.root()}>
+                              {t('shared:DataVirtualizations')}
+                            </Link>
+                            <span>
+                              {t(
+                                'data:virtualization.createDataVirtualizationTitle'
+                              )}
+                            </span>
+                          </Breadcrumb>
+                          <PageSection variant={'light'}>
+                            <h1 className="pf-c-title pf-m-xl">
+                              {t(
+                                'data:virtualization.createDataVirtualizationTitle'
+                              )}
+                            </h1>
+                          </PageSection>
+                          <PageSection>
+                            <AutoForm
+                              definition={formDefinition}
+                              initialValue={''}
+                              i18nRequiredProperty={t(
+                                'data:virtualization.requiredPropertyText'
+                              )}
+                              validate={validate}
+                              onSave={handleCreate}
+                            >
+                              {({ fields, handleSubmit }) => (
+                                <React.Fragment>
+                                  {fields}
+                                  <button
+                                    type="button"
+                                    className="btn btn-primary"
+                                    onClick={handleSubmit}
+                                  >
+                                    {t('shared:Create')}
+                                  </button>
+                                </React.Fragment>
+                              )}
+                            </AutoForm>
+                          </PageSection>
+                        </>
+                      )}
+                    </Translation>
+                  );
+                }}
+              </WithVirtualizationHelpers>
+            )}
+          </AppContext.Consumer>
         )}
       </WithRouteData>
     );

@@ -190,8 +190,7 @@ export class WithVirtualizationSqlClientForm extends React.Component<
     };
 
     return (
-      // TODO need to retrieve real user here
-      <WithVirtualizationHelpers username="developer">
+      <WithVirtualizationHelpers>
         {({ queryVirtualization }) => {
           const doSubmit = async (value: any) => {
             const viewDefn = this.props.views.find(

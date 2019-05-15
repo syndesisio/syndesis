@@ -12,6 +12,11 @@ export default include('/data', {
       root: '',
       sqlClient: 'sqlClient',
       views: include('views', {
+        createView: include('createView', {
+          root: '',
+          selectName: 'selectName',
+          selectSources: 'selectSources',
+        }),
         importSource: include('importSource', {
           root: '',
           selectConnection: 'selectConnection',

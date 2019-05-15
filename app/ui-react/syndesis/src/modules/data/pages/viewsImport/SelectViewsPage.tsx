@@ -1,10 +1,10 @@
 import { WithViewEditorStates, WithVirtualizationHelpers } from '@syndesis/api';
 import { RestDataService, ViewEditorState, ViewInfo } from '@syndesis/models';
-import { ViewsCreateLayout } from '@syndesis/ui';
+import { ViewsImportLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import resolvers from '../../../resolvers';
-import { ViewInfosContent, ViewsCreateSteps } from '../../shared';
+import { ViewInfosContent, ViewsImportSteps } from '../../shared';
 import { generateViewEditorStates } from '../../shared/VirtualizationUtils';
 
 /**
@@ -78,8 +78,7 @@ export class SelectViewsPage extends React.Component<
           { virtualization, connectionId },
           { history }
         ) => (
-          // TODO need to retrieve real user here
-          <WithVirtualizationHelpers username="developer">
+          <WithVirtualizationHelpers>
             {({ refreshVirtualizationViews }) => {
               const handleCreateViews = async () => {
                 const viewEditorStates = generateViewEditorStates(
@@ -100,8 +99,8 @@ export class SelectViewsPage extends React.Component<
                   idPattern={virtualization.serviceVdbName + '*'}
                 >
                   {({ data, hasData, error }) => (
-                    <ViewsCreateLayout
-                      header={<ViewsCreateSteps step={2} />}
+                    <ViewsImportLayout
+                      header={<ViewsImportSteps step={2} />}
                       content={
                         <ViewInfosContent
                           connectionName={connectionId}

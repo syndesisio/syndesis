@@ -11,6 +11,7 @@ const WORKSPACE_ROOT = '/tko:komodo/tko:workspace/';
 
 export interface IWithVirtualizationHelpersChildrenProps {
   createVirtualization(
+    username: string,
     virtualizationName: string,
     virtualizationDescription?: string
   ): Promise<RestDataService>;
@@ -33,7 +34,6 @@ export interface IWithVirtualizationHelpersChildrenProps {
 }
 
 export interface IWithVirtualizationHelpersProps {
-  username: string;
   children(props: IWithVirtualizationHelpersChildrenProps): any;
 }
 
@@ -57,15 +57,17 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
 
   /**
    * Creates a virtualization with the specified name and description
+   * @param username the username (used to define the workspace path)
    * @param virtName the name of the virtualization to create
    * @param virtDesc the description (optional) of the virtualization to create
    */
   public async createVirtualization(
+    username: string,
     virtName: string,
     virtDesc?: string
   ): Promise<RestDataService> {
     const newVirtualization = {
-      keng__dataPath: `${WORKSPACE_ROOT}${this.props.username}/${virtName}`,
+      keng__dataPath: `${WORKSPACE_ROOT}${username}/${virtName}`,
       keng__id: `${virtName}`,
       serviceVdbName: `${virtName}`.toLowerCase() + 'vdb',
       tko__description: virtDesc ? `${virtDesc}` : '',
