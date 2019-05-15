@@ -1,1 +1,1 @@
-export * from './SupportPageBody';
+export * from './DownloadDiagnostics';

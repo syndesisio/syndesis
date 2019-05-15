@@ -61,28 +61,28 @@ export class HelpDropdown extends React.Component<
     const dropdownItems = [
       <DropdownItem
         key="sampleIntegrationTutorials"
-        component="span"
+        component="a"
         onClick={launchSampleIntegrationTutorials}
       >
         Sample Integration Tutorials
       </DropdownItem>,
-      <DropdownItem key="userGuide" component="span" onClick={launchUserGuide}>
+      <DropdownItem key="userGuide" component="a" onClick={launchUserGuide}>
         User Guide
       </DropdownItem>,
       <DropdownItem
         key="connectorsGuide"
-        component="span"
+        component="a"
         onClick={launchConnectorsGuide}
       >
         Connectors Guide
       </DropdownItem>,
-      <DropdownItem key="support" component="span" onClick={launchSupportPage}>
+      <DropdownItem key="support" component="a" onClick={launchSupportPage}>
         Support
       </DropdownItem>,
-      <DropdownItem key="contactUs" component="span" onClick={launchContactUs}>
+      <DropdownItem key="contactUs" component="a" onClick={launchContactUs}>
         Contact Us
       </DropdownItem>,
-      <DropdownItem key="action" component="span" onClick={launchAboutModal}>
+      <DropdownItem key="action" component="a" onClick={launchAboutModal}>
         About
       </DropdownItem>,
     ];

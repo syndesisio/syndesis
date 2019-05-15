@@ -2,7 +2,7 @@ import { DropdownItem } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IPfDropdownItem {
-  children: any;
+  children: React.ReactNode;
 }
 class PfDropdownItem extends React.Component<IPfDropdownItem> {
   public render() {

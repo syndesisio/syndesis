@@ -245,6 +245,16 @@ export const useIntegrationHelpers = () => {
     }
   };
 
+  const downloadSupportData = async (data: any) => {
+    const body = await callFetch({
+      body: data,
+      headers: apiContext.headers,
+      method: 'POST',
+      url: `${apiContext.apiUri}/support/downloadSupportZip`,
+    });
+    saveAs(await body.blob(), 'syndesis.zip');
+  }
+
   /**
    * Request that the given integration ID at the given version be deactivated, empty response is returned
    * @param id
@@ -445,6 +455,7 @@ export const useIntegrationHelpers = () => {
     addStep,
     deleteIntegration,
     deployIntegration,
+    downloadSupportData,
     exportIntegration,
     getActionDescriptor,
     getDeployment,
