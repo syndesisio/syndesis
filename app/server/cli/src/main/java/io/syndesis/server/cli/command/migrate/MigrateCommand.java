@@ -97,7 +97,7 @@ public class MigrateCommand extends SyndesisCommand {
             LOG.info("Starting migration to version: {}", targetVersion);
         }
 
-        for (int i = version; i <= targetVersion; i++) {
+        for (int i = version + 1; i <= targetVersion; i++) {
             if (migrationDir != null) {
                 migrator.migrate(jsondb, i, migrationDir);
             } else {
