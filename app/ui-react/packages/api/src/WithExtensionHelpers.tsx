@@ -37,7 +37,6 @@ export class WithExtensionHelpersWrapped extends React.Component<
     if (!response.ok) {
       throw new Error(response.statusText);
     }
-
     return Promise.resolve();
   }
 
@@ -69,24 +68,24 @@ export class WithExtensionHelpersWrapped extends React.Component<
   ): Promise<Extension> {
     const data = new FormData();
     data.append('file', file, file.name);
-
     const url = `${this.props.apiUri}/extensions`;
-
+    const {
+      Accept,
+      ['Content-Type']: contentType,
+      ...rest
+    } = this.props.headers;
     const response = await callFetch({
       body: data,
-      contentType: 'multipart/form-data',
-      headers: this.props.headers,
+      headers: { ...rest },
       includeAccept: false,
       includeContentType: false,
       includeReferrerPolicy: false,
       method: 'POST',
       url: extensionId ? `${url}?updatedId=${extensionId}` : url,
     });
-
     if (!response.ok) {
       throw new Error(response.statusText);
     }
-
     return (await response.json()) as Extension;
   }
 

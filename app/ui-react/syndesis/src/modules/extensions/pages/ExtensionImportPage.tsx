@@ -86,7 +86,7 @@ export default class ExtensionImportPage extends React.Component<
    * @param description the action description
    */
   public getActionText(name: string, description: string): string {
-    return i18n.t('customizations:action', {
+    return i18n.t('extensions:action', {
       actionDescription: description,
       actionName: name,
     });
@@ -98,7 +98,7 @@ export default class ExtensionImportPage extends React.Component<
         {({ pushNotification }) => {
           const onDndUploadRejectedHandler = (failedFileName: string) => {
             const text = i18n.t(
-              'customizations:extension.importUploadFailedAlertMessage',
+              'extensions:extension.importUploadFailedAlertMessage',
               {
                 fileName: failedFileName,
               }
@@ -139,7 +139,7 @@ export default class ExtensionImportPage extends React.Component<
                         this.setState({
                           ...this.state,
                           dndUploadSuccessMessage: i18n.t(
-                            'customizations:extension.importUploadSuccessMessage'
+                            'extensions:extension.importUploadSuccessMessage'
                           ),
                           extension: uploaded,
                           loading: false,
@@ -150,10 +150,10 @@ export default class ExtensionImportPage extends React.Component<
                           ...this.state,
                           disableDropzone: false,
                           dndUploadFailedMessage: i18n.t(
-                            'customizations:extension.importUploadFailedMessage'
+                            'extensions:extension.importUploadFailedMessage'
                           ),
                           i18nAlertMessage: i18n.t(
-                            'customizations:extension.importInvalidFileMessage'
+                            'extensions:extension.importInvalidFileMessage'
                           ),
                           loading: false,
                         });
@@ -250,11 +250,11 @@ export default class ExtensionImportPage extends React.Component<
                                   )}
                                   i18nIdLabel={i18n.t('shared:ID')}
                                   i18nImport={i18n.t(
-                                    'customizations:extension.ImportExtension'
+                                    'extensions:extension.ImportExtension'
                                   )}
                                   i18nNameLabel={i18n.t('shared:Name')}
                                   i18nTitle={i18n.t(
-                                    'customizations:extension.ImportReview'
+                                    'extensions:extension.ImportReview'
                                   )}
                                   i18nTypeLabel={i18n.t('shared:Type')}
                                   i18nActionText={this.getActionText}
