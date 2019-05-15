@@ -58,7 +58,13 @@ const addStepPage = (
 const saveIntegrationPage = (
   <SaveIntegrationPage
     cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
-    postSaveHref={resolvers.list}
+    postSaveHref={(p, s) =>
+      resolvers.integration.edit.index({
+        ...p,
+        ...s,
+      })
+    }
+    postPublishHref={resolvers.integration.details}
   />
 );
 

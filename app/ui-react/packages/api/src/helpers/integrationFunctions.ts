@@ -56,6 +56,17 @@ export function setIntegrationName(
   });
 }
 
+export function setIntegrationProperties(
+  integration: Integration,
+  properties: StringMap<any>
+): Integration {
+  return produce(integration, nextIntegration => {
+    Object.keys(properties).forEach(k => {
+      nextIntegration[k] = properties[k];
+    });
+  });
+}
+
 /**
  * returns true if the provided integration can be published; returns false
  * otherwise.
