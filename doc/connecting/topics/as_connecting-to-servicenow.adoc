@@ -9,7 +9,7 @@
 An integration can retrieve records from a ServiceNow table or add records to 
 a ServiceNow import set, which ServiceNow uses to update a table. 
 In an integration, to connect to ServiceNow,
-create a ServiceNow connection and then add that connection to an integration flow.
+create a ServiceNow connection and then add that connection to an integration. 
 For details, see:
 
 * xref:create-servicenow-connection_{context}[]
