@@ -13,8 +13,8 @@ During registration, you enable Google APIs and create credentials that
 With registration in place, you can create multiple connections
 to Gmail, Google Calendar, and Google Sheets. You can use each connection 
 in multiple integrations. 
-While each connection to a Google application uses the
-same client ID and client secret, which you obtain during registration, 
+While each connection to a Google application can use the
+same Google client ID and Google client secret, which you obtain during registration, 
 each connection can access
 a different Google account, which you choose. 
 
@@ -26,14 +26,26 @@ follow the instructions to enable their APIs.
 
 [IMPORTANT]
 ====
-Be careful if you choose to use the Google client ID and Google client 
+You must create a new Google client application for {prodname}. 
+The credentials that Google provides for a new client application contain a 
+refresh token that is used for refreshing expired access tokens. This refresh 
+token is available only the first time that the {prodname} client application 
+uses the credentials. In {prodname}, connections to Gmail, Google Calendar, 
+and Google Sheets can all use the same Google client ID and Google client 
+secret. If they do, the refresh token is available to all connections 
+to Google applications. When you view connection details in the {prodname} 
+user interface, do not click the *Validate* button. Validation is a second 
+use of the credentials and the refresh token is no longer part of the 
+client credentials. You can, however, re-connect to Google applications.
+
+In development environments, be careful if you choose to use the Google client ID and Google client 
 secret that you are using for some other, non-{prodname}, OAuth client. 
 {prodname} requires offline access that is requested on the first OAuth 
 exchange. If another OAuth client already entered the OAuth exchange 
 and did not request offline access, then {prodname} cannot obtain 
 offline access on subsequent OAuth exchanges. If you are unsure 
 whether offline access was requested on the first exchange, 
-create a new Google client ID and secret for {prodname}.
+create a new Google client application for {prodname}.
 ====
 
 .Prerequisites
