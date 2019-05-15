@@ -15,17 +15,15 @@
  */
 package io.syndesis.server.controller.integration.camelk.customizer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import io.fabric8.kubernetes.api.model.Secret;
 import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.server.controller.integration.camelk.crd.ConfigurationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static io.syndesis.common.util.Optionals.asStream;
 
@@ -45,15 +43,10 @@ public class KnativeCamelKIntegrationCustomizer implements CamelKIntegrationCust
 
     private static final String HTTP_PASSIVE_TAG = "http-passive";
 
-    private static final boolean KNATIVE_SERVING_03_COMPAT = true;
-    private static final String APPLICATION_PROPERTIES_FILE = "application.properties";
-
     @Override
     public Integration customize(IntegrationDeployment deployment, Integration integration, Secret secret) {
         customizeSourceSink(deployment, integration);
         customizeService(deployment, integration);
-        customizeProperties(deployment, integration, secret);
-        customizePaths(deployment, integration, secret);
         return integration;
     }
 
@@ -110,76 +103,11 @@ public class KnativeCamelKIntegrationCustomizer implements CamelKIntegrationCust
                 ).putTraits(DEPLOYER_TRAIT,
                     new IntegrationTraitSpec.Builder()
                         .putConfiguration("kind", KNATIVE_SERVICE_TRAIT)
-                        //.putConfiguration("container-image", KNATIVE_SERVING_03_COMPAT ? "true" : "false") // slower, but needed for knative serving < 0.4
                         .build()
                 ).build()
             );
         }
 
-        return integration;
-    }
-
-    protected Integration customizeProperties(IntegrationDeployment deployment, Integration integration, Secret secret) {
-        /*
-        if (KNATIVE_SERVING_03_COMPAT && isKnativeServiceNeeded(deployment)
-            && secret.getStringData().containsKey(APPLICATION_PROPERTIES_FILE)) {
-
-            // Only do this if using Knative serving 0.3
-            String data = secret.getStringData().get(APPLICATION_PROPERTIES_FILE);
-            Properties properties = new Properties();
-            try (StringReader reader = new StringReader(data)) {
-                properties.load(reader);
-            } catch (IOException e) {
-                throw SyndesisServerException.launderThrowable("Error while reading properties from secret", e);
-            }
-
-            IntegrationSpec.Builder spec = new IntegrationSpec.Builder();
-            if (integration.getSpec() != null) {
-                spec = spec.from(integration.getSpec());
-            }
-
-            for (Map.Entry<Object, Object> kv : properties.entrySet()) {
-                spec = spec.addConfiguration(new ConfigurationSpec.Builder()
-                    .type("property")
-                    .value(kv.getKey() + "=" + kv.getValue())
-                    .build());
-            }
-
-            integration.setSpec(spec.build());
-        }
-        */
-        return integration;
-    }
-
-    protected Integration customizePaths(IntegrationDeployment deployment, Integration integration, Secret secret) {
-        if (KNATIVE_SERVING_03_COMPAT && isKnativeServiceNeeded(deployment)
-            && integration.getSpec() != null && integration.getSpec().getConfiguration() != null) {
-
-            // Only do this if using Knative serving 0.3
-            // Replace absolute path with relative to /deployments
-            boolean edited = false;
-            String lookupKey = "AB_JMX_EXPORTER_CONFIG=";
-            List<ConfigurationSpec> newConf = new ArrayList<>();
-            for (ConfigurationSpec conf : integration.getSpec().getConfiguration()) {
-                if ("env".equals(conf.getType()) && conf.getValue() != null && conf.getValue().startsWith(lookupKey)) {
-                    newConf.add(new ConfigurationSpec.Builder()
-                        .type("env")
-                        // let's use the default prometheus config (needs to be injected from elsewhere)
-                        .value("/opt/prometheus/prometheus-config.yml")
-                        .build());
-                    edited = true;
-                } else {
-                    newConf.add(conf);
-                }
-            }
-
-            if (edited) {
-                IntegrationSpec.Builder spec = new IntegrationSpec.Builder()
-                    .from(integration.getSpec())
-                    .configuration(newConf);
-                integration.setSpec(spec.build());
-            }
-        }
         return integration;
     }
 
