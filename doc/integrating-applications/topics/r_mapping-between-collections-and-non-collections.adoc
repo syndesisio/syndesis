@@ -8,8 +8,8 @@ In the data mapper *Source* and *Target* panels:
 
 * image:images/collection-icon.png[Collection icon]
 indicates a collection. If the collection contains one primitive type, 
-then you can map directly from or to that collection. If the collection 
-contains two or more different types, then the data mapper 
+you can map directly from or to that collection. If the collection 
+contains two or more different types, the data mapper 
 displays the collection’s child fields and you can map to or from the 
 collection’s fields.  
 
@@ -58,9 +58,9 @@ are in the flow.
 
 .Changing default behavior when mapping from a collection field 
 When you map from a collection field to a non-collection 
-field, the default is that the target field gets its 
+field, the default behavior is that the target field gets its 
 value from the last element in the source collection. 
-You can change the default behavior in the following 
+You can change this default behavior in the following 
 ways: 
 
 * To map from the element that you choose, apply the *Item At* 
@@ -89,7 +89,7 @@ field with `Boston Paris Tokyo`.
 
 .Changing default behavior when mapping from a non-collection field
 When you map from a non-collection field to a collection 
-field, the default is that the target collection contains
+field, the default behavior is that the target collection contains
 one element, which contains the non-collection, source field 
 value. You can change the default behavior 
 when the source field contains a series of values that are 
