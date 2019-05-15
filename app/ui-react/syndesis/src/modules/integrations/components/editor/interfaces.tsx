@@ -122,16 +122,18 @@ export interface IBaseRouteState {
   integration: Integration;
 }
 
-/**
- * @param integration - the integration object.
- */
 export interface ISaveIntegrationRouteParams {
   flowId: string;
+  integrationId?: string;
 }
 
 export interface ISaveIntegrationForm {
   name: string;
   description?: string;
+}
+
+export interface IPostPublishRouteParams {
+  integrationId?: string;
 }
 
 /**

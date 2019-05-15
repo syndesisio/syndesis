@@ -170,7 +170,6 @@ export class WithServerEvents extends React.Component<IWithEventsProps> {
       }
     } catch (error) {
       this.onFailure(error);
-      throw error;
     }
   }
 
