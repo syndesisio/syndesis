@@ -68,6 +68,7 @@ public final class ProjectGeneratorHelper {
         return bos.toByteArray();
     }
 
+    @SuppressWarnings("PMD.NPathComplexity")
     public static boolean filterDefaultDependencies(MavenGav gav) {
         boolean answer = true;
 
@@ -86,6 +87,11 @@ public final class ProjectGeneratorHelper {
         }
 
         if ("io.syndesis".equals(gav.getGroupId()) && "integration-runtime".equals(gav.getArtifactId())) {
+            answer = false;
+        }
+
+        if ("org.apache.camel.k".equals(gav.getGroupId())) {
+            // Camel K does not work with s2i runtime
             answer = false;
         }
 
