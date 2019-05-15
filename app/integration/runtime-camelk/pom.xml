@@ -76,6 +76,11 @@
       <artifactId>camel-k-runtime-core</artifactId>
       <version>${camel-k-runtime.version}</version>
     </dependency>
+    <dependency>
+      <groupId>org.apache.camel.k</groupId>
+      <artifactId>camel-k-adapter-camel-2</artifactId>
+      <version>${camel-k-runtime.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>com.github.spotbugs</groupId>
@@ -159,6 +164,15 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <configuration>
+          <ignoredUnusedDeclaredDependencies>
+            <!-- false positive, doesn't compile without it -->
+            <ignoredUnusedDeclaredDependency>org.apache.camel.k:camel-k-adapter-camel-2</ignoredUnusedDeclaredDependency>
+          </ignoredUnusedDeclaredDependencies>
+        </configuration>
       </plugin>
     </plugins>
   </build>

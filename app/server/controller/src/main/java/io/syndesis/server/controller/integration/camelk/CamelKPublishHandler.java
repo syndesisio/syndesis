@@ -208,7 +208,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         //TODO: maybe add owner reference
         Secret secret = new SecretBuilder()
             .withNewMetadata()
-                .withName(Names.sanitize(integration.getId().get()))
+                .withName(CamelKSupport.integrationName(integration.getName()))
             .endMetadata()
             .addToStringData("application.properties", CamelKSupport.propsToString(applicationProperties))
             .build();
@@ -277,7 +277,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             .build());
         integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
             .type("secret")
-            .value(Names.sanitize(integration.getId().get()))
+            .value(CamelKSupport.integrationName(integration.getName()))
             .build());
         integrationSpecBuilder.putTraits(
             "jolokia",
@@ -311,6 +311,10 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
                 .putConfiguration("target-annotations", "prometheus.io/port"+","
                                                     +"prometheus.io/scrape")
                 .build());
+
+        this.configuration.getCamelk().getEnvironment().forEach((k, v) -> {
+            integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder().type("env").value(k + "=" + v).build());
+        });
 
         //add dependencies
         integrationSpecBuilder.addDependencies("bom:io.syndesis.integration/integration-bom-camel-k/pom/"+versionService.getVersion());

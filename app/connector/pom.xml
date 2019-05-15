@@ -75,6 +75,7 @@
     <module>concur</module>
     <module>kudu</module>
     <module>odata</module>
+    <module>knative</module>
     <module>flow</module>
   </modules>
 

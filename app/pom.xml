@@ -76,7 +76,7 @@
 
     <!-- Global camel version used everywhere -->
     <camel.version>2.21.0.fuse-740010</camel.version>
-    <camel-k-runtime.version>0.3.1</camel-k-runtime.version>
+    <camel-k-runtime.version>0.3.2</camel-k-runtime.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
     <basepom.test.fork-count>1</basepom.test.fork-count>
@@ -1473,6 +1473,12 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-odata</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-knative</artifactId>
         <version>${project.version}</version>
       </dependency>
 

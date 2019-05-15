@@ -65,6 +65,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationRouteBuilder.class);
 
     private final String configurationUri;
+    private final SourceProvider sourceProvider;
     private final List<IntegrationStepHandler> stepHandlerList;
     private final Set<String> resources;
     private final List<ActivityTrackingPolicyFactory> activityTrackingPolicyFactories;
@@ -80,6 +81,18 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
     public IntegrationRouteBuilder(String configurationUri, Collection<IntegrationStepHandler> handlers, List<ActivityTrackingPolicyFactory> activityTrackingPolicyFactories) {
         this.configurationUri = configurationUri;
+        this.sourceProvider = null;
+        this.resources = new HashSet<>();
+
+        this.stepHandlerList = new ArrayList<>();
+        this.stepHandlerList.addAll(handlers);
+
+        this.activityTrackingPolicyFactories = activityTrackingPolicyFactories;
+    }
+
+    public IntegrationRouteBuilder(SourceProvider sourceProvider, Collection<IntegrationStepHandler> handlers, List<ActivityTrackingPolicyFactory> activityTrackingPolicyFactories) {
+        this.configurationUri = null;
+        this.sourceProvider = sourceProvider;
         this.resources = new HashSet<>();
 
         this.stepHandlerList = new ArrayList<>();
@@ -91,9 +104,8 @@ public class IntegrationRouteBuilder extends RouteBuilder {
     protected Integration loadIntegration() throws IOException {
         final Integration integration;
 
-        try (InputStream is = ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri)) {
+        try (InputStream is = createIntegrationInputStream()) {
             if (is != null) {
-                LOGGER.info("Loading integration from: {}", configurationUri);
                 integration = Json.reader().forType(Integration.class).readValue(is);
             } else {
                 throw new IllegalStateException("Unable to load deployment: " + configurationUri);
@@ -101,6 +113,20 @@ public class IntegrationRouteBuilder extends RouteBuilder {
         }
 
         return integration;
+    }
+
+    protected InputStream createIntegrationInputStream() throws IOException {
+        if (sourceProvider != null) {
+            try {
+                return sourceProvider.getSource(getContext());
+            } catch (IOException | RuntimeException e) {
+                throw e;
+            } catch (Exception e) {
+                throw ObjectHelper.wrapRuntimeCamelException(e);
+            }
+        }
+        LOGGER.info("Loading integration from: {}", configurationUri);
+        return ResourceHelper.resolveResourceAsInputStream(getContext().getClassResolver(), configurationUri);
     }
 
     @Override

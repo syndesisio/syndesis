@@ -15,6 +15,7 @@
  */
 package io.syndesis.server.logging.jsondb.controller;
 
+import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.internal.PodOperationsImpl;
 import io.fabric8.kubernetes.client.utils.HttpClientUtils;
@@ -32,6 +33,10 @@ import java.io.InputStream;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -40,6 +45,8 @@ import java.util.function.Consumer;
  * Provides some enriched operations against a KubernetesClient.
  */
 public class KubernetesSupport {
+
+    private static final Set<String> BLACKLISTED_CONTAINERS = Collections.singleton("istio-proxy");
 
     private static final Logger LOG = LoggerFactory.getLogger(KubernetesSupport.class);
 
@@ -66,9 +73,17 @@ public class KubernetesSupport {
     protected void watchLog(String podName, Consumer<InputStream> handler, String sinceTime, Executor executor) throws IOException {
         try {
             PodOperationsImpl pod = (PodOperationsImpl) client.pods().withName(podName);
+
+            List<Container> containers = pod.get().getSpec().getContainers();
+            String containerFilter = getSpecificUserContainer(containers)
+                .map(n -> "&container=" + n)
+                .orElse("");
+
             StringBuilder url = new StringBuilder()
                 .append(pod.getResourceUrl().toString())
-                .append("/log?pretty=false&follow=true&timestamps=true");
+                .append("/log?pretty=false&follow=true&timestamps=true")
+                .append(containerFilter);
+
             if (sinceTime != null) {
                 url.append("&sinceTime=").append(sinceTime);
             }
@@ -113,6 +128,16 @@ public class KubernetesSupport {
         } finally {
             Thread.currentThread().setName(ActivityTrackingController.IDLE_THREAD_NAME);
         }
+    }
+
+    protected Optional<String> getSpecificUserContainer(List<Container> containers) {
+        if (containers.size() <= 1) {
+            // implicit
+            return Optional.empty();
+        }
+        return containers.stream().map(Container::getName)
+            .filter(n -> !BLACKLISTED_CONTAINERS.contains(n))
+            .findFirst();
     }
 
     public void setReadTimeout(final Duration readTimeout) {

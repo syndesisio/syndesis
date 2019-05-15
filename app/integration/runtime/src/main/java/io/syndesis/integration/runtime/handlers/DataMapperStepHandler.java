@@ -63,7 +63,7 @@ public class DataMapperStepHandler implements IntegrationStepHandler {
         List<Map<String, Object>> dataSources = getAtlasmapDataSources(step.getConfiguredProperties());
 
         addJsonTypeSourceProcessor(route, dataSources);
-        route.toF("atlas:mapping-flow-%s-step-%s.json?encoding=UTF-8&sourceMapName=" + OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP, flowIndex, stepIndex);
+        route.toF("atlas:mapping-flow-%s-step-%s.json?encoding=UTF-8&sourceMapName=%s", flowIndex, stepIndex, OutMessageCaptureProcessor.CAPTURED_OUT_MESSAGES_MAP);
         addJsonTypeTargetProcessor(route, dataSources);
 
         return Optional.of(route);
