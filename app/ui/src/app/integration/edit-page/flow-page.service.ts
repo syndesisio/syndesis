@@ -110,7 +110,7 @@ export class FlowPageService {
    * @param route
    * @param targetRoute
    */
-  doSave(route: ActivatedRoute, targetRoute?) {
+  doSave(route: ActivatedRoute, targetRoute?: Array<string>, targetUrl?: string) {
     this.errorMessage = undefined;
     if (
       !this.currentFlowService.validateFlowAndMaybeRedirect(route, this.router)
@@ -121,9 +121,13 @@ export class FlowPageService {
       !this.currentFlowService.integration.name ||
       this.currentFlowService.integration.name === ''
     ) {
-      this.router.navigate(['..', 'integration-basics'], {
-        relativeTo: route,
-      });
+      if (targetUrl == null) {
+        if (targetRoute == null) {
+          targetRoute = [];
+        }
+        targetUrl = this.router.createUrlTree(targetRoute, {relativeTo: route}).toString();
+      }
+      this.router.navigateByUrl('/integrations/create/integration-basics?targetUrl=' + targetUrl);
       return;
     }
     this.currentFlowService.events.emit({
@@ -134,6 +138,14 @@ export class FlowPageService {
         // go to the supplied route, ideally it should be
         // the same page the user is on or the save or add
         // step page
+        if (this.saveInProgress && targetUrl) {
+          this.router.navigateByUrl(targetUrl);
+          return;
+        }
+        if (targetRoute == null) {
+          //default targetRoute to the initial route
+          targetRoute = [];
+        }
         if (this.saveInProgress && targetRoute) {
           this.router.navigate(targetRoute, { relativeTo: route });
           return;
@@ -155,9 +167,9 @@ export class FlowPageService {
     });
   }
 
-  save(route: ActivatedRoute, targetRoute?: Array<string>) {
+  save(route: ActivatedRoute, targetRoute?: Array<string>, targetUrl?: string) {
     this.saveInProgress = true;
-    this.doSave(route, targetRoute);
+    this.doSave(route, targetRoute, targetUrl);
   }
 
   publish(route: ActivatedRoute) {
