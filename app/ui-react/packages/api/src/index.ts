@@ -10,6 +10,8 @@ export * from './SyndesisFetch';
 export * from './useIntegrationHelpers';
 export * from './WithActionDescriptor';
 export * from './WithActivities';
+export * from './WithApiConnector';
+export * from './WithApiConnectorHelpers';
 export * from './WithApiConnectors';
 export * from './WithApiVersion';
 export * from './WithChangeListener';

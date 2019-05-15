@@ -1,11 +1,9 @@
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
-import { linkTo } from '@storybook/addon-links';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-
+import { MemoryRouter } from 'react-router';
 import { ApiConnectorListItem } from '../../src';
-import { apiConnectorDetailsStory } from './ApiConnectorDetail.stories';
 
 const stories = storiesOf('Customization/ApiConnectorListItem', module);
 
@@ -80,39 +78,49 @@ stories
   .add(
     'in use',
     () => (
-      <ApiConnectorListItem
-        apiConnectorId={text('apiConnectorId', apiConnectorId)}
-        apiConnectorDescription={text(
-          'apiConnectorDescription',
-          apiDescription
-        )}
-        apiConnectorIcon={text('icon', apiIcon)}
-        apiConnectorName={text('apiConnectorName', apiName)}
-        i18nDelete={text('i18nDescription', deleteText)}
-        i18nDetails={detailsText}
-        i18nDetailsTip={detailsTip}
-        i18nUsedByMessage={text('i18nUsedByMessage', usedByFiveMsg)}
-        onDelete={action(deleteActionText)}
-        onDetails={linkTo('Customization', apiConnectorDetailsStory)}
-        usedBy={usedByFive}
-      />
+      <MemoryRouter>
+        <ApiConnectorListItem
+          apiConnectorId={text('apiConnectorId', apiConnectorId)}
+          apiConnectorDescription={text(
+            'apiConnectorDescription',
+            apiDescription
+          )}
+          apiConnectorIcon={text('icon', apiIcon)}
+          apiConnectorName={text('apiConnectorName', apiName)}
+          i18nCancelLabel={'Cancel'}
+          i18nDeleteModalMessage={'Are you sure you want to delete this?'}
+          i18nDeleteModalTitle={'Confirm Delete'}
+          detailsPageLink={'/details/page/link'}
+          i18nDelete={text('i18nDescription', deleteText)}
+          i18nDetails={detailsText}
+          i18nDetailsTip={detailsTip}
+          i18nUsedByMessage={text('i18nUsedByMessage', usedByFiveMsg)}
+          onDelete={action(deleteActionText)}
+          usedBy={usedByFive}
+        />
+      </MemoryRouter>
     ),
     { notes: inUseTestNotes }
   )
   .add(
     'not used',
     () => (
-      <ApiConnectorListItem
-        apiConnectorId={text('apiConnectorId', apiConnectorId)}
-        apiConnectorName={text('apiConnectorName', apiName)}
-        i18nDelete={text('i18nDescription', deleteText)}
-        i18nDeleteTip={deleteTip}
-        i18nDetails={detailsText}
-        i18nUsedByMessage={text('i18nUsedByMessage', usedByZeroMsg)}
-        onDelete={action(deleteActionText)}
-        onDetails={linkTo('Customization', apiConnectorDetailsStory)}
-        usedBy={usedByZero}
-      />
+      <MemoryRouter>
+        <ApiConnectorListItem
+          apiConnectorId={text('apiConnectorId', apiConnectorId)}
+          apiConnectorName={text('apiConnectorName', apiName)}
+          i18nCancelLabel={'Cancel'}
+          i18nDeleteModalMessage={'Are you sure you want to delete this?'}
+          i18nDeleteModalTitle={'Confirm Delete'}
+          detailsPageLink={'/details/page/link'}
+          i18nDelete={text('i18nDescription', deleteText)}
+          i18nDeleteTip={deleteTip}
+          i18nDetails={detailsText}
+          i18nUsedByMessage={text('i18nUsedByMessage', usedByZeroMsg)}
+          onDelete={action(deleteActionText)}
+          usedBy={usedByZero}
+        />
+      </MemoryRouter>
     ),
     { notes: notUsedTestNotes }
   );

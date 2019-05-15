@@ -1,6 +1,5 @@
-export * from './ApiConnectorDetail';
 export * from './ApiConnectorDetailCard';
-export * from './ApiConnectorInfo';
+export * from './ApiConnectorDetailsForm';
 export * from './ApiConnectorReview';
 export * from './ApiConnectorListItem';
 export * from './ApiConnectorListSkeleton';
