@@ -171,7 +171,7 @@ export function getOutputDocument(
     .map(s => stepToProps(s.step, false, true, s.index))
     .filter(s => s !== false && s.id !== stepId) as IDocumentWithShape[];
 
-  if (outputDocuments.length > 1) {
+  if (outputDocuments.length === 0) {
     throw new Error('output document shape kind not supported');
   }
 
