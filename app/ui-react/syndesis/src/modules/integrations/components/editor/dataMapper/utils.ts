@@ -17,17 +17,22 @@ import {
   Step,
 } from '@syndesis/models';
 
+interface IDocumentWithShape extends IDocument {
+  dataShape: DataShape;
+}
+
 export function stepToProps(
   step: Step,
   isSource: boolean,
   showFields: boolean,
   index: number
-): IDocument | false {
+): IDocumentWithShape | false {
   const dataShape = isSource
     ? step.action!.descriptor!.outputDataShape!
     : step.action!.descriptor!.inputDataShape!;
 
   const basicInfo = {
+    dataShape,
     description: dataShape.description || '',
     id: step.id!,
     inspectionResult: '',
@@ -141,7 +146,7 @@ export function getInputDocuments(
     .map(s =>
       stepToProps(s.step, true, dataShapeAwareSteps.length === 1, s.index)
     )
-    .filter(s => s) as IDocument[];
+    .filter(s => s) as IDocumentWithShape[];
 
   if (inputDocuments.length === 0) {
     throw new Error('input documents shape kind not supported');
@@ -164,7 +169,7 @@ export function getOutputDocument(
 
   const outputDocuments = subsequentSteps
     .map(s => stepToProps(s.step, false, true, s.index))
-    .filter(s => s !== false && s.id !== stepId) as IDocument[];
+    .filter(s => s !== false && s.id !== stepId) as IDocumentWithShape[];
 
   if (outputDocuments.length > 1) {
     throw new Error('output document shape kind not supported');

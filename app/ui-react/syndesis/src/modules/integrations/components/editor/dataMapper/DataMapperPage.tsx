@@ -1,8 +1,12 @@
-import { getSteps, WithIntegrationHelpers } from '@syndesis/api';
+import {
+  DataShapeKinds,
+  getSteps,
+  WithIntegrationHelpers,
+} from '@syndesis/api';
 import { DataMapperAdapter } from '@syndesis/atlasmap-adapter';
 import * as H from '@syndesis/history';
-import { Integration } from '@syndesis/models';
-import { IntegrationEditorLayout, PageSection } from '@syndesis/ui';
+import { Action, Integration } from '@syndesis/models';
+import { ButtonLink, IntegrationEditorLayout, PageSection } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { AppContext } from '../../../../../app';
@@ -58,47 +62,78 @@ export const DataMapperPage: React.FunctionComponent<
     <WithIntegrationHelpers>
       {({ addStep, updateStep }) => (
         <WithRouteData<IDataMapperRouteParams, IDataMapperRouteState>>
-          {(
-            { flowId, position },
-            { step, integration, updatedIntegration },
-            { history }
-          ) => {
-            const positionAsNumber = parseInt(position, 10);
+          {(params, state, { history }) => {
+            const positionAsNumber = parseInt(params.position, 10);
 
             const inputDocuments = getInputDocuments(
-              integration,
-              flowId,
+              state.integration,
+              params.flowId,
               positionAsNumber
             );
             const outputDocument = getOutputDocument(
-              integration,
-              flowId,
+              state.integration,
+              params.flowId,
               props.mode === 'adding' ? positionAsNumber - 1 : positionAsNumber,
-              step.id!
+              state.step.id!
             );
+
+            const saveMappingStep = async () => {
+              // tslint:disable
+              // @ts-ignore
+              const updatedIntegration = await (props.mode === 'adding'
+                ? addStep
+                : updateStep)(
+                state.integration,
+                {
+                  ...state.step,
+                  action: {
+                    actionType: 'step',
+                    descriptor: {
+                      inputDataShape: {
+                        kind: DataShapeKinds.ANY,
+                        name: 'All preceding outputs',
+                      },
+                      outputDataShape: outputDocument.dataShape,
+                    } as any,
+                  } as Action,
+                },
+                params.flowId,
+                positionAsNumber,
+                {
+                  [MAPPING_KEY]: mappings,
+                }
+              );
+              // tslint:enable
+              history.push(
+                props.postConfigureHref(updatedIntegration, params, {
+                  ...state,
+                  updatedIntegration,
+                })
+              );
+            };
 
             return (
               <>
-                <PageTitle title={step.name} />
+                <PageTitle title={state.step.name} />
                 <IntegrationEditorLayout
-                  title={step.name}
-                  description={step.description}
+                  title={state.step.name}
+                  description={state.step.description}
                   sidebar={props.sidebar({
                     activeIndex: positionAsNumber,
-                    activeStep: toUIStep(step),
+                    activeStep: toUIStep(state.step),
                     initialExpanded: false,
                     steps: toUIStepCollection(
-                      getSteps(updatedIntegration || integration, flowId)
+                      getSteps(state.integration, params.flowId)
                     ),
                   })}
                   content={
                     <PageSection noPadding={true}>
                       <DataMapperAdapter
-                        documentId={integration.id!}
+                        documentId={state.integration.id!}
                         inputDocuments={inputDocuments}
                         outputDocument={outputDocument}
                         initialMappings={
-                          (step.configuredProperties || {})[MAPPING_KEY]
+                          (state.step.configuredProperties || {})[MAPPING_KEY]
                         }
                         baseXMLInspectionServiceUrl={
                           appContext.config.apiBase +
@@ -123,14 +158,16 @@ export const DataMapperPage: React.FunctionComponent<
                       />
                     </PageSection>
                   }
-                  cancelHref={props.cancelHref(
-                    { flowId, position },
-                    {
-                      integration,
-                      step,
-                      updatedIntegration,
-                    }
-                  )}
+                  extraActions={
+                    <ButtonLink
+                      onClick={saveMappingStep}
+                      disabled={!mappings}
+                      as={'primary'}
+                    >
+                      Done
+                    </ButtonLink>
+                  }
+                  cancelHref={props.cancelHref(params, state)}
                 />
               </>
             );
