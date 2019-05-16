@@ -767,6 +767,8 @@ export function removeStepFromFlow(
   flowId: string,
   position: number
 ) {
+  console.log('oldInt: ' + JSON.stringify(integration));
+
   const flow = getFlow(integration, flowId);
   const steps = [...flow!.steps!];
   if (
@@ -778,7 +780,10 @@ export function removeStepFromFlow(
   } else {
     steps.splice(position, 1);
   }
-  return setFlow(integration, { ...flow!, steps });
+  const newInt = setFlow(integration, { ...flow!, steps });
+  console.log('newInt: ' + JSON.stringify(newInt));
+
+  return newInt;
 }
 
 /**

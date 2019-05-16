@@ -1,4 +1,7 @@
-import { getStepIcon, removeStepFromFlow } from '@syndesis/api';
+import {
+  getStepIcon,
+  removeStepFromFlow,
+} from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Integration, Step } from '@syndesis/models';
 import {
