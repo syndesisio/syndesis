@@ -76,7 +76,7 @@ body {
   width: 100%;
 }
 
-.list-view-pf-stacked .list-group-item-heading {
+.list-view-pf-body .list-group-item-heading {
   font-size: var(--pf-global--FontSize--sm);
 }
 
