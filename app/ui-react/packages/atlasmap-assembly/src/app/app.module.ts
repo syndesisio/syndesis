@@ -14,7 +14,7 @@ import { DataMapperHostComponent } from './data-mapper-host.component';
     FormsModule,
     HttpClientModule,
     RouterModule.forRoot([]),
-    DataMapperModule,
+    DataMapperModule.withInterceptor(),
   ],
   providers: [],
   bootstrap: [AppComponent],
