@@ -1,7 +1,7 @@
 .integration-vertical-flow {
   min-width: 100px;
   display: flex;
-  flex-flow: row nowrap;
+  flex-direction: column;
   flex: 1;
 }
 
@@ -15,31 +15,23 @@
   overflow-y: auto;
 }
 
-.integration-vertical-flow__expand {
-  width: 30px;
-}
-
 .integration-vertical-flow__toggle {
+  display: block;
   width: 100%;
-  height: 100%;
-  font-size: 1.25em;
-  position: relative;
+  padding: 0.5em;
+  text-align: right;
 }
 
-.integration-vertical-flow__toggle,
 .integration-vertical-flow__toggle:hover,
-.integration-vertical-flow__toggle:focus {
-  border-width: 0 0 0 1px;
-  border-color: #d1d1d1;
-}
-
-.integration-vertical-flow__toggle:focus {
-  outline: none;
+.integration-vertical-flow__toggle:focus,
+.integration-vertical-flow__toggle:active,
+.integration-vertical-flow__toggle:active:focus {
+  text-decoration: none;
+  outline: 0;
 }
 
 .integration-vertical-flow__icon {
-  position: absolute;
-  top: 13px;
-  left: 50%;
-  transform: translateX(-50%);
+  font-size: 1.5em;
+  margin-left: 5px;
+  vertical-align: text-bottom;
 }

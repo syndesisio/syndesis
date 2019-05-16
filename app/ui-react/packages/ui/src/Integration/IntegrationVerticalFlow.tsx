@@ -1,4 +1,3 @@
-import { Tooltip } from '@patternfly/react-core';
 import classnames from 'classnames';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
