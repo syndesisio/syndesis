@@ -17,3 +17,10 @@
     margin-left: 0 !important;
   }
 }
+
+@media (min-width: 992px) {
+  .list-view-pf .list-group-item-heading {
+    min-width: 150px;
+    white-space: normal;
+  }
+}
