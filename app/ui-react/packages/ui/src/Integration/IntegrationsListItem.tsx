@@ -5,7 +5,7 @@ import { IntegrationStatus } from './IntegrationStatus';
 import { IntegrationStatusDetail } from './IntegrationStatusDetail';
 import { IntegrationState } from './models';
 
-import './IntegrationListItem.css';
+import './IntegrationsListItem.css';
 
 export interface IIntegrationsListItemProps {
   integrationName: string;
@@ -49,7 +49,10 @@ export class IntegrationsListItem extends React.Component<
           )
         }
         additionalInfo={[
-          <ListView.InfoItem key={1}>
+          <ListView.InfoItem
+            key={1}
+            className={'integration-list-item__additional-info'}
+          >
             {this.props.currentState === 'Pending' ? (
               <IntegrationStatusDetail
                 targetState={this.props.targetState}
