@@ -17,9 +17,9 @@ package io.syndesis.connector.rest.swagger;
 
 import java.util.Map;
 
+import io.syndesis.connector.rest.swagger.auth.apikey.ApiKey;
 import io.syndesis.connector.rest.swagger.auth.basic.Basic;
 import io.syndesis.connector.rest.swagger.auth.oauth.OAuth;
-import io.syndesis.connector.rest.swagger.auth.parameter.Parameter;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
@@ -47,8 +47,8 @@ public class AuthenticationCustomizer implements ComponentProxyCustomizer {
             case basic:
                 Basic.setup(component, configuration);
                 break;
-            case parameter:
-                Parameter.setup(component, configuration);
+            case apiKey:
+                ApiKey.setup(component, configuration);
                 break;
             default:
                 throw new IllegalStateException("Unsupported authentication type: " + authenticationType);

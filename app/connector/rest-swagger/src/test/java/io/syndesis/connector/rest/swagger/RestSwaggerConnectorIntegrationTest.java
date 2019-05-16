@@ -342,7 +342,7 @@ public class RestSwaggerConnectorIntegrationTest {
     private Flow additionalQueryParameterAuthenticationFlow() {
         final Step queryParameterAuth = operation("apiKeyFindPetsByStatus", JSON_SCHEMA_SHAPE, NONE_SHAPE).builder()
             .connection(connection.builder()
-                .putConfiguredProperty("authenticationType", AuthenticationType.parameter.name())
+                .putConfiguredProperty("authenticationType", AuthenticationType.apiKey.name())
                 .putConfiguredProperty("authenticationParameterName", "api_key")
                 .putConfiguredProperty("authenticationParameterValue", "ENC:_key_")
                 .putConfiguredProperty("authenticationParameterPlacement", "query")
@@ -443,7 +443,7 @@ public class RestSwaggerConnectorIntegrationTest {
     private Flow headerAuthenticationFlow() {
         final Step headerParameterAuth = operation("logoutUser", NONE_SHAPE, NONE_SHAPE).builder()
             .connection(connection.builder()
-                .putConfiguredProperty("authenticationType", AuthenticationType.parameter.name())
+                .putConfiguredProperty("authenticationType", AuthenticationType.apiKey.name())
                 .putConfiguredProperty("authenticationParameterName", "apiKey")
                 .putConfiguredProperty("authenticationParameterValue", "ENC:_key_")
                 .putConfiguredProperty("authenticationParameterPlacement", "header")
@@ -530,7 +530,7 @@ public class RestSwaggerConnectorIntegrationTest {
     private Flow queryParameterAuthenticationFlow() {
         final Step queryParameterAuth = operation("apiKeyLogoutUser", NONE_SHAPE, NONE_SHAPE).builder()
             .connection(connection.builder()
-                .putConfiguredProperty("authenticationType", AuthenticationType.parameter.name())
+                .putConfiguredProperty("authenticationType", AuthenticationType.apiKey.name())
                 .putConfiguredProperty("authenticationParameterName", "api_key")
                 .putConfiguredProperty("authenticationParameterValue", "ENC:_key_")
                 .putConfiguredProperty("authenticationParameterPlacement", "query")
