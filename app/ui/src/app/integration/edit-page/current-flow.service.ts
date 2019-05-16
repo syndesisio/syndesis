@@ -692,7 +692,7 @@ export class CurrentFlowService {
     return false;
   }
 
-  isSubFlow() {
+  isAlternateFlow() {
     try {
       return this.getStartStep().connection.connectorId === 'flow';
     } catch (e) {

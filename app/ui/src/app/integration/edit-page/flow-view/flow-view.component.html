@@ -29,7 +29,7 @@
         class="flow-view-container syn-scrollable--body"
         [ngClass]="{ collapsed: isCollapsed }"
       >
-        <ng-container *ngIf="isSubFlow()">
+        <ng-container *ngIf="isAlternateFlow()">
           <div class="step flow-start">
             <div class="flow-view-step">
               <div class="icon-container"></div>
@@ -102,7 +102,7 @@
           </div>
         </ng-container>
 
-        <ng-container *ngIf="isSubFlow()">
+        <ng-container *ngIf="isAlternateFlow()">
           <div class="step flow-finish">
             <div class="flow-view-step">
               <div class="icon-container flow-end"></div>

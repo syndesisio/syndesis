@@ -35,7 +35,8 @@ import {
   IntegrationSupportService,
   Step,
   Flow,
-  key
+  key,
+  ALTERNATE
 } from '@syndesis/ui/platform';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -287,6 +288,7 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
           flow: {
             name: name,
             id: flowId,
+            type: ALTERNATE,
             description: description,
             connections: [],
             steps: [
@@ -297,7 +299,6 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
               excerpt: '',
               primaryFlowId: primaryFlowId,
               stepId: this.step.id,
-              type: 'subflow',
               kind: kind
             }
           } as Flow,
@@ -366,9 +367,9 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
     };
 
     formattedProperties.flows.forEach(option => {
-      const subflow = this.currentFlowService.flows.find(flow => flow.id === option.flow);
-      if (subflow) {
-        subflow.description = option.condition;
+      const alternateFlow = this.currentFlowService.flows.find(flow => flow.id === option.flow);
+      if (alternateFlow) {
+        alternateFlow.description = option.condition;
       }
     });
 

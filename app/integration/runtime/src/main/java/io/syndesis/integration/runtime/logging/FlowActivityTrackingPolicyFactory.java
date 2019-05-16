@@ -22,26 +22,26 @@ import org.apache.camel.spi.RoutePolicy;
 /**
  * @author Christoph Deppisch
  */
-public class SubflowActivityTrackingPolicyFactory implements ActivityTrackingPolicyFactory {
+public class FlowActivityTrackingPolicyFactory implements ActivityTrackingPolicyFactory {
 
     private final ActivityTracker tracker;
 
-    public SubflowActivityTrackingPolicyFactory(ActivityTracker tracker){
+    public FlowActivityTrackingPolicyFactory(ActivityTracker tracker){
         this.tracker = tracker;
     }
 
     @Override
     public RoutePolicy createRoutePolicy(String flowId) {
-        return new SubflowActivityTrackingPolicy(tracker);
+        return new FlowActivityTrackingPolicy(tracker);
     }
 
     @Override
     public boolean isInstance(RoutePolicy routePolicy) {
-        return SubflowActivityTrackingPolicy.class.isInstance(routePolicy);
+        return FlowActivityTrackingPolicy.class.isInstance(routePolicy);
     }
 
     @Override
     public boolean appliesTo(Flow flow) {
-        return flow.isSubFlow();
+        return flow.isAlternate();
     }
 }

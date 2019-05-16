@@ -91,6 +91,7 @@
     {
       "name": "Conditional Flow",
       "id": "conditional-flow",
+      "type": "ALTERNATE",
       "steps": [
         {
           "id": "flow-start-conditional",
@@ -153,7 +154,6 @@
       "metadata": {
         "primaryFlowId": "primary-flow",
         "stepId": "conditional-flow-step",
-        "type": "subflow",
         "kind": "conditional"
       },
       "description": "${body.task} contains 'Play'"
@@ -161,6 +161,7 @@
     {
       "name": "Default Flow",
       "id": "default-flow",
+      "type": "ALTERNATE",
       "steps": [
         {
           "id": "flow-start-step-default",
@@ -223,7 +224,6 @@
       "metadata": {
         "primaryFlowId": "primary-flow",
         "stepId": "conditional-flow-step",
-        "type": "subflow",
         "kind": "default"
       },
       "description": "Use this as default"

@@ -22,8 +22,8 @@ import io.syndesis.common.util.Resources;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicy;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
-import io.syndesis.integration.runtime.logging.SubflowActivityTrackingPolicy;
-import io.syndesis.integration.runtime.logging.SubflowActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicy;
+import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
 import org.apache.camel.impl.DefaultCamelContext;
 import org.apache.camel.model.ChoiceDefinition;
 import org.apache.camel.model.LogDefinition;
@@ -43,7 +43,7 @@ public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
 
     private ActivityTracker tracker = new ActivityTracker.SysOut();
     private List<ActivityTrackingPolicyFactory> policyFactories = Arrays.asList(new IntegrationActivityTrackingPolicyFactory(tracker),
-                                                                                new SubflowActivityTrackingPolicyFactory(tracker));
+                                                                                new FlowActivityTrackingPolicyFactory(tracker));
 
     @Test
     public void testIntegrationRouteBuilder() throws Exception {
@@ -130,7 +130,7 @@ public class IntegrationRouteBuilderTest extends IntegrationTestSupport {
         RouteDefinition conditionalRoute = routes.getRoutes().get(1);
 
         assertThat(conditionalRoute.getRoutePolicies()).hasSize(1);
-        assertThat(conditionalRoute.getRoutePolicies().get(0)).isInstanceOf(SubflowActivityTrackingPolicy.class);
+        assertThat(conditionalRoute.getRoutePolicies().get(0)).isInstanceOf(FlowActivityTrackingPolicy.class);
 
         assertThat(conditionalRoute.getInputs()).hasSize(1);
         assertThat(conditionalRoute.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct");

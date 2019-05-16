@@ -34,10 +34,4 @@ public interface WithMetadata {
             getMetadata().get(key)
         );
     }
-
-    @JsonIgnore
-    default String getMetadata(String key, String defaultValue) {
-        return Optional.ofNullable(getMetadata().get(key))
-                       .orElse(defaultValue);
-    }
 }

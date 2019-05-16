@@ -83,6 +83,7 @@ export type Integrations = Array<Integration>;
 
 export interface Flow extends WithId {
   name: string;
+  type?: FlowType;
   description: string;
   metadata: {
     excerpt: string;
@@ -90,6 +91,13 @@ export interface Flow extends WithId {
   steps: Array<Step>;
   connections: Array<Connection>;
 }
+
+export const PRIMARY = 'PRIMARY';
+export const ALTERNATE = 'ALTERNATE';
+
+export type FlowType =
+  | 'PRIMARY'
+  | 'ALTERNATE';
 
 export type Flows = Array<Flow>;
 

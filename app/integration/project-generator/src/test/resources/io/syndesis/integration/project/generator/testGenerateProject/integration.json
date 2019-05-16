@@ -1,6 +1,7 @@
 {
   "flows": [
     {
+      "type": "PRIMARY",
       "steps": [
         {
           "action": {

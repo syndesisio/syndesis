@@ -26,7 +26,7 @@ import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
-import io.syndesis.integration.runtime.logging.SubflowActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.k.RoutesLoader;
 import org.apache.camel.k.Runtime;
@@ -74,6 +74,6 @@ public class IntegrationRouteLoader implements RoutesLoader {
 
         return new IntegrationRouteBuilder(ctx -> URIResolver.resolve(ctx, source), integrationStepHandlers,
                 Arrays.asList(new IntegrationActivityTrackingPolicyFactory(activityTracker),
-                              new SubflowActivityTrackingPolicyFactory(activityTracker)));
+                              new FlowActivityTrackingPolicyFactory(activityTracker)));
     }
 }

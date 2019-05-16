@@ -22,10 +22,10 @@ import org.apache.camel.Route;
 /**
  * @author Christoph Deppisch
  */
-public final class SubflowActivityTrackingPolicy extends DefaultRoutePolicy {
+public final class FlowActivityTrackingPolicy extends DefaultRoutePolicy {
     private final ActivityTracker tracker;
 
-    public SubflowActivityTrackingPolicy(ActivityTracker tracker) {
+    public FlowActivityTrackingPolicy(ActivityTracker tracker) {
         this.tracker = tracker;
     }
 

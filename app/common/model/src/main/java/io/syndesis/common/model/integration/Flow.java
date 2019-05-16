@@ -18,7 +18,6 @@ package io.syndesis.common.model.integration;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -43,21 +42,14 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
         // allow access to ImmutableIntegration.Builder
     }
 
-    enum MetadataKey {
-        TYPE;
-
-        public String value() {
-            return name().toLowerCase(Locale.US);
-        }
+    enum FlowType {
+        PRIMARY,
+        ALTERNATE;
     }
 
-    enum MetadataValue {
-        PRIMARY,
-        SUBFLOW;
-
-        public String value() {
-            return name().toLowerCase(Locale.US);
-        }
+    @Value.Default
+    default FlowType getType() {
+        return FlowType.PRIMARY;
     }
 
     @Value.Default
@@ -109,14 +101,11 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
 
     @JsonIgnore
     default boolean isPrimary() {
-        return getMetadata().isEmpty() || getMetadata(MetadataKey.TYPE.value(), MetadataValue.PRIMARY.value())
-                                            .equals(MetadataValue.PRIMARY.value());
+        return FlowType.PRIMARY == getType();
     }
 
     @JsonIgnore
-    default boolean isSubFlow() {
-        Optional<String> flowType = getMetadata(MetadataKey.TYPE.value());
-        return flowType.isPresent() &&
-                flowType.get().equals(MetadataValue.SUBFLOW.value());
+    default boolean isAlternate() {
+        return FlowType.ALTERNATE == getType();
     }
 }

@@ -32,7 +32,7 @@ import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.StringConstants;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
-import io.syndesis.integration.runtime.logging.SubflowActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
 import org.apache.camel.Body;
 import org.apache.camel.CamelContext;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -97,7 +97,7 @@ public class IntegrationTestSupport implements StringConstants {
         List<ActivityTrackingPolicyFactory> activityTrackingPolicyFactories = Collections.emptyList();
         if(activityTracker!=null) {
             activityTrackingPolicyFactories = Arrays.asList(new IntegrationActivityTrackingPolicyFactory(activityTracker),
-                                                            new SubflowActivityTrackingPolicyFactory(activityTracker));
+                                                            new FlowActivityTrackingPolicyFactory(activityTracker));
         }
         return new
             IntegrationRouteBuilder("", Resources.loadServices(IntegrationStepHandler.class), activityTrackingPolicyFactories) {

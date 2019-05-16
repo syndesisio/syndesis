@@ -20,7 +20,7 @@ import io.syndesis.integration.runtime.logging.ActivityTracker;
 import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
 import io.syndesis.integration.runtime.logging.BodyLogger;
 import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
-import io.syndesis.integration.runtime.logging.SubflowActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
 import org.apache.camel.spi.InterceptStrategy;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
@@ -66,7 +66,7 @@ public class IntegrationLoggingAutoConfiguration {
     }
 
     @Bean
-    public ActivityTrackingPolicyFactory subFlowActivityTrackingPolicyFactory(ActivityTracker activityTracker) {
-        return new SubflowActivityTrackingPolicyFactory(activityTracker);
+    public ActivityTrackingPolicyFactory flowActivityTrackingPolicyFactory(ActivityTracker activityTracker) {
+        return new FlowActivityTrackingPolicyFactory(activityTracker);
     }
 }
