@@ -41,8 +41,6 @@
   }
   .integration-editor-layout__sidebarInner {
     background-color: var(--pf-global--BackgroundColor--200);
-    overflow-x: hidden;
-    overflow-y: auto;
     display: flex;
   }
 

@@ -1,35 +1,45 @@
 .integration-vertical-flow {
-  min-width: 185px;
+  min-width: 130px;
   display: flex;
   flex-flow: row nowrap;
   flex: 1;
 }
 
 .integration-vertical-flow.is-expanded {
-  min-width: 400px;
+  min-width: 345px;
 }
 
 .integration-vertical-flow__body {
   flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .integration-vertical-flow__expand {
   flex: 0 0 30px;
 }
 
-.integration-vertical-flow__expand .btn {
+.integration-vertical-flow__toggle {
   width: 100%;
   height: 100%;
+  font-size: 1.25em;
+  position: relative;
 }
 
-.integration-vertical-flow__expand .btn:focus {
+.integration-vertical-flow__toggle,
+.integration-vertical-flow__toggle:hover,
+.integration-vertical-flow__toggle:focus {
+  border-width: 0 0 0 1px;
+  border-color: #d1d1d1;
+}
+
+.integration-vertical-flow__toggle:focus {
   outline: none;
 }
 
-.integration-vertical-flow__expand .btn::before {
-  content: '\00bb';
-}
-
-.is-expanded .integration-vertical-flow__expand .btn::before {
-  content: '\00ab';
+.integration-vertical-flow__icon {
+  position: absolute;
+  top: 13px;
+  left: 50%;
+  transform: translateX(-50%);
 }

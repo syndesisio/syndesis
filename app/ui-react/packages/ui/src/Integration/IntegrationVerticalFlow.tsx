@@ -40,7 +40,7 @@ export const IntegrationVerticalFlow: React.FunctionComponent<
         {children({ expanded })}
       </div>
       <div className="integration-vertical-flow__expand">
-        <ButtonLink onClick={toggleExpanded} as={'link'} />
+        <ButtonLink className="integration-vertical-flow__toggle" onClick={toggleExpanded} as={'link'} />
       </div>
     </div>
   );
