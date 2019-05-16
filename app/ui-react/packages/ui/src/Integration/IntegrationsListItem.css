@@ -9,3 +9,7 @@
 .integration-list-item .config-required .pficon {
   padding-right: 5px;
 }
+
+.integration-list-item .integration-list-item__additional-info {
+  display: inline-block;
+}
