@@ -95,16 +95,18 @@ export function restrictPreviousStepArrayScope(
   previousSteps: IndexedStep[],
   stepKind: Step['stepKind']
 ): IndexedStep[] {
-  const splitIndex = previousSteps
-    .reverse()
-    .findIndex(s => s.step.stepKind!.toLowerCase() === stepKind!.toLowerCase());
-
-  previousSteps.reverse();
-
+  const splitIndex = previousSteps.reduceRight(
+    (foundIndex, s, idx) =>
+      s.step.stepKind!.toLowerCase() === stepKind!.toLowerCase() &&
+      idx > foundIndex
+        ? idx
+        : foundIndex,
+    -1
+  );
   if (splitIndex !== -1) {
-    previousSteps = previousSteps.slice(0, splitIndex);
+    previousSteps = previousSteps.slice(splitIndex);
   }
-  return previousSteps.sort((a, b) => a.index - b.index);
+  return previousSteps;
 }
 
 export function isSupportedDataShape(dataShape: DataShape): boolean {
@@ -130,11 +132,14 @@ export function getInputDocuments(
   flowId: string,
   position: number
 ) {
+  const allPreviousSteps = getPreviousIntegrationStepsWithDataShape(
+    integration,
+    flowId,
+    position
+  )!;
+
   const previousSteps = restrictPreviousStepArrayScope(
-    restrictPreviousStepArrayScope(
-      getPreviousIntegrationStepsWithDataShape(integration, flowId, position)!,
-      SPLIT
-    ),
+    restrictPreviousStepArrayScope(allPreviousSteps, SPLIT),
     AGGREGATE
   );
 

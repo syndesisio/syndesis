@@ -937,9 +937,8 @@ export function getPreviousConnection(
   flowId: string,
   position: number
 ) {
-  return (
-    getPreviousConnections(integration, flowId, position) || []
-  ).reverse()[0];
+  const prevConns = getPreviousConnections(integration, flowId, position) || [];
+  return prevConns[prevConns.length - 1];
 }
 
 /**
@@ -1008,8 +1007,7 @@ export function getPreviousStepsWithDataShape(
       .map((step, index) => {
         return { step, index };
       })
-      .filter(indexedStep => hasDataShape(indexedStep.step, false))
-      .sort((a, b) => b.index - a.index);
+      .filter(indexedStep => hasDataShape(indexedStep.step, false));
   }
   // TODO preserving semantics for now
   return [];
@@ -1032,7 +1030,7 @@ export function getPreviousIntegrationStepIndexWithDataShape(
     position
   );
   if (steps && steps.length) {
-    return steps.reverse()[0].index;
+    return steps[steps.length - 1].index;
   }
   return -1;
 }
@@ -1060,7 +1058,7 @@ export function getPreviousIntegrationStepWithDataShape(
 export function getPreviousStepWithDataShape(steps: Step[], position: number) {
   const previousSteps = getPreviousStepsWithDataShape(steps, position);
   if (previousSteps && previousSteps.length) {
-    return previousSteps.reverse()[0].step;
+    return previousSteps[previousSteps.length - 1].step;
   }
   return undefined;
 }

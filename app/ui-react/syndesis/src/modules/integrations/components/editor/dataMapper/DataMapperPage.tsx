@@ -78,8 +78,6 @@ export const DataMapperPage: React.FunctionComponent<
             );
 
             const saveMappingStep = async () => {
-              // tslint:disable
-              // @ts-ignore
               const updatedIntegration = await (props.mode === 'adding'
                 ? addStep
                 : updateStep)(
@@ -103,7 +101,6 @@ export const DataMapperPage: React.FunctionComponent<
                   [MAPPING_KEY]: mappings,
                 }
               );
-              // tslint:enable
               history.push(
                 props.postConfigureHref(updatedIntegration, params, {
                   ...state,

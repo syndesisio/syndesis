@@ -158,15 +158,14 @@ export function toUIIntegrationStepCollection(
         ? getDataShapeText(step.stepKind!, step.outputDataShape)
         : getDataShapeText(step.stepKind!, step.inputDataShape);
 
-    if (step.action && step.action.descriptor) {
+    if (step.action && step.action.descriptor && position > 0) {
       const inputDataShape = step.action.descriptor.inputDataShape;
       if (
-        position > 0 &&
         inputDataShape &&
         ![
-          DataShapeKinds.ANY.toUpperCase(),
-          DataShapeKinds.NONE.toUpperCase(),
-        ].includes(inputDataShape.kind!.toUpperCase())
+          DataShapeKinds.ANY.toLowerCase(),
+          DataShapeKinds.NONE.toLowerCase(),
+        ].includes(inputDataShape.kind!.toLowerCase())
       ) {
         const prev = getPreviousStepWithDataShape(steps, position);
         if (

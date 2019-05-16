@@ -66,8 +66,9 @@ export class IntegrationEditorStepAdder extends React.Component<
           ).map((s, idx) => (
             <React.Fragment key={idx}>
               <IntegrationEditorStepsListItem
-                stepName={(s.action && s.action!.name) || s.name!}
+                stepName={(s.action && s.action.name) || s.name!}
                 stepDescription={(s.action! && s.action!.description) || ''}
+                action={(s.action && s.action.name) || 'n/a'}
                 shape={s.shape || 'n/a'}
                 icon={getStepIcon(process.env.PUBLIC_URL, s)}
                 showWarning={

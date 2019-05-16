@@ -1,16 +1,11 @@
-import {
-  ListView,
-  Overlay,
-  OverlayTrigger,
-  Popover,
-  Tooltip,
-} from 'patternfly-react';
+import { ListView, Overlay, Popover } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
 
 export interface IIntegrationEditorStepsListItemProps {
   stepName: string;
   stepDescription: string;
+  action: string;
   shape: string;
   showWarning: boolean;
   i18nWarningTitle: React.ReactNode;
@@ -33,40 +28,38 @@ export const IntegrationEditorStepsListItem: React.FunctionComponent<
       description={props.stepDescription}
       additionalInfo={[
         <React.Fragment key={0}>
-          {props.showWarning && (
-            <ButtonLink
-              as={'link'}
-              onClick={toggleWarningPopover}
-              ref={itemRef}
-              className={'pull-left'}
-            >
-              <i className={'pficon pficon-warning-triangle-o'} />
-            </ButtonLink>
-          )}
-          <div
-            className={
-              'list-view-pf-additional-info-item-stacked list-view-pf-additional-info-item'
-            }
-          >
-            <OverlayTrigger
-              placement={'top'}
-              overlay={<Tooltip id={'iedsli-ds'}>Data shape</Tooltip>}
-            >
-              <strong>{props.shape}</strong>
-            </OverlayTrigger>
-
-            <Overlay
-              placement={'top'}
-              show={showWarningPopover}
-              target={itemRef.current}
-            >
-              <Popover
-                id={'iedsli-shape-warning'}
-                title={props.i18nWarningTitle}
+          <div>
+            <p>
+              <strong>Action:</strong>&nbsp;
+              <span>{props.action}</span>
+            </p>
+            <p>
+              <strong>Data Type:</strong>&nbsp;
+              <span>
+                {props.shape}
+                {props.showWarning && (
+                  <ButtonLink
+                    as={'link'}
+                    onClick={toggleWarningPopover}
+                    ref={itemRef}
+                  >
+                    <i className={'pficon pficon-warning-triangle-o'} />
+                  </ButtonLink>
+                )}
+              </span>
+              <Overlay
+                placement={'top'}
+                show={showWarningPopover}
+                target={itemRef.current}
               >
-                {props.i18nWarningMessage}
-              </Popover>
-            </Overlay>
+                <Popover
+                  id={'iedsli-shape-warning'}
+                  title={props.i18nWarningTitle}
+                >
+                  {props.i18nWarningMessage}
+                </Popover>
+              </Overlay>
+            </p>
           </div>
         </React.Fragment>,
       ]}

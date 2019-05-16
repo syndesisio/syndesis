@@ -81,6 +81,8 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     c.initCfg.xsrfDefaultTokenValue = environment.xsrf.defaultTokenValue;
     c.initCfg.xsrfHeaderName = environment.xsrf.headerName;
 
+    console.log(c.initCfg);
+
     // initialize base urls for our service calls
     c.initCfg.baseJavaInspectionServiceUrl = this.baseJavaInspectionServiceUrl;
     c.initCfg.baseXMLInspectionServiceUrl = this.baseXMLInspectionServiceUrl;
