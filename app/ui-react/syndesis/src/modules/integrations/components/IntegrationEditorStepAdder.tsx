@@ -83,35 +83,18 @@ export class IntegrationEditorStepAdder extends React.Component<IIntegrationEdit
     this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
   }
 
-  public handleDeleteConfirm(
-    integration?: Integration,
-    flowId?: string,
-    position?: number,
-  ) {
-    console.log('position: ' + position);
-    console.log('flowId: ' + flowId);
-    console.log('integration: ' + JSON.stringify(integration));
-
+  public handleDeleteConfirm() {
     if (this.state.showDeleteDialog) {
       this.closeDeleteDialog();
-      /**
-       removeStepFromFlow(
-       integration!,
-       flowId!,
-       position!
-       );
-       // this.onDeleteItem(name);
-       **/
     }
   }
 
-  public onDelete(idx: any) {
-    console.log('idx: ' + idx);
-    this.setState({ showDeleteDialog: true });
+  public onDelete(idx: any): void {
+    this.setState({ position: idx, showDeleteDialog: true });
   }
 
-  public closeDeleteDialog() {
-    this.setState({ showDeleteDialog: false });
+  public closeDeleteDialog(): void {
+    this.setState({ position: 0, showDeleteDialog: false });
   }
 
   public render() {
