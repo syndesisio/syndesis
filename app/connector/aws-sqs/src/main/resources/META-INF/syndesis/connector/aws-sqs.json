@@ -21,6 +21,43 @@
             "description": "Set the needed option for sending a single message to AWS SQS",
             "name": "Send a single message to AWS SQS",
             "properties": {
+              "delaySeconds": {
+                "defaultValue": 0,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "producer",
+                "javaType": "integer",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Delay sending messages for a number of seconds",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              },
+              "messageDeduplicationIdStrategy": {
+                "deprecated": false,
+                "displayName": "Message Deduplication Id strategy",
+                "enum": [
+                  {
+                    "label": "NullMessageDeduplicationIdStrategy",
+                    "value": "useContentBasedDeduplication"
+                  },
+                  {
+                    "label": "ExchangeIdMessageDeduplicationIdStrategy",
+                    "value": "useExchangeId"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Strategy for setting the messageDeduplicationId on the message, only for FIFO Queue",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
               "messageGroupIdStrategy": {
                 "deprecated": false,
                 "displayName": "Message Group Id strategy",
@@ -43,47 +80,10 @@
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "Strategy for setting the messageGroupId on the message, only for FIFO Queue",
+                "order": "1",
                 "required": false,
                 "secret": false,
-                "type": "string",
-                "order": "1"
-              },
-              "messageDeduplicationIdStrategy": {
-                "deprecated": false,
-                "displayName": "Message Deduplication Id strategy",
-                "enum": [
-                  {
-                    "label": "NullMessageDeduplicationIdStrategy",
-                    "value": "useContentBasedDeduplication"
-                  },
-                  {
-                    "label": "ExchangeIdMessageDeduplicationIdStrategy",
-                    "value": "useExchangeId"
-                  }
-                ],
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Strategy for setting the messageDeduplicationId on the message, only for FIFO Queue",
-                "required": false,
-                "secret": false,
-                "type": "string",
-                "order": "2"
-              },
-              "delaySeconds": {
-                "defaultValue": 0,
-                "deprecated": false,
-                "displayName": "Delay",
-                "group": "producer",
-                "javaType": "integer",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Delay sending messages for a number of seconds",
-                "order": "4",
-                "required": false,
-                "secret": false,
-                "type": "integer"
+                "type": "string"
               },
               "queueNameOrArn": {
                 "deprecated": false,
@@ -114,22 +114,22 @@
           "io.syndesis.connector.aws.sqs.AWSSQSBatchMessagesCustomizer"
         ],
         "inputDataShape": {
+          "collectionClass": "java.util.ArrayList",
+          "collectionType": "List",
           "description": "Represent one SQS Batch message",
           "kind": "java",
-          "type": "io.syndesis.connector.aws.sqs.SQSMessage",
-          "collectionType": "List",
-          "collectionClass": "java.util.ArrayList",
           "metadata": {
             "variant": "collection"
           },
+          "type": "io.syndesis.connector.aws.sqs.SQSMessage",
           "variants": [
             {
-                "kind": "java",
-                "type": "io.syndesis.connector.aws.sqs.SQSMessage",
-                "metadata": {
-                    "variant": "element",
-                    "compression": "true"
-                }
+              "kind": "java",
+              "metadata": {
+                "compression": "true",
+                "variant": "element"
+              },
+              "type": "io.syndesis.connector.aws.sqs.SQSMessage"
             }
           ]
         },
@@ -141,6 +141,43 @@
             "description": "Set the needed option for sending a batch of messages to AWS SQS",
             "name": "Send a messages batch to AWS SQS",
             "properties": {
+              "delaySeconds": {
+                "defaultValue": 0,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "producer",
+                "javaType": "integer",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Delay sending messages for a number of seconds",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              },
+              "messageDeduplicationIdStrategy": {
+                "deprecated": false,
+                "displayName": "Message Deduplication Id strategy",
+                "enum": [
+                  {
+                    "label": "NullMessageDeduplicationIdStrategy",
+                    "value": "useContentBasedDeduplication"
+                  },
+                  {
+                    "label": "ExchangeIdMessageDeduplicationIdStrategy",
+                    "value": "useExchangeId"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Strategy for setting the messageDeduplicationId on the message, only for FIFO Queue",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
               "messageGroupIdStrategy": {
                 "deprecated": false,
                 "displayName": "Message Group Id strategy",
@@ -163,47 +200,10 @@
                 "kind": "parameter",
                 "label": "producer",
                 "labelHint": "Strategy for setting the messageGroupId on the message, only for FIFO Queue",
+                "order": "1",
                 "required": false,
                 "secret": false,
-                "type": "string",
-                "order": "1"
-              },
-              "messageDeduplicationIdStrategy": {
-                "deprecated": false,
-                "displayName": "Message Deduplication Id strategy",
-                "enum": [
-                  {
-                    "label": "NullMessageDeduplicationIdStrategy",
-                    "value": "useContentBasedDeduplication"
-                  },
-                  {
-                    "label": "ExchangeIdMessageDeduplicationIdStrategy",
-                    "value": "useExchangeId"
-                  }
-                ],
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Strategy for setting the messageDeduplicationId on the message, only for FIFO Queue",
-                "required": false,
-                "secret": false,
-                "type": "string",
-                "order": "2"
-              },
-              "delaySeconds": {
-                "defaultValue": 0,
-                "deprecated": false,
-                "displayName": "Delay",
-                "group": "producer",
-                "javaType": "integer",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Delay sending messages for a number of seconds",
-                "order": "4",
-                "required": false,
-                "secret": false,
-                "type": "integer"
+                "type": "string"
               },
               "queueNameOrArn": {
                 "deprecated": false,
@@ -332,7 +332,7 @@
     }
   ],
   "description": "Send and receive messages.",
-"icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/PjwhRE9DVFlQRSBzdmcgIFBVQkxJQyAnLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4nICAnaHR0cDovL3d3dy53My5vcmcvR3JhcGhpY3MvU1ZHLzEuMS9EVEQvc3ZnMTEuZHRkJz48c3ZnIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDEwMCAxMDAiIGhlaWdodD0iMTAwcHgiIHZlcnNpb249IjEuMSIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHdpZHRoPSIxMDBweCIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+PGcgaWQ9IkFtYXpvbl9DbG91ZFNlYXJjaCI+PGc+PHBvbHlnb24gZmlsbD0iI0Q5QTc0MSIgcG9pbnRzPSI1NC40Niw1OS41MDYgMjMuOTg1LDYzLjc5MyAyMy45ODcsMzYuMjAxIDU0LjQ2Miw0MC40OTQgICAiLz48cG9seWdvbiBmaWxsPSIjODc2OTI5IiBwb2ludHM9IjIwLjE3OSwzNy4zNDQgNTAuMDAzLDI4LjM5OSA1MC4wMDMsMTQgMjAuMTc5LDI4LjkwOCAgICIvPjxwb2x5Z29uIGZpbGw9IiM4NzY5MjkiIHBvaW50cz0iMjAuMTksNjIuNjU0IDQ5Ljk5OSw3MS42IDQ5Ljk5Nyw4NiAyMC4xOSw3MS4wOTQgICAiLz48cG9seWdvbiBmaWxsPSIjRDlBNzQxIiBwb2ludHM9Ijc5LjgyMywzNy4zNSA1MC4wMDMsMjguMzk5IDUwLjAwMywxNCA3OS44MjUsMjguOTE0ICAgIi8+PHBvbHlnb24gZmlsbD0iI0Q5QTc0MSIgcG9pbnRzPSI3OS44MDYsNjIuNjYgNDkuOTk5LDcxLjYgNDkuOTk3LDg2IDc5LjgwNiw3MS4wOTkgICAiLz48cG9seWdvbiBmaWxsPSIjODc2OTI5IiBwb2ludHM9IjIzLjk4NSw3Mi45OSAyMC4xNzUsNzEuMDg2IDIwLjE3OSwyOC45MDggMjMuOTg5LDI3LjAwNCAgICIvPjxwb2x5Z29uIGZpbGw9IiM4NzY5MjkiIHBvaW50cz0iMzkuMDE3LDU3Ljc2MiA0OS45OTksNTkuMTYgNTAuMDAxLDQwLjgzMiAzOS4wMTksNDIuMjI5ICAgIi8+PHBvbHlnb24gZmlsbD0iIzg3NjkyOSIgcG9pbnRzPSIyNy45NTQsNTYuMzU0IDM1LjA4MSw1Ny4yNiAzNS4wODMsNDIuNzI5IDI3Ljk1NCw0My42MzcgICAiLz48cG9seWdvbiBmaWxsPSIjNjI0QTFFIiBwb2ludHM9IjIzLjk4NywzNi4yMDEgNTAuMDAzLDI4LjM5OSA3OS44MjMsMzcuMzUgNTQuNDgxLDQwLjQ5NiAgICIvPjxwb2x5Z29uIGZpbGw9IiNGQUQ3OTEiIHBvaW50cz0iMjMuOTg1LDYzLjc5MyA0OS45OTksNzEuNiA3OS44MDYsNjIuNjYgNTQuNDYsNTkuNTA2ICAgIi8+PHBvbHlnb24gZmlsbD0iI0Q5QTc0MSIgcG9pbnRzPSI3OS44MDgsNTUuMzMgNDkuOTk5LDU5LjA5MiA1MC4wMDEsNDAuODMyIDc5LjgwOCw0NC42MjkgICAiLz48L2c+PC9nPjwvc3ZnPg==",
+  "icon": "data:image/svg+xml;base64,PHN2ZyBoZWlnaHQ9IjEwMCIgd2lkdGg9IjEwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBmaWxsPSIjRDlBNzQxIiBkPSJNNTQuNDYgNTkuNTA2bC0zMC40NzUgNC4yODcuMDAyLTI3LjU5MiAzMC40NzUgNC4yOTN6Ii8+PHBhdGggZmlsbD0iIzg3NjkyOSIgZD0iTTIwLjE3OSAzNy4zNDRsMjkuODI0LTguOTQ1VjE0TDIwLjE3OSAyOC45MDh6TTIwLjE5IDYyLjY1NEw0OS45OTkgNzEuNiA0OS45OTcgODYgMjAuMTkgNzEuMDk0eiIvPjxwYXRoIGZpbGw9IiNEOUE3NDEiIGQ9Ik03OS44MjMgMzcuMzVsLTI5LjgyLTguOTUxVjE0bDI5LjgyMiAxNC45MTR6TTc5LjgwNiA2Mi42Nkw0OS45OTkgNzEuNiA0OS45OTcgODZsMjkuODA5LTE0LjkwMXoiLz48cGF0aCBmaWxsPSIjODc2OTI5IiBkPSJNMjMuOTg1IDcyLjk5bC0zLjgxLTEuOTA0LjAwNC00Mi4xNzggMy44MS0xLjkwNHpNMzkuMDE3IDU3Ljc2MmwxMC45ODIgMS4zOTguMDAyLTE4LjMyOC0xMC45ODIgMS4zOTd6TTI3Ljk1NCA1Ni4zNTRsNy4xMjcuOTA2LjAwMi0xNC41MzEtNy4xMjkuOTA4eiIvPjxwYXRoIGZpbGw9IiM2MjRBMUUiIGQ9Ik0yMy45ODcgMzYuMjAxbDI2LjAxNi03LjgwMiAyOS44MiA4Ljk1MS0yNS4zNDIgMy4xNDZ6Ii8+PHBhdGggZmlsbD0iI0ZBRDc5MSIgZD0iTTIzLjk4NSA2My43OTNMNDkuOTk5IDcxLjZsMjkuODA3LTguOTQtMjUuMzQ2LTMuMTU0eiIvPjxwYXRoIGZpbGw9IiNEOUE3NDEiIGQ9Ik03OS44MDggNTUuMzNsLTI5LjgwOSAzLjc2Mi4wMDItMTguMjYgMjkuODA3IDMuNzk3eiIvPjwvc3ZnPg==",
   "id": "aws-sqs",
   "name": "Amazon SQS",
   "properties": {

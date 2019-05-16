@@ -172,6 +172,19 @@
             "description": "Specify grid data content and target spreadsheet id.",
             "name": "Update values through Google Sheets",
             "properties": {
+              "headerRow": {
+                "deprecated": false,
+                "displayName": "Header row number",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Enter the row number that represents the headers. These values are used as column names.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
               "majorDimension": {
                 "defaultValue": "ROWS",
                 "deprecated": false,
@@ -206,19 +219,6 @@
                 "label": "producer",
                 "labelHint": "The range to write values to.",
                 "order": "2",
-                "required": false,
-                "secret": false,
-                "type": "string"
-              },
-              "headerRow": {
-                "deprecated": false,
-                "displayName": "Header row number",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Enter the row number that represents the headers. These values are used as column names.",
-                "order": "4",
                 "required": false,
                 "secret": false,
                 "type": "string"
@@ -313,6 +313,19 @@
             "description": "Specify grid data content and target spreadsheet id.",
             "name": "Append values through Google Sheets",
             "properties": {
+              "headerRow": {
+                "deprecated": false,
+                "displayName": "Header row number",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Enter the row number that represents the headers. These values are used as column names.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
               "majorDimension": {
                 "defaultValue": "ROWS",
                 "deprecated": false,
@@ -348,19 +361,6 @@
                 "labelHint": "The target range. Operation will append the values to that range.",
                 "order": "2",
                 "required": true,
-                "secret": false,
-                "type": "string"
-              },
-              "headerRow": {
-                "deprecated": false,
-                "displayName": "Header row number",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Enter the row number that represents the headers. These values are used as column names.",
-                "order": "4",
-                "required": false,
                 "secret": false,
                 "type": "string"
               },
@@ -470,6 +470,19 @@
                 "tags": [],
                 "type": "duration"
               },
+              "headerRow": {
+                "deprecated": false,
+                "displayName": "Header row number",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Enter the row number that represents the headers. These values are used as column names.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
               "majorDimension": {
                 "defaultValue": "ROWS",
                 "deprecated": false,
@@ -518,19 +531,6 @@
                 "label": "producer",
                 "labelHint": "Value range in a spreadsheet to obtain.",
                 "order": "2",
-                "required": false,
-                "secret": false,
-                "type": "string"
-              },
-              "headerRow": {
-                "deprecated": false,
-                "displayName": "Header row number",
-                "group": "producer",
-                "javaType": "java.lang.String",
-                "kind": "parameter",
-                "label": "producer",
-                "labelHint": "Enter the row number that represents the headers. These values are used as column names.",
-                "order": "4",
                 "required": false,
                 "secret": false,
                 "type": "string"

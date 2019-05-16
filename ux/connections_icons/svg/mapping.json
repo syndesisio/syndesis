@@ -16,6 +16,14 @@
     "icon": "connectionicons_AWS-S3.svg"
   },
   {
+    "connectorId": "aws-sns",
+    "icon": "connectionicons_sns.svg"
+  },
+  {
+    "connectorId": "aws-sqs",
+    "icon": "connectionicons_sqs.svg"
+  },
+  {
     "connectorId": "email-receive",
     "icon": "connectionicons_emailreceive.svg"
   },

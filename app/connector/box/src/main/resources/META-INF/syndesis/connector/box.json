@@ -7,8 +7,8 @@
         "componentScheme": "box",
         "configuredProperties": {
           "apiName": "files",
-          "methodName": "upload",
-          "inBody": "content"
+          "inBody": "content",
+          "methodName": "upload"
         },
         "inputDataShape": {
           "kind": "any"
@@ -22,8 +22,8 @@
             "name": "Upload a file to Box",
             "properties": {
               "parentFolderId": {
-                "deprecated": false,
                 "defaultValue": "0",
+                "deprecated": false,
                 "displayName": "Parent folder ID",
                 "group": "producer",
                 "javaType": "java.lang.String",
@@ -49,8 +49,8 @@
         "component-scheme": "box",
         "configuredProperties": {
           "apiName": "files",
-          "methodName": "download",
-          "inBody": "output"
+          "inBody": "output",
+          "methodName": "download"
         },
         "connectorCustomizers": [
           "io.syndesis.connector.box.customizer.BoxDownloadCustomizer"
@@ -117,34 +117,6 @@
       "secret": false,
       "type": "hidden"
     },
-    "userName": {
-      "componentProperty": true,
-      "deprecated": false,
-      "displayName": "User name",
-      "group": "common,security",
-      "javaType": "java.lang.String",
-      "kind": "property",
-      "label": "security",
-      "labelHint": "Box user name",
-      "order": "1",
-      "required": true,
-      "secret": false,
-      "type": "string"
-    },
-    "userPassword": {
-      "componentProperty": true,
-      "deprecated": false,
-      "displayName": "User password",
-      "group": "common,security",
-      "javaType": "java.lang.String",
-      "kind": "property",
-      "label": "security",
-      "labelHint": "Box user password",
-      "order": "2",
-      "required": true,
-      "secret": true,
-      "type": "string"
-    },
     "clientId": {
       "componentProperty": true,
       "deprecated": false,
@@ -169,6 +141,34 @@
       "label": "security",
       "labelHint": "Box application client secret",
       "order": "4",
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "userName": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User name",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "Box user name",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "userPassword": {
+      "componentProperty": true,
+      "deprecated": false,
+      "displayName": "User password",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "security",
+      "labelHint": "Box user password",
+      "order": "2",
       "required": true,
       "secret": true,
       "type": "string"
