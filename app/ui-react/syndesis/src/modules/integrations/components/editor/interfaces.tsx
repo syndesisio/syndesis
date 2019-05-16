@@ -62,6 +62,23 @@ export interface IConfigureActionRouteState {
   configuredProperties: { [key: string]: string };
 }
 
+export enum DataShapeDirection {
+  INPUT = 'input',
+  OUTPUT = 'output',
+}
+
+export interface IDescribeDataShapeRouteParams {
+  flowId: string;
+  position: string;
+  direction: DataShapeDirection;
+}
+
+export interface IDescribeDataShapeRouteState {
+  step: StepKind;
+  integration: Integration;
+  updatedIntegration?: Integration;
+}
+
 /**
  * @param connectionId - the ID of the connection selected in the previous step
  * @param position - the zero-based position for the new step in the integration

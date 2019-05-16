@@ -20,6 +20,8 @@ import {
   IConfigureStepRouteState,
   IDataMapperRouteParams,
   IDataMapperRouteState,
+  IDescribeDataShapeRouteParams,
+  IDescribeDataShapeRouteState,
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState,
   ISelectActionRouteParams,
@@ -136,6 +138,26 @@ export const configureConfigureActionMapper = ({
   };
 };
 
+export const configureDescribeDataShapeMapper = ({
+  position,
+  step,
+  updatedIntegration,
+  ...rest
+}: IEditorConfigureStep) => {
+  const { params, state } = configureIndexMapper(rest);
+  return {
+    params: {
+      ...params,
+      position,
+    } as IDescribeDataShapeRouteParams,
+    state: {
+      ...state,
+      step,
+      updatedIntegration,
+    } as IDescribeDataShapeRouteState,
+  };
+};
+
 export const configureConfigureStepMapper = ({
   position,
   step,
@@ -216,7 +238,11 @@ export function makeEditorStepRoutesResolvers(
         IConfigureActionRouteParams,
         IConfigureActionRouteState
       >(esr.connection.configureAction, configureConfigureActionMapper),
-      describeData: () => 'describeData',
+      describeData: makeResolver<
+        IEditorConfigureStep,
+        IDescribeDataShapeRouteParams,
+        IDescribeDataShapeRouteState
+      >(esr.connection.configureAction, configureDescribeDataShapeMapper),
     },
     apiProvider: {
       upload: makeResolverNoParams(esr.apiProvider.upload),

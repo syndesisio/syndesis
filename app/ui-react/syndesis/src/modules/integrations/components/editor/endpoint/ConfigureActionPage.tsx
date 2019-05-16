@@ -1,18 +1,22 @@
 import {
   getConnectionIcon,
+  getStep,
   getSteps,
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Integration } from '@syndesis/models';
+import { Integration, StepKind } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
+  DataShapeDirection,
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
+  IDescribeDataShapeRouteParams,
+  IDescribeDataShapeRouteState,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 import {
@@ -37,8 +41,8 @@ export interface IConfigureActionPageProps {
   sidebar: (props: IEditorSidebarProps) => React.ReactNode;
   postConfigureHref: (
     integration: Integration,
-    p: IConfigureActionRouteParams,
-    s: IConfigureActionRouteState
+    p: IDescribeDataShapeRouteParams,
+    s: IDescribeDataShapeRouteState
   ) => H.LocationDescriptorObject;
 }
 
@@ -116,11 +120,14 @@ export class ConfigureActionPage extends React.Component<
                   history.push(
                     this.props.postConfigureHref(
                       updatedIntegration,
-                      { actionId, flowId, step, position },
+                      { direction: DataShapeDirection.INPUT, flowId, position },
                       {
-                        configuredProperties,
-                        connection,
                         integration,
+                        step: getStep(
+                          updatedIntegration,
+                          flowId,
+                          positionAsNumber
+                        ) as StepKind,
                         updatedIntegration,
                       }
                     )

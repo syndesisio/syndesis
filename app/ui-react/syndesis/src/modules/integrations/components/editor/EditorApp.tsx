@@ -10,6 +10,7 @@ import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
+import { DescribeDataShapePage } from './endpoint/DescribeDataShapePage';
 import { SelectActionPage } from './endpoint/SelectActionPage';
 import {
   IConfigureActionRouteParams,
@@ -117,7 +118,21 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       sidebar={props => (
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
-      postConfigureHref={postConfigureHref}
+      postConfigureHref={(p, s) =>
+        appResolvers.connection.describeData({
+          ...p,
+          ...s,
+        })
+      }
+    />
+  );
+
+  const describeDataShapePage = (
+    <DescribeDataShapePage
+      cancelHref={cancelHref}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
     />
   );
 
@@ -165,7 +180,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           configureActionPath: appStepRoutes.connection.configureAction,
           configureActionChildren: configureActionPage,
           describeDataPath: appStepRoutes.connection.describeData,
-          describeDataChildren: TODO,
+          describeDataChildren: describeDataShapePage,
         }}
         apiProvider={{
           uploadPath: appStepRoutes.apiProvider.upload,
@@ -193,7 +208,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         }}
         extension={{
           configurePath: appStepRoutes.extension,
-          configureChildren: TODO,
+          configureChildren: configureStepPage,
         }}
       />
     </>
