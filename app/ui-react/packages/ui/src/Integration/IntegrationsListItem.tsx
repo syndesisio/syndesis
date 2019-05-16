@@ -41,7 +41,11 @@ export class IntegrationsListItem extends React.Component<
         actions={this.props.actions}
         heading={this.props.integrationName}
         className={'integration-list-item'}
-        description={this.props.integrationDescription}
+        description={
+          <div className="syn-truncate__ellipsis">
+            {this.props.integrationDescription}
+          </div>
+        }
         additionalInfo={[
           <ListView.InfoItem
             key={1}
@@ -71,7 +75,11 @@ export class IntegrationsListItem extends React.Component<
           <ListView.InfoItem key={2}>
             {this.props.isConfigurationRequired && (
               <div className={'config-required pf-u-my-sm'}>
-                <Icon type={'pf'} name={'warning-triangle-o'} />
+                <Icon
+                  type={'pf'}
+                  name={'warning-triangle-o'}
+                  className="pf-u-mr-xs"
+                />
                 {this.props.i18nConfigurationRequired}
               </div>
             )}
@@ -83,7 +91,7 @@ export class IntegrationsListItem extends React.Component<
             finishConnectionIcon={this.props.finishConnectionIcon}
           />
         }
-        stacked={true}
+        stacked={false}
       />
     );
   }

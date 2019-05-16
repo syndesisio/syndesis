@@ -114,3 +114,9 @@ body {
 .list-view-pf-view {
   margin-top: 0;
 }
+
+.syn-truncate__ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}

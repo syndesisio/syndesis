@@ -1,7 +1,3 @@
-.integration-list-item {
-  cursor: pointer;
-}
-
 .integration-list-item .label,
 .integration-list-item .view-integration-btn {
   font-size: var(--pf-global--FontSize--sm);
