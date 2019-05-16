@@ -1,4 +1,3 @@
-import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
@@ -12,7 +11,6 @@ import { DataMapperHostComponent } from './data-mapper-host.component';
   imports: [
     BrowserModule,
     FormsModule,
-    HttpClientModule,
     RouterModule.forRoot([]),
     DataMapperModule.withInterceptor(),
   ],
