@@ -21,6 +21,7 @@ import {
   MappingSerializer,
 } from '@atlasmap/atlasmap-data-mapper';
 import { Subscription } from 'rxjs';
+import { environment } from '../environments/environment';
 import { IDocumentProps } from './app.component';
 
 @Component({
@@ -75,6 +76,10 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
 
     // initialize config information before initializing services
     const c: ConfigModel = this.initializationService.cfg;
+
+    c.initCfg.xsrfCookieName = environment.xsrf.cookieName;
+    c.initCfg.xsrfDefaultTokenValue = environment.xsrf.defaultTokenValue;
+    c.initCfg.xsrfHeaderName = environment.xsrf.headerName;
 
     // initialize base urls for our service calls
     c.initCfg.baseJavaInspectionServiceUrl = this.baseJavaInspectionServiceUrl;
