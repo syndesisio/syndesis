@@ -4,6 +4,11 @@
 
 export const environment = {
   production: false,
+  xsrf: {
+    headerName: 'SYNDESIS-XSRF-TOKEN',
+    cookieName: 'SYNDESIS-XSRF-COOKIE',
+    defaultTokenValue: 'awesome',
+  },
 };
 
 /*

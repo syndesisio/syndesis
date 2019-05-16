@@ -1,9 +1,10 @@
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { DataMapperModule } from '@atlasmap/atlasmap-data-mapper';
 import { NgModule } from '@angular/core';
+import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
 import { DataMapperHostComponent } from './data-mapper-host.component';
 
@@ -13,6 +14,7 @@ import { DataMapperHostComponent } from './data-mapper-host.component';
     BrowserModule,
     FormsModule,
     HttpClientModule,
+    HttpClientXsrfModule.withOptions(environment.xsrf),
     RouterModule.forRoot([]),
     DataMapperModule,
   ],
