@@ -36,11 +36,27 @@ export const IntegrationVerticalFlow: React.FunctionComponent<
         'is-expanded': expanded,
       })}
     >
+      <div className="integration-vertical-flow__expand">
+        <ButtonLink
+          className="integration-vertical-flow__toggle"
+          onClick={toggleExpanded}
+          as={'link'}
+        >
+          {expanded === false ? (
+            <>
+              Expand{' '}
+              <i className="fa fa-angle-double-right integration-vertical-flow__icon" />
+            </>
+          ) : (
+            <>
+              Collapse{' '}
+              <i className="fa fa-angle-double-left integration-vertical-flow__icon" />
+            </>
+          )}
+        </ButtonLink>
+      </div>
       <div className="integration-vertical-flow__body">
         {children({ expanded })}
-      </div>
-      <div className="integration-vertical-flow__expand">
-        <ButtonLink className="integration-vertical-flow__toggle" onClick={toggleExpanded} as={'link'} />
       </div>
     </div>
   );
