@@ -140,8 +140,9 @@ export class DataMapperAdapter extends React.Component<
     };
     return (
       <iframe
+        name={'atlasmap-frame'}
         srcDoc={srcDoc}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', lineHeight: '0' }}
         frameBorder={0}
         {...extraProps}
         ref={el => (this.iframe = el)}

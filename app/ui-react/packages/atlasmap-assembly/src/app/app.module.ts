@@ -2,7 +2,10 @@ import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
-import { DataMapperModule } from '@atlasmap/atlasmap-data-mapper';
+import {
+  ApiHttpXsrfTokenExtractor,
+  DataMapperModule,
+} from '@atlasmap/atlasmap-data-mapper';
 import { NgModule } from '@angular/core';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
@@ -18,7 +21,7 @@ import { DataMapperHostComponent } from './data-mapper-host.component';
     RouterModule.forRoot([]),
     DataMapperModule,
   ],
-  providers: [],
+  providers: [ApiHttpXsrfTokenExtractor],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
