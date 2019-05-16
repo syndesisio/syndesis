@@ -2,6 +2,8 @@
   flex: 1 0;
   display: flex;
   flex-flow: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .integration-editor-layout__sidebarOuter {
