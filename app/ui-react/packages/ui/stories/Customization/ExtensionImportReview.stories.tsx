@@ -11,24 +11,24 @@ const stories = storiesOf(
 
 const actions = [
   {
-    name: 'Action 1',
     description: 'The description for action 1',
+    name: 'Action 1',
   } as IImportAction,
   {
-    name: 'Action 2',
     description: 'The description for action 2',
+    name: 'Action 2',
   } as IImportAction,
   {
-    name: 'Action 3',
     description: 'The description for action 3',
+    name: 'Action 3',
   } as IImportAction,
   {
-    name: 'Action 4',
     description: 'The description for action 4',
+    name: 'Action 4',
   } as IImportAction,
 ] as IImportAction[];
-const actionText = (name: string, description: string) => {
-  return `<strong>${name}</strong> - ${description}`;
+const actionText = (theName: string, theDescription: string) => {
+  return `<strong>${theName}</strong> - ${theDescription}`;
 };
 const cancelBtnText = 'Cancel';
 const description = 'An extension to Syndesis to do Logging';

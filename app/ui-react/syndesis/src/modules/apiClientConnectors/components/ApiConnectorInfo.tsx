@@ -6,7 +6,15 @@ import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
 
 export interface IApiConnectorInfoProps {
+  /**
+   * The API client connector whose information is being displayed.
+   */
   apiConnector: Connector;
+
+  /**
+   * The connector icon.
+   */
+  apiConnectorIcon?: string;
 
   /**
    * `true` when the connection details are being edited.
@@ -34,6 +42,11 @@ export interface IApiConnectorInfoProps {
    * The callback for start editing.
    */
   onStartEditing: () => void;
+
+  /**
+   * The callback for when an icon image is uploaded.
+   */
+  onUploadImage: (event: any) => void;
 }
 
 export class ApiConnectorInfo extends React.Component<IApiConnectorInfoProps> {
@@ -85,17 +98,11 @@ export class ApiConnectorInfo extends React.Component<IApiConnectorInfoProps> {
             }}
             onSave={this.props.handleSubmit}
           >
-            {({
-              fields,
-              handleSubmit,
-              isSubmitting,
-              // dirty,
-              // resetForm,
-              // submitForm,
-              // values,
-            }) => (
+            {({ fields, handleSubmit }) => (
               <ApiConnectorDetailsForm
-                apiConnectorIcon={this.props.apiConnector.icon}
+                apiConnectorIcon={
+                  this.props.apiConnectorIcon || this.props.apiConnector.icon
+                }
                 apiConnectorName={this.props.apiConnector.name}
                 i18nCancelLabel={t('shared:Cancel')}
                 i18nEditLabel={t('shared:Edit')}
@@ -106,6 +113,7 @@ export class ApiConnectorInfo extends React.Component<IApiConnectorInfoProps> {
                 handleSubmit={handleSubmit}
                 onCancelEditing={this.props.onCancelEditing}
                 onStartEditing={this.props.onStartEditing}
+                onUploadImage={this.props.onUploadImage}
               >
                 {fields}
               </ApiConnectorDetailsForm>

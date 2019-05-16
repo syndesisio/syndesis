@@ -17,32 +17,32 @@ const stories = storiesOf(
 );
 
 const extension = {
-  name: 'Loop',
-  description: 'Add a loop',
-  extensionId: 'io.syndesis.extensions:syndesis-extension-loop',
   actions: [
     {
-      name: 'Action 1',
       description: "This is Action 1's description",
+      name: 'Action 1',
     } as IAction,
     {
-      name: 'Action 2',
       description: "This is Action 2's description",
+      name: 'Action 2',
     } as IAction,
     {
-      name: 'Action 3',
       description: "This is Action 3's description",
+      name: 'Action 3',
     } as IAction,
     {
-      name: 'Action 4',
       description: "This is Action 4's description",
+      name: 'Action 4',
     } as IAction,
     {
-      name: 'Action 5',
       description: "This is Action 5's description",
+      name: 'Action 5',
     } as IAction,
   ],
+  description: 'Add a loop',
+  extensionId: 'io.syndesis.extensions:syndesis-extension-loop',
   extensionType: 'Steps',
+  name: 'Loop',
   uses: 2,
 };
 const notUsedExtension = {

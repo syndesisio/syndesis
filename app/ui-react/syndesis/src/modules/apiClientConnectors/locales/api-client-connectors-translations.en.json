@@ -14,6 +14,7 @@
   "errorDeletingApiConnector": "Unexpected server error deleting API client connector \"{{connectorId}}\".",
   "errorSavingApiConnector": "Unexpected server error saving the API client connector.",
   "Host": "Host",
+  "invalidImageFileUpload": "Please select an image file",
   "reviewActionsTitle": "Review Actions",
   "reviewApiDefinitionHeading": "API DEFINITION",
   "reviewErrorsHeading": "Errors {{count}}",

@@ -16,6 +16,7 @@ const uid = 'uid';
 
 const extensions = [
   <ExtensionListItem
+    key={0}
     detailsPageLink={'/extensions/id-0'}
     extensionDescription="id-0 description goes here"
     extensionId={'id-0'}
@@ -35,6 +36,7 @@ const extensions = [
     usedBy={0}
   />,
   <ExtensionListItem
+    key={1}
     detailsPageLink={'/extensions/id-1'}
     extensionId={'id-1'}
     extensionName={'id-1 name'}
@@ -53,6 +55,7 @@ const extensions = [
     usedBy={1}
   />,
   <ExtensionListItem
+    key={2}
     detailsPageLink={'/extensions/id-2'}
     extensionId={'id-2'}
     extensionName={'id-2 name'}

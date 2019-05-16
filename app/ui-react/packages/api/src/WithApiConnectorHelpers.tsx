@@ -82,7 +82,10 @@ export class WithApiConnectorHelpersWrapped extends React.Component<
     return produce(apiConnector, draft => {
       draft.name = newName;
       draft.description = newDescription;
-      draft.icon = newIcon;
+
+      if (newIcon) {
+        draft.icon = newIcon;
+      }
 
       if (draft.configuredProperties) {
         if (newHost) {

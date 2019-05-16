@@ -59,6 +59,12 @@ export interface IApiConnectorDetailsFormProps {
    * The callback for start editing.
    */
   onStartEditing: () => void;
+
+  /**
+   * The callback for when an icon file was selected from the file system.
+   * @param event the event whose target contains the file being uploaded
+   */
+  onUploadImage: (event: any) => void;
 }
 
 export class ApiConnectorDetailsForm extends React.Component<
@@ -88,10 +94,14 @@ export class ApiConnectorDetailsForm extends React.Component<
                   </div>
                   <div className="col-sm-9">
                     <img
-                      className="col-sm-2"
+                      className="col-sm-2 api-connector-details-form__icon"
                       src={this.props.apiConnectorIcon}
                     />
-                    <input type="file" id="iconFileInput" />
+                    <input
+                      type="file"
+                      id="iconFileInput"
+                      onChange={this.props.onUploadImage}
+                    />
                   </div>
                 </div>
                 {this.props.children}

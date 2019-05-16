@@ -32,6 +32,7 @@ export interface IApiConnectorDetailsPageProps {
 
 export interface IApiConnectorDetailsPageState {
   isWorking: boolean;
+  proposedIcon?: string;
 }
 
 export default class ApiConnectorDetailsPage extends React.Component<
@@ -40,6 +41,7 @@ export default class ApiConnectorDetailsPage extends React.Component<
 > {
   public state = {
     isWorking: false,
+    proposedIcon: undefined,
   };
 
   public getUsedByMessage(apiConnector: Connector): string {
@@ -114,7 +116,7 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                     values.description,
                                     values.host,
                                     values.basePath,
-                                    values.icon
+                                    this.state.proposedIcon
                                   );
 
                                   try {
@@ -142,6 +144,7 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                 };
 
                                 const cancelEditing = () => {
+                                  this.setState({ proposedIcon: undefined });
                                   history.push(
                                     resolvers.apiClientConnectors.apiConnector.details(
                                       {
@@ -159,6 +162,42 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                       }
                                     )
                                   );
+                                };
+
+                                const uploadImage = (event: any): void => {
+                                  if (event.target.files.length === 1) {
+                                    const imageFile = event.target.files[0];
+
+                                    if (imageFile.type.startsWith('image')) {
+                                      const reader = new FileReader();
+                                      reader.onloadstart = () => {
+                                        this.setState({
+                                          isWorking: true,
+                                        });
+                                      };
+                                      reader.onloadend = () => {
+                                        this.setState({
+                                          isWorking: false,
+                                        });
+                                      };
+                                      reader.onload = () => {
+                                        this.setState({
+                                          proposedIcon: reader.result as string,
+                                        });
+                                      };
+                                      reader.readAsDataURL(imageFile);
+                                    } else {
+                                      event.target.value = '';
+                                      event.target.files = FileList[0];
+                                      this.setState({
+                                        proposedIcon: undefined,
+                                      });
+                                      pushNotification(
+                                        t('invalidImageFileUpload'),
+                                        'info'
+                                      );
+                                    }
+                                  }
                                 };
 
                                 return (
@@ -199,11 +238,15 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                             <Container className="col-sm-8">
                                               <ApiConnectorInfo
                                                 apiConnector={data}
+                                                apiConnectorIcon={
+                                                  this.state.proposedIcon
+                                                }
                                                 isEditing={this.props.edit}
                                                 isWorking={this.state.isWorking}
                                                 handleSubmit={handleSubmit}
                                                 onCancelEditing={cancelEditing}
                                                 onStartEditing={startEditing}
+                                                onUploadImage={uploadImage}
                                               />
                                               {data.actionsSummary ? (
                                                 <ApiConnectorReview
