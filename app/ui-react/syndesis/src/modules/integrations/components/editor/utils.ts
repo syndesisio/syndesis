@@ -28,7 +28,6 @@ import {
   Step,
   StepKind,
 } from '@syndesis/models';
-import { IAddStepPageProps } from './AddStepPage';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
@@ -37,9 +36,9 @@ import {
 } from './interfaces';
 
 type StepKindHrefCallback = (
-  step: Step,
-  p: ISelectConnectionRouteParams | IAddStepPageProps,
-  s: ISelectConnectionRouteState | undefined
+  step: StepKind,
+  p: ISelectConnectionRouteParams,
+  s: ISelectConnectionRouteState
 ) => H.LocationDescriptorObject;
 
 export function getStepKind(step: Step): IUIStep['uiStepKind'] {
@@ -230,8 +229,8 @@ export interface IGetStepHrefs {
 }
 export const getStepHref = (
   step: Step,
-  params: ISelectConnectionRouteParams | IAddStepPageProps,
-  state: ISelectConnectionRouteState | undefined,
+  params: ISelectConnectionRouteParams,
+  state: ISelectConnectionRouteState,
   hrefs: IGetStepHrefs
 ) => {
   switch (getStepKind(step)) {
@@ -239,22 +238,22 @@ export const getStepHref = (
     case CONNECTOR:
       return hrefs.connectionHref(
         typeof (step as IUIStep).uiStepKind !== 'undefined'
-          ? (step as IUIStep).connection!
-          : (step as ConnectionOverview),
+          ? ((step as IUIStep).connection! as StepKind)
+          : (step as StepKind),
         params,
         state
       );
     case API_PROVIDER:
-      return hrefs.apiProviderHref(step, params, state);
+      return hrefs.apiProviderHref(step as StepKind, params, state);
     case BASIC_FILTER:
-      return hrefs.filterHref(step, params, state);
+      return hrefs.filterHref(step as StepKind, params, state);
     case DATA_MAPPER:
-      return hrefs.mapperHref(step, params, state);
+      return hrefs.mapperHref(step as StepKind, params, state);
     case TEMPLATE:
-      return hrefs.templateHref(step, params, state);
+      return hrefs.templateHref(step as StepKind, params, state);
     case EXTENSION:
     default:
-      return hrefs.stepHref(step, params, state);
+      return hrefs.stepHref(step as StepKind, params, state);
   }
 };
 

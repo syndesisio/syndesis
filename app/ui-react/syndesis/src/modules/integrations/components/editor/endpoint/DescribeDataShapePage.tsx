@@ -45,7 +45,7 @@ export class DescribeDataShapePage extends React.Component<
             >>
               {(
                 { direction, flowId, position },
-                { step, integration, updatedIntegration },
+                { connection, step, integration, updatedIntegration },
                 { history }
               ) => {
                 const positionAsNumber = parseInt(position, 10);
@@ -78,6 +78,7 @@ export class DescribeDataShapePage extends React.Component<
                       cancelHref={this.props.cancelHref(
                         { flowId, direction, position },
                         {
+                          connection,
                           integration,
                           step,
                           updatedIntegration,

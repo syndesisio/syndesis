@@ -2,7 +2,6 @@
 import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
 import * as React from 'react';
-import { RouteResolver } from '../../resolvers';
 import { ReviewPage } from './api-provider/EditPage';
 import { EditPage } from './api-provider/ReviewPage';
 import { UploadPage } from './api-provider/UploadPage';
@@ -21,6 +20,7 @@ import {
   ITemplateStepRouteState,
   stepRoutes,
 } from './interfaces';
+import { makeEditorResolvers } from './makeEditorResolvers';
 import { SelectConnectionPage } from './SelectConnectionPage';
 import { ConfigureStepPage } from './step/ConfigureStepPage';
 import { TemplateStepPage } from './template/TemplateStepPage';
@@ -30,7 +30,7 @@ const TODO: React.FunctionComponent = () => <>TODO</>;
 export interface IEditorApp {
   mode: 'adding' | 'editing';
   appStepRoutes: typeof stepRoutes;
-  appResolvers: RouteResolver<typeof stepRoutes>;
+  appResolvers: ReturnType<typeof makeEditorResolvers>;
   cancelHref: (
     p: ISelectConnectionRouteParams,
     s: ISelectConnectionRouteState
@@ -60,7 +60,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           ...state,
         })
       }
-      filterHref={appResolvers.basicFilter}
+      filterHref={(step, p, s) => appResolvers.basicFilter()}
       mapperHref={(step, params, state) =>
         appResolvers.dataMapper({
           step,
@@ -90,7 +90,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
 
   const selectActionPage = (
     <SelectActionPage
-      cancelHref={appResolvers.selectStep}
+      cancelHref={(p, s) => appResolvers.selectStep({ ...p, ...s })}
       sidebar={props => (
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
@@ -118,7 +118,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       sidebar={props => (
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
-      postConfigureHref={(p, s) =>
+      postConfigureHref={(integration, p, s) =>
         appResolvers.connection.describeData({
           ...p,
           ...s,

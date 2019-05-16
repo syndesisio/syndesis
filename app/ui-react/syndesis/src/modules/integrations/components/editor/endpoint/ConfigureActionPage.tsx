@@ -120,8 +120,13 @@ export class ConfigureActionPage extends React.Component<
                   history.push(
                     this.props.postConfigureHref(
                       updatedIntegration,
-                      { direction: DataShapeDirection.INPUT, flowId, position },
                       {
+                        direction: DataShapeDirection.INPUT,
+                        flowId,
+                        position,
+                      },
+                      {
+                        connection,
                         integration,
                         step: getStep(
                           updatedIntegration,

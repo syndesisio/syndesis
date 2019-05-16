@@ -41,21 +41,18 @@ export class IntegrationDetailNavBar extends React.Component<
               <TabBarItem
                 label={'Details'}
                 to={resolvers.integration.details({
-                  integration,
                   integrationId: integration.id!,
                 })}
               />
               <TabBarItem
                 label={'Activity'}
                 to={resolvers.integration.activity({
-                  integration,
                   integrationId: integration.id!,
                 })}
               />
               <TabBarItem
                 label={'Metrics'}
                 to={resolvers.integration.metrics({
-                  integration,
                   integrationId: integration.id!,
                 })}
               />

@@ -9,6 +9,36 @@ import {
 } from '@syndesis/models';
 import { include } from 'named-urls';
 
+export interface IEditorIndex {
+  flowId: string;
+  integration: Integration;
+}
+
+export interface IEditorSelectConnection extends IEditorIndex {
+  position: string;
+}
+
+export interface IEditorSelectAction extends IEditorSelectConnection {
+  connection: ConnectionOverview;
+}
+
+export interface IEditorConfigureAction extends IEditorSelectAction {
+  actionId: string;
+  step?: string;
+  updatedIntegration?: Integration;
+}
+
+export interface IEditorConfigureDataShape extends IEditorSelectAction {
+  step: StepKind;
+  direction: DataShapeDirection;
+}
+
+export interface IEditorConfigureStep extends IEditorIndex {
+  position: string;
+  step: StepKind;
+  updatedIntegration?: Integration;
+}
+
 /**
  * @param actionId - the ID of the action selected in the previous step.
  * @param position - the zero-based position for the new step in the integration
@@ -75,6 +105,7 @@ export interface IDescribeDataShapeRouteParams {
 
 export interface IDescribeDataShapeRouteState {
   step: StepKind;
+  connection: ConnectionOverview;
   integration: Integration;
   updatedIntegration?: Integration;
 }
@@ -144,7 +175,7 @@ export interface ISaveIntegrationForm {
 }
 
 export interface IPostPublishRouteParams {
-  integrationId?: string;
+  integrationId: string;
 }
 
 /**
@@ -196,7 +227,7 @@ export const stepRoutes = {
     selectAction: '',
     configureAction: ':actionId/:step',
     // if 'any' data shape
-    describeData: 'describe-data/:position/:direction(input|output)',
+    describeData: 'describe-data/:position/:direction',
   }),
 };
 /**
