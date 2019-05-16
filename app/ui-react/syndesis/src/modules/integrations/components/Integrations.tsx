@@ -46,6 +46,9 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                             >
                               {({ actions }) => (
                                 <IntegrationsListItem
+                                  integrationDescription={
+                                    mi.integration.description
+                                  }
                                   integrationName={mi.integration.name}
                                   currentState={mi.integration!.currentState!}
                                   targetState={mi.integration!.targetState!}

@@ -2,12 +2,14 @@
   cursor: pointer;
 }
 
-.integration-list-item .config-required {
-  font-size: smaller;
+.integration-list-item .label,
+.integration-list-item .view-integration-btn {
+  font-size: var(--pf-global--FontSize--sm);
 }
 
-.integration-list-item .config-required .pficon {
-  padding-right: 5px;
+.integration-list-item .integration-icon__divider:before {
+  font-size: 20px;
+  line-height: 1.6;
 }
 
 .integration-list-item .integration-list-item__additional-info {

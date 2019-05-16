@@ -9,6 +9,7 @@ import './IntegrationsListItem.css';
 
 export interface IIntegrationsListItemProps {
   integrationName: string;
+  integrationDescription?: string;
   currentState: IntegrationState;
   targetState: IntegrationState;
   isConfigurationRequired: boolean;
@@ -40,14 +41,7 @@ export class IntegrationsListItem extends React.Component<
         actions={this.props.actions}
         heading={this.props.integrationName}
         className={'integration-list-item'}
-        description={
-          this.props.isConfigurationRequired && (
-            <div className={'config-required'}>
-              <Icon type={'pf'} name={'warning-triangle-o'} />
-              {this.props.i18nConfigurationRequired}
-            </div>
-          )
-        }
+        description={this.props.integrationDescription}
         additionalInfo={[
           <ListView.InfoItem
             key={1}
@@ -72,6 +66,14 @@ export class IntegrationsListItem extends React.Component<
                 i18nUnpublished={this.props.i18nUnpublished}
                 i18nError={this.props.i18nError}
               />
+            )}
+          </ListView.InfoItem>,
+          <ListView.InfoItem key={2}>
+            {this.props.isConfigurationRequired && (
+              <div className={'config-required pf-u-my-sm'}>
+                <Icon type={'pf'} name={'warning-triangle-o'} />
+                {this.props.i18nConfigurationRequired}
+              </div>
             )}
           </ListView.InfoItem>,
         ]}
