@@ -250,6 +250,7 @@
               (blur)="onBlur($event)"
               (change)="onValueChange($event)"
               (focus)="onFocus($event)"
+              size="20"
               multiple>
 
         <option *ngFor="let option of model.options$ | async"
