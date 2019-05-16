@@ -9,7 +9,6 @@ import './IntegrationsListItem.css';
 
 export interface IIntegrationsListItemProps {
   integrationName: string;
-  integrationDescription?: string;
   currentState: IntegrationState;
   targetState: IntegrationState;
   isConfigurationRequired: boolean;
@@ -42,9 +41,16 @@ export class IntegrationsListItem extends React.Component<
         heading={this.props.integrationName}
         className={'integration-list-item'}
         description={
-          <div className="syn-truncate__ellipsis">
-            {this.props.integrationDescription}
-          </div>
+          this.props.isConfigurationRequired && (
+            <div className={'config-required pf-u-my-sm pf-u-ml-2xl'}>
+              <Icon
+                type={'pf'}
+                name={'warning-triangle-o'}
+                className="pf-u-mr-xs"
+              />
+              {this.props.i18nConfigurationRequired}
+            </div>
+          )
         }
         additionalInfo={[
           <ListView.InfoItem
@@ -70,18 +76,6 @@ export class IntegrationsListItem extends React.Component<
                 i18nUnpublished={this.props.i18nUnpublished}
                 i18nError={this.props.i18nError}
               />
-            )}
-          </ListView.InfoItem>,
-          <ListView.InfoItem key={2}>
-            {this.props.isConfigurationRequired && (
-              <div className={'config-required pf-u-my-sm pf-u-ml-2xl'}>
-                <Icon
-                  type={'pf'}
-                  name={'warning-triangle-o'}
-                  className="pf-u-mr-xs"
-                />
-                {this.props.i18nConfigurationRequired}
-              </div>
             )}
           </ListView.InfoItem>,
         ]}
