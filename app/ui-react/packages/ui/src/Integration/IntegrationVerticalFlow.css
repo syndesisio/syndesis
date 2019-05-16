@@ -1,5 +1,5 @@
 .integration-vertical-flow {
-  min-width: 130px;
+  min-width: 100px;
   display: flex;
   flex-flow: row nowrap;
   flex: 1;
