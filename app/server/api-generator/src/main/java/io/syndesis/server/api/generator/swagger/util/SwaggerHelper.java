@@ -148,7 +148,7 @@ public final class SwaggerHelper {
         json.get("paths").forEach(path -> {
             path.forEach(operation -> {
                 final ObjectNode operationNode = (ObjectNode) operation;
-                operationNode.remove(Arrays.asList("tags", "summary", "description", "security"));
+                operationNode.remove(Arrays.asList("tags", "summary", "description"));
                 final ArrayNode parameters = (ArrayNode) operation.get("parameters");
 
                 if (parameters != null) {
