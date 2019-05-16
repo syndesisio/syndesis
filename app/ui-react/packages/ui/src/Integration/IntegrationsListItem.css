@@ -11,3 +11,9 @@
 .integration-list-item .integration-list-item__additional-info {
   display: inline-block;
 }
+
+@media (max-width: 1204px) {
+  .integration-list-item .config-required {
+    margin-left: 0 !important;
+  }
+}

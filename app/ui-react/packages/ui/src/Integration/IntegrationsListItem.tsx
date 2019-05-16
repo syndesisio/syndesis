@@ -74,7 +74,7 @@ export class IntegrationsListItem extends React.Component<
           </ListView.InfoItem>,
           <ListView.InfoItem key={2}>
             {this.props.isConfigurationRequired && (
-              <div className={'config-required pf-u-my-sm'}>
+              <div className={'config-required pf-u-my-sm pf-u-ml-2xl'}>
                 <Icon
                   type={'pf'}
                   name={'warning-triangle-o'}
