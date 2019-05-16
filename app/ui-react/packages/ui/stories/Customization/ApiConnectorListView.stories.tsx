@@ -1,45 +1,50 @@
 import { action } from '@storybook/addon-actions';
 import { text } from '@storybook/addon-knobs';
-import { linkTo } from '@storybook/addon-links';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-
 import { ApiConnectorListItem, ApiConnectorListView } from '../../src';
-import { extensionDetailStory } from './ExtensionDetail.stories';
 
 const stories = storiesOf('Customization/ApiConnectorListView', module);
 
 const connectors = [
   <ApiConnectorListItem
+    key={1}
     apiConnectorId={text('apiConnectorId', 'api-conn-1')}
     apiConnectorDescription={text(
       'apiConnectorDescription',
       'api-conn-1-description'
     )}
     apiConnectorName={text('apiConnectorName', 'Api Conn 1')}
-    i18nDelete={text('i18nDelete', 'Delete')}
-    i18nDetails={text('i18nDetails', 'Details')}
+    detailsPageLink={'/details/page/link'}
+    i18nCancelLabel={'Cancel'}
+    i18nDelete={'Delete'}
+    i18nDeleteModalMessage={'Are you sure you want to delete this?'}
+    i18nDeleteModalTitle={'Confirm Delete?'}
+    i18nDetails={'Details'}
     i18nUsedByMessage={text(
       'i18nUsedByMessage',
       'Not used by any integrations'
     )}
     onDelete={action('api-conn-1')}
-    onDetails={linkTo('Customization', extensionDetailStory)}
     usedBy={0}
   />,
   <ApiConnectorListItem
+    key={2}
     apiConnectorId={text('apiConnectorId', 'api-conn-2')}
     apiConnectorDescription={text(
       'apiConnectorDescription',
       'api-conn-2-description'
     )}
     apiConnectorName={text('apiConnectorName', 'Api Conn 2')}
-    i18nDelete={text('i18nDescription', 'Delete')}
-    i18nDetails={text('i18nDetails', 'Details')}
+    detailsPageLink={'/details/page/link'}
+    i18nCancelLabel={'Cancel'}
+    i18nDelete={'Delete'}
+    i18nDeleteModalMessage={'Are you sure you want to delete this?'}
+    i18nDeleteModalTitle={'Confirm Delete?'}
+    i18nDetails={'Details'}
     i18nUsedByMessage={text('i18nUsedByMessage', 'Used by 2 integrations')}
     onDelete={action('api-conn-1')}
-    onDetails={linkTo('Customization', extensionDetailStory)}
     usedBy={2}
   />,
 ];

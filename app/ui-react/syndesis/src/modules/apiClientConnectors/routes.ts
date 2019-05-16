@@ -1,7 +1,10 @@
 import { include } from 'named-urls';
 
 export default include('/api-connector', {
-  apiConnector: ':apiConnectorId',
+  apiConnector: include(':apiConnectorId', {
+    details: '',
+    edit: 'edit',
+  }),
   create: include('create/swagger-connector', {
     review: 'review',
     save: 'save',

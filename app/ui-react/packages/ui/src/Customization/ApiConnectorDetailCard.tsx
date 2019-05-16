@@ -18,11 +18,7 @@ export class ApiConnectorDetailCard extends React.Component<
         <CardBody>
           <div className={'api-connector-card__content'}>
             <div>
-              <img
-                className="api-connector-card__icon"
-                src={this.props.icon}
-                alt={this.props.name}
-              />
+              <img className="api-connector-card__icon" src={this.props.icon} />
             </div>
             <div
               className="api-connector__title h2"
