@@ -16,7 +16,7 @@
 }
 
 .integration-vertical-flow__expand {
-  flex: 0 0 30px;
+  width: 30px;
 }
 
 .integration-vertical-flow__toggle {
