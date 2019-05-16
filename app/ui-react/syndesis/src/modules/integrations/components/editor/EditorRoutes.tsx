@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router';
 import { ReviewPage } from './api-provider/EditPage';
 import { EditPage } from './api-provider/ReviewPage';
 import { UploadPage } from './api-provider/UploadPage';
+import { IDataMapperPageProps } from './dataMapper/DataMapperPage';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
 import { SelectActionPage } from './endpoint/SelectActionPage';
 import { TemplateStepPage } from './template/TemplateStepPage';
@@ -105,7 +106,7 @@ export const BasicFilterApp: React.FunctionComponent<
 
 export interface IDataMapperAppProps {
   mapperPath: string;
-  mapperChildren: React.ReactNode;
+  mapperChildren: React.ReactElement<IDataMapperPageProps>;
 }
 export const DataMapperApp: React.FunctionComponent<
   IDataMapperAppProps

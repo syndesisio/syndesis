@@ -6,6 +6,7 @@ import { RouteResolver } from '../../resolvers';
 import { ReviewPage } from './api-provider/EditPage';
 import { EditPage } from './api-provider/ReviewPage';
 import { UploadPage } from './api-provider/UploadPage';
+import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
@@ -59,7 +60,13 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         })
       }
       filterHref={appResolvers.basicFilter}
-      mapperHref={appResolvers.dataMapper}
+      mapperHref={(step, params, state) =>
+        appResolvers.dataMapper({
+          step,
+          ...params,
+          ...state,
+        })
+      }
       templateHref={(step, params, state) =>
         appResolvers.template({
           step,
@@ -136,6 +143,17 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     />
   );
 
+  const dataMapperPage = (
+    <DataMapperPage
+      cancelHref={cancelHref}
+      mode={mode}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
+      postConfigureHref={postConfigureHref}
+    />
+  );
+
   return (
     <>
       <EditorRoutes
@@ -163,7 +181,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         }}
         dataMapper={{
           mapperPath: appStepRoutes.dataMapper,
-          mapperChildren: TODO,
+          mapperChildren: dataMapperPage,
         }}
         basicFilter={{
           filterPath: appStepRoutes.basicFilter,

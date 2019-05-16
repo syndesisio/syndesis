@@ -13,16 +13,16 @@ import {
   ConfigModel,
   DataMapperAppComponent,
   DocumentInitializationModel,
-  DocumentType,
   DocumentManagementService,
   ErrorHandlerService,
   InitializationService,
-  InspectionType,
   MappingManagementService,
   MappingDefinition,
   MappingSerializer,
 } from '@atlasmap/atlasmap-data-mapper';
 import { Subscription } from 'rxjs';
+import { environment } from '../environments/environment';
+import { IDocumentProps } from './app.component';
 
 @Component({
   selector: 'app-data-mapper-host',
@@ -37,17 +37,13 @@ import { Subscription } from 'rxjs';
 })
 export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
   @Input() documentId: string;
-  @Input() inputName: string;
-  @Input() inputDescription: string;
-  @Input() inputDocumentType: DocumentType;
-  @Input() inputInspectionType: InspectionType;
-  @Input() inputDataShape: string;
-  @Input() outputName: string;
-  @Input() outputDescription: string;
-  @Input() outputDocumentType: DocumentType;
-  @Input() outputInspectionType: InspectionType;
-  @Input() outputDataShape: string;
-  @Input() mappings?: string;
+  @Input() inputDocuments: IDocumentProps[];
+  @Input() outputDocument: IDocumentProps;
+  @Input() initialMappings?: string;
+  @Input() baseJavaInspectionServiceUrl: string;
+  @Input() baseXMLInspectionServiceUrl: string;
+  @Input() baseJSONInspectionServiceUrl: string;
+  @Input() baseMappingServiceUrl: string;
   @Output() outputMappings = new EventEmitter<string>();
   @ViewChild('dataMapperComponent')
   private dataMapperComponent: DataMapperAppComponent;
@@ -63,8 +59,8 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (
       Object.keys(changes).length === 1 &&
-      (changes['mappings'] &&
-        changes['mappings'].previousValue !== this.modifiedMappings)
+      (changes['initialMappings'] &&
+        changes['initialMappings'].previousValue !== this.modifiedMappings)
     ) {
       // do nothing, it's us updating the mappings and getting it back from the app component
     } else {
@@ -81,11 +77,17 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     // initialize config information before initializing services
     const c: ConfigModel = this.initializationService.cfg;
 
+    c.initCfg.xsrfCookieName = environment.xsrf.cookieName;
+    c.initCfg.xsrfDefaultTokenValue = environment.xsrf.defaultTokenValue;
+    c.initCfg.xsrfHeaderName = environment.xsrf.headerName;
+
+    console.log(c.initCfg);
+
     // initialize base urls for our service calls
-    c.initCfg.baseJavaInspectionServiceUrl = '/api/v1/atlas/java/';
-    c.initCfg.baseXMLInspectionServiceUrl = '/api/v1/atlas/xml/';
-    c.initCfg.baseJSONInspectionServiceUrl = '/api/v1/atlas/json/';
-    c.initCfg.baseMappingServiceUrl = '/api/v1/atlas/';
+    c.initCfg.baseJavaInspectionServiceUrl = this.baseJavaInspectionServiceUrl;
+    c.initCfg.baseXMLInspectionServiceUrl = this.baseXMLInspectionServiceUrl;
+    c.initCfg.baseJSONInspectionServiceUrl = this.baseJSONInspectionServiceUrl;
+    c.initCfg.baseMappingServiceUrl = this.baseMappingServiceUrl;
 
     // // enable the navigation bar and import/export for stand-alone
     c.initCfg.disableNavbar = true;
@@ -117,33 +119,36 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     c.initCfg.debugValidationServiceCalls = false;
     c.initCfg.debugFieldActionServiceCalls = false;
 
-    const inputDoc: DocumentInitializationModel = new DocumentInitializationModel();
-    inputDoc.type = this.inputDocumentType;
-    inputDoc.inspectionType = this.inputInspectionType;
-    inputDoc.inspectionSource = this.inputDataShape;
-    inputDoc.id = this.documentId;
-    inputDoc.name = this.inputName;
-    inputDoc.description = this.inputDescription;
-    inputDoc.isSource = true;
-    inputDoc.showFields = true;
-    c.addDocument(inputDoc);
+    this.inputDocuments.forEach(d => {
+      const inputDoc: DocumentInitializationModel = new DocumentInitializationModel();
+      inputDoc.type = d.documentType;
+      inputDoc.inspectionType = d.inspectionType;
+      inputDoc.inspectionSource = d.inspectionSource;
+      inputDoc.inspectionResult = d.inspectionResult;
+      inputDoc.id = d.id;
+      inputDoc.name = d.name;
+      inputDoc.description = d.description;
+      inputDoc.isSource = true;
+      inputDoc.showFields = d.showFields;
+      c.addDocument(inputDoc);
+    });
 
     const outputDoc: DocumentInitializationModel = new DocumentInitializationModel();
-    outputDoc.type = this.outputDocumentType;
-    outputDoc.inspectionType = this.outputInspectionType;
-    outputDoc.inspectionSource = this.outputDataShape;
-    outputDoc.id = this.documentId;
-    outputDoc.name = this.outputName;
-    outputDoc.description = this.outputDescription;
+    outputDoc.type = this.outputDocument.documentType;
+    outputDoc.inspectionType = this.outputDocument.inspectionType;
+    outputDoc.inspectionSource = this.outputDocument.inspectionSource;
+    outputDoc.id = this.outputDocument.id;
+    outputDoc.name = this.outputDocument.name;
+    outputDoc.description = this.outputDocument.description;
     outputDoc.isSource = false;
-    outputDoc.showFields = true;
+    outputDoc.showFields = this.outputDocument.showFields;
     c.addDocument(outputDoc);
 
     const mappingDefinition = new MappingDefinition();
-    if (this.mappings) {
+    if (this.initialMappings) {
       try {
         MappingSerializer.deserializeMappingServiceJSON(
-          JSON.parse(this.mappings),
+          JSON.parse(this.initialMappings),
           mappingDefinition,
           c
         );

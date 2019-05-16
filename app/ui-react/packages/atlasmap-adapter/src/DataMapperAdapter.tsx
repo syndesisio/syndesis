@@ -1,4 +1,5 @@
 import {
+  IDocumentProps,
   IInitMessagePayload,
   IMappingsMessagePayload,
 } from '@syndesis/atlasmap-assembly/src/app/app.component';
@@ -15,7 +16,8 @@ const main = require('file-loader?name=atlasmap-main.js!@syndesis/atlasmap-assem
 /* tslint:enable*/
 
 export enum DocumentType {
-  JAVA = 'Java',
+  JAVA = 'JAVA',
+  JAVA_ARCHIVE = 'JAR',
   XML = 'XML',
   XSD = 'XSD',
   JSON = 'JSON',
@@ -30,6 +32,9 @@ export enum InspectionType {
   INSTANCE = 'INSTANCE',
   UNKNOWN = 'UNKNOWN',
 }
+
+// tslint:disable-next-line
+export interface IDocument extends IDocumentProps {}
 
 export interface IDataMapperAdapterProps extends IInitMessagePayload {
   onMappings(mappings: string): void;
@@ -96,24 +101,11 @@ export class DataMapperAdapter extends React.Component<
     }
   }
 
-  public updateDataMapperApp(props: IInitMessagePayload) {
+  public updateDataMapperApp(payload: IInitMessagePayload) {
     if (this.messagePort) {
       const message = {
         message: 'update',
-        payload: {
-          documentId: props.documentId,
-          inputDataShape: props.inputDataShape,
-          inputDescription: props.inputDescription,
-          inputDocumentType: props.inputDocumentType,
-          inputInspectionType: props.inputInspectionType,
-          inputName: props.inputName,
-          mappings: props.mappings,
-          outputDataShape: props.outputDataShape,
-          outputDescription: props.outputDescription,
-          outputDocumentType: props.outputDocumentType,
-          outputInspectionType: props.outputInspectionType,
-          outputName: props.outputName,
-        },
+        payload,
       };
       this.messagePort.postMessage(message);
     }
@@ -148,8 +140,9 @@ export class DataMapperAdapter extends React.Component<
     };
     return (
       <iframe
+        name={'atlasmap-frame'}
         srcDoc={srcDoc}
-        style={{ width: '100%', height: '100%' }}
+        style={{ width: '100%', height: '100%', lineHeight: '0' }}
         frameBorder={0}
         {...extraProps}
         ref={el => (this.iframe = el)}

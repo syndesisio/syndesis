@@ -110,3 +110,8 @@ export interface IListResult<T> {
 export interface StringMap<T> {
   [key: string]: T;
 }
+
+export interface IndexedStep {
+  step: Step;
+  index: number;
+}

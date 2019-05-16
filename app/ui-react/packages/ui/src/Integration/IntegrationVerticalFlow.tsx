@@ -6,16 +6,9 @@ import './IntegrationVerticalFlow.css';
 export interface IIntegrationVerticalFlowProps {
   /**
    * A render prop that receives the expanded state of the container.
-   * @see [props.expanded]{@link IIntegrationVerticalFlowState#expanded}
    */
-  children(props: IIntegrationVerticalFlowState): any;
-}
-
-export interface IIntegrationVerticalFlowState {
-  /**
-   * The container expanded state.
-   */
-  expanded: boolean;
+  children: (props: { expanded: boolean }) => any;
+  initialExpanded?: boolean;
 }
 
 /**
@@ -23,46 +16,32 @@ export interface IIntegrationVerticalFlowState {
  * integration's steps.
  * @see [children]{@link IIntegrationVerticalFlowProps#children}
  */
-export class IntegrationVerticalFlow extends React.Component<
-  IIntegrationVerticalFlowProps,
-  IIntegrationVerticalFlowState
-> {
-  public static defaultProps = {
-    disabled: false,
+export const IntegrationVerticalFlow: React.FunctionComponent<
+  IIntegrationVerticalFlowProps
+> = ({ children, initialExpanded = true }) => {
+  const [expanded, setExpanded] = React.useState(
+    initialExpanded !== undefined
+      ? initialExpanded
+      : (localStorage.getItem('iec-vertical-flow-expanded') || 'y') === 'y'
+  );
+
+  const toggleExpanded = () => {
+    localStorage.setItem('iec-vertical-flow-expanded', !expanded ? 'y' : 'n');
+    setExpanded(!expanded);
   };
 
-  public state = {
-    expanded:
-      (localStorage.getItem('iec-vertical-flow-expanded') || 'y') === 'y',
-  };
-
-  constructor(props: IIntegrationVerticalFlowProps) {
-    super(props);
-    this.toggleExpanded = this.toggleExpanded.bind(this);
-  }
-
-  public toggleExpanded(): void {
-    const expanded = !this.state.expanded;
-    localStorage.setItem('iec-vertical-flow-expanded', expanded ? 'y' : 'n');
-    this.setState({
-      expanded,
-    });
-  }
-
-  public render() {
-    return (
-      <div
-        className={classnames('integration-vertical-flow', {
-          'is-expanded': this.state.expanded,
-        })}
-      >
-        <div className="integration-vertical-flow__body">
-          {this.props.children(this.state)}
-        </div>
-        <div className="integration-vertical-flow__expand">
-          <ButtonLink onClick={this.toggleExpanded} as={'link'} />
-        </div>
+  return (
+    <div
+      className={classnames('integration-vertical-flow', {
+        'is-expanded': expanded,
+      })}
+    >
+      <div className="integration-vertical-flow__body">
+        {children({ expanded })}
       </div>
-    );
-  }
-}
+      <div className="integration-vertical-flow__expand">
+        <ButtonLink onClick={toggleExpanded} as={'link'} />
+      </div>
+    </div>
+  );
+};

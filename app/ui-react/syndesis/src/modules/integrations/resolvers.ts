@@ -18,6 +18,8 @@ import {
   IConfigureActionRouteState,
   IConfigureStepRouteParams,
   IConfigureStepRouteState,
+  IDataMapperRouteParams,
+  IDataMapperRouteState,
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState,
   ISelectActionRouteParams,
@@ -174,6 +176,26 @@ export const configureTemplateStepMapper = ({
   };
 };
 
+export const configureConfigureDataMapperMapper = ({
+  position,
+  step,
+  updatedIntegration,
+  ...rest
+}: IEditorConfigureStep) => {
+  const { params, state } = configureIndexMapper(rest);
+  return {
+    params: {
+      ...params,
+      position,
+    } as IDataMapperRouteParams,
+    state: {
+      ...state,
+      step,
+      updatedIntegration,
+    } as IDataMapperRouteState,
+  };
+};
+
 export function makeEditorStepRoutesResolvers(
   esr: typeof stepRoutes
 ): RouteResolver<typeof stepRoutes> {
@@ -202,7 +224,11 @@ export function makeEditorStepRoutesResolvers(
       edit: () => 'edit',
     },
     basicFilter: () => 'basicFilter',
-    dataMapper: () => 'dataMapper',
+    dataMapper: makeResolver<
+      IEditorConfigureStep,
+      IDataMapperRouteParams,
+      IDataMapperRouteState
+    >(esr.dataMapper, configureConfigureDataMapperMapper),
     template: makeResolver<
       IEditorConfigureStep,
       ITemplateStepRouteParams,

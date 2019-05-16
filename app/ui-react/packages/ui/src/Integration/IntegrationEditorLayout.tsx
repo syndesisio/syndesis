@@ -52,6 +52,7 @@ export interface IIntegrationEditorLayoutProps {
   isSaveLoading?: boolean;
   isPublishDisabled?: boolean;
   isPublishLoading?: boolean;
+  extraActions?: React.ReactNode;
 }
 
 /**
@@ -82,6 +83,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
   isSaveDisabled,
   isPublishLoading,
   isPublishDisabled,
+  extraActions,
 }: IIntegrationEditorLayoutProps) => {
   return (
     <div className={'integration-editor-layout'}>
@@ -136,6 +138,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
                   Publish
                 </ButtonLink>
               )}
+              {extraActions}
             </LevelItem>
           </Level>
         </PageSection>

@@ -189,9 +189,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@atlasmap/atlasmap-data-mapper@1.39.4":
-  version "1.39.4"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap-data-mapper/-/atlasmap-data-mapper-1.39.4.tgz#d69495cc210a5bb59761658cf39b41907139b2e4"
+"@atlasmap/atlasmap-data-mapper@1.39.6":
+  version "1.39.6"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap-data-mapper/-/atlasmap-data-mapper-1.39.6.tgz#e3e6565202e7900c20bf6409f58496863535a72e"
+  integrity sha512-anw+B3ZDeLlSp1AZvqG+Phu77D598b2zl06w/EvONmhiWOny1eNzHOz5QgHnIDtr7iCCokvONJ/NaTi5QDqwEQ==
   dependencies:
     tslib "^1.9.0"
 

@@ -11,6 +11,11 @@ import { getStepHref, IGetStepHrefs } from './utils';
 
 export interface IAddStepPageProps extends IGetStepHrefs {
   cancelHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
+  getAddMapperStepHref: (
+    position: number,
+    p: IBaseRouteParams,
+    s: IBaseRouteState
+  ) => H.LocationDescriptor;
   getEditAddStepHref: (
     position: number,
     p: IBaseRouteParams,
@@ -47,6 +52,13 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
               content={
                 <IntegrationEditorStepAdder
                   steps={getSteps(integration, flowId)}
+                  addDataMapperStepHref={position =>
+                    this.props.getAddMapperStepHref(
+                      position,
+                      { flowId },
+                      { integration }
+                    )
+                  }
                   addStepHref={position =>
                     this.props.getEditAddStepHref(
                       position,
