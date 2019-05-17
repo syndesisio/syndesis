@@ -2,7 +2,7 @@
   loading... {{loading}}
 </div>
 <ng-template #dataMapperTpl>
-  <app-data-mapper-host
+  <app-apicurio-host
     [documentId]="documentId"
     [inputDocuments]="inputDocuments"
     [outputDocument]="outputDocument"
@@ -12,5 +12,5 @@
     [baseJSONInspectionServiceUrl]="baseJSONInspectionServiceUrl"
     [baseMappingServiceUrl]="baseMappingServiceUrl"
     (outputMappings)="onMappings($event)"
-  ></app-data-mapper-host>
+  ></app-apicurio-host>
 </ng-template>

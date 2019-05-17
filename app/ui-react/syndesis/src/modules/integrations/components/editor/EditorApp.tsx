@@ -54,7 +54,13 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
   const selectStepChildren = (
     <SelectConnectionPage
       cancelHref={cancelHref}
-      apiProviderHref={appResolvers.apiProvider.upload}
+      apiProviderHref={(step, params, state) =>
+        appResolvers.apiProvider.upload({
+          step,
+          ...params,
+          ...state,
+        })
+      }
       connectionHref={(connection, params, state) =>
         appResolvers.connection.selectAction({
           connection,

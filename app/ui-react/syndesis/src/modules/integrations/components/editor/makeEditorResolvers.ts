@@ -189,7 +189,11 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
       >(esr.connection.describeData, configureDescribeDataShapeMapper),
     },
     apiProvider: {
-      upload: makeResolverNoParams(esr.apiProvider.upload),
+      upload: makeResolver<
+        IEditorConfigureStep,
+        IConfigureStepRouteParams,
+        IConfigureStepRouteState
+        >(esr.apiProvider.upload, configureConfigureStepMapper),
       review: makeResolverNoParams('todo review'),
       edit: makeResolverNoParams('todo edit'),
     },

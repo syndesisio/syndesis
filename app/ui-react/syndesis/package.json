@@ -11,6 +11,7 @@
   "dependencies": {
     "@craco/craco": "^5.0.2",
     "@syndesis/api": "*",
+    "@syndesis/apicurio-adapter": "*",
     "@syndesis/atlasmap-adapter": "*",
     "@syndesis/auto-form": "*",
     "@syndesis/history": "*",

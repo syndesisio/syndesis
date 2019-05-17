@@ -1,18 +1,21 @@
+import { ApicurioAdapter } from '@syndesis/apicurio-adapter';
+import { PageSection } from '@syndesis/ui';
 import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 
 export class UploadPage extends React.Component {
   public render() {
     return (
-      <>
+      <PageSection>
         <PageTitle title={'Start integration with an API call'} />
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis
-          illo, iusto nesciunt nostrum omnis pariatur rerum vero voluptates.
-          Accusamus aliquid corporis deleniti ea earum ipsa optio, quidem quod
-          ut! Placeat.
-        </p>
-      </>
+        <ApicurioAdapter
+          specification={`{"swagger":"2.0","info":{"title":"Beer API 2.0","description":"An OpenAPI 2.0 version of the Beer API.","license":{"name":"Apache 2.0","url":"https://www.apache.org/licenses/LICENSE-2.0"},"version":"1.0.0"},"paths":{"/beers":{"get":{"summary":"Get All Beers","description":"Returns all of the beers.","operationId":"getAllBeers","parameters":[{"name":"style","in":"query","description":"Optional: filter by the style of the beer (e.g. lager).","type":"string"}],"responses":{"200":{"description":"All the beers!","schema":{"type":"array","items":{"$ref":"#/definitions/Beer"}}}}},"post":{"summary":"Add a Beer","description":"Adds a beer to the data set.","operationId":"addBeer","parameters":[{"name":"body","in":"body","description":"The beer to add.","schema":{"$ref":"#/definitions/Beer"}}],"responses":{"201":{"description":"Beer was added."}}}},"/beers/{beerId}":{"get":{"summary":"Get a Single Beer","description":"Returns full information about a single beer.","operationId":"getBeer","responses":{"200":{"description":"A single beer.","schema":{"$ref":"#/definitions/Beer"}}}},"put":{"summary":"Update a Beer","description":"Updates information about a single beer.","operationId":"updateBeer","parameters":[{"name":"body","in":"body","description":"The beer to update.","schema":{"$ref":"#/definitions/Beer"}}],"responses":{"202":{"description":"The beer was updated."}}},"delete":{"summary":"Delete a Beer","description":"Removes a single beer from the data set.","operationId":"deleteBeer","responses":{"204":{"description":"The beer was deleted."}}},"parameters":[{"name":"beerId","in":"path","description":"The unique ID of a beer.","required":true,"type":"integer","format":"int32"}]},"/breweries":{"get":{"summary":"Get All Breweries","description":"Returns a list of all breweries.","operationId":"getAllBreweries","parameters":[{"name":"city","in":"query","description":"Optional: filter by city.","type":"string"},{"name":"state","in":"query","description":"Optional: filter by state.","type":"string"}],"responses":{"200":{"description":"Returns all breweries.","schema":{"type":"array","items":{"$ref":"#/definitions/Brewery"}}}}},"post":{"summary":"Add a Brewery","description":"Adds a single brewery to the data set.","operationId":"addBrewery","parameters":[{"name":"body","in":"body","description":"New brewery info.","schema":{"$ref":"#/definitions/Brewery"}}],"responses":{"201":{"description":"Brewery successfully added."}}}},"/breweries/{breweryId}":{"get":{"summary":"Get Brewery Info","description":"Returns full information about a single brewery.","operationId":"getBrewery","responses":{"200":{"description":"Information about a brewery.","schema":{"$ref":"#/definitions/Brewery"}}}},"put":{"summary":"Update a Brewery","description":"Updates information about a single brewery.","operationId":"updateBrewery","parameters":[{"name":"body","in":"body","description":"Updated brewery information.","schema":{"$ref":"#/definitions/Brewery"}}],"responses":{"202":{"description":"Brewery was updated."}}},"delete":{"summary":"Delete a Brewery","description":"Removes a single brewery from the data set.","operationId":"deleteBrewery","responses":{"204":{"description":"Brewery was deleted."}}},"parameters":[{"name":"breweryId","in":"path","description":"Unique ID of a brewery.","required":true,"type":"integer","format":"int32"}]},"/breweries/{breweryId}/beers":{"get":{"summary":"Get Beers From the Brewery","description":"Returns all of the beers made by the brewery.","operationId":"listBreweryBeers","responses":{"200":{"description":"The list of beers for the brewery.","schema":{"type":"array","items":{"$ref":"#/definitions/Beer"}}}}},"post":{"summary":"Add a Beer to the Brewery","description":"Adds a single beer to the data set for this brewery.","operationId":"addBeerToBrewery","parameters":[{"name":"body","in":"body","description":"Information about a new beer.","schema":{"$ref":"#/definitions/Beer"}}],"responses":{"201":{"description":"Beer was added."}}},"parameters":[{"name":"breweryId","in":"path","description":"The unique ID of a brewery.","required":true,"type":"integer","format":"int32"}]}},"definitions":{"Beer":{"title":"Root Type for Beer","description":"The root of the Beer type's schema.","type":"object","properties":{"id":{"format":"int32","type":"integer"},"name":{"type":"string"},"style":{"type":"string"},"abv":{"format":"double","type":"number"},"ibu":{"format":"double","type":"number"},"ounces":{"format":"double","type":"number"},"breweryId":{"format":"int32","type":"integer"}}},"Brewery":{"title":"Root Type for Brewery","description":"The root of the Brewery type's schema.","type":"object","properties":{"id":{"format":"int32","type":"integer"},"name":{"type":"string"},"city":{"type":"string"},"state":{"type":"string"}}}},"tags":[{"name":"beer"},{"name":"hops"},{"name":"brewing"}]}`}
+          onSpecification={
+            // tslint:disable-next-line
+            s => console.log(s)
+          }
+        />
+      </PageSection>
     );
   }
 }
