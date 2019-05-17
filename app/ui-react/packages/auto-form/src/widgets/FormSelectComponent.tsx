@@ -39,6 +39,7 @@ export const FormSelectComponent: React.FunctionComponent<
         </ControlLabel>
       )}
       <FormControl
+        size={isMultiple ? 12 : undefined}
         {...props.property.fieldAttributes}
         {...props.field}
         onChange={handleChange}
