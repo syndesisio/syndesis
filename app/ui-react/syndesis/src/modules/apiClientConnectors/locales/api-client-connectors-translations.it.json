@@ -14,6 +14,7 @@
   "errorDeletingApiConnector": "Errore imprevisto del server che elimina il connettore del client API \"{{connectorId}}\".",
   "errorSavingApiConnector": "Errore imprevisto del server durante il salvataggio del connettore del client API.",
   "Host": "Ospite",
+  "invalidImageFileUpload": "Si prega di selezionare un file immagine",
   "reviewActionsTitle": "Rivedi le Azioni",
   "reviewApiDefinitionHeading": "API DEFINIZIONE",
   "reviewErrorsHeading": "Errori {{count}}",

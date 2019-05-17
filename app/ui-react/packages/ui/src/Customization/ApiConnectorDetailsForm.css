@@ -25,6 +25,11 @@
   width: 90%;
 }
 
+.api-connector-details-form__icon {
+  max-height: 100px;
+  max-width: 100px;
+}
+
 .api-connector-details-form__iconContainer {
   margin-bottom: 40px;
   margin-left: -40px;
