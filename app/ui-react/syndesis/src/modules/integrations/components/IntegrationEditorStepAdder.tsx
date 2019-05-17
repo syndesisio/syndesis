@@ -46,7 +46,7 @@ export interface IIntegrationEditorStepAdderProps {
   // tslint:disable-next-line:react-unused-props-and-state
   configureStepHref: (
     stepIdx: number,
-    step: Step,
+    step: Step
   ) => H.LocationDescriptorObject;
   deleteAction: (integration: Integration) => void;
   flowId: string;
@@ -69,8 +69,10 @@ export interface IIntegrationEditorStepAdderState {
  *
  * @todo add the delete step button
  */
-export class IntegrationEditorStepAdder extends React.Component<IIntegrationEditorStepAdderProps,
-  IIntegrationEditorStepAdderState> {
+export class IntegrationEditorStepAdder extends React.Component<
+  IIntegrationEditorStepAdderProps,
+  IIntegrationEditorStepAdderState
+> {
   constructor(props: any) {
     super(props);
     this.state = {
@@ -109,10 +111,10 @@ export class IntegrationEditorStepAdder extends React.Component<IIntegrationEdit
                 i18nCancelButtonText={t('shared:Cancel')}
                 i18nConfirmButtonText={t('shared:Delete')}
                 i18nConfirmationMessage={t(
-                  'integrations:editor:confirmDeleteStepDialogBody',
+                  'integrations:editor:confirmDeleteStepDialogBody'
                 )}
                 i18nTitle={t(
-                  'integrations:editor:confirmDeleteStepDialogTitle',
+                  'integrations:editor:confirmDeleteStepDialogTitle'
                 )}
                 showDialog={this.state.showDeleteDialog}
                 onCancel={this.closeDeleteDialog}
@@ -130,17 +132,20 @@ export class IntegrationEditorStepAdder extends React.Component<IIntegrationEdit
             <PageSection>
               <IntegrationEditorStepsList>
                 {toUIIntegrationStepCollection(
-                  toUIStepCollection(this.props.steps),
+                  toUIStepCollection(this.props.steps)
                 ).map((s, idx) => (
                   <React.Fragment key={idx}>
                     <IntegrationEditorStepsListItem
                       stepName={(s.action && s.action.name) || s.name!}
-                      stepDescription={(s.action! && s.action!.description) || ''}
+                      stepDescription={
+                        (s.action! && s.action!.description) || ''
+                      }
                       action={(s.action && s.action.name) || 'n/a'}
                       shape={s.shape || 'n/a'}
                       icon={getStepIcon(process.env.PUBLIC_URL, s)}
                       showWarning={
-                        s.shouldAddDataMapper || s.previousStepShouldDefineDataShape
+                        s.shouldAddDataMapper ||
+                        s.previousStepShouldDefineDataShape
                       }
                       i18nWarningTitle={'Data Type Mismatch'}
                       i18nWarningMessage={
@@ -163,13 +168,16 @@ export class IntegrationEditorStepAdder extends React.Component<IIntegrationEdit
                           <ButtonLink
                             href={this.props.configureStepHref(
                               idx,
-                              this.props.steps[idx],
+                              this.props.steps[idx]
                             )}
                           >
                             {t('shared:Configure')}
                           </ButtonLink>
-                          <ButtonLink href={'#'} onClick={() => this.onDelete(idx)} as={'danger'}>
-                            <i className="fa fa-trash"/>
+                          <ButtonLink
+                            onClick={() => this.onDelete(idx)}
+                            as={'danger'}
+                          >
+                            <i className="fa fa-trash" />
                           </ButtonLink>
                         </>
                       }

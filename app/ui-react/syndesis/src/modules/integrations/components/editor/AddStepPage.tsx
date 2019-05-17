@@ -23,6 +23,10 @@ export interface IAddStepPageProps extends IGetStepHrefs {
     s: IBaseRouteState
   ) => H.LocationDescriptor;
   saveHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
+  selfHref: (
+    p: IBaseRouteParams,
+    s: IBaseRouteState
+  ) => H.LocationDescriptorObject;
 }
 
 /**
@@ -47,7 +51,7 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
             {({ flowId }, { integration }, { history }) => {
               const deleteAction = (newIntegration: Integration) => {
                 history.push(
-                  this.props.saveHref(
+                  this.props.selfHref(
                     { flowId },
                     { integration: newIntegration }
                   )

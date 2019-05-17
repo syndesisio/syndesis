@@ -71,6 +71,12 @@ const addStepPage = (
         ...s,
       })
     }
+    selfHref={(p, s) =>
+      resolvers.integration.edit.index({
+        ...p,
+        ...s,
+      })
+    }
   />
 );
 
