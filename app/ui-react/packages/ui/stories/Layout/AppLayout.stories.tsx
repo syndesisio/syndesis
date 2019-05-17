@@ -29,6 +29,7 @@ stories.add(
         <MemoryRouter initialEntries={['/test']}>
           <>
             <AboutModal
+              bgImg={undefined}
               trademark={'Red Hat'}
               productName="Syndesis"
               isModalOpen={store.state.showAboutModal}

@@ -2,7 +2,7 @@ import { AboutModal as PfAboutModal } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IAboutModal {
-  bgImg: string;
+  bgImg?: string;
   brandImg: any;
   handleModalToggle: any;
   isModalOpen: boolean;
