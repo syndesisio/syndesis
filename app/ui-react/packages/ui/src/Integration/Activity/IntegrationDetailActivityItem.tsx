@@ -1,4 +1,4 @@
-import { Col, Icon, ListView, Row, Table } from 'patternfly-react';
+import { Icon, ListView, Table } from 'patternfly-react';
 import * as React from 'react';
 
 import './IntegrationDetailActivityItem.css';
@@ -79,76 +79,71 @@ export class IntegrationDetailActivityItem extends React.Component<
           </ListView.InfoItem>,
         ]}
       >
-        <Row>
-          {this.props.steps ? (
-            <Col sm={11}>
-              <Table.PfProvider
-                striped={true}
-                bordered={true}
-                hover={true}
-                columns={[
-                  {
-                    cell: {
-                      formatters: [cellFormat],
-                      property: 'step',
-                    },
-                    header: {
-                      formatters: [headerFormat],
-                      label: 'Step',
-                    },
-                  },
-                  {
-                    cell: {
-                      formatters: [cellFormat],
-                      property: 'time',
-                    },
-                    header: {
-                      formatters: [headerFormat],
-                      label: 'Time',
-                    },
-                  },
-                  {
-                    cell: {
-                      formatters: [cellFormat],
-                      property: 'duration',
-                    },
-                    header: {
-                      formatters: [headerFormat],
-                      label: 'Duration',
-                    },
-                  },
-                  {
-                    cell: {
-                      formatters: [statusCellFormat],
-                      property: 'status',
-                    },
-                    header: {
-                      formatters: [headerFormat],
-                      label: 'Status',
-                    },
-                  },
-                  {
-                    cell: {
-                      formatters: [outputCellFormat],
-                      property: 'output',
-                    },
-                    header: {
-                      formatters: [headerFormat],
-                      label: 'Output',
-                    },
-                  },
-                ]}
-              >
-                <Table.Header />
-                {this.props.steps}
-              </Table.PfProvider>
-            </Col>
-          ) : (
-            <Col sm={11}>
-              <span>{this.props.i18nNoSteps}</span>
-            </Col>
-          )}
-        </Row>
+        {this.props.steps ? (
+          <Table.PfProvider
+            className="integration-detail-activity-item__expanded-table"
+            striped={true}
+            bordered={true}
+            hover={true}
+            columns={[
+              {
+                cell: {
+                  formatters: [cellFormat],
+                  property: 'step',
+                },
+                header: {
+                  formatters: [headerFormat],
+                  label: 'Step',
+                },
+              },
+              {
+                cell: {
+                  formatters: [cellFormat],
+                  property: 'time',
+                },
+                header: {
+                  formatters: [headerFormat],
+                  label: 'Time',
+                },
+              },
+              {
+                cell: {
+                  formatters: [cellFormat],
+                  property: 'duration',
+                },
+                header: {
+                  formatters: [headerFormat],
+                  label: 'Duration',
+                },
+              },
+              {
+                cell: {
+                  formatters: [statusCellFormat],
+                  property: 'status',
+                },
+                header: {
+                  formatters: [headerFormat],
+                  label: 'Status',
+                },
+              },
+              {
+                cell: {
+                  formatters: [outputCellFormat],
+                  property: 'output',
+                },
+                header: {
+                  formatters: [headerFormat],
+                  label: 'Output',
+                },
+              },
+            ]}
+          >
+            <Table.Header />
+            {this.props.steps}
+          </Table.PfProvider>
+        ) : (
+          <span>{this.props.i18nNoSteps}</span>
+        )}
       </ListView.Item>
     );
   }

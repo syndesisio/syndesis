@@ -13,6 +13,8 @@ import {
 import * as React from 'react';
 import { PageSection } from '../../Layout';
 
+import './IntegrationDetailMetrics.css';
+
 export interface IIntegrationDetailMetricsProps {
   i18nLastProcessed: string;
   i18nSince: string;
@@ -35,16 +37,20 @@ export class IntegrationDetailMetrics extends React.Component<
     const startAsHuman = startAsDate.toLocaleString();
 
     return (
-      <PageSection>
+      <PageSection className="integration-detail-metrics">
         <CardGrid fluid={true} matchHeight={true}>
           <Row style={{ marginBottom: '20px', marginTop: '20px' }}>
             <Col xs={6} sm={3} md={3}>
               <Card accented={true} aggregated={true} matchHeight={true}>
-                <CardTitle>
-                  <Icon type="pf" name="error-circle-o" />
-                  {this.props.errors}
-                </CardTitle>
-                <CardBody>{this.props.i18nTotalErrors}</CardBody>
+                <CardTitle>{this.props.i18nTotalErrors}</CardTitle>
+                <CardBody>
+                  <AggregateStatusNotifications>
+                    <AggregateStatusNotification>
+                      <Icon type="pf" name="error-circle-o" />
+                      {this.props.errors}
+                    </AggregateStatusNotification>
+                  </AggregateStatusNotifications>
+                </CardBody>
               </Card>
             </Col>
             <Col xs={6} sm={3} md={3}>
@@ -54,7 +60,11 @@ export class IntegrationDetailMetrics extends React.Component<
                   {this.props.i18nLastProcessed}
                 </CardTitle>
                 <CardBody>
-                  <h2>{this.props.lastProcessed}</h2>
+                  <AggregateStatusNotifications>
+                    <AggregateStatusNotification>
+                      {this.props.lastProcessed}
+                    </AggregateStatusNotification>
+                  </AggregateStatusNotifications>
                 </CardBody>
               </Card>
             </Col>
@@ -90,7 +100,11 @@ export class IntegrationDetailMetrics extends React.Component<
                   <div>{this.props.i18nUptime}</div>
                 </Card.Title>
                 <Card.Body>
-                  <h4>{this.props.durationDifference}</h4>
+                  <AggregateStatusNotifications>
+                    <AggregateStatusNotification>
+                      {this.props.durationDifference}
+                    </AggregateStatusNotification>
+                  </AggregateStatusNotifications>
                 </Card.Body>
               </Card>
             </Col>
