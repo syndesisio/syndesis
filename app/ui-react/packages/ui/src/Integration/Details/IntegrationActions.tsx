@@ -22,7 +22,11 @@ export class IntegrationActions extends React.Component<
   public render() {
     return (
       <>
-        <ButtonLink href={this.props.detailsHref} as={'primary'}>
+        <ButtonLink
+          className="view-integration-btn"
+          href={this.props.detailsHref}
+          as={'default'}
+        >
           View
         </ButtonLink>
         <DropdownKebab

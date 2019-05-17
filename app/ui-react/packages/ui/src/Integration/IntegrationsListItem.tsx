@@ -42,8 +42,12 @@ export class IntegrationsListItem extends React.Component<
         className={'integration-list-item'}
         description={
           this.props.isConfigurationRequired && (
-            <div className={'config-required'}>
-              <Icon type={'pf'} name={'warning-triangle-o'} />
+            <div className={'config-required pf-u-my-sm pf-u-ml-2xl'}>
+              <Icon
+                type={'pf'}
+                name={'warning-triangle-o'}
+                className="pf-u-mr-xs"
+              />
               {this.props.i18nConfigurationRequired}
             </div>
           )
@@ -81,7 +85,7 @@ export class IntegrationsListItem extends React.Component<
             finishConnectionIcon={this.props.finishConnectionIcon}
           />
         }
-        stacked={true}
+        stacked={false}
       />
     );
   }
