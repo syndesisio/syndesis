@@ -780,8 +780,8 @@ export function removeStepFromFlow(
     steps.splice(position, 1);
   }
 
-  return produce(integration, integration => {
-    setFlow(integration, { ...flow!, steps });
+  return produce(integration, newInt => {
+    setFlow(newInt, { ...flow!, steps });
   });
 }
 
