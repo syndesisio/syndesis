@@ -245,9 +245,13 @@ export function filterStepsByPosition(
       return true;
     }
     // Only show connections that have at least one action that accepts data
-    return (step as Connection).connector.actions.some(action => {
-      return action.pattern === 'To';
-    });
+    if (typeof(step.connector) != 'undefined') {
+      return step.connector.actions.some(action => {
+        return action.pattern === 'To';
+      });
+    }
+
+    return false;
   });
 }
 

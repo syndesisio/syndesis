@@ -187,33 +187,18 @@ export class FlowPageService {
 
   getCurrentChild(route: ActivatedRoute): string {
     const path = this.getChildPath(route);
-    if (!path) {
+    if (typeof(path) === 'undefined') {
       return undefined;
     }
     return path[0].path;
   }
 
   getCurrentPosition(route: ActivatedRoute): number {
-    const path = this.getChildPath(route);
-    if (!path) {
-      return undefined;
-    }
-    try {
-      const position = path[1].path;
-      return +position;
-    } catch (error) {
-      return -1;
-    }
+    return this.pathIndexPartFrom(route, 1);
   }
 
   getCurrentStepIndex(route: ActivatedRoute): number {
-    const path = this.getChildPath(route);
-    try {
-      const index = path[2].path;
-      return +index;
-    } catch (error) {
-      return -1;
-    }
+    return this.pathIndexPartFrom(route, 2);
   }
 
   getCurrentStep(route: ActivatedRoute) {
@@ -222,5 +207,18 @@ export class FlowPageService {
 
   getCurrentStepKind(route: ActivatedRoute) {
     return (this.getCurrentStep(route) || {})['stepKind'];
+  }
+
+  pathIndexPartFrom(route: ActivatedRoute, index: number): number {
+    const path = this.getChildPath(route);
+    if (typeof(path) === 'undefined') {
+      return undefined;
+    }
+
+    if (typeof(path[index]) === 'undefined') {
+      return -1;
+    }
+
+    return Number(path[index].path);
   }
 }
