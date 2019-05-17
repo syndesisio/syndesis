@@ -3,6 +3,7 @@ import { Integration, StepKind } from '@syndesis/models';
 import { Breadcrumb } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { Translation } from 'react-i18next';
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../shared';
@@ -70,6 +71,12 @@ const addStepPage = (
         ...s,
       })
     }
+    selfHref={(p, s) =>
+      resolvers.integration.edit.index({
+        ...p,
+        ...s,
+      })
+    }
   />
 );
 
@@ -108,81 +115,84 @@ export interface IIntegrationEditorAppRouteState {
  * [1] https://reactjs.org/docs/error-boundaries.html
  *
  * @todo add an error handler!
- * @todo i18n everywhere!
  */
 export const IntegrationEditorApp: React.FunctionComponent = () => {
   return (
-    <WithRouteData<null, IIntegrationEditorAppRouteState>>
-      {(_, { integration }) => (
-        <WithClosedNavigation>
-          <Breadcrumb>
-            <Link to={resolvers.list()}>Integrations</Link>
-            <Link
-              to={resolvers.integration.details({
-                integrationId: integration.id!,
-              })}
-            >
-              {integration.name}
-            </Link>
-            <span>Add to integration</span>
-          </Breadcrumb>
-          <Switch>
-            <Route
-              path={routes.integration.edit.index}
-              exact={true}
-              children={addStepPage}
-            />
+    <Translation ns={['integrations', 'shared']}>
+      {t => (
+        <WithRouteData<null, IIntegrationEditorAppRouteState>>
+          {(_, { integration }) => (
+            <WithClosedNavigation>
+              <Breadcrumb>
+                <Link to={resolvers.list()}>{t('shared:Integrations')}</Link>
+                <Link
+                  to={resolvers.integration.details({
+                    integrationId: integration.id!,
+                  })}
+                >
+                  {integration.name}
+                </Link>
+                <span>{t('integrations:editor:addToIntegration')}</span>
+              </Breadcrumb>
+              <Switch>
+                <Route
+                  path={routes.integration.edit.index}
+                  exact={true}
+                  children={addStepPage}
+                />
 
-            {/* add step */}
-            <Route path={routes.integration.edit.addStep.selectStep}>
-              <EditorApp
-                mode={'adding'}
-                appStepRoutes={routes.integration.edit.addStep}
-                appResolvers={resolvers.integration.edit.addStep}
-                cancelHref={(params, state) =>
-                  resolvers.integration.edit.index({
-                    ...params,
-                    ...state,
-                  })
-                }
-                postConfigureHref={(updatedIntegration, params) =>
-                  resolvers.integration.edit.index({
-                    integration: updatedIntegration,
-                    ...params,
-                  })
-                }
-              />
-            </Route>
+                {/* add step */}
+                <Route path={routes.integration.edit.addStep.selectStep}>
+                  <EditorApp
+                    mode={'adding'}
+                    appStepRoutes={routes.integration.edit.addStep}
+                    appResolvers={resolvers.integration.edit.addStep}
+                    cancelHref={(params, state) =>
+                      resolvers.integration.edit.index({
+                        ...params,
+                        ...state,
+                      })
+                    }
+                    postConfigureHref={(updatedIntegration, params) =>
+                      resolvers.integration.edit.index({
+                        integration: updatedIntegration,
+                        ...params,
+                      })
+                    }
+                  />
+                </Route>
 
-            {/* edit step */}
-            <Route path={routes.integration.edit.editStep.selectStep}>
-              <EditorApp
-                mode={'editing'}
-                appStepRoutes={routes.integration.edit.editStep}
-                appResolvers={resolvers.integration.edit.editStep}
-                cancelHref={(params, state) =>
-                  resolvers.integration.edit.index({
-                    ...params,
-                    ...state,
-                  })
-                }
-                postConfigureHref={(updatedIntegration, params) =>
-                  resolvers.integration.edit.index({
-                    integration: updatedIntegration,
-                    ...params,
-                  })
-                }
-              />
-            </Route>
+                {/* edit step */}
+                <Route path={routes.integration.edit.editStep.selectStep}>
+                  <EditorApp
+                    mode={'editing'}
+                    appStepRoutes={routes.integration.edit.editStep}
+                    appResolvers={resolvers.integration.edit.editStep}
+                    cancelHref={(params, state) =>
+                      resolvers.integration.edit.index({
+                        ...params,
+                        ...state,
+                      })
+                    }
+                    postConfigureHref={(updatedIntegration, params) =>
+                      resolvers.integration.edit.index({
+                        integration: updatedIntegration,
+                        ...params,
+                      })
+                    }
+                  />
+                </Route>
 
-            <Route
-              path={routes.integration.edit.saveAndPublish}
-              exact={true}
-              children={saveIntegrationPage}
-            />
-          </Switch>
-        </WithClosedNavigation>
+                <Route
+                  path={routes.integration.edit.saveAndPublish}
+                  exact={true}
+                  children={saveIntegrationPage}
+                />
+              </Switch>
+            </WithClosedNavigation>
+          )}
+        </WithRouteData>
       )}
-    </WithRouteData>
+    </Translation>
   );
 };

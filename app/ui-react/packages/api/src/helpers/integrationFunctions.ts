@@ -768,7 +768,8 @@ export function removeStepFromFlow(
   position: number
 ) {
   const flow = getFlow(integration, flowId);
-  const steps = [...flow!.steps!];
+  const steps = getSteps(integration, flowId);
+
   if (
     position === getFirstPosition(integration, flowId) ||
     position === getLastPosition(integration, flowId)
@@ -778,7 +779,10 @@ export function removeStepFromFlow(
   } else {
     steps.splice(position, 1);
   }
-  return setFlow(integration, { ...flow!, steps });
+
+  return produce(integration, newInt => {
+    setFlow(newInt, { ...flow!, steps });
+  });
 }
 
 /**
