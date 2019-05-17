@@ -1,4 +1,4 @@
-import { DataShapeKinds } from '@syndesis/api';
+import { DataShapeKinds, toDataShapeKinds } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { DataShape } from '@syndesis/models';
 import { DescribeDataShapeForm } from '@syndesis/ui';
@@ -53,11 +53,11 @@ export class WithDescribeDataShapeForm extends React.Component<
   }
   public handleNext() {
     const metadata =
-      this.state.kind === DataShapeKinds.ANY.toLowerCase()
+      toDataShapeKinds(this.state.kind) === DataShapeKinds.ANY
         ? {}
         : { userDefined: 'true' };
     const dataShape =
-      this.state.kind === DataShapeKinds.ANY.toLowerCase()
+      toDataShapeKinds(this.state.kind) === DataShapeKinds.ANY
         ? { kind: this.state.kind }
         : {
             description: this.state.description,

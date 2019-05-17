@@ -1,6 +1,7 @@
 import {
   getConnectionIcon,
   getSteps,
+  toDataShapeKinds,
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
@@ -86,7 +87,7 @@ export class DescribeDataShapePage extends React.Component<
                       })}
                       content={
                         <WithDescribeDataShapeForm
-                          initialKind={dataShape.kind!.toLowerCase()}
+                          initialKind={toDataShapeKinds(dataShape.kind)}
                           initialDefinition={dataShape.specification}
                           initialName={dataShape.name}
                           initialDescription={dataShape.description}

@@ -17,6 +17,7 @@ import {
   LOG,
   SPLIT,
   TEMPLATE,
+  toDataShapeKinds,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
@@ -161,10 +162,9 @@ export function toUIIntegrationStepCollection(
       const inputDataShape = step.action.descriptor.inputDataShape;
       if (
         inputDataShape &&
-        ![
-          DataShapeKinds.ANY.toLowerCase(),
-          DataShapeKinds.NONE.toLowerCase(),
-        ].includes(inputDataShape.kind!.toLowerCase())
+        ![DataShapeKinds.ANY, DataShapeKinds.NONE].includes(
+          toDataShapeKinds(inputDataShape.kind!)
+        )
       ) {
         const prev = getPreviousStepWithDataShape(steps, position);
         if (
@@ -174,10 +174,7 @@ export function toUIIntegrationStepCollection(
           prev.action.descriptor.outputDataShape
         ) {
           const prevOutDataShape = prev.action.descriptor.outputDataShape;
-          if (
-            DataShapeKinds.ANY.toLowerCase() ===
-            prevOutDataShape.kind!.toLowerCase()
-          ) {
+          if (DataShapeKinds.ANY === toDataShapeKinds(prevOutDataShape.kind!)) {
             previousStepShouldDefineDataShape = true;
           } else if (!isSameDataShape(inputDataShape, prevOutDataShape)) {
             shouldAddDataMapper = true;
@@ -204,9 +201,9 @@ export function getDataShapeText(stepKind: string, dataShape?: DataShape) {
     dataShape.metadata && dataShape.metadata.variant === 'collection';
   let answer: string | undefined = dataShape.name;
   if (dataShape.kind) {
-    if (dataShape.kind === (DataShapeKinds.ANY as string)) {
+    if (toDataShapeKinds(dataShape.kind) === DataShapeKinds.ANY) {
       answer = 'ANY';
-    } else if (dataShape.kind === (DataShapeKinds.NONE as string)) {
+    } else if (toDataShapeKinds(dataShape.kind) === DataShapeKinds.NONE) {
       answer = undefined;
     } else if (!dataShape.type) {
       answer = dataShape.kind;
