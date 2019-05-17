@@ -145,7 +145,7 @@ enum PropertyGenerators {
         @Override
         protected PropertyGenerator propertyGenerator() {
             return (swagger, template, settings) -> oauthProperty(swagger, template, settings,
-                d -> d.getScopes().keySet().stream().sorted().collect(Collectors.joining(" ")));
+                d -> ofNullable(d.getScopes()).map(scopes -> scopes.keySet().stream().sorted().collect(Collectors.joining(" "))).orElse(null));
         }
     },
     password {
