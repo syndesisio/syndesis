@@ -104,6 +104,7 @@ export class IntegrationEditorStepAdder extends React.Component<IIntegrationEdit
     return (
       <Translation ns={['integrations', 'shared']}>
         {t => (
+<<<<<<< HEAD
           <>
             {this.state.showDeleteDialog && (
               <ConfirmationDialog
@@ -113,6 +114,34 @@ export class IntegrationEditorStepAdder extends React.Component<IIntegrationEdit
                 i18nConfirmButtonText={t('shared:Delete')}
                 i18nConfirmationMessage={t(
                   'integrations:editor:confirmDeleteStepDialogBody',
+=======
+          <WithIntegrationHelpers>
+            {({ removeStep }) => (
+              <>
+                {this.state.showDeleteDialog && (
+                  <ConfirmationDialog
+                    buttonStyle={ConfirmationButtonStyle.NORMAL}
+                    icon={ConfirmationIconType.DANGER}
+                    i18nCancelButtonText={t('shared:Cancel')}
+                    i18nConfirmButtonText={t('shared:Delete')}
+                    i18nConfirmationMessage={t(
+                      'integrations:editor:confirmDeleteStepDialogBody'
+                    )}
+                    i18nTitle={t(
+                      'integrations:editor:confirmDeleteStepDialogTitle'
+                    )}
+                    showDialog={this.state.showDeleteDialog}
+                    onCancel={this.closeDeleteDialog}
+                    onConfirm={() => {
+                      this.handleDeleteConfirm();
+                      return removeStepFromFlow(
+                        this.props.integration!,
+                        this.props.flowId!,
+                        this.state.position!
+                      );
+                    }}
+                  />
+>>>>>>> Fix for removeStepFromFlow, get steps separately
                 )}
                 i18nTitle={t(
                   'integrations:editor:confirmDeleteStepDialogTitle',

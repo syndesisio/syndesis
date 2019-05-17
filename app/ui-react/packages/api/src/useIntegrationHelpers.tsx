@@ -73,6 +73,43 @@ export const useIntegrationHelpers = () => {
   };
 
   /**
+<<<<<<< HEAD
+=======
+   * Returns the newly updated integration,
+   * with the step removed
+   * @param integration
+   * @param flowId
+   * @param position
+   */
+  const removeStep = async (
+    integration: Integration,
+    flowId: string,
+    position: number
+  ): Promise<Integration> => {
+    const step = getStep(integration, flowId, position);
+    // Get flow
+    // const flow = getFlow(integration, flowId);
+
+    // console.log('oldInt: ' + JSON.stringify(integration));
+
+    const newInt = produce(integration, draft => {
+      // console.log('draft.flows: ' + JSON.stringify(draft.flows));
+      // console.log('flow: ' + JSON.stringify(flow));
+      // console.log('step: ' + JSON.stringify(step));
+      const flowIdx = draft.flows!.indexOf((f: Flow) => f.id === flowId);
+      draft!.flows![flowIdx]!.steps = draft!.flows![flowIdx]!.steps!.filter(
+        s => s.id !== step!.id
+      );
+    });
+
+    // console.log('newInt: ' + JSON.stringify(newInt));
+
+    // Return a new integration without said step
+    return newInt;
+  };
+
+  /**
+>>>>>>> Fix for removeStepFromFlow, get steps separately
    * adds a step of type stepKind to the provided integration object.
    *
    * @param integration - the integration object to modify
