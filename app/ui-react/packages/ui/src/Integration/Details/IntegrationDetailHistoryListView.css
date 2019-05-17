@@ -15,3 +15,11 @@
   border: none;
   font-size: 0.8em;
 }
+
+.integration-detail-history-list-view__draft-row .list-group-item-heading {
+    margin-left: 50px;
+}
+
+.integration-detail-history-list-view__draft-row .integration-detail-history-list-view__description {
+    padding-top: 30px;
+}
