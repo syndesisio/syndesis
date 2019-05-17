@@ -13,6 +13,7 @@ export { CodeMirror };
 export type ITextEditor = CodeMirror.Editor;
 
 export interface ITextEditorProps {
+  id?: string;
   value: string;
   options: { [name: string]: any };
   onChange: (editor: ITextEditor, data: any, value: string) => void;
@@ -25,12 +26,14 @@ export class TextEditor extends React.Component<ITextEditorProps> {
     const options = { ...this.props.options };
     return (
       <>
-        <ReactCodeMirror
-          value={this.props.value}
-          options={options}
-          onChange={this.props.onChange}
-          editorDidMount={this.props.editorDidMount}
-        />
+        <div data-testid={this.props.id || 'codemirror'}>
+          <ReactCodeMirror
+            value={this.props.value}
+            options={options}
+            onChange={this.props.onChange}
+            editorDidMount={this.props.editorDidMount}
+          />
+        </div>
       </>
     );
   }

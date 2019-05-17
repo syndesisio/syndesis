@@ -2,6 +2,7 @@ import { IFormDefinition, IFormDefinitionProperty } from '@syndesis/auto-form';
 import {
   IConfigurationProperties,
   IConfigurationProperty,
+  StringMap,
 } from '@syndesis/models';
 
 /**
@@ -54,12 +55,32 @@ export function toFormDefinitionProperty(property: IConfigurationProperty) {
   } as IFormDefinitionProperty;
 }
 
-export function getInitialValues(properties: IConfigurationProperties) {
-  const configuredProperties = {};
+/**
+ * Returns a new configuredProperties object with any default values set from
+ * the given definition if they aren't set already
+ * @param properties
+ * @param initial
+ */
+export function applyInitialValues(
+  properties: IConfigurationProperties,
+  initial?: StringMap<string>
+) {
+  const configuredProperties =
+    typeof initial !== 'undefined' ? { ...initial } : {};
   Object.keys(properties).forEach(key => {
     const property = properties[key];
-    if (property.value || property.defaultValue) {
-      configuredProperties[key] = property.value || property.defaultValue;
+    // `property.value` being set is deprecated, defaultValue takes precedence
+    if (
+      typeof property.value !== 'undefined' &&
+      typeof configuredProperties[key] === 'undefined'
+    ) {
+      configuredProperties[key] = property.value;
+    }
+    if (
+      typeof property.defaultValue !== 'undefined' &&
+      typeof configuredProperties[key] === 'undefined'
+    ) {
+      configuredProperties[key] = property.defaultValue;
     }
   });
   return configuredProperties;
@@ -72,8 +93,13 @@ export function validateConfiguredProperties(
   if (typeof values === 'undefined') {
     return false;
   }
-  const allRequiredSet = Object.keys(properties)
-    .filter(key => properties[key].required)
+  const allRequired = Object.keys(properties).filter(
+    key => properties[key].required
+  );
+  if (allRequired.length === 0) {
+    return true;
+  }
+  const allRequiredSet = allRequired
     .map(key => typeof values[key] !== 'undefined')
     .reduce((prev, curr) => curr, false);
   return allRequiredSet;

@@ -13,6 +13,10 @@ export interface IAutoFormProps<T> {
    */
   initialValue: T;
   /**
+   * If the passed in value is valid or not
+   */
+  isInitialValid?: boolean;
+  /**
    * String to be displayed when a required field isn't set
    */
   i18nRequiredProperty: string;
@@ -63,6 +67,7 @@ export class AutoForm<T> extends React.Component<IAutoFormProps<T>> {
           <Formik<T>
             initialValues={initialValue}
             onSubmit={onSave}
+            isInitialValid={this.props.isInitialValid}
             validate={this.props.validate}
           >
             {({

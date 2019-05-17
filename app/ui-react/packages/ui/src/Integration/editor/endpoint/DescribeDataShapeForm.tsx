@@ -75,6 +75,7 @@ export class DescribeDataShapeForm extends React.Component<
                       <FieldLevelHelp content={this.props.i18nSelectTypeHelp} />
                     </ControlLabel>
                     <FormControl
+                      data-testid={'describe-data-shape-form-kind-select'}
                       componentClass="select"
                       value={this.props.kind}
                       onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
@@ -96,6 +97,7 @@ export class DescribeDataShapeForm extends React.Component<
                           content={this.props.i18nDefinitionHelp}
                         />
                         <TextEditor
+                          id={'describe-data-shape-form-definition-editor'}
                           value={this.props.definition || ''}
                           onChange={(editor, data, text) =>
                             this.props.onDefinitionChange(text)
@@ -121,6 +123,7 @@ export class DescribeDataShapeForm extends React.Component<
                           />
                         </ControlLabel>
                         <FormControl
+                          data-testid={'describe-data-shape-form-name-text'}
                           type="text"
                           value={this.props.name}
                           onChange={(
@@ -139,6 +142,9 @@ export class DescribeDataShapeForm extends React.Component<
                         </ControlLabel>
                         <FormControl
                           type="text"
+                          data-testid={
+                            'describe-data-shape-form-description-text'
+                          }
                           value={this.props.description}
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
@@ -154,14 +160,21 @@ export class DescribeDataShapeForm extends React.Component<
               <div className="card-pf-footer">
                 {this.props.backActionHref && (
                   <>
-                    <ButtonLink href={this.props.backActionHref}>
+                    <ButtonLink
+                      data-testid={'describe-data-shape-form-back-button'}
+                      href={this.props.backActionHref}
+                    >
                       <i className={'fa fa-chevron-left'} />{' '}
                       {this.props.i18nBackAction}
                     </ButtonLink>
                     &nbsp;
                   </>
                 )}
-                <ButtonLink onClick={this.props.onNext} as={'primary'}>
+                <ButtonLink
+                  data-testid={'describe-data-shape-form-next-button'}
+                  onClick={this.props.onNext}
+                  as={'primary'}
+                >
                   {this.props.i18nNext}
                 </ButtonLink>
               </div>
