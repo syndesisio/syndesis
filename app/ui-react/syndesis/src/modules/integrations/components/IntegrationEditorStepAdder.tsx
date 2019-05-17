@@ -134,7 +134,7 @@ export class IntegrationEditorStepAdder extends React.Component<IIntegrationEdit
                     onCancel={this.closeDeleteDialog}
                     onConfirm={() => {
                       this.handleDeleteConfirm();
-                      return removeStepFromFlow(
+                      removeStepFromFlow(
                         this.props.integration!,
                         this.props.flowId!,
                         this.state.position!
