@@ -1,6 +1,6 @@
 import { getSteps } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Step } from '@syndesis/models';
+import { Integration, Step } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -45,6 +45,11 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
         {t => (
           <WithRouteData<IBaseRouteParams, IBaseRouteState>>
             {({ flowId }, { integration }, { history }) => {
+
+              const deleteAction = (newIntegration: Integration) => {
+                // Update history with new integration
+              };
+
               return (
               <>
                 <PageTitle title={t('integrations:editor:saveOrAddStep')}/>
@@ -76,14 +81,17 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                           this.props,
                         )
                       }
-                      cancelHref={this.props.cancelHref(
-                        { flowId },
-                        { integration },
-                      )}
-                      saveHref={this.props.saveHref({ flowId }, { integration })}
-                      publishHref={this.props.saveHref({ flowId }, { integration })}
+                      flowId={flowId}
+                      integration={integration}
+                      deleteAction={deleteAction}
                     />
                   }
+                  cancelHref={this.props.cancelHref(
+                    { flowId },
+                    { integration },
+                  )}
+                  saveHref={this.props.saveHref({ flowId }, { integration })}
+                  publishHref={this.props.saveHref({ flowId }, { integration })}
                 />
               </>
               );
