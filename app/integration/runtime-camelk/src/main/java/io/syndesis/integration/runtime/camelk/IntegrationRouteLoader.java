@@ -15,10 +15,18 @@
  */
 package io.syndesis.integration.runtime.camelk;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.ServiceLoader;
+import java.util.Set;
+
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.k.RoutesLoader;
 import org.apache.camel.k.Runtime;
@@ -26,12 +34,6 @@ import org.apache.camel.k.Source;
 import org.apache.camel.k.support.URIResolver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ServiceLoader;
-import java.util.Set;
 
 public class IntegrationRouteLoader implements RoutesLoader {
     private static final Logger LOGGER = LoggerFactory.getLogger(IntegrationRouteLoader.class);
@@ -70,6 +72,8 @@ public class IntegrationRouteLoader implements RoutesLoader {
             LOGGER.info("{} IntegrationStepHandlers loaded.", integrationStepHandlers.size());
         }
 
-        return new IntegrationRouteBuilder(ctx -> URIResolver.resolve(ctx, source), integrationStepHandlers, Collections.singletonList(new IntegrationLoggingActivityTrackingPolicyFactory(activityTracker)));
+        return new IntegrationRouteBuilder(ctx -> URIResolver.resolve(ctx, source), integrationStepHandlers,
+                Arrays.asList(new IntegrationActivityTrackingPolicyFactory(activityTracker),
+                              new FlowActivityTrackingPolicyFactory(activityTracker)));
     }
 }

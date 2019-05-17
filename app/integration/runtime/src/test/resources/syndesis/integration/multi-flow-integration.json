@@ -1,0 +1,259 @@
+{
+  "id": "multi-flow",
+  "version": 1,
+  "createdAt": 1557914199883,
+  "updatedAt": 1557914237397,
+  "name": "MultiFlow",
+  "flows": [
+    {
+      "id": "primary-flow",
+      "steps": [
+        {
+          "action": {
+            "descriptor": {
+              "componentScheme": "direct",
+              "connectorCustomizers": [],
+              "propertyDefinitionSteps": [],
+              "configuredProperties": {
+                "name": "expression"
+              }
+            },
+            "tags": [],
+            "actionType": "connector",
+            "dependencies": []
+          },
+          "stepKind": "endpoint",
+          "configuredProperties": {
+
+          },
+          "dependencies": [],
+          "metadata": {
+            "step.index": "1"
+          }
+        },
+        {
+          "id": "split-step",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "descriptor": {},
+            "actionType": "step"
+          },
+          "stepKind": "split",
+          "name": "Split"
+        },
+        {
+          "id": "log-step-before",
+          "configuredProperties": {
+            "contextLoggingEnabled": "false",
+            "bodyLoggingEnabled": "true",
+            "customText": "Before"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "id": "conditional-flow-step",
+          "configuredProperties": {
+            "default": "default-flow",
+            "routingScheme": "direct",
+            "flows": "[{\"flow\":\"conditional-flow\",\"condition\":\"${body.task} contains 'Play'\"}]"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "descriptor": {},
+            "actionType": "step"
+          },
+          "stepKind": "choice",
+          "name": "Conditional Flows"
+        },
+        {
+          "id": "log-step-finish",
+          "configuredProperties": {
+            "contextLoggingEnabled": "false",
+            "bodyLoggingEnabled": "true",
+            "customText": "Finished"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        }
+      ]
+    },
+    {
+      "name": "Conditional Flow",
+      "id": "conditional-flow",
+      "type": "ALTERNATE",
+      "steps": [
+        {
+          "id": "flow-start-conditional",
+          "configuredProperties": {
+            "name": "conditional-flow"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "id": "io.syndesis:flow-start",
+            "name": "Flow Start",
+            "description": "Start a Syndesis integration flow",
+            "descriptor": {
+              "propertyDefinitionSteps": [],
+              "componentScheme": "direct"
+            },
+            "actionType": "connector",
+            "pattern": "From"
+          },
+          "stepKind": "endpoint",
+          "name": "Flow start"
+        },
+        {
+          "id": "log-step-conditional",
+          "configuredProperties": {
+            "contextLoggingEnabled": "false",
+            "bodyLoggingEnabled": "true",
+            "customText": "Found <Play>"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "id": "flow-end-conditional",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "id": "io.syndesis:flow-end",
+            "name": "Flow End",
+            "description": "End action of Syndesis integrations flow",
+            "descriptor": {
+              "configuredProperties": {
+                "beanName": "io.syndesis.connector.flow.NoOpBean",
+                "method": "process"
+              },
+              "componentScheme": "bean"
+            },
+            "actionType": "connector",
+            "pattern": "To"
+          },
+          "stepKind": "endpoint",
+          "name": "Flow end"
+        }
+      ],
+      "metadata": {
+        "primaryFlowId": "primary-flow",
+        "stepId": "conditional-flow-step",
+        "kind": "conditional"
+      },
+      "description": "${body.task} contains 'Play'"
+    },
+    {
+      "name": "Default Flow",
+      "id": "default-flow",
+      "type": "ALTERNATE",
+      "steps": [
+        {
+          "id": "flow-start-step-default",
+          "configuredProperties": {
+            "name": "default-flow"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "id": "io.syndesis:flow-start",
+            "name": "Flow Start",
+            "description": "Start a Syndesis integration flow",
+            "descriptor": {
+              "propertyDefinitionSteps": [],
+              "componentScheme": "direct"
+            },
+            "actionType": "connector",
+            "pattern": "From"
+          },
+          "stepKind": "endpoint",
+          "name": "Flow start"
+        },
+        {
+          "id": "log-step-default",
+          "configuredProperties": {
+            "contextLoggingEnabled": "false",
+            "bodyLoggingEnabled": "true",
+            "customText": "Default"
+          },
+          "metadata": {
+            "configured": "true"
+          },
+          "stepKind": "log",
+          "name": "Log"
+        },
+        {
+          "id": "flow-end-step-default",
+          "metadata": {
+            "configured": "true"
+          },
+          "action": {
+            "id": "io.syndesis:flow-end",
+            "name": "Flow End",
+            "description": "End action of Syndesis integrations flow",
+            "descriptor": {
+              "configuredProperties": {
+                "beanName": "io.syndesis.connector.flow.NoOpBean",
+                "method": "process"
+              },
+              "componentScheme": "bean"
+            },
+            "actionType": "connector",
+            "pattern": "To"
+          },
+          "stepKind": "endpoint",
+          "name": "Flow end"
+        }
+      ],
+      "metadata": {
+        "primaryFlowId": "primary-flow",
+        "stepId": "conditional-flow-step",
+        "kind": "default"
+      },
+      "description": "Use this as default"
+    }
+  ],
+  "currentState": "Unpublished",
+  "targetState": "Unpublished",
+  "deployments": [
+    {
+      "id": "multi-flow:1",
+      "version": 1,
+      "createdAt": 1557914237628,
+      "updatedAt": 1557915852371,
+      "userId": "developer",
+      "currentState": "Unpublished",
+      "targetState": "Unpublished"
+    }
+  ],
+  "board": {
+    "id": "multi-flow-board",
+    "metadata": {
+      "integration-id": "multi-flow",
+      "integration-version": "1"
+    },
+    "createdAt": 1557914200038,
+    "updatedAt": 1557914269339,
+    "targetResourceId": "multi-flow",
+    "notices": 0,
+    "warnings": 0,
+    "errors": 0
+  },
+  "isDraft": true
+}

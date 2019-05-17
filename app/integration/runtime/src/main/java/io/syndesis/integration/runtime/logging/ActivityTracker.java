@@ -15,7 +15,12 @@
  */
 package io.syndesis.integration.runtime.logging;
 
+import java.util.Objects;
+
 import io.syndesis.integration.runtime.util.JsonSupport;
+import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.util.ObjectHelper;
 
 @FunctionalInterface
 public interface ActivityTracker {
@@ -29,6 +34,34 @@ public interface ActivityTracker {
         @Override
         public void track(Object... fields) {
             System.out.println(JsonSupport.toJsonObject(fields));
+        }
+    }
+
+    static String getActivityId(Exchange exchange) {
+        return exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
+    }
+
+    static void initializeTracking(Exchange exchange) {
+        if (ObjectHelper.isEmpty(getActivityId(exchange))) {
+            Message in = exchange.getIn();
+
+            if (in != null && in.getHeader(IntegrationLoggingConstants.ACTIVITY_ID) != null) {
+                exchange.setProperty(IntegrationLoggingConstants.ACTIVITY_ID, in.removeHeader(IntegrationLoggingConstants.ACTIVITY_ID));
+            } else {
+                exchange.setProperty(IntegrationLoggingConstants.ACTIVITY_ID, exchange.getExchangeId());
+            }
+        }
+    }
+
+    default void startTracking(Exchange exchange) {
+        initializeTracking(exchange);
+        track("exchange", getActivityId(exchange), "status", "begin");
+    }
+
+    default void finishTracking(Exchange exchange) {
+        final String activityId = getActivityId(exchange);
+        if (Objects.nonNull(activityId)) {
+            track("exchange", activityId, "status", "done", "failed", exchange.isFailed());
         }
     }
 }

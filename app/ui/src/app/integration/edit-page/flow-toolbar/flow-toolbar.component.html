@@ -54,7 +54,7 @@
                       class="btn btn-default"
                       style="width: 100%"
                       [disabled]="
-                      isMainFlow(currentFlow) ||
+                      isPrimaryFlow(currentFlow) ||
                       flowPageService.saveInProgress ||
                       flowPageService.publishInProgress
                     "
@@ -147,7 +147,7 @@
           </div>
         </div>
       </div>
-      <div class="row toolbar-pf toolbar-condensed" *ngIf="!isMainFlow(currentFlow)">
+      <div class="row toolbar-pf toolbar-condensed" *ngIf="!isPrimaryFlow(currentFlow)">
         <div class="col-sm-12">
           <div class="toolbar-pf-actions">
             <div class="form-group toolbar-pf-filter">

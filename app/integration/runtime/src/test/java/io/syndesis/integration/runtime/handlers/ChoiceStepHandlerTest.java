@@ -30,6 +30,7 @@ import io.syndesis.integration.runtime.logging.BodyLogger;
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -61,6 +62,12 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
     @Before
     public void setupMocks() {
         reset(activityTracker);
+
+        doAnswer(invocation -> {
+            ActivityTracker.initializeTracking(invocation.getArgument(0));
+            return null;
+        }).when(activityTracker).startTracking(any(Exchange.class));
+
         doAnswer(invocation -> {
             LOGGER.info(JsonSupport.toJsonObject(invocation.getArguments()));
             return null;
@@ -154,10 +161,10 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
             helloResult.assertIsSatisfied();
             byeResult.assertIsSatisfied();
 
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(3)).startTracking(any(Exchange.class));
             verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("message"), endsWith("No content based route for message"));
+            verify(activityTracker, times(3)).finishTracking(any(Exchange.class));
+            verify(activityTracker).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("message"), endsWith("No matching condition for message"));
 
         } finally {
             context.stop();
@@ -233,9 +240,9 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
             helloResult.assertIsSatisfied();
             byeResult.assertIsSatisfied();
 
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(3)).startTracking(any(Exchange.class));
             verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker, times(3)).finishTracking(any(Exchange.class));
 
         } finally {
             context.stop();
@@ -312,10 +319,10 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
             helloResult.assertIsSatisfied();
             byeResult.assertIsSatisfied();
 
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(3)).startTracking(any(Exchange.class));
             verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("message"), endsWith("No content based route for message"));
+            verify(activityTracker, times(3)).finishTracking(any(Exchange.class));
+            verify(activityTracker).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("message"), endsWith("No matching condition for message"));
 
         } finally {
             context.stop();
@@ -377,9 +384,9 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
 
             result.assertIsSatisfied();
 
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker, times(3)).startTracking(any(Exchange.class));
             verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker, times(3)).finishTracking(any(Exchange.class));
 
         } finally {
             context.stop();

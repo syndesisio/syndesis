@@ -15,9 +15,13 @@
  */
 package io.syndesis.integration.runtime.sb.logging;
 
-import org.apache.camel.CamelContext;
+import io.syndesis.integration.runtime.ActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.ActivityTracker;
+import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
+import io.syndesis.integration.runtime.logging.BodyLogger;
+import io.syndesis.integration.runtime.logging.IntegrationActivityTrackingPolicyFactory;
+import io.syndesis.integration.runtime.logging.FlowActivityTrackingPolicyFactory;
 import org.apache.camel.spi.InterceptStrategy;
-import org.apache.camel.spi.RoutePolicy;
 import org.apache.camel.spring.boot.CamelAutoConfiguration;
 import org.apache.camel.spring.boot.CamelContextConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -27,14 +31,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.integration.runtime.ActivityTrackingPolicyFactory;
-import io.syndesis.integration.runtime.logging.ActivityTracker;
-import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy;
-import io.syndesis.integration.runtime.logging.BodyLogger;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingActivityTrackingPolicy;
-import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 
 @Configuration
 @AutoConfigureAfter(CamelAutoConfiguration.class)
@@ -50,23 +46,7 @@ public class IntegrationLoggingAutoConfiguration {
 
     @Bean
     public CamelContextConfiguration integrationLoggingContextConfiguration(ActivityTracker activityTracker) {
-        return new CamelContextConfiguration() {
-            @Override
-            public void beforeApplicationStart(CamelContext camelContext) {
-                // Lets generates always incrementing lexically sortable unique
-                // uuids. These uuids are also more compact than the camel default
-                // and contain an embedded timestamp.
-                camelContext.setUuidGenerator(KeyGenerator::createKey);
-
-                // Log listener
-                camelContext.addLogListener(new IntegrationLoggingListener(activityTracker));
-            }
-
-            @Override
-            public void afterApplicationStart(CamelContext camelContext) {
-                // no ops
-            }
-        };
+        return new IntegrationLoggingCamelContextConfiguration(activityTracker);
     }
 
     @Bean
@@ -81,17 +61,12 @@ public class IntegrationLoggingAutoConfiguration {
     }
 
     @Bean
-    public ActivityTrackingPolicyFactory activityTrackingPolicyFactory(ActivityTracker activityTracker) {
-        return new ActivityTrackingPolicyFactory(){
-            @Override
-            public RoutePolicy createRoutePolicy(String flowId) {
-                return new IntegrationLoggingActivityTrackingPolicy(activityTracker);
-            }
+    public ActivityTrackingPolicyFactory integrationActivityTrackingPolicyFactory(ActivityTracker activityTracker) {
+        return new IntegrationActivityTrackingPolicyFactory(activityTracker);
+    }
 
-            @Override
-            public boolean isInstance(RoutePolicy routePolicy) {
-                return IntegrationLoggingActivityTrackingPolicy.class.isInstance(routePolicy);
-            }
-        };
+    @Bean
+    public ActivityTrackingPolicyFactory flowActivityTrackingPolicyFactory(ActivityTracker activityTracker) {
+        return new FlowActivityTrackingPolicyFactory(activityTracker);
     }
 }

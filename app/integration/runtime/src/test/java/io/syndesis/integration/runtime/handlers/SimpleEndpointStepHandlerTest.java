@@ -26,6 +26,7 @@ import io.syndesis.integration.runtime.logging.ActivityTrackingInterceptStrategy
 import io.syndesis.integration.runtime.logging.IntegrationLoggingListener;
 import io.syndesis.integration.runtime.util.JsonSupport;
 import org.apache.camel.CamelContext;
+import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
@@ -54,12 +55,16 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
     @Before
     public void setupMocks() {
         reset(activityTracker);
+
+        doAnswer(invocation -> {
+            ActivityTracker.initializeTracking(invocation.getArgument(0));
+            return null;
+        }).when(activityTracker).startTracking(any(Exchange.class));
+
         doAnswer(invocation -> {
             LOGGER.debug(JsonSupport.toJsonObject(invocation.getArguments()));
             return null;
         }).when(activityTracker).track(any());
-
-
     }
 
     @Test
@@ -117,9 +122,9 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
 
             result.assertIsSatisfied();
 
-            verify(activityTracker, times(1)).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker).startTracking(any(Exchange.class));
             verify(activityTracker, times(2)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(1)).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
@@ -190,9 +195,9 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
 
             result.assertIsSatisfied();
 
-            verify(activityTracker, times(1)).track(eq("exchange"), anyString(), eq("status"), eq("begin"));
+            verify(activityTracker).startTracking(any(Exchange.class));
             verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-            verify(activityTracker, times(1)).track(eq("exchange"), anyString(), eq("status"), eq("done"), eq("failed"), eq(false));
+            verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }

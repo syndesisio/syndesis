@@ -23,17 +23,15 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithTags;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
-
 import org.immutables.value.Value;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 @Value.Immutable
 @JsonDeserialize(builder = Flow.Builder.class)
@@ -42,6 +40,16 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
 
     class Builder extends ImmutableFlow.Builder {
         // allow access to ImmutableIntegration.Builder
+    }
+
+    enum FlowType {
+        PRIMARY,
+        ALTERNATE;
+    }
+
+    @Value.Default
+    default FlowType getType() {
+        return FlowType.PRIMARY;
     }
 
     @Value.Default
@@ -89,5 +97,15 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
         return getSteps().stream()
             .flatMap(s -> s.getExtensionIds().stream())
             .collect(Collectors.toSet());
+    }
+
+    @JsonIgnore
+    default boolean isPrimary() {
+        return FlowType.PRIMARY == getType();
+    }
+
+    @JsonIgnore
+    default boolean isAlternate() {
+        return FlowType.ALTERNATE == getType();
     }
 }

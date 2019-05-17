@@ -35,7 +35,7 @@ public class IntegrationLoggingListener implements LogListener {
             return message;
         }
 
-        final String activityId = exchange.getProperty(IntegrationLoggingConstants.ACTIVITY_ID, String.class);
+        final String activityId = ActivityTracker.getActivityId(exchange);
         if (activityId != null) {
             final Marker marker = camelLogger.getMarker();
             final String step = marker != null ? marker.getName() : "null";

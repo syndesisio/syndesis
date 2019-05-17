@@ -3,7 +3,7 @@ import { CurrentFlowService } from '../current-flow.service';
 import { FlowPageService } from '../flow-page.service';
 import { ActivatedRoute } from '@angular/router';
 import { INTEGRATION_SET_PROPERTY } from '../edit-page.models';
-import { Flow } from '@syndesis/ui/platform';
+import { Flow, ALTERNATE, PRIMARY } from '@syndesis/ui/platform';
 
 @Component({
   selector: 'syndesis-integration-flow-toolbar',
@@ -57,10 +57,6 @@ export class FlowToolbarComponent implements OnInit {
     );
   }
 
-  isMainFlow(flow: Flow) {
-    return !this.isConditionalFlow(flow) && !this.isDefaultFlow(flow);
-  }
-
   getFlowName(flow: Flow) {
     if (this.isConditionalFlow(flow)) {
       return flow.name || 'Conditional Flow';
@@ -73,8 +69,20 @@ export class FlowToolbarComponent implements OnInit {
     return 'Flow';
   }
 
+  isPrimaryFlow(flow: Flow) {
+    return !flow.type || flow.type === PRIMARY;
+  }
+
+  isAlternateFlow(flow: Flow) {
+    return flow.type === ALTERNATE;
+  }
+
   isConditionalFlow(flow: Flow) {
-    return flow.metadata && flow.metadata['type'] === 'conditional';
+    return this.isAlternateFlow(flow) && flow.metadata['kind'] === 'conditional';
+  }
+
+  isDefaultFlow(flow: Flow) {
+    return this.isAlternateFlow(flow) && flow.metadata['kind'] === 'default';
   }
 
   getConditionalFlows(): Flow[] {
@@ -100,10 +108,6 @@ export class FlowToolbarComponent implements OnInit {
     return result.reduce((prev, curr) => {
       return prev.concat(curr);
     });
-  }
-
-  isDefaultFlow(flow: Flow) {
-    return flow.metadata && flow.metadata['type'] === 'default';
   }
 
   publish() {

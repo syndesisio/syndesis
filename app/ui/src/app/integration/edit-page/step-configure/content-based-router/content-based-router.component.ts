@@ -35,7 +35,8 @@ import {
   IntegrationSupportService,
   Step,
   Flow,
-  key
+  key,
+  ALTERNATE
 } from '@syndesis/ui/platform';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -276,9 +277,9 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
     this.doCreateFlow('Conditional Flow', 'conditional', '* To be defined *', flowId => this.addFlow(flowId));
   }
 
-  doCreateFlow(name: string, type: string, description: string, then: (flowId: string) => void) {
+  doCreateFlow(name: string, kind: string, description: string, then: (flowId: string) => void) {
     const currentFlow = this.currentFlowService.currentFlow;
-    const mainFlowId = currentFlow.id;
+    const primaryFlowId = currentFlow.id;
     const flowId = key();
     this.connectionService.get('flow')
       .subscribe(entity => {
@@ -287,6 +288,7 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
           flow: {
             name: name,
             id: flowId,
+            type: ALTERNATE,
             description: description,
             connections: [],
             steps: [
@@ -295,9 +297,9 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
             ],
             metadata: {
               excerpt: '',
-              mainFlowId: mainFlowId,
+              primaryFlowId: primaryFlowId,
               stepId: this.step.id,
-              type: type
+              kind: kind
             }
           } as Flow,
           onSave: () => {
@@ -365,9 +367,9 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
     };
 
     formattedProperties.flows.forEach(option => {
-      const subflow = this.currentFlowService.flows.find(flow => flow.id === option.flow);
-      if (subflow) {
-        subflow.description = option.condition;
+      const alternateFlow = this.currentFlowService.flows.find(flow => flow.id === option.flow);
+      if (alternateFlow) {
+        alternateFlow.description = option.condition;
       }
     });
 
