@@ -4,6 +4,7 @@ import {
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
+import { DataShape } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -15,6 +16,7 @@ import {
   IDescribeDataShapeRouteState,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
+import { WithDescribeDataShapeForm } from './WithDescribeDataShapeForm';
 
 export interface IDescribeDataShapePageProps {
   /*
@@ -53,6 +55,14 @@ export class DescribeDataShapePage extends React.Component<
                   direction === DataShapeDirection.INPUT
                     ? 'Specify Input Data Type'
                     : 'Specify Output Data Type';
+                const descriptor = step.action!.descriptor!;
+                const dataShape: DataShape =
+                  direction === DataShapeDirection.INPUT
+                    ? descriptor.inputDataShape!
+                    : descriptor.outputDataShape!;
+                const handleUpdatedDataShape = (newDataShape: DataShape) => {
+                  /* todo */
+                };
                 return (
                   <>
                     <PageTitle title={'Specify Data Type'} />
@@ -74,7 +84,15 @@ export class DescribeDataShapePage extends React.Component<
                           getSteps(integration, flowId)
                         ),
                       })}
-                      content={<p>TODO</p>}
+                      content={
+                        <WithDescribeDataShapeForm
+                          initialKind={dataShape.kind!.toLowerCase()}
+                          initialDefinition={dataShape.specification}
+                          initialName={dataShape.name}
+                          initialDescription={dataShape.description}
+                          onUpdatedDataShape={handleUpdatedDataShape}
+                        />
+                      }
                       cancelHref={this.props.cancelHref(
                         { flowId, direction, position },
                         {

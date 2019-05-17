@@ -1,7 +1,7 @@
 import { Text, TextContent } from '@patternfly/react-core';
 import { Alert } from 'patternfly-react';
 import * as React from 'react';
-import { ITextEditor, TextEditor } from '../../../../Shared';
+import { ITextEditor, TextEditor } from '../../../Shared';
 import { TemplateType } from './TemplateStepTypeSelector';
 
 interface ITemplateStepTemplateEditorProps {

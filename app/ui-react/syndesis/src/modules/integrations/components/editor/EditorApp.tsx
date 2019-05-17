@@ -14,6 +14,8 @@ import { SelectActionPage } from './endpoint/SelectActionPage';
 import {
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
+  IDescribeDataShapeRouteParams,
+  IDescribeDataShapeRouteState,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
   ITemplateStepRouteParams,
@@ -118,12 +120,21 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       sidebar={props => (
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
-      postConfigureHref={(integration, p, s) =>
-        appResolvers.connection.describeData({
-          ...p,
-          ...s,
-        })
-      }
+      postConfigureHref={(requiresDataShape, integration, p, s) => {
+        if (requiresDataShape) {
+          return appResolvers.connection.describeData({
+            integration,
+            ...(p as IDescribeDataShapeRouteParams),
+            ...(s as IDescribeDataShapeRouteState),
+          });
+        } else {
+          return postConfigureHref(
+            integration,
+            p as IConfigureActionRouteParams,
+            s as IConfigureActionRouteState
+          );
+        }
+      }}
     />
   );
 

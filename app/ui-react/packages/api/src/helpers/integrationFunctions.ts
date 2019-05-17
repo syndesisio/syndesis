@@ -347,6 +347,26 @@ export function isActionInputShapeless(descriptor: ActionDescriptor) {
   );
 }
 
+export function requiresOutputDescribeDataShape(descriptor: ActionDescriptor) {
+  if (!descriptor) {
+    return false;
+  }
+  if (isActionOutputShapeless(descriptor)) {
+    return true;
+  }
+  return isUserDefinedDataShape(descriptor.outputDataShape);
+}
+
+export function requiresInputDescribeDataShape(descriptor: ActionDescriptor) {
+  if (!descriptor) {
+    return false;
+  }
+  if (isActionInputShapeless(descriptor)) {
+    return true;
+  }
+  return isUserDefinedDataShape(descriptor.inputDataShape);
+}
+
 /**
  * Returns whether or not the supplied descriptor has an output datashape of ANY
  * @param descriptor
@@ -507,7 +527,30 @@ export function setDescriptorOnStep(
     ...(propertyDefaults || {}),
     ...(step.configuredProperties || {}),
   };
-  const oldDescriptor = { ...step.action.descriptor };
+  return {
+    ...step,
+    action: applyUserDefinedDataShapesToAction(step.action, {
+      ...step.action,
+      descriptor,
+    }),
+    configuredProperties,
+  };
+}
+
+/**
+ * Copies user-defined data shapes from an old copy to a new copy of the action
+ * @param oldAction
+ * @param newAction
+ */
+export function applyUserDefinedDataShapesToAction(
+  oldAction: Action,
+  newAction: Action
+) {
+  if (!oldAction) {
+    return newAction;
+  }
+  const descriptor = newAction.descriptor!;
+  const oldDescriptor = oldAction.descriptor!;
   const oldInputDataShape = oldDescriptor.inputDataShape;
   const oldOutputDataShape = oldDescriptor.outputDataShape;
   const preserveInput =
@@ -525,20 +568,16 @@ export function setDescriptorOnStep(
         DataShapeKinds.NONE.toLowerCase() &&
         !descriptor.outputDataShape.specification));
   return {
-    ...step,
-    action: {
-      ...step.action,
-      descriptor: {
-        ...descriptor,
-        inputDataShape: preserveInput
-          ? oldInputDataShape
-          : descriptor.inputDataShape,
-        outputDataShape: preserveOutput
-          ? oldOutputDataShape
-          : descriptor.outputDataShape,
-      },
+    ...newAction,
+    descriptor: {
+      ...descriptor,
+      inputDataShape: preserveInput
+        ? oldInputDataShape
+        : descriptor.inputDataShape,
+      outputDataShape: preserveOutput
+        ? oldOutputDataShape
+        : descriptor.outputDataShape,
     },
-    configuredProperties,
   };
 }
 
@@ -1166,4 +1205,50 @@ export function getNextAggregateStep(
     return subsequentSteps.filter(s => s.stepKind === AGGREGATE)[0];
   }
   return undefined;
+}
+
+/**
+ * Returns if the given indice is at the start of the flow
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function isStartStep(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  return position === 0;
+}
+
+/**
+ * Returns if the given indice is at the end of the flow
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function isEndStep(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const steps = getSteps(integration, flowId);
+  return position + 1 >= steps.length;
+}
+
+/**
+ * Returns if the given indice is somewhere in the middle of the flow
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function isMiddleStep(
+  integration: Integration,
+  flowId: string,
+  position: number
+): boolean {
+  return (
+    !isStartStep(integration, flowId, position) &&
+    !isMiddleStep(integration, flowId, position)
+  );
 }

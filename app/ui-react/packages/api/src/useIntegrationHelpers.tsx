@@ -7,13 +7,19 @@ import {
   Step,
   StepKind,
 } from '@syndesis/models';
+import { key } from '@syndesis/utils';
 import { saveAs } from 'file-saver';
 import produce from 'immer';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 import { PUBLISHED, UNPUBLISHED } from './constants';
-import { createStep, insertStepIntoFlowBefore, setStepInFlow } from './helpers';
+import {
+  createStep,
+  insertStepIntoFlowBefore,
+  setDescriptorOnStep,
+  setStepInFlow,
+} from './helpers';
 
 export const useIntegrationHelpers = () => {
   const apiContext = React.useContext(ApiContext);
@@ -46,16 +52,16 @@ export const useIntegrationHelpers = () => {
       configuredProperties
     );
     return produce(integration, draft => {
-      const step: Step = {
-        action,
-        configuredProperties,
-        connection,
-        id: flowId,
-      };
-      if (actionDescriptor) {
-        step.action!.descriptor = actionDescriptor;
-      }
-      step.stepKind = 'endpoint';
+      const step: Step = setDescriptorOnStep(
+        {
+          action,
+          configuredProperties,
+          connection,
+          id: key(),
+          stepKind: 'endpoint',
+        },
+        actionDescriptor!
+      );
       draft.flows = draft.flows!.map(f => {
         if (f.id === flowId) {
           f.steps!.splice(position, 0, step);
@@ -200,21 +206,21 @@ export const useIntegrationHelpers = () => {
     actionId: string,
     configuredProperties: any
   ): Promise<ActionDescriptor | null> => {
-      if (configuredProperties) {
-        const response = await callFetch({
-          body: configuredProperties,
-          headers: apiContext.headers,
-          method: 'POST',
-          url: `${
-            apiContext.apiUri
-            }/connections/${connectionId}/actions/${actionId}`,
-        });
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        return (await response.json()) as ActionDescriptor;
-      } else {
-        return null;
+    if (configuredProperties) {
+      const response = await callFetch({
+        body: configuredProperties,
+        headers: apiContext.headers,
+        method: 'POST',
+        url: `${
+          apiContext.apiUri
+        }/connections/${connectionId}/actions/${actionId}`,
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return (await response.json()) as ActionDescriptor;
+    } else {
+      return null;
     }
   };
 
@@ -253,7 +259,7 @@ export const useIntegrationHelpers = () => {
       url: `${apiContext.apiUri}/support/downloadSupportZip`,
     });
     saveAs(await body.blob(), 'syndesis.zip');
-  }
+  };
 
   /**
    * Request that the given integration ID at the given version be deactivated, empty response is returned
@@ -302,16 +308,16 @@ export const useIntegrationHelpers = () => {
       configuredProperties
     );
     return produce(integration, draft => {
-      const step: Step = {
-        action,
-        configuredProperties,
-        connection,
-        id: flowId,
-      };
-      if (actionDescriptor) {
-        step.action!.descriptor = actionDescriptor;
-      }
-      step.stepKind = 'endpoint';
+      const step: Step = setDescriptorOnStep(
+        {
+          action,
+          configuredProperties,
+          connection,
+          id: key(),
+          stepKind: 'endpoint',
+        },
+        actionDescriptor!
+      );
       draft.flows = draft.flows!.map(f => {
         if (f.id === flowId) {
           f.steps![position] = step;

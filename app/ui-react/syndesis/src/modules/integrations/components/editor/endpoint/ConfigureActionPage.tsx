@@ -2,6 +2,10 @@ import {
   getConnectionIcon,
   getStep,
   getSteps,
+  isEndStep,
+  isStartStep,
+  requiresInputDescribeDataShape,
+  requiresOutputDescribeDataShape,
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
@@ -40,9 +44,10 @@ export interface IConfigureActionPageProps {
   ) => H.LocationDescriptorObject;
   sidebar: (props: IEditorSidebarProps) => React.ReactNode;
   postConfigureHref: (
+    requiresDataShape: boolean,
     integration: Integration,
-    p: IDescribeDataShapeRouteParams,
-    s: IDescribeDataShapeRouteState
+    p: IConfigureActionRouteParams | IDescribeDataShapeRouteParams,
+    s: IConfigureActionRouteState | IDescribeDataShapeRouteState
   ) => H.LocationDescriptorObject;
 }
 
@@ -83,6 +88,11 @@ export class ConfigureActionPage extends React.Component<
             ) => {
               const stepAsNumber = parseInt(step, 10);
               const positionAsNumber = parseInt(position, 10);
+              const oldStepConfig = getStep(
+                integration,
+                flowId,
+                positionAsNumber
+              );
               const onUpdatedIntegration = async ({
                 action,
                 moreConfigurationSteps,
@@ -117,29 +127,75 @@ export class ConfigureActionPage extends React.Component<
                     )
                   );
                 } else {
-                  history.push(
-                    this.props.postConfigureHref(
-                      updatedIntegration,
-                      {
-                        direction: DataShapeDirection.INPUT,
-                        flowId,
-                        position,
-                      },
-                      {
-                        connection,
-                        integration,
-                        step: getStep(
-                          updatedIntegration,
+                  const stepKind = getStep(
+                    updatedIntegration,
+                    flowId,
+                    positionAsNumber
+                  ) as StepKind;
+                  const gotoDescribeData = (direction: DataShapeDirection) => {
+                    history.push(
+                      this.props.postConfigureHref(
+                        true,
+                        updatedIntegration!,
+                        {
+                          direction,
                           flowId,
-                          positionAsNumber
-                        ) as StepKind,
-                        updatedIntegration,
-                      }
-                    )
-                  );
+                          position,
+                        },
+                        {
+                          connection,
+                          integration,
+                          step: stepKind,
+                          updatedIntegration,
+                        }
+                      )
+                    );
+                  };
+                  const gotoDefaultNextPage = () => {
+                    history.push(
+                      this.props.postConfigureHref(
+                        false,
+                        updatedIntegration!,
+                        {
+                          actionId,
+                          flowId,
+                          position,
+                          step,
+                        } as IConfigureActionRouteParams,
+                        {
+                          configuredProperties,
+                          connection,
+                          integration,
+                          step,
+                          updatedIntegration,
+                        } as IConfigureActionRouteState
+                      )
+                    );
+                  };
+                  const descriptor = stepKind.action!.descriptor!;
+                  if (isStartStep(integration, flowId, positionAsNumber)) {
+                    if (requiresOutputDescribeDataShape(descriptor)) {
+                      gotoDescribeData(DataShapeDirection.OUTPUT);
+                    } else {
+                      gotoDefaultNextPage();
+                    }
+                  } else if (isEndStep(integration, flowId, positionAsNumber)) {
+                    if (requiresInputDescribeDataShape(descriptor)) {
+                      gotoDescribeData(DataShapeDirection.INPUT);
+                    } else {
+                      gotoDefaultNextPage();
+                    }
+                  } else {
+                    if (requiresInputDescribeDataShape(descriptor)) {
+                      gotoDescribeData(DataShapeDirection.INPUT);
+                    } else if (requiresOutputDescribeDataShape(descriptor)) {
+                      gotoDescribeData(DataShapeDirection.OUTPUT);
+                    } else {
+                      gotoDefaultNextPage();
+                    }
+                  }
                 }
               };
-
               return (
                 <>
                   <PageTitle title={'Configure the action'} />
@@ -163,6 +219,7 @@ export class ConfigureActionPage extends React.Component<
                       <WithConfigurationForm
                         connection={connection}
                         actionId={actionId}
+                        oldAction={oldStepConfig!.action!}
                         configurationStep={stepAsNumber}
                         initialValue={configuredProperties}
                         onUpdatedIntegration={onUpdatedIntegration}

@@ -35,7 +35,6 @@ export interface IWithTemplaterProps {
 
 export interface IWithTemplaterState {
   language: TemplateType;
-  text: string;
   fileErrorMessage?: string;
 }
 
@@ -89,13 +88,14 @@ export class WithTemplater extends React.Component<
   private editor: ITextEditor | undefined;
   private action: Action | undefined;
   private fileInput = React.createRef<HTMLInputElement>();
+  private text: string;
 
   constructor(props: IWithTemplaterProps) {
     super(props);
     this.state = {
       language: this.props.initialLanguage,
-      text: this.props.initialText,
     };
+    this.text = this.props.initialText;
     this.linter = linters[this.props.initialLanguage];
     this.handleTemplateTypeChange = this.handleTemplateTypeChange.bind(this);
     this.handleEditorChange = this.handleEditorChange.bind(this);
@@ -132,7 +132,7 @@ export class WithTemplater extends React.Component<
   public handleEditorDidMount(editor: ITextEditor) {
     this.editor = editor;
     this.doLint();
-    this.buildAction(this.state.text);
+    this.buildAction(this.text);
   }
   public handleTemplateTypeChange(newType: TemplateType) {
     this.linter = linters[newType];
@@ -140,7 +140,7 @@ export class WithTemplater extends React.Component<
       this.editor.setOption('mode', this.linter.name());
       this.doLint();
     }
-    this.buildAction(this.state.text);
+    this.buildAction(this.text);
     this.setState({ language: newType });
   }
   public handleEditorChange(editor: ITextEditor, data: any, text: string) {
@@ -152,7 +152,7 @@ export class WithTemplater extends React.Component<
         action: this.action,
         values: {
           language: this.state.language,
-          template: this.state.text,
+          template: this.text,
         },
       });
     };
@@ -188,7 +188,7 @@ export class WithTemplater extends React.Component<
                     file.
                   </>
                 }
-                initialValue={this.state.text}
+                initialValue={this.text}
                 onChange={this.handleEditorChange}
                 onUpdateLinting={this.props.onUpdateLinting}
                 editorDidMount={this.handleEditorDidMount}
@@ -234,7 +234,8 @@ export class WithTemplater extends React.Component<
     }
   }
   private updateEditor(text: string) {
+    this.text = text;
     this.buildAction(text);
-    this.setState({ fileErrorMessage: undefined, text });
+    this.setState({ fileErrorMessage: undefined });
   }
 }

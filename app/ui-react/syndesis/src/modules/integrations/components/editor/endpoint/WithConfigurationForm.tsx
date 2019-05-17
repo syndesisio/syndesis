@@ -1,4 +1,5 @@
 import {
+  applyUserDefinedDataShapesToAction,
   getActionById,
   getActionStep,
   getActionStepDefinition,
@@ -74,6 +75,8 @@ export interface IWithConfigurationFormProps {
    * the ID of the action that needs to be configured.
    */
   actionId: string;
+
+  oldAction: Action;
   /**
    * for actions whose configuration must be performed in multiple steps,
    * indicates the current step.
@@ -127,7 +130,10 @@ export class WithConfigurationForm extends React.Component<
         actions: any
       ): Promise<void> => {
         await this.props.onUpdatedIntegration({
-          action: { ...action, descriptor },
+          action: applyUserDefinedDataShapesToAction(this.props.oldAction, {
+            ...action,
+            descriptor,
+          }),
           moreConfigurationSteps,
           values,
         });

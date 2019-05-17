@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ButtonLink, Container, PageSection } from '../../../../Layout';
+import { ButtonLink, Container, PageSection } from '../../../Layout';
 
 export interface ITemplateStepCardProps {
   i18nDone: string;
