@@ -120,7 +120,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
           return (
             <AppContext.Consumer>
               {({ user, config }) => {
-                const isProductBuild = config.branding.productBuild;
+                const isProductBuild = config && config.branding.productBuild;
                 const productName = isProductBuild ? 'Fuse Online' : 'Syndesis';
                 return (
                   <>
@@ -130,11 +130,9 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                         productName={productName}
                         isModalOpen={showAboutModal}
                         handleModalToggle={toggleAboutModal}
-                        bgImg={config && isProductBuild ? brandImg : undefined}
+                        bgImg={isProductBuild ? brandImg : undefined}
                         brandImg={
-                          config && isProductBuild
-                            ? fuseOnlineLogo
-                            : syndesisLogoGraphic
+                          isProductBuild ? fuseOnlineLogo : syndesisLogoGraphic
                         }
                       >
                         <WithApiVersion>
@@ -249,9 +247,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                             pictograph={
                               <img
                                 src={
-                                  config && isProductBuild
-                                    ? fuseOnlineLogo
-                                    : syndesisLogo
+                                  isProductBuild ? fuseOnlineLogo : syndesisLogo
                                 }
                                 alt={productName}
                                 style={{ minWidth: '164px' }}
