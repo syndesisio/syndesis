@@ -28,7 +28,7 @@ export class IntegrationDetailHistoryListView extends React.Component<
           className="integration-detail-history-list-view"
         >
           {this.props.isDraft ? (
-            <Grid.Row className="show-grid">
+            <Grid.Row className="show-grid integration-detail-history-list-view__draft-row">
               <Grid.Col
                 xs={2}
                 md={2}
