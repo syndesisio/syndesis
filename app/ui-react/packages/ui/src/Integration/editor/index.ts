@@ -1,2 +1,3 @@
 export * from './shared';
-export * from './steps';
+export * from './template';
+export * from './endpoint';

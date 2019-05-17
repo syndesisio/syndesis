@@ -5,6 +5,7 @@ import { EditPage } from './api-provider/ReviewPage';
 import { UploadPage } from './api-provider/UploadPage';
 import { IDataMapperPageProps } from './dataMapper/DataMapperPage';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
+import { DescribeDataShapePage } from './endpoint/DescribeDataShapePage';
 import { SelectActionPage } from './endpoint/SelectActionPage';
 import { TemplateStepPage } from './template/TemplateStepPage';
 
@@ -14,7 +15,7 @@ export interface IEndpointEditorAppProps {
   configureActionPath: string;
   configureActionChildren: React.ReactElement<ConfigureActionPage>;
   describeDataPath: string;
-  describeDataChildren: React.ReactNode;
+  describeDataChildren: React.ReactElement<DescribeDataShapePage>;
 }
 export const EndpointEditorApp: React.FunctionComponent<
   IEndpointEditorAppProps

@@ -10,6 +10,7 @@ import {
   SPLIT,
   TEMPLATE,
 } from './constants';
+import { toDataShapeKinds } from './helpers';
 
 export const ALL_STEPS: StepKind[] = [
   requiresInputOutputDataShapes(
@@ -189,9 +190,9 @@ function stepsHaveOutputDataShape(steps: Step[]): boolean {
         s.action.descriptor &&
         s.action.descriptor.outputDataShape &&
         s.action.descriptor.outputDataShape.kind &&
-        s.action.descriptor.outputDataShape.kind.toLowerCase() !==
+        toDataShapeKinds(s.action.descriptor.outputDataShape.kind) !==
           DataShapeKinds.NONE &&
-        s.action.descriptor.outputDataShape.kind.toLowerCase() !==
+        toDataShapeKinds(s.action.descriptor.outputDataShape.kind) !==
           DataShapeKinds.ANY
     ).length > 0
   );
@@ -206,9 +207,9 @@ function stepsHaveInputDataShape(steps: Step[]): boolean {
         s.action.descriptor &&
         s.action.descriptor.inputDataShape &&
         s.action.descriptor.inputDataShape.kind &&
-        s.action.descriptor.inputDataShape.kind.toLowerCase() !==
+        toDataShapeKinds(s.action.descriptor.inputDataShape.kind) !==
           DataShapeKinds.NONE &&
-        s.action.descriptor.inputDataShape.kind.toLowerCase() !==
+        toDataShapeKinds(s.action.descriptor.inputDataShape.kind) !==
           DataShapeKinds.ANY
     ).length > 0
   );

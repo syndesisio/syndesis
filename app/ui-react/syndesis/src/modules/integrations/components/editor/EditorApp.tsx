@@ -2,7 +2,6 @@
 import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
 import * as React from 'react';
-import { RouteResolver } from '../../resolvers';
 import { ReviewPage } from './api-provider/EditPage';
 import { EditPage } from './api-provider/ReviewPage';
 import { UploadPage } from './api-provider/UploadPage';
@@ -10,16 +9,20 @@ import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
+import { DescribeDataShapePage } from './endpoint/DescribeDataShapePage';
 import { SelectActionPage } from './endpoint/SelectActionPage';
 import {
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
+  IDescribeDataShapeRouteParams,
+  IDescribeDataShapeRouteState,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
   ITemplateStepRouteParams,
   ITemplateStepRouteState,
   stepRoutes,
 } from './interfaces';
+import { makeEditorResolvers } from './makeEditorResolvers';
 import { SelectConnectionPage } from './SelectConnectionPage';
 import { ConfigureStepPage } from './step/ConfigureStepPage';
 import { TemplateStepPage } from './template/TemplateStepPage';
@@ -29,7 +32,7 @@ const TODO: React.FunctionComponent = () => <>TODO</>;
 export interface IEditorApp {
   mode: 'adding' | 'editing';
   appStepRoutes: typeof stepRoutes;
-  appResolvers: RouteResolver<typeof stepRoutes>;
+  appResolvers: ReturnType<typeof makeEditorResolvers>;
   cancelHref: (
     p: ISelectConnectionRouteParams,
     s: ISelectConnectionRouteState
@@ -59,7 +62,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           ...state,
         })
       }
-      filterHref={appResolvers.basicFilter}
+      filterHref={(step, p, s) => appResolvers.basicFilter()}
       mapperHref={(step, params, state) =>
         appResolvers.dataMapper({
           step,
@@ -89,7 +92,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
 
   const selectActionPage = (
     <SelectActionPage
-      cancelHref={appResolvers.selectStep}
+      cancelHref={(p, s) => appResolvers.selectStep({ ...p, ...s })}
       sidebar={props => (
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
@@ -117,7 +120,30 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       sidebar={props => (
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
-      postConfigureHref={postConfigureHref}
+      postConfigureHref={(requiresDataShape, integration, p, s) => {
+        if (requiresDataShape) {
+          return appResolvers.connection.describeData({
+            integration,
+            ...(p as IDescribeDataShapeRouteParams),
+            ...(s as IDescribeDataShapeRouteState),
+          });
+        } else {
+          return postConfigureHref(
+            integration,
+            p as IConfigureActionRouteParams,
+            s as IConfigureActionRouteState
+          );
+        }
+      }}
+    />
+  );
+
+  const describeDataShapePage = (
+    <DescribeDataShapePage
+      cancelHref={cancelHref}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
     />
   );
 
@@ -165,7 +191,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           configureActionPath: appStepRoutes.connection.configureAction,
           configureActionChildren: configureActionPage,
           describeDataPath: appStepRoutes.connection.describeData,
-          describeDataChildren: TODO,
+          describeDataChildren: describeDataShapePage,
         }}
         apiProvider={{
           uploadPath: appStepRoutes.apiProvider.upload,
@@ -193,7 +219,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         }}
         extension={{
           configurePath: appStepRoutes.extension,
-          configureChildren: TODO,
+          configureChildren: configureStepPage,
         }}
       />
     </>

@@ -17,6 +17,7 @@ import {
   LOG,
   SPLIT,
   TEMPLATE,
+  toDataShapeKinds,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
@@ -28,7 +29,6 @@ import {
   Step,
   StepKind,
 } from '@syndesis/models';
-import { IAddStepPageProps } from './AddStepPage';
 import {
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
@@ -37,9 +37,9 @@ import {
 } from './interfaces';
 
 type StepKindHrefCallback = (
-  step: Step,
-  p: ISelectConnectionRouteParams | IAddStepPageProps,
-  s: ISelectConnectionRouteState | undefined
+  step: StepKind,
+  p: ISelectConnectionRouteParams,
+  s: ISelectConnectionRouteState
 ) => H.LocationDescriptorObject;
 
 export function getStepKind(step: Step): IUIStep['uiStepKind'] {
@@ -162,10 +162,9 @@ export function toUIIntegrationStepCollection(
       const inputDataShape = step.action.descriptor.inputDataShape;
       if (
         inputDataShape &&
-        ![
-          DataShapeKinds.ANY.toLowerCase(),
-          DataShapeKinds.NONE.toLowerCase(),
-        ].includes(inputDataShape.kind!.toLowerCase())
+        ![DataShapeKinds.ANY, DataShapeKinds.NONE].includes(
+          toDataShapeKinds(inputDataShape.kind!)
+        )
       ) {
         const prev = getPreviousStepWithDataShape(steps, position);
         if (
@@ -175,10 +174,7 @@ export function toUIIntegrationStepCollection(
           prev.action.descriptor.outputDataShape
         ) {
           const prevOutDataShape = prev.action.descriptor.outputDataShape;
-          if (
-            DataShapeKinds.ANY.toLowerCase() ===
-            prevOutDataShape.kind!.toLowerCase()
-          ) {
+          if (DataShapeKinds.ANY === toDataShapeKinds(prevOutDataShape.kind!)) {
             previousStepShouldDefineDataShape = true;
           } else if (!isSameDataShape(inputDataShape, prevOutDataShape)) {
             shouldAddDataMapper = true;
@@ -205,9 +201,9 @@ export function getDataShapeText(stepKind: string, dataShape?: DataShape) {
     dataShape.metadata && dataShape.metadata.variant === 'collection';
   let answer: string | undefined = dataShape.name;
   if (dataShape.kind) {
-    if (dataShape.kind === (DataShapeKinds.ANY as string)) {
+    if (toDataShapeKinds(dataShape.kind) === DataShapeKinds.ANY) {
       answer = 'ANY';
-    } else if (dataShape.kind === (DataShapeKinds.NONE as string)) {
+    } else if (toDataShapeKinds(dataShape.kind) === DataShapeKinds.NONE) {
       answer = undefined;
     } else if (!dataShape.type) {
       answer = dataShape.kind;
@@ -230,8 +226,8 @@ export interface IGetStepHrefs {
 }
 export const getStepHref = (
   step: Step,
-  params: ISelectConnectionRouteParams | IAddStepPageProps,
-  state: ISelectConnectionRouteState | undefined,
+  params: ISelectConnectionRouteParams,
+  state: ISelectConnectionRouteState,
   hrefs: IGetStepHrefs
 ) => {
   switch (getStepKind(step)) {
@@ -239,22 +235,22 @@ export const getStepHref = (
     case CONNECTOR:
       return hrefs.connectionHref(
         typeof (step as IUIStep).uiStepKind !== 'undefined'
-          ? (step as IUIStep).connection!
-          : (step as ConnectionOverview),
+          ? ((step as IUIStep).connection! as StepKind)
+          : (step as StepKind),
         params,
         state
       );
     case API_PROVIDER:
-      return hrefs.apiProviderHref(step, params, state);
+      return hrefs.apiProviderHref(step as StepKind, params, state);
     case BASIC_FILTER:
-      return hrefs.filterHref(step, params, state);
+      return hrefs.filterHref(step as StepKind, params, state);
     case DATA_MAPPER:
-      return hrefs.mapperHref(step, params, state);
+      return hrefs.mapperHref(step as StepKind, params, state);
     case TEMPLATE:
-      return hrefs.templateHref(step, params, state);
+      return hrefs.templateHref(step as StepKind, params, state);
     case EXTENSION:
     default:
-      return hrefs.stepHref(step, params, state);
+      return hrefs.stepHref(step as StepKind, params, state);
   }
 };
 

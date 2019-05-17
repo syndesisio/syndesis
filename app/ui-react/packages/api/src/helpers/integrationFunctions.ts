@@ -24,6 +24,59 @@ export const NEW_INTEGRATION = {
   tags: [],
 } as Integration;
 
+export type DataShapeKindType =
+  | 'ANY'
+  | 'JAVA'
+  | 'JSON_SCHEMA'
+  | 'JSON_INSTANCE'
+  | 'XML_SCHEMA'
+  | 'XML_SCHEMA_INSPECTED'
+  | 'XML_INSTANCE'
+  | 'NONE';
+
+export function toDataShapeKindType(kind?: DataShapeKinds): DataShapeKindType {
+  return kind!.toLowerCase() as DataShapeKindType;
+}
+
+export function toDataShapeKinds(
+  kind?:
+    | 'ANY'
+    | 'JAVA'
+    | 'JSON_SCHEMA'
+    | 'JSON_INSTANCE'
+    | 'XML_SCHEMA'
+    | 'XML_SCHEMA_INSPECTED'
+    | 'XML_INSTANCE'
+    | 'NONE'
+    | string
+) {
+  switch ((kind! as string).toLowerCase()) {
+    case 'any':
+      return DataShapeKinds.ANY;
+    case 'java':
+      return DataShapeKinds.JAVA;
+    case 'json_schema':
+    case 'json-schema':
+      return DataShapeKinds.JSON_SCHEMA;
+    case 'json_instance':
+    case 'json-instance':
+      return DataShapeKinds.JSON_INSTANCE;
+    case 'xml_schema':
+    case 'xml-schema':
+      return DataShapeKinds.XML_SCHEMA;
+    case 'xml_schema_inspected':
+    case 'xml-schema-inspected':
+      return DataShapeKinds.XML_SCHEMA_INSPECTED;
+    case 'xml_instance':
+    case 'xml-instance':
+      return DataShapeKinds.XML_INSTANCE;
+    case 'none':
+      return DataShapeKinds.NONE;
+    default:
+      throw new Error(`Invalid data shape kind: ${kind}`);
+  }
+}
+
 /**
  * returns an empty integration object.
  *
@@ -308,7 +361,7 @@ export function hasDataShape(step: Step, isInput = false) {
   return (
     dataShape &&
     dataShape.kind &&
-    dataShape.kind.toLowerCase() !== DataShapeKinds.NONE.toLowerCase()
+    toDataShapeKinds(dataShape.kind) !== DataShapeKinds.NONE
   );
 }
 
@@ -326,8 +379,8 @@ export function isActionShapeless(descriptor: ActionDescriptor) {
     inputDataShape &&
     outputDataShape &&
     (inputDataShape.kind && outputDataShape.kind) &&
-    (inputDataShape.kind.toLowerCase() === DataShapeKinds.ANY.toLowerCase() ||
-      outputDataShape.kind.toLowerCase() === DataShapeKinds.ANY.toLowerCase())
+    (toDataShapeKinds(inputDataShape.kind) === DataShapeKinds.ANY ||
+      toDataShapeKinds(outputDataShape.kind) === DataShapeKinds.ANY)
   );
 }
 
@@ -343,8 +396,28 @@ export function isActionInputShapeless(descriptor: ActionDescriptor) {
   return (
     inputDataShape &&
     inputDataShape.kind &&
-    inputDataShape.kind.toLowerCase() === DataShapeKinds.ANY.toLowerCase()
+    toDataShapeKinds(inputDataShape.kind) === DataShapeKinds.ANY
   );
+}
+
+export function requiresOutputDescribeDataShape(descriptor: ActionDescriptor) {
+  if (!descriptor) {
+    return false;
+  }
+  if (isActionOutputShapeless(descriptor)) {
+    return true;
+  }
+  return isUserDefinedDataShape(descriptor.outputDataShape);
+}
+
+export function requiresInputDescribeDataShape(descriptor: ActionDescriptor) {
+  if (!descriptor) {
+    return false;
+  }
+  if (isActionInputShapeless(descriptor)) {
+    return true;
+  }
+  return isUserDefinedDataShape(descriptor.inputDataShape);
 }
 
 /**
@@ -359,7 +432,7 @@ export function isActionOutputShapeless(descriptor: ActionDescriptor) {
   return (
     outputDataShape &&
     outputDataShape.kind &&
-    outputDataShape.kind.toLowerCase() === DataShapeKinds.ANY.toLowerCase()
+    toDataShapeKinds(outputDataShape.kind) === DataShapeKinds.ANY
   );
 }
 
@@ -507,38 +580,57 @@ export function setDescriptorOnStep(
     ...(propertyDefaults || {}),
     ...(step.configuredProperties || {}),
   };
-  const oldDescriptor = { ...step.action.descriptor };
+  return {
+    ...step,
+    action: applyUserDefinedDataShapesToAction(step.action, {
+      ...step.action,
+      descriptor,
+    }),
+    configuredProperties,
+  };
+}
+
+/**
+ * Copies user-defined data shapes from an old copy to a new copy of the action
+ * @param oldAction
+ * @param newAction
+ */
+export function applyUserDefinedDataShapesToAction(
+  oldAction: Action,
+  newAction: Action
+) {
+  if (!oldAction) {
+    return newAction;
+  }
+  const descriptor = newAction.descriptor!;
+  const oldDescriptor = oldAction.descriptor!;
   const oldInputDataShape = oldDescriptor.inputDataShape;
   const oldOutputDataShape = oldDescriptor.outputDataShape;
   const preserveInput =
     isUserDefinedDataShape(oldInputDataShape) ||
     (descriptor.inputDataShape &&
       descriptor.inputDataShape.kind &&
-      (descriptor.inputDataShape.kind.toLowerCase() !==
-        DataShapeKinds.NONE.toLowerCase() &&
+      (toDataShapeKinds(descriptor.inputDataShape.kind) !==
+        DataShapeKinds.NONE &&
         !descriptor.inputDataShape.specification));
   const preserveOutput =
     isUserDefinedDataShape(oldOutputDataShape) ||
     (descriptor.outputDataShape &&
       descriptor.outputDataShape.kind &&
-      (descriptor.outputDataShape.kind.toLowerCase() !==
-        DataShapeKinds.NONE.toLowerCase() &&
+      (toDataShapeKinds(descriptor.outputDataShape.kind) !==
+        DataShapeKinds.NONE &&
         !descriptor.outputDataShape.specification));
   return {
-    ...step,
-    action: {
-      ...step.action,
-      descriptor: {
-        ...descriptor,
-        inputDataShape: preserveInput
-          ? oldInputDataShape
-          : descriptor.inputDataShape,
-        outputDataShape: preserveOutput
-          ? oldOutputDataShape
-          : descriptor.outputDataShape,
-      },
+    ...newAction,
+    descriptor: {
+      ...descriptor,
+      inputDataShape: preserveInput
+        ? oldInputDataShape
+        : descriptor.inputDataShape,
+      outputDataShape: preserveOutput
+        ? oldOutputDataShape
+        : descriptor.outputDataShape,
     },
-    configuredProperties,
   };
 }
 
@@ -1166,4 +1258,50 @@ export function getNextAggregateStep(
     return subsequentSteps.filter(s => s.stepKind === AGGREGATE)[0];
   }
   return undefined;
+}
+
+/**
+ * Returns if the given indice is at the start of the flow
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function isStartStep(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  return position === 0;
+}
+
+/**
+ * Returns if the given indice is at the end of the flow
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function isEndStep(
+  integration: Integration,
+  flowId: string,
+  position: number
+) {
+  const steps = getSteps(integration, flowId);
+  return position + 1 >= steps.length;
+}
+
+/**
+ * Returns if the given indice is somewhere in the middle of the flow
+ * @param integration
+ * @param flowId
+ * @param position
+ */
+export function isMiddleStep(
+  integration: Integration,
+  flowId: string,
+  position: number
+): boolean {
+  return (
+    !isStartStep(integration, flowId, position) &&
+    !isMiddleStep(integration, flowId, position)
+  );
 }
