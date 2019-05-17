@@ -10,6 +10,7 @@ doc/app
 syndesis/public/config.json
 syndesis/public/config.json.bak
 syndesis/public/atlasmap/
+syndesis/public/apicurio/
 syndesis/tapes/ht*
 .puppeteer_data
 

@@ -43,7 +43,7 @@ type StepKindHrefCallback = (
 ) => H.LocationDescriptorObject;
 
 export function getStepKind(step: Step): IUIStep['uiStepKind'] {
-  if ((step as ConnectionOverview).connectorId === 'api-provider') {
+  if (step.connection && step.connection.connectorId === 'api-provider') {
     return 'api-provider';
   }
   return step.stepKind;
@@ -231,6 +231,8 @@ export const getStepHref = (
   hrefs: IGetStepHrefs
 ) => {
   switch (getStepKind(step)) {
+    case API_PROVIDER:
+      return hrefs.apiProviderHref(step as StepKind, params, state);
     case ENDPOINT:
     case CONNECTOR:
       return hrefs.connectionHref(
@@ -240,8 +242,6 @@ export const getStepHref = (
         params,
         state
       );
-    case API_PROVIDER:
-      return hrefs.apiProviderHref(step as StepKind, params, state);
     case BASIC_FILTER:
       return hrefs.filterHref(step as StepKind, params, state);
     case DATA_MAPPER:

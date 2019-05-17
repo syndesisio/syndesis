@@ -1,18 +1,21 @@
+import { ApicurioAdapter } from '@syndesis/apicurio-adapter';
+import { PageSection } from '@syndesis/ui';
 import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 
 export class UploadPage extends React.Component {
   public render() {
     return (
-      <>
+      <PageSection>
         <PageTitle title={'Start integration with an API call'} />
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis
-          illo, iusto nesciunt nostrum omnis pariatur rerum vero voluptates.
-          Accusamus aliquid corporis deleniti ea earum ipsa optio, quidem quod
-          ut! Placeat.
-        </p>
-      </>
+        <ApicurioAdapter
+          specification={''}
+          onSpecification={
+            // tslint:disable-next-line
+            s => console.log(s)
+          }
+        />
+      </PageSection>
     );
   }
 }

@@ -39,8 +39,6 @@
     "start": "ng serve --deployUrl=apicurio/",
     "dev": "ng build --watch --deployUrl=apicurio/",
     "build": "ng build --deployUrl=apicurio/ --prod",
-    "test:ci": "ng test --watch=false --progress=false --browsers=ChromeHeadlessCI",
-    "test:watch": "ng test",
     "lint-disabled": "ng lint",
     "e2e": "ng e2e"
   },

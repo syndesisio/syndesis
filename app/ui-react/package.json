@@ -10,6 +10,7 @@
       "typings/*"
     ],
     "nohoist": [
+      "**/ngx-bootstrap",
       "**/jest",
       "**/rxjs"
     ]
@@ -21,7 +22,9 @@
     "test:jest": "CI=true lerna run test -- --coverage --color --runInBand",
     "test": "npm-run-all -s test:*",
     "build": "lerna run build",
-    "postbuild": "cpr packages/atlasmap-assembly/dist/atlasmap syndesis/public/atlasmap -d",
+    "copyasset:atlasmap": "cpr packages/atlasmap-assembly/dist/atlasmap syndesis/public/atlasmap -d",
+    "copyasset:apicurio": "cpr packages/apicurio-assembly/dist/apicurio syndesis/public/apicurio -d",
+    "postbuild": "npm-run-all copyasset:*",
     "watch:app:proxy": "lerna run --parallel --no-prefix --scope @syndesis/syndesis proxy",
     "watch:app:minishift:restore": "lerna run --parallel --no-prefix --scope @syndesis/syndesis minishift:restore",
     "watch:app:minishift": "lerna run --parallel --no-prefix --scope @syndesis/syndesis minishift",
@@ -74,5 +77,11 @@
     "singleQuote": true,
     "semi": true
   },
-  "dependencies": {}
+  "dependencies": {},
+  "resolutions": {
+    "ngx-bootstrap": "3.1.4",
+    "bootstrap": "~3.4",
+    "bootstrap-select": "1.13.6",
+    "codemirror": "5.42.2"
+  }
 }
