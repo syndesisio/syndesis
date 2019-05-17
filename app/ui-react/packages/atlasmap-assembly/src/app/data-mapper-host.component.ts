@@ -25,7 +25,7 @@ import { environment } from '../environments/environment';
 import { IDocumentProps } from './app.component';
 
 @Component({
-  selector: 'app-data-mapper-host',
+  selector: 'app-apicurio-host',
   template: `
     <data-mapper #dataMapperComponent></data-mapper>
   `,

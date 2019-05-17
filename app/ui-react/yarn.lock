@@ -5796,10 +5796,12 @@ bootstrap-sass@^3.4.0:
   resolved "https://registry.yarnpkg.com/bootstrap-sass/-/bootstrap-sass-3.4.1.tgz#6843c73b1c258a0ac5cb2cc6f6f5285b664a8e9a"
   integrity sha512-p5rxsK/IyEDQm2CwiHxxUi0MZZtvVFbhWmyMOt4lLkA4bujDA1TGoKT0i1FKIWiugAdP+kK8T5KMDFIKQCLYIA==
 
-bootstrap-select@1.12.2, bootstrap-select@1.13.6:
-  version "1.13.6"
-  resolved "https://registry.yarnpkg.com/bootstrap-select/-/bootstrap-select-1.13.6.tgz#dc41f8a7385ab4e385562b400d4cf2422f5ef852"
-  integrity sha512-MsOZjYVv0jjHOCUV6CG3J8MSsosrKL8MlA8DacMhMqFq43tTxMjjd7Czo5a/upKPNHW6asFq29oyKJTrPva6FQ==
+bootstrap-select@1.12.2:
+  version "1.12.2"
+  resolved "https://registry.yarnpkg.com/bootstrap-select/-/bootstrap-select-1.12.2.tgz#58d095b3fd584b31443866fbe39b6fdd4e4e12a4"
+  integrity sha1-WNCVs/1YSzFEOGb745tv3U5OEqQ=
+  dependencies:
+    jquery ">=1.8"
 
 bootstrap-slider-without-jquery@^10.0.0:
   version "10.0.0"
@@ -5821,10 +5823,15 @@ bootstrap-touchspin@~3.1.1:
   resolved "https://registry.yarnpkg.com/bootstrap-touchspin/-/bootstrap-touchspin-3.1.1.tgz#9779deac72aaf577e5e762b8512c747c871d9597"
   integrity sha1-l3nerHKq9Xfl52K4USx0fIcdlZc=
 
-bootstrap@3.4.x, bootstrap@^3.3, bootstrap@^4.1.2, bootstrap@~3.4, bootstrap@~3.4.0:
+bootstrap@3.4.x, bootstrap@^3.3, bootstrap@~3.4, bootstrap@~3.4.0:
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.4.1.tgz#c3a347d419e289ad11f4033e3c4132b87c081d72"
   integrity sha512-yN5oZVmRCwe5aKwzRj6736nSmKDX7pLYwsXiCj/EYmo16hODaBiT4En5btW/jhBF/seV+XMx3aYwukYC3A49DA==
+
+bootstrap@^4.1.2:
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.3.1.tgz#280ca8f610504d99d7b6b4bfc4b68cec601704ac"
+  integrity sha512-rXqOmH1VilAt2DyPzluTi2blhk17bO7ef+zLLPlWvG494pDxcM234pJ8wTc/6R40UWizAIIMgxjvxZg5kmsbag==
 
 bower-config@~0.5.0, bower-config@~0.5.2:
   version "0.5.3"
@@ -6886,10 +6893,10 @@ codelyzer@^4.4.4:
     source-map "^0.5.7"
     sprintf-js "^1.1.1"
 
-codemirror@5.42.2, codemirror@^5.46.0:
-  version "5.42.2"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.42.2.tgz#801ab715a7a7e1c7ed4162b78e9d8138b98de8f0"
-  integrity sha512-Tkv6im39VuhduFMsDA3MlXcC/kKas3Z0PI1/8N88QvFQbtOeiiwnfFJE4juGyC8/a4sb1BSxQlzsil8XLQdxRw==
+codemirror@^5.46.0:
+  version "5.46.0"
+  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.46.0.tgz#be3591572f88911e0105a007c324856a9ece0fb7"
+  integrity sha512-3QpMge0vg4QEhHW3hBAtCipJEWjTJrqLLXdIaWptJOblf1vHFeXLNtFhPai/uX2lnFCehWNk4yOdaMR853Z02w==
 
 collection-visit@^1.0.0:
   version "1.0.0"
@@ -12546,7 +12553,7 @@ jquery-match-height@^0.7.2:
   resolved "https://registry.yarnpkg.com/jquery-match-height/-/jquery-match-height-0.7.2.tgz#f8d9f3ba5314daab109cf07408674be204be5f0e"
   integrity sha1-+NnzulMU2qsQnPB0CGdL4gS+Xw4=
 
-"jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, "jquery@>=1.7.1 <4.0.0", "jquery@^1.8.3 || ^2.0 || ^3.0":
+"jquery@>= 2.1.x", jquery@>=1.7, jquery@>=1.7.0, "jquery@>=1.7.1 <4.0.0", jquery@>=1.8, "jquery@^1.8.3 || ^2.0 || ^3.0":
   version "3.4.1"
   resolved "https://registry.yarnpkg.com/jquery/-/jquery-3.4.1.tgz#714f1f8d9dde4bdfa55764ba37ef214630d80ef2"
   integrity sha512-36+AdBzCL+y6qjw5Tx7HgzeGCzC81MDDgaUP8ld2zhx58HdqXGoBd+tHdrBMiyjGQs0Hxs/MLZTu/eHNJJuWPw==
@@ -14522,7 +14529,12 @@ ng2-dragula@^1.5.0:
   dependencies:
     dragula "^3.7.2"
 
-ngx-bootstrap@3.1.4, ngx-bootstrap@3.2.0, ngx-bootstrap@^3.0.0, ngx-bootstrap@^3.0.1:
+ngx-bootstrap@3.2.0:
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-3.2.0.tgz#ece7c48af0bc260462c3f77de14f22d4b3dde149"
+  integrity sha512-oLSLIWZgRiIfcuxyXLMZUOhX3wZtg6lpuMbdo/0UzMDg2bSOe1XPskcKZ/iuOa3FOlU9rjuYMzswHYYV5f/QCA==
+
+ngx-bootstrap@^3.0.0, ngx-bootstrap@^3.0.1:
   version "3.1.4"
   resolved "https://registry.yarnpkg.com/ngx-bootstrap/-/ngx-bootstrap-3.1.4.tgz#5105c0227da3b51a1972d04efa1504a79474fd57"
   integrity sha512-dHMX6Yv0ahwvjvMFo2wQ2Mbe4vcUTEcao0jmVKenchmaZjDGWsJ2xvRgEDKgAA9bNR0RI5gqQNzICmSf2MC1DA==

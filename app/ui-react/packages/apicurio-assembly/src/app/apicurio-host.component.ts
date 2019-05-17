@@ -14,7 +14,7 @@ import * as YAML from 'js-yaml';
 import { WindowRef } from './WindowRef';
 
 @Component({
-  selector: 'app-data-mapper-host',
+  selector: 'app-apicurio-host',
   template: `
     <api-editor
       #apicurioComponent
@@ -28,11 +28,10 @@ import { WindowRef } from './WindowRef';
 export class ApicurioHostComponent implements OnInit, OnDestroy, OnChanges {
   @Input() title: string;
   @Input('specification')
-  @Output()
-  onSpecification = new EventEmitter<ApiDefinition>();
   set specification(spec: string) {
     this.apiDefinition.spec = JSON.parse(spec);
   }
+  @Output() onSpecification = new EventEmitter<ApiDefinition>();
   @ViewChild('apicurioComponent')
   private apicurioComponent: ApiEditorComponent;
   apiDefinition = new ApiDefinition();

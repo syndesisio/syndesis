@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
@@ -6,6 +7,7 @@ import {
   ApicurioCommonComponentsModule,
   ApicurioEditorModule,
 } from 'apicurio-design-studio';
+import { BsDropdownModule, ModalModule } from 'ngx-bootstrap';
 import { AppComponent } from './app.component';
 import { ApicurioHostComponent } from './apicurio-host.component';
 import { WindowRef } from './WindowRef';
@@ -14,7 +16,10 @@ import { WindowRef } from './WindowRef';
   declarations: [AppComponent, ApicurioHostComponent],
   imports: [
     BrowserModule,
+    CommonModule,
     FormsModule,
+    ModalModule.forRoot(),
+    BsDropdownModule.forRoot(),
     RouterModule.forRoot([]),
     ApicurioEditorModule,
     ApicurioCommonComponentsModule,

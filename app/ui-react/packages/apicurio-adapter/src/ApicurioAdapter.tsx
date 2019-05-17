@@ -70,7 +70,7 @@ export class ApicurioAdapter extends React.Component<IApicurioAdapterProps> {
         this.updateApicurioApp(payload);
         break;
       }
-      case 'mappings': {
+      case 'specification': {
         const payload: IApiDefinitionPayload = event.data.payload;
         this.props.onSpecification(payload.specification);
         break;
