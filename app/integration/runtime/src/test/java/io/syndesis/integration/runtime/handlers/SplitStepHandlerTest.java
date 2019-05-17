@@ -61,6 +61,10 @@ import static org.mockito.Mockito.verify;
 public class SplitStepHandlerTest extends IntegrationTestSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(SplitStepHandlerTest.class);
 
+    private static final String START_STEP = "start-step";
+    private static final String SPLIT_STEP = "split-step";
+    private static final String MOCK_STEP = "mock-step";
+
     private ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
 
     @Before
@@ -85,6 +89,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
                 new Step.Builder()
+                    .id(START_STEP)
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -94,9 +99,11 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
+                    .id(SPLIT_STEP)
                     .stepKind(StepKind.split)
                     .build(),
                 new Step.Builder()
+                    .id(MOCK_STEP)
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -129,7 +136,8 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             verify(activityTracker).startTracking(any(Exchange.class));
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verifyActivityStepTracking(SPLIT_STEP, 0);
+            verifyActivityStepTracking(MOCK_STEP, 3);
             verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
@@ -143,6 +151,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
                 new Step.Builder()
+                    .id(START_STEP)
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -152,11 +161,13 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
+                    .id(SPLIT_STEP)
                     .stepKind(StepKind.split)
                     .putConfiguredProperty("language", "tokenize")
                     .putConfiguredProperty("expression", "|")
                     .build(),
                 new Step.Builder()
+                    .id(MOCK_STEP)
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -189,7 +200,8 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             verify(activityTracker).startTracking(any(Exchange.class));
-            verify(activityTracker, times(5)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verifyActivityStepTracking(SPLIT_STEP, 0);
+            verifyActivityStepTracking(MOCK_STEP, 5);
             verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
@@ -203,6 +215,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
                     new Step.Builder()
+                        .id(START_STEP)
                         .stepKind(StepKind.endpoint)
                         .action(new ConnectorAction.Builder()
                             .descriptor(new ConnectorDescriptor.Builder()
@@ -212,9 +225,11 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
                             .build())
                         .build(),
                     new Step.Builder()
+                        .id(SPLIT_STEP)
                         .stepKind(StepKind.split)
                         .build(),
                     new Step.Builder()
+                        .id(MOCK_STEP)
                         .stepKind(StepKind.endpoint)
                         .action(new ConnectorAction.Builder()
                             .descriptor(new ConnectorDescriptor.Builder()
@@ -248,7 +263,8 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             verify(activityTracker).startTracking(any(Exchange.class));
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verifyActivityStepTracking(SPLIT_STEP, 0);
+            verifyActivityStepTracking(MOCK_STEP, 3);
             verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
@@ -262,6 +278,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
                     new Step.Builder()
+                        .id(START_STEP)
                         .stepKind(StepKind.endpoint)
                         .action(new ConnectorAction.Builder()
                             .descriptor(new ConnectorDescriptor.Builder()
@@ -271,9 +288,11 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
                             .build())
                         .build(),
                     new Step.Builder()
+                        .id(SPLIT_STEP)
                         .stepKind(StepKind.split)
                         .build(),
                     new Step.Builder()
+                        .id(MOCK_STEP)
                         .stepKind(StepKind.endpoint)
                         .action(new ConnectorAction.Builder()
                             .descriptor(new ConnectorDescriptor.Builder()
@@ -307,7 +326,8 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             verify(activityTracker).startTracking(any(Exchange.class));
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verifyActivityStepTracking(SPLIT_STEP, 0);
+            verifyActivityStepTracking(MOCK_STEP, 3);
             verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
@@ -321,6 +341,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
         try {
             final RouteBuilder routes = newIntegrationRouteBuilder(activityTracker,
                     new Step.Builder()
+                            .id(START_STEP)
                             .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                     .descriptor(new ConnectorDescriptor.Builder()
@@ -330,6 +351,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
                                     .build())
                             .build(),
                     new Step.Builder()
+                            .id(SPLIT_STEP)
                             .stepKind(StepKind.split)
                             .action(new StepAction.Builder()
                                     .descriptor(new StepDescriptor.Builder()
@@ -362,6 +384,7 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
                                     .build())
                             .build(),
                     new Step.Builder()
+                            .id(MOCK_STEP)
                             .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                     .descriptor(new ConnectorDescriptor.Builder()
@@ -405,10 +428,15 @@ public class SplitStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             verify(activityTracker).startTracking(any(Exchange.class));
-            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verifyActivityStepTracking(SPLIT_STEP, 0);
+            verifyActivityStepTracking(MOCK_STEP, 3);
             verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
         }
+    }
+
+    private void verifyActivityStepTracking(String stepId, int times) {
+        verify(activityTracker, times(times)).track(eq("exchange"), anyString(), eq("step"), eq(stepId), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
     }
 }
