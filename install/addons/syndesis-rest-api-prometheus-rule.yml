@@ -5,6 +5,7 @@ metadata:
     app: syndesis
     syndesis.io/app: syndesis
     syndesis.io/type: infrastructure
+    syndesis.io/addon: rest-api-prometheus-rule
     prometheus: application-monitoring
     role: alert-rules
     monitoring-key: middleware

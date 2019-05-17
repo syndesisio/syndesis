@@ -1,0 +1,31 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  labels:
+    app: syndesis
+    syndesis.io/app: todo
+    syndesis.io/addon: todo
+  name: todo
+spec:
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      uri: 'https://github.com/syndesisio/todo-example.git'
+    type: Git
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'todo:latest'
+  strategy:
+    sourceStrategy:
+      from:
+        kind: ImageStreamTag
+        name: 'php:7.0'
+        namespace: openshift
+    type: Source
+  triggers:
+    - type: ConfigChange
+    - imageChange:
+      type: ImageChange

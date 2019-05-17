@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 	"errors"
+	"strings"
 
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -125,18 +126,45 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	}
 
 	// Install addons
-	if addonsDir := *configuration.AddonsDirLocation; len(addonsDir) > 0 {
-		addons, err := addons.GetAddonsResources(addonsDir)
+	config := configuration.GetEnvVars(syndesis)
+	addonReq := strings.Split(config[string(configuration.EnvAddons)], ",")
+
+	// Only if we have adddons specified do we bother to try and load them
+
+	if addonsDir := *configuration.AddonsDirLocation; len(addonsDir) > 0 && len(addonReq) > 0 {
+		theAddons, err := addons.GetAddonsResources(addonsDir, syndesis)
 		if err != nil {
+			a.log.Error(err, "Failed to load addons from addon directory")
 			return err
 		}
-		for _, addon := range addons {
+		for _, addon := range theAddons {
+			addonName := addons.GetAddonID(addon)
+			if addonName == "" {
+				continue
+			}
+
+			// Check the addon is required by looking at the list in the EnvVar
+			addonRequired := false
+			for _, a := range addonReq {
+				ad := strings.TrimSpace(a)
+				if ad == addonName {
+					// Found
+					addonRequired = true
+					break
+				}
+			}
+
+			if !addonRequired {
+				continue
+			}
+
 			operation.SetLabel(addon, "syndesis.io/addon-resource", "true")
 
 			operation.SetNamespaceAndOwnerReference(addon, syndesis)
 
 			err = createOrReplace(ctx, a.client, addon)
 			if err != nil && !k8serrors.IsAlreadyExists(err) {
+				a.log.Error(err, "Failed to successfully install the addon.", "name", addonName)
 				return err
 			}
 		}

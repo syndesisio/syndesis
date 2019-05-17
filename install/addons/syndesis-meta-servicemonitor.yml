@@ -6,6 +6,7 @@ metadata:
     syndesis.io/app: syndesis
     syndesis.io/component: syndesis-meta
     syndesis.io/type: infrastructure
+    syndesis.io/addon: meta-service-monitor
     monitoring-key: middleware
     application-monitoring: "true"
   name: syndesis-meta

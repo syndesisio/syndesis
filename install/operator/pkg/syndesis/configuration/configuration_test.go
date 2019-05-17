@@ -17,10 +17,17 @@ func TestStandardConfig(t *testing.T) {
 	}
 
 	config := GetEnvVars(&syndesis)
-	assert.Len(t, config, 3)
+	assert.Len(t, config, 5)
 	assert.Contains(t, config, string(EnvOpenshiftProject))
 	assert.Contains(t, config, string(EnvSarNamespace))
 	assert.Contains(t, config, string(EnvExposeVia3Scale))
+
+	assert.Contains(t, config, string(EnvImageStreamNamespace))
+	assert.Equal(t, "", config[string(EnvImageStreamNamespace)])
+
+	// Should contain default value of sampledb password
+	assert.Contains(t, config, string(EnvPostgresqlSampleDbPassword))
+	assert.Equal(t, DEFAULT_POSTGRESQL_SAMPLEDB_PASSWORD, config[string(EnvPostgresqlSampleDbPassword)])
 }
 
 func TestSpecificConfig(t *testing.T) {
@@ -28,6 +35,7 @@ func TestSpecificConfig(t *testing.T) {
 	deploy := false
 	limit := 2
 	stateCheckInterval := 120
+	addons := "db-sampledb,todo"
 	syndesis := v1alpha1.Syndesis{
 		ObjectMeta: v1.ObjectMeta{
 			Namespace: "ns",
@@ -42,11 +50,13 @@ func TestSpecificConfig(t *testing.T) {
 			RouteHostName:      "myhost",
 			Registry:           "registry",
 			DeployIntegrations: &deploy,
+			Addons:             addons,
 			Components: v1alpha1.ComponentsSpec{
 				Db: v1alpha1.DbConfiguration{
 					ImageStreamNamespace: "dbis",
 					Database:             "db",
 					User:                 "user",
+					SampleDbPassword:     "password",
 					Resources: v1alpha1.ResourcesWithVolume{
 						ResourceRequirements: v12.ResourceRequirements{
 							Limits: v12.ResourceList{
@@ -107,6 +117,7 @@ func TestSpecificConfig(t *testing.T) {
 	assert.Equal(t, "user", config[string(EnvPostgresqlUser)])
 	assert.Equal(t, "1Gi", config[string(EnvPostgresqlMemoryLimit)])
 	assert.Equal(t, "2Gi", config[string(EnvPostgresqlVolumeCapacity)])
+	assert.Equal(t, "password", config[string(EnvPostgresqlSampleDbPassword)])
 
 	assert.Equal(t, "3Gi", config[string(EnvServerMemoryLimit)])
 	assert.Equal(t, "false", config[string(EnvExposeVia3Scale)])
@@ -116,4 +127,6 @@ func TestSpecificConfig(t *testing.T) {
 
 	assert.Equal(t, "6Gi", config[string(EnvPrometheusMemoryLimit)])
 	assert.Equal(t, "7Gi", config[string(EnvPrometheusVolumeCapacity)])
+
+	assert.Equal(t, addons, config[string(EnvAddons)])
 }

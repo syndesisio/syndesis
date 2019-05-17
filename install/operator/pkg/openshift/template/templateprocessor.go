@@ -3,6 +3,7 @@ package template
 import (
 	"errors"
 	v1template "github.com/openshift/api/template/v1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/runtime/schema"
@@ -10,6 +11,8 @@ import (
 	"k8s.io/client-go/rest"
 	"sigs.k8s.io/controller-runtime/pkg/client/config"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 )
 
 var log = logf.Log.WithName("template")
@@ -17,7 +20,7 @@ var log = logf.Log.WithName("template")
 type TemplateProcessor struct {
 	namespace  string
 	restClient *rest.RESTClient
-	scheme *runtime.Scheme
+	scheme     *runtime.Scheme
 }
 
 func NewTemplateProcessor(scheme *runtime.Scheme, namespace string) (*TemplateProcessor, error) {
@@ -48,11 +51,11 @@ func NewTemplateProcessor(scheme *runtime.Scheme, namespace string) (*TemplatePr
 	return &TemplateProcessor{
 		namespace:  namespace,
 		restClient: restClient,
-		scheme: scheme,
+		scheme:     scheme,
 	}, nil
 }
 
-func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, parameters map[string]string) ([]runtime.RawExtension, error) {
+func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, parameters map[string]string, syndesis *v1alpha1.Syndesis) ([]runtime.RawExtension, error) {
 	p.fillInParameters(sourceTemplate, parameters)
 
 	resource, err := json.Marshal(sourceTemplate)
@@ -82,9 +85,20 @@ func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, paramet
 	}
 
 	if v1Temp, ok := templ.(*v1template.Template); ok {
+		//
+		// Add all the template parameters to the EnvVars
+		// This ensures they'll be available to any addons
+		//
+		paramMap := make(map[string]string)
+		for i := 0; i < len(v1Temp.Parameters); i++ {
+			parameter := v1Temp.Parameters[i]
+			paramMap[parameter.Name] = parameter.Value
+		}
+		configuration.SetConfigurationFromEnvVars(paramMap, syndesis)
+
 		return v1Temp.Objects, nil
 	}
-	log.Error(nil,"Wrong type returned by the server", "template", templ)
+	log.Error(nil, "Wrong type returned by the server", "template", templ)
 	return nil, errors.New("wrong type returned by the server")
 }
 

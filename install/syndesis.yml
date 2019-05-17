@@ -70,12 +70,6 @@ parameters:
   name: POSTGRESQL_VOLUME_CAPACITY
   required: true
   value: 1Gi
-- description: Password for the PostgreSQL sampledb user.
-  displayName: PostgreSQL SampleDB Connection Password
-  from: '[a-zA-Z0-9]{16}'
-  generate: expression
-  name: POSTGRESQL_SAMPLEDB_PASSWORD
-  required: true
 - description: Enables test-support endpoint on backend API
   displayName: Test Support Enabled
   name: TEST_SUPPORT_ENABLED
@@ -335,7 +329,6 @@ objects:
       POSTGRESQL_PASSWORD=${POSTGRESQL_PASSWORD}
       POSTGRESQL_DATABASE=${POSTGRESQL_DATABASE}
       POSTGRESQL_VOLUME_CAPACITY=${POSTGRESQL_VOLUME_CAPACITY}
-      POSTGRESQL_SAMPLEDB_PASSWORD=${POSTGRESQL_SAMPLEDB_PASSWORD}
       TEST_SUPPORT_ENABLED=${TEST_SUPPORT_ENABLED}
       DEMO_DATA_ENABLED=${DEMO_DATA_ENABLED}
       SYNDESIS_REGISTRY=${SYNDESIS_REGISTRY}
@@ -516,72 +509,6 @@ objects:
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
       syndesis.io/component: syndesis-db
-    name: syndesis-sampledb-config
-  data:
-    add-sample-db.sh: |
-      #!/bin/bash
-      until bash -c "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"; do
-        echo "Waiting for Postgres server..."
-        sleep 1
-      done
-      echo "***** creating sampledb"
-      psql <<EOF
-        CREATE DATABASE sampledb;
-        CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';
-        GRANT ALL PRIVILEGES ON DATABASE sampledb to sampledb;
-      EOF
-      psql -d sampledb -U sampledb <<'EOF'
-        CREATE TABLE IF NOT EXISTS contact (first_name VARCHAR, last_name VARCHAR, company VARCHAR, lead_source VARCHAR, create_date DATE);
-        INSERT INTO contact VALUES ('Joe','Jackson','Red Hat','db',current_timestamp);
-        CREATE TABLE IF NOT EXISTS todo (id SERIAL PRIMARY KEY, task VARCHAR, completed INTEGER);
-        CREATE OR REPLACE FUNCTION add_lead(
-          first_and_last_name varchar,
-          company varchar,
-          phone varchar,
-          email varchar,
-          lead_source varchar,
-          lead_status varchar,
-          rating varchar)
-
-          RETURNS void
-          LANGUAGE 'plpgsql'
-
-        AS $BODY$
-        DECLARE
-          task varchar;
-        BEGIN
-          task := concat(lead_status || ' ', 'Lead: Please contact ', first_and_last_name, ' from ' || company, ' via phone: ' || phone, ' via email: ' || email, '. ', 'Lead is from ' || lead_source, '. Rating: ' || rating, '.');
-          insert into todo(task,completed) VALUES (task,0);
-        END;
-        $BODY$;
-
-        CREATE OR REPLACE FUNCTION create_lead(
-          OUT first_name text,
-          OUT last_name text,
-          OUT company text,
-          OUT lead_source text)
-          RETURNS SETOF record
-          AS
-          $$
-            SELECT first_name, last_name, company, lead_source
-            FROM contact;
-          $$
-           LANGUAGE 'sql' VOLATILE;
-      EOF
-
-      echo "***** sampledb created"
-    postStart.sh: |
-      #!/bin/bash
-      /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1
-
-- apiVersion: v1
-  kind: ConfigMap
-  metadata:
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: infrastructure
-      syndesis.io/component: syndesis-db
     name: syndesis-db-conf
   data:
     syndesis-postgresql.conf: |
@@ -676,17 +603,8 @@ objects:
             value: ${POSTGRESQL_PASSWORD}
           - name: POSTGRESQL_DATABASE
             value: ${POSTGRESQL_DATABASE}
-          - name: POSTGRESQL_SAMPLEDB_PASSWORD
-            value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
           image: ' '
           imagePullPolicy: IfNotPresent
-          lifecycle:
-            postStart:
-              exec:
-                command:
-                - /bin/sh
-                - -c
-                - /var/lib/pgsql/sampledb/postStart.sh
           livenessProbe:
             initialDelaySeconds: 60
             tcpSocket:
@@ -713,8 +631,6 @@ objects:
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: syndesis-db-data
-          - mountPath: /var/lib/pgsql/sampledb
-            name: syndesis-sampledb-config
           - mountPath: /opt/app-root/src/postgresql-cfg/
             name: syndesis-db-conf
         - capabilities: {}
@@ -755,10 +671,6 @@ objects:
         - name: syndesis-db-data
           persistentVolumeClaim:
             claimName: syndesis-db
-        - configMap:
-            defaultMode: 511
-            name: syndesis-sampledb-config
-          name: syndesis-sampledb-config
         - configMap:
             name: syndesis-db-conf
           name: syndesis-db-conf
@@ -1278,7 +1190,7 @@ objects:
       # See the License for the specific language governing permissions and
       # limitations under the License.
       #
-      
+
       startDelaySecs: 5
       ssl: false
       blacklistObjectNames: ["java.lang:*"]
@@ -1390,8 +1302,8 @@ objects:
               context: $1
               type: context
           type: GAUGE
-      
-      
+
+
       # Route level
         - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>ExchangesCompleted'
           name: org.apache.camel.ExchangesCompleted
@@ -1489,7 +1401,7 @@ objects:
               route: $2
               type: routes
           type: GAUGE
-      
+
       # Processor level
         - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>ExchangesCompleted'
           name: org.apache.camel.ExchangesCompleted
@@ -1587,7 +1499,7 @@ objects:
               processor: $2
               type: processors
           type: COUNTER
-      
+
       # Consumers
         - pattern: 'org.apache.camel<context=([^,]+), type=consumers, name=([^,]+)><>InflightExchanges'
           name: org.apache.camel.InflightExchanges
@@ -1597,7 +1509,7 @@ objects:
               consumer: $2
               type: consumers
           type: GAUGE
-      
+
       # Services
         - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>MaxDuration'
           name: org.apache.camel.MaxDuration
@@ -1818,7 +1730,7 @@ objects:
               type: $2
               service: $3
               port: $4
-      
+
 
 - apiVersion: v1
   kind: ConfigMap
@@ -1919,160 +1831,6 @@ objects:
     name: camel-k
     apiGroup: rbac.authorization.k8s.io
 # END:CAMEL-K
-- apiVersion: v1
-  kind: Service
-  metadata:
-    labels:
-      app: syndesis
-      syndesis.io/app: todo
-      syndesis.io/component: todo
-    name: todo
-  spec:
-    ports:
-    - port: 8080
-      protocol: TCP
-      targetPort: 8080
-    selector:
-      app: syndesis
-      syndesis.io/app: todo
-      syndesis.io/component: todo
-
-- apiVersion: route.openshift.io/v1
-  kind: Route
-  metadata:
-    labels:
-      app: syndesis
-      syndesis.io/app: todo
-      syndesis.io/component: todo
-    name: todo
-  spec:
-    host: todo-${ROUTE_HOSTNAME}
-    path: /
-    port:
-      targetPort: 8080
-    tls:
-      insecureEdgeTerminationPolicy: Allow
-      termination: edge
-    to:
-      kind: Service
-      name: todo
-      weight: 100
-
-- apiVersion: image.openshift.io/v1
-  kind: ImageStream
-  metadata:
-    labels:
-      app: syndesis
-      syndesis.io/app: todo
-    name: todo
-  spec:
-    lookupPolicy:
-      local: false
-  status:
-    tags:
-      - items:
-        tag: latest
-
-- apiVersion: build.openshift.io/v1
-  kind: BuildConfig
-  metadata:
-    labels:
-      app: syndesis
-      syndesis.io/app: todo
-    name: todo
-  spec:
-    postCommit: {}
-    resources: {}
-    runPolicy: Serial
-    source:
-      git:
-        uri: 'https://github.com/syndesisio/todo-example.git'
-      type: Git
-    output:
-      to:
-        kind: ImageStreamTag
-        name: 'todo:latest'
-    strategy:
-      sourceStrategy:
-        from:
-          kind: ImageStreamTag
-          name: 'php:7.0'
-          namespace: openshift
-      type: Source
-    triggers:
-      - type: ConfigChange
-      - imageChange:
-        type: ImageChange
-
-- apiVersion: apps.openshift.io/v1
-  kind: DeploymentConfig
-  metadata:
-    labels:
-      app: syndesis
-      syndesis.io/app: todo
-    name: todo
-  spec:
-    replicas: 1
-    selector:
-      app: syndesis
-      syndesis.io/app: todo
-      syndesis.io/component: todo
-    strategy:
-      resources:
-        limits:
-          memory: "256Mi"
-        requests:
-          memory: "20Mi"
-      type: Recreate
-    template:
-      metadata:
-        annotations:
-          openshift.io/container.todo.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
-        creationTimestamp: null
-        labels:
-          app: syndesis
-          syndesis.io/app: todo
-          syndesis.io/component: todo
-      spec:
-        containers:
-          - env:
-              - name: TODO_DB_SERVER
-                value: syndesis-db
-              - name: TODO_DB_NAME
-                value: sampledb
-              - name: TODO_DB_USER
-                value: sampledb
-              - name: TODO_DB_PASS
-                value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
-            imagePullPolicy: Always
-            name: todo
-            image: ' '
-            resources:
-              limits:
-                memory: 256Mi
-              requests:
-                memory: 256Mi
-            ports:
-              - containerPort: 8080
-                name: http
-            terminationMessagePath: /dev/termination-log
-            terminationMessagePolicy: File
-        dnsPolicy: ClusterFirst
-        restartPolicy: Always
-        schedulerName: default-scheduler
-        securityContext: {}
-        terminationGracePeriodSeconds: 30
-    test: false
-    triggers:
-      - type: ConfigChange
-      - imageChangeParams:
-          automatic: true
-          containerNames:
-            - todo
-          from:
-            kind: ImageStreamTag
-            name: todo:latest
-        type: ImageChange
 - apiVersion: authorization.openshift.io/v1
   kind: RoleBinding
   metadata:

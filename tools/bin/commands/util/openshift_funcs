@@ -161,6 +161,17 @@ EOT
         syndesis="${syndesis}${extra}"
     fi
 
+    local addons=$(readopt --addons)
+    if [ -n "$addons" ]; then
+        extra=$(cat <<EOT
+
+  addons: "$addons"
+EOT
+)
+
+        syndesis="${syndesis}${extra}"
+    fi
+
     local memory_server=$(readopt --memory-server)
     local memory_meta=$(readopt --memory-meta)
     if [ -n "$memory_server" ] || [ -n "$memory_meta" ]; then

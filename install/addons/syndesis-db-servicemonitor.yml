@@ -6,6 +6,7 @@ metadata:
     syndesis.io/app: syndesis
     syndesis.io/component: syndesis-db-metrics
     syndesis.io/type: infrastructure
+    syndesis.io/addon: db-service-monitor
     monitoring-key: middleware
     application-monitoring: "true"
   name: syndesis-db-metrics

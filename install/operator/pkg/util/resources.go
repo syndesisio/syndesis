@@ -15,12 +15,11 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
-
 var log = logf.Log.WithName("resources")
 
 func NewObjectKey(name string, namespace string) client.ObjectKey {
 	return client.ObjectKey{
-		Name: name,
+		Name:      name,
 		Namespace: namespace,
 	}
 }
@@ -31,7 +30,7 @@ func LoadResourceFromFile(scheme *runtime.Scheme, path string) (runtime.Object, 
 		return nil, err
 	}
 
-	data, err = jsonIfYaml(data, path)
+	data, err = JsonIfYaml(data, path)
 	if err != nil {
 		return nil, err
 	}
@@ -55,8 +54,7 @@ func LoadRawResourceFromYaml(data string) (runtime.Object, error) {
 	}, nil
 }
 
-
-func LoadResourceFromYaml(scheme *runtime.Scheme,  source []byte) (runtime.Object, error) {
+func LoadResourceFromYaml(scheme *runtime.Scheme, source []byte) (runtime.Object, error) {
 	jsonSource, err := yaml.ToJSON(source)
 	if err != nil {
 		return nil, err
@@ -70,7 +68,7 @@ func LoadResourceFromYaml(scheme *runtime.Scheme,  source []byte) (runtime.Objec
 }
 
 // RuntimeObjectFromUnstructured converts an unstructured to a runtime object
-func RuntimeObjectFromUnstructured(scheme *runtime.Scheme,u *unstructured.Unstructured) (runtime.Object, error) {
+func RuntimeObjectFromUnstructured(scheme *runtime.Scheme, u *unstructured.Unstructured) (runtime.Object, error) {
 	gvk := u.GroupVersionKind()
 	codecs := serializer.NewCodecFactory(scheme)
 	decoder := codecs.UniversalDecoder(gvk.GroupVersion())
@@ -86,25 +84,6 @@ func RuntimeObjectFromUnstructured(scheme *runtime.Scheme,u *unstructured.Unstru
 	return ro, nil
 }
 
-func LoadUnstructuredObjectFromFile(path string) (*unstructured.Unstructured, error) {
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		return nil, err
-	}
-
-	data, err = jsonIfYaml(data, path)
-	if err != nil {
-		return nil, err
-	}
-
-	uo, err := LoadUnstructuredObject(data)
-	if err != nil {
-		return nil, err
-	}
-
-	return uo, nil
-}
-
 func LoadUnstructuredObject(data []byte) (*unstructured.Unstructured, error) {
 	var uo unstructured.Unstructured
 	if err := json.Unmarshal(data, &uo.Object); err != nil {
@@ -113,7 +92,7 @@ func LoadUnstructuredObject(data []byte) (*unstructured.Unstructured, error) {
 	return &uo, nil
 }
 
-func jsonIfYaml(source []byte, filename string) ([]byte, error) {
+func JsonIfYaml(source []byte, filename string) ([]byte, error) {
 	if strings.HasSuffix(filename, ".yaml") || strings.HasSuffix(filename, ".yml") {
 		return yaml.ToJSON(source)
 	}

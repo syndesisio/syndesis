@@ -29,6 +29,7 @@ cat <<"EOT"
 -o  --open                    Open Syndesis in browser when installation is ready (implies --watch)
 -y  --yes                     Assume 'yes' automatically when asking for deleting
                               a given project.
+    --addons <a1,a2,a3>       Additional addons to install (comma-separated list), ie. db-sampledb,todo
     --memory-server <mem>     Memory limit to set for syndesis-server. Specify as "800Mi"
     --memory-meta <mem>       Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support            Allow test support endpoint for syndesis-server

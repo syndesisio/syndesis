@@ -6,6 +6,7 @@ metadata:
     app: syndesis
     syndesis.io/app: syndesis
     syndesis.io/type: infrastructure
+    syndesis.io/addon: rest-api-dashboard
 spec:
   name: syndesis-rest-api.json
   json: |

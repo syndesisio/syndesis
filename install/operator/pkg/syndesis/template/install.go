@@ -47,5 +47,5 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 	config := configuration.GetEnvVars(syndesis)
 	config[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
 
-	return processor.Process(templ, config)
+	return processor.Process(templ, config, syndesis)
 }

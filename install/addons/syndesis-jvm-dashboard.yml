@@ -6,6 +6,7 @@ metadata:
     app: syndesis
     syndesis.io/app: syndesis
     syndesis.io/type: infrastructure
+    syndesis.io/addon: jvm-dashboard
 spec:
   name: syndesis-jvm.json
   json: |

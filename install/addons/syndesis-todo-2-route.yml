@@ -1,0 +1,21 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  labels:
+    app: syndesis
+    syndesis.io/app: todo
+    syndesis.io/component: todo
+    syndesis.io/addon: todo
+  name: todo
+spec:
+  host: todo-${ROUTE_HOSTNAME}
+  path: /
+  port:
+    targetPort: 8080
+  tls:
+    insecureEdgeTerminationPolicy: Allow
+    termination: edge
+  to:
+    kind: Service
+    name: todo
+    weight: 100

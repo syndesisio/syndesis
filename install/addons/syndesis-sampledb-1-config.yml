@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+    syndesis.io/component: syndesis-db
+    syndesis.io/addon: db-sampledb
+  name: syndesis-sampledb-config
+data:
+  add-sample-db.sh: |
+    #!/bin/bash
+    until bash -c "psql -h 127.0.0.1 -U $POSTGRESQL_USER -q -d $POSTGRESQL_DATABASE -c 'SELECT 1'"; do
+      echo "Waiting for Postgres server..."
+      sleep 1
+    done
+    echo "***** creating sampledb"
+    psql <<EOF
+      CREATE DATABASE sampledb;
+      CREATE USER sampledb WITH PASSWORD '$POSTGRESQL_SAMPLEDB_PASSWORD';
+      GRANT ALL PRIVILEGES ON DATABASE sampledb to sampledb;
+    EOF
+    psql -d sampledb -U sampledb <<'EOF'
+      CREATE TABLE IF NOT EXISTS contact (first_name VARCHAR, last_name VARCHAR, company VARCHAR, lead_source VARCHAR, create_date DATE);
+      INSERT INTO contact VALUES ('Joe','Jackson','Red Hat','db',current_timestamp);
+      CREATE TABLE IF NOT EXISTS todo (id SERIAL PRIMARY KEY, task VARCHAR, completed INTEGER);
+      CREATE OR REPLACE FUNCTION add_lead(
+        first_and_last_name varchar,
+        company varchar,
+        phone varchar,
+        email varchar,
+        lead_source varchar,
+        lead_status varchar,
+        rating varchar)
+
+        RETURNS void
+        LANGUAGE 'plpgsql'
+
+      AS $BODY$
+      DECLARE
+        task varchar;
+      BEGIN
+        task := concat(lead_status || ' ', 'Lead: Please contact ', first_and_last_name, ' from ' || company, ' via phone: ' || phone, ' via email: ' || email, '. ', 'Lead is from ' || lead_source, '. Rating: ' || rating, '.');
+        insert into todo(task,completed) VALUES (task,0);
+      END;
+      $BODY$;
+
+      CREATE OR REPLACE FUNCTION create_lead(
+        OUT first_name text,
+        OUT last_name text,
+        OUT company text,
+        OUT lead_source text)
+        RETURNS SETOF record
+        AS
+        $$
+          SELECT first_name, last_name, company, lead_source
+          FROM contact;
+        $$
+         LANGUAGE 'sql' VOLATILE;
+    EOF
+
+    echo "***** sampledb created"
+  postStart.sh: |
+    #!/bin/bash
+    /var/lib/pgsql/sampledb/add-sample-db.sh &>  /proc/1/fd/1

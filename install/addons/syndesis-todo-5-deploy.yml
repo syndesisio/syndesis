@@ -1,0 +1,70 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  labels:
+    app: syndesis
+    syndesis.io/app: todo
+    syndesis.io/addon: todo
+  name: todo
+spec:
+  replicas: 1
+  selector:
+    app: syndesis
+    syndesis.io/app: todo
+    syndesis.io/component: todo
+  strategy:
+    resources:
+      limits:
+        memory: "256Mi"
+      requests:
+        memory: "20Mi"
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        openshift.io/container.todo.image.entrypoint: '["container-entrypoint","/bin/sh","-c","$STI_SCRIPTS_PATH/usage"]'
+      creationTimestamp: null
+      labels:
+        app: syndesis
+        syndesis.io/app: todo
+        syndesis.io/component: todo
+    spec:
+      containers:
+        - env:
+            - name: TODO_DB_SERVER
+              value: syndesis-db
+            - name: TODO_DB_NAME
+              value: sampledb
+            - name: TODO_DB_USER
+              value: sampledb
+            - name: TODO_DB_PASS
+              value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
+          imagePullPolicy: Always
+          name: todo
+          image: ' '
+          resources:
+            limits:
+              memory: 256Mi
+            requests:
+              memory: 256Mi
+          ports:
+            - containerPort: 8080
+              name: http
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - todo
+        from:
+          kind: ImageStreamTag
+          name: todo:latest
+      type: ImageChange

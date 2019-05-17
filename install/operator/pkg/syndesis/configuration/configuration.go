@@ -18,6 +18,8 @@ var AddonsDirLocation *string
 // Registry for looking up images
 var Registry *string
 
+const DEFAULT_POSTGRESQL_SAMPLEDB_PASSWORD = "password"
+
 const (
 	EnvRouteHostname SyndesisEnvVar = "ROUTE_HOSTNAME"
 	//EnvOpenshiftMaster 					SyndesisEnvVar = "OPENSHIFT_MASTER"
@@ -27,11 +29,11 @@ const (
 	EnvPostgresqlMemoryLimit          SyndesisEnvVar = "POSTGRESQL_MEMORY_LIMIT"
 	EnvPostgresqlImageStreamNamespace SyndesisEnvVar = "POSTGRESQL_IMAGE_STREAM_NAMESPACE"
 	EnvPostgresqlUser                 SyndesisEnvVar = "POSTGRESQL_USER"
-	//EnvPostgresqlPassword				SyndesisEnvVar = "POSTGRESQL_PASSWORD"
-	EnvPostgresqlDatabase       SyndesisEnvVar = "POSTGRESQL_DATABASE"
-	EnvPostgresqlVolumeCapacity SyndesisEnvVar = "POSTGRESQL_VOLUME_CAPACITY"
-	//EnvPostgresqlSampledbPassword		SyndesisEnvVar = "POSTGRESQL_SAMPLEDB_PASSWORD"
-	EnvTestSupport SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
+	EnvPostgresqlPassword             SyndesisEnvVar = "POSTGRESQL_PASSWORD"
+	EnvPostgresqlDatabase             SyndesisEnvVar = "POSTGRESQL_DATABASE"
+	EnvPostgresqlVolumeCapacity       SyndesisEnvVar = "POSTGRESQL_VOLUME_CAPACITY"
+	EnvPostgresqlSampleDbPassword     SyndesisEnvVar = "POSTGRESQL_SAMPLEDB_PASSWORD"
+	EnvTestSupport                    SyndesisEnvVar = "TEST_SUPPORT_ENABLED"
 	//EnvOauthCookieSecret				SyndesisEnvVar = "OAUTH_COOKIE_SECRET"
 	//EnvSyndesisEncryptKey				SyndesisEnvVar = "SYNDESIS_ENCRYPT_KEY"
 	EnvPrometheusVolumeCapacity SyndesisEnvVar = "PROMETHEUS_VOLUME_CAPACITY"
@@ -52,6 +54,8 @@ const (
 	EnvUpgradeRegistry       SyndesisEnvVar = "UPGRADE_REGISTRY"
 	EnvUpgradeVolumeCapacity SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
 	EnvExposeVia3Scale       SyndesisEnvVar = "CONTROLLERS_EXPOSE_VIA3SCALE"
+
+	EnvAddons SyndesisEnvVar = "SYNDESIS_ADDONS"
 )
 
 type SyndesisEnvVarConfig struct {
@@ -82,8 +86,10 @@ var (
 		envPostgresqlMemoryLimit,
 		envPostgresqlImageStreamNamespace,
 		envPostgresqlUser,
+		envPostgresqlPassword,
 		envPostgresqlDatabase,
 		envPostgresqlVolumeCapacity,
+		envPostgresqlSampleDbPassword,
 
 		envPrometheusMemoryLimit,
 		envPrometheusVolumeCapacity,
@@ -94,6 +100,7 @@ var (
 		envMetaVolumeCapacity,
 
 		envUpgradeVolumeCapacity,
+		envAddons,
 	}
 
 	setters = []SyndesisEnvVarSetter{
@@ -112,8 +119,10 @@ var (
 		postgresqlMemoryLimitFromEnv,
 		postgresqlImageStreamNamespaceFromEnv,
 		postgresqlUserFromEnv,
+		postgresqlPasswordFromEnv,
 		postgresqlDatabaseFromEnv,
 		postgresqlVolumeCapacityFromEnv,
+		postgresqlSampleDbPasswordFromEnv,
 
 		prometheusMemoryLimitFromEnv,
 		prometheusVolumeCapacityFromEnv,
@@ -125,6 +134,7 @@ var (
 		sarNamespaceFromEnv,
 
 		upgradeVolumeCapacityFromEnv,
+		addonsFromEnv,
 	}
 )
 
@@ -296,13 +306,12 @@ func testSupportFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 }
 
 func envImageStreamNamespace(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
-	if namespace := syndesis.Spec.ImageStreamNamespace; namespace != "" {
-		return &SyndesisEnvVarConfig{
-			Var:   EnvImageStreamNamespace,
-			Value: namespace,
-		}
+	// Can be empty so always return conf value
+	namespace := syndesis.Spec.ImageStreamNamespace
+	return &SyndesisEnvVarConfig{
+		Var:   EnvImageStreamNamespace,
+		Value: namespace,
 	}
-	return nil
 }
 func imageStreamNamespaceFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 	if v, ok := getString(config, EnvImageStreamNamespace); ok {
@@ -359,6 +368,21 @@ func postgresqlUserFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis
 	}
 }
 
+func envPostgresqlPassword(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if password := syndesis.Spec.Components.Db.Password; password != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvPostgresqlPassword,
+			Value: password,
+		}
+	}
+	return nil
+}
+func postgresqlPasswordFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvPostgresqlPassword); ok {
+		syndesis.Spec.Components.Db.Password = v
+	}
+}
+
 func envPostgresqlDatabase(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 	if database := syndesis.Spec.Components.Db.Database; database != "" {
 		return &SyndesisEnvVarConfig{
@@ -386,6 +410,24 @@ func envPostgresqlVolumeCapacity(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarCon
 func postgresqlVolumeCapacityFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 	if v, ok := getString(config, EnvPostgresqlVolumeCapacity); ok {
 		syndesis.Spec.Components.Db.Resources.VolumeCapacity = v
+	}
+}
+
+func envPostgresqlSampleDbPassword(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	password := syndesis.Spec.Components.Db.SampleDbPassword
+	if password == "" {
+		password = DEFAULT_POSTGRESQL_SAMPLEDB_PASSWORD
+	}
+
+	return &SyndesisEnvVarConfig{
+		Var:   EnvPostgresqlSampleDbPassword,
+		Value: password,
+	}
+}
+
+func postgresqlSampleDbPasswordFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvPostgresqlSampleDbPassword); ok {
+		syndesis.Spec.Components.Db.SampleDbPassword = v
 	}
 }
 
@@ -503,5 +545,22 @@ func exposeVia3Scale(config map[string]string, syndesis *v1alpha1.Syndesis) {
 		if b, err := strconv.ParseBool(v); err != nil {
 			syndesis.Spec.Components.Server.Features.ExposeVia3Scale = b
 		}
+	}
+}
+
+// Addons
+func envAddons(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
+	if addons := syndesis.Spec.Addons; addons != "" {
+		return &SyndesisEnvVarConfig{
+			Var:   EnvAddons,
+			Value: addons,
+		}
+	}
+	return nil
+}
+
+func addonsFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
+	if v, ok := getString(config, EnvAddons); ok {
+		syndesis.Spec.Addons = v
 	}
 }

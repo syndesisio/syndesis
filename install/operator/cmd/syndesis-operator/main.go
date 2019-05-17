@@ -41,7 +41,7 @@ func main() {
 	logf.SetLogger(logf.ZapLogger(false))
 
 	configuration.TemplateLocation = flag.String("template", "/conf/syndesis-template.yml", "Path to template used for installation")
-	configuration.AddonsDirLocation = flag.String("addons", "", "Path to the addons directory used for installation")
+	configuration.AddonsDirLocation = flag.String("addons", "/conf/addons", "Path to the addons directory used for installation")
 	configuration.Registry = flag.String("registry", "docker.io", "Registry to use for loading images like the upgrade pod")
 
 	flag.Parse()

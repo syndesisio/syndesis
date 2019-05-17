@@ -38,7 +38,7 @@ func GetUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 	paramMap[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
 	paramMap[string(configuration.EnvUpgradeRegistry)] = *params.UpgradeRegistry
 
-	return processor.Process(upgrateTempl, paramMap)
+	return processor.Process(upgrateTempl, paramMap, syndesis)
 }
 
 func findUpgradeTemplate(scheme *runtime.Scheme, list []runtime.RawExtension) (*templatev1.Template, error) {
