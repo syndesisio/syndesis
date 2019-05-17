@@ -33,6 +33,7 @@ public class ModelData<T extends WithId<T>> implements ToJson {
     private Kind kind;
     private T data;
     private String json;
+    private String condition;
 
     public ModelData() {
         // makes it easier to handle as a Java bean
@@ -82,6 +83,14 @@ public class ModelData<T extends WithId<T>> implements ToJson {
     public void setData(T data) {
         this.data = data;
         this.json = null;
+    }
+
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
     }
 
 }
