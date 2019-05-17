@@ -2,6 +2,8 @@
   flex: 1 0;
   display: flex;
   flex-flow: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .integration-editor-layout__sidebarOuter {
@@ -41,8 +43,6 @@
   }
   .integration-editor-layout__sidebarInner {
     background-color: var(--pf-global--BackgroundColor--200);
-    overflow-x: hidden;
-    overflow-y: auto;
     display: flex;
   }
 
