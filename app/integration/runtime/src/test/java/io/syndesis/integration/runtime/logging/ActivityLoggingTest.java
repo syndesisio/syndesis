@@ -83,7 +83,8 @@ public class ActivityLoggingTest extends AbstractActivityLoggingTest {
         assertEquals("false", findActivityEvent(x -> "done".equals(x.status)).failed);
 
         // There should be 1 log activity
-        assertEquals(1, findActivityEvents(x -> "log".equals(x.step)).size());
+        assertEquals(1, findActivityEvents(x -> "log".equals(x.step) && ObjectHelper.isEmpty(x.duration)).size());
+        assertEquals(1, findActivityEvents(x -> "log".equals(x.step) && ObjectHelper.isNotEmpty(x.duration)).size());
         assertEquals("hi", findActivityEvent(x -> "log".equals(x.step)).message);
 
         // There should be step activity tracking events
@@ -109,7 +110,8 @@ public class ActivityLoggingTest extends AbstractActivityLoggingTest {
         assertEquals("true", findActivityEvent(x -> "done".equals(x.status)).failed);
 
         // There should be 1 log activity
-        assertEquals(1, findActivityEvents(x -> "log".equals(x.step)).size());
+        assertEquals(1, findActivityEvents(x -> "log".equals(x.step) && ObjectHelper.isEmpty(x.duration)).size());
+        assertEquals(1, findActivityEvents(x -> "log".equals(x.step) && ObjectHelper.isNotEmpty(x.duration)).size());
         assertEquals("hi", findActivityEvent(x -> "log".equals(x.step)).message);
 
         // There should be step activity tracking events

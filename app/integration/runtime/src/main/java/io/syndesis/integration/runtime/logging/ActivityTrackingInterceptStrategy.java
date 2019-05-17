@@ -58,15 +58,18 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
                 return target;
             }
 
-            return new EventProcessor(target);
+            return new EventProcessor(target, stepId);
         }
 
         return target;
     }
 
     private class EventProcessor extends DelegateAsyncProcessor {
-        EventProcessor(Processor processor) {
+        private final String stepId;
+
+        EventProcessor(Processor processor, String stepId) {
             super(processor);
+            this.stepId = stepId;
         }
 
         @Override
@@ -78,12 +81,11 @@ public class ActivityTrackingInterceptStrategy implements InterceptStrategy {
 
             return super.process(exchange, doneSync -> {
                 final String activityId =  ActivityTracker.getActivityId(exchange);
-                final String stepId = in.getHeader(IntegrationLoggingConstants.STEP_ID, String.class);
 
                 if (activityId != null) {
                     tracker.track(
                         "exchange", activityId,
-                        "step", stepId != null ? stepId : "none",
+                        "step", stepId,
                         "id", trackerId,
                         "duration", System.nanoTime() - createdAt,
                         "failure", failure(exchange)

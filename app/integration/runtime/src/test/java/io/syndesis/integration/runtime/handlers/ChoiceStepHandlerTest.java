@@ -57,6 +57,10 @@ import static org.mockito.Mockito.verify;
 public class ChoiceStepHandlerTest extends IntegrationTestSupport {
     private static final Logger LOGGER = LoggerFactory.getLogger(ChoiceStepHandlerTest.class);
 
+    private static final String START_STEP = "start-step";
+    private static final String CHOICE_STEP = "choice-step";
+    private static final String MOCK_STEP = "mock-step";
+
     private ActivityTracker activityTracker = Mockito.mock(ActivityTracker.class);
 
     @Before
@@ -81,7 +85,7 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
         try {
             final RouteBuilder integrationRoute = newIntegrationRouteBuilder(activityTracker,
                 new Step.Builder()
-                    .id("flow-step")
+                    .id(START_STEP)
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -91,7 +95,7 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
                         .build())
                     .build(),
                 new Step.Builder()
-                    .id("choice-step")
+                    .id(CHOICE_STEP)
                     .stepKind(StepKind.choice)
                     .putConfiguredProperty("flows", "[" +
                                         "{\"condition\": \"${body} contains 'Hello'\", \"flow\": \"hello-flow\"}," +
@@ -99,7 +103,7 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
                                     "]")
                     .build(),
                 new Step.Builder()
-                    .id("mock-step")
+                    .id(MOCK_STEP)
                     .stepKind(StepKind.endpoint)
                     .action(new ConnectorAction.Builder()
                         .descriptor(new ConnectorDescriptor.Builder()
@@ -162,10 +166,10 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
             byeResult.assertIsSatisfied();
 
             verify(activityTracker, times(3)).startTracking(any(Exchange.class));
-            verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verifyActivityStepTracking(CHOICE_STEP, 3);
+            verifyActivityStepTracking(MOCK_STEP, 3);
+            verifyNoMatchingConditionTracking(1);
             verify(activityTracker, times(3)).finishTracking(any(Exchange.class));
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("message"), endsWith("No matching condition for message"));
-
         } finally {
             context.stop();
         }
@@ -178,7 +182,7 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
         try {
             final RouteBuilder integrationRoute = newIntegrationRouteBuilder(activityTracker,
                     new Step.Builder()
-                            .id("flow-step")
+                            .id(START_STEP)
                             .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                     .descriptor(new ConnectorDescriptor.Builder()
@@ -188,7 +192,7 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
                                     .build())
                             .build(),
                     new Step.Builder()
-                            .id("choice-step")
+                            .id(CHOICE_STEP)
                             .stepKind(StepKind.choice)
                             .putConfiguredProperty("routingScheme", "mock")
                             .putConfiguredProperty("default", "default-flow")
@@ -198,7 +202,7 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
                                     "]")
                             .build(),
                     new Step.Builder()
-                            .id("mock-step")
+                            .id(MOCK_STEP)
                             .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                     .descriptor(new ConnectorDescriptor.Builder()
@@ -241,7 +245,8 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
             byeResult.assertIsSatisfied();
 
             verify(activityTracker, times(3)).startTracking(any(Exchange.class));
-            verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verifyActivityStepTracking(CHOICE_STEP, 3);
+            verifyActivityStepTracking(MOCK_STEP, 3);
             verify(activityTracker, times(3)).finishTracking(any(Exchange.class));
 
         } finally {
@@ -256,7 +261,7 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
         try {
             final RouteBuilder integrationRoute = newIntegrationRouteBuilder(activityTracker,
                     new Step.Builder()
-                            .id("flow-step")
+                            .id(START_STEP)
                             .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                     .descriptor(new ConnectorDescriptor.Builder()
@@ -266,7 +271,7 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
                                     .build())
                             .build(),
                     new Step.Builder()
-                            .id("choice-step")
+                            .id(CHOICE_STEP)
                             .stepKind(StepKind.choice)
                             .putConfiguredProperty("routingScheme", "mock")
                             .putConfiguredProperty("flows", "[" +
@@ -275,7 +280,7 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
                                     "]")
                             .build(),
                     new Step.Builder()
-                            .id("mock-step")
+                            .id(MOCK_STEP)
                             .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                     .descriptor(new ConnectorDescriptor.Builder()
@@ -320,9 +325,10 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
             byeResult.assertIsSatisfied();
 
             verify(activityTracker, times(3)).startTracking(any(Exchange.class));
-            verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verifyActivityStepTracking(CHOICE_STEP, 3);
+            verifyActivityStepTracking(MOCK_STEP, 3);
+            verifyNoMatchingConditionTracking(1);
             verify(activityTracker, times(3)).finishTracking(any(Exchange.class));
-            verify(activityTracker).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("message"), endsWith("No matching condition for message"));
 
         } finally {
             context.stop();
@@ -336,7 +342,7 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
         try {
             final RouteBuilder integrationRoute = newIntegrationRouteBuilder(activityTracker,
                     new Step.Builder()
-                            .id("flow-step")
+                            .id(START_STEP)
                             .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                     .descriptor(new ConnectorDescriptor.Builder()
@@ -346,11 +352,11 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
                                     .build())
                             .build(),
                     new Step.Builder()
-                            .id("choice-step")
+                            .id(CHOICE_STEP)
                             .stepKind(StepKind.choice)
                             .build(),
                     new Step.Builder()
-                            .id("mock-step")
+                            .id(MOCK_STEP)
                             .stepKind(StepKind.endpoint)
                             .action(new ConnectorAction.Builder()
                                     .descriptor(new ConnectorDescriptor.Builder()
@@ -385,11 +391,20 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             verify(activityTracker, times(3)).startTracking(any(Exchange.class));
-            verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verifyActivityStepTracking(CHOICE_STEP, 3);
+            verifyActivityStepTracking(MOCK_STEP, 3);
             verify(activityTracker, times(3)).finishTracking(any(Exchange.class));
 
         } finally {
             context.stop();
         }
+    }
+
+    private void verifyActivityStepTracking(String stepId, int times) {
+        verify(activityTracker, times(times)).track(eq("exchange"), anyString(), eq("step"), eq(stepId), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+    }
+
+    private void verifyNoMatchingConditionTracking(int times) {
+        verify(activityTracker, times(times)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("message"), endsWith("No matching condition for message"));
     }
 }
