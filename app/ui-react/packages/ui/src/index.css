@@ -120,3 +120,7 @@ body {
   white-space: nowrap;
   text-overflow: ellipsis;
 }
+
+.pf-c-about-modal-box__hero {
+  background-position: right;
+}

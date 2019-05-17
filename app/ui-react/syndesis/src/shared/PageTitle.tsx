@@ -19,12 +19,18 @@ export class PageTitle extends React.PureComponent<IPageTitleProps> {
   public render() {
     return (
       <AppContext.Consumer>
-        {({ config }) => (
-          <Helmet>
-            <title>{`${this.props.title} - ${config.title ||
-              'Syndesis'}`}</title>
-          </Helmet>
-        )}
+        {({ config }) => {
+          const productName = config.branding.productBuild
+            ? 'Fuse Online'
+            : 'Syndesis';
+          return (
+            <Helmet>
+              <title>
+                {`${this.props.title} - ${config.title || productName}`}
+              </title>
+            </Helmet>
+          );
+        }}
       </AppContext.Consumer>
     );
   }

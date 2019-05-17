@@ -18,9 +18,12 @@ import { Link, Route, Switch } from 'react-router-dom';
 import { Workbox } from 'workbox-window';
 import resolvers from '../modules/resolvers';
 import { ApiError, PageNotFound, WithErrorBoundary } from '../shared';
+import fuseOnlineLogo from '../shared/images/FuseOnlineLogo_White.svg';
+import brandImg from '../shared/images/pf4-downstream-bg.svg';
+import syndesisLogoGraphic from '../shared/images/syndesis-logo-graphic.png';
+import syndesisLogo from '../shared/images/syndesis_logo_full_darkbkg.svg';
 import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
 import { AppContext } from './AppContext';
-import logo from './syndesis_logo_full_darkbkg.svg';
 import { UIContext } from './UIContext';
 
 export interface IAppUIProps {
@@ -114,168 +117,184 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
     >
       <Translation ns={['app', 'shared']}>
         {t => {
-          const productName = 'Syndesis';
           return (
-            <>
-              {showAboutModal && (
-                <AboutModal
-                  trademark={''}
-                  productName={productName}
-                  isModalOpen={showAboutModal}
-                  handleModalToggle={toggleAboutModal}
-                  brandImg={'https://avatars0.githubusercontent.com/u/23079786'}
-                >
-                  <WithApiVersion>
-                    {({ data, error, loading }) => {
-                      const {
-                        'commit-id': commitId,
-                        'build-id': buildId,
-                        version,
-                      } = data;
-                      return (
-                        <WithLoader
-                          error={error}
-                          loading={loading}
-                          errorChildren={<ApiError />}
-                          loaderChildren={<Loader />}
-                        >
-                          {() => (
-                            <AboutModalContent
-                              version={version}
-                              buildId={buildId}
-                              commitId={commitId}
-                              productName={productName}
-                            />
-                          )}
-                        </WithLoader>
-                      );
-                    }}
-                  </WithApiVersion>
-                </AboutModal>
-              )}
-              <Notifications
-                notifications={notifications}
-                notificationTimerDelay={8000}
-                removeNotificationAction={onRemoveNotification}
-              />
-              <WithRouter>
-                {({ history, match }) => {
-                  return (
-                    <AppContext.Consumer>
-                      {({ user }) => (
-                        <AppLayout
-                          onShowAboutModal={toggleAboutModal}
-                          onSelectSupport={() => {
-                            history.push(resolvers.support.root());
-                          }}
-                          onSelectSampleIntegrationTutorials={() => {
-                            window.open(
-                              'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/fuse_online_sample_integration_tutorials/',
-                              '_blank'
-                            );
-                          }}
-                          onSelectUserGuide={() => {
-                            window.open(
-                              'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/integrating_applications_with_fuse_online',
-                              '_blank'
-                            );
-                          }}
-                          onSelectConnectorsGuide={() => {
-                            window.open(
-                              'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/connecting_fuse_online_to_applications_and_services/',
-                              '_blank'
-                            );
-                          }}
-                          onSelectContactUs={() => {
-                            window.location.href =
-                              'mailto:fuse-online-tech-preview@redhat.com';
-                          }}
-                          appNav={
-                            <AppTopMenu username={user.username || 'developer'}>
-                              <PfDropdownItem>
-                                <Link
-                                  to={'/logout'}
-                                  className="pf-c-dropdown__menu-item"
-                                  children={t('Logout')}
-                                />
-                              </PfDropdownItem>
-                            </AppTopMenu>
-                          }
-                          verticalNav={routes.map((route, index) =>
-                            !(route as IAppRouteWithChildrens).childrens ? (
-                              <PfVerticalNavItem
-                                exact={(route as IAppRoute).exact}
-                                label={t((route as IAppRoute).label)}
-                                to={(route as IAppRoute).to}
-                                key={index}
-                                data-testid={`navbar-link-${
-                                  (route as IAppRoute).to
-                                }`}
-                              />
-                            ) : (
-                              <PfVerticalNavItem
-                                label={t(route.label)}
-                                key={index}
-                                to={'#'}
+            <AppContext.Consumer>
+              {({ user, config }) => {
+                const isProductBuild = config.branding.productBuild;
+                const productName = isProductBuild ? 'Fuse Online' : 'Syndesis';
+                return (
+                  <>
+                    {showAboutModal && (
+                      <AboutModal
+                        trademark={''}
+                        productName={productName}
+                        isModalOpen={showAboutModal}
+                        handleModalToggle={toggleAboutModal}
+                        bgImg={config && isProductBuild ? brandImg : undefined}
+                        brandImg={
+                          config && isProductBuild
+                            ? fuseOnlineLogo
+                            : syndesisLogoGraphic
+                        }
+                      >
+                        <WithApiVersion>
+                          {({ data, error, loading }) => {
+                            const {
+                              'commit-id': commitId,
+                              'build-id': buildId,
+                              version,
+                            } = data;
+                            return (
+                              <WithLoader
+                                error={error}
+                                loading={loading}
+                                errorChildren={<ApiError />}
+                                loaderChildren={<Loader />}
                               >
-                                {(route as IAppRouteWithChildrens).childrens.map(
-                                  (subRoute, subIndex) => (
-                                    <PfVerticalNavItem
-                                      exact={subRoute.exact}
-                                      label={t(subRoute.label)}
-                                      to={subRoute.to}
-                                      key={subIndex}
-                                      data-testid={`navbar-link-${subRoute.to}`}
-                                    />
-                                  )
-                                )}
-                              </PfVerticalNavItem>
-                            )
-                          )}
-                          pictograph={
-                            <img
-                              src={logo}
-                              alt="Syndesis"
-                              style={{ minWidth: '164px' }}
-                            />
-                          }
-                          logoHref={'/'}
-                          showNavigation={showNavigation}
-                          onNavigationCollapse={onHideNavigation}
-                          onNavigationExpand={onShowNavigation}
-                        >
-                          <WithErrorBoundary key={match.url}>
-                            <Switch>
-                              {routes
-                                .reduce(
-                                  (flattenedRoutes, route) => [
-                                    ...flattenedRoutes,
-                                    ...(!(route as IAppRouteWithChildrens)
-                                      .childrens
-                                      ? [route as IAppRoute]
-                                      : (route as IAppRouteWithChildrens)
-                                          .childrens),
-                                  ],
-                                  [] as IAppRoute[]
-                                )
-                                .map((route, index) => (
-                                  <Route
-                                    path={route.to}
-                                    exact={route.exact}
-                                    component={route.component}
-                                    key={index}
+                                {() => (
+                                  <AboutModalContent
+                                    version={version}
+                                    buildId={buildId}
+                                    commitId={commitId}
+                                    productName={productName}
                                   />
-                                ))}
-                              <Route component={PageNotFound} />
-                            </Switch>
-                          </WithErrorBoundary>
-                        </AppLayout>
-                      )}
-                    </AppContext.Consumer>
-                  );
-                }}
-              </WithRouter>
-            </>
+                                )}
+                              </WithLoader>
+                            );
+                          }}
+                        </WithApiVersion>
+                      </AboutModal>
+                    )}
+                    <Notifications
+                      notifications={notifications}
+                      notificationTimerDelay={8000}
+                      removeNotificationAction={onRemoveNotification}
+                    />
+                    <WithRouter>
+                      {({ history, match }) => {
+                        return (
+                          <AppLayout
+                            onShowAboutModal={toggleAboutModal}
+                            onSelectSupport={() => {
+                              history.push(resolvers.support.root());
+                            }}
+                            onSelectSampleIntegrationTutorials={() => {
+                              window.open(
+                                'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/fuse_online_sample_integration_tutorials/',
+                                '_blank'
+                              );
+                            }}
+                            onSelectUserGuide={() => {
+                              window.open(
+                                'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/integrating_applications_with_fuse_online',
+                                '_blank'
+                              );
+                            }}
+                            onSelectConnectorsGuide={() => {
+                              window.open(
+                                'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/connecting_fuse_online_to_applications_and_services/',
+                                '_blank'
+                              );
+                            }}
+                            onSelectContactUs={() => {
+                              window.location.href =
+                                'mailto:fuse-online-tech-preview@redhat.com';
+                            }}
+                            appNav={
+                              <AppTopMenu
+                                username={user.username || 'developer'}
+                              >
+                                <PfDropdownItem>
+                                  <Link
+                                    to={'/logout'}
+                                    className="pf-c-dropdown__menu-item"
+                                    children={t('Logout')}
+                                  />
+                                </PfDropdownItem>
+                              </AppTopMenu>
+                            }
+                            verticalNav={routes.map((route, index) =>
+                              !(route as IAppRouteWithChildrens).childrens ? (
+                                <PfVerticalNavItem
+                                  exact={(route as IAppRoute).exact}
+                                  label={t((route as IAppRoute).label)}
+                                  to={(route as IAppRoute).to}
+                                  key={index}
+                                  data-testid={`navbar-link-${
+                                    (route as IAppRoute).to
+                                  }`}
+                                />
+                              ) : (
+                                <PfVerticalNavItem
+                                  label={t(route.label)}
+                                  key={index}
+                                  to={'#'}
+                                >
+                                  {(route as IAppRouteWithChildrens).childrens.map(
+                                    (subRoute, subIndex) => (
+                                      <PfVerticalNavItem
+                                        exact={subRoute.exact}
+                                        label={t(subRoute.label)}
+                                        to={subRoute.to}
+                                        key={subIndex}
+                                        data-testid={`navbar-link-${
+                                          subRoute.to
+                                        }`}
+                                      />
+                                    )
+                                  )}
+                                </PfVerticalNavItem>
+                              )
+                            )}
+                            pictograph={
+                              <img
+                                src={
+                                  config && isProductBuild
+                                    ? fuseOnlineLogo
+                                    : syndesisLogo
+                                }
+                                alt={productName}
+                                style={{ minWidth: '164px' }}
+                              />
+                            }
+                            logoHref={'/'}
+                            showNavigation={showNavigation}
+                            onNavigationCollapse={onHideNavigation}
+                            onNavigationExpand={onShowNavigation}
+                          >
+                            <WithErrorBoundary key={match.url}>
+                              <Switch>
+                                {routes
+                                  .reduce(
+                                    (flattenedRoutes, route) => [
+                                      ...flattenedRoutes,
+                                      ...(!(route as IAppRouteWithChildrens)
+                                        .childrens
+                                        ? [route as IAppRoute]
+                                        : (route as IAppRouteWithChildrens)
+                                            .childrens),
+                                    ],
+                                    [] as IAppRoute[]
+                                  )
+                                  .map((route, index) => (
+                                    <Route
+                                      path={route.to}
+                                      exact={route.exact}
+                                      component={route.component}
+                                      key={index}
+                                    />
+                                  ))}
+                                <Route component={PageNotFound} />
+                              </Switch>
+                            </WithErrorBoundary>
+                          </AppLayout>
+                        );
+                      }}
+                    </WithRouter>
+                  </>
+                );
+              }}
+            </AppContext.Consumer>
           );
         }}
       </Translation>
