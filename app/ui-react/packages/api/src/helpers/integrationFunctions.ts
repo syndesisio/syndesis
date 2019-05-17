@@ -604,6 +604,21 @@ export function applyUserDefinedDataShapesToAction(
   }
   const descriptor = newAction.descriptor!;
   const oldDescriptor = oldAction.descriptor!;
+  return setDescriptorOnAction(newAction, oldDescriptor, descriptor);
+}
+
+/**
+ * Compares the old and new descriptors and returns a new action object
+ * with user defined data shapes preserved
+ * @param action
+ * @param oldDescriptor
+ * @param descriptor
+ */
+export function setDescriptorOnAction(
+  action: Action,
+  oldDescriptor: ActionDescriptor,
+  descriptor: ActionDescriptor
+): Action {
   const oldInputDataShape = oldDescriptor.inputDataShape;
   const oldOutputDataShape = oldDescriptor.outputDataShape;
   const preserveInput =
@@ -621,7 +636,7 @@ export function applyUserDefinedDataShapesToAction(
         DataShapeKinds.NONE &&
         !descriptor.outputDataShape.specification));
   return {
-    ...newAction,
+    ...action,
     descriptor: {
       ...descriptor,
       inputDataShape: preserveInput
@@ -1302,6 +1317,6 @@ export function isMiddleStep(
 ): boolean {
   return (
     !isStartStep(integration, flowId, position) &&
-    !isMiddleStep(integration, flowId, position)
+    !isEndStep(integration, flowId, position)
   );
 }

@@ -4,6 +4,7 @@ import {
   getPreviousIntegrationStepsWithDataShape,
   getSubsequentIntegrationStepsWithDataShape,
   SPLIT,
+  toDataShapeKinds,
 } from '@syndesis/api';
 import {
   DocumentType,
@@ -42,7 +43,7 @@ export function stepToProps(
     showFields,
   };
 
-  switch (dataShape.kind!.toLowerCase()) {
+  switch (toDataShapeKinds(dataShape.kind!)) {
     case DataShapeKinds.JAVA:
       return {
         ...basicInfo,
