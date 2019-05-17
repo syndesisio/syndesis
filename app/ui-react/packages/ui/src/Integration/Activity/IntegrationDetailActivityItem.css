@@ -14,3 +14,7 @@
   border: none;
   padding-top: 2px;
 }
+
+.integration-detail-activity-item__expanded-table {
+  margin-top: 25px;
+}
