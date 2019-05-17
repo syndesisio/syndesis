@@ -146,10 +146,34 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
 
   const describeDataShapePage = (
     <DescribeDataShapePage
+      mode={mode}
       cancelHref={cancelHref}
       sidebar={props => (
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
+      backHref={(page, p, s) =>
+        page === 'configureAction'
+          ? appResolvers.connection.configureAction({
+              ...(p as IConfigureActionRouteParams),
+              ...(s as IConfigureActionRouteState),
+            })
+          : appResolvers.connection.describeData({
+              ...(p as IDescribeDataShapeRouteParams),
+              ...(s as IDescribeDataShapeRouteState),
+            })
+      }
+      postConfigureHref={(page, integration, p, s) =>
+        page === 'describeData'
+          ? appResolvers.connection.describeData({
+              ...(p as IDescribeDataShapeRouteParams),
+              ...(s as IDescribeDataShapeRouteState),
+            })
+          : postConfigureHref(
+              integration,
+              p as IConfigureActionRouteParams,
+              s as IConfigureActionRouteState
+            )
+      }
     />
   );
 

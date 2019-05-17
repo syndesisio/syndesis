@@ -99,6 +99,7 @@ export enum DataShapeDirection {
 
 export interface IDescribeDataShapeRouteParams {
   flowId: string;
+  actionId?: string;
   position: string;
   direction: DataShapeDirection;
 }

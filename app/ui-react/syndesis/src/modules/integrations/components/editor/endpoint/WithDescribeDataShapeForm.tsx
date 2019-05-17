@@ -9,7 +9,7 @@ export interface IWithDescribeDataShapeFormProps {
   initialDefinition?: string;
   initialName?: string;
   initialDescription?: string;
-  backActionHref?: H.LocationDescriptor;
+  backActionHref: H.LocationDescriptor;
   onUpdatedDataShape: (dataShape: DataShape) => void;
 }
 
@@ -91,6 +91,7 @@ export class WithDescribeDataShapeForm extends React.Component<
             'Paste or write content for the type you selected, for example, for JSON Schema, paste the content of a document whose media type is application/schema+json.'
           }
           i18nNext={'Next'}
+          i18nBackAction={'Back'}
           backActionHref={this.props.backActionHref}
           onNext={this.handleNext}
           onKindChange={this.handleKindChange}
