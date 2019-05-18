@@ -106,7 +106,15 @@ export class FormDurationComponent extends React.Component<
         controlId={this.props.field.name}
         validationState={getValidationState(this.props)}
       >
-        <ControlLabel>{this.props.property.displayName}</ControlLabel>
+        <ControlLabel
+          className={
+            this.props.property.required && !this.props.allFieldsRequired
+              ? 'required-pf'
+              : ''
+          }
+        >
+          {this.props.property.displayName}
+        </ControlLabel>
         {this.props.property.labelHint && (
           <ControlLabel>
             <FieldLevelHelp content={this.props.property.labelHint} />

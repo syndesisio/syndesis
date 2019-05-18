@@ -32,7 +32,15 @@ export const FormSelectComponent: React.FunctionComponent<
       controlId={field.name}
       validationState={getValidationState(props)}
     >
-      <ControlLabel>{props.property.displayName}</ControlLabel>
+      <ControlLabel
+        className={
+          props.property.required && !props.allFieldsRequired
+            ? 'required-pf'
+            : ''
+        }
+      >
+        {props.property.displayName}
+      </ControlLabel>
       {props.property.labelHint && (
         <ControlLabel>
           <FieldLevelHelp content={props.property.labelHint} />

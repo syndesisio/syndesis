@@ -15,6 +15,7 @@ export interface INamedConfigurationProperty extends IFormDefinitionProperty {
 }
 
 export interface IRenderFieldProps {
+  allFieldsRequired: boolean;
   property: INamedConfigurationProperty;
   value: any;
   [name: string]: any;
@@ -51,7 +52,7 @@ export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
       textarea: FormTextAreaComponent,
     };
     const validate = (value: any) => {
-      if (props.property.required && !value) {
+      if (props.property.required && typeof value === 'undefined') {
         return this.props.i18nRequiredProperty;
       }
       return undefined;

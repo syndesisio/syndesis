@@ -69,6 +69,8 @@
       "viewLogs": "View Logs",
       "HideDetails": "Hide Details",
       "ShowDetails": "Show Details",
+      "FieldsMarkedWithStarRequired": "The fields marked with <span class=\"required-pf\">*</span> are required.",
+      "AllFieldsRequired": "All fields are required.",
       "links": {
         "contactus": "//access.redhat.com/support/cases/#/case/new",
         "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online",

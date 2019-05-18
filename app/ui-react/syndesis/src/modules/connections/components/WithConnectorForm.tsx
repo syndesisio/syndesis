@@ -2,8 +2,13 @@ import { WithConnectionHelpers } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
 import { Connector } from '@syndesis/models';
 import { IConnectorConfigurationFormValidationResult } from '@syndesis/ui';
-import { toFormDefinition } from '@syndesis/utils';
+import {
+  allFieldsRequired,
+  getRequiredStatusText,
+  toFormDefinition,
+} from '@syndesis/utils';
 import * as React from 'react';
+import i18n from '../../../i18n';
 
 export interface IWithConnectorFormChildrenProps {
   /**
@@ -165,11 +170,18 @@ export class WithConnectorForm extends React.Component<
               }
             }
           };
-
+          const requiredPrompt = getRequiredStatusText(
+            definition,
+            i18n.t('shared:AllFieldsRequired'),
+            i18n.t('shared:FieldsMarkedWithStarRequired'),
+            ''
+          );
           return (
             <AutoForm<{ [key: string]: string }>
               i18nRequiredProperty={'* Required field'}
               definition={toFormDefinition(definition)}
+              i18nFieldsStatusText={requiredPrompt}
+              allFieldsRequired={allFieldsRequired(definition)}
               initialValue={this.props.initialValue!}
               validate={validateFormAgainstBackend}
               onSave={this.props.onSave}
