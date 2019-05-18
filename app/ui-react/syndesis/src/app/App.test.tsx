@@ -24,13 +24,13 @@ export default describe('App', () => {
           routes={[
             {
               component: TestRoute,
-              icon: 'test-icon',
+              kind: 'route',
               label: 'Test route',
               to: '/some-test-url',
             },
             {
               component: UnmatchedRoute,
-              icon: 'test-icon',
+              kind: 'route',
               label: 'Test unmatched route',
               to: '/unmatched',
             },

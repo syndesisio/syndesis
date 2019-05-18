@@ -2,6 +2,7 @@ import { AboutModal as PfAboutModal } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IAboutModal {
+  bgImg?: string;
   brandImg: any;
   handleModalToggle: any;
   isModalOpen: boolean;
@@ -17,6 +18,7 @@ export class AboutModal extends React.Component<IAboutModal> {
 
   public render() {
     const {
+      bgImg,
       brandImg,
       children,
       isModalOpen,
@@ -33,6 +35,7 @@ export class AboutModal extends React.Component<IAboutModal> {
           brandImageSrc={brandImg}
           brandImageAlt="Brand Image"
           productName={productName}
+          backgroundImageSrc={bgImg}
         >
           {children}
         </PfAboutModal>

@@ -23,6 +23,7 @@ stories.add(
           Open Modal
         </button>
         <AboutModal
+          bgImg={undefined}
           trademark={text(
             'trademark',
             'A flexible, customizable, open source platform that provides core integration capabilities as a service.'
