@@ -52,7 +52,10 @@ export class IntegrationEditorForm extends React.Component<
                 <div className="card-pf-footer">
                   {this.props.backActionHref && (
                     <>
-                      <ButtonLink href={this.props.backActionHref}>
+                      <ButtonLink
+                        id={'integration-editor-form-back-button'}
+                        href={this.props.backActionHref}
+                      >
                         <i className={'fa fa-chevron-left'} />{' '}
                         {this.props.i18nBackAction}
                       </ButtonLink>
@@ -60,6 +63,7 @@ export class IntegrationEditorForm extends React.Component<
                     </>
                   )}
                   <ButtonLink
+                    id={'integration-editor-form-next-button'}
                     onClick={this.props.submitForm}
                     disabled={!this.props.isValid}
                     as={'primary'}

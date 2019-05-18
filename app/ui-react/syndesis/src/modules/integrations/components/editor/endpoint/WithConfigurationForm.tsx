@@ -17,7 +17,7 @@ import {
   PageSectionLoader,
 } from '@syndesis/ui';
 import {
-  getInitialValues,
+  applyInitialValues,
   toFormDefinition,
   validateConfiguredProperties,
   WithLoader,
@@ -76,7 +76,7 @@ export interface IWithConfigurationFormProps {
    */
   actionId: string;
 
-  oldAction: Action;
+  oldAction?: Action;
   /**
    * for actions whose configuration must be performed in multiple steps,
    * indicates the current step.
@@ -129,30 +129,39 @@ export class WithConfigurationForm extends React.Component<
         values: { [key: string]: string },
         actions: any
       ): Promise<void> => {
+        action =
+          typeof this.props.oldAction !== 'undefined'
+            ? applyUserDefinedDataShapesToAction(this.props.oldAction, {
+                ...action,
+                descriptor,
+              })
+            : action;
         await this.props.onUpdatedIntegration({
-          action: applyUserDefinedDataShapesToAction(this.props.oldAction, {
-            ...action,
-            descriptor,
-          }),
+          action,
           moreConfigurationSteps,
           values,
         });
         actions.setSubmitting(false);
       };
       const key = JSON.stringify(definition);
-      const allRequiredSet = validateConfiguredProperties(
+      const initialValue = applyInitialValues(
         definition,
         this.props.initialValue
+      );
+      const isInitialValid = validateConfiguredProperties(
+        definition,
+        initialValue
       );
       return (
         <AutoForm<{ [key: string]: string }>
           i18nRequiredProperty={'* Required field'}
           definition={toFormDefinition(definition)}
-          initialValue={this.props.initialValue || getInitialValues(definition)}
+          initialValue={initialValue}
+          isInitialValid={isInitialValid}
           onSave={onSave}
-          validate={(values: { [name: string]: any }): any => {
-            return true;
-          }}
+          validate={(values: { [name: string]: any }): any =>
+            validateConfiguredProperties(definition, values)
+          }
           key={key}
         >
           {({ dirty, fields, handleSubmit, isValid, submitForm }) => (
@@ -161,7 +170,7 @@ export class WithConfigurationForm extends React.Component<
                 i18nFormTitle={`${action.name} - ${action.description}`}
                 i18nBackAction={'Choose Action'}
                 i18nNext={'Next'}
-                isValid={allRequiredSet || isValid}
+                isValid={isValid}
                 submitForm={submitForm}
                 handleSubmit={handleSubmit}
                 backActionHref={this.props.chooseActionHref}

@@ -5,9 +5,13 @@ import {
   getActionSteps,
 } from '@syndesis/api';
 import { AutoForm } from '@syndesis/auto-form';
-import { StepKind } from '@syndesis/models';
+import { ConfigurationProperty, StepKind } from '@syndesis/models';
 import { IntegrationEditorForm } from '@syndesis/ui';
-import { toFormDefinition } from '@syndesis/utils';
+import {
+  applyInitialValues,
+  toFormDefinition,
+  validateConfiguredProperties,
+} from '@syndesis/utils';
 import * as React from 'react';
 
 export interface IWithConfigurationFormChildrenProps {
@@ -91,9 +95,7 @@ export class WithConfigurationForm extends React.Component<
     let step = this.props.step.properties
       ? this.props.step
       : ALL_STEPS.find(s => s.stepKind === this.props.step.stepKind);
-
-    let definition;
-
+    let definition: { [key: string]: ConfigurationProperty };
     // if step is undefined, maybe we are dealing with an extension
     if (!step) {
       const steps = getActionSteps(this.props.step.action!.descriptor!);
@@ -103,12 +105,24 @@ export class WithConfigurationForm extends React.Component<
     } else {
       definition = step.properties;
     }
+    const initialValue = applyInitialValues(
+      definition,
+      this.props.step.configuredProperties
+    );
+    const isInitialValid = validateConfiguredProperties(
+      definition,
+      initialValue
+    );
     return (
       <AutoForm<{ [key: string]: string }>
         i18nRequiredProperty={'* Required field'}
         definition={toFormDefinition(definition)}
-        initialValue={this.props.step.configuredProperties || {}}
+        initialValue={initialValue}
+        isInitialValid={isInitialValid}
         onSave={onSave}
+        validate={(values: { [name: string]: any }): any =>
+          validateConfiguredProperties(definition, values)
+        }
         key={this.props.step.id}
       >
         {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>

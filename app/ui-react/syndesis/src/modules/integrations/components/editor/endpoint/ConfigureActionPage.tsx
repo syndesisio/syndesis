@@ -219,7 +219,11 @@ export class ConfigureActionPage extends React.Component<
                       <WithConfigurationForm
                         connection={connection}
                         actionId={actionId}
-                        oldAction={oldStepConfig!.action!}
+                        oldAction={
+                          oldStepConfig && oldStepConfig.action
+                            ? oldStepConfig!.action!
+                            : undefined
+                        }
                         configurationStep={stepAsNumber}
                         initialValue={configuredProperties}
                         onUpdatedIntegration={onUpdatedIntegration}
