@@ -8,11 +8,14 @@ import { AutoForm } from '@syndesis/auto-form';
 import { ConfigurationProperty, StepKind } from '@syndesis/models';
 import { IntegrationEditorForm } from '@syndesis/ui';
 import {
+  allFieldsRequired,
   applyInitialValues,
+  getRequiredStatusText,
   toFormDefinition,
   validateConfiguredProperties,
 } from '@syndesis/utils';
 import * as React from 'react';
+import i18n from '../../../../../i18n';
 
 export interface IWithConfigurationFormChildrenProps {
   /**
@@ -113,9 +116,17 @@ export class WithConfigurationForm extends React.Component<
       definition,
       initialValue
     );
+    const requiredPrompt = getRequiredStatusText(
+      definition,
+      i18n.t('shared:AllFieldsRequired'),
+      i18n.t('shared:FieldsMarkedWithStarRequired'),
+      ''
+    );
     return (
       <AutoForm<{ [key: string]: string }>
         i18nRequiredProperty={'* Required field'}
+        allFieldsRequired={allFieldsRequired(definition)}
+        i18nFieldsStatusText={requiredPrompt}
         definition={toFormDefinition(definition)}
         initialValue={initialValue}
         isInitialValid={isInitialValid}

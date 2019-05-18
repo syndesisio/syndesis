@@ -65,7 +65,8 @@ export interface IFormDefinitionProperty {
 }
 
 export interface IFormControl extends FieldProps {
-  name?: string;
-  type?: string;
+  name: string;
+  type: string;
+  allFieldsRequired: boolean;
   property: IFormDefinitionProperty;
 }

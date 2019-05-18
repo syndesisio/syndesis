@@ -15,7 +15,11 @@ import {
   OAuthAppListItemView,
 } from '@syndesis/ui';
 import {
+  allFieldsRequired,
+  applyInitialValues,
+  getRequiredStatusText,
   toFormDefinition,
+  validateConfiguredProperties,
   WithListViewToolbarHelpers,
   WithLoader,
 } from '@syndesis/utils';
@@ -186,13 +190,28 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                     <OAuthAppList>
                                       {filteredAndSortedOAuthApps.map(
                                         (oauthApp, index) => {
+                                          const definition = oauthApp.properties!;
                                           const configured =
                                             typeof oauthApp.configuredProperties !==
                                             'undefined';
-                                          const configuration =
-                                            oauthApp.configuredProperties || {};
+                                          const configuration = applyInitialValues(
+                                            definition,
+                                            oauthApp.configuredProperties
+                                          );
                                           const key = JSON.stringify(
                                             configuration
+                                          );
+                                          const isInitialValid = validateConfiguredProperties(
+                                            definition,
+                                            configuration
+                                          );
+                                          const requiredPrompt = getRequiredStatusText(
+                                            definition,
+                                            i18n.t('shared:AllFieldsRequired'),
+                                            i18n.t(
+                                              'shared:FieldsMarkedWithStarRequired'
+                                            ),
+                                            ''
                                           );
                                           return (
                                             <OAuthAppListItem
@@ -212,8 +231,15 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                               <AutoForm
                                                 key={index + '-' + key}
                                                 definition={toFormDefinition(
-                                                  oauthApp.properties!
+                                                  definition
                                                 )}
+                                                allFieldsRequired={allFieldsRequired(
+                                                  definition
+                                                )}
+                                                i18nFieldsStatusText={
+                                                  requiredPrompt
+                                                }
+                                                isInitialValid={isInitialValid}
                                                 i18nRequiredProperty={t(
                                                   'shared:requiredFieldMessage'
                                                 )}

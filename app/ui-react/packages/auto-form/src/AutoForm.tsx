@@ -17,9 +17,17 @@ export interface IAutoFormProps<T> {
    */
   isInitialValid?: boolean;
   /**
+   * If all fields in the form are required or not
+   */
+  allFieldsRequired?: boolean;
+  /**
    * String to be displayed when a required field isn't set
    */
   i18nRequiredProperty: string;
+  /**
+   * String to be displayed when some or all properties are required
+   */
+  i18nFieldsStatusText?: string;
   /**
    * Callback function that will be called when the form is submitted
    */
@@ -88,8 +96,18 @@ export class AutoForm<T> extends React.Component<IAutoFormProps<T>> {
                 errors,
                 fields: (
                   <React.Fragment>
+                    {this.props.i18nFieldsStatusText && (
+                      <p
+                        className="fields-status-pf"
+                        dangerouslySetInnerHTML={{
+                          __html: this.props.i18nFieldsStatusText,
+                        }}
+                      />
+                    )}
                     {fields.map(property =>
                       getField({
+                        allFieldsRequired:
+                          this.props.allFieldsRequired || false,
                         errors,
                         property,
                         touched,

@@ -86,6 +86,51 @@ export function applyInitialValues(
   return configuredProperties;
 }
 
+export function anyFieldsRequired(properties: IConfigurationProperties) {
+  return (
+    Object.keys(properties)
+      .filter(key => requiredTypeMask(properties[key]))
+      .filter(key => properties[key].required).length > 0
+  );
+}
+
+function requiredTypeMask(property: IConfigurationProperty) {
+  switch (property.type) {
+    case 'boolean':
+    case 'checkbox':
+    case 'hidden':
+      return false;
+    default:
+      return true;
+  }
+}
+
+export function allFieldsRequired(properties: IConfigurationProperties) {
+  const keys = Object.keys(properties).filter(key =>
+    requiredTypeMask(properties[key])
+  );
+  const allRequired = keys.filter(key => properties[key].required);
+  if (allRequired.length === 0) {
+    return false;
+  }
+  return keys.length === allRequired.length;
+}
+
+export function getRequiredStatusText(
+  properties: IConfigurationProperties,
+  allRequired: string,
+  someRequired: string,
+  noneRequired: string
+) {
+  if (allFieldsRequired(properties)) {
+    return allRequired;
+  }
+  if (anyFieldsRequired(properties)) {
+    return someRequired;
+  }
+  return noneRequired;
+}
+
 export function validateConfiguredProperties(
   properties: IConfigurationProperties,
   values?: { [name: string]: any }
