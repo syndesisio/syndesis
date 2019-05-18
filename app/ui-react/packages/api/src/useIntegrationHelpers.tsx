@@ -206,22 +206,18 @@ export const useIntegrationHelpers = () => {
     actionId: string,
     configuredProperties: any
   ): Promise<ActionDescriptor | null> => {
-    if (configuredProperties) {
-      const response = await callFetch({
-        body: configuredProperties,
-        headers: apiContext.headers,
-        method: 'POST',
-        url: `${
-          apiContext.apiUri
-        }/connections/${connectionId}/actions/${actionId}`,
-      });
-      if (!response.ok) {
-        throw new Error(response.statusText);
-      }
-      return (await response.json()) as ActionDescriptor;
-    } else {
-      return null;
+    const response = await callFetch({
+      body: configuredProperties || {},
+      headers: apiContext.headers,
+      method: 'POST',
+      url: `${
+        apiContext.apiUri
+      }/connections/${connectionId}/actions/${actionId}`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
     }
+    return (await response.json()) as ActionDescriptor;
   };
 
   /**
