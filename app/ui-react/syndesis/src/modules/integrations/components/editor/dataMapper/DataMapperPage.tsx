@@ -132,25 +132,7 @@ export const DataMapperPage: React.FunctionComponent<
                         initialMappings={
                           (state.step.configuredProperties || {})[MAPPING_KEY]
                         }
-                        baseXMLInspectionServiceUrl={
-                          appContext.config.apiBase +
-                          appContext.config.datamapper
-                            .baseXMLInspectionServiceUrl
-                        }
-                        baseMappingServiceUrl={
-                          appContext.config.apiBase +
-                          appContext.config.datamapper.baseMappingServiceUrl
-                        }
-                        baseJSONInspectionServiceUrl={
-                          appContext.config.apiBase +
-                          appContext.config.datamapper
-                            .baseJSONInspectionServiceUrl
-                        }
-                        baseJavaInspectionServiceUrl={
-                          appContext.config.apiBase +
-                          appContext.config.datamapper
-                            .baseJavaInspectionServiceUrl
-                        }
+                        {...appContext.config.datamapper}
                         onMappings={onMappings}
                       />
                     </PageSection>

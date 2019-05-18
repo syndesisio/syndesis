@@ -43,7 +43,7 @@ type StepKindHrefCallback = (
 ) => H.LocationDescriptorObject;
 
 export function getStepKind(step: Step): IUIStep['uiStepKind'] {
-  if (step.connection && step.connection.connectorId === 'api-provider') {
+  if (step.connection && step.connection.id === 'api-provider') {
     return 'api-provider';
   }
   return step.stepKind;

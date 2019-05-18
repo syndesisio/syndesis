@@ -81,13 +81,24 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     c.initCfg.xsrfDefaultTokenValue = environment.xsrf.defaultTokenValue;
     c.initCfg.xsrfHeaderName = environment.xsrf.headerName;
 
-    console.log(c.initCfg);
+    const makeUrl = (url: string) => {
+      return !url.startsWith('http') &&
+        !url.startsWith(this.baseMappingServiceUrl)
+        ? this.baseMappingServiceUrl + url
+        : url;
+    };
 
     // initialize base urls for our service calls
-    c.initCfg.baseJavaInspectionServiceUrl = this.baseJavaInspectionServiceUrl;
-    c.initCfg.baseXMLInspectionServiceUrl = this.baseXMLInspectionServiceUrl;
-    c.initCfg.baseJSONInspectionServiceUrl = this.baseJSONInspectionServiceUrl;
     c.initCfg.baseMappingServiceUrl = this.baseMappingServiceUrl;
+    c.initCfg.baseJavaInspectionServiceUrl = makeUrl(
+      this.baseJavaInspectionServiceUrl
+    );
+    c.initCfg.baseXMLInspectionServiceUrl = makeUrl(
+      this.baseXMLInspectionServiceUrl
+    );
+    c.initCfg.baseJSONInspectionServiceUrl = makeUrl(
+      this.baseJSONInspectionServiceUrl
+    );
 
     // // enable the navigation bar and import/export for stand-alone
     c.initCfg.disableNavbar = true;
