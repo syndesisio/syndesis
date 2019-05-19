@@ -15,6 +15,8 @@
  */
 package io.syndesis.server.api.generator.swagger;
 
+import java.util.function.Supplier;
+
 import io.swagger.models.Operation;
 import io.swagger.models.Swagger;
 import io.syndesis.common.model.DataShape;
@@ -25,11 +27,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public final class SwaggerUnifiedShapeConnectorGenerator extends BaseSwaggerConnectorGenerator {
 
-    private final DataShapeGenerator dataShapeGenerator;
+    private final DataShapeGenerator dataShapeGenerator = new UnifiedDataShapeGenerator();
 
     public SwaggerUnifiedShapeConnectorGenerator(final Connector restSwaggerConnector) {
         super(restSwaggerConnector);
-        dataShapeGenerator = new UnifiedDataShapeGenerator();
+    }
+
+    SwaggerUnifiedShapeConnectorGenerator(final Connector restSwaggerConnector, final Supplier<String> operationIdGenerator) {
+        super(restSwaggerConnector, operationIdGenerator);
     }
 
     @Override

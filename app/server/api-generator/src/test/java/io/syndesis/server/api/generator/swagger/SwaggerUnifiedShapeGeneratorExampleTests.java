@@ -18,6 +18,7 @@ package io.syndesis.server.api.generator.swagger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.Json;
@@ -57,7 +58,8 @@ public class SwaggerUnifiedShapeGeneratorExampleTests extends BaseSwaggerGenerat
         try (InputStream stream = SwaggerUnifiedShapeGeneratorExampleTests.class.getResourceAsStream("/META-INF/syndesis/connector/rest-swagger.json")) {
             final Connector restSwagger = Json.readFromStream(stream, Connector.class);
 
-            return new SwaggerUnifiedShapeConnectorGenerator(restSwagger);
+            final AtomicInteger cnt = new AtomicInteger();
+            return new SwaggerUnifiedShapeConnectorGenerator(restSwagger, () -> "operation-" + cnt.getAndIncrement());
         } catch (final IOException e) {
             throw new AssertionError(e);
         }
