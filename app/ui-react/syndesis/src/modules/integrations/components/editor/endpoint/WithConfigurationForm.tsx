@@ -95,25 +95,15 @@ export const WithConfigurationForm: React.FunctionComponent<
           loaderChildren={<PageSectionLoader />}
           errorChildren={<ApiError />}
         >
-          {() => {
-            try {
-              return (
-                <ConfigurationForm
-                  action={action}
-                  descriptor={data}
-                  {...props}
-                />
-              );
-            } catch (e) {
-              return (
-                <NothingToConfigure
-                  action={action}
-                  descriptor={data}
-                  {...props}
-                />
-              );
-            }
-          }}
+          {() => (
+            <ConfigurationForm action={action} descriptor={data} {...props}>
+              <NothingToConfigure
+                action={action}
+                descriptor={data}
+                {...props}
+              />
+            </ConfigurationForm>
+          )}
         </WithLoader>
       )}
     </WithActionDescriptor>

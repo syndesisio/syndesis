@@ -26,6 +26,7 @@ export interface IConfigurationFormProps
     Pick<IWithConfigurationFormProps, 'chooseActionHref'> {
   action: Action;
   descriptor: ActionDescriptor;
+  children: any;
 }
 
 export const ConfigurationForm: React.FunctionComponent<
@@ -38,6 +39,7 @@ export const ConfigurationForm: React.FunctionComponent<
   oldAction,
   chooseActionHref,
   onUpdatedIntegration,
+  children,
 }) => {
   const [error, setError] = React.useState();
   try {
@@ -115,6 +117,6 @@ export const ConfigurationForm: React.FunctionComponent<
       </AutoForm>
     );
   } catch (e) {
-    return null;
+    return children;
   }
 };
