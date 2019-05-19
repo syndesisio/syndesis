@@ -9,6 +9,7 @@
     ]
   },
   "dependencies": {
+    "@allpro/react-router-pause": "^1.1.3",
     "@craco/craco": "^5.0.2",
     "@syndesis/api": "*",
     "@syndesis/apicurio-adapter": "*",

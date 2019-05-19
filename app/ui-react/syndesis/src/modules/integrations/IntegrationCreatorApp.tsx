@@ -1,10 +1,13 @@
 import { ALL_STEPS, createStep, DATA_MAPPER } from '@syndesis/api';
+import * as H from '@syndesis/history';
 import { StepKind } from '@syndesis/models';
 import { Breadcrumb } from '@syndesis/ui';
 import * as React from 'react';
+import { Translation } from 'react-i18next';
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../shared';
+import { WithLeaveConfirmation } from '../../shared/WithLeaveConfirmation';
 import { AddStepPage } from './components/editor/AddStepPage';
 import { EditorApp } from './components/editor/EditorApp';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
@@ -120,94 +123,110 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
         <Link to={resolvers.list()}>Integrations</Link>
         <span>New integration</span>
       </Breadcrumb>
-      <Switch>
-        {/* start step */}
-        <Route path={routes.create.start.selectStep}>
-          <EditorApp
-            mode={'adding'}
-            appStepRoutes={routes.create.start}
-            appResolvers={resolvers.create.start}
-            cancelHref={resolvers.list}
-            postConfigureHref={(integration, params) => {
-              return resolvers.create.finish.selectStep({
-                integration,
-                ...params,
-                position: '1',
-              });
+      <Translation ns={['integrations']}>
+        {t => (
+          <WithLeaveConfirmation
+            i18nTitle={t('unsavedChangesTitle')}
+            i18nConfirmationMessage={t('unsavedChangesMessage')}
+            shouldDisplayDialog={(location: H.LocationDescriptor) => {
+              const url =
+                typeof location === 'string' ? location : location.pathname!;
+              return !url.startsWith(routes.create.root);
             }}
-          />
-        </Route>
+          >
+            {() => (
+              <Switch>
+                {/* start step */}
+                <Route path={routes.create.start.selectStep}>
+                  <EditorApp
+                    mode={'adding'}
+                    appStepRoutes={routes.create.start}
+                    appResolvers={resolvers.create.start}
+                    cancelHref={resolvers.list}
+                    postConfigureHref={(integration, params) => {
+                      return resolvers.create.finish.selectStep({
+                        integration,
+                        ...params,
+                        position: '1',
+                      });
+                    }}
+                  />
+                </Route>
 
-        {/* finish step */}
-        <Route path={routes.create.finish.selectStep}>
-          <EditorApp
-            mode={'adding'}
-            appStepRoutes={routes.create.finish}
-            appResolvers={resolvers.create.finish}
-            cancelHref={resolvers.list}
-            postConfigureHref={(integration, params) =>
-              resolvers.create.configure.index({
-                integration,
-                ...params,
-              })
-            }
-          />
-        </Route>
+                {/* finish step */}
+                <Route path={routes.create.finish.selectStep}>
+                  <EditorApp
+                    mode={'adding'}
+                    appStepRoutes={routes.create.finish}
+                    appResolvers={resolvers.create.finish}
+                    cancelHref={resolvers.list}
+                    postConfigureHref={(integration, params) =>
+                      resolvers.create.configure.index({
+                        integration,
+                        ...params,
+                      })
+                    }
+                  />
+                </Route>
 
-        <Route
-          path={routes.create.configure.index}
-          exact={true}
-          children={addStepPage}
-        />
+                <Route
+                  path={routes.create.configure.index}
+                  exact={true}
+                  children={addStepPage}
+                />
 
-        {/* add step */}
-        <Route path={routes.create.configure.addStep.selectStep}>
-          <EditorApp
-            mode={'adding'}
-            appStepRoutes={routes.create.configure.addStep}
-            appResolvers={resolvers.create.configure.addStep}
-            cancelHref={(params, state) =>
-              resolvers.create.configure.index({
-                ...params,
-                ...state,
-              })
-            }
-            postConfigureHref={(integration, params) =>
-              resolvers.create.configure.index({
-                integration,
-                ...params,
-              })
-            }
-          />
-        </Route>
+                {/* add step */}
+                <Route path={routes.create.configure.addStep.selectStep}>
+                  <EditorApp
+                    mode={'adding'}
+                    appStepRoutes={routes.create.configure.addStep}
+                    appResolvers={resolvers.create.configure.addStep}
+                    cancelHref={(params, state) =>
+                      resolvers.create.configure.index({
+                        ...params,
+                        ...state,
+                      })
+                    }
+                    postConfigureHref={(integration, params) =>
+                      resolvers.create.configure.index({
+                        integration,
+                        ...params,
+                      })
+                    }
+                  />
+                </Route>
 
-        {/* edit step */}
-        <Route path={routes.create.configure.editStep.selectStep}>
-          <EditorApp
-            mode={'editing'}
-            appStepRoutes={routes.create.configure.editStep}
-            appResolvers={resolvers.create.configure.editStep}
-            cancelHref={(params, state) =>
-              resolvers.create.configure.index({
-                ...params,
-                ...state,
-              })
-            }
-            postConfigureHref={(integration, params) =>
-              resolvers.create.configure.index({
-                integration,
-                ...params,
-              })
-            }
-          />
-        </Route>
+                {/* edit step */}
+                <Route path={routes.create.configure.editStep.selectStep}>
+                  <EditorApp
+                    mode={'editing'}
+                    appStepRoutes={routes.create.configure.editStep}
+                    appResolvers={resolvers.create.configure.editStep}
+                    cancelHref={(params, state) =>
+                      resolvers.create.configure.index({
+                        ...params,
+                        ...state,
+                      })
+                    }
+                    postConfigureHref={(integration, params) =>
+                      resolvers.create.configure.index({
+                        integration,
+                        ...params,
+                      })
+                    }
+                  />
+                </Route>
 
-        <Route
-          path={routes.create.configure.saveAndPublish}
-          exact={true}
-          children={saveIntegrationPage}
-        />
-      </Switch>
+                <Route
+                  path={routes.create.configure.saveAndPublish}
+                  exact={true}
+                  children={saveIntegrationPage}
+                />
+              </Switch>
+            )}
+          </WithLeaveConfirmation>
+        )}
+      </Translation>
     </WithClosedNavigation>
   );
 };

@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@allpro/react-router-pause@^1.1.3":
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/@allpro/react-router-pause/-/react-router-pause-1.1.3.tgz#515224c8d40a0a44d41554e5556917df5e44dfa5"
+  integrity sha512-yNlkdn9CkONSKz/8eCgEdBOFRMwhGMQNuZnd/AXju9VHFjri3JoIYAGrOi0sP7ZGmzNyJjaiB41RCUeLyLuWdg==
+  dependencies:
+    lodash "^4.17.11"
+
 "@angular-devkit/architect@0.13.3":
   version "0.13.3"
   resolved "https://registry.yarnpkg.com/@angular-devkit/architect/-/architect-0.13.3.tgz#28813279c546cdcb709ad55038bb2051736de668"
