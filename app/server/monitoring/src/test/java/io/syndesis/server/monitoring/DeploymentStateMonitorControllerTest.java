@@ -118,7 +118,7 @@ public class DeploymentStateMonitorControllerTest {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
 
         // create test Data Manager and integration deployment
-        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader);
+        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader, null);
         dataManager.create(new IntegrationDeployment.Builder()
                 .id(DEPLOYMENT_ID)
                 .integrationId(java.util.Optional.of(INTEGRATION_ID))

@@ -82,7 +82,7 @@ public class MetricsCollectorTest {
         EncryptionComponent encryptionComponent = new EncryptionComponent(null);
         ResourceLoader resourceLoader = new DefaultResourceLoader();
         //Create Data Manager
-        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader);
+        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader, null);
         intMH = new IntegrationMetricsHandler(dataManager);
     }
 

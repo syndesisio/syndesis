@@ -20,6 +20,7 @@ import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -31,6 +32,7 @@ import static io.syndesis.common.util.Optionals.asStream;
  * Enables specific Knative traits if needed
  */
 @Component
+@ConditionalOnProperty(value = "features.knative.enabled", havingValue = "true")
 public class KnativeCamelKIntegrationCustomizer implements CamelKIntegrationCustomizer {
 
     private static final String KNATIVE_TRAIT = "knative";

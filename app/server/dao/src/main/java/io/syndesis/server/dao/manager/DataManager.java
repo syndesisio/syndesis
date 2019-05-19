@@ -54,10 +54,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.ConfigurableEnvironment;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternUtils;
+import org.springframework.expression.Expression;
+import org.springframework.expression.ExpressionParser;
+import org.springframework.expression.ParserContext;
+import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
@@ -74,6 +79,7 @@ public class DataManager implements DataAccessObjectRegistry {
     private final EventBus eventBus;
     private final EncryptionComponent encryptionComponent;
     private final ResourceLoader resourceLoader;
+    private ConfigurableEnvironment environment;
 
     @Value("${deployment.file:io/syndesis/server/dao/deployment.json}")
     @SuppressWarnings("PMD.ImmutableField") // @Value cannot be applied to final properties
@@ -88,11 +94,13 @@ public class DataManager implements DataAccessObjectRegistry {
                        List<DataAccessObject<?>> dataAccessObjects,
                        EventBus eventBus,
                        EncryptionComponent encryptionComponent,
-                       ResourceLoader resourceLoader) {
+                       ResourceLoader resourceLoader,
+                       ConfigurableEnvironment environment) {
         this.caches = caches;
         this.eventBus = eventBus;
         this.encryptionComponent = encryptionComponent;
         this.resourceLoader = resourceLoader;
+        this.environment = environment;
 
         if (dataAccessObjects != null) {
             this.dataAccessObjects.addAll(dataAccessObjects);
@@ -119,11 +127,22 @@ public class DataManager implements DataAccessObjectRegistry {
         try {
             List<ModelData<?>> mdList = reader.readDataFromFile(file);
             for (ModelData<?> modelData : mdList) {
-                store(modelData);
+                if (canLoad(modelData)) {
+                    store(modelData);
+                }
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception e) {
             throw new IllegalStateException("Cannot read startup data due to: " + e.getMessage(), e);
         }
+    }
+
+    private boolean canLoad(ModelData<?> modelData) {
+        if (this.environment != null && modelData.getCondition() != null) {
+            ExpressionParser parser = new SpelExpressionParser();
+            Expression ex = parser.parseExpression(modelData.getCondition(), ParserContext.TEMPLATE_EXPRESSION);
+            return ex.getValue(this.environment, Boolean.class);
+        }
+        return true;
     }
 
     private void loadData() {

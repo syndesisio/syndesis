@@ -56,7 +56,7 @@ public class DataManagerTest {
         ResourceLoader resourceLoader = new DefaultResourceLoader();
 
         //Create Data Manager
-        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader);
+        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader, null);
         dataManager.init();
         dataManager.resetDeploymentData();
     }

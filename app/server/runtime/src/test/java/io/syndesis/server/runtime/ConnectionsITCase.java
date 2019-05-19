@@ -21,6 +21,7 @@ import java.util.UUID;
 import io.syndesis.common.model.Violation;
 import io.syndesis.common.model.connection.Connection;
 
+import io.syndesis.common.model.connection.ConnectionOverview;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
@@ -123,5 +124,10 @@ public class ConnectionsITCase extends BaseITCase {
 
         assertThat(got.getBody()).containsExactly(new Violation.Builder().property("create.obj.name")
             .error("UniqueProperty").message("Value 'Existing connection' is not unique").build());
+    }
+
+    @Test
+    public void checkKnativeConnectionAbsentByDefault() {
+        get("/api/v1/connections/knative", ConnectionOverview.class, HttpStatus.NOT_FOUND);
     }
 }
