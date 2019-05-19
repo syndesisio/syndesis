@@ -215,7 +215,14 @@ export const useIntegrationHelpers = () => {
       }/connections/${connectionId}/actions/${actionId}`,
     });
     if (!response.ok) {
-      throw new Error(response.statusText);
+      let error = response.statusText;
+      try {
+        const errResponse = await response.json();
+        error = (errResponse as any)._meta.message;
+      } catch (e) {
+        // noop
+      }
+      throw new Error(error);
     }
     return (await response.json()) as ActionDescriptor;
   };

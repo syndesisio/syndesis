@@ -1,4 +1,5 @@
 import * as H from '@syndesis/history';
+import { Alert } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../Layout';
 
@@ -15,6 +16,7 @@ export interface IIntegrationEditorFormProps {
    * @param e
    */
   isValid: boolean;
+  error?: string;
   backActionHref?: H.LocationDescriptor;
   handleSubmit: (e?: any) => void;
   submitForm: (e?: any) => void;
@@ -46,6 +48,11 @@ export class IntegrationEditorForm extends React.Component<
                     {this.props.i18nFormTitle}
                   </div>
                 )}
+                {this.props.error ? (
+                  <Alert type={'warning'}>
+                    <span>{this.props.error}</span>
+                  </Alert>
+                ) : null}
                 <div className="card-pf-body">
                   <Container>{this.props.children}</Container>
                 </div>
