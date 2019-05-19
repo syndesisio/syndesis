@@ -52,7 +52,7 @@ export class SelectConnectionPage extends React.Component<
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {(params, state) => {
+        {(params, state, { history }) => {
           const { flowId, position } = params;
           const { integration = getEmptyIntegration() } = state;
           const positionAsNumber = parseInt(position, 10) || 0;

@@ -111,5 +111,7 @@
     "templater-create": "Create",
     "templater-create-editor-title": "Copy and paste a template or enter text that defines a template.",
     "templater-import-review": "{{import}} review:"
-  }
+  },
+  "unsavedChangesTitle": "Unsaved Changes",
+  "unsavedChangesMessage": "Are you sure you want to exit editing the integration?"
 }

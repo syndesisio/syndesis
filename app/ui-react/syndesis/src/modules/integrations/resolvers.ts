@@ -126,7 +126,10 @@ const resolvers = {
     activity: integrationActivityResolver,
     details: integrationDetailsResolver,
     edit: {
-      root: makeResolverNoParams(routes.integration.edit.root),
+      root: makeResolver<IEditorIndex, IBaseRouteParams, IBaseRouteState>(
+        routes.integration.edit.root,
+        configureIndexMapper
+      ),
       index: makeResolver<IEditorIndex, IBaseRouteParams, IBaseRouteState>(
         routes.integration.edit.index,
         configureIndexMapper
