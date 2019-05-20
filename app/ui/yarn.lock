@@ -6140,7 +6140,7 @@ node-project-validator@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/node-project-validator/-/node-project-validator-0.1.3.tgz#099feb7215de86b23cc139eff27e13cb23ab2f37"
 
-node-sass@^4.9.0:
+node-sass@^4.12.0:
   version "4.12.0"
   resolved "https://registry.yarnpkg.com/node-sass/-/node-sass-4.12.0.tgz#0914f531932380114a30cc5fa4fa63233a25f017"
   integrity sha512-A1Iv4oN+Iel6EPv77/HddXErL2a+gZ4uBeZUy+a8O35CFYTXhgA8MgLCWBtwpGZdCvTvQ9d+bQxX/QC36GDPpQ==
