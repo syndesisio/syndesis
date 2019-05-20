@@ -1,3 +1,7 @@
+.connection-details-header__row {
+  align-items: center;
+}
+
 .connection-details-header__connectionName {
   font-size: 2em;
 }
@@ -6,18 +10,6 @@
   width: 46px;
 }
 
-.connection-details-header__row {
-  margin-top: 20px;
-  margin-bottom: 20px;
-}
-
 .connection-details-header__propertyLabel {
-  font-size: 1.25em;
-  font-weight: bold;
-  text-align: right;
-}
-
-.connection-details-header__propertyValue {
-  font-size: 1.25em;
-  text-align: left;
+  --pf-c-content--dt--FontWeight: bold; /* override for OpenSans not supporting weight 500 */
 }

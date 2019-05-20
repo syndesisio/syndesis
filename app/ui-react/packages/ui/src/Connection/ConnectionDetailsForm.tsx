@@ -103,22 +103,27 @@ export class ConnectionDetailsForm extends React.Component<
                   </Alert>
                 ))}
                 {this.props.children}
-                {this.props.isEditing ? (
-                  <Button
-                    bsStyle="default"
-                    disabled={this.props.isWorking || !this.props.isValid}
-                    onClick={this.props.onValidate}
-                  >
-                    {this.props.isWorking ? (
-                      <Loader size={'sm'} inline={true} />
-                    ) : null}
-                    {this.props.i18nValidateLabel}
-                  </Button>
-                ) : (
-                  <Button bsStyle="primary" onClick={this.props.onStartEditing}>
-                    {this.props.i18nEditLabel}
-                  </Button>
-                )}
+                <div className="form-group">
+                  {this.props.isEditing ? (
+                    <Button
+                      bsStyle="default"
+                      disabled={this.props.isWorking || !this.props.isValid}
+                      onClick={this.props.onValidate}
+                    >
+                      {this.props.isWorking ? (
+                        <Loader size={'sm'} inline={true} />
+                      ) : null}
+                      {this.props.i18nValidateLabel}
+                    </Button>
+                  ) : (
+                    <Button
+                      bsStyle="primary"
+                      onClick={this.props.onStartEditing}
+                    >
+                      {this.props.i18nEditLabel}
+                    </Button>
+                  )}
+                </div>
               </form>
             </Container>
           </Card.Body>
