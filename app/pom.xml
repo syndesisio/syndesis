@@ -1723,6 +1723,13 @@
       </dependency>
 
       <dependency>
+        <groupId>org.codehaus.woodstox</groupId>
+        <artifactId>stax2-api</artifactId>
+        <version>4.1</version>
+        <scope>provided</scope>
+      </dependency>
+
+      <dependency>
         <groupId>me.andrz.jackson</groupId>
         <artifactId>jackson-json-reference-core</artifactId>
         <version>0.2.1</version>
