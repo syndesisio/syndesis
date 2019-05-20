@@ -5,7 +5,7 @@ import {
   IntegrationEditorActionsListItem,
   IntegrationEditorChooseAction,
   IntegrationEditorLayout,
-  Loader,
+  PageLoader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -53,7 +53,7 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                 <WithLoader
                   error={error}
                   loading={!hasData}
-                  loaderChildren={<Loader />}
+                  loaderChildren={<PageLoader />}
                   errorChildren={<ApiError />}
                 >
                   {() => (

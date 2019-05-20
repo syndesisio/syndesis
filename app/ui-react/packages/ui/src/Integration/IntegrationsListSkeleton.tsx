@@ -8,27 +8,26 @@ function getRandom(min: number, max: number) {
 const ItemSkeleton = () => (
   <ContentLoader
     height={80}
-    width={500}
+    width={400}
     speed={2}
     primaryColor="#f3f3f3"
     secondaryColor="#ecebeb"
     style={{
       height: 80,
-      width: '100%',
     }}
   >
-    <circle cx="35" cy="40" r="35" />
-    <circle cx="115" cy="40" r="35" />
+    <circle cx="35" cy="40" r="25" />
+    <circle cx="95" cy="40" r="25" />
     <rect
-      x="185"
+      x="145"
       y="20"
       rx="5"
       ry="5"
-      width={400 * getRandom(0.6, 1)}
+      width={350 * getRandom(0.6, 1)}
       height="18"
     />
     <rect
-      x="185"
+      x="145"
       y="55"
       rx="5"
       ry="5"

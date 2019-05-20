@@ -1,7 +1,6 @@
-import { PageSection } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
-import { ButtonLink } from '../Layout';
+import { ButtonLink, PageSection } from '../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
 
 export interface IConnectionsListViewProps extends IListViewToolbarProps {

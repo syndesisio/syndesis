@@ -5,7 +5,7 @@ import {
   ApiConnectorReview,
   Breadcrumb,
   Container,
-  Loader,
+  PageLoader,
   PageSection,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
@@ -204,7 +204,7 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                   <WithLoader
                                     error={error}
                                     loading={!hasData}
-                                    loaderChildren={<Loader />}
+                                    loaderChildren={<PageLoader />}
                                     errorChildren={<ApiError />}
                                   >
                                     {() => {
