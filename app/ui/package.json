@@ -63,7 +63,7 @@
     "freemarker-parser": "1.1.6",
     "jquery": "3.4.1",
     "license-reporter": "1.2.2",
-    "marked": "0.5.2",
+    "marked": "0.6.2",
     "merge": "1.2.1",
     "moment": "2.20.1",
     "mustache": "3.0.1",
