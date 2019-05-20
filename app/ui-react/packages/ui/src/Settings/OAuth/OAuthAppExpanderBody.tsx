@@ -34,12 +34,12 @@ export class OAuthAppExpanderBody extends React.Component<
           </Row>
         )}
         <Row>
-          <Col xs={6} xsOffset={5}>
+          <Col xs={12} md={8}>
             {this.props.children}
           </Col>
         </Row>
         <Row>
-          <Col xs={6} xsOffset={5}>
+          <Col xs={12} md={8}>
             <>
               <Button
                 data-testid={'oauth-app-expander-body-save'}
