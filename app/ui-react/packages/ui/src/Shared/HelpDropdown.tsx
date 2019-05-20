@@ -116,6 +116,7 @@ export class HelpDropdown extends React.Component<
           onSelect={this.onSelect}
           toggle={
             <DropdownToggle
+              id="helpDropdownButton"
               className={classNames('', this.props.className)}
               iconComponent={null}
               onToggle={this.onToggle}
