@@ -46,7 +46,6 @@ jobs:
           name: Lint project
           command: yarn lint
 
-
       - run:
           name: Build project
           command: yarn build
@@ -64,9 +63,6 @@ jobs:
           paths:
             - syndesis/build
             - doc
-            - node_modules
-            - packages/history/cjs
-            - packages/**/dist
 
   doc-deploy:
     docker:
@@ -82,8 +78,19 @@ jobs:
       - checkout:
           path: ~/repo
 
-      - attach_workspace:
-          at: ~/repo/app/ui-react
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
+
+      - run:
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+
+      - run:
+          name: Build project
+          command: yarn build --ignore @syndesis/syndesis
 
       - run:
           name: Build app for GH-Pages
@@ -110,8 +117,19 @@ jobs:
       - checkout:
           path: ~/repo
 
-      - attach_workspace:
-          at: ~/repo/app/ui-react
+      - restore_cache:
+          keys:
+            - v2-dependencies-{{ checksum "yarn.lock" }}
+            # fallback to using the latest cache if no exact match is found
+            - v2-dependencies-
+
+      - run:
+          name: Install dependencies
+          command: yarn install --frozen-lockfile
+
+      - run:
+          name: Build project
+          command: yarn build --ignore @syndesis/syndesis
 
       - run:
           name: Build app for Circle CI artifacts

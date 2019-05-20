@@ -64,16 +64,16 @@ export interface IConnectionWithIconFile extends Connection {
 }
 
 export interface IIntegrationOverviewWithDraft extends IntegrationOverview {
-  isDraft: boolean;
+  isDraft?: boolean;
 }
 
 export interface IntegrationWithOverview {
-  integration: IntegrationOverview;
+  integration: IIntegrationOverviewWithDraft;
   overview?: IntegrationMetricsSummary;
 }
 
 export interface IntegrationWithMonitoring {
-  integration: IntegrationOverview;
+  integration: IIntegrationOverviewWithDraft;
   monitoring?: IntegrationMonitoring;
 }
 

@@ -128,7 +128,7 @@ export class DetailsPage extends React.Component {
                                       }
                                       isDraft={
                                         (data.integration as IIntegrationOverviewWithDraft)
-                                          .isDraft
+                                          .isDraft || false
                                       }
                                       i18nTextDraft={t('shared:Draft')}
                                       i18nTextHistory={t(
