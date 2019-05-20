@@ -15,16 +15,17 @@
  */
 package io.syndesis.server.controller.integration.camelk.customizer;
 
-import io.fabric8.kubernetes.api.model.Secret;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
+import io.syndesis.server.openshift.Exposure;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static io.syndesis.common.util.Optionals.asStream;
 
@@ -33,7 +34,7 @@ import static io.syndesis.common.util.Optionals.asStream;
  */
 @Component
 @ConditionalOnProperty(value = "features.knative.enabled", havingValue = "true")
-public class KnativeCamelKIntegrationCustomizer implements CamelKIntegrationCustomizer {
+public class KnativeCustomizer implements CamelKIntegrationCustomizer {
 
     private static final String KNATIVE_TRAIT = "knative";
     private static final String KNATIVE_SERVICE_TRAIT = "knative-service";
@@ -46,13 +47,13 @@ public class KnativeCamelKIntegrationCustomizer implements CamelKIntegrationCust
     private static final String HTTP_PASSIVE_TAG = "http-passive";
 
     @Override
-    public Integration customize(IntegrationDeployment deployment, Integration integration, Secret secret) {
+    public Integration customize(IntegrationDeployment deployment, Integration integration, EnumSet<Exposure> exposures) {
         customizeSourceSink(deployment, integration);
         customizeService(deployment, integration);
         return integration;
     }
 
-    protected Integration customizeSourceSink(IntegrationDeployment deployment, Integration integration) {
+    protected void customizeSourceSink(IntegrationDeployment deployment, Integration integration) {
         List<String> sourceChannels = deployment.getSpec().getFlows().stream()
             .flatMap(f -> f.getSteps().stream())
             .flatMap(s -> asStream(s.getAction().flatMap(a -> a.propertyTaggedWith(s.getConfiguredProperties(), KNATIVE_SOURCE_CHANNEL_TAG))))
@@ -86,11 +87,9 @@ public class KnativeCamelKIntegrationCustomizer implements CamelKIntegrationCust
                 .build()
             ).build()
         );
-
-        return integration;
     }
 
-    protected Integration customizeService(IntegrationDeployment deployment, Integration integration) {
+    protected void customizeService(IntegrationDeployment deployment, Integration integration) {
         if (isKnativeServiceNeeded(deployment)) {
             IntegrationSpec.Builder spec = new IntegrationSpec.Builder();
             if (integration.getSpec() != null) {
@@ -109,8 +108,6 @@ public class KnativeCamelKIntegrationCustomizer implements CamelKIntegrationCust
                 ).build()
             );
         }
-
-        return integration;
     }
 
     protected boolean isKnativeServiceNeeded(IntegrationDeployment deployment) {

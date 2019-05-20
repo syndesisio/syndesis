@@ -15,31 +15,36 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-import io.fabric8.kubernetes.api.model.Secret;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
-import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
-import io.syndesis.common.util.Names;
-import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
-import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
-import io.syndesis.server.openshift.OpenShiftService;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.zip.GZIPOutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import io.fabric8.kubernetes.api.model.Secret;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
+import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
+import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.common.util.Names;
+import io.syndesis.common.util.Optionals;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.server.controller.ControllersConfigurationProperties;
+import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
+import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
+import io.syndesis.server.openshift.Exposure;
+import io.syndesis.server.openshift.OpenShiftService;
 
 public final class CamelKSupport {
     //    // IntegrationPhaseInitial --
@@ -223,5 +228,26 @@ public final class CamelKSupport {
 
     public static String integrationName(String integrationName) {
         return Names.sanitize("i-" + integrationName);
+    }
+
+    public static EnumSet<Exposure> determineExposure(ControllersConfigurationProperties properties, IntegrationDeployment integrationDeployment) {
+        boolean needsExposure = integrationDeployment.getSpec()
+            .getFlows().stream()
+            .flatMap(f -> f.getSteps().stream())
+            .flatMap(step -> Optionals.asStream(step.getAction()))
+            .flatMap(action -> action.getTags().stream())
+            .anyMatch("expose"::equals);
+
+        boolean webHook = integrationDeployment.getSpec().getUsedConnectorIds().contains("webhook");
+
+        if (needsExposure) {
+            if (properties.isExposeVia3scale() && !webHook) {
+                return EnumSet.of(Exposure.SERVICE, Exposure._3SCALE);
+            }
+
+            return EnumSet.of(Exposure.ROUTE, Exposure.SERVICE);
+        }
+
+        return EnumSet.noneOf(Exposure.class);
     }
 }

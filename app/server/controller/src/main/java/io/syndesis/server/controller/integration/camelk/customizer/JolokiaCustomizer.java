@@ -15,16 +15,28 @@
  */
 package io.syndesis.server.controller.integration.camelk.customizer;
 
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.Map;
 
-import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
+import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
 import io.syndesis.server.openshift.Exposure;
+import org.springframework.stereotype.Component;
 
 /**
- * Used to customize the Camel K integration resource.
+ * Configure jolokia trait
  */
-@FunctionalInterface
-public interface CamelKIntegrationCustomizer {
-    Integration customize(IntegrationDeployment deployment, Integration integration, EnumSet<Exposure> exposure);
+@Component
+public class JolokiaCustomizer extends AbstractTraitCustomizer {
+    @Override
+    protected Map<String, IntegrationTraitSpec> computeTraits(Integration integration, EnumSet<Exposure> exposure) {
+        return Collections.singletonMap(
+            "jolokia",
+            new IntegrationTraitSpec.Builder()
+                .putConfiguration("enabled", "true")
+                .putConfiguration("port", "8778")
+                .build()
+        );
+    }
 }

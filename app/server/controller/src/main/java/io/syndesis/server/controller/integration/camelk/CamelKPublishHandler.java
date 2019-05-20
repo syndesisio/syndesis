@@ -15,42 +15,22 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.stream.Collectors;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
-import io.syndesis.common.model.Dependency;
-import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Labels;
 import io.syndesis.common.util.Names;
 import io.syndesis.integration.api.IntegrationProjectGenerator;
 import io.syndesis.integration.api.IntegrationResourceManager;
-import io.syndesis.integration.project.generator.mvn.MavenGav;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.StateChangeHandler;
 import io.syndesis.server.controller.StateUpdate;
@@ -61,17 +41,29 @@ import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
 import io.syndesis.server.controller.integration.camelk.crd.ImmutableIntegrationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
-import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
 import io.syndesis.server.controller.integration.camelk.crd.ResourceSpec;
 import io.syndesis.server.controller.integration.camelk.crd.SourceSpec;
 import io.syndesis.server.controller.integration.camelk.customizer.CamelKIntegrationCustomizer;
 import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
-import io.syndesis.server.endpoint.v1.VersionService;
+import io.syndesis.server.openshift.Exposure;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Component
 @Qualifier("camel-k")
@@ -81,7 +73,6 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
 
     private final IntegrationResourceManager resourceManager;
     private final IntegrationProjectGenerator projectGenerator;
-    private final VersionService versionService;
     private final List<CamelKIntegrationCustomizer> customizers;
     private final ControllersConfigurationProperties configuration;
 
@@ -92,13 +83,11 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         IntegrationProjectGenerator projectGenerator,
         IntegrationPublishValidator validator,
         IntegrationResourceManager resourceManager,
-        VersionService versionService,
         List<CamelKIntegrationCustomizer> customizers,
         ControllersConfigurationProperties configuration) {
         super(openShiftService, iDao, idDao, validator);
         this.projectGenerator = projectGenerator;
         this.resourceManager = resourceManager;
-        this.versionService = versionService;
         this.customizers = customizers;
         this.configuration = configuration;
     }
@@ -182,13 +171,9 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         prepareDeployment(integrationDeployment);
 
         io.syndesis.server.controller.integration.camelk.crd.Integration camelkIntegration = createIntegrationCR(integrationDeployment);
-        Secret camelkSecret = createIntegrationSecret(integrationDeployment);
+        camelkIntegration = applyCustomizers(integrationDeployment, camelkIntegration);
 
-        if (this.customizers != null && !this.customizers.isEmpty()) {
-            for (CamelKIntegrationCustomizer customizer : this.customizers) {
-                camelkIntegration = customizer.customize(integrationDeployment, camelkIntegration, camelkSecret);
-            }
-        }
+        Secret camelkSecret = createIntegrationSecret(integrationDeployment);
 
         getOpenShiftService().createOrReplaceSecret(camelkSecret);
         getOpenShiftService().createOrReplaceCR(integrationCRD,
@@ -214,6 +199,19 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             .build();
 
         return secret;
+    }
+
+    protected io.syndesis.server.controller.integration.camelk.crd.Integration applyCustomizers(IntegrationDeployment integrationDeployment, io.syndesis.server.controller.integration.camelk.crd.Integration integration) {
+        io.syndesis.server.controller.integration.camelk.crd.Integration result = integration;
+        if (this.customizers != null && !this.customizers.isEmpty()) {
+            EnumSet<Exposure> exposures = CamelKSupport.determineExposure(configuration, integrationDeployment);
+
+            for (CamelKIntegrationCustomizer customizer : this.customizers) {
+                result = customizer.customize(integrationDeployment, integration, exposures);
+            }
+        }
+
+        return result;
     }
 
     @SuppressWarnings({"PMD.ExcessiveMethodLength"})
@@ -251,21 +249,6 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             customizers = configuration.getCamelk().getCustomizers();
         }
 
-        //add customizers
-        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
-            .type("property")
-            .value("camel.k.customizer=" + String.join(",", customizers))
-            .build());
-
-        //TODO: make all this configurable, where makes sense
-        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
-            .type("env")
-            .value("AB_JMX_EXPORTER_CONFIG=/etc/camel/resources/prometheus-config.yml")
-            .build());
-        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
-            .type("property")
-            .value("camel.context.streamCaching=true")
-            .build());
         integrationSpecBuilder.addResources(new ResourceSpec.Builder()
             .dataSpec(new DataSpec.Builder()
                 .name("prometheus-config.yml")
@@ -275,71 +258,52 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             .mountPath("/etc/camel/resources")
             .type("data")
             .build());
-        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
-            .type("secret")
-            .value(CamelKSupport.integrationName(integration.getName()))
-            .build());
-        integrationSpecBuilder.putTraits(
-            "jolokia",
-            new IntegrationTraitSpec.Builder()
-                .putConfiguration("enabled", "true")
-                .putConfiguration("port", "8778")
-                .build());
-        integrationSpecBuilder.putTraits(
-            "prometheus",
-            new IntegrationTraitSpec.Builder()
-                .putConfiguration("enabled", "true")
-                .putConfiguration("port", "9779")
-                .putConfiguration("service-monitor", "false")
-                .build());
-        integrationSpecBuilder.putTraits(
-            "camel",
-            new IntegrationTraitSpec.Builder()
-                .putConfiguration("version", versionService.getCamelVersion())
-                .putConfiguration("runtime-version", versionService.getCamelkRuntimeVersion())
-                .build());
-        integrationSpecBuilder.putTraits(
-            "owner",
-            new IntegrationTraitSpec.Builder()
-                .putConfiguration("target-labels", OpenShiftService.COMPONENT_LABEL+","
-                                                    +OpenShiftService.INTEGRATION_ID_LABEL+","
-                                                    +OpenShiftService.DEPLOYMENT_VERSION_LABEL+","
-                                                    +OpenShiftService.USERNAME_LABEL+","
-                                                    +OpenShiftService.INTEGRATION_NAME_LABEL+","
-                                                    +"syndesis.io/type"+","
-                                                    +"syndesis.io/app")
-                .putConfiguration("target-annotations", "prometheus.io/port"+","
-                                                    +"prometheus.io/scrape")
-                .build());
 
         this.configuration.getCamelk().getEnvironment().forEach((k, v) -> {
             integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder().type("env").value(k + "=" + v).build());
         });
 
-        //add dependencies
-        integrationSpecBuilder.addDependencies("bom:io.syndesis.integration/integration-bom-camel-k/pom/"+versionService.getVersion());
-        integrationSpecBuilder.addDependencies("mvn:io.syndesis.integration/integration-runtime-camelk");
-        getDependencies(integration).forEach(gav -> integrationSpecBuilder.addDependencies("mvn:"+gav.getGroupId() + "/" + gav.getArtifactId()));
+        for (String customizerId: customizers) {
+            integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
+                .type("property")
+                .value("customizer." + customizerId + ".enabled=true")
+                .build());
+        }
+        //TODO: make all this configurable, where makes sense
+        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
+            .type("env")
+            .value("AB_JMX_EXPORTER_CONFIG=/etc/camel/resources/prometheus-config.yml")
+            .build());
+        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
+            .type("property")
+            .value("camel.context.streamCaching=true")
+            .build());
+        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
+            .type("secret")
+            .value(CamelKSupport.integrationName(integration.getName()))
+            .build());
+        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
+            .type("property")
+            .value("camel.rest.contextPath=/")
+            .build());
+        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
+            .type("property")
+            .value("camel.rest.component=servlet")
+            .build());
+        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
+            .type("property")
+            .value("camel.rest.endpointProperty.headerFilterStrategy=syndesisHeaderStrategy")
+            .build());
 
         try {
             addMappingRules(integration, integrationSpecBuilder);
-            addOpenAPIDefinition(integration, integrationSpecBuilder);
             addIntegrationSource(integration, integrationSpecBuilder);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new IllegalStateException(e);
         }
 
         result.setSpec(integrationSpecBuilder.build());
         return result;
-    }
-
-    private Set<MavenGav> getDependencies(Integration integration){
-        return resourceManager.collectDependencies(integration).stream()
-            .filter(Dependency::isMaven)
-            .map(Dependency::getId)
-            .map(MavenGav::new)
-//            .filter(ProjectGeneratorHelper::filterDefaultDependencies)
-            .collect(Collectors.toCollection(TreeSet::new));
     }
 
     private String extractIntegrationJson(Integration fullIntegration) {
@@ -411,40 +375,4 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             }
         }
     }
-
-    private void addOpenAPIDefinition(Integration integration, ImmutableIntegrationSpec.Builder builder) throws IOException {
-        // assuming that we have a single swagger definition for the moment
-        Optional<ResourceIdentifier> rid = integration.getResources().stream().filter(Kind.OpenApi::sameAs).findFirst();
-        if (!rid.isPresent()) {
-            return;
-        }
-
-        final ResourceIdentifier openApiResource = rid.get();
-        final Optional<String> maybeOpenApiResourceId = openApiResource.getId();
-        if (!maybeOpenApiResourceId.isPresent()) {
-            return;
-        }
-
-        final String openApiResourceId = maybeOpenApiResourceId.get();
-        Optional<OpenApi> res = resourceManager.loadOpenApiDefinition(openApiResourceId);
-        if (!res.isPresent()) {
-            return;
-        }
-
-        final byte[] openApiBytes = res.get().getDocument();
-        final String content = configuration.getCamelk().isCompression() ? CamelKSupport.compress(openApiBytes) : new String(openApiBytes, UTF_8);
-        final String name = openApiResource.name().orElse(maybeOpenApiResourceId.get());
-
-        builder.addResources(
-            new ResourceSpec.Builder()
-                .dataSpec(new DataSpec.Builder()
-                    .compression(configuration.getCamelk().isCompression())
-                    .name(Names.sanitize(name))
-                    .content(content)
-                .build())
-                .type("openapi")
-                .build()
-        );
-    }
-
 }

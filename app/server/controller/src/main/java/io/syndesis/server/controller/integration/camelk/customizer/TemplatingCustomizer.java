@@ -15,17 +15,18 @@
  */
 package io.syndesis.server.controller.integration.camelk.customizer;
 
-import io.fabric8.kubernetes.api.model.Secret;
+import java.util.EnumSet;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
+import io.syndesis.server.openshift.Exposure;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static io.syndesis.common.util.Optionals.asStream;
 
@@ -33,11 +34,10 @@ import static io.syndesis.common.util.Optionals.asStream;
  * Adds libraries needed for templating steps
  */
 @Component
-public class TemplatingCamelKIntegrationCustomizer implements CamelKIntegrationCustomizer {
+public class TemplatingCustomizer implements CamelKIntegrationCustomizer {
 
     @Override
-    public Integration customize(IntegrationDeployment deployment, Integration integration, Secret secret) {
-
+    public Integration customize(IntegrationDeployment deployment, Integration integration, EnumSet<Exposure> exposure) {
         Set<TemplateStepLanguage> languages = deployment.getSpec().getFlows().stream()
             .flatMap(f -> f.getSteps().stream())
             .filter(s -> s.getStepKind() == StepKind.template)
