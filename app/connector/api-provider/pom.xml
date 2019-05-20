@@ -29,13 +29,6 @@
   <packaging>jar</packaging>
 
   <dependencies>
-
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-      <scope>provided</scope>
-    </dependency>
-
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
