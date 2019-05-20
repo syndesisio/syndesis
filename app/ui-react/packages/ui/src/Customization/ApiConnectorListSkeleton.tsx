@@ -12,7 +12,7 @@ export const ApiConnectorListSkeleton: React.FunctionComponent<
   IApiConnectorListSkeletonProps
 > = ({ width, style }) => (
   <ContentLoader
-    height={356}
+    height={226}
     width={width}
     speed={2}
     primaryColor="#f3f3f3"

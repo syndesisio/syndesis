@@ -4,7 +4,7 @@ import {
   WithServerEvents,
 } from '@syndesis/api';
 import { createBrowserHistory } from '@syndesis/history';
-import { Loader, UnrecoverableError } from '@syndesis/ui';
+import { UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
@@ -33,7 +33,7 @@ ReactDOM.render(
           <WithLoader
             loading={loading}
             error={error}
-            loaderChildren={<Loader />}
+            loaderChildren={<span />}
             errorChildren={
               <Translation ns={['shared']}>
                 {t => (

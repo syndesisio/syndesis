@@ -1,7 +1,7 @@
 import { WithIntegrationHelpers, WithIntegrations } from '@syndesis/api';
 import {
   DownloadDiagnostics,
-  Loader,
+  PageLoader,
   PageSection,
   SimplePageHeader,
 } from '@syndesis/ui';
@@ -42,7 +42,7 @@ export const SupportPage: React.FunctionComponent = () => {
                       <WithLoader
                         error={error}
                         loading={loading}
-                        loaderChildren={<Loader />}
+                        loaderChildren={<PageLoader />}
                         errorChildren={<ApiError />}
                       >
                         {() => {

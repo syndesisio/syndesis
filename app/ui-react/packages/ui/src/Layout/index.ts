@@ -6,6 +6,7 @@ export * from './Breadcrumb';
 export * from './Container';
 export * from './Loader';
 export * from './Page';
+export * from './PageLoader';
 export * from './PfNavLink';
 export * from './PfVerticalNavItem';
 export * from './TabBar';

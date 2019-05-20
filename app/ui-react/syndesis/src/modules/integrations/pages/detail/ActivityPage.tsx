@@ -1,5 +1,5 @@
 import { WithMonitoredIntegration } from '@syndesis/api';
-import { Loader } from '@syndesis/ui';
+import { PageLoader } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -39,7 +39,7 @@ export class ActivityPage extends React.Component {
                             <WithLoader
                               error={error}
                               loading={!hasData}
-                              loaderChildren={<Loader />}
+                              loaderChildren={<PageLoader />}
                               errorChildren={<ApiError />}
                             >
                               {() => (

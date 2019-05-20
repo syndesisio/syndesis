@@ -2,7 +2,7 @@ import {
   WithIntegrationMetrics,
   WithMonitoredIntegration,
 } from '@syndesis/api';
-import { IntegrationDetailMetrics, Loader } from '@syndesis/ui';
+import { IntegrationDetailMetrics, PageLoader } from '@syndesis/ui';
 import {
   toDurationDifferenceString,
   WithLoader,
@@ -46,7 +46,7 @@ export class MetricsPage extends React.Component {
                               <WithLoader
                                 error={error}
                                 loading={!hasData}
-                                loaderChildren={<Loader />}
+                                loaderChildren={<PageLoader />}
                                 errorChildren={<ApiError />}
                               >
                                 {() => (

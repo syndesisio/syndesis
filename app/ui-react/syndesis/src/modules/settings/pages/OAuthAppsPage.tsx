@@ -7,6 +7,7 @@ import {
   ConfirmationIconType,
   IActiveFilter,
   IFilterType,
+  IntegrationsListSkeleton,
   ISortType,
   OAuthAppExpanderBody,
   OAuthAppHeader,
@@ -183,7 +184,7 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                 <WithLoader
                                   error={error}
                                   loading={!hasData}
-                                  loaderChildren={<div>TODO</div>}
+                                  loaderChildren={<IntegrationsListSkeleton />}
                                   errorChildren={<ApiError />}
                                 >
                                   {() => (

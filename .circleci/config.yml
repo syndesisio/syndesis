@@ -62,11 +62,7 @@ jobs:
       - persist_to_workspace:
           root: ~/repo/app/ui-react
           paths:
-            - syndesis/build
-            - doc
-            - node_modules
-            - packages/history/cjs
-            - packages/**/dist
+            - '*'
 
   doc-deploy:
     docker:

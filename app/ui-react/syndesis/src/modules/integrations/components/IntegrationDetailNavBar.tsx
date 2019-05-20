@@ -1,4 +1,4 @@
-import { Integration } from '@syndesis/models';
+import { IIntegrationOverviewWithDraft } from '@syndesis/models/src';
 import { Container, TabBar, TabBarItem } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -9,7 +9,7 @@ import resolvers from '../resolvers';
  * exists, it must equal to the [integrationId]{@link IIntegrationDetailNavBarProps#integration}.
  */
 export interface IIntegrationDetailNavBarProps {
-  integration: Integration;
+  integration: IIntegrationOverviewWithDraft;
 }
 
 /**
@@ -41,18 +41,21 @@ export class IntegrationDetailNavBar extends React.Component<
               <TabBarItem
                 label={'Details'}
                 to={resolvers.integration.details({
+                  integration,
                   integrationId: integration.id!,
                 })}
               />
               <TabBarItem
                 label={'Activity'}
                 to={resolvers.integration.activity({
+                  integration,
                   integrationId: integration.id!,
                 })}
               />
               <TabBarItem
                 label={'Metrics'}
                 to={resolvers.integration.metrics({
+                  integration,
                   integrationId: integration.id!,
                 })}
               />
