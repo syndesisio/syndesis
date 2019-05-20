@@ -235,11 +235,17 @@ export class ConnectionDetailsPage extends React.Component<
                                             <>
                                               <Breadcrumb>
                                                 <Link
+                                                  data-testid={
+                                                    'connection-details-page-home'
+                                                  }
                                                   to={resolvers.dashboard.root()}
                                                 >
                                                   {t('shared:Home')}
                                                 </Link>
                                                 <Link
+                                                  data-testid={
+                                                    'connection-details-page-connections'
+                                                  }
                                                   to={resolvers.connections.connections()}
                                                 >
                                                   {t('shared:Connections')}

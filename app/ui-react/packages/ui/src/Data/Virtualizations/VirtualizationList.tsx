@@ -79,6 +79,7 @@ export class VirtualizationList extends React.Component<
                 placement="top"
               >
                 <Button
+                  data-testid={'virtualization-list-import'}
                   bsStyle="default"
                   to={this.props.i18nImport}
                   onClick={this.handleImport}
@@ -90,7 +91,11 @@ export class VirtualizationList extends React.Component<
                 overlay={this.getCreateVirtualizationTooltip()}
                 placement="top"
               >
-                <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
+                <ButtonLink
+                  data-testid={'virtualization-list-create-virtualization'}
+                  href={this.props.linkCreateHRef}
+                  as={'primary'}
+                >
                   {this.props.i18nLinkCreateVirtualization}
                 </ButtonLink>
               </OverlayTrigger>
@@ -112,7 +117,11 @@ export class VirtualizationList extends React.Component<
                   overlay={this.getCreateVirtualizationTooltip()}
                   placement="top"
                 >
-                  <ButtonLink href={this.props.linkCreateHRef} as={'primary'}>
+                  <ButtonLink
+                    data-testid={'virtualization-list-empty-state-create'}
+                    href={this.props.linkCreateHRef}
+                    as={'primary'}
+                  >
                     {this.props.i18nLinkCreateVirtualization}
                   </ButtonLink>
                 </OverlayTrigger>

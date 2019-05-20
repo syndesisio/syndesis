@@ -32,6 +32,7 @@ export class SqlClientForm extends React.Component<ISqlClientFormProps> {
             </div>
           </form>
           <button
+            data-testid={'sql-client-form-submit'}
             type="button"
             className="btn btn-primary"
             onClick={this.props.handleSubmit}

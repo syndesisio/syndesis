@@ -35,17 +35,26 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
         <EmptyState.Info>{i18nInfo}</EmptyState.Info>
         <EmptyState.Help>{i18nHelp}</EmptyState.Help>
         <EmptyState.Action>
-          <ButtonLink href={'.'} as={'primary'} size={'lg'}>
+          <ButtonLink
+            data-testid={'unrecoverable-error-refresh'}
+            href={'.'}
+            as={'primary'}
+            size={'lg'}
+          >
             {i18nRefreshLabel}
           </ButtonLink>
         </EmptyState.Action>
         <EmptyState.Action secondary={true}>
           {error && (
-            <ButtonLink onClick={toggleErrorInfo}>
+            <ButtonLink
+              data-testid={'unrecoverable-error-show-error'}
+              onClick={toggleErrorInfo}
+            >
               {i18nShowErrorInfoLabel}
             </ButtonLink>
           )}
           <a
+            data-testid={'unrecoverable-error-report-issue'}
             className={'btn btn-default'}
             href={
               'https://github.com/syndesisio/syndesis/issues/new?template=simple.md&labels=cat/bug&title=Error%20report'

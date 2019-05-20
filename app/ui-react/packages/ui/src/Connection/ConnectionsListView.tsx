@@ -20,6 +20,7 @@ export class ConnectionsListView extends React.Component<
           <ListViewToolbar {...this.props}>
             <div className="form-group">
               <ButtonLink
+                data-testid={'connections-list-view-create-connection'}
                 href={this.props.linkToConnectionCreate}
                 as={this.props.createConnectionButtonStyle || 'primary'}
               >

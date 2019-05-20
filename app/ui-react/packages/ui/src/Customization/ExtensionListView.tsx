@@ -41,7 +41,11 @@ export class ExtensionListView extends React.Component<
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
-              <ButtonLink href={this.props.linkImportExtension} as={'primary'}>
+              <ButtonLink
+                data-testid={'extension-list-view-import-extension'}
+                href={this.props.linkImportExtension}
+                as={'primary'}
+              >
                 {this.props.i18nLinkImportExtension}
               </ButtonLink>
             </OverlayTrigger>
@@ -67,6 +71,7 @@ export class ExtensionListView extends React.Component<
             <EmptyState.Action>
               <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
                 <ButtonLink
+                  data-testid={'extension-list-view-empty-state-import'}
                   href={this.props.linkImportExtension}
                   as={'primary'}
                 >

@@ -37,10 +37,18 @@ export class VirtualizationRelationshipPage extends React.Component {
               {t => (
                 <>
                   <Breadcrumb>
-                    <Link to={resolvers.dashboard.root()}>
+                    <Link
+                      data-testid={'virtualization-relationship-page-home'}
+                      to={resolvers.dashboard.root()}
+                    >
                       {t('shared:Home')}
                     </Link>
-                    <Link to={resolvers.data.root()}>
+                    <Link
+                      data-testid={
+                        'virtualization-relationship-page-virtualizations'
+                      }
+                      to={resolvers.data.root()}
+                    >
                       {t('shared:DataVirtualizations')}
                     </Link>
                     <span>

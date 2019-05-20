@@ -212,11 +212,17 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                         <>
                                           <Breadcrumb>
                                             <Link
+                                              data-testid={
+                                                'api-connector-details-page-home'
+                                              }
                                               to={resolvers.dashboard.root()}
                                             >
                                               {t('shared:Home')}
                                             </Link>
                                             <Link
+                                              data-testid={
+                                                'api-connector-details-page-api-connectors'
+                                              }
                                               to={resolvers.apiClientConnectors.list()}
                                             >
                                               {t('apiConnectorsPageTitle')}

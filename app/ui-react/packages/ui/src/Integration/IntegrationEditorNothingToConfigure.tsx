@@ -36,12 +36,19 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
                 </Container>
               </div>
               <div className="card-pf-footer">
-                <ButtonLink href={this.props.backActionHref}>
+                <ButtonLink
+                  data-testid={'integration-editor-nothing-to-configure-back'}
+                  href={this.props.backActionHref}
+                >
                   <i className={'fa fa-chevron-left'} />{' '}
                   {this.props.i18nBackAction}
                 </ButtonLink>
                 &nbsp;
-                <ButtonLink onClick={this.props.submitForm} as={'primary'}>
+                <ButtonLink
+                  data-testid={'integration-editor-nothing-to-configure-next'}
+                  onClick={this.props.submitForm}
+                  as={'primary'}
+                >
                   {this.props.i18nNext}
                 </ButtonLink>
               </div>

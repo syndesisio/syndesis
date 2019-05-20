@@ -183,9 +183,15 @@ export class WithTemplater extends React.Component<
                   <>
                     Drag and drop a file, paste in text, or start typing in the
                     text editor below to add a template. If you already have a
-                    template file,{/* eslint-disable-next-line */ ' '}
-                    <a onClick={this.handleClickBrowse}>browse to upload</a> the
-                    file.
+                    template file,
+                    {/* eslint-disable-next-line */ ' '}
+                    <a
+                      data-testid={'unrecoverable-error-show-error'}
+                      onClick={this.handleClickBrowse}
+                    >
+                      browse to upload
+                    </a>{' '}
+                    the file.
                   </>
                 }
                 initialValue={this.text}

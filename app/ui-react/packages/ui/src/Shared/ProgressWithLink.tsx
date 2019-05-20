@@ -24,7 +24,11 @@ export class ProgressWithLink extends React.PureComponent<
           </i>
           {this.props.logUrl && (
             <span data-testid="progress-log-link" className="pull-right">
-              <a target="_blank" href={this.props.logUrl}>
+              <a
+                data-testid={'progress-with-link-log-url'}
+                target="_blank"
+                href={this.props.logUrl}
+              >
                 {this.props.i18nLogUrlText} <Icon name={'external-link'} />
               </a>
             </span>

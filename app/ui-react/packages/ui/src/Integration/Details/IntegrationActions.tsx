@@ -23,6 +23,7 @@ export class IntegrationActions extends React.Component<
     return (
       <>
         <ButtonLink
+          data-testid={'integration-actions-view'}
           className="view-integration-btn"
           href={this.props.detailsHref}
           as={'default'}
@@ -37,6 +38,7 @@ export class IntegrationActions extends React.Component<
             <li role={'presentation'} key={idx}>
               {a.href ? (
                 <Link
+                  data-testid={`integration-actions-${idx}`}
                   to={a.href}
                   onClick={a.onClick}
                   role={'menuitem'}
@@ -46,6 +48,7 @@ export class IntegrationActions extends React.Component<
                 </Link>
               ) : (
                 <a
+                  data-testid={`integration-actions-${idx}`}
                   href={'javascript:void(0)'}
                   onClick={a.onClick}
                   role={'menuitem'}

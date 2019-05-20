@@ -82,6 +82,9 @@ export default class ConfigurationPage extends React.Component {
                               isNextDisabled={isSubmitting}
                               extraButtons={
                                 <ButtonLink
+                                  data-testid={
+                                    'configuration-page-validate-form'
+                                  }
                                   onClick={validateForm}
                                   disabled={!isValid || isValidating}
                                 >

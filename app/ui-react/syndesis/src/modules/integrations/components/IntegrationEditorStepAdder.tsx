@@ -151,12 +151,24 @@ export class IntegrationEditorStepAdder extends React.Component<
                       i18nWarningMessage={
                         s.previousStepShouldDefineDataShape ? (
                           <>
-                            <a href={'/todo'}>Define the data type</a> for the
-                            previous step to resolve this warning.
+                            <a
+                              data-testid={
+                                'integration-editor-step-adder-define-data-type'
+                              }
+                              href={'/todo'}
+                            >
+                              Define the data type
+                            </a>{' '}
+                            for the previous step to resolve this warning.
                           </>
                         ) : (
                           <>
-                            <Link to={this.props.addDataMapperStepHref(idx)}>
+                            <Link
+                              data-testid={
+                                'integration-editor-step-adder-add-step-before-connection'
+                              }
+                              to={this.props.addDataMapperStepHref(idx)}
+                            >
                               Add a data mapping step
                             </Link>{' '}
                             before this connection to resolve the difference.
@@ -166,6 +178,9 @@ export class IntegrationEditorStepAdder extends React.Component<
                       actions={
                         <>
                           <ButtonLink
+                            data-testid={
+                              'integration-editor-step-adder-configure'
+                            }
                             href={this.props.configureStepHref(
                               idx,
                               this.props.steps[idx]
@@ -174,6 +189,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                             {t('shared:Configure')}
                           </ButtonLink>
                           <ButtonLink
+                            data-testid={'integration-editor-step-adder-delete'}
                             onClick={() => this.onDelete(idx)}
                             as={'danger'}
                           >

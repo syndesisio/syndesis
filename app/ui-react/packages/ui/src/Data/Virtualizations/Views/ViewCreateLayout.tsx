@@ -86,6 +86,7 @@ export const ViewCreateLayout: React.FunctionComponent<
       </div>
       <div className="wizard-pf-footer view-create-layout__footer">
         <ButtonLink
+          data-testid={'view-create-layout-back'}
           onClick={onBack}
           href={backHref}
           className={'wizard-pf-back'}
@@ -93,6 +94,7 @@ export const ViewCreateLayout: React.FunctionComponent<
           <i className="fa fa-angle-left" /> Back
         </ButtonLink>
         <ButtonLink
+          data-testid={'view-create-layout-next'}
           onClick={onNext}
           href={nextHref}
           as={'primary'}
@@ -109,6 +111,7 @@ export const ViewCreateLayout: React.FunctionComponent<
           )}
         </ButtonLink>
         <ButtonLink
+          data-testid={'view-create-layout-cancel'}
           onClick={onCancel}
           href={cancelHref}
           className={'wizard-pf-cancel'}

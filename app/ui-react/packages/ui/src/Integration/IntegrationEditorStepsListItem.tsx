@@ -39,6 +39,7 @@ export const IntegrationEditorStepsListItem: React.FunctionComponent<
                 {props.shape}
                 {props.showWarning && (
                   <ButtonLink
+                    data-testid={'integration-editor-steps-list-item-warning'}
                     as={'link'}
                     onClick={toggleWarningPopover}
                     ref={itemRef}

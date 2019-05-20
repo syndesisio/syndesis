@@ -13,7 +13,12 @@ export default class ConnectionsCreatorApp extends React.Component {
       <PageSection noPadding={true}>
         <WithClosedNavigation>
           <Breadcrumb>
-            <Link to={resolvers.connections()}>Connections</Link>
+            <Link
+              data-testid={'connections-creator-app-connections'}
+              to={resolvers.connections()}
+            >
+              Connections
+            </Link>
             <span>Create connection</span>
           </Breadcrumb>
           <Switch>

@@ -22,6 +22,7 @@ export class TagIntegrationListItem extends React.Component<
       <ListViewItem
         checkboxInput={
           <input
+            data-testid={'tag-integration-list-item-selected'}
             type="checkbox"
             defaultChecked={this.props.selected}
             onChange={this.handleChange}

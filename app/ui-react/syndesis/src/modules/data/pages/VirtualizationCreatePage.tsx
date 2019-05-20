@@ -71,10 +71,18 @@ export class VirtualizationCreatePage extends React.Component {
                       {t => (
                         <>
                           <Breadcrumb>
-                            <Link to={resolvers.dashboard.root()}>
+                            <Link
+                              data-testid={'virtualization-create-page-home'}
+                              to={resolvers.dashboard.root()}
+                            >
                               {t('shared:Home')}
                             </Link>
-                            <Link to={resolvers.data.root()}>
+                            <Link
+                              data-testid={
+                                'virtualization-create-page-virtualizations'
+                              }
+                              to={resolvers.data.root()}
+                            >
                               {t('shared:DataVirtualizations')}
                             </Link>
                             <span>
@@ -104,6 +112,9 @@ export class VirtualizationCreatePage extends React.Component {
                                 <React.Fragment>
                                   {fields}
                                   <button
+                                    data-testid={
+                                      'virtualization-create-page-create'
+                                    }
                                     type="button"
                                     className="btn btn-primary"
                                     onClick={handleSubmit}

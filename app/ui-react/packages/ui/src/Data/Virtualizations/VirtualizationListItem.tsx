@@ -208,7 +208,11 @@ export class VirtualizationListItem extends React.Component<
                 />
               )}
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
-                <ButtonLink href={this.props.detailsPageLink} as={'primary'}>
+                <ButtonLink
+                  data-testid={'virtualization-list-item-edit'}
+                  href={this.props.detailsPageLink}
+                  as={'primary'}
+                >
                   {this.props.i18nEdit}
                 </ButtonLink>
               </OverlayTrigger>

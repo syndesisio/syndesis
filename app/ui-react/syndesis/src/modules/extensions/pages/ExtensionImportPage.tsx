@@ -174,6 +174,7 @@ export default class ExtensionImportPage extends React.Component<
                             <Breadcrumb
                               actions={
                                 <ButtonLink
+                                  data-testid={'extension-import-page-cancel'}
                                   className={'extension-import-page__action'}
                                   href={resolvers.extensions.list()}
                                   as={'default'}
@@ -182,10 +183,16 @@ export default class ExtensionImportPage extends React.Component<
                                 </ButtonLink>
                               }
                             >
-                              <Link to={resolvers.dashboard.root()}>
+                              <Link
+                                data-testid={'extension-import-page-home'}
+                                to={resolvers.dashboard.root()}
+                              >
                                 {t('shared:Home')}
                               </Link>
-                              <Link to={resolvers.extensions.list()}>
+                              <Link
+                                data-testid={'extension-import-page-extensions'}
+                                to={resolvers.extensions.list()}
+                              >
                                 {t('shared:Extensions')}
                               </Link>
                               <span>

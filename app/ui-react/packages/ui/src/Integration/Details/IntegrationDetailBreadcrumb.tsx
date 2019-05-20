@@ -30,12 +30,14 @@ export class IntegrationDetailBreadcrumb extends React.Component<
         actions={
           <>
             <ButtonLink
+              data-testid={'integration-detail-breadcrumb-export'}
               to={this.props.exportHref}
               onClick={this.props.exportAction}
               children={this.props.exportLabel}
             />
             &nbsp;&nbsp;
             <ButtonLink
+              data-testid={'integration-detail-breadcrumb-edit'}
               className="btn btn-primary"
               href={this.props.editHref}
               children={this.props.editLabel}
@@ -49,6 +51,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
                     <li role={'presentation'} key={idx}>
                       {a.href ? (
                         <Link
+                          data-testid={`integration-detail-breadcrumb-${idx}`}
                           to={a.href}
                           onClick={a.onClick}
                           role={'menuitem'}
@@ -58,6 +61,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
                         </Link>
                       ) : (
                         <a
+                          data-testid={`integration-detail-breadcrumb-${idx}`}
                           href={'javascript:void(0)'}
                           onClick={a.onClick}
                           role={'menuitem'}
@@ -74,10 +78,18 @@ export class IntegrationDetailBreadcrumb extends React.Component<
         }
       >
         <span>
-          <Link to={this.props.homeHref!}>{this.props.i18nHome}</Link>
+          <Link
+            data-testid={'integration-detail-breadcrumb-home'}
+            to={this.props.homeHref!}
+          >
+            {this.props.i18nHome}
+          </Link>
         </span>
         <span>
-          <Link to={this.props.integrationsHref!}>
+          <Link
+            data-testid={'integration-detail-breadcrumb-integrations'}
+            to={this.props.integrationsHref!}
+          >
             {this.props.i18nIntegrations}
           </Link>
         </span>

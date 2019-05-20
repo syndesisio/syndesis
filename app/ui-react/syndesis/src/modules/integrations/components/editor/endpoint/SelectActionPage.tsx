@@ -93,6 +93,7 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                                   }
                                   actions={
                                     <ButtonLink
+                                      data-testid={'select-action-page-select'}
                                       href={this.props.selectHref(
                                         a.id!,
                                         { connectionId, flowId, position },

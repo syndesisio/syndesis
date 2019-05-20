@@ -32,7 +32,11 @@ export class ExtensionIntegrationsTable extends React.Component<
       const onClick = () => this.onIntegrationSelected(rowData.id);
       return (
         <Table.Cell>
-          <a href="javascript:void(0)" onClick={onClick}>
+          <a
+            data-testid={`extension-integrations-table-${rowData.id}`}
+            href="javascript:void(0)"
+            onClick={onClick}
+          >
             {value}
           </a>
         </Table.Cell>

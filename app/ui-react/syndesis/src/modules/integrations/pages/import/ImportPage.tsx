@@ -66,7 +66,10 @@ export class ImportPage extends React.Component<{}, IImportPageState> {
                 <>
                   <PageTitle title={t('shared:Import')} />
                   <Breadcrumb>
-                    <Link to={resolvers.list()}>
+                    <Link
+                      data-testid={'import-page-integrations'}
+                      to={resolvers.list()}
+                    >
                       {t('shared:Integrations')}
                     </Link>
                     <span>{t('integrations:ImportIntegration')}</span>

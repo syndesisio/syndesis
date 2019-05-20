@@ -38,6 +38,7 @@ export const IntegrationVerticalFlow: React.FunctionComponent<
     >
       <div className="integration-vertical-flow__expand">
         <ButtonLink
+          data-testid={'integration-vertical-flow-expand-collapse'}
           className="integration-vertical-flow__toggle"
           onClick={toggleExpanded}
           as={'link'}

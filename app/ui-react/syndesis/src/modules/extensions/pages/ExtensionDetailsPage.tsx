@@ -91,10 +91,18 @@ export default class ExtensionDetailsPage extends React.Component {
                             {t => (
                               <>
                                 <Breadcrumb>
-                                  <Link to={resolvers.dashboard.root()}>
+                                  <Link
+                                    data-testid={'extension-details-page-home'}
+                                    to={resolvers.dashboard.root()}
+                                  >
                                     {t('shared:Home')}
                                   </Link>
-                                  <Link to={resolvers.extensions.list()}>
+                                  <Link
+                                    data-testid={
+                                      'extension-details-page-extensions'
+                                    }
+                                    to={resolvers.extensions.list()}
+                                  >
                                     {t('shared:Extensions')}
                                   </Link>
                                   <span>

@@ -139,6 +139,7 @@ export const DataMapperPage: React.FunctionComponent<
                   }
                   extraActions={
                     <ButtonLink
+                      data-testid={'data-mapper-page-save-mapping'}
                       onClick={saveMappingStep}
                       disabled={!mappings}
                       as={'primary'}

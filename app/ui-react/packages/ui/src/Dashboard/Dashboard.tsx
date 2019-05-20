@@ -38,6 +38,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
             <Grid.Row className={'show-grid dashboard__integrations__actions'}>
               <Grid.Col xs={6} xsOffset={6}>
                 <ButtonLink
+                  data-testid={'dashboard-create-integration'}
                   href={this.props.linkToIntegrationCreation}
                   as={'primary'}
                   className={'pull-right'}
@@ -45,6 +46,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                   {this.props.i18nLinkCreateIntegration}
                 </ButtonLink>
                 <Link
+                  data-testid={'dashboard-integrations'}
                   to={this.props.linkToIntegrations}
                   className={'pull-right view'}
                 >
@@ -89,6 +91,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 {this.props.i18nConnections}
               </Title>
               <ButtonLink
+                data-testid={'dashboard-create-connection'}
                 href={this.props.linkToConnectionCreation}
                 as={'primary'}
                 className={'pull-right'}
@@ -96,6 +99,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 {this.props.i18nLinkCreateConnection}
               </ButtonLink>
               <Link
+                data-testid={'dashboard-connections'}
                 to={this.props.linkToConnections}
                 className={'pull-right view'}
               >

@@ -134,12 +134,17 @@ export class ExtensionListItem extends React.Component<
                 overlay={this.getDetailsTooltip()}
                 placement="top"
               >
-                <ButtonLink href={this.props.detailsPageLink} as={'default'}>
+                <ButtonLink
+                  data-testid={'extension-list-item-details'}
+                  href={this.props.detailsPageLink}
+                  as={'default'}
+                >
                   {this.props.i18nDetails}
                 </ButtonLink>
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
                 <ButtonLink
+                  data-testid={'extension-list-item-update'}
                   href={this.props.linkUpdateExtension}
                   as={'default'}
                 >
@@ -148,6 +153,7 @@ export class ExtensionListItem extends React.Component<
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
                 <Button
+                  data-testid={'extension-list-item-delete'}
                   bsStyle="default"
                   disabled={this.props.usedBy !== 0}
                   onClick={this.showDeleteDialog}
