@@ -1,4 +1,9 @@
-import { getStepIcon, removeStepFromFlow } from '@syndesis/api';
+import {
+  getFirstPosition,
+  getLastPosition,
+  getStepIcon,
+  removeStepFromFlow,
+} from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Integration, Step } from '@syndesis/models';
 import {
@@ -32,10 +37,11 @@ export interface IIntegrationEditorStepAdderProps {
   addDataMapperStepHref: (idx: number) => H.LocationDescriptor;
   /**
    * a callback to get the `LocationDescriptor` that should be reached when
-   * clicking the Add Connection button
+   * clicking the Add Connection button, or when deleting the first or last
+   * step
    * @param idx - the zero-based index where a new connection should be added
    */
-  addStepHref: (idx: number) => H.LocationDescriptor;
+  editAddStepHref: (idx: number) => H.LocationDescriptor;
   /**
    * a callback to get the `LocationDescriptor` that should be reached when
    * clicking the Edit Step button
@@ -56,6 +62,8 @@ export interface IIntegrationEditorStepAdderProps {
 export interface IIntegrationEditorStepAdderState {
   position: number;
   showDeleteDialog: boolean;
+  step?: Step;
+  stepIdx?: number;
 }
 
 /**
@@ -78,6 +86,8 @@ export class IntegrationEditorStepAdder extends React.Component<
     this.state = {
       position: 0,
       showDeleteDialog: false,
+      step: {},
+      stepIdx: 0,
     };
 
     this.onDelete = this.onDelete.bind(this);
@@ -89,14 +99,50 @@ export class IntegrationEditorStepAdder extends React.Component<
     if (this.state.showDeleteDialog) {
       this.closeDeleteDialog();
     }
+
+    const newInt = removeStepFromFlow(
+      this.props.integration!,
+      this.props.flowId!,
+      this.state.position!
+    );
+
+    this.props.deleteAction(newInt);
   }
 
-  public onDelete(idx: any): void {
-    this.setState({ position: idx, showDeleteDialog: true });
+  public onDelete(idx: any, step: Step): void {
+    console.log('step: ' + JSON.stringify(step));
+    // console.log('idx: ' + idx);
+    // console.log('firstPosition: ' + getFirstPosition(this.props.integration, this.props.flowId));
+    // console.log('lastPosition: ' + getLastPosition(this.props.integration, this.props.flowId));
+
+    if (idx === getFirstPosition(this.props.integration, this.props.flowId)) {
+      console.log('Is first position');
+    }
+
+    if (idx === getLastPosition(this.props.integration, this.props.flowId)) {
+      console.log('Is last position');
+    }
+
+    // Check if it's an API provider step that can't be deleted
+    if (step.configuredProperties!.stepKind === 'mapper') {
+      console.log('Data mapper step');
+    }
+
+    this.setState({
+      position: idx,
+      showDeleteDialog: true,
+      step: step,
+      stepIdx: idx,
+    });
   }
 
   public closeDeleteDialog(): void {
-    this.setState({ position: 0, showDeleteDialog: false });
+    this.setState({
+      position: 0,
+      showDeleteDialog: false,
+      step: {},
+      stepIdx: 0,
+    });
   }
 
   public render() {
@@ -120,12 +166,6 @@ export class IntegrationEditorStepAdder extends React.Component<
                 onCancel={this.closeDeleteDialog}
                 onConfirm={() => {
                   this.handleDeleteConfirm();
-                  const newInt = removeStepFromFlow(
-                    this.props.integration!,
-                    this.props.flowId!,
-                    this.state.position!
-                  );
-                  this.props.deleteAction(newInt);
                 }}
               />
             )}
@@ -169,9 +209,9 @@ export class IntegrationEditorStepAdder extends React.Component<
                               }
                               to={this.props.addDataMapperStepHref(idx)}
                             >
-                              Add a data mapping step
+                        {t('integrations:editor:addStepDataMapping')}
                             </Link>{' '}
-                            before this connection to resolve the difference.
+                            {t('integrations:editor:addStepDataMappingTrail')}
                           </>
                         )
                       }
@@ -205,9 +245,17 @@ export class IntegrationEditorStepAdder extends React.Component<
                         addStepHref={this.props.addStepHref(idx + 1)}
                         i18nAddStep={t('integrations:editor:addStep')}
                       />
-                    )}
-                  </React.Fragment>
-                ))}
+                      {idx < this.props.steps.length - 1 && (
+                        <IntegrationFlowAddStep
+                          active={false}
+                          showDetails={false}
+                          addStepHref={this.props.editAddStepHref(idx + 1)}
+                          i18nAddStep={t('integrations:editor:addStep')}
+                        />
+                      )}
+                    </React.Fragment>
+                  );
+                })}
               </IntegrationEditorStepsList>
             </PageSection>
           </>

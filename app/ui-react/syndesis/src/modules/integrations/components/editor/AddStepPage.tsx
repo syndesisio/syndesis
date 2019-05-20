@@ -74,19 +74,19 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                             { integration }
                           )
                         }
-                        addStepHref={position =>
-                          this.props.getEditAddStepHref(
-                            position,
-                            { flowId },
-                            { integration }
-                          )
-                        }
                         configureStepHref={(position: number, step: Step) =>
                           getStepHref(
                             step,
                             { flowId, position: `${position}` },
                             { integration },
                             this.props
+                          )
+                        }
+                        editAddStepHref={position =>
+                          this.props.getEditAddStepHref(
+                            position,
+                            { flowId },
+                            { integration }
                           )
                         }
                         flowId={flowId}
