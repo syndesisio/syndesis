@@ -23,8 +23,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import io.swagger.models.HttpMethod;
@@ -81,8 +83,16 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
     static final String URL_EXTENSION = "x-syndesis-swagger-url";
 
-    BaseSwaggerConnectorGenerator(final Connector baseConnector) {
+    final Supplier<String> operationIdGenerator;
+
+    public BaseSwaggerConnectorGenerator(final Connector baseConnector, final Supplier<String> operationIdGenerator) {
         super(baseConnector);
+
+        this.operationIdGenerator = operationIdGenerator;
+    }
+
+    BaseSwaggerConnectorGenerator(final Connector baseConnector) {
+        this(baseConnector, BaseSwaggerConnectorGenerator::randomUUID);
     }
 
     @Override
@@ -194,7 +204,6 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
         final List<ConnectorAction> actions = new ArrayList<>();
         final Map<String, Integer> operationIdCounts = new HashMap<>();
-        int idx = 0;
         for (final Entry<String, Path> pathEntry : paths.entrySet()) {
             final Path path = pathEntry.getValue();
 
@@ -204,7 +213,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                 final Operation operation = entry.getValue();
                 final String operationId = operation.getOperationId();
                 if (operationId == null) {
-                    operation.operationId("operation-" + idx++);
+                    operation.operationId(operationIdGenerator.get());
                 } else {
                     // we tolerate that some operations might have the same
                     // operationId, if that's the case we generate a unique
@@ -369,5 +378,9 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
                 "Configured properties of the given connector template does not include `specification` property");
         }
         return specification;
+    }
+
+    private static String randomUUID() {
+        return UUID.randomUUID().toString();
     }
 }

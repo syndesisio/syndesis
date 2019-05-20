@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -301,7 +302,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
     protected String requireUniqueOperationId(final String preferredOperationId, final Set<String> alreadyUsedOperationIds) {
         String baseId = preferredOperationId;
         if (baseId == null) {
-            baseId = "operation";
+            baseId = UUID.randomUUID().toString();
         }
         // Sanitize for using it in direct
         baseId = baseId.replaceAll("[^A-Za-z0-9-_]", "");
