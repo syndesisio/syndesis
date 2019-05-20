@@ -2,6 +2,7 @@ export * from './AboutModal';
 export * from './AboutModalContent';
 export * from './AggregatedMetricCard';
 export * from './ConfirmationDialog';
+export * from './CopyToClipboard';
 export * from './Dialog';
 export * from './DndFileChooser';
 export * from './GenericTable';

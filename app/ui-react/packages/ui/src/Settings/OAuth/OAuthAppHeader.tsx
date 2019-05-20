@@ -1,6 +1,7 @@
 import { Text, TextContent, Title, TitleLevel } from '@patternfly/react-core';
 import * as React from 'react';
 import { PageSection } from '../../Layout';
+import { CopyToClipboard } from '../../Shared/CopyToClipboard';
 
 export interface IOAuthAppHeaderProps {
   i18nPageTitle: string;
@@ -21,9 +22,10 @@ export const OAuthAppHeader: React.FunctionComponent<IOAuthAppHeaderProps> = ({
         {i18nPageTitle}
       </Title>
       <Text dangerouslySetInnerHTML={{ __html: i18nDescription }} />
-      <Text>
-        {i18nCallbackDescription} : {callbackURI}
-      </Text>
+      <span>
+        {i18nCallbackDescription}:
+        <CopyToClipboard>{callbackURI}</CopyToClipboard>
+      </span>
     </TextContent>
   </PageSection>
 );
