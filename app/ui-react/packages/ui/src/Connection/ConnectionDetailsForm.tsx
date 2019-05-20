@@ -105,6 +105,7 @@ export class ConnectionDetailsForm extends React.Component<
                 {this.props.children}
                 {this.props.isEditing ? (
                   <Button
+                    data-testid={'connection-details-form-validate'}
                     bsStyle="default"
                     disabled={this.props.isWorking || !this.props.isValid}
                     onClick={this.props.onValidate}
@@ -115,7 +116,11 @@ export class ConnectionDetailsForm extends React.Component<
                     {this.props.i18nValidateLabel}
                   </Button>
                 ) : (
-                  <Button bsStyle="primary" onClick={this.props.onStartEditing}>
+                  <Button
+                    data-testid={'connection-details-form-edit'}
+                    bsStyle="primary"
+                    onClick={this.props.onStartEditing}
+                  >
                     {this.props.i18nEditLabel}
                   </Button>
                 )}
@@ -124,6 +129,7 @@ export class ConnectionDetailsForm extends React.Component<
           </Card.Body>
           <Card.Footer>
             <Button
+              data-testid={'connection-details-form-cancel'}
               bsStyle="default"
               className="connection-details-form__editButton"
               disabled={this.props.isWorking}
@@ -132,6 +138,7 @@ export class ConnectionDetailsForm extends React.Component<
               {this.props.i18nCancelLabel}
             </Button>
             <Button
+              data-testid={'connection-details-form-save'}
               bsStyle="primary"
               className="connection-details-form__editButton"
               disabled={this.props.isWorking || !this.props.isValid}

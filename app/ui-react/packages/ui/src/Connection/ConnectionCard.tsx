@@ -145,12 +145,18 @@ export class ConnectionCard extends React.PureComponent<
                   title={this.props.menuProps.i18nMenuTitle}
                 >
                   <li role={'presentation'} key={0}>
-                    <Link to={this.props.href} role={'menuitem'} tabIndex={1}>
+                    <Link
+                      data-testid={'connection-card-view'}
+                      to={this.props.href}
+                      role={'menuitem'}
+                      tabIndex={1}
+                    >
                       {this.props.menuProps.i18nViewLabel}
                     </Link>
                   </li>
                   <li role={'presentation'} key={1}>
                     <Link
+                      data-testid={'connection-card-edit'}
                       to={this.props.menuProps.editHref}
                       role={'menuitem'}
                       tabIndex={2}
@@ -171,6 +177,7 @@ export class ConnectionCard extends React.PureComponent<
                         position={'bottom'}
                       >
                         <a
+                          data-testid={'connection-card-delete'}
                           href={'javascript:void(0)'}
                           onClick={this.showDeleteDialog}
                           role={'menuitem'}
@@ -181,6 +188,7 @@ export class ConnectionCard extends React.PureComponent<
                       </Tooltip>
                     ) : (
                       <a
+                        data-testid={'connection-card-delete'}
                         href={'javascript:void(0)'}
                         onClick={this.showDeleteDialog}
                         role={'menuitem'}
@@ -194,7 +202,11 @@ export class ConnectionCard extends React.PureComponent<
               </div>
             )}
           </Card.Heading>
-          <Link to={this.props.href} className={'connection-card__content'}>
+          <Link
+            data-testid={'connection-card-details'}
+            to={this.props.href}
+            className={'connection-card__content'}
+          >
             <Card.Body>
               <div className={'connection-card__body'}>
                 <div className="connection-card__icon">

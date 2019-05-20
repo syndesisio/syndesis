@@ -69,6 +69,7 @@ export const SupportPage: React.FunctionComponent = () => {
                                   <div className="radio">
                                     <label htmlFor="alllogs">
                                       <input
+                                        data-testid={'support-page-all-logs'}
                                         type="radio"
                                         id="alllogs"
                                         value="alllogs"
@@ -87,6 +88,9 @@ export const SupportPage: React.FunctionComponent = () => {
                                   <div className="radio">
                                     <label htmlFor="specificlogs">
                                       <input
+                                        data-testid={
+                                          'support-page-specific-logs'
+                                        }
                                         type="radio"
                                         id="specificlogs"
                                         value="specificlogs"
@@ -137,6 +141,7 @@ export const SupportPage: React.FunctionComponent = () => {
                                       };
                                       return (
                                         <button
+                                          data-testid={'support-page-download'}
                                           className="btn btn-primary"
                                           disabled={
                                             isEmpty(integrationsToDl) &&

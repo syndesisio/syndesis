@@ -100,6 +100,9 @@ export const SelectiveIntegrationList: React.FunctionComponent<
                         integrationName={si.name}
                         checkboxComponent={
                           <input
+                            data-testid={
+                              'selective-integration-list-integrations'
+                            }
                             type="checkbox"
                             defaultValue={si.name}
                             onChange={event => onIntegrationChecked(event)}

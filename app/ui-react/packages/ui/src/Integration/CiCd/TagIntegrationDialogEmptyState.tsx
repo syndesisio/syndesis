@@ -27,7 +27,12 @@ export class TagIntegrationDialogEmptyState extends React.Component<
         <EmptyState.Title>{this.props.i18nTitle}</EmptyState.Title>
         <EmptyState.Info>{this.props.i18nInfo}</EmptyState.Info>
         <EmptyState.Action>
-          <ButtonLink as="primary" size="lg" href={this.props.href}>
+          <ButtonLink
+            data-testid={'tag-integration-dialog-empty-state-manage'}
+            as="primary"
+            size="lg"
+            href={this.props.href}
+          >
             {this.props.i18nGoToManageCiCdButtonText}
           </ButtonLink>
         </EmptyState.Action>

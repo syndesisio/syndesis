@@ -42,6 +42,7 @@ export class OAuthAppExpanderBody extends React.Component<
           <Col xs={6} xsOffset={5}>
             <>
               <Button
+                data-testid={'oauth-app-expander-body-save'}
                 bsStyle="primary"
                 onClick={this.props.onSave}
                 disabled={this.props.disableSave}
@@ -49,6 +50,7 @@ export class OAuthAppExpanderBody extends React.Component<
                 {this.props.i18nSaveButtonText}
               </Button>{' '}
               <Button
+                data-testid={'oauth-app-expander-body-remove'}
                 onClick={this.props.onRemove}
                 disabled={this.props.disableRemove}
               >

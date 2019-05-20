@@ -208,6 +208,7 @@ export class ExtensionImportReview extends React.Component<
                     {this.props.i18nImport}
                   </Button>
                   <ButtonLink
+                    data-testid={'extension-detail-cancel'}
                     className="extension-import-review__cancelButton"
                     href={this.props.cancelLink}
                     as={'default'}

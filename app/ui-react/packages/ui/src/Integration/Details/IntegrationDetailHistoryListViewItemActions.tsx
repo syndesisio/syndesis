@@ -22,6 +22,7 @@ export class IntegrationDetailHistoryListViewItemActions extends React.Component
             <li role={'presentation'} key={index}>
               {a.href ? (
                 <Link
+                  data-testid={`integration-detail-history-list-view-item-actions-${index}`}
                   to={a.href}
                   onClick={a.onClick}
                   role={'menuitem'}
@@ -31,6 +32,7 @@ export class IntegrationDetailHistoryListViewItemActions extends React.Component
                 </Link>
               ) : (
                 <a
+                  data-testid={`integration-detail-history-list-view-item-actions-${index}`}
                   href={'javascript:void(0)'}
                   onClick={a.onClick}
                   role={'menuitem'}

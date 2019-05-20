@@ -120,7 +120,12 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
   return (
     <WithClosedNavigation>
       <Breadcrumb>
-        <Link to={resolvers.list()}>Integrations</Link>
+        <Link
+          data-testid={'integration-creator-app-new-integration'}
+          to={resolvers.list()}
+        >
+          Integrations
+        </Link>
         <span>New integration</span>
       </Breadcrumb>
       <Translation ns={['integrations']}>

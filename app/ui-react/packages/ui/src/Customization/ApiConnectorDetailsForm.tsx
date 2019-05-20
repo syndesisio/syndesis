@@ -98,6 +98,7 @@ export class ApiConnectorDetailsForm extends React.Component<
                       src={this.props.apiConnectorIcon}
                     />
                     <input
+                      data-testid={'api-connector-details-form-icon-file'}
                       type="file"
                       id="iconFileInput"
                       onChange={this.props.onUploadImage}
@@ -110,6 +111,7 @@ export class ApiConnectorDetailsForm extends React.Component<
             {this.props.isEditing ? (
               <>
                 <Button
+                  data-testid={'api-connector-details-form-cancel'}
                   bsStyle="default"
                   className="api-connector-details-form__editButton"
                   disabled={this.props.isWorking}
@@ -118,6 +120,7 @@ export class ApiConnectorDetailsForm extends React.Component<
                   {this.props.i18nCancelLabel}
                 </Button>
                 <Button
+                  data-testid={'api-connector-details-form-save'}
                   bsStyle="primary"
                   className="api-connector-details-form__editButton"
                   disabled={this.props.isWorking}
@@ -128,7 +131,11 @@ export class ApiConnectorDetailsForm extends React.Component<
                 </Button>
               </>
             ) : (
-              <Button bsStyle="primary" onClick={this.props.onStartEditing}>
+              <Button
+                data-testid={'api-connector-details-form-edit'}
+                bsStyle="primary"
+                onClick={this.props.onStartEditing}
+              >
                 {this.props.i18nEditLabel}
               </Button>
             )}

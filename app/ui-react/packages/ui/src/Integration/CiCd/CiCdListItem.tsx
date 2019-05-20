@@ -37,10 +37,16 @@ export class CiCdListItem extends React.Component<ICiCdListItemProps> {
         additionalInfo={[]}
         actions={
           <div>
-            <Button onClick={this.handleEditClicked}>
+            <Button
+              data-testid={'cicd-list-item-edit'}
+              onClick={this.handleEditClicked}
+            >
               {this.props.i18nEditButtonText}
             </Button>
-            <Button onClick={this.handleRemoveClicked}>
+            <Button
+              data-testid={'cicd-list-item-remove'}
+              onClick={this.handleRemoveClicked}
+            >
               {this.props.i18nRemoveButtonText}
             </Button>
           </div>

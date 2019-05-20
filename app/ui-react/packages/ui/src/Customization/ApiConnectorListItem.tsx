@@ -114,12 +114,17 @@ export class ApiConnectorListItem extends React.Component<
                 overlay={this.getDetailsTooltip()}
                 placement="top"
               >
-                <ButtonLink href={this.props.detailsPageLink} as={'default'}>
+                <ButtonLink
+                  data-testid={'api-connector-list-item-details'}
+                  href={this.props.detailsPageLink}
+                  as={'default'}
+                >
                   {this.props.i18nDetails}
                 </ButtonLink>
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
                 <Button
+                  data-testid={'api-connector-list-item-delete'}
                   bsStyle="default"
                   disabled={this.props.usedBy !== 0}
                   onClick={this.showDeleteDialog}

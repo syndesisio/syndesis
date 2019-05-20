@@ -65,7 +65,11 @@ export class ViewListItem extends React.Component<
           actions={
             <div className="form-group">
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
-                <Button bsStyle="default" onClick={this.handleEdit}>
+                <Button
+                  data-testid={'view-list-item-edit'}
+                  bsStyle="default"
+                  onClick={this.handleEdit}
+                >
                   {this.props.i18nEdit}
                 </Button>
               </OverlayTrigger>

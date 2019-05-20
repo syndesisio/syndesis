@@ -38,6 +38,7 @@ export class ViewList extends React.Component<IViewsListProps> {
                 placement="top"
               >
                 <ButtonLink
+                  data-testid={'view-list-import-views'}
                   href={this.props.linkImportViewsHRef}
                   as={'default'}
                 >
@@ -48,7 +49,11 @@ export class ViewList extends React.Component<IViewsListProps> {
                 overlay={this.getCreateViewTooltip()}
                 placement="top"
               >
-                <ButtonLink href={this.props.linkCreateViewHRef} as={'primary'}>
+                <ButtonLink
+                  data-testid={'view-list-create-view'}
+                  href={this.props.linkCreateViewHRef}
+                  as={'primary'}
+                >
                   {this.props.i18nCreateView}
                 </ButtonLink>
               </OverlayTrigger>

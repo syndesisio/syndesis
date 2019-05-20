@@ -95,6 +95,7 @@ export const IntegrationEditorWizard: React.FunctionComponent<
       </div>
       <div className="wizard-pf-footer integration-editor-wizard__footer">
         <ButtonLink
+          data-testid={'integration-editor-wizard-back'}
           onClick={onBack}
           href={backHref}
           className={'wizard-pf-back'}
@@ -102,6 +103,7 @@ export const IntegrationEditorWizard: React.FunctionComponent<
           <i className="fa fa-angle-left" /> Back
         </ButtonLink>
         <ButtonLink
+          data-testid={'integration-editor-wizard-next'}
           onClick={onNext}
           href={nextHref}
           as={'primary'}
@@ -118,6 +120,7 @@ export const IntegrationEditorWizard: React.FunctionComponent<
           )}
         </ButtonLink>
         <ButtonLink
+          data-testid={'integration-editor-wizard-cancel'}
           onClick={onCancel}
           href={cancelHref}
           className={'wizard-pf-cancel'}

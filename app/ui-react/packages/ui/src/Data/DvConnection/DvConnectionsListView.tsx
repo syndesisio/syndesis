@@ -16,7 +16,11 @@ export class DvConnectionsListView extends React.Component<
       <>
         <ListViewToolbar {...this.props}>
           <div className="form-group">
-            <ButtonLink href={this.props.linkToConnectionCreate} as={'primary'}>
+            <ButtonLink
+              data-testid={'dv-connections-list-view-create-connection'}
+              href={this.props.linkToConnectionCreate}
+              as={'primary'}
+            >
               {this.props.i18nLinkCreateConnection}
             </ButtonLink>
           </div>

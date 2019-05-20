@@ -15,7 +15,14 @@ export const IntegrationsListItemUnreadable: React.FC<
   return (
     <ListView.Item
       heading={integrationName}
-      actions={<ButtonLink onClick={onClick}>Integration JSON</ButtonLink>}
+      actions={
+        <ButtonLink
+          data-testid={'integrations-list-item-unreadable-json'}
+          onClick={onClick}
+        >
+          Integration JSON
+        </ButtonLink>
+      }
       description={i18nDescription}
       stacked={true}
     />

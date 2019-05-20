@@ -57,6 +57,7 @@ export class SchemaNodeListItem extends React.Component<
         description={this.schemaDisplayPath(this.props.schemaPath)}
         checkboxInput={
           <input
+            data-testid={'schema-node-list-item-selected'}
             type="checkbox"
             value=""
             defaultChecked={this.props.selected}

@@ -56,6 +56,7 @@ export class ViewInfoListItem extends React.Component<
         description={this.getNodePathStr()}
         checkboxInput={
           <input
+            data-testid={'view-info-list-item-selected'}
             type="checkbox"
             value=""
             defaultChecked={this.props.selected}

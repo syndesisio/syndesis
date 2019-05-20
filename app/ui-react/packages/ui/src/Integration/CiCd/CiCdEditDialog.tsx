@@ -89,10 +89,14 @@ export class CiCdEditDialog extends React.Component<
         }
         footer={
           <>
-            <Button onClick={this.props.onHide}>
+            <Button
+              data-testid={'cicd-edit-dialog-cancel'}
+              onClick={this.props.onHide}
+            >
               {this.props.i18nCancelButtonText}
             </Button>
             <Button
+              data-testid={'cicd-edit-dialog-save'}
               bsStyle={'primary'}
               onClick={this.handleClick}
               disabled={

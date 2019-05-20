@@ -65,7 +65,10 @@ export class IntegrationFlowAddStep extends React.Component<
             className={'integration-flow-add-step__iconWrapper'}
             ref={this.containerRef}
           >
-            <Link to={this.props.addStepHref}>
+            <Link
+              data-testid={'integration-flow-add-step-add-step'}
+              to={this.props.addStepHref}
+            >
               <i className="fa fa-plus" title={this.props.i18nAddStep} />
             </Link>
           </div>

@@ -28,6 +28,7 @@ export class EmptyViewsState extends React.Component<IEmptyViewsStateProps> {
             placement="top"
           >
             <ButtonLink
+              data-testid={'empty-view-state-import-views'}
               href={this.props.linkImportViewsHRef}
               as={'default'}
               className={'empty-views-import'}
@@ -36,7 +37,11 @@ export class EmptyViewsState extends React.Component<IEmptyViewsStateProps> {
             </ButtonLink>
           </OverlayTrigger>
           <OverlayTrigger overlay={this.getCreateViewTooltip()} placement="top">
-            <ButtonLink href={this.props.linkCreateViewHRef} as={'primary'}>
+            <ButtonLink
+              data-testid={'empty-view-state-create-view'}
+              href={this.props.linkCreateViewHRef}
+              as={'primary'}
+            >
               {this.props.i18nCreateView}
             </ButtonLink>
           </OverlayTrigger>

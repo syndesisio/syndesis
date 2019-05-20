@@ -97,7 +97,12 @@ export class ListViewToolbar extends React.Component<IListViewToolbarProps> {
                   </Filter.Item>
                 ))}
               </Filter.List>
-              <a onClick={this.props.onClearFilters}>Clear All Filters</a>
+              <a
+                data-testid={'list-view-toolbar-clear-filters'}
+                onClick={this.props.onClearFilters}
+              >
+                Clear All Filters
+              </a>
             </>
           )}
         </Toolbar.Results>

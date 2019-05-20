@@ -88,6 +88,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
             <>
               <div className="pull-right toast-pf-action">
                 <ButtonLink
+                  data-testid={'ui-refresh-app'}
                   onClick={refreshApp}
                   as={'link'}
                   style={{ padding: 0, border: 0 }}
@@ -204,6 +205,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                               >
                                 <PfDropdownItem>
                                   <Link
+                                    data-testid={'ui-logout'}
                                     to={'/logout'}
                                     className="pf-c-dropdown__menu-item"
                                     children={t('Logout')}

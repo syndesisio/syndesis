@@ -126,8 +126,14 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
           {({ flowId }, { integration }) => (
             <WithClosedNavigation>
               <Breadcrumb>
-                <Link to={resolvers.list()}>{t('shared:Integrations')}</Link>
                 <Link
+                  data-testid={'integration-editor-app-integrations'}
+                  to={resolvers.list()}
+                >
+                  {t('shared:Integrations')}
+                </Link>
+                <Link
+                  data-testid={'integration-editor-app-integration'}
                   to={resolvers.integration.details({
                     integrationId: integration.id!,
                   })}

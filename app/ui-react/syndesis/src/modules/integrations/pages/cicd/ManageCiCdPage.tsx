@@ -115,7 +115,10 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                         <>
                           <PageTitle title={t('integrations:ManageCiCd')} />
                           <Breadcrumb>
-                            <Link to={resolvers.list()}>
+                            <Link
+                              data-testid={'manage-cicd-page-integrations'}
+                              to={resolvers.list()}
+                            >
                               {t('shared:Integrations')}
                             </Link>
                             <span>{t('integrations:ManageCiCd')}</span>

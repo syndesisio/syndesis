@@ -21,13 +21,20 @@ export default class ViewCreateApp extends React.Component {
         {(_, { virtualization }) => (
           <WithClosedNavigation>
             <Breadcrumb>
-              <Link to={resolvers.dashboard.root()}>
+              <Link
+                data-testid={'view-create-home'}
+                to={resolvers.dashboard.root()}
+              >
                 {i18n.t('shared:Home')}
               </Link>
-              <Link to={resolvers.data.root()}>
+              <Link
+                data-testid={'view-create-virtualizations'}
+                to={resolvers.data.root()}
+              >
                 {i18n.t('shared:DataVirtualizations')}
               </Link>
               <Link
+                data-testid={'view-create-virtualization'}
                 to={resolvers.data.virtualizations.views.root({
                   virtualization,
                 })}

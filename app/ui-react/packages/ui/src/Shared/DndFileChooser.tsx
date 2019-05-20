@@ -138,7 +138,9 @@ export class DndFileChooser extends React.Component<
       return (
         <ul>
           {this.state.files.map((file, index) => (
-            <li key={index}>{file.name}</li>
+            <li data-testid={`dnd-file-chooser-${index}`} key={index}>
+              {file.name}
+            </li>
           ))}
         </ul>
       );
@@ -176,6 +178,7 @@ export class DndFileChooser extends React.Component<
         <ul>
           {this.props.i18nUploadSuccessMessages!.map((message, idx) => (
             <li
+              data-testid={`dnd-file-chooser-success-message-${idx}`}
               key={'success' + idx}
               className="dnd-file-chooser__uploadMessage"
             >
@@ -184,7 +187,11 @@ export class DndFileChooser extends React.Component<
             </li>
           ))}
           {this.props.i18nUploadFailedMessages!.map((message, idx) => (
-            <li key={'fail' + idx} className="dnd-file-chooser__uploadMessage">
+            <li
+              data-testid={`dnd-file-chooser-failed-message-${idx}`}
+              key={'fail' + idx}
+              className="dnd-file-chooser__uploadMessage"
+            >
               <Icon type="pf" name="error-circle-o" />
               &nbsp;{message}
             </li>

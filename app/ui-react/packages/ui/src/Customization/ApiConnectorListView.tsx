@@ -33,6 +33,7 @@ export class ApiConnectorListView extends React.Component<
               placement="top"
             >
               <ButtonLink
+                data-testid={'api-connector-list-view-create-api-connector'}
                 href={this.props.linkCreateApiConnector}
                 as={'primary'}
               >
@@ -64,6 +65,7 @@ export class ApiConnectorListView extends React.Component<
                 placement="top"
               >
                 <ButtonLink
+                  data-testid={'api-connector-list-view-empty-state-create'}
                   href={this.props.linkCreateApiConnector}
                   as={'primary'}
                 >

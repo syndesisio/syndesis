@@ -60,29 +60,51 @@ export class HelpDropdown extends React.Component<
     } = this.props;
     const dropdownItems = [
       <DropdownItem
+        data-testid={'help-dropdown-integration-tutorials'}
         key="sampleIntegrationTutorials"
         component="a"
         onClick={launchSampleIntegrationTutorials}
       >
         Sample Integration Tutorials
       </DropdownItem>,
-      <DropdownItem key="userGuide" component="a" onClick={launchUserGuide}>
+      <DropdownItem
+        data-testid={'help-dropdown-user-guide'}
+        key="userGuide"
+        component="a"
+        onClick={launchUserGuide}
+      >
         User Guide
       </DropdownItem>,
       <DropdownItem
+        data-testid={'help-dropdown-connectors-guide'}
         key="connectorsGuide"
         component="a"
         onClick={launchConnectorsGuide}
       >
         Connectors Guide
       </DropdownItem>,
-      <DropdownItem key="support" component="a" onClick={launchSupportPage}>
+      <DropdownItem
+        data-testid={'help-dropdown-support'}
+        key="support"
+        component="a"
+        onClick={launchSupportPage}
+      >
         Support
       </DropdownItem>,
-      <DropdownItem key="contactUs" component="a" onClick={launchContactUs}>
+      <DropdownItem
+        data-testid={'help-dropdown-contact-us'}
+        key="contactUs"
+        component="a"
+        onClick={launchContactUs}
+      >
         Contact Us
       </DropdownItem>,
-      <DropdownItem key="action" component="a" onClick={launchAboutModal}>
+      <DropdownItem
+        data-testid={'help-dropdown-about'}
+        key="action"
+        component="a"
+        onClick={launchAboutModal}
+      >
         About
       </DropdownItem>,
     ];

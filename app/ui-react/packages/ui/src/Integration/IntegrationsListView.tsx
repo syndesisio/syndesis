@@ -31,13 +31,20 @@ export class IntegrationsListView extends React.Component<
         <PageSection>
           <ListViewToolbar {...this.props}>
             <div className="form-group">
-              <ButtonLink href={this.props.linkToManageCiCd}>
+              <ButtonLink
+                data-testid={'integrations-list-view-manage-cicd'}
+                href={this.props.linkToManageCiCd}
+              >
                 {this.props.i18nManageCiCd}
               </ButtonLink>
-              <ButtonLink href={this.props.linkToIntegrationImport}>
+              <ButtonLink
+                data-testid={'integrations-list-view-import'}
+                href={this.props.linkToIntegrationImport}
+              >
                 {this.props.i18nImport}
               </ButtonLink>
               <ButtonLink
+                data-testid={'integrations-list-view-create'}
                 href={this.props.linkToIntegrationCreation}
                 as={'primary'}
               >

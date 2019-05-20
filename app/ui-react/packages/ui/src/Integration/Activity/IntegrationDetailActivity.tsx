@@ -23,7 +23,10 @@ export class IntegrationDetailActivity extends React.Component<
           <div className="integration-detail-activity-toolbar pull-right">
             {this.props.linkToOpenShiftLog && (
               <>
-                <Link to={this.props.linkToOpenShiftLog}>
+                <Link
+                  data-testid={'integration-detail-activitiy-view-log'}
+                  to={this.props.linkToOpenShiftLog}
+                >
                   {this.props.i18nViewLogOpenShift}
                 </Link>
                 &nbsp;|&nbsp;
@@ -33,7 +36,10 @@ export class IntegrationDetailActivity extends React.Component<
               {this.props.i18nLastRefresh}
             </span>
             &nbsp;&nbsp;
-            <Button onClick={this.props.onRefresh}>
+            <Button
+              data-testid={'integration-detail-activity-refresh'}
+              onClick={this.props.onRefresh}
+            >
               {this.props.i18nBtnRefresh}
             </Button>
           </div>

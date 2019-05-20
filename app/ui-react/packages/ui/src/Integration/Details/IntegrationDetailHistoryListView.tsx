@@ -43,11 +43,17 @@ export class IntegrationDetailHistoryListView extends React.Component<
                   actions={
                     <>
                       <ButtonLink
+                        data-testid={
+                          'integration-detail-history-list-view-publish'
+                        }
                         to={this.props.publishHref}
                         onClick={this.props.publishAction}
                         children={this.props.publishLabel}
                       />
                       <ButtonLink
+                        data-testid={
+                          'integration-detail-history-list-view-edit'
+                        }
                         href={this.props.editHref}
                         children={this.props.editLabel}
                       />

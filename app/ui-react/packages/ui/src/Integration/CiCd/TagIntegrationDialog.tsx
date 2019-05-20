@@ -60,10 +60,14 @@ export class TagIntegrationDialog extends React.Component<
         })}
         footer={
           <>
-            <Button onClick={this.props.onHide}>
+            <Button
+              data-testid={'tag-integration-dialog-cancel'}
+              onClick={this.props.onHide}
+            >
               {this.props.i18nCancelButtonText}
             </Button>
             <Button
+              data-testid={'tag-integration-dialog-save'}
               bsStyle={'primary'}
               onClick={this.handleClick}
               disabled={this.state.disableSave}

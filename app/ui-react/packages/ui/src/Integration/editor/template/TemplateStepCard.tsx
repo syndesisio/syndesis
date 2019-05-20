@@ -19,6 +19,7 @@ export class TemplateStepCard extends React.Component<ITemplateStepCardProps> {
               </div>
               <div className="card-pf-footer">
                 <ButtonLink
+                  data-testid={'template-step-card-done'}
                   onClick={this.props.submitForm}
                   disabled={!this.props.isValid}
                   as={'primary'}

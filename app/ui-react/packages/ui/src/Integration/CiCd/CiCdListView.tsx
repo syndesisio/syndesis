@@ -15,7 +15,11 @@ export class CiCdListView extends React.Component<ICiCdListViewProps> {
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             {this.props.resultsCount !== 0 && (
-              <Button className="btn btn-primary" onClick={this.props.onAddNew}>
+              <Button
+                data-testid={'cicd-list-view-add-new'}
+                className="btn btn-primary"
+                onClick={this.props.onAddNew}
+              >
                 {this.props.i18nAddNewButtonText}
               </Button>
             )}
