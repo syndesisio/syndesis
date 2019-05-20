@@ -13,7 +13,9 @@ ENV KUBECONFIG=/opt/kube-config \
 
 # Install jq & oc
 # Enable EPEL for "uniguruma" package (required by jq)
-RUN yum install -y "epel-release" \
+RUN yum clean all \
+ && yum update -y \
+ && yum install -y "epel-release" \
  && yum install -y "$openshift_yum_repo" \
  && yum install -y \
         "$openjdk_rpm" \
