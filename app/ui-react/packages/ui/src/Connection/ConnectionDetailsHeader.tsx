@@ -1,6 +1,14 @@
-import { Grid } from 'patternfly-react';
+import {
+  Split,
+  Stack,
+  TextContent,
+  TextList,
+  TextListItem,
+  TextListItemVariants,
+  TextListVariants,
+} from '@patternfly/react-core';
 import * as React from 'react';
-import { Container, PageSection } from '../Layout';
+import { PageSection } from '../Layout';
 import { InlineTextEdit } from '../Shared';
 import './ConnectionDetailsHeader.css';
 
@@ -81,63 +89,58 @@ export class ConnectionDetailsHeader extends React.Component<
   public render() {
     return (
       <PageSection variant={'light'}>
-        <Grid fluid={true}>
-          <Grid.Row className={'connection-details-header__row'}>
+        <Stack gutter="md">
+          <Split gutter="md" className={'connection-details-header__row'}>
             {this.props.connectionIcon ? (
-              <Grid.Col xs={1}>
-                <Container className="blank-slate-pf-icon">
-                  <img
-                    className="connection-details-header__connectionIcon"
-                    src={this.props.connectionIcon}
-                    alt={this.props.connectionName}
-                    width={46}
-                  />
-                </Container>
-              </Grid.Col>
+              <div>
+                <img
+                  className="connection-details-header__connectionIcon"
+                  src={this.props.connectionIcon}
+                  alt={this.props.connectionName}
+                  width={46}
+                />
+              </div>
             ) : null}
-            <Grid.Col xs={11}>
-              <InlineTextEdit
-                className="connection-details-header__connectionName"
-                value={this.props.connectionName}
-                allowEditing={this.props.allowEditing && !this.props.isWorking}
-                placeholder={this.props.i18nNamePlaceholder}
-                isTextArea={false}
-                onChange={this.props.onChangeName}
-              />
-            </Grid.Col>
-          </Grid.Row>
-          <Grid.Row className={'connection-details-header__row'}>
-            <Grid.Col
-              xs={2}
-              className="connection-details-header__propertyLabel"
-            >
-              {this.props.i18nDescriptionLabel}
-            </Grid.Col>
-            <Grid.Col xs={10}>
-              <InlineTextEdit
-                value={this.props.connectionDescription || ''}
-                allowEditing={this.props.allowEditing && !this.props.isWorking}
-                i18nPlaceholder={this.props.i18nDescriptionPlaceholder}
-                isTextArea={true}
-                onChange={this.props.onChangeDescription}
-              />
-            </Grid.Col>
-          </Grid.Row>
-          <Grid.Row>
-            <Grid.Col
-              xs={2}
-              className="connection-details-header__propertyLabel"
-            >
-              {this.props.i18nUsageLabel}
-            </Grid.Col>
-            <Grid.Col
-              xs={10}
-              className="connection-details-header__propertyValue"
-            >
-              {this.props.i18nUsageMessage}
-            </Grid.Col>
-          </Grid.Row>
-        </Grid>
+            <InlineTextEdit
+              className="connection-details-header__connectionName"
+              value={this.props.connectionName}
+              allowEditing={this.props.allowEditing && !this.props.isWorking}
+              placeholder={this.props.i18nNamePlaceholder}
+              isTextArea={false}
+              onChange={this.props.onChangeName}
+            />
+          </Split>
+          <TextContent>
+            <TextList component={TextListVariants.dl}>
+              <TextListItem
+                className="connection-details-header__propertyLabel"
+                component={TextListItemVariants.dt}
+              >
+                {this.props.i18nDescriptionLabel}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dd}>
+                <InlineTextEdit
+                  value={this.props.connectionDescription || ''}
+                  allowEditing={
+                    this.props.allowEditing && !this.props.isWorking
+                  }
+                  i18nPlaceholder={this.props.i18nDescriptionPlaceholder}
+                  isTextArea={true}
+                  onChange={this.props.onChangeDescription}
+                />
+              </TextListItem>
+              <TextListItem
+                className="connection-details-header__propertyLabel"
+                component={TextListItemVariants.dt}
+              >
+                {this.props.i18nUsageLabel}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dd}>
+                {this.props.i18nUsageMessage}
+              </TextListItem>
+            </TextList>
+          </TextContent>
+        </Stack>
       </PageSection>
     );
   }

@@ -98,7 +98,7 @@ export class AutoForm<T> extends React.Component<IAutoFormProps<T>> {
                   <React.Fragment>
                     {this.props.i18nFieldsStatusText && (
                       <p
-                        className="fields-status-pf"
+                        className="form-group fields-status-pf"
                         dangerouslySetInnerHTML={{
                           __html: this.props.i18nFieldsStatusText,
                         }}
