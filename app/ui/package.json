@@ -101,7 +101,7 @@
     "@types/jasmine": "2.5.54",
     "@types/jasminewd2": "2.0.6",
     "@types/jquery": "3.3.29",
-    "@types/lodash": "4.14.119",
+    "@types/lodash": "4.14.129",
     "@types/node": "10.12.18",
     "@types/pluralize": "0.0.28",
     "@types/tether": "1.4.4",
@@ -143,6 +143,7 @@
     "codemirror": "5.42.2",
     "extend": "3.0.2",
     "fstream": "1.0.12",
+    "lodash": "4.17.11",
     "ngx-bootstrap": "3.1.4"
   },
   "snyk": true
