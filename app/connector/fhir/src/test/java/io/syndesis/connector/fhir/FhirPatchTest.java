@@ -17,9 +17,7 @@ package io.syndesis.connector.fhir;
 
 import ca.uhn.fhir.rest.api.MethodOutcome;
 import io.syndesis.common.model.integration.Step;
-import org.hl7.fhir.dstu3.model.HumanName;
 import org.hl7.fhir.dstu3.model.OperationOutcome;
-import org.hl7.fhir.dstu3.model.Patient;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -27,7 +25,6 @@ import java.util.List;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.okXml;
 import static com.github.tomakehurst.wiremock.client.WireMock.patch;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
 import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
 
 public class FhirPatchTest extends FhirTestBase {
