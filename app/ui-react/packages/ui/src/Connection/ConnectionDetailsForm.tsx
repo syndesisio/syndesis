@@ -1,6 +1,6 @@
 import { Alert, Button, Card } from 'patternfly-react';
 import * as React from 'react';
-import { Container, Loader, PageSection } from '../Layout';
+import { Loader, PageSection } from '../Layout';
 import './ConnectionDetailsForm.css';
 
 export interface IConnectionDetailsValidationResult {
@@ -91,41 +91,36 @@ export class ConnectionDetailsForm extends React.Component<
             <Card.Title>{this.props.i18nTitle}</Card.Title>
           </Card.Heading>
           <Card.Body>
-            <Container>
-              <form
-                className="form-horizontal required-pf"
-                role="form"
-                onSubmit={this.props.handleSubmit}
-              >
-                {this.props.validationResults.map((e, idx) => (
-                  <Alert key={idx} type={e.type}>
-                    {e.message}
-                  </Alert>
-                ))}
-                {this.props.children}
-                <div className="form-group">
-                  {this.props.isEditing ? (
-                    <Button
-                      bsStyle="default"
-                      disabled={this.props.isWorking || !this.props.isValid}
-                      onClick={this.props.onValidate}
-                    >
-                      {this.props.isWorking ? (
-                        <Loader size={'sm'} inline={true} />
-                      ) : null}
-                      {this.props.i18nValidateLabel}
-                    </Button>
-                  ) : (
-                    <Button
-                      bsStyle="primary"
-                      onClick={this.props.onStartEditing}
-                    >
-                      {this.props.i18nEditLabel}
-                    </Button>
-                  )}
-                </div>
-              </form>
-            </Container>
+            <form
+              className="required-pf"
+              role="form"
+              onSubmit={this.props.handleSubmit}
+            >
+              {this.props.validationResults.map((e, idx) => (
+                <Alert key={idx} type={e.type}>
+                  {e.message}
+                </Alert>
+              ))}
+              {this.props.children}
+              <div>
+                {this.props.isEditing ? (
+                  <Button
+                    bsStyle="default"
+                    disabled={this.props.isWorking || !this.props.isValid}
+                    onClick={this.props.onValidate}
+                  >
+                    {this.props.isWorking ? (
+                      <Loader size={'sm'} inline={true} />
+                    ) : null}
+                    {this.props.i18nValidateLabel}
+                  </Button>
+                ) : (
+                  <Button bsStyle="primary" onClick={this.props.onStartEditing}>
+                    {this.props.i18nEditLabel}
+                  </Button>
+                )}
+              </div>
+            </form>
           </Card.Body>
           <Card.Footer>
             <Button

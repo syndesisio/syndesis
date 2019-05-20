@@ -1,13 +1,12 @@
 import {
-  Stack,
   Split,
+  Stack,
   TextContent,
   TextList,
-  TextListVariants,
   TextListItem,
   TextListItemVariants,
+  TextListVariants,
 } from '@patternfly/react-core';
-
 import * as React from 'react';
 import { PageSection } from '../Layout';
 import { InlineTextEdit } from '../Shared';
