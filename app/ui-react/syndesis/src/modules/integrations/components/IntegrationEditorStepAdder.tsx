@@ -54,7 +54,7 @@ export interface IIntegrationEditorStepAdderProps {
  * buttons to add a new step, edit an existing one, etc.
  *
  * @see [steps]{@link IIntegrationEditorStepAdderProps#steps}
- * @see [editAddStepHref]{@link IIntegrationEditorStepAdderProps#editAddStepHref}
+ * @see [addStepHref]{@link IIntegrationEditorStepAdderProps#addStepHref}
  * @see [configureStepHref]{@link IIntegrationEditorStepAdderProps#configureStepHref}
  *
  * @todo add the delete step button

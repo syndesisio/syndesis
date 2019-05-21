@@ -24,6 +24,13 @@ const addStepPage = (
         ...s,
       })
     }
+    getEditStepHref={(position, p, s) =>
+      resolvers.create.configure.addStep.selectStep({
+        position: `${position}`,
+        ...p,
+        ...s,
+      })
+    }
     apiProviderHref={(step, p, s) =>
       resolvers.create.configure.editStep.apiProvider.selectMethod()
     }

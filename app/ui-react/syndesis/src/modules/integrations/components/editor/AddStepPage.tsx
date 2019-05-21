@@ -32,7 +32,7 @@ export interface IAddStepPageProps extends IGetStepHrefs {
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
-  getEditStepHref?: (
+  getEditStepHref: (
     position: number,
     p: IBaseRouteParams,
     s: IBaseRouteState
@@ -75,7 +75,6 @@ export class AddStepPage extends React.Component<
       step: {},
     };
 
-    // this.onDelete = this.onDelete.bind(this);
     this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
     this.openDeleteDialog = this.openDeleteDialog.bind(this);
     this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
@@ -107,32 +106,20 @@ export class AddStepPage extends React.Component<
     });
   }
 
-  /**
-  public onDelete(idx: number, step: Step): void {
-    this.setState({ position: idx, showDeleteDialog: true });
-  }
-   **/
-
   public render() {
     return (
-      <Translation ns={['integrations']}>
+      <Translation ns={['integrations', 'shared']}>
         {t => (
           <>
             <WithRouteData<IBaseRouteParams, IBaseRouteState>>
               {({ flowId }, { integration }, { history }) => {
                 const onDelete = (idx: number, step: Step): void => {
-                  console.log('step: ' + JSON.stringify(step));
-                  console.log('idx: ' + idx);
-                  // console.log('idx: ' + idx);
-                  // console.log('firstPosition: ' + getFirstPosition(this.props.integration, this.props.flowId));
-                  // console.log('lastPosition: ' + getLastPosition(this.props.integration, this.props.flowId));
-
                   if (
                     idx === getFirstPosition(integration, flowId) ||
                     idx === getLastPosition(integration, flowId)
                   ) {
                     history.push(
-                      this.props.getEditStepHref!(
+                      this.props.getEditStepHref(
                         this.state.position!,
                         { flowId },
                         { integration }
@@ -140,21 +127,8 @@ export class AddStepPage extends React.Component<
                     );
                   }
 
-                  // Check if it's an API provider step that can't be deleted
-                  if (step.configuredProperties!.stepKind === 'mapper') {
-                    console.log('Data mapper step');
-                  }
-
                   this.setStepAndPosition(idx, step);
                   this.openDeleteDialog();
-
-                  console.log(
-                    'this.state.position: ' +
-                      JSON.stringify(this.state.position)
-                  );
-                  console.log(
-                    'this.state.step: ' + JSON.stringify(this.state.step)
-                  );
                 };
 
                 return (
