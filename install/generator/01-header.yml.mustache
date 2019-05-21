@@ -133,11 +133,15 @@ parameters:
   required: true
 {{#IncludeDint}}
 - description: Maximum amount of memory the data virtualization service might use.
-  displayName: Memory Limit  
+  displayName: Memory Limit
   name: KOMODO_MEMORY_LIMIT
   value: 1024Mi
-  required: true  
-{{/IncludeDint}}
+  required: true
+- description: Set to 0 to disable data virtualization, set to 1 to enable data virtualization.
+  displayName: Enable data virtualization
+  name: DATAVIRT_ENABLED
+  value: "0"
+  required: true{{/IncludeDint}}
 - description: Maximum number of integrations single user can create
   displayName: Maximum number of integrations
   name: MAX_INTEGRATIONS_PER_USER

@@ -134,6 +134,16 @@ parameters:
   name: SERVER_MEMORY_LIMIT
   value: 800Mi
   required: true
+- description: Maximum amount of memory the data virtualization service might use.
+  displayName: Memory Limit
+  name: KOMODO_MEMORY_LIMIT
+  value: 1024Mi
+  required: true
+- description: Set to 0 to disable data virtualization, set to 1 to enable data virtualization.
+  displayName: Enable data virtualization
+  name: DATAVIRT_ENABLED
+  value: "0"
+  required: true
 - description: Maximum number of integrations single user can create
   displayName: Maximum number of integrations
   name: MAX_INTEGRATIONS_PER_USER
@@ -254,6 +264,24 @@ objects:
       importPolicy:
         scheduled: true
       name: "v2.1.0"
+- apiVersion: image.openshift.io/v1
+  kind: ImageStream
+  metadata:
+    name: komodo-server
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: komodo-server
+  spec:
+    tags:
+    - from:
+        kind: DockerImage
+        name: ${SYNDESIS_REGISTRY}/teiid/komodo-server:latest
+      importPolicy:
+        scheduled: true
+      name: "latest"
+
 - apiVersion: image.openshift.io/v1
   kind: ImageStream
   metadata:
@@ -1024,6 +1052,7 @@ objects:
             - --upstream=http://syndesis-server/api/
             - --upstream=http://syndesis-server/mapper/
             - --upstream=http://syndesis-ui/
+            - --upstream=http://komodo-server/vdb-builder/
             - --tls-cert=/etc/tls/private/tls.crt
             - --tls-key=/etc/tls/private/tls.key
             - --cookie-secret=$(OAUTH_COOKIE_SECRET)
@@ -1282,7 +1311,7 @@ objects:
       # See the License for the specific language governing permissions and
       # limitations under the License.
       #
-      
+
       startDelaySecs: 5
       ssl: false
       blacklistObjectNames: ["java.lang:*"]
@@ -1394,8 +1423,7 @@ objects:
               context: $1
               type: context
           type: GAUGE
-      
-      
+
       # Route level
         - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>ExchangesCompleted'
           name: org.apache.camel.ExchangesCompleted
@@ -1493,7 +1521,7 @@ objects:
               route: $2
               type: routes
           type: GAUGE
-      
+
       # Processor level
         - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>ExchangesCompleted'
           name: org.apache.camel.ExchangesCompleted
@@ -1591,7 +1619,7 @@ objects:
               processor: $2
               type: processors
           type: COUNTER
-      
+
       # Consumers
         - pattern: 'org.apache.camel<context=([^,]+), type=consumers, name=([^,]+)><>InflightExchanges'
           name: org.apache.camel.InflightExchanges
@@ -1601,7 +1629,7 @@ objects:
               consumer: $2
               type: consumers
           type: GAUGE
-      
+
       # Services
         - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>MaxDuration'
           name: org.apache.camel.MaxDuration
@@ -1822,7 +1850,6 @@ objects:
               type: $2
               service: $3
               port: $4
-      
 
 - apiVersion: v1
   kind: ConfigMap
@@ -1961,6 +1988,136 @@ objects:
     name: syndesis-knative-reader
     apiGroup: rbac.authorization.k8s.io
 # END:CAMEL-K
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: komodo-server
+    name: komodo-server
+  spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: komodo-server
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: komodo-server
+    name: komodo-server
+  spec:
+    replicas: ${DATAVIRT_ENABLED}
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: komodo-server
+    strategy:
+      resources:
+        limits:
+          memory: "256Mi"
+        requests:
+          memory: "20Mi"
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: syndesis
+          syndesis.io/app: syndesis
+          syndesis.io/type: infrastructure
+          syndesis.io/component: komodo-server
+      spec:
+        serviceAccountName: syndesis-server
+        containers:
+        - name: komodo-server
+          env:
+          - name: JAVA_APP_DIR
+            value: /deployments
+          - name: JAVA_OPTIONS
+            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp -Djava.net.preferIPv4Addresses=true -Dlog4j.logger.org.apache.http=DEBUG -Dkomodo.user=${POSTGRESQL_USER} -Dkomodo.password=${POSTGRESQL_PASSWORD} -Dkomodo.connectionUrl=jdbc:postgresql://syndesis-db:5432/${POSTGRESQL_DATABASE} -Dkomodo.binaryStoreUrl=jdbc:postgresql://syndesis-db:5432/${POSTGRESQL_DATABASE} -Dkomodo.connectionDriver=org.postgresql.Driver"
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: GC_MAX_METASPACE_SIZE
+            value: "512"
+          - name: BUILD_IMAGE_STREAM
+            value: syndesis-s2i:latest
+          - name: POSTGRESQL_PASSWORD
+            value: ${POSTGRESQL_PASSWORD}
+          - name: POSTGRESQL_USER
+            value: ${POSTGRESQL_USER}
+          - name: POSTGRESQL_DATABASE
+            value: ${POSTGRESQL_DATABASE}
+          image: ' '
+
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: "/vdb-builder/v1/swagger.json"
+              httpHeaders:
+              - name: Accept
+                value: 'application/json'
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: "/vdb-builder/v1/swagger.json"
+              port: 8080
+              httpHeaders:
+              - name: Accept
+                value: 'application/json'
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+          ports:
+          - containerPort: 8080
+            name: http
+          - containerPort: 9779
+            name: prometheus
+          - containerPort: 8778
+            name: jolokia
+          workingDir: /deployments
+          volumeMounts:
+          - name: config-volume
+            mountPath: /deployments/config
+          # Set QoS class to "Guaranteed" (limits == requests)
+          # This doesn't work on OSO as there is a fixed ratio
+          # from limit to resource (80% currently). 'requests' is ignored there
+          resources:
+            limits:
+              memory: ${KOMODO_MEMORY_LIMIT}
+              cpu: 750m
+            requests:
+              memory: 256Mi
+        volumes:
+        - name: config-volume
+          configMap:
+            name: syndesis-server-config
+    triggers:
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - komodo-server
+        from:
+          kind: ImageStreamTag
+          name: komodo-server:latest
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+
+    - type: ConfigChange
+
 - apiVersion: v1
   kind: Service
   metadata:

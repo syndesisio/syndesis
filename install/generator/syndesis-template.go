@@ -15,6 +15,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -159,7 +160,7 @@ var productContext = Context{
 var context = syndesisContext
 var prometheusRulesFile = ""
 
-const prometheusRulesFileIndent = "      "
+var prometheusRulesIdentEx = regexp.MustCompile(`(.+)`)
 
 func init() {
 	flags := installCommand.PersistentFlags()
@@ -202,7 +203,7 @@ func install(cmd *cobra.Command, args []string) {
 	prometheusRules, err := ioutil.ReadFile(prometheusRulesFile)
 	check(err)
 
-	context.PrometheusRules = strings.Replace(prometheusRulesFileIndent+string(prometheusRules), "\n", "\n"+prometheusRulesFileIndent, -1)
+	context.PrometheusRules = prometheusRulesIdentEx.ReplaceAllString(string(prometheusRules), "      $1")
 
 	for _, f := range files {
 		if strings.HasSuffix(f.Name(), ".yml.mustache") {
