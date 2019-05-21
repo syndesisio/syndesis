@@ -12,13 +12,18 @@ export class UptimeMetric extends React.PureComponent<IUptimeMetricProps> {
     const startAsDate = new Date(this.props.start);
     const startAsHuman = startAsDate.toLocaleString();
     return (
-      <Card accented={true} aggregated={true} matchHeight={true}>
+      <Card
+        className="metrics-uptime"
+        accented={true}
+        aggregated={true}
+        matchHeight={true}
+      >
         <Card.Title className={'text-left'}>
           <small className={'pull-right'}>since {startAsHuman}</small>
           <div>{this.props.i18nTitle}</div>
         </Card.Title>
         <Card.Body>
-          <h4>{this.props.durationDifference}</h4>
+          <span>{this.props.durationDifference}</span>
         </Card.Body>
       </Card>
     );

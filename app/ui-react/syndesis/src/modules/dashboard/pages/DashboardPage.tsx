@@ -172,13 +172,15 @@ export default () => (
                         </div>
                       }
                       uptimeOverview={
-                        <UptimeMetric
-                          start={parseInt(metricsData.start!, 10)}
-                          durationDifference={toDurationDifferenceString(
-                            parseInt(metricsData.start!, 10)
-                          )}
-                          i18nTitle={t('titleUptimeMetric')}
-                        />
+                        <div data-testid="metrics-uptime">
+                          <UptimeMetric
+                            start={parseInt(metricsData.start!, 10)}
+                            durationDifference={toDurationDifferenceString(
+                              parseInt(metricsData.start!, 10)
+                            )}
+                            i18nTitle={t('titleUptimeMetric')}
+                          />
+                        </div>
                       }
                       topIntegrations={
                         <TopIntegrationsCard

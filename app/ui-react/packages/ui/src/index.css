@@ -22,6 +22,7 @@
 @import url('~@patternfly/patternfly/components/Popover/popover.css');
 @import url('~@patternfly/patternfly/components/Tooltip/tooltip.css');
 @import url('~@patternfly/patternfly/components/Card/card.css');
+@import url('~@patternfly/patternfly/components/ClipboardCopy/clipboard-copy.css');
 
 :root {
   --pf-global--link--Color: #0088ce;
@@ -125,3 +126,27 @@ body {
   background-position: right;
 }
 
+.pf-c-clipboard-copy {
+  display: inline-block;
+  min-width: 455px;
+}
+
+@media (max-width: 768px) {
+  .pf-c-clipboard-copy {
+    display: inline-block;
+    --pf-global--spacer--md: 0;
+  }
+}
+
+.dashboard__metrics .card-pf.card-pf-aggregate-status {
+  padding: 0 10px 24px 10px;
+}
+
+.dashboard__metrics .card-pf-title .card-pf-aggregate-status-count {
+  font-size: 14px;
+}
+
+.dashboard__metrics .metrics-uptime {
+  font-size: 24px;
+  font-weight: 300;
+}
