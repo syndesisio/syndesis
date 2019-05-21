@@ -1,6 +1,7 @@
 import { Grid, Icon } from 'patternfly-react';
 import * as React from 'react';
 import { Container } from '../Layout/Container';
+import { toTestId } from '../utils';
 import './DndFileChooser.css';
 import { INotification, INotificationType } from './Notifications';
 import { WithDropzone } from './WithDropzone';
@@ -138,7 +139,10 @@ export class DndFileChooser extends React.Component<
       return (
         <ul>
           {this.state.files.map((file, index) => (
-            <li data-testid={`dnd-file-chooser-${index}`} key={index}>
+            <li
+              data-testid={`${toTestId(DndFileChooser.name, file.name)}`}
+              key={index}
+            >
               {file.name}
             </li>
           ))}
@@ -178,7 +182,7 @@ export class DndFileChooser extends React.Component<
         <ul>
           {this.props.i18nUploadSuccessMessages!.map((message, idx) => (
             <li
-              data-testid={`dnd-file-chooser-success-message-${idx}`}
+              data-testid={`${toTestId(DndFileChooser.name, message)}`}
               key={'success' + idx}
               className="dnd-file-chooser__uploadMessage"
             >
@@ -188,7 +192,7 @@ export class DndFileChooser extends React.Component<
           ))}
           {this.props.i18nUploadFailedMessages!.map((message, idx) => (
             <li
-              data-testid={`dnd-file-chooser-failed-message-${idx}`}
+              data-testid={`${toTestId(DndFileChooser.name, message)}`}
               key={'fail' + idx}
               className="dnd-file-chooser__uploadMessage"
             >

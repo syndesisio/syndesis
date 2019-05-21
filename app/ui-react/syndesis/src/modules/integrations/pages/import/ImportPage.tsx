@@ -1,5 +1,5 @@
 import { WithIntegrationHelpers } from '@syndesis/api';
-import { Breadcrumb, ImportPageUI } from '@syndesis/ui';
+import { Breadcrumb, ImportPageUI, toTestId } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
@@ -67,7 +67,10 @@ export class ImportPage extends React.Component<{}, IImportPageState> {
                   <PageTitle title={t('shared:Import')} />
                   <Breadcrumb>
                     <Link
-                      data-testid={'import-page-integrations'}
+                      data-testid={toTestId(
+                        ImportPage.name,
+                        'integrations-link'
+                      )}
                       to={resolvers.list()}
                     >
                       {t('shared:Integrations')}

@@ -1,6 +1,6 @@
 import { WithViewEditorStates } from '@syndesis/api';
 import { RestDataService, ViewEditorState } from '@syndesis/models';
-import { Breadcrumb, PageSection, ViewHeader } from '@syndesis/ui';
+import { Breadcrumb, PageSection, toTestId, ViewHeader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -50,15 +50,19 @@ export class VirtualizationSqlClientPage extends React.Component<
               <>
                 <Breadcrumb>
                   <Link
-                    data-testid={'virtualization-sql-client-page-home'}
+                    data-testid={toTestId(
+                      VirtualizationSqlClientPage.name,
+                      'home-link'
+                    )}
                     to={resolvers.dashboard.root()}
                   >
                     {t('shared:Home')}
                   </Link>
                   <Link
-                    data-testid={
-                      'virtualization-sql-client-page-virtualizations'
-                    }
+                    data-testid={toTestId(
+                      VirtualizationSqlClientPage.name,
+                      'virtualizations-link'
+                    )}
                     to={resolvers.data.root()}
                   >
                     {t('shared:DataVirtualizations')}

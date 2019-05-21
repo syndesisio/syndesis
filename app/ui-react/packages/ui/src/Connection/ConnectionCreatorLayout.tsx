@@ -4,6 +4,7 @@ import * as H from '@syndesis/history';
 import classnames from 'classnames';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../Layout';
+import { toTestId } from '../utils';
 
 /**
  * @param header - a PatternFly Wizard Steps component.
@@ -94,7 +95,10 @@ export const ConnectionCreatorLayout: React.FunctionComponent<
       </div>
       <div className="wizard-pf-footer integration-editor-layout__footer">
         <ButtonLink
-          data-testid={'connection-creator-layout-back'}
+          data-testid={`${toTestId(
+            ConnectionCreatorLayout.name,
+            'back-button'
+          )}`}
           onClick={onBack}
           href={backHref}
           className={'wizard-pf-back'}
@@ -105,7 +109,10 @@ export const ConnectionCreatorLayout: React.FunctionComponent<
           <div className={'wizard-pf-extrabuttons'}>{extraButtons}</div>
         )}
         <ButtonLink
-          data-testid={'connection-creator-layout-next'}
+          data-testid={`${toTestId(
+            ConnectionCreatorLayout.name,
+            'next-button'
+          )}`}
           onClick={onNext}
           href={nextHref}
           as={'primary'}
@@ -122,7 +129,10 @@ export const ConnectionCreatorLayout: React.FunctionComponent<
           )}
         </ButtonLink>
         <ButtonLink
-          data-testid={'connection-creator-layout-cancel'}
+          data-testid={`${toTestId(
+            ConnectionCreatorLayout.name,
+            'cancel-button'
+          )}`}
           onClick={onCancel}
           href={cancelHref}
           className={'wizard-pf-cancel'}

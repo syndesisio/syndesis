@@ -26,23 +26,25 @@ export default describe('IntegrationProgress', () => {
 
   it('Should show the progress value and steps', () => {
     const { getByTestId } = render(testComponent);
-    expect(getByTestId('progress-link-value')).toHaveTextContent(
+    expect(getByTestId('progresswithlink.value')).toHaveTextContent(
       'Deploying ( 2 / 4 )'
     );
   });
   it('Should show the log link when supplied', () => {
     const { queryByTestId } = render(testComponent);
-    expect(queryByTestId('progress-log-link')).toBeDefined();
-    expect(queryByTestId('progress-log-link')).toHaveTextContent('View Logs');
+    expect(queryByTestId('progresswithlink.log-url')).toBeDefined();
+    expect(queryByTestId('progresswithlink.log-url')).toHaveTextContent(
+      'View Logs'
+    );
   });
   it('Should show the progress value and steps', () => {
     const { getByTestId } = render(testComponentNoLog);
-    expect(getByTestId('progress-link-value')).toHaveTextContent(
+    expect(getByTestId('progresswithlink.value')).toHaveTextContent(
       'Assembling ( 1 / 4 )'
     );
   });
   it('Should not show the log link if not supplied', () => {
     const { queryByTestId } = render(testComponentNoLog);
-    expect(queryByTestId('progess-log-link')).toEqual(null);
+    expect(queryByTestId('progresswithlink.log-url')).toEqual(null);
   });
 });

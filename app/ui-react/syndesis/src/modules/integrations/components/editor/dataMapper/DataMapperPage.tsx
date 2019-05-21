@@ -6,7 +6,12 @@ import {
 import { DataMapperAdapter } from '@syndesis/atlasmap-adapter';
 import * as H from '@syndesis/history';
 import { Action, Integration } from '@syndesis/models';
-import { ButtonLink, IntegrationEditorLayout, PageSection } from '@syndesis/ui';
+import {
+  ButtonLink,
+  IntegrationEditorLayout,
+  PageSection,
+  toTestId,
+} from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { AppContext } from '../../../../../app';
@@ -140,7 +145,10 @@ export const DataMapperPage: React.FunctionComponent<
                   }
                   extraActions={
                     <ButtonLink
-                      data-testid={'data-mapper-page-save-mapping'}
+                      data-testid={toTestId(
+                        DataMapperPage.name,
+                        'save-mapping-button'
+                      )}
                       onClick={saveMappingStep}
                       disabled={!mappings}
                       as={'primary'}

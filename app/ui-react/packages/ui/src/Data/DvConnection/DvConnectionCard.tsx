@@ -1,7 +1,7 @@
 import { Text } from '@patternfly/react-core';
 import { Card, Label } from 'patternfly-react';
 import * as React from 'react';
-
+import { toTestId } from '../../utils';
 import './DvConnectionCard.css';
 
 export enum ConnectionStatus {
@@ -68,7 +68,10 @@ export class DvConnectionCard extends React.PureComponent<
               </div>
               <div
                 className="dv-connection-card__title h2"
-                data-testid="dv-connection-card-title"
+                data-testid={`${toTestId(
+                  DvConnectionCard.name,
+                  this.props.name
+                )}`}
               >
                 {this.props.name}
               </div>

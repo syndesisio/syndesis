@@ -10,6 +10,7 @@ import {
   ConnectionDetailsForm,
   ConnectionDetailsHeader,
   PageLoader,
+  toTestId,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -235,17 +236,19 @@ export class ConnectionDetailsPage extends React.Component<
                                             <>
                                               <Breadcrumb>
                                                 <Link
-                                                  data-testid={
-                                                    'connection-details-page-home'
-                                                  }
+                                                  data-testid={toTestId(
+                                                    ConnectionDetailsPage.name,
+                                                    'home-link'
+                                                  )}
                                                   to={resolvers.dashboard.root()}
                                                 >
                                                   {t('shared:Home')}
                                                 </Link>
                                                 <Link
-                                                  data-testid={
-                                                    'connection-details-page-connections'
-                                                  }
+                                                  data-testid={toTestId(
+                                                    ConnectionDetailsPage.name,
+                                                    'connections-link'
+                                                  )}
                                                   to={resolvers.connections.connections()}
                                                 >
                                                   {t('shared:Connections')}

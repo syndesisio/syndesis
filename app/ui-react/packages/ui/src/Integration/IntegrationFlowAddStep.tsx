@@ -1,6 +1,7 @@
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { toTestId } from '../utils';
 import './IntegrationFlowAddStep.css';
 
 export interface IIntegrationFlowAddStepProps {
@@ -66,7 +67,10 @@ export class IntegrationFlowAddStep extends React.Component<
             ref={this.containerRef}
           >
             <Link
-              data-testid={'integration-flow-add-step-add-step'}
+              data-testid={`${toTestId(
+                IntegrationFlowAddStep.name,
+                'add-step-link'
+              )}`}
               to={this.props.addStepHref}
             >
               <i className="fa fa-plus" title={this.props.i18nAddStep} />

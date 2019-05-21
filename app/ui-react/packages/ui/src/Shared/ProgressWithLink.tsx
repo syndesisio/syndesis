@@ -1,6 +1,6 @@
 import { Icon, ProgressBar } from 'patternfly-react';
 import * as React from 'react';
-
+import { toTestId } from '../utils';
 import './ProgressWithLink.css';
 
 export interface IProgressWithLinkProps {
@@ -18,14 +18,14 @@ export class ProgressWithLink extends React.PureComponent<
     return (
       <div className="progress-link">
         <div>
-          <i data-testid="progress-link-value">
+          <i data-testid={`${toTestId(ProgressWithLink.name, 'value')}`}>
             {this.props.value} ( {this.props.currentStep} /{' '}
             {this.props.totalSteps} )
           </i>
           {this.props.logUrl && (
-            <span data-testid="progress-log-link" className="pull-right">
+            <span className="pull-right">
               <a
-                data-testid={'progress-with-link-log-url'}
+                data-testid={`${toTestId(ProgressWithLink.name, 'log-url')}`}
                 target="_blank"
                 href={this.props.logUrl}
               >

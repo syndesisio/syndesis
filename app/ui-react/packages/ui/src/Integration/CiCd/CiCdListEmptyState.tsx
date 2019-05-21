@@ -1,5 +1,6 @@
 import { Button, EmptyState } from 'patternfly-react';
 import * as React from 'react';
+import { toTestId } from '../../utils';
 
 export interface ICiCdListEmptyState {
   onAddNew: () => void;
@@ -17,7 +18,10 @@ export class CiCdListEmptyState extends React.Component<ICiCdListEmptyState> {
         <EmptyState.Info>{this.props.i18nInfo}</EmptyState.Info>
         <EmptyState.Action>
           <Button
-            data-testid={'cicd-list-empty-state-add-new'}
+            data-testid={`${toTestId(
+              CiCdListEmptyState.name,
+              'add-new-button'
+            )}`}
             bsStyle="primary"
             bsSize="large"
             onClick={this.props.onAddNew}

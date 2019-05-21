@@ -6,6 +6,7 @@ import {
   ListViewToolbar,
   SimplePageHeader,
 } from '../Shared';
+import { toTestId } from '../utils';
 
 export interface IIntegrationsListViewProps extends IListViewToolbarProps {
   linkToManageCiCd: H.LocationDescriptor;
@@ -32,19 +33,28 @@ export class IntegrationsListView extends React.Component<
           <ListViewToolbar {...this.props}>
             <div className="form-group">
               <ButtonLink
-                data-testid={'integrations-list-view-manage-cicd'}
+                data-testid={`${toTestId(
+                  IntegrationsListView.name,
+                  'manage-cicd-button'
+                )}`}
                 href={this.props.linkToManageCiCd}
               >
                 {this.props.i18nManageCiCd}
               </ButtonLink>
               <ButtonLink
-                data-testid={'integrations-list-view-import'}
+                data-testid={`${toTestId(
+                  IntegrationsListView.name,
+                  'import-button'
+                )}`}
                 href={this.props.linkToIntegrationImport}
               >
                 {this.props.i18nImport}
               </ButtonLink>
               <ButtonLink
-                data-testid={'integrations-list-view-create'}
+                data-testid={`${toTestId(
+                  IntegrationsListView.name,
+                  'create-button'
+                )}`}
                 href={this.props.linkToIntegrationCreation}
                 as={'primary'}
               >

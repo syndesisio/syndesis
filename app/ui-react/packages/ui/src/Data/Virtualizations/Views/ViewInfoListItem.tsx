@@ -1,5 +1,6 @@
 import { Label, ListViewInfoItem, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
+import { toTestId } from '../../../utils';
 
 export interface IViewInfoListItemProps {
   name: string;
@@ -56,7 +57,10 @@ export class ViewInfoListItem extends React.Component<
         description={this.getNodePathStr()}
         checkboxInput={
           <input
-            data-testid={'view-info-list-item-selected'}
+            data-testid={`${toTestId(
+              ViewInfoListItem.name,
+              this.props.name + '.selected-input'
+            )}`}
             type="checkbox"
             value=""
             defaultChecked={this.props.selected}

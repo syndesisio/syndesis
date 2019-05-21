@@ -2,6 +2,7 @@ import { Button } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
+import { toTestId } from '../../utils';
 
 export interface ICiCdListViewProps extends IListViewToolbarProps {
   i18nAddNewButtonText: string;
@@ -16,7 +17,7 @@ export class CiCdListView extends React.Component<ICiCdListViewProps> {
           <div className="form-group">
             {this.props.resultsCount !== 0 && (
               <Button
-                data-testid={'cicd-list-view-add-new'}
+                data-testid={`${toTestId(CiCdListView.name, 'add-new-button')}`}
                 className="btn btn-primary"
                 onClick={this.props.onAddNew}
               >

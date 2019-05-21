@@ -12,6 +12,7 @@ import {
   ListViewToolbar,
   SimplePageHeader,
 } from '../../Shared';
+import { toTestId } from '../../utils';
 
 export interface IVirtualizationListProps extends IListViewToolbarProps {
   hasListData: boolean;
@@ -82,8 +83,10 @@ export class VirtualizationList extends React.Component<
                 placement="top"
               >
                <Button
-                  
-                  data-testid={'virtualization-list-import'}
+                  data-testid={`${toTestId(
+                    VirtualizationList.name,
+                    'import-button'
+                  )}`}
                   bsStyle="default"
                   to={this.props.i18nImport}
                   onClick={this.handleImport}
@@ -96,7 +99,10 @@ export class VirtualizationList extends React.Component<
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={'virtualization-list-create-virtualization'}
+                  data-testid={`${toTestId(
+                    VirtualizationList.name,
+                    'create-virtualization-button'
+                  )}`}
                   href={this.props.linkCreateHRef}
                   as={'primary'}
                 >
@@ -122,7 +128,10 @@ export class VirtualizationList extends React.Component<
                   placement="top"
                 >
                   <ButtonLink
-                    data-testid={'virtualization-list-empty-state-create'}
+                    data-testid={`${toTestId(
+                      VirtualizationList.name,
+                      'empty-state-create-button'
+                    )}`}
                     href={this.props.linkCreateHRef}
                     as={'primary'}
                   >

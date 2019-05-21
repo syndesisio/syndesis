@@ -1,7 +1,7 @@
 import { WithViewEditorStates, WithVirtualizationHelpers } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
 import { ViewDefinition, ViewEditorState } from '@syndesis/models';
-import { Breadcrumb, PageSection, ViewHeader } from '@syndesis/ui';
+import { Breadcrumb, PageSection, toTestId, ViewHeader } from '@syndesis/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import i18n from '../../../i18n';
@@ -114,15 +114,19 @@ export class VirtualizationViewsPage extends React.Component<
                       <>
                         <Breadcrumb>
                           <Link
-                            data-testid={'virtualization-views-page-home'}
+                            data-testid={toTestId(
+                              'VirtualizationViewsPage',
+                              'home-link'
+                            )}
                             to={resolvers.dashboard.root()}
                           >
                             {t('shared:Home')}
                           </Link>
                           <Link
-                            data-testid={
-                              'virtualization-views-page-virtualizations'
-                            }
+                            data-testid={toTestId(
+                              'VirtualizationViewsPage',
+                              'virtualizations-link'
+                            )}
                             to={resolvers.data.root()}
                           >
                             {t('shared:DataVirtualizations')}

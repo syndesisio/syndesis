@@ -8,6 +8,7 @@ import {
   IImportAction,
   Loader,
   PageSection,
+  toTestId,
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -174,7 +175,10 @@ export default class ExtensionImportPage extends React.Component<
                             <Breadcrumb
                               actions={
                                 <ButtonLink
-                                  data-testid={'extension-import-page-cancel'}
+                                  data-testid={toTestId(
+                                    ExtensionImportPage.name,
+                                    'cancel-button'
+                                  )}
                                   className={'extension-import-page__action'}
                                   href={resolvers.extensions.list()}
                                   as={'default'}
@@ -184,13 +188,19 @@ export default class ExtensionImportPage extends React.Component<
                               }
                             >
                               <Link
-                                data-testid={'extension-import-page-home'}
+                                data-testid={toTestId(
+                                  ExtensionImportPage.name,
+                                  'home-link'
+                                )}
                                 to={resolvers.dashboard.root()}
                               >
                                 {t('shared:Home')}
                               </Link>
                               <Link
-                                data-testid={'extension-import-page-extensions'}
+                                data-testid={toTestId(
+                                  ExtensionImportPage.name,
+                                  'extensions-link'
+                                )}
                                 to={resolvers.extensions.list()}
                               >
                                 {t('shared:Extensions')}

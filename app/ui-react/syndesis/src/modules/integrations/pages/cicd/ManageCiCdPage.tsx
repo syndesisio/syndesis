@@ -10,6 +10,7 @@ import {
   IFilterType,
   ISortType,
   TagNameValidationError,
+  toTestId,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -116,7 +117,10 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                           <PageTitle title={t('integrations:ManageCiCd')} />
                           <Breadcrumb>
                             <Link
-                              data-testid={'manage-cicd-page-integrations'}
+                              data-testid={toTestId(
+                                ManageCiCdPage.name,
+                                'integrations-link'
+                              )}
                               to={resolvers.list()}
                             >
                               {t('shared:Integrations')}

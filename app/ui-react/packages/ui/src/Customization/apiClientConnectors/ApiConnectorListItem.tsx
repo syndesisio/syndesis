@@ -13,6 +13,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../Shared';
+import { toTestId } from '../../utils';
 
 export interface IApiConnectorListItemProps {
   apiConnectorDescription?: string;
@@ -115,7 +116,10 @@ export class ApiConnectorListItem extends React.Component<
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={'api-connector-list-item-details'}
+                  data-testid={`${toTestId(
+                    ApiConnectorListItem.name,
+                    this.props.apiConnectorName + '.details-button'
+                  )}`}
                   href={this.props.detailsPageLink}
                   as={'default'}
                 >
@@ -124,7 +128,10 @@ export class ApiConnectorListItem extends React.Component<
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
                 <Button
-                  data-testid={'api-connector-list-item-delete'}
+                  data-testid={`${toTestId(
+                    ApiConnectorListItem.name,
+                    this.props.apiConnectorName + '.delete-button'
+                  )}`}
                   bsStyle="default"
                   disabled={this.props.usedBy !== 0}
                   onClick={this.showDeleteDialog}

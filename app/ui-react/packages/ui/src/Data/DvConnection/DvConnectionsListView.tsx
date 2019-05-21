@@ -2,6 +2,7 @@ import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, Container } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
+import { toTestId } from '../../utils';
 
 export interface IDvConnectionsListViewProps extends IListViewToolbarProps {
   linkToConnectionCreate: H.LocationDescriptor;
@@ -17,7 +18,10 @@ export class DvConnectionsListView extends React.Component<
         <ListViewToolbar {...this.props}>
           <div className="form-group">
             <ButtonLink
-              data-testid={'dv-connections-list-view-create-connection'}
+              data-testid={`${toTestId(
+                DvConnectionsListView.name,
+                'create-connection-button'
+              )}`}
               href={this.props.linkToConnectionCreate}
               as={'primary'}
             >

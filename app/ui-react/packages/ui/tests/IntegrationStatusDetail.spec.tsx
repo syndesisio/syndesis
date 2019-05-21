@@ -40,19 +40,19 @@ export default describe('IntegrationStatusDetail', () => {
 
   it('Should show the starting state', () => {
     const { getByTestId } = render(testComponentPublishing);
-    expect(getByTestId('integration-status-detail')).toHaveTextContent(
+    expect(getByTestId('integrationstatusdetail.detail')).toHaveTextContent(
       'Starting...'
     );
   });
 
   it('Should show the detailed status', () => {
     const { getByTestId } = render(testComponentPublishingDetailed);
-    expect(getByTestId('integration-status-detail')).toHaveTextContent('');
+    expect(getByTestId('integrationstatusdetail.detail')).toHaveTextContent('');
   });
 
   it('Should show the stopping state', () => {
     const { getByTestId } = render(testComponentUnpublishing);
-    expect(getByTestId('integration-status-detail')).toHaveTextContent(
+    expect(getByTestId('integrationstatusdetail.detail')).toHaveTextContent(
       'Stopping...'
     );
   });

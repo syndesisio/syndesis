@@ -1,5 +1,5 @@
 import { RestDataService } from '@syndesis/models';
-import { Breadcrumb } from '@syndesis/ui';
+import { Breadcrumb, toTestId } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
@@ -22,19 +22,25 @@ export default class ViewCreateApp extends React.Component {
           <WithClosedNavigation>
             <Breadcrumb>
               <Link
-                data-testid={'view-create-home'}
+                data-testid={toTestId(ViewCreateApp.name, 'home-link')}
                 to={resolvers.dashboard.root()}
               >
                 {i18n.t('shared:Home')}
               </Link>
               <Link
-                data-testid={'view-create-virtualizations'}
+                data-testid={toTestId(
+                  ViewCreateApp.name,
+                  'virtualizations-link'
+                )}
                 to={resolvers.data.root()}
               >
                 {i18n.t('shared:DataVirtualizations')}
               </Link>
               <Link
-                data-testid={'view-create-virtualization'}
+                data-testid={toTestId(
+                  ViewCreateApp.name,
+                  'virtualization-link'
+                )}
                 to={resolvers.data.virtualizations.views.root({
                   virtualization,
                 })}

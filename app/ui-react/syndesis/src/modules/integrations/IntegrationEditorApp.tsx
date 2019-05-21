@@ -1,7 +1,7 @@
 import { ALL_STEPS, createStep, DATA_MAPPER } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { StepKind } from '@syndesis/models';
-import { Breadcrumb } from '@syndesis/ui';
+import { Breadcrumb, toTestId } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -142,13 +142,19 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
             <WithClosedNavigation>
               <Breadcrumb>
                 <Link
-                  data-testid={'integration-editor-app-integrations'}
+                  data-testid={toTestId(
+                    IntegrationEditorApp.name,
+                    'integrations-link'
+                  )}
                   to={resolvers.list()}
                 >
                   {t('shared:Integrations')}
                 </Link>
                 <Link
-                  data-testid={'integration-editor-app-integration'}
+                  data-testid={toTestId(
+                    IntegrationEditorApp.name,
+                    'integration-link'
+                  )}
                   to={resolvers.integration.details({
                     integrationId: integration.id!,
                   })}

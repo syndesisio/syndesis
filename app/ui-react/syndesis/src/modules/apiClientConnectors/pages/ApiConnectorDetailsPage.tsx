@@ -7,6 +7,7 @@ import {
   Container,
   PageLoader,
   PageSection,
+  toTestId,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -212,17 +213,19 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                         <>
                                           <Breadcrumb>
                                             <Link
-                                              data-testid={
-                                                'api-connector-details-page-home'
-                                              }
+                                              data-testid={toTestId(
+                                                ApiConnectorDetailsPage.name,
+                                                'home-link'
+                                              )}
                                               to={resolvers.dashboard.root()}
                                             >
                                               {t('shared:Home')}
                                             </Link>
                                             <Link
-                                              data-testid={
-                                                'api-connector-details-page-api-connectors'
-                                              }
+                                              data-testid={toTestId(
+                                                ApiConnectorDetailsPage.name,
+                                                'api-connectors-link'
+                                              )}
                                               to={resolvers.apiClientConnectors.list()}
                                             >
                                               {t('apiConnectorsPageTitle')}
@@ -268,7 +271,9 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                                   )}
                                                   i18nErrorsHeading={t(
                                                     'reviewErrorsHeading',
-                                                    { count: 0 }
+                                                    {
+                                                      count: 0,
+                                                    }
                                                   )} // TODO fix count
                                                   i18nImportedHeading={t(
                                                     'reviewImportedHeading'
@@ -292,7 +297,9 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                                   )}
                                                   i18nWarningsHeading={t(
                                                     'reviewWarningsHeading',
-                                                    { count: 0 }
+                                                    {
+                                                      count: 0,
+                                                    }
                                                   )} // TODO fix count
                                                 />
                                               ) : (
@@ -311,7 +318,9 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                                   )}
                                                   i18nOperationsHtmlMessage={t(
                                                     'reviewOperationsMessage',
-                                                    { count: 0 }
+                                                    {
+                                                      count: 0,
+                                                    }
                                                   )}
                                                   i18nTitle={t(
                                                     'reviewActionsTitle'

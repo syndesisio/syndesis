@@ -8,6 +8,7 @@ import {
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
+import { toTestId } from '../../utils';
 
 export interface IApiConnectorListViewProps extends IListViewToolbarProps {
   i18nDescription: string;
@@ -33,7 +34,10 @@ export class ApiConnectorListView extends React.Component<
               placement="top"
             >
               <ButtonLink
-                data-testid={'api-connector-list-view-create-api-connector'}
+                data-testid={`${toTestId(
+                  ApiConnectorListView.name,
+                  'create-button'
+                )}`}
                 href={this.props.linkCreateApiConnector}
                 as={'primary'}
               >
@@ -65,7 +69,10 @@ export class ApiConnectorListView extends React.Component<
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={'api-connector-list-view-empty-state-create'}
+                  data-testid={`${toTestId(
+                    ApiConnectorListView.name,
+                    'empty-state-create-button'
+                  )}`}
                   href={this.props.linkCreateApiConnector}
                   as={'primary'}
                 >

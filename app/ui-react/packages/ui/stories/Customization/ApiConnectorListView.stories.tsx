@@ -5,7 +5,10 @@ import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { ApiConnectorListItem, ApiConnectorListView } from '../../src';
 
-const stories = storiesOf('Customization/ApiConnectorListView', module);
+const stories = storiesOf(
+  'Customization/ApiClientConnector/ApiConnectorListView',
+  module
+);
 
 const connectors = [
   <ApiConnectorListItem

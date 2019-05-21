@@ -1,6 +1,7 @@
 import * as CodeMirror from 'codemirror';
 import * as React from 'react';
 import { UnControlled as ReactCodeMirror } from 'react-codemirror2';
+import { toTestId } from '../utils';
 
 import 'codemirror/addon/display/placeholder.js';
 import 'codemirror/addon/lint/lint.css';
@@ -26,7 +27,12 @@ export class TextEditor extends React.Component<ITextEditorProps> {
     const options = { ...this.props.options };
     return (
       <>
-        <div data-testid={this.props.id || 'codemirror'}>
+        <div
+          data-testid={`${toTestId(
+            TextEditor.name,
+            this.props.id || 'codemirror'
+          )}`}
+        >
           <ReactCodeMirror
             value={this.props.value}
             options={options}

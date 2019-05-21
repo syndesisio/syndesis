@@ -1,5 +1,6 @@
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
+import { toTestId } from '../../utils';
 
 function getRandom(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -34,7 +35,7 @@ export class CiCdListSkeleton extends React.PureComponent {
       <>
         <div
           className={'list-group-item'}
-          data-testid="environments-list-skeleton"
+          data-testid={`${toTestId(CiCdListSkeleton.name, 'item-0')}`}
         >
           <div>
             <ItemSkeleton />
@@ -42,7 +43,7 @@ export class CiCdListSkeleton extends React.PureComponent {
         </div>
         <div
           className={'list-group-item'}
-          data-testid="environments-list-skeleton"
+          data-testid={`${toTestId(CiCdListSkeleton.name, 'item-1')}`}
         >
           <div>
             <ItemSkeleton />
@@ -50,7 +51,7 @@ export class CiCdListSkeleton extends React.PureComponent {
         </div>
         <div
           className={'list-group-item'}
-          data-testid="environments-list-skeleton"
+          data-testid={`${toTestId(CiCdListSkeleton.name, 'item-2')}`}
         >
           <div>
             <ItemSkeleton />

@@ -7,6 +7,7 @@ import {
   IntegrationEditorStepsListItem,
   IntegrationFlowAddStep,
   PageSection,
+  toTestId,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -103,9 +104,10 @@ export class IntegrationEditorStepAdder extends React.Component<
                         s.previousStepShouldDefineDataShape ? (
                           <>
                             <a
-                              data-testid={
-                                'integration-editor-step-adder-define-data-type'
-                              }
+                              data-testid={toTestId(
+                                IntegrationEditorStepAdder.name,
+                                'define-data-type-link'
+                              )}
                               href={'/todo'}
                             >
                               Define the data type
@@ -115,9 +117,10 @@ export class IntegrationEditorStepAdder extends React.Component<
                         ) : (
                           <>
                             <Link
-                              data-testid={
-                                'integration-editor-step-adder-add-step-before-connection'
-                              }
+                              data-testid={toTestId(
+                                IntegrationEditorStepAdder.name,
+                                'add-step-before-connection-link'
+                              )}
                               to={this.props.addDataMapperStepHref(idx)}
                             >
                               Add a data mapping step
@@ -129,9 +132,10 @@ export class IntegrationEditorStepAdder extends React.Component<
                       actions={
                         <>
                           <ButtonLink
-                            data-testid={
-                              'integration-editor-step-adder-configure'
-                            }
+                            data-testid={toTestId(
+                              IntegrationEditorStepAdder.name,
+                              'configure-button'
+                            )}
                             href={this.props.configureStepHref(
                               idx,
                               this.props.steps[idx]
@@ -141,9 +145,10 @@ export class IntegrationEditorStepAdder extends React.Component<
                           </ButtonLink>
                           {!restrictedDelete && (
                             <ButtonLink
-                              data-testid={
-                                'integration-editor-step-adder-delete'
-                              }
+                              data-testid={toTestId(
+                                IntegrationEditorStepAdder.name,
+                                'delete-button'
+                              )}
                               onClick={() => this.props.onDelete(idx, s)}
                               as={'danger'}
                             >

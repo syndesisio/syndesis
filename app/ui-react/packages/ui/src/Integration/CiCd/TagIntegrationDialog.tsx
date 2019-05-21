@@ -1,6 +1,7 @@
 import { Button } from 'patternfly-react';
 import * as React from 'react';
 import { Dialog } from '../../Shared';
+import { toTestId } from '../../utils';
 import { ITagIntegrationEntry } from './CiCdUIModels';
 
 export interface ITagIntegrationDialogChildrenProps {
@@ -61,13 +62,19 @@ export class TagIntegrationDialog extends React.Component<
         footer={
           <>
             <Button
-              data-testid={'tag-integration-dialog-cancel'}
+              data-testid={`${toTestId(
+                TagIntegrationDialog.name,
+                'cancel-button'
+              )}`}
               onClick={this.props.onHide}
             >
               {this.props.i18nCancelButtonText}
             </Button>
             <Button
-              data-testid={'tag-integration-dialog-save'}
+              data-testid={`${toTestId(
+                TagIntegrationDialog.name,
+                'save-button'
+              )}`}
               bsStyle={'primary'}
               onClick={this.handleClick}
               disabled={this.state.disableSave}

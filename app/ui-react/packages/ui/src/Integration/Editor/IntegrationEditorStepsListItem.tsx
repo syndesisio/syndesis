@@ -1,6 +1,7 @@
 import { ListView, Overlay, Popover } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../Layout';
+import { toTestId } from '../../utils';
 
 export interface IIntegrationEditorStepsListItemProps {
   stepName: string;
@@ -39,7 +40,10 @@ export const IntegrationEditorStepsListItem: React.FunctionComponent<
                 {props.shape}
                 {props.showWarning && (
                   <ButtonLink
-                    data-testid={'integration-editor-steps-list-item-warning'}
+                    data-testid={`${toTestId(
+                      IntegrationEditorStepsListItem.name,
+                      props.stepName + '.warning-button'
+                    )}`}
                     as={'link'}
                     onClick={toggleWarningPopover}
                     ref={itemRef}

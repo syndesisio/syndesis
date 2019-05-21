@@ -13,6 +13,7 @@ import {
   RecentUpdatesItem,
   RecentUpdatesSkeleton,
   TopIntegrationsCard,
+  toTestId,
   UptimeMetric,
 } from '@syndesis/ui';
 import { toShortDateAndTimeString } from '@syndesis/utils';
@@ -139,7 +140,12 @@ export default () => (
                       linkToConnections={resolvers.connections.connections()}
                       linkToConnectionCreation={resolvers.connections.create.selectConnector()}
                       integrationsOverview={
-                        <div data-testid="total-integrations">
+                        <div
+                          data-testid={toTestId(
+                            'DashboardPage',
+                            'total-integrations'
+                          )}
+                        >
                           <AggregatedMetricCard
                             title={t('titleTotalIntegrations')}
                             total={integrationsData.totalCount}
@@ -152,7 +158,12 @@ export default () => (
                         </div>
                       }
                       connectionsOverview={
-                        <div data-testid="total-connections">
+                        <div
+                          data-testid={toTestId(
+                            'DashboardPage',
+                            'total-connections'
+                          )}
+                        >
                           <ConnectionsMetric
                             i18nTitle={t('titleTotalConnections', {
                               count:
@@ -162,7 +173,12 @@ export default () => (
                         </div>
                       }
                       messagesOverview={
-                        <div data-testid="total-messages">
+                        <div
+                          data-testid={toTestId(
+                            'DashboardPage',
+                            'total-messages'
+                          )}
+                        >
                           <AggregatedMetricCard
                             title={t('titleTotalMessages')}
                             total={metricsData.messages!}

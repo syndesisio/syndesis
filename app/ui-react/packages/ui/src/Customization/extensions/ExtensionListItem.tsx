@@ -13,6 +13,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../Shared';
+import { toTestId } from '../../utils';
 
 export interface IExtensionListItemProps {
   detailsPageLink: H.LocationDescriptor;
@@ -135,7 +136,10 @@ export class ExtensionListItem extends React.Component<
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={'extension-list-item-details'}
+                  data-testid={`${toTestId(
+                    ExtensionListItem.name,
+                    this.props.extensionName + '.details-button'
+                  )}`}
                   href={this.props.detailsPageLink}
                   as={'default'}
                 >
@@ -144,7 +148,10 @@ export class ExtensionListItem extends React.Component<
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
                 <ButtonLink
-                  data-testid={'extension-list-item-update'}
+                  data-testid={`${toTestId(
+                    ExtensionListItem.name,
+                    this.props.extensionName + '.update-button'
+                  )}`}
                   href={this.props.linkUpdateExtension}
                   as={'default'}
                 >
@@ -153,7 +160,10 @@ export class ExtensionListItem extends React.Component<
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
                 <Button
-                  data-testid={'extension-list-item-delete'}
+                  data-testid={`${toTestId(
+                    ExtensionListItem.name,
+                    this.props.extensionName + '.delete-button'
+                  )}`}
                   bsStyle="default"
                   disabled={this.props.usedBy !== 0}
                   onClick={this.showDeleteDialog}

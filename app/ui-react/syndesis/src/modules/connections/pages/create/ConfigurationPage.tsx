@@ -6,6 +6,7 @@ import {
   ConnectorConfigurationForm,
   Loader,
   PageLoader,
+  toTestId,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -82,9 +83,10 @@ export default class ConfigurationPage extends React.Component {
                               isNextDisabled={isSubmitting}
                               extraButtons={
                                 <ButtonLink
-                                  data-testid={
-                                    'configuration-page-validate-form'
-                                  }
+                                  data-testid={toTestId(
+                                    ConfigurationPage.name,
+                                    'validate-button'
+                                  )}
                                   onClick={validateForm}
                                   disabled={!isValid || isValidating}
                                 >
