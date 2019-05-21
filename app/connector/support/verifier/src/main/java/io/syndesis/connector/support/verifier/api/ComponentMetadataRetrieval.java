@@ -44,10 +44,14 @@ public abstract class ComponentMetadataRetrieval implements MetadataRetrieval {
         Objects.requireNonNull(actionId, "ActionID must not be null");
 
         MetaDataExtension extension = getOrCreateMetaDataExtension(context, componentId, actionId);
-        Map<String, Object> extensionOptions = CollectionsUtils.removeNullValues(properties);
+        Map<String, Object> extensionOptions = prepareProperties(context, componentId, actionId, properties);
         MetaDataExtension.MetaData metaData = fetchMetaData(extension, extensionOptions);
 
         return adapt(context, componentId, actionId, properties, metaData);
+    }
+
+    protected Map<String, Object> prepareProperties(CamelContext context, String componentId, String actionId, Map<String, Object> properties) {
+        return CollectionsUtils.removeNullValues(properties);
     }
 
     protected MetaDataExtension.MetaData fetchMetaData(MetaDataExtension extension, Map<String, Object> properties) {

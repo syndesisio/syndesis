@@ -72,6 +72,10 @@
             value: /deployments/ext
           - name: JAVA_OPTIONS
             value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp"
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
 {{#Debug}}
           - name: JAVA_DEBUG
             value: "true"
