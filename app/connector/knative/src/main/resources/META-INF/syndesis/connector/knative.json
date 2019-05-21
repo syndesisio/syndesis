@@ -30,6 +30,15 @@
                   "knative-sink-channel"
                 ],
                 "type": "string"
+              },
+              "type": {
+                "deprecated": false,
+                "displayName": "Knative resource type",
+                "javaType": "java.lang.String",
+                "labelHint": "Type of Knative resource used to exchange events",
+                "required": false,
+                "secret": false,
+                "type": "hidden"
               }
             }
           }
@@ -37,7 +46,10 @@
       },
       "id": "io.syndesis:knative-channel-send-connector",
       "name": "Send to Channel",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -51,7 +63,7 @@
           "kind": "any"
         },
         "outputDataShape": {
-          "kind": "none"
+          "kind": "any"
         },
         "propertyDefinitionSteps": [
           {
@@ -69,6 +81,15 @@
                   "knative-sink-endpoint"
                 ],
                 "type": "string"
+              },
+              "type": {
+                "deprecated": false,
+                "displayName": "Knative resource type",
+                "javaType": "java.lang.String",
+                "labelHint": "Type of Knative resource used to exchange events",
+                "required": false,
+                "secret": false,
+                "type": "hidden"
               }
             }
           }
@@ -76,7 +97,10 @@
       },
       "id": "io.syndesis:knative-endpoint-call-connector",
       "name": "Call Service",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -108,6 +132,15 @@
                   "knative-source-channel"
                 ],
                 "type": "string"
+              },
+              "type": {
+                "deprecated": false,
+                "displayName": "Knative resource type",
+                "javaType": "java.lang.String",
+                "labelHint": "Type of Knative resource used to exchange events",
+                "required": false,
+                "secret": false,
+                "type": "hidden"
               }
             }
           }
@@ -117,7 +150,8 @@
       "name": "Subscribe to Channel",
       "pattern": "From",
       "tags": [
-        "http-passive"
+        "http-passive",
+        "dynamic"
       ]
     },
     {
@@ -135,7 +169,32 @@
         "outputDataShape": {
           "kind": "any"
         },
-        "propertyDefinitionSteps": []
+        "propertyDefinitionSteps": [
+          {
+            "description": "Expose as Knative service",
+            "name": "Expose as Knative service",
+            "properties": {
+              "name": {
+                "deprecated": false,
+                "displayName": "Channel name",
+                "javaType": "java.lang.String",
+                "labelHint": "Name of the Knative channel to which the integration will be subscribed",
+                "required": false,
+                "secret": false,
+                "type": "hidden"
+              },
+              "type": {
+                "deprecated": false,
+                "displayName": "Knative resource type",
+                "javaType": "java.lang.String",
+                "labelHint": "Type of Knative resource used to exchange events",
+                "required": false,
+                "secret": false,
+                "type": "hidden"
+              }
+            }
+          }
+        ]
       },
       "id": "io.syndesis:knative-endpoint-expose-connector",
       "name": "Expose as Service",
