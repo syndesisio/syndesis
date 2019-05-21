@@ -23,7 +23,7 @@ type upgradeBackoffAction struct {
 
 func newUpgradeBackoffAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
 	return &upgradeBackoffAction{
-		newBaseAction(mgr,api,"upgrade-backoff"),
+		newBaseAction(mgr, api, "upgrade-backoff"),
 		"",
 	}
 }

@@ -15,12 +15,11 @@ import (
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
 
-
 var log = logf.Log.WithName("resources")
 
 func NewObjectKey(name string, namespace string) client.ObjectKey {
 	return client.ObjectKey{
-		Name: name,
+		Name:      name,
 		Namespace: namespace,
 	}
 }
@@ -55,8 +54,7 @@ func LoadRawResourceFromYaml(data string) (runtime.Object, error) {
 	}, nil
 }
 
-
-func LoadResourceFromYaml(scheme *runtime.Scheme,  source []byte) (runtime.Object, error) {
+func LoadResourceFromYaml(scheme *runtime.Scheme, source []byte) (runtime.Object, error) {
 	jsonSource, err := yaml.ToJSON(source)
 	if err != nil {
 		return nil, err
@@ -70,7 +68,7 @@ func LoadResourceFromYaml(scheme *runtime.Scheme,  source []byte) (runtime.Objec
 }
 
 // RuntimeObjectFromUnstructured converts an unstructured to a runtime object
-func RuntimeObjectFromUnstructured(scheme *runtime.Scheme,u *unstructured.Unstructured) (runtime.Object, error) {
+func RuntimeObjectFromUnstructured(scheme *runtime.Scheme, u *unstructured.Unstructured) (runtime.Object, error) {
 	gvk := u.GroupVersionKind()
 	codecs := serializer.NewCodecFactory(scheme)
 	decoder := codecs.UniversalDecoder(gvk.GroupVersion())

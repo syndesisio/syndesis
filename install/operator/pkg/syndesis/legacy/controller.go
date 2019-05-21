@@ -11,7 +11,6 @@ import (
 	"time"
 )
 
-
 var log = logf.Log.WithName("legacy")
 
 const (
@@ -48,7 +47,7 @@ func (c *LegacyController) verifyAndCreate(ctx context.Context, client client.Cl
 				return
 			case <-time.After(retryInterval):
 				if err := c.doVerifyAndCreate(ctx, client); err != nil {
-					log.Error(err,"Unable to check Syndesis legacy installations (will retry again)")
+					log.Error(err, "Unable to check Syndesis legacy installations (will retry again)")
 				} else {
 					return
 				}
@@ -86,7 +85,7 @@ func (c *LegacyController) doVerifyAndCreate(ctx context.Context, cl client.Clie
 
 		configuration.SetConfigurationFromEnvVars(config, &synd)
 
-		log.Info("Creating a new Syndesis resource from legacy installation", "namespace",c.namespace)
+		log.Info("Creating a new Syndesis resource from legacy installation", "namespace", c.namespace)
 		return cl.Create(ctx, &synd)
 	} else {
 		log.Info("No legacy Syndesis installations detected", "namespace", c.namespace)

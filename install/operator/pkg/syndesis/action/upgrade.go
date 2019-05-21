@@ -37,7 +37,7 @@ type upgradeAction struct {
 
 func newUpgradeAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
 	return &upgradeAction{
-		newBaseAction(mgr,api, "upgrade"),
+		newBaseAction(mgr, api, "upgrade"),
 		"",
 	}
 }
@@ -245,7 +245,7 @@ func (a *upgradeAction) findUpgradePod(resources []runtime.Object) (*v1.Pod, err
 	return nil, errors.New("upgrade pod not found")
 }
 
-func (a *upgradeAction) getUpgradePodFromNamespace(ctx context.Context,  podTemplate *v1.Pod, syndesis *v1alpha1.Syndesis) (*v1.Pod, error) {
+func (a *upgradeAction) getUpgradePodFromNamespace(ctx context.Context, podTemplate *v1.Pod, syndesis *v1alpha1.Syndesis) (*v1.Pod, error) {
 	pod := v1.Pod{}
 	key := client.ObjectKey{
 		Namespace: syndesis.Namespace,

@@ -21,7 +21,7 @@ type upgradeLegacyAction struct {
 
 func newUpgradeLegacyAction(mgr manager.Manager, api kubernetes.Interface) SyndesisOperatorAction {
 	return &upgradeLegacyAction{
-		newBaseAction(mgr, api,"upgrade-legacy"),
+		newBaseAction(mgr, api, "upgrade-legacy"),
 	}
 }
 
