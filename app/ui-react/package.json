@@ -22,9 +22,6 @@
     "test:jest": "CI=true lerna run test -- --coverage --color --runInBand",
     "test": "npm-run-all -s test:*",
     "build": "lerna run build",
-    "copyasset:atlasmap": "cpr packages/atlasmap-assembly/dist/atlasmap syndesis/public/atlasmap -d",
-    "copyasset:apicurio": "cpr packages/apicurio-assembly/dist/apicurio syndesis/public/apicurio -d",
-    "postbuild": "npm-run-all copyasset:*",
     "watch:app:proxy": "lerna run --parallel --no-prefix --scope @syndesis/syndesis proxy",
     "watch:app:minishift:restore": "lerna run --parallel --no-prefix --scope @syndesis/syndesis minishift:restore",
     "watch:app:minishift": "lerna run --parallel --no-prefix --scope @syndesis/syndesis minishift",
@@ -41,7 +38,6 @@
     "prepush": "npm-run-all -p lint test"
   },
   "devDependencies": {
-    "cpr": "^3.0.1",
     "gh-pages": "^2.0.1",
     "husky": "^2.2.0",
     "lerna": "^3.13.1",
