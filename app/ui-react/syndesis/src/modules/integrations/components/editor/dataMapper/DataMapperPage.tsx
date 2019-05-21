@@ -73,8 +73,9 @@ export const DataMapperPage: React.FunctionComponent<
             const outputDocument = getOutputDocument(
               state.integration,
               params.flowId,
-              props.mode === 'adding' ? positionAsNumber - 1 : positionAsNumber,
-              state.step.id!
+              positionAsNumber,
+              state.step.id!,
+              props.mode === 'adding'
             );
 
             const saveMappingStep = async () => {
