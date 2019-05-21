@@ -70,14 +70,10 @@
   },
   "editor": {
     "addStep": "Add a step",
-    "addStepDataMapping": "Add a data mapping step",
-    "addStepDataMappingTrail": "  before this connection to resolve the difference.",
     "addStepDescription": "You can continue adding steps and connections to your integration as well.",
     "addToIntegration": "Add to Integration",
     "confirmDeleteStepDialogBody": "Are you sure you want to delete this step from the integration?",
     "confirmDeleteStepDialogTitle": "Confirm Delete",
-    "dataShape": "Data Shape",
-    "defineDataTypeMessage": "<a href={'/todo'}>Define the data type</a> for the previous step to resolve this warning.",
     "saveOrAddStep": "Save or Add Step"
   },
   "ReplaceDraft": "Replace Draft",

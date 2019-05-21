@@ -1,7 +1,17 @@
-import { getSteps } from '@syndesis/api';
+import {
+  getFirstPosition,
+  getLastPosition,
+  getSteps,
+  removeStepFromFlow,
+} from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Integration, Step } from '@syndesis/models';
-import { IntegrationEditorLayout } from '@syndesis/ui';
+import { Step } from '@syndesis/models';
+import {
+  ConfirmationButtonStyle,
+  ConfirmationDialog,
+  ConfirmationIconType,
+  IntegrationEditorLayout,
+} from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -17,7 +27,7 @@ export interface IAddStepPageProps extends IGetStepHrefs {
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
-  getEditAddStepHref: (
+  getAddStepHref: (
     position: number,
     p: IBaseRouteParams,
     s: IBaseRouteState
@@ -27,6 +37,12 @@ export interface IAddStepPageProps extends IGetStepHrefs {
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptorObject;
+}
+
+export interface IAddStepPageState {
+  position?: number;
+  showDeleteDialog: boolean;
+  step?: Step;
 }
 
 /**
@@ -42,72 +58,189 @@ export interface IAddStepPageProps extends IGetStepHrefs {
  * optional and adding a WithIntegration component to retrieve the integration
  * from the backend
  */
-export class AddStepPage extends React.Component<IAddStepPageProps> {
+export class AddStepPage extends React.Component<
+  IAddStepPageProps,
+  IAddStepPageState
+> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      position: 0,
+      showDeleteDialog: false,
+      step: {},
+    };
+
+    // this.onDelete = this.onDelete.bind(this);
+    this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
+    this.openDeleteDialog = this.openDeleteDialog.bind(this);
+    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
+    this.setStepAndPosition = this.setStepAndPosition.bind(this);
+  }
+
+  public closeDeleteDialog(): void {
+    this.setState({
+      showDeleteDialog: false,
+    });
+  }
+
+  public openDeleteDialog(): void {
+    this.setState({
+      showDeleteDialog: true,
+    });
+  }
+
+  public handleDeleteConfirm() {
+    if (this.state.showDeleteDialog) {
+      this.closeDeleteDialog();
+    }
+  }
+
+  public setStepAndPosition(idx: number, step: Step): void {
+    this.setState({
+      position: idx,
+      step: step,
+    });
+  }
+
+  /**
+  public onDelete(idx: number, step: Step): void {
+    this.setState({ position: idx, showDeleteDialog: true });
+  }
+   **/
+
   public render() {
     return (
       <Translation ns={['integrations']}>
         {t => (
-          <WithRouteData<IBaseRouteParams, IBaseRouteState>>
-            {({ flowId }, { integration }, { history }) => {
-              const deleteAction = (newIntegration: Integration) => {
-                history.push(
-                  this.props.selfHref(
-                    { flowId },
-                    { integration: newIntegration }
-                  )
-                );
-              };
+          <>
+            <WithRouteData<IBaseRouteParams, IBaseRouteState>>
+              {({ flowId }, { integration }, { history }) => {
+                const onDelete = (idx: number, step: Step): void => {
+                  console.log('step: ' + JSON.stringify(step));
+                  console.log('idx: ' + idx);
+                  // console.log('idx: ' + idx);
+                  // console.log('firstPosition: ' + getFirstPosition(this.props.integration, this.props.flowId));
+                  // console.log('lastPosition: ' + getLastPosition(this.props.integration, this.props.flowId));
 
-              return (
-                <>
-                  <PageTitle title={t('integrations:editor:saveOrAddStep')} />
-                  <IntegrationEditorLayout
-                    title={t('integrations:editor:addToIntegration')}
-                    description={t('integrations:editor:addStepDescription')}
-                    content={
-                      <IntegrationEditorStepAdder
-                        steps={getSteps(integration, flowId)}
-                        addDataMapperStepHref={position =>
-                          this.props.getAddMapperStepHref(
-                            position,
-                            { flowId },
-                            { integration }
-                          )
-                        }
-                        configureStepHref={(position: number, step: Step) =>
-                          getStepHref(
-                            step,
-                            { flowId, position: `${position}` },
-                            { integration },
-                            this.props
-                          )
-                        }
-                        editAddStepHref={position =>
-                          this.props.getEditAddStepHref(
-                            position,
-                            { flowId },
-                            { integration }
-                          )
-                        }
-                        flowId={flowId}
-                        integration={integration}
-                        deleteAction={deleteAction}
+                  if (idx === getFirstPosition(integration, flowId)) {
+                    console.log('Is first position');
+                    // H.location.push({this.props.editAddStepHref(idx)});
+                  }
+
+                  if (idx === getLastPosition(integration, flowId)) {
+                    console.log('Is last position');
+                  }
+
+                  // Check if it's an API provider step that can't be deleted
+                  if (step.configuredProperties!.stepKind === 'mapper') {
+                    console.log('Data mapper step');
+                  }
+
+                  this.setStepAndPosition(idx, step);
+                  this.openDeleteDialog();
+
+                  console.log(
+                    'this.state.position: ' +
+                      JSON.stringify(this.state.position)
+                  );
+                  console.log(
+                    'this.state.step: ' + JSON.stringify(this.state.step)
+                  );
+                };
+
+                return (
+                  <>
+                    {this.state.showDeleteDialog && (
+                      <ConfirmationDialog
+                        buttonStyle={ConfirmationButtonStyle.NORMAL}
+                        icon={ConfirmationIconType.DANGER}
+                        i18nCancelButtonText={t('shared:Cancel')}
+                        i18nConfirmButtonText={t('shared:Delete')}
+                        i18nConfirmationMessage={t(
+                          'integrations:editor:confirmDeleteStepDialogBody'
+                        )}
+                        i18nTitle={t(
+                          'integrations:editor:confirmDeleteStepDialogTitle'
+                        )}
+                        showDialog={this.state.showDeleteDialog}
+                        onCancel={this.closeDeleteDialog}
+                        onConfirm={() => {
+                          this.handleDeleteConfirm();
+
+                          console.log(
+                            'this.state.position: ' + this.state.position
+                          );
+                          console.log('this.state.step: ' + this.state.step);
+
+                          const newInt = removeStepFromFlow(
+                            integration,
+                            flowId,
+                            this.state.position!
+                          );
+
+                          console.log('newInt: ' + JSON.stringify(newInt));
+
+                          // deleteAction(newInt);
+
+                          history.push(
+                            this.props.selfHref(
+                              { flowId },
+                              { integration: newInt }
+                            )
+                          );
+                        }}
                       />
-                    }
-                    cancelHref={this.props.cancelHref(
-                      { flowId },
-                      { integration }
                     )}
-                    saveHref={this.props.saveHref({ flowId }, { integration })}
-                    publishHref={this.props.saveHref(
-                      { flowId },
-                      { integration }
-                    )}
-                  />
-                </>
-              );
-            }}
-          </WithRouteData>
+                    <PageTitle title={t('integrations:editor:saveOrAddStep')} />
+                    <IntegrationEditorLayout
+                      title={t('integrations:editor:addToIntegration')}
+                      description={t('integrations:editor:addStepDescription')}
+                      content={
+                        <IntegrationEditorStepAdder
+                          steps={getSteps(integration, flowId)}
+                          addDataMapperStepHref={position =>
+                            this.props.getAddMapperStepHref(
+                              position,
+                              { flowId },
+                              { integration }
+                            )
+                          }
+                          addStepHref={position =>
+                            this.props.getAddStepHref(
+                              position,
+                              { flowId },
+                              { integration }
+                            )
+                          }
+                          configureStepHref={(position: number, step: Step) =>
+                            getStepHref(
+                              step,
+                              { flowId, position: `${position}` },
+                              { integration },
+                              this.props
+                            )
+                          }
+                          onDelete={onDelete}
+                        />
+                      }
+                      cancelHref={this.props.cancelHref(
+                        { flowId },
+                        { integration }
+                      )}
+                      saveHref={this.props.saveHref(
+                        { flowId },
+                        { integration }
+                      )}
+                      publishHref={this.props.saveHref(
+                        { flowId },
+                        { integration }
+                      )}
+                    />
+                  </>
+                );
+              }}
+            </WithRouteData>
+          </>
         )}
       </Translation>
     );

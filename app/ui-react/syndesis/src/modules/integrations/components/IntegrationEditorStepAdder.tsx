@@ -1,16 +1,8 @@
-import {
-  getFirstPosition,
-  getLastPosition,
-  getStepIcon,
-  removeStepFromFlow,
-} from '@syndesis/api';
+import { getStepIcon } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Integration, Step } from '@syndesis/models';
+import { Step } from '@syndesis/models';
 import {
   ButtonLink,
-  ConfirmationButtonStyle,
-  ConfirmationDialog,
-  ConfirmationIconType,
   IntegrationEditorStepsList,
   IntegrationEditorStepsListItem,
   IntegrationFlowAddStep,
@@ -41,7 +33,7 @@ export interface IIntegrationEditorStepAdderProps {
    * step
    * @param idx - the zero-based index where a new connection should be added
    */
-  editAddStepHref: (idx: number) => H.LocationDescriptor;
+  addStepHref: (idx: number) => H.LocationDescriptor;
   /**
    * a callback to get the `LocationDescriptor` that should be reached when
    * clicking the Edit Step button
@@ -54,16 +46,7 @@ export interface IIntegrationEditorStepAdderProps {
     stepIdx: number,
     step: Step
   ) => H.LocationDescriptorObject;
-  deleteAction: (integration: Integration) => void;
-  flowId: string;
-  integration: Integration;
-}
-
-export interface IIntegrationEditorStepAdderState {
-  position: number;
-  showDeleteDialog: boolean;
-  step?: Step;
-  stepIdx?: number;
+  onDelete: (idx: number, step: Step) => void;
 }
 
 /**
@@ -71,109 +54,24 @@ export interface IIntegrationEditorStepAdderState {
  * buttons to add a new step, edit an existing one, etc.
  *
  * @see [steps]{@link IIntegrationEditorStepAdderProps#steps}
- * @see [addStepHref]{@link IIntegrationEditorStepAdderProps#addStepHref}
- * @see [addStepHref]{@link IIntegrationEditorStepAdderProps#addStepHref}
+ * @see [editAddStepHref]{@link IIntegrationEditorStepAdderProps#editAddStepHref}
  * @see [configureStepHref]{@link IIntegrationEditorStepAdderProps#configureStepHref}
  *
  * @todo add the delete step button
  */
 export class IntegrationEditorStepAdder extends React.Component<
-  IIntegrationEditorStepAdderProps,
-  IIntegrationEditorStepAdderState
+  IIntegrationEditorStepAdderProps
 > {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      position: 0,
-      showDeleteDialog: false,
-      step: {},
-      stepIdx: 0,
-    };
-
-    this.onDelete = this.onDelete.bind(this);
-    this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
-    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
-  }
-
-  public handleDeleteConfirm() {
-    if (this.state.showDeleteDialog) {
-      this.closeDeleteDialog();
-    }
-
-    const newInt = removeStepFromFlow(
-      this.props.integration!,
-      this.props.flowId!,
-      this.state.position!
-    );
-
-    this.props.deleteAction(newInt);
-  }
-
-  public onDelete(idx: any, step: Step): void {
-    console.log('step: ' + JSON.stringify(step));
-    // console.log('idx: ' + idx);
-    // console.log('firstPosition: ' + getFirstPosition(this.props.integration, this.props.flowId));
-    // console.log('lastPosition: ' + getLastPosition(this.props.integration, this.props.flowId));
-
-    if (idx === getFirstPosition(this.props.integration, this.props.flowId)) {
-      console.log('Is first position');
-    }
-
-    if (idx === getLastPosition(this.props.integration, this.props.flowId)) {
-      console.log('Is last position');
-    }
-
-    // Check if it's an API provider step that can't be deleted
-    if (step.configuredProperties!.stepKind === 'mapper') {
-      console.log('Data mapper step');
-    }
-
-    this.setState({
-      position: idx,
-      showDeleteDialog: true,
-      step: step,
-      stepIdx: idx,
-    });
-  }
-
-  public closeDeleteDialog(): void {
-    this.setState({
-      position: 0,
-      showDeleteDialog: false,
-      step: {},
-      stepIdx: 0,
-    });
-  }
-
   public render() {
     return (
       <Translation ns={['integrations', 'shared']}>
         {t => (
-          <>
-            {this.state.showDeleteDialog && (
-              <ConfirmationDialog
-                buttonStyle={ConfirmationButtonStyle.NORMAL}
-                icon={ConfirmationIconType.DANGER}
-                i18nCancelButtonText={t('shared:Cancel')}
-                i18nConfirmButtonText={t('shared:Delete')}
-                i18nConfirmationMessage={t(
-                  'integrations:editor:confirmDeleteStepDialogBody'
-                )}
-                i18nTitle={t(
-                  'integrations:editor:confirmDeleteStepDialogTitle'
-                )}
-                showDialog={this.state.showDeleteDialog}
-                onCancel={this.closeDeleteDialog}
-                onConfirm={() => {
-                  this.handleDeleteConfirm();
-                }}
-              />
-            )}
-            <PageSection>
-              <IntegrationEditorStepsList>
-                {toUIIntegrationStepCollection(
-                  toUIStepCollection(this.props.steps)
-                ).map((s, idx) => (
+          <PageSection>
+            <IntegrationEditorStepsList>
+              {toUIIntegrationStepCollection(
+                toUIStepCollection(this.props.steps)
+              ).map((s, idx) => {
+                return (
                   <React.Fragment key={idx}>
                     <IntegrationEditorStepsListItem
                       stepName={(s.action && s.action.name) || s.name!}
@@ -209,9 +107,9 @@ export class IntegrationEditorStepAdder extends React.Component<
                               }
                               to={this.props.addDataMapperStepHref(idx)}
                             >
-                        {t('integrations:editor:addStepDataMapping')}
+                              Add a data mapping step
                             </Link>{' '}
-                            {t('integrations:editor:addStepDataMappingTrail')}
+                            before this connection to resolve the difference.
                           </>
                         )
                       }
@@ -230,7 +128,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                           </ButtonLink>
                           <ButtonLink
                             data-testid={'integration-editor-step-adder-delete'}
-                            onClick={() => this.onDelete(idx)}
+                            onClick={() => this.props.onDelete(idx, s)}
                             as={'danger'}
                           >
                             <i className="fa fa-trash" />
@@ -245,20 +143,12 @@ export class IntegrationEditorStepAdder extends React.Component<
                         addStepHref={this.props.addStepHref(idx + 1)}
                         i18nAddStep={t('integrations:editor:addStep')}
                       />
-                      {idx < this.props.steps.length - 1 && (
-                        <IntegrationFlowAddStep
-                          active={false}
-                          showDetails={false}
-                          addStepHref={this.props.editAddStepHref(idx + 1)}
-                          i18nAddStep={t('integrations:editor:addStep')}
-                        />
-                      )}
-                    </React.Fragment>
-                  );
-                })}
-              </IntegrationEditorStepsList>
-            </PageSection>
-          </>
+                    )}
+                  </React.Fragment>
+                );
+              })}
+            </IntegrationEditorStepsList>
+          </PageSection>
         )}
       </Translation>
     );
