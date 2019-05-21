@@ -22,7 +22,7 @@ public interface EMailConstants extends StringConstants {
 
     String PROTOCOL = "protocol";
 
-    String SECURE = "secure";
+    String SECURE_TYPE = "secureType";
 
     String HOST = "host";
 
@@ -31,6 +31,8 @@ public interface EMailConstants extends StringConstants {
     String USER = "username";
 
     String PASSWORD = "password";
+
+    String ADDITIONAL_MAIL_PROPERTIES = "AdditionalJavaMailProperties";
 
     String SSL_CONTEXT_PARAMETERS = "sslContextParameters";
 
@@ -112,6 +114,35 @@ public interface EMailConstants extends StringConstants {
 
         public String componentSchema() {
             return isReceiver() ? "email-receive" : "email-send";
+        }
+    }
+
+    enum SecureType {
+        STARTTLS("StartTLS"),
+        SSL_TLS("SSL/TLS");
+
+        private final String id;
+
+        SecureType(String id) {
+            this.id = id;
+        }
+
+        public static SecureType secureTypeFromId(String id) {
+            if (id == null) {
+                return null;
+            }
+
+            for (SecureType secureType : SecureType.values()) {
+                if (secureType.id.equalsIgnoreCase(id)) {
+                    return secureType;
+                }
+            }
+
+            return null;
+        }
+
+        public String id() {
+            return this.id;
         }
     }
 

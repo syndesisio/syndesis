@@ -18,6 +18,7 @@ package io.syndesis.connector.email.verifier;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Properties;
 import javax.mail.Session;
 import javax.mail.Store;
 import javax.mail.Transport;
@@ -115,17 +116,32 @@ public class EMailVerifierExtension extends DefaultComponentVerifierExtension im
 
 
     private void secureProtocol(Map<String, Object> parameters) {
-        String protocol = (String) parameters.get(PROTOCOL);
-        if (ObjectHelper.isEmpty(protocol)) {
+        String protocolId = (String) parameters.get(PROTOCOL);
+        if (ObjectHelper.isEmpty(protocolId)) {
             return;
         }
 
-        String secure = (String) parameters.get(SECURE);
-        if (ObjectHelper.isEmpty(secure) || protocol.endsWith("s")) {
+        Protocol protocol = Protocol.getValueOf(protocolId);
+        String secureTypeId = (String) parameters.get(SECURE_TYPE);
+        SecureType secureType = SecureType.secureTypeFromId(secureTypeId);
+
+        if (ObjectHelper.isEmpty(secureType) || protocol.isSecure()) {
             return;
         }
 
-        parameters.put(PROTOCOL, protocol + "s");
+        switch (secureType) {
+            case STARTTLS:
+                Properties properties = new Properties();
+                properties.put("mail." + protocol + ".starttls.enable", "true");
+                properties.put("mail." + protocol + ".starttls.required", "true");
+                parameters.put(ADDITIONAL_MAIL_PROPERTIES, properties);
+                break;
+            case SSL_TLS:
+                parameters.put(PROTOCOL, Protocol.toSecureProtocol(protocolId).id());
+                break;
+            default:
+                // Nothing required
+        }
     }
 
 
