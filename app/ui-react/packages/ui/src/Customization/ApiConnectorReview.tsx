@@ -98,19 +98,6 @@ export class ApiConnectorReview extends React.Component<
                   )}
                 </TextList>
               )}
-              {/*
-            {this.props.i18nOperationTagHtmlMessages
-              ? this.props.i18nOperationTagHtmlMessages.map(
-                  (msg: string, index: number) => (
-                    <Grid.Row
-                      key={index}
-                      className="api-connector-review__tagMessage customization-details__row"
-                      dangerouslySetInnerHTML={{ __html: msg }}
-                    />
-                  )
-                )
-              : null}
-            */}
 
               {/* error messages */}
               {this.props.i18nErrorsHeading && this.props.errorMessages && (
