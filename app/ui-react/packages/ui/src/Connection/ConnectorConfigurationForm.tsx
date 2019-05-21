@@ -41,22 +41,26 @@ export class ConnectorConfigurationForm extends React.Component<
     return (
       <Container>
         <form
-          className="form-horizontal required-pf"
+          className="required-pf"
           role="form"
           onSubmit={this.props.handleSubmit}
         >
           <div className="row row-cards-pf">
             <div className="card-pf">
-              {this.props.i18nFormTitle && (
-                <div className="card-pf-title">{this.props.i18nFormTitle}</div>
-              )}
+              <div className="card-pf-heading">
+                {this.props.i18nFormTitle && (
+                  <div className="card-pf-title">
+                    {this.props.i18nFormTitle}
+                  </div>
+                )}
+              </div>
               <div className="card-pf-body">
                 {this.props.validationResults!.map((e, idx) => (
                   <Alert key={idx} type={e.type}>
                     {e.message}
                   </Alert>
                 ))}
-                <Container>{this.props.children}</Container>
+                {this.props.children}
               </div>
             </div>
           </div>
