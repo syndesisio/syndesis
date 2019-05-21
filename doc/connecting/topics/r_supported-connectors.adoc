@@ -101,14 +101,11 @@ JDBC driver for that database.
 |Obtain messages from a chat or send messages to a chat by using
 a Telegram chat bot.
 
-|link:{LinkFuseOnlineConnectorGuide}#triggering-integrations-with-timers_connectors[Timer]
-| Set a simple timer or a `cron` timer to trigger execution of a simple integration.
-
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-twitter_connectors[Twitter]
 |Trigger execution of a simple integration upon tweets that mention you or that
 contain data that you specify.
 
-|link:{LinkFuseOnlineConnectorGuide}#triggering-integrations-with-http-requests_connectors[Webhook]
+|link:{LinkFuseOnlineIntegrationGuide}#triggering-integrations-with-http-requests_ug[Webhook]
 |Trigger execution of simple integrations with HTTP `GET` or `POST` requests.
 
 |===

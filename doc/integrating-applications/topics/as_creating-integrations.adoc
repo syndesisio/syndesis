@@ -22,7 +22,9 @@ The following topics provide information and instructions for creating
 an integration:
 
 * xref:preparing-to-create-an-integration_{context}[]
+* xref:alternatives-for-triggering-integration-execution_{context}[]
 * xref:procedure-for-creating-an-integration_{context}[]
+* xref:triggering-integrations-with-timers_{context}[]
 * xref:how-to-process-a-collection-in-a-flow_{context}[]
 * xref:about-adding-steps_{context}[]
 * xref:add-data-mapping-step_{context}[]
@@ -33,7 +35,11 @@ an integration:
 
 include::c_preparing-to-create-an-integration.adoc[leveloffset=+1]
 
+include::r_alternatives-for-triggering-integration-execution.adoc[leveloffset=+1]
+
 include::p_procedure-for-creating-an-integration.adoc[leveloffset=+1]
+
+include::as_trigger-integration-with-timer.adoc[leveloffset=+1]
 
 include::as_how-to-process-a-collection-in-a-flow.adoc[leveloffset=+1]
 

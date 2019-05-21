@@ -43,9 +43,6 @@ details for creating connections and adding them to integrations:
 * <<connecting-to-databases_{context}>>
 * <<connecting-to-telegram_{context}>>
 * <<connecting-to-twitter_{context}>>
-* <<triggering-integrations-with-http-requests_{context}>>
-* <<triggering-integrations-with-timers_{context}>>
-
 
 include::topics/r_supported-connectors.adoc[leveloffset=+1]
 
@@ -90,7 +87,3 @@ include::topics/as_connecting-to-databases.adoc[leveloffset=+1]
 include::topics/as_connecting-to-telegram.adoc[leveloffset=+1]
 
 include::topics/as_connecting-to-twitter.adoc[leveloffset=+1]
-
-include::topics/as_triggering-integrations-with-http-requests.adoc[leveloffset=+1]
-
-include::topics/as_trigger-integration-with-timer.adoc[leveloffset=+1]

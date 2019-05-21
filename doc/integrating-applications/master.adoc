@@ -25,6 +25,7 @@ The content in this guide is organized as follows:
 * <<connecting-to-applications_{context}>>
 * <<creating-integrations_{context}>>
 * <<trigger-integrations-with-api-calls_{context}>>
+* <<triggering-integrations-with-http-requests_{context}>>
 * <<mapping-data_{context}>>
 * <<managing-integrations_{context}>>
 * <<customizing_{context}>>
@@ -41,6 +42,8 @@ include::topics/as_connecting-to-applications.adoc[leveloffset=+1]
 include::topics/as_creating-integrations.adoc[leveloffset=+1]
 
 include::topics/as_trigger-integrations-with-api-calls.adoc[leveloffset=+1]
+
+include::topics/as_triggering-integrations-with-http-requests.adoc[leveloffset=+1]
 
 include::topics/as_mapping-data.adoc[leveloffset=+1]
 

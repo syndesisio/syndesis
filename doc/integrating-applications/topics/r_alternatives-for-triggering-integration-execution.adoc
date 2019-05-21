@@ -1,0 +1,35 @@
+// This module is included in the following assemblies:
+// as_creating-integrations.adoc
+
+[id='alternatives-for-triggering-integration-execution_{context}']
+= Alternatives for triggering integration execution
+
+When you create an integration, the first step in the integration 
+determines how execution of the integration is triggered. 
+The first step in an integration can be one of the following:
+
+* *link:{LinkFuseOnlineIntegrationGuide}#connecting-to-applications_ug[Connection to an application or service]*. 
+You configure the connection
+for the particular application or service. Examples:
++
+** A connection to Twitter can monitor tweets and trigger  
+execution of a simple integration when a tweet contains text that you specified. 
+** A connection to Salesforce can trigger execution of a simple integration when 
+anyone creates a new lead. 
+** A connection to AWS S3 can periodically poll a particular bucket 
+and trigger execution of a simple integration when the bucket contains files. 
+ 
+* *link:{LinkFuseOnlineIntegrationGuide}#triggering-integrations-with-timers_create[Timer]*. {prodname} triggers execution of a simple integration at the interval that 
+you specify. This can be a simple timer or a `cron` job. 
+
+* *link:{LinkFuseOnlineIntegrationGuide}#triggering-integrations-with-http-requests_ug[Webhook]*. A client can send an HTTP `GET` or `POST`
+request to an HTTP endpoint that {prodname} exposes. The request triggers
+execution of the simple integration.  
+
+* *link:{LinkFuseOnlineIntegrationGuide}#trigger-integrations-with-api-calls_ug[API Provider]*. An API provider integration starts with a REST API service. 
+This REST API service is defined by an OpenAPI 2.0
+document that you provide when you create an API provider integration. 
+After you publish an API provider integration,
+{prodname} deploys the REST API service on OpenShift.  
+Any client with network access to the integration endpoints can trigger execution of 
+the integration.
