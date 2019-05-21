@@ -75,7 +75,8 @@ export class IntegrationEditorStepAdder extends React.Component<
               ).map((s, idx) => {
                 const restrictedDelete =
                   s.configuredProperties!.stepKind === 'choice' ||
-                  getStartStep().connection.connectorId === 'api-provider';
+                  getStartStep(this.props.integration, this.props.flowId)!
+                    .connection!.connectorId === 'api-provider';
 
                 return (
                   <React.Fragment key={idx}>
