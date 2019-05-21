@@ -1,4 +1,4 @@
-import { WithApiVersion } from '@syndesis/api';
+import { WithApiVersion, WithUserHelpers } from '@syndesis/api';
 import {
   AppLayout,
   AppTopMenu,
@@ -6,7 +6,6 @@ import {
   INotification,
   INotificationType,
   Notifications,
-  PfDropdownItem,
   PfVerticalNavItem,
 } from '@syndesis/ui';
 import { AboutModal, AboutModalContent, Loader } from '@syndesis/ui';
@@ -14,7 +13,7 @@ import { WithLoader, WithRouter } from '@syndesis/utils';
 import { useState } from 'react';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { Link, Route, Switch } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import { Workbox } from 'workbox-window';
 import resolvers from '../modules/resolvers';
 import { ApiError, PageNotFound, WithErrorBoundary } from '../shared';
@@ -200,18 +199,18 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                 'mailto:fuse-online-tech-preview@redhat.com';
                             }}
                             appNav={
-                              <AppTopMenu
-                                username={user.username || 'developer'}
-                              >
-                                <PfDropdownItem>
-                                  <Link
-                                    data-testid={'ui-logout'}
-                                    to={'/logout'}
-                                    className="pf-c-dropdown__menu-item"
-                                    children={t('Logout')}
-                                  />
-                                </PfDropdownItem>
-                              </AppTopMenu>
+                              <WithUserHelpers>
+                                {({ logout }) => {
+                                  return (
+                                    <AppTopMenu
+                                      username={user.username || 'developer'}
+                                      onSelectLogout={logout}
+                                    >
+                                      {t('Logout')}
+                                    </AppTopMenu>
+                                  );
+                                }}
+                              </WithUserHelpers>
                             }
                             verticalNav={routes.map((route, index) =>
                               !(route as IAppRouteWithChildrens).childrens ? (
