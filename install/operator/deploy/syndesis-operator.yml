@@ -96,6 +96,16 @@ rules:
   resources:
   - grafanadashboards
   verbs: [ get, list, create, update, delete, deletecollection, watch]
+- apiGroups:
+    - serving.knative.dev
+  resources:
+    - services
+  verbs: [ get, list, watch]
+- apiGroups:
+    - eventing.knative.dev
+  resources:
+    - channels
+  verbs: [ get, list, watch]
 ---
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1beta1
