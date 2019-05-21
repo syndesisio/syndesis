@@ -4,12 +4,11 @@
 [id='creating-odata-connections_{context}']
 = Creating a connection to an OData service
 
-In an integration, to obtain entities from an OData service, 
-or to update, create or delete
+In an integration, to obtain, update, create, or delete
 entities that are managed by an OData service, you must first create a connection to 
 that OData service.
 
-.Prerequisite
+.Prerequisites
 
 * You must know the base URL for the OData service that you want
 to connect to. 
@@ -51,7 +50,7 @@ a file, copy the certificate, and paste it into this field.
 connection and displays a message that indicates whether 
 validation is successful. If validation fails, revise the input 
 parameter(s) and try again.
-. If validation is successful, click *Next*.
+. When validation is successful, click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, you might enter `OData North`.
