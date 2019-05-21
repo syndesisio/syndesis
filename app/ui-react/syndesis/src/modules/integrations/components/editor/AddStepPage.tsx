@@ -194,6 +194,8 @@ export class AddStepPage extends React.Component<
                               this.props
                             )
                           }
+                          flowId={flowId}
+                          integration={integration}
                           onDelete={onDelete}
                         />
                       }
