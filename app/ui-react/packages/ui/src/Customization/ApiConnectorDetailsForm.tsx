@@ -81,20 +81,18 @@ export class ApiConnectorDetailsForm extends React.Component<
         <Card.Body className="api-connector-details-form__body">
           <>
             <form
-              className="form-horizontal required-pf"
+              className="required-pf"
               role="form"
               onSubmit={this.props.handleSubmit}
             >
               <fieldset disabled={!this.props.isEditing}>
-                <div className="api-connector-details-form__iconContainer">
-                  <div className="col-sm-3">
-                    <label className="control-label" htmlFor="iconFileInput">
-                      {this.props.i18nIconLabel}
-                    </label>
-                  </div>
-                  <div className="col-sm-9">
+                <div className="form-group api-connector-details-form__iconContainer">
+                  <label className="control-label" htmlFor="iconFileInput">
+                    {this.props.i18nIconLabel}
+                  </label>
+                  <div>
                     <img
-                      className="col-sm-2 api-connector-details-form__icon"
+                      className="api-connector-details-form__icon"
                       src={this.props.apiConnectorIcon}
                     />
                     <input

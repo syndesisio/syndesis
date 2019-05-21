@@ -9,7 +9,3 @@
 .connection-details-header__connectionIcon {
   width: 46px;
 }
-
-.connection-details-header__propertyLabel {
-  --pf-c-content--dt--FontWeight: bold; /* override for OpenSans not supporting weight 500 */
-}

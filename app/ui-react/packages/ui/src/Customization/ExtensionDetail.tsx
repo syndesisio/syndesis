@@ -17,6 +17,7 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
+import { Container } from '../Layout/Container';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
@@ -193,15 +194,19 @@ export class ExtensionDetail extends React.Component<
         />
         <PageSection variant={'light'}>
           <Level gutter={'sm'}>
-            <LevelItem>
-              <TextContent>
-                <Title size="xl" headingLevel={TitleLevel.h1}>
-                  {this.props.extensionName}
-                </Title>
-                <Text>{this.props.i18nIdMessage}</Text>
-              </TextContent>
-            </LevelItem>
-            <LevelItem>
+            <TextContent>
+              <Title
+                size="xl"
+                headingLevel={TitleLevel.h1}
+                className="extension-detail__extensionTitle"
+              >
+                {this.props.extensionName}
+              </Title>
+              <Text className="extension-detail__extensionId">
+                {this.props.i18nIdMessage}
+              </Text>
+            </TextContent>
+            <LevelItem className="extension-detail__titleButtons">
               <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
                 <ButtonLink
                   data-testid={'extension-detail-update'}
@@ -226,32 +231,34 @@ export class ExtensionDetail extends React.Component<
         <PageSection>
           <Card>
             <CardBody>
-              <Title
-                size="md"
-                headingLevel={TitleLevel.h3}
-                className="extension-detail__sectionHeading"
-              >
-                {this.props.i18nOverviewSectionTitle}
-              </Title>
-              {this.props.overviewSection}
+              <TextContent>
+                <Title
+                  headingLevel="h5"
+                  size="md"
+                  className="customization-details__heading"
+                >
+                  {this.props.i18nOverviewSectionTitle}
+                </Title>
+                <Container>{this.props.overviewSection}</Container>
 
-              <Title
-                size="md"
-                headingLevel={TitleLevel.h3}
-                className="extension-detail__sectionHeading"
-              >
-                {this.props.i18nSupportsSectionTitle}
-              </Title>
-              {this.props.supportsSection}
+                <Title
+                  headingLevel="h5"
+                  size="md"
+                  className="customization-details__heading"
+                >
+                  {this.props.i18nSupportsSectionTitle}
+                </Title>
+                <Container>{this.props.supportsSection}</Container>
 
-              <Title
-                size="md"
-                headingLevel={TitleLevel.h3}
-                className="extension-detail__sectionHeading"
-              >
-                {this.props.i18nUsageSectionTitle}
-              </Title>
-              {this.props.integrationsSection}
+                <Title
+                  headingLevel="h5"
+                  size="md"
+                  className="customization-details__heading"
+                >
+                  {this.props.i18nUsageSectionTitle}
+                </Title>
+                <Container>{this.props.integrationsSection}</Container>
+              </TextContent>
             </CardBody>
           </Card>
         </PageSection>

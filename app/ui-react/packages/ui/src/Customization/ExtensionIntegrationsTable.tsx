@@ -1,5 +1,5 @@
 import { Text } from '@patternfly/react-core';
-import { Row, Table } from 'patternfly-react';
+import { Table } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IExtensionIntegration {
@@ -77,22 +77,18 @@ export class ExtensionIntegrationsTable extends React.Component<
   public render() {
     return (
       <div className="extension-group">
-        <Row>
-          <div className="col-xs-offset-1 col-xs-11">
-            <Text>{this.props.i18nUsageMessage}</Text>
-            {this.props.data.length !== 0 ? (
-              <Table.PfProvider
-                striped={true}
-                bordered={true}
-                hover={true}
-                columns={this.getColumns()}
-              >
-                <Table.Header />
-                <Table.Body rows={this.props.data} rowKey="name" />
-              </Table.PfProvider>
-            ) : null}
-          </div>
-        </Row>
+        <Text>{this.props.i18nUsageMessage}</Text>
+        {this.props.data.length !== 0 ? (
+          <Table.PfProvider
+            striped={true}
+            bordered={true}
+            hover={true}
+            columns={this.getColumns()}
+          >
+            <Table.Header />
+            <Table.Body rows={this.props.data} rowKey="name" />
+          </Table.PfProvider>
+        ) : null}
       </div>
     );
   }

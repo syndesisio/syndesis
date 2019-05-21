@@ -1,6 +1,11 @@
-import { Grid } from 'patternfly-react';
 import * as React from 'react';
 import './ExtensionOverview.css';
+import {
+  TextList,
+  TextListVariants,
+  TextListItem,
+  TextListItemVariants,
+} from '@patternfly/react-core';
 
 export interface IExtensionOverviewProps {
   /**
@@ -52,44 +57,34 @@ export class ExtensionOverview extends React.Component<
 > {
   public render() {
     return (
-      <Grid>
-        <Grid.Row>
-          <Grid.Col xs={2} className="extension-overview__propertyLabel">
-            {this.props.i18nName}
-          </Grid.Col>
-          <Grid.Col className="extension-overview__propertyValue">
-            {this.props.extensionName}
-          </Grid.Col>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Col xs={2} className="extension-overview__propertyLabel">
-            {this.props.i18nDescription}
-          </Grid.Col>
-          <Grid.Col className="extension-overview__propertyValue">
-            {this.props.extensionDescription
-              ? this.props.extensionDescription
-              : null}
-          </Grid.Col>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Col xs={2} className="extension-overview__propertyLabel">
-            {this.props.i18nType}
-          </Grid.Col>
-          <Grid.Col className="extension-overview__propertyValue">
-            {this.props.i18nTypeMessage}
-          </Grid.Col>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Col xs={2} className="extension-overview__propertyLabel">
-            {this.props.i18nLastUpdate}
-          </Grid.Col>
-          <Grid.Col className="extension-overview__propertyValue">
-            {this.props.i18nLastUpdateDate
-              ? this.props.i18nLastUpdateDate
-              : null}
-          </Grid.Col>
-        </Grid.Row>
-      </Grid>
+      <TextList component={TextListVariants.dl}>
+        <TextListItem component={TextListItemVariants.dt}>
+          {this.props.i18nName}
+        </TextListItem>
+        <TextListItem component={TextListItemVariants.dd}>
+          {this.props.extensionName}
+        </TextListItem>
+        <TextListItem component={TextListItemVariants.dt}>
+          {this.props.i18nDescription}
+        </TextListItem>
+        <TextListItem component={TextListItemVariants.dd}>
+          {this.props.extensionDescription
+            ? this.props.extensionDescription
+            : null}
+        </TextListItem>
+        <TextListItem component={TextListItemVariants.dt}>
+          {this.props.i18nType}
+        </TextListItem>
+        <TextListItem component={TextListItemVariants.dd}>
+          {this.props.i18nTypeMessage}
+        </TextListItem>
+        <TextListItem component={TextListItemVariants.dt}>
+          {this.props.i18nLastUpdate}
+        </TextListItem>
+        <TextListItem component={TextListItemVariants.dd}>
+          {this.props.i18nLastUpdateDate ? this.props.i18nLastUpdateDate : null}
+        </TextListItem>
+      </TextList>
     );
   }
 }

@@ -1,15 +1,16 @@
 .extension-detail__extensionId {
-  font-size: 0.5em;
+  font-size: 12px;
   margin-left: 10px;
 }
 
 .extension-detail__extensionTitle {
-  margin: 0;
+  --pf-c-content--h1--MarginBottom: 0;
 }
 
-/* .extension-detail__sectionHeading {
-} */
+.extension-detail__extensionId, .extension-detail__extensionTitle {
+  display: inline-block;
+}
 
-.extension-detail__titleButtons button + button {
+.extension-detail__titleButtons .btn + button {
   margin-left: 4px;
 }

@@ -1,5 +1,10 @@
-import { Row } from 'patternfly-react';
 import * as React from 'react';
+import {
+  TextList,
+  TextListItem,
+  TextListItemVariants,
+  TextListVariants,
+} from '@patternfly/react-core';
 
 export interface IAction {
   description: string;
@@ -20,17 +25,20 @@ export class ExtensionSupports extends React.Component<
     return (
       <div className="extension-group">
         {this.props.extensionActions.length !== 0 ? (
-          <Row>
-            <div className="col-xs-offset-1 col-xs-11">
-              {this.props.extensionActions.map(
-                (action: IAction, index: number) => (
-                  <div key={index}>
-                    <strong>{action.name}</strong> - {action.description}
-                  </div>
-                )
-              )}
-            </div>
-          </Row>
+          <TextList component={TextListVariants.dl}>
+            {this.props.extensionActions.map(
+              (action: IAction, index: number) => (
+                <React.Fragment key={index}>
+                  <TextListItem component={TextListItemVariants.dt}>
+                    {action.name}
+                  </TextListItem>
+                  <TextListItem component={TextListItemVariants.dd}>
+                    {action.description}
+                  </TextListItem>
+                </React.Fragment>
+              )
+            )}
+          </TextList>
         ) : null}
       </div>
     );
