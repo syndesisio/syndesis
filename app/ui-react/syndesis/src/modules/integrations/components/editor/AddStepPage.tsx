@@ -32,6 +32,11 @@ export interface IAddStepPageProps extends IGetStepHrefs {
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
+  getEditStepHref?: (
+    position: number,
+    p: IBaseRouteParams,
+    s: IBaseRouteState
+  ) => H.LocationDescriptorObject;
   saveHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
   selfHref: (
     p: IBaseRouteParams,
@@ -122,13 +127,17 @@ export class AddStepPage extends React.Component<
                   // console.log('firstPosition: ' + getFirstPosition(this.props.integration, this.props.flowId));
                   // console.log('lastPosition: ' + getLastPosition(this.props.integration, this.props.flowId));
 
-                  if (idx === getFirstPosition(integration, flowId)) {
-                    console.log('Is first position');
-                    // H.location.push({this.props.editAddStepHref(idx)});
-                  }
-
-                  if (idx === getLastPosition(integration, flowId)) {
-                    console.log('Is last position');
+                  if (
+                    idx === getFirstPosition(integration, flowId) ||
+                    idx === getLastPosition(integration, flowId)
+                  ) {
+                    history.push(
+                      this.props.getEditStepHref!(
+                        this.state.position!,
+                        { flowId },
+                        { integration }
+                      )
+                    );
                   }
 
                   // Check if it's an API provider step that can't be deleted
@@ -167,20 +176,11 @@ export class AddStepPage extends React.Component<
                         onConfirm={() => {
                           this.handleDeleteConfirm();
 
-                          console.log(
-                            'this.state.position: ' + this.state.position
-                          );
-                          console.log('this.state.step: ' + this.state.step);
-
                           const newInt = removeStepFromFlow(
                             integration,
                             flowId,
                             this.state.position!
                           );
-
-                          console.log('newInt: ' + JSON.stringify(newInt));
-
-                          // deleteAction(newInt);
 
                           history.push(
                             this.props.selfHref(

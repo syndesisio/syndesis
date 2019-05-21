@@ -17,7 +17,7 @@ import routes from './routes';
 const addStepPage = (
   <AddStepPage
     cancelHref={resolvers.list}
-    getEditAddStepHref={(position, p, s) =>
+    getAddStepHref={(position, p, s) =>
       resolvers.create.configure.addStep.selectStep({
         position: `${position}`,
         ...p,
