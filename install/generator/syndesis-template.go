@@ -50,6 +50,7 @@ type syndesisImages struct {
 	Verifier string
 	S2i      string
 	Upgrade  string
+	Komodo   string
 }
 
 type images struct {
@@ -60,6 +61,7 @@ type images struct {
 	OAuthProxyImagePrefix       string
 	PrometheusImagePrefix       string
 	PostgresExporterImagePrefix string
+	KomodoImagesPrefix          string
 }
 
 type tags struct {
@@ -69,6 +71,7 @@ type tags struct {
 	Prometheus       string
 	Upgrade          string
 	PostgresExporter string
+	Komodo           string
 }
 
 type Context struct {
@@ -85,6 +88,7 @@ type Context struct {
 	Tags             tags
 	Debug            bool
 	PrometheusRules  string
+	IncludeDint      bool
 }
 
 // TODO: Could be added from a local configuration file
@@ -94,6 +98,7 @@ var syndesisContext = Context{
 		OAuthProxyImagePrefix:       "quay.io/openshift",
 		PrometheusImagePrefix:       "prom",
 		PostgresExporterImagePrefix: "wrouesnel",
+		KomodoImagesPrefix:          "teiid",
 		Support: supportImages{
 			Postgresql:       "postgresql",
 			OAuthProxy:       "oauth-proxy",
@@ -107,6 +112,7 @@ var syndesisContext = Context{
 			Verifier: "syndesis-meta",
 			S2i:      "syndesis-s2i",
 			Upgrade:  "syndesis-upgrade",
+			Komodo:   "komodo-server",
 		},
 	},
 	Tags: tags{
@@ -125,6 +131,7 @@ var productContext = Context{
 		OAuthProxyImagePrefix:       "openshift",
 		PrometheusImagePrefix:       "prom",
 		PostgresExporterImagePrefix: "wrouesnel",
+		KomodoImagesPrefix:          "dv",
 		Support: supportImages{
 			Postgresql:       "postgresql",
 			OAuthProxy:       "oauth-proxy",
@@ -137,6 +144,7 @@ var productContext = Context{
 			Verifier: "fuse-ignite-meta",
 			S2i:      "fuse-ignite-s2i",
 			Upgrade:  "fuse-ignite-upgrade",
+			Komodo:   "fuse-komodo-server",
 		},
 	},
 	Tags: tags{
@@ -150,7 +158,8 @@ var productContext = Context{
 
 var context = syndesisContext
 var prometheusRulesFile = ""
-const  prometheusRulesFileIndent = "      "
+
+const prometheusRulesFileIndent = "      "
 
 func init() {
 	flags := installCommand.PersistentFlags()
@@ -160,12 +169,14 @@ func init() {
 	flags.BoolVar(&context.WithDockerImages, "with-docker-images", false, "With docker images")
 	flags.StringVar(&context.Tags.Syndesis, "syndesis-tag", "latest", "Syndesis Image tag to use")
 	flags.StringVar(&context.Tags.Upgrade, "upgrade-tag", "latest", "Syndesis Upgrade version")
+	flags.StringVar(&context.Tags.Komodo, "komodo-tag", "latest", "Komodo image tag to use")
 	flags.BoolVar(&context.Oso, "oso", false, "Generate product templates for SO")
 	flags.BoolVar(&context.Ocp, "ocp", false, "Generate product templates for OCP")
 	flags.BoolVar(&context.EarlyAccess, "early-access", false, "Point repositories to early-access repos")
 	flags.StringVar(&context.Registry, "registry", "docker.io", "Registry to use for imagestreams")
 	flags.BoolVar(&context.Debug, "debug", false, "Enable debug support")
-    flags.StringVar(&prometheusRulesFile, "prometheus-rules-file", "", "Prometheus Rules file to copy as content of a configmap")
+	flags.StringVar(&prometheusRulesFile, "prometheus-rules-file", "", "Prometheus Rules file to copy as content of a configmap")
+	flags.BoolVar(&context.IncludeDint, "include-data-integration", true, "Include Data Integration")
 	pflag.CommandLine.AddGoFlagSet(flag.CommandLine)
 }
 
@@ -188,10 +199,10 @@ func install(cmd *cobra.Command, args []string) {
 		return files[i].Name() < files[j].Name()
 	})
 
-    prometheusRules, err := ioutil.ReadFile(prometheusRulesFile)
-    check(err)
+	prometheusRules, err := ioutil.ReadFile(prometheusRulesFile)
+	check(err)
 
-    context.PrometheusRules = strings.Replace(prometheusRulesFileIndent+string(prometheusRules),"\n","\n"+prometheusRulesFileIndent,-1)
+	context.PrometheusRules = strings.Replace(prometheusRulesFileIndent+string(prometheusRules), "\n", "\n"+prometheusRulesFileIndent, -1)
 
 	for _, f := range files {
 		if strings.HasSuffix(f.Name(), ".yml.mustache") {

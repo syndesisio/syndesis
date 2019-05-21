@@ -131,6 +131,13 @@ parameters:
   name: SERVER_MEMORY_LIMIT
   value: 800Mi
   required: true
+{{#IncludeDint}}
+- description: Maximum amount of memory the data virtualization service might use.
+  displayName: Memory Limit  
+  name: KOMODO_MEMORY_LIMIT
+  value: 1024Mi
+  required: true  
+{{/IncludeDint}}
 - description: Maximum number of integrations single user can create
   displayName: Maximum number of integrations
   name: MAX_INTEGRATIONS_PER_USER
