@@ -71,6 +71,9 @@ export class IntegrationEditorStepAdder extends React.Component<
               {toUIIntegrationStepCollection(
                 toUIStepCollection(this.props.steps)
               ).map((s, idx) => {
+                const restrictedDelete =
+                  s.configuredProperties!.stepKind === 'choice';
+
                 return (
                   <React.Fragment key={idx}>
                     <IntegrationEditorStepsListItem
@@ -126,13 +129,17 @@ export class IntegrationEditorStepAdder extends React.Component<
                           >
                             {t('shared:Configure')}
                           </ButtonLink>
-                          <ButtonLink
-                            data-testid={'integration-editor-step-adder-delete'}
-                            onClick={() => this.props.onDelete(idx, s)}
-                            as={'danger'}
-                          >
-                            <i className="fa fa-trash" />
-                          </ButtonLink>
+                          {!restrictedDelete && (
+                            <ButtonLink
+                              data-testid={
+                                'integration-editor-step-adder-delete'
+                              }
+                              onClick={() => this.props.onDelete(idx, s)}
+                              as={'danger'}
+                            >
+                              <i className="fa fa-trash" />
+                            </ButtonLink>
+                          )}
                         </>
                       }
                     />
