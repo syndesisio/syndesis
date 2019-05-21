@@ -42,7 +42,8 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
-import io.syndesis.connector.email.AbstractEMailRouteTest;
+import io.syndesis.connector.email.AbstractEmailServerTest;
+import io.syndesis.connector.email.RouteUtils;
 import io.syndesis.connector.email.component.EMailComponentFactory;
 import io.syndesis.connector.email.customizer.EMailReceiveCustomizer;
 import io.syndesis.connector.email.model.EMailMessageModel;
@@ -67,7 +68,7 @@ import io.syndesis.connector.support.util.PropertyBuilder;
     }
 )
 
-public class EMailReadRouteTest extends AbstractEMailRouteTest {
+public class EMailReadRouteTest extends AbstractEmailServerTest implements RouteUtils.ConnectorActionFactory {
 
     private EMailTestServer server;
 
@@ -79,7 +80,7 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
     }
 
     @Override
-    protected ConnectorAction createConnectorAction(Map<String, String> configuredProperties) throws Exception {
+    public ConnectorAction createConnectorAction(Map<String, String> configuredProperties) {
         ConnectorAction emailAction = new ConnectorAction.Builder()
             .description("Read email from the server")
              .id("io.syndesis:email-receive-connector")
@@ -100,52 +101,52 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
     @Test
     public void testImapEMailRoute() throws Exception {
         server = imapServer();
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD));
 
-        Step mailStep = createEMailStep(mailConnector);
-        Integration mailIntegration = createIntegration(mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction);
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
 
         context.start();
 
-        assertSatisfied(result);
+        RouteUtils.assertSatisfied(result);
 
         List<EMailMessageModel> emails = server.getEmails();
         for (int i = 0; i < emails.size(); ++i) {
-            testResult(result, i, emails.get(i));
+            RouteUtils.testResult(result, i, emails.get(i));
         }
     }
 
     @Test
     public void testImapEMailRouteWrongPassword() throws Exception {
         server = imapServer();
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.IMAP.id())
-                                                               .property(SECURE, Boolean.toString(true))
+                                                               .property(SECURE_TYPE, SecureType.SSL_TLS.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, "ReallyWrongPassword"));
 
-        Step mailStep = createEMailStep(mailConnector);
-        Integration mailIntegration = createIntegration(mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction);
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
 
         //
         // No messages returned due to wrong password
@@ -160,94 +161,94 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
     @Test
     public void testPop3EMailRoute() throws Exception {
         server = pop3Server();
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.POP3.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD));
 
-        Step mailStep = createEMailStep(mailConnector);
-        Integration mailIntegration = createIntegration(mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction);
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
 
         context.start();
 
-        assertSatisfied(result);
+        RouteUtils.assertSatisfied(result);
 
         List<EMailMessageModel> emails = server.getEmails();
         for (int i = 0; i < emails.size(); ++i) {
-            testResult(result, i, emails.get(i));
+            RouteUtils.testResult(result, i, emails.get(i));
         }
     }
 
     @Test
     public void testImapsEMailRoute() throws Exception {
         server = imapsServer();
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.IMAP.id())
-                                                               .property(SECURE, Boolean.toString(true))
+                                                               .property(SECURE_TYPE, SecureType.SSL_TLS.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD)
                                                                .property(SERVER_CERTIFICATE, server.getCertificate()));
 
-        Step mailStep = createEMailStep(mailConnector);
-        Integration mailIntegration = createIntegration(mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction);
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
 
         context.start();
 
-        assertSatisfied(result);
+        RouteUtils.assertSatisfied(result);
 
         List<EMailMessageModel> emails = server.getEmails();
         for (int i = 0; i < emails.size(); ++i) {
-            testResult(result, i, emails.get(i));
+            RouteUtils.testResult(result, i, emails.get(i));
         }
     }
 
     @Test
     public void testPop3sEMailRoute() throws Exception {
         server = pop3sServer();
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.POP3.id())
-                                                               .property(SECURE, Boolean.toString(true))
+                                                               .property(SECURE_TYPE, SecureType.SSL_TLS.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD)
                                                                .property(SERVER_CERTIFICATE, server.getCertificate()));
 
-        Step mailStep = createEMailStep(mailConnector);
-        Integration mailIntegration = createIntegration(mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction);
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
 
         context.start();
 
-        assertSatisfied(result);
+        RouteUtils.assertSatisfied(result);
 
         List<EMailMessageModel> emails = server.getEmails();
         for (int i = 0; i < emails.size(); ++i) {
-            testResult(result, i, emails.get(i));
+            RouteUtils.testResult(result, i, emails.get(i));
         }
     }
 
@@ -263,33 +264,33 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
         int readCount = emailCount - unseenCount;
         server.readEmails(readCount);
 
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD));
 
         PropertyBuilder<String> configuredProperties = new PropertyBuilder<>();
         configuredProperties.property(UNSEEN_ONLY, Boolean.toString(true));
-        Step mailStep = createEMailStep(mailConnector, configuredProperties.build());
-        Integration mailIntegration = createIntegration(mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction, configuredProperties.build());
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setResultWaitTime(10000L);
         result.setExpectedMessageCount(unseenCount);
 
         context.start();
 
-        assertSatisfied(result);
+        RouteUtils.assertSatisfied(result);
 
         assertEquals(unseenCount, result.getExchanges().size());
         for (int i = readCount; i < emailCount; ++i) {
-            testResult(result, (i - readCount), server.getEmails().get(i));
+            RouteUtils.testResult(result, (i - readCount), server.getEmails().get(i));
         }
     }
 
@@ -297,32 +298,32 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
     public void testImapEMailRouteMaxEmails() throws Exception {
         int filteredTotal = 2;
         server = imapServer();
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD));
 
         PropertyBuilder<String> configuredProperties = new PropertyBuilder<>();
         configuredProperties.property(MAX_MESSAGES, Integer.toString(filteredTotal));
-        Step mailStep = createEMailStep(mailConnector, configuredProperties.build());
-        Integration mailIntegration = createIntegration(mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction, configuredProperties.build());
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setExpectedMessageCount(filteredTotal);
 
         context.start();
 
-        assertSatisfied(result);
+        RouteUtils.assertSatisfied(result);
 
         assertEquals(filteredTotal, result.getExchanges().size());
         for (int i = 0; i < filteredTotal; ++i) {
-            testResult(result, i, server.getEmails().get(i));
+            RouteUtils.testResult(result, i, server.getEmails().get(i));
         }
     }
 
@@ -331,32 +332,32 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
         String delayValue = "1000";
 
         server = imapServer();
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD));
 
         PropertyBuilder<String> configuredProperties = new PropertyBuilder<>();
         configuredProperties.property(DELAY, delayValue);
-        Step mailStep = createEMailStep(mailConnector, configuredProperties.build());
-        Integration mailIntegration = createIntegration(mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction, configuredProperties.build());
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
 
         context.start();
 
-        assertSatisfied(result);
+        RouteUtils.assertSatisfied(result);
 
         List<EMailMessageModel> emails = server.getEmails();
         for (int i = 0; i < emails.size(); ++i) {
-            testResult(result, i, emails.get(i));
+            RouteUtils.testResult(result, i, emails.get(i));
         }
 
         Collection<Endpoint> endpoints = context.getEndpoints();
@@ -388,34 +389,34 @@ public class EMailReadRouteTest extends AbstractEMailRouteTest {
         String plainText = "Hi, how are you?";
         String body = "<html><body>Hi, <i>how are you?</i></body></html>";
 
-        server.createMultipartMessage(TEST_USER_NAME, TEST_PASSWORD, "Ben1@test.com",
+        server.createMultipartMessage(TEST_ADDRESS, TEST_PASSWORD, "Ben1@test.com",
                                                                        "An HTML Message", TEXT_HTML, body);
         assertEquals(1, server.getEmailCount());
 
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.IMAP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD));
 
         PropertyBuilder<String> configuredProperties = new PropertyBuilder<>();
         configuredProperties.property(TO_PLAIN_TEXT, Boolean.toString(true));
-        Step mailStep = createEMailStep(mailConnector, configuredProperties.build());
-        Integration mailIntegration = createIntegration(mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction, configuredProperties.build());
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setMinimumExpectedMessageCount(server.getEmailCount());
 
         context.start();
 
-        assertSatisfied(result);
+        RouteUtils.assertSatisfied(result);
 
-        EMailMessageModel model = extractModelFromExchgMsg(result, 0);
+        EMailMessageModel model = RouteUtils.extractModelFromExchgMsg(result, 0);
         assertThat(model.getContent()).isInstanceOf(String.class);
         assertEquals(plainText, model.getContent().toString().trim());
     }

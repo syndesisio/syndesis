@@ -40,7 +40,8 @@ import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.SuppressFBWarnings;
-import io.syndesis.connector.email.AbstractEMailRouteTest;
+import io.syndesis.connector.email.AbstractEmailServerTest;
+import io.syndesis.connector.email.RouteUtils;
 import io.syndesis.connector.email.component.EMailComponentFactory;
 import io.syndesis.connector.email.customizer.EMailSendCustomizer;
 import io.syndesis.connector.email.model.EMailMessageModel;
@@ -66,7 +67,7 @@ import io.syndesis.connector.support.util.PropertyBuilder;
     }
 )
 @SuppressFBWarnings
-public class EMailSendRouteTest extends AbstractEMailRouteTest {
+public class EMailSendRouteTest extends AbstractEmailServerTest implements RouteUtils.ConnectorActionFactory {
 
     private static EMailTestServer server;
 
@@ -84,7 +85,7 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
     }
 
     @Override
-    protected ConnectorAction createConnectorAction(Map<String, String> configuredProperties) throws Exception {
+    public ConnectorAction createConnectorAction(Map<String, String> configuredProperties) {
         ConnectorAction emailAction = new ConnectorAction.Builder()
         .description("Send email to another server")
          .id("io.syndesis:email-send-connector")
@@ -121,21 +122,21 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
 
         Step directStep = createDirectStep();
 
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.SMTP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD));
 
-        Step mailStep = createEMailStep(mailConnector);
-        Integration mailIntegration = createIntegration(directStep, mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction);
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(directStep, mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setExpectedMessageCount(1);
 
         DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
@@ -145,8 +146,8 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
 
         EMailMessageModel msgModel = new EMailMessageModel();
         msgModel.setSubject("Test Email 1");
-        msgModel.setFrom(TEST_USER_NAME);
-        msgModel.setTo(TEST_USER_NAME);
+        msgModel.setFrom(TEST_ADDRESS);
+        msgModel.setTo(TEST_ADDRESS);
         msgModel.setContent("Hello, I am sending emails to myself again!\r\n");
 
         template.sendBody(directEndpoint, msgModel);
@@ -168,23 +169,23 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
         // Even though protocol is set to 'smtp', it will be changed to 'smtps'
         // by the EMailComponent due to secure being true
         //
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.SMTP.id())
-                                                               .property(SECURE, Boolean.toString(true))
+                                                               .property(SECURE_TYPE, SecureType.SSL_TLS.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD)
                                                                .property(SERVER_CERTIFICATE, server.getCertificate()));
 
-        Step mailStep = createEMailStep(mailConnector);
-        Integration mailIntegration = createIntegration(directStep, mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction);
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(directStep, mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setExpectedMessageCount(1);
 
         DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
@@ -194,8 +195,8 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
 
         EMailMessageModel msgModel = new EMailMessageModel();
         msgModel.setSubject("Test Email 1");
-        msgModel.setFrom(TEST_USER_NAME);
-        msgModel.setTo(TEST_USER_NAME);
+        msgModel.setFrom(TEST_ADDRESS);
+        msgModel.setTo(TEST_ADDRESS);
         msgModel.setContent("Hello, I am sending emails to myself again!\r\n");
 
         template.sendBody(directEndpoint, msgModel);
@@ -213,18 +214,18 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
 
         Step directStep = createDirectStep();
 
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.SMTP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD));
 
         EMailMessageModel injectedDataModel = new EMailMessageModel();
         injectedDataModel.setSubject("Injected Data Email 1");
-        injectedDataModel.setFrom(TEST_USER_NAME);
-        injectedDataModel.setTo(TEST_USER_NAME);
+        injectedDataModel.setFrom(TEST_ADDRESS);
+        injectedDataModel.setTo(TEST_ADDRESS);
         injectedDataModel.setContent("Hello, this is an email from injected data!\r\n");
 
         String inputValueSubject = "Input Values Email 1";
@@ -235,13 +236,13 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
         builder.property(MAIL_SUBJECT, inputValueSubject);
         builder.property(MAIL_TEXT, inputValueText);
 
-        Step mailStep = createEMailStep(mailConnector, builder.build());
-        Integration mailIntegration = createIntegration(directStep, mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction, builder.build());
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(directStep, mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setExpectedMessageCount(1);
 
         DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
@@ -272,18 +273,18 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
 
         Step directStep = createDirectStep();
 
-        Connector mailConnector = createEMailConnector(componentScheme(server),
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
                                                        new PropertyBuilder<String>()
                                                                .property(PROTOCOL, Protocol.SMTP.id())
                                                                .property(HOST, server.getHost())
                                                                .property(PORT, Integer.toString(server.getPort()))
-                                                               .property(USER, TEST_USER_NAME)
+                                                               .property(USER, TEST_ADDRESS)
                                                                .property(PASSWORD, TEST_PASSWORD));
 
         EMailMessageModel injectedDataModel = new EMailMessageModel();
         injectedDataModel.setSubject("Injected Data Email 1");
-        injectedDataModel.setFrom(TEST_USER_NAME);
-        injectedDataModel.setTo(TEST_USER_NAME);
+        injectedDataModel.setFrom(TEST_ADDRESS);
+        injectedDataModel.setTo(TEST_ADDRESS);
         injectedDataModel.setContent("Hello, this is an email from injected data!\r\n");
 
         String inputValueSubject = "Input Values Email 1";
@@ -297,13 +298,13 @@ public class EMailSendRouteTest extends AbstractEMailRouteTest {
         builder.property(MAIL_SUBJECT, inputValueSubject);
         builder.property(MAIL_TEXT, inputValueText);
 
-        Step mailStep = createEMailStep(mailConnector, builder.build());
-        Integration mailIntegration = createIntegration(directStep, mailStep, mockStep);
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction, builder.build());
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(directStep, mailStep);
 
-        RouteBuilder routes = newIntegrationRouteBuilder(mailIntegration);
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
         context.addRoutes(routes);
 
-        MockEndpoint result = initMockEndpoint();
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
         result.setExpectedMessageCount(1);
 
         DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);

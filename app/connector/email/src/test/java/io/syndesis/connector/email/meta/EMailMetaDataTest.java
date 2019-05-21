@@ -22,10 +22,10 @@ import java.util.Optional;
 import org.apache.camel.component.extension.MetaDataExtension;
 import org.junit.Before;
 import org.junit.Test;
-import io.syndesis.connector.email.AbstractEMailTest;
+import io.syndesis.connector.email.AbstractEmailServerTest;
 import io.syndesis.connector.email.server.EMailTestServer;
 
-public class EMailMetaDataTest extends AbstractEMailTest {
+public class EMailMetaDataTest extends AbstractEmailServerTest {
 
     @Before
     public void emailSetup() throws Exception {
@@ -42,7 +42,7 @@ public class EMailMetaDataTest extends AbstractEMailTest {
         parameters.put(PROTOCOL, server.getProtocol());
         parameters.put(HOST, server.getHost());
         parameters.put(PORT, Integer.toString(server.getPort()));
-        parameters.put(USER, TEST_USER_NAME);
+        parameters.put(USER, TEST_ADDRESS);
         parameters.put(PASSWORD, TEST_PASSWORD);
 
         Optional<MetaDataExtension.MetaData> meta = extension.meta(parameters);

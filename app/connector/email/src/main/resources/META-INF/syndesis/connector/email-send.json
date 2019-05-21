@@ -206,19 +206,34 @@
       "secret": false,
       "type": "hidden"
     },
-    "secure": {
+    "secureType": {
       "componentProperty": true,
       "deprecated": false,
-      "displayName": "Secure (SSL)",
+      "displayName": "Security Method",
+      "enum": [
+        {
+          "label": "None",
+          "value": "None"
+        },
+        {
+          "label": "StartTLS",
+          "value": "StartTLS"
+        },
+        {
+          "label": "SSL / TLS",
+          "value": "SSL/TLS"
+        }
+      ],
+      "defaultValue": "None",
       "group": "security",
-      "javaType": "java.lang.boolean",
+      "javaType": "java.lang.String",
       "kind": "parameter",
       "label": "security",
-      "labelHint": "Specify whether this is an imaps (ssl enabled) connection",
+      "labelHint": "Specify what security protocol (if any) the connection requires",
       "order": "6",
       "required": false,
       "secret": false,
-      "type": "boolean"
+      "type": "string"
     },
     "serverCertificate": {
       "componentProperty": true,
