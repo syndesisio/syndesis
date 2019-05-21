@@ -28,7 +28,7 @@
   <name>Connector :: Box</name>
 
   <properties>
-    <box-java-sdk-version>2.10.0</box-java-sdk-version>
+    <box-java-sdk-version>2.32.0</box-java-sdk-version>
   </properties>
 
   <dependencies>

@@ -16,7 +16,6 @@
 package io.syndesis.connector.fhir;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.atlasmap.v2.Field;
 import io.atlasmap.xml.v2.XmlComplexType;
 import io.atlasmap.xml.v2.XmlDocument;
 import org.apache.commons.io.IOUtils;

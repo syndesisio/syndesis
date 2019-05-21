@@ -54,7 +54,7 @@
 
     <hibernate.validator.version>6.0.16.Final</hibernate.validator.version>
 
-    <jackson.version>2.9.8</jackson.version>
+    <jackson.version>2.9.9</jackson.version>
     <json-patch.version>1.9</json-patch.version>
     <kubernetes.client.version>3.1.12.fuse-730022</kubernetes.client.version>
 
@@ -109,7 +109,7 @@
     <powermock.version>2.0.0</powermock.version>
     <testcontainers.version>1.10.6</testcontainers.version>
 
-    <spring-security.version>4.2.6.RELEASE</spring-security.version>
+    <spring-security.version>4.2.11.RELEASE</spring-security.version>
     <resteasy.version>3.6.1.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>1.0.1.Final</resteasy-spring-boot-starter.version>
 
@@ -1720,6 +1720,13 @@
         <groupId>com.fasterxml.jackson.module</groupId>
         <artifactId>jackson-module-jsonSchema</artifactId>
         <version>${jackson.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.codehaus.woodstox</groupId>
+        <artifactId>stax2-api</artifactId>
+        <version>4.1</version>
+        <scope>provided</scope>
       </dependency>
 
       <dependency>
