@@ -165,13 +165,21 @@ export function getOutputDocument(
   integration: IntegrationOverview,
   flowId: string,
   position: number,
-  stepId: string
+  stepId: string,
+  isAddingStep: boolean
 ) {
   const subsequentSteps = getSubsequentIntegrationStepsWithDataShape(
     integration,
     flowId,
-    position
-  )!;
+    isAddingStep ? position - 1 : position
+  )!.map(s =>
+    isAddingStep
+      ? {
+          index: s.index + 1,
+          step: s.step,
+        }
+      : s
+  );
 
   const outputDocuments = subsequentSteps
     .map(s => stepToProps(s.step, false, true, s.index))

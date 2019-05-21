@@ -171,6 +171,9 @@ export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
    */
   private massageValue(property: IFormDefinitionProperty, value?: string) {
     if (value === undefined || value === null) {
+      if (property.enum && property.enum.length > 0) {
+        return property.enum[0].value;
+      }
       return value;
     }
     switch (property.type) {
