@@ -1,18 +1,17 @@
-import { Card } from 'patternfly-react';
-import * as React from 'react';
-import './ApiConnectorReview.css';
-import { Container } from '../Layout/Container';
-
 import {
-  TextContent,
   Text,
-  TextVariants,
+  TextContent,
   TextList,
-  TextListVariants,
   TextListItem,
   TextListItemVariants,
+  TextListVariants,
+  TextVariants,
   Title,
 } from '@patternfly/react-core';
+import { Card } from 'patternfly-react';
+import * as React from 'react';
+import { Container } from '../Layout/Container';
+import './ApiConnectorReview.css';
 
 export interface IApiConnectorReviewProps {
   apiConnectorDescription?: string;
@@ -146,7 +145,7 @@ export class ApiConnectorReview extends React.Component<
               {this.props.warningMessages
                 ? this.props.warningMessages.map(
                     (warningMsg: string, index: number) => (
-                      <Text component={TextVariants.p}>
+                      <Text key={index} component={TextVariants.p}>
                         {index + 1}. {warningMsg}
                       </Text>
                     )

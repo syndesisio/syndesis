@@ -1,10 +1,9 @@
-import * as React from 'react';
 import {
-  TextList,
   TextListItem,
   TextListItemVariants,
   TextListVariants,
 } from '@patternfly/react-core';
+import * as React from 'react';
 
 export interface IAction {
   description: string;

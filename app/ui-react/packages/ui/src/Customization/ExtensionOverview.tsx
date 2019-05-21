@@ -1,11 +1,11 @@
-import * as React from 'react';
-import './ExtensionOverview.css';
 import {
   TextList,
-  TextListVariants,
   TextListItem,
   TextListItemVariants,
+  TextListVariants,
 } from '@patternfly/react-core';
+import * as React from 'react';
+import './ExtensionOverview.css';
 
 export interface IExtensionOverviewProps {
   /**
