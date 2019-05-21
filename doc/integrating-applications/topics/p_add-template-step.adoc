@@ -14,7 +14,8 @@ When you create the flow, you add a template step, map source fields
 to the template placeholders, and then map template content to the next step
 in the flow. When {prodname} executes the flow, it 
 inserts the values that are in the mapped source fields into an
-instance of the template and passes the result to the next step in the flow.
+instance of the template and makes the result available to the next step 
+in the flow.
 
 If a flow includes a template step then it is most likely the only
 template step in that flow. However, more than one template step in a
@@ -34,7 +35,7 @@ integration then it must already have its start and finish connections.
 
 . In the visualization panel on the left, click the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
-at the location where you want to add a template step.
+where you want to add a template step.
 . Click *Template*. The
 *Upload Template* page opens.
 . Specify the template type, which is Freemarker, Mustache, or Velocity. 
@@ -46,24 +47,12 @@ want to modify to create a template, into the template editor.
 * Click *browse to upload*, navigate to a file, and upload it.
 * In the template editor, start typing to define a template.
 
-+
-In the previous release, you were required to prefix each
-placeholder with `body.`. This is no longer necessary, and
-`.` in a placeholder is not allowed. The
-editor displays a syntax error if you specify`.` in a placeholder.
-Here is an example of a valid Mustache template:
-
-+
-----
-At {{time}}, {{name}} tweeted:
-{{text}}
-----
-
 . In the template editor, ensure that the template
-is valid for use with {prodname}. {prodname} displays
+is valid for use with {prodname}. Examples of valid templates are 
+after this procedure. {prodname} displays
 image:images/RedCircleXError.png[a red error indicator] to the left of
-a line that contains a syntax error. Hovering over a red indicator displays hints
-about how to resolve the error.
+a line that contains a syntax error. Hovering over a syntax error 
+indicator displays hints about how to resolve the error.
 
 . Click *Done* to add the template step to the flow.
 +
@@ -80,8 +69,8 @@ immediately before the template step that you just added.
 .. On the *Choose a Step* page, click *Data Mapper*.
 .. In the data mapper, map a source field to each template placeholder field.
 +
-For example, using the template above, map a source field
-to each of these template fields:
+For example, using the example templates that are after this procedure, 
+map a source field to each of these template fields:
 +
 * `time`
 * `name`
@@ -104,6 +93,31 @@ next in the flow and you want to send the result of the template step
 as the content of a Gmail message. To do this, you would map the *message*
 source field to the *text* target field.
 .. In the upper right, click *Done*.
+
+.Examples of templates
+
+Example of a Mustache template:
+
+----
+At {{time}}, {{name}} tweeted:
+{{text}}
+----
+
+Freemarker and Velocity support this example template:
+
+----
+At ${time}, ${name} tweeted:
+${text}
+----
+
+Velocity also supports syntax without braces, as shown in this example:
+
+----
+At $time, $name tweeted:
+$text
+----
+
+A placeholder cannot contain a `.` (period). 
 
 .Additional resources
 
