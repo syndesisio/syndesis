@@ -102,7 +102,7 @@ export class AddStepPage extends React.Component<
   public setStepAndPosition(idx: number, step: Step): void {
     this.setState({
       position: idx,
-      step: step,
+      step,
     });
   }
 
@@ -114,19 +114,6 @@ export class AddStepPage extends React.Component<
             <WithRouteData<IBaseRouteParams, IBaseRouteState>>
               {({ flowId }, { integration }, { history }) => {
                 const onDelete = (idx: number, step: Step): void => {
-                  if (
-                    idx === getFirstPosition(integration, flowId) ||
-                    idx === getLastPosition(integration, flowId)
-                  ) {
-                    history.push(
-                      this.props.getEditStepHref(
-                        this.state.position!,
-                        { flowId },
-                        { integration }
-                      )
-                    );
-                  }
-
                   this.setStepAndPosition(idx, step);
                   this.openDeleteDialog();
                 };
@@ -150,18 +137,47 @@ export class AddStepPage extends React.Component<
                         onConfirm={() => {
                           this.handleDeleteConfirm();
 
+                          /**
+                           * Remove the step from the integration flow
+                           * and receive a copy of the new integration.
+                           */
                           const newInt = removeStepFromFlow(
                             integration,
                             flowId,
                             this.state.position!
                           );
 
-                          history.push(
-                            this.props.selfHref(
-                              { flowId },
-                              { integration: newInt }
-                            )
-                          );
+                          /**
+                           * Check if step is first or last position,
+                           * in which case you should delete the step and
+                           * subsequently redirect the user to the step select
+                           * page for that position.
+                           */
+                          if (
+                            this.state.position ===
+                              getFirstPosition(integration, flowId) ||
+                            this.state.position ===
+                              getLastPosition(integration, flowId)
+                          ) {
+                            history.push(
+                              this.props.getEditStepHref(
+                                this.state.position!,
+                                { flowId },
+                                { integration }
+                              )
+                            );
+                          } else {
+                            /**
+                             * If is a middle step, simply remove the step
+                             * and update the UI.
+                             */
+                            history.push(
+                              this.props.selfHref(
+                                { flowId },
+                                { integration: newInt }
+                              )
+                            );
+                          }
                         }}
                       />
                     )}

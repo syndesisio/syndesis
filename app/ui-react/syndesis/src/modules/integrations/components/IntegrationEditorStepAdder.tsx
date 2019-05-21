@@ -1,4 +1,4 @@
-import { getStartStep, getStepIcon } from '@syndesis/api';
+import { getStepIcon } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Integration, Step } from '@syndesis/models';
 import {
@@ -73,10 +73,16 @@ export class IntegrationEditorStepAdder extends React.Component<
               {toUIIntegrationStepCollection(
                 toUIStepCollection(this.props.steps)
               ).map((s, idx) => {
-                const restrictedDelete =
-                  s.configuredProperties!.stepKind === 'choice' ||
-                  getStartStep(this.props.integration, this.props.flowId)!
-                    .connection!.connectorId === 'api-provider';
+                let restrictedDelete = false;
+
+                if (
+                  (s.configuredProperties &&
+                    s.configuredProperties!.stepKind === 'choice') ||
+                  (s.connection &&
+                    s.connection!.connectorId! === 'api-provider')
+                ) {
+                  restrictedDelete = true;
+                }
 
                 return (
                   <React.Fragment key={idx}>
