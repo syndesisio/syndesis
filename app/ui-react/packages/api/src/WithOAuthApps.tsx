@@ -18,7 +18,7 @@ export class WithOAuthApps extends React.Component<IWithOAuthAppsProps> {
   public render() {
     return (
       <SyndesisFetch<IListResult<OAuthApp>>
-        url={'/setup/oauth-apps'}
+        url={'/setup/oauth-apps?per_page=50'}
         defaultValue={{
           items: [],
           totalCount: 0,

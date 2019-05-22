@@ -48,7 +48,7 @@ export class WithConnectors extends React.Component<IWithConnectorsProps> {
   public render() {
     return (
       <SyndesisFetch<IConnectorsFetchResponse>
-        url={'/connectors'}
+        url={'/connectors?per_page=50'}
         defaultValue={{
           items: [],
           totalCount: 0,

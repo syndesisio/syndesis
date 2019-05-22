@@ -27,7 +27,7 @@ export class WithExtensions extends React.Component<IWithExtensionsProps> {
   public render() {
     return (
       <SyndesisFetch<IExtensionsResponse>
-        url={'/extensions'}
+        url={'/extensions?per_page=50'}
         defaultValue={{ items: [], totalCount: 0 }}
       >
         {({ read, response }) =>
