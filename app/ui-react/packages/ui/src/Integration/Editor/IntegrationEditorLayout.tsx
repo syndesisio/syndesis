@@ -10,7 +10,7 @@ import {
 } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
-import { ButtonLink, Loader, PageSection } from '../Layout';
+import { ButtonLink, Loader, PageSection } from '../../Layout';
 import './IntegrationEditorLayout.css';
 
 /**

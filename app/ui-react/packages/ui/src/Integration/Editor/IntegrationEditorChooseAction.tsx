@@ -1,6 +1,6 @@
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
-import { PageSection } from '../Layout';
+import { PageSection } from '../../Layout';
 
 /**
  * A component to render a list of actions, to be used in the integration
