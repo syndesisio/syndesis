@@ -35,7 +35,7 @@ import org.apache.camel.component.extension.MetaDataExtension;
 import org.apache.camel.component.servicenow.ServiceNowConstants;
 import org.apache.camel.util.ObjectHelper;
 
-final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieval {
+public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieval {
 
     /**
      * TODO: use local extension, remove when switching to camel 2.22.x
