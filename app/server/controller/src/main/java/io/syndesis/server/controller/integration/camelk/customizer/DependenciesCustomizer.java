@@ -52,7 +52,11 @@ public class DependenciesCustomizer implements CamelKIntegrationCustomizer {
 
         spec.addDependencies("bom:io.syndesis.integration/integration-bom-camel-k/pom/" + versionService.getVersion());
         spec.addDependencies("mvn:io.syndesis.integration/integration-runtime-camelk");
-        spec.addDependencies("mvn:org.apache.camel.k/camel-k-runtime-servlet");
+
+        if (exposure.contains(Exposure.SERVICE)) {
+            spec.addDependencies("mvn:org.apache.camel/camel-base64");
+            spec.addDependencies("mvn:org.apache.camel.k/camel-k-runtime-servlet");
+        }
 
         for (MavenGav gav: getDependencies(deployment.getSpec())) {
             spec.addDependencies("mvn:" + gav.getGroupId() + "/" + gav.getArtifactId());

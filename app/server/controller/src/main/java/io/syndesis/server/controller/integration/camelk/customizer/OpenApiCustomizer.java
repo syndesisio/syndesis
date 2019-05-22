@@ -109,7 +109,7 @@ public class OpenApiCustomizer implements CamelKIntegrationCustomizer {
                 .name("openapi.json")
                 .content(compressedContent)
                 .build())
-            .type("openapi")
+            .type("data")
             .build();
     }
 

@@ -76,6 +76,7 @@ public class ControllersConfigurationProperties {
 
     public static class CamelK {
         private boolean compression;
+        private boolean prettyPrint;
         private Map<String, String> environment = new HashMap<>();
         private Set<String> customizers = new HashSet<>();
 
@@ -89,6 +90,14 @@ public class ControllersConfigurationProperties {
 
         public void setCompression(boolean compression) {
             this.compression = compression;
+        }
+
+        public boolean isPrettyPrint() {
+            return prettyPrint;
+        }
+
+        public void setPrettyPrint(boolean prettyPrint) {
+            this.prettyPrint = prettyPrint;
         }
 
         public Set<String> getCustomizers() {

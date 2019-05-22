@@ -15,6 +15,19 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import io.fabric8.kubernetes.api.model.Secret;
@@ -51,19 +64,6 @@ import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
-
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
 
 @Component
 @Qualifier("camel-k")
@@ -306,11 +306,13 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         return result;
     }
 
-    private String extractIntegrationJson(Integration fullIntegration) {
+    private String extractIntegrationJson(Integration fullIntegration, boolean prettyPrint) {
         Integration integration = resourceManager.sanitize(fullIntegration);
         ObjectWriter writer = Json.writer();
         try {
-            return new String(writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration), UTF_8);
+            return prettyPrint
+                ? new String(writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsBytes(integration), UTF_8)
+                : new String(writer.writeValueAsBytes(integration), UTF_8);
         } catch (JsonProcessingException e) {
             throw new IllegalStateException("Cannot convert integration " + integration.getName() + " to JSON: " + e,e);
         }
@@ -328,11 +330,11 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
     // ************************************
 
     private void addIntegrationSource(Integration integration, ImmutableIntegrationSpec.Builder builder) throws IOException {
-        final String json = extractIntegrationJson(integration);
+        final String json = extractIntegrationJson(integration, configuration.getCamelk().isPrettyPrint());
         final String content = configuration.getCamelk().isCompression() ? CamelKSupport.compress(json) : json;
         final String name = integration.getId().get();
 
-        logInfo(integration,"integration.json: {}", content);
+        logInfo(integration,"integration.json: {}", json);
 
         builder.addSources(new SourceSpec.Builder()
             .dataSpec(new DataSpec.Builder()

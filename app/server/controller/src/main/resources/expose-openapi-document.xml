@@ -25,6 +25,12 @@
         <setBody>
           <constant>resource:classpath:openapi.json</constant>
         </setBody>
+        <unmarshal>
+          <base64/>
+        </unmarshal>
+        <unmarshal>
+          <gzip/>
+        </unmarshal>
       </route>
     </get>
   </rest>

@@ -15,16 +15,21 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -45,6 +50,7 @@ import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
 import io.syndesis.server.openshift.Exposure;
 import io.syndesis.server.openshift.OpenShiftService;
+import org.apache.commons.io.IOUtils;
 
 public final class CamelKSupport {
     //    // IntegrationPhaseInitial --
@@ -120,12 +126,25 @@ public final class CamelKSupport {
             return null;
         }
 
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            try (OutputStream out = new GZIPOutputStream(Base64.getEncoder().wrap(bos))) {
+                out.write(data);
+            }
+
+            return bos.toString(UTF_8.name());
+        }
+    }
+
+    public static String uncompress(byte[] data) throws IOException {
+        if (data == null) {
+            return null;
+        }
+
         try(
-            ByteArrayOutputStream os = new ByteArrayOutputStream(data.length);
-            GZIPOutputStream gzip = new GZIPOutputStream(os)
+            ByteArrayInputStream bis = new ByteArrayInputStream(data, 0, data.length);
+            InputStream is = new GZIPInputStream(Base64.getDecoder().wrap(bis))
         ) {
-            gzip.write(data);
-            return os.toString(UTF_8.name());
+            return IOUtils.toString(is, UTF_8);
         }
     }
 

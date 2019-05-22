@@ -50,6 +50,35 @@ public class DependenciesCustomizerTest {
         io.syndesis.server.controller.integration.camelk.crd.Integration i = customizer.customize(
             deployment,
             new io.syndesis.server.controller.integration.camelk.crd.Integration(),
+            EnumSet.noneOf(Exposure.class)
+        );
+
+        assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("bom:io.syndesis.integration/integration-bom-camel-k/pom/"));
+        assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("mvn:io.syndesis.integration/integration-runtime-camelk"));
+        assertThat(i.getSpec().getDependencies()).anyMatch(s -> s.startsWith("mvn:io.syndesis.connector/syndesis-connector-api-provider"));
+    }
+
+    @Test
+    public void testDependenciesCustomizerWithServiceExposure() {
+        VersionService versionService = new VersionService();
+        TestResourceManager manager = new TestResourceManager();
+        Integration integration = manager.newIntegration(
+            new Step.Builder()
+                .addDependencies(Dependency.maven("io.syndesis.connector:syndesis-connector-api-provider"))
+                .build()
+        );
+
+        IntegrationDeployment deployment = new IntegrationDeployment.Builder()
+            .userId("user")
+            .id("idId")
+            .spec(integration)
+            .build();
+
+        CamelKIntegrationCustomizer customizer = new DependenciesCustomizer(versionService, manager);
+
+        io.syndesis.server.controller.integration.camelk.crd.Integration i = customizer.customize(
+            deployment,
+            new io.syndesis.server.controller.integration.camelk.crd.Integration(),
             EnumSet.of(Exposure.SERVICE)
         );
 
