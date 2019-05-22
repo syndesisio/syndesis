@@ -7,8 +7,12 @@ import { moment } from '@syndesis/ui/vendor';
 })
 export class DurationPipe implements PipeTransform {
   transform(timeDuration: number, unit: 'ms' | 'ns'): string {
-    if (!timeDuration) {
+    if (typeof timeDuration === 'undefined') {
       return 'NaN';
+    }
+
+    if (timeDuration <= 0) {
+      return '-';
     }
 
     if (unit === 'ns') {

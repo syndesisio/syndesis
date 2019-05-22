@@ -15,14 +15,24 @@
  */
 package io.syndesis.integration.runtime.tracing;
 
-import static java.util.Collections.singleton;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 
+import io.jaegertracing.internal.JaegerSpan;
+import io.jaegertracing.internal.JaegerTracer;
+import io.jaegertracing.internal.samplers.ConstSampler;
+import io.jaegertracing.spi.Reporter;
+import io.opentracing.Tracer;
+import io.syndesis.common.model.action.ConnectorAction;
+import io.syndesis.common.model.action.ConnectorDescriptor;
+import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.Resources;
+import io.syndesis.integration.runtime.IntegrationRouteBuilder;
+import io.syndesis.integration.runtime.IntegrationStepHandler;
+import io.syndesis.integration.runtime.IntegrationTestSupport;
 import org.apache.camel.CamelContext;
 import org.apache.camel.CamelExecutionException;
 import org.apache.camel.Handler;
@@ -35,23 +45,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.jaegertracing.internal.JaegerSpan;
-import io.jaegertracing.internal.JaegerTracer;
-import io.jaegertracing.internal.samplers.ConstSampler;
-import io.jaegertracing.spi.Reporter;
-import io.opentracing.Tracer;
-import io.syndesis.common.model.action.ConnectorAction;
-import io.syndesis.common.model.action.ConnectorDescriptor;
-import io.syndesis.common.model.integration.Flow;
-import io.syndesis.common.model.integration.Integration;
-import io.syndesis.common.model.integration.Scheduler;
-import io.syndesis.common.model.integration.Step;
-import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.common.util.Resources;
-import io.syndesis.integration.runtime.IntegrationRouteBuilder;
-import io.syndesis.integration.runtime.IntegrationStepHandler;
-import io.syndesis.integration.runtime.IntegrationTestSupport;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @SuppressWarnings({"PMD.JUnitTestsShouldIncludeAssert", "PMD.AvoidThrowingRawExceptionTypes"})
 public class ActivityTracingWithSplitTest extends IntegrationTestSupport {
@@ -159,7 +154,7 @@ public class ActivityTracingWithSplitTest extends IntegrationTestSupport {
         result.assertIsSatisfied();
 
         // System.out.println(Json.writer().writeValueAsString(activityEvents));
-        assertEquals(5, activityEvents.size()); //.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
+        assertEquals(6, activityEvents.size()); //.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
 
 //        // There should be 1 exchanges logged.
 //        assertEquals(1, activityEvents.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
@@ -181,7 +176,7 @@ public class ActivityTracingWithSplitTest extends IntegrationTestSupport {
         }
 
 //        // There should be 1 exchanges logged.
-        assertEquals(3, activityEvents.size()); //.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
+        assertEquals(4, activityEvents.size()); //.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
 //        assertEquals(1, activityEvents.stream().map(x -> x.exchange).collect(Collectors.toSet()).size());
 //        // There should be 1 "status":"begin"
 //        assertEquals(1, activityEvents.stream().map(x -> x.status).filter(x -> "begin".equals(x)).collect(Collectors.toList()).size());

@@ -32,7 +32,6 @@ import io.syndesis.integration.runtime.logging.IntegrationLoggingConstants;
 import io.syndesis.integration.runtime.util.JsonSimplePredicate;
 import org.apache.camel.CamelContext;
 import org.apache.camel.Exchange;
-import org.apache.camel.LoggingLevel;
 import org.apache.camel.Predicate;
 import org.apache.camel.Processor;
 import org.apache.camel.model.ChoiceDefinition;
@@ -56,27 +55,19 @@ public class ChoiceStepHandler implements IntegrationStepHandler {
         List<FlowOption> flows = extractFlows(step.getConfiguredProperties().get("flows"));
 
         if (!flows.isEmpty()) {
-            route.process(new EnrichActivityIdHeader());
-
             ChoiceDefinition choice = route.choice();
 
             for (FlowOption flowOption : flows) {
                 choice.when(getPredicate(flowOption.getConditionExpression(), builder.getContext()))
+                        .process(new EnrichActivityIdHeader())
                         .to(getEndpointUri(routingScheme, flowOption.getFlow()))
                         .end();
             }
 
             if (ObjectHelper.isNotEmpty(defaultFlow)) {
                 choice.otherwise()
+                        .process(new EnrichActivityIdHeader())
                         .to(getEndpointUri(routingScheme, defaultFlow))
-                        .end();
-            } else if (step.getId().isPresent()) {
-                choice.otherwise()
-                        .log(LoggingLevel.INFO, (String) null, step.getId().get(), getNoMatchingConditionLogMessage())
-                        .end();
-            } else {
-                choice.otherwise()
-                        .log(LoggingLevel.INFO, getNoMatchingConditionLogMessage())
                         .end();
             }
 
@@ -88,10 +79,6 @@ public class ChoiceStepHandler implements IntegrationStepHandler {
 
     private Predicate getPredicate(String conditionExpression, CamelContext context) {
         return new JsonSimplePredicate(conditionExpression, context);
-    }
-
-    private String getNoMatchingConditionLogMessage() {
-        return "Message Context: [${in.headers}] Body: [${bean:bodyLogger}] No matching condition for message";
     }
 
     // *******************************
