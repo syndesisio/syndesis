@@ -11,6 +11,11 @@ export class ApiProviderEditSpecification extends React.Component<
   IApiProviderEditSpecificationProps
 > {
   public render() {
-    return <>{this.props.children}</>;
+    return (
+      <>
+        <div>{this.props.i18nTitle}</div>
+        <div>{this.props.children}</div>
+      </>
+    );
   }
 }

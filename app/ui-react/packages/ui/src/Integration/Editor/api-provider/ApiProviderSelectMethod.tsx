@@ -16,6 +16,7 @@ export class ApiProviderSelectMethod extends React.Component<
   public render() {
     return (
       <>
+        <Text>{this.props.i18nTitle}</Text>
         <Text>{this.props.i18nDescription}</Text>
         <ListView
           id="listView--listItemVariants"
@@ -67,11 +68,11 @@ export class ApiProviderSelectMethod extends React.Component<
               </span>
             }
             additionalInfo={[
-              <ListView.InfoItem key="1" stacked>
+              <ListView.InfoItem key={'1'} stacked={true}>
                 <strong>113,735</strong>
                 <span>Service One</span>
               </ListView.InfoItem>,
-              <ListView.InfoItem key="2" stacked>
+              <ListView.InfoItem key={'2'} stacked={true}>
                 <strong>35%</strong>
                 <span>Service Two</span>
               </ListView.InfoItem>,
@@ -81,8 +82,8 @@ export class ApiProviderSelectMethod extends React.Component<
           <ListView.Item
             key="item4"
             additionalInfo={[
-              <ListView.InfoItem key="1">Only Additional</ListView.InfoItem>,
-              <ListView.InfoItem key="2">Info Items</ListView.InfoItem>,
+              <ListView.InfoItem key={'1'}>Only Additional</ListView.InfoItem>,
+              <ListView.InfoItem key={'2'}>Info Items</ListView.InfoItem>,
             ]}
             stacked={true}
           />

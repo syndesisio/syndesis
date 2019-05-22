@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { EditSpecificationPage } from './api-provider/EditSpecificationPage';
-import { SelectMethodPage } from './api-provider/SelectMethodPage';
-import { SetInfoPage } from './api-provider/SetInfoPage';
 import { ReviewActionsPage } from './api-provider/ReviewActionsPage';
 import { ReviewOperationsPage } from './api-provider/ReviewOperationsPage';
+import { SelectMethodPage } from './api-provider/SelectMethodPage';
+import { SetInfoPage } from './api-provider/SetInfoPage';
 import { IDataMapperPageProps } from './dataMapper/DataMapperPage';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
 import { DescribeDataShapePage } from './endpoint/DescribeDataShapePage';

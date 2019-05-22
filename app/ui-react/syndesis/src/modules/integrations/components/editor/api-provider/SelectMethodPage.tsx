@@ -1,5 +1,5 @@
-import * as React from 'react';
 import { ApiProviderSelectMethod, PageSection } from '@syndesis/ui';
+import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 
 /**

@@ -11,6 +11,6 @@ export class ApiProviderSetInfo extends React.Component<
   IApiProviderSetInfoProps
 > {
   public render() {
-    return <></>;
+    return <>{this.props.i18nTitle}</>;
   }
 }

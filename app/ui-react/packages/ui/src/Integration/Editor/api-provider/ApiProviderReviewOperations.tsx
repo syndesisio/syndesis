@@ -11,6 +11,6 @@ export class ApiProviderReviewOperations extends React.Component<
   IApiProviderReviewOperationsProps
 > {
   public render() {
-    return <></>;
+    return <>{this.props.i18nTitle}</>;
   }
 }
