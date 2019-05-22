@@ -1,11 +1,16 @@
 import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 
-export class EditPage extends React.Component {
+/**
+ * This is usually the final step of the API Provider user flow.
+ * This page shows the operations that have been previously defined
+ * earlier in the user flow.
+ */
+export class ReviewOperationsPage extends React.Component {
   public render() {
     return (
       <>
-        <PageTitle title={'Provide API Definition'} />
+        <PageTitle title={'Operations'} />
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis
           illo, iusto nesciunt nostrum omnis pariatur rerum vero voluptates.

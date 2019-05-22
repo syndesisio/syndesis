@@ -29,7 +29,9 @@ const addStepPage = (
         ...s,
       })
     }
-    apiProviderHref={resolvers.integration.edit.editStep.apiProvider.review}
+    apiProviderHref={
+      resolvers.integration.edit.editStep.apiProvider.selectMethod
+    }
     connectionHref={(step, params, state) =>
       resolvers.integration.edit.editStep.connection.configureAction({
         actionId: step.action!.id!,

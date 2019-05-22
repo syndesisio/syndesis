@@ -7,7 +7,7 @@ import { PageTitle } from '../../../../../shared';
  * This is the page where you define or edit your API specification.
  * At the moment, we are using Apicurio as the API specification editor.
  */
-export class SpecificationPage extends React.Component {
+export class EditSpecificationPage extends React.Component {
   public render() {
     return (
       <PageSection>

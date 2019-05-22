@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 
-export class ReviewPage extends React.Component {
+/**
+ * The page where you define basic info such as the name and description of the integration.
+ */
+export class SetInfoPage extends React.Component {
   public render() {
     return (
       <>
-        <PageTitle title={'Review actions'} />
+        <PageTitle title={'Give this integration a name'} />
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis
           illo, iusto nesciunt nostrum omnis pariatur rerum vero voluptates.

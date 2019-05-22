@@ -211,9 +211,11 @@ export const stepRoutes = {
   selectStep: '',
   // if selected step is api provider
   apiProvider: include('api-provider', {
-    upload: '',
-    review: 'review',
-    edit: 'edit',
+    selectMethod: '',
+    reviewActions: 'review-actions',
+    editSpecification: 'edit-specification',
+    setInfo: 'set-info',
+    reviewOperations: 'review-operations',
   }),
   // if selected step kind is data mapper
   dataMapper: 'mapper',
