@@ -65,6 +65,10 @@ export class ApiClientConnectorCreateUpload extends React.Component<
 > {
   public render() {
     return (
+      /**
+       * TODO: Move drag and drop stuff to its own component,
+       * keep this is as a list of options: Upload or Use a URL
+       */
       <Card>
         <Card.Heading>
           <Card.Title>{this.props.i18nTitle}</Card.Title>
