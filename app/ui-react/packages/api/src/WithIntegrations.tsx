@@ -26,7 +26,7 @@ export class WithIntegrations extends React.Component<IWithIntegrationsProps> {
   public render() {
     return (
       <SyndesisFetch<IIntegrationsResponse>
-        url={'/integrations'}
+        url={'/integrations?per_page=50'}
         defaultValue={{ items: [], totalCount: 0 }}
       >
         {({ read, response }) =>

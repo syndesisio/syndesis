@@ -26,7 +26,9 @@ export class WithApiConnectors extends React.Component<
   public render() {
     return (
       <SyndesisFetch<IApiConnectorsResponse>
-        url={'/connectors?query=connectorGroupId%3Dswagger-connector-template'}
+        url={
+          '/connectors?query=connectorGroupId%3Dswagger-connector-template&per_page=50'
+        }
         defaultValue={{
           items: [],
           totalCount: 0,

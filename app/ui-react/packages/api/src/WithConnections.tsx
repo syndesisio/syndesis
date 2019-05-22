@@ -86,7 +86,7 @@ export class WithConnections extends React.Component<IWithConnectionsProps> {
   public render() {
     return (
       <SyndesisFetch<IConnectionsFetchResponse>
-        url={'/connections'}
+        url={'/connections?per_page=50'}
         defaultValue={{
           items: [],
           totalCount: 0,
