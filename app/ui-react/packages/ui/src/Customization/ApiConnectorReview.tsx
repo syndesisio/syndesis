@@ -1,5 +1,16 @@
-import { Card, Grid } from 'patternfly-react';
+import {
+  Text,
+  TextContent,
+  TextList,
+  TextListItem,
+  TextListItemVariants,
+  TextListVariants,
+  TextVariants,
+  Title,
+} from '@patternfly/react-core';
+import { Card } from 'patternfly-react';
 import * as React from 'react';
+import { Container } from '../Layout/Container';
 import './ApiConnectorReview.css';
 
 export interface IApiConnectorReviewProps {
@@ -34,83 +45,100 @@ export class ApiConnectorReview extends React.Component<
               {this.props.i18nValidationFallbackMessage}
             </h5>
           ) : (
-            <Grid>
-              <Grid.Row className="api-connector-review__heading">
+            <TextContent>
+              <Title
+                headingLevel="h5"
+                size="md"
+                className="customization-details__heading"
+              >
                 {this.props.i18nApiDefinitionHeading}
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Col className="api-connector-review__propertyName" xs={2}>
-                  {this.props.i18nNameLabel}
-                </Grid.Col>
-                <Grid.Col>{this.props.apiConnectorName}</Grid.Col>
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Col className="api-connector-review__propertyName" xs={2}>
-                  {this.props.i18nDescriptionLabel}
-                </Grid.Col>
-                <Grid.Col>{this.props.apiConnectorDescription}</Grid.Col>
-              </Grid.Row>
-              <Grid.Row className="api-connector-review__heading">
+              </Title>
+              <Container>
+                <TextList component={TextListVariants.dl}>
+                  <TextListItem component={TextListItemVariants.dt}>
+                    {this.props.i18nNameLabel}
+                  </TextListItem>
+                  <TextListItem component={TextListItemVariants.dd}>
+                    {this.props.apiConnectorName}
+                  </TextListItem>
+                  <TextListItem component={TextListItemVariants.dt}>
+                    {this.props.i18nDescriptionLabel}
+                  </TextListItem>
+                  <TextListItem component={TextListItemVariants.dd}>
+                    {this.props.apiConnectorDescription}
+                  </TextListItem>
+                </TextList>
+              </Container>
+              <Title
+                headingLevel="h5"
+                size="md"
+                className="customization-details__heading"
+              >
                 {this.props.i18nImportedHeading}
-              </Grid.Row>
-              <Grid.Row
-                className="api-connector-review__message"
-                dangerouslySetInnerHTML={{
-                  __html: this.props.i18nOperationsHtmlMessage,
-                }}
-              />
+              </Title>
+              <Container>
+                <Text
+                  component={TextVariants.p}
+                  dangerouslySetInnerHTML={{
+                    __html: this.props.i18nOperationsHtmlMessage,
+                  }}
+                />
+              </Container>
 
               {/* tagged messages */}
-              {this.props.i18nOperationTagHtmlMessages
-                ? this.props.i18nOperationTagHtmlMessages.map(
+              {this.props.i18nOperationTagHtmlMessages && (
+                <TextList className="api-connector-review__tagMessageList">
+                  {this.props.i18nOperationTagHtmlMessages.map(
                     (msg: string, index: number) => (
-                      <Grid.Row
+                      <TextListItem
                         key={index}
-                        className="api-connector-review__tagMessage"
                         dangerouslySetInnerHTML={{ __html: msg }}
                       />
                     )
-                  )
-                : null}
+                  )}
+                </TextList>
+              )}
 
               {/* error messages */}
               {this.props.i18nErrorsHeading && this.props.errorMessages && (
-                <Grid.Row className="api-connector-review__heading">
+                <Title
+                  headingLevel="h5"
+                  size="md"
+                  className="customization-details__heading"
+                >
                   {this.props.i18nErrorsHeading}
-                </Grid.Row>
+                </Title>
               )}
               {this.props.errorMessages
                 ? this.props.errorMessages.map(
                     (errorMsg: string, index: number) => (
-                      <Grid.Row
-                        key={index}
-                        className="api-connector-review__message"
-                      >
+                      <Text component={TextVariants.p} key={index}>
                         {index + 1}. {errorMsg}
-                      </Grid.Row>
+                      </Text>
                     )
                   )
                 : null}
 
               {/* warning messages */}
               {this.props.i18nWarningsHeading && this.props.warningMessages && (
-                <Grid.Row className="api-connector-review__heading">
+                <Title
+                  headingLevel="h5"
+                  size="md"
+                  className="customization-details__heading"
+                >
                   {this.props.i18nWarningsHeading}
-                </Grid.Row>
+                </Title>
               )}
               {this.props.warningMessages
                 ? this.props.warningMessages.map(
                     (warningMsg: string, index: number) => (
-                      <Grid.Row
-                        key={index}
-                        className="api-connector-review__message"
-                      >
+                      <Text key={index} component={TextVariants.p}>
                         {index + 1}. {warningMsg}
-                      </Grid.Row>
+                      </Text>
                     )
                   )
                 : null}
-            </Grid>
+            </TextContent>
           )}
         </Card.Body>
       </Card>

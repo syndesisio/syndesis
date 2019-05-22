@@ -1,6 +1,4 @@
 .api-connector-details-form__body {
-  margin-left: 20px;
-  margin-right: 20px;
   margin-top: 20px;
 }
 
@@ -26,15 +24,20 @@
 }
 
 .api-connector-details-form__icon {
-  max-height: 100px;
-  max-width: 100px;
+  max-height: 50px;
+  max-width: 50px;
+  vertical-align: middle;
+  margin-right: 20px;
 }
 
 .api-connector-details-form__iconContainer {
-  margin-bottom: 40px;
-  margin-left: -40px;
+  margin-bottom: 20px;
 }
 
 .api-connector-details-form__title {
   font-size: 1.25em;
+}
+
+.api-connector-details-form__iconContainer input[type="file"] {
+  display: inline-block;
 }
