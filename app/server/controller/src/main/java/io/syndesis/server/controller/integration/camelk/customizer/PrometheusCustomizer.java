@@ -20,7 +20,7 @@ import java.util.EnumSet;
 import java.util.Map;
 
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
-import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
+import io.syndesis.server.controller.integration.camelk.crd.TraitSpec;
 import io.syndesis.server.openshift.Exposure;
 import org.springframework.stereotype.Component;
 
@@ -30,10 +30,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class PrometheusCustomizer extends AbstractTraitCustomizer {
     @Override
-    protected Map<String, IntegrationTraitSpec> computeTraits(Integration integration, EnumSet<Exposure> exposure) {
+    protected Map<String, TraitSpec> computeTraits(Integration integration, EnumSet<Exposure> exposure) {
         return Collections.singletonMap(
             "prometheus",
-            new IntegrationTraitSpec.Builder()
+            new TraitSpec.Builder()
                 .putConfiguration("enabled", "true")
                 .putConfiguration("port", "9779")
                 .putConfiguration("service-monitor", "false")

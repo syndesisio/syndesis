@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
-import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
+import io.syndesis.server.controller.integration.camelk.crd.TraitSpec;
 import io.syndesis.server.openshift.Exposure;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
@@ -78,7 +78,7 @@ public class KnativeCustomizer implements CamelKIntegrationCustomizer {
             spec = spec.from(integration.getSpec());
         }
         integration.setSpec(
-            spec.putTraits(KNATIVE_TRAIT, new IntegrationTraitSpec.Builder()
+            spec.putTraits(KNATIVE_TRAIT, new TraitSpec.Builder()
                 .putConfiguration("enabled", "true")
                 .putConfiguration("channel-sources", channelSources)
                 .putConfiguration("channel-sinks", channelSinks)
@@ -97,12 +97,12 @@ public class KnativeCustomizer implements CamelKIntegrationCustomizer {
             }
             integration.setSpec(
                 spec.putTraits(KNATIVE_SERVICE_TRAIT,
-                    new IntegrationTraitSpec.Builder()
+                    new TraitSpec.Builder()
                         .putConfiguration("enabled", "true")
                         .putConfiguration("min-scale", "0")
                         .build()
                 ).putTraits(DEPLOYER_TRAIT,
-                    new IntegrationTraitSpec.Builder()
+                    new TraitSpec.Builder()
                         .putConfiguration("kind", KNATIVE_SERVICE_TRAIT)
                         .build()
                 ).build()

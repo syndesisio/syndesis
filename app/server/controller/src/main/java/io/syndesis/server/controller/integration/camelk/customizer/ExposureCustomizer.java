@@ -21,7 +21,7 @@ import java.util.HashMap;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
-import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
+import io.syndesis.server.controller.integration.camelk.crd.TraitSpec;
 import io.syndesis.server.openshift.Exposure;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.stereotype.Component;
@@ -41,7 +41,7 @@ public class ExposureCustomizer implements CamelKIntegrationCustomizer {
         if (exposure.contains(Exposure.SERVICE)) {
             spec.putTraits(
                 "service",
-                new IntegrationTraitSpec.Builder()
+                new TraitSpec.Builder()
                     .putConfiguration("enabled", "true")
                     .putConfiguration("auto", "false")
                     .putConfiguration("port", Integer.toString(OpenShiftService.INTEGRATION_SERVICE_PORT))
@@ -52,7 +52,7 @@ public class ExposureCustomizer implements CamelKIntegrationCustomizer {
         if (exposure.contains(Exposure.ROUTE)) {
             spec.putTraits(
                 "route",
-                new IntegrationTraitSpec.Builder()
+                new TraitSpec.Builder()
                     .putConfiguration("enabled", "true")
                     .putConfiguration("tls-termination", "edge")
                     .build()

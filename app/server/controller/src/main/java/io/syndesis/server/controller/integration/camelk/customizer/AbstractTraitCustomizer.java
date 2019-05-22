@@ -21,13 +21,13 @@ import java.util.Map;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
-import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
+import io.syndesis.server.controller.integration.camelk.crd.TraitSpec;
 import io.syndesis.server.openshift.Exposure;
 
 abstract class AbstractTraitCustomizer implements CamelKIntegrationCustomizer {
     @Override
     public Integration customize(IntegrationDeployment deployment, Integration integration, EnumSet<Exposure> exposure) {
-        Map<String, IntegrationTraitSpec> traits = computeTraits(integration, exposure);
+        Map<String, TraitSpec> traits = computeTraits(integration, exposure);
         if (!traits.isEmpty()) {
             IntegrationSpec.Builder spec = new IntegrationSpec.Builder();
             if (integration.getSpec() != null) {
@@ -42,5 +42,5 @@ abstract class AbstractTraitCustomizer implements CamelKIntegrationCustomizer {
         return integration;
     }
 
-    protected abstract Map<String, IntegrationTraitSpec> computeTraits(Integration integration, EnumSet<Exposure> exposure);
+    protected abstract Map<String, TraitSpec> computeTraits(Integration integration, EnumSet<Exposure> exposure);
 }

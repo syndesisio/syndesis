@@ -20,7 +20,7 @@ import java.util.EnumSet;
 import java.util.Map;
 
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
-import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
+import io.syndesis.server.controller.integration.camelk.crd.TraitSpec;
 import io.syndesis.server.endpoint.v1.VersionService;
 import io.syndesis.server.openshift.Exposure;
 import org.springframework.stereotype.Component;
@@ -37,10 +37,10 @@ public class CamelVersionCustomizer extends AbstractTraitCustomizer {
     }
 
     @Override
-    protected Map<String, IntegrationTraitSpec> computeTraits(Integration integration, EnumSet<Exposure> exposure) {
+    protected Map<String, TraitSpec> computeTraits(Integration integration, EnumSet<Exposure> exposure) {
         return Collections.singletonMap(
             "camel",
-            new IntegrationTraitSpec.Builder()
+            new TraitSpec.Builder()
                 .putConfiguration("version", versionService.getCamelVersion())
                 .putConfiguration("runtime-version", versionService.getCamelkRuntimeVersion())
                 .build()

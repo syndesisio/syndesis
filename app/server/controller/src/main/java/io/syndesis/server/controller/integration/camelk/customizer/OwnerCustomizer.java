@@ -16,7 +16,7 @@
 package io.syndesis.server.controller.integration.camelk.customizer;
 
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
-import io.syndesis.server.controller.integration.camelk.crd.IntegrationTraitSpec;
+import io.syndesis.server.controller.integration.camelk.crd.TraitSpec;
 import io.syndesis.server.openshift.Exposure;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.stereotype.Component;
@@ -60,7 +60,7 @@ public class OwnerCustomizer extends AbstractTraitCustomizer {
     ));
 
     @Override
-    protected Map<String, IntegrationTraitSpec> computeTraits(Integration integration, EnumSet<Exposure> exposure) {
+    protected Map<String, TraitSpec> computeTraits(Integration integration, EnumSet<Exposure> exposure) {
         List<String> labels = new ArrayList<>(LABELS);
         List<String> annotations = new ArrayList<>(ANNOTATIONS);
 
@@ -71,7 +71,7 @@ public class OwnerCustomizer extends AbstractTraitCustomizer {
 
         return Collections.singletonMap(
             "owner",
-            new IntegrationTraitSpec.Builder()
+            new TraitSpec.Builder()
                 .putConfiguration("target-labels", String.join(",", labels))
                 .putConfiguration("target-annotations", String.join(",", annotations))
                 .build()
