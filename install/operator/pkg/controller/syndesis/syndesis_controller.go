@@ -3,9 +3,9 @@ package syndesis
 import (
 	"context"
 	"reflect"
-    "time"
+	"time"
 
-    "k8s.io/apimachinery/pkg/api/errors"
+	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	"k8s.io/client-go/kubernetes"
@@ -86,7 +86,7 @@ type ReconcileSyndesis struct {
 // Result.Requeue is true, otherwise upon completion it will remove the work from the queue.
 func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Result, error) {
 	reqLogger := log.WithValues("Request.Namespace", request.Namespace, "Request.Name", request.Name)
-	reqLogger.Info("Reconciling Syndesis")
+	reqLogger.V(2).Info("Reconciling Syndesis")
 
 	// Fetch the Syndesis syndesis
 	syndesis := &syndesisv1alpha1.Syndesis{}
@@ -115,9 +115,9 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 
 	for _, a := range actions {
 		if a.CanExecute(syndesis) {
-			log.Info("Running action", "action", reflect.TypeOf(a))
+			log.V(2).Info("Running action", "action", reflect.TypeOf(a))
 			if err := a.Execute(ctx, syndesis); err != nil {
-				log.Error(err, "Error reconciling","action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
+				log.Error(err, "Error reconciling", "action", reflect.TypeOf(a), "phase", syndesis.Status.Phase)
 				return reconcile.Result{}, err
 			}
 		}
@@ -125,9 +125,9 @@ func (r *ReconcileSyndesis) Reconcile(request reconcile.Request) (reconcile.Resu
 
 	// Requeuing because actions expect this behaviour
 	return reconcile.Result{
-	    Requeue: true,
-	    RequeueAfter: 15 * time.Second,
-    }, nil
+		Requeue:      true,
+		RequeueAfter: 15 * time.Second,
+	}, nil
 }
 
 func (r *ReconcileSyndesis) isLatestVersion(ctx context.Context, syndesis *syndesisv1alpha1.Syndesis) (bool, error) {

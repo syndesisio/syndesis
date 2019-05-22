@@ -12,4 +12,4 @@ ADD addons /conf/addons
 # Add the operator
 ADD syndesis-operator /usr/local/bin/syndesis-operator
 
-ENTRYPOINT [ "/usr/local/bin/syndesis-operator", "-template", "/conf/syndesis-template.yml" ]
+ENTRYPOINT [ "/usr/local/bin/syndesis-operator", "--template", "/conf/syndesis-template.yml" ]
