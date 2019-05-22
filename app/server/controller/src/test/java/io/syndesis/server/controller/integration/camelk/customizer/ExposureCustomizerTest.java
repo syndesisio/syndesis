@@ -16,6 +16,7 @@
 package io.syndesis.server.controller.integration.camelk.customizer;
 
 import java.util.EnumSet;
+import java.util.Objects;
 
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
@@ -55,6 +56,17 @@ public class ExposureCustomizerTest {
             entry("auto", "false"),
             entry("port", Integer.toString(OpenShiftService.INTEGRATION_SERVICE_PORT))
         );
+
+        assertThat(i.getSpec().getConfiguration())
+            .filteredOn("type", "property")
+            .anyMatch(
+            c -> Objects.equals(c.getValue(), "customizer.servlet.enabled=true")
+        );
+        assertThat(i.getSpec().getConfiguration())
+            .filteredOn("type", "property")
+            .anyMatch(
+                c -> Objects.equals(c.getValue(), "customizer.servlet.bindPort=" +OpenShiftService.INTEGRATION_SERVICE_PORT)
+            );
     }
 
     @Test

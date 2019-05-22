@@ -19,6 +19,7 @@ import java.util.EnumSet;
 import java.util.HashMap;
 
 import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.server.controller.integration.camelk.crd.ConfigurationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.TraitSpec;
@@ -45,6 +46,19 @@ public class ExposureCustomizer implements CamelKIntegrationCustomizer {
                     .putConfiguration("enabled", "true")
                     .putConfiguration("auto", "false")
                     .putConfiguration("port", Integer.toString(OpenShiftService.INTEGRATION_SERVICE_PORT))
+                    .build()
+            );
+
+            spec.addConfiguration(
+                new ConfigurationSpec.Builder()
+                    .type("property")
+                    .value("customizer.servlet.enabled=true")
+                    .build()
+            );
+            spec.addConfiguration(
+                new ConfigurationSpec.Builder()
+                    .type("property")
+                    .value("customizer.servlet.bindPort=" +OpenShiftService.INTEGRATION_SERVICE_PORT)
                     .build()
             );
         }
