@@ -4,7 +4,7 @@ import {
   getActionStepDefinition,
   getActionSteps,
 } from '@syndesis/api';
-import { AutoForm } from '@syndesis/auto-form';
+import { AutoForm, IFormValue } from '@syndesis/auto-form';
 import { Action, ActionDescriptor } from '@syndesis/models';
 import { IntegrationEditorForm } from '@syndesis/ui';
 import {
@@ -13,6 +13,7 @@ import {
   getRequiredStatusText,
   toFormDefinition,
   validateConfiguredProperties,
+  validateRequiredProperties,
 } from '@syndesis/utils';
 import * as React from 'react';
 import i18n from '../../../../../i18n';
@@ -82,7 +83,7 @@ export const ConfigurationForm: React.FunctionComponent<
       ''
     );
     return (
-      <AutoForm<{ [key: string]: string }>
+      <AutoForm<IFormValue>
         i18nRequiredProperty={'* Required field'}
         allFieldsRequired={allFieldsRequired(definition)}
         i18nFieldsStatusText={requiredPrompt}
@@ -90,8 +91,12 @@ export const ConfigurationForm: React.FunctionComponent<
         initialValue={initialValue}
         isInitialValid={isInitialValid}
         onSave={onSave}
-        validate={(values: { [name: string]: any }): any =>
-          validateConfiguredProperties(definition, values)
+        validate={(values: IFormValue) =>
+          validateRequiredProperties(
+            definition,
+            (name: string) => `${name} is required`,
+            values
+          )
         }
         key={key}
       >

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { fireEvent, render, wait } from 'react-testing-library';
-import { AutoForm } from '../src';
+import { AutoForm, toValidHtmlId } from '../src';
 
 export default describe('AutoForm', () => {
   const definitions = {
@@ -84,7 +84,9 @@ export default describe('AutoForm', () => {
   it('All fields are rendered', () => {
     const { form } = testSampleForm(definitions);
     const { getByTestId } = render(form);
-    definitionIds.forEach(id => expect(getByTestId(id)).toBeDefined());
+    definitionIds.forEach(id =>
+      expect(getByTestId(toValidHtmlId(id))).toBeDefined()
+    );
   });
 
   definitionIds.forEach(id =>

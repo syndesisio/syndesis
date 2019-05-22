@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-testing-library';
-import { AutoForm } from '../src';
+import { AutoForm, toValidHtmlId } from '../src';
 
 describe('FormTextareaComponent', () => {
   const fieldId = 'testTextareaInput';
@@ -29,7 +29,7 @@ describe('FormTextareaComponent', () => {
 
   it('Should use the definition key as an id', () => {
     const { getByTestId } = render(form);
-    expect(getByTestId(fieldId)).toBeDefined();
+    expect(getByTestId(toValidHtmlId(fieldId))).toBeDefined();
   });
 
   it('Should use the displayName as a label', () => {

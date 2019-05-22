@@ -188,20 +188,18 @@ stories.add('Kitchen Sink', () => {
         onSave={onSave}
       >
         {({ fields, handleSubmit }) => (
-          <React.Fragment>
-            <p className="fields-status-pf">
-              The fields marked with <span className="required-pf">*</span> are
-              required.
-            </p>
-            {fields}
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={handleSubmit}
-            >
-              Submit
-            </button>
-          </React.Fragment>
+          <form onSubmit={handleSubmit}>
+            <React.Fragment>
+              <p className="fields-status-pf">
+                The fields marked with <span className="required-pf">*</span>{' '}
+                are required.
+              </p>
+              {fields}
+              <button type="submit" className="btn btn-primary">
+                Submit
+              </button>
+            </React.Fragment>
+          </form>
         )}
       </AutoForm>
     </StoryWrapper>

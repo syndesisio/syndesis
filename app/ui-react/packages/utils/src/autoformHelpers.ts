@@ -1,8 +1,11 @@
-import { IFormDefinition, IFormDefinitionProperty } from '@syndesis/auto-form';
+import {
+  IFormDefinition,
+  IFormDefinitionProperty,
+  IFormErrors,
+} from '@syndesis/auto-form';
 import {
   IConfigurationProperties,
   IConfigurationProperty,
-  StringMap,
 } from '@syndesis/models';
 
 /**
@@ -61,10 +64,10 @@ export function toFormDefinitionProperty(property: IConfigurationProperty) {
  * @param properties
  * @param initial
  */
-export function applyInitialValues(
+export function applyInitialValues<T>(
   properties: IConfigurationProperties,
-  initial?: StringMap<string>
-) {
+  initial?: T
+): T {
   const configuredProperties =
     typeof initial !== 'undefined' ? { ...initial } : {};
   Object.keys(properties).forEach(key => {
@@ -83,7 +86,7 @@ export function applyInitialValues(
       configuredProperties[key] = property.defaultValue;
     }
   });
-  return configuredProperties;
+  return configuredProperties as T;
 }
 
 export function anyFieldsRequired(properties: IConfigurationProperties) {
@@ -131,6 +134,12 @@ export function getRequiredStatusText(
   return noneRequired;
 }
 
+/**
+ * Evaluates the values according to the given property definition and returns
+ * a boolean if the supplied values are valid or not.
+ * @param properties
+ * @param values
+ */
 export function validateConfiguredProperties(
   properties: IConfigurationProperties,
   values?: { [name: string]: any }
@@ -145,7 +154,56 @@ export function validateConfiguredProperties(
     return true;
   }
   const allRequiredSet = allRequired
-    .map(key => typeof values[key] !== 'undefined')
+    .map(key => validateRequired(values[key]))
     .reduce((prev, curr) => curr, false);
   return allRequiredSet;
+}
+
+/**
+ * Examine the given property and determine if it's set or not,
+ * for string values this includes evaluating against ''
+ * @param value
+ */
+export function validateRequired(value?: any) {
+  if (typeof value === 'undefined') {
+    return false;
+  }
+  if (typeof value === 'string') {
+    return (value as string) !== '';
+  }
+  return true;
+}
+
+/**
+ * Evaluates the given values against the supplied property definition
+ * object and returns an IFormErrors map that can be returned to auto-form
+ * @param properties
+ * @param getErrorString
+ * @param values
+ */
+export function validateRequiredProperties<T>(
+  properties: IConfigurationProperties | IFormDefinition,
+  getErrorString: (name: string) => string,
+  values?: T
+): IFormErrors<T> {
+  const allRequired = Object.keys(properties).filter(
+    key => properties[key].required
+  );
+  if (allRequired.length === 0) {
+    return {} as IFormErrors<T>;
+  }
+  const sanitizedValues = values || ({} as T);
+  return allRequired
+    .map(key => ({ key, defined: validateRequired(sanitizedValues[key]) }))
+    .reduce(
+      (acc, current) => {
+        if (!current.defined) {
+          acc[current.key] = getErrorString(
+            properties[current.key].displayName || current.key
+          );
+        }
+        return acc;
+      },
+      {} as IFormErrors<T>
+    );
 }

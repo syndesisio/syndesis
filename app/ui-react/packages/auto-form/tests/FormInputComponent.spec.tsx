@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-testing-library';
-import { AutoForm } from '../src';
+import { AutoForm, toValidHtmlId } from '../src';
 
 describe('FormInputComponent: text', () => {
   const fieldId = 'testTextInput';
@@ -28,7 +28,7 @@ describe('FormInputComponent: text', () => {
 
   it('Should use the definition key as an id', () => {
     const { getByTestId } = render(form);
-    expect(getByTestId(fieldId)).toBeDefined();
+    expect(getByTestId(toValidHtmlId(fieldId))).toBeDefined();
   });
 
   it('Should use the displayName as a label', () => {
@@ -64,12 +64,12 @@ describe('FormInputComponent: password', () => {
 
   it('Should use the definition key as an id', () => {
     const { getByTestId } = render(form);
-    expect(getByTestId(fieldId)).toBeDefined();
+    expect(getByTestId(toValidHtmlId(fieldId))).toBeDefined();
   });
 
   it('Should use the definition key as an id', () => {
     const { getByTestId } = render(form);
-    expect(getByTestId(fieldId)).toBeDefined();
+    expect(getByTestId(toValidHtmlId(fieldId))).toBeDefined();
   });
 
   it('Should use the displayName as a label', () => {
@@ -105,7 +105,7 @@ describe('FormInputComponent: number', () => {
 
   it('Should use the definition key as an id', () => {
     const { getByTestId } = render(form);
-    expect(getByTestId(fieldId)).toBeDefined();
+    expect(getByTestId(toValidHtmlId(fieldId))).toBeDefined();
   });
 
   it('Should use the displayName as a label', () => {

@@ -23,11 +23,10 @@ import {
   stepRoutes,
 } from './interfaces';
 import { makeEditorResolvers } from './makeEditorResolvers';
+import { RuleFilterStepPage } from './ruleFilter/RuleFilterStepPage';
 import { SelectConnectionPage } from './SelectConnectionPage';
 import { ConfigureStepPage } from './step/ConfigureStepPage';
 import { TemplateStepPage } from './template/TemplateStepPage';
-
-const TODO: React.FunctionComponent = () => <>TODO</>;
 
 export interface IEditorApp {
   mode: 'adding' | 'editing';
@@ -68,7 +67,13 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           ...state,
         })
       }
-      filterHref={(step, p, s) => appResolvers.basicFilter()}
+      filterHref={(step, params, state) =>
+        appResolvers.basicFilter({
+          step,
+          ...params,
+          ...state,
+        })
+      }
       mapperHref={(step, params, state) =>
         appResolvers.dataMapper({
           step,
@@ -210,6 +215,17 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     />
   );
 
+  const basicFilterPage = (
+    <RuleFilterStepPage
+      cancelHref={cancelHref}
+      mode={mode}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
+      postConfigureHref={postConfigureHref}
+    />
+  );
+
   return (
     <>
       <EditorRoutes
@@ -240,8 +256,8 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           mapperChildren: dataMapperPage,
         }}
         basicFilter={{
-          filterPath: appStepRoutes.basicFilter,
-          filterChildren: TODO,
+          basicFilterPath: appStepRoutes.basicFilter,
+          basicFilterChildren: basicFilterPage,
         }}
         step={{
           configurePath: appStepRoutes.step,

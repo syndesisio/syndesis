@@ -1,7 +1,7 @@
-import { Formik, FormikErrors } from 'formik';
+import { Formik, FormikErrors, FormikProps } from 'formik';
 import * as React from 'react';
 import { FormBuilder } from './FormBuilder';
-import { IFormDefinition, IFormErrors } from './models';
+import { IAutoFormActions, IFormDefinition, IFormErrors } from './models';
 
 export interface IAutoFormProps<T> {
   /**
@@ -21,6 +21,11 @@ export interface IAutoFormProps<T> {
    */
   allFieldsRequired?: boolean;
   /**
+   * Map of custom components, each key maps to the 'type'
+   * property of an IFormDefinitionProperty
+   */
+  customComponents?: { [type: string]: any };
+  /**
    * String to be displayed when a required field isn't set
    */
   i18nRequiredProperty: string;
@@ -31,35 +36,29 @@ export interface IAutoFormProps<T> {
   /**
    * Callback function that will be called when the form is submitted
    */
-  onSave: (value: T, actions: any) => void;
+  onSave?: (value: T, autoFormBag: IAutoFormActions<T>) => void;
   /**
    * Validation function called whenever a change or blur event occurs on the form
    */
-  validate?: (value: T | any) => IFormErrors | Promise<any> | undefined;
+  validate?: (
+    value: T | any
+  ) => IFormErrors<T> | Promise<IFormErrors<T>> | undefined;
   /**
    * Child component that will receive the form fields and submit handler
    */
-  children: (state: IAutoFormChildrenProps) => any;
+  children: (props: IAutoFormChildrenProps<T> & FormikProps<T>) => any;
 }
 
-export interface IAutoFormChildrenProps {
+export interface IAutoFormChildrenProps<T> {
   /**
    * Fragment containing all of the form fields
    */
   fields: JSX.Element;
+  fieldsAsArray: JSX.Element[];
   /**
    * Function to trigger a form submit which will then trigger onSave
    */
-  handleSubmit: (e?: any) => void;
-  dirty: boolean;
-  isSubmitting: boolean;
-  isValid: boolean;
-  isValidating: boolean;
-  resetForm: (nextValues?: any) => void;
-  submitForm: () => void;
-  validateForm: () => Promise<FormikErrors<any>>;
-  values: any;
-  errors: any;
+  validateForm: () => Promise<IFormErrors<T> | FormikErrors<T>>;
 }
 
 export class AutoForm<T> extends React.Component<IAutoFormProps<T>> {
@@ -68,64 +67,56 @@ export class AutoForm<T> extends React.Component<IAutoFormProps<T>> {
       <FormBuilder
         definition={this.props.definition}
         initialValue={this.props.initialValue}
-        onSave={this.props.onSave}
+        customComponents={this.props.customComponents || {}}
         i18nRequiredProperty={this.props.i18nRequiredProperty}
       >
-        {({ initialValue, fields, onSave, getField }) => (
+        {({ initialValue, propertiesArray, getField }) => (
           <Formik<T>
             initialValues={initialValue}
-            onSubmit={onSave}
+            onSubmit={
+              this.props.onSave ||
+              (() => {
+                /* todo right now silently ignore */
+              })
+            }
             isInitialValid={this.props.isInitialValid}
             validate={this.props.validate}
           >
-            {({
-              handleSubmit,
-              values,
-              touched,
-              dirty,
-              errors,
-              isValid,
-              isValidating,
-              isSubmitting,
-              resetForm,
-              validateForm,
-              submitForm,
-            }) =>
-              this.props.children({
+            {({ values, touched, dirty, errors, ...rest }) => {
+              const propertyComponents = propertiesArray.map(property => {
+                const err =
+                  typeof errors === 'object'
+                    ? errors
+                    : { [property.name]: errors };
+                return getField({
+                  allFieldsRequired: this.props.allFieldsRequired || false,
+                  errors: err as IFormErrors<T>,
+                  property,
+                  value: (values || {})[property.name],
+                  ...rest,
+                });
+              });
+              return this.props.children({
                 dirty,
                 errors,
                 fields: (
                   <React.Fragment>
                     {this.props.i18nFieldsStatusText && (
                       <p
-                        className="form-group fields-status-pf"
+                        className="fields-status-pf"
                         dangerouslySetInnerHTML={{
                           __html: this.props.i18nFieldsStatusText,
                         }}
                       />
                     )}
-                    {fields.map(property =>
-                      getField({
-                        allFieldsRequired:
-                          this.props.allFieldsRequired || false,
-                        errors,
-                        property,
-                        touched,
-                        value: (values || {})[property.name],
-                      })
-                    )}
+                    {propertyComponents}
                   </React.Fragment>
                 ),
-                handleSubmit,
-                isSubmitting,
-                isValid,
-                isValidating,
-                resetForm,
-                submitForm,
-                validateForm,
+                fieldsAsArray: propertyComponents,
                 values,
-              })
-            }
+                ...(rest as FormikProps<T>),
+              });
+            }}
           </Formik>
         )}
       </FormBuilder>

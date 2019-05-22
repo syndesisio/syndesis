@@ -1,11 +1,13 @@
 import { WithConnectionHelpers } from '@syndesis/api';
-import { AutoForm } from '@syndesis/auto-form';
+import { AutoForm, IFormValue } from '@syndesis/auto-form';
 import { Connector } from '@syndesis/models';
 import { IConnectorConfigurationFormValidationResult } from '@syndesis/ui';
 import {
   allFieldsRequired,
+  applyInitialValues,
   getRequiredStatusText,
   toFormDefinition,
+  validateRequiredProperties,
 } from '@syndesis/utils';
 import * as React from 'react';
 import i18n from '../../../i18n';
@@ -121,55 +123,57 @@ export class WithConnectorForm extends React.Component<
     return (
       <WithConnectionHelpers>
         {({ validateConfiguration }) => {
-          let shouldValidateAgainstBackend = false;
           let validationResults: IConnectorConfigurationFormValidationResult[] = [];
           const validateFormAgainstBackend = async (values: {
             [key: string]: string;
           }) => {
             validationResults = [];
-            if (shouldValidateAgainstBackend) {
-              const errors: { [key: string]: string } = {};
-              const status = await validateConfiguration(
-                this.props.connector.id!,
-                values
-              );
+            const errors: { [key: string]: string } = {};
+            const status = await validateConfiguration(
+              this.props.connector.id!,
+              values
+            );
+            (
               (
-                (
-                  status.find(obj => obj.scope === 'PARAMETERS') || {
-                    errors: [],
-                  }
-                ).errors || []
-              ).forEach(obj => {
-                obj.parameters.forEach(p => (errors[p] = obj.description));
-              });
-              validationResults = (
-                (
-                  status.find(obj => obj.scope === 'CONNECTIVITY') || {
-                    errors: [],
-                  }
-                ).errors || []
-              ).map(
-                obj =>
-                  ({
-                    message: obj.description,
-                    type: 'error',
-                  } as IConnectorConfigurationFormValidationResult)
-              );
-              if (Object.keys(errors).length) {
-                throw errors;
-              }
-              if (validationResults.length === 0) {
-                validationResults = [
-                  {
-                    message: `${
-                      this.props.connector.name
-                    } has been successfully validated`,
-                    type: 'success',
-                  } as IConnectorConfigurationFormValidationResult,
-                ];
-              }
+                status.find(obj => obj.scope === 'PARAMETERS') || {
+                  errors: [],
+                }
+              ).errors || []
+            ).forEach(obj => {
+              obj.parameters.forEach(p => (errors[p] = obj.description));
+            });
+            validationResults = (
+              (
+                status.find(obj => obj.scope === 'CONNECTIVITY') || {
+                  errors: [],
+                }
+              ).errors || []
+            ).map(
+              obj =>
+                ({
+                  message: obj.description,
+                  type: 'error',
+                } as IConnectorConfigurationFormValidationResult)
+            );
+            if (Object.keys(errors).length) {
+              throw errors;
             }
+            if (validationResults.length === 0) {
+              validationResults = [
+                {
+                  message: `${
+                    this.props.connector.name
+                  } has been successfully validated`,
+                  type: 'success',
+                } as IConnectorConfigurationFormValidationResult,
+              ];
+            }
+            return validationResults;
           };
+          const initialValue = applyInitialValues(
+            definition,
+            this.props.initialValue!
+          );
           const requiredPrompt = getRequiredStatusText(
             definition,
             i18n.t('shared:AllFieldsRequired'),
@@ -177,13 +181,19 @@ export class WithConnectorForm extends React.Component<
             ''
           );
           return (
-            <AutoForm<{ [key: string]: string }>
+            <AutoForm<IFormValue>
               i18nRequiredProperty={'* Required field'}
               definition={toFormDefinition(definition)}
               i18nFieldsStatusText={requiredPrompt}
               allFieldsRequired={allFieldsRequired(definition)}
-              initialValue={this.props.initialValue!}
-              validate={validateFormAgainstBackend}
+              initialValue={initialValue!}
+              validate={(values: IFormValue) =>
+                validateRequiredProperties(
+                  definition,
+                  (name: string) => `${name} is required`,
+                  values
+                )
+              }
               onSave={this.props.onSave}
             >
               {({
@@ -198,12 +208,6 @@ export class WithConnectorForm extends React.Component<
                 validateForm,
                 values,
               }) => {
-                const enableValidationAgainstBackend = async () => {
-                  shouldValidateAgainstBackend = true;
-                  await validateForm();
-                  shouldValidateAgainstBackend = false;
-                };
-
                 return this.props.children({
                   dirty,
                   fields,
@@ -213,7 +217,7 @@ export class WithConnectorForm extends React.Component<
                   isValidating,
                   resetForm,
                   submitForm,
-                  validateForm: enableValidationAgainstBackend,
+                  validateForm: () => validateFormAgainstBackend(values),
                   validationResults,
                   values,
                 });

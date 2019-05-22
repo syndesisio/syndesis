@@ -1,16 +1,17 @@
 import * as React from 'react';
-import { IFormControl } from '../models';
+import { IFormControlProps } from '../models';
+import { toValidHtmlId } from './helpers';
 
 export const FormHiddenComponent: React.FunctionComponent<
-  IFormControl
+  IFormControlProps
 > = props => (
-  <div>
+  <div {...props.property.formGroupAttributes}>
     <input
       {...props.property.fieldAttributes}
       {...props.field}
       type={props.type}
-      id={props.name}
-      data-testid={props.name}
+      id={toValidHtmlId(props.field.name)}
+      data-testid={toValidHtmlId(props.field.name)}
     />
     {props.form.touched[props.field.name] &&
       props.form.errors[props.field.name] && (
