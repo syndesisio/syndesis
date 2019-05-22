@@ -1,3 +1,4 @@
+export * from './api-provider';
 export * from './shared';
 export * from './template';
 export * from './endpoint';
