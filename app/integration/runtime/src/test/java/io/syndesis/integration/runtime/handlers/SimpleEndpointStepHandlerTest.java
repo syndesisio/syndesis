@@ -123,7 +123,7 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             verify(activityTracker).startTracking(any(Exchange.class));
-            verify(activityTracker, times(2)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(3)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
             verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
@@ -196,7 +196,7 @@ public class SimpleEndpointStepHandlerTest extends IntegrationTestSupport {
             result.assertIsSatisfied();
 
             verify(activityTracker).startTracking(any(Exchange.class));
-            verify(activityTracker, times(6)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
+            verify(activityTracker, times(7)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
             verify(activityTracker).finishTracking(any(Exchange.class));
         } finally {
             context.stop();

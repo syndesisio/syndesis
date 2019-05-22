@@ -100,7 +100,10 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
             assertThat(route.getInputs()).hasSize(1);
             assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
-            assertThat(route.getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
+            assertThat(route.getOutputs().get(0).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(0).getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
             assertThat(route.getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
             assertThat(route.getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
             assertThat(route.getOutputs().get(3)).isInstanceOf(PipelineDefinition.class);
@@ -119,6 +122,11 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
             );
             assertThat(route.getOutputs().get(3).getOutputs().get(4)).isInstanceOf(ProcessDefinition.class);
             assertThat(route.getOutputs().get(4)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(4).getOutputs()).hasSize(3);
+            assertThat(route.getOutputs().get(4).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(4).getOutputs().get(1)).isInstanceOf(ToDefinition.class);
+            assertThat(route.getOutputs().get(4).getOutputs().get(1)).hasFieldOrPropertyWithValue("uri", "mock:result");
+            assertThat(route.getOutputs().get(4).getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
         } finally {
             context.stop();
         }
@@ -180,7 +188,10 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
             assertThat(route.getInputs()).hasSize(1);
             assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
-            assertThat(route.getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
+            assertThat(route.getOutputs().get(0).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(0).getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
             assertThat(route.getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
             assertThat(route.getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
             assertThat(route.getOutputs().get(3)).isInstanceOf(PipelineDefinition.class);
@@ -193,6 +204,11 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
             );
             assertThat(route.getOutputs().get(3).getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
             assertThat(route.getOutputs().get(4)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(4).getOutputs()).hasSize(3);
+            assertThat(route.getOutputs().get(4).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(4).getOutputs().get(1)).isInstanceOf(ToDefinition.class);
+            assertThat(route.getOutputs().get(4).getOutputs().get(1)).hasFieldOrPropertyWithValue("uri", "mock:result");
+            assertThat(route.getOutputs().get(4).getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
         } finally {
             context.stop();
         }
@@ -251,7 +267,10 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
             assertThat(route.getInputs()).hasSize(1);
             assertThat(route.getInputs().get(0)).hasFieldOrPropertyWithValue("uri", "direct:start");
             assertThat(route.getOutputs()).hasSize(5);
-            assertThat(route.getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(0)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(0).getOutputs()).hasSize(2);
+            assertThat(route.getOutputs().get(0).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(0).getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
             assertThat(route.getOutputs().get(1)).isInstanceOf(SetHeaderDefinition.class);
             assertThat(route.getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
             assertThat(route.getOutputs().get(3)).isInstanceOf(PipelineDefinition.class);
@@ -265,6 +284,11 @@ public class ExtensionStepHandlerTest extends IntegrationTestSupport {
             assertThat(SetHeaderDefinition.class.cast(route.getOutputs().get(3).getOutputs().get(2)).getExpression()).hasFieldOrPropertyWithValue("expression", "Val-2");
             assertThat(route.getOutputs().get(3).getOutputs().get(3)).isInstanceOf(ProcessDefinition.class);
             assertThat(route.getOutputs().get(4)).isInstanceOf(PipelineDefinition.class);
+            assertThat(route.getOutputs().get(4).getOutputs()).hasSize(3);
+            assertThat(route.getOutputs().get(4).getOutputs().get(0)).isInstanceOf(SetHeaderDefinition.class);
+            assertThat(route.getOutputs().get(4).getOutputs().get(1)).isInstanceOf(ToDefinition.class);
+            assertThat(route.getOutputs().get(4).getOutputs().get(1)).hasFieldOrPropertyWithValue("uri", "mock:result");
+            assertThat(route.getOutputs().get(4).getOutputs().get(2)).isInstanceOf(ProcessDefinition.class);
         } finally {
             context.stop();
         }

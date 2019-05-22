@@ -45,7 +45,6 @@ import org.slf4j.LoggerFactory;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.endsWith;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.isNull;
 import static org.mockito.Mockito.doAnswer;
@@ -168,7 +167,6 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
             verify(activityTracker, times(3)).startTracking(any(Exchange.class));
             verifyActivityStepTracking(CHOICE_STEP, 3);
             verifyActivityStepTracking(MOCK_STEP, 3);
-            verifyNoMatchingConditionTracking(1);
             verify(activityTracker, times(3)).finishTracking(any(Exchange.class));
         } finally {
             context.stop();
@@ -327,7 +325,6 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
             verify(activityTracker, times(3)).startTracking(any(Exchange.class));
             verifyActivityStepTracking(CHOICE_STEP, 3);
             verifyActivityStepTracking(MOCK_STEP, 3);
-            verifyNoMatchingConditionTracking(1);
             verify(activityTracker, times(3)).finishTracking(any(Exchange.class));
 
         } finally {
@@ -402,9 +399,5 @@ public class ChoiceStepHandlerTest extends IntegrationTestSupport {
 
     private void verifyActivityStepTracking(String stepId, int times) {
         verify(activityTracker, times(times)).track(eq("exchange"), anyString(), eq("step"), eq(stepId), eq("id"), anyString(), eq("duration"), anyLong(), eq("failure"), isNull());
-    }
-
-    private void verifyNoMatchingConditionTracking(int times) {
-        verify(activityTracker, times(times)).track(eq("exchange"), anyString(), eq("step"), anyString(), eq("id"), anyString(), eq("message"), endsWith("No matching condition for message"));
     }
 }
