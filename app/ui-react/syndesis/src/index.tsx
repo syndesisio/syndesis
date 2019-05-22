@@ -4,13 +4,14 @@ import {
   WithServerEvents,
 } from '@syndesis/api';
 import { createBrowserHistory } from '@syndesis/history';
+import { App, IAppRoute, IAppRouteWithChildrens } from './app';
+// tslint:disable-next-line:ordered-imports
 import { UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { I18nextProvider, Translation } from 'react-i18next';
 import { Router } from 'react-router-dom';
-import { App, IAppRoute, IAppRouteWithChildrens } from './app';
 import { WithConfig } from './app/WithConfig';
 import i18n from './i18n';
 import './index.css';
