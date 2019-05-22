@@ -1,7 +1,7 @@
 import { Text } from '@patternfly/react-core';
 import { Alert, Card } from 'patternfly-react';
 import * as React from 'react';
-import { DndFileChooser } from '../Shared/DndFileChooser';
+import { DndFileChooser } from '../../Shared/DndFileChooser';
 
 export interface IExtensionImportCardProps {
   /**

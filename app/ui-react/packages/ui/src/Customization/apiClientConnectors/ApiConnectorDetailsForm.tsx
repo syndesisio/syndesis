@@ -1,6 +1,6 @@
 import { Button, Card } from 'patternfly-react';
 import * as React from 'react';
-import { Loader } from '../Layout';
+import { Loader } from '../../Layout';
 import './ApiConnectorDetailsForm.css';
 
 export interface IApiConnectorDetailsFormProps {
