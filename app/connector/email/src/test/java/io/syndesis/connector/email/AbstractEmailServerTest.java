@@ -17,8 +17,6 @@ package io.syndesis.connector.email;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import io.syndesis.connector.email.server.EMailTestServer;
 import io.syndesis.connector.email.server.EMailTestServer.Options;
@@ -27,6 +25,7 @@ public abstract class AbstractEmailServerTest extends AbstractEmailTest {
 
     protected static final String TEST_HOST_NAME = "localhost";
     protected static final String TEST_ADDRESS = TEST_USER_NAME + AT + TEST_HOST_NAME;
+    protected static final String TEST_FOLDER = "testFolder";
 
     private static Options[] serverTypes = {
             Options.IMAP,
@@ -45,8 +44,8 @@ public abstract class AbstractEmailServerTest extends AbstractEmailTest {
             if (! mailServers.containsKey(option)) {
                 EMailTestServer server = new EMailTestServer(TEST_HOST_NAME, option);
                 server.createUser(TEST_ADDRESS, TEST_PASSWORD);
-                refresh(server);
                 server.start();
+                refresh(server);
                 mailServers.put(option, server);
             }
         }
