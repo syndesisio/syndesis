@@ -126,7 +126,6 @@ rules:
         type: context
     type: GAUGE
 
-
 # Route level
   - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>ExchangesCompleted'
     name: org.apache.camel.ExchangesCompleted
