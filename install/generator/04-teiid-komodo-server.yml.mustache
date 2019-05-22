@@ -27,7 +27,7 @@
       syndesis.io/component: komodo-server
     name: komodo-server
   spec:
-    replicas: ${DATAVIRT_ENABLED}
+    replicas: {{=(( ))=}}${{DATAVIRT_ENABLED}}((={{ }}=))
     selector:
       app: syndesis
       syndesis.io/app: syndesis
