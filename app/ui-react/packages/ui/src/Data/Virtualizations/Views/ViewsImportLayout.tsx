@@ -73,12 +73,15 @@ export const ViewsImportLayout: React.FunctionComponent<
 }: IViewsImportLayoutProps) => {
   return (
     <div
-      className={classnames('wizard-pf-body views-import-layout', {
-        'has-footer': true,
-      })}
+      className={classnames(
+        'wizard-pf-body views-import-layout syn-scrollable',
+        {
+          'has-footer': true,
+        }
+      )}
     >
       {header}
-      <div className="wizard-pf-row views-import-layout__body">
+      <div className="wizard-pf-row views-import-layout__body syn-scrollable--body">
         <div
           className={
             'wizard-pf-main cards-pf views-import-layout__contentWrapper'
