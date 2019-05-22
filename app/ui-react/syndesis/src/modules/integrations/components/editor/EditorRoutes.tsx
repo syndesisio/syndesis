@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { ReviewPage } from './api-provider/EditPage';
 import { EditPage } from './api-provider/ReviewPage';
-import { UploadPage } from './api-provider/UploadPage';
+import { SpecificationPage } from './api-provider/SpecificationPage';
 import { IDataMapperPageProps } from './dataMapper/DataMapperPage';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
 import { DescribeDataShapePage } from './endpoint/DescribeDataShapePage';
@@ -43,7 +43,7 @@ export const EndpointEditorApp: React.FunctionComponent<
 
 export interface IApiProviderAppProps {
   uploadPath: string;
-  uploadChildren: React.ReactElement<UploadPage>;
+  uploadChildren: React.ReactElement<SpecificationPage>;
   reviewPath: string;
   reviewChildren: React.ReactElement<ReviewPage>;
   editPath: string;

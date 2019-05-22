@@ -4,7 +4,7 @@ import { Integration } from '@syndesis/models';
 import * as React from 'react';
 import { ReviewPage } from './api-provider/EditPage';
 import { EditPage } from './api-provider/ReviewPage';
-import { UploadPage } from './api-provider/UploadPage';
+import { SpecificationPage } from './api-provider/SpecificationPage';
 import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';
@@ -241,7 +241,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         }}
         apiProvider={{
           uploadPath: appStepRoutes.apiProvider.upload,
-          uploadChildren: <UploadPage />,
+          uploadChildren: <SpecificationPage />,
           reviewPath: appStepRoutes.apiProvider.review,
           reviewChildren: <ReviewPage />,
           editPath: appStepRoutes.apiProvider.edit,
