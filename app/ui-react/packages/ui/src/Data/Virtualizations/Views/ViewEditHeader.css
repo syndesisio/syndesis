@@ -1,0 +1,15 @@
+.view-edit-header__row {
+  align-items: center;
+}
+
+.view-edit-header__viewName {
+  font-size: 2em;
+}
+
+.view-edit-header__viewIcon {
+  width: 46px;
+}
+
+.view-edit-header__propertyLabel {
+  --pf-c-content--dt--FontWeight: bold; /* override for OpenSans not supporting weight 500 */
+}

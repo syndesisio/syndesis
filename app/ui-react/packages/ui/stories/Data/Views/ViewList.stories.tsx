@@ -5,7 +5,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
-import { ViewListItem, ViewList } from '../../../src';
+import { ViewList, ViewListItem } from '../../../src';
 
 const stories = storiesOf('Data/Virtualizations/Views/ViewList', module);
 
@@ -16,7 +16,6 @@ const viewDescription2 = 'Description for AccountsSummary';
 const editText = 'Edit';
 const editTip1 = 'Edit ' + viewName1 + ' view';
 const editTip2 = 'Edit ' + viewName2 + ' view';
-const editActionText = 'Edit View';
 const deleteText = 'Delete';
 const deleteTip1 = 'Delete ' + viewName1 + ' view';
 const deleteTip2 = 'Delete ' + viewName2 + ' view';
@@ -27,6 +26,7 @@ const viewItems = [
     key="viewListItem1"
     viewName={text('name', viewName1)}
     viewDescription={text('description', viewDescription1)}
+    viewEditPageLink={''}
     i18nCancelText={'Cancel'}
     i18nDelete={text('i18nDelete', deleteText)}
     i18nDeleteTip={text('i18nDeleteTip1', deleteTip1)}
@@ -35,11 +35,11 @@ const viewItems = [
     i18nEdit={text('i18nEdit', editText)}
     i18nEditTip={text('i18nEditTip1', editTip1)}
     onDelete={action(deleteActionText)}
-    onEdit={action(editActionText)}
   />,
   <ViewListItem
     key="viewListItem2"
     viewName={text('name', viewName2)}
+    viewEditPageLink={''}
     i18nCancelText={'Cancel'}
     viewDescription={text('description', viewDescription2)}
     i18nDelete={text('i18nDelete', deleteText)}
@@ -49,7 +49,6 @@ const viewItems = [
     i18nEdit={text('i18nEdit', editText)}
     i18nEditTip={text('i18nEditTip2', editTip2)}
     onDelete={action(deleteActionText)}
-    onEdit={action(editActionText)}
   />,
 ];
 
@@ -90,9 +89,6 @@ const hasViewsTestNotes =
   '- Verify ' +
   viewItems.length +
   ' View list items are displayed\n' +
-  '- Verify clicking the Edit button prints "' +
-  editActionText +
-  '" in the ACTION LOGGER\n' +
   '- Verify selecting Delete in the kebab menu prints "' +
   deleteActionText +
   '" in the ACTION LOGGER';

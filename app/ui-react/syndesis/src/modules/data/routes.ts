@@ -17,6 +17,9 @@ export default include('/data', {
           selectName: 'selectName',
           selectSources: 'selectSources',
         }),
+        edit: include(':viewDefinitionId', {
+          root: '',
+        }),
         importSource: include('importSource', {
           root: '',
           selectConnection: 'selectConnection',

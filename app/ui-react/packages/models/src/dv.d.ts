@@ -34,6 +34,18 @@ export interface RestViewDefinition {
   keng___links: [];
 }
 
+export interface RestVdbModel {
+  keng__baseUri: string;
+  keng__id: string;
+  keng__dataPath: string;
+  keng__kType: string;
+  keng__hasChildren: boolean;
+  mmcore__modelType: string;
+  vdb__visible: boolean;
+  vdb__metadataType: string;
+  keng__ddl: string;
+}
+
 export interface SchemaNode {
   name: string;
   type: string;
@@ -83,6 +95,7 @@ export interface ViewDefinition {
   sourcePaths: string[];
   compositions: string[];
   projectedColumns: ProjectedColumn[];
+  ddl?: string;
 }
 
 export interface ViewEditorState {
@@ -103,6 +116,11 @@ export interface RowData {
 export interface QueryResults {
   columns: ColumnData[];
   rows: RowData[];
+}
+
+export interface ViewDefinitionStatus {
+  status: string;
+  message: string;
 }
 
 export interface VirtualizationPublishingDetails {

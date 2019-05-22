@@ -1,6 +1,8 @@
 import {
   QueryResults,
   RestDataService,
+  ViewDefinition,
+  ViewDefinitionStatus,
   ViewEditorState,
 } from '@syndesis/models';
 import * as React from 'react';
@@ -31,6 +33,9 @@ export interface IWithVirtualizationHelpersChildrenProps {
   ): Promise<void>;
   unpublishServiceVdb(vdbName: string): Promise<void>;
   updateViewEditorStates(viewEditorStates: ViewEditorState[]): Promise<void>;
+  validateViewDefinition(
+    viewDefinition: ViewDefinition
+  ): Promise<ViewDefinitionStatus>;
 }
 
 export interface IWithVirtualizationHelpersProps {
@@ -53,6 +58,7 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
       this
     );
     this.unpublishServiceVdb = this.unpublishServiceVdb.bind(this);
+    this.validateViewDefinition = this.validateViewDefinition.bind(this);
   }
 
   /**
@@ -194,6 +200,27 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
   }
 
   /**
+   * Validate the supplied ViewDefinition
+   * @param viewDefinition the view definition
+   */
+  public async validateViewDefinition(
+    viewDefinition: ViewDefinition
+  ): Promise<ViewDefinitionStatus> {
+    const response = await callFetch({
+      body: viewDefinition,
+      headers: {},
+      method: 'POST',
+      url: `${this.props.dvApiUri}service/userProfile/validateViewDefinition`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return (await response.json()) as ViewDefinitionStatus;
+  }
+
+  /**
    * Unpublish the Service VDB with the specified name.
    * @param vdbName the name of the vdb associated with the service
    */
@@ -287,6 +314,7 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
       refreshVirtualizationViews: this.refreshVirtualizationViews,
       unpublishServiceVdb: this.unpublishServiceVdb,
       updateViewEditorStates: this.updateViewEditorStates,
+      validateViewDefinition: this.validateViewDefinition,
     });
   }
 }
