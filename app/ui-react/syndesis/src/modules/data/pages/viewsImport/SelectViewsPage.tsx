@@ -3,6 +3,8 @@ import { RestDataService, ViewEditorState, ViewInfo } from '@syndesis/models';
 import { ViewsImportLayout } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
+import { Translation } from 'react-i18next';
+import { UIContext } from '../../../../app';
 import resolvers from '../../../resolvers';
 import { ViewInfosContent, ViewsImportSteps } from '../../shared';
 import { generateViewEditorStates } from '../../shared/VirtualizationUtils';
@@ -72,61 +74,93 @@ export class SelectViewsPage extends React.Component<
 
   public render() {
     return (
-      <WithRouteData<ISelectViewsRouteParams, ISelectViewsRouteState>>
-        {(
-          { virtualizationId },
-          { virtualization, connectionId },
-          { history }
-        ) => (
-          <WithVirtualizationHelpers>
-            {({ refreshVirtualizationViews }) => {
-              const handleCreateViews = async () => {
-                const viewEditorStates = generateViewEditorStates(
-                  virtualization.serviceVdbName,
-                  this.selectedViews
-                );
-                await refreshVirtualizationViews(
-                  virtualization.keng__id,
-                  viewEditorStates
-                );
-                // TODO: post toast notification
-                history.push(
-                  resolvers.data.virtualizations.views.root({ virtualization })
-                );
-              };
+      <Translation ns={['data', 'shared']}>
+        {t => (
+          <UIContext.Consumer>
+            {({ pushNotification }) => {
               return (
-                <WithViewEditorStates
-                  idPattern={virtualization.serviceVdbName + '*'}
-                >
-                  {({ data, hasData, error }) => (
-                    <ViewsImportLayout
-                      header={<ViewsImportSteps step={2} />}
-                      content={
-                        <ViewInfosContent
-                          connectionName={connectionId}
-                          existingViewNames={this.getExistingViewNames(data)}
-                          onViewSelected={this.handleAddView}
-                          onViewDeselected={this.handleRemoveView}
-                        />
-                      }
-                      cancelHref={resolvers.data.virtualizations.views.root({
-                        virtualization,
-                      })}
-                      backHref={resolvers.data.virtualizations.views.importSource.selectConnection(
-                        { virtualization }
-                      )}
-                      onCreateViews={handleCreateViews}
-                      isNextDisabled={!this.state.hasSelectedTables}
-                      isNextLoading={false}
-                      isLastStep={true}
-                    />
+                <WithRouteData<ISelectViewsRouteParams, ISelectViewsRouteState>>
+                  {(
+                    { virtualizationId },
+                    { virtualization, connectionId },
+                    { history }
+                  ) => (
+                    <WithVirtualizationHelpers>
+                      {({ refreshVirtualizationViews }) => {
+                        const handleCreateViews = async () => {
+                          const viewEditorStates = generateViewEditorStates(
+                            virtualization.serviceVdbName,
+                            this.selectedViews
+                          );
+                          try {
+                            await refreshVirtualizationViews(
+                              virtualization.keng__id,
+                              viewEditorStates
+                            );
+                            pushNotification(
+                              t('virtualization.importViewsSuccess', {
+                                name: virtualization.serviceVdbName,
+                              }),
+                              'success'
+                            );
+                          } catch (error) {
+                            const details = error.message ? error.message : '';
+                            pushNotification(
+                              t('virtualization.importViewsFailed', {
+                                details,
+                                name: virtualization.serviceVdbName,
+                              }),
+                              'error'
+                            );
+                          }
+                          history.push(
+                            resolvers.data.virtualizations.views.root({
+                              virtualization,
+                            })
+                          );
+                        };
+                        return (
+                          <WithViewEditorStates
+                            idPattern={virtualization.serviceVdbName + '*'}
+                          >
+                            {({ data, hasData, error }) => (
+                              <ViewsImportLayout
+                                header={<ViewsImportSteps step={2} />}
+                                content={
+                                  <ViewInfosContent
+                                    connectionName={connectionId}
+                                    existingViewNames={this.getExistingViewNames(
+                                      data
+                                    )}
+                                    onViewSelected={this.handleAddView}
+                                    onViewDeselected={this.handleRemoveView}
+                                  />
+                                }
+                                cancelHref={resolvers.data.virtualizations.views.root(
+                                  {
+                                    virtualization,
+                                  }
+                                )}
+                                backHref={resolvers.data.virtualizations.views.importSource.selectConnection(
+                                  { virtualization }
+                                )}
+                                onCreateViews={handleCreateViews}
+                                isNextDisabled={!this.state.hasSelectedTables}
+                                isNextLoading={false}
+                                isLastStep={true}
+                              />
+                            )}
+                          </WithViewEditorStates>
+                        );
+                      }}
+                    </WithVirtualizationHelpers>
                   )}
-                </WithViewEditorStates>
+                </WithRouteData>
               );
             }}
-          </WithVirtualizationHelpers>
+          </UIContext.Consumer>
         )}
-      </WithRouteData>
+      </Translation>
     );
   }
 }

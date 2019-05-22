@@ -47,6 +47,21 @@
     "viewSqlFormSqlStatement": "SQL Statement",
     "viewSqlFormSqlStatementDescription": "Enter SQL query and click SUBMIT (i.e. SELECT a, b FROM view1)",
     "queryResultsTableEmptyStateInfo": "Query has not yet been executed.\nSelect view, enter SQL query and click 'Submit'",
-    "queryResultsTableEmptyStateTitle": "NO DATA AVAILABLE"
+    "queryResultsTableEmptyStateTitle": "NO DATA AVAILABLE",
+    "queryViewFailed": "An error occurred querying the selected view. Details: {{details}}",
+    "queryViewSuccess": "The selected view was successfully queried.",
+    "createVirtualizationSuccess": "{{name}} virtualization created.",
+    "publishVirtualizationSuccess": "Virtualization {{name}} was submitted for publishing.",
+    "publishVirtualizatioFailed": "Publishing failed for virtualization {{name}}. Details: {{details}}",
+    "unpublishVirtualizationSuccess": "Virtualizaton {{name}} was unpublished.",
+    "unpublishVirtualizationFailed": "Unpublish virtualization {{name}} failed. Details: {{details}}",
+    "deleteVirtualizationSuccess": "Virtualization {{name}} was deleted.",
+    "deleteVirtualizationFailed": "Delete virtualization {{name}} failed. Details: {{details}}",
+    "deleteViewSuccess": "View {{name}} was deleted.",
+    "deleteViewFailed": "Delete view {{name}} failed. Details: {{details}}",
+    "importViewsSuccess": "Import data source completed for virtualization {{name}}.",
+    "importViewsFailed": "Import data source failed for virtualization {{name}}. Details: {{details}}",
+    "createViewSuccess": "Created view named: {{name}}.",
+    "createViewFailed": "Create view failed. Details: {{details}}"
   }
 }
