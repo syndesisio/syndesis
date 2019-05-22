@@ -149,7 +149,7 @@ export class ConnectionCard extends React.PureComponent<
                     <Link
                       data-testid={`${toTestId(
                         ConnectionCard.name,
-                        this.props.name + '.view-action'
+                        this.props.name + '--view-action'
                       )}`}
                       to={this.props.href}
                       role={'menuitem'}
@@ -162,7 +162,7 @@ export class ConnectionCard extends React.PureComponent<
                     <Link
                       data-testid={`${toTestId(
                         ConnectionCard.name,
-                        this.props.name + '.edit-action'
+                        this.props.name + '--edit-action'
                       )}`}
                       to={this.props.menuProps.editHref}
                       role={'menuitem'}
@@ -186,7 +186,7 @@ export class ConnectionCard extends React.PureComponent<
                         <a
                           data-testid={`${toTestId(
                             ConnectionCard.name,
-                            this.props.name + '.delete-action'
+                            this.props.name + '--delete-action'
                           )}`}
                           href={'javascript:void(0)'}
                           onClick={this.showDeleteDialog}
@@ -200,7 +200,7 @@ export class ConnectionCard extends React.PureComponent<
                       <a
                         data-testid={`${toTestId(
                           ConnectionCard.name,
-                          this.props.name + '.delete-action'
+                          this.props.name + '--delete-action'
                         )}`}
                         href={'javascript:void(0)'}
                         onClick={this.showDeleteDialog}
@@ -218,7 +218,7 @@ export class ConnectionCard extends React.PureComponent<
           <Link
             data-testid={`${toTestId(
               ConnectionCard.name,
-              this.props.name + '.details-link'
+              this.props.name + '--details-link'
             )}`}
             to={this.props.href}
             className={'connection-card__content'}

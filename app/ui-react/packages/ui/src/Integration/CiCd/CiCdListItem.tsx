@@ -41,7 +41,7 @@ export class CiCdListItem extends React.Component<ICiCdListItemProps> {
             <Button
               data-testid={`${toTestId(
                 CiCdListItem.name,
-                this.props.name + '.create-button'
+                this.props.name + '--create-button'
               )}`}
               onClick={this.handleEditClicked}
             >
@@ -50,7 +50,7 @@ export class CiCdListItem extends React.Component<ICiCdListItemProps> {
             <Button
               data-testid={`${toTestId(
                 CiCdListItem.name,
-                this.props.name + '.remove-button'
+                this.props.name + '--remove-button'
               )}`}
               onClick={this.handleRemoveClicked}
             >

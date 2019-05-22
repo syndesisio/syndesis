@@ -70,7 +70,7 @@ export class ViewListItem extends React.Component<
                 <ButtonLink 
                   data-testid={`${toTestId(
                     ViewListItem.name,
-                    this.props.viewName + '.edit-button'
+                    this.props.viewName + '--edit-button'
                   )}`}
                   href={this.props.viewEditPageLink} 
                   as={'default'}

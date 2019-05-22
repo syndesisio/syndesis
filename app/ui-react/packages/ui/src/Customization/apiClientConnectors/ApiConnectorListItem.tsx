@@ -118,7 +118,7 @@ export class ApiConnectorListItem extends React.Component<
                 <ButtonLink
                   data-testid={`${toTestId(
                     ApiConnectorListItem.name,
-                    this.props.apiConnectorName + '.details-button'
+                    this.props.apiConnectorName + '--details-button'
                   )}`}
                   href={this.props.detailsPageLink}
                   as={'default'}
@@ -130,7 +130,7 @@ export class ApiConnectorListItem extends React.Component<
                 <Button
                   data-testid={`${toTestId(
                     ApiConnectorListItem.name,
-                    this.props.apiConnectorName + '.delete-button'
+                    this.props.apiConnectorName + '--delete-button'
                   )}`}
                   bsStyle="default"
                   disabled={this.props.usedBy !== 0}

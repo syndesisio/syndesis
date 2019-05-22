@@ -6,7 +6,7 @@
  */
 export function toTestId(prefix: string, uniqueId: string): string {
   if (prefix && uniqueId) {
-    return generateId(prefix) + '.' + generateId(uniqueId);
+    return generateId(prefix) + '--' + generateId(uniqueId);
   }
 
   if (prefix) {

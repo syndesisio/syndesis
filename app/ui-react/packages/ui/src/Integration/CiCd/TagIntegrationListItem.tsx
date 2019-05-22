@@ -25,7 +25,7 @@ export class TagIntegrationListItem extends React.Component<
           <input
             data-testid={`${toTestId(
               TagIntegrationListItem.name,
-              this.props.name + '.selected-input'
+              this.props.name + '--selected-input'
             )}`}
             type="checkbox"
             defaultChecked={this.props.selected}

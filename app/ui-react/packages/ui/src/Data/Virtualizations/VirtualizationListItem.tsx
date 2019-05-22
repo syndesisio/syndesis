@@ -216,7 +216,7 @@ export class VirtualizationListItem extends React.Component<
                 <ButtonLink
                   data-testid={`${toTestId(
                     VirtualizationListItem.name,
-                    this.props.virtualizationName + '.edit-button'
+                    this.props.virtualizationName + '--edit-button'
                   )}`}
                   href={this.props.detailsPageLink}
                   as={'primary'}
