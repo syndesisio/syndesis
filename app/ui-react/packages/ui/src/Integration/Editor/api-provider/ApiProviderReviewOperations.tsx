@@ -4,7 +4,7 @@ export interface IApiProviderReviewOperationsProps {
   /**
    * The title
    */
-  i18nTitle: string;
+  i18nTitle?: string;
 }
 
 export class ApiProviderReviewOperations extends React.Component<

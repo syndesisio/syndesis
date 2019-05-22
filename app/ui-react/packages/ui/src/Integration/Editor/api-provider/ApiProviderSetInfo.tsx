@@ -4,7 +4,7 @@ export interface IApiProviderSetInfoProps {
   /**
    * The title
    */
-  i18nTitle: string;
+  i18nTitle?: string;
 }
 
 export class ApiProviderSetInfo extends React.Component<

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiProviderSetInfo, PageSection } from '@syndesis/ui';
 import { PageTitle } from '../../../../../shared';
 
 /**
@@ -7,15 +8,16 @@ import { PageTitle } from '../../../../../shared';
 export class SetInfoPage extends React.Component {
   public render() {
     return (
-      <>
+      <PageSection>
         <PageTitle title={'Give this integration a name'} />
+        <ApiProviderSetInfo />
         <p>
           Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis
           illo, iusto nesciunt nostrum omnis pariatur rerum vero voluptates.
           Accusamus aliquid corporis deleniti ea earum ipsa optio, quidem quod
           ut! Placeat.
         </p>
-      </>
+      </PageSection>
     );
   }
 }

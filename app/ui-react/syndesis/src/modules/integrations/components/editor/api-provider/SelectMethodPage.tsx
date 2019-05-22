@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ApiProviderSelectMethod, PageSection } from '@syndesis/ui';
 import { PageTitle } from '../../../../../shared';
 
 /**
@@ -9,15 +10,15 @@ import { PageTitle } from '../../../../../shared';
 export class SelectMethodPage extends React.Component {
   public render() {
     return (
-      <>
+      <PageSection>
         <PageTitle title={'Start integration with an API call'} />
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Blanditiis
-          illo, iusto nesciunt nostrum omnis pariatur rerum vero voluptates.
-          Accusamus aliquid corporis deleniti ea earum ipsa optio, quidem quod
-          ut! Placeat.
-        </p>
-      </>
+        <ApiProviderSelectMethod
+          i18nTitle={'Start integration with an API call'}
+          i18nDescription={
+            'Execute this integration when a client invokes an operation defined by this API.'
+          }
+        />
+      </PageSection>
     );
   }
 }
