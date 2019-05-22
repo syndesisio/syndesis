@@ -25,3 +25,8 @@ repos:
     name: Format license
     entry: tools/misc/format-license.sh
     language: script
+  - id: go-dep-check
+    name: Run dep check to see if Gopkg.lock is up to date
+    entry: ./install/operator/check-dep.sh
+    language: script
+    files: ^install/operator/Gopkg\..*
