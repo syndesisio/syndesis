@@ -24,13 +24,15 @@ export class WithUserHelpersWrapped extends React.Component<
         responseType: 'arraybuffer',
       },
       method: 'GET',
-      url: `${this.props.apiUri}/logout`,
+      url: `/logout`,
     });
-    const html = String.fromCharCode.apply(null, new Uint8Array(response.body));
-    window.history.pushState(null, null, '/logout');
-    window.document.open();
-    window.document.write(html);
-    window.document.close();
+
+    // const html = String.fromCharCode.apply(null, new Uint8Array(response.body!));
+    // window.history.pushState(null, null, '/logout');
+    // window.document.open();
+    // window.document.write(html);
+    // window.document.close();
+    return await response.body;
   }
 
   public render() {

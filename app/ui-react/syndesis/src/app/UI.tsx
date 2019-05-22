@@ -204,7 +204,13 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                   return (
                                     <AppTopMenu
                                       username={user.username || 'developer'}
-                                      onSelectLogout={logout}
+                                      onSelectLogout={() => {
+                                        logout().then(() => {
+                                          console.log(
+                                            'do we need to manually redirect here?'
+                                          );
+                                        });
+                                      }}
                                     >
                                       {t('Logout')}
                                     </AppTopMenu>
