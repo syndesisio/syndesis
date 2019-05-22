@@ -412,6 +412,13 @@
       <scope>runtime</scope>
     </dependency>
 
+    <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-jira</artifactId>
+      <scope>runtime</scope>
+    </dependency>
+
+
     <!-- === Testing Dependencies ======================================================== -->
 
     <dependency>

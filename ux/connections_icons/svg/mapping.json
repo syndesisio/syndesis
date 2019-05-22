@@ -56,6 +56,10 @@
     "icon": "connectionicons_http.svg"
   },
   {
+    "connectorId": "jira",
+    "icon": "connectionicons_jira.svg"
+  },
+  {
     "connectorId": "kafka",
     "icon": "connectionicons_kafka.svg"
   },

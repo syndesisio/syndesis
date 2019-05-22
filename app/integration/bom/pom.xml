@@ -96,6 +96,10 @@
       <name>Red Hat General Availability Repository</name>
       <url>https://maven.repository.redhat.com/ga/</url>
     </repository>
+    <repository>
+      <id>atlassian-public</id>
+      <url>https://packages.atlassian.com/maven-external</url>
+    </repository>
   </repositories>
 
   <pluginRepositories>
@@ -373,6 +377,11 @@
       <dependency>
         <groupId>io.syndesis.connector</groupId>
         <artifactId>connector-knative</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.connector</groupId>
+        <artifactId>connector-jira</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
