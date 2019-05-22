@@ -1,8 +1,8 @@
+import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { Button } from 'patternfly-react';
 import * as React from 'react';
 import { Dialog } from '../../Shared';
 import { TagNameValidationError } from './CiCdUIModels';
-import { TextContent, Text, TextVariants } from '@patternfly/react-core';
 
 export interface ICiCdEditDialogProps {
   i18nTitle: string;
