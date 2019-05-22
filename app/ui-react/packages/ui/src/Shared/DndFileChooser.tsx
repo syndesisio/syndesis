@@ -244,47 +244,42 @@ export class DndFileChooser extends React.Component<
         onDropRejected={this.handleRejectedFiles}
       >
         {({ getRootProps, getInputProps }) => (
-          <Container>
-            <Grid
-              disabled={this.props.disableDropzone}
-              fluid={true}
-              className="dnd-file-chooser"
-              {...getRootProps({ refKey: 'dnd-file-chooser' })}
-            >
+          <Grid
+            disabled={this.props.disableDropzone}
+            fluid={true}
+            className="dnd-file-chooser"
+            {...getRootProps({ refKey: 'dnd-file-chooser' })}
+          >
+            <Grid.Row>
+              <Grid.Col
+                className="dnd-file-chooser__instructions"
+                dangerouslySetInnerHTML={{
+                  __html: this.props.i18nInstructions,
+                }}
+              />
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Col>
+                <input {...getInputProps()} />
+              </Grid.Col>
+            </Grid.Row>
+            <Grid.Row>
+              <Grid.Col className="dnd-file-chooser__selectedFileLabel" xs={3}>
+                {this.props.i18nSelectedFileLabel}
+              </Grid.Col>
+              <Grid.Col className="dnd-file-chooser__selectedFile" xs={6}>
+                {this.getSelectedFileMessage()}
+              </Grid.Col>
+              <Grid.Col xs={3}>{this.getUploadMessage()}</Grid.Col>
+            </Grid.Row>
+            {this.props.i18nHelpMessage ? (
               <Grid.Row>
-                <Grid.Col
-                  className="dnd-file-chooser__instructions"
-                  dangerouslySetInnerHTML={{
-                    __html: this.props.i18nInstructions,
-                  }}
-                />
-              </Grid.Row>
-              <Grid.Row>
-                <Grid.Col>
-                  <input {...getInputProps()} />
+                <Grid.Col className="dnd-file-chooser__helpText">
+                  {this.props.i18nHelpMessage}
                 </Grid.Col>
               </Grid.Row>
-              <Grid.Row>
-                <Grid.Col
-                  className="dnd-file-chooser__selectedFileLabel"
-                  xs={3}
-                >
-                  {this.props.i18nSelectedFileLabel}
-                </Grid.Col>
-                <Grid.Col className="dnd-file-chooser__selectedFile" xs={6}>
-                  {this.getSelectedFileMessage()}
-                </Grid.Col>
-                <Grid.Col xs={3}>{this.getUploadMessage()}</Grid.Col>
-              </Grid.Row>
-              {this.props.i18nHelpMessage ? (
-                <Grid.Row>
-                  <Grid.Col className="dnd-file-chooser__helpText">
-                    {this.props.i18nHelpMessage}
-                  </Grid.Col>
-                </Grid.Row>
-              ) : null}
-            </Grid>
-          </Container>
+            ) : null}
+          </Grid>
         )}
       </WithDropzone>
     );
