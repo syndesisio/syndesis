@@ -52,6 +52,7 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
     private int port = -1;
     private String username;
     private String password;
+    private String folderName;
     private String serverCertificate;
     private boolean unseenOnly;
 
@@ -115,6 +116,14 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
         this.password = password;
     }
 
+    public String getFolderName() {
+        return folderName;
+    }
+
+    public void setFolderName(String folderName) {
+        this.folderName = folderName;
+    }
+
     public String getServerCertificate() {
         return serverCertificate;
     }
@@ -154,12 +163,15 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
     private Map<String, Object> bundleOptions() {
         Map<String, Object> options = new HashMap<>();
         options.compute(PROTOCOL, value(this::getProtocol));
+        options.compute(SECURE_TYPE, value(this::getSecureType));
         options.compute(HOST, value(this::getHost));
         options.compute(PORT, value(this::getPort));
         options.compute(USER, value(this::getUsername));
         options.compute(PASSWORD, value(this::getPassword));
+        options.compute(FOLDER, value(this::getFolderName));
         options.compute(SERVER_CERTIFICATE, value(this::getServerCertificate));
         options.compute(UNSEEN_ONLY, value(this::isUnseenOnly));
+        options.compute(DELAY, value(this::getDelay));
         options.compute(MAX_MESSAGES, value(this::getMaxResults));
         return options;
     }
@@ -194,6 +206,10 @@ public final class EMailComponent extends ComponentProxyComponent implements EMa
         configuration.setUsername(getUsername());
         configuration.setPassword(getPassword());
         configuration.setUnseen(isUnseenOnly());
+
+        if (getFolderName() != null) {
+            configuration.setFolderName(getFolderName());
+        }
 
         Map<String, Object> resolvedOptions = bundleOptions();
         SSLContextParameters sslContextParameters = EMailUtil.createSSLContextParameters(resolvedOptions);

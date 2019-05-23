@@ -32,6 +32,8 @@ public interface EMailConstants extends StringConstants {
 
     String PASSWORD = "password";
 
+    String FOLDER = "folderName";
+
     String ADDITIONAL_MAIL_PROPERTIES = "AdditionalJavaMailProperties";
 
     String SSL_CONTEXT_PARAMETERS = "sslContextParameters";

@@ -16,6 +16,7 @@
 package io.syndesis.connector.email.server;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.security.KeyStore;
@@ -27,15 +28,18 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 import javax.mail.Flags.Flag;
-import javax.mail.Message.RecipientType;
+import javax.mail.Folder;
 import javax.mail.Message;
+import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Session;
+import javax.mail.Store;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import org.apache.commons.codec.binary.Base64;
 import com.icegreen.greenmail.server.AbstractServer;
+import com.icegreen.greenmail.smtp.SmtpServer;
 import com.icegreen.greenmail.user.GreenMailUser;
 import com.icegreen.greenmail.util.DummySSLServerSocketFactory;
 import com.icegreen.greenmail.util.GreenMail;
@@ -43,6 +47,7 @@ import com.icegreen.greenmail.util.GreenMailUtil;
 import com.icegreen.greenmail.util.ServerSetup;
 import com.icegreen.greenmail.util.ServerSetupTest;
 import io.syndesis.common.util.StringConstants;
+import io.syndesis.connector.email.EMailConstants.Protocol;
 import io.syndesis.connector.email.model.EMailMessageModel;
 
 public class EMailTestServer implements StringConstants {
@@ -150,7 +155,7 @@ public class EMailTestServer implements StringConstants {
         return GreenMailUtil.createTextEmail(to, from, subject, body, server.getServerSetup());
     }
 
-    public void createMultipartMessage(String user, String password, String from, String subject,
+    public void deliverMultipartMessage(String user, String password, String from, String subject,
                                                                        String contentType, Object body) throws Exception {
         GreenMailUser greenUser = greenMail.setUser(user, password);
         MimeMultipart multiPart = new MimeMultipart();
@@ -180,11 +185,58 @@ public class EMailTestServer implements StringConstants {
         assertEquals(5, greenMail.getReceivedMessages().length);
     }
 
+    public void generateFolder(String user, String password, String folderName) throws Exception {
+        if (server instanceof SmtpServer) {
+            throw new Exception("SMTP not applicable for generating folders");
+        }
+
+        Store store = server.createStore();
+        store.connect(user, password);
+
+        Folder newFolder = store.getFolder(folderName);
+        if (! newFolder.exists()) {
+            newFolder.create(Folder.HOLDS_MESSAGES);
+            assertTrue(newFolder.exists());
+        }
+
+        newFolder.open(Folder.READ_WRITE);
+        assertTrue(newFolder.isOpen());
+
+        List<MimeMessage> msgs = new ArrayList<>();
+        for (int i = 1; i <= 5; ++i) {
+            // Use random content to avoid potential residual lingering problems
+            String subject = folderName + SPACE + HYPHEN + SPACE + GreenMailUtil.random();
+            String body = folderName + NEW_LINE + GreenMailUtil.random();
+            GreenMailUser greenUser = greenMail.setUser(user, password);
+            msgs.add(createTextMessage(greenUser.getEmail(), "Ben" + i + "@test.com", subject, body)); // Construct message
+        }
+
+        newFolder.appendMessages(msgs.toArray(new MimeMessage[0]));
+        assertEquals(msgs.size(), newFolder.getMessageCount());
+    }
+
+    public int getEmailCountInFolder(String user, String password, String folderName) throws Exception {
+        if (server instanceof SmtpServer) {
+            throw new Exception("SMTP not applicable for reading folders");
+        }
+
+        Store store = server.createStore();
+        store.connect(user, password);
+
+        Folder newFolder = store.getFolder(folderName);
+        if (! newFolder.exists()) {
+            throw new Exception("No folder with name " + folderName);
+        }
+
+        newFolder.open(Folder.READ_ONLY);
+        return newFolder.getMessageCount();
+    }
+
     public int getEmailCount() {
         return greenMail.getReceivedMessages().length;
     }
 
-    private EMailMessageModel createMessageModel(MimeMessage msg) throws MessagingException, IOException {
+    private EMailMessageModel createMessageModel(Message msg) throws MessagingException, IOException {
         EMailMessageModel model = new EMailMessageModel();
         model.setFrom(msg.getFrom()[0].toString());
         model.setTo(msg.getRecipients(RecipientType.TO)[0].toString());
@@ -218,8 +270,35 @@ public class EMailTestServer implements StringConstants {
         return models;
     }
 
+    public List<EMailMessageModel> getEmailsInFolder(String user, String password, String folderName) throws Exception {
+        if (server instanceof SmtpServer) {
+            throw new Exception("SMTP not applicable for reading folders");
+        }
+
+        Store store = server.createStore();
+        store.connect(user, password);
+
+        Folder newFolder = store.getFolder(folderName);
+        if (! newFolder.exists()) {
+            throw new Exception("No folder with name " + folderName);
+        }
+
+        newFolder.open(Folder.READ_ONLY);
+        List<EMailMessageModel> models = new ArrayList<>();
+        for (Message msg : newFolder.getMessages()) {
+            models.add(createMessageModel(msg));
+        }
+
+        return models;
+    }
+
     public boolean isSmtp() {
-        return server.getProtocol().equalsIgnoreCase("smtp") ||
-            server.getProtocol().equalsIgnoreCase("smtps");
+        return server.getProtocol().equalsIgnoreCase(Protocol.SMTP.id()) ||
+            server.getProtocol().equalsIgnoreCase(Protocol.SMTPS.id());
+    }
+
+    public boolean isImap() {
+        return server.getProtocol().equalsIgnoreCase(Protocol.IMAP.id()) ||
+            server.getProtocol().equalsIgnoreCase(Protocol.IMAPS.id());
     }
 }

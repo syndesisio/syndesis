@@ -159,6 +159,40 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
     }
 
     @Test
+    public void testImapEMailRouteWithFolder() throws Exception {
+        server = imapServer();
+        server.generateFolder(TEST_ADDRESS, TEST_PASSWORD, TEST_FOLDER);
+
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
+                                                       new PropertyBuilder<String>()
+                                                               .property(PROTOCOL, Protocol.IMAP.id())
+                                                               .property(HOST, server.getHost())
+                                                               .property(PORT, Integer.toString(server.getPort()))
+                                                               .property(USER, TEST_ADDRESS)
+                                                               .property(PASSWORD, TEST_PASSWORD)
+                                                               .property(FOLDER, TEST_FOLDER));
+
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction);
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(mailStep);
+
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.addRoutes(routes);
+
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
+
+        result.setAssertPeriod(2000L);
+        result.setMinimumExpectedMessageCount(server.getEmailCountInFolder(TEST_ADDRESS, TEST_PASSWORD, TEST_FOLDER));
+
+        context.start();
+        result.assertIsSatisfied();
+
+        List<EMailMessageModel> emails = server.getEmailsInFolder(TEST_ADDRESS, TEST_PASSWORD, TEST_FOLDER);
+        for (int i = 0; i < emails.size(); ++i) {
+            RouteUtils.testResult(result, i, emails.get(i));
+        }
+    }
+
+    @Test
     public void testPop3EMailRoute() throws Exception {
         server = pop3Server();
         Connector mailConnector = RouteUtils.createEMailConnector(server,
@@ -389,7 +423,7 @@ public class EMailReadRouteTest extends AbstractEmailServerTest implements Route
         String plainText = "Hi, how are you?";
         String body = "<html><body>Hi, <i>how are you?</i></body></html>";
 
-        server.createMultipartMessage(TEST_ADDRESS, TEST_PASSWORD, "Ben1@test.com",
+        server.deliverMultipartMessage(TEST_ADDRESS, TEST_PASSWORD, "Ben1@test.com",
                                                                        "An HTML Message", TEXT_HTML, body);
         assertEquals(1, server.getEmailCount());
 
