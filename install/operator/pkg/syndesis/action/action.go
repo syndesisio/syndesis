@@ -24,11 +24,10 @@ type Client struct {
 }
 
 type baseAction struct {
-	log logr.Logger
+	log    logr.Logger
 	client client.Client
 	scheme *runtime.Scheme
-	api kubernetes.Interface
-
+	api    kubernetes.Interface
 }
 
 var actionLog = logf.Log.WithName("action")

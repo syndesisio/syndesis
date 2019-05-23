@@ -20,6 +20,7 @@ type SyndesisSpec struct {
 	Components           ComponentsSpec  `json:"components,omitempty"`
 	OpenShiftConsoleUrl  string          `json:"openShiftConsoleUrl,omitempty"`
 	SarNamespace         string          `json:"sarNamespace,omitempty"`
+	Addons               AddonsSpec      `json:"addons,omitempty"`
 }
 
 // SyndesisStatus defines the observed state of Syndesis
@@ -37,92 +38,97 @@ type SyndesisStatus struct {
 // =============================================================================
 
 type IntegrationSpec struct {
-        Limit              *int `json:"limit,omitempty"`
-        StateCheckInterval *int `json:"stateCheckInterval,omitempty"`
+	Limit              *int `json:"limit,omitempty"`
+	StateCheckInterval *int `json:"stateCheckInterval,omitempty"`
 }
 
 type ComponentsSpec struct {
-        Db         DbConfiguration         `json:"db,omitempty"`
-        Prometheus PrometheusConfiguration `json:"prometheus,omitempty"`
-        Grafana    GrafanaConfiguration    `json:"grafana,omitempty"`
-        Server     ServerConfiguration     `json:"server,omitempty"`
-        Meta       MetaConfiguration       `json:"meta,omitempty"`
-        Upgrade    UpgradeConfiguration    `json:"upgrade,omitempty"`
+	Db         DbConfiguration         `json:"db,omitempty"`
+	Prometheus PrometheusConfiguration `json:"prometheus,omitempty"`
+	Grafana    GrafanaConfiguration    `json:"grafana,omitempty"`
+	Server     ServerConfiguration     `json:"server,omitempty"`
+	Meta       MetaConfiguration       `json:"meta,omitempty"`
+	Upgrade    UpgradeConfiguration    `json:"upgrade,omitempty"`
 }
 
 type DbConfiguration struct {
-        Resources            ResourcesWithVolume `json:"resources,omitempty"`
-        User                 string              `json:"user,omitempty"`
-        Database             string              `json:"database,omitempty"`
-        ImageStreamNamespace string              `json:"imageStreamNamespace,omitempty"`
+	Resources            ResourcesWithVolume `json:"resources,omitempty"`
+	User                 string              `json:"user,omitempty"`
+	Database             string              `json:"database,omitempty"`
+	ImageStreamNamespace string              `json:"imageStreamNamespace,omitempty"`
 }
 type PrometheusConfiguration struct {
-        Resources ResourcesWithVolume `json:"resources,omitempty"`
+	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }
 
 type GrafanaConfiguration struct {
-        Resources Resources `json:"resources,omitempty"`
+	Resources Resources `json:"resources,omitempty"`
 }
 
 type ServerConfiguration struct {
-        Resources Resources      `json:"resources,omitempty"`
-        Features  ServerFeatures `json:"features,omitempty"`
+	Resources Resources      `json:"resources,omitempty"`
+	Features  ServerFeatures `json:"features,omitempty"`
 }
 
 type MetaConfiguration struct {
-        Resources ResourcesWithVolume `json:"resources,omitempty"`
+	Resources ResourcesWithVolume `json:"resources,omitempty"`
 }
 
 type UpgradeConfiguration struct {
-        Resources VolumeOnlyResources `json:"resources,omitempty"`
+	Resources VolumeOnlyResources `json:"resources,omitempty"`
 }
 
 type Resources struct {
-        v1.ResourceRequirements `json:",inline,omitempty"`
+	v1.ResourceRequirements `json:",inline,omitempty"`
 }
 
 type ResourcesWithVolume struct {
-        v1.ResourceRequirements `json:",inline,omitempty"`
-        VolumeCapacity          string `json:"volumeCapacity,omitempty"`
+	v1.ResourceRequirements `json:",inline,omitempty"`
+	VolumeCapacity          string `json:"volumeCapacity,omitempty"`
 }
 
 type VolumeOnlyResources struct {
-        VolumeCapacity string `json:"volumeCapacity,omitempty"`
+	VolumeCapacity string `json:"volumeCapacity,omitempty"`
 }
 
 type ServerFeatures struct {
-        ExposeVia3Scale bool `json:"exposeVia3Scale,omitempty"`
+	ExposeVia3Scale bool `json:"exposeVia3Scale,omitempty"`
 }
+
+type AddonsSpec map[string]Parameters
+
+type Parameters []Parameter
+
+type Parameter map[string]string
 
 // =============================================================================
 
 type SyndesisPhase string
 
 const (
-        SyndesisPhaseMissing               SyndesisPhase = ""
-        SyndesisPhaseInstalling            SyndesisPhase = "Installing"
-        SyndesisPhaseUpgradingLegacy       SyndesisPhase = "UpgradingLegacy"
-        SyndesisPhaseStarting              SyndesisPhase = "Starting"
-        SyndesisPhaseStartupFailed         SyndesisPhase = "StartupFailed"
-        SyndesisPhaseInstalled             SyndesisPhase = "Installed"
-        SyndesisPhaseNotInstalled          SyndesisPhase = "NotInstalled"
-        SyndesisPhaseUpgrading             SyndesisPhase = "Upgrading"
-        SyndesisPhaseUpgradeFailureBackoff SyndesisPhase = "UpgradeFailureBackoff"
-        SyndesisPhaseUpgradeFailed         SyndesisPhase = "UpgradeFailed"
+	SyndesisPhaseMissing               SyndesisPhase = ""
+	SyndesisPhaseInstalling            SyndesisPhase = "Installing"
+	SyndesisPhaseUpgradingLegacy       SyndesisPhase = "UpgradingLegacy"
+	SyndesisPhaseStarting              SyndesisPhase = "Starting"
+	SyndesisPhaseStartupFailed         SyndesisPhase = "StartupFailed"
+	SyndesisPhaseInstalled             SyndesisPhase = "Installed"
+	SyndesisPhaseNotInstalled          SyndesisPhase = "NotInstalled"
+	SyndesisPhaseUpgrading             SyndesisPhase = "Upgrading"
+	SyndesisPhaseUpgradeFailureBackoff SyndesisPhase = "UpgradeFailureBackoff"
+	SyndesisPhaseUpgradeFailed         SyndesisPhase = "UpgradeFailed"
 )
 
 type SyndesisStatusReason string
 
 const (
-        SyndesisStatusReasonMissing                SyndesisStatusReason = ""
-        SyndesisStatusReasonDuplicate              SyndesisStatusReason = "Duplicate"
-        SyndesisStatusReasonDeploymentNotReady     SyndesisStatusReason = "DeploymentNotReady"
-        SyndesisStatusReasonUpgradePodFailed       SyndesisStatusReason = "UpgradePodFailed"
-        SyndesisStatusReasonTooManyUpgradeAttempts SyndesisStatusReason = "TooManyUpgradeAttempts"
+	SyndesisStatusReasonMissing                SyndesisStatusReason = ""
+	SyndesisStatusReasonDuplicate              SyndesisStatusReason = "Duplicate"
+	SyndesisStatusReasonDeploymentNotReady     SyndesisStatusReason = "DeploymentNotReady"
+	SyndesisStatusReasonUpgradePodFailed       SyndesisStatusReason = "UpgradePodFailed"
+	SyndesisStatusReasonTooManyUpgradeAttempts SyndesisStatusReason = "TooManyUpgradeAttempts"
 )
 
 // =============================================================================
-
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 

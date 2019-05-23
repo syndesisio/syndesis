@@ -17,7 +17,7 @@ func getBool(config map[string]string, key SyndesisEnvVar) (bool, bool) {
 	if v, ok := config[string(key)]; ok {
 		boolValue, err := strconv.ParseBool(v)
 		if err != nil {
-			log.Info( " property has not a bool value", "key",string(key), "value", v)
+			log.Info(" property has not a bool value", "key", string(key), "value", v)
 			return false, false
 		}
 		return boolValue, true
@@ -29,7 +29,7 @@ func getInt(config map[string]string, key SyndesisEnvVar) (int, bool) {
 	if v, ok := config[string(key)]; ok {
 		intValue, err := strconv.Atoi(v)
 		if err != nil {
-			log.Info( " property has not a int value", "key", string(key), "value", v)
+			log.Info(" property has not a int value", "key", string(key), "value", v)
 			return 0, false
 		}
 		return intValue, true

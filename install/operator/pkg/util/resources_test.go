@@ -7,7 +7,6 @@ import (
 	"testing"
 )
 
-
 func init() {
 	scheme = runtime.NewScheme()
 	if err := appsv1.AddToScheme(scheme); err != nil {
@@ -18,7 +17,7 @@ func init() {
 var scheme *runtime.Scheme
 
 func TestLoadResources(t *testing.T) {
-	object, err := LoadResourceFromFile(scheme,"../../test/resources/dep.json")
+	object, err := LoadResourceFromFile(scheme, "../../test/resources/dep.json")
 	assert.Nil(t, err)
 
 	assert.NotNil(t, object)
@@ -28,7 +27,7 @@ func TestLoadResources(t *testing.T) {
 }
 
 func TestLoadYamlResources(t *testing.T) {
-	object, err := LoadResourceFromFile(scheme,"../../test/resources/dep.yml")
+	object, err := LoadResourceFromFile(scheme, "../../test/resources/dep.yml")
 	assert.Nil(t, err)
 
 	assert.NotNil(t, object)

@@ -17,7 +17,7 @@ var log = logf.Log.WithName("template")
 type TemplateProcessor struct {
 	namespace  string
 	restClient *rest.RESTClient
-	scheme *runtime.Scheme
+	scheme     *runtime.Scheme
 }
 
 func NewTemplateProcessor(scheme *runtime.Scheme, namespace string) (*TemplateProcessor, error) {
@@ -48,7 +48,7 @@ func NewTemplateProcessor(scheme *runtime.Scheme, namespace string) (*TemplatePr
 	return &TemplateProcessor{
 		namespace:  namespace,
 		restClient: restClient,
-		scheme: scheme,
+		scheme:     scheme,
 	}, nil
 }
 
@@ -59,6 +59,8 @@ func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, paramet
 	if err != nil {
 		return nil, err
 	}
+
+	log.V(4).Info("Template with parameters", "template", resource)
 
 	result := p.restClient.
 		Post().
@@ -84,7 +86,7 @@ func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, paramet
 	if v1Temp, ok := templ.(*v1template.Template); ok {
 		return v1Temp.Objects, nil
 	}
-	log.Error(nil,"Wrong type returned by the server", "template", templ)
+	log.Error(nil, "Wrong type returned by the server", "template", templ)
 	return nil, errors.New("wrong type returned by the server")
 }
 
