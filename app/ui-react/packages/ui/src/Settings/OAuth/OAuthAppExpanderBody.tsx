@@ -44,7 +44,7 @@ export class OAuthAppExpanderBody extends React.Component<
             <>
               <Button
                 data-testid={`${toTestId(
-                  OAuthAppExpanderBody.name,
+                  'OAuthAppExpanderBody',
                   'save-button'
                 )}`}
                 bsStyle="primary"
@@ -55,7 +55,7 @@ export class OAuthAppExpanderBody extends React.Component<
               </Button>{' '}
               <Button
                 data-testid={`${toTestId(
-                  OAuthAppExpanderBody.name,
+                  'OAuthAppExpanderBody',
                   'remove-button'
                 )}`}
                 onClick={this.props.onRemove}

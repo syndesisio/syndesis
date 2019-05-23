@@ -39,7 +39,7 @@ export class VirtualizationRelationshipPage extends React.Component {
                   <Breadcrumb>
                     <Link
                       data-testid={toTestId(
-                        VirtualizationRelationshipPage.name,
+                        'VirtualizationRelationshipPage',
                         'home-link'
                       )}
                       to={resolvers.dashboard.root()}
@@ -48,7 +48,7 @@ export class VirtualizationRelationshipPage extends React.Component {
                     </Link>
                     <Link
                       data-testid={toTestId(
-                        VirtualizationRelationshipPage.name,
+                        'VirtualizationRelationshipPage',
                         'virtualizations-link'
                       )}
                       to={resolvers.data.root()}

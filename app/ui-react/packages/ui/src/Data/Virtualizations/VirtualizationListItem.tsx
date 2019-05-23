@@ -215,8 +215,9 @@ export class VirtualizationListItem extends React.Component<
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
                 <ButtonLink
                   data-testid={`${toTestId(
-                    VirtualizationListItem.name,
-                    this.props.virtualizationName + '--edit-button'
+                    'VirtualizationListItem',
+                    this.props.virtualizationName,
+                    'edit-button'
                   )}`}
                   href={this.props.detailsPageLink}
                   as={'primary'}

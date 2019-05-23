@@ -93,7 +93,7 @@ export const ViewsImportLayout: React.FunctionComponent<
       </div>
       <div className="wizard-pf-footer views-import-layout__footer">
         <ButtonLink
-          data-testid={`${toTestId(ViewsImportLayout.name, 'back-button')}`}
+          data-testid={`${toTestId('ViewsImportLayout', 'back-button')}`}
           onClick={onBack}
           href={backHref}
           className={'wizard-pf-back'}
@@ -101,7 +101,7 @@ export const ViewsImportLayout: React.FunctionComponent<
           <i className="fa fa-angle-left" /> Back
         </ButtonLink>
         <ButtonLink
-          data-testid={`${toTestId(ViewsImportLayout.name, 'next-button')}`}
+          data-testid={`${toTestId('ViewsImportLayout', 'next-button')}`}
           onClick={isLastStep ? onCreateViews : onNext}
           href={nextHref}
           as={'primary'}
@@ -118,7 +118,7 @@ export const ViewsImportLayout: React.FunctionComponent<
           )}
         </ButtonLink>
         <ButtonLink
-          data-testid={`${toTestId(ViewsImportLayout.name, 'cancel-button')}`}
+          data-testid={`${toTestId('ViewsImportLayout', 'cancel-button')}`}
           onClick={onCancel}
           href={cancelHref}
           className={'wizard-pf-cancel'}

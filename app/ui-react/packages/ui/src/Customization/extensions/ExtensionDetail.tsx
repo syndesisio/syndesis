@@ -211,7 +211,7 @@ export class ExtensionDetail extends React.Component<
               <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
                 <ButtonLink
                   data-testid={`${toTestId(
-                    ExtensionDetail.name,
+                    'ExtensionDetail',
                     'update-button'
                   )}`}
                   href={this.props.linkUpdateExtension}

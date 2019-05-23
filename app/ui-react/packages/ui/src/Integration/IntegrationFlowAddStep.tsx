@@ -68,7 +68,7 @@ export class IntegrationFlowAddStep extends React.Component<
           >
             <Link
               data-testid={`${toTestId(
-                IntegrationFlowAddStep.name,
+                'IntegrationFlowAddStep',
                 'add-step-link'
               )}`}
               to={this.props.addStepHref}

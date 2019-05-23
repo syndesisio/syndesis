@@ -25,7 +25,7 @@ export class IntegrationDetailActivity extends React.Component<
               <>
                 <Link
                   data-testid={`${toTestId(
-                    IntegrationDetailActivity.name,
+                    'IntegrationDetailActivity',
                     'view-log-link'
                   )}`}
                   to={this.props.linkToOpenShiftLog}
@@ -41,7 +41,7 @@ export class IntegrationDetailActivity extends React.Component<
             &nbsp;&nbsp;
             <Button
               data-testid={`${toTestId(
-                IntegrationDetailActivity.name,
+                'IntegrationDetailActivity',
                 'refresh-button'
               )}`}
               onClick={this.props.onRefresh}

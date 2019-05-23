@@ -102,7 +102,7 @@ export const SelectiveIntegrationList: React.FunctionComponent<
                         checkboxComponent={
                           <input
                             data-testid={toTestId(
-                              SelectiveIntegrationList.name,
+                              'SelectiveIntegrationList',
                               'integrations-input'
                             )}
                             type="checkbox"

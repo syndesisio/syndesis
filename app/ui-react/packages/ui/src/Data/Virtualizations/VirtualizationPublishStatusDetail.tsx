@@ -20,7 +20,7 @@ export class VirtualizationPublishStatusDetail extends React.Component<
     return (
       <div
         data-testid={`${toTestId(
-          VirtualizationPublishStatusDetail.name,
+          'VirtualizationPublishStatusDetail',
           'detail'
         )}`}
         className={'virtualization-publish-status-detail'}

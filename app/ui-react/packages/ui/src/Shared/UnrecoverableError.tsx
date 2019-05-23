@@ -37,10 +37,7 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
         <EmptyState.Help>{i18nHelp}</EmptyState.Help>
         <EmptyState.Action>
           <ButtonLink
-            data-testid={`${toTestId(
-              UnrecoverableError.name,
-              'refresh-button'
-            )}`}
+            data-testid={`${toTestId('UnrecoverableError', 'refresh-button')}`}
             href={'.'}
             as={'primary'}
             size={'lg'}
@@ -52,7 +49,7 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
           {error && (
             <ButtonLink
               data-testid={`${toTestId(
-                UnrecoverableError.name,
+                'UnrecoverableError',
                 'show-error-button'
               )}`}
               onClick={toggleErrorInfo}
@@ -62,7 +59,7 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
           )}
           <a
             data-testid={`${toTestId(
-              UnrecoverableError.name,
+              'UnrecoverableError',
               'report-issue-link'
             )}`}
             className={'btn btn-default'}

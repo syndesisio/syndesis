@@ -77,7 +77,7 @@ export class DescribeDataShapeForm extends React.Component<
                     </ControlLabel>
                     <FormControl
                       data-testid={`${toTestId(
-                        DescribeDataShapeForm.name,
+                        'DescribeDataShapeForm',
                         'kind-input'
                       )}`}
                       componentClass="select"
@@ -128,7 +128,7 @@ export class DescribeDataShapeForm extends React.Component<
                         </ControlLabel>
                         <FormControl
                           data-testid={`${toTestId(
-                            DescribeDataShapeForm.name,
+                            'DescribeDataShapeForm',
                             'name-input'
                           )}`}
                           type="text"
@@ -150,7 +150,7 @@ export class DescribeDataShapeForm extends React.Component<
                         <FormControl
                           type="text"
                           data-testid={`${toTestId(
-                            DescribeDataShapeForm.name,
+                            'DescribeDataShapeForm',
                             'description-input'
                           )}`}
                           value={this.props.description}
@@ -170,7 +170,7 @@ export class DescribeDataShapeForm extends React.Component<
                   <>
                     <ButtonLink
                       data-testid={`${toTestId(
-                        DescribeDataShapeForm.name,
+                        'DescribeDataShapeForm',
                         'back-button'
                       )}`}
                       href={this.props.backActionHref}
@@ -183,7 +183,7 @@ export class DescribeDataShapeForm extends React.Component<
                 )}
                 <ButtonLink
                   data-testid={`${toTestId(
-                    DescribeDataShapeForm.name,
+                    'DescribeDataShapeForm',
                     'next-button'
                   )}`}
                   onClick={this.props.onNext}

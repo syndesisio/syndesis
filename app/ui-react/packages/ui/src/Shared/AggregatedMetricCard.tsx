@@ -28,16 +28,11 @@ export class AggregatedMetricCard extends React.PureComponent<
         <Card.Title>
           <AggregateStatusCount>
             <span
-              data-testid={`${toTestId(
-                AggregatedMetricCard.name,
-                'total-count'
-              )}`}
+              data-testid={`${toTestId('AggregatedMetricCard', 'total-count')}`}
             >
               {this.formatNumber(this.props.total)}
             </span>
-            <span
-              data-testid={`${toTestId(AggregatedMetricCard.name, 'title')}`}
-            >
+            <span data-testid={`${toTestId('AggregatedMetricCard', 'title')}`}>
               {' '}
               {this.props.title}
             </span>
@@ -48,10 +43,7 @@ export class AggregatedMetricCard extends React.PureComponent<
             <AggregateStatusNotification>
               <Icon type="pf" name="ok" />
               <span
-                data-testid={`${toTestId(
-                  AggregatedMetricCard.name,
-                  'ok-count'
-                )}`}
+                data-testid={`${toTestId('AggregatedMetricCard', 'ok-count')}`}
               >
                 {this.formatNumber(this.props.ok)}
               </span>{' '}
@@ -60,7 +52,7 @@ export class AggregatedMetricCard extends React.PureComponent<
               <Icon type="pf" name="error-circle-o" />
               <span
                 data-testid={`${toTestId(
-                  AggregatedMetricCard.name,
+                  'AggregatedMetricCard',
                   'error-count'
                 )}`}
               >

@@ -84,7 +84,7 @@ export class VirtualizationList extends React.Component<
               >
                <Button
                   data-testid={`${toTestId(
-                    VirtualizationList.name,
+                    'VirtualizationList',
                     'import-button'
                   )}`}
                   bsStyle="default"
@@ -100,7 +100,7 @@ export class VirtualizationList extends React.Component<
               >
                 <ButtonLink
                   data-testid={`${toTestId(
-                    VirtualizationList.name,
+                    'VirtualizationList',
                     'create-virtualization-button'
                   )}`}
                   href={this.props.linkCreateHRef}
@@ -129,7 +129,7 @@ export class VirtualizationList extends React.Component<
                 >
                   <ButtonLink
                     data-testid={`${toTestId(
-                      VirtualizationList.name,
+                      'VirtualizationList',
                       'empty-state-create-button'
                     )}`}
                     href={this.props.linkCreateHRef}

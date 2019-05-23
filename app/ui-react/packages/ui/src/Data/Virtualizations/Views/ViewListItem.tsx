@@ -67,12 +67,13 @@ export class ViewListItem extends React.Component<
           actions={
             <div className="form-group">
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
-                <ButtonLink 
+                <ButtonLink
                   data-testid={`${toTestId(
-                    ViewListItem.name,
-                    this.props.viewName + '--edit-button'
+                    'ViewListItem',
+                    this.props.viewName,
+                    'edit-button'
                   )}`}
-                  href={this.props.viewEditPageLink} 
+                  href={this.props.viewEditPageLink}
                   as={'default'}
                 >
                   {this.props.i18nEdit}

@@ -99,10 +99,7 @@ export class ListViewToolbar extends React.Component<IListViewToolbarProps> {
                 ))}
               </Filter.List>
               <a
-                data-testid={`${toTestId(
-                  ListViewToolbar.name,
-                  'clear-filters'
-                )}`}
+                data-testid={`${toTestId('ListViewToolbar', 'clear-filters')}`}
                 onClick={this.props.onClearFilters}
               >
                 Clear All Filters

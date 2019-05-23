@@ -105,7 +105,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                           <>
                             <a
                               data-testid={toTestId(
-                                IntegrationEditorStepAdder.name,
+                                'IntegrationEditorStepAdder',
                                 'define-data-type-link'
                               )}
                               href={'/todo'}
@@ -118,7 +118,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                           <>
                             <Link
                               data-testid={toTestId(
-                                IntegrationEditorStepAdder.name,
+                                'IntegrationEditorStepAdder',
                                 'add-step-before-connection-link'
                               )}
                               to={this.props.addDataMapperStepHref(idx)}
@@ -133,7 +133,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                         <>
                           <ButtonLink
                             data-testid={toTestId(
-                              IntegrationEditorStepAdder.name,
+                              'IntegrationEditorStepAdder',
                               'configure-button'
                             )}
                             href={this.props.configureStepHref(
@@ -146,7 +146,7 @@ export class IntegrationEditorStepAdder extends React.Component<
                           {!restrictedDelete && (
                             <ButtonLink
                               data-testid={toTestId(
-                                IntegrationEditorStepAdder.name,
+                                'IntegrationEditorStepAdder',
                                 'delete-button'
                               )}
                               onClick={() => this.props.onDelete(idx, s)}

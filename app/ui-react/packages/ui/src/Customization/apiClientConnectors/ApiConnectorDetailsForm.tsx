@@ -98,7 +98,7 @@ export class ApiConnectorDetailsForm extends React.Component<
                     />
                     <input
                       data-testid={`${toTestId(
-                        ApiConnectorDetailsForm.name,
+                        'ApiConnectorDetailsForm',
                         'icon-file-input'
                       )}`}
                       type="file"
@@ -114,7 +114,7 @@ export class ApiConnectorDetailsForm extends React.Component<
               <>
                 <Button
                   data-testid={`${toTestId(
-                    ApiConnectorDetailsForm.name,
+                    'ApiConnectorDetailsForm',
                     'cancel-button'
                   )}`}
                   bsStyle="default"
@@ -126,7 +126,7 @@ export class ApiConnectorDetailsForm extends React.Component<
                 </Button>
                 <Button
                   data-testid={`${toTestId(
-                    ApiConnectorDetailsForm.name,
+                    'ApiConnectorDetailsForm',
                     'save-button'
                   )}`}
                   bsStyle="primary"
@@ -141,7 +141,7 @@ export class ApiConnectorDetailsForm extends React.Component<
             ) : (
               <Button
                 data-testid={`${toTestId(
-                  ApiConnectorDetailsForm.name,
+                  'ApiConnectorDetailsForm',
                   'edit-button'
                 )}`}
                 bsStyle="primary"

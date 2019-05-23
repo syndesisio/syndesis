@@ -32,7 +32,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
           <>
             <ButtonLink
               data-testid={`${toTestId(
-                IntegrationDetailBreadcrumb.name,
+                'IntegrationDetailBreadcrumb',
                 'export-button'
               )}`}
               to={this.props.exportHref}
@@ -42,7 +42,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
             &nbsp;&nbsp;
             <ButtonLink
               data-testid={`${toTestId(
-                IntegrationDetailBreadcrumb.name,
+                'IntegrationDetailBreadcrumb',
                 'edit-button'
               )}`}
               className="btn btn-primary"
@@ -59,7 +59,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
                       {a.href ? (
                         <Link
                           data-testid={`${toTestId(
-                            IntegrationDetailBreadcrumb.name,
+                            'IntegrationDetailBreadcrumb',
                             a.label.toString()
                           )}`}
                           to={a.href}
@@ -72,7 +72,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
                       ) : (
                         <a
                           data-testid={`${toTestId(
-                            IntegrationDetailBreadcrumb.name,
+                            'IntegrationDetailBreadcrumb',
                             a.label.toString()
                           )}`}
                           href={'javascript:void(0)'}
@@ -93,7 +93,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
         <span>
           <Link
             data-testid={`${toTestId(
-              IntegrationDetailBreadcrumb.name,
+              'IntegrationDetailBreadcrumb',
               'home-link'
             )}`}
             to={this.props.homeHref!}
@@ -104,7 +104,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
         <span>
           <Link
             data-testid={`${toTestId(
-              IntegrationDetailBreadcrumb.name,
+              'IntegrationDetailBreadcrumb',
               'integrations-link'
             )}`}
             to={this.props.integrationsHref!}

@@ -187,10 +187,7 @@ export class WithTemplater extends React.Component<
                     template file,
                     {/* eslint-disable-next-line */ ' '}
                     <a
-                      data-testid={toTestId(
-                        WithTemplater.name,
-                        'show-error-link'
-                      )}
+                      data-testid={toTestId('WithTemplater', 'show-error-link')}
                       onClick={this.handleClickBrowse}
                     >
                       browse to upload

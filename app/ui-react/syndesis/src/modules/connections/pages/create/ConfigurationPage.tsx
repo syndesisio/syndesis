@@ -84,7 +84,7 @@ export default class ConfigurationPage extends React.Component {
                               extraButtons={
                                 <ButtonLink
                                   data-testid={toTestId(
-                                    ConfigurationPage.name,
+                                    'ConfigurationPage',
                                     'validate-button'
                                   )}
                                   onClick={validateForm}

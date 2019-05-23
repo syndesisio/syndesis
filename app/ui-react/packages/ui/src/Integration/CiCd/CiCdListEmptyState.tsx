@@ -18,10 +18,7 @@ export class CiCdListEmptyState extends React.Component<ICiCdListEmptyState> {
         <EmptyState.Info>{this.props.i18nInfo}</EmptyState.Info>
         <EmptyState.Action>
           <Button
-            data-testid={`${toTestId(
-              CiCdListEmptyState.name,
-              'add-new-button'
-            )}`}
+            data-testid={`${toTestId('CiCdListEmptyState', 'add-new-button')}`}
             bsStyle="primary"
             bsSize="large"
             onClick={this.props.onAddNew}

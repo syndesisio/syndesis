@@ -109,7 +109,7 @@ export class ConnectionDetailsForm extends React.Component<
                     {this.props.isEditing ? (
                       <Button
                         data-testid={`${toTestId(
-                          ConnectionDetailsForm.name,
+                          'ConnectionDetailsForm',
                           'validate-button'
                         )}`}
                         bsStyle="default"
@@ -124,7 +124,7 @@ export class ConnectionDetailsForm extends React.Component<
                     ) : (
                       <Button
                         data-testid={`${toTestId(
-                          ConnectionDetailsForm.name,
+                          'ConnectionDetailsForm',
                           'edit-button'
                         )}`}
                         bsStyle="primary"
@@ -139,7 +139,7 @@ export class ConnectionDetailsForm extends React.Component<
               <Card.Footer>
                 <Button
                   data-testid={`${toTestId(
-                    ConnectionDetailsForm.name,
+                    'ConnectionDetailsForm',
                     'cancel-button'
                   )}`}
                   bsStyle="default"
@@ -151,7 +151,7 @@ export class ConnectionDetailsForm extends React.Component<
                 </Button>
                 <Button
                   data-testid={`${toTestId(
-                    ConnectionDetailsForm.name,
+                    'ConnectionDetailsForm',
                     'save-button'
                   )}`}
                   bsStyle="primary"

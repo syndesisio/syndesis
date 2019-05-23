@@ -15,7 +15,7 @@ export default class ConnectionsCreatorApp extends React.Component {
           <Breadcrumb>
             <Link
               data-testid={`${toTestId(
-                ConnectionsCreatorApp.name,
+                'ConnectionsCreatorApp',
                 'connections-link'
               )}`}
               to={resolvers.connections()}

@@ -17,7 +17,7 @@ export class CiCdListView extends React.Component<ICiCdListViewProps> {
           <div className="form-group">
             {this.props.resultsCount !== 0 && (
               <Button
-                data-testid={`${toTestId(CiCdListView.name, 'add-new-button')}`}
+                data-testid={`${toTestId('CiCdListView', 'add-new-button')}`}
                 className="btn btn-primary"
                 onClick={this.props.onAddNew}
               >

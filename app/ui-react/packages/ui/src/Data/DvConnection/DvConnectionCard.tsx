@@ -69,8 +69,9 @@ export class DvConnectionCard extends React.PureComponent<
               <div
                 className="dv-connection-card__title h2"
                 data-testid={`${toTestId(
-                  DvConnectionCard.name,
-                  this.props.name
+                  'DvConnectionCard',
+                  this.props.name,
+                  'title'
                 )}`}
               >
                 {this.props.name}

@@ -148,8 +148,9 @@ export class ConnectionCard extends React.PureComponent<
                   <li role={'presentation'} key={0}>
                     <Link
                       data-testid={`${toTestId(
-                        ConnectionCard.name,
-                        this.props.name + '--view-action'
+                        'ConnectionCard',
+                        this.props.name,
+                        'view-action'
                       )}`}
                       to={this.props.href}
                       role={'menuitem'}
@@ -161,8 +162,9 @@ export class ConnectionCard extends React.PureComponent<
                   <li role={'presentation'} key={1}>
                     <Link
                       data-testid={`${toTestId(
-                        ConnectionCard.name,
-                        this.props.name + '--edit-action'
+                        'ConnectionCard',
+                        this.props.name,
+                        'edit-action'
                       )}`}
                       to={this.props.menuProps.editHref}
                       role={'menuitem'}
@@ -185,8 +187,9 @@ export class ConnectionCard extends React.PureComponent<
                       >
                         <a
                           data-testid={`${toTestId(
-                            ConnectionCard.name,
-                            this.props.name + '--delete-action'
+                            'ConnectionCard',
+                            this.props.name,
+                            'delete-action'
                           )}`}
                           href={'javascript:void(0)'}
                           onClick={this.showDeleteDialog}
@@ -199,8 +202,9 @@ export class ConnectionCard extends React.PureComponent<
                     ) : (
                       <a
                         data-testid={`${toTestId(
-                          ConnectionCard.name,
-                          this.props.name + '--delete-action'
+                          'ConnectionCard',
+                          this.props.name,
+                          'delete-action'
                         )}`}
                         href={'javascript:void(0)'}
                         onClick={this.showDeleteDialog}
@@ -217,8 +221,9 @@ export class ConnectionCard extends React.PureComponent<
           </Card.Heading>
           <Link
             data-testid={`${toTestId(
-              ConnectionCard.name,
-              this.props.name + '--details-link'
+              'ConnectionCard',
+              this.props.name,
+              'details-link'
             )}`}
             to={this.props.href}
             className={'connection-card__content'}
@@ -232,8 +237,9 @@ export class ConnectionCard extends React.PureComponent<
                   size="lg"
                   className="connection-card__title h2"
                   data-testid={`${toTestId(
-                    ConnectionCard.name,
-                    this.props.name
+                    'ConnectionCard',
+                    this.props.name,
+                    'title'
                   )}`}
                 >
                   {this.props.name}

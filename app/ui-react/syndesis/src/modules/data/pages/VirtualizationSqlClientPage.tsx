@@ -51,7 +51,7 @@ export class VirtualizationSqlClientPage extends React.Component<
                 <Breadcrumb>
                   <Link
                     data-testid={toTestId(
-                      VirtualizationSqlClientPage.name,
+                      'VirtualizationSqlClientPage',
                       'home-link'
                     )}
                     to={resolvers.dashboard.root()}
@@ -60,7 +60,7 @@ export class VirtualizationSqlClientPage extends React.Component<
                   </Link>
                   <Link
                     data-testid={toTestId(
-                      VirtualizationSqlClientPage.name,
+                      'VirtualizationSqlClientPage',
                       'virtualizations-link'
                     )}
                     to={resolvers.data.root()}

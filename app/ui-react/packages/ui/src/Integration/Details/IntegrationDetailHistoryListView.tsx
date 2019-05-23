@@ -45,7 +45,7 @@ export class IntegrationDetailHistoryListView extends React.Component<
                     <>
                       <ButtonLink
                         data-testid={`${toTestId(
-                          IntegrationDetailHistoryListView.name,
+                          'IntegrationDetailHistoryListView',
                           'publish-button'
                         )}`}
                         to={this.props.publishHref}
@@ -54,7 +54,7 @@ export class IntegrationDetailHistoryListView extends React.Component<
                       />
                       <ButtonLink
                         data-testid={`${toTestId(
-                          IntegrationDetailHistoryListView.name,
+                          'IntegrationDetailHistoryListView',
                           'edit-button'
                         )}`}
                         href={this.props.editHref}

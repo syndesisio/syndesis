@@ -118,7 +118,7 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                           <Breadcrumb>
                             <Link
                               data-testid={toTestId(
-                                ManageCiCdPage.name,
+                                'ManageCiCdPage',
                                 'integrations-link'
                               )}
                               to={resolvers.list()}

@@ -40,7 +40,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
               <Grid.Col xs={6} xsOffset={6}>
                 <ButtonLink
                   data-testid={`${toTestId(
-                    Dashboard.name,
+                    'Dashboard',
                     'create-integration-button'
                   )}`}
                   href={this.props.linkToIntegrationCreation}
@@ -50,10 +50,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                   {this.props.i18nLinkCreateIntegration}
                 </ButtonLink>
                 <Link
-                  data-testid={`${toTestId(
-                    Dashboard.name,
-                    'integrations-link'
-                  )}`}
+                  data-testid={`${toTestId('Dashboard', 'integrations-link')}`}
                   to={this.props.linkToIntegrations}
                   className={'pull-right view'}
                 >
@@ -99,7 +96,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
               </Title>
               <ButtonLink
                 data-testid={`${toTestId(
-                  Dashboard.name,
+                  'Dashboard',
                   'create-connection-button'
                 )}`}
                 href={this.props.linkToConnectionCreation}
@@ -109,7 +106,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 {this.props.i18nLinkCreateConnection}
               </ButtonLink>
               <Link
-                data-testid={`${toTestId(Dashboard.name, 'connections-link')}`}
+                data-testid={`${toTestId('Dashboard', 'connections-link')}`}
                 to={this.props.linkToConnections}
                 className={'pull-right view'}
               >

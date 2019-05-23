@@ -63,7 +63,7 @@ export class TagIntegrationDialog extends React.Component<
           <>
             <Button
               data-testid={`${toTestId(
-                TagIntegrationDialog.name,
+                'TagIntegrationDialog',
                 'cancel-button'
               )}`}
               onClick={this.props.onHide}
@@ -71,10 +71,7 @@ export class TagIntegrationDialog extends React.Component<
               {this.props.i18nCancelButtonText}
             </Button>
             <Button
-              data-testid={`${toTestId(
-                TagIntegrationDialog.name,
-                'save-button'
-              )}`}
+              data-testid={`${toTestId('TagIntegrationDialog', 'save-button')}`}
               bsStyle={'primary'}
               onClick={this.handleClick}
               disabled={this.state.disableSave}

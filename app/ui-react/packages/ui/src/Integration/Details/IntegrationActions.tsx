@@ -24,7 +24,11 @@ export class IntegrationActions extends React.Component<
     return (
       <>
         <ButtonLink
-          data-testid={`${toTestId(IntegrationActions.name, 'view-button')}`}
+          data-testid={`${toTestId(
+            'IntegrationActions',
+            this.props.integrationId,
+            'view-button'
+          )}`}
           className="view-integration-btn"
           href={this.props.detailsHref}
           as={'default'}
@@ -40,7 +44,8 @@ export class IntegrationActions extends React.Component<
               {a.href ? (
                 <Link
                   data-testid={`${toTestId(
-                    IntegrationActions.name,
+                    'IntegrationActions',
+                    this.props.integrationId,
                     a.label.toString()
                   )}`}
                   to={a.href}
@@ -53,7 +58,8 @@ export class IntegrationActions extends React.Component<
               ) : (
                 <a
                   data-testid={`${toTestId(
-                    IntegrationActions.name,
+                    'IntegrationActions',
+                    this.props.integrationId,
                     a.label.toString()
                   )}`}
                   href={'javascript:void(0)'}

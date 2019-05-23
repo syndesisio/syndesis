@@ -39,10 +39,7 @@ export class ViewList extends React.Component<IViewsListProps> {
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    ViewList.name,
-                    'import-views-button'
-                  )}`}
+                  data-testid={`${toTestId('ViewList', 'import-views-button')}`}
                   href={this.props.linkImportViewsHRef}
                   as={'default'}
                 >
@@ -54,10 +51,7 @@ export class ViewList extends React.Component<IViewsListProps> {
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    ViewList.name,
-                    'create-view-button'
-                  )}`}
+                  data-testid={`${toTestId('ViewList', 'create-view-button')}`}
                   href={this.props.linkCreateViewHRef}
                   as={'primary'}
                 >

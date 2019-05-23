@@ -59,8 +59,9 @@ export class SchemaNodeListItem extends React.Component<
         checkboxInput={
           <input
             data-testid={`${toTestId(
-              SchemaNodeListItem.name,
-              this.props.name + '.selected-input'
+              'SchemaNodeListItem',
+              this.props.name,
+              'selected-input'
             )}`}
             type="checkbox"
             value=""

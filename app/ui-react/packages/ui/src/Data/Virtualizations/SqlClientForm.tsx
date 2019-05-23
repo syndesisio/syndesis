@@ -33,7 +33,7 @@ export class SqlClientForm extends React.Component<ISqlClientFormProps> {
             </div>
           </form>
           <button
-            data-testid={`${toTestId(SqlClientForm.name, 'submit-button')}`}
+            data-testid={`${toTestId('SqlClientForm', 'submit-button')}`}
             type="button"
             className="btn btn-primary"
             onClick={this.props.handleSubmit}

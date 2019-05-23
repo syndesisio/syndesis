@@ -143,7 +143,7 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
               <Breadcrumb>
                 <Link
                   data-testid={toTestId(
-                    IntegrationEditorApp.name,
+                    'IntegrationEditorApp',
                     'integrations-link'
                   )}
                   to={resolvers.list()}
@@ -152,7 +152,7 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                 </Link>
                 <Link
                   data-testid={toTestId(
-                    IntegrationEditorApp.name,
+                    'IntegrationEditorApp',
                     'integration-link'
                   )}
                   to={resolvers.integration.details({

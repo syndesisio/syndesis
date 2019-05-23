@@ -30,7 +30,7 @@ export class TagIntegrationDialogEmptyState extends React.Component<
         <EmptyState.Action>
           <ButtonLink
             data-testid={`${toTestId(
-              TagIntegrationDialogEmptyState.name,
+              'TagIntegrationDialogEmptyState',
               'manage-cicd-button'
             )}`}
             as="primary"

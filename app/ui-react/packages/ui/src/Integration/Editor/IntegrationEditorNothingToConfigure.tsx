@@ -39,7 +39,7 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
               <div className="card-pf-footer">
                 <ButtonLink
                   data-testid={`${toTestId(
-                    IntegrationEditorNothingToConfigure.name,
+                    'IntegrationEditorNothingToConfigure',
                     'back-button'
                   )}`}
                   href={this.props.backActionHref}
@@ -50,7 +50,7 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
                 &nbsp;
                 <ButtonLink
                   data-testid={`${toTestId(
-                    IntegrationEditorNothingToConfigure.name,
+                    'IntegrationEditorNothingToConfigure',
                     'next-button'
                   )}`}
                   onClick={this.props.submitForm}

@@ -140,7 +140,11 @@ export class DndFileChooser extends React.Component<
         <ul>
           {this.state.files.map((file, index) => (
             <li
-              data-testid={`${toTestId(DndFileChooser.name, file.name)}`}
+              data-testid={`${toTestId(
+                'DndFileChooser',
+                file.name,
+                'list-item'
+              )}`}
               key={index}
             >
               {file.name}
@@ -182,7 +186,11 @@ export class DndFileChooser extends React.Component<
         <ul>
           {this.props.i18nUploadSuccessMessages!.map((message, idx) => (
             <li
-              data-testid={`${toTestId(DndFileChooser.name, message)}`}
+              data-testid={`${toTestId(
+                'DndFileChooser',
+                message,
+                'success-message'
+              )}`}
               key={'success' + idx}
               className="dnd-file-chooser__uploadMessage"
             >
@@ -192,7 +200,11 @@ export class DndFileChooser extends React.Component<
           ))}
           {this.props.i18nUploadFailedMessages!.map((message, idx) => (
             <li
-              data-testid={`${toTestId(DndFileChooser.name, message)}`}
+              data-testid={`${toTestId(
+                'DndFileChooser',
+                message,
+                'failed-message'
+              )}`}
               key={'fail' + idx}
               className="dnd-file-chooser__uploadMessage"
             >

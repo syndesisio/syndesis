@@ -146,7 +146,7 @@ export const DataMapperPage: React.FunctionComponent<
                   extraActions={
                     <ButtonLink
                       data-testid={toTestId(
-                        DataMapperPage.name,
+                        'DataMapperPage',
                         'save-mapping-button'
                       )}
                       onClick={saveMappingStep}

@@ -22,25 +22,19 @@ export default class ViewsImportApp extends React.Component {
           <WithClosedNavigation>
             <Breadcrumb>
               <Link
-                data-testid={toTestId(ViewsImportApp.name, 'home-link')}
+                data-testid={toTestId('ViewsImportApp', 'home-link')}
                 to={resolvers.dashboard.root()}
               >
                 {i18n.t('shared:Home')}
               </Link>
               <Link
-                data-testid={toTestId(
-                  ViewsImportApp.name,
-                  'virtualizations-link'
-                )}
+                data-testid={toTestId('ViewsImportApp', 'virtualizations-link')}
                 to={resolvers.data.root()}
               >
                 {i18n.t('shared:DataVirtualizations')}
               </Link>
               <Link
-                data-testid={toTestId(
-                  ViewsImportApp.name,
-                  'virtualization-link'
-                )}
+                data-testid={toTestId('ViewsImportApp', 'virtualization-link')}
                 to={resolvers.data.virtualizations.views.root({
                   virtualization,
                 })}

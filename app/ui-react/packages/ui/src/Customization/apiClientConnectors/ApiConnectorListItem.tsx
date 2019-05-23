@@ -117,8 +117,9 @@ export class ApiConnectorListItem extends React.Component<
               >
                 <ButtonLink
                   data-testid={`${toTestId(
-                    ApiConnectorListItem.name,
-                    this.props.apiConnectorName + '--details-button'
+                    'ApiConnectorListItem',
+                    this.props.apiConnectorName,
+                    'details-button'
                   )}`}
                   href={this.props.detailsPageLink}
                   as={'default'}
@@ -129,8 +130,9 @@ export class ApiConnectorListItem extends React.Component<
               <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
                 <Button
                   data-testid={`${toTestId(
-                    ApiConnectorListItem.name,
-                    this.props.apiConnectorName + '--delete-button'
+                    'ApiConnectorListItem',
+                    this.props.apiConnectorName,
+                    'delete-button'
                   )}`}
                   bsStyle="default"
                   disabled={this.props.usedBy !== 0}

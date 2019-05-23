@@ -95,7 +95,7 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                                   actions={
                                     <ButtonLink
                                       data-testid={toTestId(
-                                        SelectActionPage.name,
+                                        'SelectActionPage',
                                         'select-button'
                                       )}
                                       href={this.props.selectHref(

@@ -19,7 +19,7 @@ export const IntegrationsListItemUnreadable: React.FC<
       actions={
         <ButtonLink
           data-testid={`${toTestId(
-            IntegrationsListItemUnreadable.name,
+            'IntegrationsListItemUnreadable',
             'json-button'
           )}`}
           onClick={onClick}

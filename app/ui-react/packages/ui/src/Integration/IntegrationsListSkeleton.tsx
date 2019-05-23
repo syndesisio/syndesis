@@ -44,7 +44,7 @@ export class IntegrationsListSkeleton extends React.PureComponent {
       <>
         <div
           className={'list-group-item'}
-          data-testid={`${toTestId(IntegrationsListSkeleton.name, 'item-0')}`}
+          data-testid={`${toTestId('IntegrationsListSkeleton', 'item-0')}`}
         >
           <div>
             <ItemSkeleton />
@@ -52,7 +52,7 @@ export class IntegrationsListSkeleton extends React.PureComponent {
         </div>
         <div
           className={'list-group-item'}
-          data-testid={`${toTestId(IntegrationsListSkeleton.name, 'item-1')}`}
+          data-testid={`${toTestId('IntegrationsListSkeleton', 'item-1')}`}
         >
           <div>
             <ItemSkeleton />
@@ -60,7 +60,7 @@ export class IntegrationsListSkeleton extends React.PureComponent {
         </div>
         <div
           className={'list-group-item'}
-          data-testid={`${toTestId(IntegrationsListSkeleton.name, 'item-2')}`}
+          data-testid={`${toTestId('IntegrationsListSkeleton', 'item-2')}`}
         >
           <div>
             <ItemSkeleton />

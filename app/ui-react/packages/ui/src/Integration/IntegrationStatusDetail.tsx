@@ -33,7 +33,7 @@ export class IntegrationStatusDetail extends React.Component<
     }
     return (
       <div
-        data-testid={`${toTestId(IntegrationStatusDetail.name, 'detail')}`}
+        data-testid={`${toTestId('IntegrationStatusDetail', 'status-detail')}`}
         className={'integration-status-detail'}
       >
         {this.props.value && this.props.currentStep && this.props.totalSteps ? (

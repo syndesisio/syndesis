@@ -44,7 +44,7 @@ export class ExtensionListView extends React.Component<
             <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
               <ButtonLink
                 data-testid={`${toTestId(
-                  ExtensionListView.name,
+                  'ExtensionListView',
                   'import-button'
                 )}`}
                 href={this.props.linkImportExtension}
@@ -76,7 +76,7 @@ export class ExtensionListView extends React.Component<
               <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
                 <ButtonLink
                   data-testid={`${toTestId(
-                    ExtensionListView.name,
+                    'ExtensionListView',
                     'empty-state-import-button'
                   )}`}
                   href={this.props.linkImportExtension}

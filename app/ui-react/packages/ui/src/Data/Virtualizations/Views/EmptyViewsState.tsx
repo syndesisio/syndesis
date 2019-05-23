@@ -30,7 +30,7 @@ export class EmptyViewsState extends React.Component<IEmptyViewsStateProps> {
           >
             <ButtonLink
               data-testid={`${toTestId(
-                EmptyViewsState.name,
+                'EmptyViewsState',
                 'import-views-button'
               )}`}
               href={this.props.linkImportViewsHRef}
@@ -43,7 +43,7 @@ export class EmptyViewsState extends React.Component<IEmptyViewsStateProps> {
           <OverlayTrigger overlay={this.getCreateViewTooltip()} placement="top">
             <ButtonLink
               data-testid={`${toTestId(
-                EmptyViewsState.name,
+                'EmptyViewsState',
                 'create-view-button'
               )}`}
               href={this.props.linkCreateViewHRef}

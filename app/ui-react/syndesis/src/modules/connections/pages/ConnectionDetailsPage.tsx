@@ -237,7 +237,7 @@ export class ConnectionDetailsPage extends React.Component<
                                               <Breadcrumb>
                                                 <Link
                                                   data-testid={toTestId(
-                                                    ConnectionDetailsPage.name,
+                                                    'ConnectionDetailsPage',
                                                     'home-link'
                                                   )}
                                                   to={resolvers.dashboard.root()}
@@ -246,7 +246,7 @@ export class ConnectionDetailsPage extends React.Component<
                                                 </Link>
                                                 <Link
                                                   data-testid={toTestId(
-                                                    ConnectionDetailsPage.name,
+                                                    'ConnectionDetailsPage',
                                                     'connections-link'
                                                   )}
                                                   to={resolvers.connections.connections()}

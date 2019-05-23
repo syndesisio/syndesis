@@ -34,7 +34,7 @@ export class IntegrationsListView extends React.Component<
             <div className="form-group">
               <ButtonLink
                 data-testid={`${toTestId(
-                  IntegrationsListView.name,
+                  'IntegrationsListView',
                   'manage-cicd-button'
                 )}`}
                 href={this.props.linkToManageCiCd}
@@ -43,7 +43,7 @@ export class IntegrationsListView extends React.Component<
               </ButtonLink>
               <ButtonLink
                 data-testid={`${toTestId(
-                  IntegrationsListView.name,
+                  'IntegrationsListView',
                   'import-button'
                 )}`}
                 href={this.props.linkToIntegrationImport}
@@ -52,7 +52,7 @@ export class IntegrationsListView extends React.Component<
               </ButtonLink>
               <ButtonLink
                 data-testid={`${toTestId(
-                  IntegrationsListView.name,
+                  'IntegrationsListView',
                   'create-button'
                 )}`}
                 href={this.props.linkToIntegrationCreation}

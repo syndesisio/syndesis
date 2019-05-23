@@ -1,7 +1,7 @@
 import { Text } from '@patternfly/react-core';
 import { Card, CardBody } from 'patternfly-react';
 import * as React from 'react';
-import { toTestId } from '../utils';
+import { toTestId } from '../../utils';
 import './ApiConnectorDetailCard.css';
 
 export interface IApiConnectorDetailCardProps {
@@ -23,7 +23,7 @@ export class ApiConnectorDetailCard extends React.Component<
             </div>
             <div
               className="api-connector__title h2"
-              data-testid={`${toTestId(ApiConnectorDetailCard.name, 'title')}`}
+              data-testid={`${toTestId('ApiConnectorDetailCard', 'title')}`}
             >
               {this.props.name}
             </div>

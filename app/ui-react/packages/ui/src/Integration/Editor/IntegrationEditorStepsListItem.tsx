@@ -41,8 +41,9 @@ export const IntegrationEditorStepsListItem: React.FunctionComponent<
                 {props.showWarning && (
                   <ButtonLink
                     data-testid={`${toTestId(
-                      IntegrationEditorStepsListItem.name,
-                      props.stepName + '--warning-button'
+                      'IntegrationEditorStepsListItem',
+                      props.stepName,
+                      'warning-button'
                     )}`}
                     as={'link'}
                     onClick={toggleWarningPopover}

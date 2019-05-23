@@ -137,8 +137,9 @@ export class ExtensionListItem extends React.Component<
               >
                 <ButtonLink
                   data-testid={`${toTestId(
-                    ExtensionListItem.name,
-                    this.props.extensionName + '--details-button'
+                    'ExtensionListItem',
+                    this.props.extensionName,
+                    'details-button'
                   )}`}
                   href={this.props.detailsPageLink}
                   as={'default'}
@@ -149,8 +150,9 @@ export class ExtensionListItem extends React.Component<
               <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
                 <ButtonLink
                   data-testid={`${toTestId(
-                    ExtensionListItem.name,
-                    this.props.extensionName + '--update-button'
+                    'ExtensionListItem',
+                    this.props.extensionName,
+                    'update-button'
                   )}`}
                   href={this.props.linkUpdateExtension}
                   as={'default'}
@@ -161,8 +163,9 @@ export class ExtensionListItem extends React.Component<
               <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
                 <Button
                   data-testid={`${toTestId(
-                    ExtensionListItem.name,
-                    this.props.extensionName + '--delete-button'
+                    'ExtensionListItem',
+                    this.props.extensionName,
+                    'delete-button'
                   )}`}
                   bsStyle="default"
                   disabled={this.props.usedBy !== 0}

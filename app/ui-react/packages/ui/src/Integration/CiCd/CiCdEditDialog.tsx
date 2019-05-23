@@ -99,13 +99,13 @@ export class CiCdEditDialog extends React.Component<
         footer={
           <>
             <Button
-              data-testid={`${toTestId(CiCdEditDialog.name, 'cancel-button')}`}
+              data-testid={`${toTestId('CiCdEditDialog', 'cancel-button')}`}
               onClick={this.props.onHide}
             >
               {this.props.i18nCancelButtonText}
             </Button>
             <Button
-              data-testid={`${toTestId(CiCdEditDialog.name, 'save-button')}`}
+              data-testid={`${toTestId('CiCdEditDialog', 'save-button')}`}
               bsStyle={'primary'}
               onClick={this.handleClick}
               disabled={

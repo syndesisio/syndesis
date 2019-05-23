@@ -210,7 +210,7 @@ export class ExtensionImportReview extends React.Component<
                   </Button>
                   <ButtonLink
                     data-testid={`${toTestId(
-                      ExtensionImportReview.name,
+                      'ExtensionImportReview',
                       'cancel-button'
                     )}`}
                     className="extension-import-review__cancelButton"

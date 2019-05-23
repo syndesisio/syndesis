@@ -24,7 +24,7 @@ export class IntegrationDetailHistoryListViewItemActions extends React.Component
               {a.href ? (
                 <Link
                   data-testid={`${toTestId(
-                    IntegrationDetailHistoryListViewItemActions.name,
+                    'IntegrationDetailHistoryListViewItemActions',
                     a.label.toString()
                   )}`}
                   to={a.href}
@@ -37,7 +37,7 @@ export class IntegrationDetailHistoryListViewItemActions extends React.Component
               ) : (
                 <a
                   data-testid={`${toTestId(
-                    IntegrationDetailHistoryListViewItemActions.name,
+                    'IntegrationDetailHistoryListViewItemActions',
                     a.label.toString()
                   )}`}
                   href={'javascript:void(0)'}

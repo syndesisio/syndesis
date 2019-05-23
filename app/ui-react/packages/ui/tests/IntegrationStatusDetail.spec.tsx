@@ -40,22 +40,22 @@ export default describe('IntegrationStatusDetail', () => {
 
   it('Should show the starting state', () => {
     const { getByTestId } = render(testComponentPublishing);
-    expect(getByTestId('integrationstatusdetail--detail')).toHaveTextContent(
-      'Starting...'
-    );
+    expect(
+      getByTestId('integrationstatusdetail--status-detail')
+    ).toHaveTextContent('Starting...');
   });
 
   it('Should show the detailed status', () => {
     const { getByTestId } = render(testComponentPublishingDetailed);
-    expect(getByTestId('integrationstatusdetail--detail')).toHaveTextContent(
-      ''
-    );
+    expect(
+      getByTestId('integrationstatusdetail--status-detail')
+    ).toHaveTextContent('');
   });
 
   it('Should show the stopping state', () => {
     const { getByTestId } = render(testComponentUnpublishing);
-    expect(getByTestId('integrationstatusdetail--detail')).toHaveTextContent(
-      'Stopping...'
-    );
+    expect(
+      getByTestId('integrationstatusdetail--status-detail')
+    ).toHaveTextContent('Stopping...');
   });
 });

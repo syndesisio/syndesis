@@ -88,7 +88,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
             <>
               <div className="pull-right toast-pf-action">
                 <ButtonLink
-                  data-testid={`${toTestId(UI.name, 'reload-button')}`}
+                  data-testid={`${toTestId('UI', 'reload-button')}`}
                   onClick={refreshApp}
                   as={'link'}
                   style={{ padding: 0, border: 0 }}
@@ -211,7 +211,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                           type="button"
                                           role="menuitem"
                                           data-testid={`${toTestId(
-                                            UI.name,
+                                            'UI',
                                             'logout-link'
                                           )}`}
                                           className="pf-c-dropdown__menu-item"
@@ -232,7 +232,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                   to={(route as IAppRoute).to}
                                   key={index}
                                   data-testid={`${toTestId(
-                                    UI.name,
+                                    'UI',
                                     (route as IAppRoute).to
                                   )}`}
                                 />
@@ -250,7 +250,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                         to={subRoute.to}
                                         key={subIndex}
                                         data-testid={`${toTestId(
-                                          UI.name,
+                                          'UI',
                                           subRoute.to
                                         )}`}
                                       />

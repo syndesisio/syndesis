@@ -18,14 +18,14 @@ export class ProgressWithLink extends React.PureComponent<
     return (
       <div className="progress-link">
         <div>
-          <i data-testid={`${toTestId(ProgressWithLink.name, 'value')}`}>
+          <i data-testid={`${toTestId('ProgressWithLink', 'value')}`}>
             {this.props.value} ( {this.props.currentStep} /{' '}
             {this.props.totalSteps} )
           </i>
           {this.props.logUrl && (
             <span className="pull-right">
               <a
-                data-testid={`${toTestId(ProgressWithLink.name, 'log-url')}`}
+                data-testid={`${toTestId('ProgressWithLink', 'log-url')}`}
                 target="_blank"
                 href={this.props.logUrl}
               >

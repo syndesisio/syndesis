@@ -188,7 +188,12 @@ export default () => (
                         </div>
                       }
                       uptimeOverview={
-                        <div data-testid="metrics-uptime">
+                        <div
+                          data-testid={toTestId(
+                            'DashboardPage',
+                            'metrics-uptime'
+                          )}
+                        >
                           <UptimeMetric
                             start={parseInt(metricsData.start!, 10)}
                             durationDifference={toDurationDifferenceString(

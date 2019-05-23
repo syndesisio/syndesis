@@ -94,7 +94,7 @@ export default class ExtensionDetailsPage extends React.Component {
                                 <Breadcrumb>
                                   <Link
                                     data-testid={toTestId(
-                                      ExtensionDetailsPage.name,
+                                      'ExtensionDetailsPage',
                                       'home-link'
                                     )}
                                     to={resolvers.dashboard.root()}
@@ -103,7 +103,7 @@ export default class ExtensionDetailsPage extends React.Component {
                                   </Link>
                                   <Link
                                     data-testid={toTestId(
-                                      ExtensionDetailsPage.name,
+                                      'ExtensionDetailsPage',
                                       'extensions-link'
                                     )}
                                     to={resolvers.extensions.list()}

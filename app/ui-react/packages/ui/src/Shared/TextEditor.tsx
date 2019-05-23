@@ -29,7 +29,7 @@ export class TextEditor extends React.Component<ITextEditorProps> {
       <>
         <div
           data-testid={`${toTestId(
-            TextEditor.name,
+            'TextEditor',
             this.props.id || 'codemirror'
           )}`}
         >

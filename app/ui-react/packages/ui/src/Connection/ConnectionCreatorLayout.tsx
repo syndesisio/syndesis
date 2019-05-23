@@ -95,10 +95,7 @@ export const ConnectionCreatorLayout: React.FunctionComponent<
       </div>
       <div className="wizard-pf-footer integration-editor-layout__footer">
         <ButtonLink
-          data-testid={`${toTestId(
-            ConnectionCreatorLayout.name,
-            'back-button'
-          )}`}
+          data-testid={`${toTestId('ConnectionCreatorLayout', 'back-button')}`}
           onClick={onBack}
           href={backHref}
           className={'wizard-pf-back'}
@@ -109,10 +106,7 @@ export const ConnectionCreatorLayout: React.FunctionComponent<
           <div className={'wizard-pf-extrabuttons'}>{extraButtons}</div>
         )}
         <ButtonLink
-          data-testid={`${toTestId(
-            ConnectionCreatorLayout.name,
-            'next-button'
-          )}`}
+          data-testid={`${toTestId('ConnectionCreatorLayout', 'next-button')}`}
           onClick={onNext}
           href={nextHref}
           as={'primary'}
@@ -130,7 +124,7 @@ export const ConnectionCreatorLayout: React.FunctionComponent<
         </ButtonLink>
         <ButtonLink
           data-testid={`${toTestId(
-            ConnectionCreatorLayout.name,
+            'ConnectionCreatorLayout',
             'cancel-button'
           )}`}
           onClick={onCancel}

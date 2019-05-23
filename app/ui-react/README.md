@@ -6,35 +6,47 @@ Syndesis UI is a single page application built with React.
 
 ##### Table of Contents
 
-- [This repository](#this-repository)
-- [Setup and preparation](#setup-and-preparation)
-- [Development workflow](#development-workflow)
-    - [yarn build](#yarn-build)
-    - [yarn watch:app:minishift](#yarn-watchappminishift)
-    - [yarn watch:app:minishift:restore](#yarn-watchappminishiftrestore)
-    - [yarn watch:packages](#yarn-watchpackages)
-    - [yarn test](#yarn-test)
-    - [yarn storybook](#yarn-storybook)
-- [How to](#how-to)
+- [Syndesis UI](#syndesis-ui)
+        - [Table of Contents](#table-of-contents)
+  - [This repository](#this-repository)
+    - [syndesis](#syndesis)
+    - [packages/api](#packagesapi)
+    - [packages/models](#packagesmodels)
+    - [packages/ui](#packagesui)
+    - [packages/utils](#packagesutils)
+    - [typings](#typings)
+  - [Setup and preparation](#setup-and-preparation)
+  - [Development workflow](#development-workflow)
+    - [`yarn build`](#yarn-build)
+    - [`yarn watch:app:minishift`](#yarn-watchappminishift)
+    - [`yarn watch:app:minishift:restore`](#yarn-watchappminishiftrestore)
+    - [`BACKEND=https://syndesis.192.168.64.1.nip.io yarn watch:app:proxy`](#backendhttpssyndesis192168641nipio-yarn-watchappproxy)
+    - [`yarn watch:packages`](#yarn-watchpackages)
+    - [`yarn test`](#yarn-test)
+    - [`yarn storybook`](#yarn-storybook)
+  - [How to](#how-to)
     - [Internationalization](#internationalization)
-        - [Internationalizing a render method](#internationalizing-a-render-method)
-        - [Internationalizing text in a constant](#internationalizing-text-in-a-constant)
-        - [Translation Examples](#translation-examples)
-            - [Simple translation using default namespace](#simple-translation-using-default-namespace)
-            - [Translations using different namespaces](#translations-using-different-namespaces)
-            - [Translation with arguments](#translation-with-arguments)
-            - [Nested translation](#nested-translation)
-            - [Translation as an argument to another translation](#translation-as-an-argument-to-another-translation)
-            - [Adding plurals to a translation](#adding-plurals-to-a-translation)
+      - [Internationalizing a render method](#internationalizing-a-render-method)
+      - [Internationalizing text in a constant](#internationalizing-text-in-a-constant)
+      - [Translation Examples](#translation-examples)
+        - [Simple translation using default namespace](#simple-translation-using-default-namespace)
+        - [Translations using different namespaces](#translations-using-different-namespaces)
+        - [Translation with arguments](#translation-with-arguments)
+        - [Nested translation](#nested-translation)
+        - [Translation as an argument to another translation](#translation-as-an-argument-to-another-translation)
+        - [Adding plurals to a translation](#adding-plurals-to-a-translation)
     - [Routing](#routing)
-        - [Introduction to routing](#introduction-to-routing)
-        - [App's routes and resolvers](#apps-routes-and-resolvers)
-        - [Routes and app state (AKA passing data between routes)](#routes-and-app-state-aka-passing-data-between-routes)
-          - [A simple example](#a-simple-example)
-          - [Urls as a single source of truth](#urls-as-a-single-source-of-truth)
-          - [Where we are going there ~~are no roads~~ is no app state](#where-we-are-going-there-are-no-roads-is-no-app-state)        
-    - [Testing](#testing)        
-- [License](#license)
+      - [Introduction to routing](#introduction-to-routing)
+      - [App's routes and resolvers](#apps-routes-and-resolvers)
+      - [Routes and app state (i.e. passing data between routes)](#routes-and-app-state-ie-passing-data-between-routes)
+        - [A simple example](#a-simple-example)
+        - [URLs as a single source of truth](#urls-as-a-single-source-of-truth)
+        - [Where we are going there ~~are no roads~~ is no app state](#where-we-are-going-there-are-no-roads-is-no-app-state)
+    - [Testing](#testing)
+      - [Adding test identifiers](#adding-test-identifiers)
+      - [Unit testing](#unit-testing)
+      - [Integration testing](#integration-testing)
+  - [License](#license)
 
 ## This repository 
 
@@ -621,6 +633,31 @@ export class IntegrationDetailPage extends React.Component {
 We now have a page that is resilient to page refreshes, can be shared with others, and uses the URL as a single source of truth. Plus, with a little help from the browser, we can use history state to improve the user experience.
 
 ### Testing
+
+#### Adding test identifiers
+
+UI components that have user interaction should define a `data-testid` attribute. Here are a few components that might need a test identifier: `ButtonLink`, `button`, `a`, `input`, `Link`, `PfVerticalNavItem`, `PfNavLink`, `li` used in menus, and `DropdownItem`.
+
+The `toTestId` utilitity function, which is found in the `testIdGenerator.ts` file in the `utils` folder of the `@syndesis/ui` package, should be used to generate **all** test identifiers. This function ensures the identifier is formatted correctly and only contains valid characters. It also provides a way to separate segments of the identifier if segments are desired.
+
+The `toTestId` function accepts one or more strings and inserts 2 dash (`-`) characters between them. It is recommended to have the first string be the name of the component. Here is an example of how to use the `toTestId` function:
+
+```tsx
+export class ExtensionListItem extends React.Component<
+...
+<Button
+  data-testid={`${toTestId(
+    'ExtensionListItem',
+    this.props.extensionName,
+    'delete-button'
+  )}`}
+  ...
+>
+  {this.props.i18nDelete}
+</Button>
+```
+
+The above code produces this test ID for an extension with the name of "My Extension": `extensionlistitem--my-extension--delete-button`.
 
 #### Unit testing
 

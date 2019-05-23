@@ -22,25 +22,19 @@ export default class ViewCreateApp extends React.Component {
           <WithClosedNavigation>
             <Breadcrumb>
               <Link
-                data-testid={toTestId(ViewCreateApp.name, 'home-link')}
+                data-testid={toTestId('ViewCreateApp', 'home-link')}
                 to={resolvers.dashboard.root()}
               >
                 {i18n.t('shared:Home')}
               </Link>
               <Link
-                data-testid={toTestId(
-                  ViewCreateApp.name,
-                  'virtualizations-link'
-                )}
+                data-testid={toTestId('ViewCreateApp', 'virtualizations-link')}
                 to={resolvers.data.root()}
               >
                 {i18n.t('shared:DataVirtualizations')}
               </Link>
               <Link
-                data-testid={toTestId(
-                  ViewCreateApp.name,
-                  'virtualization-link'
-                )}
+                data-testid={toTestId('ViewCreateApp', 'virtualization-link')}
                 to={resolvers.data.virtualizations.views.root({
                   virtualization,
                 })}

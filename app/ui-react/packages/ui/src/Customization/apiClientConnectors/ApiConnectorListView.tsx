@@ -35,7 +35,7 @@ export class ApiConnectorListView extends React.Component<
             >
               <ButtonLink
                 data-testid={`${toTestId(
-                  ApiConnectorListView.name,
+                  'ApiConnectorListView',
                   'create-button'
                 )}`}
                 href={this.props.linkCreateApiConnector}
@@ -70,7 +70,7 @@ export class ApiConnectorListView extends React.Component<
               >
                 <ButtonLink
                   data-testid={`${toTestId(
-                    ApiConnectorListView.name,
+                    'ApiConnectorListView',
                     'empty-state-create-button'
                   )}`}
                   href={this.props.linkCreateApiConnector}

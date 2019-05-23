@@ -71,7 +71,7 @@ export const SupportPage: React.FunctionComponent = () => {
                                     <label htmlFor="alllogs">
                                       <input
                                         data-testid={toTestId(
-                                          SupportPage.name,
+                                          'SupportPage',
                                           'all-logs-input'
                                         )}
                                         type="radio"
@@ -93,7 +93,7 @@ export const SupportPage: React.FunctionComponent = () => {
                                     <label htmlFor="specificlogs">
                                       <input
                                         data-testid={toTestId(
-                                          SupportPage.name,
+                                          'SupportPage',
                                           'specific-logs-input'
                                         )}
                                         type="radio"
@@ -147,7 +147,7 @@ export const SupportPage: React.FunctionComponent = () => {
                                       return (
                                         <button
                                           data-testid={toTestId(
-                                            SupportPage.name,
+                                            'SupportPage',
                                             'download-button'
                                           )}
                                           className="btn btn-primary"

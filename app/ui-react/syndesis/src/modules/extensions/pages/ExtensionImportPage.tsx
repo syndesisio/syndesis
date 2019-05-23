@@ -176,7 +176,7 @@ export default class ExtensionImportPage extends React.Component<
                               actions={
                                 <ButtonLink
                                   data-testid={toTestId(
-                                    ExtensionImportPage.name,
+                                    'ExtensionImportPage',
                                     'cancel-button'
                                   )}
                                   className={'extension-import-page__action'}
@@ -189,7 +189,7 @@ export default class ExtensionImportPage extends React.Component<
                             >
                               <Link
                                 data-testid={toTestId(
-                                  ExtensionImportPage.name,
+                                  'ExtensionImportPage',
                                   'home-link'
                                 )}
                                 to={resolvers.dashboard.root()}
@@ -198,7 +198,7 @@ export default class ExtensionImportPage extends React.Component<
                               </Link>
                               <Link
                                 data-testid={toTestId(
-                                  ExtensionImportPage.name,
+                                  'ExtensionImportPage',
                                   'extensions-link'
                                 )}
                                 to={resolvers.extensions.list()}

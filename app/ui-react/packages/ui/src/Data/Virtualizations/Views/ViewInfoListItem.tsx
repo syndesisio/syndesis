@@ -58,8 +58,9 @@ export class ViewInfoListItem extends React.Component<
         checkboxInput={
           <input
             data-testid={`${toTestId(
-              ViewInfoListItem.name,
-              this.props.name + '--selected-input'
+              'ViewInfoListItem',
+              this.props.name,
+              'selected-input'
             )}`}
             type="checkbox"
             value=""

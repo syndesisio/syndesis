@@ -19,7 +19,7 @@ export class DvConnectionsListView extends React.Component<
           <div className="form-group">
             <ButtonLink
               data-testid={`${toTestId(
-                DvConnectionsListView.name,
+                'DvConnectionsListView',
                 'create-connection-button'
               )}`}
               href={this.props.linkToConnectionCreate}

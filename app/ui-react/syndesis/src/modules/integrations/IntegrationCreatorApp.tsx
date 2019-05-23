@@ -135,7 +135,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
       <Breadcrumb>
         <Link
           data-testid={toTestId(
-            IntegrationCreatorApp.name,
+            'IntegrationCreatorApp',
             'new-integration-link'
           )}
           to={resolvers.list()}
