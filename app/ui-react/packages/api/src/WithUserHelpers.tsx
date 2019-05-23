@@ -24,7 +24,7 @@ export class WithUserHelpersWrapped extends React.Component<
         responseType: 'arraybuffer',
       },
       method: 'GET',
-      url: `/logout`,
+      url: `${process.env.PUBLIC_URL}/logout`,
     });
 
     // const html = String.fromCharCode.apply(null, new Uint8Array(response.body!));
