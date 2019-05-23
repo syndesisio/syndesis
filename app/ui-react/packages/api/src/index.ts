@@ -26,6 +26,7 @@ export * from './WithExtension';
 export * from './WithExtensionHelpers';
 export * from './WithExtensionIntegrations';
 export * from './WithExtensions';
+export * from './WithFilterOptions';
 export * from './WithIntegration';
 export * from './WithIntegrationHelpers';
 export * from './WithIntegrationMetrics';

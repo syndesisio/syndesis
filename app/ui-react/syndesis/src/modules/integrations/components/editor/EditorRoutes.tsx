@@ -88,8 +88,8 @@ export const TemplateApp: React.FunctionComponent<
 };
 
 export interface IBasicFilterAppProps {
-  filterPath: string;
-  filterChildren: React.ReactNode;
+  basicFilterPath: string;
+  basicFilterChildren: React.ReactElement<IBasicFilterAppProps>;
 }
 export const BasicFilterApp: React.FunctionComponent<
   IBasicFilterAppProps
@@ -97,9 +97,9 @@ export const BasicFilterApp: React.FunctionComponent<
   return (
     <Switch>
       <Route
-        path={props.filterPath}
+        path={props.basicFilterPath}
         exact={true}
-        children={props.filterChildren}
+        children={props.basicFilterChildren}
       />
     </Switch>
   );
@@ -211,10 +211,10 @@ export const EditorRoutes: React.FunctionComponent<IEditorAppProps> = props => {
           mapperChildren={props.dataMapper.mapperChildren}
         />
       </Route>
-      <Route path={props.basicFilter.filterPath}>
+      <Route path={props.basicFilter.basicFilterPath}>
         <BasicFilterApp
-          filterPath={props.basicFilter.filterPath}
-          filterChildren={props.basicFilter.filterChildren}
+          basicFilterPath={props.basicFilter.basicFilterPath}
+          basicFilterChildren={props.basicFilter.basicFilterChildren}
         />
       </Route>
       <Route path={props.step.configurePath}>

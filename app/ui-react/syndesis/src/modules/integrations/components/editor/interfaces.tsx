@@ -145,6 +145,8 @@ export interface ITemplateStepRouteParams extends IConfigureStepRouteParams {}
 export interface ITemplateStepRouteState extends IConfigureStepRouteState {}
 export interface IDataMapperRouteParams extends IConfigureStepRouteParams {}
 export interface IDataMapperRouteState extends IConfigureStepRouteState {}
+export interface IRuleFilterStepRouteParams extends IConfigureStepRouteParams {}
+export interface IRuleFilterStepRouteState extends IConfigureStepRouteState {}
 
 /**
  * @param integration - the integration object coming from step 3.index, used to

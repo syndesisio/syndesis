@@ -1,5 +1,5 @@
 import { ApiContext, WithOAuthAppHelpers, WithOAuthApps } from '@syndesis/api';
-import { AutoForm } from '@syndesis/auto-form';
+import { AutoForm, IFormValue } from '@syndesis/auto-form';
 import { OAuthApp } from '@syndesis/models';
 import {
   ConfirmationButtonStyle,
@@ -21,6 +21,7 @@ import {
   getRequiredStatusText,
   toFormDefinition,
   validateConfiguredProperties,
+  validateRequiredProperties,
   WithListViewToolbarHelpers,
   WithLoader,
 } from '@syndesis/utils';
@@ -229,7 +230,7 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                               id={oauthApp.id!}
                                               name={oauthApp.name!}
                                             >
-                                              <AutoForm
+                                              <AutoForm<IFormValue>
                                                 key={index + '-' + key}
                                                 definition={toFormDefinition(
                                                   definition
@@ -244,6 +245,16 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                                 i18nRequiredProperty={t(
                                                   'shared:requiredFieldMessage'
                                                 )}
+                                                validate={(
+                                                  values: IFormValue
+                                                ) =>
+                                                  validateRequiredProperties(
+                                                    definition,
+                                                    (name: string) =>
+                                                      `${name} is required`,
+                                                    values
+                                                  )
+                                                }
                                                 initialValue={configuration}
                                                 onSave={(
                                                   configuredProperties,

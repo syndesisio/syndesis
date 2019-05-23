@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-testing-library';
-import { AutoForm } from '../src';
+import { AutoForm, toValidHtmlId } from '../src';
 
 export default describe('FormCheckboxComponent', () => {
   const fieldId = 'test01TestCheckbox';
@@ -27,7 +27,7 @@ export default describe('FormCheckboxComponent', () => {
 
   it('Should use the definition key as an id for the checkbox', () => {
     const { getByTestId } = render(form);
-    expect(getByTestId(fieldId)).toBeDefined();
+    expect(getByTestId(toValidHtmlId(fieldId))).toBeDefined();
   });
 
   it('Should use the displayName as a label in the checkbox', () => {

@@ -109,19 +109,18 @@ export class VirtualizationCreatePage extends React.Component {
                               onSave={handleCreate}
                             >
                               {({ fields, handleSubmit }) => (
-                                <React.Fragment>
+                                <form onSubmit={handleSubmit}>
                                   {fields}
                                   <button
+                                    type="submit"
                                     data-testid={
                                       'virtualization-create-page-create'
                                     }
-                                    type="button"
                                     className="btn btn-primary"
-                                    onClick={handleSubmit}
                                   >
                                     {t('shared:Create')}
                                   </button>
-                                </React.Fragment>
+                                </form>
                               )}
                             </AutoForm>
                           </PageSection>

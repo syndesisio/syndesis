@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { render } from 'react-testing-library';
-import { AutoForm } from '../src';
+import { AutoForm, toValidHtmlId } from '../src';
 
 export default describe('FormSelectComponent', () => {
   const fieldId = 'test01Select';
@@ -54,7 +54,7 @@ export default describe('FormSelectComponent', () => {
 
   it('Should use the definition key as an id', () => {
     const { getByTestId } = render(form);
-    expect(getByTestId(fieldId)).toBeDefined();
+    expect(getByTestId(toValidHtmlId(fieldId))).toBeDefined();
   });
 
   it('Should use the displayName as a label', () => {

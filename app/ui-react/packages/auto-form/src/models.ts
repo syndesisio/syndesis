@@ -1,4 +1,4 @@
-import { FieldProps } from 'formik';
+import { FieldArrayRenderProps, FieldProps, FormikActions } from 'formik';
 
 export interface IFormDefinition {
   [name: string]: IFormDefinitionProperty;
@@ -8,7 +8,7 @@ export interface IFormValue {
   [name: string]: any;
 }
 
-export interface IFormErrors {
+export interface IFormErrors<T> {
   [name: string]: string;
 }
 
@@ -40,33 +40,72 @@ export interface IFormFieldAttributes {
   [name: string]: any;
 }
 
-export interface IFormDefinitionProperty {
-  required?: boolean;
-  secret?: boolean;
-  disabled?: boolean;
-  type: string;
-  defaultValue?: string;
-  displayName?: string;
-  deprecated?: boolean;
-  group?: string;
-  label?: string;
-  kind?: string;
-  description?: string;
-  enum?: IFormPropertyValue[];
-  generator?: string;
-  placeholder?: string;
-  connectorValue?: string;
-  relation?: IFormPropertyRelation[];
-  controlHint?: string;
-  labelHint?: string;
-  tags?: string[];
-  order?: number;
-  fieldAttributes?: IFormFieldAttributes;
+export interface IAutoFormActions<T> extends FormikActions<T> {
+  // nothing to do
 }
 
-export interface IFormControl extends FieldProps {
+export interface IFormArrayDefinitionOptions {
+  fieldAttributes?: IFormFieldAttributes;
+  formGroupAttributes?: IFormFieldAttributes;
+  arrayControlAttributes?: IFormFieldAttributes;
+  controlLabelAttributes?: IFormFieldAttributes;
+  i18nAddElementText: string;
+}
+
+export interface IFormDefinitionProperty {
+  arrayDefinition?: IFormDefinition;
+  arrayDefinitionOptions?: IFormArrayDefinitionOptions;
+  connectorValue?: string;
+  controlHint?: string;
+  controlLabelAttributes?: IFormFieldAttributes;
+  defaultValue?: string;
+  deprecated?: boolean;
+  description?: string;
+  disabled?: boolean;
+  displayName?: string;
+  enum?: IFormPropertyValue[];
+  extendedOptions?: { [name: string]: any };
+  fieldAttributes?: IFormFieldAttributes;
+  formGroupAttributes?: IFormFieldAttributes;
+  generator?: string;
+  group?: string;
+  kind?: string;
+  label?: string;
+  labelHint?: string;
+  order?: number;
+  placeholder?: string;
+  relation?: IFormPropertyRelation[];
+  required?: boolean;
+  secret?: boolean;
+  tags?: string[];
+  type: string;
+  dataList?: string[];
+}
+
+export interface INamedConfigurationProperty extends IFormDefinitionProperty {
+  name: string;
+}
+
+export interface IRenderFieldProps {
+  allFieldsRequired: boolean;
+  property: INamedConfigurationProperty;
+  value: any;
+  [name: string]: any;
+}
+
+export interface IFormControlProps<T = any> extends FieldProps {
   name: string;
   type: string;
+  errors?: IFormErrors<T>;
   allFieldsRequired: boolean;
-  property: IFormDefinitionProperty;
+  property: INamedConfigurationProperty;
+  value: T;
+}
+
+export interface IFormArrayControlProps<T = any> extends FieldArrayRenderProps {
+  name: string;
+  customComponents: { [type: string]: any };
+  allFieldsRequired: boolean;
+  property: INamedConfigurationProperty;
+  value: T;
 }

@@ -3,26 +3,32 @@ import {
   FieldLevelHelp,
   FormControl,
   FormGroup,
-  HelpBlock,
 } from 'patternfly-react';
 import * as React from 'react';
-import { IFormControl } from '../models';
-import { getValidationState } from './helpers';
+import { IFormControlProps } from '../models';
+import { AutoFormHelpBlock } from './AutoFormHelpBlock';
+import { getValidationState, toValidHtmlId } from './helpers';
 
 export const FormInputComponent: React.FunctionComponent<
-  IFormControl
+  IFormControlProps
 > = props => (
   <FormGroup
-    controlId={props.field.name}
+    {...props.property.formGroupAttributes}
+    controlId={toValidHtmlId(props.field.name)}
     validationState={getValidationState(props)}
   >
-    <ControlLabel
-      className={
-        props.property.required && !props.allFieldsRequired ? 'required-pf' : ''
-      }
-    >
-      {props.property.displayName}
-    </ControlLabel>
+    {props.property.displayName && (
+      <ControlLabel
+        className={
+          props.property.required && !props.allFieldsRequired
+            ? 'required-pf'
+            : ''
+        }
+        {...props.property.controlLabelAttributes}
+      >
+        {props.property.displayName}
+      </ControlLabel>
+    )}
     {props.property.labelHint && (
       <ControlLabel>
         <FieldLevelHelp content={props.property.labelHint} />
@@ -31,16 +37,26 @@ export const FormInputComponent: React.FunctionComponent<
     <FormControl
       {...props.property.fieldAttributes}
       {...props.field}
-      data-testid={props.field.name}
+      data-testid={toValidHtmlId(props.field.name)}
       disabled={props.form.isSubmitting || props.property.disabled}
       placeholder={props.property.placeholder}
       type={props.type || 'text'}
       onChange={props.field.onChange}
       title={props.property.controlHint}
+      list={`${toValidHtmlId(props.field.name)}-list`}
     />
-    <HelpBlock>
-      {props.property.description}
-      {props.form.errors[props.field.name]}
-    </HelpBlock>
+    {props.property.dataList && props.property.dataList.length > 0 && (
+      <datalist id={`${toValidHtmlId(props.field.name)}-list`}>
+        {props.property.dataList.map((opt, index) => (
+          <option key={index} value={opt}>
+            {opt}
+          </option>
+        ))}
+      </datalist>
+    )}
+    <AutoFormHelpBlock
+      error={props.form.errors[props.field.name] as string}
+      description={props.property.description}
+    />
   </FormGroup>
 );

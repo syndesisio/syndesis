@@ -4,12 +4,12 @@ import {
   FieldLevelHelp,
   Form,
   FormGroup,
-  HelpBlock,
   MenuItem,
 } from 'patternfly-react';
 import * as React from 'react';
-import { IFormControl } from '../models';
-import { getValidationState } from './helpers';
+import { IFormControlProps } from '../models';
+import { AutoFormHelpBlock } from './AutoFormHelpBlock';
+import { getValidationState, toValidHtmlId } from './helpers';
 
 interface IDuration {
   label: string;
@@ -52,11 +52,11 @@ export interface IFormDurationComponentState {
 }
 
 export class FormDurationComponent extends React.Component<
-  IFormControl,
+  IFormControlProps,
   IFormDurationComponentState
 > {
   private inputField: HTMLInputElement = undefined as any;
-  constructor(props: IFormControl) {
+  constructor(props: IFormControlProps) {
     super(props);
     // find the highest duration that keeps the duration above 1
     const index =
@@ -103,7 +103,8 @@ export class FormDurationComponent extends React.Component<
   public render() {
     return (
       <FormGroup
-        controlId={this.props.field.name}
+        {...this.props.property.formGroupAttributes}
+        controlId={toValidHtmlId(this.props.field.name)}
         validationState={getValidationState(this.props)}
       >
         <ControlLabel
@@ -112,6 +113,7 @@ export class FormDurationComponent extends React.Component<
               ? 'required-pf'
               : ''
           }
+          {...this.props.property.controlLabelAttributes}
         >
           {this.props.property.displayName}
         </ControlLabel>
@@ -124,7 +126,7 @@ export class FormDurationComponent extends React.Component<
           <Form.FormControl
             min={0}
             {...this.props.property.fieldAttributes}
-            data-testid={this.props.field.name}
+            data-testid={toValidHtmlId(this.props.field.name)}
             type={'number'}
             defaultValue={calculateDuration(
               this.state.duration,
@@ -139,7 +141,7 @@ export class FormDurationComponent extends React.Component<
             title={this.props.property.controlHint}
           />
           <DropdownButton
-            id={this.props.field.name + '-duration'}
+            data-testid={`${toValidHtmlId(this.props.field.name)}-duration`}
             componentClass={Form.InputGroup.Button}
             title={this.state.duration.label}
             onSelect={this.handleOnSelect}
@@ -154,10 +156,10 @@ export class FormDurationComponent extends React.Component<
             ))}
           </DropdownButton>
         </Form.InputGroup>
-        <HelpBlock>
-          {this.props.property.description}
-          {this.props.form.errors[this.props.field.name]}
-        </HelpBlock>
+        <AutoFormHelpBlock
+          error={this.props.form.errors[this.props.field.name] as string}
+          description={this.props.property.description}
+        />
       </FormGroup>
     );
   }

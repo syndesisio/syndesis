@@ -1,6 +1,13 @@
-import { Field } from 'formik';
+import { Field, FieldArray } from 'formik';
 import * as React from 'react';
-import { IFormDefinition, IFormDefinitionProperty } from './models';
+import {
+  IFormArrayControlProps,
+  IFormControlProps,
+  IFormDefinition,
+  IFormDefinitionProperty,
+  INamedConfigurationProperty,
+  IRenderFieldProps,
+} from './models';
 import {
   FormCheckboxComponent,
   FormDurationComponent,
@@ -9,31 +16,20 @@ import {
   FormSelectComponent,
   FormTextAreaComponent,
 } from './widgets';
-
-export interface INamedConfigurationProperty extends IFormDefinitionProperty {
-  name: string;
-}
-
-export interface IRenderFieldProps {
-  allFieldsRequired: boolean;
-  property: INamedConfigurationProperty;
-  value: any;
-  [name: string]: any;
-}
+import { FormArrayComponent } from './widgets/FormArrayComponent';
 
 export interface IFormBuilderProps<T> {
   definition: IFormDefinition;
   initialValue: T;
   i18nRequiredProperty: string;
-  onSave: (value: T | any, actions: any) => void;
+  customComponents: { [type: string]: any };
   children(props: IFormBuilderChildrenProps<T>): any;
 }
 
 export interface IFormBuilderChildrenProps<T> {
-  fields: INamedConfigurationProperty[];
+  propertiesArray: INamedConfigurationProperty[];
   getField: (props: IRenderFieldProps) => any;
   initialValue: T;
-  onSave: (value: T, actions: any) => void;
 }
 
 export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
@@ -50,36 +46,57 @@ export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
       hidden: FormHiddenComponent,
       select: FormSelectComponent,
       textarea: FormTextAreaComponent,
+      ...(this.props.customComponents || {}),
     };
-    const validate = (value: any) => {
+    const validate = (value: T) => {
       if (props.property.required && typeof value === 'undefined') {
         return this.props.i18nRequiredProperty;
       }
       return undefined;
     };
-    return (
-      <Field
-        key={props.property.name}
-        name={props.property.name}
-        type={type}
-        validate={validate}
-        {...props}
-        component={componentTypemaps[type] || FormInputComponent}
-      />
-    );
+    switch (type) {
+      case 'array':
+        return (
+          <FieldArray
+            {...props as IFormArrayControlProps}
+            key={props.property.name}
+            name={props.property.name}
+          >
+            {fieldArrayProps => (
+              <FormArrayComponent
+                {...props}
+                {...fieldArrayProps}
+                customComponents={this.props.customComponents}
+              />
+            )}
+          </FieldArray>
+        );
+      default:
+        return (
+          <Field
+            key={props.property.name}
+            name={props.property.name}
+            type={type}
+            validate={validate}
+            {...props as IFormControlProps}
+            component={componentTypemaps[type] || FormInputComponent}
+          />
+        );
+    }
   };
 
   public render() {
-    const fields = this.enrichAndOrderProperties(this.props.definition);
+    const propertiesArray = this.enrichAndOrderProperties(
+      this.props.definition
+    );
     const massagedValue = this.sanitizeValues(
       this.props.definition,
       this.props.initialValue
     );
     return this.props.children({
-      fields,
       getField: this.getField,
       initialValue: massagedValue,
-      onSave: this.props.onSave,
+      propertiesArray,
     });
   }
 
