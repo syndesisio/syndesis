@@ -5,7 +5,7 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-import { AppContext } from '../../../app';
+import { AppContext, UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import resolvers from '../../resolvers';
 
@@ -47,93 +47,109 @@ export class VirtualizationCreatePage extends React.Component {
     };
 
     return (
-      <WithRouteData<null, null>>
-        {(p, s, { history }) => (
-          <AppContext.Consumer>
-            {({ user }) => (
-              <WithVirtualizationHelpers>
-                {({ createVirtualization }) => {
-                  const handleCreate = async (value: any) => {
-                    const virtualization = await createVirtualization(
-                      user.username || 'developer',
-                      value.virtName,
-                      value.virtDescription
-                    );
-                    // TODO: post toast notification
-                    history.push(
-                      resolvers.data.virtualizations.views.root({
-                        virtualization,
-                      })
-                    );
-                  };
-                  return (
-                    <Translation ns={['data', 'shared']}>
-                      {t => (
-                        <>
-                          <Breadcrumb>
-                            <Link
-                              data-testid={'virtualization-create-page-home'}
-                              to={resolvers.dashboard.root()}
-                            >
-                              {t('shared:Home')}
-                            </Link>
-                            <Link
-                              data-testid={
-                                'virtualization-create-page-virtualizations'
-                              }
-                              to={resolvers.data.root()}
-                            >
-                              {t('shared:DataVirtualizations')}
-                            </Link>
-                            <span>
-                              {t(
-                                'data:virtualization.createDataVirtualizationTitle'
-                              )}
-                            </span>
-                          </Breadcrumb>
-                          <PageSection variant={'light'}>
-                            <h1 className="pf-c-title pf-m-xl">
-                              {t(
-                                'data:virtualization.createDataVirtualizationTitle'
-                              )}
-                            </h1>
-                          </PageSection>
-                          <PageSection>
-                            <AutoForm
-                              definition={formDefinition}
-                              initialValue={''}
-                              i18nRequiredProperty={t(
-                                'data:virtualization.requiredPropertyText'
-                              )}
-                              validate={validate}
-                              onSave={handleCreate}
-                            >
-                              {({ fields, handleSubmit }) => (
-                                <form onSubmit={handleSubmit}>
-                                  {fields}
-                                  <button
-                                    type="submit"
+      <Translation ns={['data', 'shared']}>
+        {t => (
+          <UIContext.Consumer>
+            {({ pushNotification }) => {
+              return (
+                <WithRouteData<null, null>>
+                  {(p, s, { history }) => (
+                    <AppContext.Consumer>
+                      {({ user }) => (
+                        <WithVirtualizationHelpers>
+                          {({ createVirtualization }) => {
+                            const handleCreate = async (value: any) => {
+                              const virtualization = await createVirtualization(
+                                user.username || 'developer',
+                                value.virtName,
+                                value.virtDescription
+                              );
+                              pushNotification(
+                                t(
+                                  'virtualization.createVirtualizationSuccess',
+                                  {
+                                    name: value.virtName,
+                                  }
+                                ),
+                                'success'
+                              );
+                              history.push(
+                                resolvers.data.virtualizations.views.root({
+                                  virtualization,
+                                })
+                              );
+                            };
+                            return (
+                              <>
+                                <Breadcrumb>
+                                  <Link
                                     data-testid={
-                                      'virtualization-create-page-create'
+                                      'virtualization-create-page-home'
                                     }
-                                    className="btn btn-primary"
+                                    to={resolvers.dashboard.root()}
                                   >
-                                    {t('shared:Create')}
-                                  </button>
-                                </form>
-                              )}
-                            </AutoForm>
-                          </PageSection>
-                        </>
+                                    {t('shared:Home')}
+                                  </Link>
+                                  <Link
+                                    data-testid={
+                                      'virtualization-create-page-virtualizations'
+                                    }
+                                    to={resolvers.data.root()}
+                                  >
+                                    {t('shared:DataVirtualizations')}
+                                  </Link>
+                                  <span>
+                                    {t(
+                                      'data:virtualization.createDataVirtualizationTitle'
+                                    )}
+                                  </span>
+                                </Breadcrumb>
+                                <PageSection variant={'light'}>
+                                  <h1 className="pf-c-title pf-m-xl">
+                                    {t(
+                                      'data:virtualization.createDataVirtualizationTitle'
+                                    )}
+                                  </h1>
+                                </PageSection>
+                                <PageSection>
+                                  <AutoForm
+                                    definition={formDefinition}
+                                    initialValue={''}
+                                    i18nRequiredProperty={t(
+                                      'data:virtualization.requiredPropertyText'
+                                    )}
+                                    validate={validate}
+                                    onSave={handleCreate}
+                                  >
+                                    {({ fields, handleSubmit }) => (
+                                      <form onSubmit={handleSubmit}>
+                                        {fields}
+                                        <button
+                                          type="submit"
+                                          data-testid={
+                                            'virtualization-create-page-create'
+                                          }
+                                          className="btn btn-primary"
+                                        >
+                                          {t('shared:Create')}
+                                        </button>
+                                      </form>
+                                    )}
+                                  </AutoForm>
+                                </PageSection>
+                              </>
+                            );
+                          }}
+                        </WithVirtualizationHelpers>
                       )}
-                    </Translation>
-                  );
-                }}
-              </WithVirtualizationHelpers>
-            )}
-          </AppContext.Consumer>
+                    </AppContext.Consumer>
+                  )}
+                </WithRouteData>
+              );
+            }}
+          </UIContext.Consumer>
         )}
-      </WithRouteData>
+      </Translation>
     );
   }
 }

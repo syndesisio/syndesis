@@ -4,6 +4,8 @@ import * as H from '@syndesis/history';
 import { QueryResults, ViewDefinition } from '@syndesis/models';
 import { SqlClientContent, SqlClientForm } from '@syndesis/ui';
 import * as React from 'react';
+import { Translation } from 'react-i18next';
+import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
 import { getPreviewSql } from './VirtualizationUtils';
 
@@ -190,80 +192,113 @@ export class WithVirtualizationSqlClientForm extends React.Component<
     };
 
     return (
-      <WithVirtualizationHelpers>
-        {({ queryVirtualization }) => {
-          const doSubmit = async (value: any) => {
-            const viewDefn = this.props.views.find(
-              view => view.viewName === value.view
-            );
-            let sqlStatement = '';
-            if (viewDefn) {
-              sqlStatement = getPreviewSql(viewDefn);
-            }
-            const results: QueryResults = await queryVirtualization(
-              this.props.targetVdb,
-              sqlStatement,
-              value.rowLimit,
-              value.rowOffset
-            );
-            this.setQueryResults(results);
-          };
-          return (
-            <AutoForm
-              i18nRequiredProperty={'* Required field'}
-              definition={formDefinition}
-              initialValue={initialValue}
-              onSave={doSubmit}
-            >
-              {({
-                fields,
-                handleSubmit,
-                isSubmitting,
-                isValid,
-                submitForm,
-              }) => (
-                <SqlClientContent
-                  formContent={
-                    <SqlClientForm handleSubmit={handleSubmit}>
-                      {fields}
-                    </SqlClientForm>
-                  }
-                  viewNames={this.props.views.map(
-                    (viewDefn: ViewDefinition) => viewDefn.viewName
-                  )}
-                  queryResultRows={this.buildRows(this.state.queryResults)}
-                  queryResultCols={this.buildColumns(this.state.queryResults)}
-                  targetVdb={'test'}
-                  i18nEmptyStateInfo={i18n.t(
-                    'data:virtualization.viewEmptyStateInfo'
-                  )}
-                  i18nEmptyStateTitle={i18n.t(
-                    'data:virtualization.viewEmptyStateTitle'
-                  )}
-                  i18nImportViews={i18n.t(
-                    'data:virtualization.importDataSource'
-                  )}
-                  i18nImportViewsTip={i18n.t(
-                    'data:virtualization.importDataSourceTip'
-                  )}
-                  i18nCreateView={i18n.t('data:virtualization.createView')}
-                  i18nCreateViewTip={i18n.t(
-                    'data:virtualization.createViewTip'
-                  )}
-                  linkCreateViewHRef={this.props.linkCreateView}
-                  linkImportViewsHRef={this.props.linkImportViews}
-                  i18nEmptyResultsTitle={i18n.t(
-                    'data:virtualization.queryResultsTableEmptyStateTitle'
-                  )}
-                  i18nEmptyResultsMsg={i18n.t(
-                    'data:virtualization.queryResultsTableEmptyStateInfo'
-                  )}
-                />
-              )}
-            </AutoForm>
-          );
-        }}
-      </WithVirtualizationHelpers>
+      <Translation ns={['data', 'shared']}>
+        {t => (
+          <UIContext.Consumer>
+            {({ pushNotification }) => {
+              return (
+                <WithVirtualizationHelpers>
+                  {({ queryVirtualization }) => {
+                    const doSubmit = async (value: any) => {
+                      const viewDefn = this.props.views.find(
+                        view => view.viewName === value.view
+                      );
+                      try {
+                        let sqlStatement = '';
+                        if (viewDefn) {
+                          sqlStatement = getPreviewSql(viewDefn);
+                        }
+                        const results: QueryResults = await queryVirtualization(
+                          this.props.targetVdb,
+                          sqlStatement,
+                          value.rowLimit,
+                          value.rowOffset
+                        );
+                        pushNotification(
+                          t('virtualization.queryViewSuccess', {
+                            name: value.viewName,
+                          }),
+                          'success'
+                        );
+                        this.setQueryResults(results);
+                      } catch (error) {
+                        const details = error.message ? error.message : '';
+                        pushNotification(
+                          t('virtualization.queryViewFailed', {
+                            details,
+                            name: value.viewName,
+                          }),
+                          'error'
+                        );
+                      }
+                    };
+                    return (
+                      <AutoForm
+                        i18nRequiredProperty={'* Required field'}
+                        definition={formDefinition}
+                        initialValue={initialValue}
+                        onSave={doSubmit}
+                      >
+                        {({
+                          fields,
+                          handleSubmit,
+                          isSubmitting,
+                          isValid,
+                          submitForm,
+                        }) => (
+                          <SqlClientContent
+                            formContent={
+                              <SqlClientForm handleSubmit={handleSubmit}>
+                                {fields}
+                              </SqlClientForm>
+                            }
+                            viewNames={this.props.views.map(
+                              (viewDefn: ViewDefinition) => viewDefn.viewName
+                            )}
+                            queryResultRows={this.buildRows(
+                              this.state.queryResults
+                            )}
+                            queryResultCols={this.buildColumns(
+                              this.state.queryResults
+                            )}
+                            targetVdb={'test'}
+                            i18nEmptyStateInfo={i18n.t(
+                              'data:virtualization.viewEmptyStateInfo'
+                            )}
+                            i18nEmptyStateTitle={i18n.t(
+                              'data:virtualization.viewEmptyStateTitle'
+                            )}
+                            i18nImportViews={i18n.t(
+                              'data:virtualization.importDataSource'
+                            )}
+                            i18nImportViewsTip={i18n.t(
+                              'data:virtualization.importDataSourceTip'
+                            )}
+                            i18nCreateView={i18n.t(
+                              'data:virtualization.createView'
+                            )}
+                            i18nCreateViewTip={i18n.t(
+                              'data:virtualization.createViewTip'
+                            )}
+                            linkCreateViewHRef={this.props.linkCreateView}
+                            linkImportViewsHRef={this.props.linkImportViews}
+                            i18nEmptyResultsTitle={i18n.t(
+                              'data:virtualization.queryResultsTableEmptyStateTitle'
+                            )}
+                            i18nEmptyResultsMsg={i18n.t(
+                              'data:virtualization.queryResultsTableEmptyStateInfo'
+                            )}
+                          />
+                        )}
+                      </AutoForm>
+                    );
+                  }}
+                </WithVirtualizationHelpers>
+              );
+            }}
+          </UIContext.Consumer>
+        )}
+      </Translation>
     );
   }
 }
