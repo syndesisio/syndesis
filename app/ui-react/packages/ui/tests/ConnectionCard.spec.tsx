@@ -32,7 +32,7 @@ export default describe('ConnectionCard', () => {
   it('Should have the Sample connection title', () => {
     const { getByTestId } = render(testComponent);
     expect(
-      getByTestId('connectioncard--sample-connection--details-link')
+      getByTestId('connectioncard-sample-connection-details-link')
     ).toHaveTextContent('Sample connection');
   });
 });

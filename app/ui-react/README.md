@@ -640,7 +640,7 @@ UI components that have user interaction should define a `data-testid` attribute
 
 The `toTestId` utilitity function, which is found in the `testIdGenerator.ts` file in the `utils` folder of the `@syndesis/ui` package, should be used to generate **all** test identifiers. This function ensures the identifier is formatted correctly and only contains valid characters. It also provides a way to separate segments of the identifier if segments are desired.
 
-The `toTestId` function accepts one or more strings and inserts 2 dash (`-`) characters between them. It is recommended to have the first string be the name of the component. Here is an example of how to use the `toTestId` function:
+The `toTestId` function accepts one or more strings and inserts a dash (`-`) character between them. It is recommended to have the first string be the name of the component. Here is an example of how to use the `toTestId` function:
 
 ```tsx
 export class ExtensionListItem extends React.Component<
@@ -657,7 +657,7 @@ export class ExtensionListItem extends React.Component<
 </Button>
 ```
 
-The above code produces this test ID for an extension with the name of "My Extension": `extensionlistitem--my-extension--delete-button`.
+The above code produces this test ID for an extension with the name of "My Extension": `extensionlistitem-my-extension-delete-button`.
 
 #### Unit testing
 
