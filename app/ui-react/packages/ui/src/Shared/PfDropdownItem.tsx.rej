@@ -1,0 +1,8 @@
+diff a/app/ui-react/packages/ui/src/Shared/PfDropdownItem.tsx b/app/ui-react/packages/ui/src/Shared/PfDropdownItem.tsx	(rejected hunks)
+@@ -10 +10,5 @@ class PfDropdownItem extends React.Component<IPfDropdownItem> {
+-    return <DropdownItem onClick={this.props.onClick}>{this.props.children}</DropdownItem>;
++    return (
++      <DropdownItem onClick={this.props.onClick}>
++        {this.props.children}
++      </DropdownItem>
++    );

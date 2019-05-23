@@ -8,11 +8,13 @@ import {
   AboutModalContent,
   AppLayout,
   AppTopMenu,
+  PfDropdownItem,
   PfVerticalNavItem,
 } from '../../src';
 import { withState } from '@dump247/storybook-state';
 const stories = storiesOf('Layout/AppLayout', module);
 const logDropdownItemSelection = action('select dropdown item log');
+const logLogout = action('logout action');
 
 stories.add(
   'sample usage',
@@ -56,7 +58,18 @@ stories.add(
               }}
               showNavigation={true}
               pictograph={text('Application title', 'Syndesis')}
-              appNav={<AppTopMenu username={'developer'}>Logout</AppTopMenu>}
+              appNav={
+                <AppTopMenu username={'developer'}>
+                  <PfDropdownItem
+                    onClick={event => {
+                      event && event.preventDefault();
+                      logLogout();
+                    }}
+                  >
+                    Logout
+                  </PfDropdownItem>
+                </AppTopMenu>
+              }
               verticalNav={[
                 <PfVerticalNavItem
                   exact={true}
