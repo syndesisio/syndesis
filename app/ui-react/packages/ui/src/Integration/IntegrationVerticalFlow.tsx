@@ -1,6 +1,7 @@
 import classnames from 'classnames';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
+import { toTestId } from '../utils';
 import './IntegrationVerticalFlow.css';
 
 export interface IIntegrationVerticalFlowProps {
@@ -38,7 +39,10 @@ export const IntegrationVerticalFlow: React.FunctionComponent<
     >
       <div className="integration-vertical-flow__expand">
         <ButtonLink
-          data-testid={'integration-vertical-flow-expand-collapse'}
+          data-testid={`${toTestId(
+            'IntegrationVerticalFlow',
+            'expand-collapse-button'
+          )}`}
           className="integration-vertical-flow__toggle"
           onClick={toggleExpanded}
           as={'link'}

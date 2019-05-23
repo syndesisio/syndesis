@@ -3,6 +3,7 @@ import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ButtonLink } from '../../Layout';
+import { toTestId } from '../../utils';
 
 export interface IIntegrationAction {
   href?: H.LocationDescriptor;
@@ -23,7 +24,11 @@ export class IntegrationActions extends React.Component<
     return (
       <>
         <ButtonLink
-          data-testid={'integration-actions-view'}
+          data-testid={`${toTestId(
+            'IntegrationActions',
+            this.props.integrationId,
+            'view-button'
+          )}`}
           className="view-integration-btn"
           href={this.props.detailsHref}
           as={'default'}
@@ -38,7 +43,11 @@ export class IntegrationActions extends React.Component<
             <li role={'presentation'} key={idx}>
               {a.href ? (
                 <Link
-                  data-testid={`integration-actions-${idx}`}
+                  data-testid={`${toTestId(
+                    'IntegrationActions',
+                    this.props.integrationId,
+                    a.label.toString()
+                  )}`}
                   to={a.href}
                   onClick={a.onClick}
                   role={'menuitem'}
@@ -48,7 +57,11 @@ export class IntegrationActions extends React.Component<
                 </Link>
               ) : (
                 <a
-                  data-testid={`integration-actions-${idx}`}
+                  data-testid={`${toTestId(
+                    'IntegrationActions',
+                    this.props.integrationId,
+                    a.label.toString()
+                  )}`}
                   href={'javascript:void(0)'}
                   onClick={a.onClick}
                   role={'menuitem'}

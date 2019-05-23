@@ -8,6 +8,7 @@ import {
 import { HelpIcon } from '@patternfly/react-icons';
 import classNames from 'classnames';
 import * as React from 'react';
+import { toTestId } from '../utils';
 
 export interface IHelpDropdownProps {
   className?: string;
@@ -60,7 +61,11 @@ export class HelpDropdown extends React.Component<
     } = this.props;
     const dropdownItems = [
       <DropdownItem
-        data-testid={'help-dropdown-integration-tutorials'}
+        data-testid={`${toTestId(
+          'HelpDropdown',
+          'integration-tutorials',
+          'dropdown-item'
+        )}`}
         key="sampleIntegrationTutorials"
         component="a"
         onClick={launchSampleIntegrationTutorials}
@@ -68,7 +73,11 @@ export class HelpDropdown extends React.Component<
         Sample Integration Tutorials
       </DropdownItem>,
       <DropdownItem
-        data-testid={'help-dropdown-user-guide'}
+        data-testid={`${toTestId(
+          'HelpDropdown',
+          'user-guide',
+          'dropdown-item'
+        )}`}
         key="userGuide"
         component="a"
         onClick={launchUserGuide}
@@ -76,7 +85,11 @@ export class HelpDropdown extends React.Component<
         User Guide
       </DropdownItem>,
       <DropdownItem
-        data-testid={'help-dropdown-connectors-guide'}
+        data-testid={`${toTestId(
+          'HelpDropdown',
+          'connectors-guide',
+          'dropdown-item'
+        )}`}
         key="connectorsGuide"
         component="a"
         onClick={launchConnectorsGuide}
@@ -84,7 +97,7 @@ export class HelpDropdown extends React.Component<
         Connectors Guide
       </DropdownItem>,
       <DropdownItem
-        data-testid={'help-dropdown-support'}
+        data-testid={`${toTestId('HelpDropdown', 'support', 'dropdown-item')}`}
         key="support"
         component="a"
         onClick={launchSupportPage}
@@ -92,7 +105,11 @@ export class HelpDropdown extends React.Component<
         Support
       </DropdownItem>,
       <DropdownItem
-        data-testid={'help-dropdown-contact-us'}
+        data-testid={`${toTestId(
+          'HelpDropdown',
+          'contact-us',
+          'dropdown-item'
+        )}`}
         key="contactUs"
         component="a"
         onClick={launchContactUs}
@@ -100,7 +117,7 @@ export class HelpDropdown extends React.Component<
         Contact Us
       </DropdownItem>,
       <DropdownItem
-        data-testid={'help-dropdown-about'}
+        data-testid={`${toTestId('HelpDropdown', 'about', 'dropdown-item')}`}
         key="action"
         component="a"
         onClick={launchAboutModal}

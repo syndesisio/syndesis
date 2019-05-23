@@ -4,7 +4,10 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { ApiConnectorDetailsForm } from '../../src';
 
-const stories = storiesOf('Customization/ApiConnectorDetailsForm', module);
+const stories = storiesOf(
+  'Customization/ApiClientConnector/ApiConnectorDetailsForm',
+  module
+);
 
 const cancelEditingText = 'cancel editing called';
 const cancelLabel = 'Cancel';

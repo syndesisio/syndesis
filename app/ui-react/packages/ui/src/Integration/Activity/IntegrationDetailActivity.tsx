@@ -2,7 +2,7 @@ import { Button, ListView } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Container, PageSection } from '../../Layout';
-
+import { toTestId } from '../../utils';
 import './IntegrationDetailActivity.css';
 
 export interface IIntegrationDetailActivityProps {
@@ -24,7 +24,10 @@ export class IntegrationDetailActivity extends React.Component<
             {this.props.linkToOpenShiftLog && (
               <>
                 <Link
-                  data-testid={'integration-detail-activitiy-view-log'}
+                  data-testid={`${toTestId(
+                    'IntegrationDetailActivity',
+                    'view-log-link'
+                  )}`}
                   to={this.props.linkToOpenShiftLog}
                 >
                   {this.props.i18nViewLogOpenShift}
@@ -37,7 +40,10 @@ export class IntegrationDetailActivity extends React.Component<
             </span>
             &nbsp;&nbsp;
             <Button
-              data-testid={'integration-detail-activity-refresh'}
+              data-testid={`${toTestId(
+                'IntegrationDetailActivity',
+                'refresh-button'
+              )}`}
               onClick={this.props.onRefresh}
             >
               {this.props.i18nBtnRefresh}

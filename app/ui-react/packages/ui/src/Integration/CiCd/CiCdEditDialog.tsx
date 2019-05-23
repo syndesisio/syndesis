@@ -2,6 +2,7 @@ import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { Button } from 'patternfly-react';
 import * as React from 'react';
 import { Dialog } from '../../Shared';
+import { toTestId } from '../../utils';
 import { TagNameValidationError } from './CiCdUIModels';
 
 export interface ICiCdEditDialogProps {
@@ -98,13 +99,13 @@ export class CiCdEditDialog extends React.Component<
         footer={
           <>
             <Button
-              data-testid={'cicd-edit-dialog-cancel'}
+              data-testid={`${toTestId('CiCdEditDialog', 'cancel-button')}`}
               onClick={this.props.onHide}
             >
               {this.props.i18nCancelButtonText}
             </Button>
             <Button
-              data-testid={'cicd-edit-dialog-save'}
+              data-testid={`${toTestId('CiCdEditDialog', 'save-button')}`}
               bsStyle={'primary'}
               onClick={this.handleClick}
               disabled={

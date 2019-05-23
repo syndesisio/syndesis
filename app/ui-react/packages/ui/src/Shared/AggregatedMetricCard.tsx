@@ -6,6 +6,7 @@ import {
   Icon,
 } from 'patternfly-react';
 import * as React from 'react';
+import { toTestId } from '../utils';
 
 export interface IAggregatedMetricProps {
   title: string;
@@ -26,23 +27,35 @@ export class AggregatedMetricCard extends React.PureComponent<
       <Card accented={true} aggregated={true} matchHeight={true}>
         <Card.Title>
           <AggregateStatusCount>
-            <span data-testid="aggregate-total-count">
+            <span
+              data-testid={`${toTestId('AggregatedMetricCard', 'total-count')}`}
+            >
               {this.formatNumber(this.props.total)}
             </span>
-            <span data-testid="aggregate-title"> {this.props.title}</span>
+            <span data-testid={`${toTestId('AggregatedMetricCard', 'title')}`}>
+              {' '}
+              {this.props.title}
+            </span>
           </AggregateStatusCount>
         </Card.Title>
         <Card.Body>
           <AggregateStatusNotifications>
             <AggregateStatusNotification>
               <Icon type="pf" name="ok" />
-              <span data-testid="aggregate-ok-count">
+              <span
+                data-testid={`${toTestId('AggregatedMetricCard', 'ok-count')}`}
+              >
                 {this.formatNumber(this.props.ok)}
               </span>{' '}
             </AggregateStatusNotification>
             <AggregateStatusNotification>
               <Icon type="pf" name="error-circle-o" />
-              <span data-testid="aggregate-error-count">
+              <span
+                data-testid={`${toTestId(
+                  'AggregatedMetricCard',
+                  'error-count'
+                )}`}
+              >
                 {this.formatNumber(this.props.error)}
               </span>
             </AggregateStatusNotification>

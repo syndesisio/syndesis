@@ -1,7 +1,7 @@
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { ProgressWithLink } from '../../Shared';
-
+import { toTestId } from '../../utils';
 import './VirtualizationPublishStatusDetail.css';
 
 export interface IVirtualizationPublishStatusDetailProps {
@@ -19,7 +19,10 @@ export class VirtualizationPublishStatusDetail extends React.Component<
   public render() {
     return (
       <div
-        data-testid="virtualization-publish-status-detail"
+        data-testid={`${toTestId(
+          'VirtualizationPublishStatusDetail',
+          'detail'
+        )}`}
         className={'virtualization-publish-status-detail'}
       >
         {this.props.stepText &&

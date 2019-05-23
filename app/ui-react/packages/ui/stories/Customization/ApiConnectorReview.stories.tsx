@@ -2,7 +2,10 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { ApiConnectorReview } from '../../src';
 
-const stories = storiesOf('Customization/ApiConnectorReview', module);
+const stories = storiesOf(
+  'Customization/ApiClientConnector/ApiConnectorReview',
+  module
+);
 
 stories.add('with description', () => (
   <ApiConnectorReview

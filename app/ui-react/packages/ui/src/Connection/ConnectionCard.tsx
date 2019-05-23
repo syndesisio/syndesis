@@ -15,6 +15,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../Shared';
+import { toTestId } from '../utils';
 import './ConnectionCard.css';
 
 export interface IConnectionCardMenuProps {
@@ -146,7 +147,11 @@ export class ConnectionCard extends React.PureComponent<
                 >
                   <li role={'presentation'} key={0}>
                     <Link
-                      data-testid={'connection-card-view'}
+                      data-testid={`${toTestId(
+                        'ConnectionCard',
+                        this.props.name,
+                        'view-action'
+                      )}`}
                       to={this.props.href}
                       role={'menuitem'}
                       tabIndex={1}
@@ -156,7 +161,11 @@ export class ConnectionCard extends React.PureComponent<
                   </li>
                   <li role={'presentation'} key={1}>
                     <Link
-                      data-testid={'connection-card-edit'}
+                      data-testid={`${toTestId(
+                        'ConnectionCard',
+                        this.props.name,
+                        'edit-action'
+                      )}`}
                       to={this.props.menuProps.editHref}
                       role={'menuitem'}
                       tabIndex={2}
@@ -177,7 +186,11 @@ export class ConnectionCard extends React.PureComponent<
                         position={'bottom'}
                       >
                         <a
-                          data-testid={'connection-card-delete'}
+                          data-testid={`${toTestId(
+                            'ConnectionCard',
+                            this.props.name,
+                            'delete-action'
+                          )}`}
                           href={'javascript:void(0)'}
                           onClick={this.showDeleteDialog}
                           role={'menuitem'}
@@ -188,7 +201,11 @@ export class ConnectionCard extends React.PureComponent<
                       </Tooltip>
                     ) : (
                       <a
-                        data-testid={'connection-card-delete'}
+                        data-testid={`${toTestId(
+                          'ConnectionCard',
+                          this.props.name,
+                          'delete-action'
+                        )}`}
                         href={'javascript:void(0)'}
                         onClick={this.showDeleteDialog}
                         role={'menuitem'}
@@ -203,7 +220,11 @@ export class ConnectionCard extends React.PureComponent<
             )}
           </Card.Heading>
           <Link
-            data-testid={'connection-card-details'}
+            data-testid={`${toTestId(
+              'ConnectionCard',
+              this.props.name,
+              'details-link'
+            )}`}
             to={this.props.href}
             className={'connection-card__content'}
           >
@@ -215,7 +236,11 @@ export class ConnectionCard extends React.PureComponent<
                 <Title
                   size="lg"
                   className="connection-card__title h2"
-                  data-testid="connection-card-title"
+                  data-testid={`${toTestId(
+                    'ConnectionCard',
+                    this.props.name,
+                    'title'
+                  )}`}
                 >
                   {this.props.name}
                 </Title>

@@ -2,6 +2,7 @@ import * as H from '@syndesis/history';
 import { Grid, ListView, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
+import { toTestId } from '../../utils';
 import './IntegrationDetailHistoryListView.css';
 
 export interface IIntegrationDetailHistoryListViewProps {
@@ -43,17 +44,19 @@ export class IntegrationDetailHistoryListView extends React.Component<
                   actions={
                     <>
                       <ButtonLink
-                        data-testid={
-                          'integration-detail-history-list-view-publish'
-                        }
+                        data-testid={`${toTestId(
+                          'IntegrationDetailHistoryListView',
+                          'publish-button'
+                        )}`}
                         to={this.props.publishHref}
                         onClick={this.props.publishAction}
                         children={this.props.publishLabel}
                       />
                       <ButtonLink
-                        data-testid={
-                          'integration-detail-history-list-view-edit'
-                        }
+                        data-testid={`${toTestId(
+                          'IntegrationDetailHistoryListView',
+                          'edit-button'
+                        )}`}
                         href={this.props.editHref}
                         children={this.props.editLabel}
                       />

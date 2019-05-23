@@ -16,6 +16,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../Shared';
+import { toTestId } from '../../utils';
 import {
   BUILDING,
   CONFIGURING,
@@ -213,7 +214,11 @@ export class VirtualizationListItem extends React.Component<
               )}
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
                 <ButtonLink
-                  data-testid={'virtualization-list-item-edit'}
+                  data-testid={`${toTestId(
+                    'VirtualizationListItem',
+                    this.props.virtualizationName,
+                    'edit-button'
+                  )}`}
                   href={this.props.detailsPageLink}
                   as={'primary'}
                 >

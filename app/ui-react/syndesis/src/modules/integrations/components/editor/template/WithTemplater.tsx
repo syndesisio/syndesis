@@ -5,6 +5,7 @@ import {
   TemplateStepTemplateEditor,
   TemplateStepTypeSelector,
   TemplateType,
+  toTestId,
   WithDropzone,
 } from '@syndesis/ui';
 import { key } from '@syndesis/utils';
@@ -186,7 +187,7 @@ export class WithTemplater extends React.Component<
                     template file,
                     {/* eslint-disable-next-line */ ' '}
                     <a
-                      data-testid={'unrecoverable-error-show-error'}
+                      data-testid={toTestId('WithTemplater', 'show-error-link')}
                       onClick={this.handleClickBrowse}
                     >
                       browse to upload

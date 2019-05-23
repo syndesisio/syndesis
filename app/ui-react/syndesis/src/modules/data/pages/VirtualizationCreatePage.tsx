@@ -1,6 +1,6 @@
 import { WithVirtualizationHelpers } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { Breadcrumb, PageSection } from '@syndesis/ui';
+import { Breadcrumb, PageSection, toTestId } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -83,17 +83,19 @@ export class VirtualizationCreatePage extends React.Component {
                               <>
                                 <Breadcrumb>
                                   <Link
-                                    data-testid={
-                                      'virtualization-create-page-home'
-                                    }
+                                    data-testid={toTestId(
+                                      'VirtualizationCreatePage',
+                                      'home-link'
+                                    )}
                                     to={resolvers.dashboard.root()}
                                   >
                                     {t('shared:Home')}
                                   </Link>
                                   <Link
-                                    data-testid={
-                                      'virtualization-create-page-virtualizations'
-                                    }
+                                    data-testid={toTestId(
+                                      'VirtualizationCreatePage',
+                                      'virtualizations-link'
+                                    )}
                                     to={resolvers.data.root()}
                                   >
                                     {t('shared:DataVirtualizations')}
@@ -126,9 +128,10 @@ export class VirtualizationCreatePage extends React.Component {
                                         {fields}
                                         <button
                                           type="submit"
-                                          data-testid={
-                                            'virtualization-create-page-create'
-                                          }
+                                          data-testid={toTestId(
+                                            'VirtualizationCreatePage',
+                                            'create-button'
+                                          )}
                                           className="btn btn-primary"
                                         >
                                           {t('shared:Create')}

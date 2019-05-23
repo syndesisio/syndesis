@@ -1,6 +1,7 @@
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../Layout';
+import { toTestId } from '../utils';
 
 export interface IIntegrationsListItemUnreadableProps {
   integrationName: string;
@@ -17,7 +18,10 @@ export const IntegrationsListItemUnreadable: React.FC<
       heading={integrationName}
       actions={
         <ButtonLink
-          data-testid={'integrations-list-item-unreadable-json'}
+          data-testid={`${toTestId(
+            'IntegrationsListItemUnreadable',
+            'json-button'
+          )}`}
           onClick={onClick}
         >
           Integration JSON

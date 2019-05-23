@@ -9,7 +9,7 @@ import {
   PfDropdownItem,
   PfVerticalNavItem,
 } from '@syndesis/ui';
-import { AboutModal, AboutModalContent, Loader } from '@syndesis/ui';
+import { AboutModal, AboutModalContent, Loader, toTestId } from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
 import { useState } from 'react';
 import * as React from 'react';
@@ -88,7 +88,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
             <>
               <div className="pull-right toast-pf-action">
                 <ButtonLink
-                  data-testid={'ui-refresh-app'}
+                  data-testid={`${toTestId('UI', 'reload-button')}`}
                   onClick={refreshApp}
                   as={'link'}
                   style={{ padding: 0, border: 0 }}
@@ -210,7 +210,10 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                         <button
                                           type="button"
                                           role="menuitem"
-                                          data-testid={'ui-logout-app'}
+                                          data-testid={`${toTestId(
+                                            'UI',
+                                            'logout-link'
+                                          )}`}
                                           className="pf-c-dropdown__menu-item"
                                         >
                                           {t('Logout')}
@@ -228,9 +231,10 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                   label={t((route as IAppRoute).label)}
                                   to={(route as IAppRoute).to}
                                   key={index}
-                                  data-testid={`navbar-link-${
+                                  data-testid={`${toTestId(
+                                    'UI',
                                     (route as IAppRoute).to
-                                  }`}
+                                  )}`}
                                 />
                               ) : (
                                 <PfVerticalNavItem
@@ -245,9 +249,10 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                         label={t(subRoute.label)}
                                         to={subRoute.to}
                                         key={subIndex}
-                                        data-testid={`navbar-link-${
+                                        data-testid={`${toTestId(
+                                          'UI',
                                           subRoute.to
-                                        }`}
+                                        )}`}
                                       />
                                     )
                                   )}
@@ -260,7 +265,9 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                   isProductBuild ? fuseOnlineLogo : syndesisLogo
                                 }
                                 alt={productName}
-                                style={{ minWidth: '164px' }}
+                                style={{
+                                  minWidth: '164px',
+                                }}
                               />
                             }
                             logoHref={'/'}

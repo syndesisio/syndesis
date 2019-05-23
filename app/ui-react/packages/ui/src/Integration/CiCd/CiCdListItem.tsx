@@ -1,6 +1,7 @@
 import { Button } from 'patternfly-react';
 import { ListViewItem } from 'patternfly-react';
 import * as React from 'react';
+import { toTestId } from '../../utils';
 
 export interface ICiCdListItemProps {
   onEditClicked: (name: string) => void;
@@ -38,13 +39,21 @@ export class CiCdListItem extends React.Component<ICiCdListItemProps> {
         actions={
           <div>
             <Button
-              data-testid={'cicd-list-item-edit'}
+              data-testid={`${toTestId(
+                'CiCdListItem',
+                this.props.name,
+                'create-button'
+              )}`}
               onClick={this.handleEditClicked}
             >
               {this.props.i18nEditButtonText}
             </Button>
             <Button
-              data-testid={'cicd-list-item-remove'}
+              data-testid={`${toTestId(
+                'CiCdListItem',
+                this.props.name,
+                'remove-button'
+              )}`}
               onClick={this.handleRemoveClicked}
             >
               {this.props.i18nRemoveButtonText}

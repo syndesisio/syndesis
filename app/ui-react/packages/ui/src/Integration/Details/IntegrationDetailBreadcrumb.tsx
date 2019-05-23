@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { Breadcrumb, ButtonLink } from '../../Layout';
 import { IMenuActions } from '../../Shared';
+import { toTestId } from '../../utils';
 import './IntegrationDetailBreadcrumb.css';
 
 export interface IIntegrationDetailBreadcrumbProps {
@@ -30,14 +31,20 @@ export class IntegrationDetailBreadcrumb extends React.Component<
         actions={
           <>
             <ButtonLink
-              data-testid={'integration-detail-breadcrumb-export'}
+              data-testid={`${toTestId(
+                'IntegrationDetailBreadcrumb',
+                'export-button'
+              )}`}
               to={this.props.exportHref}
               onClick={this.props.exportAction}
               children={this.props.exportLabel}
             />
             &nbsp;&nbsp;
             <ButtonLink
-              data-testid={'integration-detail-breadcrumb-edit'}
+              data-testid={`${toTestId(
+                'IntegrationDetailBreadcrumb',
+                'edit-button'
+              )}`}
               className="btn btn-primary"
               href={this.props.editHref}
               children={this.props.editLabel}
@@ -51,7 +58,10 @@ export class IntegrationDetailBreadcrumb extends React.Component<
                     <li role={'presentation'} key={idx}>
                       {a.href ? (
                         <Link
-                          data-testid={`integration-detail-breadcrumb-${idx}`}
+                          data-testid={`${toTestId(
+                            'IntegrationDetailBreadcrumb',
+                            a.label.toString()
+                          )}`}
                           to={a.href}
                           onClick={a.onClick}
                           role={'menuitem'}
@@ -61,7 +71,10 @@ export class IntegrationDetailBreadcrumb extends React.Component<
                         </Link>
                       ) : (
                         <a
-                          data-testid={`integration-detail-breadcrumb-${idx}`}
+                          data-testid={`${toTestId(
+                            'IntegrationDetailBreadcrumb',
+                            a.label.toString()
+                          )}`}
                           href={'javascript:void(0)'}
                           onClick={a.onClick}
                           role={'menuitem'}
@@ -79,7 +92,10 @@ export class IntegrationDetailBreadcrumb extends React.Component<
       >
         <span>
           <Link
-            data-testid={'integration-detail-breadcrumb-home'}
+            data-testid={`${toTestId(
+              'IntegrationDetailBreadcrumb',
+              'home-link'
+            )}`}
             to={this.props.homeHref!}
           >
             {this.props.i18nHome}
@@ -87,7 +103,10 @@ export class IntegrationDetailBreadcrumb extends React.Component<
         </span>
         <span>
           <Link
-            data-testid={'integration-detail-breadcrumb-integrations'}
+            data-testid={`${toTestId(
+              'IntegrationDetailBreadcrumb',
+              'integrations-link'
+            )}`}
             to={this.props.integrationsHref!}
           >
             {this.props.i18nIntegrations}

@@ -7,6 +7,7 @@ import {
   ExtensionSupports,
   IAction,
   PageLoader,
+  toTestId,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -92,15 +93,19 @@ export default class ExtensionDetailsPage extends React.Component {
                               <>
                                 <Breadcrumb>
                                   <Link
-                                    data-testid={'extension-details-page-home'}
+                                    data-testid={toTestId(
+                                      'ExtensionDetailsPage',
+                                      'home-link'
+                                    )}
                                     to={resolvers.dashboard.root()}
                                   >
                                     {t('shared:Home')}
                                   </Link>
                                   <Link
-                                    data-testid={
-                                      'extension-details-page-extensions'
-                                    }
+                                    data-testid={toTestId(
+                                      'ExtensionDetailsPage',
+                                      'extensions-link'
+                                    )}
                                     to={resolvers.extensions.list()}
                                   >
                                     {t('shared:Extensions')}

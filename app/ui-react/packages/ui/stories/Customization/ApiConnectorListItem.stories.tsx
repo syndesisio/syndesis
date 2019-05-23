@@ -5,7 +5,10 @@ import * as React from 'react';
 import { MemoryRouter } from 'react-router';
 import { ApiConnectorListItem } from '../../src';
 
-const stories = storiesOf('Customization/ApiConnectorListItem', module);
+const stories = storiesOf(
+  'Customization/ApiClientConnector/ApiConnectorListItem',
+  module
+);
 
 const apiConnectorId = 'beer-api-2.0';
 const apiDescription = 'An OpenAPI 2.0 version of the Beer API';

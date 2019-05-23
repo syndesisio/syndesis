@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { Container } from '../../Layout';
+import { toTestId } from '../../utils';
 
 export interface ISqlClientFormProps {
   /**
@@ -32,7 +33,7 @@ export class SqlClientForm extends React.Component<ISqlClientFormProps> {
             </div>
           </form>
           <button
-            data-testid={'sql-client-form-submit'}
+            data-testid={`${toTestId('SqlClientForm', 'submit-button')}`}
             type="button"
             className="btn btn-primary"
             onClick={this.props.handleSubmit}

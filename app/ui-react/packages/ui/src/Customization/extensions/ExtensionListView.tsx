@@ -9,6 +9,7 @@ import {
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
+import { toTestId } from '../../utils';
 
 export interface IExtensionListViewProps extends IListViewToolbarProps {
   i18nDescription: string;
@@ -42,7 +43,10 @@ export class ExtensionListView extends React.Component<
           <div className="form-group">
             <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
               <ButtonLink
-                data-testid={'extension-list-view-import-extension'}
+                data-testid={`${toTestId(
+                  'ExtensionListView',
+                  'import-button'
+                )}`}
                 href={this.props.linkImportExtension}
                 as={'primary'}
               >
@@ -71,7 +75,10 @@ export class ExtensionListView extends React.Component<
             <EmptyState.Action>
               <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
                 <ButtonLink
-                  data-testid={'extension-list-view-empty-state-import'}
+                  data-testid={`${toTestId(
+                    'ExtensionListView',
+                    'empty-state-import-button'
+                  )}`}
                   href={this.props.linkImportExtension}
                   as={'primary'}
                 >

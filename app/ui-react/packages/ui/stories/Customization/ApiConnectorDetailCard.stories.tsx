@@ -2,7 +2,10 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { ApiConnectorDetailCard } from '../../src';
 
-const stories = storiesOf('Customization/ApiConnectorDetailCard', module);
+const stories = storiesOf(
+  'Customization/ApiClientConnector/ApiConnectorDetailCard',
+  module
+);
 
 const description = 'An OpenAPI 2.0 version of the Beer API.';
 const icon =

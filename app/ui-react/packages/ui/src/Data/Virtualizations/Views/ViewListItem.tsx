@@ -14,6 +14,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../../Shared';
+import { toTestId } from '../../../utils';
 
 export interface IViewListItemProps {
   viewDescription: string;
@@ -66,7 +67,15 @@ export class ViewListItem extends React.Component<
           actions={
             <div className="form-group">
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
-                <ButtonLink href={this.props.viewEditPageLink} as={'default'}>
+                <ButtonLink
+                  data-testid={`${toTestId(
+                    'ViewListItem',
+                    this.props.viewName,
+                    'edit-button'
+                  )}`}
+                  href={this.props.viewEditPageLink}
+                  as={'default'}
+                >
                   {this.props.i18nEdit}
                 </ButtonLink>
               </OverlayTrigger>

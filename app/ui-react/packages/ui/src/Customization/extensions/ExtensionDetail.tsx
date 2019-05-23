@@ -23,6 +23,7 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../Shared';
+import { toTestId } from '../../utils';
 import './ExtensionDetail.css';
 
 export interface IExtensionDetailProps {
@@ -209,7 +210,10 @@ export class ExtensionDetail extends React.Component<
             <LevelItem className="extension-detail__titleButtons">
               <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
                 <ButtonLink
-                  data-testid={'extension-detail-update'}
+                  data-testid={`${toTestId(
+                    'ExtensionDetail',
+                    'update-button'
+                  )}`}
                   href={this.props.linkUpdateExtension}
                   as={'primary'}
                 >

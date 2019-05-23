@@ -2,6 +2,7 @@ import * as H from '@syndesis/history';
 import { EmptyState, OverlayTrigger, Tooltip } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
+import { toTestId } from '../../../utils';
 import './EmptyViewsState.css';
 
 export interface IEmptyViewsStateProps {
@@ -28,7 +29,10 @@ export class EmptyViewsState extends React.Component<IEmptyViewsStateProps> {
             placement="top"
           >
             <ButtonLink
-              data-testid={'empty-view-state-import-views'}
+              data-testid={`${toTestId(
+                'EmptyViewsState',
+                'import-views-button'
+              )}`}
               href={this.props.linkImportViewsHRef}
               as={'default'}
               className={'empty-views-import'}
@@ -38,7 +42,10 @@ export class EmptyViewsState extends React.Component<IEmptyViewsStateProps> {
           </OverlayTrigger>
           <OverlayTrigger overlay={this.getCreateViewTooltip()} placement="top">
             <ButtonLink
-              data-testid={'empty-view-state-create-view'}
+              data-testid={`${toTestId(
+                'EmptyViewsState',
+                'create-view-button'
+              )}`}
               href={this.props.linkCreateViewHRef}
               as={'primary'}
             >

@@ -1,5 +1,6 @@
 import { Filter, FormControl, Sort, Toolbar } from 'patternfly-react';
 import * as React from 'react';
+import { toTestId } from '../utils';
 import './ListViewToolbar.css';
 
 export interface IFilterValue {
@@ -98,7 +99,7 @@ export class ListViewToolbar extends React.Component<IListViewToolbarProps> {
                 ))}
               </Filter.List>
               <a
-                data-testid={'list-view-toolbar-clear-filters'}
+                data-testid={`${toTestId('ListViewToolbar', 'clear-filters')}`}
                 onClick={this.props.onClearFilters}
               >
                 Clear All Filters
