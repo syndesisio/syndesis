@@ -487,7 +487,7 @@ patch_for_using_template_from_configmap() {
               "name": "syndesis-operator",
               "command": [
                 "syndesis-operator",
-                "-template",
+                "--template",
                 "/conf/syndesis-template.yml"
               ],
               "volumeMounts": [
