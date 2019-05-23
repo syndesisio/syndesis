@@ -14,7 +14,7 @@ export class ApiProviderEditSpecification extends React.Component<
     return (
       <>
         <div>{this.props.i18nTitle}</div>
-        <div>{this.props.children}</div>
+        {this.props.children}
       </>
     );
   }

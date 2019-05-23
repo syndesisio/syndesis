@@ -81,5 +81,5 @@ export const SPLIT = 'split';
 export const AGGREGATE = 'aggregate';
 export const LOG = 'log';
 export const TEMPLATE = 'template';
-export const API_PROVIDER = 'apiProvider';
+export const API_PROVIDER = 'api-provider';
 export const CONNECTOR = 'connector';
