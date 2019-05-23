@@ -1,5 +1,6 @@
 import { ApiProviderSelectMethod, PageSection } from '@syndesis/ui';
 import * as React from 'react';
+import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../../shared';
 
 /**
@@ -10,15 +11,22 @@ import { PageTitle } from '../../../../../shared';
 export class SelectMethodPage extends React.Component {
   public render() {
     return (
-      <PageSection>
-        <PageTitle title={'Start integration with an API call'} />
-        <ApiProviderSelectMethod
-          i18nTitle={'Start integration with an API call'}
-          i18nDescription={
-            'Execute this integration when a client invokes an operation defined by this API.'
-          }
-        />
-      </PageSection>
+      <Translation ns={['integrations', 'shared']}>
+        {t => (
+          <PageSection>
+            <PageTitle title={t('integrations:apiProvider:title')} />
+            <ApiProviderSelectMethod
+              i18nDescription={t('integrations:apiProvider:description')}
+              i18nMethodFromFile={t('integrations:apiProvider:methodFromFile')}
+              i18nMethodFromScratch={t(
+                'integrations:apiProvider:methodFromScratch'
+              )}
+              i18nMethodFromUrl={t('integrations:apiProvider:methodFromUrl')}
+              i18nUrlNote={t('integrations:apiProvider:urlNote')}
+            />
+          </PageSection>
+        )}
+      </Translation>
     );
   }
 }
