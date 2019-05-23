@@ -32,8 +32,8 @@ const addStepPage = (
     apiProviderHref={
       resolvers.integration.edit.editStep.apiProvider.selectMethod
     }
-    getEditStepHref={(position, p, s) =>
-      resolvers.integration.edit.addStep.selectStep({
+    getDeleteEdgeStepHref={(position, p, s) =>
+      resolvers.integration.edit.editStep.selectStep({
         position: `${position}`,
         ...p,
         ...s,

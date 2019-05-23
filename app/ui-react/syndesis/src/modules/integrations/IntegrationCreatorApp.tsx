@@ -24,8 +24,8 @@ const addStepPage = (
         ...s,
       })
     }
-    getEditStepHref={(position, p, s) =>
-      resolvers.create.configure.addStep.selectStep({
+    getDeleteEdgeStepHref={(position, p, s) =>
+      resolvers.create.configure.editStep.selectStep({
         position: `${position}`,
         ...p,
         ...s,
