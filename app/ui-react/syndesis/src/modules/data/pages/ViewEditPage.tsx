@@ -7,7 +7,7 @@ import {
 import {
   Breadcrumb,
   IViewEditValidationResult,
-  Loader,
+  PageLoader,
   ViewEditContent,
   ViewEditHeader,
 } from '@syndesis/ui';
@@ -172,7 +172,7 @@ export class ViewEditPage extends React.Component<{}, IViewEditPageState> {
                           <WithLoader
                             error={error}
                             loading={!hasData}
-                            loaderChildren={<Loader />}
+                            loaderChildren={<PageLoader />}
                             errorChildren={<ApiError />}
                           >
                             {() => {

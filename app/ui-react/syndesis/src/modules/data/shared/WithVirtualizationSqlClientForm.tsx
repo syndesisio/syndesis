@@ -200,8 +200,11 @@ export class WithVirtualizationSqlClientForm extends React.Component<
                 <WithVirtualizationHelpers>
                   {({ queryVirtualization }) => {
                     const doSubmit = async (value: any) => {
+                      const selectedViewName = value.view
+                        ? value.view
+                        : this.getInitialView();
                       const viewDefn = this.props.views.find(
-                        view => view.viewName === value.view
+                        view => view.viewName === selectedViewName
                       );
                       try {
                         let sqlStatement = '';
@@ -237,7 +240,11 @@ export class WithVirtualizationSqlClientForm extends React.Component<
                         i18nRequiredProperty={'* Required field'}
                         definition={formDefinition}
                         initialValue={initialValue}
-                        onSave={doSubmit}
+                        onSave={(properties, actions) => {
+                          doSubmit(properties).finally(() => {
+                            actions.setSubmitting(false);
+                          });
+                        }}
                       >
                         {({
                           fields,
