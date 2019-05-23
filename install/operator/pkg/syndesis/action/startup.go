@@ -31,7 +31,7 @@ func (a *startupAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 func (a *startupAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 
-	list := v1.DeploymentConfigList {
+	list := v1.DeploymentConfigList{
 		TypeMeta: metav1.TypeMeta{
 			Kind:       "DeploymentConfig",
 			APIVersion: "apps.openshift.io/v1",
@@ -54,7 +54,7 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	var failedDeployment *string
 	for _, depl := range list.Items {
 		if depl.Spec.Replicas != depl.Status.ReadyReplicas {
-			a.log.Info("Not ready", "desired", depl.Spec.Replicas, "actual", depl.Status.ReadyReplicas, "deployment", depl.Name)
+			a.log.V(2).Info("Not ready", "desired", depl.Spec.Replicas, "actual", depl.Status.ReadyReplicas, "deployment", depl.Name)
 			ready = false
 		}
 		if depl.Spec.Replicas != depl.Status.Replicas && depl.Status.Replicas == 0 && !isProcessing(&depl) {
@@ -74,14 +74,14 @@ func (a *startupAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		target.Status.Phase = v1alpha1.SyndesisPhaseStartupFailed
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonDeploymentNotReady
 		target.Status.Description = "Some Syndesis deployments failed to startup within the allowed time frame"
-		a.log.Info("Startup failed for Syndesis resource. Deployment not ready", "name", syndesis.Name, "deployment", *failedDeployment)
+		a.log.V(2).Info("Startup failed for Syndesis resource. Deployment not ready", "name", syndesis.Name, "deployment", *failedDeployment)
 		return a.client.Update(ctx, target)
 	} else {
 		target := syndesis.DeepCopy()
 		target.Status.Phase = v1alpha1.SyndesisPhaseStarting
 		target.Status.Reason = v1alpha1.SyndesisStatusReasonMissing
 		target.Status.Description = ""
-		a.log.Info("Waiting for Syndesis resource to startup", "name", syndesis.Name)
+		a.log.V(2).Info("Waiting for Syndesis resource to startup", "name", syndesis.Name)
 		return a.client.Update(ctx, target)
 	}
 }
