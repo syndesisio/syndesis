@@ -108,7 +108,7 @@ export class ViewListItem extends React.Component<
                 />
               </div>
             ) : (
-              <ListViewIcon name={'cube'} />
+              <ListViewIcon name={'table'} />
             )
           }
           stacked={false}

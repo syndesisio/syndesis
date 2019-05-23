@@ -215,21 +215,12 @@ const virtualizationItems = [
   />,
 ];
 
-const title = 'Virtualizations';
-const description =
-  'Syndesis creates and manages data virtualizations to expose as data source connections.';
 const createVirtualization = 'Create Data Virtualization';
 const createVirtualizationTip = 'Create Data Virtualization';
 const importText = 'Import';
 const importTip = 'Import a data virtualization';
 
 const defaultNotes =
-  '- Verify page title is "' +
-  title +
-  '"\n' +
-  '- Verify page description is "' +
-  description +
-  '"\n' +
   '- Verify toolbar is displayed\n' +
   '- Verify toolbar contains "' +
   importText +
@@ -319,7 +310,6 @@ stories
           onUpdateCurrentSortType={action('onUpdateCurrentSortType')}
           i18nCreateDataVirtualization={createVirtualization}
           i18nCreateDataVirtualizationTip={createVirtualization}
-          i18nDescription={text('i18nDescription', description)}
           i18nEmptyStateInfo={text(
             'i18nEmptyStateInfo',
             'There are no currently available Virtualizations. Please click on the button below to create one.'
@@ -342,8 +332,7 @@ stories
             'Filter by Name...'
           )}
           i18nResultsCount={text('i18nResultsCount', '0 Results')}
-          i18nTitle={text('i18nTitle', title)}
-          /* TD-636: Commented out for TP
+          /* TD-636: Commented out for TP 
           onImport={action(importText)} */
           children={[]}
           hasListData={false}
@@ -386,7 +375,6 @@ stories
           onUpdateCurrentSortType={action('onUpdateCurrentSortType')}
           i18nCreateDataVirtualization={createVirtualization}
           i18nCreateDataVirtualizationTip={createVirtualization}
-          i18nDescription={text('i18nDescription', description)}
           i18nEmptyStateInfo={text(
             'i18nEmptyStateInfo',
             'There are no currently available API connectors. Please click on the button below to create one.'
@@ -411,8 +399,7 @@ stories
             'i18nResultsCount',
             virtualizationItems.length + ' Results'
           )}
-          i18nTitle={text('i18nTitle', title)}
-          /* TD-636: Commented out for TP
+          /* TD-636: Commented out for TP 
           onImport={action(importText)} */
           children={virtualizationItems}
           hasListData={true}
@@ -455,7 +442,6 @@ stories
           onUpdateCurrentSortType={action('onUpdateCurrentSortType')}
           i18nCreateDataVirtualization={createVirtualization}
           i18nCreateDataVirtualizationTip={createVirtualization}
-          i18nDescription={text('i18nDescription', description)}
           i18nEmptyStateInfo={text(
             'i18nEmptyStateInfo',
             'There are no currently available API connectors. Please click on the button below to create one.'
@@ -480,8 +466,7 @@ stories
             'i18nResultsCount',
             virtItem.length + ' Results'
           )}
-          i18nTitle={text('i18nTitle', title)}
-          /* TD-636: Commented out for TP
+          /* TD-636: Commented out for TP 
           onImport={action(importText)} */
           hasListData={true}
         />

@@ -11,6 +11,11 @@ import { callFetch } from './callFetch';
 
 const WORKSPACE_ROOT = '/tko:komodo/tko:workspace/';
 
+export interface IDvNameValidationResult {
+  isError: boolean;
+  error?: string;
+}
+
 export interface IWithVirtualizationHelpersChildrenProps {
   createVirtualization(
     username: string,
@@ -36,6 +41,14 @@ export interface IWithVirtualizationHelpersChildrenProps {
   validateViewDefinition(
     viewDefinition: ViewDefinition
   ): Promise<ViewDefinitionStatus>;
+  validateVirtualizationName(
+    virtualizationName: string
+  ): Promise<IDvNameValidationResult>;
+  validateViewName(
+    vdbName: string,
+    modelName: string,
+    viewName: string
+  ): Promise<IDvNameValidationResult>;
 }
 
 export interface IWithVirtualizationHelpersProps {
@@ -59,6 +72,10 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
     );
     this.unpublishServiceVdb = this.unpublishServiceVdb.bind(this);
     this.validateViewDefinition = this.validateViewDefinition.bind(this);
+    this.validateVirtualizationName = this.validateVirtualizationName.bind(
+      this
+    );
+    this.validateViewName = this.validateViewName.bind(this);
   }
 
   /**
@@ -221,6 +238,68 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
   }
 
   /**
+   * Validate the supplied Virtualization name
+   * @param virtName the virutalization name
+   */
+  public async validateVirtualizationName(
+    virtName: string
+  ): Promise<IDvNameValidationResult> {
+    const encodedName = encodeURIComponent(virtName);
+    const response = await callFetch({
+      headers: {},
+      method: 'GET',
+      url: `${
+        this.props.dvApiUri
+      }workspace/dataservices/nameValidation/${encodedName}`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    // return validation result
+    const result = await response.text();
+    const hasError = result.length > 0;
+    return {
+      error: hasError ? result : '',
+      isError: hasError,
+    } as IDvNameValidationResult;
+  }
+
+  /**
+   * Validate the view name for the specified vdb and model
+   * @param vdbName the VDB name
+   * @param modelName the model name
+   * @param viewName the view name
+   */
+  public async validateViewName(
+    vdbName: string,
+    modelName: string,
+    viewName: string
+  ): Promise<IDvNameValidationResult> {
+    const encodedName = encodeURIComponent(viewName);
+    const response = await callFetch({
+      headers: {},
+      method: 'GET',
+      url: `${
+        this.props.dvApiUri
+      }workspace/vdbs/${vdbName}/Models/${modelName}/Views/nameValidation/${encodedName}`,
+    });
+
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    // return validation result
+    const result = await response.text();
+    const hasError = result.length > 0;
+    return {
+      error: hasError ? result : '',
+      isError: hasError,
+    } as IDvNameValidationResult;
+  }
+
+  /**
    * Unpublish the Service VDB with the specified name.
    * @param vdbName the name of the vdb associated with the service
    */
@@ -315,6 +394,8 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
       unpublishServiceVdb: this.unpublishServiceVdb,
       updateViewEditorStates: this.updateViewEditorStates,
       validateViewDefinition: this.validateViewDefinition,
+      validateViewName: this.validateViewName,
+      validateVirtualizationName: this.validateVirtualizationName,
     });
   }
 }

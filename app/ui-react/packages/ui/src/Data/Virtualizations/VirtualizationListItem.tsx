@@ -268,7 +268,7 @@ export class VirtualizationListItem extends React.Component<
                 />
               </div>
             ) : (
-              <ListViewIcon name={'database'} />
+              <ListViewIcon name={'cube'} />
             )
           }
           stacked={true}
