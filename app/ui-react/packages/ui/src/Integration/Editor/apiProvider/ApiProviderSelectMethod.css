@@ -1,0 +1,7 @@
+.api-provider-select-method__list .list-view-pf-expand {
+  display: none;
+}
+
+.api-provider-select-method__list .list-view-pf-checkbox {
+  border-right: 0;
+}

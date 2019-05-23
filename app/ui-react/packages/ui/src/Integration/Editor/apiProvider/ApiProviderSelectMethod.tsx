@@ -2,12 +2,17 @@ import { Text } from '@patternfly/react-core';
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
 
+import './ApiProviderSelectMethod.css';
+
 export interface IApiProviderSelectMethodProps {
   i18nDescription?: string;
   /**
    * The title
    */
   i18nTitle?: string;
+  i18nMethodFromFile: string;
+  i18nMethodFromUrl: string;
+  i18nMethodFromScratch: string;
 }
 
 export class ApiProviderSelectMethod extends React.Component<
@@ -19,73 +24,28 @@ export class ApiProviderSelectMethod extends React.Component<
         <Text>{this.props.i18nTitle}</Text>
         <Text>{this.props.i18nDescription}</Text>
         <ListView
-          id="listView--listItemVariants"
-          className="listView--listItemVariants"
+          id="api-provider-select-method__list"
+          className="api-provider-select-method__list"
         >
           <ListView.Item
-            id="item1"
-            className="listViewItem--listItemVariants"
-            key="item1"
-            description="Expandable item with description, additional items and actions"
-            heading="Event One"
-            checkboxInput={<input type="checkbox" />}
-            leftContent={<ListView.Icon name="plane" />}
-            additionalInfo={[
-              <ListView.InfoItem key="1">Item 1</ListView.InfoItem>,
-              <ListView.InfoItem key="2" />,
-            ]}
+            key={'1'}
+            checkboxInput={<input type="radio" />}
+            heading={this.props.i18nMethodFromFile}
             stacked={false}
           >
-            Expanded Content
+            {this.props.children}
           </ListView.Item>
           <ListView.Item
-            key="item2"
-            leftContent={<ListView.Icon size="lg" name="plane" />}
-            heading={
-              <span>
-                This is EVENT One that is with very LONG and should not overflow
-                and push other elements out of the bounding box.
-                <small>Feb 23, 2015 12:32 am</small>
-              </span>
-            }
-            actions={<div />}
-            description={
-              <span>
-                The following snippet of text is rendered as{' '}
-                <a href="">link text</a>.
-              </span>
-            }
+            key={'2'}
+            checkboxInput={<input type="radio" />}
+            heading={this.props.i18nMethodFromUrl}
             stacked={false}
           />
           <ListView.Item
-            key="item3"
-            checkboxInput={<input type="checkbox" />}
-            heading="Stacked Additional Info items"
-            description={
-              <span>
-                The following snippet of text is rendered as{' '}
-                <a href="">link text</a>.
-              </span>
-            }
-            additionalInfo={[
-              <ListView.InfoItem key={'1'} stacked={true}>
-                <strong>113,735</strong>
-                <span>Service One</span>
-              </ListView.InfoItem>,
-              <ListView.InfoItem key={'2'} stacked={true}>
-                <strong>35%</strong>
-                <span>Service Two</span>
-              </ListView.InfoItem>,
-            ]}
+            key={'3'}
+            checkboxInput={<input type="radio" />}
+            heading={this.props.i18nMethodFromScratch}
             stacked={false}
-          />
-          <ListView.Item
-            key="item4"
-            additionalInfo={[
-              <ListView.InfoItem key={'1'}>Only Additional</ListView.InfoItem>,
-              <ListView.InfoItem key={'2'}>Info Items</ListView.InfoItem>,
-            ]}
-            stacked={true}
           />
         </ListView>
       </>
