@@ -40,6 +40,7 @@ import org.apache.camel.util.ObjectHelper;
 public final class GoogleSheetsMetadataRetrieval extends ComponentMetadataRetrieval {
 
     private static final String SHEETS_GET_VALUES_ACTION = "io.syndesis:sheets-get-values-connector";
+    private static final String SHEETS_RETRIEVE_VALUES_ACTION = "io.syndesis:sheets-retrieve-values-connector";
     private static final String SHEETS_UPDATE_VALUES_ACTION = "io.syndesis:sheets-update-values-connector";
     private static final String SHEETS_APPEND_VALUES_ACTION = "io.syndesis:sheets-append-values-connector";
 
@@ -82,7 +83,7 @@ public final class GoogleSheetsMetadataRetrieval extends ComponentMetadataRetrie
                 }
 
                 DataShape.Builder outputShapeBuilder = new DataShape.Builder().type("VALUE_RANGE_PARAM_OUT");
-                if (ObjectHelper.equal(actionId, SHEETS_GET_VALUES_ACTION)) {
+                if (ObjectHelper.isEqualToAny(actionId, SHEETS_GET_VALUES_ACTION, SHEETS_RETRIEVE_VALUES_ACTION)) {
                     outputShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                             .name("ValueRange Result")
                             .description(String.format("Results of range [%s]", valueRangeMetaData.getRange()))

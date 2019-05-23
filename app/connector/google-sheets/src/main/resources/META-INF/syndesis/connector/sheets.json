@@ -437,6 +437,119 @@
     },
     {
       "actionType": "connector",
+      "description": "Retrieve data range values from a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
+      "descriptor": {
+        "componentScheme": "google-sheets",
+        "connectorCustomizers": [
+          "io.syndesis.connector.sheets.GoogleSheetsRetrieveValuesCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "kind": "json-schema"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify the value range that you want to retrieve.",
+            "name": "Retrieve spreadsheet values from Google Sheets",
+            "properties": {
+              "headerRow": {
+                "deprecated": false,
+                "displayName": "Header row number",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Enter the row number that represents the headers. These values are used as column names.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "majorDimension": {
+                "defaultValue": "ROWS",
+                "deprecated": false,
+                "displayName": "Major Dimension",
+                "enum": [
+                  {
+                    "label": "Rows",
+                    "value": "ROWS"
+                  },
+                  {
+                    "label": "Columns",
+                    "value": "COLUMNS"
+                  }
+                ],
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The major dimension that results should use. Indicates which dimension results apply to.",
+                "order": "3",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "range": {
+                "defaultValue": "A:A",
+                "deprecated": false,
+                "displayName": "Range",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Value range in a spreadsheet to obtain.",
+                "order": "2",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "spreadsheetId": {
+                "deprecated": false,
+                "displayName": "SpreadsheetId",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "The spreadsheet identifier.",
+                "order": "1",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          },
+          {
+            "description": "Specify column names.",
+            "name": "Column name mappings",
+            "properties": {
+              "columnNames": {
+                "deprecated": false,
+                "displayName": "Column names",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "producer",
+                "labelHint": "Comma delimited list of names that describe the columns.",
+                "order": "4",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:sheets-retrieve-values-connector",
+      "name": "Retrieve sheet values",
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
       "description": "Obtain data range values from a spreadsheet on your the Google Sheets account that this connection is authorized to access.",
       "descriptor": {
         "componentScheme": "google-sheets-stream",
