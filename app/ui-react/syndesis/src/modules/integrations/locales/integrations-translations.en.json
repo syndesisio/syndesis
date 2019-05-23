@@ -77,12 +77,37 @@
     "saveOrAddStep": "Save or Add Step"
   },
   "apiProvider": {
-    "description": "Execute this integration when a client invokes an operation defined by this API.",
-    "methodFromFile": "Upload an OpenAPI file",
-    "methodFromScratch": "Create from scratch",
-    "methodFromUrl": "Use a URL",
-    "title": "Start integration with an API call",
-    "urlNote": "* Note: After uploading this document, Syndesis does not automatically obtain any updates to it."
+    "editSpecification": {
+      "title": "Provide API Definition"
+    },
+    "reviewActions": {
+      "btnReviewEdit": "Review/Edit",
+      "description": "Description",
+      "name": "Name",
+      "operations": "operations",
+      "sectionApiDefinition": "API DEFINITION",
+      "sectionImported": "IMPORTED",
+      "sectionWarnings": "WARNINGS",
+      "title": "Review Actions"
+    },
+    "reviewOperations": {
+      "title": "Operations"
+    },
+    "selectMethod": {
+      "description": "Execute this integration when a client invokes an operation defined by this API.",
+      "dndFileExtensions": ".json, .yaml and .yml",
+      "dndHelpMessage": "Accepted file type: .json, .yaml and .yml",
+      "dndInstructions": "Drag 'n' drop a file here, or <strong>click</strong> to select a file using a file chooser dialog.",
+      "dndNoFileSelectedLabel": "Selected file:",
+      "methodFromFile": "Upload an OpenAPI file",
+      "methodFromScratch": "Create from scratch",
+      "methodFromUrl": "Use a URL",
+      "title": "Start integration with an API call",
+      "urlNote": "* Note: After uploading this document, Syndesis does not automatically obtain any updates to it."
+    },
+    "setInfo": {
+      "title": "Give this integration a name"
+    }
   },
   "ReplaceDraft": "Replace Draft",
   "ReplaceDraftModalMessage": "Are you sure you want to to replace the current draft for the \"{{name}}\" integration?",

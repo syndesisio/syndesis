@@ -11,8 +11,8 @@ import {
   DndFileChooser,
 } from '../../../src';
 
-const fileExtensions = '.jar';
-const helpMessage = 'Accepted file type: .jar';
+const fileExtensions = '.json, .yaml and .yml';
+const helpMessage = 'Accepted file type: .json, .yaml and .yml';
 const instructions =
   "Drag 'n' drop a file here, or <strong>click</strong> to select a file using a file chooser dialog.";
 const noFileSelectedMessage = 'no file selected';

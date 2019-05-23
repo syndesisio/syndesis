@@ -183,6 +183,10 @@ export const useIntegrationHelpers = () => {
   };
 
   /**
+   * Uploads and imports the supplied OpenAPI specification
+   */
+
+  /**
    * Requests a .zip file of the integration, using the specified filename
    * @param id
    * @param fileName

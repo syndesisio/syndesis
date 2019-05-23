@@ -59,9 +59,7 @@ export class ApiProviderSelectMethod extends React.Component<
             checkboxInput={<input type="radio" />}
             heading={this.props.i18nMethodFromScratch}
             stacked={false}
-          >
-            <></>
-          </ListView.Item>
+          />
         </ListView>
       </>
     );
