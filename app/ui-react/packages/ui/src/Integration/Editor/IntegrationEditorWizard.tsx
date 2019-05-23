@@ -3,7 +3,7 @@
 import * as H from '@syndesis/history';
 import classnames from 'classnames';
 import * as React from 'react';
-import { ButtonLink, Loader } from '../Layout';
+import { ButtonLink, Loader } from '../../Layout';
 import './IntegrationEditorWizard.css';
 
 /**

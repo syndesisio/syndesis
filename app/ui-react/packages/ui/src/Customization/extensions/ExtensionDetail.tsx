@@ -16,13 +16,13 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../Layout';
-import { Container } from '../Layout/Container';
+import { ButtonLink } from '../../Layout';
+import { Container } from '../../Layout/Container';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
-} from '../Shared';
+} from '../../Shared';
 import './ExtensionDetail.css';
 
 export interface IExtensionDetailProps {

@@ -1,6 +1,6 @@
 import { ListView, Overlay, Popover } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../Layout';
+import { ButtonLink } from '../../Layout';
 
 export interface IIntegrationEditorStepsListItemProps {
   stepName: string;

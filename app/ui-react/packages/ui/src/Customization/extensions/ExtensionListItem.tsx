@@ -7,40 +7,49 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink } from '../Layout';
+import { ButtonLink } from '../../Layout';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
-} from '../Shared';
+} from '../../Shared';
 
-export interface IApiConnectorListItemProps {
-  apiConnectorDescription?: string;
-  apiConnectorId: string;
-  apiConnectorIcon?: string;
-  apiConnectorName: string;
+export interface IExtensionListItemProps {
   detailsPageLink: H.LocationDescriptor;
-  i18nCancelLabel: string;
+  extensionDescription?: string;
+  extensionIcon?: string;
+  extensionId: string;
+  extensionName: string;
+  i18nCancelText: string;
   i18nDelete: string;
   i18nDeleteModalMessage: string;
   i18nDeleteModalTitle: string;
   i18nDeleteTip?: string;
   i18nDetails: string;
   i18nDetailsTip?: string;
+  i18nExtensionType: string;
+  i18nUpdate: string;
+  i18nUpdateTip?: string;
   i18nUsedByMessage: string;
-  onDelete: (apiConnectorId: string) => void;
+
+  /**
+   * An href to use when the extension is being updated.
+   */
+  linkUpdateExtension: H.LocationDescriptor;
+
+  onDelete: (extensionId: string) => void;
   usedBy: number;
 }
 
-export interface IApiConnectorListItemState {
+export interface IExtensionListItemState {
   showDeleteDialog: boolean;
 }
 
-export class ApiConnectorListItem extends React.Component<
-  IApiConnectorListItemProps,
-  IApiConnectorListItemState
+export class ExtensionListItem extends React.Component<
+  IExtensionListItemProps,
+  IExtensionListItemState
 > {
-  public constructor(props: IApiConnectorListItemProps) {
+  public constructor(props: IExtensionListItemProps) {
     super(props);
 
     this.state = {
@@ -64,7 +73,7 @@ export class ApiConnectorListItem extends React.Component<
     });
 
     // TODO: disable components while delete is processing
-    this.props.onDelete(this.props.apiConnectorId);
+    this.props.onDelete(this.props.extensionId);
   }
 
   public getDeleteTooltip() {
@@ -87,6 +96,16 @@ export class ApiConnectorListItem extends React.Component<
     );
   }
 
+  public getUpdateTooltip() {
+    return (
+      <Tooltip id="updateTip">
+        {this.props.i18nUpdateTip
+          ? this.props.i18nUpdateTip
+          : this.props.i18nUpdate}
+      </Tooltip>
+    );
+  }
+
   public showDeleteDialog() {
     this.setState({
       showDeleteDialog: true,
@@ -97,8 +116,9 @@ export class ApiConnectorListItem extends React.Component<
     return (
       <>
         <ConfirmationDialog
+          // extensionId={this.props.extensionId}
           buttonStyle={ConfirmationButtonStyle.DANGER}
-          i18nCancelButtonText={this.props.i18nCancelLabel}
+          i18nCancelButtonText={this.props.i18nCancelText}
           i18nConfirmButtonText={this.props.i18nDelete}
           i18nConfirmationMessage={this.props.i18nDeleteModalMessage}
           i18nTitle={this.props.i18nDeleteModalTitle}
@@ -115,16 +135,25 @@ export class ApiConnectorListItem extends React.Component<
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={'api-connector-list-item-details'}
+                  data-testid={'extension-list-item-details'}
                   href={this.props.detailsPageLink}
                   as={'default'}
                 >
                   {this.props.i18nDetails}
                 </ButtonLink>
               </OverlayTrigger>
+              <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
+                <ButtonLink
+                  data-testid={'extension-list-item-update'}
+                  href={this.props.linkUpdateExtension}
+                  as={'default'}
+                >
+                  {this.props.i18nUpdate}
+                </ButtonLink>
+              </OverlayTrigger>
               <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
                 <Button
-                  data-testid={'api-connector-list-item-delete'}
+                  data-testid={'extension-list-item-delete'}
                   bsStyle="default"
                   disabled={this.props.usedBy !== 0}
                   onClick={this.showDeleteDialog}
@@ -136,22 +165,25 @@ export class ApiConnectorListItem extends React.Component<
           }
           additionalInfo={[
             <ListViewInfoItem key={1}>
+              {this.props.i18nExtensionType}
+            </ListViewInfoItem>,
+            <ListViewInfoItem key={2}>
               {this.props.i18nUsedByMessage}
             </ListViewInfoItem>,
           ]}
           description={
-            this.props.apiConnectorDescription
-              ? this.props.apiConnectorDescription
+            this.props.extensionDescription
+              ? this.props.extensionDescription
               : ''
           }
-          heading={this.props.apiConnectorName}
+          heading={this.props.extensionName}
           hideCloseIcon={true}
           leftContent={
-            this.props.apiConnectorIcon ? (
+            this.props.extensionIcon ? (
               <div className="blank-slate-pf-icon">
                 <img
-                  src={this.props.apiConnectorIcon}
-                  alt={this.props.apiConnectorName}
+                  src={this.props.extensionIcon}
+                  alt={this.props.extensionName}
                   width={46}
                 />
               </div>

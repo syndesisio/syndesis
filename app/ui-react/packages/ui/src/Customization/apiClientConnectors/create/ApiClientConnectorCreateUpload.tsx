@@ -1,18 +1,12 @@
-import { Text } from '@patternfly/react-core';
-import { Alert, Card } from 'patternfly-react';
+import { Card } from 'patternfly-react';
 import * as React from 'react';
-import { DndFileChooser } from '../Shared/DndFileChooser';
+import { DndFileChooser } from '../../../Shared';
 
-export interface IExtensionImportCardProps {
+export interface IApiClientConnectorCreateUploadProps {
   /**
    * `true` if the dropzone should be disabled.
    */
   dndDisabled: boolean;
-
-  /**
-   * A localized alert message when a jar file cannot be processed as an extension.
-   */
-  i18nAlertMessage?: string;
 
   /**
    * The localized text that appears below the selected file information at the bottom of the drop area. This
@@ -51,11 +45,6 @@ export interface IExtensionImportCardProps {
   i18nDndUploadSuccessMessage?: string;
 
   /**
-   * The localized instructions text that appears above the DnD component.
-   */
-  i18nImportInstructions: string;
-
-  /**
    * The localized title text that appears above the DnD component.
    */
   i18nTitle: string;
@@ -71,25 +60,23 @@ export interface IExtensionImportCardProps {
   onDndUploadRejected(fileName: string): string;
 }
 
-export class ExtensionImportCard extends React.Component<
-  IExtensionImportCardProps
+export class ApiClientConnectorCreateUpload extends React.Component<
+  IApiClientConnectorCreateUploadProps
 > {
   public render() {
     return (
+      /**
+       * TODO: Move drag and drop stuff to its own component,
+       * keep this is as a list of options: Upload or Use a URL
+       */
       <Card>
         <Card.Heading>
           <Card.Title>{this.props.i18nTitle}</Card.Title>
         </Card.Heading>
         <Card.Body>
-          <Text>{this.props.i18nImportInstructions}</Text>
-          {this.props.i18nAlertMessage ? (
-            <Alert type={'error'}>
-              <span>{this.props.i18nAlertMessage}</span>
-            </Alert>
-          ) : null}
           <DndFileChooser
             disableDropzone={this.props.dndDisabled}
-            fileExtensions={'.jar'}
+            fileExtensions={'.json'}
             i18nHelpMessage={this.props.i18nDndHelpMessage}
             i18nInstructions={this.props.i18nDndInstructions}
             i18nNoFileSelectedMessage={this.props.i18nDndNoFileSelectedMessage}

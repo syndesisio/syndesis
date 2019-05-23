@@ -1,4 +1,5 @@
 import { Text, Title } from '@patternfly/react-core';
+import * as H from '@syndesis/history';
 import {
   EmptyState,
   ListView,
@@ -6,44 +7,52 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink, PageSection } from '../Layout';
-import { IListViewToolbarProps, ListViewToolbar } from '../Shared';
+import { ButtonLink, PageSection } from '../../Layout';
+import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
-export interface IApiConnectorListViewProps extends IListViewToolbarProps {
+export interface IExtensionListViewProps extends IListViewToolbarProps {
   i18nDescription: string;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
-  i18nLinkCreateApiConnector: string;
-  i18nLinkCreateApiConnectorTip?: string;
+  i18nLinkImportExtension: H.LocationDescriptor;
+  i18nLinkImportExtensionTip?: H.LocationDescriptor;
   i18nName: string;
+  i18nNameFilterPlaceholder: string;
   i18nTitle: string;
-  linkCreateApiConnector: string;
+  linkImportExtension: H.LocationDescriptor;
 }
 
-export class ApiConnectorListView extends React.Component<
-  IApiConnectorListViewProps
+export class ExtensionListView extends React.Component<
+  IExtensionListViewProps
 > {
+  public getImportTooltip() {
+    return (
+      <Tooltip id="importTip">
+        {this.props.i18nLinkImportExtensionTip
+          ? this.props.i18nLinkImportExtensionTip
+          : this.props.i18nLinkImportExtension}
+      </Tooltip>
+    );
+  }
+
   public render() {
     return (
       <PageSection>
         <ListViewToolbar {...this.props}>
           <div className="form-group">
-            <OverlayTrigger
-              overlay={this.getCreateConnectorTooltip()}
-              placement="top"
-            >
+            <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
               <ButtonLink
-                data-testid={'api-connector-list-view-create-api-connector'}
-                href={this.props.linkCreateApiConnector}
+                data-testid={'extension-list-view-import-extension'}
+                href={this.props.linkImportExtension}
                 as={'primary'}
               >
-                {this.props.i18nLinkCreateApiConnector}
+                {this.props.i18nLinkImportExtension}
               </ButtonLink>
             </OverlayTrigger>
           </div>
         </ListViewToolbar>
         {this.props.i18nTitle !== '' && (
-          <Title size="xl">{this.props.i18nTitle}</Title>
+          <Title size="lg">{this.props.i18nTitle}</Title>
         )}
         {this.props.i18nDescription !== '' && (
           <Text
@@ -60,32 +69,19 @@ export class ApiConnectorListView extends React.Component<
             </EmptyState.Title>
             <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
             <EmptyState.Action>
-              <OverlayTrigger
-                overlay={this.getCreateConnectorTooltip()}
-                placement="top"
-              >
+              <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
                 <ButtonLink
-                  data-testid={'api-connector-list-view-empty-state-create'}
-                  href={this.props.linkCreateApiConnector}
+                  data-testid={'extension-list-view-empty-state-import'}
+                  href={this.props.linkImportExtension}
                   as={'primary'}
                 >
-                  {this.props.i18nLinkCreateApiConnector}
+                  {this.props.i18nLinkImportExtension}
                 </ButtonLink>
               </OverlayTrigger>
             </EmptyState.Action>
           </EmptyState>
         )}
       </PageSection>
-    );
-  }
-
-  private getCreateConnectorTooltip() {
-    return (
-      <Tooltip id="createTip">
-        {this.props.i18nLinkCreateApiConnectorTip
-          ? this.props.i18nLinkCreateApiConnectorTip
-          : this.props.i18nLinkCreateApiConnector}
-      </Tooltip>
     );
   }
 }

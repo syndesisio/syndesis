@@ -1,7 +1,7 @@
 import { Text } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
-import { ButtonLink, Container, PageSection } from '../Layout';
+import { ButtonLink, Container, PageSection } from '../../Layout';
 
 export interface IIntegrationEditorNothingToConfigureProps {
   /**

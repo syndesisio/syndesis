@@ -1,8 +1,10 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import { ReviewPage } from './api-provider/EditPage';
-import { EditPage } from './api-provider/ReviewPage';
-import { UploadPage } from './api-provider/UploadPage';
+import { EditSpecificationPage } from './apiProvider/EditSpecificationPage';
+import { ReviewActionsPage } from './apiProvider/ReviewActionsPage';
+import { ReviewOperationsPage } from './apiProvider/ReviewOperationsPage';
+import { SelectMethodPage } from './apiProvider/SelectMethodPage';
+import { SetInfoPage } from './apiProvider/SetInfoPage';
 import { IDataMapperPageProps } from './dataMapper/DataMapperPage';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
 import { DescribeDataShapePage } from './endpoint/DescribeDataShapePage';
@@ -42,12 +44,16 @@ export const EndpointEditorApp: React.FunctionComponent<
 };
 
 export interface IApiProviderAppProps {
-  uploadPath: string;
-  uploadChildren: React.ReactElement<UploadPage>;
-  reviewPath: string;
-  reviewChildren: React.ReactElement<ReviewPage>;
-  editPath: string;
-  editChildren: React.ReactElement<EditPage>;
+  selectMethodPath: string;
+  selectMethodChildren: React.ReactElement<SelectMethodPage>;
+  reviewActionsPath: string;
+  reviewActionsChildren: React.ReactElement<ReviewActionsPage>;
+  editSpecificationPath: string;
+  editSpecificationChildren: React.ReactElement<EditSpecificationPage>;
+  setInfoPath: string;
+  setInfoChildren: React.ReactElement<SetInfoPage>;
+  reviewOperationsPath: string;
+  reviewOperationsChildren: React.ReactElement<ReviewOperationsPage>;
 }
 export const ApiProviderApp: React.FunctionComponent<
   IApiProviderAppProps
@@ -55,16 +61,30 @@ export const ApiProviderApp: React.FunctionComponent<
   return (
     <Switch>
       <Route
-        path={props.uploadPath}
+        path={props.selectMethodPath}
         exact={true}
-        children={props.uploadChildren}
+        children={props.selectMethodChildren}
       />
       <Route
-        path={props.reviewPath}
+        path={props.reviewActionsPath}
         exact={true}
-        children={props.reviewChildren}
+        children={props.reviewActionsChildren}
       />
-      <Route path={props.editPath} exact={true} children={props.editChildren} />
+      <Route
+        path={props.editSpecificationPath}
+        exact={true}
+        children={props.editSpecificationChildren}
+      />
+      <Route
+        path={props.setInfoPath}
+        exact={true}
+        children={props.setInfoChildren}
+      />
+      <Route
+        path={props.reviewOperationsPath}
+        exact={true}
+        children={props.reviewOperationsChildren}
+      />
     </Switch>
   );
 };
@@ -189,14 +209,20 @@ export const EditorRoutes: React.FunctionComponent<IEditorAppProps> = props => {
           describeDataChildren={props.endpointEditor.describeDataChildren}
         />
       </Route>
-      <Route path={props.apiProvider.uploadPath}>
+      <Route path={props.apiProvider.selectMethodPath}>
         <ApiProviderApp
-          uploadPath={props.apiProvider.uploadPath}
-          uploadChildren={props.apiProvider.uploadChildren}
-          reviewPath={props.apiProvider.reviewPath}
-          reviewChildren={props.apiProvider.reviewChildren}
-          editPath={props.apiProvider.editPath}
-          editChildren={props.apiProvider.editChildren}
+          selectMethodPath={props.apiProvider.selectMethodPath}
+          selectMethodChildren={props.apiProvider.selectMethodChildren}
+          reviewActionsPath={props.apiProvider.reviewActionsPath}
+          reviewActionsChildren={props.apiProvider.reviewActionsChildren}
+          editSpecificationPath={props.apiProvider.editSpecificationPath}
+          editSpecificationChildren={
+            props.apiProvider.editSpecificationChildren
+          }
+          setInfoPath={props.apiProvider.setInfoPath}
+          setInfoChildren={props.apiProvider.setInfoChildren}
+          reviewOperationsPath={props.apiProvider.reviewOperationsPath}
+          reviewOperationsChildren={props.apiProvider.reviewOperationsChildren}
         />
       </Route>
       <Route path={props.template.templatePath}>

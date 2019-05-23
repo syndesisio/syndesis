@@ -10,7 +10,7 @@ import {
 } from '@patternfly/react-core';
 import { Card } from 'patternfly-react';
 import * as React from 'react';
-import { Container } from '../Layout/Container';
+import { Container } from '../../Layout/Container';
 import './ApiConnectorReview.css';
 
 export interface IApiConnectorReviewProps {

@@ -2,9 +2,11 @@
 import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
 import * as React from 'react';
-import { ReviewPage } from './api-provider/EditPage';
-import { EditPage } from './api-provider/ReviewPage';
-import { UploadPage } from './api-provider/UploadPage';
+import { EditSpecificationPage } from './apiProvider/EditSpecificationPage';
+import { ReviewActionsPage } from './apiProvider/ReviewActionsPage';
+import { ReviewOperationsPage } from './apiProvider/ReviewOperationsPage';
+import { SelectMethodPage } from './apiProvider/SelectMethodPage';
+import { SetInfoPage } from './apiProvider/SetInfoPage';
 import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';
@@ -54,7 +56,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     <SelectConnectionPage
       cancelHref={cancelHref}
       apiProviderHref={(step, params, state) =>
-        appResolvers.apiProvider.upload({
+        appResolvers.apiProvider.editSpecification({
           step,
           ...params,
           ...state,
@@ -240,12 +242,16 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           describeDataChildren: describeDataShapePage,
         }}
         apiProvider={{
-          uploadPath: appStepRoutes.apiProvider.upload,
-          uploadChildren: <UploadPage />,
-          reviewPath: appStepRoutes.apiProvider.review,
-          reviewChildren: <ReviewPage />,
-          editPath: appStepRoutes.apiProvider.edit,
-          editChildren: <EditPage />,
+          selectMethodPath: appStepRoutes.apiProvider.selectMethod,
+          selectMethodChildren: <SelectMethodPage />,
+          reviewActionsPath: appStepRoutes.apiProvider.reviewActions,
+          reviewActionsChildren: <ReviewActionsPage />,
+          editSpecificationPath: appStepRoutes.apiProvider.editSpecification,
+          editSpecificationChildren: <EditSpecificationPage />,
+          setInfoPath: appStepRoutes.apiProvider.setInfo,
+          setInfoChildren: <SetInfoPage />,
+          reviewOperationsPath: appStepRoutes.apiProvider.reviewOperations,
+          reviewOperationsChildren: <ReviewOperationsPage />,
         }}
         template={{
           templatePath: appStepRoutes.template,
