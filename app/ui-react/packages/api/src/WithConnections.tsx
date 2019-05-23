@@ -32,7 +32,7 @@ export function getConnectionsWithToAction(connections: ConnectionOverview[]) {
       // safety net
       return true;
     }
-    if (connection.connectorId === 'api-provider') {
+    if (connection.connectorId === 'apiProvider') {
       // api provider can be used only for From actions
       return false;
     }

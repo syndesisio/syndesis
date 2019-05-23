@@ -2,11 +2,11 @@
 import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
 import * as React from 'react';
-import { EditSpecificationPage } from './api-provider/EditSpecificationPage';
-import { ReviewActionsPage } from './api-provider/ReviewActionsPage';
-import { ReviewOperationsPage } from './api-provider/ReviewOperationsPage';
-import { SelectMethodPage } from './api-provider/SelectMethodPage';
-import { SetInfoPage } from './api-provider/SetInfoPage';
+import { EditSpecificationPage } from './apiProvider/EditSpecificationPage';
+import { ReviewActionsPage } from './apiProvider/ReviewActionsPage';
+import { ReviewOperationsPage } from './apiProvider/ReviewOperationsPage';
+import { SelectMethodPage } from './apiProvider/SelectMethodPage';
+import { SetInfoPage } from './apiProvider/SetInfoPage';
 import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';

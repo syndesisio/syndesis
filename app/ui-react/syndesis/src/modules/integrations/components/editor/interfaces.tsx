@@ -192,7 +192,7 @@ export interface IUIStep extends StepKind {
   board?: ConnectionBulletinBoard;
   connector?: Connector;
   icon: string;
-  uiStepKind: 'api-provider' | StepKind['stepKind'];
+  uiStepKind: 'apiProvider' | StepKind['stepKind'];
   title: string;
   metadata: { [key: string]: any };
   inputDataShape?: DataShape;
@@ -210,7 +210,7 @@ export const stepRoutes = {
   // step 1
   selectStep: '',
   // if selected step is api provider
-  apiProvider: include('api-provider', {
+  apiProvider: include('apiProvider', {
     selectMethod: '',
     reviewActions: 'review-actions',
     editSpecification: 'edit-specification',
