@@ -3,26 +3,11 @@
 @import url('~patternfly/dist/css/patternfly-additions.css');
 @import url('~patternfly-react/dist/css/patternfly-react.css');
 
-/* selective pf4 base styles */
-@import url('~@patternfly/patternfly/patternfly-variables.css');
-@import url('~@patternfly/patternfly/patternfly-shield-noninheritable.css');
-@import url('~@patternfly/patternfly/patternfly-common.css');
-@import url('~@patternfly/patternfly/patternfly-globals.css');
+/* pf4 base styles */
+@import url('~@patternfly/react-core/dist/styles/base.css');
 @import url('~@patternfly/patternfly/utilities/Spacing/spacing.css');
 @import url('~@patternfly/patternfly/layouts/Level/level.css');
 @import url('~@patternfly/patternfly/layouts/Split/split.css');
-
-/* selective pf4 component specific stylesheets */
-@import url('~@patternfly/patternfly/components/Page/page.css');
-@import url('~@patternfly/patternfly/components/Nav/nav.css');
-@import url('~@patternfly/patternfly/components/Dropdown/dropdown.css');
-@import url('~@patternfly/patternfly/components/AboutModalBox/about-modal-box.css');
-@import url('~@patternfly/patternfly/components/BackgroundImage/background-image.css');
-@import url('~@patternfly/patternfly/components/Content/content.css');
-@import url('~@patternfly/patternfly/components/Popover/popover.css');
-@import url('~@patternfly/patternfly/components/Tooltip/tooltip.css');
-@import url('~@patternfly/patternfly/components/Card/card.css');
-@import url('~@patternfly/patternfly/components/ClipboardCopy/clipboard-copy.css');
 
 :root {
   --pf-global--link--Color: #0088ce;
