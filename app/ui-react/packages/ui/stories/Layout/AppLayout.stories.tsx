@@ -13,7 +13,6 @@ import {
 import { withState } from '@dump247/storybook-state';
 const stories = storiesOf('Layout/AppLayout', module);
 const logDropdownItemSelection = action('select dropdown item log');
-const logLogout = action('logout');
 
 stories.add(
   'sample usage',
@@ -57,11 +56,7 @@ stories.add(
               }}
               showNavigation={true}
               pictograph={text('Application title', 'Syndesis')}
-              appNav={
-                <AppTopMenu onSelectLogout={logLogout} username={'developer'}>
-                  Logout
-                </AppTopMenu>
-              }
+              appNav={<AppTopMenu username={'developer'}>Logout</AppTopMenu>}
               verticalNav={[
                 <PfVerticalNavItem
                   exact={true}

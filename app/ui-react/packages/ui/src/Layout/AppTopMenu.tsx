@@ -1,10 +1,9 @@
-import { Dropdown, DropdownItem, DropdownToggle } from '@patternfly/react-core';
+import { Dropdown, DropdownToggle } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IAppTopMenuProps {
   username: string;
   children: any;
-  onSelectLogout(): void;
 }
 
 export interface IAppTopMenuState {
@@ -32,12 +31,7 @@ export class AppTopMenu extends React.Component<
     });
   };
   public render() {
-    const { children, username, onSelectLogout } = this.props;
-    const handleClick = (link: string) => {
-      if (link.toLowerCase() === 'logout') {
-        onSelectLogout();
-      }
-    };
+    const { children, username } = this.props;
     return (
       <Dropdown
         isPlain={true}
@@ -46,19 +40,7 @@ export class AppTopMenu extends React.Component<
           <DropdownToggle onToggle={this.onToggle}>{username}</DropdownToggle>
         }
         isOpen={this.state.isOpen}
-        dropdownItems={React.Children.toArray(children).map((child, idx) => {
-          return (
-            <DropdownItem
-              onClick={event => {
-                event.preventDefault();
-                handleClick(child);
-              }}
-              key={idx}
-            >
-              {child}
-            </DropdownItem>
-          );
-        })}
+        dropdownItems={React.Children.toArray(children)}
       />
     );
   }

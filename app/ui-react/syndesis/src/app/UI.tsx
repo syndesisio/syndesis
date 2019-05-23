@@ -6,6 +6,7 @@ import {
   INotification,
   INotificationType,
   Notifications,
+  PfDropdownItem,
   PfVerticalNavItem,
 } from '@syndesis/ui';
 import { AboutModal, AboutModalContent, Loader } from '@syndesis/ui';
@@ -204,9 +205,17 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                   return (
                                     <AppTopMenu
                                       username={user.username || 'developer'}
-                                      onSelectLogout={logout}
                                     >
-                                      {t('Logout')}
+                                      <PfDropdownItem onClick={logout}>
+                                        <button
+                                          type="button"
+                                          role="menuitem"
+                                          data-testid={'ui-logout-app'}
+                                          className="pf-c-dropdown__menu-item"
+                                        >
+                                          {t('Logout')}
+                                        </button>
+                                      </PfDropdownItem>
                                     </AppTopMenu>
                                   );
                                 }}
