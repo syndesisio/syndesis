@@ -20,6 +20,7 @@ type SyndesisSpec struct {
 	Components           ComponentsSpec  `json:"components,omitempty"`
 	OpenShiftConsoleUrl  string          `json:"openShiftConsoleUrl,omitempty"`
 	SarNamespace         string          `json:"sarNamespace,omitempty"`
+	Addons               AddonsSpec      `json:"addons,omitempty"`
 }
 
 // SyndesisStatus defines the observed state of Syndesis
@@ -93,6 +94,12 @@ type VolumeOnlyResources struct {
 type ServerFeatures struct {
 	ExposeVia3Scale bool `json:"exposeVia3Scale,omitempty"`
 }
+
+type AddonsSpec map[string]Parameters
+
+type Parameters []Parameter
+
+type Parameter map[string]string
 
 // =============================================================================
 

@@ -60,6 +60,8 @@ func (p *TemplateProcessor) Process(sourceTemplate *v1template.Template, paramet
 		return nil, err
 	}
 
+	log.V(4).Info("Template with parameters", "template", resource)
+
 	result := p.restClient.
 		Post().
 		Namespace(p.namespace).

@@ -7,10 +7,14 @@ import (
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"k8s.io/apimachinery/pkg/runtime"
+	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
 )
+
+var log = logf.Log.WithName("template")
 
 type InstallParams struct {
 	OAuthClientSecret string
+	DataVirtEnabled   bool
 }
 
 func GetInstallResourcesAsRuntimeObjects(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.Object, error) {
@@ -27,6 +31,13 @@ func GetInstallResourcesAsRuntimeObjects(scheme *runtime.Scheme, syndesis *v1alp
 			return nil, err
 		}
 		objects = append(objects, res)
+	}
+
+	if log.V(5).Enabled() {
+		log.V(5).Info("Number of objects to create", "number_of_objects", len(objects))
+		for _, obj := range objects {
+			log.V(5).Info("Object to create", "object", obj)
+		}
 	}
 
 	return objects, nil
@@ -46,6 +57,9 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 
 	config := configuration.GetEnvVars(syndesis)
 	config[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
+	if params.DataVirtEnabled {
+		config["DATAVIRT_ENABLED"] = "1"
+	}
 
 	return processor.Process(templ, config)
 }

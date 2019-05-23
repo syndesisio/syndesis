@@ -73,9 +73,16 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		syndesis.Spec.RouteHostName = "dummy"
 	}
 
-	list, err := syndesistemplate.GetInstallResourcesAsRuntimeObjects(a.scheme, syndesis, syndesistemplate.InstallParams{
+	params := syndesistemplate.InstallParams{
 		OAuthClientSecret: token,
-	})
+	}
+
+	if _, ok := syndesis.Spec.Addons["komodo"]; ok {
+		a.log.Info("Addon enabled", "addon", "komodo")
+		params.DataVirtEnabled = true
+	}
+
+	list, err := syndesistemplate.GetInstallResourcesAsRuntimeObjects(a.scheme, syndesis, params)
 	if err != nil {
 		return err
 	}
@@ -97,9 +104,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		}
 
 		// Recreate the list of resources to inject the route hostname
-		list, err = syndesistemplate.GetInstallResourcesAsRuntimeObjects(a.scheme, syndesis, syndesistemplate.InstallParams{
-			OAuthClientSecret: token,
-		})
+		list, err = syndesistemplate.GetInstallResourcesAsRuntimeObjects(a.scheme, syndesis, params)
 	}
 
 	// Link the image secret to service accounts
