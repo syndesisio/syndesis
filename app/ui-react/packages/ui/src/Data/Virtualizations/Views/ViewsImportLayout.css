@@ -1,43 +1,54 @@
 .views-import-layout {
-  height: calc(100% - 36px - 60px);
+  flex: 1 0;
+  display: flex;
+  flex-flow: column;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .views-import-layout__body {
-  max-height: none;
+  display: flex;
+  flex: 1 0;
 }
 
-.views-import-layout.has-footer .views-import-layout__body {
-  height: calc(100vh - 60px - 36px - 57px - 61px);
-  max-height: none;
+.views-import-layout__contentOuter {
+  display: flex;
+  flex-flow: column;
+}
+
+.views-import-layout__sectionLight,
+/* hack to make the toolbar match the header */
+.views-import-layout__contentOuter .toolbar-pf {
+  background-color: var(--pf-global--BackgroundColor--200);
 }
 
 @media (min-width: 768px) {
+  .views-import-layout {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+  }
+
+  .views-import-layout__header {
+    border-bottom: 1px solid #ededed;
+  }
+
   .views-import-layout__body {
-    height: calc(100vh - 121px - 60px - 36px);
-    max-height: none;
+    flex: 1 0;
+    display: flex;
+    width: 100%;
+    overflow: hidden;
   }
 
-  .views-import-layout.has-footer .views-import-layout__body {
-    height: calc(100vh - 121px - 60px - 36px - 61px);
-    max-height: none;
+  .views-import-layout__contentOuter {
+    overflow: auto;
+    padding: 0;
+    width: 100%;
   }
-}
 
-.views-import-layout__contentWrapper {
-  overflow: auto;
-  padding: 0;
-}
-
-.views-import-layout__content {
-  max-width: 1100px;
-  margin: auto;
-}
-
-.views-import-layout__footer {
-  padding: 17px 15px;
-  z-index: 1;
-}
-
-.views-import-layout .list-view-pf .list-group-item-heading {
-  flex-basis: calc(50% - 20px);
+  .views-import-layout__contentInner {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+  }
 }

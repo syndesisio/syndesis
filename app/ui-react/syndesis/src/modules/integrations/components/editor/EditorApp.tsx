@@ -2,9 +2,11 @@
 import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
 import * as React from 'react';
-import { ReviewPage } from './api-provider/EditPage';
-import { EditPage } from './api-provider/ReviewPage';
-import { UploadPage } from './api-provider/UploadPage';
+import { EditSpecificationPage } from './apiProvider/EditSpecificationPage';
+import { ReviewActionsPage } from './apiProvider/ReviewActionsPage';
+import { ReviewOperationsPage } from './apiProvider/ReviewOperationsPage';
+import { SelectMethodPage } from './apiProvider/SelectMethodPage';
+import { SetInfoPage } from './apiProvider/SetInfoPage';
 import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';
@@ -23,11 +25,10 @@ import {
   stepRoutes,
 } from './interfaces';
 import { makeEditorResolvers } from './makeEditorResolvers';
+import { RuleFilterStepPage } from './ruleFilter/RuleFilterStepPage';
 import { SelectConnectionPage } from './SelectConnectionPage';
 import { ConfigureStepPage } from './step/ConfigureStepPage';
 import { TemplateStepPage } from './template/TemplateStepPage';
-
-const TODO: React.FunctionComponent = () => <>TODO</>;
 
 export interface IEditorApp {
   mode: 'adding' | 'editing';
@@ -55,7 +56,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     <SelectConnectionPage
       cancelHref={cancelHref}
       apiProviderHref={(step, params, state) =>
-        appResolvers.apiProvider.upload({
+        appResolvers.apiProvider.editSpecification({
           step,
           ...params,
           ...state,
@@ -68,7 +69,13 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           ...state,
         })
       }
-      filterHref={(step, p, s) => appResolvers.basicFilter()}
+      filterHref={(step, params, state) =>
+        appResolvers.basicFilter({
+          step,
+          ...params,
+          ...state,
+        })
+      }
       mapperHref={(step, params, state) =>
         appResolvers.dataMapper({
           step,
@@ -210,6 +217,17 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     />
   );
 
+  const basicFilterPage = (
+    <RuleFilterStepPage
+      cancelHref={cancelHref}
+      mode={mode}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
+      postConfigureHref={postConfigureHref}
+    />
+  );
+
   return (
     <>
       <EditorRoutes
@@ -224,12 +242,16 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           describeDataChildren: describeDataShapePage,
         }}
         apiProvider={{
-          uploadPath: appStepRoutes.apiProvider.upload,
-          uploadChildren: <UploadPage />,
-          reviewPath: appStepRoutes.apiProvider.review,
-          reviewChildren: <ReviewPage />,
-          editPath: appStepRoutes.apiProvider.edit,
-          editChildren: <EditPage />,
+          selectMethodPath: appStepRoutes.apiProvider.selectMethod,
+          selectMethodChildren: <SelectMethodPage />,
+          reviewActionsPath: appStepRoutes.apiProvider.reviewActions,
+          reviewActionsChildren: <ReviewActionsPage />,
+          editSpecificationPath: appStepRoutes.apiProvider.editSpecification,
+          editSpecificationChildren: <EditSpecificationPage />,
+          setInfoPath: appStepRoutes.apiProvider.setInfo,
+          setInfoChildren: <SetInfoPage />,
+          reviewOperationsPath: appStepRoutes.apiProvider.reviewOperations,
+          reviewOperationsChildren: <ReviewOperationsPage />,
         }}
         template={{
           templatePath: appStepRoutes.template,
@@ -240,8 +262,8 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           mapperChildren: dataMapperPage,
         }}
         basicFilter={{
-          filterPath: appStepRoutes.basicFilter,
-          filterChildren: TODO,
+          basicFilterPath: appStepRoutes.basicFilter,
+          basicFilterChildren: basicFilterPage,
         }}
         step={{
           configurePath: appStepRoutes.step,

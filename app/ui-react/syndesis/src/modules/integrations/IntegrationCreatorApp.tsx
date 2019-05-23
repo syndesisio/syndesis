@@ -17,15 +17,22 @@ import routes from './routes';
 const addStepPage = (
   <AddStepPage
     cancelHref={resolvers.list}
-    getEditAddStepHref={(position, p, s) =>
+    getAddStepHref={(position, p, s) =>
       resolvers.create.configure.addStep.selectStep({
         position: `${position}`,
         ...p,
         ...s,
       })
     }
+    getDeleteEdgeStepHref={(position, p, s) =>
+      resolvers.create.configure.editStep.selectStep({
+        position: `${position}`,
+        ...p,
+        ...s,
+      })
+    }
     apiProviderHref={(step, p, s) =>
-      resolvers.create.configure.editStep.apiProvider.review()
+      resolvers.create.configure.editStep.apiProvider.selectMethod()
     }
     connectionHref={(step, params, state) =>
       resolvers.create.configure.editStep.connection.configureAction({
@@ -35,7 +42,13 @@ const addStepPage = (
         ...state,
       })
     }
-    filterHref={resolvers.create.configure.editStep.basicFilter}
+    filterHref={(step, params, state) =>
+      resolvers.create.configure.editStep.basicFilter({
+        step,
+        ...params,
+        ...state,
+      })
+    }
     getAddMapperStepHref={(position, params, state) =>
       resolvers.create.configure.addStep.dataMapper({
         position: `${position}`,

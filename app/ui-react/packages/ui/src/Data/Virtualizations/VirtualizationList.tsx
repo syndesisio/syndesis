@@ -1,6 +1,5 @@
 import * as H from '@syndesis/history';
 import {
-  Button,
   EmptyState,
   ListView,
   OverlayTrigger,
@@ -21,15 +20,17 @@ export interface IVirtualizationListProps extends IListViewToolbarProps {
   i18nDescription: string;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
+  /* TD-636: Commented out for TP
   i18nImport: string;
-  i18nImportTip: string;
+  i18nImportTip: string; */
   i18nLinkCreateVirtualization: string;
   i18nLinkCreateVirtualizationTip?: string;
   i18nName: string;
   i18nNameFilterPlaceholder: string;
   i18nTitle: string;
   linkCreateHRef: H.LocationDescriptor;
-  onImport: (name: string) => void;
+  /* TD-636: Commented out for TP
+  onImport: (name: string) => void; */
 }
 
 export class VirtualizationList extends React.Component<
@@ -37,7 +38,7 @@ export class VirtualizationList extends React.Component<
 > {
   public constructor(props: IVirtualizationListProps) {
     super(props);
-    this.handleImport = this.handleImport.bind(this);
+    /* TD-636: Commented out for TP {this.handleImport = this.handleImport.bind(this);} */
   }
 
   public getCreateVirtualizationTooltip() {
@@ -50,19 +51,20 @@ export class VirtualizationList extends React.Component<
     );
   }
 
-  public getImportVirtualizationTooltip() {
+  /* TD-636: Commented out for TP 
+    public getImportVirtualizationTooltip() {
     return (
       <Tooltip id="importTip">
         {this.props.i18nImportTip
           ? this.props.i18nImportTip
           : this.props.i18nImport}
       </Tooltip>
-    );
+    ); 
   }
 
   public handleImport() {
     this.props.onImport('');
-  }
+  } */
 
   public render() {
     return (
@@ -74,19 +76,21 @@ export class VirtualizationList extends React.Component<
         <PageSection>
           <ListViewToolbar {...this.props}>
             <div className="form-group">
+              {/* TD-636: Commented out for TP 
               <OverlayTrigger
                 overlay={this.getImportVirtualizationTooltip()}
                 placement="top"
               >
-                <Button
+               <Button
+                  
                   data-testid={'virtualization-list-import'}
                   bsStyle="default"
                   to={this.props.i18nImport}
                   onClick={this.handleImport}
                 >
                   {this.props.i18nImport}
-                </Button>
-              </OverlayTrigger>
+                </Button> 
+              </OverlayTrigger> */}
               <OverlayTrigger
                 overlay={this.getCreateVirtualizationTooltip()}
                 placement="top"

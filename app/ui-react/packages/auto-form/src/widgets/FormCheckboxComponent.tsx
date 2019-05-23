@@ -1,26 +1,22 @@
-import {
-  Checkbox,
-  FieldLevelHelp,
-  FormGroup,
-  HelpBlock,
-} from 'patternfly-react';
+import { Checkbox, FieldLevelHelp, FormGroup } from 'patternfly-react';
 import * as React from 'react';
-import { IFormControl } from '../models';
-import { getValidationState } from './helpers';
+import { IFormControlProps } from '../models';
+import { AutoFormHelpBlock } from './AutoFormHelpBlock';
+import { getValidationState, toValidHtmlId } from './helpers';
 
 export const FormCheckboxComponent: React.FunctionComponent<
-  IFormControl
+  IFormControlProps
 > = props => (
   <FormGroup
-    controlId={props.field.name}
+    {...props.property.formGroupAttributes}
+    controlId={toValidHtmlId(props.field.name)}
     validationState={getValidationState(props)}
   >
     <Checkbox
       {...props.property.fieldAttributes}
       {...props.field}
-      id={props.field.name}
       checked={props.field.value}
-      data-testid={props.field.name}
+      data-testid={toValidHtmlId(props.field.name)}
       disabled={props.form.isSubmitting || props.property.disabled}
       title={props.property.controlHint}
     >
@@ -32,9 +28,9 @@ export const FormCheckboxComponent: React.FunctionComponent<
         />
       )}
     </Checkbox>
-    <HelpBlock>
-      {props.property.description}
-      {props.form.errors[props.field.name]}
-    </HelpBlock>
+    <AutoFormHelpBlock
+      error={props.form.errors[props.field.name] as string}
+      description={props.property.description}
+    />
   </FormGroup>
 );

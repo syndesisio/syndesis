@@ -16,6 +16,8 @@ import {
   IEditorConfigureStep,
   IEditorSelectAction,
   IEditorSelectConnection,
+  IRuleFilterStepRouteParams,
+  IRuleFilterStepRouteState,
   ISelectActionRouteParams,
   ISelectActionRouteState,
   ISelectConnectionRouteParams,
@@ -189,15 +191,21 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
       >(esr.connection.describeData, configureDescribeDataShapeMapper),
     },
     apiProvider: {
-      upload: makeResolver<
+      editSpecification: makeResolver<
         IEditorConfigureStep,
         IConfigureStepRouteParams,
         IConfigureStepRouteState
-        >(esr.apiProvider.upload, configureConfigureStepMapper),
-      review: makeResolverNoParams('todo review'),
-      edit: makeResolverNoParams('todo edit'),
+      >(esr.apiProvider.editSpecification, configureConfigureStepMapper),
+      selectMethod: makeResolverNoParams('todo select method'),
+      reviewActions: makeResolverNoParams('todo review actions'),
+      setInfo: makeResolverNoParams('todo set info'),
+      reviewOperations: makeResolverNoParams('todo review operations'),
     },
-    basicFilter: makeResolverNoParams('todo basicFilter'),
+    basicFilter: makeResolver<
+      IEditorConfigureStep,
+      IRuleFilterStepRouteParams,
+      IRuleFilterStepRouteState
+    >(esr.basicFilter, configureConfigureDataMapperMapper),
     dataMapper: makeResolver<
       IEditorConfigureStep,
       IDataMapperRouteParams,

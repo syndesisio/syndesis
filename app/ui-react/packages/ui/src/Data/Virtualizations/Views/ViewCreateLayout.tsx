@@ -70,12 +70,15 @@ export const ViewCreateLayout: React.FunctionComponent<
 }: IViewCreateLayoutProps) => {
   return (
     <div
-      className={classnames('wizard-pf-body view-create-layout', {
-        'has-footer': true,
-      })}
+      className={classnames(
+        'wizard-pf-body view-create-layout syn-scrollable',
+        {
+          'has-footer': true,
+        }
+      )}
     >
       {header}
-      <div className="wizard-pf-row view-create-layout__body">
+      <div className="wizard-pf-row view-create-layout__body syn-scrollable--body">
         <div
           className={
             'wizard-pf-main cards-pf view-create-layout__contentWrapper'

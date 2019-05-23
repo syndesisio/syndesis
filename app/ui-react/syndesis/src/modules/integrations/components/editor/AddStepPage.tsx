@@ -1,7 +1,17 @@
-import { getSteps } from '@syndesis/api';
+import {
+  getFirstPosition,
+  getLastPosition,
+  getSteps,
+  removeStepFromFlow,
+} from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Integration, Step } from '@syndesis/models';
-import { IntegrationEditorLayout } from '@syndesis/ui';
+import { Step } from '@syndesis/models';
+import {
+  ConfirmationButtonStyle,
+  ConfirmationDialog,
+  ConfirmationIconType,
+  IntegrationEditorLayout,
+} from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -17,16 +27,27 @@ export interface IAddStepPageProps extends IGetStepHrefs {
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
-  getEditAddStepHref: (
+  getAddStepHref: (
     position: number,
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
+  getDeleteEdgeStepHref: (
+    position: number,
+    p: IBaseRouteParams,
+    s: IBaseRouteState
+  ) => H.LocationDescriptorObject;
   saveHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
   selfHref: (
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptorObject;
+}
+
+export interface IAddStepPageState {
+  position?: number;
+  showDeleteDialog: boolean;
+  step?: Step;
 }
 
 /**
@@ -42,24 +63,123 @@ export interface IAddStepPageProps extends IGetStepHrefs {
  * optional and adding a WithIntegration component to retrieve the integration
  * from the backend
  */
-export class AddStepPage extends React.Component<IAddStepPageProps> {
-  public render() {
-    return (
-      <Translation ns={['integrations']}>
-        {t => (
-          <WithRouteData<IBaseRouteParams, IBaseRouteState>>
-            {({ flowId }, { integration }, { history }) => {
-              const deleteAction = (newIntegration: Integration) => {
-                history.push(
-                  this.props.selfHref(
-                    { flowId },
-                    { integration: newIntegration }
-                  )
-                );
-              };
+export class AddStepPage extends React.Component<
+  IAddStepPageProps,
+  IAddStepPageState
+> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      position: 0,
+      showDeleteDialog: false,
+      step: {},
+    };
 
-              return (
+    this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
+    this.openDeleteDialog = this.openDeleteDialog.bind(this);
+    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
+    this.setStepAndPosition = this.setStepAndPosition.bind(this);
+  }
+
+  public closeDeleteDialog(): void {
+    this.setState({
+      showDeleteDialog: false,
+    });
+  }
+
+  public openDeleteDialog(): void {
+    this.setState({
+      showDeleteDialog: true,
+    });
+  }
+
+  public handleDeleteConfirm() {
+    if (this.state.showDeleteDialog) {
+      this.closeDeleteDialog();
+    }
+  }
+
+  public setStepAndPosition(idx: number, step: Step): void {
+    this.setState({
+      position: idx,
+      step,
+    });
+  }
+
+  public render() {
+    const onDelete = (idx: number, step: Step): void => {
+      this.setStepAndPosition(idx, step);
+      this.openDeleteDialog();
+    };
+
+    return (
+      <Translation ns={['integrations', 'shared']}>
+        {t => (
+          <>
+            <WithRouteData<IBaseRouteParams, IBaseRouteState>>
+              {({ flowId }, { integration }, { history }) => (
                 <>
+                  {this.state.showDeleteDialog && (
+                    <ConfirmationDialog
+                      buttonStyle={ConfirmationButtonStyle.NORMAL}
+                      icon={ConfirmationIconType.DANGER}
+                      i18nCancelButtonText={t('shared:Cancel')}
+                      i18nConfirmButtonText={t('shared:Delete')}
+                      i18nConfirmationMessage={t(
+                        'integrations:editor:confirmDeleteStepDialogBody'
+                      )}
+                      i18nTitle={t(
+                        'integrations:editor:confirmDeleteStepDialogTitle'
+                      )}
+                      showDialog={this.state.showDeleteDialog}
+                      onCancel={this.closeDeleteDialog}
+                      onConfirm={() => {
+                        this.handleDeleteConfirm();
+
+                        /**
+                         * Check if step is first or last position,
+                         * in which case you should delete the step and
+                         * subsequently redirect the user to the step select
+                         * page for that position.
+                         */
+                        if (
+                          this.state.position ===
+                            getFirstPosition(integration, flowId) ||
+                          this.state.position ===
+                            getLastPosition(integration, flowId)
+                        ) {
+                          history.push(
+                            this.props.getDeleteEdgeStepHref(
+                              this.state.position!,
+                              { flowId },
+                              { integration }
+                            )
+                          );
+                        } else {
+                          /**
+                           * Remove the step from the integration flow
+                           * and receive a copy of the new integration.
+                           */
+                          const newInt = removeStepFromFlow(
+                            integration,
+                            flowId,
+                            this.state.position!
+                          );
+
+                          /**
+                           * If is a middle step, simply remove the step
+                           * and update the UI.
+                           */
+                          history.push(
+                            this.props.selfHref(
+                              { flowId },
+                              { integration: newInt }
+                            )
+                          );
+                        }
+                      }}
+                    />
+                  )}
                   <PageTitle title={t('integrations:editor:saveOrAddStep')} />
                   <IntegrationEditorLayout
                     title={t('integrations:editor:addToIntegration')}
@@ -75,7 +195,7 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                           )
                         }
                         addStepHref={position =>
-                          this.props.getEditAddStepHref(
+                          this.props.getAddStepHref(
                             position,
                             { flowId },
                             { integration }
@@ -91,7 +211,7 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                         }
                         flowId={flowId}
                         integration={integration}
-                        deleteAction={deleteAction}
+                        onDelete={onDelete}
                       />
                     }
                     cancelHref={this.props.cancelHref(
@@ -105,9 +225,9 @@ export class AddStepPage extends React.Component<IAddStepPageProps> {
                     )}
                   />
                 </>
-              );
-            }}
-          </WithRouteData>
+              )}
+            </WithRouteData>
+          </>
         )}
       </Translation>
     );

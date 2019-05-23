@@ -38,7 +38,8 @@ export interface IVirtualizationListItemProps {
   i18nError: string;
   i18nEdit: string;
   i18nEditTip?: string;
-  i18nExport: string;
+  /* TD-636: Commented out for TP 
+  i18nExport: string; */
   i18nPublish: string;
   i18nPublished: string;
   i18nPublishLogUrlText: string;
@@ -48,7 +49,8 @@ export interface IVirtualizationListItemProps {
   i18nUnpublishModalTitle: string;
   icon?: string;
   onDelete: (virtualizationName: string) => void;
-  onExport: (virtualizationName: string) => void;
+  /* TD-636: Commented out for TP 
+  onExport: (virtualizationName: string) => void; */
   onPublish: (virtualizationName: string) => void;
   onUnpublish: (virtualizationName: string) => void;
   publishingCurrentStep?: number;
@@ -75,7 +77,8 @@ export class VirtualizationListItem extends React.Component<
     };
     this.handleCancel = this.handleCancel.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleExport = this.handleExport.bind(this);
+    /* TD-636: Commented out for TP
+    this.handleExport = this.handleExport.bind(this); */
     this.handleUnpublish = this.handleUnpublish.bind(this);
     this.handlePublish = this.handlePublish.bind(this);
     this.showConfirmationDialog = this.showConfirmationDialog.bind(this);
@@ -106,11 +109,12 @@ export class VirtualizationListItem extends React.Component<
     }
   }
 
+  /* TD-636: Commented out for TP
   public handleExport() {
     if (this.props.virtualizationName) {
       this.props.onExport(this.props.virtualizationName);
     }
-  }
+  } */
 
   public handlePublish() {
     if (this.props.virtualizationName) {
@@ -225,9 +229,10 @@ export class VirtualizationListItem extends React.Component<
                 <MenuItem onClick={this.showConfirmationDialog}>
                   {this.props.i18nDelete}
                 </MenuItem>
+                {/* TD-636: Commented out for TP 
                 <MenuItem onClick={this.handleExport}>
                   {this.props.i18nExport}
-                </MenuItem>
+                </MenuItem> */}
                 <MenuItem
                   onClick={
                     isPublished || publishInProgress

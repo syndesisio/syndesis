@@ -72,7 +72,6 @@ export default class ConfigurationPage extends React.Component {
                                 <ConnectorConfigurationForm
                                   i18nFormTitle={data.name}
                                   handleSubmit={handleSubmit}
-                                  validationResults={validationResults}
                                 >
                                   {fields}
                                 </ConnectorConfigurationForm>

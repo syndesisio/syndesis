@@ -145,6 +145,8 @@ export interface ITemplateStepRouteParams extends IConfigureStepRouteParams {}
 export interface ITemplateStepRouteState extends IConfigureStepRouteState {}
 export interface IDataMapperRouteParams extends IConfigureStepRouteParams {}
 export interface IDataMapperRouteState extends IConfigureStepRouteState {}
+export interface IRuleFilterStepRouteParams extends IConfigureStepRouteParams {}
+export interface IRuleFilterStepRouteState extends IConfigureStepRouteState {}
 
 /**
  * @param integration - the integration object coming from step 3.index, used to
@@ -209,9 +211,11 @@ export const stepRoutes = {
   selectStep: '',
   // if selected step is api provider
   apiProvider: include('api-provider', {
-    upload: '',
-    review: 'review',
-    edit: 'edit',
+    selectMethod: '',
+    reviewActions: 'review-actions',
+    editSpecification: 'edit-specification',
+    setInfo: 'set-info',
+    reviewOperations: 'review-operations',
   }),
   // if selected step kind is data mapper
   dataMapper: 'mapper',

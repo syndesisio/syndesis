@@ -79,14 +79,12 @@ stories.add('Text', () => (
     >
       {({ fields, handleSubmit }) => (
         <>
-          {fields}
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
+          <form onSubmit={handleSubmit}>
+            {fields}
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </form>
         </>
       )}
     </AutoForm>
@@ -115,14 +113,12 @@ stories.add('Number', () => (
     >
       {({ fields, handleSubmit }) => (
         <>
-          {fields}
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
+          <form onSubmit={handleSubmit}>
+            {fields}
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </form>
         </>
       )}
     </AutoForm>
@@ -163,14 +159,12 @@ stories.add('Checkbox', () => (
     >
       {({ fields, handleSubmit }) => (
         <>
-          {fields}
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
+          <form onSubmit={handleSubmit}>
+            {fields}
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </form>
         </>
       )}
     </AutoForm>
@@ -205,14 +199,12 @@ stories.add('Textarea', () => (
     >
       {({ fields, handleSubmit }) => (
         <>
-          {fields}
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
+          <form onSubmit={handleSubmit}>
+            {fields}
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </form>
         </>
       )}
     </AutoForm>
@@ -287,14 +279,12 @@ stories.add('Select', () => (
     >
       {({ fields, handleSubmit }) => (
         <>
-          {fields}
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
+          <form onSubmit={handleSubmit}>
+            {fields}
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </form>
         </>
       )}
     </AutoForm>
@@ -336,14 +326,12 @@ stories.add('Duration', () => (
     >
       {({ fields, handleSubmit }) => (
         <>
-          {fields}
-          <button
-            type="button"
-            className="btn btn-primary"
-            onClick={handleSubmit}
-          >
-            Submit
-          </button>
+          <form onSubmit={handleSubmit}>
+            {fields}
+            <button type="submit" className="btn btn-primary">
+              Submit
+            </button>
+          </form>
         </>
       )}
     </AutoForm>

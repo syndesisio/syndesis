@@ -1,3 +1,4 @@
+import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { Button } from 'patternfly-react';
 import * as React from 'react';
 import { Dialog } from '../../Shared';
@@ -45,47 +46,54 @@ export class CiCdEditDialog extends React.Component<
     return (
       <Dialog
         body={
-          <form className="form-horizontal">
-            <p>{this.props.i18nDescription}</p>
-            <div
-              className={
-                this.props.validationError === TagNameValidationError.NoErrors
-                  ? 'form-group'
-                  : 'form-group has-error'
-              }
-            >
-              <label className="col-sm-3 control-label" htmlFor="tagNameInput">
-                {this.props.i18nInputLabel}
-              </label>
-              <div className="col-sm-9">
-                <input
-                  id="tagNameInput"
-                  className="form-control"
-                  type="text"
-                  defaultValue={this.props.tagName}
-                  onChange={this.handleChange}
-                />
-                {this.props.validationError ===
-                  TagNameValidationError.NoErrors && (
-                  <span className="help-block">
-                    &nbsp;{/* todo: pad out the area */}
-                  </span>
-                )}
-                {this.props.validationError ===
-                  TagNameValidationError.NoName && (
-                  <span className="help-block">
-                    {this.props.i18nNoNameError}
-                  </span>
-                )}
-                {this.props.validationError ===
-                  TagNameValidationError.NameInUse && (
-                  <span className="help-block">
-                    {this.props.i18nNameInUseError}
-                  </span>
-                )}
+          <TextContent>
+            <form className="form-horizontal">
+              <Text component={TextVariants.p}>
+                {this.props.i18nDescription}
+              </Text>
+              <div
+                className={
+                  this.props.validationError === TagNameValidationError.NoErrors
+                    ? 'form-group'
+                    : 'form-group has-error'
+                }
+              >
+                <label
+                  className="col-sm-3 control-label"
+                  htmlFor="tagNameInput"
+                >
+                  {this.props.i18nInputLabel}
+                </label>
+                <div className="col-sm-9">
+                  <input
+                    id="tagNameInput"
+                    className="form-control"
+                    type="text"
+                    defaultValue={this.props.tagName}
+                    onChange={this.handleChange}
+                  />
+                  {this.props.validationError ===
+                    TagNameValidationError.NoErrors && (
+                    <span className="help-block">
+                      &nbsp;{/* todo: pad out the area */}
+                    </span>
+                  )}
+                  {this.props.validationError ===
+                    TagNameValidationError.NoName && (
+                    <span className="help-block">
+                      {this.props.i18nNoNameError}
+                    </span>
+                  )}
+                  {this.props.validationError ===
+                    TagNameValidationError.NameInUse && (
+                    <span className="help-block">
+                      {this.props.i18nNameInUseError}
+                    </span>
+                  )}
+                </div>
               </div>
-            </div>
-          </form>
+            </form>
+          </TextContent>
         }
         footer={
           <>

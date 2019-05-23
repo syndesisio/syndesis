@@ -1,11 +1,8 @@
-import { getStepIcon, removeStepFromFlow } from '@syndesis/api';
+import { getStepIcon } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Integration, Step } from '@syndesis/models';
 import {
   ButtonLink,
-  ConfirmationButtonStyle,
-  ConfirmationDialog,
-  ConfirmationIconType,
   IntegrationEditorStepsList,
   IntegrationEditorStepsListItem,
   IntegrationFlowAddStep,
@@ -32,7 +29,8 @@ export interface IIntegrationEditorStepAdderProps {
   addDataMapperStepHref: (idx: number) => H.LocationDescriptor;
   /**
    * a callback to get the `LocationDescriptor` that should be reached when
-   * clicking the Add Connection button
+   * clicking the Add Connection button, or when deleting the first or last
+   * step
    * @param idx - the zero-based index where a new connection should be added
    */
   addStepHref: (idx: number) => H.LocationDescriptor;
@@ -48,14 +46,9 @@ export interface IIntegrationEditorStepAdderProps {
     stepIdx: number,
     step: Step
   ) => H.LocationDescriptorObject;
-  deleteAction: (integration: Integration) => void;
   flowId: string;
   integration: Integration;
-}
-
-export interface IIntegrationEditorStepAdderState {
-  position: number;
-  showDeleteDialog: boolean;
+  onDelete: (idx: number, step: Step) => void;
 }
 
 /**
@@ -64,76 +57,34 @@ export interface IIntegrationEditorStepAdderState {
  *
  * @see [steps]{@link IIntegrationEditorStepAdderProps#steps}
  * @see [addStepHref]{@link IIntegrationEditorStepAdderProps#addStepHref}
- * @see [addStepHref]{@link IIntegrationEditorStepAdderProps#addStepHref}
  * @see [configureStepHref]{@link IIntegrationEditorStepAdderProps#configureStepHref}
  *
  * @todo add the delete step button
  */
 export class IntegrationEditorStepAdder extends React.Component<
-  IIntegrationEditorStepAdderProps,
-  IIntegrationEditorStepAdderState
+  IIntegrationEditorStepAdderProps
 > {
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      position: 0,
-      showDeleteDialog: false,
-    };
-
-    this.onDelete = this.onDelete.bind(this);
-    this.closeDeleteDialog = this.closeDeleteDialog.bind(this);
-    this.handleDeleteConfirm = this.handleDeleteConfirm.bind(this);
-  }
-
-  public handleDeleteConfirm() {
-    if (this.state.showDeleteDialog) {
-      this.closeDeleteDialog();
-    }
-  }
-
-  public onDelete(idx: any): void {
-    this.setState({ position: idx, showDeleteDialog: true });
-  }
-
-  public closeDeleteDialog(): void {
-    this.setState({ position: 0, showDeleteDialog: false });
-  }
-
   public render() {
     return (
       <Translation ns={['integrations', 'shared']}>
         {t => (
-          <>
-            {this.state.showDeleteDialog && (
-              <ConfirmationDialog
-                buttonStyle={ConfirmationButtonStyle.NORMAL}
-                icon={ConfirmationIconType.DANGER}
-                i18nCancelButtonText={t('shared:Cancel')}
-                i18nConfirmButtonText={t('shared:Delete')}
-                i18nConfirmationMessage={t(
-                  'integrations:editor:confirmDeleteStepDialogBody'
-                )}
-                i18nTitle={t(
-                  'integrations:editor:confirmDeleteStepDialogTitle'
-                )}
-                showDialog={this.state.showDeleteDialog}
-                onCancel={this.closeDeleteDialog}
-                onConfirm={() => {
-                  this.handleDeleteConfirm();
-                  const newInt = removeStepFromFlow(
-                    this.props.integration!,
-                    this.props.flowId!,
-                    this.state.position!
-                  );
-                  this.props.deleteAction(newInt);
-                }}
-              />
-            )}
-            <PageSection>
-              <IntegrationEditorStepsList>
-                {toUIIntegrationStepCollection(
-                  toUIStepCollection(this.props.steps)
-                ).map((s, idx) => (
+          <PageSection>
+            <IntegrationEditorStepsList>
+              {toUIIntegrationStepCollection(
+                toUIStepCollection(this.props.steps)
+              ).map((s, idx) => {
+                let restrictedDelete = false;
+
+                if (
+                  (s.configuredProperties &&
+                    s.configuredProperties!.stepKind === 'choice') ||
+                  (s.connection &&
+                    s.connection!.connectorId! === 'api-provider')
+                ) {
+                  restrictedDelete = true;
+                }
+
+                return (
                   <React.Fragment key={idx}>
                     <IntegrationEditorStepsListItem
                       stepName={(s.action && s.action.name) || s.name!}
@@ -188,13 +139,17 @@ export class IntegrationEditorStepAdder extends React.Component<
                           >
                             {t('shared:Configure')}
                           </ButtonLink>
-                          <ButtonLink
-                            data-testid={'integration-editor-step-adder-delete'}
-                            onClick={() => this.onDelete(idx)}
-                            as={'danger'}
-                          >
-                            <i className="fa fa-trash" />
-                          </ButtonLink>
+                          {!restrictedDelete && (
+                            <ButtonLink
+                              data-testid={
+                                'integration-editor-step-adder-delete'
+                              }
+                              onClick={() => this.props.onDelete(idx, s)}
+                              as={'danger'}
+                            >
+                              <i className="fa fa-trash" />
+                            </ButtonLink>
+                          )}
                         </>
                       }
                     />
@@ -207,10 +162,10 @@ export class IntegrationEditorStepAdder extends React.Component<
                       />
                     )}
                   </React.Fragment>
-                ))}
-              </IntegrationEditorStepsList>
-            </PageSection>
-          </>
+                );
+              })}
+            </IntegrationEditorStepsList>
+          </PageSection>
         )}
       </Translation>
     );

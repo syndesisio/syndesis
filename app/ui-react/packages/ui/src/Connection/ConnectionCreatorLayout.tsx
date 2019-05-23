@@ -114,7 +114,7 @@ export const ConnectionCreatorLayout: React.FunctionComponent<
         >
           {isNextLoading ? <Loader size={'xs'} inline={true} /> : null}
           {isLastStep ? (
-            'Done'
+            'Create'
           ) : (
             <>
               Next <i className="fa fa-angle-right" />

@@ -11,10 +11,10 @@ import {
   PfDropdownItem,
   PfVerticalNavItem,
 } from '../../src';
-import { Link } from 'react-router-dom';
 import { withState } from '@dump247/storybook-state';
 const stories = storiesOf('Layout/AppLayout', module);
 const logDropdownItemSelection = action('select dropdown item log');
+const logLogout = action('logout action');
 
 stories.add(
   'sample usage',
@@ -60,12 +60,13 @@ stories.add(
               pictograph={text('Application title', 'Syndesis')}
               appNav={
                 <AppTopMenu username={'developer'}>
-                  <PfDropdownItem>
-                    <Link
-                      to={'/logout'}
-                      className="pf-c-dropdown__menu-item"
-                      children={'Logout'}
-                    />
+                  <PfDropdownItem
+                    onClick={event => {
+                      event && event.preventDefault();
+                      logLogout();
+                    }}
+                  >
+                    Logout
                   </PfDropdownItem>
                 </AppTopMenu>
               }

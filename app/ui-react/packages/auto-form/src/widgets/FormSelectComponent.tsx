@@ -3,18 +3,18 @@ import {
   FieldLevelHelp,
   FormControl,
   FormGroup,
-  HelpBlock,
 } from 'patternfly-react';
 import * as React from 'react';
-import { IFormControl } from '../models';
-import { getValidationState } from './helpers';
+import { IFormControlProps } from '../models';
+import { AutoFormHelpBlock } from './AutoFormHelpBlock';
+import { getValidationState, toValidHtmlId } from './helpers';
 
 function getSelectedValues(select: HTMLSelectElement) {
   return Array.from(select.selectedOptions).map(option => option.value);
 }
 
 export const FormSelectComponent: React.FunctionComponent<
-  IFormControl
+  IFormControlProps
 > = props => {
   const isMultiple =
     props.property.fieldAttributes && props.property.fieldAttributes.multiple;
@@ -29,18 +29,22 @@ export const FormSelectComponent: React.FunctionComponent<
   };
   return (
     <FormGroup
-      controlId={field.name}
+      {...props.property.formGroupAttributes}
+      controlId={toValidHtmlId(field.name)}
       validationState={getValidationState(props)}
     >
-      <ControlLabel
-        className={
-          props.property.required && !props.allFieldsRequired
-            ? 'required-pf'
-            : ''
-        }
-      >
-        {props.property.displayName}
-      </ControlLabel>
+      {props.property.displayName && (
+        <ControlLabel
+          className={
+            props.property.required && !props.allFieldsRequired
+              ? 'required-pf'
+              : ''
+          }
+          {...props.property.controlLabelAttributes}
+        >
+          {props.property.displayName}
+        </ControlLabel>
+      )}
       {props.property.labelHint && (
         <ControlLabel>
           <FieldLevelHelp content={props.property.labelHint} />
@@ -52,22 +56,21 @@ export const FormSelectComponent: React.FunctionComponent<
         {...props.field}
         onChange={handleChange}
         onBlur={handleChange}
-        data-testid={props.field.name}
+        data-testid={toValidHtmlId(props.field.name)}
         disabled={props.form.isSubmitting || props.property.disabled}
         componentClass="select"
         title={props.property.controlHint}
       >
-        {props.property.enum &&
-          props.property.enum.map((opt: any) => (
-            <option key={opt.value} value={opt.value}>
-              {opt.label}
-            </option>
-          ))}
+        {(props.property.enum || []).map((opt: any, index: number) => (
+          <option key={`${index}-${opt.label}`} value={opt.value}>
+            {opt.label}
+          </option>
+        ))}
       </FormControl>
-      <HelpBlock>
-        {props.property.description}
-        {props.form.errors[props.field.name]}
-      </HelpBlock>
+      <AutoFormHelpBlock
+        error={props.form.errors[props.field.name] as string}
+        description={props.property.description}
+      />
     </FormGroup>
   );
 };
