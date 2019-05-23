@@ -14,15 +14,23 @@ export class SelectMethodPage extends React.Component {
       <Translation ns={['integrations', 'shared']}>
         {t => (
           <PageSection>
-            <PageTitle title={t('integrations:apiProvider:title')} />
+            <PageTitle
+              title={t('integrations:apiProvider:selectMethod:title')}
+            />
             <ApiProviderSelectMethod
-              i18nDescription={t('integrations:apiProvider:description')}
-              i18nMethodFromFile={t('integrations:apiProvider:methodFromFile')}
-              i18nMethodFromScratch={t(
-                'integrations:apiProvider:methodFromScratch'
+              i18nDescription={t(
+                'integrations:apiProvider:selectMethod:description'
               )}
-              i18nMethodFromUrl={t('integrations:apiProvider:methodFromUrl')}
-              i18nUrlNote={t('integrations:apiProvider:urlNote')}
+              i18nMethodFromFile={t(
+                'integrations:apiProvider:selectMethod:methodFromFile'
+              )}
+              i18nMethodFromScratch={t(
+                'integrations:apiProvider:selectMethod:methodFromScratch'
+              )}
+              i18nMethodFromUrl={t(
+                'integrations:apiProvider:selectMethod:methodFromUrl'
+              )}
+              i18nUrlNote={t('integrations:apiProvider:selectMethod:urlNote')}
             />
           </PageSection>
         )}
