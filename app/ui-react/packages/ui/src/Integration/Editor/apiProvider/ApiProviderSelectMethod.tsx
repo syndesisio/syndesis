@@ -3,6 +3,8 @@ import { FormControl, ListView } from 'patternfly-react';
 import * as React from 'react';
 
 import './ApiProviderSelectMethod.css';
+import { Container } from '../../../Layout';
+import { DndFileChooser } from '../../../Shared';
 
 export interface IApiProviderSelectMethodProps {
   /**
@@ -20,6 +22,78 @@ export interface IApiProviderSelectMethodProps {
    * Notice for the input field if opting to provide a URL
    */
   i18nUrlNote: string;
+
+  /**
+   * Indicates if multiple files can be added. Defaults to `false`.
+   */
+  allowMultiple?: boolean;
+
+  /**
+   * `true` if the dropzone should be disabled. Defaults to `false`.
+   */
+  disableDropzone: boolean;
+
+  /**
+   * A comma delimited string of file extensions. For example, '.jar,.txt'. Defaults to any file extension.
+   */
+  fileExtensions?: string;
+
+  /**
+   * The localized text that appears below the selected file information at the bottom of the drop area.
+   */
+  i18nHelpMessage?: string;
+
+  /**
+   * The localized text (may include HTML tags) that appears above the selected file information at the
+   * top of the drop area.
+   */
+  i18nInstructions: string;
+
+  /**
+   * The localized text that appears when no file has been selected.
+   */
+  i18nNoFileSelectedMessage: string;
+
+  /**
+   * The localized text for the label that appears before the selected file information.
+   */
+  i18nSelectedFileLabel: string;
+
+  /**
+   * A general, localized message for when a file upload failed. This message will be shown
+   * along with an error icon and appears next to the selected file message. If this property
+   * is set then `i18nUploadSuccessMessage` should not be set.
+   */
+  i18nUploadFailedMessage?: string;
+
+  /**
+   * A list of error messages for failed uploads
+   */
+  i18nUploadFailedMessages?: string[];
+
+  /**
+   * A general, localized message for when a file upload was successful. This message will be shown
+   * along with an OK icon and appear next to the selected file message. If this property
+   * is set then `i18nUploadFailedMessage` should not be set.
+   */
+  i18nUploadSuccessMessage?: string;
+
+  /**
+   * A list of error messages for successful uploads
+   */
+  i18nUploadSuccessMessages?: string[];
+
+  /**
+   * Obtains the localized text (may include HTML tags) that appears when the file upload was rejected. This
+   * will occur when a DnD of a file with the wrong extension is dropped. This message is presented
+   * as a timed toast notification.
+   */
+  onUploadRejected(fileName: string): string;
+
+  /**
+   * Callback for when one or more file uploads have been accepted. Caller should handler processing of the files.
+   */
+  onUploadAccepted(file: File[]): void;
 }
 
 export class ApiProviderSelectMethod extends React.Component<
@@ -39,7 +113,20 @@ export class ApiProviderSelectMethod extends React.Component<
             heading={this.props.i18nMethodFromFile}
             stacked={false}
           >
-            {this.props.children}
+            <Container style={{ margin: '50px' }}>
+              <DndFileChooser
+                disableDropzone={this.props.disableDropzone}
+                fileExtensions={this.props.fileExtensions}
+                i18nHelpMessage={this.props.i18nHelpMessage}
+                i18nInstructions={this.props.i18nInstructions}
+                i18nNoFileSelectedMessage={this.props.i18nNoFileSelectedMessage}
+                i18nSelectedFileLabel={this.props.i18nSelectedFileLabel}
+                i18nUploadFailedMessage={this.props.i18nUploadFailedMessage}
+                i18nUploadSuccessMessage={this.props.i18nUploadSuccessMessage}
+                onUploadAccepted={this.props.onUploadAccepted}
+                onUploadRejected={this.props.onUploadRejected}
+              />
+            </Container>
           </ListView.Item>
           <ListView.Item
             key={'2'}
