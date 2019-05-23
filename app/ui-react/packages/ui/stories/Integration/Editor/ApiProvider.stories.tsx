@@ -7,8 +7,6 @@ import {
   ApiProviderReviewActions,
   ApiProviderReviewOperations,
   ApiProviderSetInfo,
-  Container,
-  DndFileChooser,
 } from '../../../src';
 
 const fileExtensions = '.json, .yaml and .yml';
@@ -48,22 +46,17 @@ stories
         i18nUrlNote={
           '* Note: After uploading this document, Syndesis does not automatically obtain any updates to it.'
         }
-      >
-        <Container style={{ margin: '50px' }}>
-          <DndFileChooser
-            disableDropzone={boolean('Disabled', false)}
-            fileExtensions={fileExtensions}
-            i18nHelpMessage={helpMessage}
-            i18nInstructions={instructions}
-            i18nNoFileSelectedMessage={noFileSelectedMessage}
-            i18nSelectedFileLabel={selectedFileLabel}
-            i18nUploadFailedMessage={text('Fail Message', 'Upload failed')}
-            i18nUploadSuccessMessage={text('Success Message', undefined)}
-            onUploadAccepted={handleFiles}
-            onUploadRejected={uploadFailedMessage}
-          />
-        </Container>
-      </ApiProviderSelectMethod>
+        disableDropzone={boolean('Disabled', false)}
+        fileExtensions={fileExtensions}
+        i18nHelpMessage={helpMessage}
+        i18nInstructions={instructions}
+        i18nNoFileSelectedMessage={noFileSelectedMessage}
+        i18nSelectedFileLabel={selectedFileLabel}
+        i18nUploadFailedMessage={text('Fail Message', 'Upload failed')}
+        i18nUploadSuccessMessage={text('Success Message', undefined)}
+        onUploadAccepted={handleFiles}
+        onUploadRejected={uploadFailedMessage}
+      />
     </>
   ))
   .add('Review Actions', () => (

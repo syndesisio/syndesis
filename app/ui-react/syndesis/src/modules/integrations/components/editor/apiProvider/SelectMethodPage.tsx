@@ -10,6 +10,24 @@ import { PageTitle } from '../../../../../shared';
  */
 export class SelectMethodPage extends React.Component {
   public render() {
+    const handleFiles = (files: File[]) => {
+      files.forEach(file => {
+        // action('Process file ' + file.name + '\n');
+        //logUploadSucceedMessage();
+      });
+    };
+    // const logUploadFailedMessage = action('upload failed message handler');
+    // const logUploadSucceedMessage = action('upload succeeded message handler');
+
+    const uploadFailedMessage = (fileName: string) => {
+      // logUploadFailedMessage();
+      return (
+        '<span>File <strong>' +
+        fileName +
+        '</strong> could not be uploaded</span>'
+      );
+    };
+
     return (
       <Translation ns={['integrations', 'shared']}>
         {t => (
@@ -18,6 +36,30 @@ export class SelectMethodPage extends React.Component {
               title={t('integrations:apiProvider:selectMethod:title')}
             />
             <ApiProviderSelectMethod
+              disableDropzone={false}
+              fileExtensions={t(
+                'integrations:apiProvider:selectedMethod:dndFileExtensions'
+              )}
+              i18nHelpMessage={t(
+                'integrations:apiProvider:selectedMethod:dndHelpMessage'
+              )}
+              i18nInstructions={t(
+                'integrations:apiProvider:selectedMethod:dndInstructions'
+              )}
+              i18nNoFileSelectedMessage={t(
+                'integrations:apiProvider:selectedMethod:dndNoFileSelectedMessage'
+              )}
+              i18nSelectedFileLabel={t(
+                'integrations:apiProvider:selectedMethod:dndSelectedFileLabel'
+              )}
+              i18nUploadFailedMessage={t(
+                'integrations:apiProvider:selectedMethod:'
+              )}
+              i18nUploadSuccessMessage={t(
+                'integrations:apiProvider:selectedMethod:'
+              )}
+              onUploadAccepted={handleFiles}
+              onUploadRejected={uploadFailedMessage}
               i18nDescription={t(
                 'integrations:apiProvider:selectMethod:description'
               )}
