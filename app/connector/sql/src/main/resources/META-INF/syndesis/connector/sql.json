@@ -99,7 +99,7 @@
     },
     {
       "actionType": "connector",
-      "description": "Periodically invoke a stored procedure.",
+      "description": "Invoke a stored procedure.",
       "descriptor": {
         "componentScheme": "sql-stored",
         "connectorCustomizers": [
