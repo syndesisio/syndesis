@@ -45,7 +45,9 @@ stories
         i18nMethodFromFile={'Upload an OpenAPI file'}
         i18nMethodFromScratch={'Create from scratch'}
         i18nMethodFromUrl={'Use a URL'}
-        i18nTitle={'Start integration with an API call'}
+        i18nUrlNote={
+          '* Note: After uploading this document, Syndesis does not automatically obtain any updates to it.'
+        }
       >
         <Container style={{ margin: '50px' }}>
           <DndFileChooser

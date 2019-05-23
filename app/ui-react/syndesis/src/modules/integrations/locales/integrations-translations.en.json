@@ -76,6 +76,14 @@
     "confirmDeleteStepDialogTitle": "Confirm Delete",
     "saveOrAddStep": "Save or Add Step"
   },
+  "apiProvider": {
+    "description": "Execute this integration when a client invokes an operation defined by this API.",
+    "methodFromFile": "Upload an OpenAPI file",
+    "methodFromScratch": "Create from scratch",
+    "methodFromUrl": "Use a URL",
+    "title": "Start integration with an API call",
+    "urlNote": "* Note: After uploading this document, Syndesis does not automatically obtain any updates to it."
+  },
   "ReplaceDraft": "Replace Draft",
   "ReplaceDraftModalMessage": "Are you sure you want to to replace the current draft for the \"{{name}}\" integration?",
   "ReplaceDraftMOdalTitle": "Replace Draft?",
