@@ -313,14 +313,19 @@ export function mergeConnectionsSources(
  * Filters connections based on the supplied position in the step array
  * @param steps
  * @param position
+ * @param atStart
+ * @param atEnd
  */
-export function filterStepsByPosition(steps: StepKind[], position: number) {
+export function filterStepsByPosition(
+  steps: StepKind[],
+  position: number,
+  atStart: boolean,
+  atEnd: boolean
+) {
   if (typeof position === 'undefined' || !steps) {
     // safety net
     return steps;
   }
-  const atStart = position === 0;
-  const atEnd = getStepsLastPosition(steps) === position;
   return steps.filter(step => {
     // Hide steps that are marked as such, and specifically the log connection
     if (
@@ -399,7 +404,12 @@ export function visibleStepsByPosition(
 ) {
   const previousSteps = flowSteps.slice(0, position);
   const subsequentSteps = flowSteps.slice(position + 1);
-  return filterStepsByPosition(steps, position).filter(s => {
+  return filterStepsByPosition(
+    steps,
+    position,
+    position === 0,
+    getStepsLastPosition(flowSteps) === position
+  ).filter(s => {
     if (typeof s.visible === 'function') {
       return s.visible(position, previousSteps, subsequentSteps);
     }
