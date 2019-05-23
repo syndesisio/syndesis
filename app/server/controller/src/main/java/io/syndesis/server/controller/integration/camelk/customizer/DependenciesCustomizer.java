@@ -15,7 +15,10 @@
  */
 package io.syndesis.server.controller.integration.camelk.customizer;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -37,6 +40,8 @@ import org.springframework.stereotype.Component;
 public class DependenciesCustomizer implements CamelKIntegrationCustomizer {
     private final VersionService versionService;
     private final IntegrationResourceManager resourceManager;
+    private final List<MavenGav> filteredOutDependencies = Collections.unmodifiableList(Arrays.asList(
+        new MavenGav("org.apache.camel:camel-servlet-starter")));
 
     public DependenciesCustomizer(VersionService versionService, IntegrationResourceManager resourceManager) {
         this.versionService = versionService;
@@ -58,7 +63,13 @@ public class DependenciesCustomizer implements CamelKIntegrationCustomizer {
             spec.addDependencies("mvn:org.apache.camel.k/camel-k-runtime-servlet");
         }
 
-        for (MavenGav gav: getDependencies(deployment.getSpec())) {
+        Set<MavenGav> filteredDependencies = getDependencies(deployment.getSpec()).stream()
+            .filter(gav -> !filteredOutDependencies.stream()
+                            .map(fgav->fgav.getArtifactId().equals(gav.getArtifactId())
+                                    && fgav.getGroupId().equals(gav.getGroupId()) ).reduce(false, (b1,b2)->b1 || b2)
+            ).collect(Collectors.toSet());
+
+        for (MavenGav gav: filteredDependencies) {
             spec.addDependencies("mvn:" + gav.getGroupId() + "/" + gav.getArtifactId());
         }
 
