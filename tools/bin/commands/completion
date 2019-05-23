@@ -434,7 +434,7 @@ __custom_func() {
 
 _modules() {
     __debug _modules
-    COMPREPLY+=(ui server connector s2i meta integration extension common operator camel-k upgrade)
+    COMPREPLY+=(ui-angular ui-react server connector s2i meta integration extension common operator camel-k upgrade)
 }
 
 _syndesis_build() {

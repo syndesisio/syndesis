@@ -29,7 +29,7 @@
   <version>1.7-SNAPSHOT</version>
   <packaging>pom</packaging>
 
-  <name>UI</name>
+  <name>UI Angular</name>
 
   <properties>
     <yarn-install-args />

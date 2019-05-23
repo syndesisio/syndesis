@@ -7,12 +7,12 @@ build::description() {
 build::usage() {
     cat <<EOT
     -b  --backend                  Build only backend modules (core, extension, integration, connectors, server, meta)
-        --all-images               Build all modules with images: ui, server, meta, s2i, operator, upgrade, camel-k
-        --app-images               Build only application modules with Docker images (ui, server, meta, s2i)
+        --all-images               Build all modules with images: ui-angular, ui-react, server, meta, s2i, operator, upgrade, camel-k
+        --app-images               Build only application modules with Docker images (ui-angular, ui-react, server, meta, s2i)
                                    and create images
         --infra-images             Build only infrastructure modules with Docker images (operator, camel-k, upgrade) and create images
     -m  --module <m1>,<m2>, ..     Build modules
-                                   Modules: ui, server, connector, s2i, meta, integration, extension, common, operator, camel-k, upgrade
+                                   Modules: ui-angular, ui-react, server, connector, s2i, meta, integration, extension, common, operator, camel-k, upgrade
                                    Submodules: defined with [groupId]:artifactId (e.g. :connector-sql)
     -d  --dependencies             Build also all project the specified module depends on
         --skip-tests               Skip unit and system test execution
@@ -306,16 +306,17 @@ rsync_binary_from_minishift() {
 
 
 # All modules, in the right build order
-ALL_MODULES="common extension integration connector meta server s2i ui test operator camel-k upgrade"
-MAVEN_MODULES="common extension integration connector meta server s2i ui test"
-APP_IMAGES="ui server meta s2i"
+ALL_MODULES="common extension integration connector meta server s2i ui-angular ui-react test operator camel-k upgrade"
+MAVEN_MODULES="common extension integration connector meta server s2i ui-angular ui-react test"
+APP_IMAGES="ui-angular ui-react server meta s2i"
 INFRA_IMAGES="operator camel-k upgrade"
 ALL_IMAGES="$APP_IMAGES $INFRA_IMAGES"
 MODULES=(
   "upgrade:server common extension integration connector"
   "operator"
   "camel-k"
-  "ui"
+  "ui-angular"
+  "ui-react"
   "common"
   "extension:common"
   "integration:common extension"
@@ -334,7 +335,7 @@ extract_modules() {
     fi
 
     if [ "$(hasflag --all-images)" ]; then
-        modules="$modules ui server meta s2i operator camel-k"
+        modules="$modules ui-angular ui-react server meta s2i operator camel-k"
     fi
 
     if [ "$(hasflag --app-images)" ]; then

@@ -35,7 +35,7 @@ ui::run() {
 
 cd_to_ui_dir() {
   if [ $(hasflag --angular) ]; then
-    pushd $(appdir)/ui > /dev/null 2>&1
+    pushd $(appdir)/ui-angular > /dev/null 2>&1
   else
     pushd $(appdir)/ui-react > /dev/null 2>&1
   fi
@@ -72,7 +72,7 @@ do_things() {
     UI_VERBOSE_LEARNA="--loglevel verbose"
   fi
 
-  # in here we assume we're in the 'ui' directory
+  # in here we assume we're in the 'ui-angular' directory
   local project=$(readopt --project -p)
   local result=''
 

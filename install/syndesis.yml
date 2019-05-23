@@ -209,7 +209,7 @@ objects:
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest-react
+        name: ${SYNDESIS_REGISTRY}/syndesis/syndesis-ui:latest
       importPolicy:
         scheduled: true
       name: "latest"
