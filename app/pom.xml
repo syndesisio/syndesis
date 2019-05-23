@@ -634,7 +634,11 @@
               <exclude>**/s2i/src/main/docker/project/**</exclude>
               <exclude>**/Dockerfile</exclude>
               <exclude>**/*.ts</exclude>
+              <exclude>**/*.tsx</exclude>
+              <exclude>**/*.css</exclude>
               <exclude>**/*.scss</exclude>
+              <exclude>**/setupProxy.js</exclude>
+              <exclude>**/ui-react/packages/**</exclude>
               <exclude>**/*.html</exclude>
               <exclude>**/config.json*</exclude>
               <exclude>**/.gitkeep</exclude>
