@@ -66,7 +66,7 @@
                       ])
                     "
                     >
-                      Go to main flow
+                      Go to primary flow
                     </button>
                   </li>
                   <li role="separator" class="divider"></li>
@@ -94,7 +94,7 @@
                 </ul>
               </div>
             </div>
-            <div *ngIf="!hideButtons" class="toolbar-pf-action-right">
+            <div *ngIf="!hideButtons && isPrimaryFlow(currentFlow)" class="toolbar-pf-action-right">
               <button
                 class="btn btn-default"
                 (click)="flowPageService.cancel()"
@@ -144,10 +144,28 @@
                 Publish
               </button>
             </div>
+            <div *ngIf="!hideButtons && isAlternateFlow(currentFlow)" class="toolbar-pf-action-right">
+              <button
+                class="btn btn-default"
+                [disabled]="
+                      flowPageService.saveInProgress ||
+                      flowPageService.publishInProgress
+                    "
+                (click)="
+                      save([
+                        '/integrations',
+                        currentFlowService.integration?.id,
+                        'edit'
+                      ])
+                    "
+              >
+                Back to primary flow
+              </button>
+            </div>
           </div>
         </div>
       </div>
-      <div class="row toolbar-pf toolbar-condensed" *ngIf="!isPrimaryFlow(currentFlow)">
+      <div class="row toolbar-pf toolbar-condensed" *ngIf="isAlternateFlow(currentFlow)">
         <div class="col-sm-12">
           <div class="toolbar-pf-actions">
             <div class="form-group toolbar-pf-filter">

@@ -31,7 +31,7 @@
                *ngFor="let flowSet of form.get('flowOptions').controls; let i = index;">
             <div class="form-group flowOptionsContainer" [formGroupName]="i">
               <label class="col-md-2 control-label">{{i + 1}}. When</label>
-              <div class="col-md-8 flow-col">
+              <div [className]="editMode ? 'col-md-6 flow-col' : 'col-md-8 flow-col'">
                 <span class="readonly" *ngIf="!editMode" [textContent]="flowSet.controls.condition.value"></span>
                 <input
                   *ngIf="editMode"
@@ -43,6 +43,28 @@
                 <span class="help-block" [textContent]="editMode ? 'Provide a condition that you want to evaluate.' : ''"></span>
                 <span *ngIf="editMode && flowSet.controls.condition.dirty && flowSet.controls.condition.errors?.required" class="help-block error">Condition is required</span>
                 <span *ngIf="editMode && flowSet.controls.condition.errors?.maxlength" class="help-block error">Maximum characters exceeded</span>
+              </div>
+              <div *ngIf="editMode" class="col-md-2">
+                <div class="flow-buttons">
+                  <a
+                    class="fa fa-arrow-circle-up"
+                    [attr.aria-label]="'Move flow up'"
+                    tooltip="Move flow up"
+                    placement="left"
+                    container="body"
+                    (keydown.enter)="moveUp(i)"
+                    (click)="moveUp(i)">
+                  </a>
+                  <a
+                    class="fa fa-arrow-circle-down"
+                    [attr.aria-label]="'Move flow down'"
+                    tooltip="Move flow up"
+                    placement="left"
+                    container="body"
+                    (keydown.enter)="moveDown(i)"
+                    (click)="moveDown(i)">
+                  </a>
+                </div>
               </div>
               <div *ngIf="!editMode" class="col-sm-12 col-md-2">
                 <button

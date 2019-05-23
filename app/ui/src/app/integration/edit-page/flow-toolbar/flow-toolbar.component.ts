@@ -74,7 +74,7 @@ export class FlowToolbarComponent implements OnInit {
   }
 
   isAlternateFlow(flow: Flow) {
-    return flow.type === ALTERNATE;
+    return flow.type && flow.type === ALTERNATE;
   }
 
   isConditionalFlow(flow: Flow) {

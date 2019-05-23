@@ -185,9 +185,37 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
   }
 
   ngOnDestroy(): void {
+    this.reconcileFlows();
+
     if (this.formValueChangeSubscription) {
       this.formValueChangeSubscription.unsubscribe();
     }
+  }
+
+  reconcileFlows() {
+    const unfinishedFlows = this.myFlows.controls
+      .filter(option => option.get('condition').value === '')
+      .map(option => option.get('flow').value)
+      .filter(flowId => flowId !== this.form.controls.defaultFlow.get('defaultFlow').value);
+
+    const unknownFlows = this.currentFlowService.flows
+      .filter(flow => typeof flow.metadata !== 'undefined')
+      .filter(flow => {
+        return this.step.id === flow.metadata['stepId'];
+      })
+      .filter(flow => {
+        const optionIndex = this.myFlows.controls.findIndex(option => option.get('flow').value === flow.id);
+        if (optionIndex < 0) {
+          return this.form.controls.defaultFlow.get('defaultFlow').value !== flow.id;
+        } else {
+          return false;
+        }
+      })
+      .map(flow => flow.id);
+
+    Array.from(new Set([...unfinishedFlows, ...unknownFlows])).forEach(flowId => {
+      this.doRemoveFlow(flowId, undefined);
+    });
   }
 
   addFlow(flowId: string): void {
@@ -230,23 +258,24 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
   }
 
   removeDefaultFlow(): void {
-    this.currentFlowService.events.emit({
-      kind: INTEGRATION_REMOVE_FLOW,
-      flowId: this.form.controls.defaultFlow.get('defaultFlow').value,
-      onSave: () => {
-        this.form.controls.defaultFlow.get('defaultFlow').setValue('');
-        this.onChange();
-      }
-    });
+    this.doRemoveFlow(this.form.controls.defaultFlow.get('defaultFlow').value,
+      () => this.form.controls.defaultFlow.get('defaultFlow').setValue(''));
   }
 
   removeFlow(index: number): void {
+    this.doRemoveFlow(this.myFlows.controls[index].get('flow').value,
+      () => this.myFlows.removeAt(index));
+  }
+
+  doRemoveFlow(flowId: string, then: () => void): void {
     this.currentFlowService.events.emit({
       kind: INTEGRATION_REMOVE_FLOW,
-      flowId: this.myFlows.controls[index].get('flow').value,
+      flowId: flowId,
       onSave: () => {
-        this.myFlows.removeAt(index);
-        this.onChange();
+        if (then) {
+          then();
+          this.onChange();
+        }
       }
     });
   }
@@ -349,6 +378,35 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
       this.step.action.descriptor.inputDataShape) {
       step.action.descriptor.outputDataShape = this.step.action.descriptor.inputDataShape;
     }
+  }
+
+  moveUp(index: number) {
+    if (index === 0) {
+      return;
+    }
+
+    this.move(index, index - 1);
+  }
+
+  moveDown(index: number) {
+    if (index === this.myFlows.length) {
+      return;
+    }
+
+    this.move(index, index + 1);
+  }
+
+  move(from: number, to: number) {
+    const flowOption = this.myFlows.controls.splice(from, 1)[0];
+    this.myFlows.controls.splice(to, 0, flowOption);
+
+    this.myFlows.controls.forEach((option, index) => {
+      const flowOptions = this.form.get('flowOptions') as FormArray;
+      flowOptions.controls[index].get('flow').setValue(option.get('flow').value);
+      flowOptions.controls[index].get('condition').setValue(option.get('condition').value);
+    });
+
+    this.onChange();
   }
 
   onChange() {
