@@ -16,21 +16,28 @@
 package io.syndesis.connector.sql.customizer;
 
 import javax.sql.DataSource;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.common.SqlParam;
 import io.syndesis.connector.sql.common.SqlStatementMetaData;
 import io.syndesis.connector.sql.common.SqlStatementParser;
+import io.syndesis.connector.sql.common.StatementType;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.sql.SqlConstants;
+import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.SqlParameterValue;
@@ -42,6 +49,8 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
     private String autoIncrementColumnName;
     private boolean isRetrieveGeneratedKeys;
 
+    private boolean batch;
+
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         component.setBeforeProducer(this::doBeforeProducer);
@@ -49,11 +58,33 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
         initJdbcMap(options);
     }
 
-    private void doBeforeProducer(Exchange exchange) {
-        final String body = exchange.getIn().getBody(String.class);
-        if (body != null && !jdbcTypeMap.isEmpty()) {
-            final Map<String, SqlParameterValue> sqlParametersValues = JSONBeanUtil.parseSqlParametersFromJSONBean(body, jdbcTypeMap);
-            exchange.getIn().setBody(sqlParametersValues);
+    @SuppressWarnings("unchecked")
+    private void doBeforeProducer(Exchange exchange) throws IOException {
+        final Message in = exchange.getIn();
+
+        List<String> jsonBeans = null;
+        if (in.getBody() instanceof List) {
+            jsonBeans = in.getBody(List.class);
+        } else if (in.getBody(String.class) != null) {
+            String body = in.getBody(String.class);
+            if (JsonUtils.isJsonArray(body)) {
+                jsonBeans = JsonUtils.arrayToJsonBeans(Json.reader().readTree(body));
+            } else if (JsonUtils.isJson(body)) {
+                jsonBeans = Collections.singletonList(body);
+            }
+        }
+
+        if (ObjectHelper.isNotEmpty(jsonBeans) && !jdbcTypeMap.isEmpty()) {
+            if (batch) {
+                final List<Map<String, SqlParameterValue>> sqlParametersValues = new ArrayList<>();
+                for (String jsonBean : jsonBeans) {
+                    sqlParametersValues.add(JSONBeanUtil.parseSqlParametersFromJSONBean(jsonBean, jdbcTypeMap));
+                }
+                exchange.getIn().setBody(sqlParametersValues);
+            } else {
+                final Map<String, SqlParameterValue> sqlParametersValues = JSONBeanUtil.parseSqlParametersFromJSONBean(jsonBeans.get(0), jdbcTypeMap);
+                exchange.getIn().setBody(sqlParametersValues);
+            }
         }
         if (isRetrieveGeneratedKeys) {
             exchange.getIn().setHeader(SqlConstants.SQL_RETRIEVE_GENERATED_KEYS, true);
@@ -90,6 +121,9 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
                     isRetrieveGeneratedKeys = true;
                     autoIncrementColumnName = statementInfo.getAutoIncrementColumnName();
                 }
+
+                batch = statementInfo.hasInputParams() && statementInfo.getStatementType() != StatementType.SELECT;
+                options.put("batch", batch);
             } catch (SQLException e){
                 LOGGER.error(e.getMessage(),e);
             }

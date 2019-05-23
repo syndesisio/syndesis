@@ -17,6 +17,7 @@ package io.syndesis.connector.sql;
 
 import java.sql.JDBCType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,15 +29,17 @@ import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
 import com.fasterxml.jackson.module.jsonSchema.types.ArraySchema;
 import com.fasterxml.jackson.module.jsonSchema.types.ObjectSchema;
 import com.fasterxml.jackson.module.jsonSchema.types.StringSchema;
-import io.syndesis.connector.sql.common.SqlParam;
-import io.syndesis.connector.sql.common.SqlStatementMetaData;
-import io.syndesis.connector.sql.common.stored.ColumnMode;
-import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
-import io.syndesis.connector.sql.common.stored.StoredProcedureColumn;
-import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.DataShapeMetaData;
+import io.syndesis.common.util.Json;
+import io.syndesis.connector.sql.common.SqlParam;
+import io.syndesis.connector.sql.common.SqlStatementMetaData;
+import io.syndesis.connector.sql.common.StatementType;
+import io.syndesis.connector.sql.common.stored.ColumnMode;
+import io.syndesis.connector.sql.common.stored.StoredProcedureColumn;
+import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
+import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -77,18 +80,31 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
     public SyndesisMetadata adaptForSql(final String actionId, final Map<String, Object> properties, final MetaData metadata) {
 
         final Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
-        final List<PropertyPair> ppList = new ArrayList<>();
         @SuppressWarnings("unchecked")
         final SqlStatementMetaData sqlStatementMetaData = (SqlStatementMetaData) metadata.getPayload();
 
-        if (sqlStatementMetaData!=null) {
-            ppList.add(new PropertyPair(sqlStatementMetaData.getSqlStatement(), QUERY));
-            enrichedProperties.put(QUERY, ppList);
+        if (sqlStatementMetaData != null) {
+            enrichedProperties.put(QUERY, Collections.singletonList(new PropertyPair(sqlStatementMetaData.getSqlStatement(), QUERY)));
+
 
             // build the input and output schemas
+            final JsonSchema specIn;
             final ObjectSchema builderIn = new ObjectSchema();
-            builderIn.set$schema(JSON_SCHEMA_ORG_SCHEMA);
             builderIn.setTitle("SQL_PARAM_IN");
+
+            boolean batch = sqlStatementMetaData.hasInputParams() &&
+                            sqlStatementMetaData.getStatementType() != StatementType.SELECT;
+
+            if (batch) {
+                ArraySchema arraySpec = new ArraySchema();
+                arraySpec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
+                arraySpec.setItemsSchema(builderIn);
+                specIn = arraySpec;
+            } else {
+                builderIn.set$schema(JSON_SCHEMA_ORG_SCHEMA);
+                specIn = builderIn;
+            }
+
             for (SqlParam inParam: sqlStatementMetaData.getInParams()) {
                 builderIn.putProperty(inParam.getName(), schemaFor(inParam.getJdbcType()));
             }
@@ -110,7 +126,15 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
                     inDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                         .name("SQL Parameter")
                         .description(String.format("Parameters of SQL [%s]", sqlStatementMetaData.getSqlStatement()))
-                        .specification(Json.writer().writeValueAsString(builderIn));
+                        .specification(Json.writer().writeValueAsString(specIn));
+
+                    if (specIn.isObjectSchema()) {
+                        inDataShapeBuilder.putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT);
+                    }
+
+                    if (specIn.isArraySchema()) {
+                        inDataShapeBuilder.putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION);
+                    }
                 }
                 DataShape.Builder outDataShapeBuilder = new DataShape.Builder().type(builderOut.getTitle());
                 if (builderOut.getProperties().isEmpty()) {
@@ -119,7 +143,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
                     outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                         .name("SQL Result")
                         .description(String.format("Result of SQL [%s]", sqlStatementMetaData.getSqlStatement()))
-                        .putMetadata("variant", "collection")
+                        .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
                         .specification(Json.writer().writeValueAsString(outputSpec));
                 }
 
@@ -186,7 +210,7 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
                     outDataShapeBuilder.kind(DataShapeKinds.JSON_SCHEMA)
                         .name(procedureName + " Return")
                         .description(String.format("Return value of Stored Procedure '%s'", procedureName))
-                        .putMetadata("variant", "element")
+                        .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
                         .specification(Json.writer().writeValueAsString(builderOut));
                 }
 

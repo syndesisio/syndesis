@@ -1,0 +1,16 @@
+{
+  "inputShape" : {
+    "kind" : "none",
+    "type" : "SQL_PARAM_IN"
+  },
+  "outputShape" : {
+    "kind" : "none",
+    "type" : "SQL_PARAM_OUT"
+  },
+  "properties" : {
+    "query" : [ {
+      "displayValue" : "query",
+      "value" : "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES ('Sheldon', 'Cooper')"
+    } ]
+  }
+}
