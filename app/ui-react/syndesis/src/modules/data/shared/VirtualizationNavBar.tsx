@@ -42,24 +42,26 @@ export class VirtualizationNavBar extends React.Component<
                   virtualization,
                 })}
               />
+              {/* TD-636: Commented out for TP
               <TabBarItem
                 label={t('data:virtualization.relationship')}
                 to={resolvers.virtualizations.relationship({
                   virtualization,
                 })}
-              />
+              /> */}
               <TabBarItem
                 label={t('data:virtualization.sqlClient')}
                 to={resolvers.virtualizations.sqlClient({
                   virtualization,
                 })}
               />
+              {/* TD-636: Commented out for TP
               <TabBarItem
                 label={t('data:virtualization.metrics')}
                 to={resolvers.virtualizations.metrics({
                   virtualization,
                 })}
-              />
+              /> */}
             </TabBar>
           </Container>
         )}

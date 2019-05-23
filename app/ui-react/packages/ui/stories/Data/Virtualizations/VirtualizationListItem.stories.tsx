@@ -93,7 +93,8 @@ stories.add(
       icon={text('icon', virtualizationIconData)}
       i18nEdit={editText}
       i18nEditTip={editTip}
-      i18nExport={'Export'}
+      /* TD-636: Commented out for TP 
+      i18nExport={'Export'} */
       i18nPublished={publishedText}
       i18nUnpublish={unpublishText}
       i18nPublish={publishText}
@@ -103,7 +104,8 @@ stories.add(
       i18nUnpublishModalTitle={confirmUnpublishTitle}
       detailsPageLink={''}
       onDelete={action(deleteText)}
-      onExport={action(exportText)}
+      /* TD-636: Commented out for TP 
+      onExport={action(exportText)} */
       onUnpublish={action(unpublishText)}
       onPublish={action(publishText)}
       currentPublishedState={select(
