@@ -32,6 +32,7 @@ import io.syndesis.integration.project.generator.ProjectGeneratorHelper;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.integration.camelk.CamelKPublishHandler;
 import io.syndesis.server.controller.integration.camelk.CamelKSupport;
+import io.syndesis.server.controller.integration.camelk.crd.ConfigurationSpec;
 import io.syndesis.server.controller.integration.camelk.crd.DataSpec;
 import io.syndesis.server.controller.integration.camelk.crd.Integration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationSpec;
@@ -88,6 +89,18 @@ public class OpenApiCustomizer implements CamelKIntegrationCustomizer {
             spec.addResources(generateOpenAPIResource(res.get()));
             spec.addSources(generateOpenAPIRestDSL(res.get()));
             spec.addSources(generateOpenAPIRestEndpoint());
+            spec.addConfiguration(
+                new ConfigurationSpec.Builder()
+                    .type("property")
+                    .value("customizer.servletregistration.enabled=true")
+                    .build()
+            );
+            spec.addConfiguration(
+                new ConfigurationSpec.Builder()
+                    .type("property")
+                    .value("customizer.servletregistration.path=/*")
+                    .build()
+            );
         } catch (Exception e) {
             throw new IllegalStateException(e);
         }
@@ -99,15 +112,15 @@ public class OpenApiCustomizer implements CamelKIntegrationCustomizer {
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     private ResourceSpec generateOpenAPIResource(OpenApi openApi) throws Exception {
-        //we always compress open api definition
         final byte[] openApiBytes = openApi.getDocument();
-        final String compressedContent = CamelKSupport.compress(openApiBytes);
+//        final String content = configuration.getCamelk().isCompression() ? CamelKSupport.compress(openApiBytes) : new String(openApiBytes, UTF_8);
 
         return new ResourceSpec.Builder()
             .dataSpec(new DataSpec.Builder()
+                //we always compress openapi spec document
                 .compression(true)
                 .name("openapi.json")
-                .content(compressedContent)
+                .content(CamelKSupport.compress(openApiBytes))
                 .build())
             .type("data")
             .build();

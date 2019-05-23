@@ -59,30 +59,28 @@ public final class CamelKSupport {
     //    IntegrationPhaseWaitingForPlatform IntegrationPhase = "Waiting For Platform"
     //    // IntegrationPhaseBuildingContext --
     //    IntegrationPhaseBuildingContext IntegrationPhase = "Building Context"
-    //    // IntegrationPhaseBuildImageSubmitted --
-    //    IntegrationPhaseBuildImageSubmitted IntegrationPhase = "Build Image Submitted"
-    //    // IntegrationPhaseBuildImageRunning --
-    //    IntegrationPhaseBuildImageRunning IntegrationPhase = "Build Image Running"
+    //    // IntegrationPhaseResolvingContext --
+    //    IntegrationPhaseResolvingContext IntegrationPhase = "Resolving Context"
     //    // IntegrationPhaseDeploying --
     //    IntegrationPhaseDeploying IntegrationPhase = "Deploying"
     //    // IntegrationPhaseRunning --
     //    IntegrationPhaseRunning IntegrationPhase = "Running"
     //    // IntegrationPhaseError --
     //    IntegrationPhaseError IntegrationPhase = "Error"
-    //    // IntegrationPhaseBuildFailureRecovery --
-    //    IntegrationPhaseBuildFailureRecovery IntegrationPhase = "Building Failure Recovery"
+    //    // IntegrationPhaseDeleting --
+    //    IntegrationPhaseDeleting IntegrationPhase = "Deleting"
 
     public static final ImmutableSet<String> CAMEL_K_STARTED_STATES = ImmutableSet.of(
                 "Waiting For Platform",
                 "Building Context",
-                "Build Image Submitted",
-                "Build Image Running",
+                "Resolving Context",
                 "Deploying");
     public static final ImmutableSet<String> CAMEL_K_FAILED_STATES = ImmutableSet.of(
                 "Error",
                 "Building Failure Recovery");
     public static final ImmutableSet<String> CAMEL_K_RUNNING_STATES = ImmutableSet.of(
-                "Running" );
+                "Running",
+                "Deleting");
 
     public static final String CAMEL_K_INTEGRATION_CRD_NAME = "integrations.camel.apache.org";
     public static final String CAMEL_K_INTEGRATION_CRD_GROUP = "camel.apache.org";
@@ -182,21 +180,6 @@ public final class CamelKSupport {
         return properties;
     }
 
-//    @SuppressWarnings("unchecked")
-//    public static io.syndesis.server.controller.integration.camelk.crd.Integration getIntegrationCR(
-//            OpenShiftService openShiftService,
-//            CustomResourceDefinition integrationCRD,
-//            IntegrationDeployment integrationDeployment) {
-//
-//        return openShiftService.getCR(
-//            integrationCRD,
-//            io.syndesis.server.controller.integration.camelk.crd.Integration.class,
-//            IntegrationList.class,
-//            DoneableIntegration.class,
-//            Names.sanitize(integrationDeployment.getIntegrationId().get())
-//        );
-//    }
-
     @SuppressWarnings("unchecked")
     public static List<io.syndesis.server.controller.integration.camelk.crd.Integration> getIntegrationCRbyLabels(
         OpenShiftService openShiftService,
@@ -249,6 +232,10 @@ public final class CamelKSupport {
         return Names.sanitize("i-" + integrationName);
     }
 
+    public static boolean isWebhookPresent(io.syndesis.common.model.integration.Integration integration) {
+        return integration.getUsedConnectorIds().contains("webhook");
+    }
+
     public static EnumSet<Exposure> determineExposure(ControllersConfigurationProperties properties, IntegrationDeployment integrationDeployment) {
         boolean needsExposure = integrationDeployment.getSpec()
             .getFlows().stream()
@@ -257,7 +244,7 @@ public final class CamelKSupport {
             .flatMap(action -> action.getTags().stream())
             .anyMatch("expose"::equals);
 
-        boolean webHook = integrationDeployment.getSpec().getUsedConnectorIds().contains("webhook");
+        boolean webHook = CamelKSupport.isWebhookPresent(integrationDeployment.getSpec());
 
         if (needsExposure) {
             if (properties.isExposeVia3scale() && !webHook) {

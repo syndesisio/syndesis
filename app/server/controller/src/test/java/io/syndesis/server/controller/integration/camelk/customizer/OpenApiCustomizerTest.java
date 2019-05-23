@@ -31,6 +31,7 @@ import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.integration.camelk.TestResourceManager;
 import io.syndesis.server.openshift.Exposure;
+import org.assertj.core.api.Condition;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -68,6 +69,15 @@ public class OpenApiCustomizerTest {
             EnumSet.of(Exposure.SERVICE)
         );
 
+        assertThat(i.getSpec().getConfiguration()).hasSize(2);
+        assertThat(i.getSpec().getConfiguration()).anyMatch(
+            c -> Objects.equals("customizer.servletregistration.enabled=true", c.getValue())
+                    && Objects.equals("property", c.getType())
+        );
+        assertThat(i.getSpec().getConfiguration()).anyMatch(
+            c -> Objects.equals("customizer.servletregistration.path=/*", c.getValue())
+                && Objects.equals("property", c.getType())
+        );
         assertThat(i.getSpec().getSources()).anyMatch(
             s -> Objects.equals("openapi-routes", s.getDataSpec().getName()) && Objects.equals("xml", s.getLanguage())
                 && !s.getDataSpec().getCompression().booleanValue()
@@ -77,7 +87,7 @@ public class OpenApiCustomizerTest {
                 && !s.getDataSpec().getCompression().booleanValue()
         );
         assertThat(i.getSpec().getResources()).anyMatch(
-            s -> Objects.equals("openapi.json", s.getDataSpec().getName()) && Objects.equals("openapi", s.getType())
+            s -> Objects.equals("openapi.json", s.getDataSpec().getName()) && Objects.equals("data", s.getType())
                 && s.getDataSpec().getCompression().booleanValue() && (s.getDataSpec().getContent().getBytes(UTF_8).length <= content.length)
         );
     }
