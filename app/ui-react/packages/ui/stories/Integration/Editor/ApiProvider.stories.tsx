@@ -6,7 +6,6 @@ import {
   ApiProviderSelectMethod,
   ApiProviderReviewActions,
   ApiProviderReviewOperations,
-  ApiProviderSetInfo,
 } from '../../../src';
 
 const fileExtensions = '.json, .yaml and .yml';
@@ -77,11 +76,6 @@ stories
           '- <strong>1</strong> tagged Rules evaluation :: Core',
         ]}
       />
-    </>
-  ))
-  .add('Set Information', () => (
-    <>
-      <ApiProviderSetInfo />
     </>
   ))
   .add('Review Operations', () => (
