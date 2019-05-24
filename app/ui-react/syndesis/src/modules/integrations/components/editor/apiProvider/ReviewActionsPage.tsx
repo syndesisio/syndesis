@@ -1,4 +1,4 @@
-import { WithApiProvider } from '@syndesis/api';
+import { useApiProvider } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
   ApiProviderReviewActions,
@@ -15,6 +15,24 @@ import {
   IReviewActionsRouteState,
 } from '../interfaces';
 
+export const ReviewSpecification: React.FunctionComponent<{
+  specification: string;
+}> = ({ specification }) => {
+  const [apiSummary, loading, error] = useApiProvider(specification);
+  console.log(apiSummary);
+
+  return (
+    <WithLoader
+      loading={loading}
+      loaderChildren={<PageLoader />}
+      error={error !== false}
+      errorChildren={<ApiError />}
+    >
+      {() => <ApiProviderReviewActions />}
+    </WithLoader>
+  );
+};
+
 export interface IReviewActionsPageProps {
   cancelHref: (
     p: IBaseApiProviderRouteParams,
@@ -27,47 +45,34 @@ export interface IReviewActionsPageProps {
  * extracted from the API specification previously created or provided
  * earlier in the API Provider editor.
  */
-export class ReviewActionsPage extends React.Component<
+export const ReviewActionsPage: React.FunctionComponent<
   IReviewActionsPageProps
-> {
-  public render() {
-    return (
-      <Translation ns={['integrations', 'shared']}>
-        {t => (
-          <WithRouteData<IBaseApiProviderRouteParams, IReviewActionsRouteState>>
-            {(params, state) => (
-              <>
-                <PageTitle
-                  title={t('integrations:apiProvider:reviewActions:title')}
-                />
-                <IntegrationEditorLayout
-                  title={t('integrations:apiProvider:reviewActions:title')}
-                  description={t(
-                    'integrations:apiProvider:reviewActions:description'
-                  )}
-                  content={
-                    <WithApiProvider specification={state.specification}>
-                      {({ data, loading, error }) => (
-                        <PageSection>
-                          <WithLoader
-                            loading={loading}
-                            loaderChildren={<PageLoader />}
-                            error={error}
-                            errorChildren={<ApiError />}
-                          >
-                            {() => <ApiProviderReviewActions />}
-                          </WithLoader>
-                        </PageSection>
-                      )}
-                    </WithApiProvider>
-                  }
-                  cancelHref={this.props.cancelHref(params, state)}
-                />
-              </>
-            )}
-          </WithRouteData>
-        )}
-      </Translation>
-    );
-  }
-}
+> = ({ cancelHref }) => {
+  return (
+    <Translation ns={['integrations', 'shared']}>
+      {t => (
+        <WithRouteData<IBaseApiProviderRouteParams, IReviewActionsRouteState>>
+          {(params, state) => (
+            <>
+              <PageTitle
+                title={t('integrations:apiProvider:reviewActions:title')}
+              />
+              <IntegrationEditorLayout
+                title={t('integrations:apiProvider:reviewActions:title')}
+                description={t(
+                  'integrations:apiProvider:reviewActions:description'
+                )}
+                content={
+                  <PageSection>
+                    <ReviewSpecification specification={state.specification} />
+                  </PageSection>
+                }
+                cancelHref={cancelHref(params, state)}
+              />
+            </>
+          )}
+        </WithRouteData>
+      )}
+    </Translation>
+  );
+};
