@@ -37,8 +37,8 @@ export class ApiProviderReviewOperationsItem extends React.Component<
             {this.props.i18nCreateFlow}
           </ButtonLink>
         }
-        additionalInfo={this.props.operationPath}
         className={'api-provider-operations-list-item'}
+        heading={this.props.operationPath}
         description={this.props.operationDescription}
         leftContent={
           <span className={httpMethodClass}>
