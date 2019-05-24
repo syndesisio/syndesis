@@ -1,3 +1,4 @@
+import classnames from 'classnames';
 import { Label } from 'patternfly-react';
 import * as React from 'react';
 import {
@@ -13,6 +14,7 @@ export interface IIntegrationStatusProps {
   i18nPublished: string;
   i18nUnpublished: string;
   i18nError: string;
+  className?: string;
 }
 
 export class IntegrationStatus extends React.Component<
@@ -39,7 +41,10 @@ export class IntegrationStatus extends React.Component<
         break;
     }
     return (
-      <Label data-testid={'integration-status-status-label'} type={labelType}>
+      <Label
+        data-testid={'integration-status-status-label'}
+        className={classnames('', this.props.className)}
+        type={labelType}>
         {label}
       </Label>
     );

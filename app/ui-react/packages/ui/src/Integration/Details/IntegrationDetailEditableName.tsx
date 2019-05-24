@@ -13,7 +13,7 @@ export class IntegrationDetailEditableName extends React.PureComponent<
     return (
       <>
         {this.props.name && (
-          <Title size="lg" className="integration-detail-editable-name">
+          <Title size="lg" className="integration-detail-editable-name pf-u-mr-lg">
             {this.props.name}
           </Title>
         )}
