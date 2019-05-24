@@ -12,15 +12,11 @@ export class SelectMethodPage extends React.Component {
   public render() {
     const handleFiles = (files: File[]) => {
       files.forEach(file => {
-        // action('Process file ' + file.name + '\n');
-        //logUploadSucceedMessage();
+        return '<span>Process file ' + file.name + '</span>\n';
       });
     };
-    // const logUploadFailedMessage = action('upload failed message handler');
-    // const logUploadSucceedMessage = action('upload succeeded message handler');
 
     const uploadFailedMessage = (fileName: string) => {
-      // logUploadFailedMessage();
       return (
         '<span>File <strong>' +
         fileName +
