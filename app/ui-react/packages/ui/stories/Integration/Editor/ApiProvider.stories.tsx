@@ -62,7 +62,22 @@ stories
   ))
   .add('Review Actions', () => (
     <>
-      <ApiProviderReviewActions />
+      <ApiProviderReviewActions
+        apiConnectorDescription={'the description'}
+        apiConnectorName={'theName'}
+        i18nApiDefinitionHeading={'API DEFINITION'}
+        i18nDescriptionLabel={'Description'}
+        i18nImportedHeading={'IMPORTED'}
+        i18nNameLabel={'Name'}
+        i18nOperationsHtmlMessage={'<strong>49</strong> operations'}
+        i18nOperationTagHtmlMessages={[
+          '- <strong>1</strong> tagged KIE Server Script :: Core',
+          '- <strong>23</strong> tagged User tasks administration :: BPM',
+          '- <strong>24</strong> tagged Queries - processes, nodes, variables and tasks :: BPM',
+          '- <strong>1</strong> tagged Rules evaluation :: Core',
+        ]}
+        i18nTitle={'Review Actions'}
+      />
     </>
   ))
   .add('Set Information', () => (
