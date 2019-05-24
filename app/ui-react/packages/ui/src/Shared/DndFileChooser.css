@@ -1,0 +1,41 @@
+.dnd-file-chooser {
+  border: 2px dashed #d1d1d1; /* color-pf-black-300 */
+  cursor: pointer;
+  width: 100%;
+}
+
+.dnd-file-chooser[disabled],
+.dnd-file-chooser[disabled]:hover {
+  color: lightgray;
+  border: 2px dashed #d1d1d1; /* color-pf-black-300 */
+  cursor: default;
+}
+
+.dnd-file-chooser:hover {
+  border-color: #39a5dc; /* color-pf-blue-300 */
+  background: #fafafa; /* color-pf-black-100 */
+}
+
+.dnd-file-chooser__helpText {
+  margin: 20px;
+}
+
+.dnd-file-chooser__instructions {
+  margin: 20px;
+}
+
+.dnd-file-chooser__selectedFile {
+  font-style: italic;
+}
+
+.dnd-file-chooser__selectedFileLabel {
+  font-weight: bold;
+}
+
+.dnd-file-chooser__notificationList {
+  margin: inherit;
+}
+
+.dnd-file-chooser__uploadMessage {
+  font-weight: bold;
+}

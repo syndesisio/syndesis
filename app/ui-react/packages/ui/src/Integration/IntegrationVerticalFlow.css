@@ -1,0 +1,37 @@
+.integration-vertical-flow {
+  min-width: 100px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.integration-vertical-flow.is-expanded {
+  min-width: 345px;
+}
+
+.integration-vertical-flow__body {
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.integration-vertical-flow__toggle {
+  display: block;
+  width: 100%;
+  padding: 0.5em;
+  text-align: right;
+}
+
+.integration-vertical-flow__toggle:hover,
+.integration-vertical-flow__toggle:focus,
+.integration-vertical-flow__toggle:active,
+.integration-vertical-flow__toggle:active:focus {
+  text-decoration: none;
+  outline: 0;
+}
+
+.integration-vertical-flow__icon {
+  font-size: 1.5em;
+  margin-left: 5px;
+  vertical-align: text-bottom;
+}

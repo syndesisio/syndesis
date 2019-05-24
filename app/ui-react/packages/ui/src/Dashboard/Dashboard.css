@@ -1,0 +1,16 @@
+.dashboard__connections__actions .view,
+.dashboard__integrations__actions .view {
+  padding: 0.3em 0.8em;
+}
+
+.dashboard__connections__actions {
+  padding: 0 10px;
+}
+
+.dashboard__integrations .list-view-pf .list-group-item {
+  border-width: 0;
+}
+
+.dashboard__integrations .list-view-pf .list-group-item:first-child {
+  border-top: 0;
+}

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Maven modules which create Docker images
-JAVA_IMAGE_MODULES="ui server meta s2i"
+JAVA_IMAGE_MODULES="ui-angular ui-react server meta s2i"
 
 # All modules which create images
 ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES operator"

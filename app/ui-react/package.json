@@ -1,0 +1,75 @@
+{
+  "name": "@syndesis/monorepo",
+  "version": "0.1.0",
+  "repository": "git@github.com:syndesisio/syndesis-react-poc.git",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "syndesis",
+      "packages/*",
+      "typings/*"
+    ],
+    "nohoist": [
+      "**/ngx-bootstrap",
+      "**/jest",
+      "**/rxjs"
+    ]
+  },
+  "scripts": {
+    "lint:staged": "lint-staged",
+    "lint": "lerna run --parallel --no-bail lint",
+    "test:angular": "lerna run test:ci",
+    "test:jest": "CI=true lerna run test -- --coverage --color --runInBand",
+    "test": "npm-run-all -s test:*",
+    "build": "lerna run build",
+    "watch:app:proxy": "lerna run --parallel --no-prefix --scope @syndesis/syndesis proxy",
+    "watch:app:minishift:restore": "lerna run --parallel --no-prefix --scope @syndesis/syndesis minishift:restore",
+    "watch:app:minishift": "lerna run --parallel --no-prefix --scope @syndesis/syndesis minishift",
+    "watch:packages": "lerna run --parallel dev",
+    "minishift:setup": "lerna run --parallel --no-prefix --scope @syndesis/syndesis minishift:setup",
+    "minishift:restore": "lerna run --parallel --no-prefix --scope @syndesis/syndesis minishift:restore",
+    "format:app": "prettier --write 'syndesis/src/**/*.{js,ts,tsx,json}'",
+    "format:packages": "prettier --write 'packages/*/src/**/*.{js,ts,tsx,json}'",
+    "format": "npm-run-all format:*",
+    "storybook": "lerna run --parallel storybook",
+    "build-storybook": "lerna run build-storybook -- --quiet",
+    "build:flash": "yarn build",
+    "gh-pages-update": "yarn run gh-pages --dotfiles --message \"[skip ci] Updates\" --dist doc",
+    "precommit": "npm-run-all -s lint:staged",
+    "prepush": "npm-run-all -p lint test"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.0.1",
+    "husky": "^2.2.0",
+    "lerna": "^3.13.1",
+    "lint-staged": "^8.1.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.16.4",
+    "rxjs": "^6.4.0",
+    "tslint": "^5.13.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-microsoft-contrib": "^6.0.0",
+    "tslint-react": "^4.0.0",
+    "typescript": "^3.4.5",
+    "yalc": "^1.0.0-pre.27"
+  },
+  "lint-staged": {
+    "syndesis/**/*.{js,ts,tsx,json}": [
+      "prettier --write",
+      "git add"
+    ],
+    "packages/**/*.{js,ts,tsx,json}": [
+      "prettier --write",
+      "git add"
+    ]
+  },
+  "prettier": {
+    "trailingComma": "es5",
+    "singleQuote": true,
+    "semi": true
+  },
+  "dependencies": {},
+  "resolutions": {
+    "@patternfly/patternfly": "2.6.6"
+  }
+}

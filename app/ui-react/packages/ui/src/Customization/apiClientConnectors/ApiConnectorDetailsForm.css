@@ -1,0 +1,43 @@
+.api-connector-details-form__body {
+  margin-top: 20px;
+}
+
+.api-connector-details-form__card {
+  margin-bottom: 0;
+}
+
+.api-connector-details-form__buttonBar {
+  border-top: none;
+  margin-left: auto;
+  padding: 0px 20px 10px;
+  width: 90%;
+}
+
+.api-connector-details-form__editButton {
+  margin-bottom: 8px !important;
+  margin-right: 4px;
+}
+
+.api-connector-details-form__formFields {
+  margin-left: auto;
+  width: 90%;
+}
+
+.api-connector-details-form__icon {
+  max-height: 50px;
+  max-width: 50px;
+  vertical-align: middle;
+  margin-right: 20px;
+}
+
+.api-connector-details-form__iconContainer {
+  margin-bottom: 20px;
+}
+
+.api-connector-details-form__title {
+  font-size: 1.25em;
+}
+
+.api-connector-details-form__iconContainer input[type="file"] {
+  display: inline-block;
+}

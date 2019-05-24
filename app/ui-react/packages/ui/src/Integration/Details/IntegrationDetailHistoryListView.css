@@ -1,0 +1,25 @@
+.integration-detail-history-list-view {
+    background-color: white;
+}
+
+.integration-detail-history-list-view__description {
+    font-weight: bold;
+    padding-top: 20px;
+}
+
+.integration-detail-history-list-view .list-view-pf-view {
+    margin-top: 0;
+}
+
+.integration-detail-history-list-view .list-view-pf-left .list-view-pf-icon-sm {
+  border: none;
+  font-size: 0.8em;
+}
+
+.integration-detail-history-list-view__draft-row .list-group-item-heading {
+    margin-left: 50px;
+}
+
+.integration-detail-history-list-view__draft-row .integration-detail-history-list-view__description {
+    padding-top: 30px;
+}

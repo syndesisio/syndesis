@@ -1,0 +1,83 @@
+{
+  "name": "@syndesis/auto-form",
+  "version": "0.1.0",
+  "main": "dist/auto-form.js",
+  "umd:main": "dist/auto-form.umd.js",
+  "typings": "dist/auto-form/src/index.d.ts",
+  "source": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.4.4",
+    "@storybook/addon-a11y": "^5.0.11",
+    "@storybook/addon-actions": "^5.0.11",
+    "@storybook/addon-info": "^5.0.11",
+    "@storybook/addon-knobs": "^5.0.11",
+    "@storybook/addon-links": "^5.0.11",
+    "@storybook/addon-notes": "^5.0.11",
+    "@storybook/addon-options": "^5.0.11",
+    "@storybook/addon-viewport": "^5.0.11",
+    "@storybook/react": "^5.0.11",
+    "@storybook/theming": "^5.0.11",
+    "@types/expect": "^1.20.3",
+    "@types/jest": "^24.0.11",
+    "@types/patternfly-react": "*",
+    "@types/react": "^16.4.18",
+    "@types/react-dom": "^16.0.9",
+    "@types/storybook__react": "^4.0.0",
+    "awesome-typescript-loader": "^5.2.1",
+    "babel-loader": "^8.0.5",
+    "expect": "^24.5.0",
+    "jest": "^24.5.0",
+    "jest-cli": "^24.5.0",
+    "jest-dom": "^3.1.3",
+    "microbundle": "^0.11.0",
+    "react": "^16.6.0",
+    "react-docgen-typescript-loader": "^3.1.0",
+    "react-dom": "^16.6.0",
+    "react-testing-library": "^7.0.0",
+    "rimraf": "^2.6.2",
+    "ts-jest": "^24.0.0",
+    "tslib": "^1.9.3",
+    "tslint": "^5.11.0",
+    "tslint-config-prettier": "^1.16.0",
+    "tslint-react": "^4.0.0",
+    "typescript": "^3.4.5"
+  },
+  "scripts": {
+    "lint": "tslint -c ../../tslint.json --project .",
+    "test": "jest",
+    "test:watch": "yarn run test --watch",
+    "prebuild": "rimraf dist",
+    "build": "microbundle --format cjs --no-compress",
+    "dev": "microbundle watch --format cjs --no-compress",
+    "storybook": "start-storybook -p 9002",
+    "build-storybook": "build-storybook -o ../../doc/auto-form"
+  },
+  "peerDependencies": {
+    "react": "^16.6.0",
+    "react-dom": "^16.6.0"
+  },
+  "jest": {
+    "setupFilesAfterEnv": [
+      "<rootDir>/../.jest/setup.ts"
+    ],
+    "preset": "ts-jest",
+    "moduleNameMapper": {
+      "\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$": "<rootDir>/../.jest/fileMock.js",
+      "\\.(css|less)$": "<rootDir>/../.jest/styleMock.js"
+    },
+    "globals": {
+      "ts-jest": {
+        "tsConfig": "tsconfig.storybook.json"
+      }
+    }
+  },
+  "dependencies": {
+    "@syndesis/ui": "*",
+    "formik": "^1.5.4",
+    "patternfly-react": "^2.32.2"
+  }
+}

@@ -1,0 +1,52 @@
+.integration-steps-horizontal-item {
+  height: 100px;
+  width: 120px;
+  display: inline-block;
+  text-align: center;
+  vertical-align: top;
+  position: relative;
+  padding: 0 10px;
+}
+
+.integration-steps-horizontal-item * {
+ vertical-align: center;
+}
+
+.integration-steps-horizontal-item a {
+  color: var(--pf-global--Color--100);
+}
+
+.integration-steps-horizontal-item a:hover {
+  text-decoration: none;
+}
+
+.integration-steps-horizontal-item .step-icon {
+  width: 45px;
+  height: 45px;
+  margin: 0 auto 10px;
+  position: relative;
+}
+.integration-steps-horizontal-item .step-icon img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.integration-steps-horizontal-item__arrow,
+.integration-steps-horizontal-item__icon {
+  padding: 0;
+}
+
+.integration-steps-horizontal-item__icon {
+  width: 100px;
+}
+
+.integration-steps-horizontal-item .step-arrow {
+  position: absolute;
+  top: 23px;
+  left: -8px;
+  -webkit-transform: translate(50%, -50%);
+  transform: translate(50%, -50%);
+  font-size: 2em;
+  line-height: 1;
+  color: #72767b;
+}

@@ -49,3 +49,44 @@ target
 ui/bin
 ui/node
 *~
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+###
+# app/ui-react
+###
+
+# ignore built storybook
+ui-react/doc/syndesis
+ui-react/doc/auto-form
+ui-react/doc/ui
+ui-react/doc/app
+
+# @syndesis/syndesis
+ui-react/syndesis/public/config.json
+ui-react/syndesis/public/config.json.bak
+ui-react/syndesis/public/atlasmap/
+ui-react/syndesis/tapes/ht*
+ui-react/.puppeteer_data
+
+# @syndesis/models
+ui-react/packages/models/src/models.d.ts
+ui-react/packages/models/src/models-internal.d.ts
+
+# testing
+ui-react/*/coverage
+
+# production
+ui-react/*/build
+ui-react/*/dist
+
+# misc
+ui-react/syndesis/.env.local
+ui-react/syndesis/.env.development.local
+ui-react/syndesis/.env.test.local
+ui-react/syndesis/.env.production.local
+
+# build cache
+ui-react/*/.cache
+ui-react/*/.rts2_cache*

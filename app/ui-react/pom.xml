@@ -1,0 +1,457 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (C) 2016 Red Hat, Inc.
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.syndesis</groupId>
+    <artifactId>syndesis-parent</artifactId>
+    <version>1.7-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+
+  <groupId>io.syndesis.ui</groupId>
+  <artifactId>ui-react</artifactId>
+  <version>1.7-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <name>UI React</name>
+
+  <properties>
+    <yarn-install-args />
+    <yarn-verbose />
+    <npm-verbose />
+  </properties>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>dist</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <tarLongFileMode>posix</tarLongFileMode>
+              <ignoreMissingDescriptor>false</ignoreMissingDescriptor>
+              <descriptors>
+                <descriptor>maven/assembly/unix-dist.xml</descriptor>
+              </descriptors>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clean-plugin</artifactId>
+        <configuration>
+          <followSymLinks>false</followSymLinks>
+          <filesets>
+            <fileset>
+              <directory>src</directory>
+              <includes>
+                <include>config.json</include>
+                <include>config.json.bak</include>
+              </includes>
+            </fileset>
+            <fileset>
+              <directory>node_modules</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+            </fileset>
+            <fileset>
+              <directory>dist</directory>
+              <includes>
+                <include>**/*</include>
+              </includes>
+            </fileset>
+          </filesets>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>com.github.eirslett</groupId>
+        <artifactId>frontend-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>install node and npm</id>
+            <goals>
+              <goal>install-node-and-npm</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>${node.version}</nodeVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>install yarn</id>
+            <goals>
+              <goal>install-node-and-yarn</goal>
+            </goals>
+            <configuration>
+              <nodeVersion>${node.version}</nodeVersion>
+              <yarnVersion>${yarn.version}</yarnVersion>
+            </configuration>
+          </execution>
+          <execution>
+            <id>yarn install</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>install --force --no-progress --frozen-lockfile ${yarn-install-args} ${yarn-verbose}</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>Install dependencies</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>install --frozen-lockfile</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>Lint project</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>lint</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>Build project</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>build</arguments>
+            </configuration>
+          </execution>
+
+          <execution>
+            <id>Run tests</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>test</arguments>
+              <skip>${skipTests}</skip>
+            </configuration>
+          </execution>
+<!-- Very slow and probably not needed on staging
+          <execution>
+            <id>Build docs</id>
+            <goals>
+              <goal>yarn</goal>
+            </goals>
+            <configuration>
+              <arguments>build-storybook</arguments>
+            </configuration>
+          </execution>
+-->
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <id>with-proxy</id>
+      <activation>
+        <property>
+          <name>proxy-server</name>
+        </property>
+      </activation>
+      <properties>
+        <yarn-install-args>--network-concurrency=30 --child-concurrency=1 --network-timeout=100000</yarn-install-args>
+      </properties>
+      <build>
+        <plugins>
+          <plugin>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>require-proxy-properties</id>
+                <goals>
+                  <goal>enforce</goal>
+                </goals>
+                <configuration>
+                  <rules>
+                    <requireProperty>
+                      <property>proxy-user</property>
+                    </requireProperty>
+                    <requireProperty>
+                      <property>proxy-password</property>
+                    </requireProperty>
+                    <requireProperty>
+                      <property>proxy-port</property>
+                    </requireProperty>
+                  </rules>
+                  <fail>true</fail>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>set https proxy</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>yarn</goal>
+                </goals>
+                <configuration>
+                  <arguments>config set https-proxy http://${proxy-user}:${proxy-password}@${proxy-server}:${proxy-port}</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>set http proxy</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>yarn</goal>
+                </goals>
+                <configuration>
+                  <arguments>config set proxy http://${proxy-user}:${proxy-password}@${proxy-server}:${proxy-port}</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>set maxconn</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>yarn</goal>
+                </goals>
+                <configuration>
+                  <arguments>config set maxsockets 30</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>with-custom-registry</id>
+      <activation>
+        <property>
+          <name>custom-registry</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>set registry</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>config set registry ${custom-registry}</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>yarn set registry</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>yarn</goal>
+                </goals>
+                <configuration>
+                  <arguments>config set registry ${custom-registry}</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>insecure</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>yarn set no-strict ssl</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>yarn</goal>
+                </goals>
+                <configuration>
+                  <arguments>config set strict-ssl false</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>rebuild-saas</id>
+      <activation>
+        <property>
+          <name>sass-binary-site</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>yarn set sass binary url</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>config set sass-binary-site ${sass-binary-site}</arguments>
+                </configuration>
+              </execution>
+              <execution>
+                <id>install node-sass</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>npm</goal>
+                </goals>
+                <configuration>
+                  <arguments>install --global-style node-sass@4.9.0 ${npm-verbose} --max-sockets=30 --fetch-retry-mintimeout=60000 --fetch-retries=10</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>verbose</id>
+      <properties>
+        <yarn-verbose>--verbose</yarn-verbose>
+        <npm-verbose>--loglevel=silly</npm-verbose>
+      </properties>
+    </profile>
+    <profile>
+      <id>flash</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clean-plugin</artifactId>
+            <configuration combine.self="override">
+              <followSymLinks>false</followSymLinks>
+              <filesets>
+                <fileset>
+                  <directory>dist</directory>
+                  <includes>
+                    <include>**/*</include>
+                  </includes>
+                </fileset>
+              </filesets>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>yarn ng lint</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>yarn ng test</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>yarn ng build</id>
+                <goals>
+                  <goal>yarn</goal>
+                </goals>
+                <configuration>
+                  <arguments>build:flash</arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>image</id>
+      <activation>
+        <property>
+          <name>::image</name>
+        </property>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>io.fabric8</groupId>
+            <artifactId>fabric8-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>exec</id>
+                <phase>package</phase>
+                <goals>
+                  <goal>build</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <!-- Important here, otherwise fmp silently ignores the build config -->
+              <skipBuildPom>false</skipBuildPom>
+              <verbose>true</verbose>
+                <!-- Only when running in openshift: -->
+              <buildStrategy>docker</buildStrategy>
+              <images>
+                <image>
+                  <name>syndesis/syndesis-ui:latest-react</name>
+                  <build>
+                    <assembly>
+                      <inline>
+                        <fileSet>
+                          <directory>syndesis/build</directory>
+                        </fileSet>
+                      </inline>
+                    </assembly>
+                    <dockerFile>${basedir}/docker/Dockerfile</dockerFile>
+                  </build>
+                </image>
+              </images>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
+</project>

@@ -1,0 +1,9 @@
+<div *ngIf="loading; else apicurioTpl">
+  loading... {{loading}}
+</div>
+<ng-template #apicurioTpl>
+  <app-apicurio-host
+    [specification]="specification"
+    (onSpecification)="onSpecification($event)"
+  ></app-apicurio-host>
+</ng-template>

@@ -1,0 +1,17 @@
+{
+  "connectionCardMenuTitle": "Azioni di Connessione",
+  "connectionDeletedFailed": "Si è verificato un errore durante l'eliminazione della connessione \"{{connectionName}}.\" Dettagli: {{details}}",
+  "connectionDeletedSuccess": "La connessione \"{{connectionName}}\" è stata cancellata con successo.",
+  "connectionDetailPageTitle": "Dettagli di Connessione",
+  "deleteModalMessage": "Sei sicuro di voler eliminare la connessione \"{{connectionName}}\"?",
+  "deleteModalTitle": "Conferma Elimina?",
+  "descriptionPlaceholder": "Inserisci la descrizione della connessione...",
+  "detailsSectionTitle": "Configurazione {{connectionName}}",
+  "duplicateNameError": "Quel nome è preso. Prova un altro.",
+  "errorSavingConnection": "Errore imprevisto del server durante il salvataggio della connessione.",
+  "errorValidatingDetails": "Errore imprevisto del server che convalida i dettagli della connessione.",
+  "errorValidatingName": "Errore imprevisto del server che convalida il nome della connessione.",
+  "namePlaceholder": "Devi inserire un nome di connessione...",
+  "usedByOne": "Utilizzato da 1 integrazione",
+  "usedByMulti": "Utilizzato dalle integrazioni {{count}} volte"
+}

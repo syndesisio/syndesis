@@ -1,0 +1,11 @@
+.Loader.is-block {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.Loader.is-inline {
+  display: inline-flex;
+  align-items: center;
+}

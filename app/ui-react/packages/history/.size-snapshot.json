@@ -1,0 +1,50 @@
+{
+  "esm/history.js": {
+    "bundled": 28557,
+    "minified": 12544,
+    "gzipped": 3664,
+    "treeshaked": {
+      "rollup": {
+        "code": 208,
+        "import_statements": 132
+      },
+      "webpack": {
+        "code": 1324
+      }
+    }
+  },
+  "umd/history.js": {
+    "bundled": 33516,
+    "minified": 12134,
+    "gzipped": 4006
+  },
+  "umd/history.min.js": {
+    "bundled": 30879,
+    "minified": 10184,
+    "gzipped": 3592
+  },
+  "esm/@syndesis/history.js": {
+    "bundled": 28122,
+    "minified": 12371,
+    "gzipped": 3583,
+    "treeshaked": {
+      "rollup": {
+        "code": 208,
+        "import_statements": 132
+      },
+      "webpack": {
+        "code": 1324
+      }
+    }
+  },
+  "umd/@syndesis/history.js": {
+    "bundled": 33067,
+    "minified": 11961,
+    "gzipped": 3925
+  },
+  "umd/@syndesis/history.min.js": {
+    "bundled": 30430,
+    "minified": 10011,
+    "gzipped": 3510
+  }
+}

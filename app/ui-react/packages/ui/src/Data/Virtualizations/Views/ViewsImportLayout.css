@@ -1,0 +1,54 @@
+.views-import-layout {
+  flex: 1 0;
+  display: flex;
+  flex-flow: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.views-import-layout__body {
+  display: flex;
+  flex: 1 0;
+}
+
+.views-import-layout__contentOuter {
+  display: flex;
+  flex-flow: column;
+}
+
+.views-import-layout__sectionLight,
+/* hack to make the toolbar match the header */
+.views-import-layout__contentOuter .toolbar-pf {
+  background-color: var(--pf-global--BackgroundColor--200);
+}
+
+@media (min-width: 768px) {
+  .views-import-layout {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+  }
+
+  .views-import-layout__header {
+    border-bottom: 1px solid #ededed;
+  }
+
+  .views-import-layout__body {
+    flex: 1 0;
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .views-import-layout__contentOuter {
+    overflow: auto;
+    padding: 0;
+    width: 100%;
+  }
+
+  .views-import-layout__contentInner {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+  }
+}

@@ -79,33 +79,38 @@ jobs:
     <<: *job_defaults
     environment:
       DOCKER_IMAGES: syndesis-ui
+      CHROME_BIN: "/usr/bin/google-chrome"
       <<: *common_env
     steps:
       - setup_remote_docker
       - checkout
       - restore_cache:
-          key: syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
+          key: syndesis-mvn-ui-{{ checksum "app/ui-angular/pom.xml" }}
       - restore_cache:
-          key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
+          key: syndesis-yarn-{{ checksum "app/ui-angular/yarn.lock" }}
       - run:
           name: Build UI
           command: |
             apt-get update
-            apt-get install libxss1 patch
-            ./tools/bin/syndesis build --batch-mode --module ui --docker | tee build_log.txt
+            apt-get install libxss1 patch apt-transport-https
+            echo "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+            curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+            apt-get update
+            apt-get install -y --no-install-recommends  google-chrome-stable fontconfig fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-symbola fonts-noto ttf-freefont
+            ./tools/bin/syndesis build --batch-mode --module ui-angular,ui-react --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
       - store_artifacts:
           path: ./build_ui_log.txt
       - save_cache:
-          key: syndesis-yarn-{{ checksum "app/ui/yarn.lock" }}
+          key: syndesis-yarn-{{ checksum "app/ui-angular/yarn.lock" }}
           paths:
           - /usr/local/share/.cache/yarn/v1
       - store_artifacts:
           path: build_log.txt
       - save_cache:
-          key: syndesis-mvn-ui-{{ checksum "app/ui/pom.xml" }}
+          key: syndesis-mvn-ui-{{ checksum "app/ui-angular/pom.xml" }}
           paths:
           - ~/.m2
       - <<: *push_images
