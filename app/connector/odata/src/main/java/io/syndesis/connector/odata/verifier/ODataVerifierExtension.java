@@ -22,6 +22,8 @@ import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExt
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
+import org.apache.camel.component.extension.ComponentVerifierExtension.VerificationError;
+import org.apache.camel.component.extension.ComponentVerifierExtension.VerificationError.StandardCode;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -87,27 +89,43 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
                 HttpGet httpGet = new HttpGet(serviceUrl + METADATA_ENDPOINT);
                 CloseableHttpResponse response = httpClient.execute(httpGet);
                 if (response.getStatusLine().getStatusCode() == 401) {
+                    String msg = "Cannot authenticate to service URL";
+                    LOGGER.error(msg);
                     builder
-                        .error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Cannot authenticate to serviceUrl").parameterKey(SERVICE_URI).build());
+                        .error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
+                               .parameterKey(SERVICE_URI).build());
                 } else if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
                     // 2xx is OK, anything else we regard as failure
+                    String msg = "Invalid service URL";
+                    LOGGER.error(msg);
                     builder
-                        .error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid serviceUrl").parameterKey(SERVICE_URI).build());
+                        .error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
+                               .parameterKey(SERVICE_URI).build());
                 }
 
             } catch (CertificateException e) {
-                builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Invalid certificate: " + e.getMessage()).
-                              parameterKey(SERVER_CERTIFICATE).
-                              build());
+                String msg = "Invalid certificate: " + e.getMessage();
+                LOGGER.error(msg, e);
+                builder.error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
+                              .detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
+                              .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
+                              .parameterKey(SERVER_CERTIFICATE)
+                              .build());
             } catch (Exception e) {
-                builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, "Failure to communicate with serviceUrl: " + e.getMessage()).
-                              parameterKey(SERVICE_URI).parameterKey(SERVER_CERTIFICATE).
-                              build());
+                String msg = "Failure to communicate with service URL";
+                LOGGER.error(msg, e);
+                builder.error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
+                              .detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
+                              .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
+                              .parameterKey(SERVICE_URI).parameterKey(SERVER_CERTIFICATE)
+                              .build());
             }
 
         } else {
+            String msg = "Invalid blank OData service URL";
+            LOGGER.error(msg);
             builder.error(
-                ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Invalid blank OData service URL")
+                ResultErrorBuilder.withCodeAndDescription(StandardCode.ILLEGAL_PARAMETER_VALUE, msg)
                     .parameterKey(SERVICE_URI)
                     .build()
             );
