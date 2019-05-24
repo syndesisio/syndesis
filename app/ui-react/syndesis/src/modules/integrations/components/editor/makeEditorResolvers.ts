@@ -265,10 +265,10 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
     },
     apiProvider: {
       editSpecification: makeResolver<
-        IApiProviderConfigureStep,
+        IApiProviderReviewStep,
         IBaseApiProviderRouteParams,
-        IBaseApiProviderRouteState
-      >(esr.apiProvider.editSpecification, apiProviderMapper),
+        IReviewActionsRouteState
+      >(esr.apiProvider.editSpecification, apiProviderReviewActionsMapper),
       selectMethod: makeResolver<
         IApiProviderConfigureStep,
         IBaseApiProviderRouteParams,
@@ -279,7 +279,11 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
         IBaseApiProviderRouteParams,
         IReviewActionsRouteState
       >(esr.apiProvider.reviewActions, apiProviderReviewActionsMapper),
-      setInfo: makeResolverNoParams('todo set info'),
+      setInfo: makeResolver<
+        IApiProviderReviewStep,
+        IBaseApiProviderRouteParams,
+        IReviewActionsRouteState
+      >(esr.apiProvider.setInfo, apiProviderReviewActionsMapper),
       reviewOperations: makeResolverNoParams('todo review operations'),
     },
     basicFilter: makeResolver<

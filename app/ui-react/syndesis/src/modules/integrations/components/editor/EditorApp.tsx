@@ -247,6 +247,23 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       cancelHref={(params, state) =>
         appResolvers.apiProvider.selectMethod({ ...params, ...state })
       }
+      editHref={(params, state) =>
+        appResolvers.apiProvider.editSpecification({ ...params, ...state })
+      }
+      nextHref={(params, state) =>
+        appResolvers.apiProvider.setInfo({ ...params, ...state })
+      }
+    />
+  );
+
+  const editSpecificationPage = (
+    <EditSpecificationPage
+      cancelHref={(params, state) =>
+        appResolvers.apiProvider.selectMethod({ ...params, ...state })
+      }
+      saveHref={(params, state) =>
+        appResolvers.apiProvider.reviewActions({ ...params, ...state })
+      }
     />
   );
 
@@ -269,7 +286,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           reviewActionsPath: appStepRoutes.apiProvider.reviewActions,
           reviewActionsChildren: reviewActionsPage,
           editSpecificationPath: appStepRoutes.apiProvider.editSpecification,
-          editSpecificationChildren: <EditSpecificationPage />,
+          editSpecificationChildren: editSpecificationPage,
           setInfoPath: appStepRoutes.apiProvider.setInfo,
           setInfoChildren: <SetInfoPage />,
           reviewOperationsPath: appStepRoutes.apiProvider.reviewOperations,

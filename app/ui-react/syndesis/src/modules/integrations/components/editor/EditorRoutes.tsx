@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import { EditSpecificationPage } from './apiProvider/EditSpecificationPage';
+import { IEditSpecificationPageProps } from './apiProvider/EditSpecificationPage';
 import { IReviewActionsPageProps } from './apiProvider/ReviewActionsPage';
 import { ReviewOperationsPage } from './apiProvider/ReviewOperationsPage';
 import { SelectMethodPage } from './apiProvider/SelectMethodPage';
@@ -49,7 +49,7 @@ export interface IApiProviderAppProps {
   reviewActionsPath: string;
   reviewActionsChildren: React.ReactElement<IReviewActionsPageProps>;
   editSpecificationPath: string;
-  editSpecificationChildren: React.ReactElement<EditSpecificationPage>;
+  editSpecificationChildren: React.ReactElement<IEditSpecificationPageProps>;
   setInfoPath: string;
   setInfoChildren: React.ReactElement<SetInfoPage>;
   reviewOperationsPath: string;

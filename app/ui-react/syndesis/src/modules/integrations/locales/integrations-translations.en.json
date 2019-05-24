@@ -78,7 +78,8 @@
   },
   "apiProvider": {
     "editSpecification": {
-      "title": "Provide API Definition"
+      "title": "Provide API Definition",
+      "description": "This description has not yet been actually defined, please send help."
     },
     "reviewActions": {
       "btnReviewEdit": "Review/Edit",

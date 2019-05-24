@@ -2,6 +2,7 @@ import { useApiProvider } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
   ApiProviderReviewActions,
+  ButtonLink,
   IntegrationEditorLayout,
   PageLoader,
   PageSection,
@@ -17,7 +18,8 @@ import {
 
 export const ReviewSpecification: React.FunctionComponent<{
   specification: string;
-}> = ({ specification }) => {
+  children: (specification: string) => any;
+}> = ({ specification, children }) => {
   const [apiSummary, loading, error] = useApiProvider(specification);
 
   return (
@@ -28,23 +30,26 @@ export const ReviewSpecification: React.FunctionComponent<{
       errorChildren={<ApiError />}
     >
       {() => (
-        <ApiProviderReviewActions
-          i18nApiDefinitionHeading={'API DEFINITION'}
-          i18nDescriptionLabel={'Description'}
-          i18nImportedHeading={'IMPORTED'}
-          i18nNameLabel={'Name'}
-          apiProviderDescription={apiSummary!.description}
-          apiProviderName={apiSummary!.name}
-          i18nOperationsHtmlMessage={`<strong>${
-            apiSummary!.actionsSummary!.totalActions
-          }</strong> operations`}
-          i18nWarningsHeading={`WARNINGS <strong> ${
-            apiSummary!.warnings!.length
-          }</strong>`}
-          warningMessages={apiSummary!.warnings!.map(warning => {
-            return (warning as any).message;
-          })}
-        />
+        <>
+          <ApiProviderReviewActions
+            i18nApiDefinitionHeading={'API DEFINITION'}
+            i18nDescriptionLabel={'Description'}
+            i18nImportedHeading={'IMPORTED'}
+            i18nNameLabel={'Name'}
+            apiProviderDescription={apiSummary!.description}
+            apiProviderName={apiSummary!.name}
+            i18nOperationsHtmlMessage={`<strong>${
+              apiSummary!.actionsSummary!.totalActions
+            }</strong> operations`}
+            i18nWarningsHeading={`WARNINGS <strong> ${
+              apiSummary!.warnings!.length
+            }</strong>`}
+            warningMessages={apiSummary!.warnings!.map(warning => {
+              return (warning as any).message;
+            })}
+          />
+          {children(apiSummary!.configuredProperties!.specification)}
+        </>
       )}
     </WithLoader>
   );
@@ -52,6 +57,14 @@ export const ReviewSpecification: React.FunctionComponent<{
 
 export interface IReviewActionsPageProps {
   cancelHref: (
+    p: IBaseApiProviderRouteParams,
+    s: IReviewActionsRouteState
+  ) => H.LocationDescriptor;
+  editHref: (
+    p: IBaseApiProviderRouteParams,
+    s: IReviewActionsRouteState
+  ) => H.LocationDescriptor;
+  nextHref: (
     p: IBaseApiProviderRouteParams,
     s: IReviewActionsRouteState
   ) => H.LocationDescriptor;
@@ -64,7 +77,7 @@ export interface IReviewActionsPageProps {
  */
 export const ReviewActionsPage: React.FunctionComponent<
   IReviewActionsPageProps
-> = ({ cancelHref }) => {
+> = ({ cancelHref, editHref, nextHref }) => {
   return (
     <Translation ns={['integrations', 'shared']}>
       {t => (
@@ -81,7 +94,29 @@ export const ReviewActionsPage: React.FunctionComponent<
                 )}
                 content={
                   <PageSection>
-                    <ReviewSpecification specification={state.specification} />
+                    <ReviewSpecification specification={state.specification}>
+                      {(specification: string) => (
+                        <>
+                          <ButtonLink
+                            href={editHref(params, {
+                              ...state,
+                              specification,
+                            })}
+                          >
+                            Review/Edit
+                          </ButtonLink>
+                          <ButtonLink
+                            href={nextHref(params, {
+                              ...state,
+                              specification,
+                            })}
+                            as={'primary'}
+                          >
+                            Next
+                          </ButtonLink>
+                        </>
+                      )}
+                    </ReviewSpecification>
                   </PageSection>
                 }
                 cancelHref={cancelHref(params, state)}
