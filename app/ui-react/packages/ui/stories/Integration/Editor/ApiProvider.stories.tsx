@@ -37,49 +37,41 @@ const stories = storiesOf('Integration/Editor/ApiProvider', module);
 
 stories
   .add('Select Method', () => (
-    <>
-      <ApiProviderSelectMethod
-        i18nMethodFromFile={'Upload an OpenAPI file'}
-        i18nMethodFromScratch={'Create from scratch'}
-        i18nMethodFromUrl={'Use a URL'}
-        i18nUrlNote={
-          '* Note: After uploading this document, Syndesis does not automatically obtain any updates to it.'
-        }
-        disableDropzone={boolean('Disabled', false)}
-        fileExtensions={fileExtensions}
-        handleSubmit={handleSubmit}
-        i18nHelpMessage={helpMessage}
-        i18nInstructions={instructions}
-        i18nNoFileSelectedMessage={noFileSelectedMessage}
-        i18nSelectedFileLabel={selectedFileLabel}
-        i18nUploadFailedMessage={text('Fail Message', 'Upload failed')}
-        i18nUploadSuccessMessage={text('Success Message', undefined)}
-        onUploadAccepted={handleFiles}
-        onUploadRejected={uploadFailedMessage}
-      />
-    </>
+    <ApiProviderSelectMethod
+      i18nMethodFromFile={'Upload an OpenAPI file'}
+      i18nMethodFromScratch={'Create from scratch'}
+      i18nMethodFromUrl={'Use a URL'}
+      i18nUrlNote={
+        '* Note: After uploading this document, Syndesis does not automatically obtain any updates to it.'
+      }
+      disableDropzone={boolean('Disabled', false)}
+      fileExtensions={fileExtensions}
+      handleSubmit={handleSubmit}
+      i18nHelpMessage={helpMessage}
+      i18nInstructions={instructions}
+      i18nNoFileSelectedMessage={noFileSelectedMessage}
+      i18nSelectedFileLabel={selectedFileLabel}
+      i18nUploadFailedMessage={text('Fail Message', 'Upload failed')}
+      i18nUploadSuccessMessage={text('Success Message', undefined)}
+      onUploadAccepted={handleFiles}
+      onUploadRejected={uploadFailedMessage}
+    />
   ))
   .add('Review Actions', () => (
-    <>
-      <ApiProviderReviewActions
-        apiProviderDescription={'the description'}
-        apiProviderName={'theName'}
-        i18nApiDefinitionHeading={'API DEFINITION'}
-        i18nDescriptionLabel={'Description'}
-        i18nImportedHeading={'IMPORTED'}
-        i18nNameLabel={'Name'}
-        i18nOperationsHtmlMessage={'<strong>49</strong> operations'}
-        i18nOperationTagHtmlMessages={[
-          '- <strong>1</strong> tagged KIE Server Script :: Core',
-          '- <strong>23</strong> tagged User tasks administration :: BPM',
-          '- <strong>24</strong> tagged Queries - processes, nodes, variables and tasks :: BPM',
-          '- <strong>1</strong> tagged Rules evaluation :: Core',
-        ]}
-      />
-    </>
+    <ApiProviderReviewActions
+      apiProviderDescription={'the description'}
+      apiProviderName={'theName'}
+      i18nApiDefinitionHeading={'API DEFINITION'}
+      i18nDescriptionLabel={'Description'}
+      i18nImportedHeading={'IMPORTED'}
+      i18nNameLabel={'Name'}
+      i18nOperationsHtmlMessage={'<strong>49</strong> operations'}
+      i18nOperationTagHtmlMessages={[
+        '- <strong>1</strong> tagged KIE Server Script :: Core',
+        '- <strong>23</strong> tagged User tasks administration :: BPM',
+        '- <strong>24</strong> tagged Queries - processes, nodes, variables and tasks :: BPM',
+        '- <strong>1</strong> tagged Rules evaluation :: Core',
+      ]}
+    />
   ))
-  .add('Review Operations', () => (
-    <>
-      <ApiProviderReviewOperations />
-    </>
-  ));
+  .add('Review Operations', () => <ApiProviderReviewOperations />);
