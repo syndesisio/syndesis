@@ -1,7 +1,7 @@
 import * as H from '@syndesis/history';
+import classNames from 'classnames';
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
-import classNames from 'classnames';
 import { ButtonLink } from '../../../Layout';
 
 import './ApiProviderReviewOperationsItem.css';
