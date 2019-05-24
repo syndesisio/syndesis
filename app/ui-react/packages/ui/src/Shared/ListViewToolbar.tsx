@@ -59,7 +59,7 @@ export interface IListViewToolbarProps {
 export class ListViewToolbar extends React.Component<IListViewToolbarProps> {
   public render() {
     return (
-      <Toolbar>
+      <Toolbar className="list-view-toolbar">
         <Filter>
           <Filter.TypeSelector
             filterTypes={this.props.filterTypes}
