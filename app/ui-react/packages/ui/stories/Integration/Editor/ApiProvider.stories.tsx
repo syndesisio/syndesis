@@ -76,7 +76,6 @@ stories
           '- <strong>24</strong> tagged Queries - processes, nodes, variables and tasks :: BPM',
           '- <strong>1</strong> tagged Rules evaluation :: Core',
         ]}
-        i18nTitle={'Review Actions'}
       />
     </>
   ))
