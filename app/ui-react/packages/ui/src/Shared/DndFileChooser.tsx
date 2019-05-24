@@ -291,7 +291,7 @@ export class DndFileChooser extends React.Component<
             {this.props.i18nHelpMessage ? (
               <Grid.Row>
                 <Grid.Col className="dnd-file-chooser__helpText">
-                  {this.props.i18nHelpMessage}
+                  <em>{this.props.i18nHelpMessage}</em>
                 </Grid.Col>
               </Grid.Row>
             ) : null}
