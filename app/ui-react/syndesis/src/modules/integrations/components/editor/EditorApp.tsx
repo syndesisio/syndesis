@@ -56,7 +56,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     <SelectConnectionPage
       cancelHref={cancelHref}
       apiProviderHref={(step, params, state) =>
-        appResolvers.apiProvider.editSpecification({
+        appResolvers.apiProvider.selectMethod({
           step,
           ...params,
           ...state,
@@ -228,6 +228,8 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     />
   );
 
+  const selectMethodPage = <SelectMethodPage cancelHref={cancelHref} />;
+
   return (
     <>
       <EditorRoutes
@@ -243,7 +245,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         }}
         apiProvider={{
           selectMethodPath: appStepRoutes.apiProvider.selectMethod,
-          selectMethodChildren: <SelectMethodPage />,
+          selectMethodChildren: selectMethodPage,
           reviewActionsPath: appStepRoutes.apiProvider.reviewActions,
           reviewActionsChildren: <ReviewActionsPage />,
           editSpecificationPath: appStepRoutes.apiProvider.editSpecification,

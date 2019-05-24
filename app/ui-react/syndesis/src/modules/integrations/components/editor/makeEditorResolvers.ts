@@ -196,7 +196,11 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
         IConfigureStepRouteParams,
         IConfigureStepRouteState
       >(esr.apiProvider.editSpecification, configureConfigureStepMapper),
-      selectMethod: makeResolverNoParams('todo select method'),
+      selectMethod: makeResolver<
+        IEditorConfigureStep,
+        IConfigureStepRouteParams,
+        IConfigureStepRouteState
+      >(esr.apiProvider.selectMethod, configureConfigureStepMapper),
       reviewActions: makeResolverNoParams('todo review actions'),
       setInfo: makeResolverNoParams('todo set info'),
       reviewOperations: makeResolverNoParams('todo review operations'),
