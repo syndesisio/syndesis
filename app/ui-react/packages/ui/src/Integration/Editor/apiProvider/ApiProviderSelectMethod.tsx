@@ -1,6 +1,5 @@
 import {
   Col,
-  ControlLabel,
   Form,
   FormControl,
   FormGroup,
@@ -59,7 +58,7 @@ export class ApiProviderSelectMethod extends React.Component<
               <FormGroup controlId={'method'} disabled={false}>
                 <div>
                   <Radio name={'method'}>
-                    <ControlLabel>{this.props.i18nMethodFromFile}</ControlLabel>
+                    <div>{this.props.i18nMethodFromFile}</div>
                     <div>
                       <Container style={{ margin: '50px' }}>
                         <DndFileChooser
@@ -93,13 +92,13 @@ export class ApiProviderSelectMethod extends React.Component<
                     </div>
                   </Radio>
                   <Radio name={'method'}>
-                    <ControlLabel>{this.props.i18nMethodFromUrl}</ControlLabel>
-                    <FormControl type="text" disabled={false} />
+                    <div>{this.props.i18nMethodFromUrl}</div>
+                    <div>
+                      <FormControl type={'text'} disabled={false} />
+                    </div>
                   </Radio>
                   <Radio name={'method'}>
-                    <ControlLabel>
-                      {this.props.i18nMethodFromScratch}
-                    </ControlLabel>
+                    <div>{this.props.i18nMethodFromScratch}</div>
                   </Radio>
                 </div>
               </FormGroup>
