@@ -18,6 +18,11 @@ export interface IApiProviderSelectMethodProps {
   disableDropzone: boolean;
   fileExtensions?: string;
   /**
+   * The callback fired when submitting the form.
+   * @param e
+   */
+  handleSubmit: (e?: any) => void;
+  /**
    * Localized strings to be displayed.
    */
   i18nHelpMessage?: string;
@@ -46,20 +51,44 @@ export interface IApiProviderSelectMethodProps {
   onUploadRejected(fileName: string): string;
 }
 
+export interface IApiProviderSelectMethodState {
+  method: string;
+}
+
 export class ApiProviderSelectMethod extends React.Component<
-  IApiProviderSelectMethodProps
+  IApiProviderSelectMethodProps,
+  IApiProviderSelectMethodState
 > {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      method: 'file',
+    };
+
+    this.onChangeMethod = this.onChangeMethod.bind(this);
+  }
+
+  public onChangeMethod(newMethod: string) {
+    console.log('this.state.method before: ' + this.state.method);
+    console.log('newMethod: ' + JSON.stringify(newMethod));
+    this.setState({ method: newMethod });
+    console.log('this.state.method after: ' + this.state.method);
+  }
+
   public render() {
     return (
       <Grid>
-        <Form>
+        <Form onSubmit={this.props.handleSubmit}>
           <Row>
             <Col>
               <FormGroup controlId={'method'} disabled={false}>
                 <div>
-                  <Radio name={'method'}>
+                  <Radio
+                    name={'method'}
+                    onClick={() => this.onChangeMethod('file')}
+                  >
                     <div>{this.props.i18nMethodFromFile}</div>
-                    <div>
+                    {this.state.method === 'file' && (
                       <Container style={{ margin: '50px' }}>
                         <DndFileChooser
                           allowMultiple={this.props.allowMultiple}
@@ -89,15 +118,23 @@ export class ApiProviderSelectMethod extends React.Component<
                           onUploadRejected={this.props.onUploadRejected}
                         />
                       </Container>
-                    </div>
+                    )}
                   </Radio>
-                  <Radio name={'method'}>
+                  <Radio
+                    name={'method'}
+                    onClick={() => this.onChangeMethod('url')}
+                  >
                     <div>{this.props.i18nMethodFromUrl}</div>
-                    <div>
-                      <FormControl type={'text'} disabled={false} />
-                    </div>
+                    {this.state.method === 'url' && (
+                      <div>
+                        <FormControl type={'text'} disabled={false} />
+                      </div>
+                    )}
                   </Radio>
-                  <Radio name={'method'}>
+                  <Radio
+                    name={'method'}
+                    onClick={() => this.onChangeMethod('scratch')}
+                  >
                     <div>{this.props.i18nMethodFromScratch}</div>
                   </Radio>
                 </div>

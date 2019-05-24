@@ -24,6 +24,9 @@ const logUploadFailedMessage = action('upload failed message handler');
 const logUploadSucceedMessage = action('upload succeeded message handler');
 
 const selectedFileLabel = 'Selected file:';
+const handleSubmit = (e: Event) => {
+  action('Handle form here');
+};
 const uploadFailedMessage = (fileName: string) => {
   logUploadFailedMessage();
   return (
@@ -45,6 +48,7 @@ stories
         }
         disableDropzone={boolean('Disabled', false)}
         fileExtensions={fileExtensions}
+        handleSubmit={handleSubmit}
         i18nHelpMessage={helpMessage}
         i18nInstructions={instructions}
         i18nNoFileSelectedMessage={noFileSelectedMessage}
