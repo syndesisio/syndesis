@@ -25,7 +25,6 @@ export interface IApiProviderReviewActionsProps {
   i18nNameLabel: string;
   i18nOperationsHtmlMessage: string;
   i18nOperationTagHtmlMessages?: string[];
-  i18nTitle: string;
   i18nValidationFallbackMessage?: string;
   i18nWarningsHeading?: string;
   warningMessages?: string[];
@@ -37,9 +36,6 @@ export class ApiProviderReviewActions extends React.Component<
   public render() {
     return (
       <Card className={'api-provider-review-actions'}>
-        <Card.Heading>
-          <Card.Title>{this.props.i18nTitle}</Card.Title>
-        </Card.Heading>
         <Card.Body>
           {this.props.i18nValidationFallbackMessage ? (
             <h5 className={'review-actions__validationFallbackMessage'}>
