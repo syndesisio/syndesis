@@ -1,4 +1,3 @@
-export * from './ApiProviderEditSpecification';
 export * from './ApiProviderReviewActions';
 export * from './ApiProviderReviewOperations';
 export * from './ApiProviderReviewOperationsItem';

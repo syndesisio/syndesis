@@ -59,6 +59,10 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                 history.push(this.props.getReviewHref(url, params, state));
               };
 
+              const handleSubmit = (...args: any[]) => {
+                console.log('handleSubmit', args);
+              };
+
               return (
                 <>
                   <PageTitle
@@ -108,7 +112,7 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                           i18nUrlNote={t(
                             'integrations:apiProvider:selectMethod:urlNote'
                           )}
-                          handleSubmit={onUrl}
+                          handleSubmit={handleSubmit}
                         />
                         <ButtonLink
                           onClick={() =>
