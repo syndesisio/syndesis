@@ -96,9 +96,6 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                           )}
                           onUploadAccepted={handleFiles}
                           onUploadRejected={uploadFailedMessage}
-                          i18nDescription={t(
-                            'integrations:apiProvider:selectMethod:description'
-                          )}
                           i18nMethodFromFile={t(
                             'integrations:apiProvider:selectMethod:methodFromFile'
                           )}
@@ -111,6 +108,7 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                           i18nUrlNote={t(
                             'integrations:apiProvider:selectMethod:urlNote'
                           )}
+                          handleSubmit={onUrl}
                         />
                         <ButtonLink
                           onClick={() =>
