@@ -147,6 +147,22 @@
             <div *ngIf="!hideButtons && isAlternateFlow(currentFlow)" class="toolbar-pf-action-right">
               <button
                 class="btn btn-default"
+                (click)="flowPageService.cancel()"
+                *ngIf="flowPageService.showCancel && flowPageService.showDone"
+              >
+                Cancel
+              </button>
+              <button
+                class="btn btn-primary"
+                (click)="flowPageService.done()"
+                [disabled]="flowPageService.doneDisabled"
+                *ngIf="flowPageService.showDone"
+              >
+                Done
+              </button>
+              <button
+                class="btn btn-default"
+                *ngIf="!flowPageService.showDone"
                 [disabled]="
                       flowPageService.saveInProgress ||
                       flowPageService.publishInProgress
