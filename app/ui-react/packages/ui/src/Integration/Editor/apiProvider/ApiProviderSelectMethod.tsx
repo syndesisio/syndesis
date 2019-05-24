@@ -69,15 +69,12 @@ export class ApiProviderSelectMethod extends React.Component<
   }
 
   public onChangeMethod(newMethod: string) {
-    console.log('this.state.method before: ' + this.state.method);
-    console.log('newMethod: ' + JSON.stringify(newMethod));
     this.setState({ method: newMethod });
-    console.log('this.state.method after: ' + this.state.method);
   }
 
   public render() {
     return (
-      <Grid>
+      <Grid className={'api-provider-select-method'}>
         <Form onSubmit={this.props.handleSubmit}>
           <Row>
             <Col>
@@ -128,6 +125,10 @@ export class ApiProviderSelectMethod extends React.Component<
                     {this.state.method === 'url' && (
                       <div>
                         <FormControl type={'text'} disabled={false} />
+                        <br />
+                        <span className={'url-note'}>
+                          {this.props.i18nUrlNote}
+                        </span>
                       </div>
                     )}
                   </Radio>
