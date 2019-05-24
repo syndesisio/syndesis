@@ -79,6 +79,7 @@ jobs:
     <<: *job_defaults
     environment:
       DOCKER_IMAGES: syndesis-ui
+      CHROME_BIN: "/usr/bin/google-chrome"
       <<: *common_env
     steps:
       - setup_remote_docker
@@ -91,8 +92,12 @@ jobs:
           name: Build UI
           command: |
             apt-get update
-            apt-get install libxss1 patch
-            ./tools/bin/syndesis build --batch-mode --module ui --docker | tee build_log.txt
+            apt-get install libxss1 patch apt-transport-https
+            echo "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
+            curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+            apt-get update
+            apt-get install -y --no-install-recommends  google-chrome-stable fontconfig fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-symbola fonts-noto ttf-freefont
+            ./tools/bin/syndesis build --batch-mode --module ui-angular,ui-react --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -109,62 +114,6 @@ jobs:
           paths:
           - ~/.m2
       - <<: *push_images
-
-  ui-react:
-    docker:
-      # specify the version you desire here
-      - image: circleci/node:10.13-browsers
-        environment:
-          CHROME_BIN: "/usr/bin/google-chrome"
-
-    # Specify service dependencies here if necessary
-    # CircleCI maintains a library of pre-built images
-    # documented at https://circleci.com/docs/2.0/circleci-images/
-    # - image: circleci/mongo:3.4.4
-
-    working_directory: ~/repo/app/ui-react
-
-    steps:
-      - checkout:
-          path: ~/repo
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "yarn.lock" }}
-            # fallback to using the latest cache if no exact match is found
-            - v2-dependencies-
-
-      - run:
-          name: Install dependencies
-          command: yarn install --frozen-lockfile
-
-      - save_cache:
-          paths:
-            - node_modules
-          key: v2-dependencies-{{ checksum "yarn.lock" }}
-
-      - run:
-          name: Lint project
-          command: yarn lint
-
-
-      - run:
-          name: Build project
-          command: yarn build
-
-      - run:
-          name: Run tests
-          command: yarn test
-
-      - run:
-          name: Build docs
-          command: yarn build-storybook
-
-      - persist_to_workspace:
-          root: ~/repo/app/ui-react
-          paths:
-            - '*'
 
   # Connector depends on integration, mount workspace .m2
   connector:

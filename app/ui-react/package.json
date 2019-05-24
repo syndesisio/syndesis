@@ -53,12 +53,6 @@
     "typescript": "^3.4.5",
     "yalc": "^1.0.0-pre.27"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn precommit",
-      "pre-push": "yarn prepush"
-    }
-  },
   "lint-staged": {
     "syndesis/**/*.{js,ts,tsx,json}": [
       "prettier --write",
