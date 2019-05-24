@@ -1,3 +1,4 @@
+// tslint:disable:no-console
 import * as H from '@syndesis/history';
 import {
   ApiProviderSelectMethod,
