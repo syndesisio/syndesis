@@ -1,0 +1,36 @@
+.integration-flow-step-details {
+  width: 100%;
+  margin-top: 15px;
+  margin-bottom: 40px;
+}
+
+.integration-flow-step-details__title {
+  background-color: #d1d1d1;
+  padding: 2px 20px;
+}
+
+.integration-flow-step-details.is-active .integration-flow-step-details__title {
+  background-color: #158acc;
+  color: #fff;
+}
+
+.integration-flow-step-details__body {
+  padding: 10px 20px;
+}
+
+.integration-flow-step-details.is-active .integration-flow-step-details__body {
+  background-color: #d6eefa;
+}
+
+.integration-flow-step-details__overview {
+  display: flex;
+  margin: 0;
+}
+
+.integration-flow-step-details__overview dt {
+  flex: 0 0 40%;
+}
+
+.integration-flow-step-details__overview dd {
+  flex: 1 1 0;
+}

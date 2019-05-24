@@ -1,0 +1,73 @@
+.integration-editor-layout {
+  flex: 1 0;
+  display: flex;
+  flex-flow: column;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.integration-editor-layout__sidebarOuter {
+  display: none;
+}
+
+.integration-editor-layout__body {
+  display: flex;
+  flex: 1 0;
+}
+
+.integration-editor-layout__contentOuter {
+  display: flex;
+  flex-flow: column;
+}
+
+.integration-editor-layout__sectionLight,
+/* hack to make the connections toolbar match the header */
+.integration-editor-layout__contentOuter .toolbar-pf {
+  background-color: var(--pf-global--BackgroundColor--200);
+}
+
+@media (min-width: 768px) {
+  .integration-editor-layout {
+    height: 100%;
+    display: flex;
+    flex-flow: column;
+  }
+
+  .integration-editor-layout__sidebarOuter {
+    background-color: var(--pf-global--BackgroundColor--200);
+    box-shadow: rgba(3, 3, 3, 0.07) 12px 0 10px -4px;
+    flex: 0 0 auto;
+    display: flex;
+    overflow: hidden;
+    z-index: 1;
+  }
+  .integration-editor-layout__sidebarInner {
+    background-color: var(--pf-global--BackgroundColor--200);
+    display: flex;
+  }
+
+  .integration-editor-layout__header {
+    border-bottom: 1px solid #ededed;
+  }
+
+  .integration-editor-layout__body {
+    flex: 1 0;
+    display: flex;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .integration-editor-layout__contentOuter {
+    overflow: auto;
+    padding: 0;
+    width: 100%;
+  }
+
+  .integration-editor-layout__contentInner {
+    flex: 1;
+    display: flex;
+    flex-flow: column;
+  }
+}
+
+

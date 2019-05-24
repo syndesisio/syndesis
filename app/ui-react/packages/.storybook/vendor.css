@@ -1,0 +1,22 @@
+@import url('~patternfly/dist/css/patternfly.css');
+@import url('~patternfly/dist/css/patternfly-additions.css');
+@import url('~patternfly-react/dist/css/patternfly-react.css');
+
+html,
+body {
+  height: 100%;
+  background: #F5F5F5;
+}
+
+body {
+  box-sizing: border-box;
+}
+
+#root {
+  height: 100%;
+}
+
+#root > div,
+#root > div > div {
+  width: 100%;
+}

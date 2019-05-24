@@ -1,0 +1,17 @@
+{
+  "integrationStatePending": "Pending",
+  "integrationStateRunning": "Running",
+  "integrationStateStopped": "Stopped",
+  "lastNumberOfDays": "Last {{numberOfDays}} Days",
+  "linkToConnections": "View All Connections",
+  "linkToIntegrations": "View All Integrations",
+  "title": "System Metrics",
+  "description": "This description has not yet been actually defined, please send help.",
+  "titleIntegrationBoard": "Integration Board",
+  "titleIntegrationUpdates": "Recent Updates",
+  "titleTopIntegrations": "Top {{count}} Integrations",
+  "titleTotalConnections": "{{count}} Connections",
+  "titleTotalIntegrations": "Integrations",
+  "titleTotalMessages": "Messages",
+  "titleUptimeMetric": "Uptime"
+}

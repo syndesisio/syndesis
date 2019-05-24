@@ -1,0 +1,48 @@
+{
+  "commment": "This config should for testing against a minishift using the syndesis-dev application templates.",
+  "apiBase": "https://syndesis.192.168.64.2.nip.io",
+  "apiEndpoint": "/api/v1",
+  "mapperEndpoint": "/mapper/v1",
+  "metricsPollingInterval": 5000,
+  "consoleUrl": "https://192.168.64.2:8443/console",
+  "project": "syndesis",
+  "branding": {
+    "logoWhiteBg": "assets/images/syndesis_logo_full_darkbkg.svg",
+    "logoDarkBg": "assets/images/syndesis_logo_full_darkbkg.svg",
+    "productBuild": false,
+    "appName": "Syndesis",
+    "favicon32": "/favicon-32x32.png",
+    "favicon16": "/favicon-16x16.png",
+    "touchIcon": "/apple-touch-icon.png"
+  },
+  "datamapper": {
+    "baseMappingServiceUrl": "/api/v1/atlas/",
+    "baseJavaInspectionServiceUrl": "/api/v1/atlas/java/",
+    "baseXMLInspectionServiceUrl": "/api/v1/atlas/xml/",
+    "baseJSONInspectionServiceUrl": "/api/v1/atlas/json/",
+    "disableMappingPreviewMode": false,
+    "discardNonMockSources": false,
+    "addMockJSONMappings": false,
+    "addMockJavaSingleSource": false,
+    "addMockJavaSources": false,
+    "addMockXMLInstanceSources": false,
+    "addMockXMLSchemaSources": false,
+    "addMockJSONSources": false,
+    "addMockJavaTarget": false,
+    "addMockXMLInstanceTarget": false,
+    "addMockXMLSchemaTarget": false,
+    "addMockJSONTarget": false,
+    "debugDocumentServiceCalls": false,
+    "debugMappingServiceCalls": false,
+    "debugClassPathServiceCalls": false,
+    "debugValidationServiceCalls": false,
+    "debugFieldActionServiceCalls": false,
+    "debugDocumentParsing": false
+  },
+  "datavirt": {
+    "dvUrl": "/vdb-builder/v1/"
+  },
+  "features": {
+    "logging": false
+  }
+}

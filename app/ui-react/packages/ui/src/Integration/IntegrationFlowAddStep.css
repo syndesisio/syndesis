@@ -1,0 +1,43 @@
+.integration-flow-add-step {
+  display: flex;
+  z-index: 2;
+  position: relative;
+  justify-content: center;
+  margin: 5px 0;
+}
+
+.integration-flow-add-step__iconWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  background-color: #158acc;
+  font-size: 18px;
+  width: 24px;
+  height: 24px;
+  border-radius: 5px;
+}
+
+.integration-flow-add-step__iconWrapper .fa {
+  color: #fff;
+}
+
+.integration-flow-add-step__iconWrapper::before {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background-color: #d4d4d4;
+  top: -5px;
+  bottom: -5px;
+  left: calc(100% / 2);
+  z-index: -1;
+}
+
+.integration-flow-add-step__links .popover-content {
+  display: flex;
+  flex-flow: column;
+}
+
+.integration-flow-add-step__links .popover-content a {
+  margin: 3px 0;
+}

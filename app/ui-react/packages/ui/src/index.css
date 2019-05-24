@@ -1,0 +1,146 @@
+/* pf3 modules */
+@import url('~patternfly/dist/css/patternfly.css');
+@import url('~patternfly/dist/css/patternfly-additions.css');
+@import url('~patternfly-react/dist/css/patternfly-react.css');
+
+/* pf4 base styles */
+@import url('~@patternfly/react-core/dist/styles/base.css');
+@import url('~@patternfly/patternfly/utilities/Spacing/spacing.css');
+@import url('~@patternfly/patternfly/layouts/Level/level.css');
+@import url('~@patternfly/patternfly/layouts/Split/split.css');
+
+:root {
+  --pf-global--link--Color: #0088ce;
+  --pf-c-nav__list-link--m-current--after--BackgroundColor: #0088ce;
+  --pf-global--link--Color--hover: #00659c;
+  --pf-c-backdrop--Color: rgba(3,3,3,.62);
+}
+
+.pf-c-dropdown {
+  --pf-c-dropdown__toggle--FontSize: var(--pf-global--FontSize--xs);
+}
+
+.pf-c-page {
+  width: 100%;
+  height: 100vh;
+}
+
+.pf-c-dropdown__menu-item {
+  --pf-c-dropdown__menu-item--FontSize: var(--pf-global--FontSize--xs);
+}
+
+body {
+  font-size: var(--pf-global--FontSize--sm);
+  line-height: var(--pf-global--LineHeight--sm);
+  color: var(--pf-global--Color--100);
+}
+
+#root {
+  flex: 1;
+  display: flex;
+}
+
+.navbar-pf .navbar-utility > li > button {
+  padding: 9px 10px;
+}
+
+.blank-slate-pf .blank-slate-pf-secondary-action a {
+  padding: 2px 6px;
+  margin-bottom: 0;
+}
+
+.wizard-pf-footer .wizard-pf-extrabuttons {
+  order: -1;
+  margin-right: 25px;
+}
+
+.wizard-pf-footer .wizard-pf-cancel {
+  order: -2;
+}
+
+.modal-body > div {
+  width: 100%;
+}
+
+.list-view-pf-body .list-group-item-heading {
+  font-size: var(--pf-global--FontSize--sm);
+}
+
+.label {
+  font-size: var(--pf-global--FontSize--xs);
+}
+
+.syn-scrollable {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.syn-scrollable--body {
+  flex: 1 1 auto;
+  overflow: auto;
+}
+
+.pf-c-backdrop {
+  background-color: var(--pf-c-backdrop--Color);
+}
+
+.pf-c-about-modal-box__content dd {
+  word-break: break-word;
+}
+
+.pf-c-content {
+  --pf-c-content--FontSize: var(--pf-global--FontSize--sm);
+  --pf-c-content--dt--FontWeight: bold; /* override for OpenSans not supporting weight 500 */
+}
+
+.pf-c-dropdown__toggle.syn-help-dropdown {
+  --pf-c-dropdown__toggle--FontSize: var(--pf-global--FontSize--md);
+}
+
+.list-view-pf-view {
+  margin-top: 0;
+}
+
+.syn-truncate__ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.pf-c-about-modal-box__hero {
+  background-position: right;
+}
+
+.pf-c-clipboard-copy {
+  display: inline-block;
+  min-width: 455px;
+}
+
+@media (max-width: 768px) {
+  .pf-c-clipboard-copy {
+    display: inline-block;
+    --pf-global--spacer--md: 0;
+  }
+}
+
+.dashboard__metrics .card-pf.card-pf-aggregate-status {
+  padding: 0 10px 24px 10px;
+}
+
+.dashboard__metrics .card-pf-title .card-pf-aggregate-status-count {
+  font-size: 14px;
+}
+
+.dashboard__metrics .metrics-uptime {
+  font-size: 24px;
+  font-weight: 300;
+}
+
+.customization-details__heading {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  padding: 4px 8px;
+}

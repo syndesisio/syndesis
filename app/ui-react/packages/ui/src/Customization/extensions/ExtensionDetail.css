@@ -1,0 +1,16 @@
+.extension-detail__extensionId {
+  font-size: 12px;
+  margin-left: 10px;
+}
+
+.extension-detail__extensionTitle {
+  --pf-c-content--h1--MarginBottom: 0;
+}
+
+.extension-detail__extensionId, .extension-detail__extensionTitle {
+  display: inline-block;
+}
+
+.extension-detail__titleButtons .btn + button {
+  margin-left: 4px;
+}

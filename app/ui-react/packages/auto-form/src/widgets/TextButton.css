@@ -1,0 +1,7 @@
+.text-button-component__button {
+  text-decoration: none;
+  padding: 8px;
+  color: #0088ce;
+  background: none;
+  border: none;
+}

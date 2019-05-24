@@ -1,0 +1,90 @@
+{
+  "it": {
+    "app": {},
+    "modules": {
+      "apiClientConnectors": {},
+      "connections": {},
+      "dashboard": {},
+      "data": {},
+      "extensions": {},
+      "integrations": {},
+      "settings": {}
+    },
+    "shared": {
+      "Actions": "Azioni",
+      "Cancel": "Annulla",
+      "Connection": "Connessione",
+      "Connections": "Connessioni",
+      "Connector": "Connettore",
+      "Create": "Crea",
+      "Customizations": "Personalizzazioni",
+      "DataVirtualization": "Virtualizzazione dei Dati",
+      "DataVirtualizations": "Virtualizzazioni di Dati",
+      "Delete": "Elimina",
+      "Description": "Descrizione",
+      "Details": "Dettagli",
+      "Draft": "Bozza",
+      "Edit": "Modificare",
+      "Error": "Errore",
+      "Export": "Esportare",
+      "Extension": "Estensione",
+      "Extensions": "Estensioni",
+      "filterByNamePlaceholder": "Filtra per Nome",
+      "Home": "Casa",
+      "ID": "ID",
+      "Import": "Importare",
+      "Integrations": "Integrazioni",
+      "Library": "Libreria",
+      "linkCreateConnection": "Crea Connessione",
+      "linkCreateIntegration": "Crea Integrazione",
+      "Name": "Nome",
+      "nameFilterPlaceholder": "Filtra per Nome...",
+      "Pending": "Pendente",
+      "Publish": "Pubblicare",
+      "Published": "Funzionante",
+      "requiredFieldMessage": "* Campo obbligatorio",
+      "resultsCount": "{{count}} Risultati",
+      "Save": "Salvare",
+      "Settings": "Impostazioni",
+      "Status": "Stato",
+      "Step": "Passo",
+      "Steps": "Passi",
+      "Total": "Totale",
+      "Type": "Tipo",
+      "Unpublish": "Non Pubblicato",
+      "Unpublished": "Fermato",
+      "Update": "Aggiornare",
+      "View": "Vista",
+      "uploadFileFailureMessage": "<span>Il file '<strong>{{fileName}}</strong>' non può essere caricato</span>",
+      "Usage": "Uso",
+      "Validate": "Convalidare",
+      "viewLogs": "Visualizza i Registri",
+      "links": {
+        "contactus": "//access.redhat.com/support/cases/#/case/new",
+        "userguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online",
+        "connectorsguide": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/connecting_fuse_online_to_applications_and_services/",
+        "tutorial": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/fuse_online_sample_integration_tutorials/",
+        "oauth-access": "//access.redhat.com/documentation/en-us/red_hat_fuse/$t(project.version)/html-single/integrating_applications_with_fuse_online/#obtaining-authorization-to-access-applications"
+      },
+      "project": {
+        "name": "Syndesis",
+        "version": "7.1"
+      },
+      "error": {
+        "title": "Qualcosa è sbagliato",
+        "info": "Si è verificato un errore durante la conversazione con il server.",
+        "help": "Per favore controlla la tua connessione Internet.",
+        "refreshButton": "Clicca per aggiornare",
+        "reportIssueButton": "Segnala il problema",
+        "showErrorInfoButton": "Mostra i dettagli dell'errore"
+      },
+      "404": {
+        "title": "Spiacenti! 404",
+        "info": "Questa pagina non è stata trovata.",
+        "help": "Se ritieni che si tratti di un bug, ti preghiamo di segnalare il problema.",
+        "refreshButton": "Portami a casa",
+        "reportIssueButton": "Segnala il problema"
+      }
+    }
+  }
+}

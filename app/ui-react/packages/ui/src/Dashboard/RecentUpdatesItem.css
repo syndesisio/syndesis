@@ -1,0 +1,10 @@
+
+.recent-updates-item {
+  cursor: pointer;
+  font-size: smaller;
+  padding: 10px 0;
+}
+
+.recent-updates-item:hover {
+  background: rgba(214,238,250,.36);
+}
