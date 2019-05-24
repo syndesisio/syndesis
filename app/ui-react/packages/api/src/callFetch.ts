@@ -75,9 +75,7 @@ export function callFetch({
     body: data,
     cache: 'no-cache',
     credentials: 'include',
-    headers: {
-      ...headers,
-    },
+    headers,
     method,
     mode: 'cors',
     redirect: 'follow',

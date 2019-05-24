@@ -33,7 +33,6 @@ const addStepPage = (
     }
     apiProviderHref={(step, params, state) =>
       resolvers.integration.edit.editStep.apiProvider.selectMethod({
-        step,
         ...params,
         ...state,
       })

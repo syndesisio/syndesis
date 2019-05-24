@@ -9,13 +9,15 @@ import {
 import {
   IBaseRouteParams,
   IBaseRouteState,
-  IEditorIndex,
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
 } from './components/editor/interfaces';
-import { makeEditorResolvers } from './components/editor/makeEditorResolvers';
+import {
+  IEditorIndex,
+  makeEditorResolvers,
+} from './components/editor/makeEditorResolvers';
 import {
   IDetailsRouteParams,
   IDetailsRouteState,

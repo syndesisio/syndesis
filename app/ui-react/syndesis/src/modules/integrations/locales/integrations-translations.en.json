@@ -82,13 +82,13 @@
     },
     "reviewActions": {
       "btnReviewEdit": "Review/Edit",
-      "description": "Description",
       "name": "Name",
       "operations": "operations",
       "sectionApiDefinition": "API DEFINITION",
       "sectionImported": "IMPORTED",
       "sectionWarnings": "WARNINGS",
-      "title": "Review Actions"
+      "title": "Review Actions",
+      "description": "This description has not yet been actually defined, please send help."
     },
     "reviewOperations": {
       "title": "Operations"
