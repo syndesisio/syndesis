@@ -13,7 +13,6 @@ export * from './WithActivities';
 export * from './WithApiConnector';
 export * from './WithApiConnectorHelpers';
 export * from './WithApiConnectors';
-export * from './WithApiProvider';
 export * from './WithApiVersion';
 export * from './WithChangeListener';
 export * from './WithConnection';

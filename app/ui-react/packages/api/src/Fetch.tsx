@@ -1,7 +1,7 @@
 import deepmerge from 'deepmerge';
 import * as React from 'react';
 import equal from 'react-fast-compare';
-import { callFetch, IFetch } from './callFetch';
+import { callFetch, IFetchHeaders } from './callFetch';
 
 export interface IFetchState<T> {
   data: T;
@@ -16,11 +16,15 @@ export interface IFetchRenderProps<T> {
   read(): Promise<void>;
 }
 
-export interface IFetchProps<T> extends IFetch {
+export interface IFetchProps<T> {
   baseUrl: string;
   url: string;
+  headers?: IFetchHeaders;
+  contentType?: string;
   defaultValue: T;
   initialValue?: T;
+  body?: any;
+  method?: 'POST' | 'GET';
   children(props: IFetchRenderProps<T>): any;
 }
 
@@ -63,11 +67,13 @@ export class Fetch<T> extends React.Component<IFetchProps<T>, IFetchState<T>> {
   public async read() {
     try {
       this.setState({ error: false, errorMessage: undefined, loading: true });
-      const fetchProps = {
-        ...this.props,
+      const response = await callFetch({
+        body: this.props.body,
+        contentType: this.props.contentType,
+        headers: this.props.headers,
+        method: this.props.method || 'GET',
         url: `${this.props.baseUrl}${this.props.url}`,
-      };
-      const response = await callFetch(fetchProps);
+      });
       if (!response.ok) {
         throw new Error(response.statusText);
       }
