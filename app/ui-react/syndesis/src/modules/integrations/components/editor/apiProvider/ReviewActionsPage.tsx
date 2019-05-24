@@ -19,7 +19,6 @@ export const ReviewSpecification: React.FunctionComponent<{
   specification: string;
 }> = ({ specification }) => {
   const [apiSummary, loading, error] = useApiProvider(specification);
-  console.log(apiSummary);
 
   return (
     <WithLoader
@@ -28,7 +27,25 @@ export const ReviewSpecification: React.FunctionComponent<{
       error={error !== false}
       errorChildren={<ApiError />}
     >
-      {() => <ApiProviderReviewActions />}
+      {() => (
+        <ApiProviderReviewActions
+          i18nApiDefinitionHeading={'API DEFINITION'}
+          i18nDescriptionLabel={'Description'}
+          i18nImportedHeading={'IMPORTED'}
+          i18nNameLabel={'Name'}
+          apiProviderDescription={apiSummary!.description}
+          apiProviderName={apiSummary!.name}
+          i18nOperationsHtmlMessage={`<strong>${
+            apiSummary!.actionsSummary!.totalActions
+          }</strong> operations`}
+          i18nWarningsHeading={`WARNINGS <strong> ${
+            apiSummary!.warnings!.length
+          }</strong>`}
+          warningMessages={apiSummary!.warnings!.map(warning => {
+            return (warning as any).message;
+          })}
+        />
+      )}
     </WithLoader>
   );
 };

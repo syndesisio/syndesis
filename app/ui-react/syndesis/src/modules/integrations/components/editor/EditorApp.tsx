@@ -245,7 +245,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
   const reviewActionsPage = (
     <ReviewActionsPage
       cancelHref={(params, state) =>
-        appResolvers.selectStep({ ...params, ...state })
+        appResolvers.apiProvider.selectMethod({ ...params, ...state })
       }
     />
   );
