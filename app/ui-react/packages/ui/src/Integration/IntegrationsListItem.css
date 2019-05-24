@@ -22,6 +22,7 @@
   .list-view-pf .list-group-item-heading {
     min-width: 110px;
     white-space: normal;
+    font-weight: normal;
   }
 }
 

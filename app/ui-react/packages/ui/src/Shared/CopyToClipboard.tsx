@@ -11,7 +11,6 @@ export class CopyToClipboard extends React.Component<ICopyToClipboardProps> {
   }
 
   public render() {
-    const { children } = this.props;
-    return <ClipboardCopy className="pf-u-ml-md">{children}</ClipboardCopy>;
+    return <ClipboardCopy>{this.props.children}</ClipboardCopy>;
   }
 }

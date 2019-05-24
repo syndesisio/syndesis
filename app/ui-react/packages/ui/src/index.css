@@ -4,7 +4,11 @@
 @import url('~patternfly-react/dist/css/patternfly-react.css');
 
 /* pf4 base styles */
-@import url('~@patternfly/react-core/dist/styles/base.css');
+/* @import url('~@patternfly/react-core/dist/styles/base.css'); */
+@import url('~@patternfly/patternfly/patternfly-variables.css');
+@import url('~@patternfly/patternfly/patternfly-shield-noninheritable.css');
+@import url('~@patternfly/patternfly/patternfly-common.css');
+@import url('~@patternfly/patternfly/patternfly-globals.css');
 @import url('~@patternfly/patternfly/utilities/Spacing/spacing.css');
 @import url('~@patternfly/patternfly/layouts/Level/level.css');
 @import url('~@patternfly/patternfly/layouts/Split/split.css');
@@ -36,6 +40,8 @@ body {
 }
 
 #root {
+  flex: 1;
+  display: flex;
   height: 100%;
 }
 
@@ -57,7 +63,7 @@ body {
 }
 
 .label {
-  font-size: var(--pf-global--FontSize--xs);
+  font-size: var(--pf-global--FontSize--sm);
 }
 
 .syn-scrollable {
@@ -104,13 +110,18 @@ body {
 
 .pf-c-clipboard-copy {
   display: inline-block;
-  min-width: 455px;
+  width: 455px;
+  max-width: 100%;
 }
 
 @media (max-width: 768px) {
   .pf-c-clipboard-copy {
     display: inline-block;
-    --pf-global--spacer--md: 0;
+  }
+
+  .pf-c-clipboard-copy__group-copy {
+    --pf-c-clipboard-copy__group-copy--PaddingLeft: 16px;
+    --pf-c-clipboard-copy__group-copy--PaddingRight: 16px;
   }
 }
 
@@ -134,3 +145,4 @@ body {
   margin-top: 8px;
   padding: 4px 8px;
 }
+

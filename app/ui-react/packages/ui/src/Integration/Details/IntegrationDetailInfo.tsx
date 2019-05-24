@@ -1,3 +1,4 @@
+import { Label } from 'patternfly-react';
 import * as React from 'react';
 import { IntegrationStatusDetail } from '../IntegrationStatusDetail';
 import { IntegrationState } from '../models';
@@ -44,6 +45,12 @@ export class IntegrationDetailInfo extends React.PureComponent<
               <span className="pficon pficon-ok integration-detail-info__status-icon" />
               Published version {this.props.version}
             </div>
+          )}
+          {this.props.currentState === 'Unpublished' && (
+            <>
+              <span className="pficon pficon-paused pf-u-mr-xs" />
+              <Label>Stopped</Label>
+            </>
           )}
         </>
       </div>
