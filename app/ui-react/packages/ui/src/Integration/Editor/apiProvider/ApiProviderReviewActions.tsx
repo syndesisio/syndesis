@@ -15,8 +15,8 @@ import { Container } from '../../../Layout';
 import './ApiProviderReviewActions.css';
 
 export interface IApiProviderReviewActionsProps {
-  apiConnectorDescription?: string;
-  apiConnectorName?: string;
+  apiProviderDescription?: string;
+  apiProviderName?: string;
   errorMessages?: string[];
   i18nApiDefinitionHeading: string;
   i18nDescriptionLabel: string;
@@ -56,13 +56,13 @@ export class ApiProviderReviewActions extends React.Component<
                     {this.props.i18nNameLabel}
                   </TextListItem>
                   <TextListItem component={TextListItemVariants.dd}>
-                    {this.props.apiConnectorName}
+                    {this.props.apiProviderName}
                   </TextListItem>
                   <TextListItem component={TextListItemVariants.dt}>
                     {this.props.i18nDescriptionLabel}
                   </TextListItem>
                   <TextListItem component={TextListItemVariants.dd}>
-                    {this.props.apiConnectorDescription}
+                    {this.props.apiProviderDescription}
                   </TextListItem>
                 </TextList>
               </Container>

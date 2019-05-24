@@ -63,8 +63,8 @@ stories
   .add('Review Actions', () => (
     <>
       <ApiProviderReviewActions
-        apiConnectorDescription={'the description'}
-        apiConnectorName={'theName'}
+        apiProviderDescription={'the description'}
+        apiProviderName={'theName'}
         i18nApiDefinitionHeading={'API DEFINITION'}
         i18nDescriptionLabel={'Description'}
         i18nImportedHeading={'IMPORTED'}
