@@ -1,13 +1,4 @@
-.api-provider-select-method__list .list-view-pf-expand,
-.api-provider-select-method__list .close {
-  display: none;
-}
-
-.api-provider-select-method__list .list-view-pf-checkbox {
-  border-right: 0;
-}
-
-.api-provider-select-method__list .url-note {
+.api-provider-select-method .url-note {
   color: gray;
   font-size: smaller;
   font-style: italic;
