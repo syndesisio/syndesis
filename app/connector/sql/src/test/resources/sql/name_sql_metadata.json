@@ -3,6 +3,9 @@
     "kind" : "json-schema",
     "type" : "SQL_PARAM_IN",
     "name" : "SQL Parameter",
+    "metadata": {
+      "variant": "element"
+    },
     "description" : "Parameters of SQL [SELECT * FROM NAME WHERE ID=:#id]",
     "specification" : "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"id\":{\"type\":\"integer\",\"required\":true}}}"
   },

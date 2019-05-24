@@ -139,7 +139,44 @@ public class SqlMetadataAdapterTest {
         ObjectWriter writer = Json.writer();
         String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
         assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+    }
 
+    @Test
+    public void adaptForSqlUpdateTest() throws IOException, JSONException {
+        CamelContext camelContext = new DefaultCamelContext();
+        SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
+        Map<String,Object> parameters = new HashMap<>();
+        for (final String name: props.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf('.') + 1), props.getProperty(name));
+        }
+        parameters.put("query", "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)");
+        Optional<MetaData> metadata = ext.meta(parameters);
+        SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
+
+        SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
+        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_update_metadata.json"), StandardCharsets.UTF_8).trim();
+        ObjectWriter writer = Json.writer();
+        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
+        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    public void adaptForSqlUpdateNoParamTest() throws IOException, JSONException {
+        CamelContext camelContext = new DefaultCamelContext();
+        SqlConnectorMetaDataExtension ext = new SqlConnectorMetaDataExtension(camelContext);
+        Map<String,Object> parameters = new HashMap<>();
+        for (final String name: props.stringPropertyNames()) {
+            parameters.put(name.substring(name.indexOf('.') + 1), props.getProperty(name));
+        }
+        parameters.put("query", "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES ('Sheldon', 'Cooper')");
+        Optional<MetaData> metadata = ext.meta(parameters);
+        SqlMetadataRetrieval adapter = new SqlMetadataRetrieval();
+
+        SyndesisMetadata syndesisMetaData2 = adapter.adapt(camelContext, "sql", "sql-connector", parameters, metadata.get());
+        String expectedMetadata = IOUtils.toString(this.getClass().getResource("/sql/name_sql_update_no_param_metadata.json"), StandardCharsets.UTF_8).trim();
+        ObjectWriter writer = Json.writer();
+        String actualMetadata = writer.with(writer.getConfig().getDefaultPrettyPrinter()).writeValueAsString(syndesisMetaData2);
+        assertEquals(expectedMetadata, actualMetadata, JSONCompareMode.STRICT);
     }
 
     @Test

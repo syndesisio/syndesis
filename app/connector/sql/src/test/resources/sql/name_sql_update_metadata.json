@@ -1,0 +1,22 @@
+{
+  "inputShape" : {
+    "kind" : "json-schema",
+    "type" : "SQL_PARAM_IN",
+    "name" : "SQL Parameter",
+    "metadata": {
+      "variant": "collection"
+    },
+    "description" : "Parameters of SQL [INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)]",
+    "specification" : "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_IN\",\"properties\":{\"firstname\":{\"type\":\"string\",\"required\":true},\"lastname\":{\"type\":\"string\",\"required\":true}}}}"
+  },
+  "outputShape" : {
+    "kind" : "none",
+    "type" : "SQL_PARAM_OUT"
+  },
+  "properties" : {
+    "query" : [ {
+      "displayValue" : "query",
+      "value" : "INSERT INTO NAME (FIRSTNAME, LASTNAME) VALUES (:#firstname, :#lastname)"
+    } ]
+  }
+}

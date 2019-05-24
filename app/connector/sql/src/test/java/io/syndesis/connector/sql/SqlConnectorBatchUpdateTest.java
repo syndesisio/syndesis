@@ -16,36 +16,24 @@
 package io.syndesis.connector.sql;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.connector.sql.common.DbEnum;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.util.SqlConnectorTestSupport;
+import org.junit.Assert;
+import org.junit.Test;
 
 @SuppressWarnings({"PMD.SignatureDeclareThrowsException", "PMD.JUnitTestsShouldIncludeAssert"})
-@RunWith(Parameterized.class)
-public class SqlConnectorTest extends SqlConnectorTestSupport {
+public class SqlConnectorBatchUpdateTest extends SqlConnectorTestSupport {
 
-    private final String sqlQuery;
-    private final List<Map<String, String[]>> expectedResults;
-    private final Map<String, Object> parameters;
-
-    public SqlConnectorTest(String sqlQuery, List<Map<String, String[]>> expectedResults, Map<String, Object> parameters) {
-        this.sqlQuery = sqlQuery;
-        this.expectedResults = expectedResults;
-        this.parameters = parameters;
-    }
+    private final String sqlQuery = "INSERT INTO ADDRESS (street, number) VALUES (:#street, :#number)";
 
     @Override
     protected List<String> setupStatements() {
@@ -88,55 +76,45 @@ public class SqlConnectorTest extends SqlConnectorTestSupport {
                 builder -> builder.putConfiguredProperty("name", "start")),
             newSqlEndpointStep(
                 "sql-connector",
-                builder -> builder.putConfiguredProperty("query", sqlQuery)),
+                builder -> builder
+                        .putConfiguredProperty("batch", "true")
+                        .putConfiguredProperty("query", sqlQuery)),
             newSimpleEndpointStep(
                 "log",
                 builder -> builder.putConfiguredProperty("loggerName", "test"))
         );
     }
 
-    // **************************
-    // Parameters
-    // **************************
-
-    @Parameterized.Parameters
-    public static Collection<Object[]> data() {
-        Map<String, Object> parameters = new HashMap<>();
-        parameters.put("number", 14);
-        parameters.put("street", "LaborInVain");
-
-        return Arrays.asList(new Object[][] {
-                { "INSERT INTO ADDRESS (street, number) VALUES ('East Davie Street', 100)",
-                        Collections.singletonList(Collections.singletonMap("ID", new String[]{"1"})),
-                        Collections.emptyMap()},
-                { "INSERT INTO ADDRESS (street, number) VALUES (:#street, :#number)",
-                        Collections.singletonList(Collections.singletonMap("ID", new String[]{"1"})),
-                        parameters}
-        });
-    }
-
-    // **************************
-    // Tests
-    // **************************
-
     @Test
-    public void sqlConnectorTest() throws Exception {
-        String body;
-        if (parameters.isEmpty()) {
-            body = null;
-        } else {
-            body = JSONBeanUtil.toJSONBean(parameters);
+    public void sqlConnectorBatchUpdateTest() {
+        final List<Map<String, Object>> parameters = new ArrayList<>();
+
+        Map<String, Object> first = new HashMap<>();
+        first.put("number", 14);
+        first.put("street", "LaborInVain");
+
+        Map<String, Object> second = new HashMap<>();
+        second.put("number", 15);
+        second.put("street", "Werner-von-Siemens-Ring");
+
+        Map<String, Object> third = new HashMap<>();
+        third.put("number", 75);
+        third.put("street", "Am Treptower Park");
+
+        parameters.add(first);
+        parameters.add(second);
+        parameters.add(third);
+
+        List<String> body = new ArrayList<>();
+        for (Map<String, Object> paramMap : parameters) {
+            body.add(JSONBeanUtil.toJSONBean(paramMap));
         }
 
         @SuppressWarnings("unchecked")
         List<String> jsonBeans = template.requestBody("direct:start", body, List.class);
 
-        Assert.assertEquals(expectedResults.isEmpty(), jsonBeans.isEmpty());
+        Assert.assertFalse(jsonBeans.isEmpty());
 
-        for (Map<String, String[]> result : expectedResults) {
-            for (Map.Entry<String, String[]> resultEntry : result.entrySet()) {
-                validateJson(jsonBeans, resultEntry.getKey(), resultEntry.getValue());
-            }
-        }
+        validateJson(jsonBeans, "ID", "3");
     }
 }
