@@ -15,13 +15,13 @@
  */
 package io.syndesis.server.controller;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ConfigurationProperties("controllers")
 public class ControllersConfigurationProperties {
@@ -76,8 +76,9 @@ public class ControllersConfigurationProperties {
 
     public static class CamelK {
         private boolean compression;
+        private boolean prettyPrint;
         private Map<String, String> environment = new HashMap<>();
-        private Set<String> customizers = new HashSet<>();
+        private List<String> customizers = new ArrayList<>();
 
         public Map<String, String> getEnvironment() {
             return environment;
@@ -91,7 +92,15 @@ public class ControllersConfigurationProperties {
             this.compression = compression;
         }
 
-        public Set<String> getCustomizers() {
+        public boolean isPrettyPrint() {
+            return prettyPrint;
+        }
+
+        public void setPrettyPrint(boolean prettyPrint) {
+            this.prettyPrint = prettyPrint;
+        }
+
+        public List<String> getCustomizers() {
             return customizers;
         }
     }

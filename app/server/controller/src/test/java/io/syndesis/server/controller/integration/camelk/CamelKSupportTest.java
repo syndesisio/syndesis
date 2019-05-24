@@ -13,18 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.server.controller.integration.camelk.customizer;
+package io.syndesis.server.controller.integration.camelk;
 
-import java.util.EnumSet;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
-import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.server.controller.integration.camelk.crd.Integration;
-import io.syndesis.server.openshift.Exposure;
+import org.junit.Test;
 
-/**
- * Used to customize the Camel K integration resource.
- */
-@FunctionalInterface
-public interface CamelKIntegrationCustomizer {
-    Integration customize(IntegrationDeployment deployment, Integration integration, EnumSet<Exposure> exposure);
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class CamelKSupportTest {
+    @Test
+    public void testCompression() throws IOException {
+        String content = "my-data";
+        String encoded = CamelKSupport.compress(content);
+        String decoded = CamelKSupport.uncompress(encoded.getBytes(StandardCharsets.UTF_8));
+
+        assertThat(decoded).isEqualTo(content);
+    }
 }

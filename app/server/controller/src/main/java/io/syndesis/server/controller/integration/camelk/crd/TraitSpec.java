@@ -24,11 +24,11 @@ import org.immutables.value.Value;
 
 @Value.Immutable
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonDeserialize(builder = IntegrationTraitSpec.Builder.class)
+@JsonDeserialize(builder = TraitSpec.Builder.class)
 // Immutables generates code that fails these checks
 @SuppressWarnings({ "ArrayEquals", "ArrayHashCode", "ArrayToString" })
-public interface IntegrationTraitSpec {
-//    type IntegrationTraitSpec struct {
+public interface TraitSpec {
+//    type TraitSpec struct {
 //        Configuration map[string]string `json:"configuration,omitempty"`
 //    }
 
@@ -37,6 +37,6 @@ public interface IntegrationTraitSpec {
         return Collections.emptyMap();
     }
 
-    class Builder extends ImmutableIntegrationTraitSpec.Builder {
+    class Builder extends ImmutableTraitSpec.Builder {
     }
 }

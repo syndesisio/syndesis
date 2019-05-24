@@ -27,7 +27,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@TestPropertySource(properties = "controllers.exposeVia3scale=true")
+@TestPropertySource(properties = {"controllers.exposeVia3scale=true", "spring.main.banner-mode=off"})
 @SpringBootTest(classes = ControllersConfigurationPropertiesTest.class, webEnvironment = WebEnvironment.NONE)
 @EnableConfigurationProperties(ControllersConfigurationProperties.class)
 public class ControllersConfigurationPropertiesTest {

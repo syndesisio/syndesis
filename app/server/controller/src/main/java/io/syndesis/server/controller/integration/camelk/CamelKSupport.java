@@ -15,31 +15,42 @@
  */
 package io.syndesis.server.controller.integration.camelk;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.util.Base64;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
+import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.Names;
+import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
+import io.syndesis.server.openshift.Exposure;
 import io.syndesis.server.openshift.OpenShiftService;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.zip.GZIPOutputStream;
-
-import static java.nio.charset.StandardCharsets.UTF_8;
+import org.apache.commons.io.IOUtils;
 
 public final class CamelKSupport {
     //    // IntegrationPhaseInitial --
@@ -48,30 +59,28 @@ public final class CamelKSupport {
     //    IntegrationPhaseWaitingForPlatform IntegrationPhase = "Waiting For Platform"
     //    // IntegrationPhaseBuildingContext --
     //    IntegrationPhaseBuildingContext IntegrationPhase = "Building Context"
-    //    // IntegrationPhaseBuildImageSubmitted --
-    //    IntegrationPhaseBuildImageSubmitted IntegrationPhase = "Build Image Submitted"
-    //    // IntegrationPhaseBuildImageRunning --
-    //    IntegrationPhaseBuildImageRunning IntegrationPhase = "Build Image Running"
+    //    // IntegrationPhaseResolvingContext --
+    //    IntegrationPhaseResolvingContext IntegrationPhase = "Resolving Context"
     //    // IntegrationPhaseDeploying --
     //    IntegrationPhaseDeploying IntegrationPhase = "Deploying"
     //    // IntegrationPhaseRunning --
     //    IntegrationPhaseRunning IntegrationPhase = "Running"
     //    // IntegrationPhaseError --
     //    IntegrationPhaseError IntegrationPhase = "Error"
-    //    // IntegrationPhaseBuildFailureRecovery --
-    //    IntegrationPhaseBuildFailureRecovery IntegrationPhase = "Building Failure Recovery"
+    //    // IntegrationPhaseDeleting --
+    //    IntegrationPhaseDeleting IntegrationPhase = "Deleting"
 
     public static final ImmutableSet<String> CAMEL_K_STARTED_STATES = ImmutableSet.of(
                 "Waiting For Platform",
                 "Building Context",
-                "Build Image Submitted",
-                "Build Image Running",
+                "Resolving Context",
                 "Deploying");
     public static final ImmutableSet<String> CAMEL_K_FAILED_STATES = ImmutableSet.of(
                 "Error",
                 "Building Failure Recovery");
     public static final ImmutableSet<String> CAMEL_K_RUNNING_STATES = ImmutableSet.of(
-                "Running" );
+                "Running",
+                "Deleting");
 
     public static final String CAMEL_K_INTEGRATION_CRD_NAME = "integrations.camel.apache.org";
     public static final String CAMEL_K_INTEGRATION_CRD_GROUP = "camel.apache.org";
@@ -115,12 +124,25 @@ public final class CamelKSupport {
             return null;
         }
 
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
+            try (OutputStream out = new GZIPOutputStream(Base64.getEncoder().wrap(bos))) {
+                out.write(data);
+            }
+
+            return bos.toString(UTF_8.name());
+        }
+    }
+
+    public static String uncompress(byte[] data) throws IOException {
+        if (data == null) {
+            return null;
+        }
+
         try(
-            ByteArrayOutputStream os = new ByteArrayOutputStream(data.length);
-            GZIPOutputStream gzip = new GZIPOutputStream(os)
+            ByteArrayInputStream bis = new ByteArrayInputStream(data, 0, data.length);
+            InputStream is = new GZIPInputStream(Base64.getDecoder().wrap(bis))
         ) {
-            gzip.write(data);
-            return os.toString(UTF_8.name());
+            return IOUtils.toString(is, UTF_8);
         }
     }
 
@@ -157,21 +179,6 @@ public final class CamelKSupport {
 
         return properties;
     }
-
-//    @SuppressWarnings("unchecked")
-//    public static io.syndesis.server.controller.integration.camelk.crd.Integration getIntegrationCR(
-//            OpenShiftService openShiftService,
-//            CustomResourceDefinition integrationCRD,
-//            IntegrationDeployment integrationDeployment) {
-//
-//        return openShiftService.getCR(
-//            integrationCRD,
-//            io.syndesis.server.controller.integration.camelk.crd.Integration.class,
-//            IntegrationList.class,
-//            DoneableIntegration.class,
-//            Names.sanitize(integrationDeployment.getIntegrationId().get())
-//        );
-//    }
 
     @SuppressWarnings("unchecked")
     public static List<io.syndesis.server.controller.integration.camelk.crd.Integration> getIntegrationCRbyLabels(
@@ -223,5 +230,30 @@ public final class CamelKSupport {
 
     public static String integrationName(String integrationName) {
         return Names.sanitize("i-" + integrationName);
+    }
+
+    public static boolean isWebhookPresent(io.syndesis.common.model.integration.Integration integration) {
+        return integration.getUsedConnectorIds().contains("webhook");
+    }
+
+    public static EnumSet<Exposure> determineExposure(ControllersConfigurationProperties properties, IntegrationDeployment integrationDeployment) {
+        boolean needsExposure = integrationDeployment.getSpec()
+            .getFlows().stream()
+            .flatMap(f -> f.getSteps().stream())
+            .flatMap(step -> Optionals.asStream(step.getAction()))
+            .flatMap(action -> action.getTags().stream())
+            .anyMatch("expose"::equals);
+
+        boolean webHook = CamelKSupport.isWebhookPresent(integrationDeployment.getSpec());
+
+        if (needsExposure) {
+            if (properties.isExposeVia3scale() && !webHook) {
+                return EnumSet.of(Exposure.SERVICE, Exposure._3SCALE);
+            }
+
+            return EnumSet.of(Exposure.ROUTE, Exposure.SERVICE);
+        }
+
+        return EnumSet.noneOf(Exposure.class);
     }
 }

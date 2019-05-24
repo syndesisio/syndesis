@@ -34,10 +34,10 @@ import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.integration.api.IntegrationResourceManager;
 import org.apache.commons.io.IOUtils;
 
-final class TestResourceManager implements IntegrationResourceManager {
+public final class TestResourceManager implements IntegrationResourceManager {
     private final ConcurrentMap<String, Object> resources;
 
-    TestResourceManager() {
+    public TestResourceManager() {
         resources = new ConcurrentHashMap<>();
     }
 
@@ -95,7 +95,7 @@ final class TestResourceManager implements IntegrationResourceManager {
     }
 
 
-    Integration newIntegration(Step... steps) {
+    public Integration newIntegration(Step... steps) {
         for (int i = 0; i < steps.length; i++) {
             steps[i].getConnection()
                     .filter(r -> r.getId().isPresent())

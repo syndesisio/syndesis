@@ -72,8 +72,11 @@ public class IntegrationRouteLoader implements RoutesLoader {
             LOGGER.info("{} IntegrationStepHandlers loaded.", integrationStepHandlers.size());
         }
 
-        return new IntegrationRouteBuilder(ctx -> URIResolver.resolve(ctx, source), integrationStepHandlers,
-                Arrays.asList(new IntegrationActivityTrackingPolicyFactory(activityTracker),
-                              new FlowActivityTrackingPolicyFactory(activityTracker)));
+        return new IntegrationRouteBuilder(
+            ctx -> URIResolver.resolve(ctx, source),
+            integrationStepHandlers,
+            Arrays.asList(new IntegrationActivityTrackingPolicyFactory(activityTracker),
+                          new FlowActivityTrackingPolicyFactory(activityTracker))
+        );
     }
 }
