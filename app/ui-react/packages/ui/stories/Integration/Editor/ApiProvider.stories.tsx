@@ -37,9 +37,6 @@ stories
   .add('Select Method', () => (
     <>
       <ApiProviderSelectMethod
-        i18nDescription={
-          'Execute this integration when a client invokes an operation defined by this API.'
-        }
         i18nMethodFromFile={'Upload an OpenAPI file'}
         i18nMethodFromScratch={'Create from scratch'}
         i18nMethodFromUrl={'Use a URL'}
