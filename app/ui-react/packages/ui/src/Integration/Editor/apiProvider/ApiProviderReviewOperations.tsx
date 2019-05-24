@@ -1,16 +1,8 @@
+import { ListView } from 'patternfly-react';
 import * as React from 'react';
 
-export interface IApiProviderReviewOperationsProps {
-  /**
-   * The title
-   */
-  i18nTitle?: string;
-}
-
-export class ApiProviderReviewOperations extends React.Component<
-  IApiProviderReviewOperationsProps
-> {
+export class ApiProviderReviewOperations extends React.Component {
   public render() {
-    return <>{this.props.i18nTitle}</>;
+    return <ListView>{this.props.children}</ListView>;
   }
 }
