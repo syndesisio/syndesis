@@ -1,14 +1,18 @@
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
-import { Fetch, IFetchProps, IFetchRenderProps } from './Fetch';
+import { Fetch, IFetchRenderProps } from './Fetch';
 import { Stream } from './Stream';
 
-type Omit<T, K> = Pick<T, Exclude<keyof T, K>>;
-
-export interface ISyndesisFetchProps<T>
-  extends Omit<IFetchProps<T>, 'baseUrl'> {
+export interface ISyndesisFetchProps<T> {
   autoload?: boolean;
+  contentType?: string;
+  url: string;
   stream?: boolean;
+  headers?: { [name: string]: string };
+  defaultValue: T;
+  initialValue?: T;
+  body?: any;
+  method?: 'POST' | 'GET';
   children(props: IFetchRenderProps<T>): any;
 }
 
@@ -20,20 +24,16 @@ export class SyndesisFetch<T> extends React.Component<ISyndesisFetchProps<T>> {
 
     return (
       <ApiContext.Consumer>
-        {({ apiUri, headers }) => {
-          headers = {
-            ...headers,
-            ...(props.headers || {}),
-          };
-          return (
-            <FetchOrStream
-              baseUrl={apiUri}
-              url={url}
-              headers={headers}
-              {...props}
-            />
-          );
-        }}
+        {({ apiUri, headers }) => (
+          <FetchOrStream
+            baseUrl={apiUri}
+            url={url}
+            headers={{
+              ...(props.headers || headers),
+            }}
+            {...props}
+          />
+        )}
       </ApiContext.Consumer>
     );
   }
