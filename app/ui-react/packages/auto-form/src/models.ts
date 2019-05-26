@@ -39,8 +39,11 @@ export interface IFormArrayDefinitionOptions {
   fieldAttributes?: IFormFieldAttributes;
   formGroupAttributes?: IFormFieldAttributes;
   arrayControlAttributes?: IFormFieldAttributes;
+  arrayRowTitleAttributes?: IFormFieldAttributes;
   controlLabelAttributes?: IFormFieldAttributes;
   minElements?: number;
+  showSortControls?: boolean;
+  rowTitle?: string;
   i18nAddElementText: string;
 }
 

@@ -13,26 +13,34 @@ const definition = {
     arrayDefinition: {
       booleanField: {
         displayName: 'Boolean Field',
+        order: 1,
         type: 'boolean',
       },
       numberField: {
         displayName: 'Number Field',
+        order: 2,
         type: 'number',
       },
       stringField: {
         displayName: 'String Field',
+        order: 0,
         type: 'text',
       },
     },
     arrayDefinitionOptions: {
       arrayControlAttributes: {
-        className: 'col-md-3 form-group',
+        className: 'col-md-1',
+      },
+      arrayRowTitleAttributes: {
+        className: 'col-md-2',
       },
       formGroupAttributes: {
         className: 'col-md-3',
       },
       i18nAddElementText: '+ Add another Thing',
       minElements: 2,
+      rowTitle: 'Thingy',
+      showSortControls: true,
     },
     type: 'array',
   },
