@@ -1,0 +1,8 @@
+.form-array-control__row-title {
+  text-align: right;
+  margin-top: 4px;
+}
+
+.form-array-control__array-controls .fa {
+  font-size: 20px;
+}

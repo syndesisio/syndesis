@@ -4,6 +4,8 @@ import { IFormArrayControlProps, IFormArrayDefinitionOptions } from '../models';
 import { toValidHtmlId } from './helpers';
 import { TextButton } from './TextButton';
 
+import './FormArrayComponent.css';
+
 export interface IFormArrayComponentProps extends IFormArrayControlProps {
   customComponents: { [key: string]: any };
 }
@@ -26,6 +28,7 @@ export class FormArrayComponent extends React.Component<
     const fieldAttributes = options.fieldAttributes || {};
     const controlLabelAttributes = options.controlLabelAttributes || {};
     const arrayControlAttributes = options.arrayControlAttributes || {};
+    const arrayRowTitleAttributes = options.arrayRowTitleAttributes || {};
     const minElements = options.minElements || 0;
     const values = this.props.form.values[this.props.name] || [];
     return (
@@ -41,9 +44,17 @@ export class FormArrayComponent extends React.Component<
               i18nRequiredProperty={''}
             >
               {({ initialValue: rowValue, propertiesArray, getField }) => {
-                const controlGroupName = `${fieldName}-formArrayControls`;
+                const titleKey = `${fieldName}-title`;
+                const controlGroupName = `${fieldName}-array-controls`;
                 return (
                   <fieldset>
+                    {options.rowTitle && (
+                      <div key={titleKey} {...arrayRowTitleAttributes}>
+                        <h5 className="form-array-control__row-title">
+                          <strong>{`${index + 1}. ${options.rowTitle}`}</strong>
+                        </h5>
+                      </div>
+                    )}
                     {propertiesArray.map(property =>
                       getField({
                         allFieldsRequired:
@@ -61,7 +72,6 @@ export class FormArrayComponent extends React.Component<
                     )}
                     <div
                       key={controlGroupName}
-                      className={'form-group'}
                       {...formGroupAttributes}
                       {...arrayControlAttributes}
                     >
@@ -72,26 +82,37 @@ export class FormArrayComponent extends React.Component<
                       >
                         &nbsp;
                       </label>
-                      <div
-                        id={toValidHtmlId(`${controlGroupName}-control`)}
-                        className=""
-                      >
-                        <div className="pull-right">
-                          {index + 1 > minElements ? (
-                            <TextButton
-                              onClick={() => this.props.remove(index)}
-                            >
-                              <i
-                                className="fa fa-trash-o"
-                                style={{ fontSize: '20px' }}
-                              />
-                            </TextButton>
-                          ) : (
-                            <>&nbsp;</>
+                      <div id={toValidHtmlId(`${controlGroupName}-control`)}>
+                        <div className="form-array-control__array-controls">
+                          {options.showSortControls && (
+                            <>
+                              <TextButton
+                                onClick={() => {
+                                  this.props.move(index, index - 1);
+                                }}
+                                visible={index > 0}
+                              >
+                                <i className="fa fa-arrow-circle-o-up" />
+                              </TextButton>
+                              <TextButton
+                                onClick={() => {
+                                  this.props.move(index, index + 1);
+                                }}
+                                visible={index < values.length - 1}
+                              >
+                                <i className="fa fa-arrow-circle-o-down" />
+                              </TextButton>
+                            </>
                           )}
+                          <TextButton
+                            onClick={() => this.props.remove(index)}
+                            visible={index + 1 > minElements}
+                          >
+                            <i className="fa fa-trash-o" />
+                          </TextButton>
                         </div>
+                        <div className="help-block">&nbsp;</div>
                       </div>
-                      <div className="help-block">&nbsp;</div>
                     </div>
                   </fieldset>
                 );
