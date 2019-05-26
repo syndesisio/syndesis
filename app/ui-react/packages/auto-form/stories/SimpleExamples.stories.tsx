@@ -1,9 +1,10 @@
 import { action } from '@storybook/addon-actions';
-import { number, text, withKnobs } from '@storybook/addon-knobs';
+import { number, object, text, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { AutoForm } from '../src';
-import { StoryWrapper } from './StoryWrapper.component';
+import { FormWrapper } from './FormWrapper';
+import { StoryWrapper } from './StoryWrapper';
 
 const stories = storiesOf('AutoForm', module);
 stories.addDecorator(withKnobs);
@@ -11,7 +12,7 @@ stories.addDecorator(withKnobs);
 stories.add('Minimal Form Definition', () => (
   <StoryWrapper>
     <AutoForm
-      definition={{
+      definition={object('Definition', {
         SomeSelect: {
           displayName: 'Pick Something',
           enum: [
@@ -40,14 +41,14 @@ stories.add('Minimal Form Definition', () => (
           order: 0,
           type: 'string',
         },
-      }}
+      })}
       i18nRequiredProperty={text(
         'i18nRequiredProperty',
         'This property is required'
       )}
-      initialValue={{
+      initialValue={object('Initial Value', {
         SomeTextField: 'Some Value',
-      }}
+      })}
       validate={action('validate')}
       onSave={action('onSave')}
     >
@@ -59,33 +60,26 @@ stories.add('Minimal Form Definition', () => (
 stories.add('Text', () => (
   <StoryWrapper>
     <AutoForm
-      definition={{
+      definition={object('Definition', {
         SomeTextField: {
           displayName: text('Display Name', 'The Label'),
           labelHint: 'This is shown for the label hint text',
           placeholder: 'This is the placeholder text',
           type: 'string',
         },
-      }}
+      })}
       i18nRequiredProperty={text(
         'i18nRequiredProperty',
         'This property is required'
       )}
-      initialValue={{
+      initialValue={object('Initial Value', {
         SomeTextField: 'Some Value',
-      }}
+      })}
       validate={action('validate')}
       onSave={action('onSave')}
     >
       {({ fields, handleSubmit }) => (
-        <>
-          <form onSubmit={handleSubmit}>
-            {fields}
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </form>
-        </>
+        <FormWrapper onSubmit={handleSubmit} fields={fields} />
       )}
     </AutoForm>
   </StoryWrapper>
@@ -94,32 +88,25 @@ stories.add('Text', () => (
 stories.add('Number', () => (
   <StoryWrapper>
     <AutoForm
-      definition={{
+      definition={object('Definition', {
         SomeNumberField: {
           displayName: text('Display Name', 'The Label'),
           labelHint: 'This is shown for the label hint text',
           type: 'number',
         },
-      }}
+      })}
       i18nRequiredProperty={text(
         'i18nRequiredProperty',
         'This property is required'
       )}
-      initialValue={{
+      initialValue={object('Initial Value', {
         SomeNumberField: 55,
-      }}
+      })}
       validate={action('validate')}
       onSave={action('onSave')}
     >
       {({ fields, handleSubmit }) => (
-        <>
-          <form onSubmit={handleSubmit}>
-            {fields}
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </form>
-        </>
+        <FormWrapper onSubmit={handleSubmit} fields={fields} />
       )}
     </AutoForm>
   </StoryWrapper>
@@ -128,7 +115,7 @@ stories.add('Number', () => (
 stories.add('Checkbox', () => (
   <StoryWrapper>
     <AutoForm
-      definition={{
+      definition={object('Definition', {
         SomeBooleanField: {
           displayName: 'Boolean Value',
           labelHint: 'This is shown for the label hint text',
@@ -144,28 +131,21 @@ stories.add('Checkbox', () => (
           labelHint: 'This is shown for the label hint text',
           type: 'boolean',
         },
-      }}
+      })}
       i18nRequiredProperty={text(
         'i18nRequiredProperty',
         'This property is required'
       )}
-      initialValue={{
+      initialValue={object('Initial Value', {
         SomeBooleanField: true,
         SomeOtherBooleanField: 'false',
         SomeThirdBooleanField: 'True',
-      }}
+      })}
       validate={action('validate')}
       onSave={action('onSave')}
     >
       {({ fields, handleSubmit }) => (
-        <>
-          <form onSubmit={handleSubmit}>
-            {fields}
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </form>
-        </>
+        <FormWrapper onSubmit={handleSubmit} fields={fields} />
       )}
     </AutoForm>
   </StoryWrapper>
@@ -174,7 +154,7 @@ stories.add('Checkbox', () => (
 stories.add('Textarea', () => (
   <StoryWrapper>
     <AutoForm
-      definition={{
+      definition={object('Definition', {
         SomeTextField: {
           displayName: text('Display Name', 'The Label'),
           fieldAttributes: {
@@ -185,27 +165,20 @@ stories.add('Textarea', () => (
           placeholder: 'This is the placeholder text',
           type: 'textarea',
         },
-      }}
+      })}
       i18nRequiredProperty={text(
         'i18nRequiredProperty',
         'This property is required'
       )}
-      initialValue={{
+      initialValue={object('Initial Value', {
         SomeTextField:
           'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed sollicitudin dolor purus, id pharetra augue maximus efficitur. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Phasellus elementum tortor sem, ut vulputate sapien tristique in. Curabitur venenatis mauris nunc, ut varius libero tincidunt sed. Aliquam porttitor viverra faucibus. Curabitur sodales nisi sem, id pulvinar ante luctus eget. Cras vitae ligula pretium felis varius pulvinar. Phasellus vel sem gravida diam venenatis cursus quis sed nisi. Cras a erat eget nibh consequat feugiat nec et enim. Sed finibus tristique diam, non sodales nulla elementum vel. Curabitur cursus lacus vel vestibulum scelerisque. Curabitur tellus sapien, pretium in metus non, fringilla consequat neque.',
-      }}
+      })}
       validate={action('validate')}
       onSave={action('onSave')}
     >
       {({ fields, handleSubmit }) => (
-        <>
-          <form onSubmit={handleSubmit}>
-            {fields}
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </form>
-        </>
+        <FormWrapper onSubmit={handleSubmit} fields={fields} />
       )}
     </AutoForm>
   </StoryWrapper>
@@ -214,7 +187,7 @@ stories.add('Textarea', () => (
 stories.add('Select', () => (
   <StoryWrapper>
     <AutoForm
-      definition={{
+      definition={object('Definition', {
         MultiField: {
           displayName: 'Pick things',
           enum: [
@@ -265,27 +238,20 @@ stories.add('Select', () => (
           order: 1,
           type: 'string',
         },
-      }}
+      })}
       i18nRequiredProperty={text(
         'i18nRequiredProperty',
         'This property is required'
       )}
-      initialValue={{
+      initialValue={object('Initial Value', {
         MultiField: ['one', 'four'],
         SomeField: 'three',
-      }}
+      })}
       validate={action('validate')}
       onSave={action('onSave')}
     >
       {({ fields, handleSubmit }) => (
-        <>
-          <form onSubmit={handleSubmit}>
-            {fields}
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </form>
-        </>
+        <FormWrapper onSubmit={handleSubmit} fields={fields} />
       )}
     </AutoForm>
   </StoryWrapper>
@@ -294,7 +260,7 @@ stories.add('Select', () => (
 stories.add('Duration', () => (
   <StoryWrapper>
     <AutoForm
-      definition={{
+      definition={object('Definition', {
         duration1: {
           displayName: 'Duration 1',
           labelHint: 'This is shown for the label hint text',
@@ -311,28 +277,21 @@ stories.add('Duration', () => (
           labelHint: 'This is shown for the label hint text',
           type: 'duration',
         },
-      }}
+      })}
       i18nRequiredProperty={text(
         'i18nRequiredProperty',
         'This property is required'
       )}
-      initialValue={{
-        duration1: number('Duration 1', 642343),
+      initialValue={object('Initial Value', {
+        duration1: number('Duration 1', 5 * 1000 * 60 * 60),
         duration2: number('Duration 2', 100),
-        duration3: number('Duration 3', 60000),
-      }}
+        duration3: number('Duration 3', 2 * 1000 * 60),
+      })}
       validate={action('validate')}
       onSave={action('onSave')}
     >
       {({ fields, handleSubmit }) => (
-        <>
-          <form onSubmit={handleSubmit}>
-            {fields}
-            <button type="submit" className="btn btn-primary">
-              Submit
-            </button>
-          </form>
-        </>
+        <FormWrapper onSubmit={handleSubmit} fields={fields} />
       )}
     </AutoForm>
   </StoryWrapper>

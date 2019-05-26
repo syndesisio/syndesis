@@ -110,6 +110,7 @@ export class WithRuleFilterForm extends React.Component<
             className: 'col-md-3',
           },
           i18nAddElementText: '+ Add another rule',
+          minElements: 1,
         },
         required: true,
         type: 'array',
