@@ -151,10 +151,10 @@ export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
       case 'boolean':
         type = 'checkbox';
     }
-    if (property.enum && property.enum.length) {
+    if (typeof property.enum !== 'undefined' && property.enum.length) {
       type = 'select';
     }
-    if (property.secret) {
+    if (typeof property.secret === 'boolean') {
       type = 'password';
     }
     return type;
@@ -178,6 +178,28 @@ export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
     }
   }
 
+  private getArrayRows(missing: number, definition: IFormDefinition) {
+    const answer: any[] = [];
+    for (let i = 0; i < missing; i++) {
+      answer.push({});
+    }
+    return answer;
+  }
+
+  private sanitizeInitialArrayValue(
+    definition: IFormDefinition,
+    value?: any[],
+    minimum?: number
+  ) {
+    const sanitizedValue = value || [];
+    const available = sanitizedValue.length;
+    const missing = (minimum || 0) - available;
+    if (missing < 0) {
+      return value;
+    }
+    return [...sanitizedValue, ...this.getArrayRows(missing, definition)];
+  }
+
   /**
    * Converts the given value from a string to the type defined in the property definition
    *
@@ -186,20 +208,34 @@ export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
    * @param property
    * @param value
    */
-  private massageValue(property: IFormDefinitionProperty, value?: string) {
-    if (value === undefined || value === null) {
-      if (property.enum && property.enum.length > 0) {
-        return property.enum[0].value;
-      }
-      return value;
-    }
+  private massageValue(property: IFormDefinitionProperty, value?: any) {
     switch (property.type) {
       case 'number':
         return parseInt(value, 10);
       case 'boolean':
       case 'checkbox':
         return String(value).toLocaleLowerCase() === 'true';
+      case 'array':
+        const minElements =
+          typeof property.arrayDefinitionOptions !== 'undefined'
+            ? property.arrayDefinitionOptions.minElements
+            : 0;
+        return this.sanitizeInitialArrayValue(
+          property.arrayDefinition || {},
+          value,
+          minElements
+        );
       default:
+        // if the value has an enum property
+        // a select control is used, default
+        // to the first available value
+        if (
+          typeof value === 'undefined' &&
+          property.enum &&
+          property.enum.length > 0
+        ) {
+          return property.enum[0].value;
+        }
         return value;
     }
   }
