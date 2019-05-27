@@ -45,7 +45,10 @@ export const ReviewActionsPage: React.FunctionComponent<
   IReviewActionsPageProps
 > = ({ cancelHref, editHref, nextHref }) => {
   const [nextDisabled, setNextDisabled] = React.useState(false);
-  const { params, state, history } = useRouteData();
+  const { params, state, history } = useRouteData<
+    IBaseApiProviderRouteParams,
+    IApiProviderReviewActionsRouteState
+  >();
   const { apiSummary, loading, error } = useApiProviderSummary(
     state.specification
   );
