@@ -196,6 +196,16 @@ rules:
   resources:
   - routes/custom-host
   verbs: [ get, list, create, update, delete, deletecollection, watch ]
+- apiGroups:
+    - serving.knative.dev
+  resources:
+    - services
+  verbs: [ get, list, watch ]
+- apiGroups:
+    - eventing.knative.dev
+  resources:
+    - channels
+  verbs: [ get, list, watch ]
 ---
 
 EOT

@@ -92,11 +92,11 @@ jobs:
           name: Build UI
           command: |
             apt-get update -y
-            apt-get install -y apt-transport-https
+            apt-get install -y --force-yes libxss1 patch apt-transport-https
             echo "deb https://dl.google.com/linux/chrome/deb/ stable main" > /etc/apt/sources.list.d/google-chrome.list
             curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
             apt-get update -y
-            apt-get install -y --no-install-recommends  google-chrome-stable fontconfig fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-symbola fonts-noto ttf-freefont libxss1 patch
+            apt-get install -y --force-yes --no-install-recommends  google-chrome-stable fontconfig fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-symbola fonts-noto ttf-freefont
             ./tools/bin/syndesis build --batch-mode --module ui-angular,ui-react --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:

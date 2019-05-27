@@ -269,6 +269,16 @@ rules:
   - grafanadashboards
   verbs:
   - "*"
+- apiGroups:
+    - serving.knative.dev
+  resources:
+    - services
+  verbs: [ get, list, watch ]
+- apiGroups:
+    - eventing.knative.dev
+  resources:
+    - channels
+  verbs: [ get, list, watch ]
 ---
 EOT
         if [ $? -ne 0 ]; then
