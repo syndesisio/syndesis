@@ -144,8 +144,9 @@ export class ConfigureActionPage extends React.Component<
                         },
                         {
                           connection,
-                          integration: updatedIntegration!,
+                          integration,
                           step: stepKind,
+                          updatedIntegration,
                         }
                       )
                     );
@@ -164,24 +165,21 @@ export class ConfigureActionPage extends React.Component<
                         {
                           configuredProperties,
                           connection,
-                          integration: updatedIntegration!,
+                          integration,
                           step,
+                          updatedIntegration,
                         } as IConfigureActionRouteState
                       )
                     );
                   };
                   const descriptor = stepKind.action!.descriptor!;
-                  if (
-                    isStartStep(updatedIntegration, flowId, positionAsNumber)
-                  ) {
+                  if (isStartStep(integration, flowId, positionAsNumber)) {
                     if (requiresOutputDescribeDataShape(descriptor)) {
                       gotoDescribeData(DataShapeDirection.OUTPUT);
                     } else {
                       gotoDefaultNextPage();
                     }
-                  } else if (
-                    isEndStep(updatedIntegration, flowId, positionAsNumber)
-                  ) {
+                  } else if (isEndStep(integration, flowId, positionAsNumber)) {
                     if (requiresInputDescribeDataShape(descriptor)) {
                       gotoDescribeData(DataShapeDirection.INPUT);
                     } else {
@@ -235,6 +233,7 @@ export class ConfigureActionPage extends React.Component<
                             configuredProperties,
                             connection,
                             integration,
+                            updatedIntegration,
                           }
                         )}
                       />
@@ -245,6 +244,7 @@ export class ConfigureActionPage extends React.Component<
                         configuredProperties,
                         connection,
                         integration,
+                        updatedIntegration,
                       }
                     )}
                   />
