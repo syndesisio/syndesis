@@ -3,9 +3,7 @@ import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 
-export function useApiProvider(
-  specification: string
-): [APISummary | undefined, boolean, boolean | Error] {
+export function useApiProviderSummary(specification: string) {
   const apiContext = React.useContext(ApiContext);
   const [loading, setLoading] = React.useState(true);
   const [error, setError] = React.useState<false | Error>(false);
@@ -41,5 +39,29 @@ export function useApiProvider(
     fetchSummary();
   }, [specification, apiContext, setLoading]);
 
-  return [apiSummary, loading, error];
+  return { apiSummary, loading, error };
+}
+
+export function useApiProviderIntegration() {
+  const apiContext = React.useContext(ApiContext);
+
+  const getIntegration = async (specification: string) => {
+    const body = new FormData();
+    body.append('specification', specification);
+    const response = await callFetch({
+      body,
+      headers: apiContext.headers,
+      includeAccept: true,
+      includeContentType: false,
+      method: 'POST',
+      url: `${apiContext.apiUri}/apis/generator`,
+    });
+    const integration = await response.json();
+    if (integration.errorCode) {
+      throw new Error(integration.userMsg);
+    }
+    return integration;
+  };
+
+  return getIntegration;
 }

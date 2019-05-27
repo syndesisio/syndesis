@@ -6,18 +6,18 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../../shared';
 import {
+  IApiProviderReviewActionsRouteState,
   IBaseApiProviderRouteParams,
-  IReviewActionsRouteState,
 } from '../interfaces';
 
 export interface IEditSpecificationPageProps {
   cancelHref: (
     p: IBaseApiProviderRouteParams,
-    s: IReviewActionsRouteState
+    s: IApiProviderReviewActionsRouteState
   ) => H.LocationDescriptor;
   saveHref: (
     p: IBaseApiProviderRouteParams,
-    s: IReviewActionsRouteState
+    s: IApiProviderReviewActionsRouteState
   ) => H.LocationDescriptor;
 }
 
@@ -38,7 +38,10 @@ export const EditSpecificationPage: React.FunctionComponent<
   return (
     <Translation ns={['integrations', 'shared']}>
       {t => (
-        <WithRouteData<IBaseApiProviderRouteParams, IReviewActionsRouteState>>
+        <WithRouteData<
+          IBaseApiProviderRouteParams,
+          IApiProviderReviewActionsRouteState
+        >>
           {(params, state) => (
             <>
               <PageTitle

@@ -9,6 +9,7 @@ import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../shared';
 import { WithLeaveConfirmation } from '../../shared/WithLeaveConfirmation';
 import { AddStepPage } from './components/editor/AddStepPage';
+import { ReviewOperationsPage } from './components/editor/apiProvider/ReviewOperationsPage';
 import { EditorApp } from './components/editor/EditorApp';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import resolvers from './resolvers';
@@ -112,6 +113,13 @@ const saveIntegrationPage = (
   />
 );
 
+const apiProviderOperationsPage = (
+  <ReviewOperationsPage
+    cancelHref={(p, s) => resolvers.list()}
+    getFlowHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
+  />
+);
+
 /**
  * Entry point for the integration creator app. This is shown when an user clicks
  * the "Create integration" button somewhere in the app.
@@ -167,13 +175,22 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                     appStepRoutes={routes.create.start}
                     appResolvers={resolvers.create.start}
                     cancelHref={resolvers.list}
-                    postConfigureHref={(integration, params) => {
-                      return resolvers.create.finish.selectStep({
-                        integration,
-                        ...params,
-                        position: '1',
-                      });
-                    }}
+                    postConfigureHref={(
+                      integration,
+                      params,
+                      state,
+                      isApiProvider
+                    ) =>
+                      isApiProvider
+                        ? resolvers.create.configure.apiProviderOperations({
+                            integration,
+                          })
+                        : resolvers.create.finish.selectStep({
+                            integration,
+                            ...params,
+                            position: '1',
+                          })
+                    }
                   />
                 </Route>
 
@@ -197,6 +214,12 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                   path={routes.create.configure.index}
                   exact={true}
                   children={addStepPage}
+                />
+
+                <Route
+                  path={routes.create.configure.apiProviderOperations}
+                  exact={true}
+                  children={apiProviderOperationsPage}
                 />
 
                 {/* add step */}

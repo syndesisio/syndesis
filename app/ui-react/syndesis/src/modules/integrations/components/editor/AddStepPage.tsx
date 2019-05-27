@@ -17,19 +17,22 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { IntegrationEditorStepAdder } from '../IntegrationEditorStepAdder';
-import { IBaseRouteParams, IBaseRouteState } from './interfaces';
+import { IBaseFlowRouteParams, IBaseRouteParams, IBaseRouteState } from './interfaces';
 import { getStepHref, IGetStepHrefs } from './utils';
 
 export interface IAddStepPageProps extends IGetStepHrefs {
-  cancelHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
+  cancelHref: (
+    p: IBaseFlowRouteParams,
+    s: IBaseRouteState
+  ) => H.LocationDescriptor;
   getAddMapperStepHref: (
     position: number,
-    p: IBaseRouteParams,
+    p: IBaseFlowRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
   getAddStepHref: (
     position: number,
-    p: IBaseRouteParams,
+    p: IBaseFlowRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
   getDeleteEdgeStepHref: (
@@ -37,9 +40,12 @@ export interface IAddStepPageProps extends IGetStepHrefs {
     p: IBaseRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptorObject;
-  saveHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
+  saveHref: (
+    p: IBaseFlowRouteParams,
+    s: IBaseRouteState
+  ) => H.LocationDescriptor;
   selfHref: (
-    p: IBaseRouteParams,
+    p: IBaseFlowRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptorObject;
 }
@@ -116,8 +122,8 @@ export class AddStepPage extends React.Component<
       <Translation ns={['integrations', 'shared']}>
         {t => (
           <>
-            <WithRouteData<IBaseRouteParams, IBaseRouteState>>
-              {({ flowId }, { integration }, { history }) => (
+            <WithRouteData<IBaseFlowRouteParams, IBaseRouteState>>
+              {(params, state, { history }) => (
                 <>
                   {this.state.showDeleteDialog && (
                     <ConfirmationDialog
@@ -144,15 +150,15 @@ export class AddStepPage extends React.Component<
                          */
                         if (
                           this.state.position ===
-                            getFirstPosition(integration, flowId) ||
+                            getFirstPosition(state.integration, params.flowId) ||
                           this.state.position ===
-                            getLastPosition(integration, flowId)
+                            getLastPosition(state.integration, params.flowId)
                         ) {
                           history.push(
                             this.props.getDeleteEdgeStepHref(
                               this.state.position!,
-                              { flowId },
-                              { integration }
+                              params,
+                              state
                             )
                           );
                         } else {
@@ -161,8 +167,8 @@ export class AddStepPage extends React.Component<
                            * and receive a copy of the new integration.
                            */
                           const newInt = removeStepFromFlow(
-                            integration,
-                            flowId,
+                            state.integration,
+                            params.flowId,
                             this.state.position!
                           );
 
@@ -172,8 +178,11 @@ export class AddStepPage extends React.Component<
                            */
                           history.push(
                             this.props.selfHref(
-                              { flowId },
-                              { integration: newInt }
+                              params,
+                              {
+                                ...state,
+                                integration: newInt
+                              }
                             )
                           );
                         }
@@ -186,43 +195,33 @@ export class AddStepPage extends React.Component<
                     description={t('integrations:editor:addStepDescription')}
                     content={
                       <IntegrationEditorStepAdder
-                        steps={getSteps(integration, flowId)}
+                        steps={getSteps(state.integration, params.flowId)}
                         addDataMapperStepHref={position =>
                           this.props.getAddMapperStepHref(
                             position,
-                            { flowId },
-                            { integration }
+                            params,
+                            state
                           )
                         }
                         addStepHref={position =>
-                          this.props.getAddStepHref(
-                            position,
-                            { flowId },
-                            { integration }
-                          )
+                          this.props.getAddStepHref(position, params, state)
                         }
                         configureStepHref={(position: number, step: Step) =>
                           getStepHref(
                             step,
-                            { flowId, position: `${position}` },
-                            { integration },
+                            { ...params, position: `${position}` },
+                            state,
                             this.props
                           )
                         }
-                        flowId={flowId}
-                        integration={integration}
+                        flowId={params.flowId}
+                        integration={state.integration}
                         onDelete={onDelete}
                       />
                     }
-                    cancelHref={this.props.cancelHref(
-                      { flowId },
-                      { integration }
-                    )}
-                    saveHref={this.props.saveHref({ flowId }, { integration })}
-                    publishHref={this.props.saveHref(
-                      { flowId },
-                      { integration }
-                    )}
+                    cancelHref={this.props.cancelHref(params, state)}
+                    saveHref={this.props.saveHref(params, state)}
+                    publishHref={this.props.saveHref(params, state)}
                   />
                 </>
               )}
