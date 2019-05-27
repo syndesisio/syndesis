@@ -32,15 +32,17 @@ export const ReviewOperationsPage: React.FunctionComponent<
   IReviewOperationsPageProps
 > = ({ cancelHref, getFlowHref }) => {
   const { params, state } = useRouteData<IBaseRouteParams, IBaseRouteState>();
-  const flows = state.integration!.flows!.map(f => {
-    const [method, description] = (f.description || '').split(' ');
-    return {
-      ...f,
-      description,
-      implemented: (f.metadata || {}).excerpt.startsWith('501') ? 0 : 1,
-      method,
-    };
-  });
+  const flows = state
+    .integration!.flows!.filter(f => f.metadata && f.metadata.excerpt)
+    .map(f => {
+      const [method, description] = (f.description || '').split(' ');
+      return {
+        ...f,
+        description,
+        implemented: f.metadata!.excerpt.startsWith('501') ? 0 : 1,
+        method,
+      };
+    });
 
   return (
     <Translation ns={['integrations', 'shared']}>

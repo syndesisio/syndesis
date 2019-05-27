@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../shared';
 import { WithLeaveConfirmation } from '../../shared/WithLeaveConfirmation';
 import { AddStepPage } from './components/editor/AddStepPage';
+import { ReviewOperationsPage } from './components/editor/apiProvider/ReviewOperationsPage';
 import { EditorApp } from './components/editor/EditorApp';
 import {
   IBaseFlowRouteParams,
@@ -117,6 +118,13 @@ const saveIntegrationPage = (
   />
 );
 
+const apiProviderOperationsPage = (
+  <ReviewOperationsPage
+    cancelHref={(p, s) => resolvers.list()}
+    getFlowHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
+  />
+);
+
 /**
  * Entry point for the integration editor app. This is shown when an user clicks
  * on the "Edit" button for any existing integration.
@@ -188,6 +196,12 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                       path={routes.integration.edit.index}
                       exact={true}
                       children={addStepPage}
+                    />
+
+                    <Route
+                      path={routes.integration.edit.apiProviderOperations}
+                      exact={true}
+                      children={apiProviderOperationsPage}
                     />
 
                     {/* add step */}
