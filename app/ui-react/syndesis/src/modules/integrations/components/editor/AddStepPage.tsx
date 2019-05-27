@@ -17,7 +17,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { IntegrationEditorStepAdder } from '../IntegrationEditorStepAdder';
-import { IBaseFlowRouteParams, IBaseRouteParams, IBaseRouteState } from './interfaces';
+import { IBaseFlowRouteParams, IBaseRouteState } from './interfaces';
 import { getStepHref, IGetStepHrefs } from './utils';
 
 export interface IAddStepPageProps extends IGetStepHrefs {
@@ -37,7 +37,7 @@ export interface IAddStepPageProps extends IGetStepHrefs {
   ) => H.LocationDescriptor;
   getDeleteEdgeStepHref: (
     position: number,
-    p: IBaseRouteParams,
+    p: IBaseFlowRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptorObject;
   saveHref: (
@@ -150,7 +150,10 @@ export class AddStepPage extends React.Component<
                          */
                         if (
                           this.state.position ===
-                            getFirstPosition(state.integration, params.flowId) ||
+                            getFirstPosition(
+                              state.integration,
+                              params.flowId
+                            ) ||
                           this.state.position ===
                             getLastPosition(state.integration, params.flowId)
                         ) {
@@ -177,13 +180,10 @@ export class AddStepPage extends React.Component<
                            * and update the UI.
                            */
                           history.push(
-                            this.props.selfHref(
-                              params,
-                              {
-                                ...state,
-                                integration: newInt
-                              }
-                            )
+                            this.props.selfHref(params, {
+                              ...state,
+                              integration: newInt,
+                            })
                           );
                         }
                       }}

@@ -2,6 +2,7 @@
 import * as H from '@syndesis/history';
 import {
   ApiProviderSelectMethod,
+  ButtonLink,
   IntegrationEditorLayout,
   PageSection,
 } from '@syndesis/ui';
