@@ -17,6 +17,7 @@ export interface IWithListViewToolbarHelpers
 export interface IWithListViewToolbarHelpersProps {
   defaultFilterType: IFilterType;
   defaultSortType: ISortType;
+  defaultSortAscending?: boolean;
   children(props: IWithListViewToolbarHelpers): any;
 }
 
@@ -33,6 +34,10 @@ export class WithListViewToolbarHelpers extends React.Component<
   IWithListViewToolbarHelpersProps,
   IWithListViewToolbarHelpersState
 > {
+  public static defaultProps = {
+    defaultSortAscending: true,
+  };
+
   constructor(props: IWithListViewToolbarHelpersProps) {
     super(props);
     this.state = {
@@ -41,7 +46,7 @@ export class WithListViewToolbarHelpers extends React.Component<
       currentSortType: this.props.defaultSortType.title,
       currentValue: '',
       filterCategory: null,
-      isSortAscending: true,
+      isSortAscending: this.props.defaultSortAscending!,
     };
   }
 

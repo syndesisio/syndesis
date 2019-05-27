@@ -1,19 +1,100 @@
 import * as H from '@syndesis/history';
+import { Flow } from '@syndesis/models';
 import {
   ApiProviderReviewOperations,
   ApiProviderReviewOperationsItem,
+  IActiveFilter,
+  IFilterType,
   IntegrationEditorLayout,
-  PageSection,
+  ISortType,
 } from '@syndesis/ui';
-import { useRouteData } from '@syndesis/utils';
+import { useRouteData, WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
+import i18n from '../../../../../i18n';
 import { PageTitle } from '../../../../../shared';
 import {
   IBaseFlowRouteParams,
   IBaseRouteParams,
   IBaseRouteState,
 } from '../interfaces';
+
+interface IOperationFlow extends Flow {
+  implemented: number;
+  method: string;
+  description: string;
+}
+
+function getFilteredAndSortedIntegrations(
+  flows: IOperationFlow[],
+  activeFilters: IActiveFilter[],
+  currentSortType: string,
+  isSortAscending: boolean
+) {
+  let filteredAndSortedFlows = flows;
+  activeFilters.forEach((filter: IActiveFilter) => {
+    const valueToLower = filter.value.toLowerCase();
+    filteredAndSortedFlows = filteredAndSortedFlows.filter(
+      (f: IOperationFlow) => {
+        if (filter.title === 'Name') {
+          return f.name.toLowerCase().includes(valueToLower);
+        }
+        if (filter.title === 'OperationName') {
+          return f.description!.toLowerCase().includes(valueToLower);
+        }
+        return false;
+      }
+    );
+  });
+
+  filteredAndSortedFlows = filteredAndSortedFlows.sort((fA, fB) => {
+    const left = isSortAscending ? fA : fB;
+    const right = isSortAscending ? fB : fA;
+    if (currentSortType === 'Name') {
+      return left.name.localeCompare(right.name);
+    } else if (currentSortType === 'Operation') {
+      return left.description!.localeCompare(right.description!);
+    } else {
+      return left.implemented - right.implemented;
+    }
+  });
+
+  return filteredAndSortedFlows;
+}
+
+const filterByName = {
+  filterType: 'text',
+  id: 'name',
+  placeholder: i18n.t('integrations:filterByOperationNamePlaceholder'),
+  title: i18n.t('integrations:OperationName'),
+} as IFilterType;
+
+const filterByMethod = {
+  filterType: 'text',
+  id: 'method',
+  placeholder: i18n.t('filterByMethodAndNamePlaceholder'),
+  title: i18n.t('integrations:MethodAndName'),
+} as IFilterType;
+
+const sortByName = {
+  id: 'name',
+  isNumeric: false,
+  title: i18n.t('integration:OperationName'),
+} as ISortType;
+
+const sortByMethod = {
+  id: 'method',
+  isNumeric: false,
+  title: i18n.t('integration:MethodAndName'),
+} as ISortType;
+
+const sortByImplemented = {
+  id: 'implemented',
+  isNumeric: true,
+  title: i18n.t('integration:OperationImplemented'),
+} as ISortType;
+
+const sortTypes: ISortType[] = [sortByName, sortByMethod, sortByImplemented];
 
 export interface IReviewOperationsPageProps {
   cancelHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
@@ -41,7 +122,7 @@ export const ReviewOperationsPage: React.FunctionComponent<
         description,
         implemented: f.metadata!.excerpt.startsWith('501') ? 0 : 1,
         method,
-      };
+      } as IOperationFlow;
     });
 
   return (
@@ -57,28 +138,51 @@ export const ReviewOperationsPage: React.FunctionComponent<
               'integrations:apiProvider:reviewOperations:description'
             )}
             content={
-              <PageSection>
-                <ApiProviderReviewOperations>
-                  {flows.map((f, idx) => (
-                    <ApiProviderReviewOperationsItem
-                      key={idx}
-                      createFlowHref={getFlowHref(
-                        {
-                          ...params,
-                          flowId: f.id!,
-                        },
-                        state
-                      )}
-                      i18nCreateFlow={
-                        f.implemented ? 'Edit flow' : 'Create flow'
-                      }
-                      operationDescription={f.name}
-                      operationHttpMethod={f.method}
-                      operationPath={f.description}
-                    />
-                  ))}
-                </ApiProviderReviewOperations>
-              </PageSection>
+              <WithListViewToolbarHelpers
+                defaultFilterType={filterByName}
+                defaultSortType={sortByImplemented}
+                defaultSortAscending={false}
+              >
+                {helpers => {
+                  const filteredAndSortedFlows = getFilteredAndSortedIntegrations(
+                    flows,
+                    helpers.activeFilters,
+                    helpers.currentSortType,
+                    helpers.isSortAscending
+                  );
+                  return (
+                    <ApiProviderReviewOperations
+                      filterTypes={[filterByName, filterByMethod]}
+                      sortTypes={sortTypes}
+                      resultsCount={filteredAndSortedFlows.length}
+                      i18nResultsCount={t('shared:resultsCount', {
+                        count: filteredAndSortedFlows.length,
+                      })}
+                      {...helpers}
+                    >
+                      {filteredAndSortedFlows.map((f, idx) => (
+                        <ApiProviderReviewOperationsItem
+                          key={idx}
+                          createFlowHref={getFlowHref(
+                            {
+                              ...params,
+                              flowId: f.id!,
+                            },
+                            state
+                          )}
+                          createAsPrimary={!f.implemented}
+                          i18nCreateFlow={
+                            f.implemented ? 'Edit flow' : 'Create flow'
+                          }
+                          operationDescription={f.name}
+                          operationHttpMethod={f.method}
+                          operationPath={f.description}
+                        />
+                      ))}
+                    </ApiProviderReviewOperations>
+                  );
+                }}
+              </WithListViewToolbarHelpers>
             }
             cancelHref={cancelHref(params, state)}
           />

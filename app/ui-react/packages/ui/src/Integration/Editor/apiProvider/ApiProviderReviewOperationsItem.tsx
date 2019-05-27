@@ -7,6 +7,7 @@ import { ButtonLink } from '../../../Layout';
 import './ApiProviderReviewOperationsItem.css';
 
 export interface IApiProviderReviewOperationsItemProps {
+  createAsPrimary: boolean;
   createFlowHref: H.LocationDescriptor;
   i18nCreateFlow: string;
   onCreateFlow?: (e: React.MouseEvent<any>) => void;
@@ -32,7 +33,7 @@ export class ApiProviderReviewOperationsItem extends React.Component<
             data-testid={'api-provider-operations-create-flow'}
             onClick={this.props.onCreateFlow}
             href={this.props.createFlowHref}
-            className={'wizard-pf-back'}
+            as={this.props.createAsPrimary ? 'primary' : 'default'}
           >
             {this.props.i18nCreateFlow}
           </ButtonLink>
