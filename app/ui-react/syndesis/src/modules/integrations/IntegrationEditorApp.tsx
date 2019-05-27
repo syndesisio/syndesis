@@ -12,7 +12,7 @@ import { WithLeaveConfirmation } from '../../shared/WithLeaveConfirmation';
 import { AddStepPage } from './components/editor/AddStepPage';
 import { EditorApp } from './components/editor/EditorApp';
 import {
-  IBaseRouteParams,
+  IBaseFlowRouteParams,
   IBaseRouteState,
 } from './components/editor/interfaces';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
@@ -140,7 +140,7 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
   return (
     <Translation ns={['integrations', 'shared']}>
       {t => (
-        <WithRouteData<IBaseRouteParams, IBaseRouteState>>
+        <WithRouteData<IBaseFlowRouteParams, IBaseRouteState>>
           {({ flowId }, { integration }) => (
             <WithClosedNavigation>
               <Breadcrumb>

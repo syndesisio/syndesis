@@ -92,7 +92,8 @@
       "description": "This description has not yet been actually defined, please send help."
     },
     "reviewOperations": {
-      "title": "Operations"
+      "title": "Operations",
+      "description": "An integration can have multiple flows. Select an operation to start creating a flow."
     },
     "selectMethod": {
       "description": "Execute this integration when a client invokes an operation defined by this API.",

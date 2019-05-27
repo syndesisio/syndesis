@@ -80,10 +80,10 @@ export function toDataShapeKinds(
 /**
  * returns an empty integration object.
  *
- * @todo make the returned object immutable to avoid uncontrolled changes
  */
 export function getEmptyIntegration(): Integration {
   return produce(NEW_INTEGRATION, draft => {
+    draft.id = key();
     draft.flows = [
       {
         id: key(),

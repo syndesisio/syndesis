@@ -2,9 +2,7 @@ import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { IEditSpecificationPageProps } from './apiProvider/EditSpecificationPage';
 import { IReviewActionsPageProps } from './apiProvider/ReviewActionsPage';
-import { ReviewOperationsPage } from './apiProvider/ReviewOperationsPage';
 import { SelectMethodPage } from './apiProvider/SelectMethodPage';
-import { SetInfoPage } from './apiProvider/SetInfoPage';
 import { IDataMapperPageProps } from './dataMapper/DataMapperPage';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
 import { DescribeDataShapePage } from './endpoint/DescribeDataShapePage';
@@ -50,10 +48,6 @@ export interface IApiProviderAppProps {
   reviewActionsChildren: React.ReactElement<IReviewActionsPageProps>;
   editSpecificationPath: string;
   editSpecificationChildren: React.ReactElement<IEditSpecificationPageProps>;
-  setInfoPath: string;
-  setInfoChildren: React.ReactElement<SetInfoPage>;
-  reviewOperationsPath: string;
-  reviewOperationsChildren: React.ReactElement<ReviewOperationsPage>;
 }
 export const ApiProviderApp: React.FunctionComponent<
   IApiProviderAppProps
@@ -74,16 +68,6 @@ export const ApiProviderApp: React.FunctionComponent<
         path={props.editSpecificationPath}
         exact={true}
         children={props.editSpecificationChildren}
-      />
-      <Route
-        path={props.setInfoPath}
-        exact={true}
-        children={props.setInfoChildren}
-      />
-      <Route
-        path={props.reviewOperationsPath}
-        exact={true}
-        children={props.reviewOperationsChildren}
       />
     </Switch>
   );
@@ -199,16 +183,6 @@ export const EditorRoutes: React.FunctionComponent<IEditorAppProps> = props => {
         />
       ) : null}
 
-      <Route path={props.endpointEditor.selectActionPath}>
-        <EndpointEditorApp
-          selectActionPath={props.endpointEditor.selectActionPath}
-          selectActionChildren={props.endpointEditor.selectActionChildren}
-          configureActionPath={props.endpointEditor.configureActionPath}
-          configureActionChildren={props.endpointEditor.configureActionChildren}
-          describeDataPath={props.endpointEditor.describeDataPath}
-          describeDataChildren={props.endpointEditor.describeDataChildren}
-        />
-      </Route>
       <Route path={props.apiProvider.selectMethodPath}>
         <ApiProviderApp
           selectMethodPath={props.apiProvider.selectMethodPath}
@@ -219,10 +193,17 @@ export const EditorRoutes: React.FunctionComponent<IEditorAppProps> = props => {
           editSpecificationChildren={
             props.apiProvider.editSpecificationChildren
           }
-          setInfoPath={props.apiProvider.setInfoPath}
-          setInfoChildren={props.apiProvider.setInfoChildren}
-          reviewOperationsPath={props.apiProvider.reviewOperationsPath}
-          reviewOperationsChildren={props.apiProvider.reviewOperationsChildren}
+        />
+      </Route>
+
+      <Route path={props.endpointEditor.selectActionPath}>
+        <EndpointEditorApp
+          selectActionPath={props.endpointEditor.selectActionPath}
+          selectActionChildren={props.endpointEditor.selectActionChildren}
+          configureActionPath={props.endpointEditor.configureActionPath}
+          configureActionChildren={props.endpointEditor.configureActionChildren}
+          describeDataPath={props.endpointEditor.describeDataPath}
+          describeDataChildren={props.endpointEditor.describeDataChildren}
         />
       </Route>
       <Route path={props.template.templatePath}>

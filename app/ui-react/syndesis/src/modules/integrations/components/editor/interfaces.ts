@@ -9,166 +9,13 @@ import {
 } from '@syndesis/models';
 import { include } from 'named-urls';
 
-/**
- * @param actionId - the ID of the action selected in the previous step.
- * @param position - the zero-based position for the new step in the integration
- * flow.
- * @param step - the configuration step when configuring a multi-page connection.
- */
-export interface IConfigureStepRouteParams {
-  flowId: string;
-  position: string;
-}
-
-/**
- * @param integration - the integration object, used to render the IVP.
- * @param connection - the connection object selected in the previous step. Needed
- * to render the IVP.
- * @param updatedIntegration - when creating a link to this page, this should
- * never be set. It is used by the page itself to pass the partially configured
- * step when configuring a multi-page connection.
- */
-export interface IConfigureStepRouteState {
-  step: StepKind;
-  integration: Integration;
-  updatedIntegration?: Integration;
-}
-
-/**
- * @param actionId - the ID of the action selected in the previous step.
- * @param position - the zero-based position for the new step in the integration
- * flow.
- * @param step - the configuration step when configuring a multi-page connection.
- */
-export interface IConfigureActionRouteParams {
-  flowId: string;
-  position: string;
-  actionId: string;
-  step: string;
-}
-
-/**
- * @param integration - the integration object, used to render the IVP.
- * @param connection - the connection object selected in the previous step. Needed
- * to render the IVP.
- * @param updatedIntegration - when creating a link to this page, this should
- * never be set. It is used by the page itself to pass the partially configured
- * step when configuring a multi-page connection.
- */
-export interface IConfigureActionRouteState {
-  connection: ConnectionOverview;
-  integration: Integration;
-  updatedIntegration?: Integration;
-  configuredProperties: { [key: string]: string };
-}
+/*********************************/
+/********* UI MODELS *************/
+/*********************************/
 
 export enum DataShapeDirection {
   INPUT = 'input',
   OUTPUT = 'output',
-}
-
-export interface IDescribeDataShapeRouteParams {
-  flowId: string;
-  actionId?: string;
-  position: string;
-  direction: DataShapeDirection;
-}
-
-export interface IDescribeDataShapeRouteState {
-  step: StepKind;
-  connection: ConnectionOverview;
-  integration: Integration;
-  updatedIntegration?: Integration;
-}
-
-/**
- * @param connectionId - the ID of the connection selected in the previous step
- * @param position - the zero-based position for the new step in the integration
- * flow.
- */
-export interface ISelectActionRouteParams {
-  flowId: string;
-  connectionId: string;
-  position: string;
-}
-
-/**
- * @param integration - the integration object, used to render the IVP.
- * @param connection - the connection object selected in the previous step, used
- * to render the IVP.
- */
-export interface ISelectActionRouteState {
-  connection: ConnectionOverview;
-  integration: Integration;
-}
-
-/**
- * @param position - the zero-based position for the new step in the integration
- * flow.
- */
-export interface ISelectConnectionRouteParams {
-  flowId: string;
-  position: string;
-}
-
-export interface IBaseApiProviderRouteParams {
-  flowId: string;
-  position: string;
-}
-
-export interface IBaseApiProviderRouteState {
-  integration: Integration;
-}
-
-export interface IReviewActionsRouteState extends IBaseApiProviderRouteState {
-  specification: string;
-}
-
-export interface ITemplateStepRouteParams extends IConfigureStepRouteParams {}
-export interface ITemplateStepRouteState extends IConfigureStepRouteState {}
-export interface IDataMapperRouteParams extends IConfigureStepRouteParams {}
-export interface IDataMapperRouteState extends IConfigureStepRouteState {}
-export interface IRuleFilterStepRouteParams extends IConfigureStepRouteParams {}
-export interface IRuleFilterStepRouteState extends IConfigureStepRouteState {}
-
-/**
- * @param integration - the integration object coming from step 3.index, used to
- * render the IVP.
- */
-export interface ISelectConnectionRouteState {
-  integration: Integration;
-}
-
-export interface IBaseRouteParams {
-  flowId: string;
-}
-
-export interface IBaseRouteState {
-  /**
-   * the integration object to edit
-   */
-  integration: Integration;
-}
-
-export interface ISaveIntegrationRouteParams {
-  flowId: string;
-  integrationId?: string;
-}
-
-export interface ISaveIntegrationForm {
-  name: string;
-  description?: string;
-}
-
-export interface IPostPublishRouteParams {
-  integrationId: string;
-}
-
-/**
- * @param integration - the integration object.
- */
-export interface ISaveIntegrationRouteState {
-  integration: Integration;
 }
 
 export interface IUIStep extends StepKind {
@@ -189,6 +36,136 @@ export interface IUIIntegrationStep extends IUIStep {
   isUnclosedSplit: boolean;
 }
 
+/*********************************/
+/*********** ROUTES **************/
+/*********************************/
+
+export interface IBaseRouteParams {
+  integrationId: string;
+}
+
+export interface IBaseFlowRouteParams extends IBaseRouteParams {
+  flowId: string;
+}
+
+export interface IBaseRouteState {
+  /**
+   * the integration object to edit
+   */
+  integration: Integration;
+}
+
+/**
+ * @param actionId - the ID of the action selected in the previous step.
+ * @param position - the zero-based position for the new step in the integration
+ * flow.
+ * @param step - the configuration step when configuring a multi-page connection.
+ */
+export interface IConfigureStepRouteParams extends IBaseFlowRouteParams {
+  position: string;
+}
+
+/**
+ * @param integration - the integration object, used to render the IVP.
+ * @param connection - the connection object selected in the previous step. Needed
+ * to render the IVP.
+ * @param updatedIntegration - when creating a link to this page, this should
+ * never be set. It is used by the page itself to pass the partially configured
+ * step when configuring a multi-page connection.
+ */
+export interface IConfigureStepRouteState extends IBaseRouteState {
+  step: StepKind;
+  updatedIntegration?: Integration;
+}
+
+/**
+ * @param actionId - the ID of the action selected in the previous step.
+ * @param position - the zero-based position for the new step in the integration
+ * flow.
+ * @param step - the configuration step when configuring a multi-page connection.
+ */
+export interface IConfigureActionRouteParams extends IBaseFlowRouteParams {
+  position: string;
+  actionId: string;
+  step: string;
+}
+
+/**
+ * @param integration - the integration object, used to render the IVP.
+ * @param connection - the connection object selected in the previous step. Needed
+ * to render the IVP.
+ * @param updatedIntegration - when creating a link to this page, this should
+ * never be set. It is used by the page itself to pass the partially configured
+ * step when configuring a multi-page connection.
+ */
+export interface IConfigureActionRouteState extends IBaseRouteState {
+  connection: ConnectionOverview;
+  updatedIntegration?: Integration;
+  configuredProperties: { [key: string]: string };
+}
+
+export interface IDescribeDataShapeRouteParams extends IBaseFlowRouteParams {
+  actionId?: string;
+  position: string;
+  direction: DataShapeDirection;
+}
+
+export interface IDescribeDataShapeRouteState extends IBaseRouteState {
+  step: StepKind;
+  connection: ConnectionOverview;
+  updatedIntegration?: Integration;
+}
+
+/**
+ * @param connectionId - the ID of the connection selected in the previous step
+ * @param position - the zero-based position for the new step in the integration
+ * flow.
+ */
+export interface ISelectActionRouteParams extends IBaseFlowRouteParams {
+  connectionId: string;
+  position: string;
+}
+
+/**
+ * @param integration - the integration object, used to render the IVP.
+ * @param connection - the connection object selected in the previous step, used
+ * to render the IVP.
+ */
+export interface ISelectActionRouteState extends IBaseRouteState {
+  connection: ConnectionOverview;
+}
+
+/**
+ * @param position - the zero-based position for the new step in the integration
+ * flow.
+ */
+export interface ISelectConnectionRouteParams extends IBaseFlowRouteParams {
+  position: string;
+}
+
+export interface IBaseApiProviderRouteParams
+  extends ISelectConnectionRouteParams {}
+export interface IBaseApiProviderRouteState
+  extends IConfigureStepRouteParams,
+    IBaseRouteState {}
+export interface IApiProviderReviewActionsRouteState
+  extends IBaseApiProviderRouteState {
+  specification: string;
+}
+
+export interface ITemplateStepRouteParams extends IConfigureStepRouteParams {}
+export interface ITemplateStepRouteState extends IConfigureStepRouteState {}
+export interface IDataMapperRouteParams extends IConfigureStepRouteParams {}
+export interface IDataMapperRouteState extends IConfigureStepRouteState {}
+export interface IRuleFilterStepRouteParams extends IConfigureStepRouteParams {}
+export interface IRuleFilterStepRouteState extends IConfigureStepRouteState {}
+export interface ISelectConnectionRouteState extends IBaseRouteState {}
+export interface IPostPublishRouteParams extends IBaseRouteParams {}
+export interface ISaveIntegrationRouteParams extends IBaseRouteParams {}
+export interface ISaveIntegrationRouteState extends IBaseRouteState {
+  flowId: string;
+}
+
 export const stepRoutes = {
   // step 1
   selectStep: '',
@@ -197,8 +174,6 @@ export const stepRoutes = {
     selectMethod: '',
     reviewActions: 'review-actions',
     editSpecification: 'edit-specification',
-    setInfo: 'set-info',
-    reviewOperations: 'review-operations',
   }),
   // if selected step kind is data mapper
   dataMapper: 'mapper',
@@ -222,10 +197,11 @@ export const stepRoutes = {
  * Both the integration creator and editor share the same routes when the creator
  * reaches the third step in the wizard. This object is to keep them DRY.
  */
-export const editorRoutes = include(':flowId', {
-  index: 'add-step',
-  addStep: include(':position/add', stepRoutes),
-  editStep: include(':position/edit', stepRoutes),
+export const editorRoutes = include('editor', {
+  index: ':flowId/add-step',
+  apiProviderOperations: 'operations',
+  addStep: include(':flowId/:position/add', stepRoutes),
+  editStep: include(':flowId/:position/edit', stepRoutes),
   saveAndPublish: 'save',
   root: '',
 });

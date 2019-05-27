@@ -6,6 +6,7 @@ import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import { configureIndexMapper } from '../../resolvers';
 import {
   DataShapeDirection,
+  IApiProviderReviewActionsRouteState,
   IBaseApiProviderRouteParams,
   IBaseApiProviderRouteState,
   IConfigureActionRouteParams,
@@ -16,7 +17,6 @@ import {
   IDataMapperRouteState,
   IDescribeDataShapeRouteParams,
   IDescribeDataShapeRouteState,
-  IReviewActionsRouteState,
   IRuleFilterStepRouteParams,
   IRuleFilterStepRouteState,
   ISelectActionRouteParams,
@@ -28,9 +28,12 @@ import {
   stepRoutes,
 } from './interfaces';
 
-export interface IEditorIndex {
-  flowId: string;
+export interface IEditorBase {
   integration: Integration;
+}
+
+export interface IEditorIndex extends IEditorBase {
+  flowId: string;
 }
 
 export interface IEditorSelectConnection extends IEditorIndex {
@@ -56,16 +59,6 @@ export interface IEditorConfigureStep extends IEditorIndex {
   position: string;
   step: StepKind;
   updatedIntegration?: Integration;
-}
-
-export interface IApiProviderConfigureStep {
-  flowId: string;
-  integration: Integration;
-  position: string;
-}
-
-export interface IApiProviderReviewStep extends IApiProviderConfigureStep {
-  specification: string;
 }
 
 export const configureSelectConnectionMapper = ({
@@ -203,19 +196,19 @@ export const configureConfigureDataMapperMapper = ({
   };
 };
 
-export const apiProviderMapper = ({
-  position,
-  ...rest
-}: IApiProviderConfigureStep) => {
-  const { params, state } = configureIndexMapper(rest);
+export interface IApiProviderConfigureStep extends IEditorSelectConnection {}
+export interface IApiProviderReviewStep extends IEditorSelectConnection {
+  specification: string;
+}
+
+export const apiProviderMapper = (data: IApiProviderConfigureStep) => {
+  const { params, state } = configureIndexMapper(data);
   return {
     params: {
       ...params,
-      position,
+      position: '0',
     } as IBaseApiProviderRouteParams,
-    state: {
-      ...state,
-    } as IBaseApiProviderRouteState,
+    state: state as IBaseApiProviderRouteState,
   };
 };
 
@@ -231,7 +224,7 @@ export const apiProviderReviewActionsMapper = ({
     state: {
       ...state,
       specification,
-    } as IReviewActionsRouteState,
+    } as IApiProviderReviewActionsRouteState,
   };
 };
 
@@ -267,7 +260,7 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
       editSpecification: makeResolver<
         IApiProviderReviewStep,
         IBaseApiProviderRouteParams,
-        IReviewActionsRouteState
+        IApiProviderReviewActionsRouteState
       >(esr.apiProvider.editSpecification, apiProviderReviewActionsMapper),
       selectMethod: makeResolver<
         IApiProviderConfigureStep,
@@ -277,14 +270,8 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
       reviewActions: makeResolver<
         IApiProviderReviewStep,
         IBaseApiProviderRouteParams,
-        IReviewActionsRouteState
+        IApiProviderReviewActionsRouteState
       >(esr.apiProvider.reviewActions, apiProviderReviewActionsMapper),
-      setInfo: makeResolver<
-        IApiProviderReviewStep,
-        IBaseApiProviderRouteParams,
-        IReviewActionsRouteState
-      >(esr.apiProvider.setInfo, apiProviderReviewActionsMapper),
-      reviewOperations: makeResolverNoParams('todo review operations'),
     },
     basicFilter: makeResolver<
       IEditorConfigureStep,
