@@ -6,7 +6,7 @@ import { BrowserRouter as Router } from 'react-router-dom';
 
 import {
   OpenApiSelectMethod,
-  ApiProviderReviewActions,
+  OpenApiReviewActions,
   ApiProviderReviewOperations,
   ApiProviderReviewOperationsItem,
 } from '../../../src';
@@ -61,7 +61,7 @@ stories
     />
   ))
   .add('Review Actions', () => (
-    <ApiProviderReviewActions
+    <OpenApiReviewActions
       apiProviderDescription={'the description'}
       apiProviderName={'theName'}
       i18nApiDefinitionHeading={'API DEFINITION'}
