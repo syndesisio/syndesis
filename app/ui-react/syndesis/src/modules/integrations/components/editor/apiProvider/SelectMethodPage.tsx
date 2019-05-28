@@ -34,20 +34,6 @@ export interface ISelectMethodPageProps {
  */
 export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
   public render() {
-    const handleFiles = (files: File[]) => {
-      files.forEach(file => {
-        return '<span>Process file ' + file.name + '</span>\n';
-      });
-    };
-
-    const uploadFailedMessage = (fileName: string) => {
-      return (
-        '<span>File <strong>' +
-        fileName +
-        '</strong> could not be uploaded</span>'
-      );
-    };
-
     return (
       <Translation ns={['integrations', 'shared']}>
         {t => (
@@ -58,10 +44,6 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
             {(params, state, { history }) => {
               const onUrl = async (url: string) => {
                 history.push(this.props.getReviewHref(url, params, state));
-              };
-
-              const handleSubmit = (...args: any[]) => {
-                console.log('handleSubmit', args);
               };
 
               return (
@@ -79,28 +61,26 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                         <OpenApiSelectMethod
                           disableDropzone={false}
                           fileExtensions={t(
-                            'integrations:apiProvider:selectedMethod:dndFileExtensions'
+                            'integrations:apiProvider:selectMethod:dndFileExtensions'
                           )}
                           i18nHelpMessage={t(
-                            'integrations:apiProvider:selectedMethod:dndHelpMessage'
+                            'integrations:apiProvider:selectMethod:dndHelpMessage'
                           )}
                           i18nInstructions={t(
-                            'integrations:apiProvider:selectedMethod:dndInstructions'
+                            'integrations:apiProvider:selectMethod:dndInstructions'
                           )}
                           i18nNoFileSelectedMessage={t(
-                            'integrations:apiProvider:selectedMethod:dndNoFileSelectedMessage'
+                            'integrations:apiProvider:selectMethod:dndNoFileSelectedLabel'
                           )}
                           i18nSelectedFileLabel={t(
-                            'integrations:apiProvider:selectedMethod:dndSelectedFileLabel'
+                            'integrations:apiProvider:selectMethod:dndSelectedFileLabel'
                           )}
                           i18nUploadFailedMessage={t(
-                            'integrations:apiProvider:selectedMethod:'
+                            'integrations:apiProvider:selectMethod:dndUploadFailedMessage'
                           )}
                           i18nUploadSuccessMessage={t(
-                            'integrations:apiProvider:selectedMethod:'
+                            'integrations:apiProvider:selectMethod:dndUploadSuccessMessage'
                           )}
-                          onUploadAccepted={handleFiles}
-                          onUploadRejected={uploadFailedMessage}
                           i18nMethodFromFile={t(
                             'integrations:apiProvider:selectMethod:methodFromFile'
                           )}
@@ -113,7 +93,6 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                           i18nUrlNote={t(
                             'integrations:apiProvider:selectMethod:urlNote'
                           )}
-                          handleSubmit={handleSubmit}
                         />
                         <ButtonLink
                           onClick={() =>
