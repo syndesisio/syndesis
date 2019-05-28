@@ -20,7 +20,7 @@ export const OperationsDropdown: React.FunctionComponent<
       }
       isOpen={isOpen}
     >
-      {children}
+      <div>{children}</div>
     </Dropdown>
   );
 };

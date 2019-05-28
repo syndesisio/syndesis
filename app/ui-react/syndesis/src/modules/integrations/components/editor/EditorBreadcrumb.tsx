@@ -20,7 +20,7 @@ export const ApiProviderOperation: React.FunctionComponent<
   return (
     <>
       <HttpMethodColors method={method} />
-      {desc}
+      &nbsp;{desc}
     </>
   );
 };
@@ -59,7 +59,18 @@ export const EditorBreadcrumb: React.FunctionComponent<
         )
       }
     >
-      <Link to={rootHref}>{integration.name}</Link>
+      <Link
+        to={rootHref}
+        title={integration.name}
+        style={{
+          maxWidth: 200,
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        {integration.name}
+      </Link>
       {currentFlow && isMultiflow && (
         <OperationsDropdown
           selectedOperation={
