@@ -125,8 +125,11 @@ export class OpenApiSelectMethod extends React.Component<
             <FormGroup controlId={'method'} disabled={false}>
               <div>
                 <Radio
+                  id={'method-file'}
                   name={'method'}
                   onClick={() => this.onSelectMethod('file')}
+                  checked={true}
+                  readOnly={true}
                 >
                   <div>{this.props.i18nMethodFromFile}</div>
                   {this.state.method === 'file' && (
@@ -160,8 +163,10 @@ export class OpenApiSelectMethod extends React.Component<
                   )}
                 </Radio>
                 <Radio
+                  id={'method-url'}
                   name={'method'}
                   onClick={() => this.onSelectMethod('url')}
+                  readOnly={true}
                 >
                   <div>{this.props.i18nMethodFromUrl}</div>
                   {this.state.method === 'url' && (
@@ -180,8 +185,10 @@ export class OpenApiSelectMethod extends React.Component<
                   )}
                 </Radio>
                 <Radio
+                  id={'method-scratch'}
                   name={'method'}
                   onClick={() => this.onSelectMethod('scratch')}
+                  readOnly={true}
                 >
                   <div>{this.props.i18nMethodFromScratch}</div>
                 </Radio>
