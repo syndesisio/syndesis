@@ -58,7 +58,6 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                           fileExtensions={t(
                             'integrations:apiProvider:selectMethod:dndFileExtensions'
                           )}
-                          i18nBtnCancel={t('shared:Cancel')}
                           i18nBtnNext={t('shared:Next')}
                           i18nHelpMessage={t(
                             'integrations:apiProvider:selectMethod:dndHelpMessage'
