@@ -22,3 +22,4 @@ export * from './IntegrationsListItemBasic';
 export * from './IntegrationsListItemUnreadable';
 export * from './IntegrationsListSkeleton';
 export * from './IntegrationsListView';
+export * from './OperationsDropdown';

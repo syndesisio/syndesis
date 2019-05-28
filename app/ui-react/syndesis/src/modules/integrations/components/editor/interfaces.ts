@@ -199,7 +199,7 @@ export const stepRoutes = {
  */
 export const editorRoutes = include('editor', {
   index: ':flowId/add-step',
-  apiProviderOperations: 'operations',
+  operations: 'operations',
   addStep: include(':flowId/:position/add', stepRoutes),
   editStep: include(':flowId/:position/edit', stepRoutes),
   saveAndPublish: 'save',

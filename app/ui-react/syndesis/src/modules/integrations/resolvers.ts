@@ -1,5 +1,5 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
-import { API_PROVIDER, getEmptyIntegration } from '@syndesis/api';
+import { getEmptyIntegration, isIntegrationApiProvider } from '@syndesis/api';
 import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import {
   makeResolver,
@@ -42,8 +42,8 @@ export const configureIndexMapper = ({
 export const configureIndexOrApiProviderMapper = (
   indexRoute: string,
   apiProviderRoute: string
-) => ({ flowId, integration }: IEditorIndex) => {
-  return (integration.tags || []).includes(API_PROVIDER)
+) => ({ flowId, integration }: { flowId?: string } & IEditorBase) => {
+  return isIntegrationApiProvider(integration!)
     ? {
         params: {
           integrationId: integration.id!,
@@ -161,26 +161,22 @@ const resolvers = {
     configure: {
       root: makeResolverNoParams(routes.create.configure.root),
       entryPoint: makeResolver<
-        IEditorIndex,
+        { flowId?: string } & IEditorBase,
         IBaseFlowRouteParams,
         IBaseRouteState
       >(
         routes.create.configure.index,
         configureIndexOrApiProviderMapper(
           routes.create.configure.index,
-          routes.create.configure.apiProviderOperations
+          routes.create.configure.operations
         )
       ),
       index: makeResolver<IEditorIndex, IBaseFlowRouteParams, IBaseRouteState>(
         routes.create.configure.index,
         configureIndexMapper
       ),
-      apiProviderOperations: makeResolver<
-        IEditorBase,
-        IBaseRouteParams,
-        IBaseRouteState
-      >(
-        routes.create.configure.apiProviderOperations,
+      operations: makeResolver<IEditorBase, IBaseRouteParams, IBaseRouteState>(
+        routes.create.configure.operations,
         configureApiProviderOperationsMapper
       ),
       addStep: makeEditorResolvers(routes.create.configure.addStep),
@@ -202,26 +198,22 @@ const resolvers = {
         configureIndexMapper
       ),
       entryPoint: makeResolver<
-        IEditorIndex,
+        { flowId?: string } & IEditorBase,
         IBaseFlowRouteParams,
         IBaseRouteState
       >(
         routes.integration.edit.index,
         configureIndexOrApiProviderMapper(
           routes.integration.edit.index,
-          routes.integration.edit.apiProviderOperations
+          routes.integration.edit.operations
         )
       ),
       index: makeResolver<IEditorIndex, IBaseFlowRouteParams, IBaseRouteState>(
         routes.integration.edit.index,
         configureIndexMapper
       ),
-      apiProviderOperations: makeResolver<
-        IEditorBase,
-        IBaseRouteParams,
-        IBaseRouteState
-      >(
-        routes.integration.edit.apiProviderOperations,
+      operations: makeResolver<IEditorBase, IBaseRouteParams, IBaseRouteState>(
+        routes.integration.edit.operations,
         configureApiProviderOperationsMapper
       ),
       addStep: makeEditorResolvers(routes.integration.edit.addStep),

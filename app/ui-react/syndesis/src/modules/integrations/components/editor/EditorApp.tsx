@@ -275,47 +275,45 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
   );
 
   return (
-    <>
-      <EditorRoutes
-        selectStepPath={appStepRoutes.selectStep}
-        selectStepChildren={selectStepChildren}
-        endpointEditor={{
-          selectActionPath: appStepRoutes.connection.selectAction,
-          selectActionChildren: selectActionPage,
-          configureActionPath: appStepRoutes.connection.configureAction,
-          configureActionChildren: configureActionPage,
-          describeDataPath: appStepRoutes.connection.describeData,
-          describeDataChildren: describeDataShapePage,
-        }}
-        apiProvider={{
-          selectMethodPath: appStepRoutes.apiProvider.selectMethod,
-          selectMethodChildren: selectMethodPage,
-          reviewActionsPath: appStepRoutes.apiProvider.reviewActions,
-          reviewActionsChildren: reviewActionsPage,
-          editSpecificationPath: appStepRoutes.apiProvider.editSpecification,
-          editSpecificationChildren: editSpecificationPage,
-        }}
-        template={{
-          templatePath: appStepRoutes.template,
-          templateChildren: templateStepPage,
-        }}
-        dataMapper={{
-          mapperPath: appStepRoutes.dataMapper,
-          mapperChildren: dataMapperPage,
-        }}
-        basicFilter={{
-          basicFilterPath: appStepRoutes.basicFilter,
-          basicFilterChildren: basicFilterPage,
-        }}
-        step={{
-          configurePath: appStepRoutes.step,
-          configureChildren: configureStepPage,
-        }}
-        extension={{
-          configurePath: appStepRoutes.extension,
-          configureChildren: configureStepPage,
-        }}
-      />
-    </>
+    <EditorRoutes
+      selectStepPath={appStepRoutes.selectStep}
+      selectStepChildren={selectStepChildren}
+      endpointEditor={{
+        selectActionPath: appStepRoutes.connection.selectAction,
+        selectActionChildren: selectActionPage,
+        configureActionPath: appStepRoutes.connection.configureAction,
+        configureActionChildren: configureActionPage,
+        describeDataPath: appStepRoutes.connection.describeData,
+        describeDataChildren: describeDataShapePage,
+      }}
+      apiProvider={{
+        selectMethodPath: appStepRoutes.apiProvider.selectMethod,
+        selectMethodChildren: selectMethodPage,
+        reviewActionsPath: appStepRoutes.apiProvider.reviewActions,
+        reviewActionsChildren: reviewActionsPage,
+        editSpecificationPath: appStepRoutes.apiProvider.editSpecification,
+        editSpecificationChildren: editSpecificationPage,
+      }}
+      template={{
+        templatePath: appStepRoutes.template,
+        templateChildren: templateStepPage,
+      }}
+      dataMapper={{
+        mapperPath: appStepRoutes.dataMapper,
+        mapperChildren: dataMapperPage,
+      }}
+      basicFilter={{
+        basicFilterPath: appStepRoutes.basicFilter,
+        basicFilterChildren: basicFilterPage,
+      }}
+      step={{
+        configurePath: appStepRoutes.step,
+        configureChildren: configureStepPage,
+      }}
+      extension={{
+        configurePath: appStepRoutes.extension,
+        configureChildren: configureStepPage,
+      }}
+    />
   );
 };

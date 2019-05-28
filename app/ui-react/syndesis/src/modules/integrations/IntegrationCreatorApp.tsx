@@ -1,16 +1,14 @@
 import { ALL_STEPS, createStep, DATA_MAPPER } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { StepKind } from '@syndesis/models';
-import { Breadcrumb, toTestId } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Route, Switch } from 'react-router';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../shared';
 import { WithLeaveConfirmation } from '../../shared/WithLeaveConfirmation';
 import { AddStepPage } from './components/editor/AddStepPage';
-import { ReviewOperationsPage } from './components/editor/apiProvider/ReviewOperationsPage';
 import { EditorApp } from './components/editor/EditorApp';
+import { OperationsPage } from './components/editor/OperationsPage';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import resolvers from './resolvers';
 import routes from './routes';
@@ -97,6 +95,12 @@ const addStepPage = (
         ...s,
       })
     }
+    rootHref={(p, s) =>
+      resolvers.create.configure.entryPoint({
+        ...p,
+        ...s,
+      })
+    }
   />
 );
 
@@ -114,8 +118,9 @@ const saveIntegrationPage = (
 );
 
 const apiProviderOperationsPage = (
-  <ReviewOperationsPage
+  <OperationsPage
     cancelHref={(p, s) => resolvers.list()}
+    rootHref={(p, s) => resolvers.create.configure.entryPoint({ ...p, ...s })}
     getFlowHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
   />
 );
@@ -143,18 +148,6 @@ const apiProviderOperationsPage = (
 export const IntegrationCreatorApp: React.FunctionComponent = () => {
   return (
     <WithClosedNavigation>
-      <Breadcrumb>
-        <Link
-          data-testid={toTestId(
-            'IntegrationCreatorApp',
-            'new-integration-link'
-          )}
-          to={resolvers.list()}
-        >
-          Integrations
-        </Link>
-        <span>New integration</span>
-      </Breadcrumb>
       <Translation ns={['integrations']}>
         {t => (
           <WithLeaveConfirmation
@@ -182,7 +175,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                       isApiProvider
                     ) =>
                       isApiProvider
-                        ? resolvers.create.configure.apiProviderOperations({
+                        ? resolvers.create.configure.operations({
                             integration,
                           })
                         : resolvers.create.finish.selectStep({
@@ -217,7 +210,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                 />
 
                 <Route
-                  path={routes.create.configure.apiProviderOperations}
+                  path={routes.create.configure.operations}
                   exact={true}
                   children={apiProviderOperationsPage}
                 />
