@@ -636,28 +636,19 @@ We now have a page that is resilient to page refreshes, can be shared with other
 
 #### Adding test identifiers
 
-UI components that have user interaction should define a `data-testid` attribute. Here are a few components that might need a test identifier: `ButtonLink`, `button`, `a`, `input`, `Link`, `PfVerticalNavItem`, `PfNavLink`, `li` used in menus, and `DropdownItem`.
+UI components that have user interaction should define a `data-testid` attribute. Here are a few components that might need a test identifier: `a`, `button`, `Button`, `ButtonLink`, `Card`, `DropdownItem`, `FormControl`, `Grid.Row`, `input`, `Label`, `li`, `Link`, `ListViewItem`, `PfNavLink`, `PfVerticalNavItem`, and `Title`.
 
-The `toTestId` utilitity function, which is found in the `testIdGenerator.ts` file in the `utils` folder of the `@syndesis/ui` package, should be used to generate **all** test identifiers. This function ensures the identifier is formatted correctly and only contains valid characters. It also provides a way to separate segments of the identifier if segments are desired.
+Test identifiers that do not contain any user-defined text should be a hardcoded string. **Only alphanumeric characters and hyphens should be used.** A common convention, though not mandatory, is to format the identifier using the file component name and the widget whose ID is being set. For example, a `data-testid` value of `api-connector-details-form-cancel-button` might be found on a button in the `ApiConnectorDetailsForm` component.
 
-The `toTestId` function accepts one or more strings and inserts a dash (`-`) character between them. It is recommended to have the first string be the name of the component. Here is an example of how to use the `toTestId` function:
+When a test identifier needs to contain some user-defined text, like for a card, list item, or row, the `toValidHtmlId` utility function, found in the `@syndesis/ui/helpers.ts` file, should be used to format the user-defined text. This function ensures the identifier only contains valid characters. Here is an example:
 
 ```tsx
-export class ExtensionListItem extends React.Component<
-...
-<Button
-  data-testid={`${toTestId(
-    'ExtensionListItem',
-    this.props.extensionName,
-    'delete-button'
-  )}`}
-  ...
->
-  {this.props.i18nDelete}
-</Button>
+        data-testid={`integrations-list-item-${toValidHtmlId(
+          this.props.integrationName
+        )}-list-item`}
 ```
 
-The above code produces this test ID for an extension with the name of "My Extension": `extensionlistitem-my-extension-delete-button`.
+The above code produces this test ID an integration with the name of "My Integration": `integrations-list-item-my-integration-list-item`.
 
 #### Unit testing
 

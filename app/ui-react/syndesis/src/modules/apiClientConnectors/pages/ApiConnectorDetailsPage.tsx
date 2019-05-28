@@ -7,7 +7,6 @@ import {
   Container,
   PageLoader,
   PageSection,
-  toTestId,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -213,19 +212,17 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                         <>
                                           <Breadcrumb>
                                             <Link
-                                              data-testid={toTestId(
-                                                'ApiConnectorDetailsPage',
-                                                'home-link'
-                                              )}
+                                              data-testid={
+                                                'api-connector-details-page-home-link'
+                                              }
                                               to={resolvers.dashboard.root()}
                                             >
                                               {t('shared:Home')}
                                             </Link>
                                             <Link
-                                              data-testid={toTestId(
-                                                'ApiConnectorDetailsPage',
-                                                'api-connectors-link'
-                                              )}
+                                              data-testid={
+                                                'api-connector-details-page-api-connectors-link'
+                                              }
                                               to={resolvers.apiClientConnectors.list()}
                                             >
                                               {t('apiConnectorsPageTitle')}

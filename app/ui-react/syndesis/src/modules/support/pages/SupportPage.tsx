@@ -4,7 +4,6 @@ import {
   PageLoader,
   PageSection,
   SimplePageHeader,
-  toTestId,
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -70,10 +69,9 @@ export const SupportPage: React.FunctionComponent = () => {
                                   <div className="radio">
                                     <label htmlFor="alllogs">
                                       <input
-                                        data-testid={toTestId(
-                                          'SupportPage',
-                                          'all-logs-input'
-                                        )}
+                                        data-testid={
+                                          'support-page-all-logs-input'
+                                        }
                                         type="radio"
                                         id="alllogs"
                                         value="alllogs"
@@ -92,10 +90,9 @@ export const SupportPage: React.FunctionComponent = () => {
                                   <div className="radio">
                                     <label htmlFor="specificlogs">
                                       <input
-                                        data-testid={toTestId(
-                                          'SupportPage',
-                                          'specific-logs-input'
-                                        )}
+                                        data-testid={
+                                          'support-page-specific-logs-input'
+                                        }
                                         type="radio"
                                         id="specificlogs"
                                         value="specificlogs"
@@ -146,10 +143,9 @@ export const SupportPage: React.FunctionComponent = () => {
                                       };
                                       return (
                                         <button
-                                          data-testid={toTestId(
-                                            'SupportPage',
-                                            'download-button'
-                                          )}
+                                          data-testid={
+                                            'support-page-download-button'
+                                          }
                                           className="btn btn-primary"
                                           disabled={
                                             isEmpty(integrationsToDl) &&

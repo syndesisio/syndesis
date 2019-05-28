@@ -4,7 +4,6 @@ import * as H from '@syndesis/history';
 import classnames from 'classnames';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../../../Layout';
-import { toTestId } from '../../../utils';
 import './ViewsImportLayout.css';
 
 /**
@@ -93,7 +92,7 @@ export const ViewsImportLayout: React.FunctionComponent<
       </div>
       <div className="wizard-pf-footer views-import-layout__footer">
         <ButtonLink
-          data-testid={`${toTestId('ViewsImportLayout', 'back-button')}`}
+          data-testid={'views-import-layout-back-button'}
           onClick={onBack}
           href={backHref}
           className={'wizard-pf-back'}
@@ -101,7 +100,7 @@ export const ViewsImportLayout: React.FunctionComponent<
           <i className="fa fa-angle-left" /> Back
         </ButtonLink>
         <ButtonLink
-          data-testid={`${toTestId('ViewsImportLayout', 'next-button')}`}
+          data-testid={'views-import-layout-next-button'}
           onClick={isLastStep ? onCreateViews : onNext}
           href={nextHref}
           as={'primary'}
@@ -118,7 +117,7 @@ export const ViewsImportLayout: React.FunctionComponent<
           )}
         </ButtonLink>
         <ButtonLink
-          data-testid={`${toTestId('ViewsImportLayout', 'cancel-button')}`}
+          data-testid={'views-import-layout-cancel-button'}
           onClick={onCancel}
           href={cancelHref}
           className={'wizard-pf-cancel'}

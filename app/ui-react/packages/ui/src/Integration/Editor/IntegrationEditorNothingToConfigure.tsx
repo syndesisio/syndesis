@@ -2,7 +2,6 @@ import { Text } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../Layout';
-import { toTestId } from '../../utils';
 
 export interface IIntegrationEditorNothingToConfigureProps {
   /**
@@ -38,10 +37,9 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
               </div>
               <div className="card-pf-footer">
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    'IntegrationEditorNothingToConfigure',
-                    'back-button'
-                  )}`}
+                  data-testid={
+                    'integration-editor-nothing-to-configure-back-button'
+                  }
                   href={this.props.backActionHref}
                 >
                   <i className={'fa fa-chevron-left'} />{' '}
@@ -49,10 +47,9 @@ export class IntegrationEditorNothingToConfigure extends React.Component<
                 </ButtonLink>
                 &nbsp;
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    'IntegrationEditorNothingToConfigure',
-                    'next-button'
-                  )}`}
+                  data-testid={
+                    'integration-editor-nothing-to-configure-next-button'
+                  }
                   onClick={this.props.submitForm}
                   as={'primary'}
                 >

@@ -2,9 +2,9 @@ import * as H from '@syndesis/history';
 import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { toValidHtmlId } from '../../helpers';
 import { Breadcrumb, ButtonLink } from '../../Layout';
 import { IMenuActions } from '../../Shared';
-import { toTestId } from '../../utils';
 import './IntegrationDetailBreadcrumb.css';
 
 export interface IIntegrationDetailBreadcrumbProps {
@@ -31,20 +31,14 @@ export class IntegrationDetailBreadcrumb extends React.Component<
         actions={
           <>
             <ButtonLink
-              data-testid={`${toTestId(
-                'IntegrationDetailBreadcrumb',
-                'export-button'
-              )}`}
+              data-testid={'integration-detail-breadcrumb-export-button'}
               to={this.props.exportHref}
               onClick={this.props.exportAction}
               children={this.props.exportLabel}
             />
             &nbsp;&nbsp;
             <ButtonLink
-              data-testid={`${toTestId(
-                'IntegrationDetailBreadcrumb',
-                'edit-button'
-              )}`}
+              data-testid={'integration-detail-breadcrumb-edit-button'}
               className="btn btn-primary"
               href={this.props.editHref}
               children={this.props.editLabel}
@@ -58,8 +52,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
                     <li role={'presentation'} key={idx}>
                       {a.href ? (
                         <Link
-                          data-testid={`${toTestId(
-                            'IntegrationDetailBreadcrumb',
+                          data-testid={`integration-detail-breadcrumb-${toValidHtmlId(
                             a.label.toString()
                           )}`}
                           to={a.href}
@@ -71,8 +64,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
                         </Link>
                       ) : (
                         <a
-                          data-testid={`${toTestId(
-                            'IntegrationDetailBreadcrumb',
+                          data-testid={`integration-detail-breadcrumb-${toValidHtmlId(
                             a.label.toString()
                           )}`}
                           href={'javascript:void(0)'}
@@ -92,10 +84,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
       >
         <span>
           <Link
-            data-testid={`${toTestId(
-              'IntegrationDetailBreadcrumb',
-              'home-link'
-            )}`}
+            data-testid={'integration-detail-breadcrumb-home-link'}
             to={this.props.homeHref!}
           >
             {this.props.i18nHome}
@@ -103,10 +92,7 @@ export class IntegrationDetailBreadcrumb extends React.Component<
         </span>
         <span>
           <Link
-            data-testid={`${toTestId(
-              'IntegrationDetailBreadcrumb',
-              'integrations-link'
-            )}`}
+            data-testid={'integration-detail-breadcrumb-integrations-link'}
             to={this.props.integrationsHref!}
           >
             {this.props.i18nIntegrations}

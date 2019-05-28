@@ -4,7 +4,6 @@ import * as H from '@syndesis/history';
 import classnames from 'classnames';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../../../Layout';
-import { toTestId } from '../../../utils';
 import './ViewCreateLayout.css';
 
 /**
@@ -90,7 +89,7 @@ export const ViewCreateLayout: React.FunctionComponent<
       </div>
       <div className="wizard-pf-footer view-create-layout__footer">
         <ButtonLink
-          data-testid={`${toTestId('ViewCreateLayout', 'back-button')}`}
+          data-testid={'view-create-layout-back-button'}
           onClick={onBack}
           href={backHref}
           className={'wizard-pf-back'}
@@ -98,7 +97,7 @@ export const ViewCreateLayout: React.FunctionComponent<
           <i className="fa fa-angle-left" /> Back
         </ButtonLink>
         <ButtonLink
-          data-testid={`${toTestId('ViewCreateLayout', 'next-button')}`}
+          data-testid={'view-create-layout-next-button'}
           onClick={onNext}
           href={nextHref}
           as={'primary'}
@@ -115,7 +114,7 @@ export const ViewCreateLayout: React.FunctionComponent<
           )}
         </ButtonLink>
         <ButtonLink
-          data-testid={`${toTestId('ViewCreateLayout', 'cancel-button')}`}
+          data-testid={'view-create-layout-cancel-button'}
           onClick={onCancel}
           href={cancelHref}
           className={'wizard-pf-cancel'}
