@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { FormBuilder } from '../FormBuilder';
 import { IFormArrayControlProps, IFormArrayDefinitionOptions } from '../models';
+import { getArrayRows } from '../utils';
 import { toValidHtmlId } from './helpers';
 import { TextButton } from './TextButton';
 
@@ -21,6 +22,7 @@ export class FormArrayComponent extends React.Component<
         </div>
       );
     }
+    const definition = this.props.property.arrayDefinition;
     const options =
       this.props.property.arrayDefinitionOptions ||
       ({} as IFormArrayDefinitionOptions);
@@ -38,7 +40,7 @@ export class FormArrayComponent extends React.Component<
           return (
             <FormBuilder
               key={fieldName}
-              definition={this.props.property.arrayDefinition}
+              definition={definition}
               initialValue={value}
               customComponents={this.props.customComponents}
               i18nRequiredProperty={''}
@@ -120,7 +122,9 @@ export class FormArrayComponent extends React.Component<
             </FormBuilder>
           );
         })}
-        <TextButton onClick={() => this.props.push({})}>
+        <TextButton
+          onClick={() => this.props.push(getArrayRows(1, definition))}
+        >
           {options.i18nAddElementText || '+ Add Another'}
         </TextButton>
       </>
