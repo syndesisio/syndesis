@@ -12,6 +12,8 @@ import { ButtonLink, Container } from '../Layout';
 import { DndFileChooser } from './DndFileChooser';
 import './OpenApiSelectMethod.css';
 
+export type Method = 'file' | 'url' | 'scratch';
+
 export interface IOpenApiSelectMethodProps {
   allowMultiple?: boolean;
   disableDropzone: boolean;
@@ -36,11 +38,11 @@ export interface IOpenApiSelectMethodProps {
   /**
    * The action fired when the user presses the Next button.
    */
-  onNext(method?: string, specification?: string): void;
+  onNext(method?: Method, specification?: string): void;
 }
 
 export interface IOpenApiSelectMethodState {
-  method?: string;
+  method?: Method;
   specification?: string;
   valid?: boolean;
 }
@@ -91,7 +93,7 @@ export class OpenApiSelectMethod extends React.Component<
    * to provide an OpenAPI specification.
    * @param newMethod
    */
-  public onSelectMethod(newMethod: string) {
+  public onSelectMethod(newMethod: Method) {
     this.setState({
       method: newMethod,
       specification: '',
@@ -205,10 +207,9 @@ export class OpenApiSelectMethod extends React.Component<
           <ButtonLink
             disabled={!this.state.valid}
             as={'primary'}
-            onClick={this.props.onNext(
-              this.state.method,
-              this.state.specification
-            )}
+            onClick={() =>
+              this.props.onNext(this.state.method, this.state.specification)
+            }
           >
             {this.props.i18nBtnNext}
           </ButtonLink>

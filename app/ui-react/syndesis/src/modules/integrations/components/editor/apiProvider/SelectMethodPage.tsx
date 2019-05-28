@@ -2,6 +2,7 @@
 import * as H from '@syndesis/history';
 import {
   IntegrationEditorLayout,
+  Method,
   OpenApiSelectMethod,
   PageSection,
 } from '@syndesis/ui';
@@ -41,6 +42,21 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
             IBaseApiProviderRouteState
           >>
             {(params, state, { history }) => {
+              const onNext = (method: Method, specification: string) => {
+                switch (method) {
+                  case 'file':
+                  case 'url':
+                    history.push(
+                      this.props.getReviewHref(specification, params, state)
+                    );
+                    break;
+                  case 'scratch':
+                    break;
+                  default:
+                    throw new Error(`Unknown method specified: ${method}`);
+                }
+              };
+
               return (
                 <>
                   <PageTitle
@@ -89,9 +105,7 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                           i18nUrlNote={t(
                             'integrations:apiProvider:selectMethod:urlNote'
                           )}
-                          onNext={(method, specification) => {
-                            return method && specification;
-                          }}
+                          onNext={onNext}
                         />
                       </PageSection>
                     }
