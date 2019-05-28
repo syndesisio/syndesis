@@ -60,6 +60,7 @@ export const ReviewActionsPage: React.FunctionComponent<
       const integration = await getIntegration(
         apiSummary!.configuredProperties!.specification
       );
+      delete integration.id;
       history.push(nextHref(integration, params, state));
     } catch (e) {
       // todo show the error?
