@@ -1,3 +1,4 @@
+// tslint:disable:no-console
 import {
   Col,
   FormControl,
@@ -58,7 +59,7 @@ export class OpenApiSelectMethod extends React.Component<
   }
 
   public checkValidUrl(url: string): boolean {
-    console.log('Check URL: ' + url);
+    // console.log('Check URL: ' + url);
     return true;
   }
 
@@ -82,7 +83,7 @@ export class OpenApiSelectMethod extends React.Component<
    * The action fired when the user presses the Next button.
    */
   public onNext(): void {
-    console.log('User wants to click Next');
+    // console.log('User wants to click Next');
   }
 
   /**
@@ -98,8 +99,9 @@ export class OpenApiSelectMethod extends React.Component<
    * Callback for when one or more file uploads have been accepted.
    */
   public onUploadAccepted(files: File[]): void {
-    this.setState({ valid: true });
     files.forEach(file => {
+      // This causes explosion
+      // this.setState({ valid: true });
       return '<span>Process file ' + file.name + '</span>\n';
     });
   }
@@ -128,7 +130,7 @@ export class OpenApiSelectMethod extends React.Component<
                   id={'method-file'}
                   name={'method'}
                   onClick={() => this.onSelectMethod('file')}
-                  checked={true}
+                  checked={this.state.method === 'file'}
                   readOnly={true}
                 >
                   <div>{this.props.i18nMethodFromFile}</div>
