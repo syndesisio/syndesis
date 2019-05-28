@@ -55,7 +55,7 @@ export class OpenApiSelectMethod extends React.Component<
       valid: false,
     };
 
-    this.onAddSpecification = this.onAddSpecification.bind(this);
+    this.onAddUrlSpecification = this.onAddUrlSpecification.bind(this);
     this.onNext = this.onNext.bind(this);
     this.onSelectMethod = this.onSelectMethod.bind(this);
     this.onUploadAccepted = this.onUploadAccepted.bind(this);
@@ -63,23 +63,25 @@ export class OpenApiSelectMethod extends React.Component<
   }
 
   public checkValidUrl(url: string): boolean {
-    // console.log('Check URL: ' + url);
-    return true;
+    const regexp = /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/;
+    return regexp.test(url);
   }
 
   /**
-   * User has added a specification either via a URL or file upload
+   * User has added a specification via a string URL, which will be
+   * checked if is a valid HTTP/HTTPS string.
    * @param e
    */
-  public onAddSpecification(e: React.FormEvent<HTMLInputElement>) {
+  public onAddUrlSpecification(e: React.FormEvent<HTMLInputElement>) {
     this.setState({ specification: e.currentTarget.value });
 
     if (
       this.state.method === 'url' &&
       this.checkValidUrl(e.currentTarget.value)
     ) {
-      // TODO
       this.setState({ valid: true });
+    } else {
+      this.setState({ valid: false });
     }
   }
 
@@ -185,8 +187,9 @@ export class OpenApiSelectMethod extends React.Component<
                         type={'text'}
                         disabled={false}
                         value={this.state.specification}
-                        onChange={this.onAddSpecification}
+                        onChange={this.onAddUrlSpecification}
                       />
+                      <FormControl.Feedback />
                       <br />
                       <span className={'url-note'}>
                         {this.props.i18nUrlNote}
