@@ -96,7 +96,11 @@ export class OpenApiSelectMethod extends React.Component<
    * @param newMethod
    */
   public onSelectMethod(newMethod: string) {
-    this.setState({ method: newMethod, valid: newMethod === 'scratch' });
+    this.setState({
+      method: newMethod,
+      specification: '',
+      valid: newMethod === 'scratch',
+    });
   }
 
   /**
