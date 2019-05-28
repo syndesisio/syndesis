@@ -65,33 +65,33 @@ function getFilteredAndSortedIntegrations(
 const filterByName = {
   filterType: 'text',
   id: 'name',
-  placeholder: i18n.t('integrations:filterByOperationNamePlaceholder'),
-  title: i18n.t('integrations:OperationName'),
+  placeholder: i18n.t('integrations:toolbars:filterByOperationNamePlaceholder'),
+  title: i18n.t('integrations:toolbars:OperationName'),
 } as IFilterType;
 
 const filterByMethod = {
   filterType: 'text',
   id: 'method',
-  placeholder: i18n.t('filterByMethodPlaceholder'),
-  title: i18n.t('integrations:Method'),
+  placeholder: i18n.t('integrations:toolbars:filterByMethodPlaceholder'),
+  title: i18n.t('integrations:toolbars:Method'),
 } as IFilterType;
 
 const sortByName = {
   id: 'name',
   isNumeric: false,
-  title: i18n.t('integration:OperationName'),
+  title: i18n.t('integrations:toolbars:OperationName'),
 } as ISortType;
 
 const sortByMethod = {
   id: 'method',
   isNumeric: false,
-  title: i18n.t('integration:Method'),
+  title: i18n.t('integrations:toolbars:Method'),
 } as ISortType;
 
 const sortByImplemented = {
   id: 'implemented',
   isNumeric: true,
-  title: i18n.t('integration:OperationImplemented'),
+  title: i18n.t('integrations:toolbars:OperationImplemented'),
 } as ISortType;
 
 const sortTypes: ISortType[] = [sortByName, sortByMethod, sortByImplemented];

@@ -148,5 +148,12 @@
     "templater-import-review": "{{import}} review:"
   },
   "unsavedChangesTitle": "Unsaved Changes",
-  "unsavedChangesMessage": "Are you sure you want to exit editing the integration?"
+  "unsavedChangesMessage": "Are you sure you want to exit editing the integration?",
+  "toolbars": {
+    "filterByOperationNamePlaceholder": "Filter by operation name",
+    "filterByMethodPlaceholder": "Filter by method",
+    "Method": "Method",
+    "OperationImplemented": "Operation implemented",
+    "OperationName": "Operation name"
+  }
 }
