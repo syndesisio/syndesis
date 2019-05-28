@@ -28,7 +28,7 @@ interface IOperationFlow extends Flow {
 function getFilteredAndSortedIntegrations(
   flows: IOperationFlow[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let filteredAndSortedFlows = flows;
@@ -36,11 +36,11 @@ function getFilteredAndSortedIntegrations(
     const valueToLower = filter.value.toLowerCase();
     filteredAndSortedFlows = filteredAndSortedFlows.filter(
       (f: IOperationFlow) => {
-        if (filter.title === 'Name') {
+        if (filter.id === 'name') {
           return f.name.toLowerCase().includes(valueToLower);
         }
-        if (filter.title === 'OperationName') {
-          return f.description!.toLowerCase().includes(valueToLower);
+        if (filter.id === 'method') {
+          return f.method!.toLowerCase().includes(valueToLower);
         }
         return false;
       }
@@ -50,10 +50,10 @@ function getFilteredAndSortedIntegrations(
   filteredAndSortedFlows = filteredAndSortedFlows.sort((fA, fB) => {
     const left = isSortAscending ? fA : fB;
     const right = isSortAscending ? fB : fA;
-    if (currentSortType === 'Name') {
+    if (currentSortType.id === 'name') {
       return left.name.localeCompare(right.name);
-    } else if (currentSortType === 'Operation') {
-      return left.description!.localeCompare(right.description!);
+    } else if (currentSortType.id === 'method') {
+      return left.method.localeCompare(right.method);
     } else {
       return left.implemented - right.implemented;
     }
@@ -72,8 +72,8 @@ const filterByName = {
 const filterByMethod = {
   filterType: 'text',
   id: 'method',
-  placeholder: i18n.t('filterByMethodAndNamePlaceholder'),
-  title: i18n.t('integrations:MethodAndName'),
+  placeholder: i18n.t('filterByMethodPlaceholder'),
+  title: i18n.t('integrations:Method'),
 } as IFilterType;
 
 const sortByName = {
@@ -85,7 +85,7 @@ const sortByName = {
 const sortByMethod = {
   id: 'method',
   isNumeric: false,
-  title: i18n.t('integration:MethodAndName'),
+  title: i18n.t('integration:Method'),
 } as ISortType;
 
 const sortByImplemented = {

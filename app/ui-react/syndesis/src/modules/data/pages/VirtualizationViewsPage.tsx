@@ -45,7 +45,7 @@ export interface IVirtualizationViewsPageRouteState {
 function getFilteredAndSortedViewDefns(
   viewDefinitions: ViewDefinition[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let filteredAndSorted = viewDefinitions;

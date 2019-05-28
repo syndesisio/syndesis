@@ -33,7 +33,7 @@ import { ApiError, PageTitle } from '../../../shared';
 function getFilteredAndSortedOAuthApps(
   oauthApps: OAuthApp[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let answer = oauthApps;

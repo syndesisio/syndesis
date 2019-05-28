@@ -4,12 +4,12 @@ import * as React from 'react';
 export interface IWithListViewToolbarHelpers
   extends IWithListViewToolbarHelpersState {
   onClearFilters(event: React.MouseEvent<HTMLAnchorElement>): void;
-  onFilterAdded(title: string, value: string): void;
+  onFilterAdded(id: string, title: string, value: string): void;
   onFilterValueSelected(filterValue: { id: string; title: string }): void;
   onRemoveFilter(filter: IActiveFilter): void;
   onSelectFilterType(filterType: IFilterType): void;
   onToggleCurrentSortDirection(): void;
-  onUpdateCurrentSortType(sortType: string): void;
+  onUpdateCurrentSortType(sortType: ISortType): void;
   onUpdateCurrentValue(event: Event): void;
   onValueKeyPress(keyEvent: KeyboardEvent): void;
 }
@@ -24,7 +24,7 @@ export interface IWithListViewToolbarHelpersProps {
 export interface IWithListViewToolbarHelpersState {
   activeFilters: IActiveFilter[];
   currentFilterType: IFilterType;
-  currentSortType: string;
+  currentSortType: ISortType;
   currentValue: any;
   filterCategory: any;
   isSortAscending: boolean;
@@ -43,7 +43,7 @@ export class WithListViewToolbarHelpers extends React.Component<
     this.state = {
       activeFilters: [] as IActiveFilter[],
       currentFilterType: this.props.defaultFilterType,
-      currentSortType: this.props.defaultSortType.title,
+      currentSortType: this.props.defaultSortType,
       currentValue: '',
       filterCategory: null,
       isSortAscending: this.props.defaultSortAscending!,
@@ -59,18 +59,23 @@ export class WithListViewToolbarHelpers extends React.Component<
 
     if (keyEvent.key === 'Enter' && currentValue && currentValue.length > 0) {
       this.setState({ currentValue: '' });
-      this.onFilterAdded(currentFilterType.title, currentValue);
+      this.onFilterAdded(
+        currentFilterType.id,
+        currentFilterType.title,
+        currentValue
+      );
       keyEvent.stopPropagation();
       keyEvent.preventDefault();
     }
   };
 
-  public onFilterAdded = (title: string, value: string) => {
+  public onFilterAdded = (id: string, title: string, value: string) => {
     const { activeFilters } = this.state;
     this.setState({
       activeFilters: [
         ...activeFilters,
         {
+          id,
           title,
           value,
         } as IActiveFilter,
@@ -93,7 +98,11 @@ export class WithListViewToolbarHelpers extends React.Component<
 
     this.setState({ currentValue: filterValue.title });
     if (filterValue) {
-      this.onFilterAdded(currentFilterType.title, filterValue.title);
+      this.onFilterAdded(
+        currentFilterType.id,
+        currentFilterType.title,
+        filterValue.title
+      );
     }
   };
 
@@ -121,10 +130,10 @@ export class WithListViewToolbarHelpers extends React.Component<
     this.setState({ isSortAscending: !isSortAscending });
   };
 
-  public onUpdateCurrentSortType = (sortType: string) => {
+  public onUpdateCurrentSortType = (sortType: ISortType) => {
     const { currentSortType } = this.state;
 
-    if (currentSortType !== sortType) {
+    if (currentSortType.id !== sortType.id) {
       this.setState({
         currentSortType: sortType,
         isSortAscending: true,
