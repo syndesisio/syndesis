@@ -5,10 +5,10 @@ import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import {
-  OpenApiSelectMethod,
-  OpenApiReviewActions,
   ApiProviderReviewOperations,
   ApiProviderReviewOperationsItem,
+  OpenApiReviewActions,
+  OpenApiSelectMethod,
 } from '../../../src';
 
 const fileExtensions = '.json, .yaml and .yml';

@@ -5,9 +5,9 @@ import {
 import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
 import {
-  ApiProviderReviewActions,
   ButtonLink,
   IntegrationEditorLayout,
+  OpenApiReviewActions,
   PageLoader,
   PageSection,
 } from '@syndesis/ui';
@@ -89,7 +89,7 @@ export const ReviewActionsPage: React.FunctionComponent<
                 >
                   {() => (
                     <>
-                      <ApiProviderReviewActions
+                      <OpenApiReviewActions
                         i18nApiDefinitionHeading={'API DEFINITION'}
                         i18nDescriptionLabel={'Description'}
                         i18nImportedHeading={'IMPORTED'}
