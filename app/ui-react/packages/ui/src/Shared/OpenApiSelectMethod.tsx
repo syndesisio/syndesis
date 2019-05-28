@@ -58,11 +58,7 @@ export class OpenApiSelectMethod extends React.Component<
   }
 
   public onAddSpecification(e: React.FormEvent<HTMLInputElement>) {
-    //console.log('e: ' + JSON.stringify(e.currentTarget.value));
-    //console.log('Specification URL or file added: ' + JSON.stringify(spec));
-    //console.log('State before: ' + JSON.stringify(this.state.specification));
     this.setState({ specification: e.currentTarget.value });
-    //console.log('State after: ' + JSON.stringify(this.state.specification));
   }
 
   /**
