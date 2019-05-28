@@ -78,7 +78,7 @@ export interface IDndFileChooserProps {
   onUploadRejected(fileName: string): string;
 
   /**
-   * Callback for when one or more file uploads have been accepted. Caller should handler processing of the files.
+   * Callback for when one or more file uploads have been accepted. Caller should handle processing of the files.
    */
   onUploadAccepted(file: File[]): void;
 }

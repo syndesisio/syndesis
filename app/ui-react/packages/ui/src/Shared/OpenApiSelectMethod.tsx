@@ -9,18 +9,13 @@ import {
 import * as React from 'react';
 
 import { Container } from '../Layout';
-import { DndFileChooser } from './';
+import { DndFileChooser } from './DndFileChooser';
 import './OpenApiSelectMethod.css';
 
 export interface IOpenApiSelectMethodProps {
   allowMultiple?: boolean;
   disableDropzone: boolean;
   fileExtensions?: string;
-  /**
-   * The callback fired when submitting the form.
-   * @param e
-   */
-  handleSubmit: (e?: any) => void;
   /**
    * Localized strings to be displayed.
    */
@@ -36,18 +31,6 @@ export interface IOpenApiSelectMethodProps {
   i18nUploadSuccessMessage?: string;
   i18nUploadSuccessMessages?: string[];
   i18nUrlNote: string;
-
-  /**
-   * Callback for when one or more file uploads have been accepted.
-   */
-  onUploadAccepted(file: File[]): void;
-
-  /**
-   * Obtains the localized text (may include HTML tags) that appears when the file upload was rejected. This
-   * will occur when a DnD of a file with the wrong extension is dropped. This message is presented
-   * as a timed toast notification.
-   */
-  onUploadRejected(fileName: string): string;
 }
 
 export interface IOpenApiSelectMethodState {
@@ -80,6 +63,34 @@ export class OpenApiSelectMethod extends React.Component<
     //console.log('State before: ' + JSON.stringify(this.state.specification));
     this.setState({ specification: e.currentTarget.value });
     //console.log('State after: ' + JSON.stringify(this.state.specification));
+  }
+
+  /**
+   * Callback for when one or more file uploads have been accepted.
+   */
+  public onUploadAccepted(files: File[]): void {
+    console.log('Upload accepted');
+    console.log('files: ' + files);
+
+    files.forEach(file => {
+      console.log('file: ' + file);
+      return '<span>Process file ' + file.name + '</span>\n';
+    });
+  }
+
+  /**
+   * Obtains the localized text (may include HTML tags) that appears when the file upload was rejected. This
+   * will occur when a DnD of a file with the wrong extension is dropped. This message is presented
+   * as a timed toast notification.
+   */
+  public onUploadRejected(fileName: string): string {
+    console.log('Upload rejected');
+    console.log('fileName: ' + fileName);
+    return (
+      '<span>File <strong>' +
+      fileName +
+      '</strong> could not be uploaded</span>'
+    );
   }
 
   public render() {
@@ -118,8 +129,8 @@ export class OpenApiSelectMethod extends React.Component<
                         i18nUploadSuccessMessages={
                           this.props.i18nUploadSuccessMessages
                         }
-                        onUploadAccepted={this.props.onUploadAccepted}
-                        onUploadRejected={this.props.onUploadRejected}
+                        onUploadAccepted={this.onUploadAccepted}
+                        onUploadRejected={this.onUploadRejected}
                       />
                     </Container>
                   )}
