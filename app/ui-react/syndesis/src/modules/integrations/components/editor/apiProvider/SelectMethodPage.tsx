@@ -1,9 +1,9 @@
 // tslint:disable:no-console
 import * as H from '@syndesis/history';
 import {
-  ApiProviderSelectMethod,
   ButtonLink,
   IntegrationEditorLayout,
+  OpenApiSelectMethod,
   PageSection,
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
@@ -76,7 +76,7 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                     )}
                     content={
                       <PageSection>
-                        <ApiProviderSelectMethod
+                        <OpenApiSelectMethod
                           disableDropzone={false}
                           fileExtensions={t(
                             'integrations:apiProvider:selectedMethod:dndFileExtensions'
