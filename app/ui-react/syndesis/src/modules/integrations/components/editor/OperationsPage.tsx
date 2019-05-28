@@ -11,13 +11,14 @@ import {
 import { useRouteData, WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import i18n from '../../../../../i18n';
-import { PageTitle } from '../../../../../shared';
+import i18n from '../../../../i18n';
+import { PageTitle } from '../../../../shared';
+import { EditorBreadcrumb } from './EditorBreadcrumb';
 import {
   IBaseFlowRouteParams,
   IBaseRouteParams,
   IBaseRouteState,
-} from '../interfaces';
+} from './interfaces';
 
 interface IOperationFlow extends Flow {
   implemented: number;
@@ -96,7 +97,8 @@ const sortByImplemented = {
 
 const sortTypes: ISortType[] = [sortByName, sortByMethod, sortByImplemented];
 
-export interface IReviewOperationsPageProps {
+export interface IOperationsPageProps {
+  rootHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
   cancelHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
   getFlowHref: (
     p: IBaseFlowRouteParams,
@@ -109,9 +111,11 @@ export interface IReviewOperationsPageProps {
  * This page shows the operations that have been previously defined
  * earlier in the user flow.
  */
-export const ReviewOperationsPage: React.FunctionComponent<
-  IReviewOperationsPageProps
-> = ({ cancelHref, getFlowHref }) => {
+export const OperationsPage: React.FunctionComponent<IOperationsPageProps> = ({
+  rootHref,
+  cancelHref,
+  getFlowHref,
+}) => {
   const { params, state } = useRouteData<IBaseRouteParams, IBaseRouteState>();
   const flows = state
     .integration!.flows!.filter(f => f.metadata && f.metadata.excerpt)
@@ -137,6 +141,14 @@ export const ReviewOperationsPage: React.FunctionComponent<
             description={t(
               'integrations:apiProvider:reviewOperations:description'
             )}
+            toolbar={
+              <EditorBreadcrumb
+                integration={state.integration}
+                rootHref={rootHref(params, state)}
+              >
+                {t('integrations:apiProvider:reviewOperations:title')}
+              </EditorBreadcrumb>
+            }
             content={
               <WithListViewToolbarHelpers
                 defaultFilterType={filterByName}

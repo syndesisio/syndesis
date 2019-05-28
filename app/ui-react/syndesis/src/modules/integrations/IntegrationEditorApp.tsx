@@ -1,21 +1,19 @@
 import { ALL_STEPS, createStep, DATA_MAPPER } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { StepKind } from '@syndesis/models';
-import { Breadcrumb, toTestId } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Route, Switch } from 'react-router';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../shared';
 import { WithLeaveConfirmation } from '../../shared/WithLeaveConfirmation';
 import { AddStepPage } from './components/editor/AddStepPage';
-import { ReviewOperationsPage } from './components/editor/apiProvider/ReviewOperationsPage';
 import { EditorApp } from './components/editor/EditorApp';
 import {
   IBaseFlowRouteParams,
   IBaseRouteState,
 } from './components/editor/interfaces';
+import { OperationsPage } from './components/editor/OperationsPage';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import resolvers from './resolvers';
 import routes from './routes';
@@ -102,6 +100,12 @@ const addStepPage = (
         ...s,
       })
     }
+    rootHref={(p, s) =>
+      resolvers.integration.edit.entryPoint({
+        ...p,
+        ...s,
+      })
+    }
   />
 );
 
@@ -119,8 +123,9 @@ const saveIntegrationPage = (
 );
 
 const apiProviderOperationsPage = (
-  <ReviewOperationsPage
+  <OperationsPage
     cancelHref={(p, s) => resolvers.list()}
+    rootHref={(p, s) => resolvers.integration.edit.entryPoint({ ...p, ...s })}
     getFlowHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
   />
 );
@@ -151,29 +156,6 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
         <WithRouteData<IBaseFlowRouteParams, IBaseRouteState>>
           {({ flowId }, { integration }) => (
             <WithClosedNavigation>
-              <Breadcrumb>
-                <Link
-                  data-testid={toTestId(
-                    'IntegrationEditorApp',
-                    'integrations-link'
-                  )}
-                  to={resolvers.list()}
-                >
-                  {t('shared:Integrations')}
-                </Link>
-                <Link
-                  data-testid={toTestId(
-                    'IntegrationEditorApp',
-                    'integration-link'
-                  )}
-                  to={resolvers.integration.details({
-                    integrationId: integration.id!,
-                  })}
-                >
-                  {integration.name}
-                </Link>
-                <span>{t('integrations:editor:addToIntegration')}</span>
-              </Breadcrumb>
               <WithLeaveConfirmation
                 i18nTitle={t('unsavedChangesTitle')}
                 i18nConfirmationMessage={t('unsavedChangesMessage')}
@@ -199,7 +181,7 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                     />
 
                     <Route
-                      path={routes.integration.edit.apiProviderOperations}
+                      path={routes.integration.edit.operations}
                       exact={true}
                       children={apiProviderOperationsPage}
                     />

@@ -17,6 +17,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { IntegrationEditorStepAdder } from '../IntegrationEditorStepAdder';
+import { EditorBreadcrumb } from './EditorBreadcrumb';
 import { IBaseFlowRouteParams, IBaseRouteState } from './interfaces';
 import { getStepHref, IGetStepHrefs } from './utils';
 
@@ -45,6 +46,10 @@ export interface IAddStepPageProps extends IGetStepHrefs {
     s: IBaseRouteState
   ) => H.LocationDescriptor;
   selfHref: (
+    p: IBaseFlowRouteParams,
+    s: IBaseRouteState
+  ) => H.LocationDescriptorObject;
+  rootHref: (
     p: IBaseFlowRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptorObject;
@@ -193,6 +198,15 @@ export class AddStepPage extends React.Component<
                   <IntegrationEditorLayout
                     title={t('integrations:editor:addToIntegration')}
                     description={t('integrations:editor:addStepDescription')}
+                    toolbar={
+                      <EditorBreadcrumb
+                        integration={state.integration}
+                        rootHref={this.props.rootHref(params, state)}
+                        currentFlowId={params.flowId}
+                      >
+                        {t('integrations:editor:addToIntegration')}
+                      </EditorBreadcrumb>
+                    }
                     content={
                       <IntegrationEditorStepAdder
                         steps={getSteps(state.integration, params.flowId)}

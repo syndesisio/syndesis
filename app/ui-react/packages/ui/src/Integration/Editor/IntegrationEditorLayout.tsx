@@ -40,6 +40,7 @@ import './IntegrationEditorLayout.css';
 export interface IIntegrationEditorLayoutProps {
   title: string;
   description?: string;
+  toolbar?: React.ReactNode;
   sidebar?: React.ReactNode;
   content: React.ReactNode;
   onCancel?: (e: React.MouseEvent<any>) => void;
@@ -71,6 +72,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
 > = ({
   title,
   description,
+  toolbar,
   sidebar,
   content,
   onPublish,
@@ -89,6 +91,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
     <div className={'integration-editor-layout'}>
       <div className={'integration-editor-layout__header'}>
         <PageSection variant={'light'}>
+          {toolbar}
           <Level gutter={'sm'}>
             <LevelItem>
               <TextContent>
