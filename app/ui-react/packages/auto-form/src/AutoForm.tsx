@@ -1,4 +1,4 @@
-import { Formik, FormikErrors, FormikProps } from 'formik';
+import { Formik, FormikActions, FormikErrors, FormikProps } from 'formik';
 import * as React from 'react';
 import { FormBuilder } from './FormBuilder';
 import { IAutoFormActions, IFormDefinition, IFormErrors } from './models';
@@ -62,6 +62,14 @@ export interface IAutoFormChildrenProps<T> {
 }
 
 export class AutoForm<T> extends React.Component<IAutoFormProps<T>> {
+  constructor(props: IAutoFormProps<T>) {
+    super(props);
+  }
+  public handleSave(value: T, formikBag: FormikActions<T>) {
+    if (typeof this.props.onSave === 'function') {
+      this.props.onSave(value, formikBag as IAutoFormActions<T>);
+    }
+  }
   public render() {
     return (
       <FormBuilder

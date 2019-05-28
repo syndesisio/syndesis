@@ -58,37 +58,6 @@ export function toFormDefinitionProperty(property: IConfigurationProperty) {
   } as IFormDefinitionProperty;
 }
 
-/**
- * Returns a new configuredProperties object with any default values set from
- * the given definition if they aren't set already
- * @param properties
- * @param initial
- */
-export function applyInitialValues<T>(
-  properties: IConfigurationProperties,
-  initial?: T
-): T {
-  const configuredProperties =
-    typeof initial !== 'undefined' ? { ...initial } : {};
-  Object.keys(properties).forEach(key => {
-    const property = properties[key];
-    // `property.value` being set is deprecated, defaultValue takes precedence
-    if (
-      typeof property.value !== 'undefined' &&
-      typeof configuredProperties[key] === 'undefined'
-    ) {
-      configuredProperties[key] = property.value;
-    }
-    if (
-      typeof property.defaultValue !== 'undefined' &&
-      typeof configuredProperties[key] === 'undefined'
-    ) {
-      configuredProperties[key] = property.defaultValue;
-    }
-  });
-  return configuredProperties as T;
-}
-
 export function anyFieldsRequired(properties: IConfigurationProperties) {
   return (
     Object.keys(properties)

@@ -4,7 +4,6 @@ import { Connector } from '@syndesis/models';
 import { IConnectorConfigurationFormValidationResult } from '@syndesis/ui';
 import {
   allFieldsRequired,
-  applyInitialValues,
   getRequiredStatusText,
   toFormDefinition,
   validateRequiredProperties,
@@ -170,10 +169,7 @@ export class WithConnectorForm extends React.Component<
             }
             return validationResults;
           };
-          const initialValue = applyInitialValues(
-            definition,
-            this.props.initialValue!
-          );
+          const initialValue = this.props.initialValue!;
           const requiredPrompt = getRequiredStatusText(
             definition,
             i18n.t('shared:AllFieldsRequired'),

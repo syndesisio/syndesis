@@ -1,7 +1,6 @@
 import { AutoForm, IAutoFormActions } from '@syndesis/auto-form';
 import { FilterOptions, Op, StepKind } from '@syndesis/models';
 import {
-  applyInitialValues,
   toFormDefinition,
   validateConfiguredProperties,
   validateRequiredProperties,
@@ -128,10 +127,7 @@ export class WithRuleFilterForm extends React.Component<
         : configuredProperties.rules;
     config.predicate = configuredProperties.predicate || 'AND';
     config.type = configuredProperties.type || 'rule';
-    const initialValue = applyInitialValues<IRuleFilterConfig>(
-      definition,
-      config
-    );
+    const initialValue = config as IRuleFilterConfig;
     const isInitialValid = validateConfiguredProperties(
       definition,
       initialValue

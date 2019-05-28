@@ -4,12 +4,11 @@ import {
   getActionStepDefinition,
   getActionSteps,
 } from '@syndesis/api';
-import { AutoForm } from '@syndesis/auto-form';
+import { AutoForm, IFormValue } from '@syndesis/auto-form';
 import { ConfigurationProperty, StepKind } from '@syndesis/models';
 import { IntegrationEditorForm } from '@syndesis/ui';
 import {
   allFieldsRequired,
-  applyInitialValues,
   getRequiredStatusText,
   toFormDefinition,
   validateConfiguredProperties,
@@ -108,10 +107,7 @@ export class WithConfigurationForm extends React.Component<
     } else {
       definition = step.properties;
     }
-    const initialValue = applyInitialValues(
-      definition,
-      this.props.step.configuredProperties
-    );
+    const initialValue = this.props.step.configuredProperties;
     const isInitialValid = validateConfiguredProperties(
       definition,
       initialValue
@@ -123,12 +119,12 @@ export class WithConfigurationForm extends React.Component<
       ''
     );
     return (
-      <AutoForm<{ [key: string]: string }>
+      <AutoForm<IFormValue>
         i18nRequiredProperty={'* Required field'}
         allFieldsRequired={allFieldsRequired(definition)}
         i18nFieldsStatusText={requiredPrompt}
         definition={toFormDefinition(definition)}
-        initialValue={initialValue}
+        initialValue={initialValue as IFormValue}
         isInitialValid={isInitialValid}
         onSave={onSave}
         validate={(values: { [name: string]: any }): any =>
