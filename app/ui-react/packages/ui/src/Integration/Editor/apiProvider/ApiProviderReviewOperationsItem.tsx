@@ -1,10 +1,8 @@
 import * as H from '@syndesis/history';
-import classNames from 'classnames';
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
-
-import './ApiProviderReviewOperationsItem.css';
+import { HttpMethodColors } from '../../../Shared';
 
 export interface IApiProviderReviewOperationsItemProps {
   createAsPrimary: boolean;
@@ -20,12 +18,6 @@ export class ApiProviderReviewOperationsItem extends React.Component<
   IApiProviderReviewOperationsItemProps
 > {
   public render() {
-    const httpMethodClass = classNames({
-      'operation-delete': this.props.operationHttpMethod === 'DELETE',
-      'operation-get': this.props.operationHttpMethod === 'GET',
-      'operation-post': this.props.operationHttpMethod === 'POST',
-      'operation-put': this.props.operationHttpMethod === 'PUT',
-    });
     return (
       <ListView.Item
         actions={
@@ -42,9 +34,7 @@ export class ApiProviderReviewOperationsItem extends React.Component<
         heading={this.props.operationPath}
         description={this.props.operationDescription}
         leftContent={
-          <span className={httpMethodClass}>
-            {this.props.operationHttpMethod}
-          </span>
+          <HttpMethodColors httpMethod={this.props.operationHttpMethod} />
         }
         stacked={false}
       />
