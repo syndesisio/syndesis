@@ -65,11 +65,7 @@ export class OpenApiSelectMethod extends React.Component<
    * Callback for when one or more file uploads have been accepted.
    */
   public onUploadAccepted(files: File[]): void {
-    console.log('Upload accepted');
-    console.log('files: ' + files);
-
     files.forEach(file => {
-      console.log('file: ' + file);
       return '<span>Process file ' + file.name + '</span>\n';
     });
   }
@@ -80,8 +76,6 @@ export class OpenApiSelectMethod extends React.Component<
    * as a timed toast notification.
    */
   public onUploadRejected(fileName: string): string {
-    console.log('Upload rejected');
-    console.log('fileName: ' + fileName);
     return (
       '<span>File <strong>' +
       fileName +
