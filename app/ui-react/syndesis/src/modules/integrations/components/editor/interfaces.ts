@@ -203,5 +203,6 @@ export const editorRoutes = include('editor', {
   addStep: include(':flowId/:position/add', stepRoutes),
   editStep: include(':flowId/:position/edit', stepRoutes),
   saveAndPublish: 'save',
+  entryPoint: '',
   root: '',
 });
