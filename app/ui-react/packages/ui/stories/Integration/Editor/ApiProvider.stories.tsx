@@ -18,7 +18,6 @@ const stories = storiesOf('Integration/Editor/ApiProvider', module);
 stories
   .add('Select Method', () => (
     <OpenApiSelectMethod
-      i18nBtnCancel={'Cancel'}
       i18nBtnNext={'Next'}
       i18nMethodFromFile={'Upload an OpenAPI file'}
       i18nMethodFromScratch={'Create from scratch'}

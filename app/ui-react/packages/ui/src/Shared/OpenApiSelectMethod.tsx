@@ -19,7 +19,6 @@ export interface IOpenApiSelectMethodProps {
   /**
    * Localized strings to be displayed.
    */
-  i18nBtnCancel: string;
   i18nBtnNext: string;
   i18nHelpMessage?: string;
   i18nInstructions: string;
