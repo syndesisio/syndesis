@@ -94,6 +94,132 @@
       "id": "io.syndesis:twitter-search-action",
       "name": "Search",
       "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Retrieve direct messages of the last 30 days.",
+      "descriptor": {
+        "componentScheme": "twitter-directmessage",
+        "configuredProperties": {
+          "delay": "30000"
+        },
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "description": "Retrieve direct messages of the last 30 days. The object represents one single message.",
+          "kind": "java",
+          "name": "Twitter Direct Message",
+          "type": "twitter4j.DirectMessage"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify options for direct messages",
+            "name": "Retrieve options",
+            "properties": {
+              "delay": {
+                "componentProperty": false,
+                "defaultValue": 5000,
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "scheduler",
+                "javaType": "long",
+                "kind": "parameter",
+                "label": "consumer,scheduler",
+                "labelHint": "Delay before the next poll. There are rate limits on Twitter side, don't set a low value",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "duration"
+              },
+              "filterOld": {
+                "componentProperty": false,
+                "defaultValue": true,
+                "deprecated": false,
+                "displayName": "Ignore tweets previously found",
+                "group": "filter",
+                "javaType": "boolean",
+                "kind": "parameter",
+                "label": "consumer,filter",
+                "labelHint": "Filter out old tweets that have previously been polled",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "boolean"
+              },
+              "count": {
+                "componentProperty": false,
+                "defaultValue": 100,
+                "deprecated": false,
+                "displayName": "Count",
+                "group": "common",
+                "javaType": "long",
+                "kind": "parameter",
+                "labelHint": "Number of direct messages to retrieve, limited to the last 30 days.",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "long"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:twitter-directmessage-retrieve-action",
+      "name": "Retrieve",
+      "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Send a direct message.",
+      "descriptor": {
+        "componentScheme": "twitter-directmessage",
+        "configuredProperties": {},
+        "connectorCustomizers": [
+          "io.syndesis.connector.twitter.SendDirectMessageCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "Message",
+          "type": "io.syndesis.connector.twitter.DirectMessageText"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Specify options for direct messages",
+            "name": "Send options",
+            "properties": {
+              "user": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "User",
+                "javaType": "String",
+                "kind": "parameter",
+                "labelHint": "The name of the Twitter user you want to send the direct message.",
+                "required": true,
+                "tags": [],
+                "type": "string"
+              },
+              "message": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "Default Message",
+                "javaType": "String",
+                "kind": "parameter",
+                "labelHint": "Custom message to use if there is no incoming message from a previous step.",
+                "required": true,
+                "tags": [],
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:twitter-directmessage-send-action",
+      "name": "Send",
+      "pattern": "To"
     }
   ],
   "configuredProperties": {},
