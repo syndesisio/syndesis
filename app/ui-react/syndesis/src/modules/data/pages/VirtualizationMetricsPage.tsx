@@ -1,5 +1,5 @@
 import { RestDataService } from '@syndesis/models';
-import { Breadcrumb, PageSection, toTestId, ViewHeader } from '@syndesis/ui';
+import { Breadcrumb, PageSection, ViewHeader } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -38,19 +38,15 @@ export class VirtualizationMetricsPage extends React.Component {
                 <>
                   <Breadcrumb>
                     <Link
-                      data-testid={toTestId(
-                        'VirtualizationMetricsPage',
-                        'home-link'
-                      )}
+                      data-testid={'virtualization-metrics-page-home-link'}
                       to={resolvers.dashboard.root()}
                     >
                       {t('shared:Home')}
                     </Link>
                     <Link
-                      data-testid={toTestId(
-                        'VirtualizationMetricsPage',
-                        'virtualizations-link'
-                      )}
+                      data-testid={
+                        'virtualization-metrics-page-virtualizations-link'
+                      }
                       to={resolvers.data.root()}
                     >
                       {t('shared:DataVirtualizations')}

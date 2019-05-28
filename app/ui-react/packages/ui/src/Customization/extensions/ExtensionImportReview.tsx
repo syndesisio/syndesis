@@ -2,7 +2,6 @@ import * as H from '@syndesis/history';
 import { Button, Grid } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, Container } from '../../Layout';
-import { toTestId } from '../../utils';
 import './ExtensionImportReview.css';
 
 export interface IImportAction {
@@ -209,10 +208,7 @@ export class ExtensionImportReview extends React.Component<
                     {this.props.i18nImport}
                   </Button>
                   <ButtonLink
-                    data-testid={`${toTestId(
-                      'ExtensionImportReview',
-                      'cancel-button'
-                    )}`}
+                    data-testid={'extension-import-review-cancel-button'}
                     className="extension-import-review__cancelButton"
                     href={this.props.cancelLink}
                     as={'default'}

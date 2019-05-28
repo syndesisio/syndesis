@@ -38,6 +38,10 @@ export class IntegrationStatus extends React.Component<
         label = this.props.i18nError;
         break;
     }
-    return <Label type={labelType}>{label}</Label>;
+    return (
+      <Label data-testid={'integration-status-status-label'} type={labelType}>
+        {label}
+      </Label>
+    );
   }
 }

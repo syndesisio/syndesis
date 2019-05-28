@@ -1,7 +1,6 @@
 import { Spinner } from 'patternfly-react';
 import * as React from 'react';
 import { ProgressWithLink } from '../Shared/ProgressWithLink';
-import { toTestId } from '../utils';
 import { IntegrationState, PUBLISHED, UNPUBLISHED } from './models';
 
 import './IntegrationStatusDetail.css';
@@ -33,7 +32,7 @@ export class IntegrationStatusDetail extends React.Component<
     }
     return (
       <div
-        data-testid={`${toTestId('IntegrationStatusDetail', 'status-detail')}`}
+        data-testid={'integration-status-detail'}
         className={'integration-status-detail'}
       >
         {this.props.value && this.props.currentStep && this.props.totalSteps ? (

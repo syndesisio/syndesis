@@ -1,6 +1,6 @@
 import { ListViewItem } from 'patternfly-react';
 import * as React from 'react';
-import { toTestId } from '../../../utils';
+import { toValidHtmlId } from '../../../helpers';
 
 export interface ISchemaNodeListItemProps {
   name: string;
@@ -54,15 +54,14 @@ export class SchemaNodeListItem extends React.Component<
   public render() {
     return (
       <ListViewItem
+        data-testid={`schema-node-list-item-${toValidHtmlId(
+          this.props.name
+        )}-list-item`}
         heading={this.props.name}
         description={this.schemaDisplayPath(this.props.schemaPath)}
         checkboxInput={
           <input
-            data-testid={`${toTestId(
-              'SchemaNodeListItem',
-              this.props.name,
-              'selected-input'
-            )}`}
+            data-testid={'schema-node-list-item-selected-input'}
             type="checkbox"
             value=""
             defaultChecked={this.props.selected}

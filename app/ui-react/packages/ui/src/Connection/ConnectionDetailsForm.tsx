@@ -1,7 +1,6 @@
 import { Alert, Button, Card } from 'patternfly-react';
 import * as React from 'react';
 import { Container, Loader, PageSection } from '../Layout';
-import { toTestId } from '../utils';
 import './ConnectionDetailsForm.css';
 
 export interface IConnectionDetailsValidationResult {
@@ -108,10 +107,7 @@ export class ConnectionDetailsForm extends React.Component<
                   <div>
                     {this.props.isEditing ? (
                       <Button
-                        data-testid={`${toTestId(
-                          'ConnectionDetailsForm',
-                          'validate-button'
-                        )}`}
+                        data-testid={'connection-details-form-validate-button'}
                         bsStyle="default"
                         disabled={this.props.isWorking || !this.props.isValid}
                         onClick={this.props.onValidate}
@@ -123,10 +119,7 @@ export class ConnectionDetailsForm extends React.Component<
                       </Button>
                     ) : (
                       <Button
-                        data-testid={`${toTestId(
-                          'ConnectionDetailsForm',
-                          'edit-button'
-                        )}`}
+                        data-testid={'connection-details-form-edit-button'}
                         bsStyle="primary"
                         onClick={this.props.onStartEditing}
                       >
@@ -138,10 +131,7 @@ export class ConnectionDetailsForm extends React.Component<
               </Card.Body>
               <Card.Footer>
                 <Button
-                  data-testid={`${toTestId(
-                    'ConnectionDetailsForm',
-                    'cancel-button'
-                  )}`}
+                  data-testid={'connection-details-form-cancel-button'}
                   bsStyle="default"
                   className="connection-details-form__editButton"
                   disabled={this.props.isWorking}
@@ -150,10 +140,7 @@ export class ConnectionDetailsForm extends React.Component<
                   {this.props.i18nCancelLabel}
                 </Button>
                 <Button
-                  data-testid={`${toTestId(
-                    'ConnectionDetailsForm',
-                    'save-button'
-                  )}`}
+                  data-testid={'connection-details-form-save-button'}
                   bsStyle="primary"
                   className="connection-details-form__editButton"
                   disabled={this.props.isWorking || !this.props.isValid}

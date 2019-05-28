@@ -3,7 +3,6 @@ import { ListView, OverlayTrigger, Tooltip } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../../Layout';
 import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
-import { toTestId } from '../../../utils';
 import { EmptyViewsState } from './EmptyViewsState';
 import './ViewList.css';
 
@@ -39,7 +38,7 @@ export class ViewList extends React.Component<IViewsListProps> {
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={`${toTestId('ViewList', 'import-views-button')}`}
+                  data-testid={'view-list-import-views-button'}
                   href={this.props.linkImportViewsHRef}
                   as={'default'}
                 >
@@ -51,7 +50,7 @@ export class ViewList extends React.Component<IViewsListProps> {
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={`${toTestId('ViewList', 'create-view-button')}`}
+                  data-testid={'view-list-create-view-button'}
                   href={this.props.linkCreateViewHRef}
                   as={'primary'}
                 >

@@ -1,7 +1,7 @@
 import { Text } from '@patternfly/react-core';
 import { Table } from 'patternfly-react';
 import * as React from 'react';
-import { toTestId } from '../../utils';
+import { toValidHtmlId } from '../../helpers';
 
 export interface IExtensionIntegration {
   id: string; // used to create link to integration details page
@@ -34,11 +34,9 @@ export class ExtensionIntegrationsTable extends React.Component<
       return (
         <Table.Cell>
           <a
-            data-testid={`${toTestId(
-              'ExtensionIntegrationsTable',
-              rowData.name,
-              'integration-link'
-            )}`}
+            data-testid={`extension-integrations-table-${toValidHtmlId(
+              rowData.name
+            )}-integration-link`}
             href="javascript:void(0)"
             onClick={onClick}
           >
