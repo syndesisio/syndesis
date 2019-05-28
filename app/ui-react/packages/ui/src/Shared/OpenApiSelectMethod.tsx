@@ -1,5 +1,4 @@
 // tslint:disable:no-console
-import * as H from '@syndesis/history';
 import {
   Col,
   FormControl,
@@ -34,6 +33,11 @@ export interface IOpenApiSelectMethodProps {
   i18nUploadSuccessMessage?: string;
   i18nUploadSuccessMessages?: string[];
   i18nUrlNote: string;
+
+  /**
+   * The action fired when the user presses the Next button.
+   */
+  onNext(method?: string, specification?: string): void;
 }
 
 export interface IOpenApiSelectMethodState {
@@ -55,7 +59,6 @@ export class OpenApiSelectMethod extends React.Component<
     };
 
     this.onAddUrlSpecification = this.onAddUrlSpecification.bind(this);
-    this.onNext = this.onNext.bind(this);
     this.onSelectMethod = this.onSelectMethod.bind(this);
     this.onUploadAccepted = this.onUploadAccepted.bind(this);
     this.onUploadRejected = this.onUploadRejected.bind(this);
@@ -82,13 +85,6 @@ export class OpenApiSelectMethod extends React.Component<
     } else {
       this.setState({ valid: false });
     }
-  }
-
-  /**
-   * The action fired when the user presses the Next button.
-   */
-  public onNext(): void {
-    // console.log('User wants to click Next');
   }
 
   /**
@@ -188,7 +184,6 @@ export class OpenApiSelectMethod extends React.Component<
                         value={this.state.specification}
                         onChange={this.onAddUrlSpecification}
                       />
-                      <FormControl.Feedback />
                       <br />
                       <span className={'url-note'}>
                         {this.props.i18nUrlNote}
@@ -211,7 +206,10 @@ export class OpenApiSelectMethod extends React.Component<
           <ButtonLink
             disabled={!this.state.valid}
             as={'primary'}
-            onClick={this.onNext}
+            onClick={this.props.onNext(
+              this.state.method,
+              this.state.specification
+            )}
           >
             {this.props.i18nBtnNext}
           </ButtonLink>
