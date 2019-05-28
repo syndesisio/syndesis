@@ -46,6 +46,7 @@
     <!-- needed for Spring Social Salesforce fork from mikegirard/spring-social-salesforce -->
     <repository>
       <id>jitpack.io</id>
+      <name>jitpack.io</name>
       <url>https://jitpack.io</url>
     </repository>
 
