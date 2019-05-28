@@ -493,6 +493,9 @@ objects:
           "baseJSONInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/json/",
           "disableMappingPreviewMode": false
         },
+        "datavirt": { 
+          "dvUrl": "/vdb-builder/v1/"
+        },
         "features" : {
           "logging": false
         },
