@@ -58,6 +58,8 @@ export class OpenApiSelectMethod extends React.Component<
     this.onAddSpecification = this.onAddSpecification.bind(this);
     this.onNext = this.onNext.bind(this);
     this.onSelectMethod = this.onSelectMethod.bind(this);
+    this.onUploadAccepted = this.onUploadAccepted.bind(this);
+    this.onUploadRejected = this.onUploadRejected.bind(this);
   }
 
   public checkValidUrl(url: string): boolean {
@@ -101,11 +103,11 @@ export class OpenApiSelectMethod extends React.Component<
    * Callback for when one or more file uploads have been accepted.
    */
   public onUploadAccepted(files: File[]): void {
-    files.forEach(file => {
-      // This causes explosion
-      // this.setState({ valid: true });
-      return '<span>Process file ' + file.name + '</span>\n';
-    });
+    const reader = new FileReader();
+    reader.readAsText(files[0]);
+    reader.onload = () => {
+      this.setState({ specification: reader.result as string, valid: true });
+    };
   }
 
   /**
