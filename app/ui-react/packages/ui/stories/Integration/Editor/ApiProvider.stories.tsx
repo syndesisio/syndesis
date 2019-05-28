@@ -16,31 +16,16 @@ const helpMessage = 'Accepted file type: .json, .yaml and .yml';
 const instructions =
   "Drag 'n' drop a file here, or <strong>click</strong> to select a file using a file chooser dialog.";
 const noFileSelectedMessage = 'no file selected';
-const handleFiles = (files: File[]) => {
-  files.forEach(file => {
-    action('Process file ' + file.name + '\n');
-    logUploadSucceedMessage();
-  });
-};
-const logUploadFailedMessage = action('upload failed message handler');
-const logUploadSucceedMessage = action('upload succeeded message handler');
 
 const selectedFileLabel = 'Selected file:';
-const handleSubmit = (e: Event) => {
-  action('Handle form here');
-};
-const uploadFailedMessage = (fileName: string) => {
-  logUploadFailedMessage();
-  return (
-    '<span>File <strong>' + fileName + '</strong> could not be uploaded</span>'
-  );
-};
 
 const stories = storiesOf('Integration/Editor/ApiProvider', module);
 
 stories
   .add('Select Method', () => (
     <OpenApiSelectMethod
+      i18nBtnCancel={'Cancel'}
+      i18nBtnNext={'Next'}
       i18nMethodFromFile={'Upload an OpenAPI file'}
       i18nMethodFromScratch={'Create from scratch'}
       i18nMethodFromUrl={'Use a URL'}
@@ -49,15 +34,12 @@ stories
       }
       disableDropzone={boolean('Disabled', false)}
       fileExtensions={fileExtensions}
-      handleSubmit={handleSubmit}
       i18nHelpMessage={helpMessage}
       i18nInstructions={instructions}
       i18nNoFileSelectedMessage={noFileSelectedMessage}
       i18nSelectedFileLabel={selectedFileLabel}
       i18nUploadFailedMessage={text('Fail Message', 'Upload failed')}
       i18nUploadSuccessMessage={text('Success Message', undefined)}
-      onUploadAccepted={handleFiles}
-      onUploadRejected={uploadFailedMessage}
     />
   ))
   .add('Review Actions', () => (
@@ -81,6 +63,7 @@ stories
     <Router>
       <ApiProviderReviewOperations>
         <ApiProviderReviewOperationsItem
+          createAsPrimary={boolean(true)}
           createFlowHref={'/create-flow'}
           i18nCreateFlow={'Create a Flow'}
           onCreateFlow={() => {
@@ -91,6 +74,7 @@ stories
           operationPath={'/breweries/{breweryId}/beers'}
         />
         <ApiProviderReviewOperationsItem
+          createAsPrimary={boolean(false)}
           createFlowHref={'/create-flow'}
           i18nCreateFlow={'Create a Flow'}
           onCreateFlow={() => {
@@ -101,6 +85,7 @@ stories
           operationPath={'/breweries/{breweryId}/beers'}
         />
         <ApiProviderReviewOperationsItem
+          createAsPrimary={boolean(false)}
           createFlowHref={'/create-flow'}
           i18nCreateFlow={'Create a Flow'}
           onCreateFlow={() => {
@@ -111,6 +96,7 @@ stories
           operationPath={'/breweries/{breweryId}'}
         />
         <ApiProviderReviewOperationsItem
+          createAsPrimary={boolean(false)}
           createFlowHref={'/create-flow'}
           i18nCreateFlow={'Create a Flow'}
           onCreateFlow={() => {
@@ -121,6 +107,7 @@ stories
           operationPath={'/breweries/{breweryId}'}
         />
         <ApiProviderReviewOperationsItem
+          createAsPrimary={boolean(false)}
           createFlowHref={'/create-flow'}
           i18nCreateFlow={'Create a Flow'}
           onCreateFlow={() => {

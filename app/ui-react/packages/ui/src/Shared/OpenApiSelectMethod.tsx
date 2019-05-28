@@ -7,8 +7,7 @@ import {
   Row,
 } from 'patternfly-react';
 import * as React from 'react';
-
-import { Container } from '../Layout';
+import { ButtonLink, Container } from '../Layout';
 import { DndFileChooser } from './DndFileChooser';
 import './OpenApiSelectMethod.css';
 
@@ -19,6 +18,8 @@ export interface IOpenApiSelectMethodProps {
   /**
    * Localized strings to be displayed.
    */
+  i18nBtnCancel: string;
+  i18nBtnNext: string;
   i18nHelpMessage?: string;
   i18nInstructions: string;
   i18nMethodFromFile: string;
@@ -36,6 +37,7 @@ export interface IOpenApiSelectMethodProps {
 export interface IOpenApiSelectMethodState {
   method?: string;
   specification?: string;
+  valid?: boolean;
 }
 
 export class OpenApiSelectMethod extends React.Component<
@@ -47,24 +49,55 @@ export class OpenApiSelectMethod extends React.Component<
     this.state = {
       method: 'file',
       specification: '',
+      valid: false,
     };
 
-    this.onSelectMethod = this.onSelectMethod.bind(this);
     this.onAddSpecification = this.onAddSpecification.bind(this);
+    this.onNext = this.onNext.bind(this);
+    this.onSelectMethod = this.onSelectMethod.bind(this);
   }
 
-  public onSelectMethod(newMethod: string) {
-    this.setState({ method: newMethod });
+  public checkValidUrl(url: string): boolean {
+    console.log('Check URL: ' + url);
+    return true;
   }
 
+  /**
+   * User has added a specification either via a URL or file upload
+   * @param e
+   */
   public onAddSpecification(e: React.FormEvent<HTMLInputElement>) {
     this.setState({ specification: e.currentTarget.value });
+
+    if (
+      this.state.method === 'url' &&
+      this.checkValidUrl(e.currentTarget.value)
+    ) {
+      console.log('Valid');
+    }
+  }
+
+  /**
+   * The action fired when the user presses the Next button.
+   */
+  public onNext(): void {
+    console.log('User wants to click Next');
+  }
+
+  /**
+   * The action fired when the user selects the method
+   * to provide an OpenAPI specification.
+   * @param newMethod
+   */
+  public onSelectMethod(newMethod: string) {
+    this.setState({ method: newMethod });
   }
 
   /**
    * Callback for when one or more file uploads have been accepted.
    */
   public onUploadAccepted(files: File[]): void {
+    this.setState({ valid: true });
     files.forEach(file => {
       return '<span>Process file ' + file.name + '</span>\n';
     });
@@ -154,6 +187,20 @@ export class OpenApiSelectMethod extends React.Component<
               </div>
             </FormGroup>
           </Col>
+
+          <ButtonLink
+            disabled={
+              !(
+                this.state.method === 'scratch' ||
+                this.state.specification !== ''
+              )
+            }
+            as={'primary'}
+            onClick={this.onNext}
+          >
+            {this.props.i18nBtnNext}
+          </ButtonLink>
+          <ButtonLink>{this.props.i18nBtnCancel}</ButtonLink>
         </Row>
       </Grid>
     );
