@@ -1,3 +1,4 @@
+import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
@@ -33,6 +34,7 @@ stories
       i18nSelectedFileLabel={selectedFileLabel}
       i18nUploadFailedMessage={text('Fail Message', 'Upload failed')}
       i18nUploadSuccessMessage={text('Success Message', undefined)}
+      onNext={action('Click next')}
     />
   ))
   .add('Review Actions', () => (
