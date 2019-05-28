@@ -23,6 +23,7 @@ export interface ISortType {
 }
 
 export interface IActiveFilter {
+  id: string;
   title: string;
   value: string;
 }
@@ -31,7 +32,7 @@ export interface IListViewToolbarProps {
   activeFilters: IActiveFilter[];
   filterTypes: IFilterType[];
   currentFilterType: IFilterType;
-  currentSortType: string;
+  currentSortType: ISortType;
   currentValue: any;
   isSortAscending: boolean;
   resultsCount: number;
@@ -42,7 +43,7 @@ export interface IListViewToolbarProps {
 
   onValueKeyPress(keyEvent: KeyboardEvent): void;
 
-  onFilterAdded(title: string, value: string): void;
+  onFilterAdded(id: string, title: string, value: string): void;
 
   onSelectFilterType(filterType: IFilterType): void;
 
@@ -54,7 +55,7 @@ export interface IListViewToolbarProps {
 
   onToggleCurrentSortDirection(): void;
 
-  onUpdateCurrentSortType(sortType: string): void;
+  onUpdateCurrentSortType(sortType: ISortType): void;
 }
 
 export class ListViewToolbar extends React.Component<IListViewToolbarProps> {

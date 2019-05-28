@@ -17,7 +17,7 @@ import resolvers from '../resolvers';
 function getFilteredAndSortedIntegrations(
   integrations: IntegrationWithMonitoring[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let filteredAndSortedIntegrations = integrations;
@@ -25,10 +25,10 @@ function getFilteredAndSortedIntegrations(
     const valueToLower = filter.value.toLowerCase();
     filteredAndSortedIntegrations = filteredAndSortedIntegrations.filter(
       (mi: IntegrationWithMonitoring) => {
-        if (filter.title === 'Name') {
+        if (filter.id === 'name') {
           return mi.integration.name.toLowerCase().includes(valueToLower);
         }
-        if (filter.title === 'Connection') {
+        if (filter.id === 'connection') {
           const connectionNames = mi.integration!.flows!.reduce(
             (acc, flow) => [
               ...acc,
@@ -52,7 +52,7 @@ function getFilteredAndSortedIntegrations(
     (miA, miB) => {
       const left = isSortAscending ? miA : miB;
       const right = isSortAscending ? miB : miA;
-      if (currentSortType === 'Name') {
+      if (currentSortType.id === 'name') {
         return left.integration.name.localeCompare(right.integration.name);
       }
       return left.integration!.currentState!.localeCompare(

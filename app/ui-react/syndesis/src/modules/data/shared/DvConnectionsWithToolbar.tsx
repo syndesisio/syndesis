@@ -19,7 +19,7 @@ function getFilteredAndSortedConnections(
   dvSourceStatuses: VirtualizationSourceStatus[],
   selectedConn: string,
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   // Connections are adjusted to supply dvStatus and selection

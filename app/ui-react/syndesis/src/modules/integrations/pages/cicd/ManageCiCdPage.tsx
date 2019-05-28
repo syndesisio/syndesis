@@ -23,7 +23,7 @@ import resolvers from '../../resolvers';
 function getFilteredAndSortedEnvironments(
   environments: string[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let answer = environments;
