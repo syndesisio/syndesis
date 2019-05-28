@@ -17,7 +17,11 @@ it('renders the heading', () => {
           placeholder: 'foo placeholder',
           title: 'Foo',
         }}
-        currentSortType={'sort'}
+        currentSortType={{
+          id: 'sort',
+          isNumeric: false,
+          title: 'Sort',
+        }}
         currentValue={''}
         isSortAscending={true}
         resultsCount={0}
