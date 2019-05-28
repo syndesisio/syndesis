@@ -4,7 +4,7 @@ import * as React from 'react';
 import './HttpMethodColors.css';
 
 export interface IHttpMethodColorsProps {
-  httpMethod: string;
+  method: string;
 }
 
 /**
@@ -15,12 +15,12 @@ export interface IHttpMethodColorsProps {
 export class HttpMethodColors extends React.Component<IHttpMethodColorsProps> {
   public render() {
     const httpMethodClass = classNames({
-      'http-method--delete': this.props.httpMethod === 'DELETE',
-      'http-method--get': this.props.httpMethod === 'GET',
-      'http-method--post': this.props.httpMethod === 'POST',
-      'http-method--put': this.props.httpMethod === 'PUT',
+      'http-method--delete': this.props.method === 'DELETE',
+      'http-method--get': this.props.method === 'GET',
+      'http-method--post': this.props.method === 'POST',
+      'http-method--put': this.props.method === 'PUT',
     });
 
-    return <span className={httpMethodClass}>{this.props.httpMethod}</span>;
+    return <span className={httpMethodClass}>{this.props.method}</span>;
   }
 }
