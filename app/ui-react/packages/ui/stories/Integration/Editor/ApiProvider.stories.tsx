@@ -1,15 +1,8 @@
-import { action } from '@storybook/addon-actions';
 import { boolean, text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
 
-import {
-  ApiProviderReviewOperations,
-  ApiProviderReviewOperationsItem,
-  OpenApiReviewActions,
-  OpenApiSelectMethod,
-} from '../../../src';
+import { OpenApiReviewActions, OpenApiSelectMethod } from '../../../src';
 
 const fileExtensions = '.json, .yaml and .yml';
 const helpMessage = 'Accepted file type: .json, .yaml and .yml';
@@ -58,65 +51,4 @@ stories
         '- <strong>1</strong> tagged Rules evaluation :: Core',
       ]}
     />
-  ))
-  .add('Review Operations', () => (
-    <Router>
-      <ApiProviderReviewOperations>
-        <ApiProviderReviewOperationsItem
-          createAsPrimary={boolean(true)}
-          createFlowHref={'/create-flow'}
-          i18nCreateFlow={'Create a Flow'}
-          onCreateFlow={() => {
-            action('Create a flow');
-          }}
-          operationDescription={'Get Beers From the Brewery'}
-          operationHttpMethod={'GET'}
-          operationPath={'/breweries/{breweryId}/beers'}
-        />
-        <ApiProviderReviewOperationsItem
-          createAsPrimary={boolean(false)}
-          createFlowHref={'/create-flow'}
-          i18nCreateFlow={'Create a Flow'}
-          onCreateFlow={() => {
-            action('Create a flow');
-          }}
-          operationDescription={'Add a Beer to the Brewery'}
-          operationHttpMethod={'POST'}
-          operationPath={'/breweries/{breweryId}/beers'}
-        />
-        <ApiProviderReviewOperationsItem
-          createAsPrimary={boolean(false)}
-          createFlowHref={'/create-flow'}
-          i18nCreateFlow={'Create a Flow'}
-          onCreateFlow={() => {
-            action('Create a flow');
-          }}
-          operationDescription={'Update a Brewery'}
-          operationHttpMethod={'PUT'}
-          operationPath={'/breweries/{breweryId}'}
-        />
-        <ApiProviderReviewOperationsItem
-          createAsPrimary={boolean(false)}
-          createFlowHref={'/create-flow'}
-          i18nCreateFlow={'Create a Flow'}
-          onCreateFlow={() => {
-            action('Create a flow');
-          }}
-          operationDescription={'Delete a Brewery'}
-          operationHttpMethod={'DELETE'}
-          operationPath={'/breweries/{breweryId}'}
-        />
-        <ApiProviderReviewOperationsItem
-          createAsPrimary={boolean(false)}
-          createFlowHref={'/create-flow'}
-          i18nCreateFlow={'Create a Flow'}
-          onCreateFlow={() => {
-            action('Create a flow');
-          }}
-          operationDescription={'Get All Breweries'}
-          operationHttpMethod={'GET'}
-          operationPath={'/breweries'}
-        />
-      </ApiProviderReviewOperations>
-    </Router>
   ));

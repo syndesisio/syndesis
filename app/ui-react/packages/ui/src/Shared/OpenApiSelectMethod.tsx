@@ -15,7 +15,6 @@ import './OpenApiSelectMethod.css';
 
 export interface IOpenApiSelectMethodProps {
   allowMultiple?: boolean;
-  cancelHref?: H.LocationDescriptor;
   disableDropzone: boolean;
   fileExtensions?: string;
   /**
@@ -215,9 +214,6 @@ export class OpenApiSelectMethod extends React.Component<
             onClick={this.onNext}
           >
             {this.props.i18nBtnNext}
-          </ButtonLink>
-          <ButtonLink href={this.props.cancelHref}>
-            {this.props.i18nBtnCancel}
           </ButtonLink>
         </Row>
       </Grid>
