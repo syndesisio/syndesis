@@ -12,6 +12,7 @@ export * from './ListViewToolbar';
 export * from './LogViewer';
 export * from './models';
 export * from './Notifications';
+export * from './OpenApiSelectMethod';
 export * from './SimplePageHeader';
 export * from './ProgressWithLink';
 export * from './PfDropdownItem';

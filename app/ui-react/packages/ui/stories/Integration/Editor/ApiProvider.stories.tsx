@@ -5,7 +5,7 @@ import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 
 import {
-  ApiProviderSelectMethod,
+  OpenApiSelectMethod,
   ApiProviderReviewActions,
   ApiProviderReviewOperations,
   ApiProviderReviewOperationsItem,
@@ -40,7 +40,7 @@ const stories = storiesOf('Integration/Editor/ApiProvider', module);
 
 stories
   .add('Select Method', () => (
-    <ApiProviderSelectMethod
+    <OpenApiSelectMethod
       i18nMethodFromFile={'Upload an OpenAPI file'}
       i18nMethodFromScratch={'Create from scratch'}
       i18nMethodFromUrl={'Use a URL'}

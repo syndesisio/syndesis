@@ -9,11 +9,11 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 
-import { Container } from '../../../Layout';
-import { DndFileChooser } from '../../../Shared';
-import './ApiProviderSelectMethod.css';
+import { Container } from '../Layout';
+import { DndFileChooser } from './index';
+import './OpenApiSelectMethod.css';
 
-export interface IApiProviderSelectMethodProps {
+export interface IOpenApiSelectMethodProps {
   allowMultiple?: boolean;
   disableDropzone: boolean;
   fileExtensions?: string;
@@ -51,13 +51,13 @@ export interface IApiProviderSelectMethodProps {
   onUploadRejected(fileName: string): string;
 }
 
-export interface IApiProviderSelectMethodState {
+export interface IOpenApiSelectMethodState {
   method: string;
 }
 
-export class ApiProviderSelectMethod extends React.Component<
-  IApiProviderSelectMethodProps,
-  IApiProviderSelectMethodState
+export class OpenApiSelectMethod extends React.Component<
+  IOpenApiSelectMethodProps,
+  IOpenApiSelectMethodState
 > {
   constructor(props: any) {
     super(props);
@@ -74,7 +74,7 @@ export class ApiProviderSelectMethod extends React.Component<
 
   public render() {
     return (
-      <Grid className={'api-provider-select-method'}>
+      <Grid className={'open-api-select-method'}>
         <Form onSubmit={this.props.handleSubmit}>
           <Row>
             <Col>
