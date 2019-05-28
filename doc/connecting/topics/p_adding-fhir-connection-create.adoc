@@ -7,16 +7,16 @@
 In an integration, you can create and add a resource to a FHIR server.
 When you configure the connection's *Create* action, you specify the 
 type of the resource that you want to create. 
-For example, you might add new patient resource to a FHIR server. 
+For example, you might want to add a new patient resource to a FHIR server. 
 To create a resource,  
 add a FHIR connection to the middle of a flow, or as a simple 
 integration's finish connection. 
 
 To populate the values in the new resource, add a data mapper 
 step to the flow just before the FHIR connection that you are 
-adding in this procedure. It is expected that previous steps 
+adding in this procedure. It is expected that the previous steps 
 in the flow provide the data that you want the new resource to 
-contain. Map fields in previous steps to fields in the target 
+contain. Map fields in the previous steps to fields in the target 
 resource that this FHIR connection is creating. The new resource 
 contains only the fields that you map to. 
 

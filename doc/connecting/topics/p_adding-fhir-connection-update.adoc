@@ -8,7 +8,7 @@ In an integration, you can update a resource that is on a FHIR server.
 To provide the updated values, add a data mapper step to the flow just before 
 a FHIR connection that updates a resource. It is expected that previous 
 steps in the flow provide the data that you want the updated resource 
-to contain. Map fields in previous steps to fields in the target 
+to contain. Map fields in the previous steps to fields in the target 
 resource that this FHIR connection updates. 
 
 [CAUTION] 
