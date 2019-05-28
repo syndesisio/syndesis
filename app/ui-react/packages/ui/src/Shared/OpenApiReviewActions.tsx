@@ -10,9 +10,9 @@ import {
 } from '@patternfly/react-core';
 import { Card } from 'patternfly-react';
 import * as React from 'react';
-import { Container } from '../../../Layout';
+import { Container } from '../Layout';
 
-import './ApiProviderReviewActions.css';
+import './OpenApiReviewActions.css';
 
 export interface IApiProviderReviewActionsProps {
   apiProviderDescription?: string;
@@ -30,12 +30,12 @@ export interface IApiProviderReviewActionsProps {
   warningMessages?: string[];
 }
 
-export class ApiProviderReviewActions extends React.Component<
+export class OpenApiReviewActions extends React.Component<
   IApiProviderReviewActionsProps
 > {
   public render() {
     return (
-      <Card className={'api-provider-review-actions'}>
+      <Card className={'open-api-review-actions'}>
         <Card.Body>
           {this.props.i18nValidationFallbackMessage ? (
             <h5 className={'review-actions__validationFallbackMessage'}>

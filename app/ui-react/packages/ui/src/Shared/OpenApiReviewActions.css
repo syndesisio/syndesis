@@ -1,0 +1,15 @@
+.open-api-review-actions .review-actions__heading {
+  background-color: #f5f5f5;
+  font-weight: bold;
+  margin-bottom: 8px;
+  margin-top: 8px;
+  padding: 4px 8px;
+}
+
+.open-api-review-actions .review-actions__tagMessageList {
+  --pf-c-content--ul--ListStyle: none;
+}
+
+.open-api-review-actions .review-actions__validationFallbackMessage {
+  font-weight: bold;
+}
