@@ -89,6 +89,7 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                           i18nUrlNote={t(
                             'integrations:apiProvider:selectMethod:urlNote'
                           )}
+                          onNext={() => {}}
                         />
                       </PageSection>
                     }
