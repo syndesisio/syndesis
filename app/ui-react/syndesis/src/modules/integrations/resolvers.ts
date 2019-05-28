@@ -160,12 +160,20 @@ const resolvers = {
     finish: makeEditorResolvers(routes.create.finish),
     configure: {
       root: makeResolverNoParams(routes.create.configure.root),
-      index: makeResolver<IEditorIndex, IBaseFlowRouteParams, IBaseRouteState>(
+      entryPoint: makeResolver<
+        IEditorIndex,
+        IBaseFlowRouteParams,
+        IBaseRouteState
+      >(
         routes.create.configure.index,
         configureIndexOrApiProviderMapper(
           routes.create.configure.index,
           routes.create.configure.apiProviderOperations
         )
+      ),
+      index: makeResolver<IEditorIndex, IBaseFlowRouteParams, IBaseRouteState>(
+        routes.create.configure.index,
+        configureIndexMapper
       ),
       apiProviderOperations: makeResolver<
         IEditorBase,
@@ -191,17 +199,22 @@ const resolvers = {
     edit: {
       root: makeResolver<IEditorIndex, IBaseFlowRouteParams, IBaseRouteState>(
         routes.integration.edit.root,
-        configureIndexOrApiProviderMapper(
-          routes.integration.edit.root,
-          routes.integration.edit.apiProviderOperations
-        )
+        configureIndexMapper
       ),
-      index: makeResolver<IEditorIndex, IBaseFlowRouteParams, IBaseRouteState>(
+      entryPoint: makeResolver<
+        IEditorIndex,
+        IBaseFlowRouteParams,
+        IBaseRouteState
+      >(
         routes.integration.edit.index,
         configureIndexOrApiProviderMapper(
           routes.integration.edit.index,
           routes.integration.edit.apiProviderOperations
         )
+      ),
+      index: makeResolver<IEditorIndex, IBaseFlowRouteParams, IBaseRouteState>(
+        routes.integration.edit.index,
+        configureIndexMapper
       ),
       apiProviderOperations: makeResolver<
         IEditorBase,
