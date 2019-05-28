@@ -1,4 +1,5 @@
 // tslint:disable:no-console
+import * as H from '@syndesis/history';
 import {
   Col,
   FormControl,
@@ -14,6 +15,7 @@ import './OpenApiSelectMethod.css';
 
 export interface IOpenApiSelectMethodProps {
   allowMultiple?: boolean;
+  cancelHref?: H.LocationDescriptor;
   disableDropzone: boolean;
   fileExtensions?: string;
   /**
@@ -205,7 +207,9 @@ export class OpenApiSelectMethod extends React.Component<
           >
             {this.props.i18nBtnNext}
           </ButtonLink>
-          <ButtonLink>{this.props.i18nBtnCancel}</ButtonLink>
+          <ButtonLink href={this.props.cancelHref}>
+            {this.props.i18nBtnCancel}
+          </ButtonLink>
         </Row>
       </Grid>
     );
