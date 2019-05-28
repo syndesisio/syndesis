@@ -7,6 +7,9 @@ check_oc_version()
 {
     local minimum=${OC_MIN_VERSION}
     local test=$(oc version | grep "^oc" | tr -d oc\ v | cut -f1 -d "+")
+    if [ "$test" = "" ]; then
+        local test=$(oc version | grep 'Client Version' | sed "s/^.*GitVersion:\"v\(.*\)\", GitCommit.*$/\1/")
+    fi
 
     echo $(compare_oc_version $test $minimum)
 }
