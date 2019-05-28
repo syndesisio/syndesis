@@ -52,7 +52,6 @@ export class OpenApiSelectMethod extends React.Component<
       valid: false,
     };
 
-    this.disableNext = this.disableNext.bind(this);
     this.onAddSpecification = this.onAddSpecification.bind(this);
     this.onNext = this.onNext.bind(this);
     this.onSelectMethod = this.onSelectMethod.bind(this);
@@ -61,23 +60,6 @@ export class OpenApiSelectMethod extends React.Component<
   public checkValidUrl(url: string): boolean {
     console.log('Check URL: ' + url);
     return true;
-  }
-
-  /**
-   * Boolean value that determines whether or not to disable
-   * the Next button
-   * 1. The specification string must not be empty,
-   * unless the method is 'scratch'
-   * 2. If the method is 'url', that URL must be valid
-   */
-  public disableNext() {
-    console.log('Allow next or no?');
-    console.log(
-      this.state.method === 'scratch' || this.state.specification !== ''
-    );
-    this.setState({
-      valid: this.state.method === 'scratch' || this.state.specification !== '',
-    });
   }
 
   /**
@@ -91,7 +73,7 @@ export class OpenApiSelectMethod extends React.Component<
       this.state.method === 'url' &&
       this.checkValidUrl(e.currentTarget.value)
     ) {
-      console.log('Valid');
+      // TODO
       this.setState({ valid: true });
     }
   }
