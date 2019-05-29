@@ -77,7 +77,7 @@
               <div *ngIf="editMode" class="col-sm-12 col-md-2">
                 <div class="pull-right flow-buttons">
                   <a
-                    *ngIf="i > 0"
+                    *ngIf="i > 0 || form.get('flowOptions').controls.length > 1"
                     tabindex="1"
                     [attr.aria-label]="'Remove flow #' + i"
                     class="fa fa-trash-o"
