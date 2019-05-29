@@ -2,11 +2,12 @@ import { object, text } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import { AutoForm, IFormDefinition } from '../src';
-import { StoryWrapper } from './StoryWrapper.component';
+import { FormWrapper } from './FormWrapper';
+import { StoryWrapper } from './StoryWrapper';
 
 const stories = storiesOf('AutoForm', module);
 
-const formDefinition = {
+const definition = {
   brokerCertificate: {
     componentProperty: true,
     deprecated: false,
@@ -178,8 +179,8 @@ stories.add('Kitchen Sink', () => {
   return (
     <StoryWrapper>
       <AutoForm
-        definition={object('definition', formDefinition)}
-        initialValue={object('initialValue', initialValue)}
+        definition={object('Definition', definition)}
+        initialValue={object('Initial Value', initialValue)}
         i18nRequiredProperty={text(
           'i18nRequiredProperty',
           'This property is required'
@@ -188,18 +189,7 @@ stories.add('Kitchen Sink', () => {
         onSave={onSave}
       >
         {({ fields, handleSubmit }) => (
-          <form onSubmit={handleSubmit}>
-            <React.Fragment>
-              <p className="fields-status-pf">
-                The fields marked with <span className="required-pf">*</span>{' '}
-                are required.
-              </p>
-              {fields}
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
-            </React.Fragment>
-          </form>
+          <FormWrapper onSubmit={handleSubmit} fields={fields} />
         )}
       </AutoForm>
     </StoryWrapper>

@@ -12,15 +12,6 @@ export interface IFormErrors<T> {
   [name: string]: string;
 }
 
-export interface IFormField {
-  name: string;
-  value?: any;
-  defaultValue?: any;
-  min?: number;
-  max?: number;
-  onChange?: () => void;
-}
-
 export interface IWhen {
   value?: string;
   id?: string;
@@ -48,7 +39,11 @@ export interface IFormArrayDefinitionOptions {
   fieldAttributes?: IFormFieldAttributes;
   formGroupAttributes?: IFormFieldAttributes;
   arrayControlAttributes?: IFormFieldAttributes;
+  arrayRowTitleAttributes?: IFormFieldAttributes;
   controlLabelAttributes?: IFormFieldAttributes;
+  minElements?: number;
+  showSortControls?: boolean;
+  rowTitle?: string;
   i18nAddElementText: string;
 }
 

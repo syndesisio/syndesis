@@ -141,6 +141,7 @@ export class FormDurationComponent extends React.Component<
             title={this.props.property.controlHint}
           />
           <DropdownButton
+            id={`${toValidHtmlId(this.props.field.name)}-duration`}
             data-testid={`${toValidHtmlId(this.props.field.name)}-duration`}
             componentClass={Form.InputGroup.Button}
             title={this.state.duration.label}
