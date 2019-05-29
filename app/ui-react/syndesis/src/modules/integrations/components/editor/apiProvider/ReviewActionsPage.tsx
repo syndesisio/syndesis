@@ -62,6 +62,7 @@ export const ReviewActionsPage: React.FunctionComponent<
         apiSummary!.configuredProperties!.specification
       );
       integration.id = state.integration.id;
+      integration.name = '';
       history.push(nextHref(integration, params, state));
     } catch (e) {
       // todo show the error?
