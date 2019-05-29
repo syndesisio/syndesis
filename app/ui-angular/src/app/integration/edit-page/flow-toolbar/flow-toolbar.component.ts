@@ -85,33 +85,25 @@ export class FlowToolbarComponent implements OnInit {
     return this.isAlternateFlow(flow) && flow.metadata['kind'] === 'default';
   }
 
-  getConditionalFlows(): Flow[] {
+  getConditionalFlowGroups() {
     const conditionalFlows = this.flows.filter(flow => this.isConditionalFlow(flow));
 
     // Add default flows to the very end of the list, ensures that default flows are always at the end of a group
     conditionalFlows.push(...this.flows.filter(flow => this.isDefaultFlow(flow)));
 
     // potentially we have many flows that belong to different steps, so group flows by step id
-    const ids = [];
-    const result = [];
+    const flowGroups = [];
     conditionalFlows.forEach(flow => {
       const stepId = flow.metadata['stepId'];
-      const index = ids.indexOf(stepId);
-      if (index > -1) {
-        result[index].push(flow);
+      const flowGroup = flowGroups.find(group => group.id === stepId);
+      if (flowGroup) {
+        flowGroup['flows'].push(flow);
       } else {
-        ids.push(stepId);
-        result.push([flow]);
+        flowGroups.push({id: stepId, flows: [flow]});
       }
     });
 
-    if (result.length) {
-      return result.reduce((prev, curr) => {
-        return prev.concat(curr);
-      });
-    } else {
-      return result;
-    }
+    return flowGroups;
   }
 
   publish() {
