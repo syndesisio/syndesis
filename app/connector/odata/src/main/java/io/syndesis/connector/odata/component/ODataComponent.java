@@ -18,8 +18,6 @@ package io.syndesis.connector.odata.component;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.apache.camel.Component;
 import org.apache.camel.Endpoint;
 import org.apache.camel.component.olingo4.Olingo4AppEndpointConfiguration;
@@ -34,10 +32,6 @@ import io.syndesis.integration.component.proxy.ComponentDefinition;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 public final class ODataComponent extends ComponentProxyComponent implements ODataConstants {
-
-    private static final Pattern NUMBER_ONLY_PATTERN = Pattern.compile("-?\\d+");
-
-    private static final Pattern KEY_PREDICATE_PATTERN = Pattern.compile("\\(?'?(.+?)\\'?\\)?\\/(.+)");
 
     /**
      * These fields are populated using reflection by the HandlerCustomizer class.
@@ -269,60 +263,10 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
         //
         String resourcePath = getResourcePath();
         if (getKeyPredicate() != null) {
-            resourcePath = resourcePath + formatKeyPredicate();
+            resourcePath = resourcePath + ODataUtil.formatKeyPredicate(getKeyPredicate(), true);
         }
 
         configuration.setResourcePath(resourcePath);
-    }
-
-    @SuppressWarnings("PMD")
-    private String formatKeyPredicate() {
-        String keyPredicate = getKeyPredicate();
-        String subPredicate = null;
-
-        Matcher kp1Matcher = KEY_PREDICATE_PATTERN.matcher(keyPredicate);
-        if (kp1Matcher.matches()) {
-            keyPredicate = kp1Matcher.group(1);
-            subPredicate = kp1Matcher.group(2);
-        }
-
-        if (keyPredicate.startsWith(OPEN_BRACKET)) {
-            keyPredicate = keyPredicate.substring(1);
-        }
-
-        if (keyPredicate.startsWith(QUOTE_MARK)) {
-            keyPredicate = keyPredicate.substring(1);
-        }
-
-        if (keyPredicate.endsWith(CLOSE_BRACKET)) {
-            keyPredicate = keyPredicate.substring(0, keyPredicate.length() - 1);
-        }
-
-        if (keyPredicate.endsWith(QUOTE_MARK)) {
-            keyPredicate = keyPredicate.substring(0, keyPredicate.length() - 1);
-        }
-
-        //
-        // if keyPredicate is a number only, it doesn't need quotes
-        //
-        Matcher numberOnlyMatcher = NUMBER_ONLY_PATTERN.matcher(keyPredicate);
-        boolean noQuotes = numberOnlyMatcher.matches();
-
-        StringBuilder buf = new StringBuilder(OPEN_BRACKET);
-        if (! noQuotes) {
-            buf.append(QUOTE_MARK);
-        }
-        buf.append(keyPredicate);
-        if (! noQuotes) {
-            buf.append(QUOTE_MARK);
-        }
-        buf.append(CLOSE_BRACKET);
-
-        if (subPredicate != null) {
-            buf.append(FORWARD_SLASH).append(subPredicate);
-        }
-
-        return buf.toString();
     }
 
     @Override
