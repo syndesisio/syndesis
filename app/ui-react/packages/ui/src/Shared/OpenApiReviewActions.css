@@ -10,6 +10,14 @@
   margin-left: 15px;
 }
 
+.open-api-review-actions .review-actions__warnings {
+  margin-top: 15px;
+}
+
+.open-api-review-actions .review-actions__warnings [data-pf-content] {
+  margin-bottom: 0 !important;
+}
+
 .open-api-review-actions .review-actions__tagMessageList {
   --pf-c-content--ul--ListStyle: none;
 }

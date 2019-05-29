@@ -117,7 +117,10 @@ export const ReviewActionsPage: React.FunctionComponent<
                         } operations`}
                         i18nWarningsHeading={
                           apiSummary!.warnings
-                            ? t('integrations:apiProvider:reviewActions:sectionWarnings') : undefined
+                            ? t(
+                                'integrations:apiProvider:reviewActions:sectionWarnings'
+                              )
+                            : undefined
                         }
                         warningMessages={
                           apiSummary!.warnings
@@ -143,6 +146,7 @@ export const ReviewActionsPage: React.FunctionComponent<
                           onClick={onNext}
                           disabled={nextDisabled}
                           as={'primary'}
+                          style={{ marginLeft: '10px' }}
                         >
                           {t('shared:Next')}
                         </ButtonLink>
