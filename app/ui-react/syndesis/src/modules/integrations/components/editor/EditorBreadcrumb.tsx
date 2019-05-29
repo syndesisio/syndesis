@@ -30,6 +30,7 @@ export interface IEditorBreadcrumbProps {
   integration: IntegrationOverview;
   rootHref: H.LocationDescriptor;
   apiProviderEditorHref: H.LocationDescriptor;
+  getFlowHref: (flowId: string) => H.LocationDescriptor;
 }
 export const EditorBreadcrumb: React.FunctionComponent<
   IEditorBreadcrumbProps
@@ -38,6 +39,7 @@ export const EditorBreadcrumb: React.FunctionComponent<
   integration,
   rootHref,
   apiProviderEditorHref,
+  getFlowHref,
   children,
 }) => {
   const isApiProvider = isIntegrationApiProvider(integration);
@@ -87,9 +89,16 @@ export const EditorBreadcrumb: React.FunctionComponent<
             )
           }
         >
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. A autem
-          dicta dolores dolorum ducimus esse fugiat hic illum laudantium, minima
-          nisi nulla omnis quidem quod, ratione sed sunt vel voluptatum!
+          {integration
+            .flows!.filter(f => f.id !== currentFlow.id)
+            .map(f => (
+              <Link to={getFlowHref(f.id!)} key={f.id}>
+                <ApiProviderOperation description={f.description!} />
+                <div>
+                  <strong>{f.name}</strong>
+                </div>
+              </Link>
+            ))}
         </OperationsDropdown>
       )}
       {children}

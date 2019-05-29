@@ -125,7 +125,7 @@ export const OperationsPage: React.FunctionComponent<IOperationsPageProps> = ({
       return {
         ...f,
         description,
-        implemented: f.metadata!.excerpt.startsWith('501') ? 0 : 1,
+        implemented: f.metadata!['return-code-edited'] ? 1 : 0,
         method,
       } as IOperationFlow;
     });

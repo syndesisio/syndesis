@@ -62,6 +62,9 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
           specification: s.integration,
         }
       )}
+      getFlowHref={flowId =>
+        resolvers.create.configure.index({ ...p, ...s, flowId })
+      }
       currentFlowId={(p as IBaseFlowRouteParams).flowId}
     >
       {title}
