@@ -10,12 +10,12 @@ import * as H from '@syndesis/history';
 import { Card, DropdownKebab, Icon } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { toValidHtmlId } from '../helpers';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../Shared';
-import { toTestId } from '../utils';
 import './ConnectionCard.css';
 
 export interface IConnectionCardMenuProps {
@@ -108,7 +108,11 @@ export class ConnectionCard extends React.PureComponent<
             onConfirm={this.doDelete}
           />
         )}
-        <Card matchHeight={true} className={'connection-card'}>
+        <Card
+          data-testid={`connection-card-${toValidHtmlId(this.props.name)}-card`}
+          matchHeight={true}
+          className={'connection-card'}
+        >
           <Card.Heading
             className={
               this.props.techPreview
@@ -119,7 +123,7 @@ export class ConnectionCard extends React.PureComponent<
             {this.props.techPreview ? (
               <Level gutter={'md'}>
                 <LevelItem>&nbsp;</LevelItem>
-                <LevelItem>
+                <LevelItem data-testid={'connection-card-tech-preview-heading'}>
                   {this.props.i18nTechPreview!}
                   {'  '}
                   <Popover
@@ -147,11 +151,7 @@ export class ConnectionCard extends React.PureComponent<
                 >
                   <li role={'presentation'} key={0}>
                     <Link
-                      data-testid={`${toTestId(
-                        'ConnectionCard',
-                        this.props.name,
-                        'view-action'
-                      )}`}
+                      data-testid={'connection-card-view-action'}
                       to={this.props.href}
                       role={'menuitem'}
                       tabIndex={1}
@@ -161,11 +161,7 @@ export class ConnectionCard extends React.PureComponent<
                   </li>
                   <li role={'presentation'} key={1}>
                     <Link
-                      data-testid={`${toTestId(
-                        'ConnectionCard',
-                        this.props.name,
-                        'edit-action'
-                      )}`}
+                      data-testid={'connection-card-edit-action'}
                       to={this.props.menuProps.editHref}
                       role={'menuitem'}
                       tabIndex={2}
@@ -186,11 +182,7 @@ export class ConnectionCard extends React.PureComponent<
                         position={'bottom'}
                       >
                         <a
-                          data-testid={`${toTestId(
-                            'ConnectionCard',
-                            this.props.name,
-                            'delete-action'
-                          )}`}
+                          data-testid={'connection-card-delete-action'}
                           href={'javascript:void(0)'}
                           onClick={this.showDeleteDialog}
                           role={'menuitem'}
@@ -201,11 +193,7 @@ export class ConnectionCard extends React.PureComponent<
                       </Tooltip>
                     ) : (
                       <a
-                        data-testid={`${toTestId(
-                          'ConnectionCard',
-                          this.props.name,
-                          'delete-action'
-                        )}`}
+                        data-testid={'connection-card-delete-action'}
                         href={'javascript:void(0)'}
                         onClick={this.showDeleteDialog}
                         role={'menuitem'}
@@ -220,11 +208,7 @@ export class ConnectionCard extends React.PureComponent<
             )}
           </Card.Heading>
           <Link
-            data-testid={`${toTestId(
-              'ConnectionCard',
-              this.props.name,
-              'details-link'
-            )}`}
+            data-testid={'connection-card-details-link'}
             to={this.props.href}
             className={'connection-card__content'}
           >
@@ -236,11 +220,7 @@ export class ConnectionCard extends React.PureComponent<
                 <Title
                   size="lg"
                   className="connection-card__title h2"
-                  data-testid={`${toTestId(
-                    'ConnectionCard',
-                    this.props.name,
-                    'title'
-                  )}`}
+                  data-testid={'connection-card-title'}
                 >
                   {this.props.name}
                 </Title>
@@ -254,6 +234,7 @@ export class ConnectionCard extends React.PureComponent<
                 className={
                   'connection-card__footer--config-required alert alert-warning'
                 }
+                data-testid={'connection-card-config-required-footer'}
               >
                 <Icon type={'pf'} name={'warning-triangle-o'} size={'2x'} />
                 {this.props.i18nConfigurationRequired}

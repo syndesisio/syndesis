@@ -6,7 +6,6 @@ import {
   IntegrationEditorChooseAction,
   IntegrationEditorLayout,
   PageLoader,
-  toTestId,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -97,10 +96,9 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                                   }
                                   actions={
                                     <ButtonLink
-                                      data-testid={toTestId(
-                                        'SelectActionPage',
-                                        'select-button'
-                                      )}
+                                      data-testid={
+                                        'select-action-page-select-button'
+                                      }
                                       href={this.props.selectHref(
                                         a.id!,
                                         params,

@@ -1,4 +1,4 @@
-import { Breadcrumb, PageSection, toTestId } from '@syndesis/ui';
+import { Breadcrumb, PageSection } from '@syndesis/ui';
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -14,10 +14,7 @@ export default class ConnectionsCreatorApp extends React.Component {
         <WithClosedNavigation>
           <Breadcrumb>
             <Link
-              data-testid={`${toTestId(
-                'ConnectionsCreatorApp',
-                'connections-link'
-              )}`}
+              data-testid={'connections-creator-app-connections-link'}
               to={resolvers.connections()}
             >
               Connections

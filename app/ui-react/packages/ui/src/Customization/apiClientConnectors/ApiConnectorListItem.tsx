@@ -7,13 +7,13 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../Shared';
-import { toTestId } from '../../utils';
 
 export interface IApiConnectorListItemProps {
   apiConnectorDescription?: string;
@@ -109,6 +109,9 @@ export class ApiConnectorListItem extends React.Component<
           onConfirm={this.doDelete}
         />
         <ListViewItem
+          data-testid={`api-connector-list-item-${toValidHtmlId(
+            this.props.apiConnectorName
+          )}-list-item`}
           actions={
             <div className="form-group">
               <OverlayTrigger
@@ -116,11 +119,7 @@ export class ApiConnectorListItem extends React.Component<
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    'ApiConnectorListItem',
-                    this.props.apiConnectorName,
-                    'details-button'
-                  )}`}
+                  data-testid={'api-connector-list-item-details-button'}
                   href={this.props.detailsPageLink}
                   as={'default'}
                 >
@@ -129,11 +128,7 @@ export class ApiConnectorListItem extends React.Component<
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
                 <Button
-                  data-testid={`${toTestId(
-                    'ApiConnectorListItem',
-                    this.props.apiConnectorName,
-                    'delete-button'
-                  )}`}
+                  data-testid={'api-connector-list-item-delete-button'}
                   bsStyle="default"
                   disabled={this.props.usedBy !== 0}
                   onClick={this.showDeleteDialog}

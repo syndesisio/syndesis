@@ -1,5 +1,6 @@
 import { Grid } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../helpers';
 import { IntegrationStatus } from '../Integration';
 import { IntegrationState } from '../Integration/models';
 import './RecentUpdatesItem.css';
@@ -21,7 +22,11 @@ export const RecentUpdatesItem: React.FunctionComponent<IRecentUpdatesItem> = ({
   i18nPublished,
   i18nUnpublished,
 }) => (
-  <Grid.Row xs={12} className={'recent-updates-item'}>
+  <Grid.Row
+    xs={12}
+    className={'recent-updates-item'}
+    data-testid={`recent-updates-item-${toValidHtmlId(integrationName)}-row`}
+  >
     <Grid.Col xs={5}>{integrationName}</Grid.Col>
     <Grid.Col xs={3}>
       <IntegrationStatus

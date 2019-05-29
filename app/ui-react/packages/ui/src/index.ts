@@ -9,4 +9,4 @@ export * from './Layout';
 export * from './Settings';
 export * from './Shared';
 export * from './Support';
-export * from './utils';
+export * from './helpers';

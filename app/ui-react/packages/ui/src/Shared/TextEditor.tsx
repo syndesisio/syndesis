@@ -1,7 +1,7 @@
 import * as CodeMirror from 'codemirror';
 import * as React from 'react';
 import { UnControlled as ReactCodeMirror } from 'react-codemirror2';
-import { toTestId } from '../utils';
+import { toValidHtmlId } from '../helpers';
 
 import 'codemirror/addon/display/placeholder.js';
 import 'codemirror/addon/lint/lint.css';
@@ -28,10 +28,9 @@ export class TextEditor extends React.Component<ITextEditorProps> {
     return (
       <>
         <div
-          data-testid={`${toTestId(
-            'TextEditor',
-            this.props.id || 'codemirror'
-          )}`}
+          data-testid={`text-editor-${
+            this.props.id ? toValidHtmlId(this.props.id) : 'codemirror'
+          }`}
         >
           <ReactCodeMirror
             value={this.props.value}

@@ -1,8 +1,8 @@
 import { DropdownKebab } from 'patternfly-react';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { toValidHtmlId } from '../../helpers';
 import { IMenuActions } from '../../Shared';
-import { toTestId } from '../../utils';
 
 export interface IIntegrationDetailHistoryListViewItemActionsProps {
   actions: IMenuActions[];
@@ -23,8 +23,7 @@ export class IntegrationDetailHistoryListViewItemActions extends React.Component
             <li role={'presentation'} key={index}>
               {a.href ? (
                 <Link
-                  data-testid={`${toTestId(
-                    'IntegrationDetailHistoryListViewItemActions',
+                  data-testid={`integration-detail-history-list-view-item-actions-${toValidHtmlId(
                     a.label.toString()
                   )}`}
                   to={a.href}
@@ -36,8 +35,7 @@ export class IntegrationDetailHistoryListViewItemActions extends React.Component
                 </Link>
               ) : (
                 <a
-                  data-testid={`${toTestId(
-                    'IntegrationDetailHistoryListViewItemActions',
+                  data-testid={`integration-detail-history-list-view-item-actions-${toValidHtmlId(
                     a.label.toString()
                   )}`}
                   href={'javascript:void(0)'}

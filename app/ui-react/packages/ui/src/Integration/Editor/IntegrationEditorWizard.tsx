@@ -4,7 +4,6 @@ import * as H from '@syndesis/history';
 import classnames from 'classnames';
 import * as React from 'react';
 import { ButtonLink, Loader } from '../../Layout';
-import { toTestId } from '../../utils';
 import './IntegrationEditorWizard.css';
 
 /**
@@ -96,7 +95,7 @@ export const IntegrationEditorWizard: React.FunctionComponent<
       </div>
       <div className="wizard-pf-footer integration-editor-wizard__footer">
         <ButtonLink
-          data-testid={`${toTestId('IntegrationEditorWizard', 'back-button')}`}
+          data-testid={'integration-editor-wizard-back-button'}
           onClick={onBack}
           href={backHref}
           className={'wizard-pf-back'}
@@ -104,7 +103,7 @@ export const IntegrationEditorWizard: React.FunctionComponent<
           <i className="fa fa-angle-left" /> Back
         </ButtonLink>
         <ButtonLink
-          data-testid={`${toTestId('IntegrationEditorWizard', 'next-button')}`}
+          data-testid={'integration-editor-wizard-next-button'}
           onClick={onNext}
           href={nextHref}
           as={'primary'}
@@ -121,10 +120,7 @@ export const IntegrationEditorWizard: React.FunctionComponent<
           )}
         </ButtonLink>
         <ButtonLink
-          data-testid={`${toTestId(
-            'IntegrationEditorWizard',
-            'cancel-button'
-          )}`}
+          data-testid={'integration-editor-wizard-cancel-button'}
           onClick={onCancel}
           href={cancelHref}
           className={'wizard-pf-cancel'}

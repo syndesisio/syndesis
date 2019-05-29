@@ -6,7 +6,6 @@ import {
   IntegrationsListItemBasic,
   ISortType,
   ListViewToolbar,
-  toTestId,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
@@ -101,10 +100,9 @@ export const SelectiveIntegrationList: React.FunctionComponent<
                         integrationName={si.name}
                         checkboxComponent={
                           <input
-                            data-testid={toTestId(
-                              'SelectiveIntegrationList',
-                              'integrations-input'
-                            )}
+                            data-testid={
+                              'selective-integration-list-integrations-input'
+                            }
                             type="checkbox"
                             defaultValue={si.name}
                             onChange={event => onIntegrationChecked(event)}

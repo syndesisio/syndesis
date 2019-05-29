@@ -1,6 +1,5 @@
 import { Alert, Button, Col, Row } from 'patternfly-react';
 import * as React from 'react';
-import { toTestId } from '../../utils';
 
 export interface IOAuthAppExpanderBodyProps {
   showSuccess: boolean;
@@ -43,10 +42,7 @@ export class OAuthAppExpanderBody extends React.Component<
           <Col xs={12} md={8}>
             <>
               <Button
-                data-testid={`${toTestId(
-                  'OAuthAppExpanderBody',
-                  'save-button'
-                )}`}
+                data-testid={'o-auth-app-expander-body-save-button'}
                 bsStyle="primary"
                 onClick={this.props.onSave}
                 disabled={this.props.disableSave}
@@ -54,10 +50,7 @@ export class OAuthAppExpanderBody extends React.Component<
                 {this.props.i18nSaveButtonText}
               </Button>{' '}
               <Button
-                data-testid={`${toTestId(
-                  'OAuthAppExpanderBody',
-                  'remove-button'
-                )}`}
+                data-testid={'o-auth-app-expander-body-remove-button'}
                 onClick={this.props.onRemove}
                 disabled={this.props.disableRemove}
               >

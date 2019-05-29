@@ -1,5 +1,6 @@
 import { ListView, ListViewIcon, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../../../helpers';
 
 export interface IConnectionSchemaListItemProps {
   icon?: string;
@@ -14,6 +15,9 @@ export class ConnectionSchemaListItem extends React.Component<
     return (
       <>
         <ListViewItem
+          data-testid={`connection-schema-list-item-${toValidHtmlId(
+            this.props.connectionName
+          )}-list-item`}
           heading={this.props.connectionName}
           description={
             this.props.connectionDescription

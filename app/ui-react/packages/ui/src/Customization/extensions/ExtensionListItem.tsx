@@ -7,13 +7,13 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../Shared';
-import { toTestId } from '../../utils';
 
 export interface IExtensionListItemProps {
   detailsPageLink: H.LocationDescriptor;
@@ -129,6 +129,9 @@ export class ExtensionListItem extends React.Component<
           onConfirm={this.doDelete}
         />
         <ListViewItem
+          data-testid={`extension-list-item-${toValidHtmlId(
+            this.props.extensionName
+          )}-list-item`}
           actions={
             <div className="form-group">
               <OverlayTrigger
@@ -136,11 +139,7 @@ export class ExtensionListItem extends React.Component<
                 placement="top"
               >
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    'ExtensionListItem',
-                    this.props.extensionName,
-                    'details-button'
-                  )}`}
+                  data-testid={'extension-list-item-details-button'}
                   href={this.props.detailsPageLink}
                   as={'default'}
                 >
@@ -149,11 +148,7 @@ export class ExtensionListItem extends React.Component<
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    'ExtensionListItem',
-                    this.props.extensionName,
-                    'update-button'
-                  )}`}
+                  data-testid={'extension-list-item-update-button'}
                   href={this.props.linkUpdateExtension}
                   as={'default'}
                 >
@@ -162,11 +157,7 @@ export class ExtensionListItem extends React.Component<
               </OverlayTrigger>
               <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
                 <Button
-                  data-testid={`${toTestId(
-                    'ExtensionListItem',
-                    this.props.extensionName,
-                    'delete-button'
-                  )}`}
+                  data-testid={'extension-list-item-delete-button'}
                   bsStyle="default"
                   disabled={this.props.usedBy !== 0}
                   onClick={this.showDeleteDialog}

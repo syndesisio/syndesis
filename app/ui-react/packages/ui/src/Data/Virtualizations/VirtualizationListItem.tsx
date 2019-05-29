@@ -10,13 +10,13 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../Shared';
-import { toTestId } from '../../utils';
 import {
   BUILDING,
   CONFIGURING,
@@ -193,6 +193,9 @@ export class VirtualizationListItem extends React.Component<
           onConfirm={this.handleDelete}
         />
         <ListViewItem
+          data-testid={`virtualization-list-item-${toValidHtmlId(
+            this.props.virtualizationName
+          )}-list-item`}
           actions={
             <div className="form-group">
               {publishInProgress ? (
@@ -214,11 +217,7 @@ export class VirtualizationListItem extends React.Component<
               )}
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    'VirtualizationListItem',
-                    this.props.virtualizationName,
-                    'edit-button'
-                  )}`}
+                  data-testid={'virtualization-list-item-edit-button'}
                   href={this.props.detailsPageLink}
                   as={'primary'}
                 >
