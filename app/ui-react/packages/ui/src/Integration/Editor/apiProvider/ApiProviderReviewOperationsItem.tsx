@@ -4,6 +4,8 @@ import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 import { HttpMethodColors } from '../../../Shared';
 
+import './ApiProviderReviewOperationsItem.css';
+
 export interface IApiProviderReviewOperationsItemProps {
   createAsPrimary: boolean;
   createFlowHref: H.LocationDescriptor;
@@ -30,9 +32,17 @@ export class ApiProviderReviewOperationsItem extends React.Component<
             {this.props.i18nCreateFlow}
           </ButtonLink>
         }
-        className={'api-provider-operations-list-item'}
-        heading={this.props.operationPath}
-        description={this.props.operationDescription}
+        additionalInfo={[
+          <ListView.InfoItem key={1} className={'item__additional-info'}>
+            {this.props.operationDescription}
+          </ListView.InfoItem>,
+        ]}
+        className={'api-provider-review-operations-item'}
+        description={
+          <div className={'item__operation-path pf-u-my-sm pf-u-ml-2xl'}>
+            {this.props.operationPath}
+          </div>
+        }
         leftContent={
           <HttpMethodColors method={this.props.operationHttpMethod} />
         }
