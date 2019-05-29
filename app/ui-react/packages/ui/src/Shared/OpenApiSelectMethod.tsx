@@ -30,20 +30,38 @@ export interface IOpenApiSelectMethodProps {
   i18nNoFileSelectedMessage: string;
   i18nSelectedFileLabel: string;
   i18nUploadFailedMessage?: string;
-  i18nUploadFailedMessages?: string[];
   i18nUploadSuccessMessage?: string;
-  i18nUploadSuccessMessages?: string[];
   i18nUrlNote: string;
 
   /**
-   * The action fired when the user presses the Next button.
+   * The action fired when the user presses the Next button
    */
   onNext(method?: Method, specification?: string): void;
 }
 
 export interface IOpenApiSelectMethodState {
+  disableDropzone: boolean;
+  /**
+   * The method selected by the user to provide the OpenAPI
+   * specification
+   */
   method?: Method;
+  /**
+   * Used to determine what string to display for when a file is
+   * selected. We need a state for this, otherwise the string remains
+   * even when the spec is removed on changing the method.
+   */
+  selectedFileLabel?: string;
   specification?: string;
+  /**
+   * Used to handle D&D upload success/fail messages
+   */
+  uploadFailedMessage?: string;
+  uploadSuccessMessage?: string;
+  /**
+   * The `valid` prop here determines whether or not
+   * to allow the user to proceed to the next step in the wizard
+   */
   valid?: boolean;
 }
 
@@ -54,15 +72,39 @@ export class OpenApiSelectMethod extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
+      disableDropzone: false,
       method: 'file',
+      selectedFileLabel: '',
       specification: '',
       valid: false,
     };
 
+    this.buildUploadMessage = this.buildUploadMessage.bind(this);
     this.onAddUrlSpecification = this.onAddUrlSpecification.bind(this);
     this.onSelectMethod = this.onSelectMethod.bind(this);
     this.onUploadAccepted = this.onUploadAccepted.bind(this);
     this.onUploadRejected = this.onUploadRejected.bind(this);
+  }
+
+  /**
+   * Helper function used to build the D&D upload success/fail
+   * messages, which are subsequently set in the UI state
+   * @param fileName - The name of the file that was uploaded
+   * @param succeeded - Boolean value that specifies whether or not the
+   * upload was successful.
+   */
+  public buildUploadMessage(fileName: string, succeeded: boolean): void {
+    if (succeeded && fileName) {
+      this.setState({
+        uploadSuccessMessage:
+          this.props.i18nUploadSuccessMessage + "'" + fileName + "'",
+      });
+    } else {
+      this.setState({
+        uploadFailedMessage:
+          "'" + fileName + "'" + this.props.i18nUploadFailedMessage,
+      });
+    }
   }
 
   public checkValidUrl(url: string): boolean {
@@ -96,7 +138,10 @@ export class OpenApiSelectMethod extends React.Component<
   public onSelectMethod(newMethod: Method) {
     this.setState({
       method: newMethod,
+      selectedFileLabel: '',
       specification: '',
+      uploadFailedMessage: '',
+      uploadSuccessMessage: '',
       valid: newMethod === 'scratch',
     });
   }
@@ -107,8 +152,15 @@ export class OpenApiSelectMethod extends React.Component<
   public onUploadAccepted(files: File[]): void {
     const reader = new FileReader();
     reader.readAsText(files[0]);
+
+    this.buildUploadMessage(files[0].name, true);
+
     reader.onload = () => {
-      this.setState({ specification: reader.result as string, valid: true });
+      this.setState({
+        selectedFileLabel: this.props.i18nSelectedFileLabel,
+        specification: reader.result as string,
+        valid: true,
+      });
     };
   }
 
@@ -116,8 +168,17 @@ export class OpenApiSelectMethod extends React.Component<
    * Obtains the localized text (may include HTML tags) that appears when the file upload was rejected. This
    * will occur when a DnD of a file with the wrong extension is dropped. This message is presented
    * as a timed toast notification.
+   * @param fileName - Name of file that failed to be uploaded
    */
   public onUploadRejected(fileName: string): string {
+    this.buildUploadMessage(fileName, false);
+
+    this.setState({
+      selectedFileLabel: this.props.i18nSelectedFileLabel,
+      specification: '',
+      valid: false,
+    });
+
     return (
       '<span>File <strong>' +
       fileName +
@@ -152,17 +213,9 @@ export class OpenApiSelectMethod extends React.Component<
                           this.props.i18nNoFileSelectedMessage
                         }
                         i18nSelectedFileLabel={this.props.i18nSelectedFileLabel}
-                        i18nUploadFailedMessage={
-                          this.props.i18nUploadFailedMessage
-                        }
-                        i18nUploadFailedMessages={
-                          this.props.i18nUploadFailedMessages
-                        }
+                        i18nUploadFailedMessage={this.state.uploadFailedMessage}
                         i18nUploadSuccessMessage={
-                          this.props.i18nUploadSuccessMessage
-                        }
-                        i18nUploadSuccessMessages={
-                          this.props.i18nUploadSuccessMessages
+                          this.state.uploadSuccessMessage
                         }
                         onUploadAccepted={this.onUploadAccepted}
                         onUploadRejected={this.onUploadRejected}
