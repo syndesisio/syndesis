@@ -111,7 +111,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
                   >
                     Cancel
                   </ButtonLink>
-                  &nbsp;
+                  &nbsp;&nbsp;&nbsp;
                 </>
               )}
               {(saveHref || onSave) && (

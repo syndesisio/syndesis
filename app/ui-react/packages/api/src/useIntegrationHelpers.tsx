@@ -9,6 +9,7 @@ import {
 } from '@syndesis/models';
 import { key } from '@syndesis/utils';
 import { saveAs } from 'file-saver';
+import produce from 'immer';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
@@ -360,7 +361,9 @@ export const useIntegrationHelpers = () => {
     integration: Integration
   ): Promise<Integration> => {
     if (integration.id === NEW_INTEGRATION_ID) {
-      delete integration.id;
+      integration = produce(integration, draft => {
+        delete draft.id;
+      });
     }
     const response = await callFetch({
       body: integration,

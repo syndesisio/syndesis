@@ -154,6 +154,7 @@ export class SaveIntegrationPage extends React.Component<
                             description: state.integration.description,
                             name: state.integration.name,
                           }}
+                          isInitialValid={state.integration.name.length > 0}
                           onSave={onSave}
                         >
                           {({
@@ -178,6 +179,15 @@ export class SaveIntegrationPage extends React.Component<
                                 content={
                                   <IntegrationSaveForm
                                     handleSubmit={handleSubmit}
+                                    onSave={submitForm}
+                                    isSaveDisabled={!isValid}
+                                    isSaveLoading={isSubmitting}
+                                    onPublish={async () => {
+                                      shouldPublish = true;
+                                      await submitForm();
+                                    }}
+                                    isPublishDisabled={!isValid}
+                                    isPublishLoading={isSubmitting}
                                   >
                                     {fields}
                                   </IntegrationSaveForm>
@@ -186,15 +196,6 @@ export class SaveIntegrationPage extends React.Component<
                                   params,
                                   state
                                 )}
-                                onSave={submitForm}
-                                isSaveDisabled={!isValid}
-                                isSaveLoading={isSubmitting}
-                                onPublish={async () => {
-                                  shouldPublish = true;
-                                  await submitForm();
-                                }}
-                                isPublishDisabled={!isValid}
-                                isPublishLoading={isSubmitting}
                               />
                             </>
                           )}
