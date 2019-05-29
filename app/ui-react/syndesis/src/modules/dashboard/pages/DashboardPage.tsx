@@ -224,7 +224,7 @@ export default () => (
                           i18nTitle={t('titleIntegrationUpdates')}
                         >
                           <WithLoader
-                            error={false}
+                            error={integrationsError}
                             loading={!hasIntegrations}
                             loaderChildren={<RecentUpdatesSkeleton />}
                             errorChildren={<ApiError />}
