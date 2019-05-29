@@ -248,6 +248,13 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           ...state,
         })
       }
+      getEditorHref={(specification, params, state) =>
+        appResolvers.apiProvider.editSpecification({
+          specification,
+          ...params,
+          ...state,
+        })
+      }
       getBreadcrumb={getBreadcrumb}
     />
   );
