@@ -18,14 +18,44 @@ package io.syndesis.connector.odata.producer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import java.io.IOException;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.direct.DirectEndpoint;
 import org.apache.camel.component.mock.MockEndpoint;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.HttpHost;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpStatus;
+import org.apache.http.StatusLine;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPatch;
+import org.apache.http.conn.ClientConnectionManager;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.HttpContext;
+import org.apache.olingo.client.api.ODataClient;
+import org.apache.olingo.client.api.communication.request.cud.ODataEntityUpdateRequest;
+import org.apache.olingo.client.api.communication.request.cud.UpdateType;
+import org.apache.olingo.client.api.communication.response.ODataEntityUpdateResponse;
+import org.apache.olingo.client.api.communication.response.ODataRetrieveResponse;
 import org.apache.olingo.client.api.domain.ClientEntity;
+import org.apache.olingo.client.api.domain.ClientObjectFactory;
+import org.apache.olingo.client.api.domain.ClientPrimitiveValue;
 import org.apache.olingo.client.api.domain.ClientProperty;
+import org.apache.olingo.client.core.ODataClientFactory;
+import org.apache.olingo.commons.api.Constants;
+import org.apache.olingo.commons.api.edm.constants.ODataServiceVersion;
+import org.apache.olingo.commons.api.format.ContentType;
+import org.apache.olingo.commons.api.http.HttpHeader;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.junit.After;
 import org.junit.Test;
@@ -282,6 +312,132 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
 
             // property is no longer the original value before the update
             assertNotEquals(property.original, updatedName);
+        }
+    }
+
+    private String queryProperty(String serviceURI, String resourcePath, String keyPredicate, String property) {
+        ClientEntity olEntity = null;
+        ODataRetrieveResponse<ClientEntity> response = null;
+        try {
+            URI httpURI = URI.create(serviceURI + FORWARD_SLASH +
+                                            resourcePath + OPEN_BRACKET +
+                                            QUOTE_MARK + keyPredicate + QUOTE_MARK +
+                                            CLOSE_BRACKET);
+            ODataClient client = ODataClientFactory.getClient();
+            response = client.getRetrieveRequestFactory().getEntityRequest(httpURI).execute();
+            assertEquals(HttpStatus.SC_OK, response.getStatusCode());
+
+            olEntity = response.getBody();
+            assertNotNull(olEntity);
+            return olEntity.getProperty(property).getPrimitiveValue().toString();
+        } finally {
+            if (response != null) {
+                response.close();
+            }
+        }
+    }
+
+    private ClientProperty cloneUpdateProperty(ClientObjectFactory factory, ClientProperty original, String newValue) {
+        if (! original.hasPrimitiveValue()) {
+            // Only support primitives in this testing builder at the moment
+            throw new UnsupportedOperationException();
+        }
+
+        ClientPrimitiveValue primitiveValue = factory.newPrimitiveValueBuilder().buildString(newValue);
+        return factory.newPrimitiveProperty(original.getName(), primitiveValue);
+    }
+
+    private void updateProperty(String serviceURI, String resourcePath, String keyPredicate, String property, String value) throws Exception {
+        URI httpURI = URI.create(serviceURI + FORWARD_SLASH +
+                                 resourcePath + OPEN_BRACKET +
+                                 QUOTE_MARK + keyPredicate + QUOTE_MARK +
+                                 CLOSE_BRACKET);
+
+        ObjectNode node = OBJECT_MAPPER.createObjectNode();
+        node.put(property, value);
+
+        String data = OBJECT_MAPPER.writeValueAsString(node);
+        HttpPatch request = new HttpPatch(httpURI);
+
+        StringEntity httpEntity = new StringEntity(data, org.apache.http.entity.ContentType.APPLICATION_JSON);
+        httpEntity.setChunked(false);
+        request.setEntity(httpEntity);
+
+        Header contentTypeHeader = request.getEntity().getContentType();
+        ContentType contentType = ContentType.parse(contentTypeHeader.getValue());
+
+        request.addHeader(HttpHeaders.ACCEPT, "application/json;odata.metadata=full,application/xml,*/*");
+        request.addHeader(HttpHeaders.ACCEPT_CHARSET, Constants.UTF8.toLowerCase());
+        request.addHeader(HttpHeaders.CONTENT_TYPE, contentType.toString());
+        request.addHeader(HttpHeader.ODATA_VERSION, ODataServiceVersion.V40.toString());
+        request.addHeader(HttpHeader.ODATA_MAX_VERSION, ODataServiceVersion.V40.toString());
+
+        CloseableHttpClient client = HttpClients.createMinimal();
+        try {
+            CloseableHttpResponse response = client.execute(request);
+            StatusLine statusLine = response.getStatusLine();
+            assertEquals(HttpStatus.SC_NO_CONTENT, statusLine.getStatusCode());
+        } finally {
+            client.close();
+        }
+    }
+
+    /**
+     * Tests alternative key predicate that is a string value
+     * @see https://github.com/syndesisio/syndesis/issues/5241
+     *
+     * @throws Exception
+     */
+    @Test
+    public void testPatchODataRouteOnRefServer() throws Exception {
+        Step directStep = createDirectStep();
+
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, REF_SERVICE_URI));
+
+        String resourcePath = "People";
+        String keyPredicate = "russellwhyte";
+        String nameProperty = "MiddleName";
+        String originalName = queryProperty(REF_SERVICE_URI, resourcePath, keyPredicate, nameProperty);
+
+        Step odataStep = createODataStep(odataConnector, resourcePath);
+
+        ObjectNode newProduct = OBJECT_MAPPER.createObjectNode();
+        // Append time to ensure old name is different from new name
+        String newMiddleName = "Quentin" + System.currentTimeMillis();
+        newProduct.put(nameProperty, newMiddleName);
+        newProduct.put(KEY_PREDICATE, keyPredicate);
+
+        Step mockStep = createMockStep();
+        Integration odataIntegration = createIntegration(directStep, odataStep, mockStep);
+
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(1);
+
+        DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
+        ProducerTemplate template = context.createProducerTemplate();
+
+        try {
+            context.start();
+
+            String inputJson = OBJECT_MAPPER.writeValueAsString(newProduct);
+            template.sendBody(directEndpoint, inputJson);
+
+            result.assertIsSatisfied();
+
+            String status = extractJsonFromExchgMsg(result, 0);
+            String expected = createResponseJson(HttpStatusCode.NO_CONTENT);
+            JSONAssert.assertEquals(expected, status, JSONCompareMode.LENIENT);
+
+            String newName = queryProperty(REF_SERVICE_URI, resourcePath, keyPredicate, nameProperty);
+            assertEquals(newMiddleName, newName);
+            assertNotEquals(originalName, newName);
+        } finally {
+            // Reset property back to original value
+            updateProperty(REF_SERVICE_URI, resourcePath, keyPredicate, nameProperty, originalName);
         }
     }
 }

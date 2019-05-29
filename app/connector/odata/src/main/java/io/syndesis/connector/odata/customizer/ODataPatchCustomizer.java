@@ -21,6 +21,7 @@ import org.apache.camel.Message;
 import org.apache.camel.util.ObjectHelper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.syndesis.connector.odata.ODataUtil;
 
 public class ODataPatchCustomizer extends AbstractProducerCustomizer {
 
@@ -45,7 +46,7 @@ public class ODataPatchCustomizer extends AbstractProducerCustomizer {
 
         if (! ObjectHelper.isEmpty(keyPredicateNode)) {
             String keyPredicate = keyPredicateNode.asText();
-            in.setHeader(OLINGO4_PROPERTY_PREFIX + KEY_PREDICATE, keyPredicate);
+            in.setHeader(OLINGO4_PROPERTY_PREFIX + KEY_PREDICATE, ODataUtil.formatKeyPredicate(keyPredicate, false));
 
             // Remove the key predicate from the body
             ObjectNode objNode = ((ObjectNode) node);

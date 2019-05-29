@@ -20,6 +20,8 @@ import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
@@ -66,6 +68,10 @@ public class ODataUtil implements ODataConstants {
         }
 
     }
+
+    private static final Pattern NUMBER_ONLY_PATTERN = Pattern.compile("-?\\d+");
+
+    private static final Pattern KEY_PREDICATE_PATTERN = Pattern.compile("\\(?'?(.+?)\\'?\\)?\\/(.+)");
 
     /**
      * @param url
@@ -200,5 +206,63 @@ public class ODataUtil implements ODataConstants {
             .filter(str -> str.length() != 0)
             .map(str -> StringUtils.stripEnd(path, FORWARD_SLASH))
             .orElse(path);
+    }
+
+    /**
+     * @param keyPredicate the predicate to be formatted
+     * @param includeBrackets whether brackets should be added around the key predicate string
+     * @return the keyPredicate formatted with quotes and brackets
+     */
+    @SuppressWarnings("PMD")
+    public static String formatKeyPredicate(String keyPredicate, boolean includeBrackets) {
+        String subPredicate = null;
+
+        Matcher kp1Matcher = KEY_PREDICATE_PATTERN.matcher(keyPredicate);
+        if (kp1Matcher.matches()) {
+            keyPredicate = kp1Matcher.group(1);
+            subPredicate = kp1Matcher.group(2);
+        }
+
+        if (keyPredicate.startsWith(OPEN_BRACKET)) {
+            keyPredicate = keyPredicate.substring(1);
+        }
+
+        if (keyPredicate.startsWith(QUOTE_MARK)) {
+            keyPredicate = keyPredicate.substring(1);
+        }
+
+        if (keyPredicate.endsWith(CLOSE_BRACKET)) {
+            keyPredicate = keyPredicate.substring(0, keyPredicate.length() - 1);
+        }
+
+        if (keyPredicate.endsWith(QUOTE_MARK)) {
+            keyPredicate = keyPredicate.substring(0, keyPredicate.length() - 1);
+        }
+
+        //
+        // if keyPredicate is a number only, it doesn't need quotes
+        //
+        Matcher numberOnlyMatcher = NUMBER_ONLY_PATTERN.matcher(keyPredicate);
+        boolean noQuotes = numberOnlyMatcher.matches();
+
+        StringBuilder buf = new StringBuilder();
+        if (includeBrackets) {
+            buf.append(OPEN_BRACKET);
+        }
+        if (! noQuotes) {
+            buf.append(QUOTE_MARK);
+        }
+        buf.append(keyPredicate);
+        if (! noQuotes) {
+            buf.append(QUOTE_MARK);
+        }
+        if (includeBrackets) {
+            buf.append(CLOSE_BRACKET);
+        }
+        if (subPredicate != null) {
+            buf.append(FORWARD_SLASH).append(subPredicate);
+        }
+
+        return buf.toString();
     }
 }
