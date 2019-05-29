@@ -77,6 +77,7 @@ export class WithRuleFilterForm extends React.Component<
         arrayDefinition: {
           op: {
             description: 'Must meet this condition',
+            displayName: 'Operator',
             enum: this.props.filterOptions.ops,
             order: 1,
             required: true,
@@ -85,6 +86,7 @@ export class WithRuleFilterForm extends React.Component<
           path: {
             dataList: this.props.filterOptions.paths,
             description: 'The data you want to evaluate',
+            displayName: 'Property Name',
             order: 0,
             placeholder: 'Property name',
             required: true,
@@ -92,6 +94,7 @@ export class WithRuleFilterForm extends React.Component<
           },
           value: {
             description: 'For this value',
+            displayName: 'Keywords',
             order: 2,
             placeholder: 'Keywords',
             required: true,
