@@ -19,6 +19,8 @@ import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.Collection;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
@@ -43,11 +45,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(Parameterized.class)
-public class WrapperProcessorTest {
+public class HttpRequestWrapperProcessorTest {
 
-    private static final String PARAMS_AND_BODY = "{\"parameters\":{\"param1\":\"param_value1\",\"param2\":\"param_value2\"},\"body\":{\"body1\":\"body_value1\",\"body2\":\"body_value2\"}}";
+    private static final String PARAMS_AND_BODY = "{\"parameters\":{\"param1\":\"param_value1\",\"param2\":[\"param_value2_1\",\"param_value2_2\"]},\"body\":{\"body1\":\"body_value1\",\"body2\":\"body_value2\"}}";
 
-    private static final String ONLY_PARAMS = "{\"parameters\":{\"param1\":\"param_value1\",\"param2\":\"param_value2\"}}";
+    private static final String ONLY_PARAMS = "{\"parameters\":{\"param1\":\"param_value1\",\"param2\":[\"param_value2_1\",\"param_value2_2\"]}}";
 
     @Parameter(0)
     public Object givenBody;
@@ -57,7 +59,7 @@ public class WrapperProcessorTest {
 
     final ObjectSchema schema = new ObjectSchema();
 
-    public WrapperProcessorTest() {
+    public HttpRequestWrapperProcessorTest() {
         final ObjectSchema parameters = new ObjectSchema();
         parameters.putProperty("param1", JsonSchema.minimalForFormat(JsonFormatTypes.STRING));
         parameters.putProperty("param2", JsonSchema.minimalForFormat(JsonFormatTypes.STRING));
@@ -81,7 +83,7 @@ public class WrapperProcessorTest {
     }
 
     @Test
-    public void testCases() throws Exception {
+    public void shouldMapValuesFromMessageHeaders() throws Exception {
         String schemaStr = Json.writer().forType(JsonSchema.class).writeValueAsString(schema);
         JsonNode schemaNode = Json.reader().forType(JsonNode.class).readTree(schemaStr);
         final HttpRequestWrapperProcessor processor = new HttpRequestWrapperProcessor(schemaNode);
@@ -93,8 +95,8 @@ public class WrapperProcessorTest {
         when(exchange.getIn()).thenReturn(message);
         when(exchange.getContext()).thenReturn(camelContext);
         when(message.getBody()).thenReturn(givenBody);
-        when(message.getHeader("param1", String.class)).thenReturn("param_value1");
-        when(message.getHeader("param2", String.class)).thenReturn("param_value2");
+        when(message.getHeader("param1", String[].class)).thenReturn(new String[] {"param_value1"});
+        when(message.getHeader("param2", String[].class)).thenReturn(new String[] {"param_value2_1", "param_value2_2"});
 
         processor.process(exchange);
 
@@ -103,4 +105,28 @@ public class WrapperProcessorTest {
         assertThat(replacement.getValue().getBody()).isEqualTo(replacedBody);
     }
 
+    @Test
+    public void shouldMapValuesFromHttpRequest() throws Exception {
+        final String schemaStr = Json.writer().forType(JsonSchema.class).writeValueAsString(schema);
+        final JsonNode schemaNode = Json.reader().forType(JsonNode.class).readTree(schemaStr);
+        final HttpRequestWrapperProcessor processor = new HttpRequestWrapperProcessor(schemaNode);
+
+        final Exchange exchange = mock(Exchange.class);
+        final Message message = mock(Message.class);
+        final CamelContext camelContext = mock(CamelContext.class);
+        when(camelContext.getHeadersMapFactory()).thenReturn(mock(HeadersMapFactory.class));
+        when(exchange.getIn()).thenReturn(message);
+        when(exchange.getContext()).thenReturn(camelContext);
+        final HttpServletRequest servletRequest = mock(HttpServletRequest.class);
+        when(message.getHeader(Exchange.HTTP_SERVLET_REQUEST, HttpServletRequest.class)).thenReturn(servletRequest);
+        when(message.getBody()).thenReturn(givenBody);
+        when(servletRequest.getParameterValues("param1")).thenReturn(new String[] {"param_value1"});
+        when(servletRequest.getParameterValues("param2")).thenReturn(new String[] {"param_value2_1", "param_value2_2"});
+
+        processor.process(exchange);
+
+        final ArgumentCaptor<Message> replacement = ArgumentCaptor.forClass(Message.class);
+        verify(exchange).setIn(replacement.capture());
+        assertThat(replacement.getValue().getBody()).isEqualTo(replacedBody);
+    }
 }

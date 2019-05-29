@@ -17,6 +17,7 @@ package io.syndesis.connector.support.processor;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectReader;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.util.Json;
 import io.syndesis.connector.support.processor.util.SimpleJsonSchemaInspector;
@@ -29,6 +30,8 @@ import org.apache.camel.util.ObjectHelper;
 
 import java.io.InputStream;
 import java.util.Set;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class HttpRequestWrapperProcessor implements Processor {
     private final Set<String> parameters;
@@ -49,8 +52,17 @@ public class HttpRequestWrapperProcessor implements Processor {
         if (!parameters.isEmpty()) {
             final ObjectNode parametersNode = rootNode.putObject("parameters");
 
+            final HttpServletRequest servletRequest = message.getHeader(Exchange.HTTP_SERVLET_REQUEST, HttpServletRequest.class);
             for (String parameter : parameters) {
-                parametersNode.put(parameter, message.getHeader(parameter, String.class));
+                final String[] values;
+                final String[] headerValues = message.getHeader(parameter, String[].class);
+                if (servletRequest != null && headerValues == null) {
+                    values = servletRequest.getParameterValues(parameter);
+                } else {
+                    values = headerValues;
+                }
+
+                putPrameterValueTo(parametersNode, parameter, values);
             }
         }
 
@@ -80,6 +92,21 @@ public class HttpRequestWrapperProcessor implements Processor {
         replacement.setHeader(Exchange.CONTENT_TYPE, "application/json");
 
         ExchangeHelper.replaceMessage(exchange, replacement, false);
+    }
+
+    private static void putPrameterValueTo(final ObjectNode node, String parameter, final String... values) {
+        if (values == null || values.length == 0) {
+            return;
+        }
+
+        if (values.length > 1) {
+            final ArrayNode ary = node.putArray(parameter);
+            for (String value : values) {
+                ary.add(value);
+            }
+        } else {
+            node.put(parameter, values[0]);
+        }
     }
 
     public Set<String> getParameters() {
