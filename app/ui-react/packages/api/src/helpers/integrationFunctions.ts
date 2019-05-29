@@ -1351,6 +1351,15 @@ export function isEndStep(
   position: number
 ) {
   const steps = getSteps(integration, flowId);
+  return atEnd(steps, position);
+}
+
+/**
+ * Returns if the given indice is at the end of the step array
+ * @param steps
+ * @param position
+ */
+export function atEnd(steps: Step[], position: number) {
   return position + 1 >= steps.length;
 }
 

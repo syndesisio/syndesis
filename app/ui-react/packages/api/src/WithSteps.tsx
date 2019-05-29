@@ -234,7 +234,9 @@ function requiresInputOutputDataShapes(
     }
     if (!anySubsequent) {
       // only test the next subsequent step that has a data shape
-      const subsequentStep = previousSteps.find(s => dataShapeExists(s, true));
+      const subsequentStep = subsequentSteps.find(s =>
+        dataShapeExists(s, true)
+      );
       subsequentSteps = subsequentStep ? [subsequentStep] : [];
     }
     return (
