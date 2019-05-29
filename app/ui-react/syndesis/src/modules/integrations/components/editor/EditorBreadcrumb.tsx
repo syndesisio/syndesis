@@ -29,7 +29,7 @@ export interface IEditorBreadcrumbProps {
   currentFlowId?: string;
   integration: IntegrationOverview;
   rootHref: H.LocationDescriptor;
-  // getApiProviderEditorHref: (specification: string) => H.LocationDescriptor;
+  apiProviderEditorHref: H.LocationDescriptor;
 }
 export const EditorBreadcrumb: React.FunctionComponent<
   IEditorBreadcrumbProps
@@ -37,7 +37,7 @@ export const EditorBreadcrumb: React.FunctionComponent<
   currentFlowId,
   integration,
   rootHref,
-  // getApiProviderEditorHref
+  apiProviderEditorHref,
   children,
 }) => {
   const isApiProvider = isIntegrationApiProvider(integration);
@@ -51,7 +51,7 @@ export const EditorBreadcrumb: React.FunctionComponent<
     <Breadcrumb
       actions={
         isApiProvider ? (
-          <ButtonLink href={'#todo'} as={'link'}>
+          <ButtonLink href={apiProviderEditorHref} as={'link'}>
             View/Edit API Definition <i className="fa fa-external-link" />
           </ButtonLink>
         ) : (

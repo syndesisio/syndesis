@@ -1,11 +1,11 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import { getStep } from '@syndesis/api';
 import { ConnectionOverview, Integration, StepKind } from '@syndesis/models';
-
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import { configureIndexMapper } from '../../resolvers';
 import {
   DataShapeDirection,
+  IApiProviderEditorRouteState,
   IApiProviderReviewActionsRouteState,
   IBaseApiProviderRouteParams,
   IBaseApiProviderRouteState,
@@ -198,7 +198,7 @@ export const configureConfigureDataMapperMapper = ({
 
 export interface IApiProviderConfigureStep extends IEditorSelectConnection {}
 export interface IApiProviderReviewStep extends IEditorSelectConnection {
-  specification: string;
+  specification: string | Integration;
 }
 
 export const apiProviderMapper = (data: IApiProviderConfigureStep) => {
@@ -225,6 +225,22 @@ export const apiProviderReviewActionsMapper = ({
       ...state,
       specification,
     } as IApiProviderReviewActionsRouteState,
+  };
+};
+
+export const apiProviderEditorMapper = ({
+  specification,
+  ...rest
+}: IApiProviderReviewStep) => {
+  const { params, state } = apiProviderMapper(rest);
+  return {
+    params: {
+      ...params,
+    } as IBaseApiProviderRouteParams,
+    state: {
+      ...state,
+      specification,
+    } as IApiProviderEditorRouteState,
   };
 };
 
@@ -260,8 +276,8 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
       editSpecification: makeResolver<
         IApiProviderReviewStep,
         IBaseApiProviderRouteParams,
-        IApiProviderReviewActionsRouteState
-      >(esr.apiProvider.editSpecification, apiProviderReviewActionsMapper),
+        IApiProviderEditorRouteState
+      >(esr.apiProvider.editSpecification, apiProviderEditorMapper),
       selectMethod: makeResolver<
         IApiProviderConfigureStep,
         IBaseApiProviderRouteParams,
