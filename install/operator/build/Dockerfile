@@ -1,7 +1,16 @@
-FROM alpine:3.8
+FROM registry.access.redhat.com/ubi7/ubi-minimal:latest
 
-RUN apk upgrade --update --no-cache
+ENV OPERATOR=/usr/local/bin/operator \
+    USER_UID=1001 \
+    USER_NAME=operator
 
-USER nobody
+# install operator binary
+COPY build/_output/bin/operator ${OPERATOR}
+COPY build/bin /usr/local/bin
+RUN  /usr/local/bin/user_setup
+USER ${USER_UID}
 
-ADD build/_output/bin/syndesis-operator /usr/local/bin/syndesis-operator
+# Add conf directory
+ADD build/conf /conf
+
+ENTRYPOINT ["/usr/local/bin/entrypoint", "-template", "/conf/syndesis-template.yml"]

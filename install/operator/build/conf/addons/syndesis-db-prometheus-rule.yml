@@ -1,0 +1,38 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+    prometheus: application-monitoring
+    role: alert-rules
+    monitoring-key: middleware
+    application-monitoring: "true"
+  name: syndesis-db-rules
+spec:
+  groups:
+    - name: syndesis-db.rules
+      rules:
+        # Alert for any syndesis-db instance that is down
+        - alert: FuseOnlineDatabaseInstanceDown
+          annotations:
+            message: >-
+              Fuse Online Postgres instance {{$labels.pod}} in namespace {{$labels.namespace}} is down.
+            sop_url: https://github.com/syndesisio/syndesis/blob/master/doc/managing_environments/topics/alerting_sop.adoc#fuseonlinedatabaseinstancedown
+          expr: >
+            sum(pg_up{job="syndesis-db"}) by(namespace, pod, instance) == 0
+          for: 5m
+          labels:
+            severity: critical
+        # Alert for any syndesis-db Postgres Exporter that is down
+        - alert: FuseOnlinePostgresExporterDown
+          annotations:
+            message: >-
+              syndesis-db has disappeared from Prometheus target discovery.
+            sop_url: https://github.com/syndesisio/syndesis/blob/master/doc/managing_environments/topics/alerting_sop.adoc#fuseonlinepostgresexporterdown
+          expr: >
+            absent(up{job="syndesis-db"}) == 1
+          for: 5m
+          labels:
+            severity: critical

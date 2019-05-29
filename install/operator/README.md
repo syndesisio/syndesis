@@ -21,32 +21,14 @@ A summary of the states:
 * **UpgradingLegacy**: The CR can go into this state only if the operator has detected that there's a legacy installation of Syndesis in the watched namespace and there's no Syndesis resource that can own it in the same namespace. The operator then creates a Syndesis resource using a configuration inferred from the legacy environment variables
 
 
-## Requirements
-
-This project can be built with **Go version 1.10+**.
-
-Other go binaries used:
-
-* [dep](https://github.com/golang/dep): for dependency management
-* [operator-sdk](https://github.com/operator-framework/operator-sdk): for building the operator image
-* [deepcopy-gen](https://github.com/kubernetes/gengo/tree/master/examples/deepcopy-gen) (optional): for updating deep-copy boilerplate when changing the model
-* [go-bindata](https://github.com/go-bindata/go-bindata) (optional): for updating embedded resources
-
 ## Building
 
-```
-dep ensure
-operator-sdk build syndesis/syndesis-operator
-```
+Just run:
 
-## Running
+````bash
+$ ./build.sh
+````
 
-```
-minishift addons enable admin-user
-minishift start
-oc login -u system:admin
-oc create -f deploy/syndesis-crd.yaml
-eval $(minishift docker-env)
-operator-sdk build syndesis/syndesis-operator
-oc create -f deploy/syndesis-operator.yaml
-```
+At a minimum docker is required.  If you go and the operator sdk installed, then
+that will be used to build the operator image.  Otherwise it will be built
+in a docker container. 

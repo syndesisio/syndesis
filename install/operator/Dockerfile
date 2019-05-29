@@ -1,15 +1,10 @@
-FROM centos:7
-
-RUN adduser -r syndesis-operator
-USER syndesis-operator
-
-# Use that template for creating the operator
-ADD syndesis-template.yml /conf/syndesis-template.yml
-
-# Add addons directory
-ADD addons /conf/addons
-
-# Add the operator
-ADD syndesis-operator /usr/local/bin/syndesis-operator
-
-ENTRYPOINT [ "/usr/local/bin/syndesis-operator", "--template", "/conf/syndesis-template.yml" ]
+FROM golang:1.12.0
+#RUN go get -u github.com/golang/dep/cmd/dep
+WORKDIR /go/src/github.com/syndesisio/syndesis/install/operator
+ENV GO111MODULE=on
+COPY go.mod .
+COPY go.sum .
+RUN go mod download
+COPY . .
+RUN go mod vendor
+RUN go build -o /operator -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor github.com/syndesisio/syndesis/install/operator/cmd/manager
