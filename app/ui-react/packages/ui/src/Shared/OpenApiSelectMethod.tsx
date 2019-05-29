@@ -1,5 +1,6 @@
 // tslint:disable:no-console
 import {
+  Card,
   Col,
   FormControl,
   FormGroup,
@@ -46,12 +47,6 @@ export interface IOpenApiSelectMethodState {
    * specification
    */
   method?: Method;
-  /**
-   * Used to determine what string to display for when a file is
-   * selected. We need a state for this, otherwise the string remains
-   * even when the spec is removed on changing the method.
-   */
-  selectedFileLabel?: string;
   specification?: string;
   /**
    * Used to handle D&D upload success/fail messages
@@ -74,7 +69,6 @@ export class OpenApiSelectMethod extends React.Component<
     this.state = {
       disableDropzone: false,
       method: 'file',
-      selectedFileLabel: '',
       specification: '',
       valid: false,
     };
@@ -138,7 +132,6 @@ export class OpenApiSelectMethod extends React.Component<
   public onSelectMethod(newMethod: Method) {
     this.setState({
       method: newMethod,
-      selectedFileLabel: '',
       specification: '',
       uploadFailedMessage: '',
       uploadSuccessMessage: '',
@@ -157,7 +150,6 @@ export class OpenApiSelectMethod extends React.Component<
 
     reader.onload = () => {
       this.setState({
-        selectedFileLabel: this.props.i18nSelectedFileLabel,
         specification: reader.result as string,
         valid: true,
       });
@@ -174,7 +166,6 @@ export class OpenApiSelectMethod extends React.Component<
     this.buildUploadMessage(fileName, false);
 
     this.setState({
-      selectedFileLabel: this.props.i18nSelectedFileLabel,
       specification: '',
       valid: false,
     });
@@ -188,86 +179,94 @@ export class OpenApiSelectMethod extends React.Component<
 
   public render() {
     return (
-      <Grid className={'open-api-select-method'}>
-        <Row>
-          <Col>
-            <FormGroup controlId={'method'} disabled={false}>
-              <div>
-                <Radio
-                  id={'method-file'}
-                  name={'method'}
-                  onClick={() => this.onSelectMethod('file')}
-                  checked={this.state.method === 'file'}
-                  readOnly={true}
-                >
-                  <div>{this.props.i18nMethodFromFile}</div>
-                  {this.state.method === 'file' && (
-                    <Container style={{ margin: '50px' }}>
-                      <DndFileChooser
-                        allowMultiple={this.props.allowMultiple}
-                        disableDropzone={this.props.disableDropzone}
-                        fileExtensions={this.props.fileExtensions}
-                        i18nHelpMessage={this.props.i18nHelpMessage}
-                        i18nInstructions={this.props.i18nInstructions}
-                        i18nNoFileSelectedMessage={
-                          this.props.i18nNoFileSelectedMessage
-                        }
-                        i18nSelectedFileLabel={this.props.i18nSelectedFileLabel}
-                        i18nUploadFailedMessage={this.state.uploadFailedMessage}
-                        i18nUploadSuccessMessage={
-                          this.state.uploadSuccessMessage
-                        }
-                        onUploadAccepted={this.onUploadAccepted}
-                        onUploadRejected={this.onUploadRejected}
-                      />
-                    </Container>
-                  )}
-                </Radio>
-                <Radio
-                  id={'method-url'}
-                  name={'method'}
-                  onClick={() => this.onSelectMethod('url')}
-                  readOnly={true}
-                >
-                  <div>{this.props.i18nMethodFromUrl}</div>
-                  {this.state.method === 'url' && (
-                    <div>
-                      <FormControl
-                        type={'text'}
-                        disabled={false}
-                        value={this.state.specification}
-                        onChange={this.onAddUrlSpecification}
-                      />
-                      <br />
-                      <span className={'url-note'}>
-                        {this.props.i18nUrlNote}
-                      </span>
-                    </div>
-                  )}
-                </Radio>
-                <Radio
-                  id={'method-scratch'}
-                  name={'method'}
-                  onClick={() => this.onSelectMethod('scratch')}
-                  readOnly={true}
-                >
-                  <div>{this.props.i18nMethodFromScratch}</div>
-                </Radio>
-              </div>
-            </FormGroup>
-          </Col>
+      <Card className={'open-api-review-actions'}>
+        <Card.Body>
+          <Grid className={'open-api-select-method'}>
+            <Row>
+              <Col>
+                <FormGroup controlId={'method'} disabled={false}>
+                  <div>
+                    <Radio
+                      id={'method-file'}
+                      name={'method'}
+                      onClick={() => this.onSelectMethod('file')}
+                      checked={this.state.method === 'file'}
+                      readOnly={true}
+                    >
+                      <div>{this.props.i18nMethodFromFile}</div>
+                      {this.state.method === 'file' && (
+                        <Container style={{ margin: '50px' }}>
+                          <DndFileChooser
+                            allowMultiple={this.props.allowMultiple}
+                            disableDropzone={this.props.disableDropzone}
+                            fileExtensions={this.props.fileExtensions}
+                            i18nHelpMessage={this.props.i18nHelpMessage}
+                            i18nInstructions={this.props.i18nInstructions}
+                            i18nNoFileSelectedMessage={
+                              this.props.i18nNoFileSelectedMessage
+                            }
+                            i18nSelectedFileLabel={
+                              this.props.i18nSelectedFileLabel
+                            }
+                            i18nUploadFailedMessage={
+                              this.state.uploadFailedMessage
+                            }
+                            i18nUploadSuccessMessage={
+                              this.state.uploadSuccessMessage
+                            }
+                            onUploadAccepted={this.onUploadAccepted}
+                            onUploadRejected={this.onUploadRejected}
+                          />
+                        </Container>
+                      )}
+                    </Radio>
+                    <Radio
+                      id={'method-url'}
+                      name={'method'}
+                      onClick={() => this.onSelectMethod('url')}
+                      readOnly={true}
+                    >
+                      <div>{this.props.i18nMethodFromUrl}</div>
+                      {this.state.method === 'url' && (
+                        <div>
+                          <FormControl
+                            type={'text'}
+                            disabled={false}
+                            value={this.state.specification}
+                            onChange={this.onAddUrlSpecification}
+                          />
+                          <br />
+                          <span className={'url-note'}>
+                            {this.props.i18nUrlNote}
+                          </span>
+                        </div>
+                      )}
+                    </Radio>
+                    <Radio
+                      id={'method-scratch'}
+                      name={'method'}
+                      onClick={() => this.onSelectMethod('scratch')}
+                      readOnly={true}
+                    >
+                      <div>{this.props.i18nMethodFromScratch}</div>
+                    </Radio>
+                  </div>
+                </FormGroup>
+              </Col>
 
-          <ButtonLink
-            disabled={!this.state.valid}
-            as={'primary'}
-            onClick={() =>
-              this.props.onNext(this.state.method, this.state.specification)
-            }
-          >
-            {this.props.i18nBtnNext}
-          </ButtonLink>
-        </Row>
-      </Grid>
+              <ButtonLink
+                disabled={!this.state.valid}
+                as={'primary'}
+                onClick={() =>
+                  this.props.onNext(this.state.method, this.state.specification)
+                }
+              >
+                {this.props.i18nBtnNext}
+              </ButtonLink>
+            </Row>
+          </Grid>
+        </Card.Body>
+      </Card>
     );
   }
 }
