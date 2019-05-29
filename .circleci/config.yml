@@ -97,7 +97,9 @@ jobs:
             curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
             apt-get update -y
             apt-get install -y --force-yes --no-install-recommends  google-chrome-stable fontconfig fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-symbola fonts-noto ttf-freefont
-            ./tools/bin/syndesis build --batch-mode --module ui-angular,ui-react --docker | tee build_log.txt
+            export NODE_OPTIONS="--max-old-space-size=1024"
+            ./tools/bin/syndesis build --batch-mode --module ui-angular --docker | tee build_log_angular.txt
+            ./tools/bin/syndesis build --batch-mode --module ui-react --docker | tee build_log_angular.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
