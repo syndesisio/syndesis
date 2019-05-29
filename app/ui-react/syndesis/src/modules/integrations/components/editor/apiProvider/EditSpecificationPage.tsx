@@ -1,3 +1,4 @@
+import { useApiProviderSpecification } from '@syndesis/api';
 import { ApicurioAdapter } from '@syndesis/apicurio-adapter';
 import * as H from '@syndesis/history';
 import {
@@ -5,10 +6,10 @@ import {
   IntegrationEditorLayout,
   PageLoader,
 } from '@syndesis/ui';
-import { useRouteData } from '@syndesis/utils';
+import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { PageTitle } from '../../../../../shared';
+import { ApiError, PageTitle } from '../../../../../shared';
 import {
   IApiProviderReviewActionsRouteState,
   IBaseApiProviderRouteParams,
@@ -37,11 +38,14 @@ export const EditSpecificationPage: React.FunctionComponent<
     IBaseApiProviderRouteParams,
     IApiProviderReviewActionsRouteState
   >();
-  const [specification, setSpecification] = React.useState<
-    string | undefined
-  >();
+  const { specification, loading, error } = useApiProviderSpecification(
+    state.specification
+  );
+
+  const [updatedSpecification, setUpdatedSpecification] = React.useState();
+
   const onSpecification = (newSpec: any) => {
-    setSpecification(JSON.stringify(newSpec.spec));
+    setUpdatedSpecification(JSON.stringify(newSpec.spec));
   };
 
   return (
@@ -63,20 +67,25 @@ export const EditSpecificationPage: React.FunctionComponent<
             )}
             content={
               <IframeWrapper>
-                {specification ? (
-                  <ApicurioAdapter
-                    specification={specification}
-                    onSpecification={onSpecification}
-                  />
-                ) : (
-                  <PageLoader />
-                )}
+                <WithLoader
+                  loading={loading}
+                  loaderChildren={<PageLoader />}
+                  error={error !== false}
+                  errorChildren={<ApiError />}
+                >
+                  {() => (
+                    <ApicurioAdapter
+                      specification={updatedSpecification || specification!}
+                      onSpecification={onSpecification}
+                    />
+                  )}
+                </WithLoader>
               </IframeWrapper>
             }
             cancelHref={cancelHref(params, state)}
             saveHref={saveHref(params, {
               ...state,
-              specification: specification || state.specification,
+              specification: updatedSpecification || specification,
             })}
           />
         </>
