@@ -31,7 +31,34 @@ to do. Otherwise, specify the resource
 ID of the resource whose fields you want to update.  
 . Specify a JSON patch that describes the updates. 
 The JSON patch must have the format described in 
-link:http://jsonpatch.com/[What is a JSON Patch?]. 
+link:http://jsonpatch.com/[What is a JSON Patch?].
++
+*Examples of patches*: 
++
+Set an active field to true:
++
+----
+[{ "op":"replace", "path":"/active", "value": true }]
+----
++
+Replace all names:
++
+----
+[{ "op":"replace", "path":"/name", "value": [{"given": ["Bob"]}] }]
+----
++
+Replace the given name of a patient:
++
+----
+[{ "op":"replace", "path":"/name/0/given/0", "value": "John" }]
+----
++
+Adding another name to a patient before the first name:
++
+----
+[{ "op":"add", "path":"/name/0", "value": {"given": ["Anthony"]} }]
+----
++
 For some updates, you must specify the JSON patch when you 
 configure the *Patch* action. For example, if you want to copy the 
 value of a resource field to another field. For other updates, 
