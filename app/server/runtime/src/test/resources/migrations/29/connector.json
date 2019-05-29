@@ -1,0 +1,338 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Stores new task in the database",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+        "camelConnectorPrefix": "swagger-operation",
+        "configuredProperties": {
+          "operationId": "operation-1"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.rest.swagger.ResponseCustomizer"
+        ],
+        "connectorId": "i-Lc6Qsm-APqmk3FKvmOBz",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
+        },
+        "outputDataShape": {
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
+        }
+      },
+      "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-1",
+      "name": "Create new task",
+      "pattern": "To",
+      "tags": [
+        "creating",
+        "tasks"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Deletes task by given identifier",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+        "camelConnectorPrefix": "swagger-operation",
+        "configuredProperties": {
+          "operationId": "operation-4"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.rest.swagger.ResponseCustomizer"
+        ],
+        "connectorId": "i-Lc6Qsm-APqmk3FKvmOBz",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier to delete\"}}}}}"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        }
+      },
+      "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-4",
+      "name": "Delete task",
+      "pattern": "To",
+      "tags": [
+        "destruction",
+        "tasks"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Fetches task by given identifier",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+        "camelConnectorPrefix": "swagger-operation",
+        "configuredProperties": {
+          "operationId": "operation-2"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.rest.swagger.ResponseCustomizer"
+        ],
+        "connectorId": "i-Lc6Qsm-APqmk3FKvmOBz",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier\"}}}}}"
+        },
+        "outputDataShape": {
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
+        }
+      },
+      "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-2",
+      "name": "Fetch task",
+      "pattern": "To",
+      "tags": [
+        "fetching",
+        "tasks"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Fetches all tasks from the database",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+        "camelConnectorPrefix": "swagger-operation",
+        "configuredProperties": {
+          "operationId": "operation-0"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.rest.swagger.ResponseCustomizer"
+        ],
+        "connectorId": "i-Lc6Qsm-APqmk3FKvmOBz",
+        "inputDataShape": {
+          "kind": "none"
+        },
+        "outputDataShape": {
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}}"
+        }
+      },
+      "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-0",
+      "name": "List all tasks",
+      "pattern": "To",
+      "tags": [
+        "fetching",
+        "tasks"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Updates task by given identifier",
+      "descriptor": {
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+        "camelConnectorPrefix": "swagger-operation",
+        "configuredProperties": {
+          "operationId": "operation-3"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.rest.swagger.ResponseCustomizer"
+        ],
+        "connectorId": "i-Lc6Qsm-APqmk3FKvmOBz",
+        "inputDataShape": {
+          "description": "API request payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Request",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"parameters\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"id\",\"description\":\"Task identifier\"}}},\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
+        },
+        "outputDataShape": {
+          "description": "API response payload",
+          "kind": "json-schema",
+          "metadata": {
+            "unified": "true"
+          },
+          "name": "Response",
+          "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
+        }
+      },
+      "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-3",
+      "name": "Update task",
+      "pattern": "To",
+      "tags": [
+        "tasks",
+        "updating"
+      ]
+    }
+  ],
+  "configuredProperties": {
+    "authenticationType": "basic",
+    "basePath": "todo",
+    "host": "http://todo2-syndesis.192.168.42.89.nip.io",
+    "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"operationId\":\"operation-0\",\"produces\":[\"application/json\"]},\"post\":{\"operationId\":\"operation-1\",\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"]}},\"/{id}\":{\"get\":{\"operationId\":\"operation-2\",\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]},\"put\":{\"operationId\":\"operation-3\",\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]},\"delete\":{\"operationId\":\"operation-4\",\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]}}}}"
+  },
+  "connectorGroup": {
+    "id": "swagger-connector-template"
+  },
+  "connectorGroupId": "swagger-connector-template",
+  "description": "Example Todo Application API",
+  "icon": "data:image/svg+xml,%3Csvg%20xmlns%3Asvg%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20xmlns%3D%22http%3A%2F%2Fwww%2Ew3%2Eorg%2F2000%2Fsvg%22%20width%3D%22400%22%20height%3D%22400%22%3E%3Ccircle%20cx%3D%22200%22%20cy%3D%22200%22%20r%3D%22200%22%20style%3D%22fill%3A%23fff%22%2F%3E%3Cpath%20d%3D%22M%20200%2E0486%2C4%2E99996%20A%20194%2E9514%2C195%200%200%200%205%2E0972058%2C192%2E6378%20l%200%2E8633847%2C0%20c%208%2E2004055%2C0%2013%2E8596845%2C%2D1%2E67314%2016%2E9781575%2C%2D5%203%2E118462%2C%2D3%2E34657%204%2E677184%2C%2D9%2E37626%204%2E677184%2C%2D18%2E08892%20l%200%2C%2D20%2E68637%20c%200%2C%2D12%2E75163%202%2E425915%2C%2D21%2E26114%207%2E276895%2C%2D25%2E5309%204%2E908747%2C%2D4%2E26977%2014%2E552562%2C%2D6%2E40606%2028%2E932227%2C%2D6%2E40606%20l%205%2E370951%2C0%200%2C12%2E46362%20%2D5%2E891271%2C0%20c%20%2D8%2E14272%2C0%20%2D13%2E456215%2C1%2E26983%20%2D15%2E939406%2C3%2E8086%20%2D2%2E483201%2C2%2E5388%20%2D3%2E724222%2C7%2E87566%20%2D3%2E724222%2C16%2E01131%20l%200%2C21%2E46334%20c%200%2C9%2E00112%20%2D1%2E298856%2C15%2E55185%20%2D3%2E897648%2C19%2E64853%20%2D2%2E598742%2C4%2E09668%20%2D7%2E102959%2C6%2E92385%20%2D13%2E513151%2C8%2E48174%206%2E352486%2C1%2E44249%2010%2E826741%2C4%2E21176%2013%2E425473%2C8%2E30844%202%2E656508%2C4%2E09665%203%2E985326%2C10%2E67344%203%2E985326%2C19%2E73232%20l%200%2C21%2E46524%20c%200%2C8%2E13562%201%2E241021%2C13%2E47253%203%2E724222%2C16%2E01132%202%2E483191%2C2%2E53878%207%2E796686%2C3%2E80861%2015%2E939406%2C3%2E80861%20l%205%2E891271%2C0%200%2C12%2E37601%20%2D5%2E370951%2C0%20c%20%2D14%2E379665%2C0%20%2D24%2E02348%2C%2D2%2E13439%20%2D28%2E932227%2C%2D6%2E40414%20%2D4%2E85098%2C%2D4%2E21208%20%2D7%2E276895%2C%2D12%2E69359%20%2D7%2E276895%2C%2D25%2E44522%20l%200%2C%2D20%2E77207%20c%200%2C%2D8%2E59723%20%2D1%2E558722%2C%2D14%2E56903%20%2D4%2E677184%2C%2D17%2E91562%20%2D3%2E060707%2C%2D3%2E28888%20%2D8%2E719986%2C%2D4%2E93403%20%2D16%2E9781575%2C%2D4%2E93403%20L%205%2C205%2E03355%20A%20195%2E16867%2C194%2E99998%200%200%200%20200%2E0486%2C395%20195%2E16867%2C194%2E99998%200%200%200%20395%2C206%2E11464%20l%20%2D0%2E9606%2C0%20c%20%2D8%2E25818%2C0%20%2D13%2E91741%2C1%2E64515%20%2D16%2E97815%2C4%2E93403%20%2D3%2E11845%2C3%2E34659%20%2D4%2E67718%2C9%2E31839%20%2D4%2E67718%2C17%2E91562%20l%200%2C20%2E77207%20c%200%2C12%2E75163%20%2D2%2E42593%2C21%2E23314%20%2D7%2E27691%2C25%2E44522%20%2D4%2E90872%2C4%2E26975%20%2D14%2E55259%2C6%2E40414%20%2D28%2E93222%2C6%2E40414%20l%20%2D5%2E37095%2C0%200%2C%2D12%2E37601%205%2E89128%2C0%20c%208%2E14269%2C0%2013%2E45618%2C%2D1%2E26983%2015%2E9394%2C%2D3%2E80861%202%2E48321%2C%2D2%2E5388%203%2E72422%2C%2D7%2E8757%203%2E72422%2C%2D16%2E01132%20l%200%2C%2D21%2E46524%20c%200%2C%2D9%2E05888%201%2E32884%2C%2D15%2E63567%203%2E98532%2C%2D19%2E73232%202%2E59875%2C%2D4%2E09668%207%2E07303%2C%2D6%2E86595%2013%2E42547%2C%2D8%2E30844%20%2D6%2E4102%2C%2D1%2E55789%20%2D10%2E9144%2C%2D4%2E38506%20%2D13%2E51314%2C%2D8%2E48174%20%2D2%2E59875%2C%2D4%2E09668%20%2D3%2E89765%2C%2D10%2E64741%20%2D3%2E89765%2C%2D19%2E64853%20l%200%2C%2D21%2E46334%20c%200%2C%2D8%2E13565%20%2D1%2E24101%2C%2D13%2E47251%20%2D3%2E72422%2C%2D16%2E01131%20%2D2%2E48322%2C%2D2%2E53877%20%2D7%2E79671%2C%2D3%2E8086%20%2D15%2E9394%2C%2D3%2E8086%20l%20%2D5%2E89128%2C0%200%2C%2D12%2E46362%205%2E37095%2C0%20c%2014%2E37963%2C0%2024%2E0235%2C2%2E13629%2028%2E93222%2C6%2E40606%204%2E85098%2C4%2E26976%207%2E27691%2C12%2E77927%207%2E27691%2C25%2E5309%20l%200%2C20%20c%200%2C8%2E71266%201%2E55873%2C14%2E74235%204%2E67718%2C18%2E08892%203%2E11848%2C3%2E34657%208%2E7777%2C5%2016%2E97815%2C5%20l%200%2E86338%2C0%20A%20194%2E9514%2C195%200%200%200%20200%2E0486%2C4%2E99996%20Z%22%20style%3D%22fill%3A%23a30000%22%2F%3E%3Cpath%20d%3D%22m%20205%2E768%2C281%2E872%20%2D11%2E536%2C0%200%2C%2D152%2E992%20%2D53%2E2%2C0%200%2C%2D10%2E752%20117%2E936%2C0%200%2C10%2E752%20%2D53%2E2%2C0%200%2C152%2E992%20z%22%20style%3D%22fill%3A%23fff%22%2F%3E%3C%2Fsvg%3E",
+  "id": "i-Lc6Qsm-APqmk3FKvmOBz",
+  "name": "TODO-API",
+  "properties": {
+    "authenticationType": {
+      "componentProperty": true,
+      "defaultValue": "basic",
+      "deprecated": false,
+      "description": "Type of authentication used to connect to the API",
+      "displayName": "Authentication Type",
+      "enum": [
+        {
+          "label": "HTTP Basic Authentication",
+          "value": "basic"
+        }
+      ],
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 1,
+      "required": false,
+      "secret": false,
+      "tags": [
+        "authentication-type"
+      ],
+      "type": "string"
+    },
+    "basePath": {
+      "componentProperty": true,
+      "defaultValue": "/api",
+      "deprecated": false,
+      "description": "API basePath for example /v2. Default is unset if set overrides the value present in OpenAPI document.",
+      "displayName": "Base path",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 11,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "host": {
+      "componentProperty": true,
+      "defaultValue": "https://hostname",
+      "deprecated": false,
+      "description": "Scheme hostname and port to direct the HTTP requests to in the form of https://hostname:port.",
+      "displayName": "Host",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 10,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "password": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Password to authenticate with",
+      "displayName": "Password",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 3,
+      "required": true,
+      "secret": true,
+      "type": "string"
+    },
+    "specification": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "OpenAPI document of the service",
+      "displayName": "Document",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "required": true,
+      "secret": false,
+      "tags": [
+        "upload",
+        "url"
+      ],
+      "type": "hidden"
+    },
+    "username": {
+      "componentProperty": true,
+      "deprecated": false,
+      "description": "Username to authenticate with",
+      "displayName": "Username",
+      "group": "producer",
+      "javaType": "java.lang.String",
+      "kind": "property",
+      "label": "producer",
+      "order": 2,
+      "required": true,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "version": 1
+}
