@@ -8,7 +8,7 @@ import {
   TextVariants,
   Title,
 } from '@patternfly/react-core';
-import { Card } from 'patternfly-react';
+import { Card, Label } from 'patternfly-react';
 import * as React from 'react';
 import { Container } from '../Layout';
 
@@ -104,6 +104,9 @@ export class OpenApiReviewActions extends React.Component<
                   className={'review-actions__heading'}
                 >
                   {this.props.i18nErrorsHeading}
+                  <Label bsStyle={'danger heading__label'}>
+                    {this.props.errorMessages.length}
+                  </Label>
                 </Title>
               )}
               {this.props.errorMessages
@@ -124,6 +127,9 @@ export class OpenApiReviewActions extends React.Component<
                   className={'review-actions__heading'}
                 >
                   {this.props.i18nWarningsHeading}
+                  <Label bsStyle={'warning heading__label'}>
+                    {this.props.warningMessages.length}
+                  </Label>
                 </Title>
               )}
               {this.props.warningMessages
