@@ -15,6 +15,7 @@ import {
   WithLeaveConfirmation,
 } from '../../../../shared/WithLeaveConfirmation';
 import {
+  IPageWithEditorBreadcrumb,
   IPostPublishRouteParams,
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState,
@@ -26,7 +27,8 @@ export interface ISaveIntegrationForm {
 }
 
 export interface ISaveIntegrationPageProps
-  extends IWithLeaveConfirmationBaseProps {
+  extends IWithLeaveConfirmationBaseProps,
+    IPageWithEditorBreadcrumb {
   cancelHref: (
     p: ISaveIntegrationRouteParams,
     s: ISaveIntegrationRouteState
@@ -168,6 +170,11 @@ export class SaveIntegrationPage extends React.Component<
                                 description={
                                   'Update details about this integration.'
                                 }
+                                toolbar={this.props.getBreadcrumb(
+                                  'Save the integration',
+                                  params,
+                                  state
+                                )}
                                 content={
                                   <IntegrationSaveForm
                                     handleSubmit={handleSubmit}

@@ -18,6 +18,7 @@ import {
 import {
   IEditorBase,
   IEditorIndex,
+  IEditorWithOptionalFlow,
   makeEditorResolvers,
 } from './components/editor/makeEditorResolvers';
 import {
@@ -42,7 +43,7 @@ export const configureIndexMapper = ({
 export const configureIndexOrApiProviderMapper = (
   indexRoute: string,
   apiProviderRoute: string
-) => ({ flowId, integration }: { flowId?: string } & IEditorBase) => {
+) => ({ flowId, integration }: IEditorWithOptionalFlow) => {
   return isIntegrationApiProvider(integration!)
     ? {
         params: {
@@ -65,7 +66,10 @@ export const configureIndexOrApiProviderMapper = (
       };
 };
 
-export const configureSaveMapper = ({ flowId, integration }: IEditorIndex) => ({
+export const configureSaveMapper = ({
+  flowId,
+  integration,
+}: IEditorWithOptionalFlow) => ({
   params: {
     integrationId: integration.id!,
   } as ISaveIntegrationRouteParams,
@@ -161,7 +165,7 @@ const resolvers = {
     configure: {
       root: makeResolverNoParams(routes.create.configure.root),
       entryPoint: makeResolver<
-        { flowId?: string } & IEditorBase,
+        IEditorWithOptionalFlow,
         IBaseFlowRouteParams,
         IBaseRouteState
       >(
@@ -182,7 +186,7 @@ const resolvers = {
       addStep: makeEditorResolvers(routes.create.configure.addStep),
       editStep: makeEditorResolvers(routes.create.configure.editStep),
       saveAndPublish: makeResolver<
-        IEditorIndex,
+        IEditorWithOptionalFlow,
         ISaveIntegrationRouteParams,
         ISaveIntegrationRouteState
       >(routes.create.configure.saveAndPublish, configureSaveMapper),
@@ -198,7 +202,7 @@ const resolvers = {
         configureIndexMapper
       ),
       entryPoint: makeResolver<
-        { flowId?: string } & IEditorBase,
+        IEditorWithOptionalFlow,
         IBaseFlowRouteParams,
         IBaseRouteState
       >(
@@ -219,7 +223,7 @@ const resolvers = {
       addStep: makeEditorResolvers(routes.integration.edit.addStep),
       editStep: makeEditorResolvers(routes.integration.edit.editStep),
       saveAndPublish: makeResolver<
-        IEditorIndex,
+        IEditorWithOptionalFlow,
         ISaveIntegrationRouteParams,
         ISaveIntegrationRouteState
       >(routes.integration.edit.saveAndPublish, configureSaveMapper),

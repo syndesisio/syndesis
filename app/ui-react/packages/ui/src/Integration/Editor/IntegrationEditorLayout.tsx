@@ -40,7 +40,7 @@ import './IntegrationEditorLayout.css';
 export interface IIntegrationEditorLayoutProps {
   title: string;
   description?: string;
-  toolbar?: React.ReactNode;
+  toolbar: React.ReactNode;
   sidebar?: React.ReactNode;
   content: React.ReactNode;
   onCancel?: (e: React.MouseEvent<any>) => void;

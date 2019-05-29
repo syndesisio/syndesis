@@ -9,6 +9,7 @@ import { IEditorSidebarProps } from '../EditorSidebar';
 import {
   IConfigureStepRouteParams,
   IConfigureStepRouteState,
+  IPageWithEditorBreadcrumb,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 import {
@@ -16,7 +17,7 @@ import {
   WithConfigurationForm,
 } from './WithConfigurationForm';
 
-export interface IConfigureStepPageProps {
+export interface IConfigureStepPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: IConfigureStepRouteParams,
     s: IConfigureStepRouteState
@@ -88,6 +89,11 @@ export class ConfigureStepPage extends React.Component<
                         description={
                           'Fill in the required information for the selected action.'
                         }
+                        toolbar={this.props.getBreadcrumb(
+                          'Configure the action',
+                          params,
+                          state
+                        )}
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           activeStep: toUIStep(state.step),

@@ -99,6 +99,7 @@ const sortTypes: ISortType[] = [sortByName, sortByMethod, sortByImplemented];
 
 export interface IOperationsPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
+  saveHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
   getFlowHref: (
     p: IBaseFlowRouteParams,
     s: IBaseRouteState
@@ -114,6 +115,7 @@ export const OperationsPage: React.FunctionComponent<IOperationsPageProps> = ({
   getBreadcrumb,
   cancelHref,
   getFlowHref,
+  saveHref,
 }) => {
   const { params, state } = useRouteData<IBaseRouteParams, IBaseRouteState>();
   const flows = state
@@ -193,6 +195,8 @@ export const OperationsPage: React.FunctionComponent<IOperationsPageProps> = ({
               </WithListViewToolbarHelpers>
             }
             cancelHref={cancelHref(params, state)}
+            saveHref={saveHref(params, state)}
+            publishHref={saveHref(params, state)}
           />
         </>
       )}

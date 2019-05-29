@@ -18,6 +18,7 @@ import {
   IConfigureActionRouteState,
   IDescribeDataShapeRouteParams,
   IDescribeDataShapeRouteState,
+  IPageWithEditorBreadcrumb,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
   stepRoutes,
@@ -28,7 +29,7 @@ import { SelectConnectionPage } from './SelectConnectionPage';
 import { ConfigureStepPage } from './step/ConfigureStepPage';
 import { TemplateStepPage } from './template/TemplateStepPage';
 
-export interface IEditorApp {
+export interface IEditorApp extends IPageWithEditorBreadcrumb {
   mode: 'adding' | 'editing';
   appStepRoutes: typeof stepRoutes;
   appResolvers: ReturnType<typeof makeEditorResolvers>;
@@ -50,6 +51,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
   appResolvers,
   cancelHref,
   postConfigureHref,
+  getBreadcrumb,
 }) => {
   const selectStepChildren = (
     <SelectConnectionPage
@@ -98,6 +100,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       sidebar={props => (
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
+      getBreadcrumb={getBreadcrumb}
     />
   );
 
@@ -114,6 +117,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           ...s,
         })
       }
+      getBreadcrumb={getBreadcrumb}
     />
   );
 
@@ -146,6 +150,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           );
         }
       }}
+      getBreadcrumb={getBreadcrumb}
     />
   );
 
@@ -179,6 +184,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
               s as IConfigureActionRouteState
             )
       }
+      getBreadcrumb={getBreadcrumb}
     />
   );
 
@@ -190,6 +196,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
       postConfigureHref={postConfigureHref}
+      getBreadcrumb={getBreadcrumb}
     />
   );
 
@@ -201,6 +208,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
       postConfigureHref={postConfigureHref}
+      getBreadcrumb={getBreadcrumb}
     />
   );
 
@@ -212,6 +220,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
       postConfigureHref={postConfigureHref}
+      getBreadcrumb={getBreadcrumb}
     />
   );
 
@@ -223,6 +232,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
       postConfigureHref={postConfigureHref}
+      getBreadcrumb={getBreadcrumb}
     />
   );
 
@@ -238,6 +248,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           ...state,
         })
       }
+      getBreadcrumb={getBreadcrumb}
     />
   );
 
@@ -260,6 +271,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
           true
         )
       }
+      getBreadcrumb={getBreadcrumb}
     />
   );
 
@@ -271,6 +283,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       saveHref={(params, state) =>
         appResolvers.apiProvider.reviewActions({ ...params, ...state })
       }
+      getBreadcrumb={getBreadcrumb}
     />
   );
 

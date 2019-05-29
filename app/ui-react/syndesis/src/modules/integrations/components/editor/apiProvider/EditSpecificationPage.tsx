@@ -12,9 +12,10 @@ import { PageTitle } from '../../../../../shared';
 import {
   IApiProviderReviewActionsRouteState,
   IBaseApiProviderRouteParams,
+  IPageWithEditorBreadcrumb,
 } from '../interfaces';
 
-export interface IEditSpecificationPageProps {
+export interface IEditSpecificationPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: IBaseApiProviderRouteParams,
     s: IApiProviderReviewActionsRouteState
@@ -31,7 +32,7 @@ export interface IEditSpecificationPageProps {
  */
 export const EditSpecificationPage: React.FunctionComponent<
   IEditSpecificationPageProps
-> = ({ cancelHref, saveHref }) => {
+> = ({ cancelHref, saveHref, getBreadcrumb }) => {
   const { params, state } = useRouteData<
     IBaseApiProviderRouteParams,
     IApiProviderReviewActionsRouteState
@@ -54,6 +55,11 @@ export const EditSpecificationPage: React.FunctionComponent<
             title={t('integrations:apiProvider:editSpecification:title')}
             description={t(
               'integrations:apiProvider:editSpecification:description'
+            )}
+            toolbar={getBreadcrumb(
+              t('integrations:apiProvider:editSpecification:title'),
+              params,
+              state
             )}
             content={
               <IframeWrapper>

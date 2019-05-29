@@ -106,6 +106,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                               position: '1',
                             })
                       }
+                      getBreadcrumb={getBreadcrumb}
                     />
                   )}
                 </WithLeaveConfirmation>
@@ -130,6 +131,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                           ...p,
                         })
                       }
+                      getBreadcrumb={getBreadcrumb}
                     />
                   )}
                 </WithLeaveConfirmation>
@@ -242,6 +244,12 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                   {() => (
                     <OperationsPage
                       cancelHref={(p, s) => resolvers.list()}
+                      saveHref={(p, s) =>
+                        resolvers.create.configure.saveAndPublish({
+                          ...p,
+                          ...s,
+                        })
+                      }
                       getFlowHref={(p, s) =>
                         resolvers.create.configure.index({ ...p, ...s })
                       }
@@ -275,6 +283,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                           ...p,
                         })
                       }
+                      getBreadcrumb={getBreadcrumb}
                     />
                   )}
                 </WithLeaveConfirmation>
@@ -304,6 +313,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                           ...p,
                         })
                       }
+                      getBreadcrumb={getBreadcrumb}
                     />
                   )}
                 </WithLeaveConfirmation>
@@ -312,10 +322,10 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
               <Route path={routes.create.configure.saveAndPublish} exact={true}>
                 <SaveIntegrationPage
                   cancelHref={(p, s) =>
-                    resolvers.create.configure.index({ ...p, ...s })
+                    resolvers.create.configure.entryPoint({ ...p, ...s })
                   }
                   postSaveHref={(p, s) =>
-                    resolvers.integration.edit.index({
+                    resolvers.integration.edit.entryPoint({
                       ...p,
                       ...s,
                     })
@@ -324,6 +334,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                   i18nTitle={i18nTitle}
                   i18nConfirmationMessage={i18nConfirmationMessage}
                   shouldDisplayDialog={shouldDisplayDialog}
+                  getBreadcrumb={getBreadcrumb}
                 />
               </Route>
             </Switch>

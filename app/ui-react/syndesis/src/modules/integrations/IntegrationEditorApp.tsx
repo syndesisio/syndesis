@@ -194,6 +194,12 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                   {() => (
                     <OperationsPage
                       cancelHref={(p, s) => resolvers.list()}
+                      saveHref={(p, s) =>
+                        resolvers.integration.edit.saveAndPublish({
+                          ...p,
+                          ...s,
+                        })
+                      }
                       getFlowHref={(p, s) =>
                         resolvers.integration.edit.index({ ...p, ...s })
                       }
@@ -227,6 +233,7 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                           ...p,
                         })
                       }
+                      getBreadcrumb={getBreadcrumb}
                     />
                   )}
                 </WithLeaveConfirmation>
@@ -256,6 +263,7 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                           ...p,
                         })
                       }
+                      getBreadcrumb={getBreadcrumb}
                     />
                   )}
                 </WithLeaveConfirmation>
@@ -264,10 +272,10 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
               <Route path={routes.integration.edit.saveAndPublish} exact={true}>
                 <SaveIntegrationPage
                   cancelHref={(p, s) =>
-                    resolvers.integration.edit.index({ ...p, ...s })
+                    resolvers.integration.edit.entryPoint({ ...p, ...s })
                   }
                   postSaveHref={(p, s) =>
-                    resolvers.integration.edit.index({
+                    resolvers.integration.edit.entryPoint({
                       ...p,
                       ...s,
                     })
@@ -276,6 +284,7 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                   i18nTitle={i18nTitle}
                   i18nConfirmationMessage={i18nConfirmationMessage}
                   shouldDisplayDialog={shouldDisplayDialog}
+                  getBreadcrumb={getBreadcrumb}
                 />
               </Route>
             </Switch>

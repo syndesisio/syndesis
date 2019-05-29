@@ -21,6 +21,7 @@ import {
   IConfigureActionRouteState,
   IDescribeDataShapeRouteParams,
   IDescribeDataShapeRouteState,
+  IPageWithEditorBreadcrumb,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 import {
@@ -28,7 +29,7 @@ import {
   WithConfigurationForm,
 } from './WithConfigurationForm';
 
-export interface IConfigureActionPageProps {
+export interface IConfigureActionPageProps extends IPageWithEditorBreadcrumb {
   backHref: (
     p: IConfigureActionRouteParams,
     s: IConfigureActionRouteState
@@ -151,13 +152,25 @@ export class ConfigureActionPage extends React.Component<
                     );
                   };
                   const descriptor = stepKind.action!.descriptor!;
-                  if (isStartStep(state.integration, params.flowId, positionAsNumber)) {
+                  if (
+                    isStartStep(
+                      state.integration,
+                      params.flowId,
+                      positionAsNumber
+                    )
+                  ) {
                     if (requiresOutputDescribeDataShape(descriptor)) {
                       gotoDescribeData(DataShapeDirection.OUTPUT);
                     } else {
                       gotoDefaultNextPage();
                     }
-                  } else if (isEndStep(state.integration, params.flowId, positionAsNumber)) {
+                  } else if (
+                    isEndStep(
+                      state.integration,
+                      params.flowId,
+                      positionAsNumber
+                    )
+                  ) {
                     if (requiresInputDescribeDataShape(descriptor)) {
                       gotoDescribeData(DataShapeDirection.INPUT);
                     } else {
@@ -182,6 +195,11 @@ export class ConfigureActionPage extends React.Component<
                     description={
                       'Fill in the required information for the selected action.'
                     }
+                    toolbar={this.props.getBreadcrumb(
+                      'Configure the action',
+                      params,
+                      state
+                    )}
                     sidebar={this.props.sidebar({
                       activeIndex: positionAsNumber,
                       activeStep: {
