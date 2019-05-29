@@ -1,7 +1,11 @@
 import { ApicurioAdapter } from '@syndesis/apicurio-adapter';
 import * as H from '@syndesis/history';
-import { IframeWrapper, IntegrationEditorLayout } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
+import {
+  IframeWrapper,
+  IntegrationEditorLayout,
+  PageLoader,
+} from '@syndesis/ui';
+import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../../shared';
@@ -28,9 +32,13 @@ export interface IEditSpecificationPageProps {
 export const EditSpecificationPage: React.FunctionComponent<
   IEditSpecificationPageProps
 > = ({ cancelHref, saveHref }) => {
-  const [specification, setSpecification] = React.useState<string | undefined>(
-    undefined
-  );
+  const { params, state } = useRouteData<
+    IBaseApiProviderRouteParams,
+    IApiProviderReviewActionsRouteState
+  >();
+  const [specification, setSpecification] = React.useState<
+    string | undefined
+  >();
   const onSpecification = (newSpec: any) => {
     setSpecification(JSON.stringify(newSpec.spec));
   };
@@ -38,37 +46,34 @@ export const EditSpecificationPage: React.FunctionComponent<
   return (
     <Translation ns={['integrations', 'shared']}>
       {t => (
-        <WithRouteData<
-          IBaseApiProviderRouteParams,
-          IApiProviderReviewActionsRouteState
-        >>
-          {(params, state) => (
-            <>
-              <PageTitle
-                title={t('integrations:apiProvider:editSpecification:title')}
-              />
-              <IntegrationEditorLayout
-                title={t('integrations:apiProvider:editSpecification:title')}
-                description={t(
-                  'integrations:apiProvider:editSpecification:description'
+        <>
+          <PageTitle
+            title={t('integrations:apiProvider:editSpecification:title')}
+          />
+          <IntegrationEditorLayout
+            title={t('integrations:apiProvider:editSpecification:title')}
+            description={t(
+              'integrations:apiProvider:editSpecification:description'
+            )}
+            content={
+              <IframeWrapper>
+                {specification ? (
+                  <ApicurioAdapter
+                    specification={specification}
+                    onSpecification={onSpecification}
+                  />
+                ) : (
+                  <PageLoader />
                 )}
-                content={
-                  <IframeWrapper>
-                    <ApicurioAdapter
-                      specification={specification || state.specification}
-                      onSpecification={onSpecification}
-                    />
-                  </IframeWrapper>
-                }
-                cancelHref={cancelHref(params, state)}
-                saveHref={saveHref(params, {
-                  ...state,
-                  specification: specification || state.specification,
-                })}
-              />
-            </>
-          )}
-        </WithRouteData>
+              </IframeWrapper>
+            }
+            cancelHref={cancelHref(params, state)}
+            saveHref={saveHref(params, {
+              ...state,
+              specification: specification || state.specification,
+            })}
+          />
+        </>
       )}
     </Translation>
   );
