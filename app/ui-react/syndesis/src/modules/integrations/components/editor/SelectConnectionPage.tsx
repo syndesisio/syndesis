@@ -15,6 +15,7 @@ import { PageTitle } from '../../../../shared';
 import { ConnectionsWithToolbar } from '../../../connections/components';
 import { IEditorSidebarProps } from './EditorSidebar';
 import {
+  IPageWithEditorBreadcrumb,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
   IUIStep,
@@ -27,7 +28,9 @@ import {
   visibleStepsByPosition,
 } from './utils';
 
-export interface ISelectConnectionPageProps extends IGetStepHrefs {
+export interface ISelectConnectionPageProps
+  extends IGetStepHrefs,
+    IPageWithEditorBreadcrumb {
   cancelHref: (
     p: ISelectConnectionRouteParams,
     s: ISelectConnectionRouteState
@@ -65,6 +68,11 @@ export class SelectConnectionPage extends React.Component<
                 description={
                   'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
                 }
+                toolbar={this.props.getBreadcrumb(
+                  'Choose a connection',
+                  params,
+                  state
+                )}
                 sidebar={this.props.sidebar({
                   activeIndex: positionAsNumber,
                   steps: toUIStepCollection(integrationSteps),

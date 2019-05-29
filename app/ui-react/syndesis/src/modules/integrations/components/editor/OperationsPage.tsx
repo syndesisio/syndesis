@@ -13,11 +13,11 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../../i18n';
 import { PageTitle } from '../../../../shared';
-import { EditorBreadcrumb } from './EditorBreadcrumb';
 import {
   IBaseFlowRouteParams,
   IBaseRouteParams,
   IBaseRouteState,
+  IPageWithEditorBreadcrumb,
 } from './interfaces';
 
 interface IOperationFlow extends Flow {
@@ -97,9 +97,9 @@ const sortByImplemented = {
 
 const sortTypes: ISortType[] = [sortByName, sortByMethod, sortByImplemented];
 
-export interface IOperationsPageProps {
-  rootHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
+export interface IOperationsPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
+  saveHref: (p: IBaseRouteParams, s: IBaseRouteState) => H.LocationDescriptor;
   getFlowHref: (
     p: IBaseFlowRouteParams,
     s: IBaseRouteState
@@ -112,9 +112,10 @@ export interface IOperationsPageProps {
  * earlier in the user flow.
  */
 export const OperationsPage: React.FunctionComponent<IOperationsPageProps> = ({
-  rootHref,
+  getBreadcrumb,
   cancelHref,
   getFlowHref,
+  saveHref,
 }) => {
   const { params, state } = useRouteData<IBaseRouteParams, IBaseRouteState>();
   const flows = state
@@ -124,7 +125,7 @@ export const OperationsPage: React.FunctionComponent<IOperationsPageProps> = ({
       return {
         ...f,
         description,
-        implemented: f.metadata!.excerpt.startsWith('501') ? 0 : 1,
+        implemented: f.metadata!['return-code-edited'] ? 1 : 0,
         method,
       } as IOperationFlow;
     });
@@ -141,14 +142,11 @@ export const OperationsPage: React.FunctionComponent<IOperationsPageProps> = ({
             description={t(
               'integrations:apiProvider:reviewOperations:description'
             )}
-            toolbar={
-              <EditorBreadcrumb
-                integration={state.integration}
-                rootHref={rootHref(params, state)}
-              >
-                {t('integrations:apiProvider:reviewOperations:title')}
-              </EditorBreadcrumb>
-            }
+            toolbar={getBreadcrumb(
+              t('integrations:apiProvider:reviewOperations:title'),
+              params,
+              state
+            )}
             content={
               <WithListViewToolbarHelpers
                 defaultFilterType={filterByName}
@@ -197,6 +195,8 @@ export const OperationsPage: React.FunctionComponent<IOperationsPageProps> = ({
               </WithListViewToolbarHelpers>
             }
             cancelHref={cancelHref(params, state)}
+            saveHref={saveHref(params, state)}
+            publishHref={saveHref(params, state)}
           />
         </>
       )}

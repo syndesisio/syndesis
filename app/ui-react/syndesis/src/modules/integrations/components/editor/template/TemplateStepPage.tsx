@@ -16,13 +16,14 @@ import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
+  IPageWithEditorBreadcrumb,
   ITemplateStepRouteParams,
   ITemplateStepRouteState,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 import { WithTemplater } from './WithTemplater';
 
-export interface ITemplateStepPageProps {
+export interface ITemplateStepPageProps extends IPageWithEditorBreadcrumb {
   mode: 'adding' | 'editing';
   cancelHref: (
     p: ITemplateStepRouteParams,
@@ -88,6 +89,11 @@ export class TemplateStepPage extends React.Component<ITemplateStepPageProps> {
                     description={
                       'A template step takes data from a source and inserts it into the format that is defined in a template that you provide.'
                     }
+                    toolbar={this.props.getBreadcrumb(
+                      'Upload template',
+                      params,
+                      state
+                    )}
                     sidebar={this.props.sidebar({
                       activeIndex: positionAsNumber,
                       activeStep: toUIStep(state.step),

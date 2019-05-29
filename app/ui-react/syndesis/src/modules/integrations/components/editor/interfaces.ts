@@ -8,6 +8,15 @@ import {
   StepKind,
 } from '@syndesis/models';
 import { include } from 'named-urls';
+import * as React from 'react';
+
+export interface IPageWithEditorBreadcrumb {
+  getBreadcrumb: (
+    title: string,
+    p: IBaseRouteParams | IBaseFlowRouteParams,
+    s: IBaseRouteState
+  ) => React.ReactElement;
+}
 
 /*********************************/
 /********* UI MODELS *************/
@@ -152,6 +161,10 @@ export interface IApiProviderReviewActionsRouteState
   extends IBaseApiProviderRouteState {
   specification: string;
 }
+export interface IApiProviderEditorRouteState
+  extends IBaseApiProviderRouteState {
+  specification: string | Integration;
+}
 
 export interface ITemplateStepRouteParams extends IConfigureStepRouteParams {}
 export interface ITemplateStepRouteState extends IConfigureStepRouteState {}
@@ -163,7 +176,7 @@ export interface ISelectConnectionRouteState extends IBaseRouteState {}
 export interface IPostPublishRouteParams extends IBaseRouteParams {}
 export interface ISaveIntegrationRouteParams extends IBaseRouteParams {}
 export interface ISaveIntegrationRouteState extends IBaseRouteState {
-  flowId: string;
+  flowId?: string;
 }
 
 export const stepRoutes = {

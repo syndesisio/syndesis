@@ -1,6 +1,7 @@
 import { ALL_STEPS, createStep, DATA_MAPPER } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { StepKind } from '@syndesis/models';
+import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Route, Switch } from 'react-router';
@@ -8,109 +9,16 @@ import { WithClosedNavigation } from '../../shared';
 import { WithLeaveConfirmation } from '../../shared/WithLeaveConfirmation';
 import { AddStepPage } from './components/editor/AddStepPage';
 import { EditorApp } from './components/editor/EditorApp';
+import { EditorBreadcrumb } from './components/editor/EditorBreadcrumb';
+import {
+  IBaseFlowRouteParams,
+  IBaseRouteParams,
+  IBaseRouteState,
+} from './components/editor/interfaces';
 import { OperationsPage } from './components/editor/OperationsPage';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import resolvers from './resolvers';
 import routes from './routes';
-
-const addStepPage = (
-  <AddStepPage
-    cancelHref={resolvers.list}
-    getAddStepHref={(position, p, s) =>
-      resolvers.create.configure.addStep.selectStep({
-        position: `${position}`,
-        ...p,
-        ...s,
-      })
-    }
-    getDeleteEdgeStepHref={(position, p, s) =>
-      resolvers.create.configure.editStep.selectStep({
-        position: `${position}`,
-        ...p,
-        ...s,
-      })
-    }
-    apiProviderHref={(step, params, state) =>
-      resolvers.create.start.apiProvider.selectMethod({
-        ...params,
-        ...state,
-      })
-    }
-    connectionHref={(step, params, state) =>
-      resolvers.create.configure.editStep.connection.configureAction({
-        actionId: step.action!.id!,
-        connection: step.connection!,
-        ...params,
-        ...state,
-      })
-    }
-    filterHref={(step, params, state) =>
-      resolvers.create.configure.editStep.basicFilter({
-        step,
-        ...params,
-        ...state,
-      })
-    }
-    getAddMapperStepHref={(position, params, state) =>
-      resolvers.create.configure.addStep.dataMapper({
-        position: `${position}`,
-        step: {
-          ...createStep(),
-          ...ALL_STEPS.find(s => s.stepKind === DATA_MAPPER),
-        } as StepKind,
-        ...params,
-        ...state,
-      })
-    }
-    mapperHref={(step, params, state) =>
-      resolvers.create.configure.editStep.dataMapper({
-        step,
-        ...params,
-        ...state,
-      })
-    }
-    templateHref={(step, params, state) =>
-      resolvers.create.configure.editStep.template({
-        step,
-        ...params,
-        ...state,
-      })
-    }
-    stepHref={(step, params, state) =>
-      resolvers.create.configure.editStep.step({
-        step,
-        ...params,
-        ...state,
-      })
-    }
-    saveHref={(p, s) =>
-      resolvers.create.configure.saveAndPublish({
-        ...p,
-        ...s,
-      })
-    }
-    selfHref={(p, s) =>
-      resolvers.create.configure.index({
-        ...p,
-        ...s,
-      })
-    }
-    rootHref={(p, s) =>
-      resolvers.create.configure.entryPoint({
-        ...p,
-        ...s,
-      })
-    }
-  />
-);
-
-const apiProviderOperationsPage = (
-  <OperationsPage
-    cancelHref={(p, s) => resolvers.list()}
-    rootHref={(p, s) => resolvers.create.configure.entryPoint({ ...p, ...s })}
-    getFlowHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
-  />
-);
 
 /**
  * Entry point for the integration creator app. This is shown when an user clicks
@@ -133,6 +41,36 @@ const apiProviderOperationsPage = (
  * @todo i18n everywhere!
  */
 export const IntegrationCreatorApp: React.FunctionComponent = () => {
+  const { params, state } = useRouteData<
+    IBaseFlowRouteParams,
+    IBaseRouteState
+  >();
+
+  const getBreadcrumb = (
+    title: string,
+    p: IBaseRouteParams | IBaseFlowRouteParams,
+    s: IBaseRouteState
+  ) => (
+    <EditorBreadcrumb
+      integration={state.integration}
+      rootHref={resolvers.create.configure.entryPoint({ ...p, ...s })}
+      apiProviderEditorHref={resolvers.create.configure.editStep.apiProvider.editSpecification(
+        {
+          ...(p as IBaseFlowRouteParams),
+          ...s,
+          position: '0',
+          specification: s.integration,
+        }
+      )}
+      getFlowHref={flowId =>
+        resolvers.create.configure.index({ ...p, ...s, flowId })
+      }
+      currentFlowId={(p as IBaseFlowRouteParams).flowId}
+    >
+      {title}
+    </EditorBreadcrumb>
+  );
+
   return (
     <WithClosedNavigation>
       <Translation ns={['integrations']}>
@@ -160,12 +98,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                       appStepRoutes={routes.create.start}
                       appResolvers={resolvers.create.start}
                       cancelHref={resolvers.list}
-                      postConfigureHref={(
-                        integration,
-                        params,
-                        state,
-                        isApiProvider
-                      ) =>
+                      postConfigureHref={(integration, p, s, isApiProvider) =>
                         isApiProvider
                           ? resolvers.create.configure.operations({
                               integration,
@@ -176,6 +109,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                               position: '1',
                             })
                       }
+                      getBreadcrumb={getBreadcrumb}
                     />
                   )}
                 </WithLeaveConfirmation>
@@ -194,12 +128,13 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                       appStepRoutes={routes.create.finish}
                       appResolvers={resolvers.create.finish}
                       cancelHref={resolvers.list}
-                      postConfigureHref={(integration, params) =>
+                      postConfigureHref={(integration, p) =>
                         resolvers.create.configure.index({
                           integration,
-                          ...params,
+                          ...p,
                         })
                       }
+                      getBreadcrumb={getBreadcrumb}
                     />
                   )}
                 </WithLeaveConfirmation>
@@ -211,7 +146,95 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                   i18nConfirmationMessage={i18nConfirmationMessage}
                   shouldDisplayDialog={shouldDisplayDialog}
                 >
-                  {() => addStepPage}
+                  {() => (
+                    <AddStepPage
+                      cancelHref={resolvers.list}
+                      getAddStepHref={(position, p, s) =>
+                        resolvers.create.configure.addStep.selectStep({
+                          position: `${position}`,
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      getDeleteEdgeStepHref={(position, p, s) =>
+                        resolvers.create.configure.editStep.selectStep({
+                          position: `${position}`,
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      apiProviderHref={(step, p, s) =>
+                        resolvers.create.start.apiProvider.selectMethod({
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      connectionHref={(step, p, s) =>
+                        resolvers.create.configure.editStep.connection.configureAction(
+                          {
+                            actionId: step.action!.id!,
+                            connection: step.connection!,
+                            ...p,
+                            ...s,
+                          }
+                        )
+                      }
+                      filterHref={(step, p, s) =>
+                        resolvers.create.configure.editStep.basicFilter({
+                          step,
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      getAddMapperStepHref={(position, p, s) =>
+                        resolvers.create.configure.addStep.dataMapper({
+                          position: `${position}`,
+                          step: {
+                            ...createStep(),
+                            ...ALL_STEPS.find(
+                              step => step.stepKind === DATA_MAPPER
+                            ),
+                          } as StepKind,
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      mapperHref={(step, p, s) =>
+                        resolvers.create.configure.editStep.dataMapper({
+                          step,
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      templateHref={(step, p, s) =>
+                        resolvers.create.configure.editStep.template({
+                          step,
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      stepHref={(step, p, s) =>
+                        resolvers.create.configure.editStep.step({
+                          step,
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      saveHref={(p, s) =>
+                        resolvers.create.configure.saveAndPublish({
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      selfHref={(p, s) =>
+                        resolvers.create.configure.index({
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      getBreadcrumb={getBreadcrumb}
+                    />
+                  )}
                 </WithLeaveConfirmation>
               </Route>
 
@@ -221,7 +244,21 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                   i18nConfirmationMessage={i18nConfirmationMessage}
                   shouldDisplayDialog={shouldDisplayDialog}
                 >
-                  {() => apiProviderOperationsPage}
+                  {() => (
+                    <OperationsPage
+                      cancelHref={(p, s) => resolvers.list()}
+                      saveHref={(p, s) =>
+                        resolvers.create.configure.saveAndPublish({
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      getFlowHref={(p, s) =>
+                        resolvers.create.configure.index({ ...p, ...s })
+                      }
+                      getBreadcrumb={getBreadcrumb}
+                    />
+                  )}
                 </WithLeaveConfirmation>
               </Route>
 
@@ -237,18 +274,19 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                       mode={'adding'}
                       appStepRoutes={routes.create.configure.addStep}
                       appResolvers={resolvers.create.configure.addStep}
-                      cancelHref={(params, state) =>
+                      cancelHref={(p, s) =>
                         resolvers.create.configure.index({
-                          ...params,
-                          ...state,
+                          ...p,
+                          ...s,
                         })
                       }
-                      postConfigureHref={(integration, params) =>
+                      postConfigureHref={(integration, p) =>
                         resolvers.create.configure.index({
                           integration,
-                          ...params,
+                          ...p,
                         })
                       }
+                      getBreadcrumb={getBreadcrumb}
                     />
                   )}
                 </WithLeaveConfirmation>
@@ -266,18 +304,19 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                       mode={'editing'}
                       appStepRoutes={routes.create.configure.editStep}
                       appResolvers={resolvers.create.configure.editStep}
-                      cancelHref={(params, state) =>
+                      cancelHref={(p, s) =>
                         resolvers.create.configure.index({
-                          ...params,
-                          ...state,
+                          ...p,
+                          ...s,
                         })
                       }
-                      postConfigureHref={(integration, params) =>
+                      postConfigureHref={(integration, p) =>
                         resolvers.create.configure.index({
                           integration,
-                          ...params,
+                          ...p,
                         })
                       }
+                      getBreadcrumb={getBreadcrumb}
                     />
                   )}
                 </WithLeaveConfirmation>
@@ -286,10 +325,10 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
               <Route path={routes.create.configure.saveAndPublish} exact={true}>
                 <SaveIntegrationPage
                   cancelHref={(p, s) =>
-                    resolvers.create.configure.index({ ...p, ...s })
+                    resolvers.create.configure.entryPoint({ ...p, ...s })
                   }
                   postSaveHref={(p, s) =>
-                    resolvers.integration.edit.index({
+                    resolvers.integration.edit.entryPoint({
                       ...p,
                       ...s,
                     })
@@ -298,6 +337,7 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                   i18nTitle={i18nTitle}
                   i18nConfirmationMessage={i18nConfirmationMessage}
                   shouldDisplayDialog={shouldDisplayDialog}
+                  getBreadcrumb={getBreadcrumb}
                 />
               </Route>
             </Switch>

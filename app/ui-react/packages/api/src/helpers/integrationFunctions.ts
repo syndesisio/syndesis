@@ -685,6 +685,45 @@ export function prepareIntegrationForSaving(integration: Integration) {
   return { ...integration, tags, flows };
 }
 
+export function sanitizeFlow(flow: Flow): Flow {
+  flow.steps = flow.steps || [];
+  // make sure we have all the connection ids as tags for the flow
+  flow.tags = Array.from(
+    new Set([
+      ...(flow.tags || []),
+      ...flow.steps
+        .filter(s => s.connection && s.connection.id)
+        .map(s => s.connection!.id),
+    ])
+  ) as string[];
+
+  // for the api provider, if a flow has been modified we change the last
+  // step of the flow to automatically set a return code of 200, unless
+  // already modified by the user. Also, we update the flow metadata to
+  // reflect that the flow has been "implemented"
+  const lastStep = flow.steps[flow.steps.length - 1];
+  if (
+    lastStep &&
+    lastStep.action &&
+    lastStep.action.id === 'io.syndesis:api-provider-end'
+  ) {
+    if (
+      !lastStep.configuredProperties ||
+      (lastStep.configuredProperties &&
+        lastStep.configuredProperties.httpResponseCode === '501')
+    ) {
+      const returnCode = flow.metadata!['default-return-code'];
+      const returnCodeEdited = flow.metadata!['return-code-edited'];
+      if (returnCode && !returnCodeEdited) {
+        flow.metadata!['return-code-edited'] = 'true';
+        lastStep.configuredProperties!.httpResponseCode = returnCode;
+      }
+    }
+  }
+
+  return flow;
+}
+
 /**
  * Returns the flow object with the given ID
  * @param integration
@@ -704,6 +743,7 @@ export function getFlow(integration: Integration, flowId: string) {
  * @param flow
  */
 export function setFlow(integration: Integration, flow: Flow) {
+  flow = sanitizeFlow(flow);
   if (getFlow(integration, flow.id!)) {
     return {
       ...integration,

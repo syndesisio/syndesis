@@ -15,6 +15,7 @@ interface INavLink {
   to: H.LocationDescriptor;
   label: any;
   children?: any;
+  [key: string]: any;
 }
 
 function joinClassnames(...classnames: Array<string | undefined>): string {
@@ -33,6 +34,8 @@ export const PfNavLink = ({
   to,
   label,
   children,
+  activeKey,
+  activeHref,
   ...rest
 }: INavLink) => {
   const path = typeof to === 'object' ? to.pathname : to;

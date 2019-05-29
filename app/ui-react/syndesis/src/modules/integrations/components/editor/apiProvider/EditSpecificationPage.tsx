@@ -1,16 +1,22 @@
+import { useApiProviderSpecification } from '@syndesis/api';
 import { ApicurioAdapter } from '@syndesis/apicurio-adapter';
 import * as H from '@syndesis/history';
-import { IframeWrapper, IntegrationEditorLayout } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
+import {
+  IframeWrapper,
+  IntegrationEditorLayout,
+  PageLoader,
+} from '@syndesis/ui';
+import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { PageTitle } from '../../../../../shared';
+import { ApiError, PageTitle } from '../../../../../shared';
 import {
   IApiProviderReviewActionsRouteState,
   IBaseApiProviderRouteParams,
+  IPageWithEditorBreadcrumb,
 } from '../interfaces';
 
-export interface IEditSpecificationPageProps {
+export interface IEditSpecificationPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: IBaseApiProviderRouteParams,
     s: IApiProviderReviewActionsRouteState
@@ -27,48 +33,62 @@ export interface IEditSpecificationPageProps {
  */
 export const EditSpecificationPage: React.FunctionComponent<
   IEditSpecificationPageProps
-> = ({ cancelHref, saveHref }) => {
-  const [specification, setSpecification] = React.useState<string | undefined>(
-    undefined
+> = ({ cancelHref, saveHref, getBreadcrumb }) => {
+  const { params, state } = useRouteData<
+    IBaseApiProviderRouteParams,
+    IApiProviderReviewActionsRouteState
+  >();
+  const { specification, loading, error } = useApiProviderSpecification(
+    state.specification
   );
+
+  const [updatedSpecification, setUpdatedSpecification] = React.useState();
+
   const onSpecification = (newSpec: any) => {
-    setSpecification(JSON.stringify(newSpec.spec));
+    setUpdatedSpecification(JSON.stringify(newSpec.spec));
   };
 
   return (
     <Translation ns={['integrations', 'shared']}>
       {t => (
-        <WithRouteData<
-          IBaseApiProviderRouteParams,
-          IApiProviderReviewActionsRouteState
-        >>
-          {(params, state) => (
-            <>
-              <PageTitle
-                title={t('integrations:apiProvider:editSpecification:title')}
-              />
-              <IntegrationEditorLayout
-                title={t('integrations:apiProvider:editSpecification:title')}
-                description={t(
-                  'integrations:apiProvider:editSpecification:description'
-                )}
-                content={
-                  <IframeWrapper>
+        <>
+          <PageTitle
+            title={t('integrations:apiProvider:editSpecification:title')}
+          />
+          <IntegrationEditorLayout
+            title={t('integrations:apiProvider:editSpecification:title')}
+            description={t(
+              'integrations:apiProvider:editSpecification:description'
+            )}
+            toolbar={getBreadcrumb(
+              t('integrations:apiProvider:editSpecification:title'),
+              params,
+              state
+            )}
+            content={
+              <IframeWrapper>
+                <WithLoader
+                  loading={loading}
+                  loaderChildren={<PageLoader />}
+                  error={error !== false}
+                  errorChildren={<ApiError />}
+                >
+                  {() => (
                     <ApicurioAdapter
-                      specification={specification || state.specification}
+                      specification={updatedSpecification || specification!}
                       onSpecification={onSpecification}
                     />
-                  </IframeWrapper>
-                }
-                cancelHref={cancelHref(params, state)}
-                saveHref={saveHref(params, {
-                  ...state,
-                  specification: specification || state.specification,
-                })}
-              />
-            </>
-          )}
-        </WithRouteData>
+                  )}
+                </WithLoader>
+              </IframeWrapper>
+            }
+            cancelHref={cancelHref(params, state)}
+            saveHref={saveHref(params, {
+              ...state,
+              specification: updatedSpecification || specification,
+            })}
+          />
+        </>
       )}
     </Translation>
   );

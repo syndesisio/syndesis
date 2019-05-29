@@ -29,7 +29,8 @@ export interface IEditorBreadcrumbProps {
   currentFlowId?: string;
   integration: IntegrationOverview;
   rootHref: H.LocationDescriptor;
-  // getApiProviderEditorHref: (specification: string) => H.LocationDescriptor;
+  apiProviderEditorHref: H.LocationDescriptor;
+  getFlowHref: (flowId: string) => H.LocationDescriptor;
 }
 export const EditorBreadcrumb: React.FunctionComponent<
   IEditorBreadcrumbProps
@@ -37,7 +38,8 @@ export const EditorBreadcrumb: React.FunctionComponent<
   currentFlowId,
   integration,
   rootHref,
-  // getApiProviderEditorHref
+  apiProviderEditorHref,
+  getFlowHref,
   children,
 }) => {
   const isApiProvider = isIntegrationApiProvider(integration);
@@ -51,7 +53,7 @@ export const EditorBreadcrumb: React.FunctionComponent<
     <Breadcrumb
       actions={
         isApiProvider ? (
-          <ButtonLink href={'#todo'} as={'link'}>
+          <ButtonLink href={apiProviderEditorHref} as={'link'}>
             View/Edit API Definition <i className="fa fa-external-link" />
           </ButtonLink>
         ) : (
@@ -68,8 +70,14 @@ export const EditorBreadcrumb: React.FunctionComponent<
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
         }}
+        onClick={(ev: React.MouseEvent) => {
+          if (!currentFlow || (currentFlow.steps || []).length < 2) {
+            ev.stopPropagation();
+            ev.preventDefault();
+          }
+        }}
       >
-        {integration.name}
+        {integration.name || 'New integration'}
       </Link>
       {currentFlow && isMultiflow && (
         <OperationsDropdown
@@ -81,9 +89,16 @@ export const EditorBreadcrumb: React.FunctionComponent<
             )
           }
         >
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. A autem
-          dicta dolores dolorum ducimus esse fugiat hic illum laudantium, minima
-          nisi nulla omnis quidem quod, ratione sed sunt vel voluptatum!
+          {integration
+            .flows!.filter(f => f.id !== currentFlow.id)
+            .map(f => (
+              <Link to={getFlowHref(f.id!)} key={f.id}>
+                <ApiProviderOperation description={f.description!} />
+                <div>
+                  <strong>{f.name}</strong>
+                </div>
+              </Link>
+            ))}
         </OperationsDropdown>
       )}
       {children}

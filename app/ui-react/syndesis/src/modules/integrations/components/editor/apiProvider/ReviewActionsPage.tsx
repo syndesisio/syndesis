@@ -18,9 +18,10 @@ import { ApiError, PageTitle } from '../../../../../shared';
 import {
   IApiProviderReviewActionsRouteState,
   IBaseApiProviderRouteParams,
+  IPageWithEditorBreadcrumb,
 } from '../interfaces';
 
-export interface IReviewActionsPageProps {
+export interface IReviewActionsPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: IBaseApiProviderRouteParams,
     s: IApiProviderReviewActionsRouteState
@@ -43,7 +44,7 @@ export interface IReviewActionsPageProps {
  */
 export const ReviewActionsPage: React.FunctionComponent<
   IReviewActionsPageProps
-> = ({ cancelHref, editHref, nextHref }) => {
+> = ({ cancelHref, editHref, nextHref, getBreadcrumb }) => {
   const [nextDisabled, setNextDisabled] = React.useState(false);
   const { params, state, history } = useRouteData<
     IBaseApiProviderRouteParams,
@@ -60,7 +61,8 @@ export const ReviewActionsPage: React.FunctionComponent<
       const integration = await getIntegration(
         apiSummary!.configuredProperties!.specification
       );
-      delete integration.id;
+      integration.id = state.integration.id;
+      integration.name = '';
       history.push(nextHref(integration, params, state));
     } catch (e) {
       // todo show the error?
@@ -79,6 +81,11 @@ export const ReviewActionsPage: React.FunctionComponent<
             title={t('integrations:apiProvider:reviewActions:title')}
             description={t(
               'integrations:apiProvider:reviewActions:description'
+            )}
+            toolbar={getBreadcrumb(
+              t('integrations:apiProvider:reviewActions:title'),
+              params,
+              state
             )}
             content={
               <PageSection>
@@ -100,12 +107,20 @@ export const ReviewActionsPage: React.FunctionComponent<
                         i18nOperationsHtmlMessage={`<strong>${
                           apiSummary!.actionsSummary!.totalActions
                         }</strong> operations`}
-                        i18nWarningsHeading={`WARNINGS <strong> ${
-                          apiSummary!.warnings!.length
-                        }</strong>`}
-                        warningMessages={apiSummary!.warnings!.map(warning => {
-                          return (warning as any).message;
-                        })}
+                        i18nWarningsHeading={
+                          apiSummary!.warnings
+                            ? `WARNINGS <strong> ${
+                                apiSummary!.warnings.length
+                              }</strong>`
+                            : undefined
+                        }
+                        warningMessages={
+                          apiSummary!.warnings
+                            ? apiSummary!.warnings.map(
+                                warning => (warning as any).message
+                              )
+                            : undefined
+                        }
                       />
                       <div>
                         <ButtonLink
