@@ -36,6 +36,10 @@ export interface IEditorIndex extends IEditorBase {
   flowId: string;
 }
 
+export interface IEditorWithOptionalFlow extends IEditorBase {
+  flowId?: string;
+}
+
 export interface IEditorSelectConnection extends IEditorIndex {
   position: string;
 }

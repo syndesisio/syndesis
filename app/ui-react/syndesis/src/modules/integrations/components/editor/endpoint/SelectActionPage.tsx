@@ -12,12 +12,13 @@ import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
+  IPageWithEditorBreadcrumb,
   ISelectActionRouteParams,
   ISelectActionRouteState,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 
-export interface ISelectActionPageProps {
+export interface ISelectActionPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: ISelectActionRouteParams,
     s: ISelectActionRouteState
@@ -67,6 +68,11 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                         description={
                           'Choose an action for the selected connection.'
                         }
+                        toolbar={this.props.getBreadcrumb(
+                          'Choose an action',
+                          params,
+                          state
+                        )}
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           activeStep: {

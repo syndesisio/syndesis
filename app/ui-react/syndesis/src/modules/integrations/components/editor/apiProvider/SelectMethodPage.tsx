@@ -13,9 +13,10 @@ import { PageTitle } from '../../../../../shared';
 import {
   IBaseApiProviderRouteParams,
   IBaseApiProviderRouteState,
+  IPageWithEditorBreadcrumb,
 } from '../interfaces';
 
-export interface ISelectMethodPageProps {
+export interface ISelectMethodPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: IBaseApiProviderRouteParams,
     s: IBaseApiProviderRouteState
@@ -66,6 +67,11 @@ export class SelectMethodPage extends React.Component<ISelectMethodPageProps> {
                     title={t('integrations:apiProvider:selectMethod:title')}
                     description={t(
                       'integrations:apiProvider:selectMethod:description'
+                    )}
+                    toolbar={this.props.getBreadcrumb(
+                      t('integrations:apiProvider:selectMethod:title'),
+                      params,
+                      state
                     )}
                     content={
                       <PageSection>

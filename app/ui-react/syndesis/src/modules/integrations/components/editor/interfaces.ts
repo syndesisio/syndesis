@@ -176,7 +176,7 @@ export interface ISelectConnectionRouteState extends IBaseRouteState {}
 export interface IPostPublishRouteParams extends IBaseRouteParams {}
 export interface ISaveIntegrationRouteParams extends IBaseRouteParams {}
 export interface ISaveIntegrationRouteState extends IBaseRouteState {
-  flowId: string;
+  flowId?: string;
 }
 
 export const stepRoutes = {

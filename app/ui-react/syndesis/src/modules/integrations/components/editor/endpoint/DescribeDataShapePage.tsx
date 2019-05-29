@@ -22,11 +22,12 @@ import {
   IConfigureActionRouteState,
   IDescribeDataShapeRouteParams,
   IDescribeDataShapeRouteState,
+  IPageWithEditorBreadcrumb,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 import { WithDescribeDataShapeForm } from './WithDescribeDataShapeForm';
 
-export interface IDescribeDataShapePageProps {
+export interface IDescribeDataShapePageProps extends IPageWithEditorBreadcrumb {
   backHref: (
     page: 'describeData' | 'configureAction',
     p: IConfigureActionRouteParams | IDescribeDataShapeRouteParams,
@@ -193,6 +194,11 @@ export class DescribeDataShapePage extends React.Component<
                       description={
                         'This is a typeless connection. To use type-aware functionality, enter information that defines the data type'
                       }
+                      toolbar={this.props.getBreadcrumb(
+                        'Specify data type',
+                        params,
+                        state
+                      )}
                       sidebar={this.props.sidebar({
                         activeIndex: positionAsNumber,
                         activeStep: {

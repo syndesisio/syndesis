@@ -18,9 +18,10 @@ import { ApiError, PageTitle } from '../../../../../shared';
 import {
   IApiProviderReviewActionsRouteState,
   IBaseApiProviderRouteParams,
+  IPageWithEditorBreadcrumb,
 } from '../interfaces';
 
-export interface IReviewActionsPageProps {
+export interface IReviewActionsPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: IBaseApiProviderRouteParams,
     s: IApiProviderReviewActionsRouteState
@@ -43,7 +44,7 @@ export interface IReviewActionsPageProps {
  */
 export const ReviewActionsPage: React.FunctionComponent<
   IReviewActionsPageProps
-> = ({ cancelHref, editHref, nextHref }) => {
+> = ({ cancelHref, editHref, nextHref, getBreadcrumb }) => {
   const [nextDisabled, setNextDisabled] = React.useState(false);
   const { params, state, history } = useRouteData<
     IBaseApiProviderRouteParams,
@@ -79,6 +80,11 @@ export const ReviewActionsPage: React.FunctionComponent<
             title={t('integrations:apiProvider:reviewActions:title')}
             description={t(
               'integrations:apiProvider:reviewActions:description'
+            )}
+            toolbar={getBreadcrumb(
+              t('integrations:apiProvider:reviewActions:title'),
+              params,
+              state
             )}
             content={
               <PageSection>

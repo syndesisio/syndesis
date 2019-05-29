@@ -68,8 +68,14 @@ export const EditorBreadcrumb: React.FunctionComponent<
           textOverflow: 'ellipsis',
           whiteSpace: 'nowrap',
         }}
+        onClick={(ev: React.MouseEvent) => {
+          if (!currentFlow || (currentFlow.steps || []).length < 2) {
+            ev.stopPropagation();
+            ev.preventDefault();
+          }
+        }}
       >
-        {integration.name}
+        {integration.name || 'New integration'}
       </Link>
       {currentFlow && isMultiflow && (
         <OperationsDropdown

@@ -17,6 +17,7 @@ import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
+  IPageWithEditorBreadcrumb,
   IRuleFilterStepRouteParams,
   IRuleFilterStepRouteState,
 } from '../interfaces';
@@ -26,7 +27,7 @@ import {
   WithRuleFilterForm,
 } from './WithRuleFilterForm';
 
-export interface IRuleFilterStepPageProps {
+export interface IRuleFilterStepPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: IRuleFilterStepRouteParams,
     s: IRuleFilterStepRouteState
@@ -96,6 +97,11 @@ export class RuleFilterStepPage extends React.Component<
                       description={
                         'Define one or more rules for evaluating data to determine whether the integration should continue.'
                       }
+                      toolbar={this.props.getBreadcrumb(
+                        'Configure basic filter step',
+                        params,
+                        state
+                      )}
                       sidebar={this.props.sidebar({
                         activeIndex: positionAsNumber,
                         activeStep: toUIStep(state.step),
