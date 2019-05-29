@@ -93,6 +93,10 @@ export interface IWithConnectorFormProps {
   onSave(props: { [key: string]: string }, action: any): any;
 }
 
+export interface IWithConnectorFormState {
+  validationResults?: any;
+}
+
 /**
  * A component to generate a configuration form for a given action and values.
  *
@@ -101,11 +105,18 @@ export interface IWithConnectorFormProps {
  * @see [values]{@link IWithConnectorFormProps#values}
  */
 export class WithConnectorForm extends React.Component<
-  IWithConnectorFormProps
+  IWithConnectorFormProps,
+  IWithConnectorFormState
 > {
   public static defaultProps = {
     initialValue: {},
   };
+  constructor(props: IWithConnectorFormProps) {
+    super(props);
+    this.state = {
+      validationResults: [],
+    };
+  }
 
   public render() {
     const definition = Object.keys(this.props.connector.properties!).reduce(
@@ -122,52 +133,33 @@ export class WithConnectorForm extends React.Component<
     return (
       <WithConnectionHelpers>
         {({ validateConfiguration }) => {
-          let validationResults: IConnectorConfigurationFormValidationResult[] = [];
           const validateFormAgainstBackend = async (values: {
             [key: string]: string;
           }) => {
-            validationResults = [];
-            const errors: { [key: string]: string } = {};
             const status = await validateConfiguration(
               this.props.connector.id!,
               values
             );
-            (
-              (
-                status.find(obj => obj.scope === 'PARAMETERS') || {
-                  errors: [],
-                }
-              ).errors || []
-            ).forEach(obj => {
-              obj.parameters.forEach(p => (errors[p] = obj.description));
+            const badValidationResults = status
+              .filter(s => s.status === 'ERROR')
+              .map(s => ({
+                message: s.errors!.map(e => e.description).join(', \n'),
+                type: 'error',
+              }));
+            const goodValidationResults = [
+              {
+                message: `${
+                  this.props.connector.name
+                } has been successfully validated`,
+                type: 'success',
+              } as IConnectorConfigurationFormValidationResult,
+            ];
+            this.setState({
+              validationResults:
+                badValidationResults.length > 0
+                  ? badValidationResults
+                  : goodValidationResults,
             });
-            validationResults = (
-              (
-                status.find(obj => obj.scope === 'CONNECTIVITY') || {
-                  errors: [],
-                }
-              ).errors || []
-            ).map(
-              obj =>
-                ({
-                  message: obj.description,
-                  type: 'error',
-                } as IConnectorConfigurationFormValidationResult)
-            );
-            if (Object.keys(errors).length) {
-              throw errors;
-            }
-            if (validationResults.length === 0) {
-              validationResults = [
-                {
-                  message: `${
-                    this.props.connector.name
-                  } has been successfully validated`,
-                  type: 'success',
-                } as IConnectorConfigurationFormValidationResult,
-              ];
-            }
-            return validationResults;
           };
           const initialValue = this.props.initialValue!;
           const requiredPrompt = getRequiredStatusText(
@@ -201,7 +193,6 @@ export class WithConnectorForm extends React.Component<
                 isValidating,
                 resetForm,
                 submitForm,
-                validateForm,
                 values,
               }) => {
                 return this.props.children({
@@ -214,7 +205,7 @@ export class WithConnectorForm extends React.Component<
                   resetForm,
                   submitForm,
                   validateForm: () => validateFormAgainstBackend(values),
-                  validationResults,
+                  validationResults: this.state.validationResults,
                   values,
                 });
               }}
