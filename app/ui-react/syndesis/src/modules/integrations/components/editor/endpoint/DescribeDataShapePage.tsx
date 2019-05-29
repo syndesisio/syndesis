@@ -58,75 +58,66 @@ export class DescribeDataShapePage extends React.Component<
               IDescribeDataShapeRouteParams,
               IDescribeDataShapeRouteState
             >>
-              {(
-                { direction, flowId, position },
-                { connection, step, integration, updatedIntegration },
-                { history }
-              ) => {
-                const positionAsNumber = parseInt(position, 10);
+              {(params, state, { history }) => {
+                const positionAsNumber = parseInt(params.position, 10);
                 const title =
-                  direction === DataShapeDirection.INPUT
+                  params.direction === DataShapeDirection.INPUT
                     ? 'Specify Input Data Type'
                     : 'Specify Output Data Type';
-                const descriptor = step.action!.descriptor!;
+                const descriptor = state.step.action!.descriptor!;
                 const dataShape: DataShape =
-                  direction === DataShapeDirection.INPUT
+                  params.direction === DataShapeDirection.INPUT
                     ? descriptor.inputDataShape!
                     : descriptor.outputDataShape!;
                 const backDescribeData = this.props.backHref(
                   'describeData',
                   {
+                    ...params,
                     direction: DataShapeDirection.INPUT,
-                    flowId,
-                    position,
-                  } as IDescribeDataShapeRouteParams,
-                  {
-                    connection,
-                    integration,
-                    step,
-                    updatedIntegration,
-                  } as IDescribeDataShapeRouteState
+                  },
+                  state
                 );
                 const backActionConfig = this.props.backHref(
                   'configureAction',
                   {
-                    actionId: step.action!.id!,
-                    flowId,
-                    position,
+                    ...params,
+                    actionId: state.step.action!.id!,
                     step: '0',
-                  } as IConfigureActionRouteParams,
-                  {
-                    connection,
-                    integration,
-                    updatedIntegration,
-                  } as IConfigureActionRouteState
+                  },
+                  state
                 );
                 const backHref =
-                  isMiddleStep(integration, flowId, positionAsNumber) &&
-                  direction === DataShapeDirection.OUTPUT
+                  isMiddleStep(
+                    state.integration,
+                    params.flowId,
+                    positionAsNumber
+                  ) && params.direction === DataShapeDirection.OUTPUT
                     ? backDescribeData
                     : backActionConfig;
                 const handleUpdatedDataShape = async (
                   newDataShape: DataShape
                 ) => {
                   const newDescriptor =
-                    direction === DataShapeDirection.INPUT
+                    params.direction === DataShapeDirection.INPUT
                       ? { ...descriptor, inputDataShape: newDataShape }
                       : { ...descriptor, outputDataShape: newDataShape };
-                  const action = { ...step.action!, descriptor: newDescriptor };
-                  updatedIntegration = await (this.props.mode === 'adding'
+                  const action = {
+                    ...state.step.action!,
+                    descriptor: newDescriptor,
+                  };
+                  const updatedIntegration = await (this.props.mode === 'adding'
                     ? addConnection
                     : updateConnection)(
-                    updatedIntegration || integration,
-                    connection,
+                    state.updatedIntegration || state.integration,
+                    state.connection,
                     action,
-                    flowId,
+                    params.flowId,
                     positionAsNumber,
-                    step.configuredProperties
+                    state.step.configuredProperties
                   );
                   const stepKind = getStep(
                     updatedIntegration,
-                    flowId,
+                    params.flowId,
                     positionAsNumber
                   ) as StepKind;
                   const gotoDescribeData = (
@@ -137,13 +128,11 @@ export class DescribeDataShapePage extends React.Component<
                         'describeData',
                         updatedIntegration!,
                         {
+                          ...params,
                           direction: nextDirection,
-                          flowId,
-                          position,
                         },
                         {
-                          connection,
-                          integration,
+                          ...state,
                           step: stepKind,
                           updatedIntegration,
                         }
@@ -156,15 +145,13 @@ export class DescribeDataShapePage extends React.Component<
                         'addStep',
                         updatedIntegration!,
                         {
+                          ...params,
                           actionId: stepKind.action!.id!,
-                          flowId,
-                          position,
                           step: '0',
                         } as IConfigureActionRouteParams,
                         {
+                          ...state,
                           configuredProperties: stepKind.configuredProperties,
-                          connection,
-                          integration,
                           step: '0',
                           updatedIntegration,
                         } as IConfigureActionRouteState
@@ -172,16 +159,24 @@ export class DescribeDataShapePage extends React.Component<
                     );
                   };
                   if (
-                    isStartStep(updatedIntegration, flowId, positionAsNumber)
+                    isStartStep(
+                      updatedIntegration,
+                      params.flowId,
+                      positionAsNumber
+                    )
                   ) {
                     gotoDefaultNextPage();
                   } else if (
-                    isEndStep(updatedIntegration, flowId, positionAsNumber)
+                    isEndStep(
+                      updatedIntegration,
+                      params.flowId,
+                      positionAsNumber
+                    )
                   ) {
                     gotoDefaultNextPage();
                   } else {
                     if (
-                      direction === DataShapeDirection.INPUT &&
+                      params.direction === DataShapeDirection.INPUT &&
                       requiresOutputDescribeDataShape(descriptor)
                     ) {
                       gotoDescribeData(DataShapeDirection.OUTPUT);
@@ -201,14 +196,14 @@ export class DescribeDataShapePage extends React.Component<
                       sidebar={this.props.sidebar({
                         activeIndex: positionAsNumber,
                         activeStep: {
-                          ...toUIStep(step.connection!),
+                          ...toUIStep(state.step.connection!),
                           icon: getConnectionIcon(
                             process.env.PUBLIC_URL,
-                            step.connection!
+                            state.step.connection!
                           ),
                         },
                         steps: toUIStepCollection(
-                          getSteps(integration, flowId)
+                          getSteps(state.integration, params.flowId)
                         ),
                       })}
                       content={
@@ -222,15 +217,7 @@ export class DescribeDataShapePage extends React.Component<
                           backActionHref={backHref}
                         />
                       }
-                      cancelHref={this.props.cancelHref(
-                        { flowId, direction, position },
-                        {
-                          connection,
-                          integration,
-                          step,
-                          updatedIntegration,
-                        }
-                      )}
+                      cancelHref={this.props.cancelHref(params, state)}
                     />
                   </>
                 );

@@ -12,10 +12,14 @@ import i18n from '../../../../i18n';
 import { PageTitle } from '../../../../shared';
 import {
   IPostPublishRouteParams,
-  ISaveIntegrationForm,
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState,
 } from './interfaces';
+
+export interface ISaveIntegrationForm {
+  name: string;
+  description?: string;
+}
 
 export interface ISaveIntegrationPageProps {
   cancelHref: (
@@ -52,7 +56,7 @@ export class SaveIntegrationPage extends React.Component<
             ISaveIntegrationRouteParams,
             ISaveIntegrationRouteState
           >>
-            {({ flowId }, { integration }, { history }) => (
+            {(params, state, { history }) => (
               <WithIntegrationHelpers>
                 {({ deployIntegration, saveIntegration }) => {
                   let shouldPublish = false;
@@ -61,7 +65,7 @@ export class SaveIntegrationPage extends React.Component<
                     actions: any
                   ) => {
                     const updatedIntegration = setIntegrationProperties(
-                      integration,
+                      state.integration,
                       {
                         description,
                         name,
@@ -107,8 +111,8 @@ export class SaveIntegrationPage extends React.Component<
                     } else {
                       history.push(
                         this.props.postSaveHref(
-                          { flowId, integrationId: savedIntegration.id! },
-                          { integration: savedIntegration }
+                          { integrationId: savedIntegration.id! },
+                          { ...state, integration: savedIntegration }
                         )
                       );
                     }
@@ -134,8 +138,8 @@ export class SaveIntegrationPage extends React.Component<
                       i18nRequiredProperty={'* Required field'}
                       definition={definition}
                       initialValue={{
-                        description: integration.description,
-                        name: integration.name,
+                        description: state.integration.description,
+                        name: state.integration.name,
                       }}
                       onSave={onSave}
                     >
@@ -159,10 +163,7 @@ export class SaveIntegrationPage extends React.Component<
                                 {fields}
                               </IntegrationSaveForm>
                             }
-                            cancelHref={this.props.cancelHref(
-                              { flowId },
-                              { integration }
-                            )}
+                            cancelHref={this.props.cancelHref(params, state)}
                             onSave={submitForm}
                             isSaveDisabled={dirty && !isValid}
                             isSaveLoading={isSubmitting}

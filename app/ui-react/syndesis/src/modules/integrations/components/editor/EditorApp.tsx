@@ -4,9 +4,7 @@ import { Integration } from '@syndesis/models';
 import * as React from 'react';
 import { EditSpecificationPage } from './apiProvider/EditSpecificationPage';
 import { ReviewActionsPage } from './apiProvider/ReviewActionsPage';
-import { ReviewOperationsPage } from './apiProvider/ReviewOperationsPage';
 import { SelectMethodPage } from './apiProvider/SelectMethodPage';
-import { SetInfoPage } from './apiProvider/SetInfoPage';
 import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';
@@ -14,14 +12,14 @@ import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
 import { DescribeDataShapePage } from './endpoint/DescribeDataShapePage';
 import { SelectActionPage } from './endpoint/SelectActionPage';
 import {
+  IBaseFlowRouteParams,
+  IBaseRouteState,
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
   IDescribeDataShapeRouteParams,
   IDescribeDataShapeRouteState,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
-  ITemplateStepRouteParams,
-  ITemplateStepRouteState,
   stepRoutes,
 } from './interfaces';
 import { makeEditorResolvers } from './makeEditorResolvers';
@@ -40,8 +38,9 @@ export interface IEditorApp {
   ) => H.LocationDescriptor;
   postConfigureHref: (
     integration: Integration,
-    p: ITemplateStepRouteParams | IConfigureActionRouteParams,
-    s: ITemplateStepRouteState | IConfigureActionRouteState
+    p: IBaseFlowRouteParams,
+    s: IBaseRouteState,
+    isApiProvider?: boolean
   ) => H.LocationDescriptorObject;
 }
 
@@ -56,8 +55,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     <SelectConnectionPage
       cancelHref={cancelHref}
       apiProviderHref={(step, params, state) =>
-        appResolvers.apiProvider.editSpecification({
-          step,
+        appResolvers.apiProvider.selectMethod({
           ...params,
           ...state,
         })
@@ -228,52 +226,94 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     />
   );
 
+  const selectMethodPage = (
+    <SelectMethodPage
+      cancelHref={(params, state) =>
+        appResolvers.selectStep({ ...params, ...state })
+      }
+      getReviewHref={(specification, params, state) =>
+        appResolvers.apiProvider.reviewActions({
+          specification,
+          ...params,
+          ...state,
+        })
+      }
+    />
+  );
+
+  const reviewActionsPage = (
+    <ReviewActionsPage
+      cancelHref={(params, state) =>
+        appResolvers.apiProvider.selectMethod({ ...params, ...state })
+      }
+      editHref={(params, state) =>
+        appResolvers.apiProvider.editSpecification({ ...params, ...state })
+      }
+      nextHref={(integration, params, state) =>
+        postConfigureHref(
+          integration,
+          {
+            ...params,
+            ...state,
+          },
+          state,
+          true
+        )
+      }
+    />
+  );
+
+  const editSpecificationPage = (
+    <EditSpecificationPage
+      cancelHref={(params, state) =>
+        appResolvers.apiProvider.selectMethod({ ...params, ...state })
+      }
+      saveHref={(params, state) =>
+        appResolvers.apiProvider.reviewActions({ ...params, ...state })
+      }
+    />
+  );
+
   return (
-    <>
-      <EditorRoutes
-        selectStepPath={appStepRoutes.selectStep}
-        selectStepChildren={selectStepChildren}
-        endpointEditor={{
-          selectActionPath: appStepRoutes.connection.selectAction,
-          selectActionChildren: selectActionPage,
-          configureActionPath: appStepRoutes.connection.configureAction,
-          configureActionChildren: configureActionPage,
-          describeDataPath: appStepRoutes.connection.describeData,
-          describeDataChildren: describeDataShapePage,
-        }}
-        apiProvider={{
-          selectMethodPath: appStepRoutes.apiProvider.selectMethod,
-          selectMethodChildren: <SelectMethodPage />,
-          reviewActionsPath: appStepRoutes.apiProvider.reviewActions,
-          reviewActionsChildren: <ReviewActionsPage />,
-          editSpecificationPath: appStepRoutes.apiProvider.editSpecification,
-          editSpecificationChildren: <EditSpecificationPage />,
-          setInfoPath: appStepRoutes.apiProvider.setInfo,
-          setInfoChildren: <SetInfoPage />,
-          reviewOperationsPath: appStepRoutes.apiProvider.reviewOperations,
-          reviewOperationsChildren: <ReviewOperationsPage />,
-        }}
-        template={{
-          templatePath: appStepRoutes.template,
-          templateChildren: templateStepPage,
-        }}
-        dataMapper={{
-          mapperPath: appStepRoutes.dataMapper,
-          mapperChildren: dataMapperPage,
-        }}
-        basicFilter={{
-          basicFilterPath: appStepRoutes.basicFilter,
-          basicFilterChildren: basicFilterPage,
-        }}
-        step={{
-          configurePath: appStepRoutes.step,
-          configureChildren: configureStepPage,
-        }}
-        extension={{
-          configurePath: appStepRoutes.extension,
-          configureChildren: configureStepPage,
-        }}
-      />
-    </>
+    <EditorRoutes
+      selectStepPath={appStepRoutes.selectStep}
+      selectStepChildren={selectStepChildren}
+      endpointEditor={{
+        selectActionPath: appStepRoutes.connection.selectAction,
+        selectActionChildren: selectActionPage,
+        configureActionPath: appStepRoutes.connection.configureAction,
+        configureActionChildren: configureActionPage,
+        describeDataPath: appStepRoutes.connection.describeData,
+        describeDataChildren: describeDataShapePage,
+      }}
+      apiProvider={{
+        selectMethodPath: appStepRoutes.apiProvider.selectMethod,
+        selectMethodChildren: selectMethodPage,
+        reviewActionsPath: appStepRoutes.apiProvider.reviewActions,
+        reviewActionsChildren: reviewActionsPage,
+        editSpecificationPath: appStepRoutes.apiProvider.editSpecification,
+        editSpecificationChildren: editSpecificationPage,
+      }}
+      template={{
+        templatePath: appStepRoutes.template,
+        templateChildren: templateStepPage,
+      }}
+      dataMapper={{
+        mapperPath: appStepRoutes.dataMapper,
+        mapperChildren: dataMapperPage,
+      }}
+      basicFilter={{
+        basicFilterPath: appStepRoutes.basicFilter,
+        basicFilterChildren: basicFilterPage,
+      }}
+      step={{
+        configurePath: appStepRoutes.step,
+        configureChildren: configureStepPage,
+      }}
+      extension={{
+        configurePath: appStepRoutes.extension,
+        configureChildren: configureStepPage,
+      }}
+    />
   );
 };

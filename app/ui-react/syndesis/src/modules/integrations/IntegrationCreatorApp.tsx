@@ -1,15 +1,14 @@
 import { ALL_STEPS, createStep, DATA_MAPPER } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { StepKind } from '@syndesis/models';
-import { Breadcrumb, toTestId } from '@syndesis/ui';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Route, Switch } from 'react-router';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../shared';
 import { WithLeaveConfirmation } from '../../shared/WithLeaveConfirmation';
 import { AddStepPage } from './components/editor/AddStepPage';
 import { EditorApp } from './components/editor/EditorApp';
+import { OperationsPage } from './components/editor/OperationsPage';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import resolvers from './resolvers';
 import routes from './routes';
@@ -31,8 +30,11 @@ const addStepPage = (
         ...s,
       })
     }
-    apiProviderHref={(step, p, s) =>
-      resolvers.create.configure.editStep.apiProvider.selectMethod()
+    apiProviderHref={(step, params, state) =>
+      resolvers.create.start.apiProvider.selectMethod({
+        ...params,
+        ...state,
+      })
     }
     connectionHref={(step, params, state) =>
       resolvers.create.configure.editStep.connection.configureAction({
@@ -93,6 +95,12 @@ const addStepPage = (
         ...s,
       })
     }
+    rootHref={(p, s) =>
+      resolvers.create.configure.entryPoint({
+        ...p,
+        ...s,
+      })
+    }
   />
 );
 
@@ -106,6 +114,14 @@ const saveIntegrationPage = (
       })
     }
     postPublishHref={p => resolvers.integration.details({ ...p })}
+  />
+);
+
+const apiProviderOperationsPage = (
+  <OperationsPage
+    cancelHref={(p, s) => resolvers.list()}
+    rootHref={(p, s) => resolvers.create.configure.entryPoint({ ...p, ...s })}
+    getFlowHref={(p, s) => resolvers.create.configure.index({ ...p, ...s })}
   />
 );
 
@@ -132,18 +148,6 @@ const saveIntegrationPage = (
 export const IntegrationCreatorApp: React.FunctionComponent = () => {
   return (
     <WithClosedNavigation>
-      <Breadcrumb>
-        <Link
-          data-testid={toTestId(
-            'IntegrationCreatorApp',
-            'new-integration-link'
-          )}
-          to={resolvers.list()}
-        >
-          Integrations
-        </Link>
-        <span>New integration</span>
-      </Breadcrumb>
       <Translation ns={['integrations']}>
         {t => (
           <WithLeaveConfirmation
@@ -164,13 +168,22 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                     appStepRoutes={routes.create.start}
                     appResolvers={resolvers.create.start}
                     cancelHref={resolvers.list}
-                    postConfigureHref={(integration, params) => {
-                      return resolvers.create.finish.selectStep({
-                        integration,
-                        ...params,
-                        position: '1',
-                      });
-                    }}
+                    postConfigureHref={(
+                      integration,
+                      params,
+                      state,
+                      isApiProvider
+                    ) =>
+                      isApiProvider
+                        ? resolvers.create.configure.operations({
+                            integration,
+                          })
+                        : resolvers.create.finish.selectStep({
+                            integration,
+                            ...params,
+                            position: '1',
+                          })
+                    }
                   />
                 </Route>
 
@@ -194,6 +207,12 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                   path={routes.create.configure.index}
                   exact={true}
                   children={addStepPage}
+                />
+
+                <Route
+                  path={routes.create.configure.operations}
+                  exact={true}
+                  children={apiProviderOperationsPage}
                 />
 
                 {/* add step */}

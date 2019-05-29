@@ -1,6 +1,3 @@
-export * from './ApiProviderEditSpecification';
-export * from './ApiProviderReviewActions';
 export * from './ApiProviderReviewOperations';
-export * from './ApiProviderSelectMethod';
+export * from './ApiProviderReviewOperationsItem';
 export * from './ApiProviderSetInfo';
-export * from './ApiProviderUploader';

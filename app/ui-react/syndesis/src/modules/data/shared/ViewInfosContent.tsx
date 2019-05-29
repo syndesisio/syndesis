@@ -18,7 +18,7 @@ import { generateViewInfos } from './VirtualizationUtils';
 function getFilteredAndSortedViewInfos(
   schemaNodes: SchemaNode[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean,
   selectedViewNames: string[],
   existingViewNames: string[]

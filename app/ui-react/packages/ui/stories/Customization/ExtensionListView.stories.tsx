@@ -143,7 +143,11 @@ stories
             placeholder: text('placeholder', 'Filter by name'),
             title: text('title', 'Name'),
           }}
-          currentSortType={'sort'}
+          currentSortType={{
+            id: 'sort',
+            isNumeric: false,
+            title: 'Sort',
+          }}
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
@@ -190,7 +194,11 @@ stories
             placeholder: text('placeholder', 'Filter by name'),
             title: text('title', 'Name'),
           }}
-          currentSortType={'sort'}
+          currentSortType={{
+            id: 'sort',
+            isNumeric: false,
+            title: 'Sort',
+          }}
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}

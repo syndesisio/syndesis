@@ -16,7 +16,7 @@ import { Connections, IConnectionsProps } from './Connections';
 function getFilteredAndSortedConnections(
   connections: Connection[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let filteredAndSortedConnections = connections;

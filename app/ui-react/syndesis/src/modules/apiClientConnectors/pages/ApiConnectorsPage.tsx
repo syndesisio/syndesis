@@ -21,7 +21,7 @@ import routes from '../routes';
 function getFilteredAndSortedApiConnectors(
   apiConnectors: Connector[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let filteredAndSorted = apiConnectors;

@@ -7,6 +7,7 @@ export * from './helpers';
 export * from './ServerEventsContext';
 export * from './Stream';
 export * from './SyndesisFetch';
+export * from './useApiProvider';
 export * from './useIntegrationHelpers';
 export * from './WithActionDescriptor';
 export * from './WithActivities';

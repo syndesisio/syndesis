@@ -1,8 +1,14 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import { getStep } from '@syndesis/api';
+import { ConnectionOverview, Integration, StepKind } from '@syndesis/models';
+
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import { configureIndexMapper } from '../../resolvers';
 import {
+  DataShapeDirection,
+  IApiProviderReviewActionsRouteState,
+  IBaseApiProviderRouteParams,
+  IBaseApiProviderRouteState,
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
   IConfigureStepRouteParams,
@@ -11,11 +17,6 @@ import {
   IDataMapperRouteState,
   IDescribeDataShapeRouteParams,
   IDescribeDataShapeRouteState,
-  IEditorConfigureAction,
-  IEditorConfigureDataShape,
-  IEditorConfigureStep,
-  IEditorSelectAction,
-  IEditorSelectConnection,
   IRuleFilterStepRouteParams,
   IRuleFilterStepRouteState,
   ISelectActionRouteParams,
@@ -26,6 +27,39 @@ import {
   ITemplateStepRouteState,
   stepRoutes,
 } from './interfaces';
+
+export interface IEditorBase {
+  integration: Integration;
+}
+
+export interface IEditorIndex extends IEditorBase {
+  flowId: string;
+}
+
+export interface IEditorSelectConnection extends IEditorIndex {
+  position: string;
+}
+
+export interface IEditorSelectAction extends IEditorSelectConnection {
+  connection: ConnectionOverview;
+}
+
+export interface IEditorConfigureAction extends IEditorSelectAction {
+  actionId: string;
+  step?: string;
+  updatedIntegration?: Integration;
+}
+
+export interface IEditorConfigureDataShape extends IEditorSelectAction {
+  step: StepKind;
+  direction: DataShapeDirection;
+}
+
+export interface IEditorConfigureStep extends IEditorIndex {
+  position: string;
+  step: StepKind;
+  updatedIntegration?: Integration;
+}
 
 export const configureSelectConnectionMapper = ({
   position,
@@ -162,6 +196,38 @@ export const configureConfigureDataMapperMapper = ({
   };
 };
 
+export interface IApiProviderConfigureStep extends IEditorSelectConnection {}
+export interface IApiProviderReviewStep extends IEditorSelectConnection {
+  specification: string;
+}
+
+export const apiProviderMapper = (data: IApiProviderConfigureStep) => {
+  const { params, state } = configureIndexMapper(data);
+  return {
+    params: {
+      ...params,
+      position: '0',
+    } as IBaseApiProviderRouteParams,
+    state: state as IBaseApiProviderRouteState,
+  };
+};
+
+export const apiProviderReviewActionsMapper = ({
+  specification,
+  ...rest
+}: IApiProviderReviewStep) => {
+  const { params, state } = apiProviderMapper(rest);
+  return {
+    params: {
+      ...params,
+    } as IBaseApiProviderRouteParams,
+    state: {
+      ...state,
+      specification,
+    } as IApiProviderReviewActionsRouteState,
+  };
+};
+
 // export type RouteResolver<T> = {
 //   [K in keyof T]: T[K] extends string ? any : RouteResolver<T[K]>
 // };
@@ -192,14 +258,20 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
     },
     apiProvider: {
       editSpecification: makeResolver<
-        IEditorConfigureStep,
-        IConfigureStepRouteParams,
-        IConfigureStepRouteState
-      >(esr.apiProvider.editSpecification, configureConfigureStepMapper),
-      selectMethod: makeResolverNoParams('todo select method'),
-      reviewActions: makeResolverNoParams('todo review actions'),
-      setInfo: makeResolverNoParams('todo set info'),
-      reviewOperations: makeResolverNoParams('todo review operations'),
+        IApiProviderReviewStep,
+        IBaseApiProviderRouteParams,
+        IApiProviderReviewActionsRouteState
+      >(esr.apiProvider.editSpecification, apiProviderReviewActionsMapper),
+      selectMethod: makeResolver<
+        IApiProviderConfigureStep,
+        IBaseApiProviderRouteParams,
+        IBaseApiProviderRouteState
+      >(esr.apiProvider.selectMethod, apiProviderMapper),
+      reviewActions: makeResolver<
+        IApiProviderReviewStep,
+        IBaseApiProviderRouteParams,
+        IApiProviderReviewActionsRouteState
+      >(esr.apiProvider.reviewActions, apiProviderReviewActionsMapper),
     },
     basicFilter: makeResolver<
       IEditorConfigureStep,

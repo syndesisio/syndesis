@@ -76,6 +76,44 @@
     "confirmDeleteStepDialogTitle": "Confirm Delete",
     "saveOrAddStep": "Save or Add Step"
   },
+  "apiProvider": {
+    "editSpecification": {
+      "title": "Provide API Definition",
+      "description": "This description has not yet been actually defined, please send help."
+    },
+    "reviewActions": {
+      "btnReviewEdit": "Review/Edit",
+      "name": "Name",
+      "operations": "operations",
+      "sectionApiDefinition": "API DEFINITION",
+      "sectionImported": "IMPORTED",
+      "sectionWarnings": "WARNINGS",
+      "title": "Review Actions",
+      "description": "This description has not yet been actually defined, please send help."
+    },
+    "reviewOperations": {
+      "title": "Operations",
+      "description": "An integration can have multiple flows. Select an operation to start creating a flow."
+    },
+    "selectMethod": {
+      "description": "Execute this integration when a client invokes an operation defined by this API.",
+      "dndUploadFailedMessage": " could not be uploaded",
+      "dndUploadSuccessMessage": "Process file ",
+      "dndFileExtensions": ".json,.yaml,.yml",
+      "dndHelpMessage": "Accepted file type: .json, .yaml, and .yml",
+      "dndInstructions": "Drag 'n' drop a file here, or <strong>click</strong> to select a file using a file chooser dialog.",
+      "dndNoFileSelectedLabel": "No file selected",
+      "dndSelectedFileLabel": "Selected file:",
+      "methodFromFile": "Upload an OpenAPI file",
+      "methodFromScratch": "Create from scratch",
+      "methodFromUrl": "Use a URL",
+      "title": "Start integration with an API call",
+      "urlNote": "* Note: After uploading this document, Syndesis does not automatically obtain any updates to it."
+    },
+    "setInfo": {
+      "title": "Give this integration a name"
+    }
+  },
   "ReplaceDraft": "Replace Draft",
   "ReplaceDraftModalMessage": "Are you sure you want to to replace the current draft for the \"{{name}}\" integration?",
   "ReplaceDraftMOdalTitle": "Replace Draft?",
@@ -112,5 +150,12 @@
     "templater-import-review": "{{import}} review:"
   },
   "unsavedChangesTitle": "Unsaved Changes",
-  "unsavedChangesMessage": "Are you sure you want to exit editing the integration?"
+  "unsavedChangesMessage": "Are you sure you want to exit editing the integration?",
+  "toolbars": {
+    "filterByOperationNamePlaceholder": "Filter by operation name",
+    "filterByMethodPlaceholder": "Filter by method",
+    "Method": "Method",
+    "OperationImplemented": "Operation implemented",
+    "OperationName": "Operation name"
+  }
 }

@@ -1,20 +1,19 @@
 import { ALL_STEPS, createStep, DATA_MAPPER } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { StepKind } from '@syndesis/models';
-import { Breadcrumb, toTestId } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Route, Switch } from 'react-router';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../shared';
 import { WithLeaveConfirmation } from '../../shared/WithLeaveConfirmation';
 import { AddStepPage } from './components/editor/AddStepPage';
 import { EditorApp } from './components/editor/EditorApp';
 import {
-  IBaseRouteParams,
+  IBaseFlowRouteParams,
   IBaseRouteState,
 } from './components/editor/interfaces';
+import { OperationsPage } from './components/editor/OperationsPage';
 import { SaveIntegrationPage } from './components/editor/SaveIntegrationPage';
 import resolvers from './resolvers';
 import routes from './routes';
@@ -29,8 +28,11 @@ const addStepPage = (
         ...s,
       })
     }
-    apiProviderHref={
-      resolvers.integration.edit.editStep.apiProvider.selectMethod
+    apiProviderHref={(step, params, state) =>
+      resolvers.integration.edit.editStep.apiProvider.selectMethod({
+        ...params,
+        ...state,
+      })
     }
     getDeleteEdgeStepHref={(position, p, s) =>
       resolvers.integration.edit.editStep.selectStep({
@@ -98,6 +100,12 @@ const addStepPage = (
         ...s,
       })
     }
+    rootHref={(p, s) =>
+      resolvers.integration.edit.entryPoint({
+        ...p,
+        ...s,
+      })
+    }
   />
 );
 
@@ -111,6 +119,14 @@ const saveIntegrationPage = (
       })
     }
     postPublishHref={resolvers.integration.details}
+  />
+);
+
+const apiProviderOperationsPage = (
+  <OperationsPage
+    cancelHref={(p, s) => resolvers.list()}
+    rootHref={(p, s) => resolvers.integration.edit.entryPoint({ ...p, ...s })}
+    getFlowHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
   />
 );
 
@@ -137,32 +153,9 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
   return (
     <Translation ns={['integrations', 'shared']}>
       {t => (
-        <WithRouteData<IBaseRouteParams, IBaseRouteState>>
+        <WithRouteData<IBaseFlowRouteParams, IBaseRouteState>>
           {({ flowId }, { integration }) => (
             <WithClosedNavigation>
-              <Breadcrumb>
-                <Link
-                  data-testid={toTestId(
-                    'IntegrationEditorApp',
-                    'integrations-link'
-                  )}
-                  to={resolvers.list()}
-                >
-                  {t('shared:Integrations')}
-                </Link>
-                <Link
-                  data-testid={toTestId(
-                    'IntegrationEditorApp',
-                    'integration-link'
-                  )}
-                  to={resolvers.integration.details({
-                    integrationId: integration.id!,
-                  })}
-                >
-                  {integration.name}
-                </Link>
-                <span>{t('integrations:editor:addToIntegration')}</span>
-              </Breadcrumb>
               <WithLeaveConfirmation
                 i18nTitle={t('unsavedChangesTitle')}
                 i18nConfirmationMessage={t('unsavedChangesMessage')}
@@ -185,6 +178,12 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                       path={routes.integration.edit.index}
                       exact={true}
                       children={addStepPage}
+                    />
+
+                    <Route
+                      path={routes.integration.edit.operations}
+                      exact={true}
+                      children={apiProviderOperationsPage}
                     />
 
                     {/* add step */}

@@ -46,10 +46,13 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
   public render() {
     return (
       <WithRouteData<ISelectActionRouteParams, ISelectActionRouteState>>
-        {({ connectionId, flowId, position }, { connection, integration }) => {
-          const positionAsNumber = parseInt(position, 10);
+        {(params, state) => {
+          const positionAsNumber = parseInt(params.position, 10);
           return (
-            <WithConnection id={connectionId} initialValue={connection}>
+            <WithConnection
+              id={params.connectionId}
+              initialValue={state.connection}
+            >
               {({ data, hasData, error }) => (
                 <WithLoader
                   error={error}
@@ -68,14 +71,14 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           activeStep: {
-                            ...toUIStep(connection),
+                            ...toUIStep(state.connection),
                             icon: getConnectionIcon(
                               process.env.PUBLIC_URL,
-                              connection
+                              state.connection
                             ),
                           },
                           steps: toUIStepCollection(
-                            getSteps(integration, flowId)
+                            getSteps(state.integration, params.flowId)
                           ),
                         })}
                         content={
@@ -100,8 +103,8 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                                       )}
                                       href={this.props.selectHref(
                                         a.id!,
-                                        { connectionId, flowId, position },
-                                        { connection, integration }
+                                        params,
+                                        state
                                       )}
                                     >
                                       Select
@@ -111,10 +114,7 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                               ))}
                           </IntegrationEditorChooseAction>
                         }
-                        cancelHref={this.props.cancelHref(
-                          { connectionId, flowId, position },
-                          { connection, integration }
-                        )}
+                        cancelHref={this.props.cancelHref(params, state)}
                       />
                     </>
                   )}

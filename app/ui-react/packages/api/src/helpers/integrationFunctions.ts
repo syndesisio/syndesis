@@ -16,7 +16,12 @@ import {
 } from '@syndesis/models';
 import { key } from '@syndesis/utils';
 import produce from 'immer';
-import { AGGREGATE, DataShapeKinds, ENDPOINT } from '../constants';
+import {
+  AGGREGATE,
+  API_PROVIDER,
+  DataShapeKinds,
+  ENDPOINT,
+} from '../constants';
 import { getConnectionIcon } from './connectionFunctions';
 
 export const NEW_INTEGRATION = {
@@ -80,10 +85,10 @@ export function toDataShapeKinds(
 /**
  * returns an empty integration object.
  *
- * @todo make the returned object immutable to avoid uncontrolled changes
  */
 export function getEmptyIntegration(): Integration {
   return produce(NEW_INTEGRATION, draft => {
+    draft.id = key();
     draft.flows = [
       {
         id: key(),
@@ -1323,4 +1328,8 @@ export function isMiddleStep(
     !isStartStep(integration, flowId, position) &&
     !isEndStep(integration, flowId, position)
   );
+}
+
+export function isIntegrationApiProvider(integration: IntegrationOverview) {
+  return (integration.tags || []).includes(API_PROVIDER);
 }
