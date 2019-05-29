@@ -9,7 +9,6 @@ import {
 } from '@syndesis/models';
 import { key } from '@syndesis/utils';
 import { saveAs } from 'file-saver';
-import produce from 'immer';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
@@ -52,21 +51,18 @@ export const useIntegrationHelpers = () => {
       action.id!,
       configuredProperties
     );
-    return produce(integration, draft => {
-      const step: Step = setDescriptorOnStep(
-        {
-          action,
-          configuredProperties,
-          connection,
-          id: key(),
-          metadata: { configured: true } as any,
-          stepKind: 'endpoint',
-        },
-        actionDescriptor!
-      );
-      draft = insertStepIntoFlowBefore(draft, flowId, step, position);
-      return draft;
-    });
+    const step: Step = setDescriptorOnStep(
+      {
+        action,
+        configuredProperties,
+        connection,
+        id: key(),
+        metadata: { configured: true } as any,
+        stepKind: 'endpoint',
+      },
+      actionDescriptor!
+    );
+    return insertStepIntoFlowBefore(integration, flowId, step, position);
   };
 
   /**
@@ -81,24 +77,21 @@ export const useIntegrationHelpers = () => {
    * @todo should we check `flow` and `position` to see if they are valid?
    * @todo perhaps rename it with a better name
    */
-  const addStep = async (
+  const addStep = (
     integration: Integration,
     stepKind: StepKind,
     flowId: string,
     position: number,
     configuredProperties: any
-  ): Promise<Integration> => {
-    return produce(integration, draft => {
-      const step: Step = {
-        ...createStep(),
-        ...stepKind,
-        configuredProperties,
-        metadata: { configured: true } as any,
-      };
+  ): Integration => {
+    const step: Step = {
+      ...createStep(),
+      ...stepKind,
+      configuredProperties,
+      metadata: { configured: true } as any,
+    };
 
-      draft = insertStepIntoFlowBefore(draft, flowId, step, position);
-      return draft;
-    });
+    return insertStepIntoFlowBefore(integration, flowId, step, position);
   };
 
   /**
@@ -313,21 +306,18 @@ export const useIntegrationHelpers = () => {
       action.id!,
       configuredProperties
     );
-    return produce(integration, draft => {
-      const step: Step = setDescriptorOnStep(
-        {
-          action,
-          configuredProperties,
-          connection,
-          id: key(),
-          metadata: { configured: true } as any,
-          stepKind: 'endpoint',
-        },
-        actionDescriptor!
-      );
-      draft = setStepInFlow(draft, flowId, step, position);
-      return draft;
-    });
+    const step: Step = setDescriptorOnStep(
+      {
+        action,
+        configuredProperties,
+        connection,
+        id: key(),
+        metadata: { configured: true } as any,
+        stepKind: 'endpoint',
+      },
+      actionDescriptor!
+    );
+    return setStepInFlow(integration, flowId, step, position);
   };
 
   /**
@@ -342,23 +332,20 @@ export const useIntegrationHelpers = () => {
    * @todo should we check `flow` and `position` to see if they are valid?
    * @todo perhaps rename it with a better name
    */
-  const updateStep = async (
+  const updateStep = (
     integration: Integration,
     stepKind: StepKind,
     flowId: string,
     position: number,
     configuredProperties: any
-  ): Promise<Integration> => {
-    return produce(integration, draft => {
-      const step: Step = {
-        ...stepKind,
-        configuredProperties,
-        metadata: { configured: true } as any,
-      };
+  ): Integration => {
+    const step: Step = {
+      ...stepKind,
+      configuredProperties,
+      metadata: { configured: true } as any,
+    };
 
-      draft = setStepInFlow(draft, flowId, step, position);
-      return draft;
-    });
+    return setStepInFlow(integration, flowId, step, position);
   };
 
   /**
@@ -373,9 +360,7 @@ export const useIntegrationHelpers = () => {
     integration: Integration
   ): Promise<Integration> => {
     if (integration.id === NEW_INTEGRATION_ID) {
-      integration = produce(integration, draft => {
-        delete draft.id;
-      });
+      delete integration.id;
     }
     const response = await callFetch({
       body: integration,

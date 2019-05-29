@@ -697,8 +697,11 @@ export function sanitizeFlow(flow: Flow): Flow {
     ])
   ) as string[];
 
+  // for the api provider, if a flow has been modified we change the last
+  // step of the flow to automatically set a return code of 200, unless
+  // already modified by the user. Also, we update the flow metadata to
+  // reflect that the flow has been "implemented"
   const lastStep = flow.steps[flow.steps.length - 1];
-
   if (
     lastStep &&
     lastStep.action &&
