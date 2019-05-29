@@ -61,6 +61,9 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
           specification: s.integration,
         }
       )}
+      getFlowHref={flowId =>
+        resolvers.integration.edit.index({ ...p, ...s, flowId })
+      }
       currentFlowId={(p as IBaseFlowRouteParams).flowId}
     >
       {title}
