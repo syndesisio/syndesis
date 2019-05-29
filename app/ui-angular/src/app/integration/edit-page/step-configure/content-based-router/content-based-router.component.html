@@ -26,7 +26,7 @@
     <ng-template #content>
       <form (change)="onChange($event)" [formGroup]="form" class="cbr-form form-horizontal">
         <fieldset>
-          <legend>Conditions <button class="btn btn-default manage-flows pull-right" (click)="toggleEditMode()" [disabled]="!form.valid" [textContent]="editMode ? 'Apply' : 'Manage'"></button></legend>
+          <legend>Conditions <button class="btn btn-default manage-flows pull-right" (click)="applyChanges()" [disabled]="!form.valid" [textContent]="editMode ? 'Apply' : 'Manage'"></button></legend>
           <div formArrayName="flowOptions"
                *ngFor="let flowSet of form.get('flowOptions').controls; let i = index;">
             <div class="form-group flowOptionsContainer" [formGroupName]="i">

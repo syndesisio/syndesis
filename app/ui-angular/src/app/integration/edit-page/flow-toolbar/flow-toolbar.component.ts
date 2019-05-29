@@ -105,9 +105,13 @@ export class FlowToolbarComponent implements OnInit {
       }
     });
 
-    return result.reduce((prev, curr) => {
-      return prev.concat(curr);
-    });
+    if (result.length) {
+      return result.reduce((prev, curr) => {
+        return prev.concat(curr);
+      });
+    } else {
+      return result;
+    }
   }
 
   publish() {
