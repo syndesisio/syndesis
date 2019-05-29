@@ -37,7 +37,7 @@ export function useApiProviderSummary(specification: string) {
       }
     };
     fetchSummary();
-  }, [specification, apiContext, setLoading]);
+  }, [specification, apiContext, setLoading, setApiSummary]);
 
   return { apiSummary, loading, error };
 }

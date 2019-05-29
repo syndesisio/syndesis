@@ -107,12 +107,20 @@ export const ReviewActionsPage: React.FunctionComponent<
                         i18nOperationsHtmlMessage={`<strong>${
                           apiSummary!.actionsSummary!.totalActions
                         }</strong> operations`}
-                        i18nWarningsHeading={`WARNINGS <strong> ${
-                          apiSummary!.warnings!.length
-                        }</strong>`}
-                        warningMessages={apiSummary!.warnings!.map(warning => {
-                          return (warning as any).message;
-                        })}
+                        i18nWarningsHeading={
+                          apiSummary!.warnings
+                            ? `WARNINGS <strong> ${
+                                apiSummary!.warnings.length
+                              }</strong>`
+                            : undefined
+                        }
+                        warningMessages={
+                          apiSummary!.warnings
+                            ? apiSummary!.warnings.map(
+                                warning => (warning as any).message
+                              )
+                            : undefined
+                        }
                       />
                       <div>
                         <ButtonLink
