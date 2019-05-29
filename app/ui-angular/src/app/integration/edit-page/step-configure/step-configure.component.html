@@ -121,6 +121,7 @@
                               [(configuredProperties)]="customProperties"
                               [(valid)]="valid"
                               [position]="position"
+                              (configuredPropertiesChange)="saveProperties($event)"
                             ></syndesis-content-based-router>
                             <div class="control-buttons">
                               <ng-container

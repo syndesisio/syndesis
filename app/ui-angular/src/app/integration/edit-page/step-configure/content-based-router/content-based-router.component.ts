@@ -214,7 +214,7 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
       .map(flow => flow.id);
 
     Array.from(new Set([...unfinishedFlows, ...unknownFlows])).forEach(flowId => {
-      this.doRemoveFlow(flowId, undefined);
+      this.doRemoveFlow(flowId);
     });
   }
 
@@ -240,7 +240,12 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
     return <FormArray>this.flowOptions;
   }
 
-  toggleEditMode() {
+  applyChanges() {
+    if (this.editMode) {
+      this.onChange();
+      this.flowPageService.save(this.route);
+    }
+
     this.editMode = !this.editMode;
   }
 
@@ -267,7 +272,7 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
       () => this.myFlows.removeAt(index));
   }
 
-  doRemoveFlow(flowId: string, then: () => void): void {
+  doRemoveFlow(flowId: string, then?: () => void): void {
     this.currentFlowService.events.emit({
       kind: INTEGRATION_REMOVE_FLOW,
       flowId: flowId,
@@ -282,17 +287,15 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
 
   openDefaultFlow() {
     const flowId = this.configuredProperties.default;
-    const integrationId = this.currentFlowService.integration.id;
-    this.router.navigate([
-      '/integrations',
-      integrationId,
-      flowId,
-      'edit'
-    ]);
+    this.doOpenFlow(flowId);
   }
 
   openFlow(index: number) {
     const flowId = this.myFlows.controls[index].get('flow').value;
+    this.doOpenFlow(flowId);
+  }
+
+  doOpenFlow(flowId: string) {
     const integrationId = this.currentFlowService.integration.id;
     this.router.navigate([
       '/integrations',

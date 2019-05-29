@@ -70,26 +70,30 @@
                     </button>
                   </li>
                   <li role="separator" class="divider"></li>
-                  <ng-container *ngFor="let flow of getConditionalFlows()">
-                    <li>
-                      <a
-                        [routerLink]="[
-                          '/integrations',
-                          currentFlowService.integration?.id,
-                          flow.id,
-                          'edit'
-                        ]"
-                      >
-                        <strong>{{ getFlowName(flow) }}</strong
-                        ><br />
-                        <div style="display: inline-flex">
-                          <span class="condition" [textContent]="isDefaultFlow(flow) ? 'OTHERWISE' : 'WHEN'"
-                                                  [attr.data-verb]="isDefaultFlow(flow) ? 'OTHERWISE' : 'WHEN'"></span>&nbsp;
-                          <span>{{ flow.description }}</span>
-                        </div>
-                      </a>
-                    </li>
-                    <li role="separator" class="divider"></li>
+                  <ng-container *ngFor="let group of getConditionalFlowGroups(); let i=index; let lastGroup=last">
+                    <li class="dropdown-header">#{{i + 1}} Conditional Flows</li>
+                    <ng-container *ngFor="let flow of group.flows; let last=last">
+                      <li>
+                        <a
+                          [routerLink]="[
+                            '/integrations',
+                            currentFlowService.integration?.id,
+                            flow.id,
+                            'edit'
+                          ]"
+                        >
+                          <strong>{{ getFlowName(flow) }}</strong
+                          ><br />
+                          <div style="display: inline-flex">
+                            <span class="condition" [textContent]="isDefaultFlow(flow) ? 'OTHERWISE' : 'WHEN'"
+                                                    [attr.data-verb]="isDefaultFlow(flow) ? 'OTHERWISE' : 'WHEN'"></span>&nbsp;
+                            <span>{{ flow.description }}</span>
+                          </div>
+                        </a>
+                      </li>
+                      <li *ngIf="!last" role="separator" class="divider"></li>
+                    </ng-container>
+                    <li *ngIf="!lastGroup" role="separator" class="divider"></li>
                   </ng-container>
                 </ul>
               </div>
@@ -175,7 +179,7 @@
                       ])
                     "
               >
-                Back to primary flow
+                Go to primary flow
               </button>
             </div>
           </div>

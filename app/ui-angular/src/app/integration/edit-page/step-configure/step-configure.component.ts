@@ -85,6 +85,15 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
     } else {
       data = this.formGroup ? this.formGroup.value : {};
     }
+    this.saveProperties(data, () => {
+      this.router.navigate(['save-or-add-step'], {
+        queryParams: { validate: true },
+        relativeTo: this.route.parent,
+      });
+    });
+  }
+
+  saveProperties(data: any = {}, then?: () => void) {
     const properties = this.formFactory.sanitizeValues(
       { ...data },
       this.formConfig
@@ -101,10 +110,9 @@ export class IntegrationStepConfigureComponent implements OnInit, OnDestroy {
           position: this.position,
           metadata: { configured: 'true' },
           onSave: () => {
-            this.router.navigate(['save-or-add-step'], {
-              queryParams: { validate: true },
-              relativeTo: this.route.parent,
-            });
+            if (then) {
+              then();
+            }
           },
         });
       },
