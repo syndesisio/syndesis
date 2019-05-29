@@ -24,7 +24,9 @@ import {
 } from '../constants';
 import { getConnectionIcon } from './connectionFunctions';
 
+export const NEW_INTEGRATION_ID = 'new-integration';
 export const NEW_INTEGRATION = {
+  id: NEW_INTEGRATION_ID,
   name: '',
   tags: [],
 } as Integration;
@@ -88,7 +90,6 @@ export function toDataShapeKinds(
  */
 export function getEmptyIntegration(): Integration {
   return produce(NEW_INTEGRATION, draft => {
-    draft.id = key();
     draft.flows = [
       {
         id: key(),

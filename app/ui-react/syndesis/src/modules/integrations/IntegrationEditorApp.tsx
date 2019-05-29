@@ -109,19 +109,6 @@ const addStepPage = (
   />
 );
 
-const saveIntegrationPage = (
-  <SaveIntegrationPage
-    cancelHref={(p, s) => resolvers.integration.edit.index({ ...p, ...s })}
-    postSaveHref={(p, s) =>
-      resolvers.integration.edit.index({
-        ...p,
-        ...s,
-      })
-    }
-    postPublishHref={resolvers.integration.details}
-  />
-);
-
 const apiProviderOperationsPage = (
   <OperationsPage
     cancelHref={(p, s) => resolvers.list()}
@@ -154,90 +141,124 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
     <Translation ns={['integrations', 'shared']}>
       {t => (
         <WithRouteData<IBaseFlowRouteParams, IBaseRouteState>>
-          {({ flowId }, { integration }) => (
-            <WithClosedNavigation>
-              <WithLeaveConfirmation
-                i18nTitle={t('unsavedChangesTitle')}
-                i18nConfirmationMessage={t('unsavedChangesMessage')}
-                shouldDisplayDialog={(location: H.LocationDescriptor) => {
-                  const url =
-                    typeof location === 'string'
-                      ? location
-                      : location.pathname!;
-                  return !url.startsWith(
-                    resolvers.integration.edit.root({
-                      flowId,
-                      integration,
-                    }).pathname
-                  );
-                }}
-              >
-                {() => (
-                  <Switch>
-                    <Route
-                      path={routes.integration.edit.index}
-                      exact={true}
-                      children={addStepPage}
+          {({ flowId }, { integration }) => {
+            const i18nTitle = t('unsavedChangesTitle');
+            const i18nConfirmationMessage = t('unsavedChangesMessage');
+            const shouldDisplayDialog = (location: H.LocationDescriptor) => {
+              const url =
+                typeof location === 'string' ? location : location.pathname!;
+              return !url.startsWith(
+                resolvers.integration.edit.root({
+                  flowId,
+                  integration,
+                }).pathname
+              );
+            };
+            return (
+              <WithClosedNavigation>
+                <Switch>
+                  <Route path={routes.integration.edit.index} exact={true}>
+                    <WithLeaveConfirmation
+                      i18nTitle={i18nTitle}
+                      i18nConfirmationMessage={i18nConfirmationMessage}
+                      shouldDisplayDialog={shouldDisplayDialog}
+                    >
+                      {() => addStepPage}
+                    </WithLeaveConfirmation>
+                  </Route>
+
+                  <Route path={routes.integration.edit.operations} exact={true}>
+                    <WithLeaveConfirmation
+                      i18nTitle={i18nTitle}
+                      i18nConfirmationMessage={i18nConfirmationMessage}
+                      shouldDisplayDialog={shouldDisplayDialog}
+                    >
+                      {() => apiProviderOperationsPage}
+                    </WithLeaveConfirmation>
+                  </Route>
+
+                  {/* add step */}
+                  <Route path={routes.integration.edit.addStep.selectStep}>
+                    <WithLeaveConfirmation
+                      i18nTitle={i18nTitle}
+                      i18nConfirmationMessage={i18nConfirmationMessage}
+                      shouldDisplayDialog={shouldDisplayDialog}
+                    >
+                      {() => (
+                        <EditorApp
+                          mode={'adding'}
+                          appStepRoutes={routes.integration.edit.addStep}
+                          appResolvers={resolvers.integration.edit.addStep}
+                          cancelHref={(params, state) =>
+                            resolvers.integration.edit.index({
+                              ...params,
+                              ...state,
+                            })
+                          }
+                          postConfigureHref={(updatedIntegration, params) =>
+                            resolvers.integration.edit.index({
+                              integration: updatedIntegration,
+                              ...params,
+                            })
+                          }
+                        />
+                      )}
+                    </WithLeaveConfirmation>
+                  </Route>
+
+                  {/* edit step */}
+                  <Route path={routes.integration.edit.editStep.selectStep}>
+                    <WithLeaveConfirmation
+                      i18nTitle={i18nTitle}
+                      i18nConfirmationMessage={i18nConfirmationMessage}
+                      shouldDisplayDialog={shouldDisplayDialog}
+                    >
+                      {() => (
+                        <EditorApp
+                          mode={'editing'}
+                          appStepRoutes={routes.integration.edit.editStep}
+                          appResolvers={resolvers.integration.edit.editStep}
+                          cancelHref={(params, state) =>
+                            resolvers.integration.edit.index({
+                              ...params,
+                              ...state,
+                            })
+                          }
+                          postConfigureHref={(updatedIntegration, params) =>
+                            resolvers.integration.edit.index({
+                              integration: updatedIntegration,
+                              ...params,
+                            })
+                          }
+                        />
+                      )}
+                    </WithLeaveConfirmation>
+                  </Route>
+
+                  <Route
+                    path={routes.integration.edit.saveAndPublish}
+                    exact={true}
+                  >
+                    <SaveIntegrationPage
+                      cancelHref={(p, s) =>
+                        resolvers.integration.edit.index({ ...p, ...s })
+                      }
+                      postSaveHref={(p, s) =>
+                        resolvers.integration.edit.index({
+                          ...p,
+                          ...s,
+                        })
+                      }
+                      postPublishHref={resolvers.integration.details}
+                      i18nTitle={i18nTitle}
+                      i18nConfirmationMessage={i18nConfirmationMessage}
+                      shouldDisplayDialog={shouldDisplayDialog}
                     />
-
-                    <Route
-                      path={routes.integration.edit.operations}
-                      exact={true}
-                      children={apiProviderOperationsPage}
-                    />
-
-                    {/* add step */}
-                    <Route path={routes.integration.edit.addStep.selectStep}>
-                      <EditorApp
-                        mode={'adding'}
-                        appStepRoutes={routes.integration.edit.addStep}
-                        appResolvers={resolvers.integration.edit.addStep}
-                        cancelHref={(params, state) =>
-                          resolvers.integration.edit.index({
-                            ...params,
-                            ...state,
-                          })
-                        }
-                        postConfigureHref={(updatedIntegration, params) =>
-                          resolvers.integration.edit.index({
-                            integration: updatedIntegration,
-                            ...params,
-                          })
-                        }
-                      />
-                    </Route>
-
-                    {/* edit step */}
-                    <Route path={routes.integration.edit.editStep.selectStep}>
-                      <EditorApp
-                        mode={'editing'}
-                        appStepRoutes={routes.integration.edit.editStep}
-                        appResolvers={resolvers.integration.edit.editStep}
-                        cancelHref={(params, state) =>
-                          resolvers.integration.edit.index({
-                            ...params,
-                            ...state,
-                          })
-                        }
-                        postConfigureHref={(updatedIntegration, params) =>
-                          resolvers.integration.edit.index({
-                            integration: updatedIntegration,
-                            ...params,
-                          })
-                        }
-                      />
-                    </Route>
-
-                    <Route
-                      path={routes.integration.edit.saveAndPublish}
-                      exact={true}
-                      children={saveIntegrationPage}
-                    />
-                  </Switch>
-                )}
-              </WithLeaveConfirmation>
-            </WithClosedNavigation>
-          )}
+                  </Route>
+                </Switch>
+              </WithClosedNavigation>
+            );
+          }}
         </WithRouteData>
       )}
     </Translation>

@@ -11,6 +11,10 @@ import { UIContext } from '../../../../app';
 import i18n from '../../../../i18n';
 import { PageTitle } from '../../../../shared';
 import {
+  IWithLeaveConfirmationBaseProps,
+  WithLeaveConfirmation,
+} from '../../../../shared/WithLeaveConfirmation';
+import {
   IPostPublishRouteParams,
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState,
@@ -21,7 +25,8 @@ export interface ISaveIntegrationForm {
   description?: string;
 }
 
-export interface ISaveIntegrationPageProps {
+export interface ISaveIntegrationPageProps
+  extends IWithLeaveConfirmationBaseProps {
   cancelHref: (
     p: ISaveIntegrationRouteParams,
     s: ISaveIntegrationRouteState
@@ -50,140 +55,152 @@ export class SaveIntegrationPage extends React.Component<
 > {
   public render() {
     return (
-      <UIContext.Consumer>
-        {({ pushNotification }) => (
-          <WithRouteData<
-            ISaveIntegrationRouteParams,
-            ISaveIntegrationRouteState
-          >>
-            {(params, state, { history }) => (
-              <WithIntegrationHelpers>
-                {({ deployIntegration, saveIntegration }) => {
-                  let shouldPublish = false;
-                  const onSave = async (
-                    { name, description }: ISaveIntegrationForm,
-                    actions: any
-                  ) => {
-                    const updatedIntegration = setIntegrationProperties(
-                      state.integration,
-                      {
-                        description,
-                        name,
-                      }
-                    );
-                    const savedIntegration = await saveIntegration(
-                      updatedIntegration
-                    );
-                    actions.setSubmitting(false);
+      <WithLeaveConfirmation {...this.props}>
+        {({ allowNavigation }) => (
+          <UIContext.Consumer>
+            {({ pushNotification }) => (
+              <WithRouteData<
+                ISaveIntegrationRouteParams,
+                ISaveIntegrationRouteState
+              >>
+                {(params, state, { history }) => (
+                  <WithIntegrationHelpers>
+                    {({ deployIntegration, saveIntegration }) => {
+                      let shouldPublish = false;
+                      const onSave = async (
+                        { name, description }: ISaveIntegrationForm,
+                        actions: any
+                      ) => {
+                        const updatedIntegration = setIntegrationProperties(
+                          state.integration,
+                          {
+                            description,
+                            name,
+                          }
+                        );
+                        const savedIntegration = await saveIntegration(
+                          updatedIntegration
+                        );
+                        actions.setSubmitting(false);
 
-                    if (shouldPublish) {
-                      pushNotification(
-                        i18n.t('integrations:PublishingIntegrationMessage'),
-                        'info'
-                      );
-                      deployIntegration(
-                        savedIntegration.id!,
-                        savedIntegration.version!,
-                        false
-                      )
-                        .then(() => {
-                          /* nothing to do on success */
-                        })
-                        .catch(err => {
+                        if (shouldPublish) {
                           pushNotification(
-                            i18n.t(
-                              'integrations:PublishingIntegrationFailedMessage',
-                              {
-                                error: err.errorMessage || err.message || err,
-                              }
-                            ),
-                            'warning'
+                            i18n.t('integrations:PublishingIntegrationMessage'),
+                            'info'
                           );
-                        });
-                    }
-                    if (shouldPublish) {
-                      shouldPublish = false;
-                      history.push(
-                        this.props.postPublishHref({
-                          integrationId: savedIntegration.id!,
-                        })
+                          deployIntegration(
+                            savedIntegration.id!,
+                            savedIntegration.version!,
+                            false
+                          )
+                            .then(() => {
+                              /* nothing to do on success */
+                            })
+                            .catch(err => {
+                              pushNotification(
+                                i18n.t(
+                                  'integrations:PublishingIntegrationFailedMessage',
+                                  {
+                                    error:
+                                      err.errorMessage || err.message || err,
+                                  }
+                                ),
+                                'warning'
+                              );
+                            });
+                        }
+
+                        allowNavigation();
+
+                        if (shouldPublish) {
+                          shouldPublish = false;
+                          history.push(
+                            this.props.postPublishHref({
+                              integrationId: savedIntegration.id!,
+                            })
+                          );
+                        } else {
+                          history.push(
+                            this.props.postSaveHref(
+                              { integrationId: savedIntegration.id! },
+                              { ...state, integration: savedIntegration }
+                            )
+                          );
+                        }
+                      };
+                      const definition: IFormDefinition = {
+                        name: {
+                          defaultValue: '',
+                          displayName: 'Name',
+                          order: 0,
+                          required: true,
+                          type: 'string',
+                        },
+                        // tslint:disable-next-line
+                        description: {
+                          defaultValue: '',
+                          displayName: 'Description',
+                          order: 1,
+                          type: 'textarea',
+                        },
+                      };
+                      return (
+                        <AutoForm<ISaveIntegrationForm>
+                          i18nRequiredProperty={'* Required field'}
+                          definition={definition}
+                          initialValue={{
+                            description: state.integration.description,
+                            name: state.integration.name,
+                          }}
+                          onSave={onSave}
+                        >
+                          {({
+                            fields,
+                            handleSubmit,
+                            isSubmitting,
+                            isValid,
+                            submitForm,
+                          }) => (
+                            <>
+                              <PageTitle title={'Save the integration'} />
+                              <IntegrationEditorLayout
+                                title={'Save the integration'}
+                                description={
+                                  'Update details about this integration.'
+                                }
+                                content={
+                                  <IntegrationSaveForm
+                                    handleSubmit={handleSubmit}
+                                  >
+                                    {fields}
+                                  </IntegrationSaveForm>
+                                }
+                                cancelHref={this.props.cancelHref(
+                                  params,
+                                  state
+                                )}
+                                onSave={submitForm}
+                                isSaveDisabled={!isValid}
+                                isSaveLoading={isSubmitting}
+                                onPublish={async () => {
+                                  shouldPublish = true;
+                                  await submitForm();
+                                }}
+                                isPublishDisabled={!isValid}
+                                isPublishLoading={isSubmitting}
+                              />
+                            </>
+                          )}
+                        </AutoForm>
                       );
-                    } else {
-                      history.push(
-                        this.props.postSaveHref(
-                          { integrationId: savedIntegration.id! },
-                          { ...state, integration: savedIntegration }
-                        )
-                      );
-                    }
-                  };
-                  const definition: IFormDefinition = {
-                    name: {
-                      defaultValue: '',
-                      displayName: 'Name',
-                      order: 0,
-                      required: true,
-                      type: 'string',
-                    },
-                    // tslint:disable-next-line
-                    description: {
-                      defaultValue: '',
-                      displayName: 'Description',
-                      order: 1,
-                      type: 'textarea',
-                    },
-                  };
-                  return (
-                    <AutoForm<ISaveIntegrationForm>
-                      i18nRequiredProperty={'* Required field'}
-                      definition={definition}
-                      initialValue={{
-                        description: state.integration.description,
-                        name: state.integration.name,
-                      }}
-                      onSave={onSave}
-                    >
-                      {({
-                        fields,
-                        dirty,
-                        handleSubmit,
-                        isSubmitting,
-                        isValid,
-                        submitForm,
-                      }) => (
-                        <>
-                          <PageTitle title={'Save the integration'} />
-                          <IntegrationEditorLayout
-                            title={'Save the integration'}
-                            description={
-                              'Update details about this integration.'
-                            }
-                            content={
-                              <IntegrationSaveForm handleSubmit={handleSubmit}>
-                                {fields}
-                              </IntegrationSaveForm>
-                            }
-                            cancelHref={this.props.cancelHref(params, state)}
-                            onSave={submitForm}
-                            isSaveDisabled={dirty && !isValid}
-                            isSaveLoading={isSubmitting}
-                            onPublish={async () => {
-                              shouldPublish = true;
-                              await submitForm();
-                            }}
-                            isPublishDisabled={dirty && !isValid}
-                            isPublishLoading={isSubmitting}
-                          />
-                        </>
-                      )}
-                    </AutoForm>
-                  );
-                }}
-              </WithIntegrationHelpers>
+                    }}
+                  </WithIntegrationHelpers>
+                )}
+              </WithRouteData>
             )}
-          </WithRouteData>
+          </UIContext.Consumer>
         )}
-      </UIContext.Consumer>
+      </WithLeaveConfirmation>
     );
   }
 }
