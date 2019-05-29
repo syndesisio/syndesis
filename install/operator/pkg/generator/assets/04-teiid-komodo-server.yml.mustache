@@ -1,0 +1,138 @@
+{{#IncludeDint}}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: komodo-server
+    name: komodo-server
+  spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: komodo-server
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: komodo-server
+    name: komodo-server
+  spec:
+    replicas: {{=(( ))=}}${{DATAVIRT_ENABLED}}((={{ }}=))
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: komodo-server
+    strategy:
+      resources:
+        limits:
+          memory: "256Mi"
+        requests:
+          memory: "20Mi"
+      type: Recreate
+    template:
+      metadata:
+        labels:
+          app: syndesis
+          syndesis.io/app: syndesis
+          syndesis.io/type: infrastructure
+          syndesis.io/component: komodo-server
+      spec:
+        serviceAccountName: syndesis-server
+        containers:
+        - name: komodo-server
+          env:
+          - name: JAVA_APP_DIR
+            value: /deployments
+          - name: JAVA_OPTIONS
+            value: "-Djava.net.preferIPv4Stack=true -Duser.home=/tmp -Djava.net.preferIPv4Addresses=true -Dlog4j.logger.org.apache.http=DEBUG -Dkomodo.user=${POSTGRESQL_USER} -Dkomodo.password=${POSTGRESQL_PASSWORD} -Dkomodo.connectionUrl=jdbc:postgresql://syndesis-db:5432/${POSTGRESQL_DATABASE} -Dkomodo.binaryStoreUrl=jdbc:postgresql://syndesis-db:5432/${POSTGRESQL_DATABASE} -Dkomodo.connectionDriver=org.postgresql.Driver"
+          - name: NAMESPACE
+            valueFrom:
+              fieldRef:
+                fieldPath: metadata.namespace
+          - name: GC_MAX_METASPACE_SIZE
+            value: "512"
+          - name: BUILD_IMAGE_STREAM
+            value: {{ Images.Syndesis.S2i }}:latest
+          - name: POSTGRESQL_PASSWORD
+            value: ${POSTGRESQL_PASSWORD}
+          - name: POSTGRESQL_USER
+            value: ${POSTGRESQL_USER}
+          - name: POSTGRESQL_DATABASE
+            value: ${POSTGRESQL_DATABASE}
+{{#Debug}}
+          - name: JAVA_DEBUG
+            value: "true"
+{{/Debug}}{{^WithDockerImages}}
+          image: ' '
+{{/WithDockerImages}}{{#WithDockerImages}}
+          image: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Komodo }}:{{ Tags.Komodo }}
+{{/WithDockerImages}}
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              port: 8080
+              path: "/vdb-builder/v1/swagger.json"
+              httpHeaders:
+              - name: Accept
+                value: 'application/json'
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+          readinessProbe:
+            httpGet:
+              path: "/vdb-builder/v1/swagger.json"
+              port: 8080
+              httpHeaders:
+              - name: Accept
+                value: 'application/json'
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            timeoutSeconds: 5
+          ports:
+          - containerPort: 8080
+            name: http
+          - containerPort: 9779
+            name: prometheus
+          - containerPort: 8778
+            name: jolokia
+          workingDir: /deployments
+          volumeMounts:
+          - name: config-volume
+            mountPath: /deployments/config
+          # Set QoS class to "Guaranteed" (limits == requests)
+          # This doesn't work on OSO as there is a fixed ratio
+          # from limit to resource (80% currently). 'requests' is ignored there
+          resources:
+            limits:
+              memory: ${KOMODO_MEMORY_LIMIT}
+              cpu: 750m
+            requests:
+              memory: 256Mi
+        volumes:
+        - name: config-volume
+          configMap:
+            name: syndesis-server-config
+    triggers:
+{{^WithDockerImages}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - komodo-server
+        from:
+          kind: ImageStreamTag
+          name: {{ Images.Syndesis.Komodo }}:{{ Tags.Komodo }}
+          namespace: ${IMAGE_STREAM_NAMESPACE}
+      type: ImageChange
+{{/WithDockerImages}}
+    - type: ConfigChange
+{{/IncludeDint}}
