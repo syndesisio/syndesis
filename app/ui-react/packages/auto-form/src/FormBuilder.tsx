@@ -48,12 +48,6 @@ export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
       textarea: FormTextAreaComponent,
       ...(this.props.customComponents || {}),
     };
-    const validate = (value: T) => {
-      if (props.property.required && typeof value === 'undefined') {
-        return this.props.i18nRequiredProperty;
-      }
-      return undefined;
-    };
     switch (type) {
       case 'array':
         return (
@@ -77,7 +71,6 @@ export class FormBuilder<T> extends React.Component<IFormBuilderProps<T>> {
             key={props.property.name}
             name={props.property.name}
             type={type}
-            validate={validate}
             {...props as IFormControlProps}
             component={componentTypemaps[type] || FormInputComponent}
           />
