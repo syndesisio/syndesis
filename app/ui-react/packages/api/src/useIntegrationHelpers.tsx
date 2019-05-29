@@ -17,6 +17,7 @@ import { PUBLISHED, UNPUBLISHED } from './constants';
 import {
   createStep,
   insertStepIntoFlowBefore,
+  NEW_INTEGRATION_ID,
   setDescriptorOnStep,
   setStepInFlow,
 } from './helpers';
@@ -430,6 +431,11 @@ export const useIntegrationHelpers = () => {
   const saveIntegration = async (
     integration: Integration
   ): Promise<Integration> => {
+    if (integration.id === NEW_INTEGRATION_ID) {
+      integration = produce(integration, draft => {
+        delete draft.id;
+      });
+    }
     const response = await callFetch({
       body: integration,
       headers: apiContext.headers,

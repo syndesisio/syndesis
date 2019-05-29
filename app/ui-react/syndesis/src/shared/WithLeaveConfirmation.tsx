@@ -9,15 +9,18 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 
 export interface IWithLeaveConfirmationChildrenProps {
-  allowNavigation: (callback?: () => void) => any;
+  allowNavigation: () => any;
 }
 
-export interface IWithLeaveConfirmationProps {
+export interface IWithLeaveConfirmationBaseProps {
   i18nCancelButtonText?: string;
   i18nConfirmButtonText?: string;
   i18nConfirmationMessage?: string;
   i18nTitle?: string;
   shouldDisplayDialog?: (location: H.LocationDescriptor) => boolean;
+}
+export interface IWithLeaveConfirmationProps
+  extends IWithLeaveConfirmationBaseProps {
   children: (props: IWithLeaveConfirmationChildrenProps) => any;
 }
 
@@ -38,12 +41,6 @@ export const WithLeaveConfirmation: React.FunctionComponent<
   children,
 }) => {
   const [blockNavigation, setBlockNavigation] = React.useState(true);
-  const [postAllowCallback, setPostAllowCallback] = React.useState();
-  React.useEffect(() => {
-    if (!blockNavigation && postAllowCallback) {
-      postAllowCallback();
-    }
-  }, [blockNavigation, postAllowCallback]);
 
   const initialDialogProps = {
     onCancel: () => false,
@@ -79,9 +76,8 @@ export const WithLeaveConfirmation: React.FunctionComponent<
     return showDialog ? null : true;
   };
 
-  const allowNavigation = (callback?: () => void) => {
+  const allowNavigation = () => {
     setBlockNavigation(false);
-    setPostAllowCallback(callback);
   };
   return (
     <Translation ns={['integrations', 'shared']}>
