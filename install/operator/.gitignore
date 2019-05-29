@@ -1,16 +1,3 @@
-# Custom Entries
-
-bin
-.go
-.push-*
-.image-*
-.dockerfile-*
-vendor
-.vendor
-.cache
-
-syndesis-operator
-dep-cache
 # Temporary Build Files
-tmp/_output
-tmp/_test
+build/_output
+build/_test
