@@ -26,6 +26,7 @@
   <distributionManagement>
     <snapshotRepository>
       <id>oss-sonatype-staging</id>
+      <name>oss-sonatype-staging</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
     <repository>
