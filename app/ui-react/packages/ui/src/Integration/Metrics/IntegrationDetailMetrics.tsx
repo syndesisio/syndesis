@@ -65,10 +65,7 @@ export class IntegrationDetailMetrics extends React.Component<
                 aggregated={true}
                 matchHeight={true}
               >
-                <CardTitle>
-                  <Icon name="shield" />
-                  {this.props.i18nLastProcessed}
-                </CardTitle>
+                <CardTitle>{this.props.i18nLastProcessed}</CardTitle>
                 <CardBody>
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification>

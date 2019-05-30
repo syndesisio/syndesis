@@ -59,7 +59,6 @@ export class IntegrationDetailHistoryListViewItem extends React.Component<
             {this.props.updatedAt}
           </>
         }
-        additionalInfo={[]}
         leftContent={getIntegrationState(this.props.currentState!)}
         stacked={false}
       />

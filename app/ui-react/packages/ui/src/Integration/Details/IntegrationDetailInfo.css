@@ -1,5 +1,7 @@
 .integration-detail-info {
     display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
 }
 
 .integration-detail-info .fa-pencil {
@@ -9,4 +11,12 @@
     border: 1px solid transparent;
     padding: 2px 6px;
     font-size: 12px;
+}
+
+.integration-detail-info__status {
+    white-space: nowrap;
+}
+
+.integration-detail-info__status-icon {
+    margin-right: 5px;
 }
