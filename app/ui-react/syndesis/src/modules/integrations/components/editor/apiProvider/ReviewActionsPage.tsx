@@ -98,20 +98,28 @@ export const ReviewActionsPage: React.FunctionComponent<
                   {() => (
                     <>
                       <OpenApiReviewActions
-                        i18nApiDefinitionHeading={'API DEFINITION'}
-                        i18nDescriptionLabel={'Description'}
-                        i18nImportedHeading={'IMPORTED'}
-                        i18nNameLabel={'Name'}
+                        i18nApiDefinitionHeading={t(
+                          'integrations:apiProvider:reviewActions:sectionApiDefinition'
+                        )}
+                        i18nDescriptionLabel={t(
+                          'integrations:apiProvider:reviewActions:descriptionLabel'
+                        )}
+                        i18nImportedHeading={t(
+                          'integrations:apiProvider:reviewActions:sectionImported'
+                        )}
+                        i18nNameLabel={t(
+                          'integrations:apiProvider:reviewActions:nameLabel'
+                        )}
                         apiProviderDescription={apiSummary!.description}
                         apiProviderName={apiSummary!.name}
-                        i18nOperationsHtmlMessage={`<strong>${
+                        i18nOperationsHtmlMessage={`${
                           apiSummary!.actionsSummary!.totalActions
-                        }</strong> operations`}
+                        } operations`}
                         i18nWarningsHeading={
                           apiSummary!.warnings
-                            ? `WARNINGS <strong> ${
-                                apiSummary!.warnings.length
-                              }</strong>`
+                            ? t(
+                                'integrations:apiProvider:reviewActions:sectionWarnings'
+                              )
                             : undefined
                         }
                         warningMessages={
@@ -130,14 +138,17 @@ export const ReviewActionsPage: React.FunctionComponent<
                               .specification,
                           })}
                         >
-                          Review/Edit
+                          {t(
+                            'integrations:apiProvider:reviewActions:btnReviewEdit'
+                          )}
                         </ButtonLink>
                         <ButtonLink
                           onClick={onNext}
                           disabled={nextDisabled}
                           as={'primary'}
+                          style={{ marginLeft: '10px' }}
                         >
-                          Next
+                          {t('shared:Next')}
                         </ButtonLink>
                       </div>
                     </>
