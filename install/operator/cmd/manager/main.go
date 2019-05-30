@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/syndesisio/syndesis/install/operator/version"
 	"os"
 	"runtime"
 
@@ -38,10 +39,11 @@ func printVersion() {
 	log.Info(fmt.Sprintf("Go Version: %s", runtime.Version()))
 	log.Info(fmt.Sprintf("Go OS/Arch: %s/%s", runtime.GOOS, runtime.GOARCH))
 	log.Info(fmt.Sprintf("Version of operator-sdk: %v", sdkVersion.Version))
+	log.Info(fmt.Sprintf("Syndesis Operator Version: %s", version.Version))
 }
 
 func main() {
-	configuration.TemplateLocation = pflag.StringP("template", "t", "/conf/syndesis-template.yml", "Path to template used for installation")
+	configuration.TemplateConfig = pflag.StringP("template-config", "t", "/conf/template-config.yml", "Path to template config used for installation")
 	configuration.AddonsDirLocation = pflag.StringP("addons", "a", "", "Path to the addons directory used for installation")
 	configuration.Registry = pflag.StringP("registry", "r", "docker.io", "Registry to use for loading images like the upgrade pod")
 

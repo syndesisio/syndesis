@@ -4,6 +4,7 @@ package generator
 
 import (
     "io/ioutil"
+    "regexp"
     "sort"
     "strings"
     "github.com/hoisie/mustache"
@@ -45,7 +46,6 @@ type tags struct {
 }
 
 type Context struct {
-    Name             string
     AllowLocalHost   bool
     WithDockerImages bool
     Productized      bool
@@ -63,7 +63,7 @@ type Context struct {
 // TODO: Could be added from a local configuration file
 
 func CreateSyndesisContext() Context {
-    return Context{
+    return assignPrometheusConfig(Context{
         Images: images{
             SyndesisImagesPrefix:        "syndesis",
             OAuthProxyImagePrefix:       "quay.io/openshift",
@@ -90,12 +90,12 @@ func CreateSyndesisContext() Context {
             Prometheus:       "v2.1.0",
             PostgresExporter: "v0.4.7",
         },
-    }
+    })
 }
 
 // TODO: Update with product image references here
 func CreateProductContext() Context {
-    return Context{
+    return assignPrometheusConfig(Context{
         Images: images{
             ImageStreamNamespace:        "fuse-ignite",
             SyndesisImagesPrefix:        "fuse7",
@@ -123,7 +123,30 @@ func CreateProductContext() Context {
             PostgresExporter: "v0.4.7",
         },
         Registry: "registry.fuse-ignite.openshift.com",
+    })
+}
+
+func assignPrometheusConfig(context Context) Context {
+    prometheusRules, err := AssetAsBytes("/prometheus-config.yml")
+    if err != nil {
+        panic(err)
     }
+    var prometheusRulesIdentEx = regexp.MustCompile(`(.+)`)
+    context.PrometheusRules = prometheusRulesIdentEx.ReplaceAllString(string(prometheusRules), "      $1")
+    return context;
+}
+
+func AssetAsBytes(path string) ([]byte, error) {
+    file, err := assets.Open(path)
+    if err != nil {
+        return nil,err
+    }
+    defer file.Close()
+    prometheusRules, err := ioutil.ReadAll(file)
+    if err != nil {
+        return nil,err
+    }
+    return prometheusRules, nil
 }
 
 func (this *Context) GenerateResources() (string, error) {
@@ -145,12 +168,7 @@ func (this *Context) GenerateResources() (string, error) {
     response := []string{}
     for _, f := range files {
         if strings.HasSuffix(f.Name(), ".yml.mustache") {
-            tf, err := assets.Open("./"+f.Name());
-            if err != nil {
-                return "", err
-            }
-            defer tf.Close()
-            template, err := ioutil.ReadAll(tf);
+            template, err := AssetAsBytes("./" + f.Name())
             if err != nil {
                 return "", err
             }

@@ -1,8 +1,10 @@
 package template
 
 import (
+	"encoding/json"
 	"github.com/openshift/api/template/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -14,7 +16,6 @@ var log = logf.Log.WithName("template")
 
 type InstallParams struct {
 	OAuthClientSecret string
-	DataVirtEnabled   bool
 }
 
 func GetInstallResourcesAsRuntimeObjects(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.Object, error) {
@@ -44,7 +45,28 @@ func GetInstallResourcesAsRuntimeObjects(scheme *runtime.Scheme, syndesis *v1alp
 }
 
 func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.RawExtension, error) {
-	res, err := util.LoadResourceFromFile(scheme, *configuration.TemplateLocation)
+
+	// Load the template config..
+	templateConfig, err := util.LoadJsonFromFile(*configuration.TemplateConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	// Parse the config
+	gen := generator.Context{}
+	err = json.Unmarshal(templateConfig, &gen)
+	if err != nil {
+		return nil, err
+	}
+
+	// Generate the OpenShift Template
+	generated, err := gen.GenerateResources()
+	if err != nil {
+		return nil, err
+	}
+
+	// Parse the template
+	res, err := util.LoadRawResourceFromYaml(generated)
 	if err != nil {
 		return nil, err
 	}
@@ -57,7 +79,8 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 
 	config := configuration.GetEnvVars(syndesis)
 	config[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
-	if params.DataVirtEnabled {
+
+	if _, ok := syndesis.Spec.Addons["komodo"]; ok {
 		config["DATAVIRT_ENABLED"] = "1"
 	}
 

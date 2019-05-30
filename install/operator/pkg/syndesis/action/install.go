@@ -79,7 +79,6 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 
 	if _, ok := syndesis.Spec.Addons["komodo"]; ok {
 		a.log.Info("Addon enabled", "addon", "komodo")
-		params.DataVirtEnabled = true
 	}
 
 	list, err := syndesistemplate.GetInstallResourcesAsRuntimeObjects(a.scheme, syndesis, params)

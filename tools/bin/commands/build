@@ -20,7 +20,6 @@ build::usage() {
     -f  --flash                    Skip checks and tests execution (fastest mode)
     -i  --image                    Build Docker via s2i images, too (for those modules creating images)
         --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
-        --multi-stage              Multi-stage Dockerfile support for operator build (experimental)
     -p  --project <project>        Specifies the project / namespace to create images
     -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
     -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
@@ -48,9 +47,6 @@ EOT
 build::run() {
     # Maven helper funcs
     source "$(basedir)/commands/util/maven_funcs"
-
-    # For building the operator
-    source "$(basedir)/commands/util/operator_funcs"
 
     # For OpenShift based builds
     source "$(basedir)/commands/util/openshift_funcs"
@@ -166,27 +162,41 @@ maven_args() {
 
 do_operator() {
     local top_dir=$1
+    local tag=${2:-latest}
+    local OPERATOR_IMAGE="syndesis/syndesis-operator"
+
     echo "=============================================================================="
     echo "Building syndesis-operator"
     echo "=============================================================================="
 
-    local operator_dir="$top_dir/install/operator"
+    if [[ "$(which operator-sdk)" == "" ]] ; then
+        echo "oc command not found.  Cannot start image stream build without it."
+        exit 1
+    fi
 
-    # New multi stage build for creating the operator image all in one step
-    if [ $(hasflag -i --image --docker) ] && [ $(hasflag --multi-stage) ]; then
-        if $(is_minishift_docker_daemon); then
-            echo "ERROR: Multistage build is not supported on Minishift as the Docker daemon in Minishift is too old"
-            exit 1
+    pushd "$top_dir/install/operator"
+    ./build.sh
+
+    if [ ! $(hasflag -i --image --docker) ]; then
+        # Lets trigger an S2I build so that image streams get updated.
+
+        echo "Creating image $OPERATOR_IMAGE:${tag} via S2I and Docker strategy"
+        if [ -z "$(oc get bc -o name | grep syndesis-operator)" ]; then
+            echo "Creating BuildConfig syndesis-operator"
+            oc new-build --strategy=docker --binary=true --name syndesis-operator
         fi
-        create_multi_stage_operator_image "$operator_dir"
-        return
-    fi
 
-    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$(hasflag -f --flash --skip-tests)"
+        local arch="$(mktemp -t syndesis-operator-docker).tar"
+        echo $arch
+        tar cvf $arch build
+        cd build
+        tar uvf $arch Dockerfile
+        trap "rm $arch" EXIT
 
-    if [ "$(hasflag -i --image --docker)" ]; then
-        create_operator_image "$operator_dir" "$(hasflag --docker)"
+        oc start-build --from-archive=$arch syndesis-operator
+
     fi
+    popd >/dev/null
 }
 
 do_camel_k() {

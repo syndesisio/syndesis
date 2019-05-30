@@ -2,7 +2,8 @@ package template
 
 import (
 	"github.com/openshift/api/template/v1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+    "github.com/syndesisio/syndesis/install/operator/pkg/generator"
+    "github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -11,7 +12,10 @@ import (
 
 func GetDeclaredResourceTypes(scheme *runtime.Scheme) ([]metav1.TypeMeta, error) {
 	types := make(map[metav1.TypeMeta]bool)
-	res, err := util.LoadResourceFromFile(scheme, *configuration.TemplateLocation)
+
+	generator.CreateSyndesisContext()
+
+	res, err := util.LoadResourceFromFile(scheme, *configuration.TemplateConfig)
 	if err != nil {
 		return nil, err
 	}
