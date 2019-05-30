@@ -7,8 +7,8 @@ import {
 import * as H from '@syndesis/history';
 import { Integration, Step, StepKind, StringMap } from '@syndesis/models';
 import {
+  EditorPageCard,
   IntegrationEditorLayout,
-  TemplateStepCard,
   TemplateType,
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
@@ -112,13 +112,13 @@ export class TemplateStepPage extends React.Component<ITemplateStepPageProps> {
                         onUpdateLinting={handleUpdateLinting}
                       >
                         {({ controls, submitForm }) => (
-                          <TemplateStepCard
+                          <EditorPageCard
                             i18nDone={'Done'}
                             isValid={isValid}
                             submitForm={submitForm}
                           >
                             {controls}
-                          </TemplateStepCard>
+                          </EditorPageCard>
                         )}
                       </WithTemplater>
                     }

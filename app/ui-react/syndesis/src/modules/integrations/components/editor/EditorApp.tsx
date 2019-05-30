@@ -5,6 +5,7 @@ import * as React from 'react';
 import { EditSpecificationPage } from './apiProvider/EditSpecificationPage';
 import { ReviewActionsPage } from './apiProvider/ReviewActionsPage';
 import { SelectMethodPage } from './apiProvider/SelectMethodPage';
+import { ChoiceStepPage } from './choice/ChoiceStepPage';
 import { DataMapperPage } from './dataMapper/DataMapperPage';
 import { EditorRoutes } from './EditorRoutes';
 import { EditorSidebar } from './EditorSidebar';
@@ -71,6 +72,13 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       }
       filterHref={(step, params, state) =>
         appResolvers.basicFilter({
+          step,
+          ...params,
+          ...state,
+        })
+      }
+      choiceHref={(step, params, state) =>
+        appResolvers.choice({
           step,
           ...params,
           ...state,
@@ -236,6 +244,18 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
     />
   );
 
+  const choicePage = (
+    <ChoiceStepPage
+      cancelHref={cancelHref}
+      mode={mode}
+      sidebar={props => (
+        <EditorSidebar {...props} isAdding={mode === 'adding'} />
+      )}
+      postConfigureHref={postConfigureHref}
+      getBreadcrumb={getBreadcrumb}
+    />
+  );
+
   const selectMethodPage = (
     <SelectMethodPage
       cancelHref={(params, state) =>
@@ -325,6 +345,10 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       basicFilter={{
         basicFilterPath: appStepRoutes.basicFilter,
         basicFilterChildren: basicFilterPage,
+      }}
+      choice={{
+        choicePath: appStepRoutes.choice,
+        choiceChildren: choicePage,
       }}
       step={{
         configurePath: appStepRoutes.step,

@@ -1,25 +1,29 @@
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../../Layout';
 
-export interface ITemplateStepCardProps {
+export interface IEditorPageCardProps {
+  header?: JSX.Element;
   i18nDone: string;
   isValid: boolean;
   submitForm: (e?: any) => void;
 }
 
-export class TemplateStepCard extends React.Component<ITemplateStepCardProps> {
+export class EditorPageCard extends React.Component<IEditorPageCardProps> {
   public render() {
     return (
       <PageSection>
         <Container>
           <div className="row row-cards-pf">
             <div className="card-pf">
+              {this.props.header && (
+                <div className="card-pf-header">{this.props.header}</div>
+              )}
               <div className="card-pf-body">
                 <Container>{this.props.children}</Container>
               </div>
               <div className="card-pf-footer">
                 <ButtonLink
-                  data-testid={'template-step-card-done-button'}
+                  data-testid={'editor-page-card-done-button'}
                   onClick={this.props.submitForm}
                   disabled={!this.props.isValid}
                   as={'primary'}
