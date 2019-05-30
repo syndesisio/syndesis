@@ -17,6 +17,7 @@ import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
+  IPageWithEditorBreadcrumb,
   IRuleFilterStepRouteParams,
   IRuleFilterStepRouteState,
 } from '../interfaces';
@@ -26,7 +27,7 @@ import {
   WithRuleFilterForm,
 } from './WithRuleFilterForm';
 
-export interface IRuleFilterStepPageProps {
+export interface IRuleFilterStepPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: IRuleFilterStepRouteParams,
     s: IRuleFilterStepRouteState
@@ -54,17 +55,13 @@ export class RuleFilterStepPage extends React.Component<
               IRuleFilterStepRouteParams,
               IRuleFilterStepRouteState
             >>
-              {(
-                { flowId, position },
-                { step, integration, updatedIntegration },
-                { history }
-              ) => {
-                const positionAsNumber = parseInt(position, 10);
+              {(params, state, { history }) => {
+                const positionAsNumber = parseInt(params.position, 10);
                 let dataShape = {} as DataShape;
                 try {
                   const prevStep = getPreviousIntegrationStepWithDataShape(
-                    integration,
-                    flowId,
+                    state.integration,
+                    params.flowId,
                     positionAsNumber
                   );
                   dataShape =
@@ -76,25 +73,20 @@ export class RuleFilterStepPage extends React.Component<
                 const handleSubmitForm = async ({
                   values,
                 }: IOnUpdatedIntegrationProps) => {
-                  updatedIntegration = await (this.props.mode === 'adding'
+                  const updatedIntegration = await (this.props.mode === 'adding'
                     ? addStep
                     : updateStep)(
-                    updatedIntegration || integration,
-                    step,
-                    flowId,
+                    state.updatedIntegration || state.integration,
+                    state.step,
+                    params.flowId,
                     positionAsNumber,
                     values
                   );
                   history.push(
-                    this.props.postConfigureHref(
+                    this.props.postConfigureHref(updatedIntegration, params, {
+                      ...state,
                       updatedIntegration,
-                      { flowId, position },
-                      {
-                        integration,
-                        step,
-                        updatedIntegration,
-                      }
-                    )
+                    })
                   );
                 };
                 return (
@@ -105,11 +97,19 @@ export class RuleFilterStepPage extends React.Component<
                       description={
                         'Define one or more rules for evaluating data to determine whether the integration should continue.'
                       }
+                      toolbar={this.props.getBreadcrumb(
+                        'Configure basic filter step',
+                        params,
+                        state
+                      )}
                       sidebar={this.props.sidebar({
                         activeIndex: positionAsNumber,
-                        activeStep: toUIStep(step),
+                        activeStep: toUIStep(state.step),
                         steps: toUIStepCollection(
-                          getSteps(updatedIntegration || integration, flowId)
+                          getSteps(
+                            state.updatedIntegration || state.integration,
+                            params.flowId
+                          )
                         ),
                       })}
                       content={
@@ -127,7 +127,7 @@ export class RuleFilterStepPage extends React.Component<
                             >
                               {() => (
                                 <WithRuleFilterForm
-                                  step={step}
+                                  step={state.step}
                                   filterOptions={data}
                                   onUpdatedIntegration={handleSubmitForm}
                                 >
@@ -148,14 +148,7 @@ export class RuleFilterStepPage extends React.Component<
                           )}
                         </WithFilterOptions>
                       }
-                      cancelHref={this.props.cancelHref(
-                        { flowId, position },
-                        {
-                          integration,
-                          step,
-                          updatedIntegration,
-                        }
-                      )}
+                      cancelHref={this.props.cancelHref(params, state)}
                     />
                   </>
                 );

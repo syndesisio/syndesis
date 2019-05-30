@@ -1,16 +1,18 @@
+import { PageSection } from '@patternfly/react-core';
+import { ListView } from 'patternfly-react';
 import * as React from 'react';
-
-export interface IApiProviderReviewOperationsProps {
-  /**
-   * The title
-   */
-  i18nTitle?: string;
-}
+import { IListViewToolbarProps, ListViewToolbar } from '../../../Shared';
 
 export class ApiProviderReviewOperations extends React.Component<
-  IApiProviderReviewOperationsProps
+  IListViewToolbarProps
 > {
   public render() {
-    return <>{this.props.i18nTitle}</>;
+    const { children, ...props } = this.props;
+    return (
+      <PageSection>
+        <ListViewToolbar {...props} />
+        <ListView>{children}</ListView>
+      </PageSection>
+    );
   }
 }

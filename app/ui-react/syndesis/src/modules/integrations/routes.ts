@@ -7,9 +7,9 @@ export default include('/integrations', {
   manageCicd: include('manageCicd', { root: '' }),
   import: 'import',
   create: include('create', {
-    start: include('start/:flowId/:position', stepRoutes),
-    finish: include('finish/:flowId/:position', stepRoutes),
-    configure: include('configure', editorRoutes),
+    start: include(':integrationId/start/:flowId/:position', stepRoutes),
+    finish: include(':integrationId/finish/:flowId/:position', stepRoutes),
+    configure: include(':integrationId/configure', editorRoutes),
     root: '',
   }),
   integration: include(':integrationId', {

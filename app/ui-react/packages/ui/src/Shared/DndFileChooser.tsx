@@ -1,7 +1,7 @@
 import { Grid, Icon } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../helpers';
 import { Container } from '../Layout/Container';
-import { toTestId } from '../utils';
 import './DndFileChooser.css';
 import { INotification, INotificationType } from './Notifications';
 import { WithDropzone } from './WithDropzone';
@@ -78,7 +78,7 @@ export interface IDndFileChooserProps {
   onUploadRejected(fileName: string): string;
 
   /**
-   * Callback for when one or more file uploads have been accepted. Caller should handler processing of the files.
+   * Callback for when one or more file uploads have been accepted. Caller should handle processing of the files.
    */
   onUploadAccepted(file: File[]): void;
 }
@@ -140,11 +140,9 @@ export class DndFileChooser extends React.Component<
         <ul>
           {this.state.files.map((file, index) => (
             <li
-              data-testid={`${toTestId(
-                'DndFileChooser',
-                file.name,
-                'list-item'
-              )}`}
+              data-testid={`dnd-file-chooser-${toValidHtmlId(
+                file.name
+              )}-list-item`}
               key={index}
             >
               {file.name}
@@ -186,11 +184,9 @@ export class DndFileChooser extends React.Component<
         <ul>
           {this.props.i18nUploadSuccessMessages!.map((message, idx) => (
             <li
-              data-testid={`${toTestId(
-                'DndFileChooser',
-                message,
-                'success-message'
-              )}`}
+              data-testid={`dnd-file-chooser-${toValidHtmlId(
+                message
+              )}-success-message`}
               key={'success' + idx}
               className="dnd-file-chooser__uploadMessage"
             >
@@ -200,11 +196,9 @@ export class DndFileChooser extends React.Component<
           ))}
           {this.props.i18nUploadFailedMessages!.map((message, idx) => (
             <li
-              data-testid={`${toTestId(
-                'DndFileChooser',
-                message,
-                'failed-message'
-              )}`}
+              data-testid={`dnd-file-chooser-${toValidHtmlId(
+                message
+              )}-failed-message-${idx}`}
               key={'fail' + idx}
               className="dnd-file-chooser__uploadMessage"
             >
@@ -291,7 +285,7 @@ export class DndFileChooser extends React.Component<
             {this.props.i18nHelpMessage ? (
               <Grid.Row>
                 <Grid.Col className="dnd-file-chooser__helpText">
-                  {this.props.i18nHelpMessage}
+                  <em>{this.props.i18nHelpMessage}</em>
                 </Grid.Col>
               </Grid.Row>
             ) : null}

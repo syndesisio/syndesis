@@ -1,5 +1,6 @@
 import { Icon, ListView } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../helpers';
 import { IntegrationIcon } from './IntegrationIcon';
 import { IntegrationStatus } from './IntegrationStatus';
 import { IntegrationStatusDetail } from './IntegrationStatusDetail';
@@ -36,6 +37,9 @@ export class IntegrationsListItem extends React.Component<
   public render() {
     return (
       <ListView.Item
+        data-testid={`integrations-list-item-${toValidHtmlId(
+          this.props.integrationName
+        )}-list-item`}
         checkboxInput={this.props.checkboxComponent || undefined}
         actions={this.props.actions}
         heading={this.props.integrationName}

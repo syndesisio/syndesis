@@ -2,7 +2,6 @@ import * as H from '@syndesis/history';
 import { EmptyState } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink } from '../../Layout';
-import { toTestId } from '../../utils';
 
 export interface ITagIntegrationDialogEmptyStateProps {
   href: H.LocationDescriptor;
@@ -29,10 +28,9 @@ export class TagIntegrationDialogEmptyState extends React.Component<
         <EmptyState.Info>{this.props.i18nInfo}</EmptyState.Info>
         <EmptyState.Action>
           <ButtonLink
-            data-testid={`${toTestId(
-              'TagIntegrationDialogEmptyState',
-              'manage-cicd-button'
-            )}`}
+            data-testid={
+              'tag-integration-dialog-empty-state-manage-cicd-button'
+            }
             as="primary"
             size="lg"
             href={this.props.href}

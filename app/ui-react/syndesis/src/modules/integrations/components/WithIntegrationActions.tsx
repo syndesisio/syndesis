@@ -120,7 +120,7 @@ export class WithIntegrationActions extends React.Component<
                   tagIntegration,
                 }) => {
                   const editAction: IIntegrationAction = {
-                    href: resolvers.integration.edit.index({
+                    href: resolvers.integration.edit.entryPoint({
                       flowId: this.props.integration.flows![0].id!,
                       integration: this.props.integration,
                     }),

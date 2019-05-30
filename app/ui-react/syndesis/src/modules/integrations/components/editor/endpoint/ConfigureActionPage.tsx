@@ -21,6 +21,7 @@ import {
   IConfigureActionRouteState,
   IDescribeDataShapeRouteParams,
   IDescribeDataShapeRouteState,
+  IPageWithEditorBreadcrumb,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 import {
@@ -28,7 +29,7 @@ import {
   WithConfigurationForm,
 } from './WithConfigurationForm';
 
-export interface IConfigureActionPageProps {
+export interface IConfigureActionPageProps extends IPageWithEditorBreadcrumb {
   backHref: (
     p: IConfigureActionRouteParams,
     s: IConfigureActionRouteState
@@ -76,21 +77,12 @@ export class ConfigureActionPage extends React.Component<
             IConfigureActionRouteParams,
             IConfigureActionRouteState
           >>
-            {(
-              { actionId, flowId, step = '0', position },
-              {
-                configuredProperties,
-                connection,
-                integration,
-                updatedIntegration,
-              },
-              { history }
-            ) => {
-              const stepAsNumber = parseInt(step, 10);
-              const positionAsNumber = parseInt(position, 10);
+            {(params, state, { history }) => {
+              const stepAsNumber = parseInt(params.step, 10);
+              const positionAsNumber = parseInt(params.position, 10);
               const oldStepConfig = getStep(
-                integration,
-                flowId,
+                state.integration,
+                params.flowId,
                 positionAsNumber
               );
               const onUpdatedIntegration = async ({
@@ -98,14 +90,14 @@ export class ConfigureActionPage extends React.Component<
                 moreConfigurationSteps,
                 values,
               }: IOnUpdatedIntegrationProps) => {
-                updatedIntegration = await (this.props.mode === 'adding' &&
-                  stepAsNumber === 0
+                const updatedIntegration = await (this.props.mode ===
+                  'adding' && stepAsNumber === 0
                   ? addConnection
                   : updateConnection)(
-                  updatedIntegration || integration,
-                  connection,
+                  state.updatedIntegration || state.integration,
+                  state.connection,
                   action,
-                  flowId,
+                  params.flowId,
                   positionAsNumber,
                   values
                 );
@@ -113,15 +105,11 @@ export class ConfigureActionPage extends React.Component<
                   history.push(
                     this.props.nextStepHref(
                       {
-                        actionId,
-                        flowId,
-                        position,
+                        ...params,
                         step: `${stepAsNumber + 1}`,
                       },
                       {
-                        configuredProperties,
-                        connection,
-                        integration,
+                        ...state,
                         updatedIntegration,
                       }
                     )
@@ -129,7 +117,7 @@ export class ConfigureActionPage extends React.Component<
                 } else {
                   const stepKind = getStep(
                     updatedIntegration,
-                    flowId,
+                    params.flowId,
                     positionAsNumber
                   ) as StepKind;
                   const gotoDescribeData = (direction: DataShapeDirection) => {
@@ -138,14 +126,14 @@ export class ConfigureActionPage extends React.Component<
                         true,
                         updatedIntegration!,
                         {
+                          ...params,
                           direction,
-                          flowId,
-                          position,
                         },
                         {
-                          connection,
-                          integration: updatedIntegration!,
+                          connection: state.connection,
+                          integration: state.integration,
                           step: stepKind,
+                          updatedIntegration,
                         }
                       )
                     );
@@ -155,24 +143,21 @@ export class ConfigureActionPage extends React.Component<
                       this.props.postConfigureHref(
                         false,
                         updatedIntegration!,
+                        params,
                         {
-                          actionId,
-                          flowId,
-                          position,
-                          step,
-                        } as IConfigureActionRouteParams,
-                        {
-                          configuredProperties,
-                          connection,
-                          integration: updatedIntegration!,
-                          step,
-                        } as IConfigureActionRouteState
+                          ...state,
+                          updatedIntegration,
+                        }
                       )
                     );
                   };
                   const descriptor = stepKind.action!.descriptor!;
                   if (
-                    isStartStep(updatedIntegration, flowId, positionAsNumber)
+                    isStartStep(
+                      state.integration,
+                      params.flowId,
+                      positionAsNumber
+                    )
                   ) {
                     if (requiresOutputDescribeDataShape(descriptor)) {
                       gotoDescribeData(DataShapeDirection.OUTPUT);
@@ -180,7 +165,11 @@ export class ConfigureActionPage extends React.Component<
                       gotoDefaultNextPage();
                     }
                   } else if (
-                    isEndStep(updatedIntegration, flowId, positionAsNumber)
+                    isEndStep(
+                      state.integration,
+                      params.flowId,
+                      positionAsNumber
+                    )
                   ) {
                     if (requiresInputDescribeDataShape(descriptor)) {
                       gotoDescribeData(DataShapeDirection.INPUT);
@@ -206,47 +195,40 @@ export class ConfigureActionPage extends React.Component<
                     description={
                       'Fill in the required information for the selected action.'
                     }
+                    toolbar={this.props.getBreadcrumb(
+                      'Configure the action',
+                      params,
+                      state
+                    )}
                     sidebar={this.props.sidebar({
                       activeIndex: positionAsNumber,
                       activeStep: {
-                        ...toUIStep(connection),
+                        ...toUIStep(state.connection),
                         icon: getConnectionIcon(
                           process.env.PUBLIC_URL,
-                          connection
+                          state.connection
                         ),
                       },
-                      steps: toUIStepCollection(getSteps(integration, flowId)),
+                      steps: toUIStepCollection(
+                        getSteps(state.integration, params.flowId)
+                      ),
                     })}
                     content={
                       <WithConfigurationForm
-                        connection={connection}
-                        actionId={actionId}
+                        connection={state.connection}
+                        actionId={params.actionId}
                         oldAction={
                           oldStepConfig && oldStepConfig.action
                             ? oldStepConfig!.action!
                             : undefined
                         }
                         configurationStep={stepAsNumber}
-                        initialValue={configuredProperties}
+                        initialValue={state.configuredProperties}
                         onUpdatedIntegration={onUpdatedIntegration}
-                        chooseActionHref={this.props.backHref(
-                          { actionId, flowId, step, position },
-                          {
-                            configuredProperties,
-                            connection,
-                            integration,
-                          }
-                        )}
+                        chooseActionHref={this.props.backHref(params, state)}
                       />
                     }
-                    cancelHref={this.props.cancelHref(
-                      { actionId, flowId, step, position },
-                      {
-                        configuredProperties,
-                        connection,
-                        integration,
-                      }
-                    )}
+                    cancelHref={this.props.cancelHref(params, state)}
                   />
                 </>
               );

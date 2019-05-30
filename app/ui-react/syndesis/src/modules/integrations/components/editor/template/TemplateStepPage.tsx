@@ -16,13 +16,14 @@ import * as React from 'react';
 import { PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
+  IPageWithEditorBreadcrumb,
   ITemplateStepRouteParams,
   ITemplateStepRouteState,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 import { WithTemplater } from './WithTemplater';
 
-export interface ITemplateStepPageProps {
+export interface ITemplateStepPageProps extends IPageWithEditorBreadcrumb {
   mode: 'adding' | 'editing';
   cancelHref: (
     p: ITemplateStepRouteParams,
@@ -42,12 +43,8 @@ export class TemplateStepPage extends React.Component<ITemplateStepPageProps> {
       <WithIntegrationHelpers>
         {({ addStep, updateStep }) => (
           <WithRouteData<ITemplateStepRouteParams, ITemplateStepRouteState>>
-            {(
-              { flowId, position },
-              { step, integration, updatedIntegration },
-              { history }
-            ) => {
-              const positionAsNumber = parseInt(position, 10);
+            {(params, state, { history }) => {
+              const positionAsNumber = parseInt(params.position, 10);
               let isValid = true;
               const handleUpdateLinting = (
                 unsortedAnnotations: any[],
@@ -59,28 +56,28 @@ export class TemplateStepPage extends React.Component<ITemplateStepPageProps> {
                 action,
                 values,
               }: StringMap<any>) => {
-                updatedIntegration = await (this.props.mode === 'adding'
+                const updatedIntegration = await (this.props.mode === 'adding'
                   ? addStep
                   : updateStep)(
-                  updatedIntegration || integration,
-                  setActionOnStep(step as Step, action, TEMPLATE) as StepKind,
-                  flowId,
+                  state.updatedIntegration || state.integration,
+                  setActionOnStep(
+                    state.step as Step,
+                    action,
+                    TEMPLATE
+                  ) as StepKind,
+                  params.flowId,
                   positionAsNumber,
                   values
                 );
                 history.push(
-                  this.props.postConfigureHref(
+                  this.props.postConfigureHref(updatedIntegration, params, {
+                    ...state,
                     updatedIntegration,
-                    { flowId, position },
-                    {
-                      integration,
-                      step,
-                      updatedIntegration,
-                    }
-                  )
+                  })
                 );
               };
-              const configuredProperties = step.configuredProperties || {};
+              const configuredProperties =
+                state.step.configuredProperties || {};
               const language =
                 configuredProperties.language || TemplateType.Mustache;
               const template = configuredProperties.template || '';
@@ -92,11 +89,19 @@ export class TemplateStepPage extends React.Component<ITemplateStepPageProps> {
                     description={
                       'A template step takes data from a source and inserts it into the format that is defined in a template that you provide.'
                     }
+                    toolbar={this.props.getBreadcrumb(
+                      'Upload template',
+                      params,
+                      state
+                    )}
                     sidebar={this.props.sidebar({
                       activeIndex: positionAsNumber,
-                      activeStep: toUIStep(step),
+                      activeStep: toUIStep(state.step),
                       steps: toUIStepCollection(
-                        getSteps(updatedIntegration || integration, flowId)
+                        getSteps(
+                          state.updatedIntegration || state.integration,
+                          params.flowId
+                        )
                       ),
                     })}
                     content={
@@ -117,14 +122,7 @@ export class TemplateStepPage extends React.Component<ITemplateStepPageProps> {
                         )}
                       </WithTemplater>
                     }
-                    cancelHref={this.props.cancelHref(
-                      { flowId, position },
-                      {
-                        integration,
-                        step,
-                        updatedIntegration,
-                      }
-                    )}
+                    cancelHref={this.props.cancelHref(params, state)}
                   />
                 </>
               );

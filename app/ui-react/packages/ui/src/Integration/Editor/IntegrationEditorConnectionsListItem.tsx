@@ -1,5 +1,6 @@
 import { ListView } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../../helpers';
 
 export interface IIntegrationEditorConnectionsListItemProps {
   integrationName: string;
@@ -14,6 +15,9 @@ export class IntegrationEditorConnectionsListItem extends React.Component<
   public render() {
     return (
       <ListView.Item
+        data-testid={`integration-editor-connections-list-item-${toValidHtmlId(
+          this.props.integrationName
+        )}-list-item`}
         actions={this.props.actions}
         heading={this.props.integrationName}
         description={this.props.integrationDescription}

@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../../Layout';
-import { toTestId } from '../../../utils';
 
 export interface ITemplateStepCardProps {
   i18nDone: string;
@@ -20,7 +19,7 @@ export class TemplateStepCard extends React.Component<ITemplateStepCardProps> {
               </div>
               <div className="card-pf-footer">
                 <ButtonLink
-                  data-testid={`${toTestId('TemplateStepCard', 'done-button')}`}
+                  data-testid={'template-step-card-done-button'}
                   onClick={this.props.submitForm}
                   disabled={!this.props.isValid}
                   as={'primary'}

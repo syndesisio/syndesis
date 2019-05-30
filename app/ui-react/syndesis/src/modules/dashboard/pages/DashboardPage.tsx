@@ -13,7 +13,6 @@ import {
   RecentUpdatesItem,
   RecentUpdatesSkeleton,
   TopIntegrationsCard,
-  toTestId,
   UptimeMetric,
 } from '@syndesis/ui';
 import { toShortDateAndTimeString } from '@syndesis/utils';
@@ -140,12 +139,7 @@ export default () => (
                       linkToConnections={resolvers.connections.connections()}
                       linkToConnectionCreation={resolvers.connections.create.selectConnector()}
                       integrationsOverview={
-                        <div
-                          data-testid={toTestId(
-                            'DashboardPage',
-                            'total-integrations'
-                          )}
-                        >
+                        <div data-testid={'dashboard-page-total-integrations'}>
                           <AggregatedMetricCard
                             title={t('titleTotalIntegrations')}
                             total={integrationsData.totalCount}
@@ -158,12 +152,7 @@ export default () => (
                         </div>
                       }
                       connectionsOverview={
-                        <div
-                          data-testid={toTestId(
-                            'DashboardPage',
-                            'total-connections'
-                          )}
-                        >
+                        <div data-testid={'dashboard-page-total-connections'}>
                           <ConnectionsMetric
                             i18nTitle={t('titleTotalConnections', {
                               count:
@@ -173,12 +162,7 @@ export default () => (
                         </div>
                       }
                       messagesOverview={
-                        <div
-                          data-testid={toTestId(
-                            'DashboardPage',
-                            'total-messages'
-                          )}
-                        >
+                        <div data-testid={'dashboard-page-total-messages'}>
                           <AggregatedMetricCard
                             title={t('titleTotalMessages')}
                             total={metricsData.messages!}
@@ -188,12 +172,7 @@ export default () => (
                         </div>
                       }
                       uptimeOverview={
-                        <div
-                          data-testid={toTestId(
-                            'DashboardPage',
-                            'metrics-uptime'
-                          )}
-                        >
+                        <div data-testid={'dashboard-page-metrics-uptime'}>
                           <UptimeMetric
                             start={parseInt(metricsData.start!, 10)}
                             durationDifference={toDurationDifferenceString(
@@ -245,7 +224,7 @@ export default () => (
                           i18nTitle={t('titleIntegrationUpdates')}
                         >
                           <WithLoader
-                            error={false}
+                            error={integrationsError}
                             loading={!hasIntegrations}
                             loaderChildren={<RecentUpdatesSkeleton />}
                             errorChildren={<ApiError />}

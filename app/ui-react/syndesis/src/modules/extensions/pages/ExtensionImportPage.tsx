@@ -8,7 +8,6 @@ import {
   IImportAction,
   Loader,
   PageSection,
-  toTestId,
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -175,10 +174,9 @@ export default class ExtensionImportPage extends React.Component<
                             <Breadcrumb
                               actions={
                                 <ButtonLink
-                                  data-testid={toTestId(
-                                    'ExtensionImportPage',
-                                    'cancel-button'
-                                  )}
+                                  data-testid={
+                                    'extension-import-page-cancel-button'
+                                  }
                                   className={'extension-import-page__action'}
                                   href={resolvers.extensions.list()}
                                   as={'default'}
@@ -188,19 +186,15 @@ export default class ExtensionImportPage extends React.Component<
                               }
                             >
                               <Link
-                                data-testid={toTestId(
-                                  'ExtensionImportPage',
-                                  'home-link'
-                                )}
+                                data-testid={'extension-import-page-home-link'}
                                 to={resolvers.dashboard.root()}
                               >
                                 {t('shared:Home')}
                               </Link>
                               <Link
-                                data-testid={toTestId(
-                                  'ExtensionImportPage',
-                                  'extensions-link'
-                                )}
+                                data-testid={
+                                  'extension-import-page-extensions-link'
+                                }
                                 to={resolvers.extensions.list()}
                               >
                                 {t('shared:Extensions')}

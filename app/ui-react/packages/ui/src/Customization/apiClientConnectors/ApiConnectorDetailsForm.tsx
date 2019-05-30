@@ -1,7 +1,6 @@
 import { Button, Card } from 'patternfly-react';
 import * as React from 'react';
 import { Loader } from '../../Layout';
-import { toTestId } from '../../utils';
 import './ApiConnectorDetailsForm.css';
 
 export interface IApiConnectorDetailsFormProps {
@@ -97,10 +96,7 @@ export class ApiConnectorDetailsForm extends React.Component<
                       src={this.props.apiConnectorIcon}
                     />
                     <input
-                      data-testid={`${toTestId(
-                        'ApiConnectorDetailsForm',
-                        'icon-file-input'
-                      )}`}
+                      data-testid={'api-connector-details-form-icon-file-input'}
                       type="file"
                       id="iconFileInput"
                       onChange={this.props.onUploadImage}
@@ -113,10 +109,7 @@ export class ApiConnectorDetailsForm extends React.Component<
             {this.props.isEditing ? (
               <>
                 <Button
-                  data-testid={`${toTestId(
-                    'ApiConnectorDetailsForm',
-                    'cancel-button'
-                  )}`}
+                  data-testid={'api-connector-details-form-cancel-button'}
                   bsStyle="default"
                   className="api-connector-details-form__editButton"
                   disabled={this.props.isWorking}
@@ -125,10 +118,7 @@ export class ApiConnectorDetailsForm extends React.Component<
                   {this.props.i18nCancelLabel}
                 </Button>
                 <Button
-                  data-testid={`${toTestId(
-                    'ApiConnectorDetailsForm',
-                    'save-button'
-                  )}`}
+                  data-testid={'api-connector-details-form-save-button'}
                   bsStyle="primary"
                   className="api-connector-details-form__editButton"
                   disabled={this.props.isWorking}
@@ -140,10 +130,7 @@ export class ApiConnectorDetailsForm extends React.Component<
               </>
             ) : (
               <Button
-                data-testid={`${toTestId(
-                  'ApiConnectorDetailsForm',
-                  'edit-button'
-                )}`}
+                data-testid={'api-connector-details-form-edit-button'}
                 bsStyle="primary"
                 onClick={this.props.onStartEditing}
               >

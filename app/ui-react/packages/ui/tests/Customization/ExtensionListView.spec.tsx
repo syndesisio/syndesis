@@ -28,7 +28,11 @@ export default describe('ExtensionListView', () => {
       placeholder: filterPlaceholder,
       title: nameLabel,
     },
-    currentSortType: 'sort',
+    currentSortType: {
+      id: 'sort',
+      isNumeric: false,
+      title: 'Sort',
+    },
     currentValue: '',
     filterTypes: [],
     isSortAscending: true,

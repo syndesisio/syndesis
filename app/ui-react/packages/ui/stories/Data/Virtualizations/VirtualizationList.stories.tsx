@@ -193,7 +193,7 @@ const virtualizationItems = [
     i18nEdit={editText}
     i18nEditTip={editTip2}
     i18nError={errorText}
-    /* TD-636: Commented out for TP 
+    /* TD-636: Commented out for TP
     i18nExport={exportText} */
     i18nPublished={publishedText}
     i18nUnpublish={unpublishText}
@@ -203,7 +203,7 @@ const virtualizationItems = [
     i18nUnpublishModalMessage={confirmUnpublishMessage}
     i18nUnpublishModalTitle={confirmUnpublishTitle}
     onDelete={action(deleteText)}
-    /* TD-636: Commented out for TP 
+    /* TD-636: Commented out for TP
     onExport={action(exportText)} */
     onUnpublish={action(unpublishText)}
     onPublish={action(publishText)}
@@ -297,7 +297,11 @@ stories
             placeholder: text('placeholder', 'Filter by name'),
             title: text('title', 'Name'),
           }}
-          currentSortType={'sort'}
+          currentSortType={{
+            id: 'sort',
+            isNumeric: false,
+            title: 'Sort',
+          }}
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
@@ -324,8 +328,8 @@ stories
             'i18nEmptyStateTitle',
             createVirtualization
           )}
-          /* TD-636: Commented out for TP 
-          i18nImport={importText} 
+          /* TD-636: Commented out for TP
+          i18nImport={importText}
           i18nImportTip={importTip} */
           i18nLinkCreateVirtualization={text(
             'i18nLinkCreateVirtualization',
@@ -339,7 +343,7 @@ stories
           )}
           i18nResultsCount={text('i18nResultsCount', '0 Results')}
           i18nTitle={text('i18nTitle', title)}
-          /* TD-636: Commented out for TP 
+          /* TD-636: Commented out for TP
           onImport={action(importText)} */
           children={[]}
           hasListData={false}
@@ -360,7 +364,11 @@ stories
             placeholder: text('placeholder', 'Filter by name'),
             title: text('title', 'Name'),
           }}
-          currentSortType={'sort'}
+          currentSortType={{
+            id: 'sort',
+            isNumeric: false,
+            title: 'Sort',
+          }}
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
@@ -387,7 +395,7 @@ stories
             'i18nEmptyStateTitle',
             createVirtualization
           )}
-          /* TD-636: Commented out for TP 
+          /* TD-636: Commented out for TP
           i18nImport={importText}
           i18nImportTip={importTip} */
           i18nLinkCreateVirtualization={text(
@@ -404,7 +412,7 @@ stories
             virtualizationItems.length + ' Results'
           )}
           i18nTitle={text('i18nTitle', title)}
-          /* TD-636: Commented out for TP 
+          /* TD-636: Commented out for TP
           onImport={action(importText)} */
           children={virtualizationItems}
           hasListData={true}
@@ -425,7 +433,11 @@ stories
             placeholder: text('placeholder', 'Filter by name'),
             title: text('title', 'Name'),
           }}
-          currentSortType={'sort'}
+          currentSortType={{
+            id: 'sort',
+            isNumeric: false,
+            title: 'Sort',
+          }}
           currentValue={''}
           filterTypes={[]}
           isSortAscending={true}
@@ -452,7 +464,7 @@ stories
             'i18nEmptyStateTitle',
             createVirtualization
           )}
-          /* TD-636: Commented out for TP 
+          /* TD-636: Commented out for TP
           i18nImport={importText}
           i18nImportTip={importTip} */
           i18nLinkCreateVirtualization={text(
@@ -469,7 +481,7 @@ stories
             virtItem.length + ' Results'
           )}
           i18nTitle={text('i18nTitle', title)}
-          /* TD-636: Commented out for TP 
+          /* TD-636: Commented out for TP
           onImport={action(importText)} */
           hasListData={true}
         />

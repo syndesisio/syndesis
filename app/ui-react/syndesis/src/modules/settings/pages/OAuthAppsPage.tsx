@@ -17,7 +17,6 @@ import {
 } from '@syndesis/ui';
 import {
   allFieldsRequired,
-  applyInitialValues,
   getRequiredStatusText,
   toFormDefinition,
   validateConfiguredProperties,
@@ -33,7 +32,7 @@ import { ApiError, PageTitle } from '../../../shared';
 function getFilteredAndSortedOAuthApps(
   oauthApps: OAuthApp[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let answer = oauthApps;
@@ -196,10 +195,8 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                           const configured =
                                             typeof oauthApp.configuredProperties !==
                                             'undefined';
-                                          const configuration = applyInitialValues(
-                                            definition,
-                                            oauthApp.configuredProperties
-                                          );
+                                          const configuration =
+                                            oauthApp.configuredProperties;
                                           const key = JSON.stringify(
                                             configuration
                                           );
@@ -255,7 +252,9 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                                     values
                                                   )
                                                 }
-                                                initialValue={configuration}
+                                                initialValue={
+                                                  configuration as IFormValue
+                                                }
                                                 onSave={(
                                                   configuredProperties,
                                                   actions

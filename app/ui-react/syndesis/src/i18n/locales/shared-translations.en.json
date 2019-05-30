@@ -42,6 +42,7 @@
       "linkCreateIntegration": "Create Integration",
       "Name": "Name",
       "nameFilterPlaceholder": "Filter by Name...",
+      "Next": "Next",
       "Pending": "Pending",
       "Publish": "Publish",
       "Published": "Running",

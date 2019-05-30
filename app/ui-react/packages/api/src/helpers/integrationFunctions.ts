@@ -16,10 +16,17 @@ import {
 } from '@syndesis/models';
 import { key } from '@syndesis/utils';
 import produce from 'immer';
-import { AGGREGATE, DataShapeKinds, ENDPOINT } from '../constants';
+import {
+  AGGREGATE,
+  API_PROVIDER,
+  DataShapeKinds,
+  ENDPOINT,
+} from '../constants';
 import { getConnectionIcon } from './connectionFunctions';
 
+export const NEW_INTEGRATION_ID = 'new-integration';
 export const NEW_INTEGRATION = {
+  id: NEW_INTEGRATION_ID,
   name: '',
   tags: [],
 } as Integration;
@@ -80,7 +87,6 @@ export function toDataShapeKinds(
 /**
  * returns an empty integration object.
  *
- * @todo make the returned object immutable to avoid uncontrolled changes
  */
 export function getEmptyIntegration(): Integration {
   return produce(NEW_INTEGRATION, draft => {
@@ -679,6 +685,45 @@ export function prepareIntegrationForSaving(integration: Integration) {
   return { ...integration, tags, flows };
 }
 
+export function sanitizeFlow(flow: Flow): Flow {
+  flow.steps = flow.steps || [];
+  // make sure we have all the connection ids as tags for the flow
+  flow.tags = Array.from(
+    new Set([
+      ...(flow.tags || []),
+      ...flow.steps
+        .filter(s => s.connection && s.connection.id)
+        .map(s => s.connection!.id),
+    ])
+  ) as string[];
+
+  // for the api provider, if a flow has been modified we change the last
+  // step of the flow to automatically set a return code of 200, unless
+  // already modified by the user. Also, we update the flow metadata to
+  // reflect that the flow has been "implemented"
+  const lastStep = flow.steps[flow.steps.length - 1];
+  if (
+    lastStep &&
+    lastStep.action &&
+    lastStep.action.id === 'io.syndesis:api-provider-end'
+  ) {
+    if (
+      !lastStep.configuredProperties ||
+      (lastStep.configuredProperties &&
+        lastStep.configuredProperties.httpResponseCode === '501')
+    ) {
+      const returnCode = flow.metadata!['default-return-code'];
+      const returnCodeEdited = flow.metadata!['return-code-edited'];
+      if (returnCode && !returnCodeEdited) {
+        flow.metadata!['return-code-edited'] = 'true';
+        lastStep.configuredProperties!.httpResponseCode = returnCode;
+      }
+    }
+  }
+
+  return flow;
+}
+
 /**
  * Returns the flow object with the given ID
  * @param integration
@@ -698,6 +743,7 @@ export function getFlow(integration: Integration, flowId: string) {
  * @param flow
  */
 export function setFlow(integration: Integration, flow: Flow) {
+  flow = sanitizeFlow(flow);
   if (getFlow(integration, flow.id!)) {
     return {
       ...integration,
@@ -1305,6 +1351,15 @@ export function isEndStep(
   position: number
 ) {
   const steps = getSteps(integration, flowId);
+  return atEnd(steps, position);
+}
+
+/**
+ * Returns if the given indice is at the end of the step array
+ * @param steps
+ * @param position
+ */
+export function atEnd(steps: Step[], position: number) {
   return position + 1 >= steps.length;
 }
 
@@ -1323,4 +1378,8 @@ export function isMiddleStep(
     !isStartStep(integration, flowId, position) &&
     !isEndStep(integration, flowId, position)
   );
+}
+
+export function isIntegrationApiProvider(integration: IntegrationOverview) {
+  return (integration.tags || []).includes(API_PROVIDER);
 }

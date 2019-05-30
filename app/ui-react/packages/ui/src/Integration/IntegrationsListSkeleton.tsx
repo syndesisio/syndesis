@@ -1,6 +1,5 @@
 import * as React from 'react';
 import ContentLoader from 'react-content-loader';
-import { toTestId } from '../utils';
 
 function getRandom(min: number, max: number) {
   return Math.random() * (max - min) + min;
@@ -44,7 +43,7 @@ export class IntegrationsListSkeleton extends React.PureComponent {
       <>
         <div
           className={'list-group-item'}
-          data-testid={`${toTestId('IntegrationsListSkeleton', 'item-0')}`}
+          data-testid={'integrations-list-skeleton-item-0'}
         >
           <div>
             <ItemSkeleton />
@@ -52,7 +51,7 @@ export class IntegrationsListSkeleton extends React.PureComponent {
         </div>
         <div
           className={'list-group-item'}
-          data-testid={`${toTestId('IntegrationsListSkeleton', 'item-1')}`}
+          data-testid={'integrations-list-skeleton-item-1'}
         >
           <div>
             <ItemSkeleton />
@@ -60,7 +59,7 @@ export class IntegrationsListSkeleton extends React.PureComponent {
         </div>
         <div
           className={'list-group-item'}
-          data-testid={`${toTestId('IntegrationsListSkeleton', 'item-2')}`}
+          data-testid={'integrations-list-skeleton-item-2'}
         >
           <div>
             <ItemSkeleton />

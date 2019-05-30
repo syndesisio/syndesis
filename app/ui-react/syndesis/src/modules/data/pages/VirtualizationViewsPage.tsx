@@ -1,7 +1,7 @@
 import { WithViewEditorStates, WithVirtualizationHelpers } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
 import { ViewDefinition, ViewEditorState } from '@syndesis/models';
-import { Breadcrumb, PageSection, toTestId, ViewHeader } from '@syndesis/ui';
+import { Breadcrumb, PageSection, ViewHeader } from '@syndesis/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import i18n from '../../../i18n';
@@ -45,7 +45,7 @@ export interface IVirtualizationViewsPageRouteState {
 function getFilteredAndSortedViewDefns(
   viewDefinitions: ViewDefinition[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let filteredAndSorted = viewDefinitions;
@@ -114,19 +114,15 @@ export class VirtualizationViewsPage extends React.Component<
                       <>
                         <Breadcrumb>
                           <Link
-                            data-testid={toTestId(
-                              'VirtualizationViewsPage',
-                              'home-link'
-                            )}
+                            data-testid={'virtualization-views-page-home-link'}
                             to={resolvers.dashboard.root()}
                           >
                             {t('shared:Home')}
                           </Link>
                           <Link
-                            data-testid={toTestId(
-                              'VirtualizationViewsPage',
-                              'virtualizations-link'
-                            )}
+                            data-testid={
+                              'virtualization-views-page-virtualizations-link'
+                            }
                             to={resolvers.data.root()}
                           >
                             {t('shared:DataVirtualizations')}

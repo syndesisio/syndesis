@@ -9,7 +9,12 @@ import {
   PfDropdownItem,
   PfVerticalNavItem,
 } from '@syndesis/ui';
-import { AboutModal, AboutModalContent, Loader, toTestId } from '@syndesis/ui';
+import {
+  AboutModal,
+  AboutModalContent,
+  Loader,
+  toValidHtmlId,
+} from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
 import { useState } from 'react';
 import * as React from 'react';
@@ -88,7 +93,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
             <>
               <div className="pull-right toast-pf-action">
                 <ButtonLink
-                  data-testid={`${toTestId('UI', 'reload-button')}`}
+                  data-testid={'ui-reload-button'}
                   onClick={refreshApp}
                   as={'link'}
                   style={{ padding: 0, border: 0 }}
@@ -210,10 +215,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                         <button
                                           type="button"
                                           role="menuitem"
-                                          data-testid={`${toTestId(
-                                            'UI',
-                                            'logout-link'
-                                          )}`}
+                                          data-testid={'ui-logout-link'}
                                           className="pf-c-dropdown__menu-item"
                                         >
                                           {t('Logout')}
@@ -231,9 +233,8 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                   label={t((route as IAppRoute).label)}
                                   to={(route as IAppRoute).to}
                                   key={index}
-                                  data-testid={`${toTestId(
-                                    'UI',
-                                    (route as IAppRoute).to
+                                  data-testid={`ui-${toValidHtmlId(
+                                    (route as IAppRoute).label
                                   )}`}
                                 />
                               ) : (
@@ -249,9 +250,8 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                         label={t(subRoute.label)}
                                         to={subRoute.to}
                                         key={subIndex}
-                                        data-testid={`${toTestId(
-                                          'UI',
-                                          subRoute.to
+                                        data-testid={`ui-${toValidHtmlId(
+                                          subRoute.label
                                         )}`}
                                       />
                                     )

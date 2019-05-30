@@ -1,7 +1,7 @@
 import { Text } from '@patternfly/react-core';
 import { Card, Label } from 'patternfly-react';
 import * as React from 'react';
-import { toTestId } from '../../utils';
+import { toValidHtmlId } from '../../helpers';
 import './DvConnectionCard.css';
 
 export enum ConnectionStatus {
@@ -49,7 +49,13 @@ export class DvConnectionCard extends React.PureComponent<
         className={'dv-connection-card'}
         onClick={this.toggleSelected(this.props.name)}
       >
-        <Card matchHeight={true} accented={this.state.isSelected}>
+        <Card
+          data-testid={`dv-connection-card-${toValidHtmlId(
+            this.props.name
+          )}-card`}
+          matchHeight={true}
+          accented={this.state.isSelected}
+        >
           <Card.Body>
             <div className="dv-connection-card__status">
               <Label
@@ -68,11 +74,7 @@ export class DvConnectionCard extends React.PureComponent<
               </div>
               <div
                 className="dv-connection-card__title h2"
-                data-testid={`${toTestId(
-                  'DvConnectionCard',
-                  this.props.name,
-                  'title'
-                )}`}
+                data-testid={'dv-connection-card--title'}
               >
                 {this.props.name}
               </div>

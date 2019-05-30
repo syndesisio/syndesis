@@ -1,6 +1,5 @@
 import { Filter, FormControl, Sort, Toolbar } from 'patternfly-react';
 import * as React from 'react';
-import { toTestId } from '../utils';
 import './ListViewToolbar.css';
 
 export interface IFilterValue {
@@ -23,6 +22,7 @@ export interface ISortType {
 }
 
 export interface IActiveFilter {
+  id: string;
   title: string;
   value: string;
 }
@@ -31,7 +31,7 @@ export interface IListViewToolbarProps {
   activeFilters: IActiveFilter[];
   filterTypes: IFilterType[];
   currentFilterType: IFilterType;
-  currentSortType: string;
+  currentSortType: ISortType;
   currentValue: any;
   isSortAscending: boolean;
   resultsCount: number;
@@ -42,7 +42,7 @@ export interface IListViewToolbarProps {
 
   onValueKeyPress(keyEvent: KeyboardEvent): void;
 
-  onFilterAdded(title: string, value: string): void;
+  onFilterAdded(id: string, title: string, value: string): void;
 
   onSelectFilterType(filterType: IFilterType): void;
 
@@ -54,13 +54,13 @@ export interface IListViewToolbarProps {
 
   onToggleCurrentSortDirection(): void;
 
-  onUpdateCurrentSortType(sortType: string): void;
+  onUpdateCurrentSortType(sortType: ISortType): void;
 }
 
 export class ListViewToolbar extends React.Component<IListViewToolbarProps> {
   public render() {
     return (
-      <Toolbar>
+      <Toolbar className="list-view-toolbar">
         <Filter>
           <Filter.TypeSelector
             filterTypes={this.props.filterTypes}
@@ -99,7 +99,7 @@ export class ListViewToolbar extends React.Component<IListViewToolbarProps> {
                 ))}
               </Filter.List>
               <a
-                data-testid={`${toTestId('ListViewToolbar', 'clear-filters')}`}
+                data-testid={'list-view-toolbar-clear-filters'}
                 onClick={this.props.onClearFilters}
               >
                 Clear All Filters

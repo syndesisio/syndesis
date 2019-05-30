@@ -8,13 +8,13 @@ import {
   Tooltip,
 } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../../../helpers';
 import { ButtonLink } from '../../../Layout';
 import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
 } from '../../../Shared';
-import { toTestId } from '../../../utils';
 
 export interface IViewListItemProps {
   viewDescription: string;
@@ -64,15 +64,14 @@ export class ViewListItem extends React.Component<
           onConfirm={this.handleDelete}
         />
         <ListViewItem
+          data-testid={`view-list-item-${toValidHtmlId(
+            this.props.viewName
+          )}-list-item`}
           actions={
             <div className="form-group">
               <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    'ViewListItem',
-                    this.props.viewName,
-                    'edit-button'
-                  )}`}
+                  data-testid={'view-list-item-edit-button'}
                   href={this.props.viewEditPageLink}
                   as={'default'}
                 >

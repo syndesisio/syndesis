@@ -1,6 +1,6 @@
 import { ListViewItem } from 'patternfly-react';
 import * as React from 'react';
-import { toTestId } from '../../utils';
+import { toValidHtmlId } from '../../helpers';
 
 export interface ITagIntegrationListItemProps {
   selected: boolean;
@@ -23,11 +23,9 @@ export class TagIntegrationListItem extends React.Component<
       <ListViewItem
         checkboxInput={
           <input
-            data-testid={`${toTestId(
-              'TagIntegrationListItem',
-              this.props.name,
-              'selected-input'
-            )}`}
+            data-testid={`tag-integration-list-item-${toValidHtmlId(
+              this.props.name
+            )}-selected-input`}
             type="checkbox"
             defaultChecked={this.props.selected}
             onChange={this.handleChange}

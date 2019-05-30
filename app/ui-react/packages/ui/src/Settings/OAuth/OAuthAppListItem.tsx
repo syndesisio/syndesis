@@ -1,5 +1,6 @@
 import { ListViewItem } from 'patternfly-react';
 import * as React from 'react';
+import { toValidHtmlId } from '../../helpers';
 
 export interface IOAuthAppListItemProps {
   id: string;
@@ -18,6 +19,9 @@ export class OAuthAppListItem extends React.Component<IOAuthAppListItemProps> {
   public render() {
     return (
       <ListViewItem
+        data-testid={`o-auth-app-list-item-${toValidHtmlId(
+          this.props.name
+        )}-list-item`}
         key={this.props.id}
         hideCloseIcon={true}
         initExpanded={this.props.expanded}

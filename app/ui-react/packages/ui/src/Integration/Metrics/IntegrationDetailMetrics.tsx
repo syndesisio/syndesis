@@ -41,7 +41,12 @@ export class IntegrationDetailMetrics extends React.Component<
         <CardGrid fluid={true} matchHeight={true}>
           <Row style={{ marginBottom: '20px', marginTop: '20px' }}>
             <Col xs={6} sm={3} md={3}>
-              <Card accented={true} aggregated={true} matchHeight={true}>
+              <Card
+                data-testid={'integration-detail-metrics-total-errors-card'}
+                accented={true}
+                aggregated={true}
+                matchHeight={true}
+              >
                 <CardTitle>{this.props.i18nTotalErrors}</CardTitle>
                 <CardBody>
                   <AggregateStatusNotifications>
@@ -54,7 +59,12 @@ export class IntegrationDetailMetrics extends React.Component<
               </Card>
             </Col>
             <Col xs={6} sm={3} md={3}>
-              <Card accented={true} aggregated={true} matchHeight={true}>
+              <Card
+                data-testid={'integration-detail-metrics-last-processed-card'}
+                accented={true}
+                aggregated={true}
+                matchHeight={true}
+              >
                 <CardTitle>
                   <Icon name="shield" />
                   {this.props.i18nLastProcessed}
@@ -69,7 +79,12 @@ export class IntegrationDetailMetrics extends React.Component<
               </Card>
             </Col>
             <Col xs={6} sm={3} md={3}>
-              <Card accented={true} aggregated={true} matchHeight={true}>
+              <Card
+                data-testid={'integration-detail-metrics-total-messages-card'}
+                accented={true}
+                aggregated={true}
+                matchHeight={true}
+              >
                 <CardTitle>
                   <AggregateStatusCount>
                     {this.props.messages}&nbsp;
@@ -91,7 +106,12 @@ export class IntegrationDetailMetrics extends React.Component<
               </Card>
             </Col>
             <Col xs={6} sm={3} md={3}>
-              <Card accented={true} aggregated={true} matchHeight={true}>
+              <Card
+                data-testid={'integration-detail-metrics-uptime-card'}
+                accented={true}
+                aggregated={true}
+                matchHeight={true}
+              >
                 <Card.Title className={'text-left'}>
                   <small className={'pull-right'}>
                     {this.props.i18nSince}

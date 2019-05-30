@@ -6,19 +6,19 @@ import {
   IntegrationEditorChooseAction,
   IntegrationEditorLayout,
   PageLoader,
-  toTestId,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
+  IPageWithEditorBreadcrumb,
   ISelectActionRouteParams,
   ISelectActionRouteState,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 
-export interface ISelectActionPageProps {
+export interface ISelectActionPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: ISelectActionRouteParams,
     s: ISelectActionRouteState
@@ -46,10 +46,13 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
   public render() {
     return (
       <WithRouteData<ISelectActionRouteParams, ISelectActionRouteState>>
-        {({ connectionId, flowId, position }, { connection, integration }) => {
-          const positionAsNumber = parseInt(position, 10);
+        {(params, state) => {
+          const positionAsNumber = parseInt(params.position, 10);
           return (
-            <WithConnection id={connectionId} initialValue={connection}>
+            <WithConnection
+              id={params.connectionId}
+              initialValue={state.connection}
+            >
               {({ data, hasData, error }) => (
                 <WithLoader
                   error={error}
@@ -65,17 +68,22 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                         description={
                           'Choose an action for the selected connection.'
                         }
+                        toolbar={this.props.getBreadcrumb(
+                          'Choose an action',
+                          params,
+                          state
+                        )}
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
                           activeStep: {
-                            ...toUIStep(connection),
+                            ...toUIStep(state.connection),
                             icon: getConnectionIcon(
                               process.env.PUBLIC_URL,
-                              connection
+                              state.connection
                             ),
                           },
                           steps: toUIStepCollection(
-                            getSteps(integration, flowId)
+                            getSteps(state.integration, params.flowId)
                           ),
                         })}
                         content={
@@ -94,14 +102,13 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                                   }
                                   actions={
                                     <ButtonLink
-                                      data-testid={toTestId(
-                                        'SelectActionPage',
-                                        'select-button'
-                                      )}
+                                      data-testid={
+                                        'select-action-page-select-button'
+                                      }
                                       href={this.props.selectHref(
                                         a.id!,
-                                        { connectionId, flowId, position },
-                                        { connection, integration }
+                                        params,
+                                        state
                                       )}
                                     >
                                       Select
@@ -111,10 +118,7 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                               ))}
                           </IntegrationEditorChooseAction>
                         }
-                        cancelHref={this.props.cancelHref(
-                          { connectionId, flowId, position },
-                          { connection, integration }
-                        )}
+                        cancelHref={this.props.cancelHref(params, state)}
                       />
                     </>
                   )}

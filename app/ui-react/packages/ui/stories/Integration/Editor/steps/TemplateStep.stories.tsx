@@ -9,7 +9,7 @@ import {
 } from '../../../../src';
 import { ITextEditor } from '../../../../src/Shared';
 
-const stories = storiesOf('Integration/editor/step/TemplateStep', module);
+const stories = storiesOf('Integration/Editor/step/TemplateStep', module);
 
 stories.add('Normal', () => (
   <>

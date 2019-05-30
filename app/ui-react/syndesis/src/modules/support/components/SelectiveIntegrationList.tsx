@@ -6,7 +6,6 @@ import {
   IntegrationsListItemBasic,
   ISortType,
   ListViewToolbar,
-  toTestId,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
@@ -36,7 +35,7 @@ export const SelectiveIntegrationList: React.FunctionComponent<
   const getFilteredAndSortedIntegrations = (
     integrations: IntegrationOverview[],
     activeFilters: IActiveFilter[],
-    currentSortType: string,
+    currentSortType: ISortType,
     isSortAscending: boolean
   ) => {
     let filteredAndSortedIntegrations = integrations;
@@ -45,7 +44,7 @@ export const SelectiveIntegrationList: React.FunctionComponent<
       const valueToLower = filter.value.toLowerCase();
       filteredAndSortedIntegrations = filteredAndSortedIntegrations.filter(
         (si: IntegrationOverview) => {
-          if (filter.title === 'Name') {
+          if (filter.id === 'name') {
             return si.name.toLowerCase().includes(valueToLower);
           }
           return false;
@@ -57,7 +56,7 @@ export const SelectiveIntegrationList: React.FunctionComponent<
       (siA, siB) => {
         const left = isSortAscending ? siA : siB;
         const right = isSortAscending ? siB : siA;
-        if (currentSortType === 'Name') {
+        if (currentSortType.id === 'name') {
           return left.name.localeCompare(right.name);
         }
         return left.currentState!.localeCompare(right.currentState!);
@@ -101,10 +100,9 @@ export const SelectiveIntegrationList: React.FunctionComponent<
                         integrationName={si.name}
                         checkboxComponent={
                           <input
-                            data-testid={toTestId(
-                              'SelectiveIntegrationList',
-                              'integrations-input'
-                            )}
+                            data-testid={
+                              'selective-integration-list-integrations-input'
+                            }
                             type="checkbox"
                             defaultValue={si.name}
                             onChange={event => onIntegrationChecked(event)}

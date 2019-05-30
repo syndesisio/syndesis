@@ -1,5 +1,5 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
-import { getEmptyIntegration } from '@syndesis/api';
+import { getEmptyIntegration, isIntegrationApiProvider } from '@syndesis/api';
 import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import {
   makeResolver,
@@ -7,15 +7,20 @@ import {
   makeResolverNoParamsWithDefaults,
 } from '@syndesis/utils';
 import {
+  IBaseFlowRouteParams,
   IBaseRouteParams,
   IBaseRouteState,
-  IEditorIndex,
   ISaveIntegrationRouteParams,
   ISaveIntegrationRouteState,
   ISelectConnectionRouteParams,
   ISelectConnectionRouteState,
 } from './components/editor/interfaces';
-import { makeEditorResolvers } from './components/editor/makeEditorResolvers';
+import {
+  IEditorBase,
+  IEditorIndex,
+  IEditorWithOptionalFlow,
+  makeEditorResolvers,
+} from './components/editor/makeEditorResolvers';
 import {
   IDetailsRouteParams,
   IDetailsRouteState,
@@ -28,7 +33,57 @@ export const configureIndexMapper = ({
 }: IEditorIndex) => ({
   params: {
     flowId: flowId ? flowId : integration.flows![0].id!,
-    ...(integration && integration.id ? { integrationId: integration.id } : {}),
+    integrationId: integration.id!,
+  } as IBaseFlowRouteParams,
+  state: {
+    integration,
+  } as IBaseRouteState,
+});
+
+export const configureIndexOrApiProviderMapper = (
+  indexRoute: string,
+  apiProviderRoute: string
+) => ({ flowId, integration }: IEditorWithOptionalFlow) => {
+  return isIntegrationApiProvider(integration!)
+    ? {
+        params: {
+          integrationId: integration.id!,
+        } as IBaseFlowRouteParams,
+        route: apiProviderRoute,
+        state: {
+          integration,
+        } as IBaseRouteState,
+      }
+    : {
+        params: {
+          flowId: flowId ? flowId : integration.flows![0].id!,
+          integrationId: integration.id!,
+        } as IBaseFlowRouteParams,
+        route: indexRoute,
+        state: {
+          integration,
+        } as IBaseRouteState,
+      };
+};
+
+export const configureSaveMapper = ({
+  flowId,
+  integration,
+}: IEditorWithOptionalFlow) => ({
+  params: {
+    integrationId: integration.id!,
+  } as ISaveIntegrationRouteParams,
+  state: {
+    flowId,
+    integration,
+  } as ISaveIntegrationRouteState,
+});
+
+export const configureApiProviderOperationsMapper = ({
+  integration,
+}: IEditorBase) => ({
+  params: {
+    integrationId: integration.id,
   } as IBaseRouteParams,
   state: {
     integration,
@@ -97,6 +152,7 @@ const resolvers = {
         return {
           params: {
             flowId: integration.flows![0].id!,
+            integrationId: integration.id!,
             position: '0',
           },
           state: {
@@ -108,17 +164,32 @@ const resolvers = {
     finish: makeEditorResolvers(routes.create.finish),
     configure: {
       root: makeResolverNoParams(routes.create.configure.root),
-      index: makeResolver<IEditorIndex, IBaseRouteParams, IBaseRouteState>(
+      entryPoint: makeResolver<
+        IEditorWithOptionalFlow,
+        IBaseFlowRouteParams,
+        IBaseRouteState
+      >(
+        routes.create.configure.index,
+        configureIndexOrApiProviderMapper(
+          routes.create.configure.index,
+          routes.create.configure.operations
+        )
+      ),
+      index: makeResolver<IEditorIndex, IBaseFlowRouteParams, IBaseRouteState>(
         routes.create.configure.index,
         configureIndexMapper
+      ),
+      operations: makeResolver<IEditorBase, IBaseRouteParams, IBaseRouteState>(
+        routes.create.configure.operations,
+        configureApiProviderOperationsMapper
       ),
       addStep: makeEditorResolvers(routes.create.configure.addStep),
       editStep: makeEditorResolvers(routes.create.configure.editStep),
       saveAndPublish: makeResolver<
-        IEditorIndex,
+        IEditorWithOptionalFlow,
         ISaveIntegrationRouteParams,
         ISaveIntegrationRouteState
-      >(routes.create.configure.saveAndPublish, configureIndexMapper),
+      >(routes.create.configure.saveAndPublish, configureSaveMapper),
     },
   },
   integration: {
@@ -126,21 +197,36 @@ const resolvers = {
     activity: integrationActivityResolver,
     details: integrationDetailsResolver,
     edit: {
-      root: makeResolver<IEditorIndex, IBaseRouteParams, IBaseRouteState>(
+      root: makeResolver<IEditorIndex, IBaseFlowRouteParams, IBaseRouteState>(
         routes.integration.edit.root,
         configureIndexMapper
       ),
-      index: makeResolver<IEditorIndex, IBaseRouteParams, IBaseRouteState>(
+      entryPoint: makeResolver<
+        IEditorWithOptionalFlow,
+        IBaseFlowRouteParams,
+        IBaseRouteState
+      >(
+        routes.integration.edit.index,
+        configureIndexOrApiProviderMapper(
+          routes.integration.edit.index,
+          routes.integration.edit.operations
+        )
+      ),
+      index: makeResolver<IEditorIndex, IBaseFlowRouteParams, IBaseRouteState>(
         routes.integration.edit.index,
         configureIndexMapper
+      ),
+      operations: makeResolver<IEditorBase, IBaseRouteParams, IBaseRouteState>(
+        routes.integration.edit.operations,
+        configureApiProviderOperationsMapper
       ),
       addStep: makeEditorResolvers(routes.integration.edit.addStep),
       editStep: makeEditorResolvers(routes.integration.edit.editStep),
       saveAndPublish: makeResolver<
-        IEditorIndex,
+        IEditorWithOptionalFlow,
         ISaveIntegrationRouteParams,
         ISaveIntegrationRouteState
-      >(routes.integration.edit.saveAndPublish, configureIndexMapper),
+      >(routes.integration.edit.saveAndPublish, configureSaveMapper),
     },
     metrics: metricsResolver,
   },

@@ -1,0 +1,20 @@
+.http-method--delete {
+  color: #D01414;
+  font-weight: 600;
+}
+
+.http-method--get {
+  color: #3C96D4;
+  font-weight: 600;
+}
+
+.http-method--post {
+  color: #61AF5A;
+  font-weight: 600;
+}
+
+.http-method--put {
+  color: #ED811D;
+  font-weight: 600;
+}
+

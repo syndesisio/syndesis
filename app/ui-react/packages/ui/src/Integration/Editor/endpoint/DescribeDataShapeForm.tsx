@@ -8,7 +8,6 @@ import {
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../../Layout';
 import { TextEditor } from '../../../Shared';
-import { toTestId } from '../../../utils';
 
 const kinds = [
   {
@@ -76,10 +75,7 @@ export class DescribeDataShapeForm extends React.Component<
                       <FieldLevelHelp content={this.props.i18nSelectTypeHelp} />
                     </ControlLabel>
                     <FormControl
-                      data-testid={`${toTestId(
-                        'DescribeDataShapeForm',
-                        'kind-input'
-                      )}`}
+                      data-testid={'describe-data-shape-form-kind-input'}
                       componentClass="select"
                       value={this.props.kind}
                       onChange={(event: React.ChangeEvent<HTMLSelectElement>) =>
@@ -127,10 +123,7 @@ export class DescribeDataShapeForm extends React.Component<
                           />
                         </ControlLabel>
                         <FormControl
-                          data-testid={`${toTestId(
-                            'DescribeDataShapeForm',
-                            'name-input'
-                          )}`}
+                          data-testid={'describe-data-shape-form-name-input'}
                           type="text"
                           value={this.props.name}
                           onChange={(
@@ -149,10 +142,9 @@ export class DescribeDataShapeForm extends React.Component<
                         </ControlLabel>
                         <FormControl
                           type="text"
-                          data-testid={`${toTestId(
-                            'DescribeDataShapeForm',
-                            'description-input'
-                          )}`}
+                          data-testid={
+                            'describe-data-shape-form-description-input'
+                          }
                           value={this.props.description}
                           onChange={(
                             event: React.ChangeEvent<HTMLInputElement>
@@ -169,10 +161,7 @@ export class DescribeDataShapeForm extends React.Component<
                 {this.props.backActionHref && (
                   <>
                     <ButtonLink
-                      data-testid={`${toTestId(
-                        'DescribeDataShapeForm',
-                        'back-button'
-                      )}`}
+                      data-testid={'describe-data-shape-form-back-button'}
                       href={this.props.backActionHref}
                     >
                       <i className={'fa fa-chevron-left'} />{' '}
@@ -182,10 +171,7 @@ export class DescribeDataShapeForm extends React.Component<
                   </>
                 )}
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    'DescribeDataShapeForm',
-                    'next-button'
-                  )}`}
+                  data-testid={'describe-data-shape-form-next-button'}
                   onClick={this.props.onNext}
                   as={'primary'}
                 >

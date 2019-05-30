@@ -20,7 +20,7 @@ import { getPublishingDetails } from '../shared/VirtualizationUtils';
 function getFilteredAndSortedVirtualizations(
   virtualizations: RestDataService[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let filteredAndSorted = virtualizations;
@@ -81,7 +81,7 @@ export class VirtualizationsPage extends React.Component {
     alert('Import virtualization ' + virtualizationName);
   }
 
-  /* TD-636: Commented out for TP 
+  /* TD-636: Commented out for TP
   public handleExportVirtualization() {
     // TODO: implement handleExportVirtualization
     alert('Export virtualization ');
@@ -216,7 +216,7 @@ export class VirtualizationsPage extends React.Component {
                                     i18nEmptyStateTitle={t(
                                       'virtualization.emptyStateTitle'
                                     )}
-                                    /* TD-636: Commented out for TP 
+                                    /* TD-636: Commented out for TP
                                     i18nImport={t('shared:Import')}
                                     i18nImportTip={t(
                                       'virtualization.importVirtualizationTip'
@@ -235,7 +235,7 @@ export class VirtualizationsPage extends React.Component {
                                       'virtualization.virtualizationsPageTitle'
                                     )}
                                     linkCreateHRef={resolvers.virtualizations.create()}
-                                    /* TD-636: Commented out for TP 
+                                    /* TD-636: Commented out for TP
                                     onImport={this.handleImportVirt} */
                                     hasListData={data.length > 0}
                                   >
@@ -299,7 +299,7 @@ export class VirtualizationsPage extends React.Component {
                                                   'virtualization.editDataVirtualizationTip'
                                                 )}
                                                 i18nError={t('shared:Error')}
-                                                /* TD-636: Commented out for TP 
+                                                /* TD-636: Commented out for TP
                                                 i18nExport={t('shared:Export')} */
                                                 i18nPublish={t(
                                                   'shared:Publish'
@@ -321,7 +321,7 @@ export class VirtualizationsPage extends React.Component {
                                                   'virtualization.unpublishModalTitle'
                                                 )}
                                                 onDelete={handleDelete}
-                                                /* TD-636: Commented out for TP 
+                                                /* TD-636: Commented out for TP
                                                 onExport={
                                                   this
                                                     .handleExportVirtualization

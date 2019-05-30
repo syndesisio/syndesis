@@ -38,7 +38,11 @@ storiesOf('Customization/Extensions/ExtensionsPage', module)
             placeholder: '',
             title: '',
           }}
-          currentSortType={'whatever'}
+          currentSortType={{
+            id: 'sort',
+            isNumeric: false,
+            title: 'Sort',
+          }}
           currentValue={''}
           isSortAscending={true}
           resultsCount={1}
@@ -113,7 +117,11 @@ storiesOf('Customization/Extensions/ExtensionsPage', module)
             placeholder: '',
             title: '',
           }}
-          currentSortType={'whatever'}
+          currentSortType={{
+            id: 'sort',
+            isNumeric: false,
+            title: 'Sort',
+          }}
           currentValue={''}
           isSortAscending={true}
           resultsCount={1}

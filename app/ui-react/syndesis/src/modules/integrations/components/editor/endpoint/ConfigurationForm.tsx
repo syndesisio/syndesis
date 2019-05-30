@@ -9,7 +9,6 @@ import { Action, ActionDescriptor } from '@syndesis/models';
 import { IntegrationEditorForm } from '@syndesis/ui';
 import {
   allFieldsRequired,
-  applyInitialValues,
   getRequiredStatusText,
   toFormDefinition,
   validateConfiguredProperties,
@@ -71,7 +70,6 @@ export const ConfigurationForm: React.FunctionComponent<
       actions.setSubmitting(false);
     };
     const key = JSON.stringify(definition);
-    initialValue = applyInitialValues(definition, initialValue);
     const isInitialValid = validateConfiguredProperties(
       definition,
       initialValue
@@ -88,7 +86,7 @@ export const ConfigurationForm: React.FunctionComponent<
         allFieldsRequired={allFieldsRequired(definition)}
         i18nFieldsStatusText={requiredPrompt}
         definition={toFormDefinition(definition)}
-        initialValue={initialValue}
+        initialValue={initialValue as IFormValue}
         isInitialValid={isInitialValid}
         onSave={onSave}
         validate={(values: IFormValue) =>

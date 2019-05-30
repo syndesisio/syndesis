@@ -58,37 +58,6 @@ export function toFormDefinitionProperty(property: IConfigurationProperty) {
   } as IFormDefinitionProperty;
 }
 
-/**
- * Returns a new configuredProperties object with any default values set from
- * the given definition if they aren't set already
- * @param properties
- * @param initial
- */
-export function applyInitialValues<T>(
-  properties: IConfigurationProperties,
-  initial?: T
-): T {
-  const configuredProperties =
-    typeof initial !== 'undefined' ? { ...initial } : {};
-  Object.keys(properties).forEach(key => {
-    const property = properties[key];
-    // `property.value` being set is deprecated, defaultValue takes precedence
-    if (
-      typeof property.value !== 'undefined' &&
-      typeof configuredProperties[key] === 'undefined'
-    ) {
-      configuredProperties[key] = property.value;
-    }
-    if (
-      typeof property.defaultValue !== 'undefined' &&
-      typeof configuredProperties[key] === 'undefined'
-    ) {
-      configuredProperties[key] = property.defaultValue;
-    }
-  });
-  return configuredProperties as T;
-}
-
 export function anyFieldsRequired(properties: IConfigurationProperties) {
   return (
     Object.keys(properties)
@@ -164,7 +133,7 @@ export function validateConfiguredProperties(
  * for string values this includes evaluating against ''
  * @param value
  */
-export function validateRequired(value?: any) {
+function validateRequired(value?: any) {
   if (typeof value === 'undefined') {
     return false;
   }
@@ -177,33 +146,54 @@ export function validateRequired(value?: any) {
 /**
  * Evaluates the given values against the supplied property definition
  * object and returns an IFormErrors map that can be returned to auto-form
- * @param properties
+ * @param definition
  * @param getErrorString
  * @param values
  */
 export function validateRequiredProperties<T>(
-  properties: IConfigurationProperties | IFormDefinition,
+  definition: IConfigurationProperties | IFormDefinition,
   getErrorString: (name: string) => string,
-  values?: T
+  values?: T,
+  prefix = ''
 ): IFormErrors<T> {
-  const allRequired = Object.keys(properties).filter(
-    key => properties[key].required
+  const allRequired = Object.keys(definition).filter(
+    key => definition[key].required
   );
   if (allRequired.length === 0) {
     return {} as IFormErrors<T>;
   }
   const sanitizedValues = values || ({} as T);
-  return allRequired
+  const validationResults = allRequired
     .map(key => ({ key, defined: validateRequired(sanitizedValues[key]) }))
     .reduce(
       (acc, current) => {
         if (!current.defined) {
-          acc[current.key] = getErrorString(
-            properties[current.key].displayName || current.key
+          acc[`${prefix}${current.key}`] = getErrorString(
+            definition[current.key].displayName || current.key
           );
         }
         return acc;
       },
       {} as IFormErrors<T>
     );
+  const arrayValidationResults = allRequired
+    .filter(key => definition[key].type === 'array')
+    .reduce((acc, current) => {
+      const arrayValue = sanitizedValues[current] || [];
+      const arrayDefinition = definition[current].arrayDefinition!;
+      const result = arrayValue
+        .map((value: any, index: number) => {
+          return validateRequiredProperties<any>(
+            arrayDefinition,
+            getErrorString,
+            value,
+            `${current}[${index}].`
+          );
+        })
+        .reduce((accInner: any, currentInner: any) => {
+          return { ...accInner, ...currentInner };
+        }, {});
+      return { ...acc, ...result };
+    }, {});
+  return { ...validationResults, ...arrayValidationResults };
 }

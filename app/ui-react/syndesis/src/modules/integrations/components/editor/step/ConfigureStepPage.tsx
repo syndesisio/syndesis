@@ -9,6 +9,7 @@ import { IEditorSidebarProps } from '../EditorSidebar';
 import {
   IConfigureStepRouteParams,
   IConfigureStepRouteState,
+  IPageWithEditorBreadcrumb,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
 import {
@@ -16,7 +17,7 @@ import {
   WithConfigurationForm,
 } from './WithConfigurationForm';
 
-export interface IConfigureStepPageProps {
+export interface IConfigureStepPageProps extends IPageWithEditorBreadcrumb {
   cancelHref: (
     p: IConfigureStepRouteParams,
     s: IConfigureStepRouteState
@@ -52,41 +53,32 @@ export class ConfigureStepPage extends React.Component<
       <WithIntegrationHelpers>
         {({ addStep, updateStep }) => (
           <WithRouteData<IConfigureStepRouteParams, IConfigureStepRouteState>>
-            {(
-              { flowId, position },
-              { step, integration, updatedIntegration },
-              { history }
-            ) => {
-              const positionAsNumber = parseInt(position, 10);
+            {(params, state, { history }) => {
+              const positionAsNumber = parseInt(params.position, 10);
               const onUpdatedIntegration = async ({
                 values,
               }: IOnUpdatedIntegrationProps) => {
-                updatedIntegration = await (this.props.mode === 'adding'
+                const updatedIntegration = await (this.props.mode === 'adding'
                   ? addStep
                   : updateStep)(
-                  updatedIntegration || integration,
-                  step,
-                  flowId,
+                  state.updatedIntegration || state.integration,
+                  state.step,
+                  params.flowId,
                   positionAsNumber,
                   values
                 );
 
                 history.push(
-                  this.props.postConfigureHref(
+                  this.props.postConfigureHref(updatedIntegration, params, {
+                    ...state,
                     updatedIntegration,
-                    { flowId, position },
-                    {
-                      integration,
-                      step,
-                      updatedIntegration,
-                    }
-                  )
+                  })
                 );
               };
 
               return (
                 <WithConfigurationForm
-                  step={step}
+                  step={state.step}
                   onUpdatedIntegration={onUpdatedIntegration}
                 >
                   {({ form }) => (
@@ -97,22 +89,23 @@ export class ConfigureStepPage extends React.Component<
                         description={
                           'Fill in the required information for the selected action.'
                         }
+                        toolbar={this.props.getBreadcrumb(
+                          'Configure the action',
+                          params,
+                          state
+                        )}
                         sidebar={this.props.sidebar({
                           activeIndex: positionAsNumber,
-                          activeStep: toUIStep(step),
+                          activeStep: toUIStep(state.step),
                           steps: toUIStepCollection(
-                            getSteps(updatedIntegration || integration, flowId)
+                            getSteps(
+                              state.updatedIntegration || state.integration,
+                              params.flowId
+                            )
                           ),
                         })}
                         content={form}
-                        cancelHref={this.props.cancelHref(
-                          { flowId, position },
-                          {
-                            integration,
-                            step,
-                            updatedIntegration,
-                          }
-                        )}
+                        cancelHref={this.props.cancelHref(params, state)}
                       />
                     </>
                   )}

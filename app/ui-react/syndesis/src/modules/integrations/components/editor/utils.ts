@@ -12,7 +12,6 @@ import {
   getNextAggregateStep,
   getPreviousStepWithDataShape,
   getStepIcon,
-  getStepsLastPosition,
   HIDE_FROM_STEP_SELECT,
   LOG,
   SPLIT,
@@ -43,7 +42,11 @@ type StepKindHrefCallback = (
 ) => H.LocationDescriptorObject;
 
 export function getStepKind(step: Step): IUIStep['uiStepKind'] {
-  if (step.connection && step.connection.id === API_PROVIDER) {
+  if (
+    step.connection &&
+    step.connection.id === API_PROVIDER &&
+    !(step.metadata || {}).configured
+  ) {
     return API_PROVIDER;
   }
   return step.stepKind;
@@ -403,12 +406,12 @@ export function visibleStepsByPosition(
   flowSteps: Step[]
 ) {
   const previousSteps = flowSteps.slice(0, position);
-  const subsequentSteps = flowSteps.slice(position + 1);
+  const subsequentSteps = flowSteps.slice(position);
   return filterStepsByPosition(
     steps,
     position,
-    position === 0,
-    getStepsLastPosition(flowSteps) === position
+    previousSteps.length === 0,
+    subsequentSteps.length === 0
   ).filter(s => {
     if (typeof s.visible === 'function') {
       return s.visible(position, previousSteps, subsequentSteps);

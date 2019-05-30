@@ -5,7 +5,6 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { ButtonLink, PageSection } from '../Layout';
 import { SimplePageHeader } from '../Shared';
-import { toTestId } from '../utils';
 import './Dashboard.css';
 
 export interface IIntegrationsPageProps {
@@ -39,10 +38,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
             <Grid.Row className={'show-grid dashboard__integrations__actions'}>
               <Grid.Col xs={6} xsOffset={6}>
                 <ButtonLink
-                  data-testid={`${toTestId(
-                    'Dashboard',
-                    'create-integration-button'
-                  )}`}
+                  data-testid={'dashboard-create-integration-button'}
                   href={this.props.linkToIntegrationCreation}
                   as={'primary'}
                   className={'pull-right'}
@@ -50,7 +46,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                   {this.props.i18nLinkCreateIntegration}
                 </ButtonLink>
                 <Link
-                  data-testid={`${toTestId('Dashboard', 'integrations-link')}`}
+                  data-testid={'dashboard-integrations-link'}
                   to={this.props.linkToIntegrations}
                   className={'pull-right view'}
                 >
@@ -95,10 +91,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 {this.props.i18nConnections}
               </Title>
               <ButtonLink
-                data-testid={`${toTestId(
-                  'Dashboard',
-                  'create-connection-button'
-                )}`}
+                data-testid={'dashboard-create-connection-button'}
                 href={this.props.linkToConnectionCreation}
                 as={'primary'}
                 className={'pull-right'}
@@ -106,7 +99,7 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
                 {this.props.i18nLinkCreateConnection}
               </ButtonLink>
               <Link
-                data-testid={`${toTestId('Dashboard', 'connections-link')}`}
+                data-testid={'dashboard-connections-link'}
                 to={this.props.linkToConnections}
                 className={'pull-right view'}
               >

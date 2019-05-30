@@ -1,4 +1,4 @@
-import { Formik, FormikErrors, FormikProps } from 'formik';
+import { Formik, FormikActions, FormikErrors, FormikProps } from 'formik';
 import * as React from 'react';
 import { FormBuilder } from './FormBuilder';
 import { IAutoFormActions, IFormDefinition, IFormErrors } from './models';
@@ -11,7 +11,7 @@ export interface IAutoFormProps<T> {
   /**
    * The initial value that should be set on the form
    */
-  initialValue: T;
+  initialValue?: T;
   /**
    * If the passed in value is valid or not
    */
@@ -62,11 +62,19 @@ export interface IAutoFormChildrenProps<T> {
 }
 
 export class AutoForm<T> extends React.Component<IAutoFormProps<T>> {
+  constructor(props: IAutoFormProps<T>) {
+    super(props);
+  }
+  public handleSave(value: T, formikBag: FormikActions<T>) {
+    if (typeof this.props.onSave === 'function') {
+      this.props.onSave(value, formikBag as IAutoFormActions<T>);
+    }
+  }
   public render() {
     return (
       <FormBuilder
         definition={this.props.definition}
-        initialValue={this.props.initialValue}
+        initialValue={this.props.initialValue || ({} as T)}
         customComponents={this.props.customComponents || {}}
         i18nRequiredProperty={this.props.i18nRequiredProperty}
       >

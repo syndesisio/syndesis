@@ -20,7 +20,7 @@ import { getExtensionTypeName } from '../utils';
 function getFilteredAndSortedExtensions(
   extensions: Extension[],
   activeFilters: IActiveFilter[],
-  currentSortType: string,
+  currentSortType: ISortType,
   isSortAscending: boolean
 ) {
   let filteredAndSorted = extensions;
