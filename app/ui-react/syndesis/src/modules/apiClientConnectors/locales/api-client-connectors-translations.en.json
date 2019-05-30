@@ -24,5 +24,27 @@
   "reviewValidationFallback": "No connector details are currently available.",
   "reviewWarningsHeading": "Warnings {{count}}",
   "usedByOne": "Used by 1 integration",
-  "usedByMulti": "Used by integrations {{count}} times"
+  "usedByMulti": "Used by integrations {{count}} times",
+  "create": {
+    "selectMethod": {
+      "dndUploadFailedMessage": " could not be uploaded",
+      "dndUploadSuccessMessage": "Process file ",
+      "dndFileExtensions": ".json,.yaml,.yml",
+      "dndHelpMessage": "Accepted file type: .json, .yaml, and .yml",
+      "dndInstructions": "Drag 'n' drop a file here, or <strong>click</strong> to select a file using a file chooser dialog.",
+      "dndNoFileSelectedLabel": "No file selected",
+      "dndSelectedFileLabel": "Selected file:",
+      "methodFromFile": "Upload an OpenAPI file",
+      "methodFromScratch": "Create from scratch",
+      "methodFromUrl": "Use a URL",
+      "title": "Upload OpenAPI Document",
+      "urlNote": "* Note: After uploading this document, Syndesis does not automatically obtain any updates to it."
+    },
+    "review": {
+      "title": "Review Actions"
+    },
+    "specification": {
+      "title": "Edit API Definition"
+    }
+  }
 }
