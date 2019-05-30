@@ -15,7 +15,7 @@ import (
 // Each operator instance is bound to a single version currently that can be retrieved from this method.
 func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, error) {
 
-	templateRes, err := util.LoadResourceFromFile(scheme, *TemplateLocation)
+	templateRes, err := util.LoadResourceFromFile(scheme, *TemplateConfig)
 	if err != nil {
 		return "", err
 	}

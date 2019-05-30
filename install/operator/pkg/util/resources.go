@@ -84,13 +84,21 @@ func RuntimeObjectFromUnstructured(scheme *runtime.Scheme, u *unstructured.Unstr
 	return ro, nil
 }
 
-func LoadUnstructuredObjectFromFile(path string) (*unstructured.Unstructured, error) {
+func LoadJsonFromFile(path string) ([]byte, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
 
 	data, err = jsonIfYaml(data, path)
+	if err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
+func LoadUnstructuredObjectFromFile(path string) (*unstructured.Unstructured, error) {
+	data, err := LoadJsonFromFile(path)
 	if err != nil {
 		return nil, err
 	}

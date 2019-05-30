@@ -13,4 +13,4 @@ USER ${USER_UID}
 # Add conf directory
 ADD build/conf /conf
 
-ENTRYPOINT ["/usr/local/bin/entrypoint", "-template", "/conf/syndesis-template.yml"]
+ENTRYPOINT ["/usr/local/bin/entrypoint", "--template-config", "/conf/template-config.yaml"]
