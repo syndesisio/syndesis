@@ -94,6 +94,7 @@ export interface IWithConnectorFormProps {
 }
 
 export interface IWithConnectorFormState {
+  isValidatingAgainstBackend: boolean;
   validationResults?: any;
 }
 
@@ -114,6 +115,7 @@ export class WithConnectorForm extends React.Component<
   constructor(props: IWithConnectorFormProps) {
     super(props);
     this.state = {
+      isValidatingAgainstBackend: false,
       validationResults: [],
     };
   }
@@ -136,6 +138,9 @@ export class WithConnectorForm extends React.Component<
           const validateFormAgainstBackend = async (values: {
             [key: string]: string;
           }) => {
+            this.setState({
+              isValidatingAgainstBackend: true,
+            });
             const status = await validateConfiguration(
               this.props.connector.id!,
               values
@@ -155,6 +160,7 @@ export class WithConnectorForm extends React.Component<
               } as IConnectorConfigurationFormValidationResult,
             ];
             this.setState({
+              isValidatingAgainstBackend: false,
               validationResults:
                 badValidationResults.length > 0
                   ? badValidationResults
@@ -201,7 +207,8 @@ export class WithConnectorForm extends React.Component<
                   handleSubmit,
                   isSubmitting,
                   isValid,
-                  isValidating,
+                  isValidating:
+                    isValidating || this.state.isValidatingAgainstBackend,
                   resetForm,
                   submitForm,
                   validateForm: () => validateFormAgainstBackend(values),

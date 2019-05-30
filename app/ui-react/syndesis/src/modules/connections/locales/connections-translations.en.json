@@ -18,5 +18,7 @@
   "techPreview": "Technology Preview",
   "techPreviewPopoverHtml": "<a href='https://access.redhat.com/support/offerings/techpreview' rel='nofollow' target='_blank' role='link'>Technology Previews</a> provide early access to features that are not yet supported. Feedback about these features is welcome. Send a message to <a href='mailto:fuse-online-tech-preview@redhat.com'>fuse-online-tech-preview@redhat.com</a>.",
   "usedByOne": "Used by 1 integration",
-  "usedByMulti": "Used by integrations {{count}} times"
+  "usedByMulti": "Used by integrations {{count}} times",
+  "unsavedChangesTitle": "Do you really want to cancel?",
+  "unsavedChangesMessage": "You have not finished creating the connection. If you cancel now you will lose data you already entered. Do you still want to cancel?"
 }
