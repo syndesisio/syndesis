@@ -1,9 +1,4 @@
-// tslint:disable react-unused-props-and-state
-// remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
-import * as H from '@syndesis/history';
-import classnames from 'classnames';
 import * as React from 'react';
-import { ButtonLink, Loader } from '../Layout';
 
 /**
  * @param header - a PatternFly Wizard Steps component.
@@ -34,16 +29,6 @@ import { ButtonLink, Loader } from '../Layout';
 export interface IConnectionCreatorProps {
   header: React.ReactNode;
   content: React.ReactNode;
-  onCancel?: (e: React.MouseEvent<any>) => void;
-  onBack?: (e: React.MouseEvent<any>) => void;
-  onNext?: (e: React.MouseEvent<any>) => void;
-  cancelHref?: H.LocationDescriptor;
-  backHref?: H.LocationDescriptor;
-  nextHref?: H.LocationDescriptor;
-  isNextDisabled?: boolean;
-  isNextLoading?: boolean;
-  isLastStep?: boolean;
-  extraButtons?: React.ReactNode;
 }
 
 /**
@@ -59,76 +44,16 @@ export interface IConnectionCreatorProps {
  */
 export const ConnectionCreatorLayout: React.FunctionComponent<
   IConnectionCreatorProps
-> = ({
-  header,
-  content,
-  onCancel,
-  onBack,
-  onNext,
-  cancelHref,
-  backHref,
-  nextHref,
-  isNextLoading,
-  isNextDisabled,
-  isLastStep = false,
-  extraButtons,
-}: IConnectionCreatorProps) => {
+> = ({ header, content }: IConnectionCreatorProps) => {
   return (
-    <div
-      className={classnames(
-        'wizard-pf-body integration-editor-layout syn-scrollable',
-        {
-          'has-footer': true,
-        }
-      )}
-    >
-      {header}
-      <div className="wizard-pf-row integration-editor-layout__body syn-scrollable--body">
-        <div
-          className={
-            'wizard-pf-main cards-pf integration-editor-layout__contentWrapper'
-          }
-        >
-          <div className="integration-editor-layout__content">{content}</div>
+    <div className={'integration-editor-layout'}>
+      <div className={'integration-editor-layout__header'}>{header}</div>
+      <div className={'integration-editor-layout__body'}>
+        <div className={'integration-editor-layout__contentOuter'}>
+          <div className={'integration-editor-layout__contentInner'}>
+            {content}
+          </div>
         </div>
-      </div>
-      <div className="wizard-pf-footer integration-editor-layout__footer">
-        <ButtonLink
-          data-testid={'connection-creator-layout-back-button'}
-          onClick={onBack}
-          href={backHref}
-          className={'wizard-pf-back'}
-        >
-          <i className="fa fa-angle-left" /> Back
-        </ButtonLink>
-        {extraButtons && (
-          <div className={'wizard-pf-extrabuttons'}>{extraButtons}</div>
-        )}
-        <ButtonLink
-          data-testid={'connection-creator-layout-next-button'}
-          onClick={onNext}
-          href={nextHref}
-          as={'primary'}
-          className={'wizard-pf-next'}
-          disabled={isNextLoading || isNextDisabled}
-        >
-          {isNextLoading ? <Loader size={'xs'} inline={true} /> : null}
-          {isLastStep ? (
-            'Create'
-          ) : (
-            <>
-              Next <i className="fa fa-angle-right" />
-            </>
-          )}
-        </ButtonLink>
-        <ButtonLink
-          data-testid={'connection-creator-layout-cancel-button'}
-          onClick={onCancel}
-          href={cancelHref}
-          className={'wizard-pf-cancel'}
-        >
-          Cancel
-        </ButtonLink>
       </div>
     </div>
   );

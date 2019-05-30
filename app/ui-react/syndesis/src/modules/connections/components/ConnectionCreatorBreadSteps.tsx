@@ -1,14 +1,14 @@
 import { WizardStep, WizardSteps } from '@syndesis/ui';
 import * as React from 'react';
 
-export interface IConnectionCreatorBreadcrumbsProps {
+export interface IConnectionCreatorStepsProps {
   /**
    * The one-based active step number.
    */
   step: number;
 }
 
-export interface IConnectionCreatorBreadcrumbsState {
+export interface IConnectionCreatorStepsState {
   /**
    * Indicates if the user clicked on a step. Used to show
    * sub-steps when browsing from a mobile device.
@@ -19,18 +19,18 @@ export interface IConnectionCreatorBreadcrumbsState {
 /**
  * A component to display the PatternFly Wizard Steps specific to the integration
  * creator flow.
- * @see [step]{@link IConnectionCreatorBreadcrumbsProps#step}
- * @see [subStep]{@link IConnectionCreatorBreadcrumbsProps#subStep}
+ * @see [step]{@link IConnectionCreatorStepsProps#step}
+ * @see [subStep]{@link IConnectionCreatorStepsProps#subStep}
  */
-export class ConnectionCreatorBreadcrumbs extends React.Component<
-  IConnectionCreatorBreadcrumbsProps,
-  IConnectionCreatorBreadcrumbsState
+export class ConnectionCreatorBreadSteps extends React.Component<
+  IConnectionCreatorStepsProps,
+  IConnectionCreatorStepsState
 > {
   public state = {
     active: false,
   };
 
-  constructor(props: IConnectionCreatorBreadcrumbsProps) {
+  constructor(props: IConnectionCreatorStepsProps) {
     super(props);
     this.toggleActive = this.toggleActive.bind(this);
   }
