@@ -27,6 +27,7 @@ export interface ISelectViewsRouteState {
 
 export interface ISelectViewsPageState {
   hasSelectedTables: boolean;
+  saveInProgress: boolean;
 }
 
 export class SelectViewsPage extends React.Component<
@@ -39,9 +40,11 @@ export class SelectViewsPage extends React.Component<
     super(props);
     this.state = {
       hasSelectedTables: false, // initialize selected tables state
+      saveInProgress: false,
     };
     this.handleAddView = this.handleAddView.bind(this);
     this.handleRemoveView = this.handleRemoveView.bind(this);
+    this.setInProgress = this.setInProgress.bind(this);
   }
 
   public getExistingViewNames(editorStates: ViewEditorState[]) {
@@ -72,6 +75,12 @@ export class SelectViewsPage extends React.Component<
     });
   }
 
+  public setInProgress(isWorking: boolean) {
+    this.setState({
+      saveInProgress: isWorking,
+    });
+  }
+
   public render() {
     return (
       <Translation ns={['data', 'shared']}>
@@ -88,6 +97,7 @@ export class SelectViewsPage extends React.Component<
                     <WithVirtualizationHelpers>
                       {({ refreshVirtualizationViews }) => {
                         const handleCreateViews = async () => {
+                          this.setInProgress(true);
                           const viewEditorStates = generateViewEditorStates(
                             virtualization.serviceVdbName,
                             this.selectedViews
@@ -113,6 +123,7 @@ export class SelectViewsPage extends React.Component<
                               'error'
                             );
                           }
+                          this.setInProgress(false);
                           history.push(
                             resolvers.data.virtualizations.views.root({
                               virtualization,
@@ -146,7 +157,7 @@ export class SelectViewsPage extends React.Component<
                                 )}
                                 onCreateViews={handleCreateViews}
                                 isNextDisabled={!this.state.hasSelectedTables}
-                                isNextLoading={false}
+                                isNextLoading={this.state.saveInProgress}
                                 isLastStep={true}
                               />
                             )}

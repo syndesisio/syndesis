@@ -187,82 +187,88 @@ export class VirtualizationViewsPage extends React.Component<
                                           helpers.isSortAscending
                                         );
                                         return (
-                                          <>
-                                            <PageSection
-                                              variant={'light'}
-                                              noPadding={true}
-                                            >
-                                              <VirtualizationNavBar
-                                                virtualization={virtualization}
+                                          <WithLoader
+                                            error={error}
+                                            loading={!hasData}
+                                            loaderChildren={
+                                              <ViewListSkeleton
+                                                width={800}
+                                                style={{
+                                                  backgroundColor: '#FFF',
+                                                  marginTop: 30,
+                                                }}
                                               />
-                                            </PageSection>
-                                            <ViewList
-                                              filterTypes={filterTypes}
-                                              sortTypes={sortTypes}
-                                              {...this.state}
-                                              resultsCount={
-                                                filteredAndSorted.length
-                                              }
-                                              {...helpers}
-                                              i18nDescription={t(
-                                                'data:virtualization.viewsPageDescription'
-                                              )}
-                                              i18nEmptyStateInfo={t(
-                                                'data:virtualization.viewEmptyStateInfo'
-                                              )}
-                                              i18nEmptyStateTitle={t(
-                                                'data:virtualization.viewEmptyStateTitle'
-                                              )}
-                                              i18nImportViews={t(
-                                                'data:virtualization.importDataSource'
-                                              )}
-                                              i18nImportViewsTip={t(
-                                                'data:virtualization.importDataSourceTip'
-                                              )}
-                                              i18nCreateView={t(
-                                                'data:virtualization.createView'
-                                              )}
-                                              i18nCreateViewTip={t(
-                                                'data:virtualization.createViewTip'
-                                              )}
-                                              i18nName={t('shared:Name')}
-                                              i18nNameFilterPlaceholder={t(
-                                                'shared:nameFilterPlaceholder'
-                                              )}
-                                              i18nResultsCount={t(
-                                                'shared:resultsCount',
-                                                {
-                                                  count:
-                                                    filteredAndSorted.length,
-                                                }
-                                              )}
-                                              linkCreateViewHRef={resolvers.data.virtualizations.views.createView.selectSources(
-                                                { virtualization }
-                                              )}
-                                              linkImportViewsHRef={resolvers.data.virtualizations.views.importSource.selectConnection(
-                                                { virtualization }
-                                              )}
-                                              onImportView={
-                                                this.handleImportView
-                                              }
-                                              hasListData={data.length > 0}
-                                            >
-                                              <WithLoader
-                                                error={error}
-                                                loading={!hasData}
-                                                loaderChildren={
-                                                  <ViewListSkeleton
-                                                    width={800}
-                                                    style={{
-                                                      backgroundColor: '#FFF',
-                                                      marginTop: 30,
-                                                    }}
+                                            }
+                                            errorChildren={<ApiError />}
+                                          >
+                                            {() => (
+                                              <>
+                                                <PageSection
+                                                  variant={'light'}
+                                                  noPadding={true}
+                                                >
+                                                  <VirtualizationNavBar
+                                                    virtualization={
+                                                      virtualization
+                                                    }
                                                   />
-                                                }
-                                                errorChildren={<ApiError />}
-                                              >
-                                                {() =>
-                                                  filteredAndSorted
+                                                </PageSection>
+                                                <ViewList
+                                                  filterTypes={filterTypes}
+                                                  sortTypes={sortTypes}
+                                                  {...this.state}
+                                                  resultsCount={
+                                                    filteredAndSorted.length
+                                                  }
+                                                  {...helpers}
+                                                  i18nDescription={t(
+                                                    'data:virtualization.viewsPageDescription'
+                                                  )}
+                                                  i18nEmptyStateInfo={t(
+                                                    'data:virtualization.viewEmptyStateInfo'
+                                                  )}
+                                                  i18nEmptyStateTitle={t(
+                                                    'data:virtualization.viewEmptyStateTitle'
+                                                  )}
+                                                  i18nImportViews={t(
+                                                    'data:virtualization.importDataSource'
+                                                  )}
+                                                  i18nImportViewsTip={t(
+                                                    'data:virtualization.importDataSourceTip'
+                                                  )}
+                                                  i18nCreateView={t(
+                                                    'data:virtualization.createView'
+                                                  )}
+                                                  i18nCreateViewTip={t(
+                                                    'data:virtualization.createViewTip'
+                                                  )}
+                                                  i18nName={t('shared:Name')}
+                                                  i18nNameFilterPlaceholder={t(
+                                                    'shared:nameFilterPlaceholder'
+                                                  )}
+                                                  i18nResultsCount={t(
+                                                    'shared:resultsCount',
+                                                    {
+                                                      count:
+                                                        filteredAndSorted.length,
+                                                    }
+                                                  )}
+                                                  linkCreateViewHRef={resolvers.data.virtualizations.views.createView.selectSources(
+                                                    {
+                                                      virtualization,
+                                                    }
+                                                  )}
+                                                  linkImportViewsHRef={resolvers.data.virtualizations.views.importSource.selectConnection(
+                                                    {
+                                                      virtualization,
+                                                    }
+                                                  )}
+                                                  onImportView={
+                                                    this.handleImportView
+                                                  }
+                                                  hasListData={data.length > 0}
+                                                >
+                                                  {filteredAndSorted
                                                     .filter(
                                                       (
                                                         viewDefinition: ViewDefinition
@@ -318,11 +324,11 @@ export class VirtualizationViewsPage extends React.Component<
                                                           }
                                                         />
                                                       )
-                                                    )
-                                                }
-                                              </WithLoader>
-                                            </ViewList>
-                                          </>
+                                                    )}
+                                                </ViewList>
+                                              </>
+                                            )}
+                                          </WithLoader>
                                         );
                                       }}
                                     </WithListViewToolbarHelpers>

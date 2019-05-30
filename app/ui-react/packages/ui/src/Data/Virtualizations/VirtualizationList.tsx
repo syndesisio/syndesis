@@ -7,17 +7,12 @@ import {
 } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, PageSection } from '../../Layout';
-import {
-  IListViewToolbarProps,
-  ListViewToolbar,
-  SimplePageHeader,
-} from '../../Shared';
+import { IListViewToolbarProps, ListViewToolbar } from '../../Shared';
 
 export interface IVirtualizationListProps extends IListViewToolbarProps {
   hasListData: boolean;
   i18nCreateDataVirtualization: string;
   i18nCreateDataVirtualizationTip?: string;
-  i18nDescription: string;
   i18nEmptyStateInfo: string;
   i18nEmptyStateTitle: string;
   /* TD-636: Commented out for TP
@@ -27,7 +22,6 @@ export interface IVirtualizationListProps extends IListViewToolbarProps {
   i18nLinkCreateVirtualizationTip?: string;
   i18nName: string;
   i18nNameFilterPlaceholder: string;
-  i18nTitle: string;
   linkCreateHRef: H.LocationDescriptor;
   /* TD-636: Commented out for TP
   onImport: (name: string) => void; */
@@ -69,11 +63,7 @@ export class VirtualizationList extends React.Component<
   public render() {
     return (
       <>
-        <SimplePageHeader
-          i18nTitle={this.props.i18nTitle}
-          i18nDescription={this.props.i18nDescription}
-        />
-        <PageSection>
+        <PageSection noPadding={true} variant={'light'}>
           <ListViewToolbar {...this.props}>
             <div className="form-group">
               {/* TD-636: Commented out for TP 
@@ -107,7 +97,7 @@ export class VirtualizationList extends React.Component<
             </div>
           </ListViewToolbar>
         </PageSection>
-        <PageSection noPadding={true}>
+        <PageSection noPadding={true} variant={'light'}>
           {this.props.hasListData ? (
             <ListView>{this.props.children}</ListView>
           ) : (

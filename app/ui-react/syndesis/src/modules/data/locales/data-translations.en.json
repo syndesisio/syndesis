@@ -9,6 +9,8 @@
     "editDataVirtualizationTip": "Edit the data virtualization",
     "emptyStateInfoMessage": "There are no virtualizations available. Please click on the button below to create one.",
     "emptyStateTitle": "$t(virtualization.createDataVirtualization)",
+    "errorValidatingViewName": "Error validating the view name",
+    "errorValidatingVirtualizationName": "Error validating the virtualization name",
     "importVirtualizationTip": "Import a data virtualization",
     "publishedDataVirtualization": "Published",
     "publishInProgress": "Publish in Progress...",
