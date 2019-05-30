@@ -48,15 +48,6 @@ body {
   margin-bottom: 0;
 }
 
-.wizard-pf-footer .wizard-pf-extrabuttons {
-  order: -1;
-  margin-right: 25px;
-}
-
-.wizard-pf-footer .wizard-pf-cancel {
-  order: -2;
-}
-
 .modal-body > div {
   width: 100%;
 }

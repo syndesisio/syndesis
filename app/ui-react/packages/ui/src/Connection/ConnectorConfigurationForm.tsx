@@ -1,6 +1,7 @@
+import * as H from '@syndesis/history';
 import { Alert } from 'patternfly-react';
 import * as React from 'react';
-import { Container } from '../Layout';
+import { ButtonLink, Container, Loader } from '../Layout';
 
 export interface IConnectorConfigurationFormValidationResult {
   message: string;
@@ -21,6 +22,13 @@ export interface IConnectorConfigurationFormProps {
    * @param e
    */
   handleSubmit: (e?: any) => void;
+  onNext: (e: React.MouseEvent<any>) => void;
+  onValidate?: (e: React.MouseEvent<any>) => void;
+  backHref: H.LocationDescriptor;
+  isNextDisabled: boolean;
+  isNextLoading: boolean;
+  isValidating: boolean;
+  isLastStep: boolean;
 }
 
 /**
@@ -28,7 +36,6 @@ export interface IConnectorConfigurationFormProps {
  * editor. This does *not* build the form itself, form's field should be passed
  * as the `children` value.
  * @see [i18nTitle]{@link IConnectorConfigurationFormProps#i18nTitle}
- * @see [i18nSubtitle]{@link IConnectorConfigurationFormProps#i18nSubtitle}
  */
 export class ConnectorConfigurationForm extends React.Component<
   IConnectorConfigurationFormProps
@@ -61,6 +68,56 @@ export class ConnectorConfigurationForm extends React.Component<
                   </Alert>
                 ))}
                 {this.props.children}
+              </div>
+              <div className="card-pf-footer">
+                <ButtonLink
+                  data-testid={'connection-creator-layout-back-button'}
+                  href={this.props.backHref}
+                  className={'wizard-pf-back'}
+                >
+                  <i className="fa fa-angle-left" /> Back
+                </ButtonLink>
+                &nbsp;
+                {this.props.onValidate && (
+                  <>
+                    <ButtonLink
+                      data-testid={'connection-creator-layout-back-button'}
+                      onClick={this.props.onValidate}
+                      className={'wizard-pf-back'}
+                      disabled={
+                        this.props.isValidating ||
+                        this.props.isNextLoading ||
+                        this.props.isNextDisabled
+                      }
+                    >
+                      {this.props.isValidating ? (
+                        <Loader size={'xs'} inline={true} />
+                      ) : null}
+                      Validate
+                    </ButtonLink>
+                    &nbsp;
+                  </>
+                )}
+                <ButtonLink
+                  data-testid={'connection-creator-layout-next-button'}
+                  onClick={this.props.onNext}
+                  as={'primary'}
+                  className={'wizard-pf-next'}
+                  disabled={
+                    this.props.isNextLoading || this.props.isNextDisabled
+                  }
+                >
+                  {this.props.isNextLoading ? (
+                    <Loader size={'xs'} inline={true} />
+                  ) : null}
+                  {this.props.isLastStep ? (
+                    <>
+                      Next <i className="fa fa-angle-right" />
+                    </>
+                  ) : (
+                    'Save'
+                  )}
+                </ButtonLink>
               </div>
             </div>
           </div>
