@@ -129,26 +129,28 @@ export class ConnectionDetailsForm extends React.Component<
                   </div>
                 </form>
               </Card.Body>
-              <Card.Footer>
-                <Button
-                  data-testid={'connection-details-form-cancel-button'}
-                  bsStyle="default"
-                  className="connection-details-form__editButton"
-                  disabled={this.props.isWorking}
-                  onClick={this.props.onCancelEditing}
-                >
-                  {this.props.i18nCancelLabel}
-                </Button>
-                <Button
-                  data-testid={'connection-details-form-save-button'}
-                  bsStyle="primary"
-                  className="connection-details-form__editButton"
-                  disabled={this.props.isWorking || !this.props.isValid}
-                  onClick={this.props.handleSubmit}
-                >
-                  {this.props.i18nSaveLabel}
-                </Button>
-              </Card.Footer>
+              {this.props.isEditing ? (
+                <Card.Footer>
+                  <Button
+                    data-testid={'connection-details-form-cancel-button'}
+                    bsStyle="default"
+                    className="connection-details-form__editButton"
+                    disabled={this.props.isWorking}
+                    onClick={this.props.onCancelEditing}
+                  >
+                    {this.props.i18nCancelLabel}
+                  </Button>
+                  <Button
+                    data-testid={'connection-details-form-save-button'}
+                    bsStyle="primary"
+                    className="connection-details-form__editButton"
+                    disabled={this.props.isWorking || !this.props.isValid}
+                    onClick={this.props.handleSubmit}
+                  >
+                    {this.props.i18nSaveLabel}
+                  </Button>
+                </Card.Footer>
+              ) : null}
             </Card>
           </div>
         </Container>

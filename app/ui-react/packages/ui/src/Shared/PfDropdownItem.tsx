@@ -3,12 +3,16 @@ import * as React from 'react';
 
 export interface IPfDropdownItem {
   children: React.ReactNode;
+  disabled?: boolean;
   onClick?(event?: React.MouseEvent): void;
 }
 class PfDropdownItem extends React.Component<IPfDropdownItem> {
   public render() {
     return (
-      <DropdownItem onClick={this.props.onClick}>
+      <DropdownItem
+        isDisabled={this.props.disabled}
+        onClick={this.props.onClick}
+      >
         {this.props.children}
       </DropdownItem>
     );
