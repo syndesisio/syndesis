@@ -43,9 +43,7 @@ export class ApiProviderReviewOperationsItem extends React.Component<
             {this.props.operationPath}
           </div>
         }
-        leftContent={
-          <HttpMethodColors method={this.props.operationHttpMethod} />
-        }
+        heading={<HttpMethodColors method={this.props.operationHttpMethod} />}
         stacked={false}
       />
     );
