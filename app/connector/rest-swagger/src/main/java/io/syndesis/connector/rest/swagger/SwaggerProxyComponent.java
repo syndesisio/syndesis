@@ -15,10 +15,10 @@
  */
 package io.syndesis.connector.rest.swagger;
 
+import java.util.Map;
 import java.util.function.Function;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-
 import org.apache.camel.Endpoint;
 
 public final class SwaggerProxyComponent extends ComponentProxyComponent {
@@ -40,4 +40,16 @@ public final class SwaggerProxyComponent extends ComponentProxyComponent {
         this.endpointOverride = endpointOverride;
     }
 
+    @Override
+    protected void enrichOptions(Map<String, Object> options) {
+        //
+        // We need to force to use the SyndesisRestSwaggerComponent as:
+        //
+        // - in case of multiple http component present in the camel registry, the behavior of the delegating
+        //   component could change and lead to unexpected results
+        // - in case an integration contains multiple rest compatible component, then each of the rest connector
+        //   could use a different http component depending of the initialization order
+        //
+        options.put("componentName", SyndesisRestSwaggerComponent.COMPONENT_NAME);
+    }
 }

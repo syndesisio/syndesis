@@ -61,6 +61,10 @@ public class ExposureCustomizer implements CamelKIntegrationCustomizer {
                     .value("customizer.servlet.bindPort=" +OpenShiftService.INTEGRATION_SERVICE_PORT)
                     .build()
             );
+
+            spec.addConfiguration("property", "camel.rest.contextPath=/");
+            spec.addConfiguration("property", "camel.rest.component=servlet");
+            spec.addConfiguration("property", "camel.rest.endpointProperty.headerFilterStrategy=syndesisHeaderStrategy");
         }
 
         if (exposure.contains(Exposure.ROUTE)) {

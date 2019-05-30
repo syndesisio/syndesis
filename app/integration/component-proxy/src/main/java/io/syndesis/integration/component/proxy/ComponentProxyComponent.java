@@ -171,6 +171,8 @@ public class ComponentProxyComponent extends DefaultComponent {
         this.remainingOptions.clear();
         this.remainingOptions.putAll(this.configuredOptions);
 
+        enrichOptions(this.remainingOptions);
+
         ComponentDefinition definition = getDefinition();
         Optional<Component> component = createDelegateComponent(definition, this.remainingOptions);
         if (component.isPresent()) {
@@ -271,6 +273,14 @@ public class ComponentProxyComponent extends DefaultComponent {
     // ***************************************
     // Helpers
     // ***************************************
+
+    /**
+     * Method used to enrich options before any delegating component/endpoint is created. This is useful
+     * when some options need to be enforced.
+     */
+    protected void enrichOptions(Map<String, Object> options) {
+        // no-op
+    }
 
     @SuppressWarnings("PMD.SignatureDeclareThrowsException")
     protected Optional<Component> createDelegateComponent(ComponentDefinition definition, Map<String, Object> options) throws Exception {

@@ -24,11 +24,7 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import io.syndesis.integration.component.proxy.Processors;
 
-import org.apache.camel.CamelContext;
-
 public final class RequestCustomizer implements ComponentProxyCustomizer, InputDataShapeAware, OutputDataShapeAware {
-
-    private static final String DELEGATE_COMPONENT_NAME = "connector-rest-swagger-http4";
 
     private DataShape inputDataShape;
 
@@ -36,13 +32,6 @@ public final class RequestCustomizer implements ComponentProxyCustomizer, InputD
 
     @Override
     public void customize(final ComponentProxyComponent component, final Map<String, Object> options) {
-        final CamelContext camelContext = component.getCamelContext();
-
-        if (!camelContext.getComponentNames().contains(DELEGATE_COMPONENT_NAME)) {
-            final SyndesisRestSwaggerComponent delegate = new SyndesisRestSwaggerComponent();
-            camelContext.addComponent(DELEGATE_COMPONENT_NAME, delegate);
-        }
-
         Processors.addBeforeProducer(component, new RequestHeaderSetter(inputDataShape, outputDataShape));
         Processors.addBeforeProducer(component, new RequestPayloadConverter(inputDataShape));
     }

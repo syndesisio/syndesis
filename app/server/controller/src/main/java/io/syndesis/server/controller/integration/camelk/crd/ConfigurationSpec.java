@@ -15,11 +15,12 @@
  */
 package io.syndesis.server.controller.integration.camelk.crd;
 
+import javax.annotation.Nullable;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.immutables.value.Value;
-
-import javax.annotation.Nullable;
 
 @Value.Immutable
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -37,5 +38,10 @@ public interface ConfigurationSpec {
     String getValue();
 
     class Builder extends ImmutableConfigurationSpec.Builder {
+    }
+
+    @JsonIgnore
+    static ConfigurationSpec of(String type, String value) {
+        return new Builder().type(type).value(value).build();
     }
 }

@@ -24,5 +24,4 @@ public final class ConnectorFactory implements ComponentProxyFactory {
     public ComponentProxyComponent newInstance(final String componentId, final String componentScheme) {
         return new SwaggerProxyComponent(componentId, componentScheme);
     }
-
 }
