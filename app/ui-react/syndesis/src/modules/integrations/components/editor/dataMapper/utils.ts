@@ -154,10 +154,6 @@ export function getInputDocuments(
     )
     .filter(s => s) as IDocumentWithShape[];
 
-  if (inputDocuments.length === 0) {
-    throw new Error('input documents shape kind not supported');
-  }
-
   return inputDocuments;
 }
 
@@ -184,10 +180,8 @@ export function getOutputDocument(
   const outputDocuments = subsequentSteps
     .map(s => stepToProps(s.step, false, true, s.index))
     .filter(s => s !== false && s.id !== stepId) as IDocumentWithShape[];
-
   if (outputDocuments.length === 0) {
     throw new Error('output document shape kind not supported');
   }
-
   return outputDocuments[0];
 }

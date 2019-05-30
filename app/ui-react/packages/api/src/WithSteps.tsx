@@ -13,20 +13,16 @@ import {
 import { toDataShapeKinds } from './helpers';
 
 export const ALL_STEPS: StepKind[] = [
-  requiresInputOutputDataShapes(
-    {
-      id: undefined,
-      connection: undefined,
-      action: undefined,
-      name: 'Data Mapper',
-      description: 'Map fields from the input type to the output type.',
-      stepKind: DATA_MAPPER,
-      properties: {},
-      configuredProperties: undefined,
-    },
-    true,
-    false
-  ),
+  requiresInputDataShape({
+    id: undefined,
+    connection: undefined,
+    action: undefined,
+    name: 'Data Mapper',
+    description: 'Map fields from the input type to the output type.',
+    stepKind: DATA_MAPPER,
+    properties: {},
+    configuredProperties: undefined,
+  }),
   requiresOutputDataShape(
     {
       id: undefined,
@@ -42,7 +38,7 @@ export const ALL_STEPS: StepKind[] = [
     },
     true
   ),
-  requiresOutputDataShape({
+  {
     id: undefined,
     connection: undefined,
     action: undefined,
@@ -52,7 +48,7 @@ export const ALL_STEPS: StepKind[] = [
       'Upload or create a Freemarker, Mustache or Velocity template to define consistent output data.',
     configuredProperties: undefined,
     properties: undefined,
-  }),
+  },
   noCollectionSupport({
     id: undefined,
     connection: undefined,
@@ -215,6 +211,8 @@ function stepsHaveInputDataShape(steps: Step[]): boolean {
   );
 }
 
+// currently no steps fit this criteria but that could change
+// @ts-ignore
 function requiresInputOutputDataShapes(
   obj: StepKind,
   anyPrevious = true,
@@ -234,7 +232,9 @@ function requiresInputOutputDataShapes(
     }
     if (!anySubsequent) {
       // only test the next subsequent step that has a data shape
-      const subsequentStep = previousSteps.find(s => dataShapeExists(s, true));
+      const subsequentStep = subsequentSteps.find(s =>
+        dataShapeExists(s, true)
+      );
       subsequentSteps = subsequentStep ? [subsequentStep] : [];
     }
     return (
@@ -311,6 +311,33 @@ function requiresOutputDataShape(
       subsequentSteps: Step[]
     ) => {
       return stepsHaveOutputDataShape(previousSteps);
+    };
+  }
+  return obj;
+}
+
+function requiresInputDataShape(
+  obj: StepKind,
+  noCollectionSupportP = false
+): StepKind {
+  if (noCollectionSupportP) {
+    obj.visible = (
+      position: number,
+      previousSteps: Step[],
+      subsequentSteps: Step[]
+    ) => {
+      return (
+        stepsHaveInputDataShape(subsequentSteps) &&
+        !hasPrecedingCollection(previousSteps)
+      );
+    };
+  } else {
+    obj.visible = (
+      position: number,
+      previousSteps: Step[],
+      subsequentSteps: Step[]
+    ) => {
+      return stepsHaveInputDataShape(subsequentSteps);
     };
   }
   return obj;
