@@ -176,7 +176,9 @@ do_things() {
       fi
     else
       echo -e "\nRunning against the staging environment"
-      export BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com
+      if [ -z ${BACKEND+x} ]; then
+        export BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com
+      fi
       if [ $(hasflag --angular) ]; then
         yarn start:staging $UI_VERBOSE_YARN &
       else
