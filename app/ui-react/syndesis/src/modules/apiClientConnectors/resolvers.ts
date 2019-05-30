@@ -1,6 +1,8 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import { Connector } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
+import { IEditSpecificationRouteState } from './pages/create/EditSpecificationPage';
+import { IReviewActionsRouteState } from './pages/create/ReviewActionsPage';
 import routes from './routes';
 
 export default {
@@ -30,7 +32,24 @@ export default {
   },
   create: {
     upload: makeResolverNoParams(routes.create.upload),
-    review: makeResolverNoParams(routes.create.review),
+    review: makeResolver<
+      IReviewActionsRouteState,
+      null,
+      IReviewActionsRouteState
+    >(routes.create.review, ({ specification }) => ({
+      state: {
+        specification,
+      },
+    })),
+    specification: makeResolver<
+      IEditSpecificationRouteState,
+      null,
+      IReviewActionsRouteState
+    >(routes.create.specification, ({ specification }) => ({
+      state: {
+        specification,
+      },
+    })),
     security: makeResolverNoParams(routes.create.security),
     save: makeResolverNoParams(routes.create.save),
   },

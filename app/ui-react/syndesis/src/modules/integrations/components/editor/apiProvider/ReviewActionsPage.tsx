@@ -14,6 +14,7 @@ import {
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
+import { UIContext } from '../../../../../app';
 import { ApiError, PageTitle } from '../../../../../shared';
 import {
   IApiProviderReviewActionsRouteState,
@@ -45,6 +46,7 @@ export interface IReviewActionsPageProps extends IPageWithEditorBreadcrumb {
 export const ReviewActionsPage: React.FunctionComponent<
   IReviewActionsPageProps
 > = ({ cancelHref, editHref, nextHref, getBreadcrumb }) => {
+  const uiContext = React.useContext(UIContext);
   const [nextDisabled, setNextDisabled] = React.useState(false);
   const { params, state, history } = useRouteData<
     IBaseApiProviderRouteParams,
@@ -69,6 +71,13 @@ export const ReviewActionsPage: React.FunctionComponent<
     }
     setNextDisabled(false);
   };
+
+  React.useEffect(() => {
+    if (error) {
+      uiContext.pushNotification((error as Error).message, 'error');
+      history.push(cancelHref(params, state) as H.LocationDescriptorObject);
+    }
+  }, [error, uiContext, history, cancelHref, params, state]);
 
   return (
     <Translation ns={['integrations', 'shared']}>
@@ -115,13 +124,9 @@ export const ReviewActionsPage: React.FunctionComponent<
                         i18nOperationsHtmlMessage={`${
                           apiSummary!.actionsSummary!.totalActions
                         } operations`}
-                        i18nWarningsHeading={
-                          apiSummary!.warnings
-                            ? t(
-                                'integrations:apiProvider:reviewActions:sectionWarnings'
-                              )
-                            : undefined
-                        }
+                        i18nWarningsHeading={t(
+                          'integrations:apiProvider:reviewActions:sectionWarnings'
+                        )}
                         warningMessages={
                           apiSummary!.warnings
                             ? apiSummary!.warnings.map(

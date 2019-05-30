@@ -16,7 +16,7 @@ import './OpenApiSelectMethod.css';
 export type Method = 'file' | 'url' | 'scratch';
 
 export interface IOpenApiSelectMethodProps {
-  allowMultiple?: boolean;
+  allowFromScratch?: boolean;
   disableDropzone: boolean;
   fileExtensions?: string;
   /**
@@ -64,6 +64,10 @@ export class OpenApiSelectMethod extends React.Component<
   IOpenApiSelectMethodProps,
   IOpenApiSelectMethodState
 > {
+  public static defaultProps = {
+    allowFromScratch: true,
+  };
+
   constructor(props: any) {
     super(props);
     this.state = {
@@ -197,7 +201,7 @@ export class OpenApiSelectMethod extends React.Component<
                       {this.state.method === 'file' && (
                         <Container style={{ margin: '50px' }}>
                           <DndFileChooser
-                            allowMultiple={this.props.allowMultiple}
+                            allowMultiple={false}
                             disableDropzone={this.props.disableDropzone}
                             fileExtensions={this.props.fileExtensions}
                             i18nHelpMessage={this.props.i18nHelpMessage}
@@ -242,14 +246,14 @@ export class OpenApiSelectMethod extends React.Component<
                         </div>
                       )}
                     </Radio>
-                    <Radio
+                    {this.props.allowFromScratch && <Radio
                       id={'method-scratch'}
                       name={'method'}
                       onClick={() => this.onSelectMethod('scratch')}
                       readOnly={true}
                     >
                       <div>{this.props.i18nMethodFromScratch}</div>
-                    </Radio>
+                    </Radio>}
                   </div>
                 </FormGroup>
               </Col>

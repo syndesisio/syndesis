@@ -7,8 +7,10 @@ export default include('/api-connector', {
   }),
   create: include('create/swagger-connector', {
     review: 'review',
+    root: '',
     save: 'save',
     security: 'security',
+    specification: 'specification',
     upload: 'upload',
   }),
   list: '',
