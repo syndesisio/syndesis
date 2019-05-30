@@ -172,6 +172,8 @@ export interface IDataMapperRouteParams extends IConfigureStepRouteParams {}
 export interface IDataMapperRouteState extends IConfigureStepRouteState {}
 export interface IRuleFilterStepRouteParams extends IConfigureStepRouteParams {}
 export interface IRuleFilterStepRouteState extends IConfigureStepRouteState {}
+export interface IChoiceStepRouteParams extends IConfigureStepRouteParams {}
+export interface IChoiceStepRouteState extends IConfigureStepRouteState {}
 export interface ISelectConnectionRouteState extends IBaseRouteState {}
 export interface IPostPublishRouteParams extends IBaseRouteParams {}
 export interface ISaveIntegrationRouteParams extends IBaseRouteParams {}
@@ -192,6 +194,8 @@ export const stepRoutes = {
   dataMapper: 'mapper',
   // if selected step kind is basic filter
   basicFilter: 'filter',
+  // if selected step kind is choice
+  choice: 'choice',
   // if selected step kind is template
   template: 'template',
   // if selected step kind is step

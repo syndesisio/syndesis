@@ -1,5 +1,5 @@
 export * from './apiProvider';
-export * from './ruleFilter';
+export * from './choice';
 export * from './shared';
 export * from './template';
 export * from './endpoint';

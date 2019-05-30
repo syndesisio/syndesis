@@ -1,16 +1,23 @@
 /* tslint:disable:object-literal-sort-keys */
-import { Step, StepKind } from '@syndesis/models';
+import {
+  Action,
+  ActionDescriptor,
+  DataShape,
+  Step,
+  StepKind,
+} from '@syndesis/models';
 import {
   ADVANCED_FILTER,
   AGGREGATE,
   BASIC_FILTER,
+  CHOICE,
   DATA_MAPPER,
   DataShapeKinds,
   LOG,
   SPLIT,
   TEMPLATE,
 } from './constants';
-import { toDataShapeKinds } from './helpers';
+import { toDataShapeKinds, toDataShapeKindType } from './helpers';
 
 export const ALL_STEPS: StepKind[] = [
   requiresInputDataShape({
@@ -95,22 +102,28 @@ $\{in.body.title\} // Evaluates true when body contains title.
         displayName: 'Custom Text',
         required: false,
       },
-      /*
-      loggingLevel: {
-        type: 'select',
-        displayName: 'Level',
-        value: 'INFO',
-        required: true,
-        enum: [
-          { value: 'INFO', label: 'INFO' },
-          { value: 'WARN', label: 'WARN' },
-          { value: 'ERROR', label: 'ERROR'},
-          {value: 'DEBUG', label: 'DEBUG'},
-          {value: 'TRACE', label: 'TRACE'}],
-      },
-      */
     },
   },
+  requiresOutputDataShape(
+    {
+      id: undefined,
+      connection: undefined,
+      action: {
+        actionType: 'step',
+        descriptor: {
+          inputDataShape: noShape(),
+          outputDataShape: anyShape(),
+        } as ActionDescriptor,
+      } as Action,
+      name: 'Conditional Flows',
+      description:
+        'Sends the message to different flows based on condition evaluation',
+      stepKind: CHOICE,
+      properties: {},
+      configuredProperties: undefined,
+    },
+    true
+  ),
   requiresOutputDataShape({
     id: undefined,
     connection: undefined,
@@ -131,50 +144,6 @@ $\{in.body.title\} // Evaluates true when body contains title.
     properties: {},
     configuredProperties: undefined,
   }),
-  /*
-  {
-    id: undefined,
-    connection: undefined,
-    action: undefined,
-    name: 'Store Data',
-    stepKind: STORE_DATA,
-    description:
-      'Store data from an invocation to be used later in the integration',
-    properties: {},
-    configuredProperties: undefined,
-  },
-  {
-    id: undefined,
-    connection: undefined,
-    action: undefined,
-    name: 'Set Data',
-    stepKind: SET_DATA,
-    description: 'Enrich data used within an integration',
-    properties: {},
-    configuredProperties: undefined,
-  },
-  {
-    id: undefined,
-    connection: undefined,
-    action: undefined,
-    name: 'Call Route',
-    stepKind: CALL_ROUTE,
-    description:
-      'Call a child integration route from the main integration flow',
-    properties: {},
-    configuredProperties: undefined,
-  },
-  {
-    id: undefined,
-    connection: undefined,
-    action: undefined,
-    name: 'Conditional Processing',
-    stepKind: CONDITIONAL_PROCESSING,
-    description: 'Add conditions and multiple paths for processing data',
-    properties: {},
-    configuredProperties: undefined,
-  }
-  */
 ];
 
 function stepsHaveOutputDataShape(steps: Step[]): boolean {
@@ -375,6 +344,20 @@ function requiresConsistentSplitAggregate(obj: StepKind): StepKind {
     );
   };
   return obj;
+}
+
+function anyShape() {
+  return {
+    kind: toDataShapeKindType(DataShapeKinds.ANY),
+    name: 'Any shape',
+  } as DataShape;
+}
+
+function noShape() {
+  return {
+    kind: toDataShapeKindType(DataShapeKinds.NONE),
+    name: 'No shape',
+  } as DataShape;
 }
 
 export interface IStepsResponse {

@@ -109,6 +109,22 @@ export const BasicFilterApp: React.FunctionComponent<
   );
 };
 
+export interface IChoiceAppProps {
+  choicePath: string;
+  choiceChildren: React.ReactElement<IChoiceAppProps>;
+}
+export const ChoiceApp: React.FunctionComponent<IChoiceAppProps> = props => {
+  return (
+    <Switch>
+      <Route
+        path={props.choicePath}
+        exact={true}
+        children={props.choiceChildren}
+      />
+    </Switch>
+  );
+};
+
 export interface IDataMapperAppProps {
   mapperPath: string;
   mapperChildren: React.ReactElement<IDataMapperPageProps>;
@@ -169,6 +185,7 @@ export interface IEditorAppProps {
   template: ITemplateAppProps;
   dataMapper: IDataMapperAppProps;
   basicFilter: IBasicFilterAppProps;
+  choice: IChoiceAppProps;
   step: IStepAppProps;
   extension: IExtensionAppProps;
 }
@@ -222,6 +239,12 @@ export const EditorRoutes: React.FunctionComponent<IEditorAppProps> = props => {
         <BasicFilterApp
           basicFilterPath={props.basicFilter.basicFilterPath}
           basicFilterChildren={props.basicFilter.basicFilterChildren}
+        />
+      </Route>
+      <Route path={props.choice.choicePath}>
+        <ChoiceApp
+          choicePath={props.choice.choicePath}
+          choiceChildren={props.choice.choiceChildren}
         />
       </Route>
       <Route path={props.step.configurePath}>

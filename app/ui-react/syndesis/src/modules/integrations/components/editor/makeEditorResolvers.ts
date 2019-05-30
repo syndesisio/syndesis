@@ -9,6 +9,8 @@ import {
   IApiProviderReviewActionsRouteState,
   IBaseApiProviderRouteParams,
   IBaseApiProviderRouteState,
+  IChoiceStepRouteParams,
+  IChoiceStepRouteState,
   IConfigureActionRouteParams,
   IConfigureActionRouteState,
   IConfigureStepRouteParams,
@@ -297,7 +299,12 @@ export function makeEditorResolvers(esr: typeof stepRoutes) {
       IEditorConfigureStep,
       IRuleFilterStepRouteParams,
       IRuleFilterStepRouteState
-    >(esr.basicFilter, configureConfigureDataMapperMapper),
+    >(esr.basicFilter, configureConfigureStepMapper),
+    choice: makeResolver<
+      IEditorConfigureStep,
+      IChoiceStepRouteParams,
+      IChoiceStepRouteState
+    >(esr.choice, configureConfigureStepMapper),
     dataMapper: makeResolver<
       IEditorConfigureStep,
       IDataMapperRouteParams,

@@ -7,10 +7,10 @@ import {
 import * as H from '@syndesis/history';
 import { DataShape, Integration } from '@syndesis/models';
 import {
+  EditorPageCard,
   IntegrationEditorLayout,
   PageLoader,
   PageSection,
-  RuleFilterCard,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -133,13 +133,13 @@ export class RuleFilterStepPage extends React.Component<
                                 >
                                   {({ form, isValid, submitForm }) => (
                                     <>
-                                      <RuleFilterCard
+                                      <EditorPageCard
                                         i18nDone={'Done'}
                                         isValid={isValid}
                                         submitForm={submitForm}
                                       >
                                         {form}
-                                      </RuleFilterCard>
+                                      </EditorPageCard>
                                     </>
                                   )}
                                 </WithRuleFilterForm>
