@@ -1,5 +1,5 @@
-import { Card, FormGroup } from 'patternfly-react';
 import { Radio } from '@patternfly/react-core';
+import { Card, FormGroup } from 'patternfly-react';
 import * as React from 'react';
 
 export interface IApiClientConnectorCreateSecurityProps {
