@@ -108,7 +108,7 @@ export class FormArrayComponent extends React.Component<
                           )}
                           <TextButton
                             onClick={() => this.props.remove(index)}
-                            visible={index + 1 > minElements}
+                            visible={values.length > minElements}
                           >
                             <i className="fa fa-trash-o" />
                           </TextButton>

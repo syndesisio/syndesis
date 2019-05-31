@@ -5,7 +5,7 @@ import {
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
 import { IntegrationEditorLayout, IntegrationSaveForm } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
+import { validateRequiredProperties, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { UIContext } from '../../../../app';
 import i18n from '../../../../i18n';
@@ -131,6 +131,12 @@ export class SaveIntegrationPage extends React.Component<
                         }
                       };
                       const definition: IFormDefinition = {
+                        description: {
+                          defaultValue: '',
+                          displayName: 'Description',
+                          order: 1,
+                          type: 'textarea',
+                        },
                         name: {
                           defaultValue: '',
                           displayName: 'Name',
@@ -138,14 +144,13 @@ export class SaveIntegrationPage extends React.Component<
                           required: true,
                           type: 'string',
                         },
-                        // tslint:disable-next-line
-                        description: {
-                          defaultValue: '',
-                          displayName: 'Description',
-                          order: 1,
-                          type: 'textarea',
-                        },
                       };
+                      const validator = (values: ISaveIntegrationForm) =>
+                        validateRequiredProperties(
+                          definition,
+                          (name: string) => `${name} is required`,
+                          values
+                        );
                       return (
                         <AutoForm<ISaveIntegrationForm>
                           i18nRequiredProperty={'* Required field'}
@@ -154,7 +159,8 @@ export class SaveIntegrationPage extends React.Component<
                             description: state.integration.description,
                             name: state.integration.name,
                           }}
-                          isInitialValid={state.integration.name.length > 0}
+                          validate={validator}
+                          validateInitial={validator}
                           onSave={onSave}
                         >
                           {({
