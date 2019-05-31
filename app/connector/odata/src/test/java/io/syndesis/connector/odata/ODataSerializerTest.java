@@ -230,7 +230,6 @@ public class ODataSerializerTest extends AbstractODataTest {
             String schema = getMetadataSchema(serviceURI, resourcePath, keyPredicate);
             JsonNode schemaNode = OBJECT_MAPPER.readTree(schema);
 
-            System.out.println(jsonResult);
             // Validate the result against the schema
             validateResultAgainstSchema(jsonResultNode, schemaNode);
 
