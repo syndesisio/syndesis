@@ -268,7 +268,7 @@
     }
   ],
   "description": "Subscribe for and publish messages.",
-  "icon": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAzMDAgMzAwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48c3R5bGU+LnN0MzJ7ZmlsbDojY2FjY2NlfTwvc3R5bGU+PHBhdGggY2xhc3M9InN0MzIiIGQ9Ik0wIDBsODMuOSA4My45VjB6Ii8+PHBhdGggZmlsbD0iI2ExYWZkYiIgZD0iTTEwOS4zIDBoODQuNnYxOTIuNWwtODQuMy04NHoiLz48cGF0aCBjbGFzcz0ic3QzMiIgZD0iTTIxNy4zIDBIMzAwdjMwMGwtODIuNC04NnoiLz48cGF0aCBkPSJNMCAzMDB2LTg1LjdoMjE3LjZMMzAwIDMwMHoiLz48cGF0aCBmaWxsPSIjMDAyMDg3IiBkPSJNMTA5LjYgMTA4LjVIMHY4NGgxOTMuOXoiLz48cGF0aCBkPSJNMCAwdjgzLjloODMuOXoiLz48L3N2Zz4=",
+  "icon": "assets:amqp.svg",
   "id": "amqp",
   "name": "AMQP Message Broker",
   "properties": {
