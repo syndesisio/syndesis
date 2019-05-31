@@ -61,7 +61,10 @@ export interface IViewEditContentProps {
 }
 
 interface IViewEditContentState {
+  ddlChanged: boolean;
   ddlValue: string;
+  initialDdlValue: string;
+  needsValidation: boolean;
 }
 
 export class ViewEditContent extends React.Component<
@@ -75,7 +78,10 @@ export class ViewEditContent extends React.Component<
   constructor(props: IViewEditContentProps) {
     super(props);
     this.state = {
+      ddlChanged: false,
       ddlValue: this.props.viewDdl,
+      initialDdlValue: this.props.viewDdl,
+      needsValidation: false,
     };
     this.handleDdlChange = this.handleDdlChange.bind(this);
     this.handleDdlValidation = this.handleDdlValidation.bind(this);
@@ -85,11 +91,16 @@ export class ViewEditContent extends React.Component<
   public handleDdlValidation = () => (event: any) => {
     const currentDdl = this.state.ddlValue;
     this.props.onValidate(currentDdl);
+    this.setState({
+      needsValidation: false,
+    });
   };
 
   public handleDdlChange(editor: ITextEditor, data: any, value: string) {
     this.setState({
+      ddlChanged: true,
       ddlValue: value,
+      needsValidation: true,
     });
   }
 
@@ -120,7 +131,7 @@ export class ViewEditContent extends React.Component<
               </Alert>
             ))}
             <TextEditor
-              value={this.state.ddlValue}
+              value={this.state.initialDdlValue}
               options={editorOptions}
               onChange={this.handleDdlChange}
             />
@@ -147,7 +158,12 @@ export class ViewEditContent extends React.Component<
             <Button
               bsStyle="primary"
               className="view-edit-content__editButton"
-              disabled={this.props.isWorking || !this.props.isValid}
+              disabled={
+                this.props.isWorking ||
+                !this.props.isValid ||
+                !this.state.ddlChanged ||
+                this.state.needsValidation
+              }
               onClick={this.handleSave()}
             >
               {this.props.i18nSaveLabel}
