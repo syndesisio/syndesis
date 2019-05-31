@@ -419,7 +419,7 @@
               <buildStrategy>docker</buildStrategy>
               <images>
                 <image>
-                  <name>${image.ui}</name>
+                  <name>syndesis/syndesis-ui-legacy:%l</name>
                   <build>
                     <assembly>
                       <inline>

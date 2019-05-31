@@ -503,7 +503,7 @@ objects:
           "baseJSONInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/json/",
           "disableMappingPreviewMode": false
         },
-        "datavirt": { 
+        "datavirt": {
           "dvUrl": "/vdb-builder/v1/"
         },
         "features" : {
@@ -1061,12 +1061,19 @@ objects:
             - --cookie-secret=$(OAUTH_COOKIE_SECRET)
             - --pass-access-token
             - --skip-provider-button
-            - --skip-auth-regex=/logout
-            - --skip-auth-regex=/[^/]+\.(png|jpg|eot|svg|ttf|woff|woff2)
-            - --skip-auth-regex=/api/v1/swagger.*
-            - --skip-auth-regex=/api/v1/index.html
-            - --skip-auth-regex=/api/v1/credentials/callback
-            - --skip-auth-regex=/api/v1/version
+            - '--skip-auth-regex=/api/v1/swagger.*'
+            - '--skip-auth-regex=/api/v1/index.html'
+            - '--skip-auth-regex=/api/v1/credentials/callback'
+            - '--skip-auth-regex=/service-worker.js'
+            - '--skip-auth-regex=/manifest.json'
+            - '--skip-auth-regex=/asset-manifest.json'
+            - '--skip-auth-regex=/precache-manifest.json'
+            - '--skip-auth-regex=/atlasmap.*'
+            - '--skip-auth-regex=/apicurio.*'
+            - '--skip-auth-regex=/favicon.ico'
+            - '--skip-auth-regex=/icons[^/]*'
+            - '--skip-auth-regex=/static[^/]*'
+            - '--skip-auth-regex=/precache-manifest.*.js'
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
