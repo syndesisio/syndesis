@@ -9,7 +9,6 @@ const stories = storiesOf(
   module
 );
 
-const cancelEditingText = 'cancel editing called';
 const cancelLabel = 'Cancel';
 const editLabel = 'Edit';
 const icon =
@@ -17,7 +16,6 @@ const icon =
 const iconLabel = 'Icon';
 const name = 'MyApiConnector';
 const saveLabel = 'Save';
-const startEditingText = 'start editing called';
 const submitText = 'submit called';
 const uploadImageText = 'upload called';
 
@@ -52,16 +50,12 @@ stories.add(
     <ApiConnectorDetailsForm
       apiConnectorIcon={icon}
       apiConnectorName={name}
-      i18nCancelLabel={cancelLabel}
-      i18nEditLabel={editLabel}
       i18nIconLabel={iconLabel}
-      i18nSaveLabel={saveLabel}
       isEditing={boolean('isEditing', false)}
-      isWorking={boolean('isWorking', false)}
       handleSubmit={action(submitText)}
-      onCancelEditing={action(cancelEditingText)}
-      onStartEditing={action(startEditingText)}
       onUploadImage={action(uploadImageText)}
+      fields={<div>fields</div>}
+      footer={<div>footer</div>}
     />
   ),
   { notes: storyNotes }
