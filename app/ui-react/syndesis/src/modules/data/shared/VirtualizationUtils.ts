@@ -253,11 +253,13 @@ function getViewEditorState(
  * @param conns the connections
  * @param virtualizationsSourceStatuses the available virtualization sources
  * @param selectedConn name of a selected connection
+ * @param activeOnly (optional) true - return only active connections
  */
 export function generateDvConnections(
   conns: Connection[],
   virtualizationsSourceStatuses: VirtualizationSourceStatus[],
-  selectedConn: string
+  selectedConn: string,
+  activeOnly = false
 ): Connection[] {
   const dvConns: Connection[] = [];
   for (const conn of conns) {
@@ -278,7 +280,11 @@ export function generateDvConnections(
       selectionState = DvConnectionSelection.SELECTED;
     }
     conn.options = { dvStatus: connStatus, dvSelected: selectionState };
-    dvConns.push(conn);
+    if (!activeOnly) {
+      dvConns.push(conn);
+    } else if (connStatus === DvConnectionStatus.ACTIVE) {
+      dvConns.push(conn);
+    }
   }
   return dvConns;
 }
