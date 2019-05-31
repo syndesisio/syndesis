@@ -1,7 +1,4 @@
-import {
-  useApiProviderIntegration,
-  useApiProviderSummary,
-} from '@syndesis/api';
+import { useApiProviderSummary } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
   ApiConnectorCreatorLayout,
@@ -29,23 +26,10 @@ export interface IReviewActionsRouteState {
 
 export const ReviewActionsPage: React.FunctionComponent = () => {
   const uiContext = React.useContext(UIContext);
-  const [nextDisabled, setNextDisabled] = React.useState(false);
   const { state, history } = useRouteData<null, IReviewActionsRouteState>();
   const { apiSummary, loading, error } = useApiProviderSummary(
     state.specification
   );
-  const getIntegration = useApiProviderIntegration();
-
-  const onNext = async () => {
-    setNextDisabled(true);
-    // try {
-    // tslint:disable-next-line
-    console.log(getIntegration);
-    // } catch (e) {
-    //   // todo show the error?
-    // }
-    setNextDisabled(false);
-  };
 
   React.useEffect(() => {
     if (error) {
@@ -116,9 +100,10 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                             </ButtonLink>
                             &nbsp;
                             <ButtonLink
-                              onClick={onNext}
-                              disabled={nextDisabled}
                               as={'primary'}
+                              href={resolvers.create.security({
+                                specification: apiSummary!,
+                              })}
                             >
                               Next
                             </ButtonLink>

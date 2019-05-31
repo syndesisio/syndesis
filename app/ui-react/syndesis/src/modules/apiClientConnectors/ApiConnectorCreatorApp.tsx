@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router';
 import { WithClosedNavigation } from '../../shared';
 import { EditSpecificationPage } from './pages/create/EditSpecificationPage';
 import { ReviewActionsPage } from './pages/create/ReviewActionsPage';
+import { SecurityPage } from './pages/create/SecurityPage';
 import { SelectMethodPage } from './pages/create/SelectMethodPage';
 import routes from './routes';
 
@@ -25,6 +26,11 @@ export default class ApiConnectorCreatorApp extends React.Component {
             path={routes.create.specification}
             exact={true}
             component={EditSpecificationPage}
+          />
+          <Route
+            path={routes.create.security}
+            exact={true}
+            component={SecurityPage}
           />
         </Switch>
       </WithClosedNavigation>
