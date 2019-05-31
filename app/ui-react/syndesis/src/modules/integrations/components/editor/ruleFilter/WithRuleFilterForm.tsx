@@ -1,10 +1,6 @@
 import { AutoForm, IAutoFormActions } from '@syndesis/auto-form';
 import { FilterOptions, Op, StepKind } from '@syndesis/models';
-import {
-  toFormDefinition,
-  validateConfiguredProperties,
-  validateRequiredProperties,
-} from '@syndesis/utils';
+import { toFormDefinition, validateRequiredProperties } from '@syndesis/utils';
 import * as React from 'react';
 
 export interface IWithRuleFilterFormChildrenProps {
@@ -131,24 +127,20 @@ export class WithRuleFilterForm extends React.Component<
     config.predicate = configuredProperties.predicate || 'AND';
     config.type = configuredProperties.type || 'rule';
     const initialValue = config as IRuleFilterConfig;
-    const isInitialValid = validateConfiguredProperties(
-      definition,
-      initialValue
-    );
+    const validator = (values: IRuleFilterConfig) =>
+      validateRequiredProperties(
+        definition,
+        (name: string) => `${name} is required`,
+        values
+      );
     return (
       <AutoForm<IRuleFilterConfig>
         definition={toFormDefinition(definition)}
         i18nRequiredProperty={'* Required field'}
         initialValue={initialValue}
-        isInitialValid={isInitialValid}
         onSave={onSave}
-        validate={(values: IRuleFilterConfig) => {
-          return validateRequiredProperties(
-            definition,
-            (name: string) => `${name} is required`,
-            values
-          );
-        }}
+        validate={validator}
+        validateInitial={validator}
         key={this.props.step.id}
       >
         {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
