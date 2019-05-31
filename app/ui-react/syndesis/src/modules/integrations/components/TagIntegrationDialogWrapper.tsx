@@ -11,6 +11,7 @@ import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { ApiError } from '../../../shared';
+import './TagIntegrationDialogWrapper.css';
 
 export interface ITagIntegrationDialogWrapperProps {
   manageCiCdHref: H.LocationDescriptor;
@@ -61,7 +62,7 @@ export class TagIntegrationDialogWrapper extends React.Component<
                     }) => {
                       return (
                         <>
-                          <p>
+                          <p className="tag-integration-dialog-wrapper__description">
                             {t('integrations:TagThisIntegrationForRelease')}
                           </p>
                           <WithLoader
