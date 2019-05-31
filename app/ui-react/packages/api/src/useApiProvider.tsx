@@ -26,8 +26,14 @@ export function useApiProviderSummary(specification: string) {
           url: `${apiContext.apiUri}/apis/info`,
         });
         const summary = await response.json();
-        if (summary.errorCode) {
-          throw new Error(summary.userMsg);
+        if (summary.errorCode || summary.errors) {
+          throw new Error(
+            summary.userMsg ||
+              (summary.errors || [])
+                .map((e: any) => e.message)
+                .filter((m: string) => m)
+                .join('\n')
+          );
         }
         setApiSummary(summary as APISummary);
       } catch (e) {
@@ -37,7 +43,7 @@ export function useApiProviderSummary(specification: string) {
       }
     };
     fetchSummary();
-  }, [specification, apiContext, setLoading, setApiSummary]);
+  }, [specification, apiContext, setLoading, setApiSummary, setError]);
 
   return { apiSummary, loading, error };
 }
