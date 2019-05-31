@@ -76,7 +76,7 @@ export class ApiConnectorCreatorWizardSteps extends React.Component<
                   isDisabled={this.props.step < 4}
                   onClick={this.toggleActive}
                   step={4}
-                  title={t('apiClientConnectors:create:save:title')}
+                  title={t('apiClientConnectors:create:details:title')}
                 />
               </>
             }
@@ -112,7 +112,7 @@ export class ApiConnectorCreatorWizardSteps extends React.Component<
                   isAlt={true}
                   onClick={this.toggleActive}
                   step={4}
-                  title={t('apiClientConnectors:create:save:title')}
+                  title={t('apiClientConnectors:create:details:title')}
                 />
               </>
             }

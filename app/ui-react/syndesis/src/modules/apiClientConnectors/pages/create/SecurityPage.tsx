@@ -22,10 +22,10 @@ export interface ISecurityPageRouteState {
 }
 
 export const SecurityPage: React.FunctionComponent = () => {
-  const { state } = useRouteData<null, ISecurityPageRouteState>();
+  const { state, history } = useRouteData<null, ISecurityPageRouteState>();
 
   const onNext = () => {
-    // todo
+    history.push(resolvers.create.save(state));
   };
 
   return (

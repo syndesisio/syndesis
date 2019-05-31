@@ -48,6 +48,10 @@
     },
     "security": {
       "title": "Specify Security"
+    },
+    "details": {
+      "title": "Review/Edit Connector Details",
+      "saveButton": "Create API Connector"
     }
   }
 }
