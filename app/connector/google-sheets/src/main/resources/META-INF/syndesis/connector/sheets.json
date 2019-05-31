@@ -38,7 +38,7 @@
               },
               "timeZone": {
                 "deprecated": false,
-                "displayName": "Time Zone",
+                "displayName": "Time zone",
                 "group": "producer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
@@ -121,7 +121,7 @@
               },
               "timeZone": {
                 "deprecated": false,
-                "displayName": "Time Zone",
+                "displayName": "Time zone",
                 "group": "producer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
@@ -188,7 +188,7 @@
               "majorDimension": {
                 "defaultValue": "ROWS",
                 "deprecated": false,
-                "displayName": "Major Dimension",
+                "displayName": "Major dimension",
                 "enum": [
                   {
                     "label": "Rows",
@@ -239,7 +239,7 @@
               "valueInputOption": {
                 "defaultValue": "USER_ENTERED",
                 "deprecated": false,
-                "displayName": "Value Input Option",
+                "displayName": "Value input option",
                 "enum": [
                   {
                     "label": "Unspecified",
@@ -329,7 +329,7 @@
               "majorDimension": {
                 "defaultValue": "ROWS",
                 "deprecated": false,
-                "displayName": "Major Dimension",
+                "displayName": "Major dimension",
                 "enum": [
                   {
                     "label": "Rows",
@@ -380,7 +380,7 @@
               "valueInputOption": {
                 "defaultValue": "USER_ENTERED",
                 "deprecated": false,
-                "displayName": "Value Input Option",
+                "displayName": "Value input option",
                 "enum": [
                   {
                     "label": "Unspecified",
@@ -470,7 +470,7 @@
               "majorDimension": {
                 "defaultValue": "ROWS",
                 "deprecated": false,
-                "displayName": "Major Dimension",
+                "displayName": "Major dimension",
                 "enum": [
                   {
                     "label": "Rows",
@@ -599,7 +599,7 @@
               "majorDimension": {
                 "defaultValue": "ROWS",
                 "deprecated": false,
-                "displayName": "Major Dimension",
+                "displayName": "Major dimension",
                 "enum": [
                   {
                     "label": "Rows",
@@ -822,7 +822,7 @@
               },
               "title": {
                 "deprecated": false,
-                "displayName": "Chart Title",
+                "displayName": "Chart title",
                 "group": "producer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
@@ -906,7 +906,7 @@
   "properties": {
     "accessToken": {
       "deprecated": false,
-      "displayName": "Access Token",
+      "displayName": "Access token",
       "group": "common",
       "javaType": "java.lang.String",
       "kind": "path",
@@ -936,7 +936,7 @@
     },
     "applicationName": {
       "deprecated": false,
-      "displayName": "Application Name",
+      "displayName": "Application name",
       "group": "common",
       "javaType": "java.lang.String",
       "kind": "parameter",
@@ -997,7 +997,7 @@
     },
     "clientSecret": {
       "deprecated": false,
-      "displayName": "Client Secret",
+      "displayName": "Client secret",
       "group": "common",
       "javaType": "java.lang.String",
       "kind": "parameter",
@@ -1028,7 +1028,7 @@
     },
     "refreshToken": {
       "deprecated": false,
-      "displayName": "Refresh Token",
+      "displayName": "Refresh token",
       "group": "common",
       "javaType": "java.lang.String",
       "kind": "path",
@@ -1057,7 +1057,7 @@
       "componentProperty": true,
       "deprecated": false,
       "description": "Google API Server X.509 PEM Certificate",
-      "displayName": "Server Certificate",
+      "displayName": "Server certificate",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "property",
