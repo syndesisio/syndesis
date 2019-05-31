@@ -19,7 +19,6 @@ export interface IViewsListProps extends IListViewToolbarProps {
   i18nDescription: string;
   i18nName: string;
   i18nNameFilterPlaceholder: string;
-  onImportView: (name: string) => void;
 }
 
 export class ViewList extends React.Component<IViewsListProps> {
