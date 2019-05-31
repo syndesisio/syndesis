@@ -434,7 +434,7 @@
               <buildStrategy>docker</buildStrategy>
               <images>
                 <image>
-                  <name>syndesis/syndesis-ui:latest-react</name>
+                  <name>${image.ui}</name>
                   <build>
                     <assembly>
                       <inline>
