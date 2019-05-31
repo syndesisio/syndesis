@@ -120,7 +120,7 @@ public class DataManagerTest {
 
         assertThat(got).isEqualToIgnoringGivenFields(given, "id");
         assertThat(got.getId()).isPresent();
-        assertThat(cacheManager.getCache(Kind.Connector.modelName).get(got.getId().get())).isSameAs(got);
+        assertThat(cacheManager.getCache(Kind.Connector.modelName, false).get(got.getId().get())).isSameAs(got);
     }
 
     @Test
@@ -129,7 +129,7 @@ public class DataManagerTest {
         final Connector got = dataManager.create(connector);
 
         assertThat(got).isSameAs(connector);
-        assertThat(cacheManager.getCache(Kind.Connector.modelName).get("custom-id")).isEqualTo(connector);
+        assertThat(cacheManager.getCache(Kind.Connector.modelName, false).get("custom-id")).isEqualTo(connector);
     }
 
     @Test

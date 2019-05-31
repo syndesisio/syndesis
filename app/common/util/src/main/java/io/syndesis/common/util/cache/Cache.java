@@ -15,10 +15,30 @@
  */
 package io.syndesis.common.util.cache;
 
-public interface CacheManager {
+import java.util.Collection;
+import java.util.Optional;
+import java.util.Set;
 
-    void evictAll();
+/**
+ * The interface for a cache.
+ *
+ */
+public interface Cache<K, V> {
 
-    <K, V> Cache<K, V> getCache(String name, boolean soft);
+    V get(K key);
+
+    Optional<V> getOptional(K key);
+
+    Set<K> keySet();
+
+    Collection<V> values();
+
+    void put(K key, V value);
+
+    V remove(K key);
+
+    void clear();
+
+    int size();
 
 }
