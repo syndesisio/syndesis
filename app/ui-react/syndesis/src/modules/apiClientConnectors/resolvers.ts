@@ -3,6 +3,7 @@ import { Connector } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import { IEditSpecificationRouteState } from './pages/create/EditSpecificationPage';
 import { IReviewActionsRouteState } from './pages/create/ReviewActionsPage';
+import { ISecurityPageRouteState } from './pages/create/SecurityPage';
 import routes from './routes';
 
 export default {
@@ -44,13 +45,21 @@ export default {
     specification: makeResolver<
       IEditSpecificationRouteState,
       null,
-      IReviewActionsRouteState
+      IEditSpecificationRouteState
     >(routes.create.specification, ({ specification }) => ({
       state: {
         specification,
       },
     })),
-    security: makeResolverNoParams(routes.create.security),
+    security: makeResolver<
+      ISecurityPageRouteState,
+      null,
+      ISecurityPageRouteState
+    >(routes.create.security, ({ specification }) => ({
+      state: {
+        specification,
+      },
+    })),
     save: makeResolverNoParams(routes.create.save),
   },
   list: makeResolverNoParams(routes.list),

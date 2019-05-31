@@ -45,6 +45,9 @@
     },
     "specification": {
       "title": "Edit API Definition"
+    },
+    "security": {
+      "title": "Specify Security"
     }
   }
 }
