@@ -4,34 +4,10 @@
   flex-wrap: wrap;
 }
 
-.integration-detail-info__title {
-  display: flex;
-  align-items: baseline;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.integration-detail-info__title .fa-pencil {
-  font-weight: 400;
-  color: #0088ce;
-  border-radius: 0;
-  border: 1px solid transparent;
-  padding: 2px 6px;
-  font-size: 12px;
-}
-
 .integration-detail-info__status {
   white-space: nowrap;
 }
 
 .integration-detail-info__status-icon {
   margin-right: 5px;
-}
-
-.integration-detail-info__title .inline-text-editwidget .form-group {
-  margin-bottom: 0;
-}
-
-.integration-detail-info__title .label {
-  font-size: var(--pf-global--FontSize--sm);
 }

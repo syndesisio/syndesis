@@ -23,7 +23,8 @@ import { Route, Switch } from 'react-router-dom';
 import { Workbox } from 'workbox-window';
 import resolvers from '../modules/resolvers';
 import { ApiError, PageNotFound, WithErrorBoundary } from '../shared';
-import fuseOnlineLogo from '../shared/images/FuseOnlineLogo_White.svg';
+import redHatFuseOnlineLogo from '../shared/images/red-hat-fuse-online-logo.png';
+import redHatBrandLogo from '../shared/images/red-hat-brand-logo.png';
 import brandImg from '../shared/images/pf4-downstream-bg.svg';
 import syndesisLogoGraphic from '../shared/images/syndesis-logo-graphic.png';
 import syndesisLogo from '../shared/images/syndesis_logo_full_darkbkg.svg';
@@ -130,7 +131,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                 const productName = isProductBuild ? 'Fuse Online' : 'Syndesis';
                 return (
                   <>
-                    {showAboutModal && (
+                    {
                       <AboutModal
                         trademark={''}
                         productName={productName}
@@ -138,7 +139,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                         handleModalToggle={toggleAboutModal}
                         bgImg={isProductBuild ? brandImg : undefined}
                         brandImg={
-                          isProductBuild ? fuseOnlineLogo : syndesisLogoGraphic
+                          isProductBuild ? redHatBrandLogo : syndesisLogoGraphic
                         }
                       >
                         <WithApiVersion>
@@ -168,7 +169,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                           }}
                         </WithApiVersion>
                       </AboutModal>
-                    )}
+                    }
                     <Notifications
                       notifications={notifications}
                       notificationTimerDelay={8000}
@@ -262,12 +263,12 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                             pictograph={
                               <img
                                 src={
-                                  isProductBuild ? fuseOnlineLogo : syndesisLogo
+                                  isProductBuild
+                                    ? redHatFuseOnlineLogo
+                                    : syndesisLogo
                                 }
                                 alt={productName}
-                                style={{
-                                  minWidth: '164px',
-                                }}
+                                className="pf-c-brand"
                               />
                             }
                             logoHref={'/'}

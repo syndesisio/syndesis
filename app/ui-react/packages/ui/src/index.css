@@ -20,6 +20,11 @@
   --pf-c-backdrop--Color: rgba(3,3,3,.62);
 }
 
+.pf-c-page__header-brand-link .pf-c-brand {
+  --pf-c-page__header-brand-link--c-brand--MaxHeight: 40px;
+  height: 40px;
+}
+
 .pf-c-dropdown {
   --pf-c-dropdown__toggle--FontSize: var(--pf-global--FontSize--xs);
 }
