@@ -1,6 +1,7 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import { Connector } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
+import { IDetailsPageRouteState } from './pages/create/DetailsPage';
 import { IEditSpecificationRouteState } from './pages/create/EditSpecificationPage';
 import { IReviewActionsRouteState } from './pages/create/ReviewActionsPage';
 import { ISecurityPageRouteState } from './pages/create/SecurityPage';
@@ -60,7 +61,14 @@ export default {
         specification,
       },
     })),
-    save: makeResolverNoParams(routes.create.save),
+    save: makeResolver<IDetailsPageRouteState, null, IDetailsPageRouteState>(
+      routes.create.save,
+      ({ specification }) => ({
+        state: {
+          specification,
+        },
+      })
+    ),
   },
   list: makeResolverNoParams(routes.list),
 };

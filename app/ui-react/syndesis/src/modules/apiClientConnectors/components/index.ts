@@ -1,3 +1,3 @@
 export * from './ApiConnectorCreatorBreadcrumb';
-export * from './ApiConnectorInfo';
+export * from './ApiConnectorInfoForm';
 export * from './ApiConnectorCreatorWizardSteps';
