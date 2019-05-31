@@ -64,10 +64,16 @@ export class ApiConnectorDetailsForm extends React.Component<
                   {this.props.i18nIconLabel}
                 </label>
                 <div>
-                  <img
-                    className="api-connector-details-form__icon"
-                    src={this.props.apiConnectorIcon}
-                  />
+                  {this.props.apiConnectorIcon ? (
+                    <img
+                      className="api-connector-details-form__icon"
+                      src={this.props.apiConnectorIcon}
+                    />
+                  ) : (
+                    <div className="api-connector-details-form__icon">
+                      <i className="fa fa-upload" />
+                    </div>
+                  )}
                   <input
                     data-testid={'api-connector-details-form-icon-file-input'}
                     type="file"

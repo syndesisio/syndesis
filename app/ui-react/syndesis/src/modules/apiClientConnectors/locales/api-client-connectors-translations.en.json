@@ -62,7 +62,8 @@
     },
     "details": {
       "title": "Review/Edit Connector Details",
-      "saveButton": "Create API Connector"
+      "saveButton": "Create API Connector",
+      "successNotification": "API Connector successfully created"
     }
   }
 }

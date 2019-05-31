@@ -1,4 +1,4 @@
-import { useApiProviderSummary } from '@syndesis/api';
+import { useApiConnectorSummary } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
   ApiConnectorCreatorLayout,
@@ -27,7 +27,7 @@ export interface IReviewActionsRouteState {
 export const ReviewActionsPage: React.FunctionComponent = () => {
   const uiContext = React.useContext(UIContext);
   const { state, history } = useRouteData<null, IReviewActionsRouteState>();
-  const { apiSummary, loading, error } = useApiProviderSummary(
+  const { apiSummary, loading, error } = useApiConnectorSummary(
     state.specification
   );
 
