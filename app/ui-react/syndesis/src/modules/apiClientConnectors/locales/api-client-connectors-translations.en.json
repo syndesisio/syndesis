@@ -56,6 +56,7 @@
     },
     "security": {
       "authTypeLabel": "Authentication Type",
+      "noSecurity": "No Security",
       "required": "All fields are required.",
       "title": "Specify Security"
     },
