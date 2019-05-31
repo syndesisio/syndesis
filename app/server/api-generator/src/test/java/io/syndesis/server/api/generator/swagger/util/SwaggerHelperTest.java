@@ -27,12 +27,24 @@ import io.syndesis.server.jsondb.impl.JsonRecordSupport;
 
 import org.junit.Test;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+
 import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
 
 public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
+
+    @Test
+    public void convertingToJsonShouldNotLooseSecurityRequirements() throws JsonProcessingException, IOException {
+        final String definition = "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[\"scope\"]}]}}}}";
+        final JsonNode node = SwaggerHelper.convertToJson(definition);
+        assertThat(node.get("paths").get("/api").get("get").get("security"))
+            .hasOnlyOneElementSatisfying(securityRequirement -> assertThat(securityRequirement.get("secured"))
+                .hasOnlyOneElementSatisfying(scope -> assertThat(scope.asText()).isEqualTo("scope")));
+    }
 
     @Test
     public void shouldSanitizeListOfTags() {
