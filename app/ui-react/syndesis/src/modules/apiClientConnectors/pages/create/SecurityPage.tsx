@@ -1,6 +1,7 @@
 import * as H from '@syndesis/history';
 import { APISummary } from '@syndesis/models/src';
 import {
+  ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorLayout,
   ButtonLink,
   PageSection,
@@ -50,7 +51,9 @@ export const SecurityPage: React.FunctionComponent = () => {
                 header={<ApiConnectorCreatorWizardSteps step={3} />}
                 content={
                   <PageSection>
-                    <div>TODO</div>
+                    <ApiClientConnectorCreateSecurity
+                      i18nTitle={'apiClientConnectors:create:security:title'}
+                    />
                     <div>
                       <ButtonLink
                         href={resolvers.create.review({
@@ -58,11 +61,11 @@ export const SecurityPage: React.FunctionComponent = () => {
                             .configuredProperties!.specification,
                         })}
                       >
-                        Back
+                        {t('Back')}
                       </ButtonLink>
                       &nbsp;
                       <ButtonLink onClick={onNext} as={'primary'}>
-                        Next
+                        {t('Next')}
                       </ButtonLink>
                     </div>
                   </PageSection>
