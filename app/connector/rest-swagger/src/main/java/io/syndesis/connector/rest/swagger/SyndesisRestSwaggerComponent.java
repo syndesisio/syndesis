@@ -27,7 +27,7 @@ import org.apache.camel.component.http4.HttpProducer;
 import org.apache.camel.spi.RestConfiguration;
 
 public final class SyndesisRestSwaggerComponent extends HttpComponent {
-
+    public static final String COMPONENT_NAME = "connector-rest-swagger-http4";
     private static final List<Consumer<HttpProducer>> CUSTOMIZERS = new ArrayList<>(3);
 
     static {

@@ -83,5 +83,13 @@ public interface IntegrationSpec {
     String getServiceAccountName();
 
     class Builder extends ImmutableIntegrationSpec.Builder {
+         public Builder addConfiguration(String type, String value) {
+             return addConfiguration(
+                 new ConfigurationSpec.Builder()
+                     .type(type)
+                    .value(value)
+                    .build()
+             );
+         }
     }
 }

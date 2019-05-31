@@ -282,18 +282,6 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
             .type("secret")
             .value(CamelKSupport.integrationName(integration.getName()))
             .build());
-        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
-            .type("property")
-            .value("camel.rest.contextPath=/")
-            .build());
-        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
-            .type("property")
-            .value("camel.rest.component=servlet")
-            .build());
-        integrationSpecBuilder.addConfiguration(new ConfigurationSpec.Builder()
-            .type("property")
-            .value("camel.rest.endpointProperty.headerFilterStrategy=syndesisHeaderStrategy")
-            .build());
 
         try {
             addMappingRules(integration, integrationSpecBuilder);
