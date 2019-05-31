@@ -109,7 +109,7 @@
     }
   ],
   "description": "Manage Apache Kudu resources.",
-  "icon": "assets:kudu.svg",
+  "icon": "assets:kudu.png",
   "id": "kudu",
   "name": "Apache Kudu",
   "properties": {

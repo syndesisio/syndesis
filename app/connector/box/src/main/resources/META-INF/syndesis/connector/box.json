@@ -100,7 +100,7 @@
     }
   ],
   "description": "Download and upload files.",
-  "icon": "assets:box.svg",
+  "icon": "assets:box.png",
   "id": "box",
   "name": "Box",
   "properties": {
