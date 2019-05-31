@@ -67,16 +67,26 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                       {() => (
                         <>
                           <OpenApiReviewActions
-                            i18nApiDefinitionHeading={'API DEFINITION'}
-                            i18nDescriptionLabel={'Description'}
-                            i18nImportedHeading={'IMPORTED'}
-                            i18nNameLabel={'Name'}
+                            i18nApiDefinitionHeading={t(
+                              'apiClientConnectors:create:review:sectionApiDefinition'
+                            )}
+                            i18nDescriptionLabel={t(
+                              'apiClientConnectors:create:review:descriptionLabel'
+                            )}
+                            i18nImportedHeading={t(
+                              'apiClientConnectors:create:review:sectionImported'
+                            )}
+                            i18nNameLabel={t(
+                              'apiClientConnectors:create:review:nameLabel'
+                            )}
                             apiProviderDescription={apiSummary!.description}
                             apiProviderName={apiSummary!.name}
                             i18nOperationsHtmlMessage={`<strong>${
                               apiSummary!.actionsSummary!.totalActions
                             }</strong> operations`}
-                            i18nWarningsHeading={'WARNINGS'}
+                            i18nWarningsHeading={t(
+                              'apiClientConnectors:create:review:sectionWarnings'
+                            )}
                             warningMessages={
                               apiSummary!.warnings
                                 ? apiSummary!.warnings.map(
@@ -87,7 +97,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                           />
                           <div>
                             <ButtonLink href={resolvers.create.upload()}>
-                              Back
+                              {t('Back')}
                             </ButtonLink>
                             &nbsp;&nbsp;&nbsp;
                             <ButtonLink
@@ -96,7 +106,9 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                                   .specification,
                               })}
                             >
-                              Review/Edit
+                              {t(
+                                'apiClientConnectors:create:review:btnReviewEdit'
+                              )}
                             </ButtonLink>
                             &nbsp;
                             <ButtonLink
@@ -105,7 +117,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                                 specification: apiSummary!,
                               })}
                             >
-                              Next
+                              {t('Next')}
                             </ButtonLink>
                           </div>
                         </>

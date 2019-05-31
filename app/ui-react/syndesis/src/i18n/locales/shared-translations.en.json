@@ -12,6 +12,7 @@
     },
     "shared": {
       "Actions": "Actions",
+      "Back": "Back",
       "Cancel": "Cancel",
       "CiCd": "CI/CD",
       "Configure": "Configure",

@@ -41,12 +41,22 @@
       "urlNote": "* Note: After uploading this document, Syndesis does not automatically obtain any updates to it."
     },
     "review": {
+      "btnReviewEdit": "Review/Edit",
+      "description": "This description has not yet been actually defined, please send help.",
+      "descriptionLabel": "Description",
+      "nameLabel": "Name",
+      "operations": "operations",
+      "sectionApiDefinition": "API DEFINITION",
+      "sectionImported": "IMPORTED",
+      "sectionWarnings": "WARNINGS",
       "title": "Review Actions"
     },
     "specification": {
       "title": "Edit API Definition"
     },
     "security": {
+      "authTypeLabel": "Authentication Type",
+      "required": "All fields are required.",
       "title": "Specify Security"
     },
     "details": {
