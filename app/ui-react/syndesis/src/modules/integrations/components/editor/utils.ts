@@ -3,6 +3,7 @@ import {
   AGGREGATE,
   API_PROVIDER,
   BASIC_FILTER,
+  CHOICE,
   CONNECTOR,
   DATA_MAPPER,
   DataShapeKinds,
@@ -223,6 +224,7 @@ export interface IGetStepHrefs {
   apiProviderHref: StepKindHrefCallback;
   connectionHref: StepKindHrefCallback;
   filterHref: StepKindHrefCallback;
+  choiceHref: StepKindHrefCallback;
   mapperHref: StepKindHrefCallback;
   templateHref: StepKindHrefCallback;
   stepHref: StepKindHrefCallback;
@@ -247,6 +249,8 @@ export const getStepHref = (
       );
     case BASIC_FILTER:
       return hrefs.filterHref(step as StepKind, params, state);
+    case CHOICE:
+      return hrefs.choiceHref(step as StepKind, params, state);
     case DATA_MAPPER:
       return hrefs.mapperHref(step as StepKind, params, state);
     case TEMPLATE:
