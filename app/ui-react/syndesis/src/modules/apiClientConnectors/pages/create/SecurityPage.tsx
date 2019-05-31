@@ -52,7 +52,11 @@ export const SecurityPage: React.FunctionComponent = () => {
                 content={
                   <PageSection>
                     <ApiClientConnectorCreateSecurity
-                      i18nTitle={'apiClientConnectors:create:security:title'}
+                      authenticationType={undefined}
+                      i18nNoSecurity={t(
+                        'apiClientConnectors:create:security:noSecurity'
+                      )}
+                      i18nTitle={t('apiClientConnectors:create:security:title')}
                     />
                     <div>
                       <ButtonLink
