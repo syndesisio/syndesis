@@ -20,6 +20,7 @@ packages/models/src/models-internal.d.ts
 
 # dependencies
 node_modules
+node
 
 # testing
 coverage
