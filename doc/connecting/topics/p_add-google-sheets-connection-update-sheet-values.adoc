@@ -40,13 +40,13 @@ the first sheet in the spreadsheet.
 The default is `A:A`, which updates the first column in the first sheet 
 in the spreadsheet. 
 
-.. In the *Major Dimension* field, accept *Rows*, which is the default, or
+.. In the *Major dimension* field, accept *Rows*, which is the default, or
 select *Columns*. *Rows* configures the action to use row objects to update 
 the sheet. Each row object contains a value for each column that you want to update.  
 *Columns* configures the action to use column objects to update the sheet. 
 Each column object contains a value for each row that you want to update.  
 
-.. In the *Value Input Option* field, indicate how you want Google sheets
+.. In the *Value input option* field, indicate how you want Google sheets
 to interpret the data that it receives for updating the sheet. 
 *Unspecified*, which is the default, enables Google Sheets to automatically 
 convert data that it recognizes. For example, if the input data is a date, then 
@@ -80,7 +80,7 @@ mapping fields from a source step to the target spreadsheet. For example,
 you might map fields from another spreadsheet or from a database. 
 +
 If you need to, you can edit the Google Sheets connection that updates
-sheet values and change the settings for *Range* or *Major Dimension*. 
+sheet values and change the settings for *Range* or *Major dimension*. 
 Changing these settings causes the data mapper to display different 
 target fields according to your changes. 
 
