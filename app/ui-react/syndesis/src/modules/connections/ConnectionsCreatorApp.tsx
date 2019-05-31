@@ -1,45 +1,33 @@
-import { Breadcrumb, PageSection } from '@syndesis/ui';
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import { Link } from 'react-router-dom';
 import { WithClosedNavigation } from '../../shared';
-import { create } from './pages';
-import resolvers from './resolvers';
+import ConfigurationPage from './pages/create/ConfigurationPage';
+import ConnectorsPage from './pages/create/ConnectorsPage';
+import ReviewPage from './pages/create/ReviewPage';
 import routes from './routes';
 
 export default class ConnectionsCreatorApp extends React.Component {
   public render() {
     return (
-      <PageSection noPadding={true}>
-        <WithClosedNavigation>
-          <Breadcrumb>
-            <Link
-              data-testid={'connections-creator-app-connections-link'}
-              to={resolvers.connections()}
-            >
-              Connections
-            </Link>
-            <span>Create connection</span>
-          </Breadcrumb>
-          <Switch>
-            <Route
-              path={routes.create.selectConnector}
-              exact={true}
-              component={create.ConnectorsPage}
-            />
-            <Route
-              path={routes.create.configureConnector}
-              exact={true}
-              component={create.ConfigurationPage}
-            />
-            <Route
-              path={routes.create.review}
-              exact={true}
-              component={create.ReviewPage}
-            />
-          </Switch>
-        </WithClosedNavigation>
-      </PageSection>
+      <WithClosedNavigation>
+        <Switch>
+          <Route
+            path={routes.create.selectConnector}
+            exact={true}
+            component={ConnectorsPage}
+          />
+          <Route
+            path={routes.create.configureConnector}
+            exact={true}
+            component={ConfigurationPage}
+          />
+          <Route
+            path={routes.create.review}
+            exact={true}
+            component={ReviewPage}
+          />
+        </Switch>
+      </WithClosedNavigation>
     );
   }
 }

@@ -1,5 +1,6 @@
 // tslint:disable:no-console
 import {
+  Card,
   Col,
   FormControl,
   FormGroup,
@@ -30,20 +31,32 @@ export interface IOpenApiSelectMethodProps {
   i18nNoFileSelectedMessage: string;
   i18nSelectedFileLabel: string;
   i18nUploadFailedMessage?: string;
-  i18nUploadFailedMessages?: string[];
   i18nUploadSuccessMessage?: string;
-  i18nUploadSuccessMessages?: string[];
   i18nUrlNote: string;
 
   /**
-   * The action fired when the user presses the Next button.
+   * The action fired when the user presses the Next button
    */
   onNext(method?: Method, specification?: string): void;
 }
 
 export interface IOpenApiSelectMethodState {
+  disableDropzone: boolean;
+  /**
+   * The method selected by the user to provide the OpenAPI
+   * specification
+   */
   method?: Method;
   specification?: string;
+  /**
+   * Used to handle D&D upload success/fail messages
+   */
+  uploadFailedMessage?: string;
+  uploadSuccessMessage?: string;
+  /**
+   * The `valid` prop here determines whether or not
+   * to allow the user to proceed to the next step in the wizard
+   */
   valid?: boolean;
 }
 
@@ -54,15 +67,38 @@ export class OpenApiSelectMethod extends React.Component<
   constructor(props: any) {
     super(props);
     this.state = {
+      disableDropzone: false,
       method: 'file',
       specification: '',
       valid: false,
     };
 
+    this.buildUploadMessage = this.buildUploadMessage.bind(this);
     this.onAddUrlSpecification = this.onAddUrlSpecification.bind(this);
     this.onSelectMethod = this.onSelectMethod.bind(this);
     this.onUploadAccepted = this.onUploadAccepted.bind(this);
     this.onUploadRejected = this.onUploadRejected.bind(this);
+  }
+
+  /**
+   * Helper function used to build the D&D upload success/fail
+   * messages, which are subsequently set in the UI state
+   * @param fileName - The name of the file that was uploaded
+   * @param succeeded - Boolean value that specifies whether or not the
+   * upload was successful.
+   */
+  public buildUploadMessage(fileName: string, succeeded: boolean): void {
+    if (succeeded && fileName) {
+      this.setState({
+        uploadSuccessMessage:
+          this.props.i18nUploadSuccessMessage + "'" + fileName + "'",
+      });
+    } else {
+      this.setState({
+        uploadFailedMessage:
+          "'" + fileName + "'" + this.props.i18nUploadFailedMessage,
+      });
+    }
   }
 
   public checkValidUrl(url: string): boolean {
@@ -97,6 +133,8 @@ export class OpenApiSelectMethod extends React.Component<
     this.setState({
       method: newMethod,
       specification: '',
+      uploadFailedMessage: '',
+      uploadSuccessMessage: '',
       valid: newMethod === 'scratch',
     });
   }
@@ -107,8 +145,14 @@ export class OpenApiSelectMethod extends React.Component<
   public onUploadAccepted(files: File[]): void {
     const reader = new FileReader();
     reader.readAsText(files[0]);
+
+    this.buildUploadMessage(files[0].name, true);
+
     reader.onload = () => {
-      this.setState({ specification: reader.result as string, valid: true });
+      this.setState({
+        specification: reader.result as string,
+        valid: true,
+      });
     };
   }
 
@@ -116,8 +160,16 @@ export class OpenApiSelectMethod extends React.Component<
    * Obtains the localized text (may include HTML tags) that appears when the file upload was rejected. This
    * will occur when a DnD of a file with the wrong extension is dropped. This message is presented
    * as a timed toast notification.
+   * @param fileName - Name of file that failed to be uploaded
    */
   public onUploadRejected(fileName: string): string {
+    this.buildUploadMessage(fileName, false);
+
+    this.setState({
+      specification: '',
+      valid: false,
+    });
+
     return (
       '<span>File <strong>' +
       fileName +
@@ -127,94 +179,94 @@ export class OpenApiSelectMethod extends React.Component<
 
   public render() {
     return (
-      <Grid className={'open-api-select-method'}>
-        <Row>
-          <Col>
-            <FormGroup controlId={'method'} disabled={false}>
-              <div>
-                <Radio
-                  id={'method-file'}
-                  name={'method'}
-                  onClick={() => this.onSelectMethod('file')}
-                  checked={this.state.method === 'file'}
-                  readOnly={true}
-                >
-                  <div>{this.props.i18nMethodFromFile}</div>
-                  {this.state.method === 'file' && (
-                    <Container style={{ margin: '50px' }}>
-                      <DndFileChooser
-                        allowMultiple={this.props.allowMultiple}
-                        disableDropzone={this.props.disableDropzone}
-                        fileExtensions={this.props.fileExtensions}
-                        i18nHelpMessage={this.props.i18nHelpMessage}
-                        i18nInstructions={this.props.i18nInstructions}
-                        i18nNoFileSelectedMessage={
-                          this.props.i18nNoFileSelectedMessage
-                        }
-                        i18nSelectedFileLabel={this.props.i18nSelectedFileLabel}
-                        i18nUploadFailedMessage={
-                          this.props.i18nUploadFailedMessage
-                        }
-                        i18nUploadFailedMessages={
-                          this.props.i18nUploadFailedMessages
-                        }
-                        i18nUploadSuccessMessage={
-                          this.props.i18nUploadSuccessMessage
-                        }
-                        i18nUploadSuccessMessages={
-                          this.props.i18nUploadSuccessMessages
-                        }
-                        onUploadAccepted={this.onUploadAccepted}
-                        onUploadRejected={this.onUploadRejected}
-                      />
-                    </Container>
-                  )}
-                </Radio>
-                <Radio
-                  id={'method-url'}
-                  name={'method'}
-                  onClick={() => this.onSelectMethod('url')}
-                  readOnly={true}
-                >
-                  <div>{this.props.i18nMethodFromUrl}</div>
-                  {this.state.method === 'url' && (
-                    <div>
-                      <FormControl
-                        type={'text'}
-                        disabled={false}
-                        value={this.state.specification}
-                        onChange={this.onAddUrlSpecification}
-                      />
-                      <br />
-                      <span className={'url-note'}>
-                        {this.props.i18nUrlNote}
-                      </span>
-                    </div>
-                  )}
-                </Radio>
-                <Radio
-                  id={'method-scratch'}
-                  name={'method'}
-                  onClick={() => this.onSelectMethod('scratch')}
-                  readOnly={true}
-                >
-                  <div>{this.props.i18nMethodFromScratch}</div>
-                </Radio>
-              </div>
-            </FormGroup>
-          </Col>
+      <Card className={'open-api-review-actions'}>
+        <Card.Body>
+          <Grid className={'open-api-select-method'}>
+            <Row>
+              <Col>
+                <FormGroup controlId={'method'} disabled={false}>
+                  <div>
+                    <Radio
+                      id={'method-file'}
+                      name={'method'}
+                      onClick={() => this.onSelectMethod('file')}
+                      checked={this.state.method === 'file'}
+                      readOnly={true}
+                    >
+                      <div>{this.props.i18nMethodFromFile}</div>
+                      {this.state.method === 'file' && (
+                        <Container style={{ margin: '50px' }}>
+                          <DndFileChooser
+                            allowMultiple={this.props.allowMultiple}
+                            disableDropzone={this.props.disableDropzone}
+                            fileExtensions={this.props.fileExtensions}
+                            i18nHelpMessage={this.props.i18nHelpMessage}
+                            i18nInstructions={this.props.i18nInstructions}
+                            i18nNoFileSelectedMessage={
+                              this.props.i18nNoFileSelectedMessage
+                            }
+                            i18nSelectedFileLabel={
+                              this.props.i18nSelectedFileLabel
+                            }
+                            i18nUploadFailedMessage={
+                              this.state.uploadFailedMessage
+                            }
+                            i18nUploadSuccessMessage={
+                              this.state.uploadSuccessMessage
+                            }
+                            onUploadAccepted={this.onUploadAccepted}
+                            onUploadRejected={this.onUploadRejected}
+                          />
+                        </Container>
+                      )}
+                    </Radio>
+                    <Radio
+                      id={'method-url'}
+                      name={'method'}
+                      onClick={() => this.onSelectMethod('url')}
+                      readOnly={true}
+                    >
+                      <div>{this.props.i18nMethodFromUrl}</div>
+                      {this.state.method === 'url' && (
+                        <div>
+                          <FormControl
+                            type={'text'}
+                            disabled={false}
+                            value={this.state.specification}
+                            onChange={this.onAddUrlSpecification}
+                          />
+                          <br />
+                          <span className={'url-note'}>
+                            {this.props.i18nUrlNote}
+                          </span>
+                        </div>
+                      )}
+                    </Radio>
+                    <Radio
+                      id={'method-scratch'}
+                      name={'method'}
+                      onClick={() => this.onSelectMethod('scratch')}
+                      readOnly={true}
+                    >
+                      <div>{this.props.i18nMethodFromScratch}</div>
+                    </Radio>
+                  </div>
+                </FormGroup>
+              </Col>
 
-          <ButtonLink
-            disabled={!this.state.valid}
-            as={'primary'}
-            onClick={() =>
-              this.props.onNext(this.state.method, this.state.specification)
-            }
-          >
-            {this.props.i18nBtnNext}
-          </ButtonLink>
-        </Row>
-      </Grid>
+              <ButtonLink
+                disabled={!this.state.valid}
+                as={'primary'}
+                onClick={() =>
+                  this.props.onNext(this.state.method, this.state.specification)
+                }
+              >
+                {this.props.i18nBtnNext}
+              </ButtonLink>
+            </Row>
+          </Grid>
+        </Card.Body>
+      </Card>
     );
   }
 }

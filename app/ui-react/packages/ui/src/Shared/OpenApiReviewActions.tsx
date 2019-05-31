@@ -8,7 +8,7 @@ import {
   TextVariants,
   Title,
 } from '@patternfly/react-core';
-import { Card } from 'patternfly-react';
+import { Card, Label } from 'patternfly-react';
 import * as React from 'react';
 import { Container } from '../Layout';
 
@@ -50,7 +50,7 @@ export class OpenApiReviewActions extends React.Component<
               >
                 {this.props.i18nApiDefinitionHeading}
               </Title>
-              <Container>
+              <Container className={'review-actions__name-description'}>
                 <TextList component={TextListVariants.dl}>
                   <TextListItem component={TextListItemVariants.dt}>
                     {this.props.i18nNameLabel}
@@ -104,6 +104,9 @@ export class OpenApiReviewActions extends React.Component<
                   className={'review-actions__heading'}
                 >
                   {this.props.i18nErrorsHeading}
+                  <Label bsStyle={'danger'} className={'heading__label'}>
+                    {this.props.errorMessages.length}
+                  </Label>
                 </Title>
               )}
               {this.props.errorMessages
@@ -124,17 +127,22 @@ export class OpenApiReviewActions extends React.Component<
                   className={'review-actions__heading'}
                 >
                   {this.props.i18nWarningsHeading}
+                  <Label bsStyle={'warning'} className={'heading__label'}>
+                    {this.props.warningMessages.length}
+                  </Label>
                 </Title>
               )}
-              {this.props.warningMessages
-                ? this.props.warningMessages.map(
-                    (warningMsg: string, index: number) => (
-                      <Text key={index} component={TextVariants.p}>
-                        {index + 1}. {warningMsg}
-                      </Text>
+              <Container className={'review-actions__warnings'}>
+                {this.props.warningMessages
+                  ? this.props.warningMessages.map(
+                      (warningMsg: string, index: number) => (
+                        <Text key={index} component={TextVariants.p}>
+                          {index + 1}. {warningMsg}
+                        </Text>
+                      )
                     )
-                  )
-                : null}
+                  : null}
+              </Container>
             </TextContent>
           )}
         </Card.Body>

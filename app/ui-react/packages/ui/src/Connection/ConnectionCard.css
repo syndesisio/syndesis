@@ -27,7 +27,7 @@
 .connection-card__heading .heading__dropdown {
   position: absolute;
   top: 35px;
-  right: 35px;
+  right: 10px;
 }
 
 a.connection-card__content:hover,

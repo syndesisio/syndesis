@@ -1,0 +1,23 @@
+.api-provider-review-operations-item {}
+
+.api-provider-review-operations-item .list-view-pf-additional-info {
+  width: 0;
+}
+
+.api-provider-review-operations-item .item__additional-info {
+  display: inline-block;
+}
+
+@media (max-width: 1204px) {
+  .api-provider-review-operations-item .item__operation-path {
+    margin-left: 0 !important;
+  }
+}
+
+@media (min-width: 992px) {
+  .list-view-pf .list-group-item-heading {
+    min-width: 110px;
+    white-space: normal;
+  }
+}
+

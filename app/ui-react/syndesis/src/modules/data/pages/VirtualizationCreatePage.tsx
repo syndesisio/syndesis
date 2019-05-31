@@ -1,4 +1,7 @@
-import { WithVirtualizationHelpers } from '@syndesis/api';
+import {
+  IDvNameValidationResult,
+  WithVirtualizationHelpers,
+} from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { Breadcrumb, PageSection } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
@@ -37,14 +40,6 @@ export class VirtualizationCreatePage extends React.Component {
         type: 'string',
       },
     } as IFormDefinition;
-    const validate = (v: { virtName: string }) => {
-      const errors: any = {};
-      // TODO Incorporate service call to validate virtualization name
-      if (v.virtName.includes('?')) {
-        errors.virtName = 'Virtualization name contains an illegal character';
-      }
-      return errors;
-    };
 
     return (
       <Translation ns={['data', 'shared']}>
@@ -57,27 +52,65 @@ export class VirtualizationCreatePage extends React.Component {
                     <AppContext.Consumer>
                       {({ user }) => (
                         <WithVirtualizationHelpers>
-                          {({ createVirtualization }) => {
-                            const handleCreate = async (value: any) => {
-                              const virtualization = await createVirtualization(
-                                user.username || 'developer',
-                                value.virtName,
-                                value.virtDescription
+                          {({
+                            createVirtualization,
+                            validateVirtualizationName,
+                          }) => {
+                            /**
+                             * Backend name validation only occurs when attempting to create
+                             * @param proposedName the name to validate
+                             */
+                            const doValidateName = async (
+                              proposedName: string
+                            ): Promise<true | string> => {
+                              // make sure name has a value
+                              if (proposedName === '') {
+                                return t(
+                                  'shared:requiredFieldMessage'
+                                ) as string;
+                              }
+
+                              const response: IDvNameValidationResult = await validateVirtualizationName(
+                                proposedName
                               );
-                              pushNotification(
+
+                              if (!response.isError) {
+                                return true;
+                              }
+                              return (
                                 t(
-                                  'virtualization.createVirtualizationSuccess',
-                                  {
-                                    name: value.virtName,
-                                  }
-                                ),
-                                'success'
+                                  'virtualization.errorValidatingVirtualizationName'
+                                ) +
+                                (response.error ? ' : ' + response.error : '')
                               );
-                              history.push(
-                                resolvers.data.virtualizations.views.root({
-                                  virtualization,
-                                })
+                            };
+                            const handleCreate = async (value: any) => {
+                              const validation = await doValidateName(
+                                value.virtName
                               );
+                              if (validation === true) {
+                                const virtualization = await createVirtualization(
+                                  user.username || 'developer',
+                                  value.virtName,
+                                  value.virtDescription
+                                );
+                                pushNotification(
+                                  t(
+                                    'virtualization.createVirtualizationSuccess',
+                                    {
+                                      name: value.virtName,
+                                    }
+                                  ),
+                                  'success'
+                                );
+                                history.push(
+                                  resolvers.data.virtualizations.views.root({
+                                    virtualization,
+                                  })
+                                );
+                              } else {
+                                pushNotification(validation, 'error');
+                              }
                             };
                             return (
                               <>
@@ -118,10 +151,13 @@ export class VirtualizationCreatePage extends React.Component {
                                     i18nRequiredProperty={t(
                                       'data:virtualization.requiredPropertyText'
                                     )}
-                                    validate={validate}
-                                    onSave={handleCreate}
+                                    onSave={(properties, actions) => {
+                                      handleCreate(properties).finally(() => {
+                                        actions.setSubmitting(false);
+                                      });
+                                    }}
                                   >
-                                    {({ fields, handleSubmit }) => (
+                                    {({ fields, handleSubmit, isValid }) => (
                                       <form onSubmit={handleSubmit}>
                                         {fields}
                                         <button

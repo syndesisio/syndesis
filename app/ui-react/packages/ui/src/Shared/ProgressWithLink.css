@@ -1,7 +1,22 @@
 .progress-link {
-  width: 180px;
+  width: 200px;
+  font-size: 12px;
 }
 
-.progress-link .progress-link-value {
-  text-transform: capitalize;
+.progress-link__row {
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-link__status {
+  font-style: italic;
+}
+
+.progress-link__link {
+  margin-left: 5px;
+}
+
+.progress-link .progress-link__link-icon {
+  margin-right: 0;
+  margin-left: 5px;
 }

@@ -1,4 +1,8 @@
-import { WithViewEditorStates, WithVirtualizationHelpers } from '@syndesis/api';
+import {
+  IDvNameValidationResult,
+  WithViewEditorStates,
+  WithVirtualizationHelpers,
+} from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { RestDataService, SchemaNodeInfo, ViewInfo } from '@syndesis/models';
 import { ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
@@ -50,43 +54,73 @@ export class SelectNamePage extends React.Component {
                     { history }
                   ) => (
                     <WithVirtualizationHelpers>
-                      {({ refreshVirtualizationViews }) => {
-                        const onSave = async (
-                          { name, description }: ISaveForm,
-                          actions: any
-                        ) => {
-                          // ViewEditorState for the source
-                          const viewEditorState = generateViewEditorState(
-                            virtualization.serviceVdbName,
-                            schemaNodeInfo,
-                            name,
-                            description
-                          );
-                          try {
-                            await refreshVirtualizationViews(
-                              virtualization.keng__id,
-                              [viewEditorState]
-                            );
-                            pushNotification(
-                              t('virtualization.createViewSuccess', {
-                                name: viewEditorState.viewDefinition.viewName,
-                              }),
-                              'success'
-                            );
-                          } catch (error) {
-                            const details = error.message ? error.message : '';
-                            pushNotification(
-                              t('virtualization.createViewFailed', {
-                                details,
-                              }),
-                              'error'
-                            );
+                      {({ refreshVirtualizationViews, validateViewName }) => {
+                        /**
+                         * Backend name validation only occurs when attempting to create
+                         * @param proposedName the name to validate
+                         */
+                        const doValidateName = async (
+                          proposedName: string
+                        ): Promise<true | string> => {
+                          // make sure name has a value
+                          if (proposedName === '') {
+                            return t('shared:requiredFieldMessage') as string;
                           }
-                          history.push(
-                            resolvers.data.virtualizations.views.root({
-                              virtualization,
-                            })
+
+                          const response: IDvNameValidationResult = await validateViewName(
+                            virtualization.serviceVdbName,
+                            'views',
+                            proposedName
                           );
+
+                          if (!response.isError) {
+                            return true;
+                          }
+                          return (
+                            t('virtualization.errorValidatingViewName') +
+                            (response.error ? ' : ' + response.error : '')
+                          );
+                        };
+                        const onSave = async (value: any) => {
+                          const validation = await doValidateName(value.name);
+                          if (validation === true) {
+                            // ViewEditorState for the source
+                            const viewEditorState = generateViewEditorState(
+                              virtualization.serviceVdbName,
+                              schemaNodeInfo,
+                              value.name,
+                              value.description
+                            );
+                            try {
+                              await refreshVirtualizationViews(
+                                virtualization.keng__id,
+                                [viewEditorState]
+                              );
+                              pushNotification(
+                                t('virtualization.createViewSuccess', {
+                                  name: viewEditorState.viewDefinition.viewName,
+                                }),
+                                'success'
+                              );
+                            } catch (error) {
+                              const details = error.message
+                                ? error.message
+                                : '';
+                              pushNotification(
+                                t('virtualization.createViewFailed', {
+                                  details,
+                                }),
+                                'error'
+                              );
+                            }
+                            history.push(
+                              resolvers.data.virtualizations.views.root({
+                                virtualization,
+                              })
+                            );
+                          } else {
+                            pushNotification(validation, 'error');
+                          }
                         };
                         const definition: IFormDefinition = {
                           name: {
@@ -111,15 +145,6 @@ export class SelectNamePage extends React.Component {
                             idPattern={virtualization.serviceVdbName + '*'}
                           >
                             {({ data, hasData, error }) => {
-                              const validate = (v: { name: string }) => {
-                                const errors: any = {};
-                                // TODO Improve name validation
-                                if (v.name.includes('?')) {
-                                  errors.name =
-                                    'View name contains an illegal character';
-                                }
-                                return errors;
-                              };
                               return (
                                 <AutoForm<ISaveForm>
                                   i18nRequiredProperty={'* Required field'}
@@ -128,8 +153,11 @@ export class SelectNamePage extends React.Component {
                                     description: '',
                                     name: '',
                                   }}
-                                  validate={validate}
-                                  onSave={onSave}
+                                  onSave={(properties, actions) => {
+                                    onSave(properties).finally(() => {
+                                      actions.setSubmitting(false);
+                                    });
+                                  }}
                                 >
                                   {({
                                     fields,
