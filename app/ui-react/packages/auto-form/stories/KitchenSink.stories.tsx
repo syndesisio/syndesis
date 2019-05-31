@@ -186,6 +186,7 @@ stories.add('Kitchen Sink', () => {
           'This property is required'
         )}
         validate={validate}
+        validateInitial={validate}
         onSave={onSave}
       >
         {({ fields, handleSubmit }) => (

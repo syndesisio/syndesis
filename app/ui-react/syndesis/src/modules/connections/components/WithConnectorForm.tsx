@@ -174,6 +174,12 @@ export class WithConnectorForm extends React.Component<
             i18n.t('shared:FieldsMarkedWithStarRequired'),
             ''
           );
+          const validator = (values: IFormValue) =>
+            validateRequiredProperties(
+              definition,
+              (name: string) => `${name} is required`,
+              values
+            );
           return (
             <AutoForm<IFormValue>
               i18nRequiredProperty={'* Required field'}
@@ -181,13 +187,8 @@ export class WithConnectorForm extends React.Component<
               i18nFieldsStatusText={requiredPrompt}
               allFieldsRequired={allFieldsRequired(definition)}
               initialValue={initialValue!}
-              validate={(values: IFormValue) =>
-                validateRequiredProperties(
-                  definition,
-                  (name: string) => `${name} is required`,
-                  values
-                )
-              }
+              validate={validator}
+              validateInitial={validator}
               onSave={this.props.onSave}
             >
               {({
