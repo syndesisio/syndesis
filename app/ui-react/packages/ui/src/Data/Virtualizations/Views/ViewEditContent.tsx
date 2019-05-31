@@ -64,7 +64,7 @@ interface IViewEditContentState {
   ddlChanged: boolean;
   ddlValue: string;
   initialDdlValue: string;
-  needsValiation: boolean;
+  needsValidation: boolean;
 }
 
 export class ViewEditContent extends React.Component<
@@ -81,7 +81,7 @@ export class ViewEditContent extends React.Component<
       ddlChanged: false,
       ddlValue: this.props.viewDdl,
       initialDdlValue: this.props.viewDdl,
-      needsValiation: false,
+      needsValidation: false,
     };
     this.handleDdlChange = this.handleDdlChange.bind(this);
     this.handleDdlValidation = this.handleDdlValidation.bind(this);
@@ -92,7 +92,7 @@ export class ViewEditContent extends React.Component<
     const currentDdl = this.state.ddlValue;
     this.props.onValidate(currentDdl);
     this.setState({
-      needsValiation: false,
+      needsValidation: false,
     });
   };
 
@@ -100,7 +100,7 @@ export class ViewEditContent extends React.Component<
     this.setState({
       ddlChanged: true,
       ddlValue: value,
-      needsValiation: true,
+      needsValidation: true,
     });
   }
 
@@ -162,7 +162,7 @@ export class ViewEditContent extends React.Component<
                 this.props.isWorking ||
                 !this.props.isValid ||
                 !this.state.ddlChanged ||
-                this.state.needsValiation
+                this.state.needsValidation
               }
               onClick={this.handleSave()}
             >
