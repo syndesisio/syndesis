@@ -3,7 +3,8 @@ import {
   WithVirtualizationHelpers,
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { Breadcrumb, PageSection } from '@syndesis/ui';
+
+import { Breadcrumb, ButtonLink, PageSection } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
@@ -114,7 +115,19 @@ export class VirtualizationCreatePage extends React.Component {
                             };
                             return (
                               <>
-                                <Breadcrumb>
+                                <Breadcrumb
+                                  actions={
+                                    <ButtonLink
+                                      data-testid={
+                                        'virtualization-create-page-cancel-button'
+                                      }
+                                      href={resolvers.data.root()}
+                                      className={'wizard-pf-cancel'}
+                                    >
+                                      Cancel
+                                    </ButtonLink>
+                                  }
+                                >
                                   <Link
                                     data-testid={
                                       'virtualization-create-page-home-link'
