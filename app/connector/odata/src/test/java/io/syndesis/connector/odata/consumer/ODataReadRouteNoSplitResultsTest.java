@@ -224,7 +224,10 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX);
+        //
+        // Return singleton json object rather than list due to key predicate
+        //
+        testResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX);
     }
 
     @Test
@@ -249,7 +252,10 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX_LOC);
+        //
+        // Return singleton json object rather than list due to key predicate
+        //
+        testResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX_LOC);
     }
 
     @Test
@@ -328,6 +334,13 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         testListResult(result, 0, TEST_SERVER_DATA_2, TEST_SERVER_DATA_1);
     }
 
+    /**
+     * Despite split being set to false, the existence of a key predicate
+     * forces the split since a predicate demands only 1 result which is
+     * pointless putting into an array.
+     *
+     * @throws Exception
+     */
     @Test
     public void testODataRouteWithKeyPredicate() throws Exception {
         String keyPredicate = "1";
@@ -346,9 +359,20 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, TEST_SERVER_DATA_1);
+
+        //
+        // We expect the result object to be a single json object & not an array
+        //
+        testResult(result, 0, TEST_SERVER_DATA_1);
     }
 
+    /**
+     * Despite split being set to false, the existence of a key predicate
+     * forces the split since a predicate demands only 1 result which is
+     * pointless putting into an array.
+     *
+     * @throws Exception
+     */
     @Test
     public void testODataRouteWithKeyPredicateWithBrackets() throws Exception {
         String keyPredicate = "(1)";
@@ -367,7 +391,10 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         context.start();
 
         result.assertIsSatisfied();
-        testListResult(result, 0, TEST_SERVER_DATA_1);
+        //
+        // We expect the result object to be a single json object & not an array
+        //
+        testResult(result, 0, TEST_SERVER_DATA_1);
     }
 
     @Test

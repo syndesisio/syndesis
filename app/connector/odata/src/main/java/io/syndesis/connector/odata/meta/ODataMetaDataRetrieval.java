@@ -192,11 +192,11 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         // If a key predicate is used then only one entity is expected to be returned
         // hence an array schema is not required.
         //
-        boolean hasKeyPredicate = basicProperties.containsKey(KEY_PREDICATE);
+        Object keyPredicate = basicProperties.get(KEY_PREDICATE);
         boolean isSplit = isSplit(basicProperties);
 
         if (! entitySchema.getProperties().isEmpty()) {
-            if (hasKeyPredicate || isSplit) {
+            if (keyPredicate != null || isSplit) {
                 //
                 // A split will mean that the schema is no longer an array schema
                 //

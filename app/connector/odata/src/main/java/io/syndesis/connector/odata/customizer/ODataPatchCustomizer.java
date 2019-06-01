@@ -16,6 +16,7 @@
 package io.syndesis.connector.odata.customizer;
 
 import java.io.IOException;
+import org.apache.camel.CamelExecutionException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.util.ObjectHelper;
@@ -52,6 +53,9 @@ public class ODataPatchCustomizer extends AbstractProducerCustomizer {
             ObjectNode objNode = ((ObjectNode) node);
             objNode.remove(KEY_PREDICATE);
             body = OBJECT_MAPPER.writeValueAsString(objNode);
+        } else {
+            // No key predicate found ... this means trouble!
+            throw new CamelExecutionException("No Key Predicate available for OData Patching", exchange);
         }
 
         if (! ObjectHelper.isEmpty(body)) {

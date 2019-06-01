@@ -15,37 +15,28 @@
  */
 package io.syndesis.connector.odata.producer;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import java.io.IOException;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.camel.CamelExecutionException;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.direct.DirectEndpoint;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
-import org.apache.http.HttpHost;
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpStatus;
 import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPatch;
-import org.apache.http.conn.ClientConnectionManager;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.params.HttpParams;
-import org.apache.http.protocol.HttpContext;
 import org.apache.olingo.client.api.ODataClient;
-import org.apache.olingo.client.api.communication.request.cud.ODataEntityUpdateRequest;
-import org.apache.olingo.client.api.communication.request.cud.UpdateType;
-import org.apache.olingo.client.api.communication.response.ODataEntityUpdateResponse;
 import org.apache.olingo.client.api.communication.response.ODataRetrieveResponse;
 import org.apache.olingo.client.api.domain.ClientEntity;
 import org.apache.olingo.client.api.domain.ClientObjectFactory;
@@ -313,6 +304,46 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
             // property is no longer the original value before the update
             assertNotEquals(property.original, updatedName);
         }
+    }
+
+    @Test
+    public void testPatchODataRouteWithNoKeyPredicate() throws Exception {
+        int initialResultCount = defaultTestServer.getResultCount();
+
+        Step directStep = createDirectStep();
+
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
+
+
+        String resourcePath = defaultTestServer.resourcePath();
+        String keyPredicate = "1";
+        String nameProperty = "Name";
+        String originalName = getPropertyFromEntity(keyPredicate, nameProperty);
+
+        Step odataStep = createODataStep(odataConnector, resourcePath);
+
+        ObjectNode newProduct = OBJECT_MAPPER.createObjectNode();
+        String newProductName = "NEC Screen";
+        newProduct.put(nameProperty, newProductName);
+
+        Step mockStep = createMockStep();
+        Integration odataIntegration = createIntegration(directStep, odataStep, mockStep);
+
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+
+        DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
+        ProducerTemplate template = context.createProducerTemplate();
+
+        context.start();
+
+        String inputJson = OBJECT_MAPPER.writeValueAsString(newProduct);
+        assertThatThrownBy(() -> {
+            template.sendBody(directEndpoint, inputJson);
+        })
+            .isInstanceOf(CamelExecutionException.class)
+            .hasMessageContaining("No Key Predicate available");
     }
 
     private String queryProperty(String serviceURI, String resourcePath, String keyPredicate, String property) {

@@ -207,6 +207,50 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
     }
 
     @Test
+    public void testReadMetaDataRetrievalWithKeyPredicate() throws Exception {
+        CamelContext context = new DefaultCamelContext();
+        ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();
+
+        String resourcePath = "Products";
+        String keyPredicate = "1";
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(METHOD_NAME, Methods.READ.id());
+        parameters.put(SERVICE_URI, defaultTestServer.servicePlainUri());
+        parameters.put(RESOURCE_PATH, resourcePath);
+        parameters.put(SPLIT_RESULT, false);
+        parameters.put(KEY_PREDICATE, keyPredicate);
+
+        String componentId = "odata";
+        String actionId = "io.syndesis:" + Methods.READ.connectorId();
+
+        SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
+        assertNotNull(metadata);
+
+        Map<String, List<PropertyPair>> properties = metadata.properties;
+        assertFalse(properties.isEmpty());
+
+        //
+        // The method names are important for collecting prior
+        // to the filling in of the integration step (values such as resource etc...)
+        //
+        List<PropertyPair> resourcePaths = properties.get(RESOURCE_PATH);
+        assertNotNull(resourcePaths);
+        assertFalse(resourcePaths.isEmpty());
+
+        PropertyPair pair = resourcePaths.get(0);
+        assertNotNull(pair);
+        assertEquals(resourcePath, pair.getValue());
+
+        //
+        // The out data shape is defined after the integration step has
+        // been populated and should be a dynamic json-schema based
+        // on the contents of the OData Edm metadata object.
+        //
+        checkTestServerSchemaMap(checkShape(metadata.outputShape, ObjectSchema.class));
+    }
+
+    @Test
     public void testCreateMetaDataRetrieval() throws Exception {
         CamelContext context = new DefaultCamelContext();
         ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();
@@ -381,45 +425,45 @@ public class ODataMetaDataRetrievalTest extends AbstractODataTest {
     }
 
     @Test
-        public void testReadMetaDataRetrievalReferenceServerSSL() throws Exception {
-            CamelContext context = new DefaultCamelContext();
-            ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();
+    public void testReadMetaDataRetrievalReferenceServerSSL() throws Exception {
+        CamelContext context = new DefaultCamelContext();
+        ODataMetaDataRetrieval retrieval = new ODataMetaDataRetrieval();
 
-            String resourcePath = "Airlines";
+        String resourcePath = "Airlines";
 
-            Map<String, Object> parameters = new HashMap<>();
-            parameters.put(METHOD_NAME, Methods.READ.id());
-            parameters.put(SERVICE_URI, REF_SERVICE_URI);
-            parameters.put(RESOURCE_PATH, resourcePath);
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(METHOD_NAME, Methods.READ.id());
+        parameters.put(SERVICE_URI, REF_SERVICE_URI);
+        parameters.put(RESOURCE_PATH, resourcePath);
 
-            String componentId = "odata";
-            String actionId = "io.syndesis:" + Methods.READ.connectorId();
+        String componentId = "odata";
+        String actionId = "io.syndesis:" + Methods.READ.connectorId();
 
-            SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
-            assertNotNull(metadata);
+        SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
+        assertNotNull(metadata);
 
-            Map<String, List<PropertyPair>> properties = metadata.properties;
-            assertFalse(properties.isEmpty());
+        Map<String, List<PropertyPair>> properties = metadata.properties;
+        assertFalse(properties.isEmpty());
 
-            //
-            // The method names are important for collecting prior
-            // to the filling in of the integration step (values such as resource etc...)
-            //
-            List<PropertyPair> resourcePaths = properties.get(RESOURCE_PATH);
-            assertNotNull(resourcePaths);
-            assertFalse(resourcePaths.isEmpty());
+        //
+        // The method names are important for collecting prior
+        // to the filling in of the integration step (values such as resource etc...)
+        //
+        List<PropertyPair> resourcePaths = properties.get(RESOURCE_PATH);
+        assertNotNull(resourcePaths);
+        assertFalse(resourcePaths.isEmpty());
 
-            PropertyPair pair = resourcePaths.get(0);
-            assertNotNull(pair);
-            assertEquals(resourcePath, pair.getValue());
+        PropertyPair pair = resourcePaths.get(0);
+        assertNotNull(pair);
+        assertEquals(resourcePath, pair.getValue());
 
-            //
-            // The out data shape is defined after the integration step has
-            // been populated and should be a dynamic json-schema based
-            // on the contents of the OData Edm metadata object.
-            //
-            Map<String, JsonSchema> schemaMap = checkShape(metadata.outputShape, ArraySchema.class);
-            assertNotNull(schemaMap.get("Name"));
-            assertNotNull(schemaMap.get("AirlineCode"));
-        }
+        //
+        // The out data shape is defined after the integration step has
+        // been populated and should be a dynamic json-schema based
+        // on the contents of the OData Edm metadata object.
+        //
+        Map<String, JsonSchema> schemaMap = checkShape(metadata.outputShape, ArraySchema.class);
+        assertNotNull(schemaMap.get("Name"));
+        assertNotNull(schemaMap.get("AirlineCode"));
+    }
 }

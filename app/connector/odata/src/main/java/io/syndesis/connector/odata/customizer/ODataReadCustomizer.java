@@ -24,19 +24,22 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 public class ODataReadCustomizer extends AbstractODataCustomizer {
 
     /*
-     * The component subsumes the split property from the options map
-     * and makes it available via a getter, hence the need to look at the
-     * component rather than the options
+     * The component subsumes the split & key predicate properties from the
+     * options map & makes them available via a getter, hence the need to look
+     * at the component rather than the options
      */
-    private boolean hasSplitProperty(ComponentProxyComponent component) {
-        return
-            (component instanceof ODataComponent) &&
-                ((ODataComponent)component).isSplitResult();
+    private boolean shouldSplitResult(ComponentProxyComponent component) {
+        if (! (component instanceof ODataComponent)) {
+            return false;
+        }
+
+        ODataComponent oc = (ODataComponent) component;
+        return oc.getKeyPredicate() != null || oc.isSplitResult();
     }
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        setSplit(hasSplitProperty(component));
+        setSplit(shouldSplitResult(component));
         component.setBeforeConsumer(this::beforeConsumer);
     }
 
