@@ -11,7 +11,7 @@ import {
   allFieldsRequired,
   getRequiredStatusText,
   toFormDefinition,
-  validateConfiguredProperties,
+  validateRequiredProperties,
 } from '@syndesis/utils';
 import * as React from 'react';
 import i18n from '../../../../../i18n';
@@ -108,16 +108,18 @@ export class WithConfigurationForm extends React.Component<
       definition = step.properties;
     }
     const initialValue = this.props.step.configuredProperties;
-    const isInitialValid = validateConfiguredProperties(
-      definition,
-      initialValue
-    );
     const requiredPrompt = getRequiredStatusText(
       definition,
       i18n.t('shared:AllFieldsRequired'),
       i18n.t('shared:FieldsMarkedWithStarRequired'),
       ''
     );
+    const validator = (values: IFormValue) =>
+      validateRequiredProperties(
+        definition,
+        (name: string) => `${name} is required`,
+        values
+      );
     return (
       <AutoForm<IFormValue>
         i18nRequiredProperty={'* Required field'}
@@ -125,11 +127,9 @@ export class WithConfigurationForm extends React.Component<
         i18nFieldsStatusText={requiredPrompt}
         definition={toFormDefinition(definition)}
         initialValue={initialValue as IFormValue}
-        isInitialValid={isInitialValid}
         onSave={onSave}
-        validate={(values: { [name: string]: any }): any =>
-          validateConfiguredProperties(definition, values)
-        }
+        validate={validator}
+        validateInitial={validator}
         key={this.props.step.id}
       >
         {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>

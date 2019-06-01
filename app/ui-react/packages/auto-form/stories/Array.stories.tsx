@@ -66,6 +66,7 @@ stories.add('Array', () => {
           'This property is required'
         )}
         validate={action('validate')}
+        validateInitial={action('validateInitial')}
         onSave={action('onSave')}
       >
         {({ fields, handleSubmit }) => (

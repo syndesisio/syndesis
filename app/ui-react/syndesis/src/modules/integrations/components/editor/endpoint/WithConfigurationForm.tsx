@@ -86,7 +86,7 @@ export const WithConfigurationForm: React.FunctionComponent<
     <WithActionDescriptor
       connectionId={props.connection.id!}
       actionId={action.id!}
-      configuredProperties={{}}
+      configuredProperties={props.initialValue || {}}
     >
       {({ data, hasData, error }) => (
         <WithLoader

@@ -2,7 +2,7 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import {
   Container,
-  TemplateStepCard,
+  EditorPageCard,
   TemplateStepTemplateEditor,
   TemplateStepTypeSelector,
   TemplateType,
@@ -58,7 +58,7 @@ class TemplateStepStory extends React.Component<
   public render() {
     return (
       <>
-        <TemplateStepCard
+        <EditorPageCard
           i18nDone={'Done'}
           isValid={true}
           submitForm={() => {
@@ -86,7 +86,7 @@ class TemplateStepStory extends React.Component<
             initialValue={this.state.text}
             onChange={this.handleChange}
           />
-        </TemplateStepCard>
+        </EditorPageCard>
       </>
     );
   }

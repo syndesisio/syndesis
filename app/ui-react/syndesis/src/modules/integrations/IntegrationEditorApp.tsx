@@ -136,6 +136,13 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                           ...s,
                         })
                       }
+                      choiceHref={(step, p, s) =>
+                        resolvers.integration.edit.editStep.choice({
+                          step,
+                          ...p,
+                          ...s,
+                        })
+                      }
                       getAddMapperStepHref={(position, p, s) =>
                         resolvers.integration.edit.addStep.dataMapper({
                           position: `${position}`,

@@ -10,6 +10,6 @@ export const AppBreadcrumb: React.FunctionComponent = ({ children }) => {
     return function removeElement() {
       appLayoutContext.showBreadcrumb(null);
     };
-  }, []);
+  });
   return null;
 };
