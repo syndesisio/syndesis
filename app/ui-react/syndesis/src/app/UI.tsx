@@ -23,11 +23,17 @@ import { Route, Switch } from 'react-router-dom';
 import { Workbox } from 'workbox-window';
 import resolvers from '../modules/resolvers';
 import { ApiError, PageNotFound, WithErrorBoundary } from '../shared';
+import favicon from '../shared/images/favicon.ico';
 import brandImg from '../shared/images/pf4-downstream-bg.svg';
 import redHatBrandLogo from '../shared/images/red-hat-brand-logo.png';
 import redHatFuseOnlineLogo from '../shared/images/red-hat-fuse-online-logo.png';
+import synAppleTouchIcon from '../shared/images/syn-apple-touch-icon.png';
 import syndesisLogoGraphic from '../shared/images/syndesis-logo-graphic.png';
 import syndesisLogo from '../shared/images/syndesis_logo_full_darkbkg.svg';
+import rhAppleTouchIcon from '../shared/images/red-hat-apple-touch-icon.png'; // tslint:disable-line
+import redHatSafariPinnedTabIcon from '../shared/images/red-hat-safari-pinned-tab.svg';
+import synFavicon from '../shared/images/syn-favicon.ico';
+import synSafariPinnedTabIcon from '../shared/images/syn-safari-pinned-tab.svg';
 import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
 import { AppContext } from './AppContext';
 import { UIContext } from './UIContext';
@@ -114,6 +120,25 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
     }
   }, []); // eslint-disable-line
 
+  const updateHref = (id: string, assetUrl: string) => {
+    const element =
+      document.getElementById(id) || document.createElement('link');
+    element.setAttribute('href', assetUrl);
+  };
+
+  const [productBuild, setProductBuild] = React.useState(false);
+  React.useEffect(() => {
+    updateHref('favicon', !productBuild ? synFavicon : favicon);
+    updateHref(
+      'appleTouchIcon',
+      !productBuild ? synAppleTouchIcon : rhAppleTouchIcon
+    );
+    updateHref(
+      'safariPinnedTab',
+      !productBuild ? synSafariPinnedTabIcon : redHatSafariPinnedTabIcon
+    );
+  }, [productBuild]);
+
   return (
     <UIContext.Provider
       value={{
@@ -128,6 +153,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
             <AppContext.Consumer>
               {({ user, config }) => {
                 const isProductBuild = config && config.branding.productBuild;
+                setProductBuild(isProductBuild);
                 const productName = isProductBuild ? 'Fuse Online' : 'Syndesis';
                 return (
                   <>
