@@ -29,7 +29,7 @@ export const SecurityPage: React.FunctionComponent = () => {
 
   const onNext = (
     accessToken?: string,
-    authType?: string | undefined,
+    authType?: string,
     authUrl?: string
   ) => {
     history.push(
@@ -68,13 +68,16 @@ export const SecurityPage: React.FunctionComponent = () => {
                   <PageSection>
                     <ApiClientConnectorCreateSecurity
                       accessToken={
+                        state.specification.properties!.tokenEndpoint &&
                         state.specification.properties!.tokenEndpoint
                           .defaultValue
                       }
                       authenticationTypes={
+                        state.specification.properties!.authenticationType &&
                         state.specification.properties!.authenticationType.enum
                       }
                       authorizationUrl={
+                        state.specification.properties!.authorizationEndpoint &&
                         state.specification.properties!.authorizationEndpoint
                           .defaultValue
                       }
