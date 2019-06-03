@@ -190,6 +190,9 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                         })
                       }
                       getBreadcrumb={getBreadcrumb}
+                      getFlowHref={(flowId, p, s) =>
+                        resolvers.integration.edit.index({ ...p, ...s, flowId })
+                      }
                     />
                   )}
                 </WithLeaveConfirmation>

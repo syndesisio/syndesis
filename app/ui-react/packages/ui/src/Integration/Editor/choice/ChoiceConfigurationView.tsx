@@ -9,7 +9,7 @@ export interface IFlowItem {
   href: H.LocationDescriptor;
 }
 
-export interface IChoiceViewModeProps {
+export interface IChoiceConfigurationViewProps {
   flowItems: IFlowItem[];
   useDefaultFlow: boolean;
   defaultFlowHref?: H.LocationDescriptor;
@@ -19,7 +19,9 @@ export interface IChoiceViewModeProps {
   i18nWhen: string;
 }
 
-export class ChoiceViewMode extends React.Component<IChoiceViewModeProps> {
+export class ChoiceConfigurationView extends React.Component<
+  IChoiceConfigurationViewProps
+> {
   public render() {
     return (
       <ListView>
@@ -53,6 +55,7 @@ export class ChoiceViewMode extends React.Component<IChoiceViewModeProps> {
               <ButtonLink
                 data-testid="choice-view-mode-view-default-flow-button"
                 href={this.props.defaultFlowHref}
+                as="primary"
               >
                 {this.props.i18nOpenFlow}
               </ButtonLink>

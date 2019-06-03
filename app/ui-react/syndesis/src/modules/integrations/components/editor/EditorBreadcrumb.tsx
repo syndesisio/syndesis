@@ -1,20 +1,34 @@
-import { getFlow, isIntegrationApiProvider } from '@syndesis/api';
+import {
+  EXCERPT_METADATA_KEY,
+  getApiProviderFlows,
+  getConditionalFlowGroupsFor,
+  getFlow,
+  getMetadataValue,
+  isConditionalFlow,
+  isDefaultFlow,
+  isIntegrationApiProvider,
+  isPrimaryFlow,
+} from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { IntegrationOverview } from '@syndesis/models';
+import { Flow, IntegrationOverview } from '@syndesis/models';
 import {
   Breadcrumb,
   ButtonLink,
+  ConditionsBackButtonItem,
+  ConditionsDropdown,
+  ConditionsDropdownHeader,
+  ConditionsDropdownItem,
   HttpMethodColors,
   OperationsDropdown,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
-export interface IApiProviderOperationProps {
+export interface IApiProviderOperationItemProps {
   description: string;
 }
-export const ApiProviderOperation: React.FunctionComponent<
-  IApiProviderOperationProps
+export const ApiProviderOperationItem: React.FunctionComponent<
+  IApiProviderOperationItemProps
 > = ({ description }) => {
   const [method, desc] = (description || '').split(' ');
   return (
@@ -24,6 +38,22 @@ export const ApiProviderOperation: React.FunctionComponent<
     </>
   );
 };
+
+function getFlowName(flow: Flow) {
+  if (typeof flow.name !== 'undefined' && flow.name !== '') {
+    return flow.name;
+  }
+  if (isConditionalFlow(flow)) {
+    return 'Conditional';
+  }
+  if (isDefaultFlow(flow)) {
+    return 'Default';
+  }
+  if (isPrimaryFlow(flow)) {
+    return 'Primary';
+  }
+  return 'Flow';
+}
 
 export interface IEditorBreadcrumbProps {
   currentFlowId?: string;
@@ -48,7 +78,17 @@ export const EditorBreadcrumb: React.FunctionComponent<
   const currentFlow = currentFlowId
     ? getFlow(integration, currentFlowId)
     : undefined;
-
+  if (!currentFlow) {
+    return <></>;
+  }
+  const isPrimary = isPrimaryFlow(currentFlow!);
+  const primaryFlow = isPrimary
+    ? currentFlow
+    : getFlow(
+        integration,
+        getMetadataValue<string>('primaryFlowId', currentFlow!.metadata)!
+      );
+  const flowGroups = getConditionalFlowGroupsFor(integration, primaryFlow!.id!);
   return (
     <Breadcrumb
       actions={
@@ -79,27 +119,68 @@ export const EditorBreadcrumb: React.FunctionComponent<
       >
         {integration.name || 'New integration'}
       </Link>
-      {currentFlow && isMultiflow && (
-        <OperationsDropdown
-          selectedOperation={
-            currentFlow.metadata && currentFlow.metadata.excerpt ? (
-              <ApiProviderOperation description={currentFlow.description!} />
-            ) : (
-              currentFlow.name
-            )
-          }
-        >
-          {integration
-            .flows!.filter(f => f.id !== currentFlow.id)
-            .map(f => (
+      {primaryFlow && isApiProvider && isMultiflow && (
+        <>
+          <span>Operation&nbsp;&nbsp;</span>
+          <OperationsDropdown
+            selectedOperation={
+              getMetadataValue<string>(
+                EXCERPT_METADATA_KEY,
+                primaryFlow.metadata
+              ) ? (
+                <ApiProviderOperationItem
+                  description={primaryFlow.description!}
+                />
+              ) : (
+                primaryFlow.name
+              )
+            }
+          >
+            {getApiProviderFlows(integration).map(f => (
               <Link to={getFlowHref(f.id!)} key={f.id}>
-                <ApiProviderOperation description={f.description!} />
+                <ApiProviderOperationItem description={f.description!} />
                 <div>
                   <strong>{f.name}</strong>
                 </div>
               </Link>
             ))}
-        </OperationsDropdown>
+          </OperationsDropdown>
+        </>
+      )}
+      {flowGroups.length > 0 && (
+        <>
+          <span>Flow&nbsp;&nbsp;</span>
+          <ConditionsDropdown selectedOperation={getFlowName(currentFlow)}>
+            <>
+              {!isPrimary && (
+                <ConditionsBackButtonItem
+                  title={
+                    isApiProvider
+                      ? 'Back to Operation Flow'
+                      : 'Back to Primary Flow'
+                  }
+                  href={getFlowHref(primaryFlow!.id!)}
+                />
+              )}
+              {flowGroups.map((group, groupIndex) => (
+                <ConditionsDropdownHeader
+                  key={groupIndex}
+                  title={`${groupIndex + 1} Conditional Flow Step`}
+                >
+                  {group.flows.map(f => (
+                    <ConditionsDropdownItem
+                      key={`${group.id} ${f.id}`}
+                      name={getFlowName(f)}
+                      description={f.description!}
+                      condition={isDefaultFlow(f) ? 'OTHERWISE' : 'WHEN'}
+                      link={getFlowHref(f.id!)}
+                    />
+                  ))}
+                </ConditionsDropdownHeader>
+              ))}
+            </>
+          </ConditionsDropdown>
+        </>
       )}
       {children}
     </Breadcrumb>

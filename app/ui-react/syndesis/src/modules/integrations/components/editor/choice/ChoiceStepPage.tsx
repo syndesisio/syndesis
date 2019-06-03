@@ -1,13 +1,16 @@
 import {
+  createConditionalFlow,
+  FlowKind,
+  getFlow,
   getSteps,
+  reconcileConditionalFlows,
   WithConnection,
   WithIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Integration } from '@syndesis/models';
+import { Integration, StringMap } from '@syndesis/models';
 import {
   ChoiceCardHeader,
-  ChoiceViewMode,
   EditorPageCard,
   IntegrationEditorLayout,
   PageLoader,
@@ -28,13 +31,12 @@ import { createChoiceConfiguration } from './utils';
 import { WithChoiceConfigurationForm } from './WithChoiceConfigurationForm';
 
 export interface IChoiceStepPageProps extends IPageWithEditorBreadcrumb {
+  mode: 'adding' | 'editing';
+  sidebar: (props: IEditorSidebarProps) => React.ReactNode;
   cancelHref: (
     p: IChoiceStepRouteParams,
     s: IChoiceStepRouteState
   ) => H.LocationDescriptor;
-  // tslint:disable-next-line:react-unused-props-and-state
-  mode: 'adding' | 'editing';
-  sidebar: (props: IEditorSidebarProps) => React.ReactNode;
   // tslint:disable-next-line:react-unused-props-and-state
   postConfigureHref: (
     integration: Integration,
@@ -43,24 +45,7 @@ export interface IChoiceStepPageProps extends IPageWithEditorBreadcrumb {
   ) => H.LocationDescriptorObject;
 }
 
-export interface IChoiceStepPageState {
-  mode: 'view' | 'edit';
-}
-
-export class ChoiceStepPage extends React.Component<
-  IChoiceStepPageProps,
-  IChoiceStepPageState
-> {
-  constructor(props: IChoiceStepPageProps) {
-    super(props);
-    this.state = {
-      mode: this.props.mode === 'adding' ? 'edit' : 'view',
-    };
-    this.handleSetMode = this.handleSetMode.bind(this);
-  }
-  public handleSetMode(mode: 'view' | 'edit') {
-    this.setState({ mode });
-  }
+export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
   public render() {
     return (
       <WithConnection id={'flow'}>
@@ -77,6 +62,9 @@ export class ChoiceStepPage extends React.Component<
                   );
                   // create the values displayed in the form
                   const initialFormValue = {
+                    defaultFlowId: configuration.defaultFlowEnabled
+                      ? configuration.defaultFlow!
+                      : '',
                     flowConditions: configuration.flows.map(
                       ({ condition, flow }) => ({
                         condition,
@@ -86,20 +74,86 @@ export class ChoiceStepPage extends React.Component<
                     routingScheme: configuration.routingScheme,
                     useDefaultFlow: configuration.defaultFlowEnabled,
                   };
-                  // create links
-                  const flowItems = configuration.flows.map(
-                    ({ condition, flow }) => ({
-                      condition,
-                      href: '' /* todo */,
-                    })
-                  );
-                  const defaultFlowHref = configuration.defaultFlowEnabled
-                    ? '' /* todo */
-                    : undefined;
                   const onUpdatedIntegration = async (
                     values: IChoiceFormConfiguration
                   ) => {
-                    /* todo */
+                    const flowCollection = values.flowConditions.map(
+                      flowCondition => {
+                        const flow =
+                          typeof flowCondition.flowId === 'undefined'
+                            ? createConditionalFlow(
+                                'Conditional',
+                                flowCondition.condition,
+                                FlowKind.CONDITIONAL,
+                                params.flowId,
+                                data,
+                                state.step
+                              )
+                            : getFlow(
+                                state.updatedIntegration || state.integration,
+                                flowCondition.flowId
+                              )!;
+                        // update the description
+                        flow.description = flowCondition.condition;
+                        return {
+                          condition: flowCondition.condition,
+                          flow,
+                          flowId: flow.id,
+                        };
+                      }
+                    );
+                    const defaultFlow = values.useDefaultFlow
+                      ? values.defaultFlowId === ''
+                        ? createConditionalFlow(
+                            'Default',
+                            'Use this as default',
+                            FlowKind.DEFAULT,
+                            params.flowId,
+                            data,
+                            state.step
+                          )
+                        : getFlow(
+                            state.updatedIntegration || state.integration,
+                            values.defaultFlowId
+                          )
+                      : undefined;
+                    const configuredProperties: StringMap<string> = {
+                      flows: JSON.stringify(
+                        flowCollection.map(f => ({
+                          condition: f.condition,
+                          flow: f.flowId,
+                        }))
+                      ),
+                      routingScheme: values.routingScheme,
+                    };
+                    const updatedFlows = flowCollection.map(f => f.flow);
+                    if (typeof defaultFlow !== 'undefined') {
+                      configuredProperties.default = defaultFlow!.id!;
+                      updatedFlows.push(defaultFlow);
+                    }
+                    const defaultFlowId =
+                      typeof defaultFlow !== 'undefined' ? defaultFlow.id! : '';
+                    const updatedIntegration = reconcileConditionalFlows(
+                      await (this.props.mode === 'adding'
+                        ? addStep
+                        : updateStep)(
+                        state.updatedIntegration || state.integration,
+                        state.step,
+                        params.flowId,
+                        positionAsNumber,
+                        configuredProperties
+                      ),
+                      updatedFlows,
+                      flowCollection.map(f => f.flowId!),
+                      defaultFlowId,
+                      state.step.id!
+                    );
+                    history.push(
+                      this.props.postConfigureHref(updatedIntegration, params, {
+                        ...state,
+                        updatedIntegration,
+                      })
+                    );
                   };
                   return (
                     <>
@@ -146,42 +200,13 @@ export class ChoiceStepPage extends React.Component<
                                     header={
                                       <ChoiceCardHeader
                                         i18nConditions={'Conditions'}
-                                        i18nManage={'Manage'}
-                                        i18nApply={'Apply'}
-                                        isValid={isValid}
-                                        mode={this.state.mode}
-                                        onClickManage={() =>
-                                          this.handleSetMode('edit')
-                                        }
-                                        onClickApply={() => {
-                                          submitForm();
-                                          this.handleSetMode('view');
-                                        }}
                                       />
                                     }
                                     i18nDone={'Done'}
-                                    isValid={
-                                      this.state.mode === 'view' ||
-                                      (this.state.mode === 'edit' && isValid)
-                                    }
+                                    isValid={isValid}
                                     submitForm={submitForm}
                                   >
-                                    {this.state.mode === 'view' && (
-                                      <ChoiceViewMode
-                                        flowItems={flowItems}
-                                        useDefaultFlow={
-                                          configuration.defaultFlowEnabled
-                                        }
-                                        defaultFlowHref={defaultFlowHref}
-                                        i18nWhen={'When'}
-                                        i18nOtherwise={'Otherwise'}
-                                        i18nOpenFlow={'Open Flow'}
-                                        i18nUseDefaultFlow={
-                                          'Use a default flow'
-                                        }
-                                      />
-                                    )}
-                                    {this.state.mode === 'edit' && fields}
+                                    {fields}
                                   </EditorPageCard>
                                 )}
                               </WithChoiceConfigurationForm>
