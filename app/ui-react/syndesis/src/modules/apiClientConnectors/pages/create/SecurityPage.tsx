@@ -3,7 +3,6 @@ import { APISummary } from '@syndesis/models';
 import {
   ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorLayout,
-  IAuthenticationType,
   PageSection,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
@@ -28,43 +27,21 @@ export const SecurityPage: React.FunctionComponent = () => {
     specification: state.specification.configuredProperties!.specification,
   });
 
-  const authenticationType: IAuthenticationType[] = [
-    {
-      label: 'HTTP Basic Authentication',
-      value: 'basic',
-    },
-    {
-      label: 'OAuth 2.0',
-      value: 'oauth2',
-    },
-  ];
-
-  const connectorExample = {
-    properties: {
-      authenticationType: {
-        description: 'Type of authentication used to connect to the API',
-        enum: authenticationType,
-      },
-      authorizationEndpoint: {
-        defaultValue: '/',
-        description: 'URL for the start of the OAuth flow',
-        displayName: 'OAuth Authorization Endpoint URL',
-      },
-      tokenEndpoint: {
-        defaultValue: '/',
-      },
-    },
-  };
-
   const onNext = (
     accessToken?: string,
-    authType?: IAuthenticationType[],
-    authUrl?: string
+    authType?: string,
+    authUrl?: string,
+    oauthScopes?: string
   ) => {
     console.log(JSON.stringify(state));
-    history.push(resolvers.create.save(state, accessToken, authType, authUrl));
-    // Leaving the following just so lint doesn't complain
-    return { accessToken, authType, authUrl };
+    history.push(
+      resolvers.create.save({
+        authenticationType: authType,
+        authorizationEndpoint: authUrl,
+        specification: state.specification,
+        tokenEndpoint: accessToken,
+      })
+    );
   };
 
   return (
@@ -93,14 +70,13 @@ export const SecurityPage: React.FunctionComponent = () => {
                   <PageSection>
                     <ApiClientConnectorCreateSecurity
                       accessToken={
-                        connectorExample.properties.tokenEndpoint.defaultValue
+                        state.specification.properties!.tokenEndpoint as string
                       }
                       authenticationType={
-                        connectorExample.properties.authenticationType.enum
+                        state.specification.properties!.authenticationType
                       }
                       authorizationUrl={
-                        connectorExample.properties.authorizationEndpoint
-                          .defaultValue
+                        state.specification.properties!.authorizationUrl
                       }
                       backHref={backHref}
                       i18nAccessTokenUrl={t(

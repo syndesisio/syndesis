@@ -63,9 +63,17 @@ export default {
     })),
     save: makeResolver<IDetailsPageRouteState, null, IDetailsPageRouteState>(
       routes.create.save,
-      ({ specification }) => ({
+      ({
+        authenticationType,
+        authorizationEndpoint,
+        specification,
+        tokenEndpoint,
+      }) => ({
         state: {
+          authenticationType,
+          authorizationEndpoint,
           specification,
+          tokenEndpoint,
         },
       })
     ),
