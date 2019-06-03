@@ -25,7 +25,7 @@ export interface IIntegrationDetailActivityItemProps {
 const headerFormat = (value: string) => <Table.Heading>{value}</Table.Heading>;
 const cellFormat = (value: string) => <Table.Cell>{value}</Table.Cell>;
 const statusCellFormat = (status: string) => (
-  <Table.Cell>
+  <Table.Cell className="integration-detail-activity-item__status">
     {status === 'Success' ? (
       <>
         <Icon type="pf" name="ok" /> Success
@@ -38,8 +38,10 @@ const statusCellFormat = (status: string) => (
   </Table.Cell>
 );
 const outputCellFormat = (output: string) => (
-  <Table.Cell>
-    <pre className="integration-detail-activity-item-step-output">{output}</pre>
+  <Table.Cell className="integration-detail-activity-item__output">
+    <pre className="integration-detail-activity-item__output-step-data">
+      {output || 'No output'}
+    </pre>
   </Table.Cell>
 );
 
