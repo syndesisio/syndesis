@@ -1,12 +1,10 @@
 import { WithApiVersion, WithUserHelpers } from '@syndesis/api';
 import {
   AppLayout,
-  AppTopMenu,
   ButtonLink,
   INotification,
   INotificationType,
   Notifications,
-  PfDropdownItem,
   PfVerticalNavItem,
 } from '@syndesis/ui';
 import {
@@ -236,39 +234,14 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                     window.location.href =
                                       'mailto:fuse-online-tech-preview@redhat.com';
                                   }}
-                                  logoutItem={
-                                    <PfDropdownItem
-                                      key="mobileLogoutMenuItem"
-                                      onClick={logout}
-                                    >
-                                      <button
-                                        type="button"
-                                        role="menuitem"
-                                        id="ui-logout-link-mobile"
-                                        data-testid={'ui-logout-link-mobile'}
-                                        className="pf-c-dropdown__menu-item pf-u-display-none-on-lg"
-                                      >
-                                        {t('Logout')}
-                                      </button>
-                                    </PfDropdownItem>
-                                  }
-                                  appNav={
-                                    <AppTopMenu
-                                      username={user.username || 'developer'}
-                                    >
-                                      <PfDropdownItem onClick={logout}>
-                                        <button
-                                          type="button"
-                                          role="menuitem"
-                                          id="ui-logout-link"
-                                          data-testid={'ui-logout-link'}
-                                          className="pf-c-dropdown__menu-item"
-                                        >
-                                          {t('Logout')}
-                                        </button>
-                                      </PfDropdownItem>
-                                    </AppTopMenu>
-                                  }
+                                  logoutItem={{
+                                    key: 'logoutMenuItem',
+                                    onClick: logout,
+                                    id: 'ui-logout-link',
+                                    className: 'pf-c-dropdown__menu-item',
+                                    children: t('Logout'),
+                                  }}
+                                  username={user.username || 'developer'}
                                   verticalNav={routes.map((route, index) =>
                                     !(route as IAppRouteWithChildrens)
                                       .childrens ? (
