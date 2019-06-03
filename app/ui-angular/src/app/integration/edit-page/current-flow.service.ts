@@ -775,7 +775,8 @@ export class CurrentFlowService {
     // quick hack to avoid overwriting the loaded integration
     if (
       !this._integration ||
-      (i.id !== this._integration.id && this.dirty$.value)
+      (i.id !== this._integration.id && this.dirty$.value) ||
+      i.updatedAt !== this._integration.updatedAt
     ) {
       this._integration = <Integration>i;
     }
