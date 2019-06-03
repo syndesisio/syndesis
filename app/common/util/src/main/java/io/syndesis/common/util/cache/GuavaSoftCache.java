@@ -15,68 +15,67 @@
  */
 package io.syndesis.common.util.cache;
 
+import com.google.common.cache.CacheBuilder;
+
 import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 /**
- * An implementation of a cache based on {@code LinkedHashMap}.
+ * A Guava based implementation of a soft cache, to allow the garbage collector to reclaim space if the application
+ * is suffering for high memory usage.
  */
-public class LRUDefaultCache<K, V> implements Cache<K, V> {
+public class GuavaSoftCache<K, V> implements Cache<K, V> {
 
-    private  Map<K, V> map;
+    private com.google.common.cache.Cache<K, V> cache;
 
-    public LRUDefaultCache(int maxElements) {
-        this.map = Collections.synchronizedMap(new LinkedHashMap<K, V>() {
-            @Override
-            protected boolean removeEldestEntry(final Map.Entry<K, V> eldest) {
-                return LRUDefaultCache.this.map.size() > maxElements;
-            }
-        });
+    public GuavaSoftCache(int maxElements) {
+        this.cache = CacheBuilder.newBuilder()
+            .maximumSize(maxElements)
+            .softValues()
+            .build();
     }
 
     @Override
     public V get(K key) {
-        return map.get(key);
+        return this.cache.getIfPresent(key);
     }
 
     @Override
     public Set<K> keySet() {
-        return map.keySet();
+        return this.cache.asMap().keySet();
     }
 
     @Override
     public Collection<V> values() {
-        return map.values();
+        return this.cache.asMap().values();
     }
 
     @Override
     public void put(K key, V value) {
-        map.put(key, value);
+        this.cache.put(key, value);
     }
 
     @Override
     public V remove(K key) {
-        return map.remove(key);
+        V old = this.cache.getIfPresent(key);
+        this.cache.invalidate(key);
+        return old;
     }
 
     @Override
     public void clear() {
-        map.clear();
+        this.cache.invalidateAll();
     }
 
     @Override
     public int size() {
-        return map.size();
+        return (int) this.cache.size();
     }
 
     @Override
     public String toString() {
-        return "LRUDefaultCache{" +
-            "map=" + map +
+        return "GuavaSoftCache{" +
+            "cache=" + cache +
             '}';
     }
 }

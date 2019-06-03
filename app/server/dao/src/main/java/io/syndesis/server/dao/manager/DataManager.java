@@ -15,27 +15,15 @@
  */
 package io.syndesis.server.dao.manager;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceException;
-
+import io.syndesis.common.model.ChangeEvent;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.ModelData;
+import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithIdVersioned;
 import io.syndesis.common.model.WithVersion;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.util.EventBus;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.KeyGenerator;
@@ -43,14 +31,6 @@ import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.common.util.cache.Cache;
 import io.syndesis.common.util.cache.CacheManager;
 import io.syndesis.server.dao.init.ReadApiClientData;
-import io.syndesis.common.model.ChangeEvent;
-import io.syndesis.common.model.Kind;
-import io.syndesis.common.model.ListResult;
-import io.syndesis.common.model.ModelData;
-import io.syndesis.common.model.WithId;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +46,25 @@ import org.springframework.expression.ParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 @Service
 @SuppressWarnings({"PMD.GodClass", "PMD.TooManyMethods"})
@@ -332,7 +331,7 @@ public class DataManager implements DataAccessObjectRegistry {
             entityToCreate = entity.withId(idVal);
         } else {
             idVal = id.get();
-            if (cache.getOptional(idVal).isPresent()) {
+            if (cache.get(idVal) != null) {
                 throw new EntityExistsException("There already exists a "
                     + kind + " with id " + idVal);
             }
@@ -374,7 +373,7 @@ public class DataManager implements DataAccessObjectRegistry {
         T previous = this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> d.update(newEntity));
         boolean daoExists = getDataAccessObject((Class<T>) kind.getModelClass()) != null;
         Cache<String, T> cache = caches.getCache(kind.getModelName(), daoExists);
-        if (!cache.getOptional(idVal).isPresent() && previous == null) {
+        if (cache.get(idVal) == null && previous == null) {
             throw new EntityNotFoundException("Can not find " + kind + " with id " + idVal);
         }
 

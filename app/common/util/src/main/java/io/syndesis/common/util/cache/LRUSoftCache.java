@@ -18,7 +18,7 @@ package io.syndesis.common.util.cache;
 import java.lang.ref.Reference;
 import java.lang.ref.SoftReference;
 import java.util.Collection;
-import java.util.Optional;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -36,21 +36,22 @@ public class LRUSoftCache<K, V> implements Cache<K, V> {
 
     @Override
     public V get(K key) {
-        return getOptional(key)
-            .orElse(null);
-    }
-
-    @Override
-    public Optional<V> getOptional(K key) {
-        return cache.getOptional(key)
-            .flatMap(ref -> Optional.ofNullable(ref.get()));
+        Reference<V> ref = cache.get(key);
+        if (ref != null) {
+            return ref.get();
+        }
+        return null;
     }
 
     @Override
     public Set<K> keySet() {
         return cache.keySet()
             .stream()
-            .filter(k -> cache.getOptional(k).flatMap(ref -> Optional.ofNullable(ref.get())).isPresent())
+            .filter(k -> {
+                Reference<V> res = cache.get(k);
+                V val = res != null ? res.get() : null;
+                return val != null;
+            })
             .collect(Collectors.toSet());
     }
 
@@ -58,9 +59,8 @@ public class LRUSoftCache<K, V> implements Cache<K, V> {
     public Collection<V> values() {
         return cache.values()
             .stream()
-            .map(ref -> Optional.ofNullable(ref.get()))
-            .filter(Optional::isPresent)
-            .map(Optional::get)
+            .map(Reference::get)
+            .filter(Objects::nonNull)
             .collect(Collectors.toList());
     }
 
@@ -71,9 +71,8 @@ public class LRUSoftCache<K, V> implements Cache<K, V> {
 
     @Override
     public V remove(K key) {
-        return Optional.ofNullable(cache.remove(key))
-            .flatMap(ref -> Optional.ofNullable(ref.get()))
-            .orElse(null);
+        Reference<V> value = cache.remove(key);
+        return value != null ? value.get() : null;
     }
 
     @Override

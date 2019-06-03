@@ -55,9 +55,9 @@ public class LRUCacheManagerTest {
         cache.put(three, three);
 
         Assertions.assertThat(cache.size()).isEqualTo(2);
-        Assertions.assertThat(cache.getOptional(one)).isEmpty();
-        Assertions.assertThat(cache.getOptional(two)).isPresent();
-        Assertions.assertThat(cache.getOptional(three)).isPresent();
+        Assertions.assertThat(cache.get(one)).isNull();
+        Assertions.assertThat(cache.get(two)).isNotNull();
+        Assertions.assertThat(cache.get(three)).isNotNull();
     }
 
     @Test

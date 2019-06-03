@@ -16,7 +16,6 @@
 package io.syndesis.common.util.cache;
 
 import java.util.Collection;
-import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -26,8 +25,6 @@ import java.util.Set;
 public interface Cache<K, V> {
 
     V get(K key);
-
-    Optional<V> getOptional(K key);
 
     Set<K> keySet();
 
