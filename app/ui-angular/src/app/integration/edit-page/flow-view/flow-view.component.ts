@@ -74,7 +74,7 @@ export class FlowViewComponent implements OnInit, OnDestroy {
   }
 
   isAlternateFlow() {
-    return this.currentFlowService.isAlternateFlow();
+    return this.currentFlowService.isAlternate();
   }
 
   isApiProvider() {

@@ -28,14 +28,13 @@
               >
               </syndesis-editable-text>
             </div>
-            <div class="form-group" *ngIf="flows.length > 1">
+            <div class="form-group" *ngIf="currentFlow && flows.length > 1">
               <label for="flowSelectDropDown">Flows</label>&nbsp;
               <div
                 id="flowSelectDropDown"
                 dropdown
                 class="dropdown btn-group"
                 placement="bottom"
-                *ngIf="currentFlow && flows.length > 1"
               >
                 <button
                   dropdownToggle
@@ -53,21 +52,14 @@
                     <button
                       class="btn btn-default"
                       style="width: 100%"
+                      [textContent]="getPrimaryFlowRouteDescription(currentFlow)"
                       [disabled]="
                       isPrimaryFlow(currentFlow) ||
                       flowPageService.saveInProgress ||
                       flowPageService.publishInProgress
                     "
-                      (click)="
-                      save([
-                        '/integrations',
-                        currentFlowService.integration?.id,
-                        'edit'
-                      ])
-                    "
-                    >
-                      Go to primary flow
-                    </button>
+                      (click)="save(getPrimaryFlowRoute(currentFlow))"
+                    ></button>
                   </li>
                   <li role="separator" class="divider"></li>
                   <ng-container *ngFor="let group of getConditionalFlowGroups(); let i=index; let lastGroup=last">
@@ -167,20 +159,13 @@
               <button
                 class="btn btn-default"
                 *ngIf="!flowPageService.showDone"
+                [textContent]="getPrimaryFlowRouteDescription(currentFlow)"
                 [disabled]="
                       flowPageService.saveInProgress ||
                       flowPageService.publishInProgress
                     "
-                (click)="
-                      save([
-                        '/integrations',
-                        currentFlowService.integration?.id,
-                        'edit'
-                      ])
-                    "
-              >
-                Go to primary flow
-              </button>
+                (click)="save(getPrimaryFlowRoute(currentFlow))"
+              ></button>
             </div>
           </div>
         </div>

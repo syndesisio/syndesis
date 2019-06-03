@@ -36,7 +36,10 @@ import {
   Step,
   Flow,
   key,
-  ALTERNATE
+  ALTERNATE,
+  FlowKind,
+  CONDITIONAL,
+  DEFAULT
 } from '@syndesis/ui/platform';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -258,7 +261,7 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
   }
 
   createDefaultFlow() {
-    this.doCreateFlow('Default Flow', 'default', 'Use this as default',
+    this.doCreateFlow('Default', DEFAULT, 'Use this as default',
         flowId => this.form.controls.defaultFlow.get('defaultFlow').setValue(flowId));
   }
 
@@ -306,10 +309,10 @@ export class ContentBasedRouterComponent implements OnChanges, OnDestroy, OnInit
   }
 
   createFlow() {
-    this.doCreateFlow('Conditional Flow', 'conditional', '* To be defined *', flowId => this.addFlow(flowId));
+    this.doCreateFlow('Conditional', CONDITIONAL, '* To be defined *', flowId => this.addFlow(flowId));
   }
 
-  doCreateFlow(name: string, kind: string, description: string, then: (flowId: string) => void) {
+  doCreateFlow(name: string, kind: FlowKind, description: string, then: (flowId: string) => void) {
     const currentFlow = this.currentFlowService.currentFlow;
     const primaryFlowId = currentFlow.id;
     const flowId = key();

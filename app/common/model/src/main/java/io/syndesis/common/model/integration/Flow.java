@@ -44,6 +44,7 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
 
     enum FlowType {
         PRIMARY,
+        API_PROVIDER,
         ALTERNATE;
     }
 
@@ -102,6 +103,11 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
     @JsonIgnore
     default boolean isPrimary() {
         return FlowType.PRIMARY == getType();
+    }
+
+    @JsonIgnore
+    default boolean isApiProvider() {
+        return FlowType.API_PROVIDER == getType();
     }
 
     @JsonIgnore

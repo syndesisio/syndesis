@@ -3,7 +3,8 @@ import { CurrentFlowService } from '../current-flow.service';
 import { FlowPageService } from '../flow-page.service';
 import { ActivatedRoute } from '@angular/router';
 import { INTEGRATION_SET_PROPERTY } from '../edit-page.models';
-import { Flow, ALTERNATE, PRIMARY } from '@syndesis/ui/platform';
+import { Flow } from '@syndesis/ui/platform';
+import { getFlow } from '@syndesis/ui/integration';
 
 @Component({
   selector: 'syndesis-integration-flow-toolbar',
@@ -59,30 +60,34 @@ export class FlowToolbarComponent implements OnInit {
 
   getFlowName(flow: Flow) {
     if (this.isConditionalFlow(flow)) {
-      return flow.name || 'Conditional Flow';
+      return flow.name || 'Conditional';
     }
 
     if (this.isDefaultFlow(flow)) {
-      return flow.name || 'Default Flow';
+      return flow.name || 'Default';
     }
 
     return 'Flow';
   }
 
   isPrimaryFlow(flow: Flow) {
-    return !flow.type || flow.type === PRIMARY;
+    return this.currentFlowService.isPrimary(flow);
+  }
+
+  isApiProviderFlow(flow: Flow) {
+    return this.currentFlowService.isApiProvider(flow);
   }
 
   isAlternateFlow(flow: Flow) {
-    return flow.type && flow.type === ALTERNATE;
+    return this.currentFlowService.isAlternate(flow);
   }
 
   isConditionalFlow(flow: Flow) {
-    return this.isAlternateFlow(flow) && flow.metadata['kind'] === 'conditional';
+    return this.currentFlowService.isConditional(flow);
   }
 
   isDefaultFlow(flow: Flow) {
-    return this.isAlternateFlow(flow) && flow.metadata['kind'] === 'default';
+    return this.currentFlowService.isDefault(flow);
   }
 
   getConditionalFlowGroups() {
@@ -104,6 +109,47 @@ export class FlowToolbarComponent implements OnInit {
     });
 
     return flowGroups;
+  }
+
+  getPrimaryFlowId(flow: Flow) {
+    if (flow.metadata) {
+      const flowId = flow.metadata['primaryFlowId'];
+      if (flowId) {
+        return flowId;
+      }
+    }
+
+    return this.currentFlowService.integration.flows[0].id;
+  }
+
+  getPrimaryFlowRoute(flow: Flow) {
+    const primaryFlowId = this.getPrimaryFlowId(flow);
+    if (this.isApiProviderFlow(getFlow(this.currentFlowService.integration, primaryFlowId))) {
+      return [
+        '/integrations',
+        this.currentFlowService.integration.id,
+        'operations',
+        primaryFlowId,
+        'edit'
+      ];
+    } else {
+      return [
+        '/integrations',
+        this.currentFlowService.integration.id,
+        primaryFlowId,
+        'edit'
+      ];
+    }
+  }
+
+  getPrimaryFlowRouteDescription(flow: Flow) {
+    const primaryFlowId = this.getPrimaryFlowId(flow);
+    const primaryFlow = getFlow(this.currentFlowService.integration, primaryFlowId);
+    if (primaryFlow && this.isApiProviderFlow(primaryFlow)) {
+      return 'Go to operation flow';
+    } else {
+      return 'Go to primary flow';
+    }
   }
 
   publish() {

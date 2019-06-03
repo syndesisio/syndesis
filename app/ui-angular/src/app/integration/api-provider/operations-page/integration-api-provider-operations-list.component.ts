@@ -1,5 +1,5 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { Flow } from '@syndesis/ui/platform';
+import { Flow, ALTERNATE } from '@syndesis/ui/platform';
 import {
   ObjectPropertyFilterConfig,
   ObjectPropertySortConfig,
@@ -82,10 +82,13 @@ export class ApiProviderOperationsListComponent implements OnInit, OnDestroy {
       .pipe(
         map(flows => {
           return flows
+            .filter(f => {
+              return (typeof f.type === 'undefined') || f.type !== ALTERNATE;
+            })
             .map(f => {
               return {
                 ...f,
-                implemented: f.metadata.excerpt.startsWith('501') ? 0 : 1,
+                implemented: f.metadata && f.metadata.excerpt && f.metadata.excerpt.startsWith('501') ? 0 : 1,
               };
             })
             .sort((a, b) => b.implemented - a.implemented);

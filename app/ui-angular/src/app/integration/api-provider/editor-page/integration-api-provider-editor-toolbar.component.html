@@ -26,7 +26,7 @@
                 dropdown
                 class="dropdown btn-group"
                 placement="bottom"
-                *ngIf="currentFlow && flows.length > 0"
+                *ngIf="currentFlow && getApiOperationFlows().length > 0"
               >
                 <button
                   dropdownToggle
@@ -60,7 +60,7 @@
                     </button>
                   </li>
                   <li role="separator" class="divider"></li>
-                  <ng-container *ngFor="let flow of flows">
+                  <ng-container *ngFor="let flow of getApiOperationFlows()">
                     <li *ngIf="flow.id !== currentFlow.id">
                       <a
                         [routerLink]="[
@@ -79,6 +79,86 @@
                         ></integration-api-provider-operation-description>
                       </a>
                     </li>
+                  </ng-container>
+                </ul>
+              </div>
+            </div>
+            <div class="form-group" *ngIf="currentFlow && currentFlow.name">
+              <label for="flowName">Flow</label>&nbsp;
+              <syndesis-editable-text
+                name="flowName"
+                [value]="currentFlow.name"
+                (onSave)="flowNameUpdated($event)"
+              >
+              </syndesis-editable-text>
+            </div>
+            <div class="form-group" *ngIf="currentFlow && getApiOperationConditionalFlowGroups().length > 0">
+              <label for="flowSelectDropDown">Flows</label>&nbsp;
+              <div
+                id="flowSelectDropDown"
+                dropdown
+                class="dropdown btn-group"
+                placement="bottom"
+              >
+                <button
+                  dropdownToggle
+                  class="btn btn-default dropdown-toggle"
+                  type="button"
+                >
+                  Open flow&nbsp;<span class="caret"></span>
+                </button>
+                <ul
+                  *dropdownMenu
+                  class="dropdown-menu flow-select-menu"
+                  role="menu"
+                >
+                  <li style="padding: 0 4px;">
+                    <button
+                      class="btn btn-default"
+                      style="width: 100%"
+                      [disabled]="
+                      isPrimaryFlow(currentFlow) ||
+                      flowPageService.saveInProgress ||
+                      flowPageService.publishInProgress
+                    "
+                      (click)="
+                      save([
+                        '/integrations',
+                        currentFlowService.integration?.id,
+                        'operations',
+                        getPrimaryFlowId(currentFlow),
+                        'edit'
+                      ])
+                    "
+                    >
+                      Go to operation flow
+                    </button>
+                  </li>
+                  <li role="separator" class="divider"></li>
+                  <ng-container *ngFor="let group of getApiOperationConditionalFlowGroups(); let i=index; let lastGroup=last">
+                    <li class="dropdown-header">#{{i + 1}} Conditional Flows</li>
+                    <ng-container *ngFor="let flow of group.flows; let last=last">
+                      <li>
+                        <a
+                          [routerLink]="[
+                            '/integrations',
+                            currentFlowService.integration?.id,
+                            flow.id,
+                            'edit'
+                          ]"
+                        >
+                          <strong>{{ getFlowName(flow) }}</strong
+                          ><br />
+                          <div style="display: inline-flex">
+                            <span class="condition" [textContent]="isDefaultFlow(flow) ? 'OTHERWISE' : 'WHEN'"
+                                  [attr.data-verb]="isDefaultFlow(flow) ? 'OTHERWISE' : 'WHEN'"></span>&nbsp;
+                            <span>{{ flow.description }}</span>
+                          </div>
+                        </a>
+                      </li>
+                      <li *ngIf="!last" role="separator" class="divider"></li>
+                    </ng-container>
+                    <li *ngIf="!lastGroup" role="separator" class="divider"></li>
                   </ng-container>
                 </ul>
               </div>

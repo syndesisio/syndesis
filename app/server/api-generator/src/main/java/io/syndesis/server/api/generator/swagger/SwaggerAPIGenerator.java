@@ -65,6 +65,7 @@ import static java.util.Optional.ofNullable;
 public class SwaggerAPIGenerator implements APIGenerator {
 
     private static final String DEFAULT_RETURN_CODE_METADATA_KEY = "default-return-code";
+    private static final String HTTP_RESPONSE_CODE_METADATA_KEY = "httpResponseCode";
 
     private static final String EXCERPT_METADATA_KEY = "excerpt";
 
@@ -151,7 +152,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .action(modifiedEndAction)
                     .connection(template.getConnection())
                     .stepKind(StepKind.endpoint)
-                    .putConfiguredProperty("httpResponseCode", "501")
+                    .putConfiguredProperty(HTTP_RESPONSE_CODE_METADATA_KEY, "501")
                     .putMetadata("configured", "true")
                     .build();
 
@@ -170,6 +171,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
 
                 final Flow flow = new Flow.Builder()
                     .id(String.format("%s:flows:%s", integrationId, operationId))
+                    .type(Flow.FlowType.API_PROVIDER)
                     .putMetadata(EXCERPT_METADATA_KEY, "501 Not Implemented")
                     .putMetadata(DEFAULT_RETURN_CODE_METADATA_KEY, defaultCode)
                     .addStep(startStep)
@@ -266,7 +268,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
             return code;
         }
         final Optional<String> httpCodeDescription = lastAction
-            .flatMap(a -> ofNullable(a.getProperties().get("httpResponseCode")))
+            .flatMap(a -> ofNullable(a.getProperties().get(HTTP_RESPONSE_CODE_METADATA_KEY)))
             .flatMap(prop -> prop.getEnum().stream()
                 .filter(e -> code.equals(e.getValue()))
                 .map(ConfigurationProperty.PropertyValue::getLabel)
@@ -281,8 +283,8 @@ public class SwaggerAPIGenerator implements APIGenerator {
         }
 
         final Step last = steps.get(steps.size() - 1);
-        if (last.getConfiguredProperties().containsKey("httpResponseCode")) {
-            final String responseCode = last.getConfiguredProperties().get("httpResponseCode");
+        if (last.getConfiguredProperties().containsKey(HTTP_RESPONSE_CODE_METADATA_KEY)) {
+            final String responseCode = last.getConfiguredProperties().get(HTTP_RESPONSE_CODE_METADATA_KEY);
             final String responseDesc = decodeHttpReturnCode(steps, responseCode);
             return new Flow.Builder()
                 .createFrom(flow)

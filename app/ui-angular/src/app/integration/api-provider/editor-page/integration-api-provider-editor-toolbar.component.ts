@@ -9,4 +9,19 @@ import { FlowToolbarComponent } from '../../edit-page';
 export class ApiProviderOperationsToolbarComponent extends FlowToolbarComponent {
   @Input()
   showOperationsButton = false;
+
+  getApiOperationFlows() {
+    return this.flows.filter(flow => {
+      return this.isPrimaryFlow(flow) || this.isApiProviderFlow(flow);
+    });
+  }
+
+  getApiOperationConditionalFlowGroups() {
+    const conditionalFlowGroups = this.getConditionalFlowGroups();
+    return conditionalFlowGroups.filter(group => {
+      // filter groups with conditional flows that belong to api provider operations other than the current flow
+      const primaryFlowId = this.getPrimaryFlowId(group.flows[0]);
+      return primaryFlowId === this.currentFlow.id;
+    });
+  }
 }
