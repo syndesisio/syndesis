@@ -34,8 +34,10 @@ export default class ConfigurationPage extends React.Component {
       <Translation ns={['connections', 'shared']}>
         {t => (
           <WithLeaveConfirmation
-            i18nTitle={t('unsavedChangesTitle')}
-            i18nConfirmationMessage={t('unsavedChangesMessage')}
+            i18nTitle={t('connections:create:unsavedChangesTitle')}
+            i18nConfirmationMessage={t(
+              'connections:create:unsavedChangesMessage'
+            )}
             shouldDisplayDialog={(location: H.LocationDescriptor) => {
               const url =
                 typeof location === 'string' ? location : location.pathname!;
@@ -81,7 +83,11 @@ export default class ConfigurationPage extends React.Component {
                               }) => {
                                 return (
                                   <>
-                                    <PageTitle title={'Configure connection'} />
+                                    <PageTitle
+                                      title={t(
+                                        'connections:create:configure:title'
+                                      )}
+                                    />
                                     <ConnectionCreatorBreadcrumb
                                       cancelHref={resolvers.connections()}
                                     />
@@ -111,6 +117,8 @@ export default class ConfigurationPage extends React.Component {
                                               validationResults
                                             }
                                             isLastStep={false}
+                                            i18nSave={t('shared:Save')}
+                                            i18nNext={t('shared:Next')}
                                           >
                                             {fields}
                                           </ConnectorConfigurationForm>

@@ -14,6 +14,7 @@ import {
   validateRequiredProperties,
 } from '@syndesis/utils';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import i18n from '../../../../../i18n';
 
 export interface IWithConfigurationFormChildrenProps {
@@ -77,84 +78,86 @@ export interface IWithConfigurationFormProps {
  * @see [moreConfigurationSteps]{@link IWithConfigurationFormProps#moreConfigurationSteps}
  * @see [values]{@link IWithConfigurationFormProps#values}
  */
-export class WithConfigurationForm extends React.Component<
+export const WithConfigurationForm: React.FunctionComponent<
   IWithConfigurationFormProps
-> {
-  public static defaultProps = {
-    initialValue: {},
+> = ({ onUpdatedIntegration, step, children }) => {
+  const { t } = useTranslation('shared');
+
+  const onSave = async (
+    values: { [key: string]: string },
+    actions: any
+  ): Promise<void> => {
+    await onUpdatedIntegration({
+      values,
+    });
+    actions.setSubmitting(false);
   };
 
-  public render() {
-    const onSave = async (
-      values: { [key: string]: string },
-      actions: any
-    ): Promise<void> => {
-      await this.props.onUpdatedIntegration({
-        values,
-      });
-      actions.setSubmitting(false);
-    };
-    let step = this.props.step.properties
-      ? this.props.step
-      : ALL_STEPS.find(s => s.stepKind === this.props.step.stepKind);
-    let definition: { [key: string]: ConfigurationProperty };
-    // if step is undefined, maybe we are dealing with an extension
-    if (!step) {
-      const steps = getActionSteps(this.props.step.action!.descriptor!);
+  let definition: { [key: string]: ConfigurationProperty };
+
+  if (!step.properties) {
+    const maybeStep = ALL_STEPS.find(s => s.stepKind === step.stepKind);
+    if (maybeStep !== undefined) {
+      const steps = getActionSteps(maybeStep.action!.descriptor!);
       const actionStep = getActionStep(steps, 0);
       definition = getActionStepDefinition(actionStep);
-      step = this.props.step;
+      step = maybeStep;
     } else {
-      definition = step.properties;
+      throw new Error('Unknown step');
     }
-    const initialValue = this.props.step.configuredProperties;
-    const requiredPrompt = getRequiredStatusText(
-      definition,
-      i18n.t('shared:AllFieldsRequired'),
-      i18n.t('shared:FieldsMarkedWithStarRequired'),
-      ''
-    );
-    const validator = (values: IFormValue) =>
-      validateRequiredProperties(
-        definition,
-        (name: string) => `${name} is required`,
-        values
-      );
-    return (
-      <AutoForm<IFormValue>
-        i18nRequiredProperty={'* Required field'}
-        allFieldsRequired={allFieldsRequired(definition)}
-        i18nFieldsStatusText={requiredPrompt}
-        definition={toFormDefinition(definition)}
-        initialValue={initialValue as IFormValue}
-        onSave={onSave}
-        validate={validator}
-        validateInitial={validator}
-        key={this.props.step.id}
-      >
-        {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
-          this.props.children({
-            form: (
-              <IntegrationEditorForm
-                i18nFormTitle={
-                  step!.description
-                    ? `${step!.name} - ${step!.description}`
-                    : step!.name
-                }
-                i18nNext={'Next'}
-                isValid={isValid}
-                submitForm={submitForm}
-                handleSubmit={handleSubmit}
-              >
-                {fields}
-              </IntegrationEditorForm>
-            ),
-            isSubmitting,
-            isValid,
-            submitForm,
-          })
-        }
-      </AutoForm>
-    );
+  } else {
+    definition = step.properties;
   }
-}
+
+  const initialValue = step.configuredProperties;
+  const requiredPrompt = getRequiredStatusText(
+    definition,
+    i18n.t('shared:AllFieldsRequired'),
+    i18n.t('shared:FieldsMarkedWithStarRequired'),
+    ''
+  );
+
+  const validator = (values: IFormValue) =>
+    validateRequiredProperties(
+      definition,
+      (name: string) => `${name} is required`,
+      values
+    );
+
+  return (
+    <AutoForm<IFormValue>
+      i18nRequiredProperty={t('shared:requiredFieldMessage')}
+      allFieldsRequired={allFieldsRequired(definition)}
+      i18nFieldsStatusText={requiredPrompt}
+      definition={toFormDefinition(definition)}
+      initialValue={initialValue as IFormValue}
+      onSave={onSave}
+      validate={validator}
+      validateInitial={validator}
+      key={step.id}
+    >
+      {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
+        children({
+          form: (
+            <IntegrationEditorForm
+              i18nFormTitle={
+                step!.description
+                  ? `${step!.name} - ${step!.description}`
+                  : step!.name
+              }
+              i18nNext={'Next'}
+              isValid={isValid}
+              submitForm={submitForm}
+              handleSubmit={handleSubmit}
+            >
+              {fields}
+            </IntegrationEditorForm>
+          ),
+          isSubmitting,
+          isValid,
+          submitForm,
+        })
+      }
+    </AutoForm>
+  );
+};
