@@ -11,7 +11,12 @@ import {
   ActionDescriptor,
   Flow,
   Flows,
-  StepOrConnection
+  StepOrConnection,
+  PRIMARY,
+  API_PROVIDER,
+  ALTERNATE,
+  CONDITIONAL,
+  DEFAULT
 } from '@syndesis/ui/platform';
 import { log, getCategory } from '@syndesis/ui/logging';
 import {
@@ -683,18 +688,48 @@ export class CurrentFlowService {
       );
   }
 
-  isApiProvider() {
+  isPrimary(maybeFlow?: Flow) {
+    const flow = maybeFlow || this.currentFlow;
+
+    return !flow.type || flow.type === PRIMARY;
+  }
+
+  isConditional(maybeFlow?: Flow) {
+    const flow = maybeFlow || this.currentFlow;
+
+    return this.isAlternate(flow) && flow.metadata.kind === CONDITIONAL;
+  }
+
+  isDefault(maybeFlow?: Flow) {
+    const flow = maybeFlow || this.currentFlow;
+
+    return this.isAlternate(flow) && flow.metadata.kind === DEFAULT;
+  }
+
+  isApiProvider(maybeFlow?: Flow) {
+    const flow = maybeFlow || this.currentFlow;
+
+    if (flow.type && flow.type === API_PROVIDER) {
+      return true;
+    }
+
     try {
-      return this.getStartStep().connection.connectorId === 'api-provider';
+      return getStartStep(this._integration, flow.id).connection.connectorId === 'api-provider';
     } catch (e) {
       // ignore
     }
     return false;
   }
 
-  isAlternateFlow() {
+  isAlternate(maybeFlow?: Flow) {
+    const flow = maybeFlow || this.currentFlow;
+
+    if (flow.type && flow.type === ALTERNATE) {
+      return true;
+    }
+
     try {
-      return this.getStartStep().connection.connectorId === 'flow';
+      return getStartStep(this._integration, flow.id).connection.connectorId === 'flow';
     } catch (e) {
       // ignore
     }

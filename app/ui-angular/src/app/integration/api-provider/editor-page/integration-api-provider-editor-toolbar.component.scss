@@ -2,3 +2,14 @@
   max-height: 50vh;
   overflow: auto;
 }
+
+.condition {
+  font-weight: bold;
+}
+
+.condition[data-verb=WHEN] {
+  color: #3C96D4;
+}
+.condition[data-verb=OTHERWISE] {
+  color: #61AF5A;
+}

@@ -86,6 +86,7 @@ export interface Flow extends WithId {
   type?: FlowType;
   description: string;
   metadata: {
+    kind?: FlowKind;
     excerpt: string;
   };
   steps: Array<Step>;
@@ -93,11 +94,20 @@ export interface Flow extends WithId {
 }
 
 export const PRIMARY = 'PRIMARY';
+export const API_PROVIDER = 'API_PROVIDER';
 export const ALTERNATE = 'ALTERNATE';
 
 export type FlowType =
   | 'PRIMARY'
+  | 'API_PROVIDER'
   | 'ALTERNATE';
+
+export const CONDITIONAL = 'conditional';
+export const DEFAULT = 'default';
+
+export type FlowKind =
+  | 'conditional'
+  | 'default';
 
 export type Flows = Array<Flow>;
 
