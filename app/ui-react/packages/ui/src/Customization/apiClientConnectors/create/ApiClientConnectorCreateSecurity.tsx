@@ -1,5 +1,4 @@
 import * as H from '@syndesis/history';
-import { PropertyValue } from '@syndesis/models';
 import {
   Card,
   ControlLabel,
@@ -10,21 +9,20 @@ import {
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 
+export interface IAuthenticationTypes {
+  value?: string;
+  label?: string;
+}
+
 export interface IApiClientConnectorCreateSecurityProps {
   /**
    * Access token, required for OAuth 2.0.
    */
   accessToken?: string;
   /**
-   * The type of authentication selected.
-   * Optional, though required in OpenAPI 2.0 for the security scheme object.
-   * Valid values are "basic", "apiKey" or "oauth2".
-   */
-  authenticationType?: string;
-  /**
    * The list of available authentication types for this specification.
    */
-  authenticationTypes?: PropertyValue[];
+  authenticationTypes?: IAuthenticationTypes[];
   backHref: H.LocationDescriptor;
   /**
    * Authorization URL, required for OAuth 2.0.
@@ -103,7 +101,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
         <Card.Body>
           <FormGroup controlId={'authenticationType'} disabled={false}>
             {this.props.authenticationTypes!.map(
-              (authType: PropertyValue, idx) => {
+              (authType: IAuthenticationTypes, idx) => {
                 return (
                   <div key={authType.value}>
                     <Radio
@@ -136,7 +134,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
                   <ControlLabel>{this.props.i18nAccessTokenUrl}</ControlLabel>
                   <FormControl
                     type={'text'}
-                    value={this.state.accessTokenUrl}
+                    value={this.state.accessTokenUrl || this.props.accessToken}
                     onChange={this.setAccessTokenUrl}
                   />
                 </FormGroup>
