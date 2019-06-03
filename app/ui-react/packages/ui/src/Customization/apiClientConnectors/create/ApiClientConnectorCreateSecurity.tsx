@@ -1,3 +1,4 @@
+import * as H from '@syndesis/history';
 import {
   Card,
   ControlLabel,
@@ -24,12 +25,14 @@ export interface IApiClientConnectorCreateSecurityProps {
    * Valid values are "basic", "apiKey" or "oauth2".
    */
   authenticationType?: IAuthenticationType[];
+  backHref: H.LocationDescriptor;
   /**
    * Authorization URL, required for OAuth 2.0.
    */
   authorizationUrl?: string;
   i18nAccessTokenUrl: string;
   i18nAuthorizationUrl: string;
+  i18nBtnBack: string;
   i18nBtnNext: string;
   /**
    * Locale string for when no security is specified
@@ -153,10 +156,18 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
                 </>
               )}
           </FormGroup>
-          <ButtonLink onClick={this.props.onNext} as={'primary'}>
-            {this.props.i18nBtnNext}
-          </ButtonLink>
         </Card.Body>
+        <Card.Footer>
+          <div>
+            <ButtonLink href={this.props.backHref}>
+              {this.props.i18nBtnBack}
+            </ButtonLink>
+            &nbsp;
+            <ButtonLink onClick={this.props.onNext} as={'primary'}>
+              {this.props.i18nBtnNext}
+            </ButtonLink>
+          </div>
+        </Card.Footer>
       </Card>
     );
   }
