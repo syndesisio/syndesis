@@ -54,7 +54,6 @@ export function useApiConnectorSummary(specification: string) {
 export interface ICreateConnectorProps {
   authenticationType?: string;
   authorizationEndpoint?: string;
-  oauthScopes?: string;
   tokenEndpoint?: string;
   specification: string;
   name: string;
@@ -79,7 +78,6 @@ export function useApiConnectorCreator() {
               authorizationEndpoint: connector.authorizationEndpoint,
               basePath: connector.basePath,
               host: connector.host,
-              oauthScopes: connector.oauthScopes,
               specification: connector.specification,
               tokenEndpoint: connector.tokenEndpoint,
             },

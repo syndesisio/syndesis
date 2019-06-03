@@ -23,10 +23,11 @@ import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface IDetailsPageRouteState {
-  accessToken?: string;
-  authType?: string;
-  authUrl?: string;
+  authenticationType?: string;
+  authorizationEndpoint?: string;
+  oauthScopes?: string;
   specification: APISummary;
+  tokenEndpoint?: string;
 }
 
 export const DetailsPage: React.FunctionComponent = () => {
@@ -54,8 +55,11 @@ export const DetailsPage: React.FunctionComponent = () => {
             // tslint:disable-next-line
             await createApiConnector({
               ...values,
+              authenticationType: state.authenticationType,
+              authorizationEndpoint: state.authorizationEndpoint,
               specification: state.specification.configuredProperties!
                 .specification,
+              tokenEndpoint: state.tokenEndpoint,
             });
             actions.setSubmitting(false);
             allowNavigation();
