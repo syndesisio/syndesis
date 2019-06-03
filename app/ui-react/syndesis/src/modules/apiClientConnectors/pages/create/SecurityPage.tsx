@@ -62,7 +62,7 @@ export const SecurityPage: React.FunctionComponent = () => {
     authUrl?: string
   ) => {
     console.log(JSON.stringify(state));
-    history.push(resolvers.create.save(state));
+    history.push(resolvers.create.save(state, accessToken, authType, authUrl));
     // Leaving the following just so lint doesn't complain
     return { accessToken, authType, authUrl };
   };
