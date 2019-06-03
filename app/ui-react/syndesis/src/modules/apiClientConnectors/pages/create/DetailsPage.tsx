@@ -25,7 +25,6 @@ import routes from '../../routes';
 export interface IDetailsPageRouteState {
   authenticationType?: string;
   authorizationEndpoint?: string;
-  oauthScopes?: string;
   specification: APISummary;
   tokenEndpoint?: string;
 }
@@ -55,11 +54,14 @@ export const DetailsPage: React.FunctionComponent = () => {
             // tslint:disable-next-line
             await createApiConnector({
               ...values,
-              authenticationType: state.authenticationType,
-              authorizationEndpoint: state.authorizationEndpoint,
+              authenticationType: state.specification.configuredProperties!
+                .authenticationType,
+              authorizationEndpoint: state.specification.configuredProperties!
+                .authorizationEndpoint,
               specification: state.specification.configuredProperties!
                 .specification,
-              tokenEndpoint: state.tokenEndpoint,
+              tokenEndpoint: state.specification.configuredProperties!
+                .tokenEndpoint,
             });
             actions.setSubmitting(false);
             allowNavigation();

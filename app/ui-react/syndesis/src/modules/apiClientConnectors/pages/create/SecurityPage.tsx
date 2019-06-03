@@ -1,5 +1,5 @@
 import * as H from '@syndesis/history';
-import { APISummary } from '@syndesis/models';
+import { APISummary } from '@syndesis/models/src';
 import {
   ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorLayout,
@@ -32,7 +32,6 @@ export const SecurityPage: React.FunctionComponent = () => {
     authType?: string | undefined,
     authUrl?: string
   ) => {
-    console.log(JSON.stringify(state));
     history.push(
       resolvers.create.save({
         authenticationType: authType,
@@ -42,8 +41,6 @@ export const SecurityPage: React.FunctionComponent = () => {
       })
     );
   };
-
-  console.log('state: ' + JSON.stringify(state));
 
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
