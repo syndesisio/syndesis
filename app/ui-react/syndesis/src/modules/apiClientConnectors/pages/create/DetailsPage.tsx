@@ -102,8 +102,8 @@ export const DetailsPage: React.FunctionComponent = () => {
                         </ButtonLink>
                         <ButtonLink
                           data-testid={'api-connector-details-form-save-button'}
-                          as="primary"
-                          className="api-connector-details-form__editButton"
+                          as={'primary'}
+                          className={'api-connector-details-form__editButton'}
                           disabled={isSubmitting || isUploadingImage}
                           onClick={submitForm}
                         >
