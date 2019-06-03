@@ -25,9 +25,13 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
   const { t } = useTranslation(['integrations', 'shared']);
 
   const definition = {
+    defaultFlowId: {
+      type: 'hidden',
+    },
     flowConditions: {
       arrayDefinition: {
         condition: {
+          defaultValue: '',
           description: t('integrations:editor:choiceForm:conditionDescription'),
           displayName: t('integrations:editor:choiceForm:conditionName'),
           placeholder: t('integrations:editor:choiceForm:conditionPlaceholder'),
@@ -35,6 +39,7 @@ export const WithChoiceConfigurationForm: React.FunctionComponent<
           type: 'text',
         },
         flowId: {
+          defaultValue: '',
           formGroupAttributes: {
             style: {
               display: 'none',

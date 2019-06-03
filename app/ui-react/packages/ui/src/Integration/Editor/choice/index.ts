@@ -1,2 +1,2 @@
 export * from './ChoiceCardHeader';
-export * from './ChoiceViewMode';
+export * from './ChoiceConfigurationView';

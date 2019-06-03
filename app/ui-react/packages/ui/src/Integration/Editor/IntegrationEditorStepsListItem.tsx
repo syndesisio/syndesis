@@ -3,10 +3,13 @@ import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
 
+import './IntegrationEditorStepsListItem.css';
+
 export interface IIntegrationEditorStepsListItemProps {
+  action: string;
+  children?: React.ReactNode;
   stepName: string;
   stepDescription: string;
-  action: string;
   shape: string;
   showWarning: boolean;
   i18nWarningTitle: React.ReactNode;
@@ -29,6 +32,9 @@ export const IntegrationEditorStepsListItem: React.FunctionComponent<
       )}-list-item`}
       actions={props.actions}
       heading={props.stepName}
+      children={props.children}
+      className={'integration-editor-steps-list-item__list-item'}
+      initExpanded={typeof props.children !== 'undefined'}
       description={props.stepDescription}
       additionalInfo={[
         <React.Fragment key={0}>

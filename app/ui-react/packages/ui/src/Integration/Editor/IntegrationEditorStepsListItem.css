@@ -1,0 +1,16 @@
+.integration-editor-steps-list-item__list-item.list-group-item.list-view-pf-expand-active {
+  background: #fff;
+  border: 1px solid #f5f5f5;
+  box-shadow: none;
+}
+.integration-editor-steps-list-item__list-item.list-group-item.list-view-pf-expand-active:hover {
+  background: #edf8ff;
+}
+.integration-editor-steps-list-item__list-item .list-group-item-container {
+  border-top: solid 1px #d1d1d1;
+}
+.integration-editor-steps-list-item__list-item .list-view-pf-expand .fa {
+  font-size: 180%;
+  margin-right: 16px;
+  color: #151515;
+}
