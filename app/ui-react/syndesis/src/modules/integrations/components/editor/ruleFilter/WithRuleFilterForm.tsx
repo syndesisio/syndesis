@@ -2,6 +2,7 @@ import { AutoForm, IAutoFormActions } from '@syndesis/auto-form';
 import { FilterOptions, Op, StepKind } from '@syndesis/models';
 import { toFormDefinition, validateRequiredProperties } from '@syndesis/utils';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface IWithRuleFilterFormChildrenProps {
   form: JSX.Element;
@@ -36,122 +37,123 @@ interface IRuleFilterConfig {
   rules: Op[];
 }
 
-export class WithRuleFilterForm extends React.Component<
+export const WithRuleFilterForm: React.FunctionComponent<
   IWithRuleFilterFormProps
-> {
-  public render() {
-    const onSave = async (
-      values: IRuleFilterConfig,
-      actions: IAutoFormActions<IRuleFilterConfig>
-    ): Promise<void> => {
-      await this.props.onUpdatedIntegration({
-        values: {
-          ...values,
-          rules: JSON.stringify(values.rules || []),
-        },
-      });
-      actions.setSubmitting(false);
-    };
-    const definition = {
-      predicate: {
-        defaultValue: 'AND',
-        displayName: 'Continue only if incoming data match ',
-        enum: [
-          {
-            label: 'ALL of the following',
-            value: 'AND',
-          },
+> = ({ onUpdatedIntegration, filterOptions, step, children }) => {
+  const { t } = useTranslation('shared');
 
-          {
-            label: 'ANY of the following',
-            value: 'OR',
-          },
-        ],
-        type: 'select',
+  const onSave = async (
+    values: IRuleFilterConfig,
+    actions: IAutoFormActions<IRuleFilterConfig>
+  ): Promise<void> => {
+    await onUpdatedIntegration({
+      values: {
+        ...values,
+        rules: JSON.stringify(values.rules || []),
       },
-      rules: {
-        arrayDefinition: {
-          op: {
-            description: 'Must meet this condition',
-            displayName: 'Operator',
-            enum: this.props.filterOptions.ops,
-            order: 1,
-            required: true,
-            type: 'text',
-          },
-          path: {
-            dataList: this.props.filterOptions.paths,
-            description: 'The data you want to evaluate',
-            displayName: 'Property Name',
-            order: 0,
-            placeholder: 'Property name',
-            required: true,
-            type: 'text',
-          },
-          value: {
-            description: 'For this value',
-            displayName: 'Keywords',
-            order: 2,
-            placeholder: 'Keywords',
-            required: true,
-            type: 'text',
-          },
+    });
+    actions.setSubmitting(false);
+  };
+
+  const definition = {
+    predicate: {
+      defaultValue: 'AND',
+      displayName: 'Continue only if incoming data match ',
+      enum: [
+        {
+          label: 'ALL of the following',
+          value: 'AND',
         },
-        arrayDefinitionOptions: {
-          arrayControlAttributes: {
-            className: 'col-md-3 form-group',
-          },
-          controlLabelAttributes: {
-            style: { display: 'none' },
-          },
-          formGroupAttributes: {
-            className: 'col-md-3',
-          },
-          i18nAddElementText: '+ Add another rule',
-          minElements: 1,
+
+        {
+          label: 'ANY of the following',
+          value: 'OR',
         },
-        required: true,
-        type: 'array',
+      ],
+      type: 'select',
+    },
+    rules: {
+      arrayDefinition: {
+        op: {
+          description: 'Must meet this condition',
+          displayName: 'Operator',
+          enum: filterOptions.ops,
+          order: 1,
+          required: true,
+          type: 'text',
+        },
+        path: {
+          dataList: filterOptions.paths,
+          description: 'The data you want to evaluate',
+          displayName: 'Property Name',
+          order: 0,
+          placeholder: 'Property name',
+          required: true,
+          type: 'text',
+        },
+        value: {
+          description: 'For this value',
+          displayName: 'Keywords',
+          order: 2,
+          placeholder: 'Keywords',
+          required: true,
+          type: 'text',
+        },
       },
-      type: {
-        defaultValue: 'rule',
-        type: 'hidden',
+      arrayDefinitionOptions: {
+        arrayControlAttributes: {
+          className: 'col-md-3 form-group',
+        },
+        controlLabelAttributes: {
+          style: { display: 'none' },
+        },
+        formGroupAttributes: {
+          className: 'col-md-3',
+        },
+        i18nAddElementText: '+ Add another rule',
+        minElements: 1,
       },
-    };
-    const configuredProperties = this.props.step.configuredProperties || {};
-    const config = {} as IRuleFilterConfig;
-    config.rules =
-      typeof configuredProperties.rules === 'string'
-        ? JSON.parse(configuredProperties.rules)
-        : configuredProperties.rules;
-    config.predicate = configuredProperties.predicate || 'AND';
-    config.type = configuredProperties.type || 'rule';
-    const initialValue = config as IRuleFilterConfig;
-    const validator = (values: IRuleFilterConfig) =>
-      validateRequiredProperties(
-        definition,
-        (name: string) => `${name} is required`,
-        values
-      );
-    return (
-      <AutoForm<IRuleFilterConfig>
-        definition={toFormDefinition(definition)}
-        i18nRequiredProperty={'* Required field'}
-        initialValue={initialValue}
-        onSave={onSave}
-        validate={validator}
-        validateInitial={validator}
-        key={this.props.step.id}
-      >
-        {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
-          this.props.children({
-            form: <>{fields}</>,
-            isSubmitting,
-            isValid,
-            submitForm,
-          })
-        }
-      </AutoForm>
+      required: true,
+      type: 'array',
+    },
+    type: {
+      defaultValue: 'rule',
+      type: 'hidden',
+    },
+  };
+  const configuredProperties = step.configuredProperties || {};
+  const config = {} as IRuleFilterConfig;
+  config.rules =
+    typeof configuredProperties.rules === 'string'
+      ? JSON.parse(configuredProperties.rules)
+      : configuredProperties.rules;
+  config.predicate = configuredProperties.predicate || 'AND';
+  config.type = configuredProperties.type || 'rule';
+  const initialValue = config as IRuleFilterConfig;
+  const validator = (values: IRuleFilterConfig) =>
+    validateRequiredProperties(
+      definition,
+      (name: string) => `${name} is required`,
+      values
     );
-  }
-}
+  return (
+    <AutoForm<IRuleFilterConfig>
+      definition={toFormDefinition(definition)}
+      i18nRequiredProperty={t('shared:requiredFieldMessage')}
+      initialValue={initialValue}
+      onSave={onSave}
+      validate={validator}
+      validateInitial={validator}
+      key={step.id}
+    >
+      {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
+        children({
+          form: <>{fields}</>,
+          isSubmitting,
+          isValid,
+          submitForm,
+        })
+      }
+    </AutoForm>
+  );
+};

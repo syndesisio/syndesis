@@ -27,8 +27,10 @@ export const EditSpecificationPage: React.FunctionComponent = () => {
     <Translation ns={['apiClientConnectors', 'shared']}>
       {t => (
         <WithLeaveConfirmation
-          i18nTitle={t('unsavedChangesTitle')}
-          i18nConfirmationMessage={t('unsavedChangesMessage')}
+          i18nTitle={t('apiClientConnectors:create:unsavedChangesTitle')}
+          i18nConfirmationMessage={t(
+            'apiClientConnectors:create:unsavedChangesMessage'
+          )}
           shouldDisplayDialog={(location: H.LocationDescriptor) => {
             const url =
               typeof location === 'string' ? location : location.pathname!;

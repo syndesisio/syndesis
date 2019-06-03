@@ -22,7 +22,6 @@ export class ConnectionSchemaList extends React.Component<
           <ListView>{this.props.children}</ListView>
         ) : (
           <EmptyState>
-            <EmptyState.Icon />
             <EmptyState.Title>
               {this.props.i18nEmptyStateTitle}
             </EmptyState.Title>

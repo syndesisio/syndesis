@@ -237,7 +237,7 @@ export class WithVirtualizationSqlClientForm extends React.Component<
                     };
                     return (
                       <AutoForm
-                        i18nRequiredProperty={'* Required field'}
+                        i18nRequiredProperty={t('shared:requiredFieldMessage')}
                         definition={formDefinition}
                         initialValue={initialValue}
                         onSave={(properties, actions) => {

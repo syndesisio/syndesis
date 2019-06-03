@@ -56,7 +56,6 @@ const createView = 'Create View';
 const createViewTip = 'Create a new view';
 const importViews = 'Import Data Source';
 const importViewsTip = 'Import data source';
-const importActionText = 'Import View';
 
 const hasViewsTestNotes =
   '- Verify toolbar is displayed\n' +
@@ -171,7 +170,6 @@ stories
             'Filter by Name...'
           )}
           i18nResultsCount={text('i18nResultsCount', '0 Results')}
-          onImportView={action(importActionText)}
           children={[]}
           hasListData={false}
         />
@@ -230,7 +228,6 @@ stories
             'i18nResultsCount',
             viewItems.length + ' Results'
           )}
-          onImportView={action(importActionText)}
           children={viewItems}
           hasListData={true}
         />

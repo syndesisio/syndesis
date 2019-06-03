@@ -26,7 +26,8 @@ function getFilteredAndSortedConnections(
   let filteredAndSortedConnections = generateDvConnections(
     connections,
     dvSourceStatuses,
-    selectedConn
+    selectedConn,
+    true
   );
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
@@ -94,7 +95,7 @@ export class DvConnectionsWithToolbar extends React.Component<
 
   public render() {
     return (
-      <Translation ns={['shared']}>
+      <Translation ns={['data', 'shared']}>
         {t => (
           <WithConnections>
             {({ data, hasData, error }) => (
@@ -114,6 +115,12 @@ export class DvConnectionsWithToolbar extends React.Component<
 
                   return (
                     <DvConnectionsListView
+                      i18nEmptyStateInfo={t(
+                        'virtualization.activeConnectionsEmptyStateInfo'
+                      )}
+                      i18nEmptyStateTitle={t(
+                        'virtualization.activeConnectionsEmptyStateTitle'
+                      )}
                       linkToConnectionCreate={resolvers.connections.create.selectConnector()}
                       filterTypes={filterTypes}
                       sortTypes={sortTypes}

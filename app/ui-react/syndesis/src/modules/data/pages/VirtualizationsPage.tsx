@@ -4,6 +4,7 @@ import {
   IActiveFilter,
   IFilterType,
   ISortType,
+  PageSection,
   SimplePageHeader,
   VirtualizationList,
   VirtualizationListItem,
@@ -132,26 +133,35 @@ export class VirtualizationsPage extends React.Component {
                             }
                           };
                           const handlePublish = async (
-                            virtualizationName: string
+                            virtualizationName: string,
+                            hasViews: boolean
                           ) => {
-                            try {
-                              await publishVirtualization(virtualizationName);
+                            if (hasViews) {
+                              try {
+                                await publishVirtualization(virtualizationName);
 
+                                pushNotification(
+                                  t(
+                                    'virtualization.publishVirtualizationSuccess',
+                                    { name: virtualizationName }
+                                  ),
+                                  'success'
+                                );
+                              } catch (error) {
+                                const details = error.error ? error.error : '';
+                                pushNotification(
+                                  t(
+                                    'virtualization.publishVirtualizationFailed',
+                                    { name: virtualizationName, details }
+                                  ),
+                                  'error'
+                                );
+                              }
+                            } else {
                               pushNotification(
                                 t(
-                                  'virtualization.publishVirtualizationSuccess',
+                                  'virtualization.publishVirtualizationNoViews',
                                   { name: virtualizationName }
-                                ),
-                                'success'
-                              );
-                            } catch (error) {
-                              const details = error.message
-                                ? error.message
-                                : '';
-                              pushNotification(
-                                t(
-                                  'virtualization.publishVirtualizationFailed',
-                                  { name: virtualizationName, details }
                                 ),
                                 'error'
                               );
@@ -205,167 +215,181 @@ export class VirtualizationsPage extends React.Component {
                                     helpers.isSortAscending
                                   );
                                   return (
-                                    <WithLoader
-                                      error={error}
-                                      loading={!hasData}
-                                      loaderChildren={
-                                        <VirtualizationListSkeleton
-                                          width={800}
-                                          style={{
-                                            backgroundColor: '#FFF',
-                                            marginTop: 30,
-                                          }}
-                                        />
-                                      }
-                                      errorChildren={<ApiError />}
+                                    <PageSection
+                                      variant={'light'}
+                                      noPadding={true}
                                     >
-                                      {() => (
-                                        <VirtualizationList
-                                          filterTypes={filterTypes}
-                                          sortTypes={sortTypes}
-                                          resultsCount={
-                                            filteredAndSorted.length
-                                          }
-                                          {...helpers}
-                                          i18nCreateDataVirtualization={t(
-                                            'virtualization.createDataVirtualization'
-                                          )}
-                                          i18nCreateDataVirtualizationTip={t(
-                                            'virtualization.createDataVirtualizationTip'
-                                          )}
-                                          i18nEmptyStateInfo={t(
-                                            'virtualization.emptyStateInfoMessage'
-                                          )}
-                                          i18nEmptyStateTitle={t(
-                                            'virtualization.emptyStateTitle'
-                                          )}
-                                          /* TD-636: Commented out for TP 
-                                          i18nImport={t('shared:Import')}
-                                          i18nImportTip={t(
-                                            'virtualization.importVirtualizationTip'
-                                          )} */
-                                          i18nLinkCreateVirtualization={t(
-                                            'virtualization.createDataVirtualization'
-                                          )}
-                                          i18nName={t('shared:Name')}
-                                          i18nNameFilterPlaceholder={t(
-                                            'shared:nameFilterPlaceholder'
-                                          )}
-                                          i18nResultsCount={t(
-                                            'shared:resultsCount',
-                                            {
-                                              count: filteredAndSorted.length,
+                                      <WithLoader
+                                        error={error}
+                                        loading={!hasData}
+                                        loaderChildren={
+                                          <VirtualizationListSkeleton
+                                            width={800}
+                                            style={{
+                                              backgroundColor: '#FFF',
+                                              marginTop: 30,
+                                            }}
+                                          />
+                                        }
+                                        errorChildren={<ApiError />}
+                                      >
+                                        {() => (
+                                          <VirtualizationList
+                                            filterTypes={filterTypes}
+                                            sortTypes={sortTypes}
+                                            resultsCount={
+                                              filteredAndSorted.length
                                             }
-                                          )}
-                                          linkCreateHRef={resolvers.virtualizations.create()}
-                                          /* TD-636: Commented out for TP 
-                                          onImport={this.handleImportVirt} */
-                                          hasListData={data.length > 0}
-                                        >
-                                          {filteredAndSorted.map(
-                                            (
-                                              virtualization: RestDataService,
-                                              index: number
-                                            ) => {
-                                              const publishingDetails = getPublishingDetails(
-                                                virtualization
-                                              );
-                                              return (
-                                                <VirtualizationListItem
-                                                  key={index}
-                                                  detailsPageLink={resolvers.virtualizations.views.root(
-                                                    { virtualization }
-                                                  )}
-                                                  virtualizationName={
-                                                    virtualization.keng__id
-                                                  }
-                                                  virtualizationDescription={
-                                                    virtualization.tko__description
-                                                      ? virtualization.tko__description
-                                                      : ''
-                                                  }
-                                                  serviceVdbName={
-                                                    virtualization.serviceVdbName
-                                                  }
-                                                  i18nCancelText={t(
-                                                    'shared:Cancel'
-                                                  )}
-                                                  i18nDelete={t(
-                                                    'shared:Delete'
-                                                  )}
-                                                  i18nDeleteModalMessage={t(
-                                                    'virtualization.deleteModalMessage',
-                                                    {
-                                                      name:
-                                                        virtualization.keng__id,
+                                            {...helpers}
+                                            i18nCreateDataVirtualization={t(
+                                              'virtualization.createDataVirtualization'
+                                            )}
+                                            i18nCreateDataVirtualizationTip={t(
+                                              'virtualization.createDataVirtualizationTip'
+                                            )}
+                                            i18nEmptyStateInfo={t(
+                                              'virtualization.emptyStateInfoMessage'
+                                            )}
+                                            i18nEmptyStateTitle={t(
+                                              'virtualization.emptyStateTitle'
+                                            )}
+                                            /* TD-636: Commented out for TP 
+                                            i18nImport={t('shared:Import')}
+                                            i18nImportTip={t(
+                                              'virtualization.importVirtualizationTip'
+                                            )} */
+                                            i18nLinkCreateVirtualization={t(
+                                              'virtualization.createDataVirtualization'
+                                            )}
+                                            i18nName={t('shared:Name')}
+                                            i18nNameFilterPlaceholder={t(
+                                              'shared:nameFilterPlaceholder'
+                                            )}
+                                            i18nResultsCount={t(
+                                              'shared:resultsCount',
+                                              {
+                                                count: filteredAndSorted.length,
+                                              }
+                                            )}
+                                            linkCreateHRef={resolvers.virtualizations.create()}
+                                            /* TD-636: Commented out for TP 
+                                            onImport={this.handleImportVirt} */
+                                            hasListData={data.length > 0}
+                                          >
+                                            {filteredAndSorted.map(
+                                              (
+                                                virtualization: RestDataService,
+                                                index: number
+                                              ) => {
+                                                const publishingDetails = getPublishingDetails(
+                                                  virtualization
+                                                );
+                                                return (
+                                                  <VirtualizationListItem
+                                                    key={index}
+                                                    detailsPageLink={resolvers.virtualizations.views.root(
+                                                      { virtualization }
+                                                    )}
+                                                    virtualizationName={
+                                                      virtualization.keng__id
                                                     }
-                                                  )}
-                                                  i18nDeleteModalTitle={t(
-                                                    'virtualization.deleteModalTitle'
-                                                  )}
-                                                  i18nDraft={t('shared:Draft')}
-                                                  i18nEdit={t('shared:Edit')}
-                                                  i18nEditTip={t(
-                                                    'virtualization.editDataVirtualizationTip'
-                                                  )}
-                                                  i18nError={t('shared:Error')}
-                                                  /* TD-636: Commented out for TP 
-                                                    i18nExport={t('shared:Export')} */
-                                                  i18nPublish={t(
-                                                    'shared:Publish'
-                                                  )}
-                                                  i18nPublished={t(
-                                                    'virtualization.publishedDataVirtualization'
-                                                  )}
-                                                  i18nUnpublish={t(
-                                                    'shared:Unpublish'
-                                                  )}
-                                                  i18nUnpublishModalMessage={t(
-                                                    'virtualization.unpublishModalMessage',
-                                                    {
-                                                      name:
-                                                        virtualization.keng__id,
+                                                    virtualizationDescription={
+                                                      virtualization.tko__description
+                                                        ? virtualization.tko__description
+                                                        : ''
                                                     }
-                                                  )}
-                                                  i18nUnpublishModalTitle={t(
-                                                    'virtualization.unpublishModalTitle'
-                                                  )}
-                                                  onDelete={handleDelete}
-                                                  /* TD-636: Commented out for TP 
-                                                    onExport={
-                                                      this
-                                                        .handleExportVirtualization
-                                                    } */
-                                                  onUnpublish={handleUnpublish}
-                                                  onPublish={handlePublish}
-                                                  currentPublishedState={
-                                                    publishingDetails.state
-                                                  }
-                                                  publishingLogUrl={
-                                                    publishingDetails.logUrl
-                                                  }
-                                                  publishingCurrentStep={
-                                                    publishingDetails.stepNumber
-                                                  }
-                                                  publishingTotalSteps={
-                                                    publishingDetails.stepTotal
-                                                  }
-                                                  publishingStepText={
-                                                    publishingDetails.stepText
-                                                  }
-                                                  i18nPublishInProgress={t(
-                                                    'virtualization.publishInProgress'
-                                                  )}
-                                                  i18nPublishLogUrlText={t(
-                                                    'shared:viewLogs'
-                                                  )}
-                                                />
-                                              );
-                                            }
-                                          )}
-                                        </VirtualizationList>
-                                      )}
-                                    </WithLoader>
+                                                    virtualizationViewNames={
+                                                      virtualization.serviceViewDefinitions
+                                                    }
+                                                    serviceVdbName={
+                                                      virtualization.serviceVdbName
+                                                    }
+                                                    i18nCancelText={t(
+                                                      'shared:Cancel'
+                                                    )}
+                                                    i18nDelete={t(
+                                                      'shared:Delete'
+                                                    )}
+                                                    i18nDeleteModalMessage={t(
+                                                      'virtualization.deleteModalMessage',
+                                                      {
+                                                        name:
+                                                          virtualization.keng__id,
+                                                      }
+                                                    )}
+                                                    i18nDeleteModalTitle={t(
+                                                      'virtualization.deleteModalTitle'
+                                                    )}
+                                                    i18nDraft={t(
+                                                      'shared:Draft'
+                                                    )}
+                                                    i18nEdit={t('shared:Edit')}
+                                                    i18nEditTip={t(
+                                                      'virtualization.editDataVirtualizationTip'
+                                                    )}
+                                                    i18nError={t(
+                                                      'shared:Error'
+                                                    )}
+                                                    /* TD-636: Commented out for TP 
+                                                      i18nExport={t('shared:Export')} */
+                                                    i18nPublish={t(
+                                                      'shared:Publish'
+                                                    )}
+                                                    i18nPublished={t(
+                                                      'virtualization.publishedDataVirtualization'
+                                                    )}
+                                                    i18nUnpublish={t(
+                                                      'shared:Unpublish'
+                                                    )}
+                                                    i18nUnpublishModalMessage={t(
+                                                      'virtualization.unpublishModalMessage',
+                                                      {
+                                                        name:
+                                                          virtualization.keng__id,
+                                                      }
+                                                    )}
+                                                    i18nUnpublishModalTitle={t(
+                                                      'virtualization.unpublishModalTitle'
+                                                    )}
+                                                    onDelete={handleDelete}
+                                                    /* TD-636: Commented out for TP 
+                                                      onExport={
+                                                        this
+                                                          .handleExportVirtualization
+                                                      } */
+                                                    onUnpublish={
+                                                      handleUnpublish
+                                                    }
+                                                    onPublish={handlePublish}
+                                                    currentPublishedState={
+                                                      publishingDetails.state
+                                                    }
+                                                    publishingLogUrl={
+                                                      publishingDetails.logUrl
+                                                    }
+                                                    publishingCurrentStep={
+                                                      publishingDetails.stepNumber
+                                                    }
+                                                    publishingTotalSteps={
+                                                      publishingDetails.stepTotal
+                                                    }
+                                                    publishingStepText={
+                                                      publishingDetails.stepText
+                                                    }
+                                                    i18nPublishInProgress={t(
+                                                      'virtualization.publishInProgress'
+                                                    )}
+                                                    i18nPublishLogUrlText={t(
+                                                      'shared:viewLogs'
+                                                    )}
+                                                  />
+                                                );
+                                              }
+                                            )}
+                                          </VirtualizationList>
+                                        )}
+                                      </WithLoader>
+                                    </PageSection>
                                   );
                                 }}
                               </WithListViewToolbarHelpers>

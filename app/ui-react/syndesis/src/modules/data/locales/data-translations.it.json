@@ -54,7 +54,8 @@
     "queryViewSuccess": "The selected view was successfully queried.",
     "createVirtualizationSuccess": "{{name}} virtualization created.",
     "publishVirtualizationSuccess": "Virtualization {{name}} was submitted for publishing.",
-    "publishVirtualizatioFailed": "Publishing failed for virtualization {{name}}. Details: {{details}}",
+    "publishVirtualizationFailed": "Publishing failed for virtualization {{name}}. Details: {{details}}",
+    "publishVirtualizationNoViews": "Cannot publish virtualization {{name}} - No views are defined",
     "unpublishVirtualizationSuccess": "Virtualizaton {{name}} was unpublished.",
     "unpublishVirtualizationFailed": "Unpublish virtualization {{name}} failed. Details: {{details}}",
     "deleteVirtualizationSuccess": "Virtualization {{name}} was deleted.",
@@ -64,6 +65,8 @@
     "importViewsSuccess": "Import data source completed for virtualization {{name}}.",
     "importViewsFailed": "Import data source failed for virtualization {{name}}. Details: {{details}}",
     "createViewSuccess": "Created view named: {{name}}.",
-    "createViewFailed": "Create view failed. Details: {{details}}"
+    "createViewFailed": "Create view failed. Details: {{details}}",
+    "activeConnectionsEmptyStateTitle": "No Active Connections",
+    "activeConnectionsEmptyStateInfo": "There are no active connections available. Please retry."
   }
 }

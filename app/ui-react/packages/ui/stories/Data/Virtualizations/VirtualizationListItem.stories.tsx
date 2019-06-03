@@ -82,6 +82,7 @@ stories.add(
   withNotes(publishedVirtualizationNotes)(() => (
     <VirtualizationListItem
       virtualizationName={virtualizationName}
+      virtualizationViewNames={[]}
       virtualizationDescription={virtualizationDescription}
       serviceVdbName={serviceVdbName}
       i18nCancelText={cancelText}

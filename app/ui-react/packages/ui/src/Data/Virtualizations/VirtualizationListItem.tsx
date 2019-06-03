@@ -52,7 +52,7 @@ export interface IVirtualizationListItemProps {
   onDelete: (virtualizationName: string) => void;
   /* TD-636: Commented out for TP 
   onExport: (virtualizationName: string) => void; */
-  onPublish: (virtualizationName: string) => void;
+  onPublish: (virtualizationName: string, hasViews: boolean) => void;
   onUnpublish: (virtualizationName: string) => void;
   publishingCurrentStep?: number;
   publishingLogUrl?: string;
@@ -60,6 +60,7 @@ export interface IVirtualizationListItemProps {
   publishingStepText?: string;
   serviceVdbName: string;
   virtualizationName: string;
+  virtualizationViewNames: string[];
   virtualizationDescription: string;
 }
 
@@ -119,7 +120,10 @@ export class VirtualizationListItem extends React.Component<
 
   public handlePublish() {
     if (this.props.virtualizationName) {
-      this.props.onPublish(this.props.virtualizationName);
+      this.props.onPublish(
+        this.props.virtualizationName,
+        this.props.virtualizationViewNames.length > 0
+      );
     }
   }
 
