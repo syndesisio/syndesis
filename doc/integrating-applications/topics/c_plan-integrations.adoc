@@ -24,8 +24,9 @@ a REST API call that triggers execution of the flow for an operation?
  
 To finish a simple integration:
 
-* Which application receives the data?
-* In that application, what action does the integration perform?
+* Is there an application that receives the data or do you want to send 
+information to the integration's log?
+* If you are sending data to an application, what action does the integration perform?
 * What are the data fields of interest?
 * What credentials does {prodname} use to access this application?
 
@@ -53,3 +54,6 @@ individual records? Does the flow need to aggregate records into a collection?
 ** Do you want to send information about messages being processed to the
 integration's log?
 ** Does the flow need to operate on the data in some customized way?
+
+* Do you need to vary the execution flow according to the content 
+of the integration data? That is, are conditional flows required?
