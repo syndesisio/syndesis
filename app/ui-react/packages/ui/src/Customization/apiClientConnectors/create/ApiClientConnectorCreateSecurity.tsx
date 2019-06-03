@@ -1,4 +1,5 @@
 import * as H from '@syndesis/history';
+import { PropertyValue } from '@syndesis/models';
 import {
   Card,
   ControlLabel,
@@ -9,22 +10,21 @@ import {
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 
-export interface IAuthenticationType {
-  label: string;
-  value: 'basic' | 'apiKey' | 'oauth2';
-}
-
 export interface IApiClientConnectorCreateSecurityProps {
   /**
    * Access token, required for OAuth 2.0.
    */
   accessToken?: string;
   /**
-   * The type of authentication.
+   * The type of authentication selected.
    * Optional, though required in OpenAPI 2.0 for the security scheme object.
    * Valid values are "basic", "apiKey" or "oauth2".
    */
-  authenticationType?: IAuthenticationType[];
+  authenticationType?: string;
+  /**
+   * The list of available authentication types for this specification.
+   */
+  authenticationTypes?: PropertyValue[];
   backHref: H.LocationDescriptor;
   /**
    * Authorization URL, required for OAuth 2.0.
@@ -45,7 +45,7 @@ export interface IApiClientConnectorCreateSecurityProps {
    */
   onNext(
     accessToken?: string,
-    authenticationType?: IAuthenticationType[],
+    authenticationType?: string,
     authorizationUrl?: string
   ): void;
 }
@@ -53,7 +53,7 @@ export interface IApiClientConnectorCreateSecurityProps {
 export interface IApiClientConnectorCreateSecurityState {
   accessTokenUrl?: string;
   authorizationUrl?: string;
-  selectedType?: IAuthenticationType;
+  selectedType?: string;
   valid: boolean;
 }
 
@@ -63,14 +63,9 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
 > {
   constructor(props: any) {
     super(props);
-    /**
-     * TODO: Improve this, crappy
-     */
+
     this.state = {
-      selectedType: {
-        label: 'HTTP Basic Authentication',
-        value: 'basic',
-      },
+      selectedType: 'basic',
       valid: false,
     };
 
@@ -84,10 +79,10 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
    * type they want to use for the client connector.
    * @param newType
    */
-  public onSelectType(newType: IAuthenticationType) {
+  public onSelectType(newType: string) {
     this.setState({
       selectedType: newType,
-      valid: newType.value === 'basic',
+      valid: newType === 'basic',
     });
   }
 
@@ -107,18 +102,16 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
         </Card.Heading>
         <Card.Body>
           <FormGroup controlId={'authenticationType'} disabled={false}>
-            {this.props.authenticationType!.map(
-              (authType: IAuthenticationType, idx) => {
+            {this.props.authenticationTypes!.map(
+              (authType: PropertyValue, idx) => {
                 return (
                   <div key={authType.value}>
                     <Radio
                       id={'authenticationType'}
                       aria-label={'Authentication Type'}
-                      checked={
-                        this.state.selectedType!.value === authType.value
-                      }
+                      checked={this.state.selectedType === authType.value}
                       name={'authenticationType'}
-                      onClick={() => this.onSelectType(authType)}
+                      onClick={() => this.onSelectType(authType.value!)}
                       readOnly={true}
                     >
                       {authType.label || this.props.i18nNoSecurity}
@@ -127,34 +120,28 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
                 );
               }
             )}
-            {this.state.selectedType &&
-              this.state.selectedType.value === 'oauth2' && (
-                <>
-                  <FormGroup controlId={'authorizationUrl'} disabled={false}>
-                    <ControlLabel>
-                      {this.props.i18nAuthorizationUrl}
-                    </ControlLabel>
-                    <FormControl
-                      type={'text'}
-                      value={
-                        this.state.authorizationUrl ||
-                        this.props.authorizationUrl
-                      }
-                      onChange={this.setAuthorizationUrl}
-                    />
-                  </FormGroup>
-                  <FormGroup controlId={'accessTokenUrl'} disabled={false}>
-                    <ControlLabel>{this.props.i18nAccessTokenUrl}</ControlLabel>
-                    <FormControl
-                      type={'text'}
-                      value={
-                        this.state.accessTokenUrl || this.props.accessToken
-                      }
-                      onChange={this.setAccessTokenUrl}
-                    />
-                  </FormGroup>
-                </>
-              )}
+            {this.state.selectedType && this.state.selectedType === 'oauth2' && (
+              <>
+                <FormGroup controlId={'authorizationUrl'} disabled={false}>
+                  <ControlLabel>{this.props.i18nAuthorizationUrl}</ControlLabel>
+                  <FormControl
+                    type={'text'}
+                    value={
+                      this.state.authorizationUrl || this.props.authorizationUrl
+                    }
+                    onChange={this.setAuthorizationUrl}
+                  />
+                </FormGroup>
+                <FormGroup controlId={'accessTokenUrl'} disabled={false}>
+                  <ControlLabel>{this.props.i18nAccessTokenUrl}</ControlLabel>
+                  <FormControl
+                    type={'text'}
+                    value={this.state.accessTokenUrl || this.props.accessToken}
+                    onChange={this.setAccessTokenUrl}
+                  />
+                </FormGroup>
+              </>
+            )}
           </FormGroup>
         </Card.Body>
         <Card.Footer>
