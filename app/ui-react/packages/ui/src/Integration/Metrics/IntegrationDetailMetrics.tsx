@@ -109,12 +109,12 @@ export class IntegrationDetailMetrics extends React.Component<
                 aggregated={true}
                 matchHeight={true}
               >
-                <Card.Title className={'text-left'}>
-                  <small className={'pull-right'}>
+                <Card.Title className="integration-detail-metrics__uptime-header">
+                  <div>{this.props.i18nUptime}</div>
+                  <div className="integration-detail-metrics__uptime-uptime">
                     {this.props.i18nSince}
                     {startAsHuman}
-                  </small>
-                  <div>{this.props.i18nUptime}</div>
+                  </div>
                 </Card.Title>
                 <Card.Body>
                   <AggregateStatusNotifications>
