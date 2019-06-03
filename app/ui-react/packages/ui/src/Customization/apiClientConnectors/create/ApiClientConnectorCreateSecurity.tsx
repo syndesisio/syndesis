@@ -92,11 +92,11 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
   }
 
   public setAccessTokenUrl(e: React.FormEvent<HTMLInputElement>) {
-    this.setState({ accessTokenUrl: e.currentTarget.value });
+    this.setState({ accessTokenUrl: e.currentTarget.value, valid: true });
   }
 
   public setAuthorizationUrl(e: React.FormEvent<HTMLInputElement>) {
-    this.setState({ authorizationUrl: e.currentTarget.value });
+    this.setState({ authorizationUrl: e.currentTarget.value, valid: true });
   }
 
   public render() {
