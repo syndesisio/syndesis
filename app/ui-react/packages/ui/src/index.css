@@ -12,6 +12,7 @@
 @import url('~@patternfly/patternfly/utilities/Spacing/spacing.css');
 @import url('~@patternfly/patternfly/layouts/Level/level.css');
 @import url('~@patternfly/patternfly/layouts/Split/split.css');
+@import url('~@patternfly/patternfly/utilities/Display/display.css');
 
 :root {
   --pf-global--link--Color: #0088ce;

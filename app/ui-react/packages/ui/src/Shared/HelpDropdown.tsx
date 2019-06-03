@@ -3,13 +3,14 @@ import {
   DropdownDirection,
   DropdownItem,
   DropdownPosition,
-  DropdownToggle,
+  KebabToggle,
 } from '@patternfly/react-core';
 import { HelpIcon } from '@patternfly/react-icons';
 import classNames from 'classnames';
 import * as React from 'react';
 
 export interface IHelpDropdownProps {
+  additionalDropdownItems?: React.ReactNode[];
   className?: string;
   isOpen: boolean;
   launchAboutModal: () => void;
@@ -51,6 +52,7 @@ export class HelpDropdown extends React.Component<
   public render() {
     const { isOpen } = this.state;
     const {
+      additionalDropdownItems = [],
       launchSampleIntegrationTutorials,
       launchUserGuide,
       launchConnectorsGuide,
@@ -115,18 +117,18 @@ export class HelpDropdown extends React.Component<
           position={DropdownPosition.right}
           onSelect={this.onSelect}
           toggle={
-            <DropdownToggle
+            <KebabToggle
               id="helpDropdownButton"
               className={classNames('', this.props.className)}
               iconComponent={null}
               onToggle={this.onToggle}
             >
               <HelpIcon />
-            </DropdownToggle>
+            </KebabToggle>
           }
           isOpen={isOpen}
           isPlain={true}
-          dropdownItems={dropdownItems}
+          dropdownItems={[...dropdownItems, ...additionalDropdownItems]}
         />
       </>
     );

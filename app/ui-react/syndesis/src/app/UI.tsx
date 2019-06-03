@@ -34,6 +34,7 @@ import rhAppleTouchIcon from '../shared/images/red-hat-apple-touch-icon.png'; //
 import redHatSafariPinnedTabIcon from '../shared/images/red-hat-safari-pinned-tab.svg';
 import synFavicon from '../shared/images/syn-favicon.ico';
 import synSafariPinnedTabIcon from '../shared/images/syn-safari-pinned-tab.svg';
+import avatarImg from '../shared/images/img_avatar.svg';
 import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
 import { AppContext } from './AppContext';
 import { UIContext } from './UIContext';
@@ -204,37 +205,54 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                     <WithRouter>
                       {({ history, match }) => {
                         return (
-                          <AppLayout
-                            onShowAboutModal={toggleAboutModal}
-                            onSelectSupport={() => {
-                              history.push(resolvers.support.root());
-                            }}
-                            onSelectSampleIntegrationTutorials={() => {
-                              window.open(
-                                'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/fuse_online_sample_integration_tutorials/',
-                                '_blank'
-                              );
-                            }}
-                            onSelectUserGuide={() => {
-                              window.open(
-                                'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/integrating_applications_with_fuse_online',
-                                '_blank'
-                              );
-                            }}
-                            onSelectConnectorsGuide={() => {
-                              window.open(
-                                'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/connecting_fuse_online_to_applications_and_services/',
-                                '_blank'
-                              );
-                            }}
-                            onSelectContactUs={() => {
-                              window.location.href =
-                                'mailto:fuse-online-tech-preview@redhat.com';
-                            }}
-                            appNav={
-                              <WithUserHelpers>
-                                {({ logout }) => {
-                                  return (
+                          <WithUserHelpers>
+                            {({ logout }) => {
+                              return (
+                                <AppLayout
+                                  avatar={avatarImg}
+                                  onShowAboutModal={toggleAboutModal}
+                                  onSelectSupport={() => {
+                                    history.push(resolvers.support.root());
+                                  }}
+                                  onSelectSampleIntegrationTutorials={() => {
+                                    window.open(
+                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/fuse_online_sample_integration_tutorials/',
+                                      '_blank'
+                                    );
+                                  }}
+                                  onSelectUserGuide={() => {
+                                    window.open(
+                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/integrating_applications_with_fuse_online',
+                                      '_blank'
+                                    );
+                                  }}
+                                  onSelectConnectorsGuide={() => {
+                                    window.open(
+                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/connecting_fuse_online_to_applications_and_services/',
+                                      '_blank'
+                                    );
+                                  }}
+                                  onSelectContactUs={() => {
+                                    window.location.href =
+                                      'mailto:fuse-online-tech-preview@redhat.com';
+                                  }}
+                                  logoutItem={
+                                    <PfDropdownItem
+                                      key="mobileLogoutMenuItem"
+                                      onClick={logout}
+                                    >
+                                      <button
+                                        type="button"
+                                        role="menuitem"
+                                        id="ui-logout-link-mobile"
+                                        data-testid={'ui-logout-link-mobile'}
+                                        className="pf-c-dropdown__menu-item pf-u-display-none-on-lg"
+                                      >
+                                        {t('Logout')}
+                                      </button>
+                                    </PfDropdownItem>
+                                  }
+                                  appNav={
                                     <AppTopMenu
                                       username={user.username || 'developer'}
                                     >
@@ -242,6 +260,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                         <button
                                           type="button"
                                           role="menuitem"
+                                          id="ui-logout-link"
                                           data-testid={'ui-logout-link'}
                                           className="pf-c-dropdown__menu-item"
                                         >
@@ -249,85 +268,86 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                         </button>
                                       </PfDropdownItem>
                                     </AppTopMenu>
-                                  );
-                                }}
-                              </WithUserHelpers>
-                            }
-                            verticalNav={routes.map((route, index) =>
-                              !(route as IAppRouteWithChildrens).childrens ? (
-                                <PfVerticalNavItem
-                                  exact={(route as IAppRoute).exact}
-                                  label={t((route as IAppRoute).label)}
-                                  to={(route as IAppRoute).to}
-                                  key={index}
-                                  data-testid={`ui-${toValidHtmlId(
-                                    (route as IAppRoute).label
-                                  )}`}
-                                />
-                              ) : (
-                                <PfVerticalNavItem
-                                  label={t(route.label)}
-                                  key={index}
-                                  to={'#'}
-                                >
-                                  {(route as IAppRouteWithChildrens).childrens.map(
-                                    (subRoute, subIndex) => (
+                                  }
+                                  verticalNav={routes.map((route, index) =>
+                                    !(route as IAppRouteWithChildrens)
+                                      .childrens ? (
                                       <PfVerticalNavItem
-                                        exact={subRoute.exact}
-                                        label={t(subRoute.label)}
-                                        to={subRoute.to}
-                                        key={subIndex}
+                                        exact={(route as IAppRoute).exact}
+                                        label={t((route as IAppRoute).label)}
+                                        to={(route as IAppRoute).to}
+                                        key={index}
                                         data-testid={`ui-${toValidHtmlId(
-                                          subRoute.label
+                                          (route as IAppRoute).label
                                         )}`}
                                       />
+                                    ) : (
+                                      <PfVerticalNavItem
+                                        label={t(route.label)}
+                                        key={index}
+                                        to={'#'}
+                                      >
+                                        {(route as IAppRouteWithChildrens).childrens.map(
+                                          (subRoute, subIndex) => (
+                                            <PfVerticalNavItem
+                                              exact={subRoute.exact}
+                                              label={t(subRoute.label)}
+                                              to={subRoute.to}
+                                              key={subIndex}
+                                              data-testid={`ui-${toValidHtmlId(
+                                                subRoute.label
+                                              )}`}
+                                            />
+                                          )
+                                        )}
+                                      </PfVerticalNavItem>
                                     )
                                   )}
-                                </PfVerticalNavItem>
-                              )
-                            )}
-                            pictograph={
-                              <img
-                                src={
-                                  isProductBuild
-                                    ? redHatFuseOnlineLogo
-                                    : syndesisLogo
-                                }
-                                alt={productName}
-                                className="pf-c-brand"
-                              />
-                            }
-                            logoHref={'/'}
-                            showNavigation={showNavigation}
-                            onNavigationCollapse={onHideNavigation}
-                            onNavigationExpand={onShowNavigation}
-                          >
-                            <WithErrorBoundary key={match.url}>
-                              <Switch>
-                                {routes
-                                  .reduce(
-                                    (flattenedRoutes, route) => [
-                                      ...flattenedRoutes,
-                                      ...(!(route as IAppRouteWithChildrens)
-                                        .childrens
-                                        ? [route as IAppRoute]
-                                        : (route as IAppRouteWithChildrens)
-                                            .childrens),
-                                    ],
-                                    [] as IAppRoute[]
-                                  )
-                                  .map((route, index) => (
-                                    <Route
-                                      path={route.to}
-                                      exact={route.exact}
-                                      component={route.component}
-                                      key={index}
+                                  pictograph={
+                                    <img
+                                      src={
+                                        isProductBuild
+                                          ? redHatFuseOnlineLogo
+                                          : syndesisLogo
+                                      }
+                                      alt={productName}
+                                      className="pf-c-brand"
                                     />
-                                  ))}
-                                <Route component={PageNotFound} />
-                              </Switch>
-                            </WithErrorBoundary>
-                          </AppLayout>
+                                  }
+                                  logoHref={'/'}
+                                  showNavigation={showNavigation}
+                                  onNavigationCollapse={onHideNavigation}
+                                  onNavigationExpand={onShowNavigation}
+                                >
+                                  <WithErrorBoundary key={match.url}>
+                                    <Switch>
+                                      {routes
+                                        .reduce(
+                                          (flattenedRoutes, route) => [
+                                            ...flattenedRoutes,
+                                            ...(!(route as IAppRouteWithChildrens)
+                                              .childrens
+                                              ? [route as IAppRoute]
+                                              : (route as IAppRouteWithChildrens)
+                                                  .childrens),
+                                          ],
+                                          [] as IAppRoute[]
+                                        )
+                                        .map((route, index) => (
+                                          <Route
+                                            path={route.to}
+                                            exact={route.exact}
+                                            component={route.component}
+                                            key={index}
+                                          />
+                                        ))}
+                                      <Route component={PageNotFound} />
+                                    </Switch>
+                                  </WithErrorBoundary>
+                                </AppLayout>
+                              );
+                            }}
+                          </WithUserHelpers>
                         );
                       }}
                     </WithRouter>
