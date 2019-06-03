@@ -54,14 +54,11 @@ export const DetailsPage: React.FunctionComponent = () => {
             // tslint:disable-next-line
             await createApiConnector({
               ...values,
-              authenticationType: state.specification.configuredProperties!
-                .authenticationType,
-              authorizationEndpoint: state.specification.configuredProperties!
-                .authorizationEndpoint,
+              authenticationType: state.authenticationType,
+              authorizationEndpoint: state.authorizationEndpoint,
               specification: state.specification.configuredProperties!
                 .specification,
-              tokenEndpoint: state.specification.configuredProperties!
-                .tokenEndpoint,
+              tokenEndpoint: state.tokenEndpoint,
             });
             actions.setSubmitting(false);
             allowNavigation();
