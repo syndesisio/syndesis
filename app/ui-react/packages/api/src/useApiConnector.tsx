@@ -52,6 +52,10 @@ export function useApiConnectorSummary(specification: string) {
 }
 
 export interface ICreateConnectorProps {
+  authenticationType?: string;
+  authorizationEndpoint?: string;
+  oauthScopes?: string;
+  tokenEndpoint?: string;
   specification: string;
   name: string;
   description?: string;
@@ -71,9 +75,13 @@ export function useApiConnectorCreator() {
         [
           JSON.stringify({
             configuredProperties: {
+              authenticationType: connector.authenticationType,
+              authorizationEndpoint: connector.authorizationEndpoint,
               basePath: connector.basePath,
               host: connector.host,
+              oauthScopes: connector.oauthScopes,
               specification: connector.specification,
+              tokenEndpoint: connector.tokenEndpoint,
             },
             connectorTemplateId: 'swagger-connector-template',
             description: connector.description,

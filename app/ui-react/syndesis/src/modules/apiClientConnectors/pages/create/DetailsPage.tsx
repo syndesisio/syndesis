@@ -23,6 +23,9 @@ import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface IDetailsPageRouteState {
+  accessToken?: string;
+  authType?: string;
+  authUrl?: string;
   specification: APISummary;
 }
 
