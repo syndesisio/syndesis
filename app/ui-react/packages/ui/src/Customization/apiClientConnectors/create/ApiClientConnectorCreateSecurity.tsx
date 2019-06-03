@@ -64,7 +64,9 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
 
     this.state = {
       selectedType:
-        this.props.authenticationTypes![0].value === 'none' ? 'none' : 'basic',
+        this.props.authenticationTypes![0].value === 'none'
+          ? 'none-01'
+          : 'basic-01',
       valid: false,
     };
 
@@ -81,7 +83,11 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
   public onSelectType(newType: string) {
     this.setState({
       selectedType: newType,
-      valid: newType === ('basic' || 'none'),
+      /**
+       * Check if the security type is either Basic or None, in which case the form
+       * should be valid.
+       */
+      valid: newType === ('basic-01' || 'none-01'),
     });
   }
 
@@ -104,13 +110,17 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
             {this.props.authenticationTypes!.map(
               (authType: IAuthenticationTypes, idx) => {
                 return (
-                  <div key={authType.value}>
+                  <div key={authType.value + '-' + idx}>
                     <Radio
                       id={'authenticationType'}
                       aria-label={'Authentication Type'}
-                      checked={this.state.selectedType === authType.value}
+                      checked={
+                        this.state.selectedType === authType.value + '-' + idx
+                      }
                       name={'authenticationType'}
-                      onClick={() => this.onSelectType(authType.value!)}
+                      onClick={() =>
+                        this.onSelectType(authType.value! + '-' + idx)
+                      }
                       readOnly={true}
                     >
                       {authType.label || this.props.i18nNoSecurity}
@@ -119,7 +129,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
                 );
               }
             )}
-            {this.state.selectedType && this.state.selectedType === 'oauth2' && (
+            {this.state.selectedType!.includes('oauth2') && (
               <>
                 <FormGroup controlId={'authorizationUrl'} disabled={false}>
                   <ControlLabel>{this.props.i18nAuthorizationUrl}</ControlLabel>
@@ -158,6 +168,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
                 )
               }
               as={'primary'}
+              disabled={!this.state.valid}
             >
               {this.props.i18nBtnNext}
             </ButtonLink>
