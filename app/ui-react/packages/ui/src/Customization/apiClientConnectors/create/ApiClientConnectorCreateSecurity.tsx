@@ -63,7 +63,8 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
     super(props);
 
     this.state = {
-      selectedType: 'basic',
+      selectedType:
+        this.props.authenticationTypes![0].value === 'none' ? 'none' : 'basic',
       valid: false,
     };
 
@@ -80,7 +81,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
   public onSelectType(newType: string) {
     this.setState({
       selectedType: newType,
-      valid: newType === 'basic',
+      valid: newType === ('basic' || 'none'),
     });
   }
 
