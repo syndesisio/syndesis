@@ -150,11 +150,13 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
             </ButtonLink>
             &nbsp;
             <ButtonLink
-              onClick={this.props.onNext(
-                this.state.accessTokenUrl,
-                this.state.selectedType,
-                this.state.authorizationUrl
-              )}
+              onClick={() =>
+                this.props.onNext(
+                  this.state.accessTokenUrl,
+                  this.state.selectedType,
+                  this.state.authorizationUrl
+                )
+              }
               as={'primary'}
             >
               {this.props.i18nBtnNext}
