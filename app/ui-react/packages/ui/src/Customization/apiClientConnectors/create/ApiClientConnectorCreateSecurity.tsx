@@ -136,7 +136,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
                   <ControlLabel>{this.props.i18nAccessTokenUrl}</ControlLabel>
                   <FormControl
                     type={'text'}
-                    value={this.state.accessTokenUrl || this.props.accessToken}
+                    value={this.state.accessTokenUrl}
                     onChange={this.setAccessTokenUrl}
                   />
                 </FormGroup>

@@ -43,6 +43,8 @@ export const SecurityPage: React.FunctionComponent = () => {
     );
   };
 
+  console.log('state: ' + JSON.stringify(state));
+
   return (
     <Translation ns={['apiClientConnectors', 'shared']}>
       {t => (
@@ -69,14 +71,15 @@ export const SecurityPage: React.FunctionComponent = () => {
                   <PageSection>
                     <ApiClientConnectorCreateSecurity
                       accessToken={
-                        state.specification.properties!.tokenEndpoint as string
+                        state.specification.properties!.tokenEndpoint
+                          .defaultValue
                       }
                       authenticationTypes={
                         state.specification.properties!.authenticationType.enum
                       }
                       authorizationUrl={
-                        state.specification.properties!
-                          .authorizationUrl as string
+                        state.specification.properties!.authorizationEndpoint
+                          .defaultValue
                       }
                       backHref={backHref}
                       i18nAccessTokenUrl={t(
