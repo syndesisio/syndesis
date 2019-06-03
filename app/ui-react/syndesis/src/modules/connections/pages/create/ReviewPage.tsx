@@ -34,8 +34,10 @@ export default class ReviewPage extends React.Component {
       <Translation ns={['connections', 'shared']}>
         {t => (
           <WithLeaveConfirmation
-            i18nTitle={t('unsavedChangesTitle')}
-            i18nConfirmationMessage={t('unsavedChangesMessage')}
+            i18nTitle={t('connections:create:unsavedChangesTitle')}
+            i18nConfirmationMessage={t(
+              'connections:create:unsavedChangesMessage'
+            )}
             shouldDisplayDialog={(location: H.LocationDescriptor) => {
               const url =
                 typeof location === 'string' ? location : location.pathname!;
@@ -75,20 +77,22 @@ export default class ReviewPage extends React.Component {
                           const definition: IFormDefinition = {
                             name: {
                               defaultValue: '',
-                              displayName: 'Name',
+                              displayName: t('shared:Name'),
                               required: true,
                               type: 'string',
                             },
                             /* tslint:disable-next-line:object-literal-sort-keys */
                             description: {
                               defaultValue: '',
-                              displayName: 'Description',
+                              displayName: t('shared:Description'),
                               type: 'textarea',
                             },
                           };
                           return (
                             <AutoForm<ISaveForm>
-                              i18nRequiredProperty={'* Required field'}
+                              i18nRequiredProperty={t(
+                                'shared:requiredFieldMessage'
+                              )}
                               definition={definition}
                               initialValue={{
                                 description: '',
@@ -104,7 +108,9 @@ export default class ReviewPage extends React.Component {
                                 submitForm,
                               }) => (
                                 <>
-                                  <PageTitle title={'Name connection'} />
+                                  <PageTitle
+                                    title={t('connections:create:review:title')}
+                                  />
                                   <ConnectionCreatorBreadcrumb
                                     cancelHref={resolvers.connections()}
                                   />
@@ -115,7 +121,9 @@ export default class ReviewPage extends React.Component {
                                     content={
                                       <PageSection>
                                         <ConnectorConfigurationForm
-                                          i18nFormTitle={'Name connection'}
+                                          i18nFormTitle={t(
+                                            'connections:create:review:title'
+                                          )}
                                           handleSubmit={handleSubmit}
                                           backHref={resolvers.create.configureConnector(
                                             {
@@ -127,6 +135,8 @@ export default class ReviewPage extends React.Component {
                                           isNextLoading={isSubmitting}
                                           isValidating={false}
                                           isLastStep={true}
+                                          i18nSave={t('shared:Save')}
+                                          i18nNext={t('shared:Next')}
                                         >
                                           {fields}
                                         </ConnectorConfigurationForm>

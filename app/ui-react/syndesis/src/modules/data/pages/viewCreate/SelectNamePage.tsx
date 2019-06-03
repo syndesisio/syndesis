@@ -147,7 +147,9 @@ export class SelectNamePage extends React.Component {
                             {({ data, hasData, error }) => {
                               return (
                                 <AutoForm<ISaveForm>
-                                  i18nRequiredProperty={'* Required field'}
+                                  i18nRequiredProperty={t(
+                                    'shared:requiredFieldMessage'
+                                  )}
                                   definition={definition}
                                   initialValue={{
                                     description: '',
