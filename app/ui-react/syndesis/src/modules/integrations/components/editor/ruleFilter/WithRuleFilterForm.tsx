@@ -58,15 +58,15 @@ export const WithRuleFilterForm: React.FunctionComponent<
   const definition = {
     predicate: {
       defaultValue: 'AND',
-      displayName: 'Continue only if incoming data match ',
+      displayName: t('integrations:editor:ruleForm:predicateDescription'),
       enum: [
         {
-          label: 'ALL of the following',
+          label: t('integrations:editor:ruleForm:predicateEnumAll'),
           value: 'AND',
         },
 
         {
-          label: 'ANY of the following',
+          label: t('integrations:editor:ruleForm:predicateEnumAny'),
           value: 'OR',
         },
       ],
@@ -75,8 +75,8 @@ export const WithRuleFilterForm: React.FunctionComponent<
     rules: {
       arrayDefinition: {
         op: {
-          description: 'Must meet this condition',
-          displayName: 'Operator',
+          description: t('integrations:editor:ruleForm:operatorDescription'),
+          displayName: t('integrations:editor:ruleForm:operatorDisplay'),
           enum: filterOptions.ops,
           order: 1,
           required: true,
@@ -84,18 +84,18 @@ export const WithRuleFilterForm: React.FunctionComponent<
         },
         path: {
           dataList: filterOptions.paths,
-          description: 'The data you want to evaluate',
-          displayName: 'Property Name',
+          description: t('integrations:editor:ruleForm:pathDescription'),
+          displayName: t('integrations:editor:ruleForm:pathDisplay'),
           order: 0,
-          placeholder: 'Property name',
+          placeholder: t('integrations:editor:ruleForm:pathPlaceholder'),
           required: true,
           type: 'text',
         },
         value: {
-          description: 'For this value',
-          displayName: 'Keywords',
+          description: t('integrations:editor:ruleForm:keywordsDescription'),
+          displayName: t('integrations:editor:ruleForm:keywordsDisplay'),
           order: 2,
-          placeholder: 'Keywords',
+          placeholder: t('integrations:editor:ruleForm:keywordsPlaceholder'),
           required: true,
           type: 'text',
         },
@@ -110,7 +110,7 @@ export const WithRuleFilterForm: React.FunctionComponent<
         formGroupAttributes: {
           className: 'col-md-3',
         },
-        i18nAddElementText: '+ Add another rule',
+        i18nAddElementText: t('integrations:editor:ruleForm:addRule'),
         minElements: 1,
       },
       required: true,
@@ -133,7 +133,8 @@ export const WithRuleFilterForm: React.FunctionComponent<
   const validator = (values: IRuleFilterConfig) =>
     validateRequiredProperties(
       definition,
-      (name: string) => `${name} is required`,
+      (field: string) =>
+        t('integrations:editor:ruleForm:fieldRequired', { field }),
       values
     );
   return (

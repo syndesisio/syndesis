@@ -75,6 +75,11 @@
     "confirmDeleteStepDialogBody": "Are you sure you want to delete this step from the integration?",
     "confirmDeleteStepDialogTitle": "Confirm Delete",
     "saveOrAddStep": "Save or Add Step",
+    "save": {
+      "title": "Save the integration",
+      "description": "Update details about this integration.",
+      "saveAndPublish": "Save and publish"
+    },
     "choiceForm": {
       "conditionDescription": "Provide a condition that you want to evaluate.",
       "conditionName": "Condition",
@@ -83,6 +88,21 @@
       "addConditionTitle": "When",
       "useDefaultFlowDescription": "Use this flow when no other condition matches",
       "useDefaultFlowTitle": "Use a default flow",
+      "fieldRequired": "{{field}} is required"
+    },
+    "ruleForm": {
+      "predicateDescription": "Continue only if incoming data match ",
+      "predicateEnumAll": "ALL of the following",
+      "predicateEnumAny": "ANY of the following",
+      "operatorDescription": "Must meet this condition",
+      "operatorDisplay": "Operator",
+      "pathDescription": "The data you want to evaluate",
+      "pathDisplay": "Property Name",
+      "pathPlaceholder": "Property name",
+      "keywordsDescription": "For this value",
+      "keywordsDisplay": "Keywords",
+      "keywordsPlaceholder": "Keywords",
+      "addRule": "+ Add another rule",
       "fieldRequired": "{{field}} is required"
     }
   },

@@ -95,13 +95,14 @@ export const ConfigurationForm: React.FunctionComponent<
         validateInitial={validator}
         key={key}
       >
-        {({ fields, handleSubmit, isValid, submitForm }) => (
+        {({ fields, handleSubmit, isValid, isSubmitting, submitForm }) => (
           <>
             <IntegrationEditorForm
               i18nFormTitle={`${action.name} - ${action.description}`}
               i18nBackAction={'Choose Action'}
               i18nNext={'Next'}
               isValid={isValid}
+              isLoading={isSubmitting}
               submitForm={() => {
                 setError(undefined);
                 submitForm();

@@ -18,12 +18,26 @@ import {
   createStep,
   insertStepIntoFlowBefore,
   NEW_INTEGRATION_ID,
+  removeStepFromFlow,
   setDescriptorOnStep,
   setStepInFlow,
 } from './helpers';
 
 export const useIntegrationHelpers = () => {
   const apiContext = React.useContext(ApiContext);
+
+  const fetchStepDescriptors = async (steps: Step[]): Promise<Step[]> => {
+    const response = await callFetch({
+      body: steps,
+      headers: apiContext.headers,
+      method: 'POST',
+      url: `${apiContext.apiUri}/steps/descriptor`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+    return (await response.json()) as Step[];
+  };
 
   /**
    * adds a step of type connection to the provided integration object.
@@ -47,23 +61,31 @@ export const useIntegrationHelpers = () => {
     position: number,
     configuredProperties: any
   ): Promise<Integration> => {
-    const actionDescriptor = await getActionDescriptor(
-      connection.id!,
-      action.id!,
-      configuredProperties
-    );
-    const step: Step = setDescriptorOnStep(
-      {
-        action,
-        configuredProperties,
-        connection,
-        id: key(),
-        metadata: { configured: true } as any,
-        stepKind: 'endpoint',
-      },
-      actionDescriptor!
-    );
-    return insertStepIntoFlowBefore(integration, flowId, step, position);
+    return produce(integration, async () => {
+      const actionDescriptor = await getActionDescriptor(
+        connection.id!,
+        action.id!,
+        configuredProperties
+      );
+      const step: Step = setDescriptorOnStep(
+        {
+          action,
+          configuredProperties,
+          connection,
+          id: key(),
+          metadata: { configured: true } as any,
+          stepKind: 'endpoint',
+        },
+        actionDescriptor!
+      );
+      return insertStepIntoFlowBefore(
+        integration,
+        flowId,
+        step,
+        position,
+        fetchStepDescriptors
+      );
+    });
   };
 
   /**
@@ -78,21 +100,29 @@ export const useIntegrationHelpers = () => {
    * @todo should we check `flow` and `position` to see if they are valid?
    * @todo perhaps rename it with a better name
    */
-  const addStep = (
+  const addStep = async (
     integration: Integration,
     stepKind: StepKind,
     flowId: string,
     position: number,
     configuredProperties: any
-  ): Integration => {
-    const step: Step = {
-      ...createStep(),
-      ...stepKind,
-      configuredProperties,
-      metadata: { configured: true } as any,
-    };
+  ): Promise<Integration> => {
+    return produce(integration, async () => {
+      const step: Step = {
+        ...createStep(),
+        ...stepKind,
+        configuredProperties,
+        metadata: { configured: true } as any,
+      };
 
-    return insertStepIntoFlowBefore(integration, flowId, step, position);
+      return insertStepIntoFlowBefore(
+        integration,
+        flowId,
+        step,
+        position,
+        fetchStepDescriptors
+      );
+    });
   };
 
   /**
@@ -302,23 +332,31 @@ export const useIntegrationHelpers = () => {
     position: number,
     configuredProperties: any
   ): Promise<Integration> => {
-    const actionDescriptor = await getActionDescriptor(
-      connection.id!,
-      action.id!,
-      configuredProperties
-    );
-    const step: Step = setDescriptorOnStep(
-      {
-        action,
-        configuredProperties,
-        connection,
-        id: key(),
-        metadata: { configured: true } as any,
-        stepKind: 'endpoint',
-      },
-      actionDescriptor!
-    );
-    return setStepInFlow(integration, flowId, step, position);
+    return produce(integration, async () => {
+      const actionDescriptor = await getActionDescriptor(
+        connection.id!,
+        action.id!,
+        configuredProperties
+      );
+      const step: Step = setDescriptorOnStep(
+        {
+          action,
+          configuredProperties,
+          connection,
+          id: key(),
+          metadata: { configured: true } as any,
+          stepKind: 'endpoint',
+        },
+        actionDescriptor!
+      );
+      return setStepInFlow(
+        integration,
+        flowId,
+        step,
+        position,
+        fetchStepDescriptors
+      );
+    });
   };
 
   /**
@@ -333,20 +371,28 @@ export const useIntegrationHelpers = () => {
    * @todo should we check `flow` and `position` to see if they are valid?
    * @todo perhaps rename it with a better name
    */
-  const updateStep = (
+  const updateStep = async (
     integration: Integration,
     stepKind: StepKind,
     flowId: string,
     position: number,
     configuredProperties: any
-  ): Integration => {
-    const step: Step = {
-      ...stepKind,
-      configuredProperties,
-      metadata: { configured: true } as any,
-    };
+  ): Promise<Integration> => {
+    return produce(integration, async () => {
+      const step: Step = {
+        ...stepKind,
+        configuredProperties,
+        metadata: { configured: true } as any,
+      };
 
-    return setStepInFlow(integration, flowId, step, position);
+      return setStepInFlow(
+        integration,
+        flowId,
+        step,
+        position,
+        fetchStepDescriptors
+      );
+    });
   };
 
   /**
@@ -398,6 +444,21 @@ export const useIntegrationHelpers = () => {
     });
   };
 
+  const removeStep = async (
+    integration: Integration,
+    flowId: string,
+    position: number
+  ) => {
+    return produce(integration, () => {
+      return removeStepFromFlow(
+        integration,
+        flowId,
+        position,
+        fetchStepDescriptors
+      );
+    });
+  };
+
   return {
     addConnection,
     addStep,
@@ -408,6 +469,7 @@ export const useIntegrationHelpers = () => {
     getActionDescriptor,
     getDeployment,
     importIntegration,
+    removeStep,
     replaceDraft,
     saveIntegration,
     setAttributes,
