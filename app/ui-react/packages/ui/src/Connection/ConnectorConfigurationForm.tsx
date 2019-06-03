@@ -29,6 +29,8 @@ export interface IConnectorConfigurationFormProps {
   isNextLoading: boolean;
   isValidating: boolean;
   isLastStep: boolean;
+  i18nSave: string;
+  i18nNext: string;
 }
 
 /**
@@ -111,11 +113,11 @@ export class ConnectorConfigurationForm extends React.Component<
                     <Loader size={'xs'} inline={true} />
                   ) : null}
                   {this.props.isLastStep ? (
-                    <>
-                      Next <i className="fa fa-angle-right" />
-                    </>
+                    this.props.i18nSave
                   ) : (
-                    'Save'
+                    <>
+                      {this.props.i18nNext} <i className="fa fa-angle-right" />
+                    </>
                   )}
                 </ButtonLink>
               </div>

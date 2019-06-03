@@ -14,6 +14,7 @@ import {
   validateRequiredProperties,
 } from '@syndesis/utils';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import i18n from '../../../../../i18n';
 import { IWithConfigurationFormProps } from './WithConfigurationForm';
 
@@ -40,6 +41,7 @@ export const ConfigurationForm: React.FunctionComponent<
   onUpdatedIntegration,
   children,
 }) => {
+  const { t } = useTranslation('shared');
   const [error, setError] = React.useState();
   try {
     const steps = getActionSteps(descriptor);
@@ -83,7 +85,7 @@ export const ConfigurationForm: React.FunctionComponent<
       );
     return (
       <AutoForm<IFormValue>
-        i18nRequiredProperty={'* Required field'}
+        i18nRequiredProperty={t('shared:requiredFieldMessage')}
         allFieldsRequired={allFieldsRequired(definition)}
         i18nFieldsStatusText={requiredPrompt}
         definition={toFormDefinition(definition)}

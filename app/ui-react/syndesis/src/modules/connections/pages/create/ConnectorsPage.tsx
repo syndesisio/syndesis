@@ -70,7 +70,7 @@ export default class ConnectorsPage extends React.Component {
           <WithConnectors>
             {({ data, hasData, error }) => (
               <>
-                <PageTitle title={'Select connector'} />
+                <PageTitle title={t('connections:create:connector:title')} />
                 <ConnectionCreatorBreadcrumb
                   cancelHref={resolvers.connections()}
                 />

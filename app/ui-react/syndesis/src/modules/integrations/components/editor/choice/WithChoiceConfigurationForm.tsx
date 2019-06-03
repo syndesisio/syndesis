@@ -2,6 +2,7 @@ import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import { IAutoFormActions } from '@syndesis/auto-form/src';
 import { validateRequiredProperties } from '@syndesis/utils';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 import { IChoiceFormConfiguration } from './interfaces';
 
 export interface IWithChoiceConfigurationFormChildrenProps {
@@ -18,97 +19,100 @@ export interface IWithChoiceConfigurationFormProps {
   children(props: IWithChoiceConfigurationFormChildrenProps): any;
 }
 
-export class WithChoiceConfigurationForm extends React.Component<
+export const WithChoiceConfigurationForm: React.FunctionComponent<
   IWithChoiceConfigurationFormProps
-> {
-  public render() {
-    const definition = {
-      flowConditions: {
-        arrayDefinition: {
-          condition: {
-            description: 'Provide a condition that you want to evaluate.',
-            displayName: 'Condition',
-            placeholder: 'Condition',
-            required: true,
-            type: 'text',
-          },
-          flowId: {
-            formGroupAttributes: {
-              style: {
-                display: 'none',
-              },
-            },
-            type: 'hidden',
-          },
+> = ({ onUpdatedIntegration, stepId, initialValue, children }) => {
+  const { t } = useTranslation(['integrations', 'shared']);
+
+  const definition = {
+    flowConditions: {
+      arrayDefinition: {
+        condition: {
+          description: t('integrations:editor:choiceForm:conditionDescription'),
+          displayName: t('integrations:editor:choiceForm:conditionName'),
+          placeholder: t('integrations:editor:choiceForm:conditionPlaceholder'),
+          required: true,
+          type: 'text',
         },
-        arrayDefinitionOptions: {
-          arrayControlAttributes: {
-            className: 'col-md-2 form-group',
-          },
-          arrayRowTitleAttributes: {
-            className: 'col-md-2',
-          },
-          controlLabelAttributes: {
-            style: { display: 'none' },
-          },
+        flowId: {
           formGroupAttributes: {
-            className: 'col-md-8',
+            style: {
+              display: 'none',
+            },
           },
-          i18nAddElementText: '+ Add another condition',
-          minElements: 1,
-          rowTitle: 'When',
-          showSortControls: true,
+          type: 'hidden',
         },
-        required: true,
-        type: 'array',
       },
-      routingScheme: {
-        defaultValue: 'direct',
-        type: 'hidden',
+      arrayDefinitionOptions: {
+        arrayControlAttributes: {
+          className: 'col-md-2 form-group',
+        },
+        arrayRowTitleAttributes: {
+          className: 'col-md-2',
+        },
+        controlLabelAttributes: {
+          style: { display: 'none' },
+        },
+        formGroupAttributes: {
+          className: 'col-md-8',
+        },
+        i18nAddElementText: t('integrations:editor:choiceForm:addCondition'),
+        minElements: 1,
+        rowTitle: t('integrations:editor:choiceForm:addConditionTitle'),
+        showSortControls: true,
       },
-      useDefaultFlow: {
-        defaultValue: 'false',
-        description: 'Use this flow when no other condition matches',
-        displayName: 'Use a default flow',
-        type: 'boolean',
-      },
-    } as IFormDefinition;
+      required: true,
+      type: 'array',
+    },
+    routingScheme: {
+      defaultValue: 'direct',
+      type: 'hidden',
+    },
+    useDefaultFlow: {
+      defaultValue: 'false',
+      description: t(
+        'integrations:editor:choiceForm:useDefaultFlowDescription'
+      ),
+      displayName: t('integrations:editor:choiceForm:useDefaultFlowTitle'),
+      type: 'boolean',
+    },
+  } as IFormDefinition;
 
-    const onSave = (
-      values: IChoiceFormConfiguration,
-      actions: IAutoFormActions<IChoiceFormConfiguration>
-    ) => {
-      this.props.onUpdatedIntegration(values);
-      actions.setSubmitting(false);
-    };
+  const onSave = (
+    values: IChoiceFormConfiguration,
+    actions: IAutoFormActions<IChoiceFormConfiguration>
+  ) => {
+    onUpdatedIntegration(values);
+    actions.setSubmitting(false);
+  };
 
-    const validator = (values: IChoiceFormConfiguration) => {
-      return validateRequiredProperties(
-        definition,
-        (name: string) => `${name} is required`,
-        values
-      );
-    };
-
-    return (
-      <AutoForm<IChoiceFormConfiguration>
-        key={this.props.stepId}
-        definition={definition}
-        i18nRequiredProperty={'* Required field'}
-        initialValue={this.props.initialValue}
-        validate={validator}
-        validateInitial={validator}
-        onSave={onSave}
-      >
-        {({ fields, isSubmitting, isValid, submitForm }) =>
-          this.props.children({
-            fields,
-            isSubmitting,
-            isValid,
-            submitForm,
-          })
-        }
-      </AutoForm>
+  const validator = (values: IChoiceFormConfiguration) => {
+    return validateRequiredProperties(
+      definition,
+      (field: string) =>
+        t('integrations:editor:choiceForm:fieldRequired', { field }),
+      values
     );
-  }
-}
+  };
+
+  return (
+    <AutoForm<IChoiceFormConfiguration>
+      key={stepId}
+      definition={definition}
+      i18nRequiredProperty={t('shared:requiredFieldMessage')}
+      initialValue={initialValue}
+      validate={validator}
+      validateInitial={validator}
+      onSave={onSave}
+    >
+      {({ fields, isSubmitting, isValid, submitForm }) =>
+        children({
+          fields,
+          isSubmitting,
+          isValid,
+          submitForm,
+        })
+      }
+    </AutoForm>
+  );
+};
