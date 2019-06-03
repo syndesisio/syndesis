@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.IntOrString;
+import io.fabric8.kubernetes.api.model.ProbeBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.SecretBuilder;
@@ -377,6 +378,13 @@ public class OpenShiftServiceImplTest {
                                 .withMountPath("/deployments/config")
                                 .withReadOnly(false)
                             .endVolumeMount()
+                            .withLivenessProbe(new ProbeBuilder()
+                                .withInitialDelaySeconds(config.getIntegrationLivenessProbeInitialDelaySeconds())
+                                .withNewHttpGet()
+                                    .withPath("/health")
+                                    .withNewPort(8080)
+                                .endHttpGet()
+                                .build())
                         .endContainer()
                         .addNewVolume()
                             .withName("secret-volume")
