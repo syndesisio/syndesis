@@ -3,7 +3,6 @@ import { APISummary } from '@syndesis/models';
 import {
   ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorLayout,
-  ButtonLink,
   IAuthenticationType,
   PageSection,
 } from '@syndesis/ui';
@@ -25,6 +24,9 @@ export interface ISecurityPageRouteState {
 
 export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
+  const backHref = resolvers.create.review({
+    specification: state.specification.configuredProperties!.specification,
+  });
 
   const authenticationType: IAuthenticationType[] = [
     {
@@ -59,6 +61,7 @@ export const SecurityPage: React.FunctionComponent = () => {
     authType?: IAuthenticationType[],
     authUrl?: string
   ) => {
+    console.log(JSON.stringify(state));
     history.push(resolvers.create.save(state));
     // Leaving the following just so lint doesn't complain
     return { accessToken, authType, authUrl };
@@ -99,12 +102,14 @@ export const SecurityPage: React.FunctionComponent = () => {
                         connectorExample.properties.authorizationEndpoint
                           .defaultValue
                       }
+                      backHref={backHref}
                       i18nAccessTokenUrl={t(
                         'apiClientConnectors:create:security:accessTokenUrl'
                       )}
                       i18nAuthorizationUrl={t(
                         'apiClientConnectors:create:security:authorizationUrl'
                       )}
+                      i18nBtnBack={t('Back')}
                       i18nBtnNext={t('Next')}
                       i18nNoSecurity={t(
                         'apiClientConnectors:create:security:noSecurity'
@@ -112,20 +117,6 @@ export const SecurityPage: React.FunctionComponent = () => {
                       i18nTitle={t('apiClientConnectors:create:security:title')}
                       onNext={onNext}
                     />
-                    <div>
-                      <ButtonLink
-                        href={resolvers.create.review({
-                          specification: state.specification
-                            .configuredProperties!.specification,
-                        })}
-                      >
-                        {t('Back')}
-                      </ButtonLink>
-                      &nbsp;
-                      <ButtonLink onClick={onNext} as={'primary'}>
-                        {t('Next')}
-                      </ButtonLink>
-                    </div>
                   </PageSection>
                 }
               />
