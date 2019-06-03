@@ -33,10 +33,7 @@ export function sanitizeValues<T>(
 ): T {
   return Object.keys(definition).reduce((result, key): any => {
     const prop = definition[key];
-    let value = massageValue(prop, initialValue[key]);
-    if (value == null) {
-      value = massageValue(prop, prop.defaultValue);
-    }
+    const value = massageValue(prop, initialValue[key], prop.defaultValue);
     return { ...result, [key]: value };
   }, {}) as T;
 }
@@ -135,13 +132,19 @@ export function sanitizeInitialArrayValue(
  * @param property
  * @param value
  */
-export function massageValue(property: IFormDefinitionProperty, value?: any) {
+export function massageValue(
+  property: IFormDefinitionProperty,
+  value?: any,
+  defaultValue?: any
+) {
   switch (property.type) {
     case 'number':
-      return parseInt(value || 0, 10);
+      return parseInt(value || defaultValue, 10);
     case 'boolean':
     case 'checkbox':
-      return String(value || 'false').toLocaleLowerCase() === 'true';
+      return (
+        String(value || defaultValue || 'false').toLocaleLowerCase() === 'true'
+      );
     case 'array':
       const minElements =
         typeof property.arrayDefinitionOptions !== 'undefined'
@@ -161,8 +164,8 @@ export function massageValue(property: IFormDefinitionProperty, value?: any) {
         property.enum &&
         property.enum.length > 0
       ) {
-        return property.enum[0].value;
+        return defaultValue || property.enum[0].value;
       }
-      return value || '';
+      return value || defaultValue || '';
   }
 }
