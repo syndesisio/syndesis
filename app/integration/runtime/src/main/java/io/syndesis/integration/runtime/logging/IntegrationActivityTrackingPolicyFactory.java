@@ -42,6 +42,6 @@ public class IntegrationActivityTrackingPolicyFactory implements ActivityTrackin
 
     @Override
     public boolean appliesTo(Flow flow) {
-        return flow.isPrimary();
+        return flow.isPrimary() || flow.isApiProvider();
     }
 }

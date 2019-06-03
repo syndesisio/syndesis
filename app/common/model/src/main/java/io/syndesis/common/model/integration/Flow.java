@@ -106,6 +106,11 @@ public interface Flow extends WithName, WithId<Flow>, WithTags, WithSteps, WithM
     }
 
     @JsonIgnore
+    default boolean isApiProvider() {
+        return FlowType.API_PROVIDER == getType();
+    }
+
+    @JsonIgnore
     default boolean isAlternate() {
         return FlowType.ALTERNATE == getType();
     }
