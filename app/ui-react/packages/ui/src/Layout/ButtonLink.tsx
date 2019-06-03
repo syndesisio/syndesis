@@ -36,6 +36,14 @@ export const ButtonLink = React.forwardRef<any, IButtonLinkProps>(
     },
     ref
   ) => {
+    const onClickInterceptor = (ev: React.MouseEvent) => {
+      if (onClick) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        onClick(ev);
+      }
+    };
+
     className = classnames('btn', `btn-${as}`, className, {
       'btn-lg': size === 'lg',
       'btn-sm': size === 'sm',
@@ -44,7 +52,7 @@ export const ButtonLink = React.forwardRef<any, IButtonLinkProps>(
     return href && !disabled ? (
       <Link
         to={href}
-        onClick={onClick}
+        onClick={onClickInterceptor}
         className={className}
         ref={ref}
         {...props}
@@ -53,7 +61,7 @@ export const ButtonLink = React.forwardRef<any, IButtonLinkProps>(
       </Link>
     ) : (
       <button
-        onClick={onClick}
+        onClick={onClickInterceptor}
         className={className}
         disabled={disabled || (!onClick && !href)}
         ref={ref}

@@ -154,7 +154,7 @@ export class ViewEditPage extends React.Component<{}, IViewEditPageState> {
                             this.handleValidationComplete(validationResult);
                           } else {
                             const validationResult = {
-                              message: 'View is not valid',
+                              message: validationResponse.message,
                               type: 'error',
                             } as IViewEditValidationResult;
                             this.handleValidationComplete(validationResult);
