@@ -15,6 +15,7 @@
  */
 package io.syndesis.common.util.openapi;
 
+import java.util.Collections;
 import java.util.List;
 
 import io.swagger.models.ModelImpl;
@@ -41,6 +42,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class OpenApiHelperTest {
 
     @Test
+    public void shouldDeserializeSecurityRequirements() throws JSONException {
+        final Swagger deserialized = OpenApiHelper.parse("{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[]}]}}}}");
+        assertThat(deserialized.getPath("/api").getGet().getSecurity()).containsOnly(Collections.singletonMap("secured", Collections.emptyList()));
+    }
+
+    @Test
     public void shouldDeserializeSerializeWithoutLoosingEnumValues() throws JSONException {
         final String document = "{\"swagger\":\"2.0\",\"definitions\":{\"Test\":{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"integer\",\"enum\":[1,2,3]}}}}}}}}}";
         final Swagger parsed = OpenApiHelper.parse(document);
@@ -48,6 +55,18 @@ public class OpenApiHelperTest {
         final String serialized = OpenApiHelper.serialize(parsed);
 
         JSONAssert.assertEquals(document,
+            serialized, JSONCompareMode.STRICT);
+    }
+
+    @Test
+    public void shouldSerializeSecurityRequirements() throws JSONException {
+        final Operation api = new Operation();
+        api.addSecurity("secured", Collections.emptyList());
+        final Swagger document = new Swagger().path("/api", new Path().get(api));
+
+        final String serialized = OpenApiHelper.serialize(document);
+        JSONAssert.assertEquals(
+            "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[]}]}}}}",
             serialized, JSONCompareMode.STRICT);
     }
 

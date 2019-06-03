@@ -70,7 +70,9 @@ import static org.apache.commons.lang3.StringUtils.trimToNull;
 
 public final class SwaggerHelper {
 
-    private static final String SWAGGER_IO_V2_SCHEMA_URI = "http://swagger.io/v2/schema.json#";
+    private static final Pattern JSON_TEST = Pattern.compile("^\\s*\\{.*");
+
+    private static final Pattern JSONDB_DISALLOWED_KEY_CHARS = Pattern.compile("[^ -\"&-\\-0-Z\\^-\u007E\u0080-\u10FFFF]");
 
     private static final Logger LOG = LoggerFactory.getLogger(SwaggerHelper.class);
 
@@ -78,11 +80,9 @@ public final class SwaggerHelper {
 
     private static final String SWAGGER_2_0_SCHEMA_FILE = "schema/swagger-2.0-schema.json";
 
+    private static final String SWAGGER_IO_V2_SCHEMA_URI = "http://swagger.io/v2/schema.json#";
+
     private static final Yaml YAML_PARSER = new Yaml();
-
-    private static final Pattern JSON_TEST = Pattern.compile("^\\s*\\{.*");
-
-    private static final Pattern JSONDB_DISALLOWED_KEY_CHARS = Pattern.compile("[^ -\"&-\\-0-Z\\^-\u007E\u0080-\u10FFFF]");
 
     static {
         try {
@@ -109,35 +109,9 @@ public final class SwaggerHelper {
     }
 
     /**
-     * Makes sure that the tag used as a key in a JSON object is a valid
-     * key determined by io.syndesis.server.jsondb.impl.JsonRecordSupport::validateKey.
-     */
-    public static String sanitizeTag(final String tag) {
-        if (StringUtils.isEmpty(tag)) {
-            return null;
-        }
-
-        final String sanitized = JSONDB_DISALLOWED_KEY_CHARS.matcher(tag).replaceAll("").trim();
-        // 768 is maximum length for keys JSONDB supports
-        if (sanitized.length() > 768) {
-            return sanitized.substring(0, Math.min(tag.length(), 768));
-        }
-
-        return sanitized;
-    }
-
-    public static Stream<String> sanitizeTags(final List<String> list) {
-        if (list == null || list.isEmpty()) {
-            return Stream.empty();
-        }
-
-        return list.stream().map(SwaggerHelper::sanitizeTag).filter(Objects::nonNull).distinct();
-    }
-
-    /**
-     * Removes all properties from the given Swagger document that are not
-     * used by the REST Swagger Camel component in order to minimize the amount
-     * of data stored in the configured properties.
+     * Removes all properties from the given Swagger document that are not used
+     * by the REST Swagger Camel component in order to minimize the amount of
+     * data stored in the configured properties.
      */
     public static String minimalSwaggerUsedByComponent(final Swagger swagger) {
         final ObjectNode json = Json.convertValue(swagger, ObjectNode.class);
@@ -187,7 +161,8 @@ public final class SwaggerHelper {
         }
     }
 
-    public static OperationDescription operationDescriptionOf(final Swagger swagger, final Operation operation, final BiFunction<String, String, String> consumer) {
+    public static OperationDescription operationDescriptionOf(final Swagger swagger, final Operation operation,
+        final BiFunction<String, String, String> consumer) {
         final Entry<String, Path> pathEntry = swagger.getPaths().entrySet().stream()
             .filter(e -> e.getValue().getOperations().contains(operation)).findFirst().get();
         final String path = pathEntry.getKey();
@@ -240,12 +215,39 @@ public final class SwaggerHelper {
         return resultBuilder.model(swagger).build();
     }
 
+    /**
+     * Makes sure that the tag used as a key in a JSON object is a valid key
+     * determined by
+     * io.syndesis.server.jsondb.impl.JsonRecordSupport::validateKey.
+     */
+    public static String sanitizeTag(final String tag) {
+        if (StringUtils.isEmpty(tag)) {
+            return null;
+        }
+
+        final String sanitized = JSONDB_DISALLOWED_KEY_CHARS.matcher(tag).replaceAll("").trim();
+        // 768 is maximum length for keys JSONDB supports
+        if (sanitized.length() > 768) {
+            return sanitized.substring(0, Math.min(tag.length(), 768));
+        }
+
+        return sanitized;
+    }
+
+    public static Stream<String> sanitizeTags(final List<String> list) {
+        if (list == null || list.isEmpty()) {
+            return Stream.empty();
+        }
+
+        return list.stream().map(SwaggerHelper::sanitizeTag).filter(Objects::nonNull).distinct();
+    }
+
     static JsonNode convertToJson(final String specification) throws IOException, JsonProcessingException {
         final JsonNode specRoot;
         if (JSON_TEST.matcher(specification).matches()) {
-            specRoot = Json.reader().readTree(specification);
+            specRoot = OpenApiHelper.mapper().readTree(specification);
         } else {
-            specRoot = Json.convertValue(YAML_PARSER.load(specification), JsonNode.class);
+            specRoot = OpenApiHelper.mapper().convertValue(YAML_PARSER.load(specification), JsonNode.class);
         }
         return specRoot;
     }
