@@ -29,9 +29,8 @@ export const SecurityPage: React.FunctionComponent = () => {
 
   const onNext = (
     accessToken?: string,
-    authType?: string,
-    authUrl?: string,
-    oauthScopes?: string
+    authType?: string | undefined,
+    authUrl?: string
   ) => {
     console.log(JSON.stringify(state));
     history.push(
@@ -72,11 +71,12 @@ export const SecurityPage: React.FunctionComponent = () => {
                       accessToken={
                         state.specification.properties!.tokenEndpoint as string
                       }
-                      authenticationType={
-                        state.specification.properties!.authenticationType
+                      authenticationTypes={
+                        state.specification.properties!.authenticationType.enum
                       }
                       authorizationUrl={
-                        state.specification.properties!.authorizationUrl
+                        state.specification.properties!
+                          .authorizationUrl as string
                       }
                       backHref={backHref}
                       i18nAccessTokenUrl={t(

@@ -52,7 +52,7 @@ export function useApiConnectorSummary(specification: string) {
 }
 
 export interface ICreateConnectorProps {
-  authenticationType?: string;
+  authenticationType?: string | undefined;
   authorizationEndpoint?: string;
   tokenEndpoint?: string;
   specification: string;
