@@ -24,6 +24,7 @@ import { Workbox } from 'workbox-window';
 import resolvers from '../modules/resolvers';
 import { ApiError, PageNotFound, WithErrorBoundary } from '../shared';
 import favicon from '../shared/images/favicon.ico';
+import avatarImg from '../shared/images/img_avatar.svg';
 import brandImg from '../shared/images/pf4-downstream-bg.svg';
 import redHatBrandLogo from '../shared/images/red-hat-brand-logo.png';
 import redHatFuseOnlineLogo from '../shared/images/red-hat-fuse-online-logo.png';
@@ -34,7 +35,6 @@ import rhAppleTouchIcon from '../shared/images/red-hat-apple-touch-icon.png'; //
 import redHatSafariPinnedTabIcon from '../shared/images/red-hat-safari-pinned-tab.svg';
 import synFavicon from '../shared/images/syn-favicon.ico';
 import synSafariPinnedTabIcon from '../shared/images/syn-safari-pinned-tab.svg';
-import avatarImg from '../shared/images/img_avatar.svg';
 import { IAppRoute, IAppRoutes, IAppRouteWithChildrens } from './App';
 import { AppContext } from './AppContext';
 import { UIContext } from './UIContext';

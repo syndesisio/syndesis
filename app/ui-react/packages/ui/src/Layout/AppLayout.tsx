@@ -1,3 +1,4 @@
+import accessibleStyles from '@patternfly/patternfly/utilities/Accessibility/accessibility.css';
 import {
   Avatar,
   Nav,
@@ -10,7 +11,6 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
-import accessibleStyles from '@patternfly/patternfly/utilities/Accessibility/accessibility.css';
 import * as React from 'react';
 import { HelpDropdown } from '../Shared/HelpDropdown';
 import { AppLayoutContext } from './AppLayoutContext';
