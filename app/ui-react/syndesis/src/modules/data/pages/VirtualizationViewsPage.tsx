@@ -93,11 +93,6 @@ export class VirtualizationViewsPage extends React.Component<
     return view.viewName !== undefined;
   }
 
-  public handleImportView(viewName: string) {
-    // TODO: implement handleImportView
-    alert('Import view ' + viewName);
-  }
-
   public render() {
     return (
       <Translation ns={['data', 'shared']}>
@@ -187,148 +182,152 @@ export class VirtualizationViewsPage extends React.Component<
                                           helpers.isSortAscending
                                         );
                                         return (
-                                          <WithLoader
-                                            error={error}
-                                            loading={!hasData}
-                                            loaderChildren={
-                                              <ViewListSkeleton
-                                                width={800}
-                                                style={{
-                                                  backgroundColor: '#FFF',
-                                                  marginTop: 30,
-                                                }}
-                                              />
-                                            }
-                                            errorChildren={<ApiError />}
+                                          <PageSection
+                                            variant={'light'}
+                                            noPadding={true}
                                           >
-                                            {() => (
-                                              <>
-                                                <PageSection
-                                                  variant={'light'}
-                                                  noPadding={true}
-                                                >
-                                                  <VirtualizationNavBar
-                                                    virtualization={
-                                                      virtualization
+                                            <WithLoader
+                                              error={error}
+                                              loading={!hasData}
+                                              loaderChildren={
+                                                <ViewListSkeleton
+                                                  width={800}
+                                                  style={{
+                                                    backgroundColor: '#FFF',
+                                                    marginTop: 30,
+                                                  }}
+                                                />
+                                              }
+                                              errorChildren={<ApiError />}
+                                            >
+                                              {() => (
+                                                <>
+                                                  <PageSection
+                                                    variant={'light'}
+                                                    noPadding={true}
+                                                  >
+                                                    <VirtualizationNavBar
+                                                      virtualization={
+                                                        virtualization
+                                                      }
+                                                    />
+                                                  </PageSection>
+                                                  <ViewList
+                                                    filterTypes={filterTypes}
+                                                    sortTypes={sortTypes}
+                                                    {...this.state}
+                                                    resultsCount={
+                                                      filteredAndSorted.length
                                                     }
-                                                  />
-                                                </PageSection>
-                                                <ViewList
-                                                  filterTypes={filterTypes}
-                                                  sortTypes={sortTypes}
-                                                  {...this.state}
-                                                  resultsCount={
-                                                    filteredAndSorted.length
-                                                  }
-                                                  {...helpers}
-                                                  i18nDescription={t(
-                                                    'data:virtualization.viewsPageDescription'
-                                                  )}
-                                                  i18nEmptyStateInfo={t(
-                                                    'data:virtualization.viewEmptyStateInfo'
-                                                  )}
-                                                  i18nEmptyStateTitle={t(
-                                                    'data:virtualization.viewEmptyStateTitle'
-                                                  )}
-                                                  i18nImportViews={t(
-                                                    'data:virtualization.importDataSource'
-                                                  )}
-                                                  i18nImportViewsTip={t(
-                                                    'data:virtualization.importDataSourceTip'
-                                                  )}
-                                                  i18nCreateView={t(
-                                                    'data:virtualization.createView'
-                                                  )}
-                                                  i18nCreateViewTip={t(
-                                                    'data:virtualization.createViewTip'
-                                                  )}
-                                                  i18nName={t('shared:Name')}
-                                                  i18nNameFilterPlaceholder={t(
-                                                    'shared:nameFilterPlaceholder'
-                                                  )}
-                                                  i18nResultsCount={t(
-                                                    'shared:resultsCount',
-                                                    {
-                                                      count:
-                                                        filteredAndSorted.length,
-                                                    }
-                                                  )}
-                                                  linkCreateViewHRef={resolvers.data.virtualizations.views.createView.selectSources(
-                                                    {
-                                                      virtualization,
-                                                    }
-                                                  )}
-                                                  linkImportViewsHRef={resolvers.data.virtualizations.views.importSource.selectConnection(
-                                                    {
-                                                      virtualization,
-                                                    }
-                                                  )}
-                                                  onImportView={
-                                                    this.handleImportView
-                                                  }
-                                                  hasListData={data.length > 0}
-                                                >
-                                                  {filteredAndSorted
-                                                    .filter(
-                                                      (
-                                                        viewDefinition: ViewDefinition
-                                                      ) =>
-                                                        this.filterUndefinedId(
-                                                          viewDefinition
-                                                        )
-                                                    )
-                                                    .map(
-                                                      (
-                                                        viewDefinition: ViewDefinition,
-                                                        index: number
-                                                      ) => (
-                                                        <ViewListItem
-                                                          key={index}
-                                                          viewName={
-                                                            viewDefinition.viewName
-                                                          }
-                                                          viewDescription={
-                                                            viewDefinition.keng__description
-                                                          }
-                                                          viewEditPageLink={resolvers.data.virtualizations.views.edit(
-                                                            {
-                                                              virtualization,
-                                                              // tslint:disable-next-line: object-literal-sort-keys
-                                                              viewDefinition,
-                                                            }
-                                                          )}
-                                                          i18nCancelText={t(
-                                                            'shared:Cancel'
-                                                          )}
-                                                          i18nDelete={t(
-                                                            'shared:Delete'
-                                                          )}
-                                                          i18nDeleteModalMessage={t(
-                                                            'virtualization.deleteViewModalMessage',
-                                                            {
-                                                              name:
-                                                                viewDefinition.viewName,
-                                                            }
-                                                          )}
-                                                          i18nDeleteModalTitle={t(
-                                                            'virtualization.deleteModalTitle'
-                                                          )}
-                                                          i18nEdit={t(
-                                                            'shared:Edit'
-                                                          )}
-                                                          i18nEditTip={t(
-                                                            'view.editViewTip'
-                                                          )}
-                                                          onDelete={
-                                                            handleDeleteView
-                                                          }
-                                                        />
-                                                      )
+                                                    {...helpers}
+                                                    i18nDescription={t(
+                                                      'data:virtualization.viewsPageDescription'
                                                     )}
-                                                </ViewList>
-                                              </>
-                                            )}
-                                          </WithLoader>
+                                                    i18nEmptyStateInfo={t(
+                                                      'data:virtualization.viewEmptyStateInfo'
+                                                    )}
+                                                    i18nEmptyStateTitle={t(
+                                                      'data:virtualization.viewEmptyStateTitle'
+                                                    )}
+                                                    i18nImportViews={t(
+                                                      'data:virtualization.importDataSource'
+                                                    )}
+                                                    i18nImportViewsTip={t(
+                                                      'data:virtualization.importDataSourceTip'
+                                                    )}
+                                                    i18nCreateView={t(
+                                                      'data:virtualization.createView'
+                                                    )}
+                                                    i18nCreateViewTip={t(
+                                                      'data:virtualization.createViewTip'
+                                                    )}
+                                                    i18nName={t('shared:Name')}
+                                                    i18nNameFilterPlaceholder={t(
+                                                      'shared:nameFilterPlaceholder'
+                                                    )}
+                                                    i18nResultsCount={t(
+                                                      'shared:resultsCount',
+                                                      {
+                                                        count:
+                                                          filteredAndSorted.length,
+                                                      }
+                                                    )}
+                                                    linkCreateViewHRef={resolvers.data.virtualizations.views.createView.selectSources(
+                                                      {
+                                                        virtualization,
+                                                      }
+                                                    )}
+                                                    linkImportViewsHRef={resolvers.data.virtualizations.views.importSource.selectConnection(
+                                                      {
+                                                        virtualization,
+                                                      }
+                                                    )}
+                                                    hasListData={
+                                                      data.length > 0
+                                                    }
+                                                  >
+                                                    {filteredAndSorted
+                                                      .filter(
+                                                        (
+                                                          viewDefinition: ViewDefinition
+                                                        ) =>
+                                                          this.filterUndefinedId(
+                                                            viewDefinition
+                                                          )
+                                                      )
+                                                      .map(
+                                                        (
+                                                          viewDefinition: ViewDefinition,
+                                                          index: number
+                                                        ) => (
+                                                          <ViewListItem
+                                                            key={index}
+                                                            viewName={
+                                                              viewDefinition.viewName
+                                                            }
+                                                            viewDescription={
+                                                              viewDefinition.keng__description
+                                                            }
+                                                            viewEditPageLink={resolvers.data.virtualizations.views.edit(
+                                                              {
+                                                                virtualization,
+                                                                // tslint:disable-next-line: object-literal-sort-keys
+                                                                viewDefinition,
+                                                              }
+                                                            )}
+                                                            i18nCancelText={t(
+                                                              'shared:Cancel'
+                                                            )}
+                                                            i18nDelete={t(
+                                                              'shared:Delete'
+                                                            )}
+                                                            i18nDeleteModalMessage={t(
+                                                              'virtualization.deleteViewModalMessage',
+                                                              {
+                                                                name:
+                                                                  viewDefinition.viewName,
+                                                              }
+                                                            )}
+                                                            i18nDeleteModalTitle={t(
+                                                              'virtualization.deleteModalTitle'
+                                                            )}
+                                                            i18nEdit={t(
+                                                              'shared:Edit'
+                                                            )}
+                                                            i18nEditTip={t(
+                                                              'view.editViewTip'
+                                                            )}
+                                                            onDelete={
+                                                              handleDeleteView
+                                                            }
+                                                          />
+                                                        )
+                                                      )}
+                                                  </ViewList>
+                                                </>
+                                              )}
+                                            </WithLoader>
+                                          </PageSection>
                                         );
                                       }}
                                     </WithListViewToolbarHelpers>

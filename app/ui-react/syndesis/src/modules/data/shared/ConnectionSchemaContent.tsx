@@ -64,9 +64,13 @@ export class ConnectionSchemaContent extends React.Component<
             <Translation ns={['data', 'shared']}>
               {t => (
                 <ConnectionSchemaList
-                  i18nEmptyStateInfo={t('virtualization.emptyStateInfoMessage')}
-                  i18nEmptyStateTitle={t('virtualization.emptyStateTitle')}
-                  hasListData={true}
+                  i18nEmptyStateInfo={t(
+                    'virtualization.activeConnectionsEmptyStateInfo'
+                  )}
+                  i18nEmptyStateTitle={t(
+                    'virtualization.activeConnectionsEmptyStateTitle'
+                  )}
+                  hasListData={connNames.length > 0}
                 >
                   <WithLoader
                     error={error}
