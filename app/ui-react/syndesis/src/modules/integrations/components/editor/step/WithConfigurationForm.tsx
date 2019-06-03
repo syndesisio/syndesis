@@ -145,8 +145,9 @@ export const WithConfigurationForm: React.FunctionComponent<
                   ? `${step!.name} - ${step!.description}`
                   : step!.name
               }
-              i18nNext={'Next'}
+              i18nNext={t('shared:Next')}
               isValid={isValid}
+              isLoading={isSubmitting}
               submitForm={submitForm}
               handleSubmit={handleSubmit}
             >

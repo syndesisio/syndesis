@@ -11,8 +11,10 @@ import {
   EXTENSION,
   getExtensionIcon,
   getNextAggregateStep,
+  getPreviousSteps,
   getPreviousStepWithDataShape,
   getStepIcon,
+  getSubsequentSteps,
   HIDE_FROM_STEP_SELECT,
   LOG,
   SPLIT,
@@ -409,8 +411,8 @@ export function visibleStepsByPosition(
   position: number,
   flowSteps: Step[]
 ) {
-  const previousSteps = flowSteps.slice(0, position);
-  const subsequentSteps = flowSteps.slice(position);
+  const previousSteps = getPreviousSteps(flowSteps, position);
+  const subsequentSteps = getSubsequentSteps(flowSteps, position - 1);
   return filterStepsByPosition(
     steps,
     position,

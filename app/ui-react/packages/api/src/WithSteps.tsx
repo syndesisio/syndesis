@@ -194,9 +194,10 @@ function requiresInputOutputDataShapes(
   ) => {
     if (!anyPrevious) {
       // only test the first previous step that has some kind of data shape
-      const previousStep = previousSteps
-        .reverse()
-        .find(s => dataShapeExists(s));
+      const previousStep = previousSteps.reduceRight(
+        (foundStep, s) => (!foundStep && dataShapeExists(s) ? s : foundStep),
+        undefined as Step | undefined
+      );
       previousSteps = previousStep ? [previousStep] : [];
     }
     if (!anySubsequent) {
@@ -233,9 +234,10 @@ function dataShapeExists(step: Step, input = false): boolean {
 }
 
 function hasPrecedingCollection(previousSteps: Step[]) {
-  const previousDataShape = previousSteps
-    .reverse()
-    .find(s => dataShapeExists(s));
+  const previousDataShape = previousSteps.reduceRight(
+    (foundStep, s) => (!foundStep && dataShapeExists(s) ? s : foundStep),
+    undefined as Step | undefined
+  );
   return (
     previousDataShape &&
     previousDataShape.action &&

@@ -57,8 +57,6 @@ export const DataMapperPage: React.FunctionComponent<
   const [mappings, setMapping] = React.useState<string | undefined>(undefined);
 
   const onMappings = (newMappings: string) => {
-    // tslint:disable-next-line
-    console.log('onMappings', newMappings, mappings);
     setMapping(newMappings);
   };
 
