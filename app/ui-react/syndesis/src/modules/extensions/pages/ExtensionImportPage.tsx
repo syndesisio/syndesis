@@ -1,3 +1,4 @@
+import { TextContent, Text, TextVariants } from '@patternfly/react-core';
 import { WithExtensionHelpers } from '@syndesis/api';
 import { Action, Extension } from '@syndesis/models';
 import {
@@ -203,6 +204,16 @@ export default class ExtensionImportPage extends React.Component<
                                 {t('extension.extensionImportPageTitle')}
                               </span>
                             </Breadcrumb>
+                            <PageSection variant={'light'}>
+                              <TextContent>
+                                <Text component={TextVariants.h1}>
+                                  {t('extension.ImportExtension')}
+                                </Text>
+                                <Text component={TextVariants.p}>
+                                  {t('extension.importUpdateMessage')}
+                                </Text>
+                              </TextContent>
+                            </PageSection>
                             <PageSection>
                               {this.state.loading ? <Loader /> : null}
                               <ExtensionImportCard
@@ -226,10 +237,6 @@ export default class ExtensionImportPage extends React.Component<
                                 i18nDndUploadSuccessMessage={
                                   this.state.dndUploadSuccessMessage
                                 }
-                                i18nImportInstructions={t(
-                                  'extension.importUpdateMessage'
-                                )}
-                                i18nTitle={t('extension.ImportExtension')}
                                 onDndUploadAccepted={onDndUploadAcceptedHandler}
                                 onDndUploadRejected={onDndUploadRejectedHandler}
                               />

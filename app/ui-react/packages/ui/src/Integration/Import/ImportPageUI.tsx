@@ -1,3 +1,4 @@
+import { Card, CardBody } from 'patternfly-react';
 import * as React from 'react';
 import { PageSection } from '../../Layout';
 import { DndFileChooser, SimplePageHeader } from '../../Shared';
@@ -24,19 +25,23 @@ export class ImportPageUI extends React.Component<IImportPageUIProps> {
           i18nDescription={this.props.i18nPageDescription}
         />
         <PageSection>
-          <DndFileChooser
-            allowMultiple={true}
-            fileExtensions={'.zip'}
-            onUploadRejected={this.props.onUploadRejected}
-            disableDropzone={false}
-            onUploadAccepted={this.props.onUploadAccepted}
-            i18nNoFileSelectedMessage={this.props.i18nNoFileSelectedMessage}
-            i18nSelectedFileLabel={this.props.i18nSelectedFileLabel}
-            i18nInstructions={this.props.i18nInstructions}
-            i18nUploadFailedMessages={this.props.i18nUploadFailedMessages}
-            i18nUploadSuccessMessages={this.props.i18nUploadSuccessMessages}
-            i18nHelpMessage={this.props.i18nHelpMessage}
-          />
+          <Card>
+            <CardBody>
+              <DndFileChooser
+                allowMultiple={true}
+                fileExtensions={'.zip'}
+                onUploadRejected={this.props.onUploadRejected}
+                disableDropzone={false}
+                onUploadAccepted={this.props.onUploadAccepted}
+                i18nNoFileSelectedMessage={this.props.i18nNoFileSelectedMessage}
+                i18nSelectedFileLabel={this.props.i18nSelectedFileLabel}
+                i18nInstructions={this.props.i18nInstructions}
+                i18nUploadFailedMessages={this.props.i18nUploadFailedMessages}
+                i18nUploadSuccessMessages={this.props.i18nUploadSuccessMessages}
+                i18nHelpMessage={this.props.i18nHelpMessage}
+              />
+            </CardBody>
+          </Card>
         </PageSection>
       </>
     );

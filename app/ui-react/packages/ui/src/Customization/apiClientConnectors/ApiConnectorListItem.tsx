@@ -113,7 +113,7 @@ export class ApiConnectorListItem extends React.Component<
             this.props.apiConnectorName
           )}-list-item`}
           actions={
-            <div className="form-group">
+            <>
               <OverlayTrigger
                 overlay={this.getDetailsTooltip()}
                 placement="top"
@@ -136,7 +136,7 @@ export class ApiConnectorListItem extends React.Component<
                   {this.props.i18nDelete}
                 </Button>
               </OverlayTrigger>
-            </div>
+            </>
           }
           additionalInfo={[
             <ListViewInfoItem key={1}>
