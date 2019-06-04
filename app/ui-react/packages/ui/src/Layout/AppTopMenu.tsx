@@ -39,7 +39,11 @@ export class AppTopMenu extends React.Component<
         isPlain={true}
         onSelect={this.onSelect}
         toggle={
-          <DropdownToggle iconComponent={null} onToggle={this.onToggle}>
+          <DropdownToggle
+            data-testid={'app-top-menu-user-dropdown'}
+            iconComponent={null}
+            onToggle={this.onToggle}
+          >
             {username}
           </DropdownToggle>
         }
