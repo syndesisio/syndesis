@@ -56,7 +56,8 @@ The connection appears in the integration flow
 in the location where you added it. During execution, the connection 
 creates a new resource on the FHIR server.  
 The connection returns a *MethodOutcome* resource that includes 
-the new resource’s resource ID, which you might want to map to a 
+an `id.idPart` field. This field contains the new resource’s
+resource ID, which you might want to map to a 
 subsequent step in the flow.
 
 .Next steps
