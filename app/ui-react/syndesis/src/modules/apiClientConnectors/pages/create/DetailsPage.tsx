@@ -23,7 +23,10 @@ import resolvers from '../../resolvers';
 import routes from '../../routes';
 
 export interface IDetailsPageRouteState {
+  authenticationType?: string;
+  authorizationEndpoint?: string;
   specification: APISummary;
+  tokenEndpoint?: string;
 }
 
 export const DetailsPage: React.FunctionComponent = () => {
@@ -51,8 +54,11 @@ export const DetailsPage: React.FunctionComponent = () => {
             // tslint:disable-next-line
             await createApiConnector({
               ...values,
+              authenticationType: state.authenticationType,
+              authorizationEndpoint: state.authorizationEndpoint,
               specification: state.specification.configuredProperties!
                 .specification,
+              tokenEndpoint: state.tokenEndpoint,
             });
             actions.setSubmitting(false);
             allowNavigation();
@@ -96,8 +102,8 @@ export const DetailsPage: React.FunctionComponent = () => {
                         </ButtonLink>
                         <ButtonLink
                           data-testid={'api-connector-details-form-save-button'}
-                          as="primary"
-                          className="api-connector-details-form__editButton"
+                          as={'primary'}
+                          className={'api-connector-details-form__editButton'}
                           disabled={isSubmitting || isUploadingImage}
                           onClick={submitForm}
                         >

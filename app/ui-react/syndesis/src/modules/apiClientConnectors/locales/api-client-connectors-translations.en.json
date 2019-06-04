@@ -57,6 +57,8 @@
       "title": "Edit API Definition"
     },
     "security": {
+      "accessTokenUrl": "Access Token URL",
+      "authorizationUrl": "Authorization URL",
       "authTypeLabel": "Authentication Type",
       "noSecurity": "No Security",
       "required": "All fields are required.",

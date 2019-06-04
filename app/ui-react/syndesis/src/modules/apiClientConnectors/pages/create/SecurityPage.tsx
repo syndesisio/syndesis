@@ -3,7 +3,6 @@ import { APISummary } from '@syndesis/models/src';
 import {
   ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorLayout,
-  ButtonLink,
   PageSection,
 } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
@@ -24,9 +23,23 @@ export interface ISecurityPageRouteState {
 
 export const SecurityPage: React.FunctionComponent = () => {
   const { state, history } = useRouteData<null, ISecurityPageRouteState>();
+  const backHref = resolvers.create.review({
+    specification: state.specification.configuredProperties!.specification,
+  });
 
-  const onNext = () => {
-    history.push(resolvers.create.save(state));
+  const onNext = (
+    accessToken?: string,
+    authType?: string,
+    authUrl?: string
+  ) => {
+    history.push(
+      resolvers.create.save({
+        authenticationType: authType,
+        authorizationEndpoint: authUrl,
+        specification: state.specification,
+        tokenEndpoint: accessToken,
+      })
+    );
   };
 
   return (
@@ -54,26 +67,39 @@ export const SecurityPage: React.FunctionComponent = () => {
                 content={
                   <PageSection>
                     <ApiClientConnectorCreateSecurity
-                      authenticationType={undefined}
+                      accessToken={
+                        state.specification.properties!.tokenEndpoint &&
+                        state.specification.properties!.tokenEndpoint
+                          .defaultValue
+                      }
+                      authenticationTypeDefault={
+                        state.specification.properties!.authenticationType
+                          .defaultValue
+                      }
+                      authenticationTypes={
+                        state.specification.properties!.authenticationType &&
+                        state.specification.properties!.authenticationType.enum
+                      }
+                      authorizationUrl={
+                        state.specification.properties!.authorizationEndpoint &&
+                        state.specification.properties!.authorizationEndpoint
+                          .defaultValue
+                      }
+                      backHref={backHref}
+                      i18nAccessTokenUrl={t(
+                        'apiClientConnectors:create:security:accessTokenUrl'
+                      )}
+                      i18nAuthorizationUrl={t(
+                        'apiClientConnectors:create:security:authorizationUrl'
+                      )}
+                      i18nBtnBack={t('Back')}
+                      i18nBtnNext={t('Next')}
                       i18nNoSecurity={t(
                         'apiClientConnectors:create:security:noSecurity'
                       )}
                       i18nTitle={t('apiClientConnectors:create:security:title')}
+                      onNext={onNext}
                     />
-                    <div>
-                      <ButtonLink
-                        href={resolvers.create.review({
-                          specification: state.specification
-                            .configuredProperties!.specification,
-                        })}
-                      >
-                        {t('Back')}
-                      </ButtonLink>
-                      &nbsp;
-                      <ButtonLink onClick={onNext} as={'primary'}>
-                        {t('Next')}
-                      </ButtonLink>
-                    </div>
                   </PageSection>
                 }
               />
