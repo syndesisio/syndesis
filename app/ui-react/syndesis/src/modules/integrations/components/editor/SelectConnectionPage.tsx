@@ -12,8 +12,8 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
-import { EditorStepsWithToolbar } from './EditorStepsWithToolbar';
 import { IEditorSidebarProps } from './EditorSidebar';
+import { EditorStepsWithToolbar } from './EditorStepsWithToolbar';
 import {
   IPageWithEditorBreadcrumb,
   ISelectConnectionRouteParams,

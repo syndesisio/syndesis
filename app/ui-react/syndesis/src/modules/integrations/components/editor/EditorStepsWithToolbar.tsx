@@ -1,4 +1,4 @@
-import { Connection } from '@syndesis/models';
+import { Connection, ConnectionOverview } from '@syndesis/models';
 import {
   ConnectionsListView,
   IActiveFilter,
@@ -9,10 +9,10 @@ import {
 import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { EditorSteps, IEditorStepsProps } from './EditorSteps';
-import { IUIIntegrationStep } from './interfaces';
 import i18n from '../../../../i18n';
 import resolvers from '../../../connections/resolvers';
+import { EditorSteps, IEditorStepsProps } from './EditorSteps';
+import { IUIIntegrationStep } from './interfaces';
 
 function getFilteredAndSortedConnections(
   steps: IUIIntegrationStep[],
@@ -78,23 +78,16 @@ export class EditorStepsWithToolbar extends React.Component<
             defaultSortType={sortByName}
           >
             {helpers => {
-              let filteredAndSortedConnections = getFilteredAndSortedConnections(
+              const connectionString = 'connection';
+
+              const filteredAndSortedConnections = getFilteredAndSortedConnections(
                 this.props.connections as IUIIntegrationStep[],
                 helpers.activeFilters,
                 helpers.currentSortType,
                 helpers.isSortAscending
-              );
-
-              /**
-               *
-               *
-               const connectionString = 'connection';
-               filteredAndSortedConnections = filteredAndSortedConnections.map(
-                connection => {
-                  return connection[connectionString];
-                }
-              );
-               **/
+              ).map(connection => {
+                return connection[connectionString];
+              });
 
               return (
                 <ConnectionsListView
@@ -116,7 +109,9 @@ export class EditorStepsWithToolbar extends React.Component<
                     error={this.props.error}
                     includeConnectionMenu={this.props.includeConnectionMenu}
                     loading={this.props.loading}
-                    connections={filteredAndSortedConnections}
+                    connections={
+                      filteredAndSortedConnections as ConnectionOverview[]
+                    }
                     getConnectionHref={this.props.getConnectionHref}
                     getConnectionEditHref={this.props.getConnectionEditHref}
                   />
