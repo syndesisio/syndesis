@@ -1,4 +1,3 @@
-import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { WithExtensionHelpers } from '@syndesis/api';
 import { Action, Extension } from '@syndesis/models';
 import {
@@ -9,6 +8,7 @@ import {
   IImportAction,
   Loader,
   PageSection,
+  SimplePageHeader,
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -204,16 +204,12 @@ export default class ExtensionImportPage extends React.Component<
                                 {t('extension.extensionImportPageTitle')}
                               </span>
                             </Breadcrumb>
-                            <PageSection variant={'light'}>
-                              <TextContent>
-                                <Text component={TextVariants.h1}>
-                                  {t('extension.ImportExtension')}
-                                </Text>
-                                <Text component={TextVariants.p}>
-                                  {t('extension.importUpdateMessage')}
-                                </Text>
-                              </TextContent>
-                            </PageSection>
+                            <SimplePageHeader
+                              i18nTitle={t('extension.ImportExtension')}
+                              i18nDescription={t(
+                                'extension.importUpdateMessage'
+                              )}
+                            />
                             <PageSection>
                               {this.state.loading ? <Loader /> : null}
                               <ExtensionImportCard
