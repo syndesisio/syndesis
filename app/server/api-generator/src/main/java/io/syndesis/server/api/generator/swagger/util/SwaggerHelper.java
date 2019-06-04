@@ -196,6 +196,30 @@ public final class SwaggerHelper {
                 .build();
         }
 
+        final JsonNode tree;
+        try {
+            tree = OpenApiHelper.mapper().readTree(resolvedSpecification);
+        } catch (final IOException e) {
+            return new SwaggerModelInfo.Builder()
+                .addError(new Violation.Builder()
+                    .property("")
+                    .error("ureadable-document")
+                    .message("Unable to read OpenAPI document: " + e.getMessage())
+                    .build())
+                .build();
+        }
+
+        final JsonNode swaggerVersion = tree.get("swagger");
+        if (swaggerVersion == null || swaggerVersion.isNull() || !"2.0".equals(swaggerVersion.textValue())) {
+            return new SwaggerModelInfo.Builder()
+                .addError(new Violation.Builder()
+                    .property("")
+                    .error("unsupported-version")
+                    .message("This document cannot be uploaded. Provide an OpenAPI 2.0 document.")
+                    .build())
+                .build();
+        }
+
         final SwaggerDeserializationResult parsed = OpenApiHelper.parseWithResult(resolvedSpecification);
         final Swagger swagger = parsed.getSwagger();
         if (swagger == null) {
