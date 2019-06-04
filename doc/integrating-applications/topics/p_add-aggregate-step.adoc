@@ -12,7 +12,7 @@ executes subsequent steps once for the collection.
 
 When deciding whether to add an aggregate step to a flow, consider the 
 connections in the flow. After a split step, for each subsequent 
-connection, Syndesis connects to that application once for each element 
+connection, {prodname} connects to that application once for each element 
 in the flow’s data. For some connections, it might be preferable to 
 connect once rather than multiple times. 
 
