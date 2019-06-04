@@ -1,4 +1,4 @@
-import { TextContent, Text, TextVariants } from '@patternfly/react-core';
+import { Text, TextContent, TextVariants } from '@patternfly/react-core';
 import { WithExtensionHelpers } from '@syndesis/api';
 import { Action, Extension } from '@syndesis/models';
 import {
