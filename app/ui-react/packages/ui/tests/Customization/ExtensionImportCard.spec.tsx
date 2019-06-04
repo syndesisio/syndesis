@@ -9,12 +9,8 @@ export default describe('ExtensionImportCard', () => {
   const dndInstructions =
     "Drag 'n' drop a file here, or click to select a file using a file chooser dialog.";
   const helpMessage = 'Accepted file type: .jar';
-  const instructions =
-    'To update an extension, click Extensions in the breadcrumbs above, ' +
-    'and in the list of extensions, click Update for the appropriate extension';
   const noFileSelectedMessage = 'no file selected';
   const selectedFileLabel = 'Selected file:';
-  const title = 'Import Extension';
 
   const mockOnUploadAccepted = jest.fn();
   const mockOnUploadRejected = jest.fn();
