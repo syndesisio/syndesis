@@ -4,4 +4,5 @@ export * from './IntegrationDetailHeader';
 export * from './IntegrationDetailSteps';
 export * from './IntegrationEditorBreadcrumbs';
 export * from './IntegrationEditorStepAdder';
+export * from './UIStepsWithToolbar';
 export * from './WithIntegrationActions';

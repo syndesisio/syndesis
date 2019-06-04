@@ -12,7 +12,7 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
-import { ConnectionsWithToolbarNew } from '../../../connections/components';
+import { UIStepsWithToolbar } from '../UIStepsWithToolbar';
 import { IEditorSidebarProps } from './EditorSidebar';
 import {
   IPageWithEditorBreadcrumb,
@@ -105,7 +105,7 @@ export class SelectConnectionPage extends React.Component<
                                     integrationSteps
                                   ) as IUIStep[];
                                   return (
-                                    <ConnectionsWithToolbarNew
+                                    <UIStepsWithToolbar
                                       loading={
                                         !hasConnectionsData ||
                                         !hasExtensionsData

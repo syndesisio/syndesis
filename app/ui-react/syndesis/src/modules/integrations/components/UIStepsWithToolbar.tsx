@@ -10,8 +10,11 @@ import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
-import resolvers from '../resolvers';
-import { Connections, IConnectionsProps } from './Connections';
+import resolvers from '../../connections/resolvers';
+import {
+  Connections,
+  IConnectionsProps,
+} from '../../connections/components/Connections';
 
 function getFilteredAndSortedConnections(
   connections: Connection[],
@@ -55,14 +58,14 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export interface IConnectionsWithToolbarNewProps
+export interface IUIStepsWithToolbarProps
   extends IConnectionsProps,
     Pick<IConnectionsListViewProps, 'createConnectionButtonStyle'> {
   children?: any;
 }
 
-export class ConnectionsWithToolbarNew extends React.Component<
-  IConnectionsWithToolbarNewProps
+export class UIStepsWithToolbar extends React.Component<
+  IUIStepsWithToolbarProps
 > {
   public static defaultProps = {
     includeHidden: false,
