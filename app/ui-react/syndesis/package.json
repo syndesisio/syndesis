@@ -46,7 +46,7 @@
     "replay:dev-server": "BACKEND=http://localhost:8556 yarn proxy:setup; BACKEND=http://localhost:8556 PROXY_NO_WS=true yarn start",
     "replay": "npm-run-all -p replay:dev-server \"mock-server -- {1}\" --",
     "start": "BROWSER=false HOST=0.0.0.0 craco start",
-    "build": "craco build",
+    "build": "NODE_OPTIONS=--max-old-space-size=2048 craco build",
     "test": "craco test",
     "eject": "react-scripts eject",
     "minishift:setup": "./scripts/minishift-setup.sh",
