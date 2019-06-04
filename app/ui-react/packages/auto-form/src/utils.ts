@@ -64,6 +64,8 @@ export function enrichAndOrderProperties(definition: IFormDefinition) {
 export function massageType(property: IFormDefinitionProperty) {
   let type = property.type || 'text';
   switch (type) {
+    case 'hidden':
+      return type;
     case 'int':
     case 'integer':
     case 'long':
