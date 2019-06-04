@@ -17,7 +17,7 @@ import { PUBLISHED, UNPUBLISHED } from './constants';
 import {
   createStep,
   insertStepIntoFlowBefore,
-  NEW_INTEGRATION_ID,
+  prepareIntegrationForSaving,
   removeStepFromFlow,
   setDescriptorOnStep,
   setStepInFlow,
@@ -406,25 +406,23 @@ export const useIntegrationHelpers = () => {
   const saveIntegration = async (
     integration: Integration
   ): Promise<Integration> => {
-    if (integration.id === NEW_INTEGRATION_ID) {
-      integration = produce(integration, draft => {
-        delete draft.id;
+    return produce(integration, async () => {
+      const sanitizedIntegration = prepareIntegrationForSaving(integration);
+      const response = await callFetch({
+        body: sanitizedIntegration,
+        headers: apiContext.headers,
+        method: sanitizedIntegration.id ? 'PUT' : 'POST',
+        url: sanitizedIntegration.id
+          ? `${apiContext.apiUri}/integrations/${sanitizedIntegration.id}`
+          : `${apiContext.apiUri}/integrations`,
       });
-    }
-    const response = await callFetch({
-      body: integration,
-      headers: apiContext.headers,
-      method: integration.id ? 'PUT' : 'POST',
-      url: integration.id
-        ? `${apiContext.apiUri}/integrations/${integration.id}`
-        : `${apiContext.apiUri}/integrations`,
+      if (!response.ok) {
+        throw new Error(response.statusText);
+      }
+      return !sanitizedIntegration.id
+        ? ((await response.json()) as Integration)
+        : Promise.resolve(sanitizedIntegration);
     });
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    return !integration.id
-      ? ((await response.json()) as Integration)
-      : Promise.resolve(integration);
   };
 
   /**
