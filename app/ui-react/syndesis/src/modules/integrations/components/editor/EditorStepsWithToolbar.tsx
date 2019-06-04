@@ -9,20 +9,18 @@ import {
 import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import i18n from '../../../i18n';
-import resolvers from '../../connections/resolvers';
-import {
-  Connections,
-  IConnectionsProps,
-} from '../../connections/components/Connections';
+import { EditorSteps, IEditorStepsProps } from './EditorSteps';
+import { IUIIntegrationStep } from './interfaces';
+import i18n from '../../../../i18n';
+import resolvers from '../../../connections/resolvers';
 
 function getFilteredAndSortedConnections(
-  connections: Connection[],
+  steps: IUIIntegrationStep[],
   activeFilters: IActiveFilter[],
   currentSortType: ISortType,
   isSortAscending: boolean
 ) {
-  let filteredAndSortedConnections = connections;
+  let filteredAndSortedConnections = steps;
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
     filteredAndSortedConnections = filteredAndSortedConnections.filter(
@@ -58,14 +56,14 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export interface IUIStepsWithToolbarProps
-  extends IConnectionsProps,
+export interface IEditorStepsWithToolbarProps
+  extends IEditorStepsProps,
     Pick<IConnectionsListViewProps, 'createConnectionButtonStyle'> {
   children?: any;
 }
 
-export class UIStepsWithToolbar extends React.Component<
-  IUIStepsWithToolbarProps
+export class EditorStepsWithToolbar extends React.Component<
+  IEditorStepsWithToolbarProps
 > {
   public static defaultProps = {
     includeHidden: false,
@@ -80,19 +78,23 @@ export class UIStepsWithToolbar extends React.Component<
             defaultSortType={sortByName}
           >
             {helpers => {
-              const connectionString = 'connection';
               let filteredAndSortedConnections = getFilteredAndSortedConnections(
-                this.props.connections,
+                this.props.connections as IUIIntegrationStep[],
                 helpers.activeFilters,
                 helpers.currentSortType,
                 helpers.isSortAscending
               );
 
-              filteredAndSortedConnections = filteredAndSortedConnections.map(
+              /**
+               *
+               *
+               const connectionString = 'connection';
+               filteredAndSortedConnections = filteredAndSortedConnections.map(
                 connection => {
                   return connection[connectionString];
                 }
               );
+               **/
 
               return (
                 <ConnectionsListView
@@ -110,7 +112,7 @@ export class UIStepsWithToolbar extends React.Component<
                   })}
                 >
                   {this.props.children}
-                  <Connections
+                  <EditorSteps
                     error={this.props.error}
                     includeConnectionMenu={this.props.includeConnectionMenu}
                     loading={this.props.loading}
