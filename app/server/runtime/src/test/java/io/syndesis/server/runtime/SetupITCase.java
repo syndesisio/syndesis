@@ -86,7 +86,7 @@ public class SetupITCase extends BaseITCase {
         final OAuthApp twitter = apps.stream().filter(x -> x.idEquals("twitter")).findFirst().get();
         assertThat(twitter.getId()).hasValue("twitter");
         assertThat(twitter.getName()).isEqualTo("Twitter");
-        assertThat(twitter.getIcon()).startsWith("data:image/svg+xml;base64");
+        assertThat(twitter.getIcon()).startsWith("assets:");
         assertThat(twitter.propertyTaggedWith(Credentials.CLIENT_ID_TAG)).isNotPresent();
         assertThat(twitter.propertyTaggedWith(Credentials.CLIENT_SECRET_TAG)).isNotPresent();
 
@@ -140,7 +140,7 @@ public class SetupITCase extends BaseITCase {
         final OAuthApp updated = apps.stream().filter(x -> x.idEquals("twitter")).findFirst().get();
         assertThat(updated.getId()).hasValue("twitter");
         assertThat(updated.getName()).isEqualTo("Twitter");
-        assertThat(updated.getIcon()).startsWith("data:image/svg+xml;base64");
+        assertThat(updated.getIcon()).startsWith("assets:");
         assertThat(updated.propertyTaggedWith(Credentials.CLIENT_ID_TAG)).hasValue("test-id");
         assertThat(updated.propertyTaggedWith(Credentials.CLIENT_SECRET_TAG)).hasValue("test-secret");
 

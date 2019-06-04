@@ -15,41 +15,22 @@
  */
 package io.syndesis.server.dao.manager;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
-import java.util.stream.Stream;
-import javax.annotation.PostConstruct;
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.PersistenceException;
-
-import io.syndesis.common.model.WithIdVersioned;
-import io.syndesis.common.model.WithVersion;
-import io.syndesis.common.util.EventBus;
-import io.syndesis.common.util.Json;
-import io.syndesis.common.util.KeyGenerator;
-import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.common.util.cache.CacheManager;
-import io.syndesis.server.dao.init.ReadApiClientData;
 import io.syndesis.common.model.ChangeEvent;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.ModelData;
 import io.syndesis.common.model.WithId;
+import io.syndesis.common.model.WithIdVersioned;
+import io.syndesis.common.model.WithVersion;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
-
+import io.syndesis.common.util.EventBus;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.KeyGenerator;
+import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.common.util.cache.Cache;
+import io.syndesis.common.util.cache.CacheManager;
+import io.syndesis.server.dao.init.ReadApiClientData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,6 +46,25 @@ import org.springframework.expression.ParserContext;
 import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
+
+import javax.annotation.PostConstruct;
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
+import javax.persistence.PersistenceException;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 @Service
 @SuppressWarnings({"PMD.GodClass", "PMD.TooManyMethods"})
@@ -238,7 +238,7 @@ public class DataManager implements DataAccessObjectRegistry {
             return doWithDataAccessObject(model, d -> d.fetchAll(operators));
         } else {
             Kind kind = Kind.from(model);
-            Map<String, T> cache = caches.getCache(kind.getModelName());
+            Cache<String, T> cache = caches.getCache(kind.getModelName(), false);
             result = ListResult.of(cache.values());
 
             if (operators == null) {
@@ -260,7 +260,8 @@ public class DataManager implements DataAccessObjectRegistry {
 
     public <T extends WithId<T>> T fetch(Class<T> model, String id) {
         Kind kind = Kind.from(model);
-        Map<String, T> cache = caches.getCache(kind.getModelName());
+        boolean daoExists = getDataAccessObject(model) != null;
+        Cache<String, T> cache = caches.getCache(kind.getModelName(), daoExists);
 
         T value = cache.get(id);
         if ( value == null) {
@@ -280,10 +281,10 @@ public class DataManager implements DataAccessObjectRegistry {
     public <T extends WithId<T>> Set<String> fetchIds(Class<T> model) {
 
         if (getDataAccessObject(model) != null) {
-            return doWithDataAccessObject(model, d -> d.fetchIds());
+            return doWithDataAccessObject(model, DataAccessObject::fetchIds);
         } else {
             Kind kind = Kind.from(model);
-            Map<String, T> cache = caches.getCache(kind.getModelName());
+            Cache<String, T> cache = caches.getCache(kind.getModelName(), false);
             return cache.keySet();
         }
     }
@@ -318,7 +319,8 @@ public class DataManager implements DataAccessObjectRegistry {
     @SuppressWarnings("unchecked")
     public <T extends WithId<T>> T create(final T entity) {
         Kind kind = entity.getKind();
-        Map<String, T> cache = caches.getCache(kind.getModelName());
+        boolean daoExists = getDataAccessObject((Class<T>) entity.getKind().getModelClass()) != null;
+        Cache<String, T> cache = caches.getCache(kind.getModelName(), daoExists);
         Optional<String> id = entity.getId();
         String idVal;
 
@@ -329,7 +331,7 @@ public class DataManager implements DataAccessObjectRegistry {
             entityToCreate = entity.withId(idVal);
         } else {
             idVal = id.get();
-            if (cache.containsKey(idVal)) {
+            if (cache.get(idVal) != null) {
                 throw new EntityExistsException("There already exists a "
                     + kind + " with id " + idVal);
             }
@@ -369,9 +371,9 @@ public class DataManager implements DataAccessObjectRegistry {
         }
 
         T previous = this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> d.update(newEntity));
-
-        Map<String, T> cache = caches.getCache(kind.getModelName());
-        if (!cache.containsKey(idVal) && previous == null) {
+        boolean daoExists = getDataAccessObject((Class<T>) kind.getModelClass()) != null;
+        Cache<String, T> cache = caches.getCache(kind.getModelName(), daoExists);
+        if (cache.get(idVal) == null && previous == null) {
             throw new EntityNotFoundException("Can not find " + kind + " with id " + idVal);
         }
 
@@ -381,6 +383,7 @@ public class DataManager implements DataAccessObjectRegistry {
         //TODO 1. properly merge the data ? + add data validation in the REST Resource
     }
 
+    @SuppressWarnings("unchecked")
     public <T extends WithId<T>> void set(T entity) {
         Optional<String> id = entity.getId();
         if (!id.isPresent()) {
@@ -391,7 +394,8 @@ public class DataManager implements DataAccessObjectRegistry {
 
         Kind kind = entity.getKind();
         this.<T, T>doWithDataAccessObject(kind.getModelClass(), d -> { d.set(entity); return null;});
-        Map<String, T> cache = caches.getCache(kind.getModelName());
+        boolean daoExists = getDataAccessObject((Class<T>) entity.getKind().getModelClass()) != null;
+        Cache<String, T> cache = caches.getCache(kind.getModelName(), daoExists);
         cache.put(idVal, entity);
         broadcast(EventBus.Action.UPDATED, kind.getModelName(), idVal);
     }
@@ -403,7 +407,8 @@ public class DataManager implements DataAccessObjectRegistry {
         }
 
         Kind kind = Kind.from(model);
-        Map<String, WithId<T>> cache = caches.getCache(kind.getModelName());
+        boolean daoExists = getDataAccessObject(model) != null;
+        Cache<String, WithId<T>> cache = caches.getCache(kind.getModelName(), daoExists);
 
         // Remove it out of the cache
         WithId<T> entity = cache.remove(id);
@@ -423,7 +428,8 @@ public class DataManager implements DataAccessObjectRegistry {
 
     public <T extends WithId<T>> void deleteAll(Class<T> model) {
         Kind kind = Kind.from(model);
-        Map<String, WithId<T>> cache = caches.getCache(kind.getModelName());
+        boolean daoExists = getDataAccessObject(model) != null;
+        Cache<String, WithId<T>> cache = caches.getCache(kind.getModelName(), daoExists);
         cache.clear();
 
         doWithDataAccessObject(model, d -> {
@@ -465,9 +471,11 @@ public class DataManager implements DataAccessObjectRegistry {
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public void clearCache() {
         for (Kind kind : Kind.values()) {
-            caches.getCache(kind.modelName).clear();
+            boolean daoExists = getDataAccessObject((Class<? extends WithId>) kind.getModelClass()) != null;
+            caches.getCache(kind.modelName, daoExists).clear();
         }
     }
 

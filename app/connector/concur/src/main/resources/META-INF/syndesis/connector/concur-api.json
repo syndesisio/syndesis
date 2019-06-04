@@ -3072,7 +3072,7 @@
   },
   "connectorGroupId": "io.syndesis.connector.concur",
   "description": "Manage invoices, travel, and expenses.",
-  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMjguMzAyIDEyNy45NzYiIGhlaWdodD0iNDgzLjY4NyIgd2lkdGg9IjQ4NC45MiI+PGcgZmlsbD0iI2ZjYjkxMyIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTM0LjAxNSAtNjMuOTAxKSI+PHBhdGggZD0iTS0xMzQuMDE1IDYzLjkwMXYxMjcuOTc2SC01LjcxM1Y2My45MDF6bTE0LjQwMSAxNC4zNjVoOTkuNXY5OS4yNDdoLTk5LjV6Ii8+PHBhdGggZD0iTS03Mi43MzQgOTQuMjQyYTM0LjIxMyAzNC4yMTMgMCAwIDAtMzQuMjEzIDM0LjIxMyAzNC4yMTMgMzQuMjEzIDAgMCAwIDM0LjIxMyAzNC4yMTJBMzQuMjEzIDM0LjIxMyAwIDAgMC00OC4zMDcgMTUyLjRsLTEwLjU3Mi0xMC41NzJhMTkuMjc3IDE5LjI3NyAwIDAgMS0xMy44NTUgNS45MDQgMTkuMjc3IDE5LjI3NyAwIDAgMS0xOS4yNzctMTkuMjc2IDE5LjI3NyAxOS4yNzcgMCAwIDEgMTkuMjc3LTE5LjI3NyAxOS4yNzcgMTkuMjc3IDAgMCAxIDEzLjc1MiA1Ljc3NWwxMC41NDUtMTAuNTQ2YTM0LjIxMyAzNC4yMTMgMCAwIDAtMjQuMjk3LTEwLjE2NXoiLz48Y2lyY2xlIGN4PSItNDQuNDAyIiBjeT0iMTI4LjU1IiByPSI4LjgzIi8+PC9nPjwvc3ZnPg==",
+  "icon": "assets:concur.svg",
   "id": "concur",
   "name": "SAP Concur",
   "properties": {

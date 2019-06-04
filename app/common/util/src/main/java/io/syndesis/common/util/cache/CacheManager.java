@@ -15,12 +15,10 @@
  */
 package io.syndesis.common.util.cache;
 
-import java.util.Map;
-
 public interface CacheManager {
 
     void evictAll();
 
-    <K, V> Map<K, V> getCache(String name);
+    <K, V> Cache<K, V> getCache(String name, boolean soft);
 
 }

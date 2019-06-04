@@ -26,7 +26,16 @@ import org.jboss.resteasy.client.jaxrs.internal.LocalResteasyProviderFactory;
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJackson2Provider;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
+import java.util.concurrent.TimeUnit;
+
 public class HttpClient {
+
+    /**
+     * Avoid thread remaining stuck waiting for prometheus to come back.
+     */
+    private static final int CONNECT_TIMEOUT = 15;
+    private static final int READ_TIMEOUT = 15;
+
     private final Client client;
 
     public HttpClient() {
@@ -56,6 +65,10 @@ public class HttpClient {
 
         final Configuration configuration = new LocalResteasyProviderFactory(providerFactory);
 
-        return ClientBuilder.newClient(configuration);
+        return ClientBuilder.newBuilder()
+            .withConfig(configuration)
+            .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+            .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+            .build();
     }
 }

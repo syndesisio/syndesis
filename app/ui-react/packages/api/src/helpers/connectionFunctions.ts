@@ -112,6 +112,10 @@ export function getConnectionIcon(
   ) {
     return `${apiUri}/connectors/${connection.id}/icon?${connection.icon}`;
   }
+  // The svg connection's icon is in UI's assets dir
+  if (connection.icon.toLowerCase().startsWith('assets:')) {
+    return `./../../icons/${connection.icon.substring(7)}`;
+  }
   // Legacy connections rely on the icon being in the UI's assets
   return `./../../icons/${connection.icon}.connection.png`;
 }

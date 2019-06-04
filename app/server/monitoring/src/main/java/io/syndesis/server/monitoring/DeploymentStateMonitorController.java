@@ -15,6 +15,17 @@
  */
 package io.syndesis.server.monitoring;
 
+import io.syndesis.common.model.integration.IntegrationDeployment;
+import io.syndesis.common.model.integration.IntegrationDeploymentState;
+import io.syndesis.server.dao.manager.DataManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.PostConstruct;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,19 +37,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.PostConstruct;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.scheduling.concurrent.CustomizableThreadFactory;
-import org.springframework.stereotype.Service;
-
-import io.syndesis.common.model.ListResult;
-import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.common.model.integration.IntegrationDeploymentState;
-import io.syndesis.server.dao.manager.DataManager;
+import java.util.stream.Stream;
 
 /**
  * Monitor Integrations based on their deployment state.
@@ -70,7 +69,7 @@ public class DeploymentStateMonitorController implements Runnable, Closeable, De
     @SuppressWarnings("FutureReturnValueIgnored")
     public void open() {
         LOGGER.info("Starting deployment state monitor.");
-        scheduler.scheduleAtFixedRate(this, configuration.getInitialDelay(), configuration.getPeriod(), TimeUnit.SECONDS);
+        scheduler.scheduleWithFixedDelay(this, configuration.getInitialDelay(), configuration.getPeriod(), TimeUnit.SECONDS);
     }
 
     @Override
@@ -84,11 +83,13 @@ public class DeploymentStateMonitorController implements Runnable, Closeable, De
     public void run() {
         LOGGER.debug("Processing states for integration deployments.");
         try {
-            final ListResult<IntegrationDeployment> deployments = dataManager.fetchAll(IntegrationDeployment.class);
-            for (IntegrationDeployment deployment : deployments) {
-                final IntegrationDeploymentState currentState = deployment.getCurrentState();
-                final List<StateHandler> handlers = this.stateHandlers.getOrDefault(currentState, Collections.emptyList());
-                if (!handlers.isEmpty()) {
+            for (Map.Entry<IntegrationDeploymentState, List<StateHandler>> e : this.stateHandlers.entrySet()) {
+                final IntegrationDeploymentState currentState = e.getKey();
+                final List<StateHandler> handlers = e.getValue();
+
+                // Indexed search
+                final Stream<IntegrationDeployment> deployments = dataManager.fetchAllByPropertyValue(IntegrationDeployment.class, "currentState", currentState.name());
+                deployments.forEach(deployment -> {
                     for (StateHandler handler : handlers) {
                         try {
                             handler.accept(deployment);
@@ -99,7 +100,7 @@ public class DeploymentStateMonitorController implements Runnable, Closeable, De
                             }
                         }
                     }
-                }
+                });
             }
         } catch (@SuppressWarnings("PMD.AvoidCatchingGenericException") Exception ex) {
             LOGGER.error("Error while iterating integration deployments.", ex);

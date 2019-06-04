@@ -1065,9 +1065,9 @@ objects:
     strategy:
       resources:
         limits:
-          memory: "256Mi"
+          memory: "512Mi"
         requests:
-          memory: "20Mi"
+          memory: "40Mi"
       type: Recreate
     template:
       metadata:
@@ -1141,9 +1141,9 @@ objects:
             name: syndesis-oauthproxy-tls
           resources:
             limits:
-              memory: 200Mi
+              memory: 512Mi
             requests:
-              memory: 20Mi
+              memory: 40Mi
         serviceAccountName: syndesis-oauth-client
         volumes:
         - name: syndesis-oauthproxy-tls

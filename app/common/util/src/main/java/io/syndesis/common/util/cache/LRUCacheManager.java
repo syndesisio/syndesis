@@ -15,38 +15,42 @@
  */
 package io.syndesis.common.util.cache;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 public class LRUCacheManager implements CacheManager {
-    private final ConcurrentMap<String, Map<?, ?>> maps;
+    private static final Logger LOG = LoggerFactory.getLogger(CacheManager.class);
+
+    private final ConcurrentMap<String, Cache<?, ?>> caches;
     private final int maxElements;
 
     public LRUCacheManager(final int maxElements) {
         this.maxElements = maxElements;
-        maps = new ConcurrentHashMap<>();
+        caches = new ConcurrentHashMap<>();
     }
 
     @Override
     public void evictAll() {
-        maps.clear();
+        caches.clear();
     }
 
     @SuppressWarnings("unchecked")
     @Override
-    public <K, V> Map<K, V> getCache(final String name) {
-        return Map.class.cast(maps.computeIfAbsent(name, this::newCache));
+    public <K, V> Cache<K, V> getCache(final String name, boolean soft) {
+        Cache<K, V> cache = (Cache<K, V>) caches.computeIfAbsent(name, n -> this.newCache(n, soft));
+        if ((soft && !(cache instanceof GuavaSoftCache)) || (!soft && (cache instanceof GuavaSoftCache))) {
+            LOG.warn("Cache {} is being used in mixed 'soft' and 'hard' mode", name);
+        }
+        return cache;
     }
 
-    private <K, V> Map<K, V> newCache(@SuppressWarnings("PMD.UnusedFormalParameter") final String name) {
-        return Collections.synchronizedMap(new LinkedHashMap<K, V>() {
-            @Override
-            protected boolean removeEldestEntry(final Map.Entry<K, V> eldest) {
-                return size() > maxElements;
-            }
-        });
+    private <K, V> Cache<K, V> newCache(@SuppressWarnings("PMD.UnusedFormalParameter") final String name, boolean soft) {
+        if (soft) {
+            return new GuavaSoftCache<>(maxElements);
+        }
+        return new LRUDefaultCache<>(maxElements);
     }
 }

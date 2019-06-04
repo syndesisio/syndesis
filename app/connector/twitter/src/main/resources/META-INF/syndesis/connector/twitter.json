@@ -117,6 +117,20 @@
             "description": "Specify options for direct messages",
             "name": "Retrieve options",
             "properties": {
+              "count": {
+                "componentProperty": false,
+                "defaultValue": 100,
+                "deprecated": false,
+                "displayName": "Count",
+                "group": "common",
+                "javaType": "long",
+                "kind": "parameter",
+                "labelHint": "Number of direct messages to retrieve, limited to the last 30 days.",
+                "required": false,
+                "secret": false,
+                "tags": [],
+                "type": "long"
+              },
               "delay": {
                 "componentProperty": false,
                 "defaultValue": 5000,
@@ -146,20 +160,6 @@
                 "secret": false,
                 "tags": [],
                 "type": "boolean"
-              },
-              "count": {
-                "componentProperty": false,
-                "defaultValue": 100,
-                "deprecated": false,
-                "displayName": "Count",
-                "group": "common",
-                "javaType": "long",
-                "kind": "parameter",
-                "labelHint": "Number of direct messages to retrieve, limited to the last 30 days.",
-                "required": false,
-                "secret": false,
-                "tags": [],
-                "type": "long"
               }
             }
           }
@@ -191,17 +191,6 @@
             "description": "Specify options for direct messages",
             "name": "Send options",
             "properties": {
-              "user": {
-                "componentProperty": false,
-                "deprecated": false,
-                "displayName": "User",
-                "javaType": "String",
-                "kind": "parameter",
-                "labelHint": "The name of the Twitter user you want to send the direct message.",
-                "required": true,
-                "tags": [],
-                "type": "string"
-              },
               "message": {
                 "componentProperty": false,
                 "deprecated": false,
@@ -209,6 +198,17 @@
                 "javaType": "String",
                 "kind": "parameter",
                 "labelHint": "Custom message to use if there is no incoming message from a previous step.",
+                "required": true,
+                "tags": [],
+                "type": "string"
+              },
+              "user": {
+                "componentProperty": false,
+                "deprecated": false,
+                "displayName": "User",
+                "javaType": "String",
+                "kind": "parameter",
+                "labelHint": "The name of the Twitter user you want to send the direct message.",
                 "required": true,
                 "tags": [],
                 "type": "string"
@@ -230,7 +230,7 @@
     }
   ],
   "description": "Trigger integrations based on tweet content.",
-  "icon": "data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJMYXllcl8xIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHg9IjAiIHk9IjAiIHZpZXdCb3g9IjAgMCAzMDAgMjQzLjgiIHhtbDpzcGFjZT0icHJlc2VydmUiPjxzdHlsZT48L3N0eWxlPjxwYXRoIGQ9Ik05NC4zIDI0My44YzExMy4yIDAgMTc1LjEtOTMuOCAxNzUuMS0xNzUuMSAwLTIuNy0uMS01LjMtLjItOCAxMi04LjcgMjIuNS0xOS41IDMwLjctMzEuOS0xMSA0LjktMjIuOSA4LjItMzUuMyA5LjcgMTIuNy03LjYgMjIuNS0xOS43IDI3LjEtMzQtMTEuOSA3LjEtMjUuMSAxMi4yLTM5LjEgMTQuOUMyNDEuNCA3LjUgMjI1LjQgMCAyMDcuNyAwYy0zNCAwLTYxLjYgMjcuNi02MS42IDYxLjUgMCA0LjguNSA5LjUgMS42IDE0LTUxLjEtMi41LTk2LjUtMjctMTI2LjgtNjQuMi01LjMgOS4xLTguMyAxOS43LTguMyAzMC45IDAgMjEuNCAxMC45IDQwLjIgMjcuNCA1MS4yLTEwLjEtLjMtMTkuNi0zLjEtMjcuOS03Ljd2LjhjMCAyOS44IDIxLjIgNTQuNyA0OS40IDYwLjMtNS4yIDEuNC0xMC42IDIuMi0xNi4yIDIuMi00IDAtNy44LS40LTExLjYtMS4xIDcuOCAyNC41IDMwLjYgNDIuMiA1Ny41IDQyLjdDNzAuMSAyMDcuMiA0My41IDIxNyAxNC43IDIxN2MtNSAwLTkuOS0uMy0xNC43LS45IDI3LjIgMTcuNSA1OS42IDI3LjcgOTQuMyAyNy43IiBmaWxsPSIjMWRhMWYyIi8+PC9zdmc+",
+  "icon": "assets:twitter.svg",
   "id": "twitter",
   "name": "Twitter",
   "properties": {

@@ -29,6 +29,11 @@
   <name>Common :: Util</name>
   <packaging>jar</packaging>
 
+  <properties>
+    <!-- Required to test effectiveness of soft cache -->
+    <basepom.test.memory>200m</basepom.test.memory>
+  </properties>
+
   <dependencies>
     <!-- === Internal dependencies (don't touch without discussion) ========================== -->
     <!-- (none) -->
@@ -82,6 +87,11 @@
       <artifactId>jsr305</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+
     <!-- Testing -->
     <dependency>
       <groupId>junit</groupId>
@@ -101,6 +111,11 @@
     <dependency>
       <groupId>net.iharder</groupId>
       <artifactId>base64</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
 
     <dependency>

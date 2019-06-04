@@ -15,34 +15,60 @@
  */
 package io.syndesis.common.util.cache;
 
-import java.util.Map;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 
+import java.util.Arrays;
+import java.util.Collection;
+
+@RunWith(Parameterized.class)
 public class LRUCacheManagerTest {
+
+    private boolean soft;
+
+
+    public LRUCacheManagerTest(boolean soft) {
+        this.soft = soft;
+    }
+
+    @Parameterized.Parameters(name = "LRUCacheManagerTest(soft={0})")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][]{
+            {Boolean.FALSE},
+            {Boolean.TRUE}
+        });
+    }
 
     @Test
     public void testEviction() {
         CacheManager manager = new LRUCacheManager(2);
-        Map<String, String> cache = manager.getCache("cache");
+        Cache<String, Object> cache = manager.getCache("cache", this.soft);
 
-        cache.put("1", "1");
-        cache.put("2", "2");
-        cache.put("3", "3");
+        String one = "1";
+        String two = "2";
+        String three = "3";
+
+        cache.put(one, one);
+        cache.put(two, two);
+        cache.put(three, three);
 
         Assertions.assertThat(cache.size()).isEqualTo(2);
-        Assertions.assertThat(cache.containsKey("1")).isFalse();
-        Assertions.assertThat(cache.containsKey("2")).isTrue();
-        Assertions.assertThat(cache.containsKey("3")).isTrue();
+        Assertions.assertThat(cache.get(one)).isNull();
+        Assertions.assertThat(cache.get(two)).isNotNull();
+        Assertions.assertThat(cache.get(three)).isNotNull();
     }
 
     @Test
     public void testIdentity() {
         CacheManager manager = new LRUCacheManager(2);
-        Map<String, String> cache1 = manager.getCache("cache");
-        Map<String, String> cache2 = manager.getCache("cache");
+        Cache<String, String> cache1 = manager.getCache("cache", this.soft);
+        Cache<String, String> cache2 = manager.getCache("cache", this.soft);
+        // same cache, but warning printed
+        Cache<String, String> cache3 = manager.getCache("cache", !this.soft);
 
         Assertions.assertThat(cache1).isEqualTo(cache2);
+        Assertions.assertThat(cache1).isEqualTo(cache3);
     }
 }

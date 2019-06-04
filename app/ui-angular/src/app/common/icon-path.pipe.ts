@@ -77,13 +77,19 @@ export class IconPathPipe implements PipeTransform {
       }
 
       if (
+        connection.icon.toLowerCase().startsWith('assets:')
+      ) {
+        return this.toSafeUrl(`./../../assets/icons/${connection.icon.substring(7)}`);
+      }
+
+      if (
         connection.icon.toLowerCase().startsWith('db:') ||
         connection.icon.startsWith('extension:')
       ) {
         connectionId = isConnector ? connection.id : connectionId;
         iconPath = `${this.apiEndpoint}/connectors/${connectionId}/icon?${
           connection.icon
-        }`;
+          }`;
       }
 
       return this.toSafeUrl(iconPath);
