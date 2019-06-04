@@ -1,7 +1,7 @@
 import * as H from '@syndesis/history';
 import { Alert } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink, Container, PageSection } from '../../Layout';
+import { ButtonLink, Container, Loader, PageSection } from '../../Layout';
 
 export interface IIntegrationEditorFormProps {
   /**
@@ -16,6 +16,7 @@ export interface IIntegrationEditorFormProps {
    * @param e
    */
   isValid: boolean;
+  isLoading: boolean;
   error?: string;
   backActionHref?: H.LocationDescriptor;
   handleSubmit: (e?: any) => void;
@@ -72,10 +73,16 @@ export class IntegrationEditorForm extends React.Component<
                   <ButtonLink
                     id={'integration-editor-form-next-button'}
                     onClick={this.props.submitForm}
-                    disabled={!this.props.isValid}
+                    disabled={!this.props.isValid || this.props.isLoading}
                     as={'primary'}
                   >
                     {this.props.i18nNext}
+                    {this.props.isLoading ? (
+                      <>
+                        &nbsp;&nbsp;
+                        <Loader inline={true} size={'xs'} />
+                      </>
+                    ) : null}
                   </ButtonLink>
                 </div>
               </div>

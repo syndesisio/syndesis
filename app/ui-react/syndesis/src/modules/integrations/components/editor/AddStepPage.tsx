@@ -2,7 +2,7 @@ import {
   getFirstPosition,
   getLastPosition,
   getSteps,
-  removeStepFromFlow,
+  useIntegrationHelpers,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Step } from '@syndesis/models';
@@ -11,8 +11,9 @@ import {
   ConfirmationDialog,
   ConfirmationIconType,
   IntegrationEditorLayout,
+  PageLoader,
 } from '@syndesis/ui';
-import { useRouteData } from '@syndesis/utils';
+import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
@@ -94,6 +95,8 @@ export const AddStepPage: React.FunctionComponent<
   >();
   const [position, setPosition] = React.useState(0);
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
+  const [isDeleting, setIsDeleting] = React.useState(false);
+  const { removeStep } = useIntegrationHelpers();
 
   const closeDeleteDialog = (): void => {
     setShowDeleteDialog(false);
@@ -130,7 +133,7 @@ export const AddStepPage: React.FunctionComponent<
               i18nTitle={t('integrations:editor:confirmDeleteStepDialogTitle')}
               showDialog={showDeleteDialog}
               onCancel={closeDeleteDialog}
-              onConfirm={() => {
+              onConfirm={async () => {
                 handleDeleteConfirm();
 
                 /**
@@ -150,12 +153,13 @@ export const AddStepPage: React.FunctionComponent<
                    * Remove the step from the integration flow
                    * and receive a copy of the new integration.
                    */
-                  const newInt = removeStepFromFlow(
+                  setIsDeleting(true);
+                  const newInt = await removeStep(
                     state.integration,
                     params.flowId,
                     position!
                   );
-
+                  setIsDeleting(false);
                   /**
                    * If is a middle step, simply remove the step
                    * and update the UI.
@@ -180,19 +184,33 @@ export const AddStepPage: React.FunctionComponent<
               state
             )}
             content={
-              <IntegrationEditorStepAdder
-                steps={getSteps(state.integration, params.flowId)}
-                addDataMapperStepHref={p =>
-                  getAddMapperStepHref(p, params, state)
-                }
-                addStepHref={p => getAddStepHref(p, params, state)}
-                configureStepHref={(p: number, s: Step) =>
-                  getStepHref(s, { ...params, position: `${p}` }, state, props)
-                }
-                flowId={params.flowId}
-                integration={state.integration}
-                onDelete={onDelete}
-              />
+              <WithLoader
+                loading={isDeleting}
+                loaderChildren={<PageLoader />}
+                error={false}
+                errorChildren={<span />}
+              >
+                {() => (
+                  <IntegrationEditorStepAdder
+                    steps={getSteps(state.integration, params.flowId)}
+                    addDataMapperStepHref={p =>
+                      getAddMapperStepHref(p, params, state)
+                    }
+                    addStepHref={p => getAddStepHref(p, params, state)}
+                    configureStepHref={(p: number, s: Step) =>
+                      getStepHref(
+                        s,
+                        { ...params, position: `${p}` },
+                        state,
+                        props
+                      )
+                    }
+                    flowId={params.flowId}
+                    integration={state.integration}
+                    onDelete={onDelete}
+                  />
+                )}
+              </WithLoader>
             }
             cancelHref={cancelHref(params, state)}
             saveHref={saveHref(params, state)}

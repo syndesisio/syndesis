@@ -1,0 +1,10 @@
+.metrics-uptime__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.metrics-uptime__uptime {
+  font-size: 11px;
+  color: #8b8d8f;
+}

@@ -2,3 +2,14 @@
   padding-top: 10px;
   padding-bottom: 10px;
 }
+
+.integration-detail-metrics__uptime-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.integration-detail-metrics__uptime-uptime {
+  font-size: 11px;
+  color: #8b8d8f;
+}

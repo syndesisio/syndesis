@@ -19,6 +19,8 @@ export interface IIntegrationSaveFormProps {
   isSaveLoading: boolean;
   isPublishDisabled: boolean;
   isPublishLoading: boolean;
+  i18nSave: string;
+  i18nSaveAndPublish: string;
 }
 
 /**
@@ -26,7 +28,6 @@ export interface IIntegrationSaveFormProps {
  * editor. This does *not* build the form itself, form's field should be passed
  * as the `children` value.
  * @see [i18nTitle]{@link IIntegrationSaveFormProps#i18nTitle}
- * @see [i18nSubtitle]{@link IIntegrationSaveFormProps#i18nSubtitle}
  */
 export const IntegrationSaveForm: React.FunctionComponent<
   IIntegrationSaveFormProps
@@ -39,6 +40,8 @@ export const IntegrationSaveForm: React.FunctionComponent<
   isSaveLoading,
   isPublishDisabled,
   isPublishLoading,
+  i18nSave,
+  i18nSaveAndPublish,
   children,
 }) => {
   return (
@@ -67,7 +70,7 @@ export const IntegrationSaveForm: React.FunctionComponent<
                 disabled={isSaveLoading || isSaveDisabled}
               >
                 {isSaveLoading ? <Loader size={'xs'} inline={true} /> : null}
-                Save
+                {i18nSave}
               </ButtonLink>
               &nbsp;
               <ButtonLink
@@ -76,7 +79,7 @@ export const IntegrationSaveForm: React.FunctionComponent<
                 as={'primary'}
                 disabled={isPublishLoading || isPublishDisabled}
               >
-                Save and publish
+                {i18nSaveAndPublish}
               </ButtonLink>
             </div>
           </div>

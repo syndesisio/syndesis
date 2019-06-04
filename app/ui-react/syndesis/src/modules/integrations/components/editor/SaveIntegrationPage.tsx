@@ -140,13 +140,13 @@ export const SaveIntegrationPage: React.FunctionComponent<
                     const definition: IFormDefinition = {
                       description: {
                         defaultValue: '',
-                        displayName: 'Description',
+                        displayName: t('shared:Description'),
                         order: 1,
                         type: 'textarea',
                       },
                       name: {
                         defaultValue: '',
-                        displayName: 'Name',
+                        displayName: t('shared:Name'),
                         order: 0,
                         required: true,
                         type: 'string',
@@ -178,14 +178,16 @@ export const SaveIntegrationPage: React.FunctionComponent<
                           submitForm,
                         }) => (
                           <>
-                            <PageTitle title={'Save the integration'} />
+                            <PageTitle
+                              title={t('integrations:editor:save:title')}
+                            />
                             <IntegrationEditorLayout
-                              title={'Save the integration'}
-                              description={
-                                'Update details about this integration.'
-                              }
+                              title={t('integrations:editor:save:title')}
+                              description={t(
+                                'integrations:editor:save:description'
+                              )}
                               toolbar={getBreadcrumb(
-                                'Save the integration',
+                                t('integrations:editor:save:title'),
                                 params,
                                 state
                               )}
@@ -201,6 +203,10 @@ export const SaveIntegrationPage: React.FunctionComponent<
                                   }}
                                   isPublishDisabled={!isValid}
                                   isPublishLoading={isSubmitting}
+                                  i18nSave={t('shared:Save')}
+                                  i18nSaveAndPublish={t(
+                                    'integrations:editor:save:saveAndPublish'
+                                  )}
                                 >
                                   {fields}
                                 </IntegrationSaveForm>

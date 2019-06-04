@@ -100,22 +100,6 @@ export function getEmptyIntegration(): Integration {
   });
 }
 
-/**
- * updates the name of an integration.
- *
- * @param integration
- * @param name
- */
-
-export function setIntegrationName(
-  integration: Integration,
-  name: string
-): Integration {
-  return produce(integration, nextIntegration => {
-    nextIntegration.name = name;
-  });
-}
-
 export function setIntegrationProperties(
   integration: Integration,
   properties: StringMap<any>
@@ -685,8 +669,13 @@ export function prepareIntegrationForSaving(integration: Integration) {
   return { ...integration, tags, flows };
 }
 
-export function sanitizeFlow(flow: Flow): Flow {
-  flow.steps = flow.steps || [];
+export type GetSanitizedSteps = (steps: Step[]) => Promise<Step[]>;
+
+export async function sanitizeFlow(
+  flow: Flow,
+  getSanitizedSteps: GetSanitizedSteps
+): Promise<Flow> {
+  flow.steps = await getSanitizedSteps(flow.steps || []);
   // make sure we have all the connection ids as tags for the flow
   flow.tags = Array.from(
     new Set([
@@ -741,9 +730,14 @@ export function getFlow(integration: Integration, flowId: string) {
  * Returns a new integration object, adding or replacing the supplied flow
  * @param integration
  * @param flow
+ * @param getSanitizedSteps
  */
-export function setFlow(integration: Integration, flow: Flow) {
-  flow = sanitizeFlow(flow);
+export async function setFlow(
+  integration: Integration,
+  flow: Flow,
+  getSanitizedSteps: GetSanitizedSteps
+) {
+  flow = await sanitizeFlow(flow, getSanitizedSteps);
   if (getFlow(integration, flow.id!)) {
     return {
       ...integration,
@@ -765,16 +759,18 @@ export function setFlow(integration: Integration, flow: Flow) {
  * @param flowId
  * @param step
  * @param position
+ * @param getSanitizedSteps
  */
 export function insertStepIntoFlowAfter(
   integration: Integration,
   flowId: string,
   step: Step,
-  position: number
+  position: number,
+  getSanitizedSteps: GetSanitizedSteps
 ) {
   const flow = getFlow(integration, flowId);
   const steps = insertStepAfter(flow!.steps!, step, position);
-  return setFlow(integration, { ...flow!, steps });
+  return setFlow(integration, { ...flow!, steps }, getSanitizedSteps);
 }
 
 /**
@@ -783,16 +779,18 @@ export function insertStepIntoFlowAfter(
  * @param flowId
  * @param step
  * @param position
+ * @param getSanitizedSteps
  */
 export function insertStepIntoFlowBefore(
   integration: Integration,
   flowId: string,
   step: Step,
-  position: number
+  position: number,
+  getSanitizedSteps: GetSanitizedSteps
 ) {
   const flow = getFlow(integration, flowId);
   const steps = insertStepBefore(flow!.steps!, step, position);
-  return setFlow(integration, { ...flow!, steps });
+  return setFlow(integration, { ...flow!, steps }, getSanitizedSteps);
 }
 
 /**
@@ -801,12 +799,14 @@ export function insertStepIntoFlowBefore(
  * @param flowId
  * @param step
  * @param position
+ * @param getSanitizedSteps
  */
 export function setStepInFlow(
   integration: Integration,
   flowId: string,
   step: Step,
-  position: number
+  position: number,
+  getSanitizedSteps: GetSanitizedSteps
 ) {
   const flow = getFlow(integration, flowId);
   const steps = [...flow!.steps!];
@@ -814,7 +814,7 @@ export function setStepInFlow(
     step.id = key();
   }
   steps[position] = { ...step };
-  return setFlow(integration, { ...flow!, steps });
+  return setFlow(integration, { ...flow!, steps }, getSanitizedSteps);
 }
 
 /**
@@ -822,11 +822,13 @@ export function setStepInFlow(
  * @param integration
  * @param flowId
  * @param position
+ * @param getSanitizedSteps
  */
 export function removeStepFromFlow(
   integration: Integration,
   flowId: string,
-  position: number
+  position: number,
+  getSanitizedSteps: GetSanitizedSteps
 ) {
   const flow = getFlow(integration, flowId);
   const steps = getSteps(integration, flowId);
@@ -841,9 +843,7 @@ export function removeStepFromFlow(
     steps.splice(position, 1);
   }
 
-  return produce(integration, newInt => {
-    setFlow(newInt, { ...flow!, steps });
-  });
+  return setFlow(integration, { ...flow!, steps }, getSanitizedSteps);
 }
 
 /**
