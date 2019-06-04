@@ -17,9 +17,11 @@ package io.syndesis.server.api.generator.swagger.util;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import io.syndesis.common.model.Violation;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.swagger.AbstractSwaggerConnectorTest;
 import io.syndesis.server.api.generator.swagger.SwaggerModelInfo;
@@ -44,6 +46,30 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
         assertThat(node.get("paths").get("/api").get("get").get("security"))
             .hasOnlyOneElementSatisfying(securityRequirement -> assertThat(securityRequirement.get("secured"))
                 .hasOnlyOneElementSatisfying(scope -> assertThat(scope.asText()).isEqualTo("scope")));
+    }
+
+    @Test
+    public void shouldNotReportIssuesWithSupportedVersions() {
+        final SwaggerModelInfo validated = SwaggerHelper.parse(
+            "{\"swagger\": \"2.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
+            APIValidationContext.CONSUMED_API);
+
+        final List<Violation> errors = validated.getErrors();
+        assertThat(errors).isEmpty();
+    }
+
+    @Test
+    public void shouldReportIssuesWithUnsupportedVersions() {
+        final SwaggerModelInfo validated = SwaggerHelper.parse(
+            "{\"openapi\": \"3.0.0\", \"info\":{ \"title\": \"test\", \"version\": \"1\"}, \"paths\": { \"/api\": { \"get\": {\"responses\": { \"200\": { \"description\": \"OK\" }}}}}}",
+            APIValidationContext.CONSUMED_API);
+
+        final List<Violation> errors = validated.getErrors();
+        assertThat(errors).containsOnly(new Violation.Builder()
+            .property("")
+            .error("unsupported-version")
+            .message("This document cannot be uploaded. Provide an OpenAPI 2.0 document.")
+            .build());
     }
 
     @Test
