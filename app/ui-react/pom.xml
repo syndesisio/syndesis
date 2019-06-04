@@ -66,19 +66,6 @@
           <followSymLinks>false</followSymLinks>
           <filesets>
             <fileset>
-              <directory>src</directory>
-              <includes>
-                <include>config.json</include>
-                <include>config.json.bak</include>
-              </includes>
-            </fileset>
-            <fileset>
-              <directory>node_modules</directory>
-              <includes>
-                <include>**/*</include>
-              </includes>
-            </fileset>
-            <fileset>
               <directory>dist</directory>
               <includes>
                 <include>**/*</include>
@@ -91,17 +78,9 @@
         <groupId>com.github.eirslett</groupId>
         <artifactId>frontend-maven-plugin</artifactId>
         <executions>
+
           <execution>
-            <id>install node and npm</id>
-            <goals>
-              <goal>install-node-and-npm</goal>
-            </goals>
-            <configuration>
-              <nodeVersion>${node.version}</nodeVersion>
-            </configuration>
-          </execution>
-          <execution>
-            <id>install yarn</id>
+            <id>install-node-and-yarn</id>
             <goals>
               <goal>install-node-and-yarn</goal>
             </goals>
@@ -110,8 +89,9 @@
               <yarnVersion>${yarn.version}</yarnVersion>
             </configuration>
           </execution>
+
           <execution>
-            <id>yarn install</id>
+            <id>yarn-install</id>
             <goals>
               <goal>yarn</goal>
             </goals>
@@ -121,17 +101,7 @@
           </execution>
 
           <execution>
-            <id>Install dependencies</id>
-            <goals>
-              <goal>yarn</goal>
-            </goals>
-            <configuration>
-              <arguments>install --frozen-lockfile</arguments>
-            </configuration>
-          </execution>
-
-          <execution>
-            <id>Lint project</id>
+            <id>yarn-lint</id>
             <goals>
               <goal>yarn</goal>
             </goals>
@@ -141,7 +111,7 @@
           </execution>
 
           <execution>
-            <id>Build project</id>
+            <id>yarn-build</id>
             <goals>
               <goal>yarn</goal>
             </goals>
@@ -151,7 +121,7 @@
           </execution>
 
           <execution>
-            <id>Run tests</id>
+            <id>yarn-test</id>
             <goals>
               <goal>yarn</goal>
             </goals>
@@ -160,17 +130,6 @@
               <skip>${skipTests}</skip>
             </configuration>
           </execution>
-<!-- Very slow and probably not needed on staging
-          <execution>
-            <id>Build docs</id>
-            <goals>
-              <goal>yarn</goal>
-            </goals>
-            <configuration>
-              <arguments>build-storybook</arguments>
-            </configuration>
-          </execution>
--->
         </executions>
       </plugin>
     </plugins>
@@ -361,26 +320,22 @@
     </profile>
     <profile>
       <id>flash</id>
-      <properties>
-        <!-- tests run is skipped -->
-        <skipTests>true</skipTests>
-      </properties>
       <build>
         <plugins>
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-clean-plugin</artifactId>
-            <configuration combine.self="override">
-              <followSymLinks>false</followSymLinks>
-              <filesets>
-                <fileset>
-                  <directory>dist</directory>
-                  <includes>
-                    <include>**/*</include>
-                  </includes>
-                </fileset>
-              </filesets>
-            </configuration>
+            <groupId>com.github.eirslett</groupId>
+            <artifactId>frontend-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>yarn-lint</id>
+                <phase />
+              </execution>
+
+              <execution>
+                <id>yarn-test</id>
+                <phase />
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
@@ -429,6 +384,139 @@
                 </image>
               </images>
             </configuration>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>non-ui-related-so-disabled</id>
+      <activation>
+        <activeByDefault>true</activeByDefault>
+      </activation>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>basepom.default-it</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-javadoc-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+              <execution>
+                <id>attach-javadocs</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-jar-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.ning.maven.plugins</groupId>
+            <artifactId>maven-dependency-versions-check-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.hubspot.maven.plugins</groupId>
+            <artifactId>dependency-management-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.hubspot.maven.plugins</groupId>
+            <artifactId>dependency-scope-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.basepom.maven</groupId>
+            <artifactId>duplicate-finder-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-pmd-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>basepom.default</id>
+                <phase />
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
