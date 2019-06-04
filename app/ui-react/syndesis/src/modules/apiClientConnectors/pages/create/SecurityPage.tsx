@@ -72,6 +72,10 @@ export const SecurityPage: React.FunctionComponent = () => {
                         state.specification.properties!.tokenEndpoint
                           .defaultValue
                       }
+                      authenticationTypeDefault={
+                        state.specification.properties!.authenticationType
+                          .defaultValue
+                      }
                       authenticationTypes={
                         state.specification.properties!.authenticationType &&
                         state.specification.properties!.authenticationType.enum
