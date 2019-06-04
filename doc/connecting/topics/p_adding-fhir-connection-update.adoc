@@ -71,6 +71,7 @@ changing, as well as fields whose values need to be updated.
 The connection appears in the integration flow 
 in the location where you added it. During execution, the connection 
 updates or creates a resource on the FHIR server and returns a 
-*MethodOutcome* resource that includes the updated/created 
-resource's resource ID, which you might want to map 
+*MethodOutcome* resource that includes an `id.idPart` field. 
+This field contains the updated/created resource's ID, 
+which you might want to map 
 to a subsequent step in the flow. 

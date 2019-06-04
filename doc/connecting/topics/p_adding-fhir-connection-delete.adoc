@@ -37,8 +37,8 @@ the resource that you want to delete from a previous step.
 The connection appears in the integration flow 
 in the location where you added it. During execution, the connection 
 deletes the specified resource on the FHIR server and returns a 
-*MethodOutcome* resource, which includes the resource ID for 
-the deleted resource.
+*MethodOutcome* resource that includes an `id.idPart` field. 
+This field contains the resource ID for the deleted resource.
 
 .Next steps
 To map a value to the *Resource Id* field or the *Resource version* field, add a data mapper step 
