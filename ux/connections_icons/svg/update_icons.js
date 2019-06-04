@@ -8,7 +8,8 @@ const SVGO = require('svgo');
 const DEPLOYMENT_JSON = '../../../app/server/dao/src/main/resources/io/syndesis/server/dao/deployment.json';
 const CONNECTORS_PATH = '../../../app/connector';
 const SCHEMA_JAVA = '../../../app/common/model/src/main/java/io/syndesis/common/model/Schema.java';
-const STEP_ICON_ASSET_PATH = '../../../app/ui/src/assets/icons/steps';
+const STEP_ICON_ASSET_PATH = ['../../../app/ui-angular/src/assets/icons/steps', '../../../app/ui-react/syndesis/public/icons/steps'];
+const CONNECTOR_ICON_ASSET_PATH = ['../../../app/ui-angular/src/assets/icons', '../../../app/ui-react/syndesis/public/icons'];
 
 const MAPPINGS = jsonfile.readFileSync('mapping.json');
 
@@ -20,10 +21,12 @@ function optimize(file) {
   const data = fs.readFileSync(file);
   return svgo.optimize(data).then(optimized => {
     const mapping = MAPPINGS.find(c => c.icon == file);
+    const id = mapping.connectorId || mapping.stepId;
     return {
-      id: mapping.connectorId || mapping.stepId,
+      id: id,
       name: path.basename(file),
-      icon: 'data:image/svg+xml;base64,' + Buffer.from(optimized.data).toString('base64'),
+      iconFile: id + ".svg",
+      icon: 'assets:' + id + ".svg",
       raw: optimized.data
     };
   });
@@ -90,6 +93,13 @@ Promise.all(MAPPINGS.filter(c => !c.ignore).map(c => {
         })
     });
 
-    optimized.filter(o => /^step/.test(o.name))
-      .forEach(o => fs.writeFileSync(path.join(STEP_ICON_ASSET_PATH, o.name.replace(/[^_]+_/, '')), o.raw))
+    STEP_ICON_ASSET_PATH.forEach(p => {
+        optimized.filter(o => /^step/.test(o.name))
+            .forEach(o => fs.writeFileSync(path.join(p, o.name.replace(/[^_]+_/, '')), o.raw));
+    });
+
+    CONNECTOR_ICON_ASSET_PATH.forEach(p => {
+        optimized.filter(o => /^(?!step)/.test(o.name))
+            .forEach(o => fs.writeFileSync(path.join(p, o.iconFile), o.raw));
+    });
 });

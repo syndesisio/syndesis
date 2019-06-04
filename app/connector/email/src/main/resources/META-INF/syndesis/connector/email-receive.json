@@ -178,6 +178,7 @@
     },
     "secureType": {
       "componentProperty": true,
+      "defaultValue": "None",
       "deprecated": false,
       "displayName": "Security Method",
       "enum": [
@@ -194,7 +195,6 @@
           "value": "SSL/TLS"
         }
       ],
-      "defaultValue": "None",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "parameter",

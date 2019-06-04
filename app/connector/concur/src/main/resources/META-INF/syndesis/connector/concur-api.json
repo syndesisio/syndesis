@@ -3072,7 +3072,7 @@
   },
   "connectorGroupId": "io.syndesis.connector.concur",
   "description": "Manage invoices, travel, and expenses.",
-  "icon": "assets:concur-api.svg",
+  "icon": "assets:concur.svg",
   "id": "concur",
   "name": "SAP Concur",
   "properties": {

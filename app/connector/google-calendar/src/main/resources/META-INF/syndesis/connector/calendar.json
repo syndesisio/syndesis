@@ -505,7 +505,7 @@
     }
   ],
   "description": "Receive, create and update events.",
-  "icon": "assets:calendar.svg",
+  "icon": "assets:google-calendar.svg",
   "id": "google-calendar",
   "name": "Google Calendar",
   "properties": {

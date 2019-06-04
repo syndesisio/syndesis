@@ -60,6 +60,10 @@
     "icon": "connectionicons_kafka.svg"
   },
   {
+    "connectorId": "knative",
+    "icon": "connectionicons_knative.svg"
+  },
+  {
     "connectorId": "mqtt",
     "icon": "connectionicons_mqtt.svg"
   },
