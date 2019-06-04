@@ -21,7 +21,9 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.stream.Stream;
 
+import io.syndesis.common.model.WithId;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -112,13 +114,25 @@ public class DeploymentStateMonitorControllerTest {
     }
 
     @Before
+    @SuppressWarnings("unchecked")
     public void before() throws Exception {
         CacheManager cacheManager = new LRUCacheManager(100);
         EncryptionComponent encryptionComponent = new EncryptionComponent(null);
         ResourceLoader resourceLoader = new DefaultResourceLoader();
 
         // create test Data Manager and integration deployment
-        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader, null);
+        dataManager = new DataManager(cacheManager, Collections.emptyList(), null, encryptionComponent, resourceLoader, null) {
+            @Override
+            public <K extends WithId<K>> Stream<K> fetchAllByPropertyValue(Class<K> type, String property, String value) {
+                if (type.equals(IntegrationDeployment.class) && property.equals("currentState")) {
+                    return (Stream<K>) fetchAll(IntegrationDeployment.class)
+                        .getItems()
+                        .stream()
+                        .filter(d -> d.getCurrentState().name().equals(value));
+                }
+                return super.fetchAllByPropertyValue(type, property, value);
+            }
+        };
         dataManager.create(new IntegrationDeployment.Builder()
                 .id(DEPLOYMENT_ID)
                 .integrationId(java.util.Optional.of(INTEGRATION_ID))
