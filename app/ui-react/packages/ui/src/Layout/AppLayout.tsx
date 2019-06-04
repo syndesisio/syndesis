@@ -122,8 +122,6 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
                       ]}
                     />
                   </ToolbarItem>
-                </ToolbarGroup>
-                <ToolbarGroup>
                   <ToolbarItem className="pf-u-display-none pf-u-display-block-on-lg">
                     <AppTopMenu username={username}>
                       <DropdownItem
