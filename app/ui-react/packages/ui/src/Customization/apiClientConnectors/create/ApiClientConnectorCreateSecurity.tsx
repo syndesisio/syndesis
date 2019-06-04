@@ -20,6 +20,11 @@ export interface IApiClientConnectorCreateSecurityProps {
    */
   accessToken?: string;
   /**
+   * Used specifically for determining the default type, mostly used
+   * for None and Basic types.
+   */
+  authenticationTypeDefault?: string;
+  /**
    * The list of available authentication types for this specification.
    */
   authenticationTypes?: IAuthenticationTypes[];
@@ -64,10 +69,8 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
 
     this.state = {
       selectedType:
-        this.props.authenticationTypes![0].value === 'none'
-          ? 'none-01'
-          : 'basic-01',
-      valid: false,
+        this.props.authenticationTypeDefault === 'none' ? 'none' : 'basic',
+      valid: this.props.authenticationTypeDefault === ('none' || 'basic'),
     };
 
     this.onSelectType = this.onSelectType.bind(this);
@@ -87,7 +90,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
        * Check if the security type is either Basic or None, in which case the form
        * should be valid.
        */
-      valid: newType === ('basic-01' || 'none-01'),
+      valid: newType === ('basic' || 'none'),
     });
   }
 
@@ -114,13 +117,9 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
                     <Radio
                       id={'authenticationType'}
                       aria-label={'Authentication Type'}
-                      checked={
-                        this.state.selectedType === authType.value + '-' + idx
-                      }
+                      checked={this.state.selectedType === authType.value}
                       name={'authenticationType'}
-                      onClick={() =>
-                        this.onSelectType(authType.value! + '-' + idx)
-                      }
+                      onClick={() => this.onSelectType(authType.value!)}
                       readOnly={true}
                     >
                       {authType.label || this.props.i18nNoSecurity}
