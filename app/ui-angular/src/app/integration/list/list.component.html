@@ -21,54 +21,46 @@
   >
     <ng-template #itemTemplate let-integration="item" let-index="index">
       <div class="list-view-pf-left integration-icons">
-        <ng-container
-          *ngIf="
-            integration.type === IntegrationType.SingleFlow;
-            else multiflowIntegration
-          "
-        >
-          <span
-            *ngIf="integrationActionsService.getStart(integration); let step"
-          >
-            <img
-              class="syn-icon-small"
-              [src]="step | synIconPath"
-              aria-hidden="true"
-            />
-          </span>
-          <span class="fa fa-angle-right"></span>
-          <span
-            *ngIf="integrationActionsService.getFinish(integration); let step"
-          >
-            <img
-              class="syn-icon-small"
-              [src]="step | synIconPath"
-              aria-hidden="true"
-            />
-          </span>
+        <ng-container [ngSwitch]="integration.type">
+          <ng-container *ngSwitchCase="IntegrationType.ApiProvider">
+            <span class="icon">
+              <img
+                class="syn-icon-small"
+                src="./../../assets/icons/api-provider.connection.png"
+                aria-hidden="true"
+              />
+            </span>
+            <span class="fa fa-angle-right"></span>
+            <span class="icon">
+              <img
+                class="syn-icon-small"
+                src="./../../assets/icons/multi-flow.connection.png"
+                aria-hidden="true"
+              />
+            </span>
+          </ng-container>
+          <ng-container *ngSwitchDefault>
+            <span
+              *ngIf="integrationActionsService.getStart(integration); let step"
+            >
+              <img
+                class="syn-icon-small"
+                [src]="step | synIconPath"
+                aria-hidden="true"
+              />
+            </span>
+            <span class="fa fa-angle-right"></span>
+            <span
+              *ngIf="integrationActionsService.getFinish(integration); let step"
+            >
+              <img
+                class="syn-icon-small"
+                [src]="step | synIconPath"
+                aria-hidden="true"
+              />
+            </span>
+          </ng-container>
         </ng-container>
-        <ng-template #multiflowIntegration>
-          <span
-            *ngIf="integrationActionsService.getStart(integration); let step"
-          >
-            <img
-              class="syn-icon-small"
-              [ngClass]="{
-                'api-provider': step.connection.id == 'api-provider'
-              }"
-              [src]="step.connection | synIconPath"
-              aria-hidden="true"
-            />
-          </span>
-          <span class="fa fa-angle-right"></span>
-          <span class="icon">
-            <img
-              class="syn-icon-small"
-              src="./../../assets/icons/multi-flow.connection.png"
-              aria-hidden="true"
-            />
-          </span>
-        </ng-template>
       </div>
       <div class="list-pf-content-wrapper">
         <div class="list-pf-main-content integration-content">

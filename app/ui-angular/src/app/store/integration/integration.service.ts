@@ -23,6 +23,7 @@ function getFlowsCount(integration: Integration) {
 }
 
 function transform(integration: Integration): Integration {
+  integration.flows = integration.flows || [];
   if (integration.flows.length > 1) {
     // Multiflow isn't a thing we support but may as well flag it
     integration.type = IntegrationType.MultiFlow;
