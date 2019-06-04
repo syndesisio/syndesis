@@ -72,13 +72,14 @@
     "react-router-dom": "^4.3.1"
   },
   "dependencies": {
-    "@patternfly/patternfly": "^2.6.6",
-    "@patternfly/react-core": "^3.21.0",
-    "@patternfly/react-icons": "^3.8.1",
+    "@patternfly/patternfly": "^2.8.1",
+    "@patternfly/react-core": "^3.32.9",
+    "@patternfly/react-icons": "^3.9.2",
+    "@patternfly/react-styles": "^3.2.0",
     "@syndesis/history": "*",
     "classnames": "^2.2.6",
     "codemirror": "^5.46.0",
-    "patternfly-react": "^2.34.0",
+    "patternfly-react": "^2.34.3",
     "react-codemirror2": "^6.0.0",
     "react-dropzone": "^10.0.0",
     "react-virtualized": "^9.20.1"

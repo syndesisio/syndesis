@@ -5,11 +5,12 @@ import {
   DropdownPosition,
   DropdownToggle,
 } from '@patternfly/react-core';
-import { HelpIcon } from '@patternfly/react-icons';
+import { CogIcon } from '@patternfly/react-icons';
 import classNames from 'classnames';
 import * as React from 'react';
 
 export interface IHelpDropdownProps {
+  additionalDropdownItems?: React.ReactNode[];
   className?: string;
   isOpen: boolean;
   launchAboutModal: () => void;
@@ -51,6 +52,7 @@ export class HelpDropdown extends React.Component<
   public render() {
     const { isOpen } = this.state;
     const {
+      additionalDropdownItems = [],
       launchSampleIntegrationTutorials,
       launchUserGuide,
       launchConnectorsGuide,
@@ -116,17 +118,17 @@ export class HelpDropdown extends React.Component<
           onSelect={this.onSelect}
           toggle={
             <DropdownToggle
+              iconComponent={null}
               id="helpDropdownButton"
               className={classNames('', this.props.className)}
-              iconComponent={null}
               onToggle={this.onToggle}
             >
-              <HelpIcon />
+              <CogIcon />
             </DropdownToggle>
           }
           isOpen={isOpen}
           isPlain={true}
-          dropdownItems={dropdownItems}
+          dropdownItems={[...dropdownItems, ...additionalDropdownItems]}
         />
       </>
     );

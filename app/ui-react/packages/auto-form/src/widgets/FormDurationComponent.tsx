@@ -101,6 +101,7 @@ export class FormDurationComponent extends React.Component<
     );
   }
   public render() {
+    const controlId = `${toValidHtmlId(this.props.field.name)}-duration`;
     return (
       <FormGroup
         {...this.props.property.formGroupAttributes}
@@ -141,8 +142,8 @@ export class FormDurationComponent extends React.Component<
             title={this.props.property.controlHint}
           />
           <DropdownButton
-            id={`${toValidHtmlId(this.props.field.name)}-duration`}
-            data-testid={`${toValidHtmlId(this.props.field.name)}-duration`}
+            id={controlId}
+            data-testid={controlId}
             componentClass={Form.InputGroup.Button}
             title={this.state.duration.label}
             onSelect={this.handleOnSelect}

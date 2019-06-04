@@ -22,10 +22,10 @@ export const OAuthAppHeader: React.FunctionComponent<IOAuthAppHeaderProps> = ({
         {i18nPageTitle}
       </Title>
       <Text dangerouslySetInnerHTML={{ __html: i18nDescription }} />
-      <span>
-        {i18nCallbackDescription}:
+      <div>
+        <span className="pf-u-mr-md">{i18nCallbackDescription}:</span>
         <CopyToClipboard>{callbackURI}</CopyToClipboard>
-      </span>
+      </div>
     </TextContent>
   </PageSection>
 );

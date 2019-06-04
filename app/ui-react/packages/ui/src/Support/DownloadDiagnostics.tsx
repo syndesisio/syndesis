@@ -1,4 +1,4 @@
-import { CardBody, Popover, PopoverPosition } from '@patternfly/react-core';
+import { CardBody, Popover } from '@patternfly/react-core';
 import { HelpIcon } from '@patternfly/react-icons';
 import * as React from 'react';
 export interface IDownloadDiagnosticsProps {
@@ -14,7 +14,7 @@ export const DownloadDiagnostics: React.FunctionComponent<
         <h2 className="pf-c-title pf-m-lg">
           Download Troubleshooting Diagnostics &nbsp;
           <Popover
-            position={PopoverPosition.right}
+            position="right"
             bodyContent={
               <p>
                 System level and application level diagnostics will be captured
