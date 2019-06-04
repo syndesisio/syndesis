@@ -664,6 +664,9 @@ export function stringifyValues(configuredProperties: any) {
  * @param integration
  */
 export function prepareIntegrationForSaving(integration: Integration) {
+  if (integration.id === NEW_INTEGRATION_ID) {
+    delete integration.id;
+  }
   const flows = validateFlows(integration.flows);
   const tags = buildTags(integration.flows, integration.tags);
   return { ...integration, tags, flows };
