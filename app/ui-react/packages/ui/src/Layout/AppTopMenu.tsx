@@ -35,6 +35,7 @@ export class AppTopMenu extends React.Component<
     return (
       <Dropdown
         id="appTopMenu"
+        data-testid="appTopMenu"
         isPlain={true}
         onSelect={this.onSelect}
         toggle={

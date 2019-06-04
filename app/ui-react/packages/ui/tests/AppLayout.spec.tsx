@@ -48,6 +48,12 @@ export default describe('ConnectionCard', () => {
     </MemoryRouter>
   );
 
+  it('should render a top menu and help dropdown', () => {
+    const { getByTestId } = render(testComponent);
+    expect(getByTestId('appTopMenu')).toBeTruthy();
+    expect(getByTestId('helpDropdownButton')).toBeTruthy();
+  });
+
   it('vertical navigation items should render', () => {
     const { getByTestId, getByText } = render(testComponent);
     expect(getByTestId('navlink')).toBeTruthy();

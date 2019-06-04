@@ -8,6 +8,7 @@ import {
   Page,
   PageHeader,
   PageSidebar,
+  SkipToContent,
   Toolbar,
   ToolbarGroup,
   ToolbarItem,
@@ -66,7 +67,19 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
 
   const [breadcrumb, setHasBreadcrumb] = React.useState(null);
   const showBreadcrumb = (b: any) => setHasBreadcrumb(b);
-
+  const PageSkipToContent = (
+    <SkipToContent href="#main-content-page-layout-default-nav">
+      Skip to Content
+    </SkipToContent>
+  );
+  const [isMobileView, setIsMobileView] = React.useState(false);
+  const [isNavOpenMobile, setIsNavOpenMobile] = React.useState(false);
+  const onNavToggleMobile = () => {
+    setIsNavOpenMobile(!isNavOpenMobile);
+  };
+  const onPageResize = (props: { mobileView: boolean; windowSize: number }) => {
+    setIsMobileView(props.mobileView);
+  };
   return (
     <AppLayoutContext.Provider
       value={{
@@ -74,6 +87,8 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
       }}
     >
       <Page
+        skipToContent={PageSkipToContent}
+        onPageResize={onPageResize}
         header={
           <PageHeader
             logo={pictograph}
@@ -122,8 +137,6 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
                       ]}
                     />
                   </ToolbarItem>
-                </ToolbarGroup>
-                <ToolbarGroup>
                   <ToolbarItem className="pf-u-display-none pf-u-display-block-on-lg">
                     <AppTopMenu username={username}>
                       <DropdownItem
@@ -147,8 +160,8 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
             }
             avatar={avatar && <Avatar src={avatar} alt="User Avatar" />}
             showNavToggle={true}
-            isNavOpen={showNavigation}
-            onNavToggle={onNavToggle}
+            onNavToggle={isMobileView ? onNavToggleMobile : onNavToggle}
+            isNavOpen={isMobileView ? isNavOpenMobile : showNavigation}
           />
         }
         sidebar={
@@ -158,7 +171,7 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
                 <NavList>{verticalNav}</NavList>
               </Nav>
             }
-            isNavOpen={showNavigation}
+            isNavOpen={isMobileView ? isNavOpenMobile : showNavigation}
           />
         }
         breadcrumb={breadcrumb}
