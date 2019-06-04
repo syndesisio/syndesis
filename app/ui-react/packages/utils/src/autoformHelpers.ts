@@ -61,13 +61,13 @@ export function toFormDefinitionProperty(property: IConfigurationProperty) {
 export function anyFieldsRequired(properties: IConfigurationProperties) {
   return (
     Object.keys(properties)
-      .filter(key => requiredTypeMask(properties[key]))
+      .filter(key => requiredTypeMask(properties[key].type))
       .filter(key => properties[key].required).length > 0
   );
 }
 
-function requiredTypeMask(property: IConfigurationProperty) {
-  switch (property.type) {
+function requiredTypeMask(type?: string) {
+  switch (type) {
     case 'boolean':
     case 'checkbox':
     case 'hidden':
@@ -79,7 +79,7 @@ function requiredTypeMask(property: IConfigurationProperty) {
 
 export function allFieldsRequired(properties: IConfigurationProperties) {
   const keys = Object.keys(properties).filter(key =>
-    requiredTypeMask(properties[key])
+    requiredTypeMask(properties[key].type)
   );
   const allRequired = keys.filter(key => properties[key].required);
   if (allRequired.length === 0) {
@@ -156,9 +156,9 @@ export function validateRequiredProperties<T>(
   values?: T,
   prefix = ''
 ): IFormErrors<T> {
-  const allRequired = Object.keys(definition).filter(
-    key => definition[key].required
-  );
+  const allRequired = Object.keys(definition)
+    .filter(key => requiredTypeMask(definition[key].type))
+    .filter(key => definition[key].required);
   if (allRequired.length === 0) {
     return {} as IFormErrors<T>;
   }
