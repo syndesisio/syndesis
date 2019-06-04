@@ -197,6 +197,7 @@
     },
     "protocol": {
       "componentProperty": true,
+      "defaultValue": "smtp",
       "deprecated": false,
       "displayName": "Protocol",
       "group": "common",
