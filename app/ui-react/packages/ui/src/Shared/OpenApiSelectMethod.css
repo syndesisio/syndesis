@@ -3,3 +3,7 @@
   font-size: smaller;
   font-style: italic;
 }
+
+.open-api-select-method__dnd-container {
+  margin: 20px 0 20px 20px;
+}

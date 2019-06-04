@@ -9,7 +9,7 @@ import {
   Row,
 } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink, Container } from '../Layout';
+import { ButtonLink } from '../Layout';
 import { DndFileChooser } from './DndFileChooser';
 import './OpenApiSelectMethod.css';
 
@@ -185,7 +185,7 @@ export class OpenApiSelectMethod extends React.Component<
     return (
       <Card className={'open-api-review-actions'}>
         <Card.Body>
-          <Grid className={'open-api-select-method'}>
+          <Grid fluid={true} className={'open-api-select-method'}>
             <Row>
               <Col>
                 <FormGroup controlId={'method'} disabled={false}>
@@ -199,7 +199,7 @@ export class OpenApiSelectMethod extends React.Component<
                     >
                       <div>{this.props.i18nMethodFromFile}</div>
                       {this.state.method === 'file' && (
-                        <Container style={{ margin: '50px' }}>
+                        <div className="open-api-select-method__dnd-container">
                           <DndFileChooser
                             allowMultiple={false}
                             disableDropzone={this.props.disableDropzone}
@@ -221,7 +221,7 @@ export class OpenApiSelectMethod extends React.Component<
                             onUploadAccepted={this.onUploadAccepted}
                             onUploadRejected={this.onUploadRejected}
                           />
-                        </Container>
+                        </div>
                       )}
                     </Radio>
                     <Radio
@@ -246,14 +246,16 @@ export class OpenApiSelectMethod extends React.Component<
                         </div>
                       )}
                     </Radio>
-                    {this.props.allowFromScratch && <Radio
-                      id={'method-scratch'}
-                      name={'method'}
-                      onClick={() => this.onSelectMethod('scratch')}
-                      readOnly={true}
-                    >
-                      <div>{this.props.i18nMethodFromScratch}</div>
-                    </Radio>}
+                    {this.props.allowFromScratch && (
+                      <Radio
+                        id={'method-scratch'}
+                        name={'method'}
+                        onClick={() => this.onSelectMethod('scratch')}
+                        readOnly={true}
+                      >
+                        <div>{this.props.i18nMethodFromScratch}</div>
+                      </Radio>
+                    )}
                   </div>
                 </FormGroup>
               </Col>
