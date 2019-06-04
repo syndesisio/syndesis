@@ -28,8 +28,6 @@ export default describe('ExtensionImportCard', () => {
     i18nDndSelectedFileLabel: selectedFileLabel,
     i18nDndUploadFailedMessage: undefined,
     i18nDndUploadSuccessMessage: undefined,
-    i18nImportInstructions: instructions,
-    i18nTitle: title,
     onDndUploadAccepted: mockOnUploadAccepted,
     onDndUploadRejected: mockOnUploadRejected,
   } as IExtensionImportCardProps;
@@ -38,12 +36,6 @@ export default describe('ExtensionImportCard', () => {
     const comp = <ExtensionImportCard {...props} />;
 
     const { queryAllByText } = render(comp);
-
-    // title
-    expect(queryAllByText(title)).toHaveLength(1);
-
-    // instructions
-    expect(queryAllByText(instructions)).toHaveLength(1);
 
     // Dnd help message
     expect(queryAllByText(helpMessage)).toHaveLength(1);
