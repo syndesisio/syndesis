@@ -252,7 +252,7 @@ public class PrometheusMetricsProviderImpl implements MetricsProvider {
                 .build();
         QueryResult response = httpClient.queryPrometheus(queryTotalMessages);
         validateResponse(response);
-        return (Map<String, Long>) QueryResult.getValueMap(response, integrationIdLabel, Long.class);
+        return QueryResult.getValueMap(response, integrationIdLabel, Long.class, SUM_LONGS);
     }
 
     private HttpQuery createSummaryHttpQuery(String integrationId, String metric, String aggregationOperator) {
