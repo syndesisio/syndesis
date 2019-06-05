@@ -26,7 +26,7 @@ import {
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
-import { ApiError, PageTitle } from '../../../shared';
+import { ApiError, EntityIcon, PageTitle } from '../../../shared';
 
 function getFilteredAndSortedOAuthApps(
   oauthApps: OAuthApp[],
@@ -224,7 +224,14 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                                 this.state.currentItemId ===
                                                 oauthApp.id
                                               }
-                                              icon={oauthApp.icon!}
+                                              icon={
+                                                <EntityIcon
+                                                  entity={oauthApp}
+                                                  alt={oauthApp.name}
+                                                  width={30}
+                                                  height={30}
+                                                />
+                                              }
                                               i18nNotConfiguredText={t(
                                                 'settings:OAuthAppNotConfigured'
                                               )}

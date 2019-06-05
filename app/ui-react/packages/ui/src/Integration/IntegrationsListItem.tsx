@@ -17,8 +17,8 @@ export interface IIntegrationsListItemProps {
   monitoringCurrentStep?: number;
   monitoringTotalSteps?: number;
   monitoringLogUrl?: string;
-  startConnectionIcon: string;
-  finishConnectionIcon: string;
+  startConnectionIcon: React.ReactNode;
+  finishConnectionIcon: React.ReactNode;
   actions: any;
   i18nConfigurationRequired: string;
   i18nError: string;

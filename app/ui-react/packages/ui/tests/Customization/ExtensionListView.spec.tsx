@@ -102,6 +102,7 @@ export default describe('ExtensionListView', () => {
           <ExtensionListItem
             detailsPageLink={'/extensions/id-0'}
             extensionDescription="id-0 description goes here"
+            extensionIcon={<div />}
             extensionId={'id-0'}
             extensionName={extOneName}
             i18nCancelText={'Cancel'}
@@ -121,6 +122,7 @@ export default describe('ExtensionListView', () => {
           <ExtensionListItem
             detailsPageLink={'/extensions/id-1'}
             extensionDescription="id-1 description goes here"
+            extensionIcon={<div />}
             extensionId={'id-1'}
             extensionName={extTwoName}
             i18nCancelText={'Cancel'}

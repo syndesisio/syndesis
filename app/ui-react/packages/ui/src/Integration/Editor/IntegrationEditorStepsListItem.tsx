@@ -15,7 +15,7 @@ export interface IIntegrationEditorStepsListItemProps {
   i18nWarningTitle: React.ReactNode;
   i18nWarningMessage: React.ReactNode;
   actions: any;
-  icon: string;
+  icon: React.ReactNode;
 }
 
 export const IntegrationEditorStepsListItem: React.FunctionComponent<
@@ -76,9 +76,7 @@ export const IntegrationEditorStepsListItem: React.FunctionComponent<
           </div>
         </React.Fragment>,
       ]}
-      leftContent={
-        <img alt={props.stepName} src={props.icon} width={24} height={24} />
-      }
+      leftContent={props.icon}
       stacked={true}
       hideCloseIcon={true}
     />
