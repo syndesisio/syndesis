@@ -26,8 +26,12 @@
   height: 40px;
 }
 
-.pf-c-dropdown {
-  --pf-c-dropdown__toggle--FontSize: var(--pf-global--FontSize--xs);
+.pf-c-dropdown__toggle {
+  --pf-c-dropdown__toggle--FontSize: var(--pf-global--FontSize--sm);
+}
+
+.pf-c-dropdown__toggle.syn-help-dropdown {
+  --pf-c-dropdown__toggle--FontSize: var(--pf-global--FontSize--md);
 }
 
 .pf-c-page {
@@ -94,10 +98,6 @@ body {
 .pf-c-content {
   --pf-c-content--FontSize: var(--pf-global--FontSize--sm);
   --pf-c-content--dt--FontWeight: bold; /* override for OpenSans not supporting weight 500 */
-}
-
-.pf-c-dropdown__toggle.syn-help-dropdown {
-  --pf-c-dropdown__toggle--FontSize: var(--pf-global--FontSize--md);
 }
 
 .list-view-pf-view {
