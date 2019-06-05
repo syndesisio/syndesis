@@ -36,12 +36,17 @@ import java.util.function.BiConsumer;
 public interface OpenShiftService {
 
     String INTEGRATION_NAME_ANNOTATION = "syndesis.io/integration-name";
+    String DEPLOYMENT_ID_ANNOTATION = "syndesis.io/deploy-id";
+    String PROMETHEUS_PORT_ANNOTATION = "prometheus.io/port";
+    String PROMETHEUS_SCRAPE_ANNOTATION = "prometheus.io/scrape";
 
     String INTEGRATION_ID_LABEL = "syndesis.io/integration-id";
+    String INTEGRATION_NAME_LABEL = "syndesis.io/integration";
+    String INTEGRATION_TYPE_LABEL = "syndesis.io/type";
+    String INTEGRATION_APP_LABEL = "syndesis.io/app";
     String DEPLOYMENT_VERSION_LABEL = "syndesis.io/deployment-version";
     String USERNAME_LABEL = "syndesis.io/username";
     String COMPONENT_LABEL = "syndesis.io/component";
-    String INTEGRATION_NAME_LABEL = "syndesis.io/integration";
 
     int INTEGRATION_SERVICE_PORT = 8080;
 

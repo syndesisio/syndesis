@@ -76,9 +76,13 @@ public class CamelKIntegrationController extends BaseIntegrationController {
             (action, integration) -> {
                 LOG.debug("CamelKIntegrationController watching "+CamelKSupport.CAMEL_K_INTEGRATION_CRD.getMetadata().getName()+" received action: "+action+" and integration:"+integration);
                 if( integration != null && integration.getMetadata() != null && integration.getMetadata().getAnnotations() != null ){
-                    String deploymentId = integration.getMetadata().getAnnotations().get("syndesis.io/deploy-id");
-                    getEventBus().broadcast(EventBus.Type.CHANGE_EVENT,
+                    String deploymentId = integration.getMetadata().getAnnotations().get(OpenShiftService.DEPLOYMENT_ID_ANNOTATION);
+                    if( deploymentId == null ){
+                        LOG.warn("CamelKIntegrationController DROPPING received action: {} on an {} lacking the [{}] property, so no Deployment Id can be associated to the event.", action, CamelKSupport.CAMEL_K_INTEGRATION_CRD.getMetadata().getName(), OpenShiftService.DEPLOYMENT_ID_ANNOTATION );
+                    } else {
+                        getEventBus().broadcast(EventBus.Type.CHANGE_EVENT,
                             ChangeEvent.of("", Kind.IntegrationDeployment.getModelName(), deploymentId).toJson());
+                    }
                 }
             });
     }
