@@ -187,6 +187,8 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                     buildId={buildId}
                                     commitId={commitId}
                                     productName={productName}
+                                    i18nBuildIdLabel={t('BuildIdLabel')}
+                                    i18nCommitIdLabel={t('CommitIdLabel')}
                                   />
                                 )}
                               </WithLoader>
