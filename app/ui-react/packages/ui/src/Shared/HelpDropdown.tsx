@@ -15,6 +15,8 @@ export interface IHelpDropdownProps {
   className?: string;
   isMobileView: boolean;
   isOpen: boolean;
+  dropdownDirection?: keyof typeof DropdownDirection;
+  dropdownPosition?: keyof typeof DropdownPosition;
   launchAboutModal: () => void;
   launchSupportPage: () => void;
   launchSampleIntegrationTutorials: () => void;
@@ -55,6 +57,8 @@ export class HelpDropdown extends React.Component<
     const { isOpen } = this.state;
     const {
       additionalDropdownItems = [],
+      dropdownDirection,
+      dropdownPosition,
       launchSampleIntegrationTutorials,
       launchUserGuide,
       launchConnectorsGuide,
@@ -117,8 +121,8 @@ export class HelpDropdown extends React.Component<
     return (
       <>
         <Dropdown
-          direction={DropdownDirection.down}
-          position={DropdownPosition.right}
+          direction={dropdownDirection || DropdownDirection.down}
+          position={dropdownPosition || DropdownPosition.right}
           onSelect={this.onSelect}
           toggle={
             isMobileView ? (
