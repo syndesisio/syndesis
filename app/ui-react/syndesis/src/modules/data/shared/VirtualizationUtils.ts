@@ -41,7 +41,9 @@ export function getPreviewVdbName(): string {
 export function getViewDdl(vdbModel: RestVdbModel, viewName: string): string {
   const views = vdbModel.keng__ddl.split('CREATE VIEW ');
   if (views.length > 0) {
-    const viewDdl = views.find(view => view.startsWith(viewName));
+    const viewDdl = views.find(
+      view => view.startsWith(viewName) || view.startsWith('"' + viewName)
+    );
     if (viewDdl) {
       return 'CREATE VIEW ' + viewDdl;
     }
