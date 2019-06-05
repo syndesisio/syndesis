@@ -3,14 +3,17 @@ import {
   DropdownDirection,
   DropdownItem,
   DropdownPosition,
+  DropdownToggle,
   KebabToggle,
 } from '@patternfly/react-core';
+import { HelpIcon } from '@patternfly/react-icons';
 import classNames from 'classnames';
 import * as React from 'react';
 
 export interface IHelpDropdownProps {
   additionalDropdownItems?: React.ReactNode[];
   className?: string;
+  isMobileView: boolean;
   isOpen: boolean;
   launchAboutModal: () => void;
   launchSupportPage: () => void;
@@ -58,6 +61,7 @@ export class HelpDropdown extends React.Component<
       launchSupportPage,
       launchContactUs,
       launchAboutModal,
+      isMobileView,
     } = this.props;
     const dropdownItems = [
       <DropdownItem
@@ -109,6 +113,7 @@ export class HelpDropdown extends React.Component<
         About
       </DropdownItem>,
     ];
+    const dropdownId = 'helpDropdownButton';
     return (
       <>
         <Dropdown
@@ -116,12 +121,24 @@ export class HelpDropdown extends React.Component<
           position={DropdownPosition.right}
           onSelect={this.onSelect}
           toggle={
-            <KebabToggle
-              id="helpDropdownButton"
-              data-testid="helpDropdownButton"
-              className={classNames('', this.props.className)}
-              onToggle={this.onToggle}
-            />
+            isMobileView ? (
+              <KebabToggle
+                id={dropdownId}
+                data-testid={dropdownId}
+                className={classNames('', this.props.className)}
+                onToggle={this.onToggle}
+              />
+            ) : (
+              <DropdownToggle
+                id={dropdownId}
+                data-testid={dropdownId}
+                className={classNames('', this.props.className)}
+                onToggle={this.onToggle}
+                iconComponent={null}
+              >
+                <HelpIcon />
+              </DropdownToggle>
+            )
           }
           isOpen={isOpen}
           isPlain={true}
