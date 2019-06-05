@@ -232,15 +232,15 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         result.getMetadata().getLabels().put(OpenShiftService.USERNAME_LABEL, Labels.sanitize(username));
         result.getMetadata().getLabels().put(OpenShiftService.COMPONENT_LABEL, "integration");
         result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_NAME_LABEL, Labels.sanitize(integration.getName()));
-        result.getMetadata().getLabels().put("syndesis.io/type", "integration");
-        result.getMetadata().getLabels().put("syndesis.io/app", "syndesis");
+        result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_TYPE_LABEL, "integration");
+        result.getMetadata().getLabels().put(OpenShiftService.INTEGRATION_APP_LABEL, "syndesis");
         result.getMetadata().setAnnotations(new HashMap<>());
         result.getMetadata().getAnnotations().put(OpenShiftService.INTEGRATION_NAME_ANNOTATION, integration.getName());
         result.getMetadata().getAnnotations().put(OpenShiftService.INTEGRATION_ID_LABEL, integrationId);
         result.getMetadata().getAnnotations().put(OpenShiftService.DEPLOYMENT_VERSION_LABEL, version);
-        result.getMetadata().getAnnotations().put("syndesis.io/deploy-id", integrationDeploymentId);
-        result.getMetadata().getAnnotations().put("prometheus.io/port", "9779");
-        result.getMetadata().getAnnotations().put("prometheus.io/scrape", "true");
+        result.getMetadata().getAnnotations().put(OpenShiftService.DEPLOYMENT_ID_ANNOTATION, integrationDeploymentId);
+        result.getMetadata().getAnnotations().put(OpenShiftService.PROMETHEUS_PORT_ANNOTATION, "9779");
+        result.getMetadata().getAnnotations().put(OpenShiftService.PROMETHEUS_SCRAPE_ANNOTATION, "true");
 
         ImmutableIntegrationSpec.Builder integrationSpecBuilder = new IntegrationSpec.Builder();
 
