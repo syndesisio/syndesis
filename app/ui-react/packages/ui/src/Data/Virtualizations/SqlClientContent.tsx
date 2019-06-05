@@ -71,10 +71,10 @@ export class SqlClientContent extends React.Component<ISqlClientContentProps> {
       <PageSection>
         {this.props.viewNames.length > 0 ? (
           <Grid.Row>
-            <Grid.Col md={6}>
+            <Grid.Col md={4}>
               <Container>{this.props.formContent}</Container>
             </Grid.Col>
-            <Grid.Col md={6}>
+            <Grid.Col md={8}>
               <Container>
                 {this.props.queryResultRows.length > 0 ? (
                   <GenericTable
