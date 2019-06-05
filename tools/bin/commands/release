@@ -100,7 +100,7 @@ release::run() {
     generate_versioned_files "$topdir" "$release_version"
 
     # Build and stage artefacts to Sonatype
-    build_and_stage_artefacts "$topdir" "$maven_opts"
+    build_and_stage_artefacts "$topdir" "$maven_opts -pl '!ui-angular,!ui-react"
 
     # Build all Docker Images
     docker_login
