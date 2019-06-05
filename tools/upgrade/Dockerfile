@@ -16,6 +16,7 @@ ENV KUBECONFIG=/opt/kube-config \
 RUN yum clean all \
  && yum update -y \
  && yum install -y "epel-release" \
+ && sed -i -e 's/#baseurl/baseurl/g' -e 's/metalink/#metalink/g' /etc/yum.repos.d/epel.repo \
  && yum install -y "$openshift_yum_repo" \
  && yum install -y \
         "$openjdk_rpm" \
