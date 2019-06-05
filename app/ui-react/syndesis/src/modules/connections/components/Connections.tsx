@@ -1,4 +1,4 @@
-import { getConnectionIcon, WithConnectionHelpers } from '@syndesis/api';
+import { WithConnectionHelpers } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { ConnectionOverview } from '@syndesis/models';
 import {
@@ -11,7 +11,7 @@ import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { UIContext } from '../../../app';
-import { ApiError } from '../../../shared';
+import { ApiError, EntityIcon } from '../../../shared';
 
 export interface IConnectionsProps {
   error: boolean;
@@ -98,14 +98,11 @@ export class Connections extends React.Component<IConnectionsProps> {
                                     }
                                     description={c.description || ''}
                                     icon={
-                                      // dirty hack to handle connection-like objects coming from the editor
-                                      c.icon &&
-                                      c.icon.includes(process.env.PUBLIC_URL)
-                                        ? c.icon
-                                        : getConnectionIcon(
-                                            process.env.PUBLIC_URL,
-                                            c
-                                          )
+                                      <EntityIcon
+                                        entity={c}
+                                        alt={c.name}
+                                        width={46}
+                                      />
                                     }
                                     href={this.props.getConnectionHref(c)}
                                     i18nCannotDelete={t('cannotDelete')}

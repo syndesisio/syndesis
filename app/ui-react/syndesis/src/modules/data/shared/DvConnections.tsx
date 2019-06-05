@@ -1,4 +1,3 @@
-import { getConnectionIcon } from '@syndesis/api';
 import { Connection } from '@syndesis/models';
 import {
   DvConnectionCard,
@@ -8,7 +7,7 @@ import {
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { ApiError } from '../../../shared';
+import { ApiError, EntityIcon } from '../../../shared';
 import {
   getDvConnectionStatus,
   isDvConnectionSelected,
@@ -57,7 +56,7 @@ export class DvConnections extends React.Component<IDvConnectionsProps> {
                   name={c.name}
                   description={c.description || ''}
                   dvStatus={getDvConnectionStatus(c)}
-                  icon={getConnectionIcon(process.env.PUBLIC_URL, c)}
+                  icon={<EntityIcon entity={c} alt={c.name} width={46} />}
                   selected={isDvConnectionSelected(c)}
                   onSelectionChanged={this.handleConnSourceSelectionChanged}
                 />

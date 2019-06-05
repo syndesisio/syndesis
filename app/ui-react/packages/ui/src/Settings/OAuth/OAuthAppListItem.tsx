@@ -7,7 +7,7 @@ export interface IOAuthAppListItemProps {
   configured: boolean;
   children: React.ReactNode;
   expanded: boolean;
-  icon: string;
+  icon: React.ReactNode;
   i18nNotConfiguredText: string;
   name: string;
 }
@@ -26,12 +26,7 @@ export class OAuthAppListItem extends React.Component<IOAuthAppListItemProps> {
         hideCloseIcon={true}
         initExpanded={this.props.expanded}
         heading={this.props.name}
-        leftContent={
-          <img
-            className={'list-pf-icon list-pf-icon-small'}
-            src={this.props.icon}
-          />
-        }
+        leftContent={this.props.icon}
         description={''}
         additionalInfo={[
           !this.props.configured && (

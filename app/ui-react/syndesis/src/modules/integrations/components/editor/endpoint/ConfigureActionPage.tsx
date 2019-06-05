@@ -1,5 +1,4 @@
 import {
-  getConnectionIcon,
   getStep,
   getSteps,
   isEndStep,
@@ -204,10 +203,6 @@ export class ConfigureActionPage extends React.Component<
                       activeIndex: positionAsNumber,
                       activeStep: {
                         ...toUIStep(state.connection),
-                        icon: getConnectionIcon(
-                          process.env.PUBLIC_URL,
-                          state.connection
-                        ),
                       },
                       steps: toUIStepCollection(
                         getSteps(state.integration, params.flowId)

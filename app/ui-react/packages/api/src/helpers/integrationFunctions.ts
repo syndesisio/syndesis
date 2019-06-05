@@ -5,9 +5,7 @@ import {
   ConfigurationProperty,
   Connection,
   DataShape,
-  Extension,
   Flow,
-  IConnectionWithIconFile,
   IndexedStep,
   Integration,
   IntegrationOverview,
@@ -28,7 +26,6 @@ import {
   FlowType,
   ITypedFlow,
 } from '../constants';
-import { getConnectionIcon } from './connectionFunctions';
 
 export const NEW_INTEGRATION_ID = 'new-integration';
 export const NEW_INTEGRATION = {
@@ -175,72 +172,6 @@ export function getSteps(integration: Integration, flowId: string): Step[] {
   } catch (e) {
     return [];
   }
-}
-
-/**
- * Returns the start icon representing the provided integration
- * @param integration
- */
-export function getStartIcon(apiUri: string, integration: Integration) {
-  const flow = integration.flows![0];
-  return getIntegrationStepIcon(apiUri, integration, flow.id!, 0);
-}
-
-/**
- * Returns the ending icon representing the provided integration
- * @param integration
- */
-export function getFinishIcon(apiUri: string, integration: Integration) {
-  const flow = integration.flows![0];
-  return getIntegrationStepIcon(
-    apiUri,
-    integration,
-    flow.id!,
-    flow.steps!.length - 1
-  );
-}
-
-export function getExtensionIcon(extension: Extension) {
-  return extension.icon || ''; // TODO: a default icon?
-}
-
-export function getStepKindIcon(stepKind: Step['stepKind']) {
-  return `/icons/steps/${stepKind}.svg`;
-}
-
-/**
- * Returns the icon for the supplied step index of the supplied flow index
- * @param apiUri
- * @param integration
- * @param flowId
- * @param stepIndex
- */
-export function getIntegrationStepIcon(
-  apiUri: string,
-  integration: Integration,
-  flowId: string,
-  stepIndex: number
-): string {
-  const step = getStep(integration, flowId, stepIndex);
-  return getStepIcon(apiUri, step!);
-}
-
-/**
- * Returns the icon for the supplied step
- * @param apiUri
- * @param step
- */
-export function getStepIcon(apiUri: string, step: Step): string {
-  if (step.connection) {
-    const connection = step.connection as IConnectionWithIconFile;
-    return getConnectionIcon(apiUri, connection);
-  }
-  // The step is an extension
-  if (step.extension) {
-    return getExtensionIcon(step.extension);
-  }
-  // It's just a step
-  return getStepKindIcon(step.stepKind);
 }
 
 //

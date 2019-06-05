@@ -9,11 +9,9 @@ import {
   DataShapeKinds,
   ENDPOINT,
   EXTENSION,
-  getExtensionIcon,
   getNextAggregateStep,
   getPreviousSteps,
   getPreviousStepWithDataShape,
-  getStepIcon,
   getSubsequentSteps,
   HIDE_FROM_STEP_SELECT,
   LOG,
@@ -55,7 +53,7 @@ export function getStepKind(step: Step): IUIStep['uiStepKind'] {
   return step.stepKind;
 }
 
-export function toUIStep(step: Step): IUIStep {
+export function toUIStep(step: Step | StepKind): IUIStep {
   const uiStepKind = getStepKind(step);
   const inputDataShape =
     step.action &&
@@ -74,7 +72,6 @@ export function toUIStep(step: Step): IUIStep {
           (step as StepKind).description ||
           (step as StepKind).extension!.description ||
           '',
-        icon: getStepIcon(process.env.PUBLIC_URL, step),
         inputDataShape,
         metadata: {
           ...(step.extension!.metadata || {}),
@@ -96,7 +93,6 @@ export function toUIStep(step: Step): IUIStep {
           (step as ConnectionOverview).description ||
           step.connection!.description ||
           '',
-        icon: getStepIcon(process.env.PUBLIC_URL, step),
         inputDataShape,
         metadata: {
           ...(step.connection!.metadata || {}),
@@ -122,7 +118,6 @@ export function toUIStep(step: Step): IUIStep {
       const name = step.name || step.stepKind || 'Step';
       return {
         ...(step as StepKind),
-        icon: getStepIcon(process.env.PUBLIC_URL, step),
         inputDataShape,
         metadata: step.metadata || {},
         name,
@@ -297,7 +292,7 @@ export function mergeConnectionsSources(
                 configuredProperties: undefined,
                 description: a.description || '',
                 extension,
-                icon: `${process.env.PUBLIC_URL}${getExtensionIcon(extension)}`,
+                icon: extension.icon,
                 metadata: (extension.metadata as { [name: string]: any }) || {},
                 name: a.name,
                 properties,
