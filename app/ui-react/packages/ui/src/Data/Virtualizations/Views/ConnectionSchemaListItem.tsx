@@ -38,7 +38,7 @@ export class ConnectionSchemaListItem extends React.Component<
               <ListViewIcon name={'database'} />
             )
           }
-          stacked={true}
+          stacked={false}
         >
           {this.props.children ? (
             <ListView>{this.props.children}</ListView>

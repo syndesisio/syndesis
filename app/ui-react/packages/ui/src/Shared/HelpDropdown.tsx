@@ -3,9 +3,8 @@ import {
   DropdownDirection,
   DropdownItem,
   DropdownPosition,
-  DropdownToggle,
+  KebabToggle,
 } from '@patternfly/react-core';
-import { CogIcon } from '@patternfly/react-icons';
 import classNames from 'classnames';
 import * as React from 'react';
 
@@ -117,14 +116,12 @@ export class HelpDropdown extends React.Component<
           position={DropdownPosition.right}
           onSelect={this.onSelect}
           toggle={
-            <DropdownToggle
-              iconComponent={null}
+            <KebabToggle
               id="helpDropdownButton"
+              data-testid="helpDropdownButton"
               className={classNames('', this.props.className)}
               onToggle={this.onToggle}
-            >
-              <CogIcon />
-            </DropdownToggle>
+            />
           }
           isOpen={isOpen}
           isPlain={true}

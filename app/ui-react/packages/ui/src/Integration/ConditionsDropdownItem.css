@@ -1,0 +1,7 @@
+
+.conditions-dropdown-item__condition[data-verb=WHEN] {
+  color: #3C96D4;
+}
+.conditions-dropdown-item__condition[data-verb=OTHERWISE] {
+  color: #61AF5A;
+}

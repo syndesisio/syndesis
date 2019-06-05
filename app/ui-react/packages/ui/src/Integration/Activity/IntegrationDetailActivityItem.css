@@ -10,9 +10,26 @@
   padding-top: 6px;
 }
 
-.integration-detail-activity-item .integration-detail-activity-item-step-output {
-  border: none;
-  padding-top: 2px;
+.integration-detail-activity-item .integration-detail-activity-item__output {
+  white-space: nowrap;
+}
+
+.integration-detail-activity-item .integration-detail-activity-item__output {
+  padding: 0;
+  vertical-align: middle;
+}
+
+.integration-detail-activity-item .table-hover tr:hover .integration-detail-activity-item__output,
+.integration-detail-activity-item .integration-detail-activity-item__output {
+  background: #fafafa;
+}
+
+.integration-detail-activity-item__output-step-data {
+  max-height: 15em;
+  padding: 5px;
+  border: 0;
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
 
 .integration-detail-activity-item__expanded-table {

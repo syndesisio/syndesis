@@ -55,6 +55,11 @@ export interface IAddStepPageProps
     p: IBaseFlowRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptorObject;
+  getFlowHref: (
+    flowId: string,
+    p: IBaseFlowRouteParams,
+    s: IBaseRouteState
+  ) => H.LocationDescriptor;
 }
 
 export interface IAddStepPageState {
@@ -88,6 +93,7 @@ export const AddStepPage: React.FunctionComponent<
     saveHref,
     selfHref,
     getBreadcrumb,
+    getFlowHref,
   } = props;
   const { params, state, history, location } = useRouteData<
     IBaseFlowRouteParams,
@@ -205,6 +211,7 @@ export const AddStepPage: React.FunctionComponent<
                         props
                       )
                     }
+                    getFlowHref={flowId => getFlowHref(flowId, params, state)}
                     flowId={params.flowId}
                     integration={state.integration}
                     onDelete={onDelete}

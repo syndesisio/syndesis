@@ -80,31 +80,30 @@ export interface IWithConfigurationFormProps {
  */
 export const WithConfigurationForm: React.FunctionComponent<
   IWithConfigurationFormProps
-> = ({ onUpdatedIntegration, step, children }) => {
+> = props => {
   const { t } = useTranslation('shared');
 
   const onSave = async (
     values: { [key: string]: string },
     actions: any
   ): Promise<void> => {
-    await onUpdatedIntegration({
+    await props.onUpdatedIntegration({
       values,
     });
     actions.setSubmitting(false);
   };
 
-  let definition: { [key: string]: ConfigurationProperty };
+  let step = props.step.properties
+    ? props.step
+    : ALL_STEPS.find(s => s.stepKind === props.step.stepKind);
 
-  if (!step.properties) {
-    const maybeStep = ALL_STEPS.find(s => s.stepKind === step.stepKind);
-    if (maybeStep !== undefined) {
-      const steps = getActionSteps(maybeStep.action!.descriptor!);
-      const actionStep = getActionStep(steps, 0);
-      definition = getActionStepDefinition(actionStep);
-      step = maybeStep;
-    } else {
-      throw new Error('Unknown step');
-    }
+  let definition: { [key: string]: ConfigurationProperty };
+  // if step is undefined, maybe we are dealing with an extension
+  if (!step) {
+    const steps = getActionSteps(props.step.action!.descriptor!);
+    const actionStep = getActionStep(steps, 0);
+    definition = getActionStepDefinition(actionStep);
+    step = props.step;
   } else {
     definition = step.properties;
   }
@@ -137,7 +136,7 @@ export const WithConfigurationForm: React.FunctionComponent<
       key={step.id}
     >
       {({ fields, handleSubmit, isSubmitting, isValid, submitForm }) =>
-        children({
+        props.children({
           form: (
             <IntegrationEditorForm
               i18nFormTitle={

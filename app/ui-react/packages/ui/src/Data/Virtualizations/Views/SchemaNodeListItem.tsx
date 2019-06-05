@@ -2,6 +2,8 @@ import { ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
 
+import './SchemaNodeListItem.css';
+
 export interface ISchemaNodeListItemProps {
   name: string;
   connectionName: string;
@@ -58,6 +60,7 @@ export class SchemaNodeListItem extends React.Component<
           this.props.name
         )}-list-item`}
         heading={this.props.name}
+        className={'schema-node-list-item'}
         description={this.schemaDisplayPath(this.props.schemaPath)}
         checkboxInput={
           <input

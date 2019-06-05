@@ -1,4 +1,6 @@
 // Enum for the LeveledMessage level field
+import { Flow } from '@syndesis/models';
+
 export enum MessageLevel {
   INFO = 'INFO',
   WARN = 'WARN',
@@ -62,6 +64,24 @@ export enum DetailedStatus {
   Starting = 'STARTING',
 }
 
+export enum FlowType {
+  PRIMARY = 'PRIMARY',
+  API_PROVIDER = 'API_PROVIDER',
+  ALTERNATE = 'ALTERNATE',
+}
+
+export enum FlowKind {
+  CONDITIONAL = 'conditional',
+  DEFAULT = 'default',
+}
+
+export interface ITypedFlow extends Flow {
+  type?: FlowType;
+}
+
+export const FLOW_KIND_METADATA_KEY = 'kind';
+export const EXCERPT_METADATA_KEY = 'excerpt';
+
 // Special sekret connection metadata keys
 export const HIDE_FROM_STEP_SELECT = 'hide-from-step-select';
 export const HIDE_FROM_CONNECTION_PAGES = 'hide-from-connection-pages';
@@ -69,6 +89,7 @@ export const HIDE_FROM_CONNECTION_PAGES = 'hide-from-connection-pages';
 // stuff used by the ui to compute the StepKinds
 export const EXTENSION = 'extension';
 export const ENDPOINT = 'endpoint';
+export const FLOW = 'flow';
 export const CONNECTION = ENDPOINT;
 export const DATA_MAPPER = 'mapper';
 export const BASIC_FILTER = 'ruleFilter';
