@@ -1,5 +1,5 @@
 import { action } from '@storybook/addon-actions';
-import { withKnobs } from '@storybook/addon-knobs';
+import { boolean, select, withKnobs } from '@storybook/addon-knobs';
 import { storiesOf } from '@storybook/react';
 import { HelpDropdown } from '../../src';
 import * as React from 'react';
@@ -11,6 +11,17 @@ stories.add('HelpDropdown', () => {
     <div className="pf-u-display-flex pf-u-align-items-flex-start pf-u-flex-wrap">
       <div className="pf-u-m-xl">
         <HelpDropdown
+          dropdownDirection={select(
+            'dropdownDirection',
+            ['down', 'up'],
+            'down'
+          )}
+          dropdownPosition={select(
+            'dropdownPosition',
+            ['left', 'right'],
+            'left'
+          )}
+          isMobileView={boolean('isMobileView', false)}
           launchConnectorsGuide={logDropdownItemSelection}
           launchContactUs={logDropdownItemSelection}
           launchSampleIntegrationTutorials={logDropdownItemSelection}
