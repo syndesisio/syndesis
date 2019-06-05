@@ -361,6 +361,10 @@
     </profile>
     <profile>
       <id>flash</id>
+      <properties>
+        <!-- tests run is skipped -->
+        <skipTests>true</skipTests>
+      </properties>
       <build>
         <plugins>
           <plugin>
@@ -377,29 +381,6 @@
                 </fileset>
               </filesets>
             </configuration>
-          </plugin>
-          <plugin>
-            <groupId>com.github.eirslett</groupId>
-            <artifactId>frontend-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>yarn ng lint</id>
-                <phase />
-              </execution>
-              <execution>
-                <id>yarn ng test</id>
-                <phase />
-              </execution>
-              <execution>
-                <id>yarn ng build</id>
-                <goals>
-                  <goal>yarn</goal>
-                </goals>
-                <configuration>
-                  <arguments>build:flash</arguments>
-                </configuration>
-              </execution>
-            </executions>
           </plugin>
         </plugins>
       </build>

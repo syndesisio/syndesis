@@ -346,6 +346,10 @@
     </profile>
     <profile>
       <id>flash</id>
+      <properties>
+        <!-- tests run is skipped -->
+        <skipTests>true</skipTests>
+      </properties>
       <build>
         <plugins>
           <plugin>
@@ -369,10 +373,6 @@
             <executions>
               <execution>
                 <id>yarn ng lint</id>
-                <phase />
-              </execution>
-              <execution>
-                <id>yarn ng test</id>
                 <phase />
               </execution>
               <execution>
