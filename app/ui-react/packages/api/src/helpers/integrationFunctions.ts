@@ -664,12 +664,15 @@ export function stringifyValues(configuredProperties: any) {
  * @param integration
  */
 export function prepareIntegrationForSaving(integration: Integration) {
-  if (integration.id === NEW_INTEGRATION_ID) {
-    delete integration.id;
-  }
+  const { id } = integration;
   const flows = validateFlows(integration.flows);
   const tags = buildTags(integration.flows, integration.tags);
-  return { ...integration, tags, flows };
+  return {
+    ...integration,
+    flows,
+    id: id === NEW_INTEGRATION_ID ? undefined : id,
+    tags,
+  };
 }
 
 export type GetSanitizedSteps = (steps: Step[]) => Promise<Step[]>;
