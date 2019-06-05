@@ -1,4 +1,4 @@
-import { Connection, ConnectionOverview } from '@syndesis/models';
+import { Connection } from '@syndesis/models';
 import {
   ConnectionsListView,
   IActiveFilter,
@@ -12,23 +12,23 @@ import { Translation } from 'react-i18next';
 import i18n from '../../../../i18n';
 import resolvers from '../../../connections/resolvers';
 import { EditorSteps, IEditorStepsProps } from './EditorSteps';
-import { IUIIntegrationStep } from './interfaces';
+import { IUIStep } from './interfaces';
 
-function getFilteredAndSortedConnections(
-  steps: IUIIntegrationStep[],
+function getFilteredAndSortedEditorSteps(
+  steps: IUIStep[],
   activeFilters: IActiveFilter[],
   currentSortType: ISortType,
   isSortAscending: boolean
 ) {
-  let filteredAndSortedConnections = steps;
+  let filteredAndSortedEditorSteps = steps;
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
-    filteredAndSortedConnections = filteredAndSortedConnections.filter(
-      (c: Connection) => c.name.toLowerCase().includes(valueToLower)
+    filteredAndSortedEditorSteps = filteredAndSortedEditorSteps.filter(
+      (e: Connection) => e.name.toLowerCase().includes(valueToLower)
     );
   });
 
-  filteredAndSortedConnections = filteredAndSortedConnections.sort(
+  filteredAndSortedEditorSteps = filteredAndSortedEditorSteps.sort(
     (miA, miB) => {
       const left = isSortAscending ? miA : miB;
       const right = isSortAscending ? miB : miA;
@@ -36,7 +36,7 @@ function getFilteredAndSortedConnections(
     }
   );
 
-  return filteredAndSortedConnections;
+  return filteredAndSortedEditorSteps;
 }
 
 const filterByName = {
@@ -78,16 +78,12 @@ export class EditorStepsWithToolbar extends React.Component<
             defaultSortType={sortByName}
           >
             {helpers => {
-              const connectionString = 'connection';
-
-              const filteredAndSortedConnections = getFilteredAndSortedConnections(
-                this.props.connections as IUIIntegrationStep[],
+              const filteredAndSortedEditorSteps = getFilteredAndSortedEditorSteps(
+                this.props.steps,
                 helpers.activeFilters,
                 helpers.currentSortType,
                 helpers.isSortAscending
-              ).map(connection => {
-                return connection[connectionString];
-              });
+              );
 
               return (
                 <ConnectionsListView
@@ -97,20 +93,18 @@ export class EditorStepsWithToolbar extends React.Component<
                   linkToConnectionCreate={resolvers.create.selectConnector()}
                   filterTypes={filterTypes}
                   sortTypes={sortTypes}
-                  resultsCount={filteredAndSortedConnections.length}
+                  resultsCount={filteredAndSortedEditorSteps.length}
                   {...helpers}
                   i18nLinkCreateConnection={t('shared:linkCreateConnection')}
                   i18nResultsCount={t('shared:resultsCount', {
-                    count: filteredAndSortedConnections.length,
+                    count: filteredAndSortedEditorSteps.length,
                   })}
                 >
                   {this.props.children}
                   <EditorSteps
                     error={this.props.error}
                     loading={this.props.loading}
-                    connections={
-                      filteredAndSortedConnections as ConnectionOverview[]
-                    }
+                    steps={filteredAndSortedEditorSteps}
                     getConnectionHref={this.props.getConnectionHref}
                     getConnectionEditHref={this.props.getConnectionEditHref}
                   />

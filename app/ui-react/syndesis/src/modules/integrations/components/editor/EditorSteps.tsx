@@ -1,4 +1,3 @@
-import { getConnectionIcon } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { ConnectionOverview } from '@syndesis/models';
 import {
@@ -10,12 +9,13 @@ import {
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { ApiError } from '../../../../shared';
+import { ApiError, EntityIcon } from '../../../../shared';
+import { IUIStep } from './interfaces';
 
 export interface IEditorStepsProps {
   error: boolean;
   loading: boolean;
-  connections: ConnectionOverview[];
+  steps: IUIStep[];
 
   getConnectionHref(connection: ConnectionOverview): H.LocationDescriptor;
   getConnectionEditHref?(connection: ConnectionOverview): H.LocationDescriptor;
@@ -41,32 +41,27 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
               }
               errorChildren={<ApiError />}
             >
-              {() =>
-                this.props.connections.map((c, index) => {
+              {() => {
+                return this.props.steps.map((s, index) => {
                   const configurationRequired =
-                    c.board &&
-                    (c.board!.notices ||
-                      c.board!.warnings ||
-                      c.board!.errors)! > 0;
+                    s.board &&
+                    (s.board!.notices ||
+                      s.board!.warnings ||
+                      s.board!.errors)! > 0;
 
                   const isTechPreview =
-                    c.connector! && c.connector!.metadata!
-                      ? c.connector!.metadata!['tech-preview'] === 'true'
+                    s.connector! && s.connector!.metadata!
+                      ? s.connector!.metadata!['tech-preview'] === 'true'
                       : false;
 
                   return (
                     <ConnectionsGridCell key={index}>
                       <ConnectionCard
-                        name={c.name}
+                        name={s.name}
                         configurationRequired={configurationRequired}
-                        description={c.description || ''}
-                        icon={
-                          // dirty hack to handle connection-like objects coming from the editor
-                          c.icon && c.icon.includes(process.env.PUBLIC_URL)
-                            ? c.icon
-                            : getConnectionIcon(process.env.PUBLIC_URL, c)
-                        }
-                        href={this.props.getConnectionHref(c)}
+                        description={s.description || ''}
+                        icon={<EntityIcon entity={s} alt={s.name} width={46} />}
+                        href={this.props.getConnectionHref(s)}
                         i18nCannotDelete={t('cannotDelete')}
                         i18nConfigurationRequired={t('configurationRequired')}
                         i18nTechPreview={t('techPreview')}
@@ -81,8 +76,8 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                       />
                     </ConnectionsGridCell>
                   );
-                })
-              }
+                });
+              }}
             </WithLoader>
           </ConnectionsGrid>
         )}

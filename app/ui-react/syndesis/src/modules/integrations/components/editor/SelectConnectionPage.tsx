@@ -55,7 +55,7 @@ export class SelectConnectionPage extends React.Component<
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {(params, state, { history }) => {
+        {(params, state) => {
           const { flowId, position } = params;
           const { integration = getEmptyIntegration() } = state;
           const positionAsNumber = parseInt(position, 10) || 0;
@@ -104,6 +104,7 @@ export class SelectConnectionPage extends React.Component<
                                     positionAsNumber,
                                     integrationSteps
                                   ) as IUIStep[];
+
                                   return (
                                     <EditorStepsWithToolbar
                                       loading={
@@ -121,7 +122,7 @@ export class SelectConnectionPage extends React.Component<
                                           this.props
                                         )
                                       }
-                                      connections={visibleSteps}
+                                      steps={visibleSteps}
                                       createConnectionButtonStyle={'default'}
                                     />
                                   );
