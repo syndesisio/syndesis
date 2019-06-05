@@ -7,7 +7,7 @@ JAVA_IMAGE_MODULES="server meta s2i"
 UI_IMAGE_MODULES="ui-angular ui-react"
 
 # All modules which create images
-ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES $UI_IMAGE_MODULES operator"
+ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES syndesis-ui-legacy syndesis-ui operator"
 
 release::description() {
     echo "Perform a release"
