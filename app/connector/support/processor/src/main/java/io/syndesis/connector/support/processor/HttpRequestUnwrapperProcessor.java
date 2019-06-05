@@ -74,6 +74,7 @@ public final class HttpRequestUnwrapperProcessor implements Processor {
                     return;
                 }
 
+                message.setHeader(Exchange.CONTENT_TYPE, "text/plain");
                 message.setBody(bodyData.asText());
             }
         }
