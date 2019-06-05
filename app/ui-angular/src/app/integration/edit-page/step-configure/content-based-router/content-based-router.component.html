@@ -39,8 +39,8 @@
                   formControlName="condition"
                   type="text"
                   [attr.list]="'path-list-' + i"
-                  placeholder="Simple language expression">
-                <span class="help-block" [textContent]="editMode ? 'Provide a condition that you want to evaluate (e.g. ${in.header.type} == \'note\' or ${in.body.title} contains \'Important\').' : ''"></span>
+                  placeholder="Condition">
+                <span class="help-block" [textContent]="editMode ? 'Provide a condition that you want to evaluate.' : ''"></span>
                 <span *ngIf="editMode && flowSet.controls.condition.dirty && flowSet.controls.condition.errors?.required" class="help-block error">Condition is required</span>
                 <span *ngIf="editMode && flowSet.controls.condition.errors?.maxlength" class="help-block error">Maximum characters exceeded</span>
               </div>

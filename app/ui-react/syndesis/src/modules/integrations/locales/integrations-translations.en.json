@@ -81,9 +81,9 @@
       "saveAndPublish": "Save and publish"
     },
     "choiceForm": {
-      "conditionDescription": "Provide a condition that you want to evaluate (e.g. ${in.header.type} == 'note' or ${in.body.title} contains 'Important').",
+      "conditionDescription": "Provide a condition that you want to evaluate.",
       "conditionName": "Condition",
-      "conditionPlaceholder": "Simple language expression",
+      "conditionPlaceholder": "Condition",
       "addCondition": "+ Add another condition",
       "addConditionTitle": "When",
       "useDefaultFlowDescription": "Use this flow when no other condition matches",
