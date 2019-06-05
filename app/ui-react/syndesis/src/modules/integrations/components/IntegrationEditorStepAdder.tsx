@@ -1,4 +1,4 @@
-import { getStepIcon } from '@syndesis/api';
+import { CHOICE, getStepIcon } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Integration, Step } from '@syndesis/models';
 import {
@@ -11,6 +11,8 @@ import {
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { ChoiceStepExpanderBody } from './editor/choice/ChoiceStepExpanderBody';
+import { IUIStep } from './editor/interfaces';
 import {
   toUIIntegrationStepCollection,
   toUIStepCollection,
@@ -46,9 +48,22 @@ export interface IIntegrationEditorStepAdderProps {
     stepIdx: number,
     step: Step
   ) => H.LocationDescriptorObject;
+  getFlowHref: (flowId: string) => H.LocationDescriptor;
   flowId: string;
   integration: Integration;
   onDelete: (idx: number, step: Step) => void;
+}
+
+function getStepChildren(
+  step: IUIStep,
+  getFlowHref: (flowId: string) => H.LocationDescriptor
+) {
+  switch (step.stepKind) {
+    case CHOICE:
+      return <ChoiceStepExpanderBody step={step} getFlowHref={getFlowHref} />;
+    default:
+      return undefined;
+  }
 }
 
 /**
@@ -59,7 +74,6 @@ export interface IIntegrationEditorStepAdderProps {
  * @see [addStepHref]{@link IIntegrationEditorStepAdderProps#addStepHref}
  * @see [configureStepHref]{@link IIntegrationEditorStepAdderProps#configureStepHref}
  *
- * @todo add the delete step button
  */
 export class IntegrationEditorStepAdder extends React.Component<
   IIntegrationEditorStepAdderProps
@@ -83,10 +97,11 @@ export class IntegrationEditorStepAdder extends React.Component<
                 ) {
                   restrictedDelete = true;
                 }
-
+                const children = getStepChildren(s, this.props.getFlowHref);
                 return (
                   <React.Fragment key={idx}>
                     <IntegrationEditorStepsListItem
+                      children={children}
                       stepName={(s.action && s.action.name) || s.name!}
                       stepDescription={
                         (s.action! && s.action!.description) || ''

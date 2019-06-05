@@ -240,6 +240,9 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                         })
                       }
                       getBreadcrumb={getBreadcrumb}
+                      getFlowHref={(flowId, p, s) =>
+                        resolvers.create.configure.index({ ...p, ...s, flowId })
+                      }
                     />
                   )}
                 </WithLeaveConfirmation>
