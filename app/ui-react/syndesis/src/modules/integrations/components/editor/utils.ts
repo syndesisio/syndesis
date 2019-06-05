@@ -82,8 +82,7 @@ export function toUIStep(step: Step): IUIStep {
         },
         name: step.name || step.extension!.name,
         outputDataShape,
-        properties: step.action!.descriptor!.propertyDefinitionSteps![0]
-          .properties,
+        properties: (step as StepKind).properties,
         title: step.name!,
         uiStepKind,
       };
