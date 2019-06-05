@@ -91,3 +91,7 @@ ui-react/syndesis/.env.production.local
 # build cache
 ui-react/*/.cache
 ui-react/*/.rts2_cache*
+
+# package-lock.json
+*/ui-react/package-lock.json
+
