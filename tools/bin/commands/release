@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# Maven modules which create Docker images
-JAVA_IMAGE_MODULES="ui-angular ui-react server meta s2i"
+# Java Maven modules which create Docker images
+JAVA_IMAGE_MODULES="server meta s2i"
+
+# UI Maven modules wich create Docker images
+UI_IMAGE_MODULES="ui-angular ui-react"
 
 # All modules which create images
-ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES operator"
+ALL_IMAGE_MODULES="$JAVA_IMAGE_MODULES $UI_IMAGE_MODULES operator"
 
 release::description() {
     echo "Perform a release"
@@ -100,7 +103,7 @@ release::run() {
     generate_versioned_files "$topdir" "$release_version"
 
     # Build and stage artefacts to Sonatype
-    build_and_stage_artefacts "$topdir" "$maven_opts -pl '!ui-angular,!ui-react"
+    build_and_stage_artefacts "$topdir" "$maven_opts -pl !ui-angular,!ui-react"
 
     # Build all Docker Images
     docker_login
@@ -300,6 +303,7 @@ create_syndesis_docker_images() {
         # -Pimage binds to fabric8:build
         ./mvnw ${maven_opts} -Prelease,image,flash -Dfabric8.mode=kubernetes -f $module package
     done
+    ./mvnw ${maven_opts} -Prelease,image,flash -Dfabric8.mode=kubernetes -pl ${UI_IMAGE_MODULES// /,} fabric8:build
 }
 
 create_upgrade_docker_image() {
