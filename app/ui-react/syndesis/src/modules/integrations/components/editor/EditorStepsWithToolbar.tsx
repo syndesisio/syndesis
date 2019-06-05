@@ -107,7 +107,6 @@ export class EditorStepsWithToolbar extends React.Component<
                   {this.props.children}
                   <EditorSteps
                     error={this.props.error}
-                    includeConnectionMenu={this.props.includeConnectionMenu}
                     loading={this.props.loading}
                     connections={
                       filteredAndSortedConnections as ConnectionOverview[]
