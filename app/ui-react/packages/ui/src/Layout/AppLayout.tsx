@@ -103,6 +103,7 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
                 >
                   <ToolbarItem>
                     <HelpDropdown
+                      isMobileView={isMobileView}
                       className="syn-help-dropdown"
                       isOpen={false}
                       launchSupportPage={onSelectSupport}
