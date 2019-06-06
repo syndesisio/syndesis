@@ -4,6 +4,7 @@ import {
   canEdit,
   WithIntegrationHelpers,
 } from '@syndesis/api';
+import * as H from '@syndesis/history';
 import { IntegrationOverview } from '@syndesis/models';
 import {
   ConfirmationButtonStyle,
@@ -31,6 +32,7 @@ export interface IWithIntegrationActionsChildrenProps {
 
 export interface IWithIntegrationActionsProps {
   integration: IntegrationOverview;
+  postDeleteHref?: H.LocationDescriptorObject;
   children: (props: IWithIntegrationActionsChildrenProps) => any;
 }
 
@@ -234,7 +236,11 @@ export class WithIntegrationActions extends React.Component<
                                   await deleteIntegration(
                                     this.props.integration.id!
                                   );
-                                  history.push(resolvers.list());
+
+                                  // redirect if requested
+                                  if (this.props.postDeleteHref) {
+                                    history.push(this.props.postDeleteHref);
+                                  }
                                 } catch (err) {
                                   pushNotification(
                                     i18n.t(
