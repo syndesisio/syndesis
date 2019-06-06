@@ -152,3 +152,39 @@ body {
   padding: 4px 8px;
 }
 
+/* Wizard overrides */
+.wizard-pf-steps-indicator,
+.wizard-pf-steps {
+  background: #fff;
+}
+
+.wizard-pf-step-alt .wizard-pf-step-alt-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+@media (min-width: 768px) {
+  .wizard-pf-steps-indicator {
+    height: auto;
+    padding-bottom: calc(1em + 25px);
+  }
+}
+
+@media (min-width: 768px) {
+  .wizard-pf-steps-indicator .wizard-pf-step .wizard-pf-step-number {
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, .5em);
+  }
+}
+
+.wizard-pf-steps-indicator .wizard-pf-step:before {
+  top: calc(100% + .5em + calc(25px / 2));
+  transform: translateY(-100%);
+}
+
+.wizard-pf-step-title {
+  line-height: 24px;
+}
