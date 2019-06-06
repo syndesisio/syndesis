@@ -16,10 +16,11 @@ import {
   IntegrationDetailHeader,
   WithIntegrationActions,
 } from '../../components';
+import resolvers from '../../resolvers';
 import { IDetailsRouteParams, IDetailsRouteState } from './interfaces';
 
 /**
- * This page shows the second tab of the Integration Detail page.
+ * This page shows the third tab of the Integration Detail page.
  *
  * This component expects either an integrationId in the URL,
  * or an integration object set via the state.
@@ -52,6 +53,7 @@ export class MetricsPage extends React.Component {
                                 {() => (
                                   <WithIntegrationActions
                                     integration={data.integration}
+                                    postDeleteHref={resolvers.list()}
                                   >
                                     {({
                                       ciCdAction,

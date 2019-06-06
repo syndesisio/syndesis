@@ -23,6 +23,7 @@ import {
   WithIntegrationActions,
 } from '../../components';
 import { WithDeploymentActions } from '../../components/WithDeploymentActions';
+import resolvers from '../../resolvers';
 import { IDetailsRouteParams, IDetailsRouteState } from './interfaces';
 
 /**
@@ -56,6 +57,7 @@ export class DetailsPage extends React.Component {
                           {() => (
                             <WithIntegrationActions
                               integration={data.integration}
+                              postDeleteHref={resolvers.list()}
                             >
                               {({
                                 ciCdAction,
