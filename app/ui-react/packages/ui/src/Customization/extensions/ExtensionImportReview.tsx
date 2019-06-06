@@ -1,7 +1,16 @@
+import {
+  Stack,
+  TextContent,
+  TextList,
+  TextListItem,
+  TextListItemVariants,
+  TextListVariants,
+  Title,
+} from '@patternfly/react-core';
 import * as H from '@syndesis/history';
-import { Button, Grid } from 'patternfly-react';
+import { Button, Card, CardBody, Grid } from 'patternfly-react';
 import * as React from 'react';
-import { ButtonLink, Container } from '../../Layout';
+import { ButtonLink } from '../../Layout';
 import './ExtensionImportReview.css';
 
 export interface IImportAction {
@@ -116,12 +125,12 @@ export class ExtensionImportReview extends React.Component<
     }
 
     return (
-      <Container>
-        {this.props.actions
-          ? this.props.actions.map((action, index) =>
-              index === 0 ? (
-                <Grid.Col
-                  key={0}
+      <TextContent>
+        <TextList className="extension-import-review__actions-list">
+          {this.props.actions
+            ? this.props.actions.map((action, index) => (
+                <TextListItem
+                  key={index}
                   dangerouslySetInnerHTML={{
                     __html: this.props.i18nActionText(
                       action.name,
@@ -129,23 +138,10 @@ export class ExtensionImportReview extends React.Component<
                     ),
                   }}
                 />
-              ) : (
-                <Grid.Row key={index}>
-                  <Grid.Col key={0} xs={2} />
-                  <Grid.Col
-                    key={1}
-                    dangerouslySetInnerHTML={{
-                      __html: this.props.i18nActionText(
-                        action.name,
-                        action.description
-                      ),
-                    }}
-                  />
-                </Grid.Row>
-              )
-            )
-          : null}
-      </Container>
+              ))
+            : null}
+        </TextList>
+      </TextContent>
     );
   }
 
@@ -155,72 +151,95 @@ export class ExtensionImportReview extends React.Component<
 
   public render() {
     return (
-      <Grid className="extension-import-review__container">
-        <Grid.Row className="extension-import-review__title">
-          {this.props.i18nTitle}
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Col xs={2} className="extension-import-review__propertyLabel">
-            {this.props.i18nIdLabel}
-          </Grid.Col>
-          <Grid.Col className="extension-import-review__propertyValue">
-            {this.props.extensionId}
-          </Grid.Col>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Col xs={2} className="extension-import-review__propertyLabel">
-            {this.props.i18nNameLabel}
-          </Grid.Col>
-          <Grid.Col className="extension-import-review__propertyValue">
-            {this.props.extensionName}
-          </Grid.Col>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Col xs={2} className="extension-import-review__propertyLabel">
-            {this.props.i18nDescriptionLabel}
-          </Grid.Col>
-          <Grid.Col className="extension-import-review__propertyValue">
-            {this.props.extensionDescription
-              ? this.props.extensionDescription
-              : null}
-          </Grid.Col>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Col xs={2} className="extension-import-review__propertyLabel">
-            {this.props.i18nTypeLabel}
-          </Grid.Col>
-          <Grid.Col className="extension-import-review__propertyValue">
-            {this.props.i18nExtensionTypeMessage}
-          </Grid.Col>
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Col xs={2} className="extension-import-review__propertyLabel">
-            {this.props.i18nActionsLabel}
-          </Grid.Col>
-          {this.getActions()}
-        </Grid.Row>
-        <Grid.Row>
-          <Grid.Col xsOffset={2}>
-            <Grid.Row>
-              <Grid.Col>
-                <Container className="extension-import-review__buttonBar">
-                  <Button bsStyle="primary" onClick={this.handleImport}>
-                    {this.props.i18nImport}
-                  </Button>
-                  <ButtonLink
-                    data-testid={'extension-import-review-cancel-button'}
-                    className="extension-import-review__cancelButton"
-                    href={this.props.cancelLink}
-                    as={'default'}
-                  >
-                    {this.props.i18nCancel}
-                  </ButtonLink>
-                </Container>
-              </Grid.Col>
-            </Grid.Row>
-          </Grid.Col>
-        </Grid.Row>
-      </Grid>
+      <Card className="extension-import-review">
+        <CardBody>
+          <Stack gutter="md">
+            <Title
+              headingLevel="h1"
+              size="xl"
+              className="extension-import-review__title"
+            >
+              {this.props.i18nTitle}
+            </Title>
+            <TextContent>
+              <TextList component={TextListVariants.dl}>
+                <TextListItem
+                  component={TextListItemVariants.dt}
+                  className="extension-import-review__propertyLabel"
+                >
+                  {this.props.i18nIdLabel}
+                </TextListItem>
+                <TextListItem
+                  component={TextListItemVariants.dd}
+                  className="extension-import-review__propertyValue"
+                >
+                  {this.props.extensionId}
+                </TextListItem>
+                <TextListItem
+                  component={TextListItemVariants.dt}
+                  className="extension-import-review__propertyLabel"
+                >
+                  {this.props.i18nNameLabel}
+                </TextListItem>
+                <TextListItem
+                  component={TextListItemVariants.dd}
+                  className="extension-import-review__propertyValue"
+                >
+                  {this.props.extensionName}
+                </TextListItem>
+                <TextListItem
+                  component={TextListItemVariants.dt}
+                  className="extension-import-review__propertyLabel"
+                >
+                  {this.props.i18nDescriptionLabel}
+                </TextListItem>
+                <TextListItem
+                  component={TextListItemVariants.dd}
+                  className="extension-import-review__propertyValue"
+                >
+                  {this.props.extensionDescription
+                    ? this.props.extensionDescription
+                    : null}
+                </TextListItem>
+                <TextListItem
+                  component={TextListItemVariants.dt}
+                  className="extension-import-review__propertyLabel"
+                >
+                  {this.props.i18nTypeLabel}
+                </TextListItem>
+                <TextListItem
+                  component={TextListItemVariants.dd}
+                  className="extension-import-review__propertyValue"
+                >
+                  {this.props.i18nExtensionTypeMessage}
+                </TextListItem>
+                <TextListItem
+                  component={TextListItemVariants.dt}
+                  className="extension-import-review__propertyLabel"
+                >
+                  {this.props.i18nActionsLabel}
+                </TextListItem>
+                <TextListItem component={TextListItemVariants.dd}>
+                  {this.getActions()}
+                </TextListItem>
+              </TextList>
+            </TextContent>
+            <div className="extension-import-review__buttonBar">
+              <Button bsStyle="primary" onClick={this.handleImport}>
+                {this.props.i18nImport}
+              </Button>
+              <ButtonLink
+                data-testid={'extension-import-review-cancel-button'}
+                className="extension-import-review__cancelButton"
+                href={this.props.cancelLink}
+                as={'default'}
+              >
+                {this.props.i18nCancel}
+              </ButtonLink>
+            </div>
+          </Stack>
+        </CardBody>
+      </Card>
     );
   }
 }
