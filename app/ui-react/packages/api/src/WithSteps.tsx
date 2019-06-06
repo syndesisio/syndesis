@@ -13,6 +13,7 @@ import {
   CHOICE,
   DATA_MAPPER,
   DataShapeKinds,
+  FLOW,
   LOG,
   SPLIT,
   TEMPLATE,
@@ -29,6 +30,7 @@ export const ALL_STEPS: StepKind[] = [
     stepKind: DATA_MAPPER,
     properties: {},
     configuredProperties: undefined,
+    visible: [],
   }),
   requiresOutputDataShape(
     {
@@ -42,6 +44,7 @@ export const ALL_STEPS: StepKind[] = [
       stepKind: BASIC_FILTER,
       properties: undefined,
       configuredProperties: undefined,
+      visible: [],
     },
     true
   ),
@@ -55,6 +58,7 @@ export const ALL_STEPS: StepKind[] = [
       'Upload or create a Freemarker, Mustache or Velocity template to define consistent output data.',
     configuredProperties: undefined,
     properties: undefined,
+    visible: [],
   },
   noCollectionSupport({
     id: undefined,
@@ -77,6 +81,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
       },
     },
     configuredProperties: undefined,
+    visible: [],
   }),
   {
     id: undefined,
@@ -103,26 +108,30 @@ $\{in.body.title\} // Evaluates true when body contains title.
         required: false,
       },
     },
+    visible: [],
   },
-  requiresOutputDataShape(
-    {
-      id: undefined,
-      connection: undefined,
-      action: {
-        actionType: 'step',
-        descriptor: {
-          inputDataShape: noShape(),
-          outputDataShape: anyShape(),
-        } as ActionDescriptor,
-      } as Action,
-      name: 'Conditional Flows',
-      description:
-        'Sends the message to different flows based on condition evaluation',
-      stepKind: CHOICE,
-      properties: {},
-      configuredProperties: undefined,
-    },
-    true
+  notAllowedInSubFlow(
+    requiresOutputDataShape(
+      {
+        id: undefined,
+        connection: undefined,
+        action: {
+          actionType: 'step',
+          descriptor: {
+            inputDataShape: noShape(),
+            outputDataShape: anyShape(),
+          } as ActionDescriptor,
+        } as Action,
+        name: 'Conditional Flows',
+        description:
+          'Sends the message to different flows based on condition evaluation',
+        stepKind: CHOICE,
+        properties: {},
+        configuredProperties: undefined,
+        visible: [],
+      },
+      true
+    )
   ),
   requiresOutputDataShape({
     id: undefined,
@@ -133,6 +142,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
     stepKind: SPLIT,
     properties: {},
     configuredProperties: undefined,
+    visible: [],
   }),
   requiresConsistentSplitAggregate({
     id: undefined,
@@ -143,6 +153,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
     stepKind: AGGREGATE,
     properties: {},
     configuredProperties: undefined,
+    visible: [],
   }),
 ];
 
@@ -180,6 +191,28 @@ function stepsHaveInputDataShape(steps: Step[]): boolean {
   );
 }
 
+function notAllowedInSubFlow(obj: StepKind) {
+  obj.visible!.push(
+    (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
+      return (
+        previousSteps.find(
+          s =>
+            typeof s.connection !== 'undefined' &&
+            typeof s.connection!.connectorId !== 'undefined' &&
+            s.connection!.connectorId! === FLOW
+        ) === undefined &&
+        subsequentSteps.find(
+          s =>
+            typeof s.connection !== 'undefined' &&
+            typeof s.connection.connectorId !== undefined &&
+            s.connection.connectorId === FLOW
+        ) === undefined
+      );
+    }
+  );
+  return obj;
+}
+
 // currently no steps fit this criteria but that could change
 // @ts-ignore
 function requiresInputOutputDataShapes(
@@ -187,31 +220,29 @@ function requiresInputOutputDataShapes(
   anyPrevious = true,
   anySubsequent = true
 ): StepKind {
-  obj.visible = (
-    position: number,
-    previousSteps: Step[],
-    subsequentSteps: Step[]
-  ) => {
-    if (!anyPrevious) {
-      // only test the first previous step that has some kind of data shape
-      const previousStep = previousSteps.reduceRight(
-        (foundStep, s) => (!foundStep && dataShapeExists(s) ? s : foundStep),
-        undefined as Step | undefined
+  obj.visible!.push(
+    (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
+      if (!anyPrevious) {
+        // only test the first previous step that has some kind of data shape
+        const previousStep = previousSteps.reduceRight(
+          (foundStep, s) => (!foundStep && dataShapeExists(s) ? s : foundStep),
+          undefined as Step | undefined
+        );
+        previousSteps = previousStep ? [previousStep] : [];
+      }
+      if (!anySubsequent) {
+        // only test the next subsequent step that has a data shape
+        const subsequentStep = subsequentSteps.find(s =>
+          dataShapeExists(s, true)
+        );
+        subsequentSteps = subsequentStep ? [subsequentStep] : [];
+      }
+      return (
+        stepsHaveOutputDataShape(previousSteps) &&
+        stepsHaveInputDataShape(subsequentSteps)
       );
-      previousSteps = previousStep ? [previousStep] : [];
     }
-    if (!anySubsequent) {
-      // only test the next subsequent step that has a data shape
-      const subsequentStep = subsequentSteps.find(s =>
-        dataShapeExists(s, true)
-      );
-      subsequentSteps = subsequentStep ? [subsequentStep] : [];
-    }
-    return (
-      stepsHaveOutputDataShape(previousSteps) &&
-      stepsHaveInputDataShape(subsequentSteps)
-    );
-  };
+  );
   return obj;
 }
 
@@ -250,13 +281,11 @@ function hasPrecedingCollection(previousSteps: Step[]) {
 }
 
 function noCollectionSupport(obj: StepKind) {
-  obj.visible = (
-    position: number,
-    previousSteps: Step[],
-    subsequentSteps: Step[]
-  ) => {
-    return !hasPrecedingCollection(previousSteps);
-  };
+  obj.visible!.push(
+    (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
+      return !hasPrecedingCollection(previousSteps);
+    }
+  );
   return obj;
 }
 
@@ -265,24 +294,20 @@ function requiresOutputDataShape(
   noCollectionSupportP = false
 ): StepKind {
   if (noCollectionSupportP) {
-    obj.visible = (
-      position: number,
-      previousSteps: Step[],
-      subsequentSteps: Step[]
-    ) => {
-      return (
-        stepsHaveOutputDataShape(previousSteps) &&
-        !hasPrecedingCollection(previousSteps)
-      );
-    };
+    obj.visible!.push(
+      (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
+        return (
+          stepsHaveOutputDataShape(previousSteps) &&
+          !hasPrecedingCollection(previousSteps)
+        );
+      }
+    );
   } else {
-    obj.visible = (
-      position: number,
-      previousSteps: Step[],
-      subsequentSteps: Step[]
-    ) => {
-      return stepsHaveOutputDataShape(previousSteps);
-    };
+    obj.visible!.push(
+      (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
+        return stepsHaveOutputDataShape(previousSteps);
+      }
+    );
   }
   return obj;
 }
@@ -292,59 +317,54 @@ function requiresInputDataShape(
   noCollectionSupportP = false
 ): StepKind {
   if (noCollectionSupportP) {
-    obj.visible = (
-      position: number,
-      previousSteps: Step[],
-      subsequentSteps: Step[]
-    ) => {
-      return (
-        stepsHaveInputDataShape(subsequentSteps) &&
-        !hasPrecedingCollection(previousSteps)
-      );
-    };
+    obj.visible!.push(
+      (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
+        return (
+          stepsHaveInputDataShape(subsequentSteps) &&
+          !hasPrecedingCollection(previousSteps)
+        );
+      }
+    );
   } else {
-    obj.visible = (
-      position: number,
-      previousSteps: Step[],
-      subsequentSteps: Step[]
-    ) => {
-      return stepsHaveInputDataShape(subsequentSteps);
-    };
+    obj.visible!.push(
+      (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
+        return stepsHaveInputDataShape(subsequentSteps);
+      }
+    );
   }
   return obj;
 }
 
 function requiresConsistentSplitAggregate(obj: StepKind): StepKind {
-  obj.visible = (
-    position: number,
-    previousSteps: Step[],
-    subsequentSteps: Step[]
-  ) => {
-    const countPreviousSplit = previousSteps.filter(s => s.stepKind === SPLIT)
-      .length;
-    const countPreviousAggregate = previousSteps.filter(
-      s => (s.stepKind || '').toLowerCase() === AGGREGATE
-    ).length;
+  obj.visible!.push(
+    (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
+      const countPreviousSplit = previousSteps.filter(s => s.stepKind === SPLIT)
+        .length;
+      const countPreviousAggregate = previousSteps.filter(
+        s => (s.stepKind || '').toLowerCase() === AGGREGATE
+      ).length;
 
-    if (countPreviousSplit <= countPreviousAggregate) {
-      return false;
+      if (countPreviousSplit <= countPreviousAggregate) {
+        return false;
+      }
+
+      const positionNextSplit = subsequentSteps.findIndex(
+        s => s.stepKind === SPLIT
+      );
+      const positionNextAggregate = subsequentSteps.findIndex(
+        s => s.stepKind === AGGREGATE
+      );
+
+      if (positionNextSplit === -1) {
+        return positionNextAggregate === -1;
+      }
+
+      return (
+        positionNextAggregate === -1 ||
+        positionNextSplit < positionNextAggregate
+      );
     }
-
-    const positionNextSplit = subsequentSteps.findIndex(
-      s => s.stepKind === SPLIT
-    );
-    const positionNextAggregate = subsequentSteps.findIndex(
-      s => s.stepKind === AGGREGATE
-    );
-
-    if (positionNextSplit === -1) {
-      return positionNextAggregate === -1;
-    }
-
-    return (
-      positionNextAggregate === -1 || positionNextSplit < positionNextAggregate
-    );
-  };
+  );
   return obj;
 }
 
