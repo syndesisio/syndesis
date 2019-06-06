@@ -9,6 +9,10 @@ call_maven() {
     check_error $maven_modules
     cd $(appdir)
     if [ -z "${maven_modules}" ]; then
+      return
+    fi
+
+    if [ "EVERYTHING" == "${maven_modules}" ]; then
         echo "=============================================================================="
         echo "./mvnw $args"
         echo "=============================================================================="
