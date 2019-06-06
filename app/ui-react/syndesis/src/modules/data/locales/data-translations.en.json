@@ -50,6 +50,8 @@
     "viewSqlFormSqlStatementDescription": "Enter SQL query and click SUBMIT (i.e. SELECT a, b FROM view1)",
     "queryResultsTableEmptyStateInfo": "Query has not yet been executed.\nSelect view, enter SQL query and click 'Submit'",
     "queryResultsTableEmptyStateTitle": "NO DATA AVAILABLE",
+    "queryResultsTitle": "Query Results",
+    "queryResultsRowCountMsg": "Number of Rows: ",
     "queryViewFailed": "An error occurred querying the selected view. Details: {{details}}",
     "queryViewSuccess": "The selected view was successfully queried.",
     "createVirtualizationSuccess": "{{name}} virtualization created.",

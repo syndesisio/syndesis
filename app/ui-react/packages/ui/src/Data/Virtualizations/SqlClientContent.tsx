@@ -1,3 +1,4 @@
+import { Text, TextContent } from '@patternfly/react-core';
 import * as H from '@syndesis/history';
 import { EmptyState, Grid, Table } from 'patternfly-react';
 import * as React from 'react';
@@ -41,6 +42,8 @@ export interface ISqlClientContentProps {
   i18nEmptyStateTitle: string;
   i18nImportViews: string;
   i18nImportViewsTip: string;
+  i18nResultsTitle: string;
+  i18nResultsRowCountMsg: string;
   linkCreateViewHRef: H.LocationDescriptor;
   linkImportViewsHRef: H.LocationDescriptor;
   i18nCreateViewTip?: string;
@@ -75,27 +78,42 @@ export class SqlClientContent extends React.Component<ISqlClientContentProps> {
               <Container>{this.props.formContent}</Container>
             </Grid.Col>
             <Grid.Col md={8}>
-              <Container>
-                {this.props.queryResultRows.length > 0 ? (
-                  <GenericTable
-                    columns={this.props.queryResultCols.map(col => ({
-                      cell: {
-                        formatters: [defaultCellFormat],
-                      },
-                      header: {
-                        formatters: [defaultHeaderFormat],
-                        label: col.label,
-                      },
-                      property: col.id,
-                    }))}
-                    rows={this.props.queryResultRows}
-                    rowKey={
-                      this.props.queryResultCols.length > 0
-                        ? this.props.queryResultCols[0].id
-                        : ''
-                    }
-                    {...this.props}
-                  />
+              <>
+                {this.props.queryResultCols.length > 0 ? (
+                  <>
+                    <TextContent>
+                      <Text>{this.props.i18nResultsTitle}</Text>
+                    </TextContent>
+                    <TextContent>
+                      <Text>
+                        <small>
+                          <i>
+                            {this.props.i18nResultsRowCountMsg}
+                            {this.props.queryResultRows.length}
+                          </i>
+                        </small>
+                      </Text>
+                    </TextContent>
+                    <GenericTable
+                      columns={this.props.queryResultCols.map(col => ({
+                        cell: {
+                          formatters: [defaultCellFormat],
+                        },
+                        header: {
+                          formatters: [defaultHeaderFormat],
+                          label: col.label,
+                        },
+                        property: col.id,
+                      }))}
+                      rows={this.props.queryResultRows}
+                      rowKey={
+                        this.props.queryResultCols.length > 0
+                          ? this.props.queryResultCols[0].id
+                          : ''
+                      }
+                      {...this.props}
+                    />
+                  </>
                 ) : (
                   <EmptyState>
                     <EmptyState.Title>
@@ -106,7 +124,7 @@ export class SqlClientContent extends React.Component<ISqlClientContentProps> {
                     </EmptyState.Info>
                   </EmptyState>
                 )}
-              </Container>
+              </>
             </Grid.Col>
           </Grid.Row>
         ) : (
