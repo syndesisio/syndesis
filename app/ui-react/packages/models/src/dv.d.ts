@@ -8,6 +8,9 @@ export interface RestDataService {
   keng__hasChildren: boolean;
   keng__id: string;
   keng__kType: string;
+  odataHostName?: string;
+  podNamespace?: string;
+  publishPodName?: string;
   publishedState:
     | 'BUILDING'
     | 'CANCELLED'
@@ -17,7 +20,6 @@ export interface RestDataService {
     | 'NOTFOUND'
     | 'RUNNING'
     | 'SUBMITTED';
-  publishLogUrl?: string;
   serviceVdbName: string;
   serviceVdbVersion: string;
   serviceViewDefinitions: string[];

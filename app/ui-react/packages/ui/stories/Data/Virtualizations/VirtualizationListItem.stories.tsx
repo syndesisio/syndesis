@@ -77,9 +77,59 @@ const publishedVirtualizationNotes =
   publishText +
   '"\n';
 
-stories.add(
-  'sample virtualization item',
-  withNotes(publishedVirtualizationNotes)(() => (
+stories
+  .add(
+    'sample virtualization item',
+    withNotes(publishedVirtualizationNotes)(() => (
+      <VirtualizationListItem
+        virtualizationName={virtualizationName}
+        virtualizationViewNames={[]}
+        virtualizationDescription={virtualizationDescription}
+        serviceVdbName={serviceVdbName}
+        i18nCancelText={cancelText}
+        i18nDelete={deleteText}
+        i18nDeleteModalMessage={confirmDeleteMessage}
+        i18nDeleteModalTitle={confirmDeleteTitle}
+        i18nDraft={draftText}
+        i18nError={errorText}
+        icon={text('icon', virtualizationIconData)}
+        i18nEdit={editText}
+        i18nEditTip={editTip}
+        /* TD-636: Commented out for TP 
+      i18nExport={'Export'} */
+        i18nPublished={publishedText}
+        i18nUnpublish={unpublishText}
+        i18nPublish={publishText}
+        i18nPublishInProgress={publishInProgressText}
+        i18nPublishLogUrlText={publishLogUrlText}
+        i18nUnpublishModalMessage={confirmUnpublishMessage}
+        i18nUnpublishModalTitle={confirmUnpublishTitle}
+        detailsPageLink={''}
+        onDelete={action(deleteText)}
+        /* TD-636: Commented out for TP 
+      onExport={action(exportText)} */
+        onUnpublish={action(unpublishText)}
+        onPublish={action(publishText)}
+        currentPublishedState={select(
+          'currentState',
+          [
+            'BUILDING',
+            'CANCELLED',
+            'CONFIGURING',
+            'DEPLOYING',
+            'FAILED',
+            'NOTFOUND',
+            'RUNNING',
+            'SUBMITTED',
+          ],
+          'NOTFOUND'
+        )}
+        publishingLogUrl={text('publishLogUrl', publishLogUrl)}
+      />
+    ))
+  )
+
+  .add('virtualization item with odata', () => (
     <VirtualizationListItem
       virtualizationName={virtualizationName}
       virtualizationViewNames={[]}
@@ -92,10 +142,11 @@ stories.add(
       i18nDraft={draftText}
       i18nError={errorText}
       icon={text('icon', virtualizationIconData)}
+      odataUrl={'http://redhat.com'}
       i18nEdit={editText}
       i18nEditTip={editTip}
       /* TD-636: Commented out for TP 
-      i18nExport={'Export'} */
+        i18nExport={'Export'} */
       i18nPublished={publishedText}
       i18nUnpublish={unpublishText}
       i18nPublish={publishText}
@@ -106,7 +157,7 @@ stories.add(
       detailsPageLink={''}
       onDelete={action(deleteText)}
       /* TD-636: Commented out for TP 
-      onExport={action(exportText)} */
+        onExport={action(exportText)} */
       onUnpublish={action(unpublishText)}
       onPublish={action(publishText)}
       currentPublishedState={select(
@@ -125,5 +176,4 @@ stories.add(
       )}
       publishingLogUrl={text('publishLogUrl', publishLogUrl)}
     />
-  ))
-);
+  ));
