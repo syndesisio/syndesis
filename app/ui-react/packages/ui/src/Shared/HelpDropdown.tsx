@@ -13,7 +13,7 @@ import * as React from 'react';
 export interface IHelpDropdownProps {
   additionalDropdownItems?: React.ReactNode[];
   className?: string;
-  isMobileView: boolean;
+  isTabletView: boolean;
   isOpen: boolean;
   dropdownDirection?: keyof typeof DropdownDirection;
   dropdownPosition?: keyof typeof DropdownPosition;
@@ -65,7 +65,7 @@ export class HelpDropdown extends React.Component<
       launchSupportPage,
       launchContactUs,
       launchAboutModal,
-      isMobileView,
+      isTabletView,
     } = this.props;
     const dropdownItems = [
       <DropdownItem
@@ -125,7 +125,7 @@ export class HelpDropdown extends React.Component<
           position={dropdownPosition || DropdownPosition.right}
           onSelect={this.onSelect}
           toggle={
-            isMobileView ? (
+            isTabletView ? (
               <KebabToggle
                 id={dropdownId}
                 data-testid={dropdownId}

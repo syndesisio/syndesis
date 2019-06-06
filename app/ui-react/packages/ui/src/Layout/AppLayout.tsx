@@ -77,9 +77,15 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
   const onNavToggleMobile = () => {
     setIsNavOpenMobile(!isNavOpenMobile);
   };
+  const [curViewportWidth, setCurViewportWidth] = React.useState(1024);
   const onPageResize = (props: { mobileView: boolean; windowSize: number }) => {
     setIsMobileView(props.mobileView);
+    setCurViewportWidth(props.windowSize);
   };
+  const [isTabletView, setIsTabletView] = React.useState(false);
+  React.useEffect(() => {
+    setIsTabletView(curViewportWidth <= 992);
+  }, [curViewportWidth]);
   return (
     <AppLayoutContext.Provider
       value={{
@@ -103,7 +109,7 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
                 >
                   <ToolbarItem>
                     <HelpDropdown
-                      isMobileView={isMobileView}
+                      isTabletView={isTabletView}
                       className="syn-help-dropdown"
                       isOpen={false}
                       launchSupportPage={onSelectSupport}
