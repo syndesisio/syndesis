@@ -1,0 +1,8 @@
+<!doctype html>
+<script>
+  addEventListener('load', function() {
+    window.opener.console.log(document.cookie);
+    window.opener.authCompleted(window.location.hash.substr(1));
+    window.close();
+  })
+</script>

@@ -62,7 +62,7 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export default class ConnectorsPage extends React.Component {
+export class ConnectorsPage extends React.Component {
   public render() {
     return (
       <Translation ns={['connections', 'shared']}>
