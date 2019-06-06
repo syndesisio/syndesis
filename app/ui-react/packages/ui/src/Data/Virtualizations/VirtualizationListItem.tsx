@@ -2,6 +2,7 @@ import * as H from '@syndesis/history';
 import {
   //  Button,
   DropdownKebab,
+  Icon,
   ListView,
   ListViewIcon,
   ListViewItem,
@@ -28,6 +29,8 @@ import {
 import { VirtualizationPublishStatus } from './VirtualizationPublishStatus';
 import { VirtualizationPublishStatusDetail } from './VirtualizationPublishStatusDetail';
 
+import './VirtualizationListItem.css';
+
 export interface IVirtualizationListItemProps {
   currentPublishedState: VirtualizationPublishState;
   detailsPageLink: H.LocationDescriptor;
@@ -49,6 +52,7 @@ export interface IVirtualizationListItemProps {
   i18nUnpublishModalMessage: string;
   i18nUnpublishModalTitle: string;
   icon?: string;
+  odataUrl?: string;
   onDelete: (virtualizationName: string) => void;
   /* TD-636: Commented out for TP 
   onExport: (virtualizationName: string) => void; */
@@ -260,6 +264,23 @@ export class VirtualizationListItem extends React.Component<
             this.props.virtualizationDescription
               ? this.props.virtualizationDescription
               : ''
+          }
+          additionalInfo={
+            this.props.odataUrl && (
+              <span>
+                <a
+                  data-testid={'virtualization-list-item-odataUrl'}
+                  target="_blank"
+                  href={this.props.odataUrl}
+                >
+                  {this.props.odataUrl}
+                  <Icon
+                    className={'virtualization-list-item-odata-link-icon'}
+                    name={'external-link'}
+                  />
+                </a>
+              </span>
+            )
           }
           hideCloseIcon={true}
           leftContent={
