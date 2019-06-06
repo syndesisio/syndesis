@@ -9,12 +9,8 @@ export default describe('ExtensionImportCard', () => {
   const dndInstructions =
     "Drag 'n' drop a file here, or click to select a file using a file chooser dialog.";
   const helpMessage = 'Accepted file type: .jar';
-  const instructions =
-    'To update an extension, click Extensions in the breadcrumbs above, ' +
-    'and in the list of extensions, click Update for the appropriate extension';
   const noFileSelectedMessage = 'no file selected';
   const selectedFileLabel = 'Selected file:';
-  const title = 'Import Extension';
 
   const mockOnUploadAccepted = jest.fn();
   const mockOnUploadRejected = jest.fn();
@@ -28,8 +24,6 @@ export default describe('ExtensionImportCard', () => {
     i18nDndSelectedFileLabel: selectedFileLabel,
     i18nDndUploadFailedMessage: undefined,
     i18nDndUploadSuccessMessage: undefined,
-    i18nImportInstructions: instructions,
-    i18nTitle: title,
     onDndUploadAccepted: mockOnUploadAccepted,
     onDndUploadRejected: mockOnUploadRejected,
   } as IExtensionImportCardProps;
@@ -38,12 +32,6 @@ export default describe('ExtensionImportCard', () => {
     const comp = <ExtensionImportCard {...props} />;
 
     const { queryAllByText } = render(comp);
-
-    // title
-    expect(queryAllByText(title)).toHaveLength(1);
-
-    // instructions
-    expect(queryAllByText(instructions)).toHaveLength(1);
 
     // Dnd help message
     expect(queryAllByText(helpMessage)).toHaveLength(1);

@@ -1,4 +1,3 @@
-import { Text } from '@patternfly/react-core';
 import { Alert, Card } from 'patternfly-react';
 import * as React from 'react';
 import { DndFileChooser } from '../../Shared/DndFileChooser';
@@ -51,16 +50,6 @@ export interface IExtensionImportCardProps {
   i18nDndUploadSuccessMessage?: string;
 
   /**
-   * The localized instructions text that appears above the DnD component.
-   */
-  i18nImportInstructions: string;
-
-  /**
-   * The localized title text that appears above the DnD component.
-   */
-  i18nTitle: string;
-
-  /**
    * Callback for when one or more file uploads have been accepted. Caller should handler processing of the files.
    */
   onDndUploadAccepted(files: File[]): void;
@@ -77,11 +66,7 @@ export class ExtensionImportCard extends React.Component<
   public render() {
     return (
       <Card>
-        <Card.Heading>
-          <Card.Title>{this.props.i18nTitle}</Card.Title>
-        </Card.Heading>
         <Card.Body>
-          <Text>{this.props.i18nImportInstructions}</Text>
           {this.props.i18nAlertMessage ? (
             <Alert type={'error'}>
               <span>{this.props.i18nAlertMessage}</span>

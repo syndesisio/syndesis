@@ -18,23 +18,13 @@ const handleFiles = (files: File[]) => {
   });
 };
 const helpMessage = 'Accepted file type: .jar';
-const instructions =
-  'To update an extension, click Extensions in the breadcrumbs above, ' +
-  'and in the list of extensions, click Update for the appropriate extension';
 const noFileSelectedMessage = 'no file selected';
 const selectedFileLabel = 'Selected file:';
-const title = 'Import Extension';
 const uploadFailedMessage = (fileName: string) =>
   '<span>File <strong>' + fileName + '</strong> could not be uploaded</span>';
 const uploadSuccessMessage = 'Successfully uploaded.';
 
 const storyNotes =
-  '- Verify title is "' +
-  title +
-  '"\n' +
-  '- Verify import instructions are "' +
-  instructions +
-  '"\n' +
   '- Verify DnD drop area instructions are "' +
   dndInstructions +
   '"\n' +
@@ -74,8 +64,6 @@ stories.add(
         'Success Message',
         'Successfully uploaded'
       )}
-      i18nImportInstructions={instructions}
-      i18nTitle={title}
       onDndUploadAccepted={handleFiles}
       onDndUploadRejected={uploadFailedMessage}
     />

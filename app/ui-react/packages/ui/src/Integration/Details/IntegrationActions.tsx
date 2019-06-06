@@ -4,6 +4,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { toValidHtmlId } from '../../helpers';
 import { ButtonLink } from '../../Layout';
+import './IntegrationActions.css';
 
 export interface IIntegrationAction {
   href?: H.LocationDescriptor;
@@ -32,6 +33,7 @@ export class IntegrationActions extends React.Component<
           View
         </ButtonLink>
         <DropdownKebab
+          className="integration-actions__dropdown-kebab"
           id={`integration-${this.props.integrationId}-action-menu`}
           pullRight={true}
         >

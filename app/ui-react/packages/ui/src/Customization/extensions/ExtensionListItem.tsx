@@ -133,7 +133,7 @@ export class ExtensionListItem extends React.Component<
             this.props.extensionName
           )}-list-item`}
           actions={
-            <div className="form-group">
+            <>
               <OverlayTrigger
                 overlay={this.getDetailsTooltip()}
                 placement="top"
@@ -165,7 +165,7 @@ export class ExtensionListItem extends React.Component<
                   {this.props.i18nDelete}
                 </Button>
               </OverlayTrigger>
-            </div>
+            </>
           }
           additionalInfo={[
             <ListViewInfoItem key={1}>

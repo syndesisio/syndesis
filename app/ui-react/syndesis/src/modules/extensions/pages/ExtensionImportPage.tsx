@@ -8,6 +8,7 @@ import {
   IImportAction,
   Loader,
   PageSection,
+  SimplePageHeader,
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -203,6 +204,12 @@ export default class ExtensionImportPage extends React.Component<
                                 {t('extension.extensionImportPageTitle')}
                               </span>
                             </Breadcrumb>
+                            <SimplePageHeader
+                              i18nTitle={t('extension.ImportExtension')}
+                              i18nDescription={t(
+                                'extension.importUpdateMessage'
+                              )}
+                            />
                             <PageSection>
                               {this.state.loading ? <Loader /> : null}
                               <ExtensionImportCard
@@ -226,10 +233,6 @@ export default class ExtensionImportPage extends React.Component<
                                 i18nDndUploadSuccessMessage={
                                   this.state.dndUploadSuccessMessage
                                 }
-                                i18nImportInstructions={t(
-                                  'extension.importUpdateMessage'
-                                )}
-                                i18nTitle={t('extension.ImportExtension')}
                                 onDndUploadAccepted={onDndUploadAcceptedHandler}
                                 onDndUploadRejected={onDndUploadRejectedHandler}
                               />
