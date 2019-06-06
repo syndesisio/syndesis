@@ -9,6 +9,8 @@ stories.addDecorator(withKnobs);
 
 const viewNames = ['view1', 'view2', 'view3'];
 const targetVdb = 'tgtVdbName';
+const queryResultsTitle = 'Query Results';
+const queryResultRowCountMsg = 'Number of Rows: ';
 const emptyStateTitle = 'Create View';
 const emptyStateInfo =
   'There are no views available. Please click one of the buttons below to create views.';
@@ -49,6 +51,8 @@ stories.add('No Views', () => (
       queryResultRows={[]}
       queryResultCols={[]}
       targetVdb={targetVdb}
+      i18nResultsTitle={queryResultsTitle}
+      i18nResultsRowCountMsg={queryResultRowCountMsg}
       i18nEmptyStateInfo={emptyStateInfo}
       i18nEmptyStateTitle={emptyStateTitle}
       i18nImportViews={importText}
@@ -75,6 +79,8 @@ stories.add('With Views, no query results', () => (
       queryResultRows={[]}
       queryResultCols={[]}
       targetVdb={targetVdb}
+      i18nResultsTitle={queryResultsTitle}
+      i18nResultsRowCountMsg={queryResultRowCountMsg}
       i18nEmptyStateInfo={emptyStateInfo}
       i18nEmptyStateTitle={emptyStateTitle}
       i18nImportViews={importText}
@@ -101,6 +107,8 @@ stories.add('With Views, with query results', () => (
       queryResultRows={resultRows}
       queryResultCols={resultCols}
       targetVdb={targetVdb}
+      i18nResultsTitle={queryResultsTitle}
+      i18nResultsRowCountMsg={queryResultRowCountMsg}
       i18nEmptyStateInfo={emptyStateInfo}
       i18nEmptyStateTitle={emptyStateTitle}
       i18nImportViews={importText}
