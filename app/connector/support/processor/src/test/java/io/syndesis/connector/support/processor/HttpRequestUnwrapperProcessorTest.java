@@ -82,7 +82,7 @@ public class HttpRequestUnwrapperProcessorTest {
 
         processor.process(exchange);
 
-        assertThat(in.getHeaders()).isEmpty();
+        assertThat(in.getHeaders()).containsOnly(entry(Exchange.CONTENT_TYPE, "text/plain"));
         assertThat(in.getBody()).isEqualTo("123");
     }
 
@@ -94,7 +94,7 @@ public class HttpRequestUnwrapperProcessorTest {
 
         processor.process(exchange);
 
-        assertThat(in.getHeaders()).isEmpty();
+        assertThat(in.getHeaders()).containsOnly(entry(Exchange.CONTENT_TYPE, "text/plain"));
         assertThat(in.getBody()).isEqualTo("simple");
     }
 
