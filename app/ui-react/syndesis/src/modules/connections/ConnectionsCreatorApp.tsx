@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
 import { WithClosedNavigation } from '../../shared';
-import ConfigurationPage from './pages/create/ConfigurationPage';
-import ConnectorsPage from './pages/create/ConnectorsPage';
-import ReviewPage from './pages/create/ReviewPage';
+import { ConfigurationPage } from './pages/create/ConfigurationPage';
+import { ConnectorsPage } from './pages/create/ConnectorsPage';
+import { ReviewPage } from './pages/create/ReviewPage';
 import routes from './routes';
 
 export default class ConnectionsCreatorApp extends React.Component {
