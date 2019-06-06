@@ -52,7 +52,7 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
 
                   let isTechPreview = false;
 
-                  if (s.connection!.connector) {
+                  if (s.connection && s.connection!.connector) {
                     isTechPreview =
                       getMetadataValue<string>(
                         'tech-preview',
