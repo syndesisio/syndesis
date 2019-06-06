@@ -1,3 +1,4 @@
+import { getMetadataValue } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { ConnectionOverview } from '@syndesis/models';
 import {
@@ -49,10 +50,21 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                       s.board!.warnings ||
                       s.board!.errors)! > 0;
 
-                  const isTechPreview =
-                    s.connector! && s.connector!.metadata!
-                      ? s.connector!.metadata!['tech-preview'] === 'true'
-                      : false;
+                  let isTechPreview = false;
+
+                  if (s.connection!.connector) {
+                    isTechPreview =
+                      getMetadataValue<string>(
+                        'tech-preview',
+                        s!.connection!.connector!.metadata
+                      ) === 'true';
+                  } else if (s.connector!) {
+                    isTechPreview =
+                      getMetadataValue<string>(
+                        'tech-preview',
+                        s.connector!.metadata
+                      ) === 'true';
+                  }
 
                   return (
                     <ConnectionsGridCell key={index}>
