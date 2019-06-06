@@ -5,6 +5,7 @@ import {
   IntegrationVerticalFlow,
 } from '@syndesis/ui';
 import * as React from 'react';
+import { EntityIcon } from '../../../../shared';
 import { IUIStep } from './interfaces';
 import { getDataShapeText, toUIStepCollection } from './utils';
 
@@ -18,9 +19,9 @@ function makeActiveStep(
   return activeStep ? (
     <IntegrationFlowStepWithOverview
       icon={
-        <img
+        <EntityIcon
           alt={activeStep.name}
-          src={activeStep.icon}
+          entity={activeStep}
           width={24}
           height={24}
         />
@@ -91,9 +92,9 @@ export const EditorSidebar: React.FunctionComponent<
             <>
               <IntegrationFlowStepWithOverview
                 icon={
-                  <img
+                  <EntityIcon
                     alt={'Step'}
-                    src={startStep.icon}
+                    entity={startStep}
                     width={24}
                     height={24}
                   />
@@ -131,7 +132,12 @@ export const EditorSidebar: React.FunctionComponent<
                   <React.Fragment key={idx}>
                     <IntegrationFlowStepWithOverview
                       icon={
-                        <img alt={s.name} src={s.icon} width={24} height={24} />
+                        <EntityIcon
+                          alt={s.name}
+                          entity={s}
+                          width={24}
+                          height={24}
+                        />
                       }
                       i18nTitle={`${position}. ${s.name}`}
                       i18nTooltip={`${position}. ${s.title}`}

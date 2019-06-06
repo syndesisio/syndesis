@@ -13,7 +13,7 @@ import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import i18n from '../../../i18n';
-import { ApiError } from '../../../shared';
+import { ApiError, EntityIcon } from '../../../shared';
 import resolvers from '../resolvers';
 import { getExtensionTypeName } from '../utils';
 
@@ -166,7 +166,13 @@ export default class ExtensionsPage extends React.Component {
                                           extensionDescription={
                                             extension.description
                                           }
-                                          extensionIcon={extension.icon}
+                                          extensionIcon={
+                                            <EntityIcon
+                                              entity={extension}
+                                              alt={extension.name}
+                                              width={46}
+                                            />
+                                          }
                                           extensionId={extension.id!}
                                           extensionName={extension.name}
                                           i18nCancelText={t('shared:Cancel')}

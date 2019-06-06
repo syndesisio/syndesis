@@ -68,7 +68,7 @@ storiesOf('Customization/Extensions/ExtensionsPage', module)
           <ExtensionListItem
             detailsPageLink={'#ext-1-details'}
             extensionDescription={'lorem'}
-            extensionIcon={undefined}
+            extensionIcon={<div />}
             extensionId={'abc-123'}
             extensionName={'Some extension name'}
             i18nCancelText={'Cancel'}

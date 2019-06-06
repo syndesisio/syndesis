@@ -44,7 +44,7 @@ export interface IConnectionProps {
   i18nCannotDelete?: string;
   i18nConfigurationRequired?: string;
   i18nTechPreview?: string;
-  icon: string;
+  icon: React.ReactNode;
   menuProps?: IConnectionCardMenuProps;
   name: string;
   techPreview?: boolean;
@@ -241,9 +241,7 @@ export class ConnectionCard extends React.PureComponent<
           >
             <Card.Body>
               <div className={'connection-card__body'}>
-                <div className="connection-card__icon">
-                  <img src={this.props.icon} alt={this.props.name} width={46} />
-                </div>
+                <div className="connection-card__icon">{this.props.icon}</div>
                 <Title
                   size="lg"
                   className="connection-card__title h2"

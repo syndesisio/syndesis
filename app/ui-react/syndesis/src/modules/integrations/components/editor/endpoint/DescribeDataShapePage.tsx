@@ -1,5 +1,4 @@
 import {
-  getConnectionIcon,
   getStep,
   getSteps,
   isEndStep,
@@ -203,10 +202,6 @@ export class DescribeDataShapePage extends React.Component<
                         activeIndex: positionAsNumber,
                         activeStep: {
                           ...toUIStep(state.step.connection!),
-                          icon: getConnectionIcon(
-                            process.env.PUBLIC_URL,
-                            state.step.connection!
-                          ),
                         },
                         steps: toUIStepCollection(
                           getSteps(state.integration, params.flowId)

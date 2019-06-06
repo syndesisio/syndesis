@@ -13,7 +13,7 @@ export interface IIntegrationStepsHorizontalItemProps {
   /**
    * The icon of the step.
    */
-  icon?: string;
+  icon: React.ReactNode;
   title?: string;
   href?: string;
   /**
@@ -35,7 +35,7 @@ export class IntegrationStepsHorizontalItem extends React.Component<
         {!this.props.href && (
           <div>
             <div className={'step-icon'} title={this.props.title}>
-              <img src={this.props.icon} />
+              {this.props.icon}
             </div>
             <p>{this.props.name}</p>
           </div>
@@ -44,7 +44,7 @@ export class IntegrationStepsHorizontalItem extends React.Component<
           <Link to={this.props.href}>
             <div>
               <div className={'step-icon'} title={this.props.title}>
-                <img src={this.props.icon} />
+                {this.props.icon}
               </div>
               <p>{this.props.name}</p>
             </div>
