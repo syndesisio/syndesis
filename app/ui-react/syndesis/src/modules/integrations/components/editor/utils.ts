@@ -413,8 +413,15 @@ export function visibleStepsByPosition(
     previousSteps.length === 0,
     subsequentSteps.length === 0
   ).filter(s => {
-    if (typeof s.visible === 'function') {
-      return s.visible(position, previousSteps, subsequentSteps);
+    if (Array.isArray(s.visible) && s.visible.length > 0) {
+      const matches = s.visible.map(visible =>
+        visible(
+          position,
+          previousSteps as StepKind[],
+          subsequentSteps as StepKind[]
+        )
+      );
+      return matches.find(m => !m) === undefined;
     }
     return true;
   });
