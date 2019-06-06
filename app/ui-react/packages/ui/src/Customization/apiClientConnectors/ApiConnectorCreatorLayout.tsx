@@ -21,7 +21,13 @@ export const ApiConnectorCreatorLayout: React.FunctionComponent<
 > = ({ header, content }: IApiClientConnectorCreatorLayoutProps) => {
   return (
     <div className={'integration-editor-layout'}>
-      <div className={'integration-editor-layout__header'}>{header}</div>
+      <div
+        className={
+          'integration-editor-layout__header api-connector-creator-layout__header'
+        }
+      >
+        {header}
+      </div>
       <div className={'integration-editor-layout__body'}>
         <div className={'integration-editor-layout__contentOuter'}>
           <div className={'integration-editor-layout__contentInner'}>
