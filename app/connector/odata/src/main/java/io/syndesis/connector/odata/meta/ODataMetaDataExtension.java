@@ -23,6 +23,7 @@ import java.util.TreeSet;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.DefaultMetaData;
+import org.apache.camel.util.ObjectHelper;
 import org.apache.olingo.client.api.ODataClient;
 import org.apache.olingo.client.api.communication.request.retrieve.EdmMetadataRequest;
 import org.apache.olingo.client.api.communication.response.ODataRetrieveResponse;
@@ -38,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import io.syndesis.connector.odata.ODataConstants;
 import io.syndesis.connector.odata.ODataUtil;
 import io.syndesis.connector.odata.meta.ODataMetadata.PropertyMetadata;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class ODataMetaDataExtension extends AbstractMetaDataExtension implements ODataConstants {
 
@@ -61,8 +63,8 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
     private ODataMetadata buildMetadata(Map<String, Object> parameters) {
         ODataMetadata odataMetadata = new ODataMetadata();
 
-        String serviceUrl = (String) parameters.get(SERVICE_URI);
-        if (serviceUrl == null) {
+        String serviceUrl = ConnectorOptions.extractOption(parameters, SERVICE_URI);
+        if (ObjectHelper.isEmpty(serviceUrl)) {
             return odataMetadata;
         }
         LOG.debug("Retrieving metadata for connection to odata with service url {}", serviceUrl);
@@ -79,8 +81,8 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
             // Will only happen after the step has been completed when
             // the resource path, inc. the resourcePath, has been populated
             //
-            String resourcePath = (String) parameters.get(ODataConstants.RESOURCE_PATH);
-            if (resourcePath != null) {
+            String resourcePath = ConnectorOptions.extractOption(parameters, RESOURCE_PATH);
+            if (ObjectHelper.isNotEmpty(resourcePath)) {
                 extractEdmMetadata(odataMetadata, edm, resourcePath);
             }
 
@@ -92,14 +94,14 @@ public class ODataMetaDataExtension extends AbstractMetaDataExtension implements
     }
 
     private void extractEdmMetadata(ODataMetadata odataMetadata, Edm edm, String resourcePath) {
-        if (resourcePath == null) {
+        if (ObjectHelper.isEmpty(resourcePath)) {
             LOG.warn("No method name with which to query OData service.");
             return;
         }
 
         EdmEntityContainer entityContainer = edm.getEntityContainer();
         EdmEntitySet entitySet = entityContainer.getEntitySet(resourcePath);
-        if (entitySet == null) {
+        if (ObjectHelper.isEmpty(entitySet)) {
             LOG.warn("No entity set associated with the selected api name: {}.", resourcePath);
             return;
         }

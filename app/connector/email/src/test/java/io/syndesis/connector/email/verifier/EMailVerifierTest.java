@@ -16,6 +16,7 @@
 package io.syndesis.connector.email.verifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.entry;
 import static org.junit.Assume.assumeThat;
 import java.util.HashMap;
 import java.util.List;
@@ -23,13 +24,15 @@ import java.util.Map;
 import org.hamcrest.CoreMatchers;
 import org.junit.Test;
 import io.syndesis.connector.email.AbstractEmailServerTest;
+import io.syndesis.connector.email.verifier.receive.ReceiveEMailVerifier;
+import io.syndesis.connector.email.verifier.send.SendEMailVerifier;
 import io.syndesis.connector.support.verifier.api.Verifier;
 import io.syndesis.connector.support.verifier.api.VerifierResponse;
 
 public class EMailVerifierTest extends AbstractEmailServerTest {
 
     @Test
-    public void testVerifyWithServer() throws Exception {
+    public void testVerifyWithImapServer() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PROTOCOL, "imap");
         parameters.put(HOST, imapServer().getHost());
@@ -37,7 +40,7 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
         parameters.put(USER, TEST_ADDRESS);
         parameters.put(PASSWORD, TEST_PASSWORD);
 
-        Verifier verifier = new EMailVerifier();
+        Verifier verifier = new ReceiveEMailVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
 
         assertThat(responses).hasSize(2);
@@ -47,7 +50,7 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
     }
 
     @Test
-    public void testVerifyWithSSLServer() throws Exception {
+    public void testVerifyWithImapsServer() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(PROTOCOL, "imap");
         parameters.put(SECURE_TYPE, SecureType.SSL_TLS.id());
@@ -57,13 +60,126 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
         parameters.put(PASSWORD, TEST_PASSWORD);
         parameters.put(SERVER_CERTIFICATE, imapsServer().getCertificate());
 
-        Verifier verifier = new EMailVerifier();
+        Verifier verifier = new ReceiveEMailVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
 
         assertThat(responses).hasSize(2);
         assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
         assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.PARAMETERS);
         assertThat(responses).allMatch(response -> response.getStatus() == Verifier.Status.OK);
+    }
+
+    @Test
+    public void testVerifyWithImapServerWithNoUserNameOrPassword() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PROTOCOL, "imap");
+        parameters.put(HOST, imapServer().getHost());
+        parameters.put(PORT, imapServer().getPort());
+
+        Verifier verifier = new ReceiveEMailVerifier();
+        List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
+
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0)).hasFieldOrPropertyWithValue("scope", Verifier.Scope.PARAMETERS);
+        assertThat(responses.get(0)).hasFieldOrPropertyWithValue("status", Verifier.Status.ERROR);
+
+        assertThat(responses.get(0).getErrors()).hasSize(2);
+        assertThat(responses.get(0).getErrors()).allMatch(error -> error.getCode().equals("MISSING_PARAMETER"));
+    }
+
+    @Test
+    public void testVerifyWithImapServerMadeUpProtocol() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PROTOCOL, "MyOwnMadeUpProtocol");
+        parameters.put(HOST, imapServer().getHost());
+        parameters.put(PORT, imapServer().getPort());
+        parameters.put(USER, TEST_ADDRESS);
+        parameters.put(PASSWORD, TEST_PASSWORD);
+
+        Verifier verifier = new ReceiveEMailVerifier();
+        List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
+
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0)).hasFieldOrPropertyWithValue("scope", Verifier.Scope.PARAMETERS);
+
+        assertThat(responses.get(0).getErrors()).hasSize(1);
+        assertThat(responses.get(0).getErrors().get(0)).hasFieldOrPropertyWithValue("code", "ILLEGAL_PARAMETER_VALUE");
+    }
+
+    @Test
+    public void testVerifyWithImapServerProducerProtocol() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PROTOCOL, "smtp");
+        parameters.put(HOST, imapServer().getHost());
+        parameters.put(PORT, imapServer().getPort());
+        parameters.put(USER, TEST_ADDRESS);
+        parameters.put(PASSWORD, TEST_PASSWORD);
+
+        Verifier verifier = new ReceiveEMailVerifier();
+        List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
+
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0)).hasFieldOrPropertyWithValue("scope", Verifier.Scope.PARAMETERS);
+
+        assertThat(responses.get(0).getErrors()).hasSize(1);
+        assertThat(responses.get(0).getErrors().get(0)).hasFieldOrPropertyWithValue("code", "ILLEGAL_PARAMETER_VALUE");
+    }
+
+    @Test
+    public void testVerifyWithSmtpServer() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(HOST, smtpServer().getHost());
+        parameters.put(PORT, smtpServer().getPort());
+        parameters.put(USER, TEST_ADDRESS);
+        parameters.put(PASSWORD, TEST_PASSWORD);
+
+        Verifier verifier = new SendEMailVerifier();
+        List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
+
+        assertThat(parameters).contains(entry(PROTOCOL, "smtp"));
+
+        assertThat(responses).hasSize(2);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.PARAMETERS);
+        assertThat(responses).allMatch(response -> response.getStatus() == Verifier.Status.OK);
+    }
+
+    @Test
+    public void testVerifyWithSmtpsServer() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();;
+        parameters.put(SECURE_TYPE, SecureType.SSL_TLS.id());
+        parameters.put(HOST, smtpsServer().getHost());
+        parameters.put(PORT, smtpsServer().getPort());
+        parameters.put(USER, TEST_ADDRESS);
+        parameters.put(PASSWORD, TEST_PASSWORD);
+        parameters.put(SERVER_CERTIFICATE, imapsServer().getCertificate());
+
+        Verifier verifier = new SendEMailVerifier();
+        List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
+
+        assertThat(parameters).contains(entry(PROTOCOL, "smtps"));
+
+        assertThat(responses).hasSize(2);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.PARAMETERS);
+        assertThat(responses).allMatch(response -> response.getStatus() == Verifier.Status.OK);
+    }
+
+    @Test
+    public void testVerifyWithSmtpServerWithNoUserNameOrPassword() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(HOST, imapServer().getHost());
+        parameters.put(PORT, imapServer().getPort());
+
+        Verifier verifier = new SendEMailVerifier();
+        List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
+
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0)).hasFieldOrPropertyWithValue("scope", Verifier.Scope.PARAMETERS);
+        assertThat(responses.get(0)).hasFieldOrPropertyWithValue("status", Verifier.Status.ERROR);
+
+        assertThat(responses.get(0).getErrors()).hasSize(2);
+        assertThat(responses.get(0).getErrors()).allMatch(error -> error.getCode().equals("MISSING_PARAMETER"));
     }
 
     private static final String TLS_HOSTNAME = NO_HOST;
@@ -89,7 +205,7 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
         parameters.put(USER, TEST_TLS_USER);
         parameters.put(PASSWORD, TEST_TLS_PASSWORD);
 
-        Verifier verifier = new EMailVerifier();
+        Verifier verifier = new ReceiveEMailVerifier();
         List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
 
         assertThat(responses).hasSize(2);

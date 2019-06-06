@@ -1,0 +1,93 @@
+/*
+ * Copyright (C) 2016 Red Hat, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package io.syndesis.connector.email.verifier;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import org.apache.camel.CamelContext;
+import org.apache.camel.Component;
+import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
+import org.apache.camel.component.mail.JavaMailSender;
+import org.apache.camel.component.mail.MailConfiguration;
+import org.apache.camel.util.ObjectHelper;
+import org.apache.camel.util.jsse.SSLContextParameters;
+import io.syndesis.connector.email.EMailConstants;
+import io.syndesis.connector.email.EMailUtil;
+import io.syndesis.connector.support.util.ConnectorOptions;
+
+public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExtension implements EMailConstants {
+
+    public AbstractEMailVerifier(String defaultScheme) {
+        super(defaultScheme);
+    }
+
+    public AbstractEMailVerifier(String defaultScheme, CamelContext camelContext) {
+        super(defaultScheme, camelContext);
+    }
+
+    public AbstractEMailVerifier(String defaultScheme, CamelContext camelContext, Component component) {
+        super(defaultScheme, camelContext, component);
+    }
+
+    protected void secureProtocol(Map<String, Object> parameters) {
+        Protocol protocol = ConnectorOptions.extractOptionAndMap(parameters, PROTOCOL, Protocol::getValueOf);
+        if (ObjectHelper.isEmpty(protocol)) {
+            return;
+        }
+
+        SecureType secureType = ConnectorOptions.extractOptionAndMap(parameters, SECURE_TYPE, SecureType::secureTypeFromId);
+        if (ObjectHelper.isEmpty(secureType) || protocol.isSecure()) {
+            return;
+        }
+
+        switch (secureType) {
+            case STARTTLS:
+                Properties properties = new Properties();
+                properties.put("mail." + protocol + ".starttls.enable", "true");
+                properties.put("mail." + protocol + ".starttls.required", "true");
+                parameters.put(ADDITIONAL_MAIL_PROPERTIES, properties);
+                break;
+            case SSL_TLS:
+                parameters.put(PROTOCOL, protocol.toSecureProtocol().id());
+                break;
+            default:
+                // Nothing required
+        }
+    }
+
+    @SuppressWarnings("PMD")
+    protected MailConfiguration createConfiguration(Map<String, Object> parameters) throws Exception {
+        secureProtocol(parameters);
+        SSLContextParameters sslContextParameters = EMailUtil.createSSLContextParameters(parameters);
+        parameters.put(SSL_CONTEXT_PARAMETERS, sslContextParameters);
+
+        //
+        // setProperties will strip parameters key/values so copy the map
+        //
+        return setProperties(new MailConfiguration(), new HashMap<>(parameters));
+    }
+
+    protected JavaMailSender createJavaMailSender(MailConfiguration configuration) throws NoSuchMethodException, SecurityException, IllegalAccessException,
+        IllegalArgumentException, InvocationTargetException {
+            Method method = MailConfiguration.class.getDeclaredMethod("createJavaMailSender");
+            method.setAccessible(true);
+            return (JavaMailSender) method.invoke(configuration);
+        }
+
+}

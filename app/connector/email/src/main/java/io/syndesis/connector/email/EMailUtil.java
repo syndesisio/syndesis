@@ -28,6 +28,7 @@ import org.apache.camel.util.jsse.KeyManagersParameters;
 import org.apache.camel.util.jsse.KeyStoreParameters;
 import org.apache.camel.util.jsse.SSLContextParameters;
 import org.apache.camel.util.jsse.TrustManagersParameters;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.util.KeyStoreHelper;
 
 public class EMailUtil implements EMailConstants {
@@ -43,12 +44,16 @@ public class EMailUtil implements EMailConstants {
 
     private static KeyStore createKeyStore(Map<String, Object> options)
         throws KeyStoreException, NoSuchAlgorithmException, CertificateException, FileNotFoundException, IOException {
-        String certContent = (String) options.get(SERVER_CERTIFICATE);
+        String certContent = ConnectorOptions.extractOption(options, SERVER_CERTIFICATE);
+        if (ObjectHelper.isEmpty(certContent)) {
+            return KeyStoreHelper.defaultKeyStore();
+        }
+
         return KeyStoreHelper.createKeyStoreWithCustomCertificate("mail", certContent);
     }
 
     public static SSLContextParameters createSSLContextParameters(Map<String, Object> options) {
-        String protocol = (String) options.get(PROTOCOL);
+        String protocol = ConnectorOptions.extractOption(options, PROTOCOL);
         if (! isSecure(protocol)) {
             return null;
         }
