@@ -32,6 +32,7 @@ export default describe('ExtensionDetail', () => {
   const props = {
     extensionName: name,
     extensionUses: uses,
+    extensionIcon: <div />,
     i18nCancelText: cancelLabel,
     i18nDelete: deleteLabel,
     i18nDeleteModalMessage: deleteModalMessage,

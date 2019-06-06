@@ -1,4 +1,4 @@
-import { CHOICE, getStepIcon } from '@syndesis/api';
+import { CHOICE } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Integration, Step } from '@syndesis/models';
 import {
@@ -11,6 +11,7 @@ import {
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { EntityIcon } from '../../../shared';
 import { ChoiceStepExpanderBody } from './editor/choice/ChoiceStepExpanderBody';
 import { IUIStep } from './editor/interfaces';
 import {
@@ -108,7 +109,14 @@ export class IntegrationEditorStepAdder extends React.Component<
                       }
                       action={(s.action && s.action.name) || 'n/a'}
                       shape={s.shape || 'n/a'}
-                      icon={getStepIcon(process.env.PUBLIC_URL, s)}
+                      icon={
+                        <EntityIcon
+                          alt={s.name || 'Step'}
+                          entity={s}
+                          width={24}
+                          height={24}
+                        />
+                      }
                       showWarning={
                         s.shouldAddDataMapper ||
                         s.previousStepShouldDefineDataShape

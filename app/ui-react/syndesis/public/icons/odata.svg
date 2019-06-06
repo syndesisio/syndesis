@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300">
+  <g id="layer1">
+    <rect x="0" y="0" width="300" height="300" fill="#fe8b00" />
+
+    <rect x="26" y="30" width="111" height="28" fill="white" />
+    <rect x="26" y="86" width="111" height="28" fill="white" />
+    <rect x="26" y="142" width="111" height="28" fill="white" />
+    <circle cx="81.5" cy="230" r="48" fill="white" />
+
+    <rect x="163" y="30" width="111" height="28" fill="white" />
+    <rect x="163" y="86" width="111" height="28" fill="white" />
+    <rect x="163" y="142" width="111" height="28" fill="white" />
+    <rect x="163" y="198" width="111" height="28" fill="white" />
+    
+  </g>
+</svg>

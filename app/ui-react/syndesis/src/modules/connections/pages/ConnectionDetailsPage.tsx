@@ -1,5 +1,4 @@
 import {
-  getConnectionIcon,
   IValidationResult,
   WithConnection,
   WithConnectionHelpers,
@@ -17,7 +16,7 @@ import { Translation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
-import { ApiError } from '../../../shared';
+import { ApiError, EntityIcon } from '../../../shared';
 import resolvers from '../../resolvers';
 import { WithConnectorForm } from '../components';
 
@@ -261,10 +260,16 @@ export class ConnectionDetailsPage extends React.Component<
                                                 connectionDescription={
                                                   data.description
                                                 }
-                                                connectionIcon={getConnectionIcon(
-                                                  process.env.PUBLIC_URL,
-                                                  data
-                                                )}
+                                                connectionIcon={
+                                                  <EntityIcon
+                                                    className={
+                                                      'connection-details-header__connectionIcon'
+                                                    }
+                                                    entity={data}
+                                                    alt={data.name}
+                                                    width={46}
+                                                  />
+                                                }
                                                 connectionName={data.name}
                                                 i18nDescriptionLabel={t(
                                                   'shared:Description'

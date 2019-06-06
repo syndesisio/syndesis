@@ -13,7 +13,7 @@ export interface IDvConnectionCardProps {
   name: string;
   description: string;
   dvStatus: string;
-  icon: string;
+  icon: React.ReactNode;
   selected: boolean;
   onSelectionChanged: (connName: string, isSelected: boolean) => void;
 }
@@ -69,9 +69,7 @@ export class DvConnectionCard extends React.PureComponent<
               </Label>
             </div>
             <div className={'dv-connection-card__content'}>
-              <div className="dv-connection-card__icon">
-                <img src={this.props.icon} alt={this.props.name} width={46} />
-              </div>
+              <div className="dv-connection-card__icon">{this.props.icon}</div>
               <div
                 className="dv-connection-card__title h2"
                 data-testid={'dv-connection-card--title'}

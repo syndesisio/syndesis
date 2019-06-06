@@ -18,7 +18,7 @@ import {
 export interface IExtensionListItemProps {
   detailsPageLink: H.LocationDescriptor;
   extensionDescription?: string;
-  extensionIcon?: string;
+  extensionIcon: React.ReactNode;
   extensionId: string;
   extensionName: string;
   i18nCancelText: string;
@@ -182,17 +182,7 @@ export class ExtensionListItem extends React.Component<
           }
           heading={this.props.extensionName}
           hideCloseIcon={true}
-          leftContent={
-            this.props.extensionIcon ? (
-              <div className="blank-slate-pf-icon">
-                <img
-                  src={this.props.extensionIcon}
-                  alt={this.props.extensionName}
-                  width={46}
-                />
-              </div>
-            ) : null
-          }
+          leftContent={this.props.extensionIcon}
           stacked={true}
         />
       </>

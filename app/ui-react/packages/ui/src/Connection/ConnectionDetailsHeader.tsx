@@ -24,9 +24,9 @@ export interface IConnectionDetailsHeaderProps {
   connectionDescription?: string;
 
   /**
-   * The optional connection icon.
+   * The connection icon.
    */
-  connectionIcon?: string;
+  connectionIcon: React.ReactNode;
 
   /**
    * The name of the connection.
@@ -91,16 +91,7 @@ export class ConnectionDetailsHeader extends React.Component<
       <PageSection variant={'light'}>
         <Stack gutter="md">
           <Split gutter="md" className={'connection-details-header__row'}>
-            {this.props.connectionIcon ? (
-              <div>
-                <img
-                  className="connection-details-header__connectionIcon"
-                  src={this.props.connectionIcon}
-                  alt={this.props.connectionName}
-                  width={46}
-                />
-              </div>
-            ) : null}
+            {this.props.connectionIcon}
             <InlineTextEdit
               className="connection-details-header__connectionName"
               value={this.props.connectionName}

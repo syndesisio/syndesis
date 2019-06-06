@@ -1,4 +1,4 @@
-import { getConnectionIcon, getSteps, WithConnection } from '@syndesis/api';
+import { getSteps, WithConnection } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
   ButtonLink,
@@ -77,10 +77,6 @@ export class SelectActionPage extends React.Component<ISelectActionPageProps> {
                           activeIndex: positionAsNumber,
                           activeStep: {
                             ...toUIStep(state.connection),
-                            icon: getConnectionIcon(
-                              process.env.PUBLIC_URL,
-                              state.connection
-                            ),
                           },
                           steps: toUIStepCollection(
                             getSteps(state.integration, params.flowId)

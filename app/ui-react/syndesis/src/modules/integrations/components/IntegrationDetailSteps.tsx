@@ -1,9 +1,4 @@
-import {
-  ENDPOINT,
-  getIntegrationStepIcon,
-  getSteps,
-  HIDE_FROM_CONNECTION_PAGES,
-} from '@syndesis/api';
+import { ENDPOINT, getSteps, HIDE_FROM_CONNECTION_PAGES } from '@syndesis/api';
 import { Integration } from '@syndesis/models';
 import {
   IntegrationStepsHorizontalItem,
@@ -11,6 +6,7 @@ import {
   PageSection,
 } from '@syndesis/ui';
 import * as React from 'react';
+import { EntityIcon } from '../../../shared';
 import resolvers from '../../resolvers';
 import { IUIStep } from './editor/interfaces';
 import { toUIStepCollection } from './editor/utils';
@@ -37,18 +33,12 @@ export class IntegrationDetailSteps extends React.Component<
                     connection: s.connection!,
                   }).pathname
                 : undefined;
-
             return (
               <React.Fragment key={idx + s.id!}>
                 <IntegrationStepsHorizontalItem
                   name={s.name}
                   title={s.title}
-                  icon={getIntegrationStepIcon(
-                    process.env.PUBLIC_URL,
-                    this.props.integration,
-                    flowId,
-                    idx
-                  )}
+                  icon={<EntityIcon entity={s} alt={s.name} />}
                   href={stepUri}
                   isFirst={isFirst}
                 />

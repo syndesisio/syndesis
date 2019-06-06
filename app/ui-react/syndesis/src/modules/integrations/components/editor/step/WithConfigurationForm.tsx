@@ -108,7 +108,7 @@ export const WithConfigurationForm: React.FunctionComponent<
     definition = step.properties;
   }
 
-  const initialValue = step.configuredProperties;
+  const initialValue = props.step.configuredProperties;
   const requiredPrompt = getRequiredStatusText(
     definition,
     i18n.t('shared:AllFieldsRequired'),

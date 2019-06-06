@@ -1,4 +1,4 @@
-import { getFinishIcon, getStartIcon } from '@syndesis/api';
+import { getLastStep, getStartStep } from '@syndesis/api';
 import { IntegrationWithMonitoring } from '@syndesis/models';
 import {
   IntegrationActions,
@@ -11,7 +11,7 @@ import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { AppContext } from '../../../app';
-import { ApiError } from '../../../shared';
+import { ApiError, EntityIcon } from '../../../shared';
 import resolvers from '../resolvers';
 import { WithIntegrationActions } from './WithIntegrationActions';
 
@@ -39,6 +39,14 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                     this.props.integrations.map(
                       (mi: IntegrationWithMonitoring) => {
                         try {
+                          const startStep = getStartStep(
+                            mi.integration,
+                            mi.integration.flows![0].id!
+                          );
+                          const endStep = getLastStep(
+                            mi.integration,
+                            mi.integration.flows![0].id!
+                          );
                           return (
                             <WithIntegrationActions
                               key={mi.integration.id}
@@ -72,14 +80,20 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                                     mi.monitoring.detailedState.totalSteps
                                   }
                                   monitoringLogUrl={getPodLogUrl(mi.monitoring)}
-                                  startConnectionIcon={getStartIcon(
-                                    process.env.PUBLIC_URL,
-                                    mi.integration
-                                  )}
-                                  finishConnectionIcon={getFinishIcon(
-                                    process.env.PUBLIC_URL,
-                                    mi.integration
-                                  )}
+                                  startConnectionIcon={
+                                    <EntityIcon
+                                      entity={startStep}
+                                      alt={startStep!.name || 'Step'}
+                                      className={'integration-icon__icon'}
+                                    />
+                                  }
+                                  finishConnectionIcon={
+                                    <EntityIcon
+                                      entity={endStep}
+                                      alt={endStep!.name || 'Step'}
+                                      className={'integration-icon__icon'}
+                                    />
+                                  }
                                   actions={
                                     <IntegrationActions
                                       integrationId={mi.integration!.id!}
