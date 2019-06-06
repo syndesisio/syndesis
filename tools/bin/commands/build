@@ -28,6 +28,8 @@ build::usage() {
                                    Otherwise run the Go build from a container (either local or Minishift's Docker  daemon)
         --clean-cache              Used for the operator build to remove the local dependency cache.
     -c  --clean                    Run clean builds (mvn clean)
+        --incremental [ref]        Run an incremental build, i.e. skip building of a module if committed or uncomitted changes
+                                   against [ref] (default master) are not part of that module
 
         --resume <m1>              Resume build from maven module (mvn -rf m1)
         --batch-mode               Run mvn in batch mode
@@ -326,6 +328,19 @@ MODULES=(
   "s2i:common extension integration connector server"
   "test:common extension integration connector server s2i"
 )
+MODULE_PATHS=(
+  "upgrade:tools/upgrade/"
+  "operator:install/operator/"
+  "ui-angular:app/ui-angular/"
+  "ui-react:app/ui-react/"
+  "common:app/common/"
+  "extension:app/extension/"
+  "integration:app/integration/"
+  "connector:app/connector/"
+  "meta:app/meta/"
+  "server:app/server/"
+  "s2i:app/s2i/"
+)
 
 extract_modules() {
     local modules=""
@@ -351,6 +366,26 @@ extract_modules() {
         modules="$modules ${arg_modules//,/ }"
     fi
 
+    if [ -z "$modules" ]; then
+      modules=$ALL_MODULES
+    fi
+
+    if [ "$(hasflag --incremental)" ]; then
+      local changed_modules=""
+
+      for module in $modules; do
+        for module_path in "${MODULE_PATHS[@]}"; do
+          local key=${module_path%%:*}
+          local path=${module_path#*:}
+          if [ "$module" == $key ] && [ "$(has_changes $path)" ]; then
+            changed_modules="$changed_modules $module"
+          fi
+        done
+      done
+
+      modules=$changed_modules
+    fi
+
     if [ "$(hasflag --dependencies -d)" ]; then
         local extra_modules=""
         for module in $modules; do
@@ -364,7 +399,8 @@ extract_modules() {
         done
         modules="$modules $extra_modules"
     fi
-    if [ -z "$modules" ]; then
+    if [ -z "$modules" ] && [ ! "$(hasflag --incremental)" ]; then
+      echo "EVERYTHING"
       return
     fi
     # Unique modules
@@ -435,7 +471,7 @@ pick_submodule() {
 should_build() {
     local module="$1"
     local modules="$2"
-    if [ -z "$modules" ]; then
+    if [ "EVERYTHING" == "$modules" ]; then
         # Empty --> Build everything
         echo "true"
     elif [ "${modules//$module}" != "${modules}" ]; then

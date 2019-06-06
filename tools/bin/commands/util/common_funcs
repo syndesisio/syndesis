@@ -144,3 +144,14 @@ git_rebase_upstream() {
     echo
   fi
 }
+
+# returns `"true"` if subtree path has changes
+has_changes() {
+  local subtree_path="${1:-}"
+  local ref="${2:-master}"
+
+  local changed_paths="$(git diff ..${ref} --name-only | tr '\n' ' ') $(git status --porcelain=v1 | cut -c 4- | tr '\n' ' ')"
+  if [[ " $changed_paths" == *" ${subtree_path}"* ]]; then
+    echo "true"
+  fi
+}
