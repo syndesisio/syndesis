@@ -401,7 +401,11 @@ export class CurrentFlowService {
       if (emitDirty) {
         this.dirty$.next(true);
       }
-      this.postUpdates();
+      // Call postUpdates in the next VM turn to avoid ExpressionChangedAfterItHasBeenCheckedError,
+      // which happens, if data is updated before Angular finishes rendering the view
+      setTimeout(() => {
+        this.postUpdates();
+      });
     };
 
     // Nested function to determine if we need to go through and update data shapes
