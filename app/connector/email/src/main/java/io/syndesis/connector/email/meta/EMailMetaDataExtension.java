@@ -21,6 +21,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.DefaultMetaData;
 import io.syndesis.connector.email.EMailConstants;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class EMailMetaDataExtension extends AbstractMetaDataExtension implements EMailConstants {
 
@@ -40,11 +41,7 @@ public class EMailMetaDataExtension extends AbstractMetaDataExtension implements
     }
 
     private EMailMetadata buildMetadata(Map<String, Object> parameters) {
-        String protocolId = Optional.ofNullable(parameters.get(PROTOCOL))
-            .map(Object::toString)
-            .orElse(null);
-
-        Protocol protocol = Protocol.getValueOf(protocolId);
+        Protocol protocol =  ConnectorOptions.extractOptionAndMap(parameters, PROTOCOL,  Protocol::getValueOf);
         if (protocol == null) {
             throw new IllegalStateException("Email connector protocol cannot be identified");
         }

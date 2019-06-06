@@ -23,6 +23,7 @@ import org.apache.camel.Message;
 import org.apache.camel.util.ObjectHelper;
 import io.syndesis.connector.email.EMailConstants;
 import io.syndesis.connector.email.model.EMailMessageModel;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
@@ -43,17 +44,17 @@ public class EMailSendCustomizer implements ComponentProxyCustomizer, EMailConst
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        from = (String) options.get(MAIL_FROM);
-        to = (String) options.get(MAIL_TO);
-        subject = (String) options.get(MAIL_SUBJECT);
-        text = (String) options.get(MAIL_TEXT);
-        cc = (String) options.get(MAIL_CC);
-        bcc = (String) options.get(MAIL_BCC);
+        from = ConnectorOptions.extractOption(options, MAIL_FROM);
+        to = ConnectorOptions.extractOption(options, MAIL_TO);
+        subject = ConnectorOptions.extractOption(options, MAIL_SUBJECT);
+        text = ConnectorOptions.extractOption(options, MAIL_TEXT);
+        cc = ConnectorOptions.extractOption(options, MAIL_CC);
+        bcc = ConnectorOptions.extractOption(options, MAIL_BCC);
 
         //
         // Will return injected data if not set
         //
-        priority = Priority.priorityFromId((String) options.get(PRIORITY));
+        priority = ConnectorOptions.extractOptionAndMap(options, PRIORITY, Priority::priorityFromId);
     }
 
     private Object updateMail(String inputValue, Object dataValue) {

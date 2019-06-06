@@ -16,6 +16,7 @@
 package io.syndesis.connector.email.meta;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -51,5 +52,22 @@ public class EMailMetaDataTest extends AbstractEmailServerTest {
         Object payload = meta.get().getPayload();
         assertThat(payload).isInstanceOf(EMailMetadata.class);
         assertThat(((EMailMetadata) payload).getProtocol()).isEqualTo(Protocol.getValueOf(server.getProtocol()));
+    }
+
+    @Test
+    public void testMetaDataExtensionWrongProtocol() throws Exception {
+        EMailTestServer server = imapServer();
+        EMailMetaDataExtension extension = new EMailMetaDataExtension(context);
+
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PROTOCOL, "MyMadeUpProtocol");
+        parameters.put(HOST, server.getHost());
+        parameters.put(PORT, Integer.toString(server.getPort()));
+        parameters.put(USER, TEST_ADDRESS);
+        parameters.put(PASSWORD, TEST_PASSWORD);
+
+        assertThatThrownBy(() -> { extension.meta(parameters); })
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessage("Email connector protocol cannot be identified");
     }
 }

@@ -13,22 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.connector.email.verifier;
+package io.syndesis.connector.email.verifier.send;
 
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.ComponentVerifierExtension;
-
 import io.syndesis.connector.support.verifier.api.ComponentVerifier;
 
-public class EMailVerifier extends ComponentVerifier {
+public class SendEMailVerifier extends ComponentVerifier {
 
-    public EMailVerifier() {
-        super("email", EMailVerifierExtension.class);
+    public SendEMailVerifier() {
+        super("email", SendEMailVerifierExtension.class);
     }
 
     @Override
     protected ComponentVerifierExtension resolveComponentVerifierExtension(CamelContext context, String scheme) {
-        return new EMailVerifierExtension(scheme, context);
+        return new SendEMailVerifierExtension(scheme, context);
     }
-
 }

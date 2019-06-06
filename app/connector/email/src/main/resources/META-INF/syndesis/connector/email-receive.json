@@ -134,7 +134,7 @@
       "label": "common,security",
       "labelHint": "Specify a password for authentication of the email service, if required.",
       "order": "5",
-      "required": false,
+      "required": true,
       "secret": true,
       "type": "string"
     },
@@ -217,11 +217,11 @@
       "order": "7",
       "relation": [
         {
-          "action": "ENABLE",
+          "action": "DISABLE",
           "when": [
             {
-              "id": "secure",
-              "value": "true"
+              "id": "secureType",
+              "value": "None"
             }
           ]
         }
@@ -240,7 +240,7 @@
       "label": "common,security",
       "labelHint": "Specify a user name for authentication of the email service url, if required.",
       "order": "4",
-      "required": false,
+      "required": true,
       "secret": false,
       "type": "string"
     }

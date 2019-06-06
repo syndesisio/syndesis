@@ -39,6 +39,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import org.apache.olingo.client.api.http.HttpClientFactory;
 import org.apache.olingo.commons.api.http.HttpMethod;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.util.KeyStoreHelper;
 
 @SuppressWarnings("PMD")
@@ -88,12 +89,16 @@ public class ODataUtil implements ODataConstants {
     }
 
     private static KeyStore createKeyStore(Map<String, Object> options) throws Exception {
-        String certContent = (String) options.get(SERVER_CERTIFICATE);
+        String certContent = ConnectorOptions.extractOption(options, SERVER_CERTIFICATE);
+        if (ObjectHelper.isEmpty(certContent)) {
+            return KeyStoreHelper.defaultKeyStore();
+        }
+
         return KeyStoreHelper.createKeyStoreWithCustomCertificate("odata", certContent);
     }
 
     public static SSLContext createSSLContext(Map<String, Object> options) throws Exception {
-        String serviceUrl = (String) options.get(SERVICE_URI);
+        String serviceUrl = ConnectorOptions.extractOption(options, SERVICE_URI);
         if (! isServiceSSL(serviceUrl)) {
             return null;
         }
@@ -108,8 +113,8 @@ public class ODataUtil implements ODataConstants {
     }
 
     private static CredentialsProvider createCredentialProvider(Map<String, Object> options) {
-        String basicUser = (String) options.get(BASIC_USER_NAME);
-        String basicPswd = (String) options.get(BASIC_PASSWORD);
+        String basicUser = ConnectorOptions.extractOption(options, BASIC_USER_NAME);
+        String basicPswd = ConnectorOptions.extractOption(options, BASIC_PASSWORD);
 
         if (ObjectHelper.isEmpty(basicUser)) {
             return null;

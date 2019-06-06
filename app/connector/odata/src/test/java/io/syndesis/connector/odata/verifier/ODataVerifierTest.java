@@ -94,6 +94,40 @@ public class ODataVerifierTest extends AbstractODataTest {
     }
 
     @Test
+    public void testVerifyWithServerNoServiceURI() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+
+        Verifier verifier = new ODataVerifier();
+        List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
+
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0)).hasFieldOrPropertyWithValue("scope", Verifier.Scope.PARAMETERS);
+        assertThat(responses.get(0)).hasFieldOrPropertyWithValue("status", Verifier.Status.ERROR);
+
+        assertThat(responses.get(0).getErrors()).hasSize(1);
+        assertThat(responses.get(0).getErrors()).allMatch(error -> error.getCode().equals("MISSING_PARAMETER"));
+        assertThat(responses.get(0).getErrors()).allMatch(error -> error.getDescription().equals("serviceUri should be set"));
+    }
+
+    @Test
+    public void testVerifyWithBasicAuthenticatedServerNoPassword() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(SERVICE_URI, authTestServer.servicePlainUri());
+        parameters.put(BASIC_USER_NAME, ODataTestServer.USER);
+
+        Verifier verifier = new ODataVerifier();
+        List<VerifierResponse> responses = verifier.verify(context, "odata", parameters);
+
+        assertThat(responses).hasSize(1);
+        assertThat(responses.get(0)).hasFieldOrPropertyWithValue("scope", Verifier.Scope.PARAMETERS);
+        assertThat(responses.get(0)).hasFieldOrPropertyWithValue("status", Verifier.Status.ERROR);
+
+        assertThat(responses.get(0).getErrors()).hasSize(1);
+        assertThat(responses.get(0).getErrors()).allMatch(error -> error.getCode().equals("MISSING_PARAMETER"));
+        assertThat(responses.get(0).getErrors()).allMatch(error -> error.getDescription().equals("Basic authentication requires both a user name and password"));
+    }
+
+    @Test
     public void testVerifyWithBasicAuthenticatedServer() throws Exception {
         Map<String, Object> parameters = new HashMap<>();
         parameters.put(SERVICE_URI, authTestServer.servicePlainUri());

@@ -86,7 +86,11 @@ public interface EMailConstants extends StringConstants {
                 return null;
             }
 
-            return valueOf(name.toUpperCase(Locale.ENGLISH));
+            try {
+                return valueOf(name.toUpperCase(Locale.ENGLISH));
+            } catch (IllegalArgumentException ex) {
+                return null;
+            }
         }
 
         public static Protocol toSecureProtocol(String name) {
@@ -95,7 +99,15 @@ public interface EMailConstants extends StringConstants {
             }
 
             Protocol p = getValueOf(name);
-            return p.isSecure() ? p : getValueOf(name + "s");
+            return p.toSecureProtocol();
+        }
+
+        public Protocol toSecureProtocol() {
+            if (isSecure()) {
+                return this;
+            }
+
+            return getValueOf(id() + "s");
         }
 
         public String id() {

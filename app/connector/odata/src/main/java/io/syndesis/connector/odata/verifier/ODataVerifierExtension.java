@@ -18,12 +18,11 @@ package io.syndesis.connector.odata.verifier;
 import java.security.cert.CertificateException;
 import java.util.Map;
 import org.apache.camel.CamelContext;
+import org.apache.camel.component.extension.ComponentVerifierExtension.VerificationError.StandardCode;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
-import org.apache.camel.component.extension.ComponentVerifierExtension.VerificationError;
-import org.apache.camel.component.extension.ComponentVerifierExtension.VerificationError.StandardCode;
 import org.apache.camel.util.ObjectHelper;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
@@ -32,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import io.syndesis.connector.odata.ODataConstants;
 import io.syndesis.connector.odata.ODataUtil;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class ODataVerifierExtension extends DefaultComponentVerifierExtension implements ODataConstants {
 
@@ -49,8 +49,8 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
         ResultBuilder builder = ResultBuilder.withStatusAndScope(Result.Status.OK, Scope.PARAMETERS)
                 .error(ResultErrorHelper.requiresOption(SERVICE_URI, parameters));
 
-        Object userName = parameters.get(BASIC_USER_NAME);
-        Object password = parameters.get(BASIC_PASSWORD);
+        Object userName = ConnectorOptions.extractOption(parameters, BASIC_USER_NAME);
+        Object password = ConnectorOptions.extractOption(parameters, BASIC_PASSWORD);
 
         if (
                 // Basic authentication requires both user name and password
@@ -58,7 +58,7 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
                 ||
                 (ObjectHelper.isNotEmpty(userName) && ObjectHelper.isEmpty(password)))
         {
-            builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.GENERIC,
+            builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.MISSING_PARAMETER,
                 "Basic authentication requires both a user name and password").
                           parameterKey(BASIC_USER_NAME).parameterKey(BASIC_PASSWORD).build());
         }
@@ -79,49 +79,10 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
         if (!builder.build().getErrors().isEmpty()) {
             return;
         }
-        String serviceUrl = (String) parameters.get(SERVICE_URI);
+        String serviceUrl = ConnectorOptions.extractOption(parameters, SERVICE_URI);
         LOGGER.debug("Validating OData connection to {}", serviceUrl);
 
-        if (ObjectHelper.isNotEmpty(serviceUrl)) {
-            try (CloseableHttpClient httpClient = ODataUtil.createHttpClient(parameters)) {
-
-                serviceUrl = ODataUtil.removeEndSlashes(serviceUrl);
-                HttpGet httpGet = new HttpGet(serviceUrl + METADATA_ENDPOINT);
-                CloseableHttpResponse response = httpClient.execute(httpGet);
-                if (response.getStatusLine().getStatusCode() == 401) {
-                    String msg = "Cannot authenticate to service URL";
-                    LOGGER.error(msg);
-                    builder
-                        .error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
-                               .parameterKey(SERVICE_URI).build());
-                } else if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
-                    // 2xx is OK, anything else we regard as failure
-                    String msg = "Invalid service URL";
-                    LOGGER.error(msg);
-                    builder
-                        .error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
-                               .parameterKey(SERVICE_URI).build());
-                }
-
-            } catch (CertificateException e) {
-                String msg = "Invalid certificate: " + e.getMessage();
-                LOGGER.error(msg, e);
-                builder.error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
-                              .detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
-                              .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
-                              .parameterKey(SERVER_CERTIFICATE)
-                              .build());
-            } catch (Exception e) {
-                String msg = "Failure to communicate with service URL";
-                LOGGER.error(msg, e);
-                builder.error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
-                              .detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
-                              .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
-                              .parameterKey(SERVICE_URI).parameterKey(SERVER_CERTIFICATE)
-                              .build());
-            }
-
-        } else {
+        if (ObjectHelper.isEmpty(serviceUrl)) {
             String msg = "Invalid blank OData service URL";
             LOGGER.error(msg);
             builder.error(
@@ -129,6 +90,43 @@ public class ODataVerifierExtension extends DefaultComponentVerifierExtension im
                     .parameterKey(SERVICE_URI)
                     .build()
             );
+        }
+
+        try (CloseableHttpClient httpClient = ODataUtil.createHttpClient(parameters)) {
+            serviceUrl = ODataUtil.removeEndSlashes(serviceUrl);
+            HttpGet httpGet = new HttpGet(serviceUrl + METADATA_ENDPOINT);
+            CloseableHttpResponse response = httpClient.execute(httpGet);
+            if (response.getStatusLine().getStatusCode() == 401) {
+                String msg = "Cannot authenticate to service URL";
+                LOGGER.error(msg);
+                builder
+                    .error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
+                           .parameterKey(SERVICE_URI).build());
+            } else if (response.getStatusLine().getStatusCode() < 200 || response.getStatusLine().getStatusCode() > 299) {
+                // 2xx is OK, anything else we regard as failure
+                String msg = "Invalid service URL";
+                LOGGER.error(msg);
+                    builder
+                        .error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
+                           .parameterKey(SERVICE_URI).build());
+                }
+
+        } catch (CertificateException e) {
+            String msg = "Invalid certificate: " + e.getMessage();
+            LOGGER.error(msg, e);
+            builder.error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
+                          .detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
+                          .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
+                          .parameterKey(SERVER_CERTIFICATE)
+                          .build());
+        } catch (Exception e) {
+            String msg = "Failure to communicate with service URL";
+            LOGGER.error(msg, e);
+            builder.error(ResultErrorBuilder.withCodeAndDescription(StandardCode.AUTHENTICATION, msg)
+                          .detail(VerificationError.ExceptionAttribute.EXCEPTION_CLASS, e.getClass().getName())
+                          .detail(VerificationError.ExceptionAttribute.EXCEPTION_INSTANCE, e)
+                          .parameterKey(SERVICE_URI).parameterKey(SERVER_CERTIFICATE)
+                          .build());
         }
     }
 }

@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension;
+import org.apache.camel.util.ObjectHelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.factories.JsonSchemaFactory;
@@ -34,6 +35,7 @@ import io.syndesis.common.util.Json;
 import io.syndesis.connector.odata.ODataConstants;
 import io.syndesis.connector.odata.meta.ODataMetadata.PropertyMetadata;
 import io.syndesis.connector.odata.meta.ODataMetadata.PropertyMetadata.TypeClass;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -106,7 +108,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
     }
 
     private boolean isSplit(Map<String, Object> properties) {
-        Object splitProp = properties.get(SPLIT_RESULT);
+        Object splitProp = ConnectorOptions.extractOption(properties, SPLIT_RESULT);
         return splitProp != null && Boolean.parseBoolean(splitProp.toString());
     }
 
@@ -192,11 +194,11 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
         // If a key predicate is used then only one entity is expected to be returned
         // hence an array schema is not required.
         //
-        Object keyPredicate = basicProperties.get(KEY_PREDICATE);
+        Object keyPredicate = ConnectorOptions.extractOption(basicProperties, KEY_PREDICATE);
         boolean isSplit = isSplit(basicProperties);
 
         if (! entitySchema.getProperties().isEmpty()) {
-            if (keyPredicate != null || isSplit) {
+            if (ObjectHelper.isNotEmpty(keyPredicate) || isSplit) {
                 //
                 // A split will mean that the schema is no longer an array schema
                 //

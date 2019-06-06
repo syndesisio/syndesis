@@ -52,7 +52,7 @@ ui/node
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-syndesis/
+/syndesis
 
 ###
 # app/ui-react
@@ -94,4 +94,3 @@ ui-react/*/.rts2_cache*
 
 # package-lock.json
 */ui-react/package-lock.json
-
