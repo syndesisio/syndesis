@@ -35,7 +35,7 @@
   {
     "data": {
       "connectorId": "timer",
-      "description": "Trigger events based on an interval or a cron expression",
+      "description": "Trigger integration execution based on an interval or a cron expression",
       "icon": "assets:timer.svg",
       "id": "timer",
       "metadata": {
