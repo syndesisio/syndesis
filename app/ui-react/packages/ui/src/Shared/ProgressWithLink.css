@@ -20,3 +20,7 @@
   margin-right: 0;
   margin-left: 5px;
 }
+
+.progress-link .progress {
+  margin: 0;
+}
