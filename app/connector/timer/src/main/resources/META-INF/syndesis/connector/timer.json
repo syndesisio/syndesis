@@ -2,7 +2,7 @@
   "actions": [
     {
       "actionType": "connector",
-      "description": "Simple Timer",
+      "description": "Specify an amount of time and its unit to periodically trigger integration execution. ",
       "descriptor": {
         "componentScheme": "timer",
         "configuredProperties": {
@@ -27,7 +27,7 @@
                 "displayName": "Period",
                 "javaType": "long",
                 "kind": "parameter",
-                "labelHint": "Delay between scheduling (executing).",
+                "labelHint": "Delay between each execution of the integration.",
                 "required": true,
                 "secret": false,
                 "type": "duration"
@@ -37,12 +37,12 @@
         ]
       },
       "id": "io.syndesis:timer-action",
-      "name": "Simple Timer",
+      "name": "Simple",
       "pattern": "From"
     },
     {
       "actionType": "connector",
-      "description": "Cron Timer",
+      "description": "Specify a cron utility expression for a more complex integration execution schedule.",
       "descriptor": {
         "componentScheme": "quartz2",
         "configuredProperties": {
@@ -63,11 +63,11 @@
                 "componentProperty": false,
                 "defaultValue": "0 0/1 * * * ?",
                 "deprecated": false,
-                "description": "A cron Expression, for example the expression for every minute is 0 0/1 * * * ?",
+                "description": "A cron expression, for example the expression for every minute is 0 0/1 * * * ?",
                 "displayName": "Cron Expression",
                 "javaType": "string",
                 "kind": "parameter",
-                "labelHint": "Delay between scheduling (executing) expressed as a cron expression",
+                "labelHint": "Delay between scheduling (executing) the integration expressed as a cron expression",
                 "required": true,
                 "secret": false,
                 "type": "string"
@@ -77,7 +77,7 @@
         ]
       },
       "id": "io.syndesis:timer-chron",
-      "name": "Cron Timer",
+      "name": "Cron",
       "pattern": "From"
     }
   ],
