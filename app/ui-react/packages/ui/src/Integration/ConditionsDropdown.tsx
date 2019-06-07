@@ -2,11 +2,11 @@ import { Dropdown, DropdownToggle } from '@patternfly/react-core';
 import * as React from 'react';
 
 export interface IConditionsDropdownProps {
-  selectedOperation: React.ReactNode;
+  selectedFlow: React.ReactNode;
 }
 export const ConditionsDropdown: React.FunctionComponent<
   IConditionsDropdownProps
-> = ({ selectedOperation, children }) => {
+> = ({ selectedFlow, children }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const closeDropdown = () => setIsOpen(false);
   const toggleDropdown = () => setIsOpen(!isOpen);
@@ -15,7 +15,7 @@ export const ConditionsDropdown: React.FunctionComponent<
       onSelect={closeDropdown}
       toggle={
         <DropdownToggle onToggle={toggleDropdown}>
-          {selectedOperation}
+          {selectedFlow}
         </DropdownToggle>
       }
       isOpen={isOpen}

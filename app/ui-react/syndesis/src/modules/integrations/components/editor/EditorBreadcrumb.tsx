@@ -16,6 +16,7 @@ import {
   ButtonLink,
   ConditionsBackButtonItem,
   ConditionsDropdown,
+  ConditionsDropdownBody,
   ConditionsDropdownHeader,
   ConditionsDropdownItem,
   HttpMethodColors,
@@ -147,10 +148,17 @@ export const EditorBreadcrumb: React.FunctionComponent<
           </OperationsDropdown>
         </>
       )}
-      {flowGroups.length > 0 && (
+      {!isPrimary && flowGroups.length > 0 && (
         <>
           <span>Flow&nbsp;&nbsp;</span>
-          <ConditionsDropdown selectedOperation={getFlowName(currentFlow)}>
+          <ConditionsDropdown
+            selectedFlow={
+              <ConditionsDropdownBody
+                description={currentFlow.description!}
+                condition={isDefaultFlow(currentFlow) ? 'OTHERWISE' : 'WHEN'}
+              />
+            }
+          >
             <>
               {!isPrimary && (
                 <ConditionsBackButtonItem

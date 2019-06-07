@@ -1,11 +1,30 @@
 // Enum for the LeveledMessage level field
 import { Flow } from '@syndesis/models';
+import { Integration } from '@syndesis/models/src';
 
 export enum MessageLevel {
   INFO = 'INFO',
   WARN = 'WARN',
   ERROR = 'ERROR',
 }
+
+export const NEW_INTEGRATION_ID = 'new-integration';
+
+export const NEW_INTEGRATION = {
+  id: NEW_INTEGRATION_ID,
+  name: '',
+  tags: [],
+} as Integration;
+
+export type DataShapeKindType =
+  | 'ANY'
+  | 'JAVA'
+  | 'JSON_SCHEMA'
+  | 'JSON_INSTANCE'
+  | 'XML_SCHEMA'
+  | 'XML_SCHEMA_INSPECTED'
+  | 'XML_INSTANCE'
+  | 'NONE';
 
 // Data shape kind enum when working with the DataShape type
 export enum DataShapeKinds {
@@ -81,6 +100,8 @@ export interface ITypedFlow extends Flow {
 
 export const FLOW_KIND_METADATA_KEY = 'kind';
 export const EXCERPT_METADATA_KEY = 'excerpt';
+export const STEP_ID_METADATA_KEY = 'stepId';
+export const PRIMARY_FLOW_ID_METADATA_KEY = 'primaryFlowId';
 
 // Special sekret connection metadata keys
 export const HIDE_FROM_STEP_SELECT = 'hide-from-step-select';
