@@ -131,19 +131,6 @@ body {
   }
 }
 
-.dashboard__metrics .card-pf.card-pf-aggregate-status {
-  padding: 0 10px 24px 10px;
-}
-
-.dashboard__metrics .card-pf-title .card-pf-aggregate-status-count {
-  font-size: 14px;
-}
-
-.dashboard__metrics .metrics-uptime {
-  font-size: 24px;
-  font-weight: 300;
-}
-
 .customization-details__heading {
   background-color: #f5f5f5;
   font-weight: bold;
@@ -187,4 +174,9 @@ body {
 
 .wizard-pf-step-title {
   line-height: 24px;
+}
+
+.list-view-pf .list-group-item-heading {
+  white-space: normal;
+  word-break: break-all;
 }
