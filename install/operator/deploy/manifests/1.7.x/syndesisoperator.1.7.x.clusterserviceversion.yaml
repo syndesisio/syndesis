@@ -43,7 +43,7 @@ spec:
   maturity: alpha
   maintainers:
   - name: Syndesis team
-    email: fuse-online@redhat.com
+    email: syndesis@googlegroups.com
   provider:
     name: Syndesis team
   labels:
