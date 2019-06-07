@@ -77,6 +77,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     // initialize config information before initializing services
     const c: ConfigModel = this.initializationService.cfg;
 
+    c.initCfg.classPath = environment.classpath;
     c.initCfg.xsrfCookieName = environment.xsrf.cookieName;
     c.initCfg.xsrfDefaultTokenValue = environment.xsrf.defaultTokenValue;
     c.initCfg.xsrfHeaderName = environment.xsrf.headerName;
