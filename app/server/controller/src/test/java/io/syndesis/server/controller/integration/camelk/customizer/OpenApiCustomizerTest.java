@@ -31,7 +31,6 @@ import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.integration.camelk.TestResourceManager;
 import io.syndesis.server.openshift.Exposure;
-import org.assertj.core.api.Condition;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

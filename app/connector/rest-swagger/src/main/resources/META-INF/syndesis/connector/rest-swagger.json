@@ -39,9 +39,6 @@
       "javaType": "java.lang.String",
       "order": 4,
       "secret": true,
-      "tags": [
-        "oauth-access-token"
-      ],
       "type": "string"
     },
     "accessTokenExpiresAt": {
@@ -105,9 +102,6 @@
       ],
       "javaType": "java.lang.String",
       "order": 1,
-      "tags": [
-        "authentication-type"
-      ],
       "type": "hidden"
     },
     "authorizationEndpoint": {
@@ -116,17 +110,11 @@
       "javaType": "java.lang.String",
       "order": 6,
       "required": true,
-      "tags": [
-        "oauth-authorization-url"
-      ],
       "type": "string"
     },
     "authorizeUsingParameters": {
       "description": "Should the implementation send client id and client secret when performing OAuth flow",
       "javaType": "java.lang.String",
-      "tags": [
-        "oauth-authorize-using-parameters"
-      ],
       "type": "hidden"
     },
     "basePath": {
@@ -141,9 +129,6 @@
       "displayName": "OAuth Client ID",
       "javaType": "java.lang.String",
       "order": 2,
-      "tags": [
-        "oauth-client-id"
-      ],
       "type": "string"
     },
     "clientSecret": {
@@ -152,9 +137,6 @@
       "javaType": "java.lang.String",
       "order": 3,
       "secret": true,
-      "tags": [
-        "oauth-client-secret"
-      ],
       "type": "string"
     },
     "host": {
@@ -170,9 +152,6 @@
       "displayName": "OAuth Scopes",
       "javaType": "java.lang.String",
       "order": 8,
-      "tags": [
-        "oauth-scope"
-      ],
       "type": "string"
     },
     "operationId": {
@@ -197,9 +176,6 @@
       "javaType": "java.lang.String",
       "order": 5,
       "secret": true,
-      "tags": [
-        "oauth-refresh-token"
-      ],
       "type": "string"
     },
     "refreshTokenRetryStatuses": {
@@ -213,10 +189,6 @@
       "displayName": "Document",
       "javaType": "java.lang.String",
       "required": true,
-      "tags": [
-        "upload",
-        "url"
-      ],
       "type": "hidden"
     },
     "tokenEndpoint": {
@@ -224,17 +196,11 @@
       "displayName": "OAuth Token Endpoint URL",
       "javaType": "java.lang.String",
       "order": 7,
-      "tags": [
-        "oauth-access-token-url"
-      ],
       "type": "string"
     },
     "tokenStrategy": {
       "displayName": "OAuth Token strategy",
       "javaType": "java.lang.String",
-      "tags": [
-        "oauth-token-strategy"
-      ],
       "type": "hidden"
     },
     "username": {

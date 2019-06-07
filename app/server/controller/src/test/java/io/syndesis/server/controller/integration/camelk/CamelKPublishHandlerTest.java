@@ -34,7 +34,6 @@ import io.syndesis.common.util.MavenProperties;
 import io.syndesis.integration.project.generator.ProjectGenerator;
 import io.syndesis.integration.project.generator.ProjectGeneratorConfiguration;
 import io.syndesis.server.controller.ControllersConfigurationProperties;
-import io.syndesis.server.endpoint.v1.VersionService;
 import io.syndesis.server.openshift.OpenShiftServiceNoOp;
 import org.junit.Test;
 
