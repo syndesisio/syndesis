@@ -30,6 +30,10 @@ import { IChoiceFormConfiguration } from './interfaces';
 import { createChoiceConfiguration } from './utils';
 import { WithChoiceConfigurationForm } from './WithChoiceConfigurationForm';
 
+const NEW_CONDITIONAL_FLOW_NAME = 'Conditional';
+const DEFAULT_FLOW_NAME = 'Default';
+const DEFAULT_FLOW_DESCRIPTION = 'Use this as default';
+
 export interface IChoiceStepPageProps extends IPageWithEditorBreadcrumb {
   mode: 'adding' | 'editing';
   sidebar: (props: IEditorSidebarProps) => React.ReactNode;
@@ -79,10 +83,14 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                   ) => {
                     const flowCollection = values.flowConditions.map(
                       flowCondition => {
+                        // Create a flow for new conditions or grab the
+                        // existing flow if we're working with an existing
+                        // configuration.  Ensure that if there's a flow
+                        // ID set and we can't find one, create a new one
                         const flow =
                           typeof flowCondition.flowId === 'undefined'
                             ? createConditionalFlow(
-                                'Conditional',
+                                NEW_CONDITIONAL_FLOW_NAME,
                                 flowCondition.condition,
                                 FlowKind.CONDITIONAL,
                                 params.flowId,
@@ -91,6 +99,15 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                               )
                             : getFlow(
                                 state.updatedIntegration || state.integration,
+                                flowCondition.flowId
+                              ) ||
+                              createConditionalFlow(
+                                NEW_CONDITIONAL_FLOW_NAME,
+                                flowCondition.condition,
+                                FlowKind.CONDITIONAL,
+                                params.flowId,
+                                data,
+                                state.step,
                                 flowCondition.flowId
                               )!;
                         // update the description
@@ -105,8 +122,8 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                     const defaultFlow = values.useDefaultFlow
                       ? values.defaultFlowId === ''
                         ? createConditionalFlow(
-                            'Default',
-                            'Use this as default',
+                            DEFAULT_FLOW_NAME,
+                            DEFAULT_FLOW_DESCRIPTION,
                             FlowKind.DEFAULT,
                             params.flowId,
                             data,
@@ -131,8 +148,6 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                       configuredProperties.default = defaultFlow!.id!;
                       updatedFlows.push(defaultFlow);
                     }
-                    const defaultFlowId =
-                      typeof defaultFlow !== 'undefined' ? defaultFlow.id! : '';
                     const updatedIntegration = reconcileConditionalFlows(
                       await (this.props.mode === 'adding'
                         ? addStep
@@ -144,8 +159,6 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                         configuredProperties
                       ),
                       updatedFlows,
-                      flowCollection.map(f => f.flowId!),
-                      defaultFlowId,
                       state.step.id!
                     );
                     history.push(
