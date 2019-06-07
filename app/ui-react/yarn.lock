@@ -2614,10 +2614,15 @@
     universal-user-agent "^2.0.0"
     url-template "^2.0.8"
 
-"@patternfly/patternfly@1.0.250", "@patternfly/patternfly@2.6.6", "@patternfly/patternfly@^2.8.1":
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-2.6.6.tgz#d4ba153f0b1470fbc91ea308c8c7260c9bcb0d28"
-  integrity sha512-lKbsTE/VlU1BiVzeo0BhfDe/qeqIqheejBz0qAm3CYuHyfUXd4+Uu+/9lfEB2EMb+wXpK4Np74OHtYCC82fP0Q==
+"@patternfly/patternfly@1.0.250":
+  version "1.0.250"
+  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-1.0.250.tgz#02952d55039891ab4796b6e78e677ecd01c25855"
+  integrity sha512-Ew9m5sRTjb68ewzD1gk/QMgJYZl/0jyXtSSYaSdXyzpzB+0Yj+46qhcKDCGql6MzXxO7kZ8vjt4gmBRqfV+OnA==
+
+"@patternfly/patternfly@^2.8.1":
+  version "2.12.5"
+  resolved "https://registry.yarnpkg.com/@patternfly/patternfly/-/patternfly-2.12.5.tgz#f2c5924deb875a8cde95e09e6d5c9022f00429da"
+  integrity sha512-zB+pwtUXZVbv6l76XMU3ggMZrbHZtbZDBHrNBeWVfDngp2xnwTNVu0Ha4WaZVtZzutyVaF6F1VHTLnef6mO5ug==
 
 "@patternfly/react-core@^3.32.9":
   version "3.32.9"
