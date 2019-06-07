@@ -26,7 +26,10 @@
       "title": "Select connector"
     },
     "configure": {
-      "title": "Configure connection"
+      "title": "Configure connection",
+      "configurationTitle": "{{name}} Configuration",
+      "configurationDescription": "Log into your {{name}} account to grant authorization for $t(shared:project:name) to act on your behalf.",
+      "configurationButton": "Connect {{name}}"
     },
     "review": {
       "title": "Name connection"

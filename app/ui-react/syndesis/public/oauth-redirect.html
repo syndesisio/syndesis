@@ -1,0 +1,16 @@
+<!doctype html>
+<script>
+  let autocloseInterval;
+
+  function authCompleted() {
+    clearInterval(autocloseInterval);
+    const cred = document.cookie.split(';').filter(c => c.indexOf('cred-o2') === 0)[0];
+    window.opener.authCompleted(window.location.hash.substr(1), cred);
+    window.close();
+  }
+
+  addEventListener('load', function() {
+    autocloseInterval = setTimeout(authCompleted, 5000);
+  })
+</script>
+<a href="javascript:authCompleted()">Connection successful, you can now close this window. It will close automatically in 5 seconds.</a>

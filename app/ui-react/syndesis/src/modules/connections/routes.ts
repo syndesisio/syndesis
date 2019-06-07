@@ -9,8 +9,8 @@ export default include('/connections', {
   }),
   create: include('create', {
     selectConnector: 'connection-basics',
-    configureConnector: 'configure-fields/:connectorId',
-    review: 'review',
+    configureConnector: ':connectorId/configure-fields',
+    review: ':connectorId/review',
     root: '',
   }),
 });
