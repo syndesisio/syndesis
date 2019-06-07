@@ -92,11 +92,17 @@ export interface IntegrationMonitoring {
   podName: string;
 }
 
+export type isVisibleFunction = (
+  position: number,
+  previous: StepKind[],
+  subsequent: StepKind[]
+) => boolean;
+
 export interface StepKind extends Step {
   name: string;
   description: string;
   properties: any;
-  visible?: (position: number, previous: Step[], subsequent: Step[]) => boolean;
+  visible?: isVisibleFunction[];
 }
 
 export interface IListResult<T> {
