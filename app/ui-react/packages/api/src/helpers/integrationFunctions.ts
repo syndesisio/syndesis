@@ -610,7 +610,7 @@ export function prepareIntegrationForSaving(integration: Integration) {
 export type GetSanitizedSteps = (steps: Step[]) => Promise<Step[]>;
 
 export async function sanitizeFlow(
-  flow: Flow,
+  flow: Flow | ITypedFlow,
   getSanitizedSteps: GetSanitizedSteps
 ): Promise<Flow> {
   flow.steps = await getSanitizedSteps(flow.steps || []);
@@ -623,7 +623,8 @@ export async function sanitizeFlow(
         .map(s => s.connection!.id),
     ])
   ) as string[];
-
+  // Ensure the type is set properly on the flow, if it's not set we assume it's a primary flow
+  (flow as ITypedFlow).type = (flow as ITypedFlow).type || FlowType.PRIMARY;
   // for the api provider, if a flow has been modified we change the last
   // step of the flow to automatically set a return code of 200, unless
   // already modified by the user. Also, we update the flow metadata to
@@ -708,6 +709,7 @@ export function reconcileConditionalFlows(
 ) {
   const newFlows = integration.flows!.filter(flow => {
     return (
+      (flow as ITypedFlow).type !== FlowType.ALTERNATE ||
       typeof flow.metadata === 'undefined' ||
       stepId !== getMetadataValue<string>('stepId', flow.metadata)
     );
