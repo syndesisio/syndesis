@@ -21,7 +21,7 @@ stories.add('HelpDropdown', () => {
             ['left', 'right'],
             'left'
           )}
-          isMobileView={boolean('isMobileView', false)}
+          isTabletView={boolean('isTabletView', false)}
           launchConnectorsGuide={logDropdownItemSelection}
           launchContactUs={logDropdownItemSelection}
           launchSampleIntegrationTutorials={logDropdownItemSelection}
