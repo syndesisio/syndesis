@@ -14,6 +14,7 @@ import {
   ToolbarItem,
 } from '@patternfly/react-core';
 import { css } from '@patternfly/react-styles';
+import { global_breakpoint_lg } from '@patternfly/react-tokens';
 import * as React from 'react';
 import { HelpDropdown } from '../Shared/HelpDropdown';
 import { AppLayoutContext } from './AppLayoutContext';
@@ -83,8 +84,15 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
     setCurViewportWidth(props.windowSize);
   };
   const [isTabletView, setIsTabletView] = React.useState(false);
+  const LARGE_VIEWPORT_BREAKPOINT = parseInt(
+    global_breakpoint_lg.value.substring(
+      0,
+      global_breakpoint_lg.value.indexOf('px')
+    ),
+    10
+  );
   React.useEffect(() => {
-    setIsTabletView(curViewportWidth <= 992);
+    setIsTabletView(curViewportWidth <= LARGE_VIEWPORT_BREAKPOINT);
   }, [curViewportWidth]);
   return (
     <AppLayoutContext.Provider
