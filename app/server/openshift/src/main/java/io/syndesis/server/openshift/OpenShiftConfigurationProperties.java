@@ -25,6 +25,7 @@ import io.fabric8.openshift.client.OpenShiftConfigBuilder;
 
 @ConfigurationProperties("openshift")
 @Validated
+@SuppressWarnings("PMD.TooManyFields")
 public class OpenShiftConfigurationProperties {
 
     private boolean enabled;
@@ -52,6 +53,8 @@ public class OpenShiftConfigurationProperties {
     private long pollingInterval = 5000;
 
     private Map<String, String> buildNodeSelector;
+
+    private int integrationLivenessProbeInitialDelaySeconds;
 
     public void setDebug(final boolean debug) {
         this.debug = debug;
@@ -171,5 +174,13 @@ public class OpenShiftConfigurationProperties {
 
     public void setBuildNodeSelector(Map<String, String> buildNodeSelector) {
         this.buildNodeSelector = buildNodeSelector;
+    }
+
+    public int getIntegrationLivenessProbeInitialDelaySeconds() {
+        return integrationLivenessProbeInitialDelaySeconds;
+    }
+
+    public void setIntegrationLivenessProbeInitialDelaySeconds(int integrationLivenessProbeInitialDelaySeconds) {
+        this.integrationLivenessProbeInitialDelaySeconds = integrationLivenessProbeInitialDelaySeconds;
     }
 }

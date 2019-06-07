@@ -256,6 +256,7 @@
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
         mavenOptions: "-XX:+UseG1GC -XX:+UseStringDeduplication -Xmx310m"
+        integrationLivenessProbeInitialDelaySeconds: 120
       dao:
         kind: jsondb
       controllers:

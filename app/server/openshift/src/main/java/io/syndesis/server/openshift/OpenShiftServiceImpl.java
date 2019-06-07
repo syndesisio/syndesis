@@ -20,6 +20,7 @@ import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.EnvVar;
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.KubernetesResourceList;
+import io.fabric8.kubernetes.api.model.ProbeBuilder;
 import io.fabric8.kubernetes.api.model.Quantity;
 import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
@@ -268,6 +269,13 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                             .withMountPath("/deployments/config")
                             .withReadOnly(false)
                         .endVolumeMount()
+                        .withLivenessProbe(new ProbeBuilder()
+                            .withInitialDelaySeconds(config.getIntegrationLivenessProbeInitialDelaySeconds())
+                            .withNewHttpGet()
+                                .withPath("/health")
+                                .withNewPort(8080)
+                            .endHttpGet()
+                            .build())
                         .endContainer()
                         .addNewVolume()
                             .withName("secret-volume")
@@ -292,8 +300,6 @@ public class OpenShiftServiceImpl implements OpenShiftService {
             .endSpec()
             .done();
     }
-
-
 
     private boolean removeDeploymentConfig(String projectName) {
         return openShiftClient.deploymentConfigs().withName(projectName).delete();
