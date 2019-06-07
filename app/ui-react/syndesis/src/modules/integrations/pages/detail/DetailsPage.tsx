@@ -9,6 +9,7 @@ import {
   IntegrationDetailHistoryListView,
   IntegrationDetailHistoryListViewItem,
   IntegrationDetailHistoryListViewItemActions,
+  IntegrationExposedURL,
   PageLoader,
 } from '@syndesis/ui';
 import { WithLoader, WithRouteData } from '@syndesis/utils';
@@ -81,6 +82,9 @@ export class DetailsPage extends React.Component {
                                     />
                                     <IntegrationDetailSteps
                                       integration={data.integration}
+                                    />
+                                    <IntegrationExposedURL
+                                      url={data.integration.url}
                                     />
                                     <WithIntegrationHelpers>
                                       {({ setAttributes }) => {
