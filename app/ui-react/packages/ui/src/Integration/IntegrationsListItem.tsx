@@ -44,18 +44,6 @@ export class IntegrationsListItem extends React.Component<
         actions={this.props.actions}
         heading={this.props.integrationName}
         className={'integration-list-item'}
-        description={
-          this.props.isConfigurationRequired && (
-            <div className={'config-required pf-u-my-sm pf-u-ml-2xl'}>
-              <Icon
-                type={'pf'}
-                name={'warning-triangle-o'}
-                className="pf-u-mr-xs"
-              />
-              {this.props.i18nConfigurationRequired}
-            </div>
-          )
-        }
         additionalInfo={[
           <ListView.InfoItem
             key={1}
@@ -80,6 +68,21 @@ export class IntegrationsListItem extends React.Component<
                 i18nUnpublished={this.props.i18nUnpublished}
                 i18nError={this.props.i18nError}
               />
+            )}
+          </ListView.InfoItem>,
+          <ListView.InfoItem
+            key={1}
+            className={'integration-list-item__additional-info'}
+          >
+            {this.props.isConfigurationRequired && (
+              <div className={'integration-list-item__config-required'}>
+                <Icon
+                  type={'pf'}
+                  name={'warning-triangle-o'}
+                  className="pf-u-mr-xs"
+                />
+                {this.props.i18nConfigurationRequired}
+              </div>
             )}
           </ListView.InfoItem>,
         ]}
