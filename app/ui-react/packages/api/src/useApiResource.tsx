@@ -7,7 +7,7 @@ export interface IUseApiResource<T> {
   body?: any;
   method?: FetchMethod;
   initialValue?: T;
-  transformResponse?: (response: any) => T;
+  transformResponse?: (response: Response) => Promise<T>;
   readOnMount?: boolean;
 }
 export function useApiResource<T>({
@@ -16,7 +16,7 @@ export function useApiResource<T>({
   defaultValue,
   method = 'GET',
   initialValue,
-  transformResponse = r => r as T,
+  transformResponse = async r => (await r.json()) as T,
   readOnMount = true,
 }: IUseApiResource<T>) {
   const apiContext = React.useContext(ApiContext);
@@ -43,10 +43,11 @@ export function useApiResource<T>({
         if (!response.ok) {
           throw new Error(response.statusText);
         }
-        r = transformResponse(await response.json());
+        r = await transformResponse(response);
         setResource(r);
         setHasData(true);
       } catch (e) {
+        setHasData(false);
         setError(e);
       } finally {
         setLoading(false);

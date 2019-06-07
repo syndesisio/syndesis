@@ -1,5 +1,5 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
-import { Connection, Connector } from '@syndesis/models';
+import { Connection } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
 import {
   IConfigurationPageRouteParams,
@@ -40,9 +40,7 @@ export default {
   create: {
     selectConnector: makeResolverNoParams(routes.create.selectConnector),
     configureConnector: makeResolver<
-      {
-        connector: Connector;
-      },
+      IConfigurationPageRouteState,
       IConfigurationPageRouteParams,
       IConfigurationPageRouteState
     >(routes.create.configureConnector, ({ connector }) => ({
@@ -54,19 +52,17 @@ export default {
       },
     })),
     review: makeResolver<
-      {
-        connector: Connector;
-        configuredProperties: { [key: string]: string };
-      },
+      IReviewPageRouteState,
       IReviewPageRouteParams,
       IReviewPageRouteState
-    >(routes.create.review, ({ connector, configuredProperties }) => ({
+    >(routes.create.review, ({ connector, configuredProperties, cookie }) => ({
       params: {
         connectorId: connector.id!,
       },
       state: {
         connector,
         configuredProperties,
+        cookie,
       },
     })),
   },
