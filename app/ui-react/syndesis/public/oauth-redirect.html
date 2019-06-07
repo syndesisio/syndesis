@@ -4,8 +4,7 @@
 
   function authCompleted() {
     clearInterval(autocloseInterval);
-    const cred = document.cookie.split(';').filter(c => c.indexOf('cred-o2') === 0)[0];
-    window.opener.authCompleted(window.location.hash.substr(1), cred);
+    window.opener.authCompleted(window.location.hash.substr(1));
     window.close();
   }
 

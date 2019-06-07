@@ -31,7 +31,6 @@ export interface IReviewPageRouteParams {
 export interface IReviewPageRouteState {
   connector: Connector;
   configuredProperties?: { [key: string]: string };
-  cookie?: string;
 }
 
 export const ReviewPage: React.FunctionComponent = () => {
@@ -46,10 +45,6 @@ export const ReviewPage: React.FunctionComponent = () => {
   );
   const { pushNotification } = React.useContext(UIContext);
   const { createConnection, saveConnection } = useConnectionHelpers();
-
-  if (state.cookie) {
-    document.cookie = `${state.cookie};path=/;secure`;
-  }
 
   const definition: IFormDefinition = {
     name: {

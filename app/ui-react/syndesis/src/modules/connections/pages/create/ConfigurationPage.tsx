@@ -97,8 +97,10 @@ export const ConfigurationPage: React.FunctionComponent = () => {
    * the API in the document. This cookie will be later used by the BE in the
    * redirect page set up in the 3rd party.
    */
-  if (connectResource) {
+  if (connectResource && connectResource.state) {
     window.document.cookie = connectResource.state.spec;
+    // we need to destroy the state to prevent reverting to it
+    connectResource.state = undefined;
   }
 
   /**
@@ -107,8 +109,7 @@ export const ConfigurationPage: React.FunctionComponent = () => {
    * result of the connection
    */
   const authCompleted = React.useCallback(
-    (authState: string, cookie: string) => {
-      // document.cookie = `${cookie};path=/;secure`;
+    (authState: string) => {
       try {
         const auth = JSON.parse(decodeURIComponent(authState));
         if (auth.status === 'FAILURE') {
@@ -118,7 +119,6 @@ export const ConfigurationPage: React.FunctionComponent = () => {
         history.push(
           resolvers.create.review({
             connector,
-            cookie,
           })
         );
       } catch (e) {
