@@ -65,7 +65,7 @@ public class BoxVerifierExtension extends DefaultComponentVerifierExtension {
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
         try {
             BoxConfiguration configuration = new BoxConfiguration();
-            configuration.setAuthenticationType(BoxConfiguration.STANDARD_AUTHENTICATION);
+            parameters.put("authenticationType", BoxConfiguration.STANDARD_AUTHENTICATION);
             setProperties(configuration, parameters);
 
             BoxAPIConnection connection = BoxConnectionHelper.createConnection(configuration);
