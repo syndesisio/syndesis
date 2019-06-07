@@ -105,7 +105,7 @@ minishift start --memory 4192
 oc login -u system:admin
 
 # Register CRD and grant permissions to "developer"
-syndesis --setup --grant developer --cluster
+syndesis install --setup --grant developer --cluster
 
 # Switch to account developer
 oc login -u developer
