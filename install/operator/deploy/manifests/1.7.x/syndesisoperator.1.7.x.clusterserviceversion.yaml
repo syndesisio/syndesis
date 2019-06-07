@@ -9,7 +9,7 @@ metadata:
     certified: "false"
     createdAt: 2019-05-08T16:12:00Z
     containerImage: syndesis/syndesis-operator
-    support: Red Hat Fuse Online
+    support: Syndesis
     description: Manages the installation of Syndesis, a flexible and customizable open source platform that provides core integration capabilities as a service.
     repository: https://github.com/syndesisio/syndesis/
     alm-examples: |
