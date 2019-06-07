@@ -6,4 +6,5 @@ export * from './ConnectionsGrid';
 export * from './ConnectionsGridCell';
 export * from './ConnectionSkeleton';
 export * from './ConnectionsListView';
+export * from './ConnectorAuthorization';
 export * from './ConnectorConfigurationForm';
