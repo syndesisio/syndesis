@@ -31,7 +31,7 @@ export interface IConfigurationPageRouteParams {
 }
 
 export interface IConfigurationPageRouteState {
-  connector?: Connector;
+  connector: Connector;
 }
 
 export const ConfigurationPage: React.FunctionComponent = () => {
@@ -62,23 +62,45 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     window.document.cookie = connectResource.state.spec;
   }
 
-  React.useEffect(() => {
-    (window as any).authCompleted = (authState: string) => {
+  const authCompleted = React.useCallback(
+    (authState: string, cookie: string) => {
+      // document.cookie = `${cookie};path=/;secure`;
       try {
         const auth = JSON.parse(decodeURIComponent(authState));
         if (auth.status === 'FAILURE') {
           throw new Error(auth.message);
         }
-        pushNotification('😛', 'success');
+        pushNotification(auth.message, 'success');
+        history.push(
+          resolvers.create.review({
+            connector,
+            cookie,
+          })
+        );
       } catch (e) {
         pushNotification(`Connection failed: ${e.message}`, 'error');
       }
-    };
+    },
+    [pushNotification, connector, history]
+  );
+
+  React.useEffect(() => {
+    (window as any).authCompleted = authCompleted;
 
     return () => {
       delete (window as any).authCompleted;
     };
-  });
+  }, [authCompleted]);
+
+  React.useEffect(() => {
+    const creds = document.cookie
+      .split(';')
+      .filter(c => c.indexOf('cred-o2') === 0);
+    creds.forEach(c => {
+      const [key] = c.split('=');
+      document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+    });
+  }, []);
 
   const onSave = (configuredProperties: { [key: string]: string }) => {
     history.push(
@@ -90,22 +112,18 @@ export const ConfigurationPage: React.FunctionComponent = () => {
   };
 
   const onConnect = () => {
-    try {
-      const popup = window.open(
-        connectResource!.redirectUrl,
-        'Connection popup',
-        'width=600,height=400,resizable,scrollbars=yes,status=yes'
+    const popup = window.open(
+      connectResource!.redirectUrl,
+      'Connection popup',
+      'width=600,height=400,resizable,scrollbars=yes,status=yes'
+    );
+    if (!popup) {
+      pushNotification(
+        `Your browser is preventing the application from opening the connection to ${
+          connector.name
+        } page.`,
+        'error'
       );
-      if (!popup) {
-        pushNotification(
-          `Your browser is preventing the application from opening the connection to ${
-            connector.name
-          } page.`,
-          'error'
-        );
-      }
-    } catch (e) {
-      // ignore error since it will be available in `errorConnecting`
     }
   };
 

@@ -30,7 +30,8 @@ export interface IReviewPageRouteParams {
 
 export interface IReviewPageRouteState {
   connector: Connector;
-  configuredProperties: { [key: string]: string };
+  configuredProperties?: { [key: string]: string };
+  cookie?: string;
 }
 
 export const ReviewPage: React.FunctionComponent = () => {
@@ -45,6 +46,10 @@ export const ReviewPage: React.FunctionComponent = () => {
   );
   const { pushNotification } = React.useContext(UIContext);
   const { createConnection, saveConnection } = useConnectionHelpers();
+
+  if (state.cookie) {
+    document.cookie = `${state.cookie};path=/;secure`;
+  }
 
   const definition: IFormDefinition = {
     name: {
@@ -81,10 +86,9 @@ export const ReviewPage: React.FunctionComponent = () => {
               connector,
               name,
               description || '',
-              state.configuredProperties || {}
+              state.configuredProperties
             );
             await saveConnection(connection);
-            actions.setSubmitting(false);
             pushNotification(
               `<strong>Connection created</strong> Connection <strong>${name}</strong> successfully created`,
               'success'
@@ -93,6 +97,8 @@ export const ReviewPage: React.FunctionComponent = () => {
             history.push(resolvers.connections());
           } catch (e) {
             pushNotification(e.message, 'error');
+          } finally {
+            actions.setSubmitting(false);
           }
         };
 

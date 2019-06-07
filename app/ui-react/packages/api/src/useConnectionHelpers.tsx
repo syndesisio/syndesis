@@ -31,7 +31,7 @@ export const useConnectionHelpers = () => {
     connector: Connector,
     name: string,
     description: string,
-    configuredProperties: { [key: string]: string }
+    configuredProperties?: { [key: string]: string }
   ): Connection => {
     const connection = {} as Connection;
     return produce(connection, draft => {

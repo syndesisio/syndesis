@@ -4,7 +4,10 @@ import { useApiResource } from './useApiResource';
 export const useConnectorCredentials = (connectorId: string) => {
   return useApiResource<AcquisitionMethod | undefined>({
     defaultValue: {},
-    transformResponse: am => (Object.keys(am).length > 0 ? am : undefined),
+    transformResponse: async response => {
+      const am = await response.json();
+      return Object.keys(am).length > 0 ? am : undefined;
+    },
     url: `/connectors/${connectorId}/credentials`,
   });
 };
@@ -26,6 +29,7 @@ export const useConnectorCredentialsConnect = (
     body: { returnUrl },
     defaultValue: undefined,
     method: 'POST',
+    readOnMount: true,
     url: `/connectors/${connectorId}/credentials`,
   });
 };
