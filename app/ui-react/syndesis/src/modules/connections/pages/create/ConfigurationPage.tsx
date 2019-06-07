@@ -6,8 +6,8 @@ import {
 import * as H from '@syndesis/history';
 import { Connector } from '@syndesis/models';
 import {
-  ButtonLink,
   ConnectionCreatorLayout,
+  ConnectorAuthorization,
   ConnectorConfigurationForm,
   PageLoader,
   PageSection,
@@ -52,7 +52,6 @@ export const ConfigurationPage: React.FunctionComponent = () => {
   const { pushNotification } = React.useContext(UIContext);
   const {
     loading: isConnecting,
-    error: errorConnecting,
     resource: connectResource,
   } = useConnectorCredentialsConnect(
     params.connectorId,
@@ -153,14 +152,22 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                 >
                   {() =>
                     acquisitionMethod ? (
-                      <>
-                        {errorConnecting && (
-                          <pre>{JSON.stringify(errorConnecting, null, 2)}</pre>
+                      <ConnectorAuthorization
+                        i18nTitle={t(
+                          'connections:create:configure:configurationTitle',
+                          { name: connector.name }
                         )}
-                        <ButtonLink disabled={isConnecting} onClick={onConnect}>
-                          Connect
-                        </ButtonLink>
-                      </>
+                        i18nDescription={t(
+                          'connections:create:configure:configurationDescription',
+                          { name: connector.name }
+                        )}
+                        i18nConnectButton={t(
+                          'connections:create:configure:configurationButton',
+                          { name: connector.name }
+                        )}
+                        isConnecting={isConnecting}
+                        onConnect={onConnect}
+                      />
                     ) : (
                       <WithConnectorForm connector={connector} onSave={onSave}>
                         {({
