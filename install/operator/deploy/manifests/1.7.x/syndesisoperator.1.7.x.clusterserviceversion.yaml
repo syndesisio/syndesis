@@ -56,7 +56,7 @@ spec:
     mediatype: image/png
   links:
   - name: Syndesis
-    url: https://github.com/syndesisio/syndesis
+    url: https://syndesis.io
   - name: Syndesis Operator
     url: https://github.com/syndesisio/syndesis/tree/master/install/operator
   installModes:
