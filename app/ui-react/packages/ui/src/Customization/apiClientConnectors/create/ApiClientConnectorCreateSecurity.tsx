@@ -91,7 +91,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
        * Check if the security type is either Basic or None, in which case the form
        * should be valid.
        */
-      valid: newType === ('basic' || 'apiKey' || 'none'),
+      valid: newType === ('apiKey' || 'basic' || 'none'),
     });
   }
 
