@@ -219,7 +219,6 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(1);
-        result.setResultWaitTime(360000);
 
         context.start();
 

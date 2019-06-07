@@ -1,0 +1,60 @@
+{
+  "UserName": "russellwhyte",
+  "FirstName": "Russell",
+  "LastName": "Whyte",
+  "Gender": "Male",
+  "MiddleName": "",
+  "Age": "",
+  "Emails": [
+    "Russell@example.com",
+    "Russell@contoso.com"
+  ],
+  "FavoriteFeature": "Feature1",
+  "Features": [
+    "Feature1",
+    "Feature2"
+  ],
+  "AddressInfo": [
+    {
+      "Address":"187 Suffolk Ln.",
+      "City":{
+        "Name":"Boise",
+        "CountryRegion":"United States",
+        "Region":"ID"
+      }
+    }
+  ],
+  "HomeAddress": "",
+  "Trips": [
+    {
+      "TripId": 0,
+      "ShareId": "9d9b2fa0-efbf-490e-a5e3-bac8f7d47354",
+      "Name": "Trip in US",
+      "Budget": 3000,
+      "Description": "Trip from San Francisco to New York City",
+      "Tags": ["business","New York meeting"],
+      "StartsAt": "2014-01-01T00:00:00Z",
+      "EndsAt": "2014-01-04T00:00:00Z"
+    },
+    {
+      "TripId": 1,
+      "ShareId": "f94e9116-8bdd-4dac-ab61-08438d0d9a71",
+      "Name": "Trip in Beijing",
+      "Budget": 2000,
+      "Description": "Trip from Shanghai to Beijing",
+      "Tags": ["Travel","Beijing"],
+      "StartsAt": "2014-02-01T00:00:00Z",
+      "EndsAt": "2014-02-04T00:00:00Z"
+    },
+    {
+      "TripId": 2,
+      "ShareId": "9ce142c3-5fd6-4a71-848e-5220ebf1e9f3",
+      "Name": "Honeymoon",
+      "Budget": 2650,
+      "Description": "Happy honeymoon trip",
+      "Tags":["Travel","honeymoon"],
+      "StartsAt": "2014-02-01T00:00:00Z",
+      "EndsAt": "2014-02-04T00:00:00Z"
+    }
+  ]
+}
