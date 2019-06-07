@@ -34,22 +34,56 @@ export interface IConfigurationPageRouteState {
   connector: Connector;
 }
 
+/**
+ * A page to set up the data required for a connector. A connector can be oauth
+ * enabled or not.
+ *
+ * For non oauth enabled connectors, we simply display a form built on top of the
+ * connector's properties.
+ *
+ * For oauth enabled connectors, we need to set up the oauth flow. It works like this:
+ *
+ * ConfigurationPage -> 3rd party authorization page (3rd party BE <-> Syndesis BE auth API) -> Syndesis BE redirect callback -> oauth-popup.html -> ConfigurationPage
+ *
+ * Basically we tell the BE that we want the flow to end up opening the url where
+ * the oauth-popup.html is hosted. That file will call a global function that we
+ * setup on page mount that to pass back the authorization result - which can be
+ * either successful or not - and the updated cookie. In case of success, we pass
+ * this cookie to the review page to allow the save connector API to retrieve the
+ * right data to set up this connector.
+ */
 export const ConfigurationPage: React.FunctionComponent = () => {
   const { t } = useTranslation(['connections', 'shared']);
   const { params, state, history } = useRouteData<
     IConfigurationPageRouteParams,
     IConfigurationPageRouteState
   >();
+  const { pushNotification } = React.useContext(UIContext);
+  /**
+   * retrieve the connector from the BE in case we don't have it in the route state
+   */
   const { hasData, error: errorConnector, resource: connector } = useConnector(
     params.connectorId,
     state.connector
   );
+  /**
+   * check if the connector requires some kind of connection to a 3rd party. We
+   * just check for a valid resource and not it's content since we support only
+   * oauth2 for the moment.
+   */
   const {
     loading: loadingCredentials,
     error: errorCredentials,
     resource: acquisitionMethod,
   } = useConnectorCredentials(params.connectorId);
-  const { pushNotification } = React.useContext(UIContext);
+  /**
+   * retrieve the credentials cookie and redirectUrl for the connector OAuth flow.
+   * If the connector requires OAuth, the resource will contain the data we need to
+   * setup the flow.
+   *
+   * We set up the oauth flow so that the last page to be open will be the oauth-redirect.html
+   * "asset", that is configured to call the authCompleted callback defined down here.
+   */
   const {
     loading: isConnecting,
     resource: connectResource,
@@ -57,10 +91,21 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     params.connectorId,
     `${process.env.PUBLIC_URL}/oauth-redirect.html`
   );
+
+  /**
+   * if we need to set up an OAuth flow, we need to set the cookie returned by
+   * the API in the document. This cookie will be later used by the BE in the
+   * redirect page set up in the 3rd party.
+   */
   if (connectResource) {
     window.document.cookie = connectResource.state.spec;
   }
 
+  /**
+   * create a callback reference to a function that will be globally available and
+   * that will be used by the oauth2 popup landing page to pass back to this the
+   * result of the connection
+   */
   const authCompleted = React.useCallback(
     (authState: string, cookie: string) => {
       // document.cookie = `${cookie};path=/;secure`;
@@ -83,6 +128,10 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     [pushNotification, connector, history]
   );
 
+  /**
+   * make the above callback available under window.authCompleted, and remove it
+   * when the page is unmounted
+   */
   React.useEffect(() => {
     (window as any).authCompleted = authCompleted;
 
@@ -91,6 +140,12 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     };
   }, [authCompleted]);
 
+  /**
+   * we need to clean up any existing cookie we might have set in previous visit
+   * to this page, to be sure that the API will get only the latest and correct one.
+   * *IMPORTANT*: the cookie must have all the flags as the one set by the API;
+   * path in this case is mandatory to set
+   */
   React.useEffect(() => {
     const creds = document.cookie
       .split(';')
@@ -101,6 +156,12 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     });
   }, []);
 
+  /**
+   * the callback that's called by the configuration form for non oauth enabled
+   * connectors.
+   *
+   * @param configuredProperties
+   */
   const onSave = (configuredProperties: { [key: string]: string }) => {
     history.push(
       resolvers.create.review({
@@ -110,6 +171,15 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     );
   };
 
+  /**
+   * the callback that's called by the connect button for oauth enabled connectors.
+   * It will open a popup pointing to the url provided by the connectResource.
+   * Eventually that popup will end up loading the oauth-redirect.html page, that
+   * will call the authCompleted callback containing the result of the authorization
+   * process.
+   *
+   * If the popup can't be opened for any reason, an error toast is shown.
+   */
   const onConnect = () => {
     const popup = window.open(
       connectResource!.redirectUrl,
