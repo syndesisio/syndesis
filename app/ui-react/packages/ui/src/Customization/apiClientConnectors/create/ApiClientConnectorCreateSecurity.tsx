@@ -69,7 +69,9 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
 
     this.state = {
       selectedType: this.props.authenticationTypeDefault || 'none',
-      valid: this.props.authenticationTypeDefault === ('none' || 'basic'),
+      valid:
+        this.props.authenticationTypeDefault ===
+        ('apiKey' || 'basic' || 'none'),
     };
 
     this.onSelectType = this.onSelectType.bind(this);
@@ -89,7 +91,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
        * Check if the security type is either Basic or None, in which case the form
        * should be valid.
        */
-      valid: newType === ('basic' || 'none'),
+      valid: newType === ('basic' || 'apiKey' || 'none'),
     });
   }
 
