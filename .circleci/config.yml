@@ -108,7 +108,7 @@ jobs:
             curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
             apt-get update -y
             apt-get install -y --force-yes --no-install-recommends  google-chrome-stable fontconfig fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-symbola fonts-noto ttf-freefont
-            ./tools/bin/syndesis build --incremental --batch-mode --module ui-react --docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module ui-react --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -148,7 +148,7 @@ jobs:
             curl -sSL https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
             apt-get update -y
             apt-get install -y --force-yes --no-install-recommends  google-chrome-stable fontconfig fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-symbola fonts-noto ttf-freefont
-            ./tools/bin/syndesis build --incremental --batch-mode --module ui-angular --docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module ui-angular --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -179,7 +179,7 @@ jobs:
       - run:
           name: Build Connectors
           command: |
-            ./tools/bin/syndesis build --incremental --batch-mode --module connector | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module connector | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -207,7 +207,7 @@ jobs:
       - run:
           name: Build Meta
           command: |
-            ./tools/bin/syndesis build --incremental --batch-mode --module meta --docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module meta --docker | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -233,7 +233,7 @@ jobs:
       - run:
           name: Build Common
           command: |
-            ./tools/bin/syndesis build --incremental --batch-mode --module common | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module common | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -258,7 +258,7 @@ jobs:
       - run:
           name: Build Extension
           command: |
-            ./tools/bin/syndesis build --incremental --batch-mode --module extension | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module extension | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -283,7 +283,7 @@ jobs:
       - run:
           name: Build Connectors
           command: |
-            ./tools/bin/syndesis build --incremental --batch-mode --module integration | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module integration | tee build_log.txt
       - <<: *save_junit
       - store_test_results:
           path: /workspace/junit
@@ -310,7 +310,7 @@ jobs:
       - run:
           name: Build S2I Builder image
           command: |
-            ./tools/bin/syndesis build --incremental --batch-mode --module s2i --docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module s2i --docker | tee build_log.txt
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
@@ -335,7 +335,7 @@ jobs:
       - run:
           name: Build Server
           command: |
-            ./tools/bin/syndesis build --incremental --batch-mode --module server --docker | tee build_log.txt
+            ./tools/bin/syndesis build --batch-mode --module server --docker | tee build_log.txt
       - run:
           name: Collect API docs
           command: |
@@ -369,7 +369,7 @@ jobs:
       - run:
           name: Build Operator
           command: |
-            ./tools/bin/syndesis build --incremental --module operator --image --docker --ensure | tee build_log.txt
+            ./tools/bin/syndesis build --module operator --image --docker --ensure | tee build_log.txt
       - store_artifacts:
           path: build_log.txt
       - <<: *push_images
@@ -394,11 +394,11 @@ jobs:
       - run:
           name: Build CLI jar
           command: |
-            ./tools/bin/syndesis build --incremental --batch-mode --flash --module server
+            ./tools/bin/syndesis build --batch-mode --flash --module server
       - run:
           name: Build upgrade image
           command: |
-            ./tools/bin/syndesis build --incremental --batch-mode --module upgrade --docker
+            ./tools/bin/syndesis build --batch-mode --module upgrade --docker
       - <<: *push_images
 
 
