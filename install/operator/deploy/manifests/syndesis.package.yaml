@@ -1,0 +1,4 @@
+packageName: fuseonline
+channels:
+- name: alpha
+  currentCSV: syndesisoperator.1.7.x
