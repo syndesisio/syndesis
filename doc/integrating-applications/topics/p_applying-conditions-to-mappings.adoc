@@ -1,0 +1,36 @@
+// This module is included in the following assemblies:
+// as_mapping-data.adoc
+
+[id='applying-conditions-to-mappings_{context}']
+= Applying conditions to mappings
+
+In some integrations, it is helpful to add conditional 
+processing to a mapping. For example, suppose that you are 
+mapping a source zip code field to a target zip code field. 
+If the source zip code field is empty, you want to fill 
+the target field with `99999`.
+
+You can define zero or one condition for each mapping. 
+
+.Prerequisites
+
+* You are mapping fields in a *Data Mapper* step. 
+* You are familiar with Microsoft Excel expressions or 
+you have the conditional expression that you want to apply 
+to a mapping. 
+
+.Procedure
+
+. Create the mapping that you want to apply a condition to, or
+ensure that the currently selected mapping is the mapping that you 
+want to apply a condition to. 
+
+. In the upper right, click
+image:images/add-condition-to-mapping.png[Add expression] to 
+display the conditional expression input field. 
++
+The data mapper automatically displays the name of the first
+source field in the expression field. 
+
+. Specify a Microsoft Excel expression in the input field. 
++
