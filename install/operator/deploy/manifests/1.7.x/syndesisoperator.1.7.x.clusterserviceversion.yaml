@@ -42,7 +42,7 @@ spec:
   version: 1.7.x
   maturity: alpha
   maintainers:
-  - name: Red Hat Fuse Online
+  - name: Syndesis team
     email: fuse-online@redhat.com
   provider:
     name: Syndesis team
