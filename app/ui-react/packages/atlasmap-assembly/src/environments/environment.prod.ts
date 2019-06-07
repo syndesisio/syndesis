@@ -1,4 +1,5 @@
 export const environment = {
+  classpath: ' ',
   production: true,
   xsrf: {
     headerName: 'SYNDESIS-XSRF-TOKEN',
