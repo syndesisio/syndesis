@@ -45,7 +45,7 @@ spec:
   - name: Red Hat Fuse Online
     email: fuse-online@redhat.com
   provider:
-    name: Red Hat
+    name: Syndesis team
   labels:
     name: syndesis-operator
   selector:
