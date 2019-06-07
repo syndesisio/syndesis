@@ -5,6 +5,7 @@ import {
   Icon,
   ListView,
   ListViewIcon,
+  ListViewInfoItem,
   ListViewItem,
   MenuItem,
   OverlayTrigger,
@@ -265,23 +266,25 @@ export class VirtualizationListItem extends React.Component<
               ? this.props.virtualizationDescription
               : ''
           }
-          additionalInfo={
-            this.props.odataUrl && (
-              <span>
-                <a
-                  data-testid={'virtualization-list-item-odataUrl'}
-                  target="_blank"
-                  href={this.props.odataUrl}
-                >
-                  {this.props.odataUrl}
-                  <Icon
-                    className={'virtualization-list-item-odata-link-icon'}
-                    name={'external-link'}
-                  />
-                </a>
-              </span>
-            )
-          }
+          additionalInfo={[
+            <ListViewInfoItem key={1}>
+              {this.props.odataUrl && (
+                <span>
+                  <a
+                    data-testid={'virtualization-list-item-odataUrl'}
+                    target="_blank"
+                    href={this.props.odataUrl}
+                  >
+                    {this.props.odataUrl}
+                    <Icon
+                      className={'virtualization-list-item-odata-link-icon'}
+                      name={'external-link'}
+                    />
+                  </a>
+                </span>
+              )}
+            </ListViewInfoItem>,
+          ]}
           hideCloseIcon={true}
           leftContent={
             this.props.icon ? (

@@ -417,10 +417,13 @@ export function getPreviewSql(viewDefinition: ViewDefinition): string {
 function getPreviewTableName(sourcePath: string): string {
   // Assemble the name, utilizing the schema model suffix
   return (
+    '"' +
     getConnectionName(sourcePath).toLowerCase() +
     SCHEMA_MODEL_SUFFIX +
-    '.' +
-    getNodeName(sourcePath)
+    '".' +
+    '"' +
+    getNodeName(sourcePath) +
+    '"'
   );
 }
 
