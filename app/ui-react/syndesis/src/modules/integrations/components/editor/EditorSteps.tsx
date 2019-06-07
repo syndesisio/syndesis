@@ -1,6 +1,5 @@
 import { getMetadataValue } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { ConnectionOverview } from '@syndesis/models';
 import {
   ConnectionCard,
   ConnectionsGrid,
@@ -18,8 +17,7 @@ export interface IEditorStepsProps {
   loading: boolean;
   steps: IUIStep[];
 
-  getConnectionHref(connection: ConnectionOverview): H.LocationDescriptor;
-  getConnectionEditHref?(connection: ConnectionOverview): H.LocationDescriptor;
+  getEditorStepHref(editorStep: IUIStep): H.LocationDescriptor;
 }
 
 export class EditorSteps extends React.Component<IEditorStepsProps> {
@@ -56,13 +54,13 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                     isTechPreview =
                       getMetadataValue<string>(
                         'tech-preview',
-                        s!.connection!.connector!.metadata
+                        s.connection.connector.metadata
                       ) === 'true';
-                  } else if (s.connector!) {
+                  } else if (s.connector) {
                     isTechPreview =
                       getMetadataValue<string>(
                         'tech-preview',
-                        s.connector!.metadata
+                        s.connector.metadata
                       ) === 'true';
                   }
 
@@ -73,7 +71,7 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                         configurationRequired={configurationRequired}
                         description={s.description || ''}
                         icon={<EntityIcon entity={s} alt={s.name} width={46} />}
-                        href={this.props.getConnectionHref(s)}
+                        href={this.props.getEditorStepHref(s)}
                         i18nCannotDelete={t('cannotDelete')}
                         i18nConfigurationRequired={t('configurationRequired')}
                         i18nTechPreview={t('techPreview')}

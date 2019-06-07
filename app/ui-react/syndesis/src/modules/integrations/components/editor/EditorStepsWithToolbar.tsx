@@ -1,4 +1,3 @@
-import { Connection } from '@syndesis/models';
 import {
   ConnectionsListView,
   IActiveFilter,
@@ -24,7 +23,7 @@ function getFilteredAndSortedEditorSteps(
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
     filteredAndSortedEditorSteps = filteredAndSortedEditorSteps.filter(
-      (e: Connection) => e.name.toLowerCase().includes(valueToLower)
+      (e: IUIStep) => e.name.toLowerCase().includes(valueToLower)
     );
   });
 
@@ -105,8 +104,7 @@ export class EditorStepsWithToolbar extends React.Component<
                     error={this.props.error}
                     loading={this.props.loading}
                     steps={filteredAndSortedEditorSteps}
-                    getConnectionHref={this.props.getConnectionHref}
-                    getConnectionEditHref={this.props.getConnectionEditHref}
+                    getEditorStepHref={this.props.getEditorStepHref}
                   />
                 </ConnectionsListView>
               );

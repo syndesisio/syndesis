@@ -114,7 +114,7 @@ export class SelectConnectionPage extends React.Component<
                                       error={
                                         connectionsError || extensionsError
                                       }
-                                      getConnectionHref={step =>
+                                      getEditorStepHref={step =>
                                         getStepHref(
                                           step,
                                           params,
