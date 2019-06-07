@@ -32,7 +32,8 @@ const errorText = 'Error';
 const exportText = 'Export';
 const unpublishText = 'Unpublish';
 const publishText = 'Publish';
-const publishInProgressText = 'Publish in Progress';
+const publishInProgressText = 'publish in progress...';
+const unpublishInProgressText = 'unpublish in progress...';
 const publishLogUrl = 'testUrl';
 const publishLogUrlText = 'View Logs';
 
@@ -96,18 +97,19 @@ stories
         i18nEdit={editText}
         i18nEditTip={editTip}
         /* TD-636: Commented out for TP 
-      i18nExport={'Export'} */
+        i18nExport={'Export'} */
         i18nPublished={publishedText}
         i18nUnpublish={unpublishText}
         i18nPublish={publishText}
         i18nPublishInProgress={publishInProgressText}
         i18nPublishLogUrlText={publishLogUrlText}
+        i18nUnpublishInProgress={unpublishInProgressText}
         i18nUnpublishModalMessage={confirmUnpublishMessage}
         i18nUnpublishModalTitle={confirmUnpublishTitle}
         detailsPageLink={''}
         onDelete={action(deleteText)}
         /* TD-636: Commented out for TP 
-      onExport={action(exportText)} */
+        onExport={action(exportText)} */
         onUnpublish={action(unpublishText)}
         onPublish={action(publishText)}
         currentPublishedState={select(
@@ -121,6 +123,9 @@ stories
             'NOTFOUND',
             'RUNNING',
             'SUBMITTED',
+            'DELETE_SUBMITTED',
+            'DELETE_REQUEUE',
+            'DELETE_DONE',
           ],
           'NOTFOUND'
         )}
@@ -152,6 +157,7 @@ stories
       i18nPublish={publishText}
       i18nPublishInProgress={publishInProgressText}
       i18nPublishLogUrlText={publishLogUrlText}
+      i18nUnpublishInProgress={unpublishInProgressText}
       i18nUnpublishModalMessage={confirmUnpublishMessage}
       i18nUnpublishModalTitle={confirmUnpublishTitle}
       detailsPageLink={''}
@@ -171,6 +177,9 @@ stories
           'NOTFOUND',
           'RUNNING',
           'SUBMITTED',
+          'DELETE_SUBMITTED',
+          'DELETE_REQUEUE',
+          'DELETE_DONE',
         ],
         'NOTFOUND'
       )}

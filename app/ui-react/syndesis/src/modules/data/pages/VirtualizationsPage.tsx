@@ -403,6 +403,9 @@ export class VirtualizationsPage extends React.Component {
                                                           i18nPublishInProgress={t(
                                                             'virtualization.publishInProgress'
                                                           )}
+                                                          i18nUnpublishInProgress={t(
+                                                            'virtualization.unpublishInProgress'
+                                                          )}
                                                           i18nPublishLogUrlText={t(
                                                             'shared:viewLogs'
                                                           )}
