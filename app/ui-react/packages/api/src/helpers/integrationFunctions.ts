@@ -18,6 +18,7 @@ import produce from 'immer';
 import {
   AGGREGATE,
   API_PROVIDER,
+  CHOICE,
   DataShapeKinds,
   DataShapeKindType,
   ENDPOINT,
@@ -694,13 +695,19 @@ export function reconcileConditionalFlows(
   newFlows: Flow[],
   stepId: string
 ) {
-  const flowsWithoutStepId = getFlowsWithoutStepId(integration.flows!, stepId);
+  const flowsWithoutStepId = getFlowsWithoutLinkedStepId(
+    integration.flows!,
+    stepId
+  );
   return { ...integration, flows: [...flowsWithoutStepId, ...newFlows] };
 }
 
-export function getFlowsWithoutStepId(flows: Flow[], stepId: string) {
+export function getFlowsWithoutLinkedStepId(flows: Flow[], stepId: string) {
   return flows.filter(
-    flow => getMetadataValue(STEP_ID_METADATA_KEY, flow.metadata) !== stepId
+    flow =>
+      (flow as ITypedFlow).type === FlowType.PRIMARY ||
+      (flow as ITypedFlow).type === FlowType.API_PROVIDER ||
+      getMetadataValue(STEP_ID_METADATA_KEY, flow.metadata) !== stepId
   );
 }
 
@@ -783,6 +790,14 @@ export function removeStepFromFlow(
 ) {
   const flow = getFlow(integration, flowId);
   const steps = getSteps(integration, flowId);
+  const toDelete = getStep(integration, flowId, position)!;
+
+  // special handling for conditional flows, related flows need
+  // to be removed from the integration as well.
+  const flows =
+    toDelete.stepKind === CHOICE
+      ? getFlowsWithoutLinkedStepId(integration.flows!, toDelete.id!)
+      : integration.flows;
 
   if (
     position === getFirstPosition(integration, flowId) ||
@@ -794,7 +809,11 @@ export function removeStepFromFlow(
     steps.splice(position, 1);
   }
 
-  return setFlow(integration, { ...flow!, steps }, getSanitizedSteps);
+  return setFlow(
+    { ...integration, flows },
+    { ...flow!, steps },
+    getSanitizedSteps
+  );
 }
 
 /**

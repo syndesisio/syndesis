@@ -1,6 +1,5 @@
 // Enum for the LeveledMessage level field
-import { Flow } from '@syndesis/models';
-import { Integration } from '@syndesis/models/src';
+import { Flow, Integration } from '@syndesis/models';
 
 export enum MessageLevel {
   INFO = 'INFO',
