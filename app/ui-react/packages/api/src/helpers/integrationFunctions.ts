@@ -18,31 +18,21 @@ import produce from 'immer';
 import {
   AGGREGATE,
   API_PROVIDER,
+  CHOICE,
   DataShapeKinds,
+  DataShapeKindType,
   ENDPOINT,
+  EXCERPT_METADATA_KEY,
   FLOW,
   FLOW_KIND_METADATA_KEY,
   FlowKind,
   FlowType,
   ITypedFlow,
+  NEW_INTEGRATION,
+  NEW_INTEGRATION_ID,
+  PRIMARY_FLOW_ID_METADATA_KEY,
+  STEP_ID_METADATA_KEY,
 } from '../constants';
-
-export const NEW_INTEGRATION_ID = 'new-integration';
-export const NEW_INTEGRATION = {
-  id: NEW_INTEGRATION_ID,
-  name: '',
-  tags: [],
-} as Integration;
-
-export type DataShapeKindType =
-  | 'ANY'
-  | 'JAVA'
-  | 'JSON_SCHEMA'
-  | 'JSON_INSTANCE'
-  | 'XML_SCHEMA'
-  | 'XML_SCHEMA_INSPECTED'
-  | 'XML_INSTANCE'
-  | 'NONE';
 
 export function toDataShapeKindType(kind?: DataShapeKinds): DataShapeKindType {
   return kind!.toLowerCase() as DataShapeKindType;
@@ -610,7 +600,7 @@ export function prepareIntegrationForSaving(integration: Integration) {
 export type GetSanitizedSteps = (steps: Step[]) => Promise<Step[]>;
 
 export async function sanitizeFlow(
-  flow: Flow,
+  flow: Flow | ITypedFlow,
   getSanitizedSteps: GetSanitizedSteps
 ): Promise<Flow> {
   flow.steps = await getSanitizedSteps(flow.steps || []);
@@ -623,7 +613,8 @@ export async function sanitizeFlow(
         .map(s => s.connection!.id),
     ])
   ) as string[];
-
+  // Ensure the type is set properly on the flow, if it's not set we assume it's a primary flow
+  (flow as ITypedFlow).type = (flow as ITypedFlow).type || FlowType.PRIMARY;
   // for the api provider, if a flow has been modified we change the last
   // step of the flow to automatically set a return code of 200, unless
   // already modified by the user. Also, we update the flow metadata to
@@ -694,25 +685,30 @@ export async function setFlow(
 /**
  * Returns a new integration object containing the supplied conditional flows for the given step ID
  * @param integration
- * @param flows
+ * @param newFlows
  * @param configuredFlowIds
  * @param defaultFlowId
  * @param stepId
  */
 export function reconcileConditionalFlows(
   integration: Integration,
-  flows: Flow[],
-  configuredFlowIds: string[],
-  defaultFlowId: string,
+  newFlows: Flow[],
   stepId: string
 ) {
-  const newFlows = integration.flows!.filter(flow => {
-    return (
-      typeof flow.metadata === 'undefined' ||
-      stepId !== getMetadataValue<string>('stepId', flow.metadata)
-    );
-  });
-  return { ...integration, flows: [...newFlows, ...flows] };
+  const flowsWithoutStepId = getFlowsWithoutLinkedStepId(
+    integration.flows!,
+    stepId
+  );
+  return { ...integration, flows: [...flowsWithoutStepId, ...newFlows] };
+}
+
+export function getFlowsWithoutLinkedStepId(flows: Flow[], stepId: string) {
+  return flows.filter(
+    flow =>
+      (flow as ITypedFlow).type === FlowType.PRIMARY ||
+      (flow as ITypedFlow).type === FlowType.API_PROVIDER ||
+      getMetadataValue(STEP_ID_METADATA_KEY, flow.metadata) !== stepId
+  );
 }
 
 /**
@@ -794,6 +790,14 @@ export function removeStepFromFlow(
 ) {
   const flow = getFlow(integration, flowId);
   const steps = getSteps(integration, flowId);
+  const toDelete = getStep(integration, flowId, position)!;
+
+  // special handling for conditional flows, related flows need
+  // to be removed from the integration as well.
+  const flows =
+    toDelete.stepKind === CHOICE
+      ? getFlowsWithoutLinkedStepId(integration.flows!, toDelete.id!)
+      : integration.flows;
 
   if (
     position === getFirstPosition(integration, flowId) ||
@@ -805,7 +809,11 @@ export function removeStepFromFlow(
     steps.splice(position, 1);
   }
 
-  return setFlow(integration, { ...flow!, steps }, getSanitizedSteps);
+  return setFlow(
+    { ...integration, flows },
+    { ...flow!, steps },
+    getSanitizedSteps
+  );
 }
 
 /**
@@ -861,6 +869,7 @@ export function createFlowWithId(id: string) {
  * @param primaryFlowId
  * @param flowConnectionTemplate
  * @param step
+ * @param useId - ID to use instead of generating one
  */
 export function createConditionalFlow(
   name: string,
@@ -868,18 +877,19 @@ export function createConditionalFlow(
   kind: FlowKind,
   primaryFlowId: string,
   flowConnectionTemplate: Connection,
-  step: StepKind
+  step: StepKind,
+  useId?: string
 ) {
-  const flowId = generateKey();
+  const flowId = useId || generateKey();
   return {
     connections: [],
     description,
     id: flowId,
     metadata: {
-      excerpt: '',
-      kind,
-      primaryFlowId,
-      stepId: step.id,
+      [EXCERPT_METADATA_KEY]: '',
+      [FLOW_KIND_METADATA_KEY]: kind,
+      [PRIMARY_FLOW_ID_METADATA_KEY]: primaryFlowId,
+      [STEP_ID_METADATA_KEY]: step.id,
     },
     name,
     steps: [
