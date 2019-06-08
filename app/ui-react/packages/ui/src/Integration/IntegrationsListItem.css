@@ -8,24 +8,10 @@
   line-height: 1.6;
 }
 
-.integration-list-item .integration-list-item__additional-info {
-  display: inline-block;
+.integration-list-item__additional-info {
+  padding: 2px 0;
 }
 
-@media (max-width: 1204px) {
-  .integration-list-item .config-required {
-    margin-left: 0 !important;
-  }
-}
-
-@media (min-width: 992px) {
-  .list-view-pf .list-group-item-heading {
-    min-width: 110px;
-    white-space: normal;
-    font-weight: normal;
-  }
-}
-
-.integration-list-item .list-view-pf-additional-info {
-  width: 0;
+.integration-list-item__config-required {
+  text-align: left;
 }
