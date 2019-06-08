@@ -6,6 +6,9 @@ export const DEPLOYING = 'DEPLOYING';
 export const RUNNING = 'RUNNING';
 export const FAILED = 'FAILED';
 export const CANCELLED = 'CANCELLED';
+export const DELETE_SUBMITTED = 'DELETE_SUBMITTED';
+export const DELETE_REQUEUE = 'DELETE_REQUEUE';
+export const DELETE_DONE = 'DELETE_DONE';
 
 export type VirtualizationPublishState =
   | 'NOTFOUND'
@@ -15,7 +18,10 @@ export type VirtualizationPublishState =
   | 'DEPLOYING'
   | 'RUNNING'
   | 'FAILED'
-  | 'CANCELLED';
+  | 'CANCELLED'
+  | 'DELETE_SUBMITTED'
+  | 'DELETE_REQUEUE'
+  | 'DELETE_DONE';
 
 // Detailed state log link types
 export const LOGS = 'LOGS';
