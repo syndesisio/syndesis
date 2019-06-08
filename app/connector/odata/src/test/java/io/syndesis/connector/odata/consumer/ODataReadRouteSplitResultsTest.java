@@ -132,7 +132,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
-        result.setResultWaitTime(360000L);
         result.setMinimumExpectedMessageCount(sslTestServer.getResultCount());
 
         context.start();
@@ -276,7 +275,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    public void testReferenceODataRouteIssue4791_1() throws Exception {
+    public void testReferenceODataRouteKeyPredicate() throws Exception {
         String resourcePath = "Airports";
         String keyPredicate = "KLAX";
 
@@ -293,7 +292,6 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(1);
-        result.setResultWaitTime(360000);
 
         context.start();
 
@@ -302,7 +300,7 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
     }
 
     @Test
-    public void testReferenceODataRouteIssue4791_2() throws Exception {
+    public void testReferenceODataRouteKeyPredicateAndSubPredicate() throws Exception {
         String resourcePath = "Airports";
         String keyPredicate = "('KLAX')/Location";
 
@@ -326,8 +324,12 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         testResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX_LOC);
     }
 
+    /*
+     * The Address property in Airports dataset is complex. Tests
+     * support for complex properties is working against ref server
+     */
     @Test
-    public void testReferenceODataRouteIssue5151() throws Exception {
+    public void testReferenceODataRouteComplexValue() throws Exception {
         String resourcePath = "Airports";
 
         context = new SpringCamelContext(applicationContext);
@@ -342,12 +344,38 @@ public class ODataReadRouteSplitResultsTest extends AbstractODataReadRouteTest {
         context.addRoutes(routes);
         MockEndpoint result = initMockEndpoint();
         result.setMinimumExpectedMessageCount(1);
-        result.setResultWaitTime(3600000L);
 
         context.start();
 
         result.assertIsSatisfied();
         testResult(result, 0, REF_SERVER_AIRPORT_DATA_1);
+    }
+
+    /*
+     * Tests a query with $expand and $filter.
+     */
+    @Test
+    public void testReferenceODataRouteQueryWithFilterAndExpand() throws Exception {
+        String resourcePath = "People";
+
+        context = new SpringCamelContext(applicationContext);
+
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, REF_SERVICE_URI)
+                                                            .property(QUERY_PARAMS, "$filter=LastName eq 'Whyte'&$expand=Trips"));
+
+        Step odataStep = createODataStep(odataConnector, resourcePath);
+        Integration odataIntegration = createIntegration(odataStep, mockStep);
+
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+        MockEndpoint result = initMockEndpoint();
+        result.setMinimumExpectedMessageCount(1);
+
+        context.start();
+
+        result.assertIsSatisfied();
+        testResult(result, 0, REF_SERVER_PEOPLE_DATA_1_EXPANDED_TRIPS);
     }
 
     @Test

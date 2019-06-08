@@ -23,7 +23,6 @@ import org.apache.camel.Endpoint;
 import org.apache.camel.component.olingo4.Olingo4AppEndpointConfiguration;
 import org.apache.camel.component.olingo4.Olingo4Component;
 import org.apache.camel.util.ObjectHelper;
-import org.apache.http.HttpHeaders;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.nio.client.HttpAsyncClientBuilder;
 import io.syndesis.connector.odata.ODataConstants;
@@ -193,11 +192,7 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
         Olingo4Component component = new Olingo4Component(getCamelContext());
         Olingo4AppEndpointConfiguration configuration = new Olingo4AppEndpointConfiguration();
 
-        //
-        // Ensure that full odata metadata is returned by the olingo request
-        //
         Map<String, String> httpHeaders = new HashMap<>();
-        httpHeaders.put(HttpHeaders.ACCEPT, "application/json;odata.metadata=full,application/xml,*/*");
         configuration.setHttpHeaders(httpHeaders);
 
         String methodName = ConnectorOptions.extractOption(options, METHOD_NAME);
