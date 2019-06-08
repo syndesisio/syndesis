@@ -43,14 +43,13 @@ export interface IConfigurationPageRouteState {
  *
  * For oauth enabled connectors, we need to set up the oauth flow. It works like this:
  *
- * ConfigurationPage -> 3rd party authorization page (3rd party BE <-> Syndesis BE auth API) -> Syndesis BE redirect callback -> oauth-popup.html -> ConfigurationPage
+ * ConfigurationPage -> 3rd party authorization page (3rd party BE <-> Syndesis BE auth API) -> Syndesis BE redirect callback (which updates the cred-o* cookie) -> oauth-popup.html -> ConfigurationPage
  *
  * Basically we tell the BE that we want the flow to end up opening the url where
  * the oauth-popup.html is hosted. That file will call a global function that we
- * setup on page mount that to pass back the authorization result - which can be
- * either successful or not - and the updated cookie. In case of success, we pass
- * this cookie to the review page to allow the save connector API to retrieve the
- * right data to set up this connector.
+ * setup on page mount that will have to be called back with authorization result -
+ * which can be either successful or not. In case of success, we redirect the user
+ * to the review page.
  */
 export const ConfigurationPage: React.FunctionComponent = () => {
   const { t } = useTranslation(['connections', 'shared']);
