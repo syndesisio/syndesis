@@ -43,14 +43,13 @@ export interface IConfigurationPageRouteState {
  *
  * For oauth enabled connectors, we need to set up the oauth flow. It works like this:
  *
- * ConfigurationPage -> 3rd party authorization page (3rd party BE <-> Syndesis BE auth API) -> Syndesis BE redirect callback -> oauth-popup.html -> ConfigurationPage
+ * ConfigurationPage -> 3rd party authorization page (3rd party BE <-> Syndesis BE auth API) -> Syndesis BE redirect callback (which updates the cred-o* cookie) -> oauth-popup.html -> ConfigurationPage
  *
  * Basically we tell the BE that we want the flow to end up opening the url where
  * the oauth-popup.html is hosted. That file will call a global function that we
- * setup on page mount that to pass back the authorization result - which can be
- * either successful or not - and the updated cookie. In case of success, we pass
- * this cookie to the review page to allow the save connector API to retrieve the
- * right data to set up this connector.
+ * setup on page mount that will have to be called back with authorization result -
+ * which can be either successful or not. In case of success, we redirect the user
+ * to the review page.
  */
 export const ConfigurationPage: React.FunctionComponent = () => {
   const { t } = useTranslation(['connections', 'shared']);
@@ -93,22 +92,12 @@ export const ConfigurationPage: React.FunctionComponent = () => {
   );
 
   /**
-   * if we need to set up an OAuth flow, we need to set the cookie returned by
-   * the API in the document. This cookie will be later used by the BE in the
-   * redirect page set up in the 3rd party.
-   */
-  if (connectResource) {
-    window.document.cookie = connectResource.state.spec;
-  }
-
-  /**
    * create a callback reference to a function that will be globally available and
    * that will be used by the oauth2 popup landing page to pass back to this the
    * result of the connection
    */
   const authCompleted = React.useCallback(
-    (authState: string, cookie: string) => {
-      // document.cookie = `${cookie};path=/;secure`;
+    (authState: string) => {
       try {
         const auth = JSON.parse(decodeURIComponent(authState));
         if (auth.status === 'FAILURE') {
@@ -118,7 +107,6 @@ export const ConfigurationPage: React.FunctionComponent = () => {
         history.push(
           resolvers.create.review({
             connector,
-            cookie,
           })
         );
       } catch (e) {
@@ -144,17 +132,39 @@ export const ConfigurationPage: React.FunctionComponent = () => {
    * we need to clean up any existing cookie we might have set in previous visit
    * to this page, to be sure that the API will get only the latest and correct one.
    * *IMPORTANT*: the cookie must have all the flags as the one set by the API;
-   * path in this case is mandatory to set
+   * path in this case is mandatory to set.
+   *
+   * This needs to happen once per lifecycle of the page.
    */
   React.useEffect(() => {
     const creds = document.cookie
       .split(';')
-      .filter(c => c.indexOf('cred-o2') === 0);
+      .filter(c => c.indexOf('cred-o') === 0);
     creds.forEach(c => {
       const [key] = c.split('=');
       document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
     });
   }, []);
+
+  /**
+   * if we need to set up an OAuth flow, we need to set the cookie returned by
+   * the API in the document. This cookie will be later used by the BE in the
+   * redirect page set up in the 3rd party.
+   *
+   * This needs to happen once per lifecycle of the page to avoid resetting the
+   * cookie to the value we got from the API before the successful auth.
+   */
+  const previousSpec = React.useRef<string | undefined>();
+  React.useEffect(() => {
+    if (
+      connectResource &&
+      connectResource.state &&
+      connectResource.state.spec !== previousSpec.current
+    ) {
+      previousSpec.current = connectResource.state.spec;
+      window.document.cookie = connectResource.state.spec;
+    }
+  }, [previousSpec, connectResource]);
 
   /**
    * the callback that's called by the configuration form for non oauth enabled

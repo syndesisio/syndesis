@@ -55,14 +55,13 @@ export default {
       IReviewPageRouteState,
       IReviewPageRouteParams,
       IReviewPageRouteState
-    >(routes.create.review, ({ connector, configuredProperties, cookie }) => ({
+    >(routes.create.review, ({ connector, configuredProperties }) => ({
       params: {
         connectorId: connector.id!,
       },
       state: {
         connector,
         configuredProperties,
-        cookie,
       },
     })),
   },
