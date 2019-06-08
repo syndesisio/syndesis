@@ -93,17 +93,6 @@ export const ConfigurationPage: React.FunctionComponent = () => {
   );
 
   /**
-   * if we need to set up an OAuth flow, we need to set the cookie returned by
-   * the API in the document. This cookie will be later used by the BE in the
-   * redirect page set up in the 3rd party.
-   */
-  if (connectResource && connectResource.state) {
-    window.document.cookie = connectResource.state.spec;
-    // we need to destroy the state to prevent reverting to it
-    connectResource.state = undefined;
-  }
-
-  /**
    * create a callback reference to a function that will be globally available and
    * that will be used by the oauth2 popup landing page to pass back to this the
    * result of the connection
@@ -144,17 +133,39 @@ export const ConfigurationPage: React.FunctionComponent = () => {
    * we need to clean up any existing cookie we might have set in previous visit
    * to this page, to be sure that the API will get only the latest and correct one.
    * *IMPORTANT*: the cookie must have all the flags as the one set by the API;
-   * path in this case is mandatory to set
+   * path in this case is mandatory to set.
+   *
+   * This needs to happen once per lifecycle of the page.
    */
   React.useEffect(() => {
     const creds = document.cookie
       .split(';')
-      .filter(c => c.indexOf('cred-o2') === 0);
+      .filter(c => c.indexOf('cred-o') === 0);
     creds.forEach(c => {
       const [key] = c.split('=');
       document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
     });
   }, []);
+
+  /**
+   * if we need to set up an OAuth flow, we need to set the cookie returned by
+   * the API in the document. This cookie will be later used by the BE in the
+   * redirect page set up in the 3rd party.
+   *
+   * This needs to happen once per lifecycle of the page to avoid resetting the
+   * cookie to the value we got from the API before the successful auth.
+   */
+  const previousSpec = React.useRef<string | undefined>();
+  React.useEffect(() => {
+    if (
+      connectResource &&
+      connectResource.state &&
+      connectResource.state.spec !== previousSpec.current
+    ) {
+      previousSpec.current = connectResource.state.spec;
+      window.document.cookie = connectResource.state.spec;
+    }
+  }, [previousSpec, connectResource]);
 
   /**
    * the callback that's called by the configuration form for non oauth enabled
