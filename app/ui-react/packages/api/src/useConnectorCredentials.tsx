@@ -15,7 +15,7 @@ export const useConnectorCredentials = (connectorId: string) => {
 export interface ICredentialsConnectResponse {
   redirectUrl: string;
   type: string;
-  state?: {
+  state: {
     persist: string;
     spec: string;
   };
