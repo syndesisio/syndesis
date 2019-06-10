@@ -11,6 +11,7 @@ import {
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
+import { parseValidationResult } from './utils';
 
 export interface IWithConnectorFormChildrenProps {
   /**
@@ -129,27 +130,8 @@ export const WithConnectorForm: React.FunctionComponent<
         }) => {
           setIsValidatingAgainstBackend(true);
           const status = await validateConfiguration(connector.id!, values);
-          const badValidationResults = status
-            .filter(s => s.status === 'ERROR')
-            .map(
-              s =>
-                ({
-                  message: s.errors!.map(e => e.description).join(', \n'),
-                  type: 'error',
-                } as IConnectorConfigurationFormValidationResult)
-            );
-          const goodValidationResults = [
-            {
-              message: `${connector.name} has been successfully validated`,
-              type: 'success',
-            } as IConnectorConfigurationFormValidationResult,
-          ];
           setIsValidatingAgainstBackend(false);
-          setValidationResults(
-            badValidationResults.length > 0
-              ? badValidationResults
-              : goodValidationResults
-          );
+          setValidationResults(parseValidationResult(status, connector.name));
         };
         const requiredPrompt = getRequiredStatusText(
           definition,
