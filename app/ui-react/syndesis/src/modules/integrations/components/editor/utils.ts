@@ -52,9 +52,9 @@ type StepKindHrefCallback = (
  * returns a string value of 'true'
  * @param data
  */
-export function figureOutTechPreviewFlag<
-  T extends IUIStep | Connection | Connector
->(data: T): boolean {
+export function isTechPreview<T extends IUIStep | Connection | Connector>(
+  data: T
+): boolean {
   if ((data as IUIStep).connection && (data as IUIStep).connection!.connector) {
     return (
       getMetadataValue<string>(

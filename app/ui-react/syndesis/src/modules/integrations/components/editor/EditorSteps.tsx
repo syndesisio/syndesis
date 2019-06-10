@@ -11,7 +11,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { ApiError, EntityIcon } from '../../../../shared';
 import { IUIStep } from './interfaces';
-import { figureOutTechPreviewFlag } from './utils';
+import { isTechPreview } from './utils';
 
 export interface IEditorStepsProps {
   error: boolean;
@@ -46,7 +46,7 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                   const configurationRequired =
                     s.board && isConfigurationRequired(s.board);
 
-                  const isTechPreview = figureOutTechPreviewFlag(s);
+                  const techPreview = isTechPreview(s);
 
                   return (
                     <ConnectionsGridCell key={index}>
@@ -59,7 +59,7 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                         i18nCannotDelete={t('cannotDelete')}
                         i18nConfigurationRequired={t('configurationRequired')}
                         i18nTechPreview={t('techPreview')}
-                        techPreview={isTechPreview}
+                        techPreview={techPreview}
                         techPreviewPopoverHtml={
                           <span
                             dangerouslySetInnerHTML={{

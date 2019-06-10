@@ -12,7 +12,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { UIContext } from '../../../app';
 import { ApiError, EntityIcon } from '../../../shared';
-import { figureOutTechPreviewFlag } from '../../integrations/components/editor/utils';
+import { isTechPreview } from '../../integrations/components/editor/utils';
 
 export interface IConnectionsProps {
   error: boolean;
@@ -81,7 +81,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                               const configurationRequired =
                                 c.board && isConfigurationRequired(c.board);
 
-                              const isTechPreview = figureOutTechPreviewFlag(c);
+                              const techPreview = isTechPreview(c);
 
                               return (
                                 <ConnectionsGridCell key={index}>
@@ -129,7 +129,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                                           }
                                         : undefined
                                     }
-                                    techPreview={isTechPreview}
+                                    techPreview={techPreview}
                                     techPreviewPopoverHtml={
                                       <span
                                         dangerouslySetInnerHTML={{
