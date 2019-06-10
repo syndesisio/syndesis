@@ -24,7 +24,6 @@ import * as H from '@syndesis/history';
 import {
   Connection,
   ConnectionOverview,
-  Connector,
   ConnectorAction,
   DataShape,
   Extension,
