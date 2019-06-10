@@ -14,6 +14,7 @@ export * from './useConnection';
 export * from './useConnector';
 export * from './useConnectorVerifier';
 export * from './useConnectorCredentials';
+export * from './useConnectorCredentialsConnect';
 export * from './useIntegrationHelpers';
 export * from './WithActionDescriptor';
 export * from './WithActivities';
@@ -61,3 +62,6 @@ export { useApiConnectorCreator } from './useApiConnectorCreator';
 export { ICreateConnectorProps } from './useApiConnectorCreator';
 export { useApiProviderSpecification } from './useApiProviderSpecification';
 export { useApiProviderIntegration } from './useApiProviderIntegration';
+export {
+  useConnectorCredentialsConnect,
+} from './useConnectorCredentialsConnect';

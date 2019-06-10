@@ -21,7 +21,8 @@ import i18n from '../../../i18n';
 import { ApiError, EntityIcon, PageTitle } from '../../../shared';
 import resolvers from '../../resolvers';
 import { WithConnectorForm } from '../components';
-import { parseValidationResult } from '../components/utils';
+import { useOAuthFlow } from '../useOAuthFlow';
+import { parseValidationResult } from '../utils';
 
 export interface IConnectionDetailsRouteParams {
   connectionId: string;
@@ -55,6 +56,9 @@ export const ConnectionDetailsPage: React.FunctionComponent<
     state.connection
   );
   const { loading: isVerifying, read: verify } = useConnectorVerifier();
+  const { connectOAuth, isConnecting } = useOAuthFlow(() => {
+    pushNotification(`Connection successful`, 'success');
+  });
 
   const getUsedByMessage = (c: Connection): string => {
     // TODO: Schema is currently wrong as it has 'uses' as an OptionalInt. Remove cast when schema is fixed.
@@ -193,7 +197,9 @@ export const ConnectionDetailsPage: React.FunctionComponent<
     }
   };
 
-  const onOauthReconnect = () => {};
+  const onOauthReconnect = () => {
+    connectOAuth(connection.connector!.id!, connection.connector!.name);
+  };
 
   return (
     <>
@@ -290,7 +296,7 @@ export const ConnectionDetailsPage: React.FunctionComponent<
                     onValidate={onOauthValidate}
                     isValidating={isVerifying}
                     onReconnect={onOauthReconnect}
-                    isReconnecting={false}
+                    isReconnecting={isConnecting}
                   />
                 )}
               </>
