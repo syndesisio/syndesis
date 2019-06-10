@@ -7,11 +7,14 @@ export * from './helpers';
 export * from './ServerEventsContext';
 export * from './Stream';
 export * from './SyndesisFetch';
-export * from './useApiConnector';
-export * from './useApiProvider';
+export * from './useApiConnectorSummary';
+export * from './useApiProviderSummary';
 export * from './useConnectionHelpers';
+export * from './useConnection';
 export * from './useConnector';
+export * from './useConnectorVerifier';
 export * from './useConnectorCredentials';
+export * from './useConnectorCredentialsConnect';
 export * from './useIntegrationHelpers';
 export * from './WithActionDescriptor';
 export * from './WithActivities';
@@ -55,3 +58,10 @@ export * from './WithVirtualizationConnectionSchema';
 export * from './WithVirtualizationConnectionStatuses';
 export * from './WithVirtualizationHelpers';
 export * from './WithVirtualizations';
+export { useApiConnectorCreator } from './useApiConnectorCreator';
+export { ICreateConnectorProps } from './useApiConnectorCreator';
+export { useApiProviderSpecification } from './useApiProviderSpecification';
+export { useApiProviderIntegration } from './useApiProviderIntegration';
+export {
+  useConnectorCredentialsConnect,
+} from './useConnectorCredentialsConnect';

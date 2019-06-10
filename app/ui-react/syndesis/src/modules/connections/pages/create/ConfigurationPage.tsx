@@ -1,8 +1,4 @@
-import {
-  useConnector,
-  useConnectorCredentials,
-  useConnectorCredentialsConnect,
-} from '@syndesis/api';
+import { useConnector, useConnectorCredentials } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Connector } from '@syndesis/models';
 import {
@@ -15,7 +11,6 @@ import {
 import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { UIContext } from '../../../../app';
 import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import {
@@ -25,6 +20,7 @@ import {
 import { ConnectionCreatorBreadcrumb } from '../../components/ConnectionCreatorBreadcrumb';
 import resolvers from '../../resolvers';
 import routes from '../../routes';
+import { useOAuthFlow } from '../../useOAuthFlow';
 
 export interface IConfigurationPageRouteParams {
   connectorId: string;
@@ -57,7 +53,6 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     IConfigurationPageRouteParams,
     IConfigurationPageRouteState
   >();
-  const { pushNotification } = React.useContext(UIContext);
   /**
    * retrieve the connector from the BE in case we don't have it in the route state
    */
@@ -75,96 +70,18 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     error: errorCredentials,
     resource: acquisitionMethod,
   } = useConnectorCredentials(params.connectorId);
-  /**
-   * retrieve the credentials cookie and redirectUrl for the connector OAuth flow.
-   * If the connector requires OAuth, the resource will contain the data we need to
-   * setup the flow.
-   *
-   * We set up the oauth flow so that the last page to be open will be the oauth-redirect.html
-   * "asset", that is configured to call the authCompleted callback defined down here.
-   */
-  const {
-    loading: isConnecting,
-    resource: connectResource,
-  } = useConnectorCredentialsConnect(
-    params.connectorId,
-    `${process.env.PUBLIC_URL}/oauth-redirect.html`
-  );
 
-  /**
-   * create a callback reference to a function that will be globally available and
-   * that will be used by the oauth2 popup landing page to pass back to this the
-   * result of the connection
-   */
-  const authCompleted = React.useCallback(
-    (authState: string) => {
-      try {
-        const auth = JSON.parse(decodeURIComponent(authState));
-        if (auth.status === 'FAILURE') {
-          throw new Error(auth.message);
-        }
-        pushNotification(auth.message, 'success');
-        history.push(
-          resolvers.create.review({
-            connector,
-          })
-        );
-      } catch (e) {
-        pushNotification(`Connection failed: ${e.message}`, 'error');
-      }
-    },
-    [pushNotification, connector, history]
-  );
-
-  /**
-   * make the above callback available under window.authCompleted, and remove it
-   * when the page is unmounted
-   */
-  React.useEffect(() => {
-    (window as any).authCompleted = authCompleted;
-
-    return () => {
-      delete (window as any).authCompleted;
-    };
-  }, [authCompleted]);
-
-  /**
-   * we need to clean up any existing cookie we might have set in previous visit
-   * to this page, to be sure that the API will get only the latest and correct one.
-   * *IMPORTANT*: the cookie must have all the flags as the one set by the API;
-   * path in this case is mandatory to set.
-   *
-   * This needs to happen once per lifecycle of the page.
-   */
-  React.useEffect(() => {
-    const creds = document.cookie
-      .split(';')
-      .filter(c => c.indexOf('cred-o') === 0);
-    creds.forEach(c => {
-      const [key] = c.split('=');
-      document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-    });
-  }, []);
-
-  /**
-   * if we need to set up an OAuth flow, we need to set the cookie returned by
-   * the API in the document. This cookie will be later used by the BE in the
-   * redirect page set up in the 3rd party.
-   *
-   * This needs to happen once per lifecycle of the page to avoid resetting the
-   * cookie to the value we got from the API before the successful auth.
-   */
-  const previousSpec = React.useRef<string | undefined>();
-  React.useEffect(() => {
-    if (
-      connectResource &&
-      connectResource.state &&
-      connectResource.state.spec !== previousSpec.current
-    ) {
-      previousSpec.current = connectResource.state.spec;
-      window.document.cookie = connectResource.state.spec;
+  const { connectOAuth, isConnecting } = useOAuthFlow(
+    connector.id!,
+    connector.name,
+    () => {
+      history.push(
+        resolvers.create.review({
+          connector,
+        })
+      );
     }
-  }, [previousSpec, connectResource]);
+  );
 
   /**
    * the callback that's called by the configuration form for non oauth enabled
@@ -179,31 +96,6 @@ export const ConfigurationPage: React.FunctionComponent = () => {
         connector,
       })
     );
-  };
-
-  /**
-   * the callback that's called by the connect button for oauth enabled connectors.
-   * It will open a popup pointing to the url provided by the connectResource.
-   * Eventually that popup will end up loading the oauth-redirect.html page, that
-   * will call the authCompleted callback containing the result of the authorization
-   * process.
-   *
-   * If the popup can't be opened for any reason, an error toast is shown.
-   */
-  const onConnect = () => {
-    const popup = window.open(
-      connectResource!.redirectUrl,
-      'Connection popup',
-      'width=600,height=400,resizable,scrollbars=yes,status=yes'
-    );
-    if (!popup) {
-      pushNotification(
-        `Your browser is preventing the application from opening the connection to ${
-          connector.name
-        } page.`,
-        'error'
-      );
-    }
   };
 
   return (
@@ -246,7 +138,7 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                           { name: connector.name }
                         )}
                         isConnecting={isConnecting}
-                        onConnect={onConnect}
+                        onConnect={connectOAuth}
                       />
                     ) : (
                       <WithConnectorForm connector={connector} onSave={onSave}>
