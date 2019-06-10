@@ -9,9 +9,12 @@ processing to a mapping. For example, suppose that you are
 mapping a source zip code field to a target zip code field. 
 If the source zip code field is empty, you might want to fill 
 the target field with `99999`. To do this, you would specify 
-a Microsoft Excel expression that tests the zip code source
+an expression that tests the zip code source
 field to determine if it is empty, and if it is empty, 
 inserts `99999` into the zip code target field. 
+The data mapper supports expressions that are similar to a Microsoft 
+Excel expressions, but does not support all Microsoft Excel expression 
+syntax.  
 
 You can define zero or one condition for each mapping. 
 
@@ -53,7 +56,7 @@ image:images/add-condition-to-mapping.png[Add expression] to
 display the conditional expression input field. 
 +
 In the expression field, the data mapper automatically displays 
-the name of the source field in the current mapping. 
+the names of the source fields in the current mapping. 
 
 . Specify a Microsoft Excel expression in the input field. 
 +
