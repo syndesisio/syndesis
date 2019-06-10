@@ -1,4 +1,4 @@
-import { getMetadataValue } from '@syndesis/api';
+import { getMetadataValue, isConfigurationRequired } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
   ConnectionCard,
@@ -43,10 +43,7 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
               {() => {
                 return this.props.steps.map((s, index) => {
                   const configurationRequired =
-                    s.board &&
-                    (s.board!.notices ||
-                      s.board!.warnings ||
-                      s.board!.errors)! > 0;
+                    s.board && isConfigurationRequired(s.board);
 
                   let isTechPreview = false;
 
