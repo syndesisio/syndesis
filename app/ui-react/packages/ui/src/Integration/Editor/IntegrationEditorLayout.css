@@ -13,11 +13,19 @@
 .integration-editor-layout__body {
   display: flex;
   flex: 1 0;
+  width: 100%;
 }
 
 .integration-editor-layout__contentOuter {
   display: flex;
   flex-flow: column;
+  flex-grow: 1;
+}
+
+.integration-editor-layout__contentInner {
+  display: flex;
+  flex-flow: column;
+  flex-grow: 1;
 }
 
 .integration-editor-layout__sectionLight,
@@ -51,9 +59,6 @@
   }
 
   .integration-editor-layout__body {
-    flex: 1 0;
-    display: flex;
-    width: 100%;
     overflow: hidden;
   }
 
@@ -64,7 +69,6 @@
   }
 
   .integration-editor-layout__contentInner {
-    flex: 1;
     display: flex;
     flex-flow: column;
   }

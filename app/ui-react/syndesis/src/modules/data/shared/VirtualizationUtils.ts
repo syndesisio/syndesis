@@ -320,10 +320,43 @@ export function isDvConnectionSelected(conn: Connection) {
 }
 
 /**
+ * Get the OData url from the virtualization, if available
+ * @param virtualization the RestDataService
+ */
+export function getOdataUrl(virtualization: RestDataService): string {
+  return virtualization.odataHostName
+    ? 'https://' + virtualization.odataHostName + '/odata'
+    : '';
+}
+
+/**
+ * Construct the pod build log url from the supplied info
+ * @param consoleUrl the console url
+ * @param namespace namespace of the DV pod
+ * @param publishPodName name of the DV pod
+ */
+export function getPodLogUrl(
+  consoleUrl: string,
+  namespace?: string,
+  publishPodName?: string
+): string {
+  return namespace && publishPodName
+    ? consoleUrl +
+        '/project/' +
+        namespace +
+        '/browse/pods/' +
+        publishPodName +
+        '?tab=logs'
+    : '';
+}
+
+/**
  * Get publishing state details for the specified virtualization
+ * @param consoleUrl the console url
  * @param virtualization the RestDataService
  */
 export function getPublishingDetails(
+  consoleUrl: string,
   virtualization: RestDataService
 ): VirtualizationPublishingDetails {
   // Determine published state
@@ -353,8 +386,12 @@ export function getPublishingDetails(
     default:
       break;
   }
-  if (virtualization.publishLogUrl) {
-    publishStepDetails.logUrl = virtualization.publishLogUrl;
+  if (virtualization.publishPodName) {
+    publishStepDetails.logUrl = getPodLogUrl(
+      consoleUrl,
+      virtualization.podNamespace,
+      virtualization.publishPodName
+    );
   }
   return publishStepDetails;
 }
@@ -379,12 +416,9 @@ export function getPreviewSql(viewDefinition: ViewDefinition): string {
  */
 function getPreviewTableName(sourcePath: string): string {
   // Assemble the name, utilizing the schema model suffix
-  return (
-    getConnectionName(sourcePath).toLowerCase() +
-    SCHEMA_MODEL_SUFFIX +
-    '.' +
-    getNodeName(sourcePath)
-  );
+  return `"${getConnectionName(
+    sourcePath
+  ).toLowerCase()}${SCHEMA_MODEL_SUFFIX}"."${getNodeName(sourcePath)}"`;
 }
 
 /**

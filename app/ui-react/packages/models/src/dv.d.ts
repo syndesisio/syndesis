@@ -8,16 +8,21 @@ export interface RestDataService {
   keng__hasChildren: boolean;
   keng__id: string;
   keng__kType: string;
+  odataHostName?: string;
+  podNamespace?: string;
+  publishPodName?: string;
   publishedState:
     | 'BUILDING'
     | 'CANCELLED'
     | 'CONFIGURING'
+    | 'DELETE_SUBMITTED'
+    | 'DELETE_REQUEUE'
+    | 'DELETE_DONE'
     | 'DEPLOYING'
     | 'FAILED'
     | 'NOTFOUND'
     | 'RUNNING'
     | 'SUBMITTED';
-  publishLogUrl?: string;
   serviceVdbName: string;
   serviceVdbVersion: string;
   serviceViewDefinitions: string[];
@@ -128,6 +133,9 @@ export interface VirtualizationPublishingDetails {
     | 'BUILDING'
     | 'CANCELLED'
     | 'CONFIGURING'
+    | 'DELETE_SUBMITTED'
+    | 'DELETE_REQUEUE'
+    | 'DELETE_DONE'
     | 'DEPLOYING'
     | 'FAILED'
     | 'NOTFOUND'

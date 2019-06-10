@@ -1,0 +1,11 @@
+.virtualization-list-item-odata-link-icon {
+  margin-left: 5px;
+}
+
+.virtualization-list-item-progress {
+    align-items: center;
+    display: inline-flex;
+    flex-flow: row;
+    margin-right: 10px;
+  }
+  

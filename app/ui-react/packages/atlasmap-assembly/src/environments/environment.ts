@@ -3,6 +3,8 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
+  // AtlasMap skips Maven classpath resolution if (classpath)
+  classpath: ' ',
   production: false,
   xsrf: {
     headerName: 'SYNDESIS-XSRF-TOKEN',

@@ -7,7 +7,7 @@ export function useRouteData<P, S>() {
     history,
     location,
     match,
-    params: match.params as P,
-    state: location.state as S,
+    params: (match.params || {}) as P,
+    state: (location.state || {}) as S,
   };
 }

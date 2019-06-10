@@ -15,7 +15,7 @@
 }
 
 @media (min-width: 992px) {
-  .list-view-pf .list-group-item-heading {
+  .api-provider-review-operations-item .list-view-pf .list-group-item-heading {
     min-width: 110px;
     white-space: normal;
   }

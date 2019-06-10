@@ -18,9 +18,13 @@ export class IntegrationEditorActionsListItem extends React.Component<
           this.props.integrationName
         )}-list-item`}
         actions={this.props.actions}
-        heading={this.props.integrationName}
-        description={this.props.integrationDescription}
-        stacked={true}
+        heading={<b>{this.props.integrationName}</b>}
+        description={
+          this.props.integrationName === this.props.integrationDescription
+            ? undefined
+            : this.props.integrationDescription
+        }
+        stacked={false}
       />
     );
   }

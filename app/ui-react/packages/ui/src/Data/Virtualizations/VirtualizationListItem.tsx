@@ -2,8 +2,10 @@ import * as H from '@syndesis/history';
 import {
   //  Button,
   DropdownKebab,
+  Icon,
   ListView,
   ListViewIcon,
+  ListViewInfoItem,
   ListViewItem,
   MenuItem,
   OverlayTrigger,
@@ -16,17 +18,18 @@ import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
+  ProgressWithLink,
 } from '../../Shared';
 import {
   BUILDING,
   CONFIGURING,
   DEPLOYING,
   RUNNING,
-  SUBMITTED,
   VirtualizationPublishState,
 } from './models';
 import { VirtualizationPublishStatus } from './VirtualizationPublishStatus';
-import { VirtualizationPublishStatusDetail } from './VirtualizationPublishStatusDetail';
+
+import './VirtualizationListItem.css';
 
 export interface IVirtualizationListItemProps {
   currentPublishedState: VirtualizationPublishState;
@@ -46,9 +49,11 @@ export interface IVirtualizationListItemProps {
   i18nPublishLogUrlText: string;
   i18nPublishInProgress: string;
   i18nUnpublish: string;
+  i18nUnpublishInProgress: string;
   i18nUnpublishModalMessage: string;
   i18nUnpublishModalTitle: string;
   icon?: string;
+  odataUrl?: string;
   onDelete: (virtualizationName: string) => void;
   /* TD-636: Commented out for TP 
   onExport: (virtualizationName: string) => void; */
@@ -160,8 +165,7 @@ export class VirtualizationListItem extends React.Component<
     const publishInProgress =
       this.props.currentPublishedState === BUILDING ||
       this.props.currentPublishedState === CONFIGURING ||
-      this.props.currentPublishedState === DEPLOYING ||
-      this.props.currentPublishedState === SUBMITTED
+      this.props.currentPublishedState === DEPLOYING
         ? true
         : false;
 
@@ -194,7 +198,7 @@ export class VirtualizationListItem extends React.Component<
           }
           showDialog={this.state.showConfirmationDialog}
           onCancel={this.handleCancel}
-          onConfirm={this.handleDelete}
+          onConfirm={isPublished ? this.handleUnpublish : this.handleDelete}
         />
         <ListViewItem
           data-testid={`virtualization-list-item-${toValidHtmlId(
@@ -203,19 +207,37 @@ export class VirtualizationListItem extends React.Component<
           actions={
             <div className="form-group">
               {publishInProgress ? (
-                <VirtualizationPublishStatusDetail
-                  logUrl={this.props.publishingLogUrl}
-                  stepText={this.props.publishingStepText}
-                  currentStep={this.props.publishingCurrentStep}
-                  totalSteps={this.props.publishingTotalSteps}
-                  i18nPublishInProgress={this.props.i18nPublishInProgress}
-                  i18nLogUrlText={this.props.i18nPublishLogUrlText}
-                />
+                <div
+                  data-testid={'virtualization-list-item-progress'}
+                  className={'virtualization-list-item-progress'}
+                >
+                  <ProgressWithLink
+                    logUrl={this.props.publishingLogUrl}
+                    value={
+                      this.props.publishingStepText
+                        ? this.props.publishingStepText
+                        : ''
+                    }
+                    currentStep={
+                      this.props.publishingCurrentStep
+                        ? this.props.publishingCurrentStep
+                        : 0
+                    }
+                    totalSteps={
+                      this.props.publishingTotalSteps
+                        ? this.props.publishingTotalSteps
+                        : 4
+                    }
+                    i18nLogUrlText={this.props.i18nPublishLogUrlText}
+                  />
+                </div>
               ) : (
                 <VirtualizationPublishStatus
                   currentState={this.props.currentPublishedState}
                   i18nPublished={this.props.i18nPublished}
                   i18nUnpublished={this.props.i18nDraft}
+                  i18nPublishInProgress={this.props.i18nPublishInProgress}
+                  i18nUnpublishInProgress={this.props.i18nUnpublishInProgress}
                   i18nError={this.props.i18nError}
                 />
               )}
@@ -261,6 +283,25 @@ export class VirtualizationListItem extends React.Component<
               ? this.props.virtualizationDescription
               : ''
           }
+          additionalInfo={[
+            <ListViewInfoItem key={1}>
+              {this.props.odataUrl && (
+                <span>
+                  <a
+                    data-testid={'virtualization-list-item-odataUrl'}
+                    target="_blank"
+                    href={this.props.odataUrl}
+                  >
+                    {this.props.odataUrl}
+                    <Icon
+                      className={'virtualization-list-item-odata-link-icon'}
+                      name={'external-link'}
+                    />
+                  </a>
+                </span>
+              )}
+            </ListViewInfoItem>,
+          ]}
           hideCloseIcon={true}
           leftContent={
             this.props.icon ? (

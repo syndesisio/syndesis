@@ -7,10 +7,15 @@
   padding: 0 10px;
 }
 
-.dashboard__integrations .list-view-pf .list-group-item {
-  border-width: 0;
+.dashboard__metrics .card-pf.card-pf-aggregate-status {
+  padding: 0 10px 24px 10px;
 }
 
-.dashboard__integrations .list-view-pf .list-group-item:first-child {
-  border-top: 0;
+.dashboard__metrics .card-pf-title .card-pf-aggregate-status-count {
+  font-size: 14px;
+}
+
+.dashboard__metrics .metrics-uptime {
+  font-size: 24px;
+  font-weight: 300;
 }

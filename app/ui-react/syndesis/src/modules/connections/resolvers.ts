@@ -1,6 +1,14 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
-import { Connection, Connector } from '@syndesis/models';
+import { Connection } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
+import {
+  IConfigurationPageRouteParams,
+  IConfigurationPageRouteState,
+} from './pages/create/ConfigurationPage';
+import {
+  IReviewPageRouteParams,
+  IReviewPageRouteState,
+} from './pages/create/ReviewPage';
 import routes from './routes';
 
 export default {
@@ -31,20 +39,26 @@ export default {
   },
   create: {
     selectConnector: makeResolverNoParams(routes.create.selectConnector),
-    configureConnector: makeResolver<{
-      connector: Connector;
-    }>(routes.create.configureConnector, ({ connector }) => ({
+    configureConnector: makeResolver<
+      IConfigurationPageRouteState,
+      IConfigurationPageRouteParams,
+      IConfigurationPageRouteState
+    >(routes.create.configureConnector, ({ connector }) => ({
       params: {
-        connectorId: connector.id,
+        connectorId: connector.id!,
       },
       state: {
         connector,
       },
     })),
-    review: makeResolver<{
-      connector: Connector;
-      configuredProperties: { [key: string]: string };
-    }>(routes.create.review, ({ connector, configuredProperties }) => ({
+    review: makeResolver<
+      IReviewPageRouteState,
+      IReviewPageRouteParams,
+      IReviewPageRouteState
+    >(routes.create.review, ({ connector, configuredProperties }) => ({
+      params: {
+        connectorId: connector.id!,
+      },
       state: {
         connector,
         configuredProperties,

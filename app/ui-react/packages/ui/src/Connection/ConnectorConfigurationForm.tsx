@@ -53,6 +53,10 @@ export class ConnectorConfigurationForm extends React.Component<
           className="required-pf"
           role="form"
           onSubmit={this.props.handleSubmit}
+          style={{
+            margin: 'auto',
+            maxWidth: 600,
+          }}
         >
           <div className="row row-cards-pf">
             <div className="card-pf">

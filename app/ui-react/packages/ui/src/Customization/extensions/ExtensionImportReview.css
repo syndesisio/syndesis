@@ -1,27 +1,14 @@
-.extension-import-review__buttonBar {
-  margin: 12px;
-}
-
 .extension-import-review__cancelButton {
   margin-left: 4px;
 }
 
-.extension-import-review__container {
-  background: white;
-  width: 100%;
-}
-
-.extension-import-review__propertyLabel {
-  font-weight: bold;
+.extension-import-review .extension-import-review__propertyLabel {
   text-align: right;
+  font-weight: bold;
 }
 
-.extension-import-review__propertyValue {
-  text-align: left;
-}
-
-.extension-import-review__title {
-  font-size: 1.5em;
-  padding: 12px;
-  text-align: left;
+.extension-import-review .extension-import-review__actions-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }

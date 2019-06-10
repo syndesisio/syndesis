@@ -1,0 +1,4 @@
+ .wizard-pf-steps-alt-indicator:after {
+  pointer-events: none;
+  cursor: pointer;
+}
