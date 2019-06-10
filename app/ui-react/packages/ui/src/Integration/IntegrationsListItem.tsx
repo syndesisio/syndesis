@@ -71,7 +71,7 @@ export class IntegrationsListItem extends React.Component<
             )}
           </ListView.InfoItem>,
           <ListView.InfoItem
-            key={1}
+            key={2}
             className={'integration-list-item__additional-info'}
           >
             {this.props.isConfigurationRequired && (
