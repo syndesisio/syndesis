@@ -64,10 +64,6 @@ export interface IEditorStepsWithToolbarProps
 export class EditorStepsWithToolbar extends React.Component<
   IEditorStepsWithToolbarProps
 > {
-  public static defaultProps = {
-    includeHidden: false,
-  };
-
   public render() {
     return (
       <Translation ns={['connections', 'shared']}>
