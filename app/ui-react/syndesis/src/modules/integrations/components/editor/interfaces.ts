@@ -40,8 +40,10 @@ export interface IUIStep extends StepKind {
 export interface IUIIntegrationStep extends IUIStep {
   shape: string | undefined;
   previousStepShouldDefineDataShape: boolean;
+  previousStepShouldDefineDataShapePosition?: number;
   shouldAddDataMapper: boolean;
   isUnclosedSplit: boolean;
+  restrictedDelete: boolean;
 }
 
 /*********************************/
