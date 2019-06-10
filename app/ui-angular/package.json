@@ -46,7 +46,7 @@
     "@angular/platform-browser": "~6",
     "@angular/platform-browser-dynamic": "~6",
     "@angular/router": "~6",
-    "@atlasmap/atlasmap-data-mapper": "1.40.0-alpha2",
+    "@atlasmap/atlasmap-data-mapper": "1.40.0-beta1",
     "@ng-dynamic-forms/core": "~5",
     "@ngrx/effects": "~6",
     "@ngrx/store": "~6",

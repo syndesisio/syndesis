@@ -171,12 +171,11 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     }
     c.mappings = mappingDefinition;
 
-    this.saveMappingSubscription = c.mappingService.saveMappingOutput$.subscribe(
-      (saveHandler: Function) => {
+    this.saveMappingSubscription = c.mappingService.mappingUpdated$.subscribe(
+      () => {
         const json = c.mappingService.serializeMappingsToJSON();
         this.modifiedMappings = JSON.stringify(json);
         this.outputMappings.emit(this.modifiedMappings);
-        c.mappingService.handleMappingSaveSuccess(saveHandler);
       }
     );
 
