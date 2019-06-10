@@ -10,6 +10,7 @@ import {
   ENDPOINT,
   EXTENSION,
   FLOW,
+  getMetadataValue,
   getNextAggregateStep,
   getPreviousSteps,
   getPreviousStepWithDataShape,
@@ -24,6 +25,7 @@ import * as H from '@syndesis/history';
 import {
   Connection,
   ConnectionOverview,
+  Connector,
   ConnectorAction,
   DataShape,
   Extension,
@@ -42,6 +44,44 @@ type StepKindHrefCallback = (
   p: ISelectConnectionRouteParams,
   s: ISelectConnectionRouteState
 ) => H.LocationDescriptorObject;
+
+/**
+ * Checks whether or not the provided object is a technical preview.
+ * Accepts either an IUIStep, Connection, or a Connector.
+ * Returns a boolean for whether or not the metadata `tech-preview` key
+ * returns a string value of 'true'
+ * @param data
+ */
+export function figureOutTechPreviewFlag<
+  T extends IUIStep | Connection | Connector
+>(data: T): boolean {
+  if ((data as IUIStep).connection && (data as IUIStep).connection!.connector) {
+    return (
+      getMetadataValue<string>(
+        'tech-preview',
+        (data as IUIStep).connection!.connector!.metadata
+      ) === 'true'
+    );
+  } else if ((data as IUIStep).connector) {
+    return (
+      getMetadataValue<string>(
+        'tech-preview',
+        (data as IUIStep).connector!.metadata
+      ) === 'true'
+    );
+  } else if ((data as Connection).connector) {
+    return (
+      getMetadataValue<string>(
+        'tech-preview',
+        (data as Connection).connector!.metadata
+      ) === 'true'
+    );
+  } else if (data as Connector) {
+    return getMetadataValue<string>('tech-preview', data.metadata) === 'true';
+  } else {
+    return false;
+  }
+}
 
 export function getStepKind(step: Step): IUIStep['uiStepKind'] {
   if (

@@ -1,4 +1,4 @@
-import { getMetadataValue, isConfigurationRequired } from '@syndesis/api';
+import { isConfigurationRequired } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
   ConnectionCard,
@@ -11,6 +11,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { ApiError, EntityIcon } from '../../../../shared';
 import { IUIStep } from './interfaces';
+import { figureOutTechPreviewFlag } from './utils';
 
 export interface IEditorStepsProps {
   error: boolean;
@@ -45,21 +46,7 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                   const configurationRequired =
                     s.board && isConfigurationRequired(s.board);
 
-                  let isTechPreview = false;
-
-                  if (s.connection && s.connection!.connector) {
-                    isTechPreview =
-                      getMetadataValue<string>(
-                        'tech-preview',
-                        s.connection.connector.metadata
-                      ) === 'true';
-                  } else if (s.connector) {
-                    isTechPreview =
-                      getMetadataValue<string>(
-                        'tech-preview',
-                        s.connector.metadata
-                      ) === 'true';
-                  }
+                  const isTechPreview = figureOutTechPreviewFlag(s);
 
                   return (
                     <ConnectionsGridCell key={index}>
