@@ -22,7 +22,6 @@ import { Workbox } from 'workbox-window';
 import resolvers from '../modules/resolvers';
 import { ApiError, PageNotFound, WithErrorBoundary } from '../shared';
 import favicon from '../shared/images/favicon.ico';
-import avatarImg from '../shared/images/img_avatar.svg';
 import brandImg from '../shared/images/pf4-downstream-bg.svg';
 import redHatBrandLogo from '../shared/images/red-hat-brand-logo.png';
 import redHatFuseOnlineLogo from '../shared/images/red-hat-fuse-online-logo.png';
@@ -209,7 +208,6 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                             {({ logout }) => {
                               return (
                                 <AppLayout
-                                  avatar={avatarImg}
                                   onShowAboutModal={toggleAboutModal}
                                   onSelectSupport={() => {
                                     history.push(resolvers.support.root());

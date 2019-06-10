@@ -175,8 +175,3 @@ body {
 .wizard-pf-step-title {
   line-height: 24px;
 }
-
-.list-view-pf .list-group-item-heading {
-  white-space: normal;
-  word-break: break-all;
-}
