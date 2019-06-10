@@ -1,11 +1,11 @@
 import {
-  TextContent,
   Text,
-  TextVariants,
+  TextContent,
   TextList,
-  TextListVariants,
   TextListItem,
   TextListItemVariants,
+  TextListVariants,
+  TextVariants,
 } from '@patternfly/react-core';
 import { Icon } from 'patternfly-react';
 import * as React from 'react';
