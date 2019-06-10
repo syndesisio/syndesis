@@ -121,6 +121,10 @@ export function getConnectionIcon(
   return `./../../icons/${connection.icon}.connection.png`;
 }
 
+/**
+ * Checks whether the ConnectionBulletinBoard provided
+ * @param board
+ */
 export function isConfigurationRequired(
   board: ConnectionBulletinBoard
 ): boolean {

@@ -1,4 +1,4 @@
-import { WithConnectionHelpers } from '@syndesis/api';
+import { isConfigurationRequired, WithConnectionHelpers } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { ConnectionOverview } from '@syndesis/models';
 import {
@@ -12,6 +12,7 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { UIContext } from '../../../app';
 import { ApiError, EntityIcon } from '../../../shared';
+import { figureOutTechPreviewFlag } from '../../integrations/components/editor/utils';
 
 export interface IConnectionsProps {
   error: boolean;
@@ -78,16 +79,9 @@ export class Connections extends React.Component<IConnectionsProps> {
                               };
 
                               const configurationRequired =
-                                c.board &&
-                                (c.board!.notices ||
-                                  c.board!.warnings ||
-                                  c.board!.errors)! > 0;
+                                c.board && isConfigurationRequired(c.board);
 
-                              const isTechPreview =
-                                c.connector! && c.connector!.metadata!
-                                  ? c.connector!.metadata!['tech-preview'] ===
-                                    'true'
-                                  : false;
+                              const isTechPreview = figureOutTechPreviewFlag(c);
 
                               return (
                                 <ConnectionsGridCell key={index}>
