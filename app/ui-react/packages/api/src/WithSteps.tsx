@@ -48,7 +48,7 @@ export const ALL_STEPS: StepKind[] = [
     },
     true
   ),
-  {
+  requiresOutputDataShape({
     id: undefined,
     connection: undefined,
     action: undefined,
@@ -59,7 +59,7 @@ export const ALL_STEPS: StepKind[] = [
     configuredProperties: undefined,
     properties: undefined,
     visible: [],
-  },
+  }),
   noCollectionSupport({
     id: undefined,
     connection: undefined,
