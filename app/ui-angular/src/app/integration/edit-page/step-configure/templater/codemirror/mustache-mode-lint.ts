@@ -97,7 +97,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
 
         if (closeSymbol > 0) {
           // Found an open symbol before all close symbols
-          const msg = this.i18NService.localize('integrations.steps.templater-illegal-open-symbol', [line, endCol]);
+          const msg = this.i18NService.localize('integrations.steps.templater-illegal-open-symbol', [(line + 1), endCol]);
           errors.push({
             message: msg,
             severity: 'error',
@@ -110,7 +110,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
 
         if (openSymbol > 2) {
           // Too many open symbols encountered
-          const msg = this.i18NService.localize('integrations.steps.templater-too-many-open-symbols', [line, endCol]);
+          const msg = this.i18NService.localize('integrations.steps.templater-too-many-open-symbols', [(line + 1), endCol]);
           errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
           reset = true;
           continue;
@@ -121,7 +121,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
 
         if (openSymbol < 2) {
           // Found a close symbol before all the open symbols
-          const msg = this.i18NService.localize('integrations.steps.templater-illegal-close-symbol', [line, endCol]);
+          const msg = this.i18NService.localize('integrations.steps.templater-illegal-close-symbol', [(line + 1), endCol]);
           errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
           reset = true;
           continue;
@@ -129,7 +129,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
 
         if (closeSymbol > 2) {
           // Too many close symbols encountered
-          const msg = this.i18NService.localize('integrations.steps.templater-too-many-close-symbols', [line, endCol]);
+          const msg = this.i18NService.localize('integrations.steps.templater-too-many-close-symbols', [(line + 1), endCol]);
           errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
           reset = true;
           continue;
@@ -148,7 +148,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
 
         if (openSymbol === 1) {
           // Should have encountered another open symbol but not
-          const msg = this.i18NService.localize('integrations.steps.templater-expected-open-symbol', [line, endCol]);
+          const msg = this.i18NService.localize('integrations.steps.templater-expected-open-symbol', [(line + 1), endCol]);
           errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
           reset = true;
           continue;
@@ -156,7 +156,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
 
         if (closeSymbol === 1) {
           // Should have encountered another close symbol but not
-          const msg = this.i18NService.localize('integrations.steps.templater-expected-close-symbol', [line, endCol]);
+          const msg = this.i18NService.localize('integrations.steps.templater-expected-close-symbol', [(line + 1), endCol]);
           errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
           reset = true;
           continue;
@@ -178,7 +178,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
         if (theSymbol.length > 0 && ! theSymbol.match(symRegex)) {
           const msg = this.i18NService.localize(
             'integrations.steps.templater-wrong-symbol-format',
-            ['{{' + theSymbol + '}}', format, line, endCol]
+            ['{{' + theSymbol + '}}', format, (line + 1), endCol]
           );
           errors.push({ message: msg, severity: 'error', from: CodeMirror.Pos(line, startCol), to: CodeMirror.Pos(line, endCol) });
         }
