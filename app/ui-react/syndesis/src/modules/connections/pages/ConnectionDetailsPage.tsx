@@ -2,12 +2,14 @@ import {
   IValidationResult,
   useConnection,
   useConnectionHelpers,
+  useConnectorVerifier,
 } from '@syndesis/api';
 import { Connection } from '@syndesis/models';
 import {
   Breadcrumb,
   ConnectionDetailsForm,
   ConnectionDetailsHeader,
+  ConnectionDetailsOauth,
   PageLoader,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
@@ -16,9 +18,10 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { UIContext } from '../../../app';
 import i18n from '../../../i18n';
-import { ApiError, EntityIcon } from '../../../shared';
+import { ApiError, EntityIcon, PageTitle } from '../../../shared';
 import resolvers from '../../resolvers';
 import { WithConnectorForm } from '../components';
+import { parseValidationResult } from '../components/utils';
 
 export interface IConnectionDetailsRouteParams {
   connectionId: string;
@@ -51,10 +54,11 @@ export const ConnectionDetailsPage: React.FunctionComponent<
     params.connectionId,
     state.connection
   );
+  const { loading: isVerifying, read: verify } = useConnectorVerifier();
 
-  const getUsedByMessage = (connection: Connection): string => {
+  const getUsedByMessage = (c: Connection): string => {
     // TODO: Schema is currently wrong as it has 'uses' as an OptionalInt. Remove cast when schema is fixed.
-    const numUsedBy = connection.uses as number;
+    const numUsedBy = c.uses as number;
 
     if (numUsedBy === 1) {
       return i18n.t('connections:usedByOne');
@@ -175,15 +179,47 @@ export const ConnectionDetailsPage: React.FunctionComponent<
     );
   };
 
+  const onOauthValidate = async () => {
+    try {
+      const status = await verify(
+        connection.connectorId!,
+        connection.configuredProperties || {}
+      );
+      parseValidationResult(status!, connection.name).map(({ message, type }) =>
+        pushNotification(message, type)
+      );
+    } catch (e) {
+      pushNotification(`Connection couln't be verified: ${e.message}`, 'error');
+    }
+  };
+
+  const onOauthReconnect = () => {};
+
   return (
-    <WithLoader
-      error={error !== false}
-      loading={!hasData}
-      loaderChildren={<PageLoader />}
-      errorChildren={<ApiError error={error as Error} />}
-    >
-      {() => {
-        return (
+    <>
+      <PageTitle title={t('connectionDetailPageTitle')} />
+      <Breadcrumb>
+        <Link
+          data-testid={'connection-details-page-home-link'}
+          to={resolvers.dashboard.root()}
+        >
+          {t('shared:Home')}
+        </Link>
+        <Link
+          data-testid={'connection-details-page-connections-link'}
+          to={resolvers.connections.connections()}
+        >
+          {t('shared:Connections')}
+        </Link>
+        <span>{t('connectionDetailPageTitle')}</span>
+      </Breadcrumb>
+      <WithLoader
+        error={error !== false}
+        loading={!hasData}
+        loaderChildren={<PageLoader />}
+        errorChildren={<ApiError error={error as Error} />}
+      >
+        {() => (
           <WithConnectorForm
             connector={connection.connector!}
             initialValue={connection.configuredProperties}
@@ -201,21 +237,6 @@ export const ConnectionDetailsPage: React.FunctionComponent<
               validateForm,
             }) => (
               <>
-                <Breadcrumb>
-                  <Link
-                    data-testid={'connection-details-page-home-link'}
-                    to={resolvers.dashboard.root()}
-                  >
-                    {t('shared:Home')}
-                  </Link>
-                  <Link
-                    data-testid={'connection-details-page-connections-link'}
-                    to={resolvers.connections.connections()}
-                  >
-                    {t('shared:Connections')}
-                  </Link>
-                  <span>{t('connectionDetailPageTitle')}</span>
-                </Breadcrumb>
                 <ConnectionDetailsHeader
                   allowEditing={true}
                   connectionDescription={connection.description}
@@ -258,12 +279,25 @@ export const ConnectionDetailsPage: React.FunctionComponent<
                     {fields}
                   </ConnectionDetailsForm>
                 )}
-                {connection.derived && <>TODO</>}
+                {connection.derived && (
+                  <ConnectionDetailsOauth
+                    i18nTitle={t('connections:oauth:title', {
+                      name: connection.name,
+                    })}
+                    i18nDescription={t('connections:oauth:description')}
+                    i18nValidateButton={t('connections:oauth:validateButton')}
+                    i18nReconnectButton={t('connections:oauth:reconnectButton')}
+                    onValidate={onOauthValidate}
+                    isValidating={isVerifying}
+                    onReconnect={onOauthReconnect}
+                    isReconnecting={false}
+                  />
+                )}
               </>
             )}
           </WithConnectorForm>
-        );
-      }}
-    </WithLoader>
+        )}
+      </WithLoader>
+    </>
   );
 };

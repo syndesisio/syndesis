@@ -34,5 +34,11 @@
     "review": {
       "title": "Name connection"
     }
+  },
+  "oauth": {
+    "title": "{{name}} Configuration",
+    "description": "This connection is configured using OAuth. Use the validate button to check if the connection is still authorized.",
+    "validateButton": "Validate",
+    "reconnectButton": "Reconnect"
   }
 }

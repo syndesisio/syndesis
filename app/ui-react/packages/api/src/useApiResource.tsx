@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
-import { callFetch, FetchMethod } from './callFetch';
+import { callFetch, FetchMethod, IFetch } from './callFetch';
 export interface IUseApiResource<T> {
   url: string;
   defaultValue: T;
@@ -29,42 +29,53 @@ export function useApiResource<T>({
 
   const previousUrl = React.useRef<string>();
 
-  const read = React.useCallback(
-    async function fetchResource() {
-      let r: T | null = null;
-      setLoading(true);
-      try {
-        const response = await callFetch({
-          body,
-          headers: apiContext.headers,
-          method,
-          url: `${apiContext.apiUri}${url}`,
-        });
-        if (!response.ok) {
-          throw new Error(response.statusText);
-        }
-        r = await transformResponse(response);
-        setResource(r);
-        setHasData(true);
-      } catch (e) {
-        setHasData(false);
-        setError(e);
-      } finally {
-        setLoading(false);
+  async function fetchResource(
+    {
+      body: fBody,
+      url: fUrl,
+      headers: fHeaders,
+      method: fMethod,
+      ...props
+    }: IFetch = { body, url, method }
+  ) {
+    let r: T | null = null;
+    setLoading(true);
+    try {
+      const response = await callFetch({
+        ...(props || {}),
+        body: fBody,
+        headers: {
+          ...apiContext.headers,
+          ...(fHeaders || {}),
+        },
+        method: fMethod,
+        url: `${apiContext.apiUri}${fUrl}`,
+      });
+      if (!response.ok) {
+        throw new Error(response.statusText);
       }
-      return r;
-    },
-    [
-      callFetch,
-      apiContext,
-      url,
-      setLoading,
-      setResource,
-      setError,
-      setHasData,
-      body,
-    ]
-  );
+      r = await transformResponse(response);
+      setResource(r);
+      setHasData(true);
+    } catch (e) {
+      setHasData(false);
+      setError(e);
+    } finally {
+      setLoading(false);
+    }
+    return r;
+  }
+
+  const read = React.useCallback(fetchResource, [
+    callFetch,
+    apiContext,
+    url,
+    setLoading,
+    setResource,
+    setError,
+    setHasData,
+    body,
+  ]);
 
   React.useEffect(() => {
     if (previousUrl.current !== url && readOnMount) {
