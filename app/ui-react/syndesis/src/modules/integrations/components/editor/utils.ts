@@ -9,6 +9,7 @@ import {
   DataShapeKinds,
   ENDPOINT,
   EXTENSION,
+  FLOW,
   getNextAggregateStep,
   getPreviousSteps,
   getPreviousStepWithDataShape,
@@ -148,7 +149,17 @@ export function toUIIntegrationStepCollection(
 ): IUIIntegrationStep[] {
   return steps.map((step, position) => {
     let previousStepShouldDefineDataShape = false;
+    let previousStepShouldDefineDataShapePosition: number | undefined;
     let shouldAddDataMapper = false;
+    let restrictedDelete = false;
+
+    if (
+      step.connection &&
+      (step.connection!.connectorId! === FLOW ||
+        step.connection!.connectorId! === API_PROVIDER)
+    ) {
+      restrictedDelete = true;
+    }
     const isUnclosedSplit =
       step.stepKind === SPLIT &&
       getNextAggregateStep(steps, position) === undefined;
@@ -176,6 +187,9 @@ export function toUIIntegrationStepCollection(
           const prevOutDataShape = prev.action.descriptor.outputDataShape;
           if (DataShapeKinds.ANY === toDataShapeKinds(prevOutDataShape.kind!)) {
             previousStepShouldDefineDataShape = true;
+            previousStepShouldDefineDataShapePosition = steps.findIndex(
+              s => s.id === prev.id
+            );
           } else if (!isSameDataShape(inputDataShape, prevOutDataShape)) {
             shouldAddDataMapper = true;
           }
@@ -187,6 +201,8 @@ export function toUIIntegrationStepCollection(
       ...step,
       isUnclosedSplit,
       previousStepShouldDefineDataShape,
+      previousStepShouldDefineDataShapePosition,
+      restrictedDelete,
       shape,
       shouldAddDataMapper,
     };
