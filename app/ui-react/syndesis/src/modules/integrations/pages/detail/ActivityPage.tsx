@@ -9,6 +9,7 @@ import {
   IntegrationDetailHeader,
   WithIntegrationActions,
 } from '../../components';
+import resolvers from '../../resolvers';
 import { ActivityPageTable } from './ActivityPageTable';
 import { IDetailsRouteParams, IDetailsRouteState } from './interfaces';
 
@@ -28,7 +29,7 @@ export class ActivityPage extends React.Component {
             <AppContext.Consumer>
               {({ getPodLogUrl }) => (
                 <WithRouteData<IDetailsRouteParams, IDetailsRouteState>>
-                  {({ integrationId }, { integration }, { history }) => {
+                  {({ integrationId }, { integration }) => {
                     return (
                       <>
                         <WithMonitoredIntegration
@@ -45,6 +46,7 @@ export class ActivityPage extends React.Component {
                               {() => (
                                 <WithIntegrationActions
                                   integration={data.integration}
+                                  postDeleteHref={resolvers.list()}
                                 >
                                   {({
                                     ciCdAction,
