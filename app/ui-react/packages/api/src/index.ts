@@ -10,6 +10,7 @@ export * from './SyndesisFetch';
 export * from './useApiConnector';
 export * from './useApiProvider';
 export * from './useConnectionHelpers';
+export * from './useConnection';
 export * from './useConnector';
 export * from './useConnectorCredentials';
 export * from './useIntegrationHelpers';
