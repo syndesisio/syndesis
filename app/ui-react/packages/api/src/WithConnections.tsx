@@ -3,6 +3,7 @@ import * as React from 'react';
 import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
 import { SyndesisFetch } from './SyndesisFetch';
+import { transformConnectionResponse } from './useConnection';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
@@ -64,15 +65,14 @@ export interface IWithConnectionsProps {
 export function transformResponse(
   response: IFetchState<IConnectionsFetchResponse>
 ): IFetchState<IConnectionsResponse> {
+  const connections = response.data.items.map(transformConnectionResponse);
   return {
     ...response,
     data: {
-      connectionsForDisplay: getConnectionsForDisplay(response.data.items),
-      connectionsWithFromAction: getConnectionsWithFromAction(
-        response.data.items
-      ),
-      connectionsWithToAction: getConnectionsWithToAction(response.data.items),
-      dangerouslyUnfilteredConnections: response.data.items,
+      connectionsForDisplay: getConnectionsForDisplay(connections),
+      connectionsWithFromAction: getConnectionsWithFromAction(connections),
+      connectionsWithToAction: getConnectionsWithToAction(connections),
+      dangerouslyUnfilteredConnections: connections,
       totalCount: response.data.totalCount,
     },
   };
