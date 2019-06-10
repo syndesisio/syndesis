@@ -18,6 +18,7 @@ import {
   ActionDescriptor,
   Action,
   IntegrationSupportService,
+  key
 } from '@syndesis/ui/platform';
 import {
   CurrentFlowService,
@@ -212,6 +213,7 @@ export class TemplaterComponent implements OnInit, AfterViewInit, OnDestroy {
       action: {
         actionType: 'step',
         name: 'Templater',
+        id: key(),
         descriptor: {
           inputDataShape: {
             kind: DataShapeKinds.JSON_SCHEMA,
