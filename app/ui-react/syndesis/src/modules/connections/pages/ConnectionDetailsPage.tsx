@@ -9,7 +9,7 @@ import {
   Breadcrumb,
   ConnectionDetailsForm,
   ConnectionDetailsHeader,
-  ConnectionDetailsOauth,
+  ConnectionDetailsOauthCard,
   PageLoader,
 } from '@syndesis/ui';
 import { useRouteData, WithLoader } from '@syndesis/utils';
@@ -23,6 +23,52 @@ import resolvers from '../../resolvers';
 import { WithConnectorForm } from '../components';
 import { useOAuthFlow } from '../useOAuthFlow';
 import { parseValidationResult } from '../utils';
+
+export interface IConnectionDetailsOauthProps {
+  connectorId: string;
+  connectionName: string;
+  configuredProperties: Pick<Connection, 'configuredProperties'>;
+}
+const ConnectionDetailsOAuth: React.FunctionComponent<
+  IConnectionDetailsOauthProps
+> = ({ connectorId, connectionName, configuredProperties }) => {
+  const { t } = useTranslation(['connections', 'shared']);
+  const { pushNotification } = React.useContext(UIContext);
+  const { connectOAuth, isConnecting } = useOAuthFlow(
+    connectorId,
+    connectionName,
+    () => {
+      pushNotification(`Connection successful`, 'success');
+    }
+  );
+  const { loading: isVerifying, read: verify } = useConnectorVerifier();
+
+  const onOauthValidate = async () => {
+    try {
+      const status = await verify(connectorId, configuredProperties);
+      parseValidationResult(status!, connectionName).map(({ message, type }) =>
+        pushNotification(message, type)
+      );
+    } catch (e) {
+      pushNotification(`Connection couln't be verified: ${e.message}`, 'error');
+    }
+  };
+
+  return (
+    <ConnectionDetailsOauthCard
+      i18nTitle={t('connections:oauth:title', {
+        name: connectionName,
+      })}
+      i18nDescription={t('connections:oauth:description')}
+      i18nValidateButton={t('connections:oauth:validateButton')}
+      i18nReconnectButton={t('connections:oauth:reconnectButton')}
+      onValidate={onOauthValidate}
+      isValidating={isVerifying}
+      onReconnect={connectOAuth}
+      isReconnecting={isConnecting}
+    />
+  );
+};
 
 export interface IConnectionDetailsRouteParams {
   connectionId: string;
@@ -55,10 +101,6 @@ export const ConnectionDetailsPage: React.FunctionComponent<
     params.connectionId,
     state.connection
   );
-  const { loading: isVerifying, read: verify } = useConnectorVerifier();
-  const { connectOAuth, isConnecting } = useOAuthFlow(() => {
-    pushNotification(`Connection successful`, 'success');
-  });
 
   const getUsedByMessage = (c: Connection): string => {
     // TODO: Schema is currently wrong as it has 'uses' as an OptionalInt. Remove cast when schema is fixed.
@@ -183,24 +225,6 @@ export const ConnectionDetailsPage: React.FunctionComponent<
     );
   };
 
-  const onOauthValidate = async () => {
-    try {
-      const status = await verify(
-        connection.connectorId!,
-        connection.configuredProperties || {}
-      );
-      parseValidationResult(status!, connection.name).map(({ message, type }) =>
-        pushNotification(message, type)
-      );
-    } catch (e) {
-      pushNotification(`Connection couln't be verified: ${e.message}`, 'error');
-    }
-  };
-
-  const onOauthReconnect = () => {
-    connectOAuth(connection.connector!.id!, connection.connector!.name);
-  };
-
   return (
     <>
       <PageTitle title={t('connectionDetailPageTitle')} />
@@ -286,17 +310,10 @@ export const ConnectionDetailsPage: React.FunctionComponent<
                   </ConnectionDetailsForm>
                 )}
                 {connection.derived && (
-                  <ConnectionDetailsOauth
-                    i18nTitle={t('connections:oauth:title', {
-                      name: connection.name,
-                    })}
-                    i18nDescription={t('connections:oauth:description')}
-                    i18nValidateButton={t('connections:oauth:validateButton')}
-                    i18nReconnectButton={t('connections:oauth:reconnectButton')}
-                    onValidate={onOauthValidate}
-                    isValidating={isVerifying}
-                    onReconnect={onOauthReconnect}
-                    isReconnecting={isConnecting}
+                  <ConnectionDetailsOAuth
+                    connectorId={connection.connector!.id!}
+                    connectionName={connection.name}
+                    configuredProperties={connection.configuredProperties || {}}
                   />
                 )}
               </>

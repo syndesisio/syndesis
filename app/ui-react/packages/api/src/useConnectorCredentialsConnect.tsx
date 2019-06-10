@@ -9,22 +9,15 @@ export interface ICredentialsConnectResponse {
   };
 }
 
-export const useConnectorCredentialsConnect = () => {
-  const { read, ...rest } = useApiResource<
-    ICredentialsConnectResponse | undefined
-  >({
+export const useConnectorCredentialsConnect = (
+  connectorId: string,
+  returnUrl: string
+) => {
+  return useApiResource<ICredentialsConnectResponse | undefined>({
+    body: { returnUrl },
     defaultValue: undefined,
-    method: 'GET',
-    readOnMount: false,
-    url: '',
+    method: 'POST',
+    readOnMount: true,
+    url: `/connectors/${connectorId}/credentials`,
   });
-  return {
-    ...rest,
-    read: (connectorId: string, returnUrl: string) =>
-      read({
-        body: { returnUrl },
-        method: 'POST',
-        url: `/connectors/${connectorId}/credentials`,
-      }),
-  };
 };

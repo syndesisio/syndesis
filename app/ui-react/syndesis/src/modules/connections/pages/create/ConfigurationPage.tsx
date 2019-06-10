@@ -71,13 +71,17 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     resource: acquisitionMethod,
   } = useConnectorCredentials(params.connectorId);
 
-  const { connectOAuth, isConnecting } = useOAuthFlow(() => {
-    history.push(
-      resolvers.create.review({
-        connector,
-      })
-    );
-  });
+  const { connectOAuth, isConnecting } = useOAuthFlow(
+    connector.id!,
+    connector.name,
+    () => {
+      history.push(
+        resolvers.create.review({
+          connector,
+        })
+      );
+    }
+  );
 
   /**
    * the callback that's called by the configuration form for non oauth enabled
@@ -134,9 +138,7 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                           { name: connector.name }
                         )}
                         isConnecting={isConnecting}
-                        onConnect={() =>
-                          connectOAuth(connector.id!, connector.name)
-                        }
+                        onConnect={connectOAuth}
                       />
                     ) : (
                       <WithConnectorForm connector={connector} onSave={onSave}>

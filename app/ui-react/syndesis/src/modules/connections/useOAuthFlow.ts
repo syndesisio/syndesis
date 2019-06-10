@@ -2,7 +2,11 @@ import { useConnectorCredentialsConnect } from '@syndesis/api';
 import * as React from 'react';
 import { UIContext } from '../../app';
 
-export function useOAuthFlow(onSuccess: () => void) {
+export function useOAuthFlow(
+  connectorId: string,
+  connectorName: string,
+  onSuccess: () => void
+) {
   const { pushNotification } = React.useContext(UIContext);
 
   /**
@@ -15,8 +19,11 @@ export function useOAuthFlow(onSuccess: () => void) {
    */
   const {
     loading: isConnecting,
-    read: connect,
-  } = useConnectorCredentialsConnect();
+    resource: connectResource,
+  } = useConnectorCredentialsConnect(
+    connectorId,
+    `${process.env.PUBLIC_URL}/oauth-redirect.html`
+  );
 
   /**
    * create a callback reference to a function that will be globally available and
@@ -59,7 +66,7 @@ export function useOAuthFlow(onSuccess: () => void) {
    *
    * This needs to happen once per lifecycle of the page.
    */
-  function deleteCookies() {
+  React.useEffect(() => {
     const creds = document.cookie
       .split(';')
       .filter(c => c.indexOf('cred-o') === 0);
@@ -67,8 +74,27 @@ export function useOAuthFlow(onSuccess: () => void) {
       const [key] = c.split('=');
       document.cookie = `${key}=; expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
     });
-  }
-  React.useEffect(deleteCookies, [deleteCookies]);
+  }, []);
+
+  /**
+   * if we need to set up an OAuth flow, we need to set the cookie returned by
+   * the API in the document. This cookie will be later used by the BE in the
+   * redirect page set up in the 3rd party.
+   *
+   * This needs to happen once per lifecycle of the page to avoid resetting the
+   * cookie to the value we got from the API before the successful auth.
+   */
+  const previousSpec = React.useRef<string | undefined>();
+  React.useEffect(() => {
+    if (
+      connectResource &&
+      connectResource.state &&
+      connectResource.state.spec !== previousSpec.current
+    ) {
+      previousSpec.current = connectResource.state.spec;
+      window.document.cookie = connectResource.state.spec;
+    }
+  }, [previousSpec, connectResource]);
 
   /**
    * the callback that's called by the connect button for oauth enabled connectors.
@@ -78,21 +104,15 @@ export function useOAuthFlow(onSuccess: () => void) {
    *
    * If the popup can't be opened for any reason, an error toast is shown.
    */
-  async function connectOAuth(connectorId: string, connectorName: string) {
+  function connectOAuth() {
     try {
-      deleteCookies();
-      const resource = await connect(
-        connectorId,
-        `${process.env.PUBLIC_URL}/oauth-redirect.html`
-      );
       /**
        * if we need to set up an OAuth flow, we need to set the cookie returned by
        * the API in the document. This cookie will be later used by the BE in the
        * redirect page set up in the 3rd party.
        */
-      window.document.cookie = resource!.state.spec;
       const popup = window.open(
-        resource!.redirectUrl,
+        connectResource!.redirectUrl,
         'Connection popup',
         'width=600,height=400,resizable,scrollbars=yes,status=yes'
       );

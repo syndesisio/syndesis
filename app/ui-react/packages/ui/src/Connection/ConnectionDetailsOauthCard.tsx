@@ -2,7 +2,7 @@ import { Card } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, Loader, PageSection } from '../Layout';
 
-export interface IConnectionDetailsOauthProps {
+export interface IConnectionDetailsOauthCardProps {
   i18nTitle: string;
   i18nDescription: string;
   i18nValidateButton: string;
@@ -13,8 +13,8 @@ export interface IConnectionDetailsOauthProps {
   isReconnecting: boolean;
 }
 
-export const ConnectionDetailsOauth: React.FunctionComponent<
-  IConnectionDetailsOauthProps
+export const ConnectionDetailsOauthCard: React.FunctionComponent<
+  IConnectionDetailsOauthCardProps
 > = ({
   i18nTitle,
   i18nDescription,
