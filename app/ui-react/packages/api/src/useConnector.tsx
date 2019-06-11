@@ -1,6 +1,12 @@
 import { Connector } from '@syndesis/models';
 import { useApiResource } from './useApiResource';
 
+export const transformConnectorResponse = (connector: Connector) => {
+  return {
+    ...connector,
+  };
+};
+
 export const useConnector = (connectorId: string, initialValue?: Connector) => {
   return useApiResource<Connector>({
     defaultValue: {
@@ -8,6 +14,10 @@ export const useConnector = (connectorId: string, initialValue?: Connector) => {
       name: '',
     },
     initialValue,
+    transformResponse: async response => {
+      const connector = await response.json();
+      return transformConnectorResponse(connector);
+    },
     url: `/connectors/${connectorId}`,
   });
 };

@@ -19,7 +19,7 @@ export const transformConnectionResponse = (connection: ConnectionOverview) => {
     ),
     configRequired: isConfigurationRequired(connection),
     derived: isDerived(connection),
-    isTechPreview: isTechPreview(connection.connector),
+    isTechPreview: isTechPreview(connection.connector!),
   };
 };
 

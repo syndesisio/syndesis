@@ -1,4 +1,4 @@
-import { isConfigurationRequired, WithConnectionHelpers } from '@syndesis/api';
+import { WithConnectionHelpers } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { ConnectionOverview } from '@syndesis/models';
 import {
@@ -12,7 +12,6 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { UIContext } from '../../../app';
 import { ApiError, EntityIcon } from '../../../shared';
-import { isTechPreview } from '../../integrations/components/editor/utils';
 
 export interface IConnectionsProps {
   error: boolean;
@@ -78,20 +77,11 @@ export class Connections extends React.Component<IConnectionsProps> {
                                 doDelete(c.id!, c.name); // must have an ID if deleting
                               };
 
-                              const configurationRequired =
-                                c.board && isConfigurationRequired(c.board);
-
-                              const techPreview = c.connector
-                                ? isTechPreview(c.connector)
-                                : false;
-
                               return (
                                 <ConnectionsGridCell key={index}>
                                   <ConnectionCard
                                     name={c.name}
-                                    configurationRequired={
-                                      configurationRequired
-                                    }
+                                    configurationRequired={c.configRequired}
                                     description={c.description || ''}
                                     icon={
                                       <EntityIcon
@@ -131,7 +121,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                                           }
                                         : undefined
                                     }
-                                    techPreview={techPreview}
+                                    techPreview={c.isTechPreview}
                                     techPreviewPopoverHtml={
                                       <span
                                         dangerouslySetInnerHTML={{

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
 import { SyndesisFetch } from './SyndesisFetch';
+import { transformConnectorResponse } from './useConnector';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
@@ -31,11 +32,13 @@ export function getConnectorsForDisplay(connectors: Connector[]) {
 export function transformConnectorsResponse(
   response: IFetchState<IConnectorsFetchResponse>
 ): IFetchState<IConnectorsResponse> {
+  const connectors = response.data.items.map(transformConnectorResponse);
+
   return {
     ...response,
     data: {
-      connectorsForDisplay: getConnectorsForDisplay(response.data.items),
-      dangerouslyUnfilteredConnections: response.data.items,
+      connectorsForDisplay: getConnectorsForDisplay(connectors),
+      dangerouslyUnfilteredConnections: connectors,
       totalCount: response.data.totalCount,
     },
   };
