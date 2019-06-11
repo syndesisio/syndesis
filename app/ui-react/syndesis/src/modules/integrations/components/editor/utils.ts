@@ -62,20 +62,6 @@ export function isTechPreview<T extends IUIStep | Connection | Connector>(
         (data as IUIStep).connection!.connector!.metadata
       ) === 'true'
     );
-  } else if ((data as IUIStep).connector) {
-    return (
-      getMetadataValue<string>(
-        'tech-preview',
-        (data as IUIStep).connector!.metadata
-      ) === 'true'
-    );
-  } else if ((data as Connection).connector) {
-    return (
-      getMetadataValue<string>(
-        'tech-preview',
-        (data as Connection).connector!.metadata
-      ) === 'true'
-    );
   } else if (data as Connector) {
     return getMetadataValue<string>('tech-preview', data.metadata) === 'true';
   } else {

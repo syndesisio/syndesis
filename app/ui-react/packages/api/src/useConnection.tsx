@@ -1,5 +1,10 @@
 import { ConnectionOverview } from '@syndesis/models';
-import { getActionsWithFrom, getActionsWithTo, isDerived } from './helpers';
+import {
+  getActionsWithFrom,
+  getActionsWithTo,
+  isConfigurationRequired,
+  isDerived,
+} from './helpers';
 import { useApiResource } from './useApiResource';
 
 export const transformConnectionResponse = (connection: ConnectionOverview) => {
@@ -11,6 +16,7 @@ export const transformConnectionResponse = (connection: ConnectionOverview) => {
     actionsWithTo: getActionsWithTo(
       connection.connector ? connection.connector.actions : []
     ),
+    configRequired: isConfigurationRequired(connection),
     derived: isDerived(connection),
   };
 };
