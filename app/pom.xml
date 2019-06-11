@@ -75,7 +75,7 @@
     <commons.compress.version>1.18</commons.compress.version>
 
     <!-- Global camel version used everywhere -->
-    <camel.version>2.21.0.fuse-740013</camel.version>
+    <camel.version>2.21.0.fuse-740028</camel.version>
     <camel-k-runtime.version>0.3.3.fuse-740002</camel-k-runtime.version>
 
     <!-- Don't fork based on cores, doesn't work nicely in the cloud -->
