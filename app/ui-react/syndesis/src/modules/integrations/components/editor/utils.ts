@@ -10,7 +10,6 @@ import {
   ENDPOINT,
   EXTENSION,
   FLOW,
-  getMetadataValue,
   getNextAggregateStep,
   getPreviousSteps,
   getPreviousStepWithDataShape,
@@ -25,7 +24,6 @@ import * as H from '@syndesis/history';
 import {
   Connection,
   ConnectionOverview,
-  Connector,
   ConnectorAction,
   DataShape,
   Extension,
@@ -44,19 +42,6 @@ type StepKindHrefCallback = (
   p: ISelectConnectionRouteParams,
   s: ISelectConnectionRouteState
 ) => H.LocationDescriptorObject;
-
-/**
- * Checks whether or not the provided object is a technical preview.
- * Accepts either an IUIStep, Connection, or a Connector.
- * Returns a boolean for whether or not the metadata `tech-preview` key
- * returns a string value of 'true'
- * @param connector
- */
-export function isTechPreview(connector: Connector): boolean {
-  return (
-    getMetadataValue<string>('tech-preview', connector.metadata) === 'true'
-  );
-}
 
 export function getStepKind(step: Step): IUIStep['uiStepKind'] {
   if (

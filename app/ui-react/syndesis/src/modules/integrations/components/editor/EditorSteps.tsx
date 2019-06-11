@@ -1,4 +1,3 @@
-import { isConfigurationRequired } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import {
   ConnectionCard,
@@ -11,7 +10,6 @@ import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { ApiError, EntityIcon } from '../../../../shared';
 import { IUIStep } from './interfaces';
-import { isTechPreview } from './utils';
 
 export interface IEditorStepsProps {
   error: boolean;
@@ -43,8 +41,6 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
             >
               {() => {
                 return this.props.steps.map((s, index) => {
-                  const techPreview = isTechPreview(s);
-
                   return (
                     <ConnectionsGridCell key={index}>
                       <ConnectionCard
@@ -56,7 +52,7 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                         i18nCannotDelete={t('cannotDelete')}
                         i18nConfigurationRequired={t('configurationRequired')}
                         i18nTechPreview={t('techPreview')}
-                        techPreview={techPreview}
+                        techPreview={s.isTechPreview}
                         techPreviewPopoverHtml={
                           <span
                             dangerouslySetInnerHTML={{

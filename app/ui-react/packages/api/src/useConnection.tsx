@@ -4,6 +4,7 @@ import {
   getActionsWithTo,
   isConfigurationRequired,
   isDerived,
+  isTechPreview,
 } from './helpers';
 import { useApiResource } from './useApiResource';
 
@@ -18,6 +19,7 @@ export const transformConnectionResponse = (connection: ConnectionOverview) => {
     ),
     configRequired: isConfigurationRequired(connection),
     derived: isDerived(connection),
+    isTechPreview: isTechPreview(connection.connector),
   };
 };
 
