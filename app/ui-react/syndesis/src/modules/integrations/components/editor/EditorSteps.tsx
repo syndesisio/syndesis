@@ -43,16 +43,13 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
             >
               {() => {
                 return this.props.steps.map((s, index) => {
-                  const configurationRequired =
-                    s.board && isConfigurationRequired(s.board);
-
                   const techPreview = isTechPreview(s);
 
                   return (
                     <ConnectionsGridCell key={index}>
                       <ConnectionCard
                         name={s.name}
-                        configurationRequired={configurationRequired}
+                        configurationRequired={s.configRequired}
                         description={s.description || ''}
                         icon={<EntityIcon entity={s} alt={s.name} width={46} />}
                         href={this.props.getEditorStepHref(s)}

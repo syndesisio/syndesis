@@ -29,7 +29,9 @@ export enum DataShapeDirection {
 
 export interface IUIStep extends StepKind {
   board?: ConnectionBulletinBoard;
+  configRequired?: boolean;
   connector?: Connector;
+  isTechPreview?: boolean;
   uiStepKind: 'api-provider' | StepKind['stepKind'];
   title: string;
   metadata: { [key: string]: any };

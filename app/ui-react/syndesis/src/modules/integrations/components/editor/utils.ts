@@ -50,23 +50,12 @@ type StepKindHrefCallback = (
  * Accepts either an IUIStep, Connection, or a Connector.
  * Returns a boolean for whether or not the metadata `tech-preview` key
  * returns a string value of 'true'
- * @param data
+ * @param connector
  */
-export function isTechPreview<T extends IUIStep | Connection | Connector>(
-  data: T
-): boolean {
-  if ((data as IUIStep).connection && (data as IUIStep).connection!.connector) {
-    return (
-      getMetadataValue<string>(
-        'tech-preview',
-        (data as IUIStep).connection!.connector!.metadata
-      ) === 'true'
-    );
-  } else if (data as Connector) {
-    return getMetadataValue<string>('tech-preview', data.metadata) === 'true';
-  } else {
-    return false;
-  }
+export function isTechPreview(connector: Connector): boolean {
+  return (
+    getMetadataValue<string>('tech-preview', connector.metadata) === 'true'
+  );
 }
 
 export function getStepKind(step: Step): IUIStep['uiStepKind'] {
