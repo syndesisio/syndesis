@@ -169,32 +169,11 @@ do_operator() {
     echo "Building syndesis-operator"
     echo "=============================================================================="
 
-    if [[ "$(which operator-sdk)" == "" ]] ; then
-        echo "oc command not found.  Cannot start image stream build without it."
-        exit 1
-    fi
-
     pushd "$top_dir/install/operator"
-    ./build.sh
-
-    if [ ! $(hasflag -i --image --docker) ]; then
-        # Lets trigger an S2I build so that image streams get updated.
-
-        echo "Creating image $OPERATOR_IMAGE:${tag} via S2I and Docker strategy"
-        if [ -z "$(oc get bc -o name | grep syndesis-operator)" ]; then
-            echo "Creating BuildConfig syndesis-operator"
-            oc new-build --strategy=docker --binary=true --name syndesis-operator
-        fi
-
-        local arch="$(mktemp -t syndesis-operator-docker).tar"
-        echo $arch
-        tar cvf $arch build
-        cd build
-        tar uvf $arch Dockerfile
-        trap "rm $arch" EXIT
-
-        oc start-build --from-archive=$arch syndesis-operator
-
+    if [ $(hasflag -i --image --docker) ]; then
+        ./build.sh --image-build=docker --image-name="${OPERATOR_IMAGE}:$tag"
+    else
+        ./build.sh --image-build=s2i
     fi
     popd >/dev/null
 }
