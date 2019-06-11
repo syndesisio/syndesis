@@ -28,7 +28,7 @@
 
   <properties>
     <spring-boot.version>1.5.13.RELEASE</spring-boot.version>
-    <camel.version>2.21.0.fuse-740013</camel.version>
+    <camel.version>2.21.0.fuse-740028</camel.version>
   </properties>
 
     <!-- Metadata need to publish to central -->
