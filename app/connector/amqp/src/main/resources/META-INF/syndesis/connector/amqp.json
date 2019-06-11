@@ -13,7 +13,7 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Specify AMQP destination properties, including Queue or Topic name",
+            "description": "Specify AMQP destination properties, including queue or topic name.",
             "name": "Select the AMQP Destination",
             "properties": {
               "deliveryPersistent": {
@@ -34,7 +34,7 @@
               "destinationName": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Destination Name",
+                "displayName": "Destination name",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
@@ -49,7 +49,7 @@
                 "componentProperty": false,
                 "defaultValue": "queue",
                 "deprecated": false,
-                "displayName": "Destination Type",
+                "displayName": "Destination type",
                 "enum": [
                   {
                     "label": "Topic",
@@ -63,7 +63,7 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "By default, the destination is a Queue.",
+                "labelHint": "By default, the destination is a queue.",
                 "order": "2",
                 "required": false,
                 "secret": false,
@@ -90,13 +90,13 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Specify AMQP destination properties, including Queue or Topic Name",
+            "description": "Specify AMQP destination properties, including queue or topic name.",
             "name": "Select the AMQP Destination",
             "properties": {
               "destinationName": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Destination Name",
+                "displayName": "Destination name",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
@@ -111,7 +111,7 @@
                 "componentProperty": false,
                 "defaultValue": "queue",
                 "deprecated": false,
-                "displayName": "Destination Type",
+                "displayName": "Destination type",
                 "enum": [
                   {
                     "label": "Topic",
@@ -125,7 +125,7 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "By default, the destination is a Queue.",
+                "labelHint": "By default, the destination is a queue.",
                 "order": "2",
                 "required": false,
                 "secret": false,
@@ -134,12 +134,12 @@
               "durableSubscriptionId": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Durable Subscription ID",
+                "displayName": "Durable subscription ID",
                 "group": "consumer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "consumer",
-                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                "labelHint": "Set the ID that lets connections close and reopen without missing messages. Destination type must be a topic.",
                 "order": "3",
                 "required": false,
                 "secret": false,
@@ -148,7 +148,7 @@
               "messageSelector": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Message Selector",
+                "displayName": "Message selector",
                 "group": "consumer (advanced)",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
@@ -180,13 +180,13 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Specify AMQP destination properties, including Queue or Topic Name",
+            "description": "Specify AMQP destination properties, including queue or topic name.",
             "name": "Select the AMQP Destination",
             "properties": {
               "destinationName": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Destination Name",
+                "displayName": "Destination name",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
@@ -201,7 +201,7 @@
                 "componentProperty": false,
                 "defaultValue": "queue",
                 "deprecated": false,
-                "displayName": "Destination Type",
+                "displayName": "Destination type",
                 "enum": [
                   {
                     "label": "Topic",
@@ -215,7 +215,7 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "By default, the destination is a Queue.",
+                "labelHint": "By default, the destination is a queue.",
                 "order": "2",
                 "required": false,
                 "secret": false,
@@ -224,12 +224,12 @@
               "durableSubscriptionId": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Durable Subscription ID",
+                "displayName": "Durable subscription ID",
                 "group": "consumer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "consumer",
-                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                "labelHint": "Set the ID that lets connections close and reopen without missing messages. Destination type must be a topic.",
                 "order": "3",
                 "required": false,
                 "secret": false,
@@ -238,7 +238,7 @@
               "messageSelector": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Message Selector",
+                "displayName": "Message selector",
                 "group": "consumer (advanced)",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
@@ -275,8 +275,8 @@
     "brokerCertificate": {
       "componentProperty": true,
       "deprecated": false,
-      "description": "AMQ Broker X.509 PEM Certificate",
-      "displayName": "Broker Certificate",
+      "description": "AMQ Broker X.509 PEM certificate",
+      "displayName": "Broker certificate",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "property",
@@ -300,8 +300,8 @@
     "clientCertificate": {
       "componentProperty": true,
       "deprecated": false,
-      "description": "AMQ Client X.509 PEM Certificate",
-      "displayName": "Client Certificate",
+      "description": "AMQ Client X.509 PEM certificate",
+      "displayName": "Client certificate",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "property",
@@ -368,7 +368,7 @@
       "componentProperty": true,
       "defaultValue": "false",
       "deprecated": false,
-      "displayName": "Check Certificates",
+      "displayName": "Check certificates",
       "enum": [
         {
           "label": "Disable",
@@ -392,7 +392,7 @@
     "username": {
       "componentProperty": true,
       "deprecated": false,
-      "displayName": "User Name",
+      "displayName": "User name",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "property",
