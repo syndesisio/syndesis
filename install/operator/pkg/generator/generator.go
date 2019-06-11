@@ -58,6 +58,7 @@ type Context struct {
     Tags             tags
     Debug            bool
     PrometheusRules  string
+    Params           map[string]string
 }
 
 // TODO: Could be added from a local configuration file
