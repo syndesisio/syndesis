@@ -20,7 +20,7 @@
                 "componentProperty": false,
                 "deprecated": false,
                 "description": "Name of the queue or topic to send data to.",
-                "displayName": "Destination Name",
+                "displayName": "Destination name",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
@@ -34,7 +34,7 @@
                 "componentProperty": false,
                 "defaultValue": "topic",
                 "deprecated": false,
-                "displayName": "Destination Type",
+                "displayName": "Destination type",
                 "enum": [
                   {
                     "label": "Topic",
@@ -98,7 +98,7 @@
                 "componentProperty": false,
                 "deprecated": false,
                 "description": "Name of the queue or topic to receive data from.",
-                "displayName": "Destination Name",
+                "displayName": "Destination name",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
@@ -112,7 +112,7 @@
                 "componentProperty": false,
                 "defaultValue": "topic",
                 "deprecated": false,
-                "displayName": "Destination Type",
+                "displayName": "Destination type",
                 "enum": [
                   {
                     "label": "Topic",
@@ -135,12 +135,12 @@
               "durableSubscriptionId": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Durable Subscription ID",
+                "displayName": "Durable subscription ID",
                 "group": "consumer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "label": "consumer",
-                "labelHint": "Set the ID that lets connections close and reopen with missing messages. Connection type must be a topic.",
+                "labelHint": "Set the ID that lets connections close and reopen without missing messages. Connection type must be a topic.",
                 "order": "3",
                 "required": false,
                 "secret": false,
@@ -149,7 +149,7 @@
               "messageSelector": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Message Selector",
+                "displayName": "Message selector",
                 "group": "consumer (advanced)",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
@@ -192,7 +192,7 @@
                 "componentProperty": false,
                 "deprecated": false,
                 "description": "Name of the queue or topic to send data to.",
-                "displayName": "Destination Name",
+                "displayName": "Destination name",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
@@ -206,7 +206,7 @@
                 "componentProperty": false,
                 "defaultValue": "topic",
                 "deprecated": false,
-                "displayName": "Destination Type",
+                "displayName": "Destination type",
                 "enum": [
                   {
                     "label": "Topic",
@@ -229,7 +229,7 @@
               "messageSelector": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Message Selector",
+                "displayName": "Message selector",
                 "group": "consumer (advanced)",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
@@ -243,7 +243,7 @@
               "namedReplyTo": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Named Reply To",
+                "displayName": "Named reply to",
                 "group": "producer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
@@ -273,7 +273,7 @@
                 "componentProperty": false,
                 "defaultValue": 5000,
                 "deprecated": false,
-                "displayName": "Response Time Out",
+                "displayName": "Response time out",
                 "group": "producer (advanced)",
                 "javaType": "long",
                 "kind": "parameter",
@@ -310,7 +310,7 @@
       "componentProperty": true,
       "deprecated": false,
       "description": "Red Hat AMQ Broker X.509 PEM Certificate",
-      "displayName": "Broker Certificate",
+      "displayName": "Broker certificate",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "property",
@@ -350,7 +350,7 @@
       "componentProperty": true,
       "deprecated": false,
       "description": "Red Hat AMQ Client X.509 PEM Certificate",
-      "displayName": "Client Certificate",
+      "displayName": "Client certificate",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "property",
@@ -403,7 +403,7 @@
       "componentProperty": true,
       "defaultValue": "false",
       "deprecated": false,
-      "displayName": "Check Certificates",
+      "displayName": "Check certificates",
       "enum": [
         {
           "label": "Disable",
@@ -427,7 +427,7 @@
     "username": {
       "componentProperty": true,
       "deprecated": false,
-      "displayName": "User Name",
+      "displayName": "User name",
       "group": "security",
       "javaType": "java.lang.String",
       "kind": "property",
