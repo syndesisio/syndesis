@@ -81,7 +81,9 @@ export class Connections extends React.Component<IConnectionsProps> {
                               const configurationRequired =
                                 c.board && isConfigurationRequired(c.board);
 
-                              const techPreview = isTechPreview(c);
+                              const techPreview = c.connector
+                                ? isTechPreview(c.connector)
+                                : false;
 
                               return (
                                 <ConnectionsGridCell key={index}>
