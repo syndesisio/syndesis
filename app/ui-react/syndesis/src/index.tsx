@@ -24,7 +24,6 @@ import { IntegrationsModule } from './modules/integrations';
 import routes from './modules/routes';
 import { SettingsModule } from './modules/settings';
 import { SupportModule } from './modules/support';
-import registerServiceWorker from './registerServiceWorker';
 
 ReactDOM.render(
   <Router history={createBrowserHistory()}>
@@ -131,4 +130,3 @@ ReactDOM.render(
   </Router>,
   document.getElementById('root') as HTMLElement
 );
-registerServiceWorker();
