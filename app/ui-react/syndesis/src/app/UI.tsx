@@ -14,8 +14,8 @@ import {
   toValidHtmlId,
 } from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
-import { useState } from 'react';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import { Translation } from 'react-i18next';
 import { Route, Switch } from 'react-router-dom';
 import { Workbox } from 'workbox-window';
@@ -45,16 +45,16 @@ export interface IAppUIState {
 }
 
 export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
-  const [showNavigation, setShowNavigation] = useState(true);
+  const [showNavigation, setShowNavigation] = React.useState(true);
   const onHideNavigation = () => setShowNavigation(false);
   const onShowNavigation = () => setShowNavigation(true);
 
-  const [showAboutModal, setShowAboutModal] = useState(false);
+  const [showAboutModal, setShowAboutModal] = React.useState(false);
   const toggleAboutModal = () => {
     setShowAboutModal(!showAboutModal);
   };
 
-  const [notifications, setNotifications] = useState<INotification[]>([]);
+  const [notifications, setNotifications] = React.useState<INotification[]>([]);
   const pushNotification = (
     msg: React.ReactNode,
     type: INotificationType,
@@ -206,6 +206,20 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                         return (
                           <WithUserHelpers>
                             {({ logout }) => {
+                              const doLogout = async () => {
+                                ReactDOM.unmountComponentAtNode(
+                                  document.getElementById('root') as HTMLElement
+                                );
+                                const buffer = await logout();
+                                const bytes = new Uint8Array(buffer);
+                                const decoder = new TextDecoder('utf-8');
+                                const html = decoder.decode(bytes);
+                                window.history.pushState(null, '', '/logout');
+                                window.document.open();
+                                window.document.write(html);
+                                window.document.close();
+                              };
+
                               return (
                                 <AppLayout
                                   onShowAboutModal={toggleAboutModal}
@@ -236,7 +250,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                   }}
                                   logoutItem={{
                                     key: 'logoutMenuItem',
-                                    onClick: logout,
+                                    onClick: doLogout,
                                     id: 'ui-logout-link',
                                     className: 'pf-c-dropdown__menu-item',
                                     children: t('Logout'),

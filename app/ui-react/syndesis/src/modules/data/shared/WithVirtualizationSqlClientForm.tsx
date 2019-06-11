@@ -1,5 +1,5 @@
 import { WithVirtualizationHelpers } from '@syndesis/api';
-import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
+import { AutoForm, IFormDefinition, IFormValue } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
 import { QueryResults, ViewDefinition } from '@syndesis/models';
 import { SqlClientContent, SqlClientForm } from '@syndesis/ui';
@@ -194,6 +194,13 @@ export class WithVirtualizationSqlClientForm extends React.Component<
       view: this.getInitialView(),
     };
 
+    // The purpose of this function is to reset the query results
+    //  whenever a form selection is changed
+    const validate = (values: IFormValue) => {
+      this.setQueryResults(WithVirtualizationSqlClientForm.queryResultsEmpty);
+      return {};
+    };
+
     return (
       <Translation ns={['data', 'shared']}>
         {t => (
@@ -243,6 +250,7 @@ export class WithVirtualizationSqlClientForm extends React.Component<
                         i18nRequiredProperty={t('shared:requiredFieldMessage')}
                         definition={formDefinition}
                         initialValue={initialValue}
+                        validate={validate}
                         onSave={(properties, actions) => {
                           doSubmit(properties).finally(() => {
                             actions.setSubmitting(false);

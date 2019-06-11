@@ -15,6 +15,7 @@
 @import url('~@patternfly/patternfly/utilities/Display/display.css');
 
 :root {
+  --pf-global--FontSize--md: var(--pf-global--FontSize--sm);
   --pf-global--link--Color: #0088ce;
   --pf-c-nav__list-link--m-current--after--BackgroundColor: #0088ce;
   --pf-global--link--Color--hover: #00659c;
@@ -44,7 +45,6 @@
 }
 
 body {
-  font-size: var(--pf-global--FontSize--sm);
   line-height: var(--pf-global--LineHeight--sm);
   color: var(--pf-global--Color--100);
 }
@@ -174,4 +174,9 @@ body {
 
 .wizard-pf-step-title {
   line-height: 24px;
+}
+
+.list-view-pf .list-group-item-heading {
+  white-space: normal;
+  word-break: break-word;
 }

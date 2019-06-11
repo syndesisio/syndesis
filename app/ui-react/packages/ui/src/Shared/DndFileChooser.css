@@ -2,6 +2,7 @@
   border: 2px dashed #d1d1d1; /* color-pf-black-300 */
   cursor: pointer;
   width: 100%;
+  padding: 20px;
 }
 
 .dnd-file-chooser[disabled],
@@ -16,16 +17,18 @@
   background: #fafafa; /* color-pf-black-100 */
 }
 
+.dnd-file-chooser__selectedFile,
 .dnd-file-chooser__helpText {
-  margin: 20px;
+  font-style: italic;
 }
 
 .dnd-file-chooser__instructions {
-  margin: 20px;
+  --pf-c-content--MarginBottom: 30px;
 }
 
-.dnd-file-chooser__selectedFile {
-  font-style: italic;
+.dnd-file-chooser__selectedFileList,
+.dnd-file-chooser__uploadMessage {
+  --pf-c-content--MarginBottom: 10px;
 }
 
 .dnd-file-chooser__selectedFileLabel {
@@ -38,4 +41,9 @@
 
 .dnd-file-chooser__uploadMessage {
   font-weight: bold;
+}
+
+.dnd-file-chooser__helpText {
+  padding-top: 20px;
+  --pf-c-content--small--MarginBottom: 0;
 }

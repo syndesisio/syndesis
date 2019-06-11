@@ -37,6 +37,12 @@ export interface IAddStepPageProps
     p: IBaseFlowRouteParams,
     s: IBaseRouteState
   ) => H.LocationDescriptor;
+  getGotoDescribeDataHref: (
+    position: number,
+    flowId: string,
+    p: IBaseFlowRouteParams,
+    s: IBaseRouteState
+  ) => H.LocationDescriptor;
   getAddStepHref: (
     position: number,
     p: IBaseFlowRouteParams,
@@ -94,6 +100,7 @@ export const AddStepPage: React.FunctionComponent<
     selfHref,
     getBreadcrumb,
     getFlowHref,
+    getGotoDescribeDataHref,
   } = props;
   const { params, state, history, location } = useRouteData<
     IBaseFlowRouteParams,
@@ -212,6 +219,9 @@ export const AddStepPage: React.FunctionComponent<
                       )
                     }
                     getFlowHref={flowId => getFlowHref(flowId, params, state)}
+                    gotoDescribeDataHref={p =>
+                      getGotoDescribeDataHref(p, params.flowId, params, state)
+                    }
                     flowId={params.flowId}
                     integration={state.integration}
                     onDelete={onDelete}
