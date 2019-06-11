@@ -605,10 +605,8 @@
   ],
   "componentScheme": "rest-swagger",
   "configuredProperties": {
-    "authorizationEndpoint": "http://petstore.swagger.io/oauth/dialog",
     "basePath": "/v2",
     "host": "http://petstore.swagger.io",
-    "oauthScopes": "read:pets write:pets",
     "specification": "{\"swagger\":\"2.0\",\"host\":\"petstore.swagger.io\",\"basePath\":\"/v2\",\"schemes\":[\"http\"],\"paths\":{\"/pet\":{\"post\":{\"operationId\":\"addPet\",\"consumes\":[\"application/json\",\"application/xml\"],\"produces\":[\"application/xml\",\"application/json\"],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]},\"put\":{\"operationId\":\"updatePet\",\"consumes\":[\"application/json\",\"application/xml\"],\"produces\":[\"application/xml\",\"application/json\"],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]}},\"/pet/findByStatus\":{\"get\":{\"operationId\":\"findPetsByStatus\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"status\",\"in\":\"query\",\"items\":{\"type\":\"string\",\"default\":\"available\",\"enum\":[\"available\",\"pending\",\"sold\"]},\"collectionFormat\":\"multi\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]}},\"/pet/findByTags\":{\"get\":{\"operationId\":\"findPetsByTags\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"tags\",\"in\":\"query\",\"items\":{\"type\":\"string\"},\"collectionFormat\":\"multi\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}],\"deprecated\":true}},\"/pet/{petId}\":{\"get\":{\"operationId\":\"getPetById\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{}]},\"post\":{\"operationId\":\"updatePetWithForm\",\"consumes\":[\"application/x-www-form-urlencoded\"],\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]},\"delete\":{\"operationId\":\"deletePet\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]}},\"/pet/{petId}/uploadImage\":{\"post\":{\"operationId\":\"uploadFile\",\"consumes\":[\"multipart/form-data\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"petId\",\"in\":\"path\"}],\"security\":[{\"petstore_auth\":[\"write:pets\",\"read:pets\"]}]}},\"/store/inventory\":{\"get\":{\"operationId\":\"getInventory\",\"produces\":[\"application/json\"],\"security\":[{}]}},\"/store/order\":{\"post\":{\"operationId\":\"placeOrder\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/store/order/{orderId}\":{\"get\":{\"operationId\":\"getOrderById\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"orderId\",\"in\":\"path\",\"maximum\":1E+1,\"minimum\":1}]},\"delete\":{\"operationId\":\"deleteOrder\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"orderId\",\"in\":\"path\",\"minimum\":1}]}},\"/user\":{\"post\":{\"operationId\":\"createUser\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/createWithArray\":{\"post\":{\"operationId\":\"createUsersWithArrayInput\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/createWithList\":{\"post\":{\"operationId\":\"createUsersWithListInput\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/login\":{\"get\":{\"operationId\":\"loginUser\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"query\"},{\"name\":\"password\",\"in\":\"query\"}]}},\"/user/logout\":{\"get\":{\"operationId\":\"logoutUser\",\"produces\":[\"application/xml\",\"application/json\"]}},\"/user/{username}\":{\"get\":{\"operationId\":\"getUserByName\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]},\"put\":{\"operationId\":\"updateUser\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]},\"delete\":{\"operationId\":\"deleteUser\",\"produces\":[\"application/xml\",\"application/json\"],\"parameters\":[{\"name\":\"username\",\"in\":\"path\"}]}}}}"
   },
   "connectorCustomizers": [
@@ -639,35 +637,6 @@
   "description": "This is a sample server Petstore server.  You can find out more about Swagger at [http://swagger.io](http://swagger.io) or on [irc.freenode.net, #swagger](http://swagger.io/irc/).  For this sample, you can use the api key `special-key` to test the authorization filters.",
   "name": "Swagger Petstore",
   "properties": {
-    "accessToken": {
-      "componentProperty": true,
-      "deprecated": false,
-      "description": "OAuth Access token",
-      "displayName": "OAuth Access token",
-      "group": "producer",
-      "javaType": "java.lang.String",
-      "kind": "property",
-      "label": "producer",
-      "order": 4,
-      "required": false,
-      "secret": true,
-      "tags": [
-        "oauth-access-token"
-      ],
-      "type": "string"
-    },
-    "accessTokenExpiresAt": {
-      "componentProperty": true,
-      "deprecated": false,
-      "description": "Seconds in UTC when the access token expires",
-      "group": "producer",
-      "javaType": "java.lang.Long",
-      "kind": "property",
-      "label": "producer",
-      "required": false,
-      "secret": false,
-      "type": "hidden"
-    },
     "authenticationParameterName": {
       "defaultValue": "api_key",
       "description": "Name of the API key parameter",
@@ -696,6 +665,7 @@
     },
     "authenticationType": {
       "componentProperty": true,
+      "defaultValue": "apiKey",
       "deprecated": false,
       "description": "Type of authentication used to connect to the API",
       "displayName": "Authentication Type",
@@ -703,10 +673,6 @@
         {
           "label": "API Key",
           "value": "apiKey"
-        },
-        {
-          "label": "OAuth 2.0",
-          "value": "oauth2"
         }
       ],
       "group": "producer",
@@ -720,24 +686,6 @@
         "authentication-type"
       ],
       "type": "hidden"
-    },
-    "authorizationEndpoint": {
-      "componentProperty": true,
-      "defaultValue": "http://petstore.swagger.io/oauth/dialog",
-      "deprecated": false,
-      "description": "URL for the start of the OAuth flow",
-      "displayName": "OAuth Authorization Endpoint URL",
-      "group": "producer",
-      "javaType": "java.lang.String",
-      "kind": "property",
-      "label": "producer",
-      "order": 6,
-      "required": true,
-      "secret": false,
-      "tags": [
-        "oauth-authorization-url"
-      ],
-      "type": "string"
     },
     "basePath": {
       "componentProperty": true,
@@ -754,40 +702,6 @@
       "secret": false,
       "type": "string"
     },
-    "clientId": {
-      "componentProperty": true,
-      "deprecated": false,
-      "description": "OAuth Client ID, sometimes called Consumer Key",
-      "displayName": "OAuth Client ID",
-      "group": "producer",
-      "javaType": "java.lang.String",
-      "kind": "property",
-      "label": "producer",
-      "order": 2,
-      "required": false,
-      "secret": false,
-      "tags": [
-        "oauth-client-id"
-      ],
-      "type": "string"
-    },
-    "clientSecret": {
-      "componentProperty": true,
-      "deprecated": false,
-      "description": "OAuth Client Secret, sometimes called Consumer Secret",
-      "displayName": "OAuth Client Secret",
-      "group": "producer",
-      "javaType": "java.lang.String",
-      "kind": "property",
-      "label": "producer",
-      "order": 3,
-      "required": false,
-      "secret": true,
-      "tags": [
-        "oauth-client-secret"
-      ],
-      "type": "string"
-    },
     "host": {
       "componentProperty": true,
       "defaultValue": "http://petstore.swagger.io",
@@ -801,41 +715,6 @@
       "order": 10,
       "required": true,
       "secret": false,
-      "type": "string"
-    },
-    "oauthScopes": {
-      "componentProperty": true,
-      "defaultValue": "read:pets write:pets",
-      "deprecated": false,
-      "description": "URL to fetch the OAuth Access token",
-      "displayName": "OAuth Scopes",
-      "group": "producer",
-      "javaType": "java.lang.String",
-      "kind": "property",
-      "label": "producer",
-      "order": 8,
-      "required": false,
-      "secret": false,
-      "tags": [
-        "oauth-scope"
-      ],
-      "type": "string"
-    },
-    "refreshToken": {
-      "componentProperty": true,
-      "deprecated": false,
-      "description": "OAuth Refresh token",
-      "displayName": "OAuth Refresh token",
-      "group": "producer",
-      "javaType": "java.lang.String",
-      "kind": "property",
-      "label": "producer",
-      "order": 5,
-      "required": false,
-      "secret": true,
-      "tags": [
-        "oauth-refresh-token"
-      ],
       "type": "string"
     },
     "specification": {
@@ -854,23 +733,6 @@
         "url"
       ],
       "type": "hidden"
-    },
-    "tokenEndpoint": {
-      "componentProperty": true,
-      "deprecated": false,
-      "description": "URL to fetch the OAuth Access token",
-      "displayName": "OAuth Token Endpoint URL",
-      "group": "producer",
-      "javaType": "java.lang.String",
-      "kind": "property",
-      "label": "producer",
-      "order": 7,
-      "required": false,
-      "secret": false,
-      "tags": [
-        "oauth-access-token-url"
-      ],
-      "type": "string"
     }
   }
 }

@@ -87,11 +87,9 @@ enum PropertyGenerators {
                         .of(new ConfigurationProperty.Builder().createFrom(template).defaultValue("none").addEnum(NO_SECURITY).build());
                 }
 
-                final ConfigurationProperty.PropertyValue[] enums = securityDefinitions.values().stream()//
-                    .map(SecuritySchemeDefinition::getType)//
-                    .filter(SupportedAuthenticationTypes.SUPPORTED::contains)//
-                    .map(SupportedAuthenticationTypes::valueOf)//
-                    .map(SupportedAuthenticationTypes::asPropertyValue)//
+                final ConfigurationProperty.PropertyValue[] enums = securityDefinitions.values().stream()
+                    .filter(SupportedAuthenticationTypes::supports)
+                    .map(SupportedAuthenticationTypes::asPropertyValue)
                     .toArray(l -> new ConfigurationProperty.PropertyValue[l]);
 
                 final ConfigurationProperty.Builder authenticationType = new ConfigurationProperty.Builder().createFrom(template)
@@ -339,7 +337,11 @@ enum PropertyGenerators {
             return empty();
         }
 
-        final Optional<T> maybeSecurityDefinition = securityDefinitions.values().stream().filter(type::isInstance).map(type::cast).findFirst();
+        final Optional<T> maybeSecurityDefinition = securityDefinitions.values().stream()
+            .filter(type::isInstance)
+            .filter(SupportedAuthenticationTypes::supports)
+            .map(type::cast)
+            .findFirst();
         if (!maybeSecurityDefinition.isPresent()) {
             return empty();
         }
