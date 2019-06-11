@@ -305,9 +305,6 @@
   "description": "Communicate with an OData service.",
   "icon": "assets:odata.svg",
   "id": "odata",
-  "metadata": {
-    "tech-preview": true
-  },
   "name": "OData",
   "properties": {
     "basicPassword": {

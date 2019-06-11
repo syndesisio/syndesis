@@ -455,9 +455,6 @@
   "description": "Communicate with a FHIR server.",
   "icon": "assets:fhir.svg",
   "id": "fhir",
-  "metadata": {
-    "tech-preview": true
-  },
   "name": "FHIR",
   "properties": {
     "accessToken": {
