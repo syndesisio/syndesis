@@ -69,11 +69,13 @@ export function toUIStep(step: Step | StepKind): IUIStep {
       // An extension needs special mapping
       return {
         ...step,
+        configRequired: false,
         description:
           (step as StepKind).description ||
           (step as StepKind).extension!.description ||
           '',
         inputDataShape,
+        isTechPreview: false,
         metadata: {
           ...(step.extension!.metadata || {}),
           ...(step.metadata || {}),
@@ -119,7 +121,9 @@ export function toUIStep(step: Step | StepKind): IUIStep {
       const name = step.name || step.stepKind || 'Step';
       return {
         ...(step as StepKind),
+        configRequired: false,
         inputDataShape,
+        isTechPreview: false,
         metadata: step.metadata || {},
         name,
         outputDataShape,
