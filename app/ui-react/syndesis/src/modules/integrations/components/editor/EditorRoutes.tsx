@@ -7,7 +7,7 @@ import { IDataMapperPageProps } from './dataMapper/DataMapperPage';
 import { ConfigureActionPage } from './endpoint/ConfigureActionPage';
 import { DescribeDataShapePage } from './endpoint/DescribeDataShapePage';
 import { SelectActionPage } from './endpoint/SelectActionPage';
-import { TemplateStepPage } from './template/TemplateStepPage';
+import { ITemplateStepPageProps } from './template/TemplateStepPage';
 
 export interface IEndpointEditorAppProps {
   selectActionPath: string;
@@ -75,7 +75,7 @@ export const ApiProviderApp: React.FunctionComponent<
 
 export interface ITemplateAppProps {
   templatePath: string;
-  templateChildren: React.ReactElement<TemplateStepPage>;
+  templateChildren: React.ReactElement<ITemplateStepPageProps>;
 }
 export const TemplateApp: React.FunctionComponent<
   ITemplateAppProps
