@@ -39,7 +39,7 @@ export class ApiProviderReviewOperationsItem extends React.Component<
         ]}
         className={'api-provider-review-operations-item'}
         description={
-          <div className={'item__operation-path pf-u-my-sm pf-u-ml-2xl'}>
+          <div className={'item__operation-path'}>
             {this.props.operationPath}
           </div>
         }

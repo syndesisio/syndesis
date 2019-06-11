@@ -3,8 +3,6 @@ import {
   Dropdown,
   DropdownPosition,
   KebabToggle,
-  Level,
-  LevelItem,
   Popover,
   Text,
   Title,
@@ -133,107 +131,97 @@ export class ConnectionCard extends React.PureComponent<
           matchHeight={true}
           className={'connection-card'}
         >
-          <Card.Heading
-            className={
-              this.props.techPreview
-                ? 'connection-card__heading connection-card__heading--tech-preview'
-                : 'connection-card__heading connection-card__heading--no-border'
-            }
-          >
-            {this.props.techPreview ? (
-              <Level gutter={'md'}>
-                <LevelItem>&nbsp;</LevelItem>
-                <LevelItem data-testid={'connection-card-tech-preview-heading'}>
-                  {this.props.i18nTechPreview!}
-                  {'  '}
-                  <Popover
-                    bodyContent={
-                      <React.Fragment>
-                        {this.props.techPreviewPopoverHtml}
-                      </React.Fragment>
-                    }
-                    aria-label={this.props.i18nTechPreview!}
-                    position={'left'}
-                  >
-                    <Icon type={'pf'} name={'info'} />
-                  </Popover>
-                </LevelItem>
-              </Level>
-            ) : (
-              <Level gutter={'md'}>&nbsp;</Level>
-            )}
-            {this.props.menuProps && (
-              <div className="heading__dropdown pull-right">
-                <Dropdown
-                  id={`connection-${this.props.name}-menu`}
-                  onSelect={this.onMenuSelect}
-                  toggle={
-                    <KebabToggle
-                      id="connection-card-kebab"
-                      onToggle={this.onToggle}
-                    />
-                  }
-                  isOpen={this.state.isMenuOpen}
-                  isPlain={true}
-                  dropdownItems={[
-                    <PfDropdownItem key="view-action">
-                      <Link
-                        className="pf-c-dropdown__menu-item"
-                        data-testid={'connection-card-view-action'}
-                        to={this.props.href}
-                        role={'menuitem'}
-                        tabIndex={1}
-                      >
-                        {this.props.menuProps.i18nViewLabel}
-                      </Link>
-                    </PfDropdownItem>,
-                    <PfDropdownItem key="edit-action">
-                      <Link
-                        className="pf-c-dropdown__menu-item"
-                        data-testid={'connection-card-edit-action'}
-                        to={this.props.menuProps.editHref}
-                        role={'menuitem'}
-                        tabIndex={2}
-                      >
-                        {this.props.menuProps.i18nEditLabel}
-                      </Link>
-                    </PfDropdownItem>,
-                    <PfDropdownItem
-                      disabled={!this.props.menuProps.isDeleteEnabled}
-                      key="delete-action"
-                      onClick={this.showDeleteDialog}
+          {this.props.techPreview && (
+            <div
+              className="connection-card__tech-preview"
+              data-testid={'connection-card-tech-preview-heading'}
+            >
+              {this.props.i18nTechPreview!}
+              {'  '}
+              <Popover
+                bodyContent={
+                  <React.Fragment>
+                    {this.props.techPreviewPopoverHtml}
+                  </React.Fragment>
+                }
+                aria-label={this.props.i18nTechPreview!}
+                position={'left'}
+              >
+                <Icon type={'pf'} name={'info'} />
+              </Popover>
+            </div>
+          )}
+          {this.props.menuProps && (
+            <div className="connection-card__dropdown">
+              <Dropdown
+                id={`connection-${this.props.name}-menu`}
+                onSelect={this.onMenuSelect}
+                toggle={
+                  <KebabToggle
+                    id="connection-card-kebab"
+                    onToggle={this.onToggle}
+                  />
+                }
+                isOpen={this.state.isMenuOpen}
+                isPlain={true}
+                dropdownItems={[
+                  <PfDropdownItem key="view-action">
+                    <Link
+                      className="pf-c-dropdown__menu-item"
+                      data-testid={'connection-card-view-action'}
+                      to={this.props.href}
+                      role={'menuitem'}
+                      tabIndex={1}
                     >
-                      {!this.props.menuProps.isDeleteEnabled ? (
-                        <Tooltip
-                          content={this.props.i18nCannotDelete!}
-                          position={'bottom'}
-                        >
-                          <Button
-                            className="pf-c-dropdown__menu-item"
-                            isDisabled={true}
-                            variant={'link'}
-                          >
-                            {this.props.menuProps.i18nDeleteLabel}
-                          </Button>
-                        </Tooltip>
-                      ) : (
-                        <a
+                      {this.props.menuProps.i18nViewLabel}
+                    </Link>
+                  </PfDropdownItem>,
+                  <PfDropdownItem key="edit-action">
+                    <Link
+                      className="pf-c-dropdown__menu-item"
+                      data-testid={'connection-card-edit-action'}
+                      to={this.props.menuProps.editHref}
+                      role={'menuitem'}
+                      tabIndex={2}
+                    >
+                      {this.props.menuProps.i18nEditLabel}
+                    </Link>
+                  </PfDropdownItem>,
+                  <PfDropdownItem
+                    disabled={!this.props.menuProps.isDeleteEnabled}
+                    key="delete-action"
+                    onClick={this.showDeleteDialog}
+                  >
+                    {!this.props.menuProps.isDeleteEnabled ? (
+                      <Tooltip
+                        content={this.props.i18nCannotDelete!}
+                        position={'bottom'}
+                      >
+                        <Button
                           className="pf-c-dropdown__menu-item"
-                          data-testid={'connection-card-delete-action'}
-                          href={'javascript:void(0)'}
-                          role={'menuitem'}
-                          tabIndex={3}
+                          isDisabled={true}
+                          variant={'link'}
                         >
                           {this.props.menuProps.i18nDeleteLabel}
-                        </a>
-                      )}
-                    </PfDropdownItem>,
-                  ]}
-                  position={DropdownPosition.right}
-                />
-              </div>
-            )}
-          </Card.Heading>
+                        </Button>
+                      </Tooltip>
+                    ) : (
+                      <a
+                        className="pf-c-dropdown__menu-item"
+                        data-testid={'connection-card-delete-action'}
+                        href={'javascript:void(0)'}
+                        role={'menuitem'}
+                        tabIndex={3}
+                      >
+                        {this.props.menuProps.i18nDeleteLabel}
+                      </a>
+                    )}
+                  </PfDropdownItem>,
+                ]}
+                position={DropdownPosition.right}
+              />
+            </div>
+          )}
           <Link
             data-testid={'connection-card-details-link'}
             to={this.props.href}

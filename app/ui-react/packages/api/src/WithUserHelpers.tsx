@@ -24,9 +24,9 @@ export class WithUserHelpersWrapped extends React.Component<
         responseType: 'arraybuffer',
       },
       method: 'GET',
-      url: `${process.env.PUBLIC_URL}/logout`,
+      url: '/logout',
     });
-    return await response.body;
+    return await response.arrayBuffer();
   }
 
   public render() {
