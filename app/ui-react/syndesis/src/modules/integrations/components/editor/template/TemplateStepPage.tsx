@@ -1,3 +1,4 @@
+// tslint:disable:react-unused-props-and-state
 import {
   getSteps,
   setActionOnStep,
@@ -142,7 +143,10 @@ export const TemplateStepPage: React.FunctionComponent<
         })}
         content={
           <PageSection>
-            <div {...getRootProps({ className: 'dropzone' })}>
+            <div
+              {...getRootProps({ className: 'dropzone' })}
+              onClick={ev => ev.stopPropagation()}
+            >
               <input {...getInputProps()} ref={fileInput} />
               <EditorPageCard
                 i18nDone={'Done'}

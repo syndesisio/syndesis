@@ -67,19 +67,39 @@ function createSpecification(symbols: TemplateSymbol[]): string {
 export function useTemplater(props: IUseTemplaterProps) {
   const isValid = React.useRef(false);
   const [editor, setEditor] = React.useState<ITextEditor>();
-  const text = React.useRef(props.initialText || '');
-  const language = React.useRef(props.initialLanguage);
-  const linter = React.useRef(linters[props.initialLanguage]);
+  const [template, setTemplate] = React.useState(props.initialText || '');
+  const [language, setLanguage] = React.useState(props.initialLanguage);
+  const [linter, setLinter] = React.useState(linters[props.initialLanguage]);
+  const previousInitialText = React.useRef(props.initialText);
+  const previousInitialLanguage = React.useRef(props.initialLanguage);
+
+  const doLint = () => {
+    if (editor) {
+      (editor as any).performLint();
+    }
+  };
+
   React.useEffect(() => {
-    if (props.initialText !== text.current) {
-      text.current = props.initialText;
+    if (props.initialText !== previousInitialText.current) {
+      previousInitialText.current = props.initialText;
+      setTemplate(props.initialText);
       doLint();
     }
-    if (props.initialLanguage !== language.current) {
-      language.current = props.initialLanguage;
-      linter.current = linters[language.current];
+    if (props.initialLanguage !== previousInitialLanguage.current) {
+      previousInitialLanguage.current = props.initialLanguage;
+      setLanguage(props.initialLanguage);
+      setLinter(linters[props.initialLanguage]);
     }
-  }, [text, language, linter, props]);
+  }, [
+    previousInitialText,
+    previousInitialLanguage,
+    linters,
+    props,
+    setTemplate,
+    setLanguage,
+    setLinter,
+    doLint,
+  ]);
 
   const handleEditorDidMount = (e: ITextEditor) => {
     setEditor(e);
@@ -87,16 +107,16 @@ export function useTemplater(props: IUseTemplaterProps) {
   };
 
   const handleTemplateTypeChange = (newType: TemplateType) => {
-    language.current = newType;
-    linter.current = linters[language.current];
+    setLanguage(newType);
+    setLinter(linters[language]);
     if (typeof editor !== 'undefined') {
-      editor.setOption('mode', linter.current.name());
+      editor.setOption('mode', linter.name());
       doLint();
     }
   };
 
   const handleEditorChange = (e: ITextEditor, data: any, t: string) => {
-    text.current = t;
+    setTemplate(t);
     doLint();
   };
 
@@ -111,8 +131,8 @@ export function useTemplater(props: IUseTemplaterProps) {
     props.onUpdatedIntegration({
       action: buildAction(),
       values: {
-        language: language.current,
-        template: text.current,
+        language,
+        template,
       },
     });
   };
@@ -123,11 +143,11 @@ export function useTemplater(props: IUseTemplaterProps) {
         i18nFreemarkerLabel={'Freemarker'}
         i18nMustacheLabel={'Mustache'}
         i18nVelocityLabel={'Velocity'}
-        templateType={language.current}
+        templateType={language}
         onTemplateTypeChange={handleTemplateTypeChange}
       />
       <TemplateStepTemplateEditor
-        mode={language.current}
+        mode={language}
         i18nFileUploadLimit={'Max: 1 file (up to 1MB)'}
         textEditorDescription={
           <>
@@ -151,18 +171,9 @@ export function useTemplater(props: IUseTemplaterProps) {
     </>
   );
 
-  const doLint = () => {
-    if (editor) {
-      (editor as any).performLint();
-    }
-  };
-
   const buildAction = () => {
     try {
-      const symbols = extractTemplateSymbols(
-        text.current,
-        linter.current.parse
-      );
+      const symbols = extractTemplateSymbols(template, linter.parse);
       const inputShapeSpecification = createSpecification(symbols);
       return {
         actionType: 'step',
