@@ -44,7 +44,7 @@
     },
     {
       "actionType": "connector",
-      "description": "Periodically invoke SQL to obtain, store, update, or delete data.",
+      "description": "Periodically invoke SQL to obtain data.",
       "descriptor": {
         "componentScheme": "sql",
         "connectorCustomizers": [
