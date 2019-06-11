@@ -119,3 +119,16 @@ export function getConnectionIcon(
   // Legacy connections rely on the icon being in the UI's assets
   return `./../../icons/${connection.icon}.connection.png`;
 }
+/**
+ * Return bool if a connection is derived, meaning that its configuration comes
+ * from an OAuth flow. This helper is to work around a bug in the swagger definition
+ * that names the property we can use to know this as `derived`, but it's really
+ * returned to us as `isDerived`.
+ *
+ * To make the helper future proof, this uses both properties to save us from
+ * a sudden fix in the API.
+ * @param connection
+ */
+export function isDerived(connection: Connection) {
+  return (connection as any).isDerived || connection.derived;
+}

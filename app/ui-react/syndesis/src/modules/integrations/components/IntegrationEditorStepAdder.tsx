@@ -32,6 +32,12 @@ export interface IIntegrationEditorStepAdderProps {
   addDataMapperStepHref: (idx: number) => H.LocationDescriptor;
   /**
    * a callback to get the `LocationDescriptor` that should be reached when
+   * clicking the 'Data Type Mismatch' warning link
+   * @param id - the zero-based index of the previous step that needs a data type specified
+   */
+  gotoDescribeDataHref: (idx: number) => H.LocationDescriptor;
+  /**
+   * a callback to get the `LocationDescriptor` that should be reached when
    * clicking the Add Connection button, or when deleting the first or last
    * step
    * @param idx - the zero-based index where a new connection should be added
@@ -88,16 +94,6 @@ export class IntegrationEditorStepAdder extends React.Component<
               {toUIIntegrationStepCollection(
                 toUIStepCollection(this.props.steps)
               ).map((s, idx) => {
-                let restrictedDelete = false;
-
-                if (
-                  (s.configuredProperties &&
-                    s.configuredProperties!.stepKind === 'choice') ||
-                  (s.connection &&
-                    s.connection!.connectorId! === 'api-provider')
-                ) {
-                  restrictedDelete = true;
-                }
                 const children = getStepChildren(s, this.props.getFlowHref);
                 return (
                   <React.Fragment key={idx}>
@@ -125,14 +121,16 @@ export class IntegrationEditorStepAdder extends React.Component<
                       i18nWarningMessage={
                         s.previousStepShouldDefineDataShape ? (
                           <>
-                            <a
+                            <Link
                               data-testid={
                                 'integration-editor-step-adder-define-data-type-link'
                               }
-                              href={'/todo'}
+                              to={this.props.gotoDescribeDataHref(
+                                s.previousStepShouldDefineDataShapePosition!
+                              )}
                             >
                               Define the data type
-                            </a>{' '}
+                            </Link>{' '}
                             for the previous step to resolve this warning.
                           </>
                         ) : (
@@ -151,6 +149,17 @@ export class IntegrationEditorStepAdder extends React.Component<
                       }
                       actions={
                         <>
+                          {!s.restrictedDelete && (
+                            <ButtonLink
+                              data-testid={
+                                'integration-editor-step-adder-delete-button'
+                              }
+                              onClick={() => this.props.onDelete(idx, s)}
+                              as={'danger'}
+                            >
+                              <i className="fa fa-trash" />
+                            </ButtonLink>
+                          )}
                           <ButtonLink
                             data-testid={
                               'integration-editor-step-adder-configure-button'
@@ -162,17 +171,6 @@ export class IntegrationEditorStepAdder extends React.Component<
                           >
                             {t('shared:Configure')}
                           </ButtonLink>
-                          {!restrictedDelete && (
-                            <ButtonLink
-                              data-testid={
-                                'integration-editor-step-adder-delete-button'
-                              }
-                              onClick={() => this.props.onDelete(idx, s)}
-                              as={'danger'}
-                            >
-                              <i className="fa fa-trash" />
-                            </ButtonLink>
-                          )}
                         </>
                       }
                     />

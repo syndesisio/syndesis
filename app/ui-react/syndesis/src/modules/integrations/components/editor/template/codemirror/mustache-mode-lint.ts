@@ -76,7 +76,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
           // Found an open symbol before all close symbols
           const msg = i18n.t(
             'integrations:steps.templater-illegal-open-symbol',
-            [line, endCol]
+            [(line + 1), endCol]
           );
           errors.push({
             from: CodeMirror.Pos(line, startCol),
@@ -91,7 +91,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
           // Too many open symbols encountered
           const msg = i18n.t(
             'integrations:steps.templater-too-many-open-symbols',
-            [line, endCol]
+            [(line + 1), endCol]
           );
           errors.push({
             from: CodeMirror.Pos(line, startCol),
@@ -108,7 +108,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
           // Found a close symbol before all the open symbols
           const msg = i18n.t(
             'integrations:steps.templater-illegal-close-symbol',
-            [line, endCol]
+            [(line + 1), endCol]
           );
           errors.push({
             from: CodeMirror.Pos(line, startCol),
@@ -123,7 +123,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
           // Too many close symbols encountered
           const msg = i18n.t(
             'integrations:steps.templater-too-many-close-symbols',
-            [line, endCol]
+            [(line + 1), endCol]
           );
           errors.push({
             from: CodeMirror.Pos(line, startCol),
@@ -146,7 +146,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
           // Should have encountered another open symbol but not
           const msg = i18n.t(
             'integrations:steps.templater-expected-open-symbol',
-            [line, endCol]
+            [(line + 1), endCol]
           );
           errors.push({
             from: CodeMirror.Pos(line, startCol),
@@ -162,7 +162,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
           // Should have encountered another close symbol but not
           const msg = i18n.t(
             'integrations:steps.templater-expected-close-symbol',
-            [line, endCol]
+            [(line + 1), endCol]
           );
           errors.push({
             from: CodeMirror.Pos(line, startCol),
@@ -190,7 +190,7 @@ export class MustacheModeLint extends AbstractLanguageLint {
         if (theSymbol.length > 0 && !theSymbol.match(symRegex)) {
           const msg = i18n.t(
             'integrations:steps.templater-wrong-symbol-format',
-            ['{{' + theSymbol + '}}', format, line, endCol]
+            ['{{' + theSymbol + '}}', format, (line + 1), endCol]
           );
           errors.push({
             from: CodeMirror.Pos(line, startCol),
