@@ -1,6 +1,6 @@
 import { WithConnectionHelpers } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { ConnectionOverview } from '@syndesis/models';
+import { ConnectionBulletinBoard, ConnectionOverview } from '@syndesis/models';
 import {
   ConnectionCard,
   ConnectionsGrid,
@@ -13,11 +13,17 @@ import { Translation } from 'react-i18next';
 import { UIContext } from '../../../app';
 import { ApiError, EntityIcon } from '../../../shared';
 
+export interface IConnectionOverview extends ConnectionOverview {
+  board?: ConnectionBulletinBoard;
+  configRequired?: boolean;
+  isTechPreview?: boolean;
+}
+
 export interface IConnectionsProps {
   error: boolean;
   includeConnectionMenu: boolean;
   loading: boolean;
-  connections: ConnectionOverview[];
+  connections: IConnectionOverview[];
 
   getConnectionHref(connection: ConnectionOverview): H.LocationDescriptor;
   getConnectionEditHref?(connection: ConnectionOverview): H.LocationDescriptor;
