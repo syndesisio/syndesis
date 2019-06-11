@@ -5,17 +5,24 @@
   height: 240px;
   position: relative;
   text-decoration: none;
+  padding-top: 2em;
 }
 
 .connection-card:hover {
   box-shadow: 0 1px 6px rgba(3,3,3,.35);
 }
 
-.connection-card__heading--tech-preview {
+.connection-card__tech-preview {
   color: #363636;
   cursor: pointer;
   font-size: small;
   padding: 5px 10px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  text-align: right;
+  border-bottom: 1px solid #d1d1d1;
 }
 
 .connection-card__heading--no-border {
@@ -24,9 +31,9 @@
   padding: 4px;
 }
 
-.connection-card__heading .heading__dropdown {
+.connection-card__dropdown {
   position: absolute;
-  top: 35px;
+  top: calc(2em + 8px);
   right: 10px;
 }
 
@@ -44,17 +51,18 @@ a.connection-card__content:focus {
 }
 
 .connection-card__body .connection-card__icon {
-  max-height: 35px;
-  max-width: 35px;
+  height: 35px;
+  width: 35px;
   margin-bottom: 25px;
   padding: 3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .connection-card__body .connection-card__title,
 .connection-card__body .connection-card__title:hover {
   color: initial;
-  font-size: 20px;
-  font-weight: 300;
   text-decoration: none;
 }
 
