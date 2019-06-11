@@ -43,7 +43,6 @@ import {
   IndexedStep,
 } from '../../edit-page.models';
 import { SPLIT, AGGREGATE } from '@syndesis/ui/store';
-import { debounceTime, tap } from 'rxjs/operators';
 /*
  * Example host component:
  *
@@ -378,15 +377,9 @@ export class DataMapperHostComponent implements OnInit, OnDestroy {
   }
 
   private registerSaveMappingHandler(): Subscription {
-    //subscribe to mapping save callback from data mapper
-    return this.cfg.mappingService.saveMappingOutput$
-      .pipe(
-        tap(saveHandler =>
-          this.cfg.mappingService.handleMappingSaveSuccess(saveHandler)
-        ),
-        debounceTime(15)
-      )
-      .subscribe(async (saveHandler: Function) => {
+    //subscribe to mapping updated callback from data mapper
+    return this.cfg.mappingService.mappingUpdated$
+      .subscribe(async () => {
         const json = this.cfg.mappingService.serializeMappingsToJSON();
         this.mappings.emit(JSON.stringify(json));
       });

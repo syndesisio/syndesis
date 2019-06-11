@@ -28,21 +28,14 @@
   <name>Connector :: Google Sheets</name>
   <packaging>jar</packaging>
 
-  <!-- ToDo remove once camel component made it into the fuse build -->
   <properties>
-    <schemeName>google-sheets</schemeName>
-    <componentName>GoogleSheets</componentName>
-    <componentPackage>org.apache.camel.component.google.sheets</componentPackage>
-    <outPackage>org.apache.camel.component.google.sheets.internal</outPackage>
-
     <google-api-client-version>1.22.0</google-api-client-version>
     <google-api-services-sheets-version>v4-rev551-1.22.0</google-api-services-sheets-version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <!-- ToDo add once camel component made it into the fuse build -->
-      <!--dependency>
+      <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-google-sheets</artifactId>
         <version>${camel.version}</version>
@@ -54,18 +47,6 @@
           <exclusion>
             <groupId>com.google.guava</groupId>
             <artifactId>guava-jdk5</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency-->
-
-      <dependency>
-        <groupId>org.springframework.security.oauth</groupId>
-        <artifactId>spring-security-oauth2</artifactId>
-        <version>2.0.16.RELEASE</version>
-        <exclusions>
-          <exclusion>
-            <groupId>aopalliance</groupId>
-            <artifactId>aopalliance</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -87,11 +68,6 @@
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.apis</groupId>
-      <artifactId>google-api-services-sheets</artifactId>
-      <version>${google-api-services-sheets-version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -116,113 +92,23 @@
       <scope>provided</scope>
     </dependency>
 
-    <!-- ToDo add once camel component made it into the fuse build -->
-    <!--dependency>
+    <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-google-sheets</artifactId>
-    </dependency-->
-
-    <!-- ToDo remove once camel component made it into the fuse build -->
-    <dependency>
-      <groupId>com.google.api-client</groupId>
-      <artifactId>google-api-client</artifactId>
-      <version>${google-api-client-version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>com.google.guava</groupId>
-          <artifactId>guava-jdk5</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-    <dependency>
-      <groupId>com.google.oauth-client</groupId>
-      <artifactId>google-oauth-client</artifactId>
-      <version>${google-api-client-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.http-client</groupId>
-      <artifactId>google-http-client-jackson2</artifactId>
-      <version>${google-api-client-version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>spi-annotations</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.apis</groupId>
       <artifactId>google-api-services-sheets</artifactId>
       <version>${google-api-services-sheets-version}</version>
-      <type>javadoc</type>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client</artifactId>
-      <version>1.22.0</version>
+      <version>${google-api-client-version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.camel</groupId>
-      <artifactId>camel-catalog</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-server</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.eclipse.jetty</groupId>
-      <artifactId>jetty-util</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework</groupId>
-      <artifactId>spring-web</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.security.oauth</groupId>
-      <artifactId>spring-security-oauth2</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>javax.servlet-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-core</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-java-dsl</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.consol.citrus</groupId>
-      <artifactId>citrus-http</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>javax.activation</groupId>
-      <artifactId>activation</artifactId>
-      <scope>test</scope>
     </dependency>
 
     <!-- test -->
@@ -292,92 +178,6 @@
     </resources>
 
     <plugins>
-      <!-- ToDo remove once camel component made it into the fuse build -->
-      <!-- generate Component source and test source -->
-      <plugin>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-api-component-maven-plugin</artifactId>
-        <version>${camel.version}</version>
-        <configuration>
-          <scheme>${schemeName}</scheme>
-          <componentName>${componentName}</componentName>
-          <componentPackage>${componentPackage}</componentPackage>
-          <outPackage>${outPackage}</outPackage>
-        </configuration>
-        <executions>
-          <execution>
-            <id>generate-test-component-classes</id>
-            <goals>
-              <goal>fromApis</goal>
-            </goals>
-            <configuration>
-              <apis>
-                <api>
-                  <apiName>spreadsheets</apiName>
-                  <proxyClass>com.google.api.services.sheets.v4.Sheets$Spreadsheets</proxyClass>
-                  <fromJavadoc />
-                </api>
-                <api>
-                  <apiName>data</apiName>
-                  <proxyClass>com.google.api.services.sheets.v4.Sheets$Spreadsheets$Values</proxyClass>
-                  <fromJavadoc />
-                </api>
-              </apis>
-              <substitutions>
-                <substitution>
-                  <method>^.+$</method>
-                  <argName>content</argName>
-                  <argType>com.google.api.services.sheets.v4.model.ValueRange</argType>
-                  <replacement>values</replacement>
-                </substitution>
-                <substitution>
-                  <method>^.+$</method>
-                  <argName>content</argName>
-                  <argType>com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest</argType>
-                  <replacement>batchUpdateSpreadsheetRequest</replacement>
-                </substitution>
-                <substitution>
-                  <method>^.+$</method>
-                  <argName>content</argName>
-                  <argType>com.google.api.services.sheets.v4.model.GetSpreadsheetByDataFilterRequest</argType>
-                  <replacement>getSpreadsheetByDataFilterRequest</replacement>
-                </substitution>
-                <substitution>
-                  <method>^.+$</method>
-                  <argName>content</argName>
-                  <argType>com.google.api.services.sheets.v4.model.ClearValuesRequest</argType>
-                  <replacement>clearValuesRequest</replacement>
-                </substitution>
-                <substitution>
-                  <method>^.+$</method>
-                  <argName>content</argName>
-                  <argType>com.google.api.services.sheets.v4.model.BatchClearValuesRequest</argType>
-                  <replacement>batchClearValuesRequest</replacement>
-                </substitution>
-                <substitution>
-                  <method>^.+$</method>
-                  <argName>content</argName>
-                  <argType>com.google.api.services.sheets.v4.model.BatchUpdateValuesByDataFilterRequest</argType>
-                  <replacement>batchUpdateValuesByDataFilterRequest</replacement>
-                </substitution>
-                <substitution>
-                  <method>^.+$</method>
-                  <argName>content</argName>
-                  <argType>com.google.api.services.sheets.v4.model.BatchGetValuesByDataFilterRequest</argType>
-                  <replacement>batchGetValuesByDataFilterRequest</replacement>
-                </substitution>
-                <substitution>
-                  <method>^.+$</method>
-                  <argName>content</argName>
-                  <argType>com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest</argType>
-                  <replacement>batchUpdateValuesRequest</replacement>
-                </substitution>
-              </substitutions>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
       <plugin>
         <artifactId>maven-resources-plugin</artifactId>
         <configuration>
@@ -399,21 +199,6 @@
             </goals>
           </execution>
         </executions>
-      </plugin>
-
-      <!-- ToDo remove once camel component made it into the fuse build -->
-      <plugin>
-        <groupId>org.basepom.maven</groupId>
-        <artifactId>duplicate-finder-maven-plugin</artifactId>
-        <configuration>
-          <ignoredResourcePatterns>
-            <ignoredResourcePattern>binding.xjb</ignoredResourcePattern>
-            <ignore>com/consol/citrus/schema/citrus-config.xsd</ignore>
-            <ignore>com/consol/citrus/schema/citrus-config-${citrus.version}.xsd</ignore>
-            <ignore>com/consol/citrus/schema/citrus-testcase.xsd</ignore>
-            <ignore>com/consol/citrus/schema/citrus-testcase-${citrus.version}.xsd</ignore>
-          </ignoredResourcePatterns>
-        </configuration>
       </plugin>
     </plugins>
   </build>
