@@ -13,6 +13,8 @@ import * as H from '@syndesis/history';
 import { Flow, IntegrationOverview } from '@syndesis/models';
 import {
   Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbItemProps,
   ButtonLink,
   ConditionsBackButtonItem,
   ConditionsDropdown,
@@ -20,7 +22,7 @@ import {
   ConditionsDropdownHeader,
   ConditionsDropdownItem,
   HttpMethodColors,
-  OperationsDropdown as OperationsDropdownUI,
+  OperationsDropdown,
 } from '@syndesis/ui';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -43,42 +45,53 @@ export const BaseBreadcrumbItems: React.FunctionComponent<
   operationsDropdown,
   flowsDropdown,
   children,
-}) => (
-  <Breadcrumb
-    actions={
-      isApiProvider ? (
-        <ButtonLink href={apiProviderEditorHref} as={'link'}>
-          View/Edit API Definition <i className="fa fa-external-link" />
-        </ButtonLink>
+}) => {
+  const integrationName = integration.name || 'New integration';
+  const canNavigateToRoot =
+    isApiProvider && currentFlow && (currentFlow.steps || []).length > 1;
+  const items: Array<React.ReactElement<BreadcrumbItemProps>> = [
+    <BreadcrumbItem key={0}>
+      <Link to={resolvers.list()}>Integrations</Link>
+    </BreadcrumbItem>,
+    <BreadcrumbItem key={1}>
+      {canNavigateToRoot ? (
+        <Link
+          to={rootHref}
+          title={integration.name}
+          style={{
+            maxWidth: 200,
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {integrationName}
+        </Link>
       ) : (
-        undefined
-      )
-    }
-  >
-    <Link to={resolvers.list()}>Integrations</Link>
-    <Link
-      to={rootHref}
-      title={integration.name}
-      style={{
-        maxWidth: 200,
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        whiteSpace: 'nowrap',
-      }}
-      onClick={(ev: React.MouseEvent) => {
-        if (!currentFlow || (currentFlow.steps || []).length < 2) {
-          ev.stopPropagation();
-          ev.preventDefault();
-        }
-      }}
-    >
-      {integration.name || 'New integration'}
-    </Link>
-    {operationsDropdown}
-    {flowsDropdown}
-    {children}
-  </Breadcrumb>
-);
+        integrationName
+      )}
+    </BreadcrumbItem>,
+    operationsDropdown,
+    flowsDropdown,
+    <BreadcrumbItem key={'children'} isActive={true}>
+      {children}
+    </BreadcrumbItem>,
+  ].filter(c => c) as Array<React.ReactElement<BreadcrumbItemProps>>;
+  return (
+    <Breadcrumb
+      actions={
+        isApiProvider ? (
+          <ButtonLink href={apiProviderEditorHref} as={'link'}>
+            View/Edit API Definition <i className="fa fa-external-link" />
+          </ButtonLink>
+        ) : (
+          undefined
+        )
+      }
+      items={items}
+    />
+  );
+};
 
 export interface IApiProviderOperationItemProps {
   description: string;
@@ -97,10 +110,11 @@ export const ApiProviderOperationItem: React.FunctionComponent<
 
 export interface IApiProviderDropdownProps extends IEditorBreadcrumbProps {
   currentFlow: Flow;
+  isApiProvider: boolean;
 }
-const OperationsDropdown: React.FunctionComponent<
+const ApiProviderDropdown: React.FunctionComponent<
   IApiProviderDropdownProps
-> = ({ currentFlow, integration, getFlowHref }) => {
+> = ({ currentFlow, integration, getFlowHref, isApiProvider }) => {
   const isPrimary = isPrimaryFlow(currentFlow);
   const primaryFlow = isPrimary
     ? currentFlow
@@ -111,10 +125,10 @@ const OperationsDropdown: React.FunctionComponent<
   const isMultiflow =
     integration.flows && integration.flows.filter(f => f.name).length > 0;
 
-  return primaryFlow && isMultiflow ? (
-    <>
+  return isApiProvider && primaryFlow && isMultiflow ? (
+    <BreadcrumbItem>
       <span>Operation&nbsp;&nbsp;</span>
-      <OperationsDropdownUI
+      <OperationsDropdown
         selectedOperation={
           getMetadataValue<string>(
             EXCERPT_METADATA_KEY,
@@ -134,8 +148,8 @@ const OperationsDropdown: React.FunctionComponent<
             </div>
           </Link>
         ))}
-      </OperationsDropdownUI>
-    </>
+      </OperationsDropdown>
+    </BreadcrumbItem>
   ) : null;
 };
 
@@ -158,7 +172,7 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
       );
   const flowGroups = getConditionalFlowGroupsFor(integration, primaryFlow!.id!);
   return !isPrimary && flowGroups.length > 0 ? (
-    <>
+    <BreadcrumbItem>
       <span>Flow&nbsp;&nbsp;</span>
       <ConditionsDropdown
         selectedFlow={
@@ -197,7 +211,7 @@ const FlowsDropdown: React.FunctionComponent<IFlowsDropdownProps> = ({
           ))}
         </>
       </ConditionsDropdown>
-    </>
+    </BreadcrumbItem>
   ) : null;
 };
 
@@ -239,12 +253,18 @@ export const EditorBreadcrumb: React.FunctionComponent<
       isApiProvider={isApiProvider}
       operationsDropdown={
         currentFlow && (
-          <OperationsDropdown currentFlow={currentFlow} {...props} />
+          <ApiProviderDropdown
+            key={'operations'}
+            currentFlow={currentFlow}
+            isApiProvider={isApiProvider}
+            {...props}
+          />
         )
       }
       flowsDropdown={
         currentFlow && (
           <FlowsDropdown
+            key={'flows'}
             currentFlow={currentFlow}
             isApiProvider={isApiProvider}
             {...props}
