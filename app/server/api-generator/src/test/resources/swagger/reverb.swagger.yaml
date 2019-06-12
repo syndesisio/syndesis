@@ -4820,8 +4820,9 @@ definitions: {}
 securityDefinitions:
   oauth2:
     type: oauth2
-    flow: application
+    flow: accessCode
     tokenUrl: 'https://reverb.com/oauth/token'
+    authorizationUrl: 'https://reverb.com/oauth/authorize'
     scopes:
       read_profile: read_profile
       write_profile: write_profile

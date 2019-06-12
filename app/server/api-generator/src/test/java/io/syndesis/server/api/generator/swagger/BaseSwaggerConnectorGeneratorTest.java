@@ -286,8 +286,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
         assertThat(summary).isEqualToIgnoringGivenFields(expected, "icon", "description", "properties", "warnings", "configuredProperties");
         assertThat(summary.getIcon()).matches(s -> s.isPresent() && s.get().startsWith("data:image"));
         assertThat(summary.getDescription()).startsWith("This is a sample server Petstore server");
-        assertThat(summary.getProperties().keySet()).contains("host", "basePath", "authenticationType", "clientId", "clientSecret",
-            "accessToken", "authorizationEndpoint", "oauthScopes", "specification");
+        assertThat(summary.getProperties().keySet()).contains("host", "basePath", "authenticationType", "specification");
         assertThat(summary.getConfiguredProperties().keySet()).containsOnly("specification");
         assertThat(reformatJson(summary.getConfiguredProperties().get("specification"))).isEqualTo(reformatJson(specification));
     }
