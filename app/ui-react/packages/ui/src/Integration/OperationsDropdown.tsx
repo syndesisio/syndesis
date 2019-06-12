@@ -1,5 +1,6 @@
 import { Dropdown, DropdownToggle } from '@patternfly/react-core';
 import * as React from 'react';
+import './OperationsDropdown.css';
 
 export interface IOperationsDropdownProps {
   selectedOperation: React.ReactNode;
@@ -12,6 +13,7 @@ export const OperationsDropdown: React.FunctionComponent<
   const toggleDropdown = () => setIsOpen(!isOpen);
   return (
     <Dropdown
+      className={'operations-dropdown'}
       onSelect={closeDropdown}
       toggle={
         <DropdownToggle onToggle={toggleDropdown}>
