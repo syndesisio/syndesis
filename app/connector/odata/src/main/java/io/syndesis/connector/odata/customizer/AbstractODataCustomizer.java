@@ -16,7 +16,6 @@
 package io.syndesis.connector.odata.customizer;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import org.apache.camel.CamelContext;
@@ -43,6 +42,8 @@ import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 public abstract class AbstractODataCustomizer implements ComponentProxyCustomizer, CamelContextAware, ODataConstants {
 
     protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
+    private static final String EMPTY_JSON = OPEN_BRACE + CLOSE_BRACE;
 
     private boolean split;
 
@@ -78,9 +79,19 @@ public abstract class AbstractODataCustomizer implements ComponentProxyCustomize
         this.split = split;
     }
 
+    private void addToBody(Message in, String payload) {
+        if (isSplit()) {
+            in.setBody(payload);
+        } else {
+            List<String> resultList = new ArrayList<>();
+            resultList.add(payload);
+            in.setBody(resultList);
+        }
+    }
+
     protected void convertMessageToJson(Message in) throws JsonProcessingException {
-        if (in.getBody(Object.class) == null) {
-            in.setBody(Collections.emptyList());
+        if (in.getBody() == null) {
+            addToBody(in, EMPTY_JSON);
             return;
         }
 
@@ -90,9 +101,14 @@ public abstract class AbstractODataCustomizer implements ComponentProxyCustomize
             // If the results have not been split and returned as a
             // ClientEntitySet then split it up into a recognisable list
             //
-            List<String> resultList = new ArrayList<>();
             ClientEntitySet entitySet = (ClientEntitySet) item;
             List<ClientEntity> entities = entitySet.getEntities();
+            if (entities == null || entities.isEmpty()) {
+                addToBody(in, EMPTY_JSON);
+                return;
+            }
+
+            List<String> resultList = new ArrayList<>();
             for (ClientEntity entity : entities) {
                 if (entitySet.getCount() != null) {
                     //
@@ -105,8 +121,9 @@ public abstract class AbstractODataCustomizer implements ComponentProxyCustomize
                 }
 
                 resultList.add(OBJECT_MAPPER.writeValueAsString(entity));
-                in.setBody(resultList);
             }
+            in.setBody(resultList);
+
         } else if (item instanceof ClientValue && ((ClientValue) item).isCollection()) {
             //
             // If the results have not been split and returned as a
@@ -131,13 +148,7 @@ public abstract class AbstractODataCustomizer implements ComponentProxyCustomize
             // Therefore, return the data in equivalent json structures.
             //
             String itemJson = OBJECT_MAPPER.writeValueAsString(item);
-            if (isSplit()) {
-                in.setBody(itemJson);
-            } else {
-                List<String> resultList = new ArrayList<>();
-                resultList.add(itemJson);
-                in.setBody(resultList);
-            }
+            addToBody(in, itemJson);
         }
     }
 }
