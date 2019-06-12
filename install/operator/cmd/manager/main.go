@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift"
 	"github.com/syndesisio/syndesis/install/operator/version"
 	"os"
 	"runtime"
@@ -109,6 +110,8 @@ func main() {
 		log.Error(err, "")
 		os.Exit(1)
 	}
+
+	openshift.AddToScheme(mgr.GetScheme())
 
 	// Setup all Controllers
 	if err := controller.AddToManager(mgr); err != nil {
