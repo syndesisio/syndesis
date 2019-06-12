@@ -1,9 +1,11 @@
 import { Connector } from '@syndesis/models';
+import { isTechPreview } from './helpers';
 import { useApiResource } from './useApiResource';
 
 export const transformConnectorResponse = (connector: Connector) => {
   return {
     ...connector,
+    isTechPreview: isTechPreview(connector),
   };
 };
 
