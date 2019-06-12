@@ -26,7 +26,7 @@ export function useApiProviderSummary(specification: string) {
           url: `${apiContext.apiUri}/apis/info`,
         });
         const summary = await response.json();
-        if (summary.errorCode || summary.errors) {
+        if (summary.errorCode && summary.errors) {
           throw new Error(
             summary.userMsg ||
               (summary.errors || [])

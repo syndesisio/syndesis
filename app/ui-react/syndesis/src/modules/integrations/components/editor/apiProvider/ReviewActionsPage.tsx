@@ -134,6 +134,16 @@ export const ReviewActionsPage: React.FunctionComponent<
                               )
                             : undefined
                         }
+                        i18nErrorsHeading={t(
+                          'integrations:apiProvider:reviewActions:sectionErrors'
+                        )}
+                        errorMessages={
+                          apiSummary!.errors
+                            ? apiSummary!.errors.map(
+                                (e: any) => `${e.property}: ${e.message}`
+                              )
+                            : undefined
+                        }
                       />
                       <div>
                         <ButtonLink
