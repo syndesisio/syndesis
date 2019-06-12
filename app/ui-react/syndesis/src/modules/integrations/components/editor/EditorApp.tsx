@@ -1,4 +1,5 @@
 /* tslint:disable:object-literal-sort-keys */
+import { NEW_INTEGRATION_ID } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { Integration } from '@syndesis/models';
 import * as React from 'react';
@@ -305,7 +306,9 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
   const editSpecificationPage = (
     <EditSpecificationPage
       cancelHref={(params, state) =>
-        appResolvers.apiProvider.selectMethod({ ...params, ...state })
+        state.integration.id === NEW_INTEGRATION_ID
+          ? appResolvers.apiProvider.selectMethod({ ...params, ...state })
+          : cancelHref(params, state)
       }
       saveHref={(params, state) =>
         appResolvers.apiProvider.reviewActions({ ...params, ...state })

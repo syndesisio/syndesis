@@ -105,8 +105,8 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                               integration,
                             })
                           : resolvers.create.finish.selectStep({
-                              integration,
                               ...params,
+                              integration,
                               position: '1',
                             })
                       }
@@ -131,8 +131,8 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                       cancelHref={resolvers.list}
                       postConfigureHref={(integration, p) =>
                         resolvers.create.configure.index({
-                          integration,
                           ...p,
+                          integration,
                         })
                       }
                       getBreadcrumb={getBreadcrumb}
@@ -312,8 +312,8 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                       }
                       postConfigureHref={(integration, p) =>
                         resolvers.create.configure.index({
-                          integration,
                           ...p,
+                          integration,
                         })
                       }
                       getBreadcrumb={getBreadcrumb}
@@ -342,8 +342,8 @@ export const IntegrationCreatorApp: React.FunctionComponent = () => {
                       }
                       postConfigureHref={(integration, p) =>
                         resolvers.create.configure.index({
-                          integration,
                           ...p,
+                          integration,
                         })
                       }
                       getBreadcrumb={getBreadcrumb}

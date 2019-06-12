@@ -262,8 +262,8 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                       }
                       postConfigureHref={(updatedIntegration, p) =>
                         resolvers.integration.edit.index({
-                          integration: updatedIntegration,
                           ...p,
+                          integration: updatedIntegration,
                         })
                       }
                       getBreadcrumb={getBreadcrumb}
@@ -292,8 +292,8 @@ export const IntegrationEditorApp: React.FunctionComponent = () => {
                       }
                       postConfigureHref={(updatedIntegration, p) =>
                         resolvers.integration.edit.index({
-                          integration: updatedIntegration,
                           ...p,
+                          integration: updatedIntegration,
                         })
                       }
                       getBreadcrumb={getBreadcrumb}
