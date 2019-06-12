@@ -58,7 +58,7 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Enter a SQL statement that starts with SELECT.",
+            "description": "Enter a SQL statement that returns results.",
             "name": "SQL statement",
             "properties": {
               "query": {
@@ -67,7 +67,7 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "SQL SELECT statement to be executed.",
+                "labelHint": "SQL statement to be executed.",
                 "order": "1",
                 "required": true,
                 "secret": false,
