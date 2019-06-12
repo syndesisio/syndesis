@@ -10,3 +10,7 @@
   color: #36832e;
   font-weight: bold;
 }
+
+.CodeMirror-hints {
+  z-index: 999;
+}

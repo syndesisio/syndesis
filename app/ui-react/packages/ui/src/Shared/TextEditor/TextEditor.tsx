@@ -10,6 +10,13 @@ import 'codemirror/addon/display/placeholder.js';
 import 'codemirror/addon/lint/lint.js';
 import './TextEditor.css';
 
+/* tslint:disable */
+require('codemirror/mode/sql/sql');
+require('codemirror/addon/hint/show-hint');
+require('codemirror/addon/hint/sql-hint');
+require('codemirror/addon/edit/matchbrackets');
+/* tslint:enable */
+
 export type ITextEditor = CodeMirror.Editor;
 
 export interface ITextEditorProps extends IUnControlledCodeMirror {
