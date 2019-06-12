@@ -1,11 +1,12 @@
 import { Text, TextContent } from '@patternfly/react-core';
 import * as React from 'react';
+import {
+  LintFreemarker,
+  LintMustache,
+  LintVelocity,
+} from '../../../Shared/TextEditor';
 
-export enum TemplateType {
-  Freemarker = 'freemarker',
-  Mustache = 'mustache',
-  Velocity = 'velocity',
-}
+export type TemplateType = LintFreemarker | LintMustache | LintVelocity;
 
 export interface ITemplateStepTypeSelectorProps {
   i18nSpecifyTemplateType: string;
@@ -40,8 +41,8 @@ export class TemplateStepTypeSelector extends React.Component<
                 type="radio"
                 id="freemarker-choice"
                 name="template-lang-choice"
-                value={TemplateType.Freemarker}
-                checked={this.props.templateType === TemplateType.Freemarker}
+                value={'freemarker'}
+                checked={this.props.templateType === 'freemarker'}
                 onChange={this.handleChange}
               />
               {this.props.i18nFreemarkerLabel}
@@ -53,8 +54,8 @@ export class TemplateStepTypeSelector extends React.Component<
                 type="radio"
                 id="mustache-choice"
                 name="template-lang-choice"
-                value={TemplateType.Mustache}
-                checked={this.props.templateType === TemplateType.Mustache}
+                value={'mustache'}
+                checked={this.props.templateType === 'mustache'}
                 onChange={this.handleChange}
               />
               {this.props.i18nMustacheLabel}
@@ -66,8 +67,8 @@ export class TemplateStepTypeSelector extends React.Component<
                 type="radio"
                 id="velocity-choice"
                 name="template-lang-choice"
-                value={TemplateType.Velocity}
-                checked={this.props.templateType === TemplateType.Velocity}
+                value={'velocity'}
+                checked={this.props.templateType === 'velocity'}
                 onChange={this.handleChange}
               />
               {this.props.i18nVelocityLabel}

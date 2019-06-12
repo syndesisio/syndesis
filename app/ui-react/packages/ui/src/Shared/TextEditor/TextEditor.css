@@ -1,0 +1,12 @@
+@import url('~codemirror/addon/lint/lint.css');
+@import url('~codemirror/lib/codemirror.css');
+
+.text-editor .cm-mustache {
+  color: #b21eab;
+  font-weight: bold;
+}
+
+.text-editor .cm-freemarker {
+  color: #36832e;
+  font-weight: bold;
+}

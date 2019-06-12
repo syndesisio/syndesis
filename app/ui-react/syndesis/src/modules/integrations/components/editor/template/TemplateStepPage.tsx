@@ -16,6 +16,7 @@ import {
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
+import { UIContext } from '../../../../../app';
 import { PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
 import {
@@ -43,6 +44,7 @@ export interface ITemplateStepPageProps extends IPageWithEditorBreadcrumb {
 export const TemplateStepPage: React.FunctionComponent<
   ITemplateStepPageProps
 > = props => {
+  const { pushNotification } = React.useContext(UIContext);
   const { addStep, updateStep } = useIntegrationHelpers();
   const { params, state, history } = useRouteData<
     ITemplateStepRouteParams,
@@ -52,43 +54,7 @@ export const TemplateStepPage: React.FunctionComponent<
   const fileInput = React.useRef<HTMLInputElement>(null);
 
   const configuredProperties = state.step.configuredProperties || {};
-  const language = configuredProperties.language || TemplateType.Mustache;
-  const template = React.useRef(configuredProperties.template || '');
-
-  const handleDropAccepted = React.useCallback(
-    (files: File[]) => {
-      // just take the last element
-      const file = files.pop();
-      if (typeof file === 'undefined') {
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = () => {
-        const text = reader.result as string;
-        template.current = text;
-      };
-      reader.readAsText(file);
-    },
-    [template]
-  );
-
-  const handleDropRejected = React.useCallback((files: File[]) => {
-    const file = files.pop();
-    if (typeof file === 'undefined') {
-      return;
-    }
-    // this.setState({
-    //   fileErrorMessage: `Could not accept "${file.name}"`,
-    // });
-  }, []);
-
-  const { getRootProps, getInputProps } = useDropzone({
-    disabled: false,
-    maxSize: 1024 * 1000,
-    multiple: false,
-    onDropAccepted: handleDropAccepted,
-    onDropRejected: handleDropRejected,
-  });
+  const language = configuredProperties.language || 'mustache';
 
   const onUploadBrowse = React.useCallback(() => {
     fileInput.current!.click();
@@ -115,11 +81,51 @@ export const TemplateStepPage: React.FunctionComponent<
     [props, addStep, updateStep, params, state, history, positionAsNumber]
   );
 
-  const { templater, isValid, submitForm } = useTemplater({
+  const { templater, isValid, submitForm, setText } = useTemplater({
     initialLanguage: language as TemplateType,
-    initialText: template.current,
+    initialText: configuredProperties.template || '',
     onUpdatedIntegration,
     onUploadBrowse,
+  });
+
+  const handleDropAccepted = React.useCallback(
+    (files: File[]) => {
+      // just take the last element
+      const file = files.pop();
+      if (typeof file === 'undefined') {
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const text = reader.result as string;
+        setText(text);
+      };
+      reader.readAsText(file);
+    },
+    [setText]
+  );
+
+  const handleDropRejected = React.useCallback(
+    (files: File[]) => {
+      const file = files.pop();
+      if (typeof file === 'undefined') {
+        return;
+      }
+      pushNotification(`Could not accept "${file.name}"`, 'error');
+    },
+    [pushNotification]
+  );
+
+  const { getRootProps, getInputProps } = useDropzone({
+    accept: 'text/*',
+    disabled: false,
+    maxSize: 1024 * 1000,
+    multiple: false,
+    noClick: true,
+    noDrag: true,
+    onDropAccepted: handleDropAccepted,
+    onDropRejected: handleDropRejected,
+    preventDropOnDocument: false,
   });
 
   return (
@@ -144,18 +150,20 @@ export const TemplateStepPage: React.FunctionComponent<
         content={
           <PageSection>
             <div
-              {...getRootProps({ className: 'dropzone' })}
-              onClick={ev => ev.stopPropagation()}
+              {...getRootProps({
+                className: 'dropzone',
+                refKey: 'dropzone',
+              })}
             >
               <input {...getInputProps()} ref={fileInput} />
-              <EditorPageCard
-                i18nDone={'Done'}
-                isValid={isValid}
-                submitForm={submitForm}
-              >
-                {templater}
-              </EditorPageCard>
             </div>
+            <EditorPageCard
+              i18nDone={'Done'}
+              isValid={isValid}
+              submitForm={submitForm}
+            >
+              {templater}
+            </EditorPageCard>
           </PageSection>
         }
         cancelHref={props.cancelHref(params, state)}

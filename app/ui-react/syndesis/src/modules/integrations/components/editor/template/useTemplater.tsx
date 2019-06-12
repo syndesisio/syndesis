@@ -1,19 +1,16 @@
 import { DataShapeKinds } from '@syndesis/api';
 import { ActionDescriptor, StringMap } from '@syndesis/models';
 import {
+  AbstractLanguageLint,
   ITextEditor,
+  TemplateStepLinters,
   TemplateStepTemplateEditor,
   TemplateStepTypeSelector,
+  TemplateSymbol,
   TemplateType,
 } from '@syndesis/ui';
 import { key } from '@syndesis/utils';
 import * as React from 'react';
-import {
-  FreemarkerModeLint,
-  MustacheModeLint,
-  TemplateSymbol,
-  VelocityLint,
-} from './codemirror';
 
 export interface IUseTemplaterProps {
   initialLanguage: TemplateType;
@@ -21,12 +18,6 @@ export interface IUseTemplaterProps {
   onUploadBrowse: () => void;
   onUpdatedIntegration(props: StringMap<any>): Promise<void>;
 }
-
-const linters = {
-  [TemplateType.Freemarker]: new FreemarkerModeLint(),
-  [TemplateType.Mustache]: new MustacheModeLint(),
-  [TemplateType.Velocity]: new VelocityLint(),
-};
 
 const outputShapeSpecification = createSpecification([
   new TemplateSymbol('message', 'string'),
@@ -65,58 +56,38 @@ function createSpecification(symbols: TemplateSymbol[]): string {
 }
 
 export function useTemplater(props: IUseTemplaterProps) {
-  const isValid = React.useRef(false);
-  const [editor, setEditor] = React.useState<ITextEditor>();
-  const [template, setTemplate] = React.useState(props.initialText || '');
+  const [isValid, setIsValid] = React.useState(false);
+  const editor = React.useRef<ITextEditor>();
+  const template = React.useRef(props.initialText || '');
   const [language, setLanguage] = React.useState(props.initialLanguage);
-  const [linter, setLinter] = React.useState(linters[props.initialLanguage]);
-  const previousInitialText = React.useRef(props.initialText);
-  const previousInitialLanguage = React.useRef(props.initialLanguage);
+  const linter = React.useRef<AbstractLanguageLint>(
+    TemplateStepLinters[language]
+  );
 
-  const doLint = () => {
-    if (editor) {
-      (editor as any).performLint();
+  const setText = (t: string) => {
+    if (editor.current) {
+      editor.current.setValue(t);
     }
   };
 
-  React.useEffect(() => {
-    if (props.initialText !== previousInitialText.current) {
-      previousInitialText.current = props.initialText;
-      setTemplate(props.initialText);
-      doLint();
+  const doLint = () => {
+    if (editor.current) {
+      (editor.current as any).performLint();
     }
-    if (props.initialLanguage !== previousInitialLanguage.current) {
-      previousInitialLanguage.current = props.initialLanguage;
-      setLanguage(props.initialLanguage);
-      setLinter(linters[props.initialLanguage]);
-    }
-  }, [
-    previousInitialText,
-    previousInitialLanguage,
-    linters,
-    props,
-    setTemplate,
-    setLanguage,
-    setLinter,
-    doLint,
-  ]);
+  };
 
   const handleEditorDidMount = (e: ITextEditor) => {
-    setEditor(e);
+    editor.current = e;
     doLint();
   };
 
   const handleTemplateTypeChange = (newType: TemplateType) => {
     setLanguage(newType);
-    setLinter(linters[language]);
-    if (typeof editor !== 'undefined') {
-      editor.setOption('mode', linter.name());
-      doLint();
-    }
+    linter.current = TemplateStepLinters[language];
   };
 
   const handleEditorChange = (e: ITextEditor, data: any, t: string) => {
-    setTemplate(t);
+    template.current = t;
     doLint();
   };
 
@@ -124,7 +95,7 @@ export function useTemplater(props: IUseTemplaterProps) {
     unsortedAnnotations: any[],
     annotations: any[]
   ) => {
-    isValid.current = annotations.length === 0;
+    setIsValid(annotations.length === 0);
   };
 
   const submitForm = () => {
@@ -132,10 +103,42 @@ export function useTemplater(props: IUseTemplaterProps) {
       action: buildAction(),
       values: {
         language,
-        template,
+        template: template.current,
       },
     });
   };
+
+  const buildAction = () => {
+    let spec = {};
+    try {
+      const symbols = extractTemplateSymbols(
+        template.current,
+        linter.current.parse
+      );
+      const inputShapeSpecification = createSpecification(symbols);
+      spec = {
+        actionType: 'step',
+        descriptor: {
+          inputDataShape: {
+            kind: DataShapeKinds.JSON_SCHEMA,
+            name: 'Template JSON Schema',
+            specification: inputShapeSpecification,
+          } as any /* todo: type hack */,
+          outputDataShape: {
+            kind: DataShapeKinds.JSON_SCHEMA,
+            name: 'Template JSON Schema',
+            specification: outputShapeSpecification,
+          } as any /* todo: type hack */,
+        } as ActionDescriptor,
+        id: key(),
+        name: 'Templater',
+      };
+    } catch (err) {
+      // ignore
+    }
+    return spec;
+  };
+
   const templater = (
     <>
       <TemplateStepTypeSelector
@@ -170,36 +173,9 @@ export function useTemplater(props: IUseTemplaterProps) {
       />
     </>
   );
-
-  const buildAction = () => {
-    try {
-      const symbols = extractTemplateSymbols(template, linter.parse);
-      const inputShapeSpecification = createSpecification(symbols);
-      return {
-        actionType: 'step',
-        descriptor: {
-          inputDataShape: {
-            kind: DataShapeKinds.JSON_SCHEMA,
-            name: 'Template JSON Schema',
-            specification: inputShapeSpecification,
-          } as any /* todo: type hack */,
-          outputDataShape: {
-            kind: DataShapeKinds.JSON_SCHEMA,
-            name: 'Template JSON Schema',
-            specification: outputShapeSpecification,
-          } as any /* todo: type hack */,
-        } as ActionDescriptor,
-        id: key(),
-        name: 'Templater',
-      };
-    } catch (err) {
-      // ignore
-    }
-    return {};
-  };
-
   return {
-    isValid: isValid.current,
+    isValid,
+    setText,
     submitForm,
     templater,
   };
