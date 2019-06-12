@@ -77,7 +77,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		syndesis.Spec.RouteHostName = "dummy"
 	}
 
-	params := syndesistemplate.InstallParams{
+	params := syndesistemplate.ResourceParams{
 		OAuthClientSecret: token,
 	}
 
@@ -90,7 +90,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		fmt.Println(err)
 		return err
 	}
-	list, unstructured := util.RuntimeObjectFromUnstructuredList(a.scheme, all)
+	list, unstructured := util.SeperateStructuredAndUnstructured(a.scheme, all)
 
 	syndesisRoute, err := installSyndesisRoute(ctx, a.client, syndesis, list, autoGenerateRoute)
 	if err != nil {
@@ -113,7 +113,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		if err != nil {
 			return err
 		}
-		list, unstructured = util.RuntimeObjectFromUnstructuredList(a.scheme, all)
+		list, unstructured = util.SeperateStructuredAndUnstructured(a.scheme, all)
 	}
 
 	// Link the image secret to service accounts

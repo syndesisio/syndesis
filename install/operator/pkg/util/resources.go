@@ -92,7 +92,7 @@ func RuntimeObjectFromUnstructured(scheme *runtime.Scheme, u *unstructured.Unstr
 	return ro, nil
 }
 
-func RuntimeObjectFromUnstructuredList(scheme *runtime.Scheme, in []unstructured.Unstructured) ([]runtime.Object, []unstructured.Unstructured) {
+func SeperateStructuredAndUnstructured(scheme *runtime.Scheme, in []unstructured.Unstructured) ([]runtime.Object, []unstructured.Unstructured) {
 	runtimes := []runtime.Object{}
 	unstructureds := []unstructured.Unstructured{}
 	for _, value := range in {

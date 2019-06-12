@@ -6,12 +6,18 @@ import (
 	"errors"
 	"fmt"
 	"github.com/hoisie/mustache"
+	"github.com/shurcooL/httpfs/filter"
+	"github.com/syndesisio/syndesis/install/operator/pkg/build"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"io/ioutil"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
+	"net/http"
+	"os"
+	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
+	"time"
 )
 
 type supportImages struct {
@@ -154,9 +160,39 @@ func AssetAsBytes(path string) ([]byte, error) {
 	return prometheusRules, nil
 }
 
-func (this *Context) GenerateResources() ([]unstructured.Unstructured, error) {
+type zeroTimeFileInfo struct {
+	os.FileInfo
+}
 
-	f, err := assets.Open("./")
+func (*zeroTimeFileInfo) ModTime() time.Time {
+	return time.Time{}
+}
+
+func GetAssetsFS(devMode bool) http.FileSystem {
+	if devMode {
+		assetsDir := filepath.Join(build.GO_MOD_DIRECTORY, "pkg", "generator", "assets")
+		return util.NewFileInfoMappingFS(filter.Keep(http.Dir(assetsDir), func(path string, fi os.FileInfo) bool {
+			if fi.Name() == ".DS_Store" {
+				return false
+			}
+			if fi.Name() == "assets_generate.go" {
+				return false
+			}
+			return true
+		}), func(fi os.FileInfo) (os.FileInfo, error) {
+			return &zeroTimeFileInfo{fi}, nil
+		})
+	} else {
+		return assets
+	}
+}
+
+func RenderDir(directory string, context interface{}) ([]unstructured.Unstructured, error) {
+	return RenderFSDir(GetAssetsFS(true), directory, context)
+}
+
+func RenderFSDir(assets http.FileSystem, directory string, context interface{}) ([]unstructured.Unstructured, error) {
+	f, err := assets.Open(directory)
 	if err != nil {
 		return nil, err
 	}
@@ -172,13 +208,14 @@ func (this *Context) GenerateResources() ([]unstructured.Unstructured, error) {
 
 	response := []unstructured.Unstructured{}
 	for _, f := range files {
+		filePath := directory + f.Name()
 		if strings.HasSuffix(f.Name(), ".yml.mustache") {
-			template, err := AssetAsBytes("./" + f.Name())
+			template, err := AssetAsBytes(filePath)
 			if err != nil {
 				return nil, err
 			}
 
-			rawYaml := mustache.Render(string(template), this)
+			rawYaml := mustache.Render(string(template), context)
 			var obj interface{} = nil
 			err = util.UnmarshalYaml([]byte(rawYaml), &obj)
 			if err != nil {
@@ -190,7 +227,7 @@ func (this *Context) GenerateResources() ([]unstructured.Unstructured, error) {
 				for _, value := range v {
 					if x, ok := value.(map[string]interface{}); ok {
 						u := unstructured.Unstructured{x}
-						//annotatedForDebugging(u, f.Name(), rawYaml)
+						//annotatedForDebugging(u, name, rawYaml)
 						response = append(response, u)
 					} else {
 						return nil, errors.New("list did not contain objects")
@@ -198,7 +235,7 @@ func (this *Context) GenerateResources() ([]unstructured.Unstructured, error) {
 				}
 			case map[string]interface{}:
 				u := unstructured.Unstructured{v}
-				//annotatedForDebugging(u, f.Name(), rawYaml)
+				//annotatedForDebugging(u, name, rawYaml)
 				response = append(response, u)
 			default:
 

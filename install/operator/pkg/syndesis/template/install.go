@@ -17,8 +17,9 @@ import (
 var log = logf.Log.WithName("template")
 var random = rand.New(rand.NewSource(time.Now().UnixNano()))
 
-type InstallParams struct {
+type ResourceParams struct {
 	OAuthClientSecret string
+	UpgradeRegistry   string
 }
 
 func randomPassword(size int) string {
@@ -81,10 +82,9 @@ func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, err
 	return ctx.Tags.Syndesis, nil
 }
 
-func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params InstallParams) ([]unstructured.Unstructured, error) {
-
+func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams) (*generator.Context, error) {
 	// Parse the config
-	gen, err := GetTemplateContext()
+	renderContext, err := GetTemplateContext()
 	if err != nil {
 		return nil, err
 	}
@@ -114,10 +114,10 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 	ifMissingSet(config, configuration.EnvTestSupport, "false")
 	ifMissingSet(config, configuration.EnvDemoDataEnabled, "false")
 
-	ifMissingSet(config, configuration.EnvSyndesisRegistry, gen.Registry)
+	ifMissingSet(config, configuration.EnvSyndesisRegistry, renderContext.Registry)
 
 	ifMissingSet(config, configuration.EnvControllersIntegrationEnabled, "true")
-	ifMissingSet(config, configuration.EnvImageStreamNamespace, gen.Images.ImageStreamNamespace)
+	ifMissingSet(config, configuration.EnvImageStreamNamespace, renderContext.Images.ImageStreamNamespace)
 	ifMissingSet(config, configuration.EnvPrometheusVolumeCapacity, "1Gi")
 	ifMissingSet(config, configuration.EnvPrometheusMemoryLimit, "512Mi")
 	ifMissingSet(config, configuration.EnvMetaVolumeCapacity, "1Gi")
@@ -126,7 +126,7 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 	ifMissingSet(config, configuration.EnvKomodoMemoryLimit, "1024Mi")
 	ifMissingSet(config, configuration.EnvDatavirtEnabled, "0")
 	maxIntegrations := "0"
-	if gen.Ocp {
+	if renderContext.Ocp {
 		maxIntegrations = "1"
 	}
 	ifMissingSet(config, configuration.EnvMaxIntegrationsPerUser, maxIntegrations)
@@ -140,10 +140,18 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 		return nil, fmt.Errorf("required config var not set: %s", configuration.EnvSarNamespace)
 	}
 
-	// Generate the OpenShift Template
-	// Parse the template
-	gen.Env = config
-	res, err := gen.GenerateResources()
+	renderContext.Env = config
+	return renderContext, nil
+}
+
+func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params ResourceParams) ([]unstructured.Unstructured, error) {
+	renderContext, err := GetRenderContext(syndesis, params)
+	if err != nil {
+		return nil, err
+	}
+
+	// Render the files in the install directory
+	res, err := generator.RenderDir("./install/", renderContext)
 	if err != nil {
 		return nil, err
 	}
