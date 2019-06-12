@@ -16,7 +16,7 @@ import {
   PageLoader,
   PageSection,
 } from '@syndesis/ui';
-import { WithLoader, WithRouteData } from '@syndesis/utils';
+import { key, WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
@@ -81,6 +81,11 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                   const onUpdatedIntegration = async (
                     values: IChoiceFormConfiguration
                   ) => {
+                    // this absolutely has to be set before we go
+                    // creating flows that need to point to it
+                    if (typeof state.step.id === 'undefined') {
+                      state.step.id = key();
+                    }
                     const flowCollection = values.flowConditions.map(
                       flowCondition => {
                         // Create a flow for new conditions or grab the
