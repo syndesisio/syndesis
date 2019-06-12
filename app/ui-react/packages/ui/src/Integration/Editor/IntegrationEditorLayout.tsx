@@ -121,6 +121,7 @@ export const IntegrationEditorLayout: React.FunctionComponent<
                     onClick={onSave}
                     href={saveHref}
                     disabled={isSaveLoading || isSaveDisabled}
+                    as={publishHref || onPublish ? 'default' : 'primary'}
                   >
                     {isSaveLoading ? (
                       <Loader size={'xs'} inline={true} />
