@@ -13,7 +13,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
+        name: {{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
@@ -30,7 +30,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
+        name: {{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
@@ -47,7 +47,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
+        name: {{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"
@@ -81,7 +81,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{Images.PrometheusImagePrefix}}/{{ Images.Support.Prometheus }}:{{ Tags.Prometheus }}
+        name: {{Env.SYNDESIS_REGISTRY}}/{{Images.PrometheusImagePrefix}}/{{ Images.Support.Prometheus }}:{{ Tags.Prometheus }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.Prometheus }}"
@@ -99,7 +99,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.KomodoImagesPrefix }}/{{ Images.Syndesis.Komodo }}:{{ Tags.Komodo }}
+        name: {{Env.SYNDESIS_REGISTRY}}/{{ Images.KomodoImagesPrefix }}/{{ Images.Syndesis.Komodo }}:{{ Tags.Komodo }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.Komodo }}"
@@ -117,7 +117,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{Images.PostgresExporterImagePrefix}}/{{ Images.Support.PostgresExporter }}:{{ Tags.PostgresExporter }}
+        name: {{Env.SYNDESIS_REGISTRY}}/{{Images.PostgresExporterImagePrefix}}/{{ Images.Support.PostgresExporter }}:{{ Tags.PostgresExporter }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.PostgresExporter }}"
@@ -135,7 +135,7 @@
     tags:
     - from:
         kind: DockerImage
-        name: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.S2i }}:{{ Tags.Syndesis }}
+        name: {{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.S2i }}:{{ Tags.Syndesis }}
       importPolicy:
         scheduled: true
       name: "{{ Tags.Syndesis }}"

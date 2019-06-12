@@ -146,7 +146,7 @@
     - ReadWriteOnce
     resources:
       requests:
-        storage: ${POSTGRESQL_VOLUME_CAPACITY}
+        storage: {{Env.POSTGRESQL_VOLUME_CAPACITY}}
 
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
@@ -182,13 +182,13 @@
         - capabilities: {}
           env:
           - name: POSTGRESQL_USER
-            value: ${POSTGRESQL_USER}
+            value: {{Env.POSTGRESQL_USER}}
           - name: POSTGRESQL_PASSWORD
-            value: ${POSTGRESQL_PASSWORD}
+            value: {{Env.POSTGRESQL_PASSWORD}}
           - name: POSTGRESQL_DATABASE
-            value: ${POSTGRESQL_DATABASE}
+            value: {{Env.POSTGRESQL_DATABASE}}
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
-            value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
+            value: {{Env.POSTGRESQL_SAMPLEDB_PASSWORD}}
           image: ' '
           imagePullPolicy: IfNotPresent
           lifecycle:
@@ -218,9 +218,9 @@
           # Note: On OSO there is no Guaranteed class, its always burstable
           resources:
             limits:
-              memory: ${POSTGRESQL_MEMORY_LIMIT}
+              memory: {{Env.POSTGRESQL_MEMORY_LIMIT}}
             requests:
-              memory: ${POSTGRESQL_MEMORY_LIMIT}
+              memory: {{Env.POSTGRESQL_MEMORY_LIMIT}}
           volumeMounts:
           - mountPath: /var/lib/pgsql/data
             name: syndesis-db-data
@@ -231,13 +231,13 @@
         - capabilities: {}
           env:
           - name: DATA_SOURCE_NAME
-            value: postgresql://${POSTGRESQL_USER}:${POSTGRESQL_PASSWORD}@localhost:5432/syndesis?sslmode=disable
+            value: postgresql://{{Env.POSTGRESQL_USER}}:{{Env.POSTGRESQL_PASSWORD}}@localhost:5432/syndesis?sslmode=disable
           - name: PG_EXPORTER_EXTEND_QUERY_PATH
             value: /etc/postgres/exporter/queries.yaml
 {{^WithDockerImages}}
           image: ' '
 {{/WithDockerImages}}{{#WithDockerImages}}
-          image: ${SYNDESIS_REGISTRY}/{{Images.PostgresExporterImagePrefix}}/{{ Images.Support.PostgresExporter }}:{{ Tags.PostgresExporter }}
+          image: {{Env.SYNDESIS_REGISTRY}}/{{Images.PostgresExporterImagePrefix}}/{{ Images.Support.PostgresExporter }}:{{ Tags.PostgresExporter }}
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
           name: syndesis-db-metrics
@@ -285,7 +285,7 @@
         from:
           kind: ImageStreamTag
           name: {{ Images.Support.Postgresql }}:{{ Tags.Postgresql }}
-          namespace: ${POSTGRESQL_IMAGE_STREAM_NAMESPACE}
+          namespace: {{Env.POSTGRESQL_IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
     - imageChangeParams:
         automatic: true
@@ -294,5 +294,5 @@
         from:
           kind: ImageStreamTag
           name: {{ Images.Support.PostgresExporter }}:{{ Tags.PostgresExporter }}
-          namespace: ${IMAGE_STREAM_NAMESPACE}
+          namespace: {{Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange

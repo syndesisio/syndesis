@@ -9,7 +9,7 @@ import (
 
 type SyndesisEnvVar string
 
-// Location from where the template should be loaded
+// Location from where the template configuration is located
 var TemplateConfig *string
 
 // Directory path from where the addons resources should be loaded

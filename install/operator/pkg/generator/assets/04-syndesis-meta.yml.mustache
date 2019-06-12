@@ -31,7 +31,7 @@
     - ReadWriteOnce
     resources:
       requests:
-        storage: ${META_VOLUME_CAPACITY}
+        storage: {{Env.META_VOLUME_CAPACITY}}
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -82,7 +82,7 @@
 {{/Debug}}{{^WithDockerImages}}
           image: ' '
 {{/WithDockerImages}}{{#WithDockerImages}}
-          image: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
+          image: {{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
           readinessProbe:
@@ -113,7 +113,7 @@
             protocol: TCP
           resources:
             limits:
-              memory: ${META_MEMORY_LIMIT}
+              memory: {{Env.META_MEMORY_LIMIT}}
             requests:
               memory: 280Mi
           # spring-boot automatically picks up application.yml from ./config
@@ -139,7 +139,7 @@
         from:
           kind: ImageStreamTag
           name: {{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}
-          namespace: ${IMAGE_STREAM_NAMESPACE}
+          namespace: {{Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
 {{/WithDockerImages}}
     - type: ConfigChange

@@ -78,11 +78,11 @@
               fieldRef:
                 fieldPath: metadata.namespace
           - name: ENDPOINTS_TEST_SUPPORT_ENABLED
-            value: ${TEST_SUPPORT_ENABLED}
+            value: '{{Env.TEST_SUPPORT_ENABLED}}'
           - name: CONTROLLERS_INTEGRATION_ENABLED
-            value: ${CONTROLLERS_INTEGRATION_ENABLED}
+            value: '{{Env.CONTROLLERS_INTEGRATION_ENABLED}}'
           - name: POSTGRESQL_SAMPLEDB_PASSWORD
-            value: ${POSTGRESQL_SAMPLEDB_PASSWORD}
+            value: '{{Env.POSTGRESQL_SAMPLEDB_PASSWORD}}'
           - name: CLIENT_STATE_AUTHENTICATION_ALGORITHM
             value: "HmacSHA1"
           - name: CLIENT_STATE_AUTHENTICATION_KEY
@@ -100,16 +100,16 @@
           - name: CLIENT_STATE_TID
             value: "1"
           - name: INTEGRATION_STATE_CHECK_INTERVAL
-            value: ${INTEGRATION_STATE_CHECK_INTERVAL}
+            value: '{{Env.INTEGRATION_STATE_CHECK_INTERVAL}}'
           - name: CONTROLLERS_EXPOSE_VIA3SCALE
-            value: ${CONTROLLERS_EXPOSE_VIA3SCALE}
+            value: '{{Env.CONTROLLERS_EXPOSE_VIA3SCALE}}'
 {{#Debug}}
           - name: JAVA_DEBUG
             value: "true"
 {{/Debug}}{{^WithDockerImages}}
           image: ' '
 {{/WithDockerImages}}{{#WithDockerImages}}
-          image: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
+          image: '{{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}'
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -145,7 +145,7 @@
           # from limit to resource (80% currently). 'requests' is ignored there
           resources:
             limits:
-              memory: ${SERVER_MEMORY_LIMIT}
+              memory: '{{Env.SERVER_MEMORY_LIMIT}}'
               cpu: 750m
             requests:
               memory: 256Mi
@@ -162,8 +162,8 @@
         - syndesis-server
         from:
           kind: ImageStreamTag
-          name: {{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}
-          namespace: ${IMAGE_STREAM_NAMESPACE}
+          name: '{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}'
+          namespace: '{{Env.IMAGE_STREAM_NAMESPACE}}'
       type: ImageChange
 {{/WithDockerImages}}
     - type: ConfigChange
@@ -197,12 +197,12 @@
   data:
     application.yml: |-
       deployment:
-        load-demo-data: ${DEMO_DATA_ENABLED}
+        load-demo-data: '{{Env.DEMO_DATA_ENABLED}}'
       cors:
 {{^AllowLocalHost}}
-        allowedOrigins: https://${ROUTE_HOSTNAME}
+        allowedOrigins: https://{{Env.ROUTE_HOSTNAME}}
 {{/AllowLocalHost}}{{#AllowLocalHost}}
-        allowedOrigins: http://localhost:4200, https://localhost:4200, https://${ROUTE_HOSTNAME}
+        allowedOrigins: http://localhost:4200, https://localhost:4200, https://{{Env.ROUTE_HOSTNAME}}
 {{/AllowLocalHost}}
       cache:
         cluster:
@@ -210,14 +210,14 @@
         max:
           entries: 100
       encrypt:
-        key: ${SYNDESIS_ENCRYPT_KEY}
+        key: '{{Env.SYNDESIS_ENCRYPT_KEY}}'
       spring:
         zipkin:
           enabled: false
         datasource:
           url: jdbc:postgresql://syndesis-db:5432/syndesis?sslmode=disable
-          username: ${POSTGRESQL_USER}
-          password: ${POSTGRESQL_PASSWORD}
+          username: '{{Env.POSTGRESQL_USER}}'
+          password: '{{Env.POSTGRESQL_PASSWORD}}'
           driver-class-name: org.postgresql.Driver
       security:
         basic:
@@ -249,9 +249,9 @@
           redhat-ga: https://maven.repository.redhat.com/ga/
           jboss-ga: https://repository.jboss.org/{{/EarlyAccess}}
 {{/Productized}}      openshift:
-        apiBaseUrl: ${OPENSHIFT_MASTER}/oapi/v1
-        namespace: ${NAMESPACE}
-        imageStreamNamespace: ${IMAGE_STREAM_NAMESPACE}
+        apiBaseUrl: '{{Env.OPENSHIFT_MASTER}}/oapi/v1'
+        namespace: '{{Env.NAMESPACE}}'
+        imageStreamNamespace: {{Env.IMAGE_STREAM_NAMESPACE}}
         builderImageStreamTag: {{ Images.Syndesis.S2i }}:{{ Tags.Syndesis }}
         deploymentMemoryRequestMi: 200
         deploymentMemoryLimitMi: 512
@@ -259,9 +259,9 @@
       dao:
         kind: jsondb
       controllers:
-        maxIntegrationsPerUser: ${MAX_INTEGRATIONS_PER_USER}
-        maxDeploymentsPerUser: ${MAX_INTEGRATIONS_PER_USER}
-        integrationStateCheckInterval: ${INTEGRATION_STATE_CHECK_INTERVAL}
+        maxIntegrationsPerUser: '{{Env.MAX_INTEGRATIONS_PER_USER}}'
+        maxDeploymentsPerUser: '{{Env.MAX_INTEGRATIONS_PER_USER}}'
+        integrationStateCheckInterval: '{{Env.INTEGRATION_STATE_CHECK_INTERVAL}}'
 # START:CAMEL-K
 - kind: Role
   apiVersion: rbac.authorization.k8s.io/v1beta1

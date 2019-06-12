@@ -42,6 +42,7 @@ require (
 	sigs.k8s.io/controller-runtime v0.1.10
 	sigs.k8s.io/controller-tools v0.1.10
 	sigs.k8s.io/testing_frameworks v0.1.0 // indirect
+	sigs.k8s.io/yaml v1.1.0
 )
 
 // Pinned to kubernetes-1.13.1

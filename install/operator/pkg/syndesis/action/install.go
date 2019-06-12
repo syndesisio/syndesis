@@ -3,6 +3,10 @@ package action
 import (
 	"context"
 	"errors"
+	"fmt"
+	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"k8s.io/apimachinery/pkg/api/meta"
+	"sigs.k8s.io/yaml"
 
 	corev1 "k8s.io/api/core/v1"
 	k8serrors "k8s.io/apimachinery/pkg/api/errors"
@@ -81,10 +85,12 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		a.log.Info("Addon enabled", "addon", "komodo")
 	}
 
-	list, err := syndesistemplate.GetInstallResourcesAsRuntimeObjects(a.scheme, syndesis, params)
+	all, err := syndesistemplate.GetInstallResources(a.scheme, syndesis, params)
 	if err != nil {
+		fmt.Println(err)
 		return err
 	}
+	list, unstructured := util.RuntimeObjectFromUnstructuredList(a.scheme, all)
 
 	syndesisRoute, err := installSyndesisRoute(ctx, a.client, syndesis, list, autoGenerateRoute)
 	if err != nil {
@@ -103,7 +109,11 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 		}
 
 		// Recreate the list of resources to inject the route hostname
-		list, err = syndesistemplate.GetInstallResourcesAsRuntimeObjects(a.scheme, syndesis, params)
+		all, err = syndesistemplate.GetInstallResources(a.scheme, syndesis, params)
+		if err != nil {
+			return err
+		}
+		list, unstructured = util.RuntimeObjectFromUnstructuredList(a.scheme, all)
 	}
 
 	// Link the image secret to service accounts
@@ -119,12 +129,34 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 			// Syndesis route already installed
 			continue
 		}
-
 		operation.SetNamespaceAndOwnerReference(res, syndesis)
 
 		err = createOrReplace(ctx, a.client, res)
 		if err != nil && !k8serrors.IsAlreadyExists(err) {
+			if bytes, err := yaml.Marshal(res); err == nil {
+				fmt.Printf("Failed to create or replace resource:\n%s\n", string(bytes))
+			}
 			return err
+		}
+	}
+
+	// Install any types we are working with in unstructured form.
+	for _, res := range unstructured {
+		operation.SetNamespaceAndOwnerReference(res, syndesis)
+
+		err = createOrReplace(ctx, a.client, &res)
+		if err != nil && !k8serrors.IsAlreadyExists(err) {
+			gvk := res.GroupVersionKind()
+			_, err := a.mgr.GetRESTMapper().RESTMapping(gvk.GroupKind(), gvk.Version)
+			if meta.IsNoMatchError(err) {
+				// CRD for that resource type is not availabl..
+				a.log.Info("Skipping install resource.  CRD not installed?", "GroupVersionKind", res.GroupVersionKind(), "Name", res.GetName())
+			} else {
+				if bytes, err := yaml.Marshal(res); err == nil {
+					fmt.Printf("Failed to create or replace resource:\n%s\n", string(bytes))
+				}
+				return err
+			}
 		}
 	}
 
@@ -141,7 +173,16 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 
 			err = createOrReplace(ctx, a.client, addon)
 			if err != nil && !k8serrors.IsAlreadyExists(err) {
-				return err
+
+				if meta.IsNoMatchError(err) {
+					// CRD for that resource type is not available.
+					a.log.Info("Skipping install resource.  CRD not installed?", "GroupVersionKind", addon.GroupVersionKind(), "Name", addon.GetName())
+				} else {
+					if bytes, err := yaml.Marshal(addon); err == nil {
+						fmt.Printf("Failed to create or replace resource:\n%s\n", string(bytes))
+					}
+					return err
+				}
 			}
 		}
 	}

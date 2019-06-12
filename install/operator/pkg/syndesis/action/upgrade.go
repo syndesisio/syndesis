@@ -48,7 +48,7 @@ func (a *upgradeAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	if a.operatorVersion == "" {
-		operatorVersion, err := configuration.GetSyndesisVersionFromOperatorTemplate(a.scheme)
+		operatorVersion, err := syndesistemplate.GetSyndesisVersionFromOperatorTemplate(a.scheme)
 		if err != nil {
 			return err
 		}

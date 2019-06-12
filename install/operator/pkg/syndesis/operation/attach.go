@@ -5,7 +5,6 @@ import (
 
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
-	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
@@ -42,12 +41,8 @@ func AttachSyndesisToResource(ctx context.Context, scheme *runtime.Scheme, cl cl
 			}
 
 			for _, obj := range list.Items {
-				res, err := util.RuntimeObjectFromUnstructured(scheme, &obj)
-				if err != nil {
-					return err
-				}
-				SetNamespaceAndOwnerReference(res, syndesis)
-				if err := cl.Update(ctx, res); err != nil {
+				SetNamespaceAndOwnerReference(&obj, syndesis)
+				if err := cl.Update(ctx, &obj); err != nil {
 					return err
 				}
 			}

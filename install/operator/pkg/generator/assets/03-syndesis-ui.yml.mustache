@@ -58,7 +58,7 @@
 {{^WithDockerImages}}
           image: ' '
 {{/WithDockerImages}}{{#WithDockerImages}}
-          image: ${SYNDESIS_REGISTRY}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
+          image: {{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
           livenessProbe:
@@ -95,7 +95,7 @@
         from:
           kind: ImageStreamTag
           name: {{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
-          namespace: ${IMAGE_STREAM_NAMESPACE}
+          namespace: {{Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
 {{/WithDockerImages}}
     - type: ConfigChange
@@ -111,16 +111,16 @@
   data:
     config.json: |
       {
-        "apiBase": "https://${ROUTE_HOSTNAME}",
+        "apiBase": "https://{{Env.ROUTE_HOSTNAME}}",
         "apiEndpoint": "/api/v1",
         "title": "Syndesis",
-        "consoleUrl": "${OPENSHIFT_CONSOLE_URL}",
-        "project": "${OPENSHIFT_PROJECT}",
+        "consoleUrl": "{{Env.OPENSHIFT_CONSOLE_URL}}",
+        "project": "{{Env.OPENSHIFT_PROJECT}}",
         "datamapper": {
-          "baseMappingServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/",
-          "baseJavaInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/java/",
-          "baseXMLInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/xml/",
-          "baseJSONInspectionServiceUrl": "https://${ROUTE_HOSTNAME}/api/v1/atlas/json/",
+          "baseMappingServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/",
+          "baseJavaInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/java/",
+          "baseXMLInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/xml/",
+          "baseJSONInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/json/",
           "disableMappingPreviewMode": false
         },
         "datavirt": { 

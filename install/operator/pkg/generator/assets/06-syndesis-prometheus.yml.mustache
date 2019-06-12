@@ -55,7 +55,7 @@
           - role: pod
             namespaces:
               names:
-                - ${OPENSHIFT_PROJECT}
+                - {{Env.OPENSHIFT_PROJECT}}
 
           relabel_configs:
           - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
@@ -133,7 +133,7 @@
     - ReadWriteOnce
     resources:
       requests:
-        storage: ${PROMETHEUS_VOLUME_CAPACITY}
+        storage: {{Env.PROMETHEUS_VOLUME_CAPACITY}}
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
@@ -170,7 +170,7 @@
 {{^WithDockerImages}}
           image: ' '
 {{/WithDockerImages}}{{#WithDockerImages}}
-          image: ${SYNDESIS_REGISTRY}/{{ Images.PrometheusImagePrefix }}/{{ Images.Support.Prometheus }}:{{ Tags.Prometheus }}
+          image: {{Env.SYNDESIS_REGISTRY}}/{{ Images.PrometheusImagePrefix }}/{{ Images.Support.Prometheus }}:{{ Tags.Prometheus }}
 {{/WithDockerImages}}
           imagePullPolicy: IfNotPresent
           args:
@@ -190,9 +190,9 @@
           # Note: On OSO there is no Guaranteed class, its always burstable
           resources:
             limits:
-              memory: ${PROMETHEUS_MEMORY_LIMIT}
+              memory: {{Env.PROMETHEUS_MEMORY_LIMIT}}
             requests:
-              memory: ${PROMETHEUS_MEMORY_LIMIT}
+              memory: {{Env.PROMETHEUS_MEMORY_LIMIT}}
           volumeMounts:
           - name: syndesis-prometheus-data
             mountPath: /prometheus
@@ -214,7 +214,7 @@
         from:
           kind: ImageStreamTag
           name: {{ Images.Support.Prometheus }}:{{ Tags.Prometheus }}
-          namespace: ${IMAGE_STREAM_NAMESPACE}
+          namespace: {{Env.IMAGE_STREAM_NAMESPACE}}
       type: ImageChange
 {{/WithDockerImages}}
     - type: ConfigChange

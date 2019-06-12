@@ -38,8 +38,16 @@ func LoadResourceFromFile(scheme *runtime.Scheme, path string) (runtime.Object, 
 	return LoadResourceFromYaml(scheme, data)
 }
 
+func UnmarshalYaml(data []byte, target interface{}) error {
+	data, err := yaml.ToJSON(data)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, target)
+}
+
 // LoadRawResourceFromYaml loads a k8s resource from a yaml definition without making assumptions on the underlying type
-func LoadRawResourceFromYaml(data string) (runtime.Object, error) {
+func LoadRawResourceFromYaml(data string) (*unstructured.Unstructured, error) {
 	source := []byte(data)
 	jsonSource, err := yaml.ToJSON(source)
 	if err != nil {
@@ -82,6 +90,19 @@ func RuntimeObjectFromUnstructured(scheme *runtime.Scheme, u *unstructured.Unstr
 		return nil, fmt.Errorf("failed to decode json data with gvk(%v): %v", gvk.String(), err)
 	}
 	return ro, nil
+}
+
+func RuntimeObjectFromUnstructuredList(scheme *runtime.Scheme, in []unstructured.Unstructured) ([]runtime.Object, []unstructured.Unstructured) {
+	runtimes := []runtime.Object{}
+	unstructureds := []unstructured.Unstructured{}
+	for _, value := range in {
+		if r, err := RuntimeObjectFromUnstructured(scheme, &value); err == nil {
+			runtimes = append(runtimes, r)
+		} else {
+			unstructureds = append(unstructureds, value)
+		}
+	}
+	return runtimes, unstructureds
 }
 
 func LoadJsonFromFile(path string) ([]byte, error) {

@@ -3,12 +3,11 @@ package template
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/openshift/api/template/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/template"
 	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 	"math/rand"
 	logf "sigs.k8s.io/controller-runtime/pkg/runtime/log"
@@ -22,79 +21,75 @@ type InstallParams struct {
 	OAuthClientSecret string
 }
 
-func GetInstallResourcesAsRuntimeObjects(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.Object, error) {
-	rawExtensions, err := GetInstallResources(scheme, syndesis, params)
-	if err != nil {
-		return nil, err
-	}
-
-	objects := make([]runtime.Object, 0)
-
-	for _, rawObj := range rawExtensions {
-		res, err := util.LoadResourceFromYaml(scheme, rawObj.Raw)
-		if err != nil {
-			return nil, err
-		}
-		objects = append(objects, res)
-	}
-
-	if log.V(5).Enabled() {
-		log.V(5).Info("Number of objects to create", "number_of_objects", len(objects))
-		for _, obj := range objects {
-			log.V(5).Info("Object to create", "object", obj)
-		}
-	}
-
-	return objects, nil
-}
-
 func randomPassword(size int) string {
-	alphabet := make([]byte, (26*2)+10)
-	for i := 0; i < 26; i++ {
-		alphabet[i] = 'a'+1
+	alphabet := make([]rune, (26*2)+10)
+	i := 0
+	for c := 'a'; c <= 'z'; c++ {
+		alphabet[i] = c
+		i += 1
 	}
-	for i := 0; i < 26; i++ {
-		alphabet[i] = 'A'+1
+	for c := 'A'; c <= 'Z'; c++ {
+		alphabet[i] = c
+		i += 1
 	}
-	for i := 0; i < 10; i++ {
-		alphabet[i] = '0'+1
+	for c := '0'; c <= '9'; c++ {
+		alphabet[i] = c
+		i += 1
 	}
 
-	result := make([]byte, size)
+	result := make([]rune, size)
 	for i := 0; i < size; i++ {
 		result[i] = alphabet[random.Intn(len(alphabet))]
 	}
-	return string(result)
+	s := string(result)
+	return s
 }
 
-func ifMissingGeneratePwd(config map[string]string, name configuration.SyndesisEnvVar, size int){
-	if value, found := config[string(name)]; !found || value=="" {
+func ifMissingGeneratePwd(config map[string]string, name configuration.SyndesisEnvVar, size int) {
+	if value, found := config[string(name)]; !found || value == "" {
 		config[string(name)] = randomPassword(size)
 	}
 }
 
-func ifMissingSet(config map[string]string, name configuration.SyndesisEnvVar, value string){
-	if _, found := config[string(name)]; !found || value=="" {
+func ifMissingSet(config map[string]string, name configuration.SyndesisEnvVar, value string) {
+	if _, found := config[string(name)]; !found || value == "" {
 		config[string(name)] = value
 	}
 }
 
-func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params InstallParams) ([]runtime.RawExtension, error) {
-
-	// Load the template config..
+func GetTemplateContext() (*generator.Context, error) {
 	templateConfig, err := util.LoadJsonFromFile(*configuration.TemplateConfig)
 	if err != nil {
 		return nil, err
 	}
 
 	// Parse the config
-	gen := generator.Context{}
-	err = json.Unmarshal(templateConfig, &gen)
+	gen := &generator.Context{}
+	err = json.Unmarshal(templateConfig, gen)
+	if err != nil {
+		return nil, err
+	}
+	return gen, nil
+}
+
+// Each operator instance is bound to a single version currently that can be retrieved from this method.
+func GetSyndesisVersionFromOperatorTemplate(scheme *runtime.Scheme) (string, error) {
+	ctx, err := GetTemplateContext()
+	if err != nil {
+		return "", err
+	}
+	return ctx.Tags.Syndesis, nil
+}
+
+func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params InstallParams) ([]unstructured.Unstructured, error) {
+
+	// Parse the config
+	gen, err := GetTemplateContext()
 	if err != nil {
 		return nil, err
 	}
 
-	// Generate the OpenShift Template
+	// Setup the config..
 	config := configuration.GetEnvVars(syndesis)
 	config[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
 	if _, ok := syndesis.Spec.Addons["komodo"]; ok {
@@ -113,10 +108,14 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 	ifMissingSet(config, configuration.EnvPostgresqlMemoryLimit, "255Mi")
 	ifMissingSet(config, configuration.EnvPostgresqlImageStreamNamespace, "openshift")
 	ifMissingSet(config, configuration.EnvPostgresqlUser, "syndesis")
+	ifMissingSet(config, configuration.EnvPostgresqlDatabase, "syndesis")
+
 	ifMissingSet(config, configuration.EnvPostgresqlVolumeCapacity, "1Gi")
 	ifMissingSet(config, configuration.EnvTestSupport, "false")
 	ifMissingSet(config, configuration.EnvDemoDataEnabled, "false")
+
 	ifMissingSet(config, configuration.EnvSyndesisRegistry, gen.Registry)
+
 	ifMissingSet(config, configuration.EnvControllersIntegrationEnabled, "true")
 	ifMissingSet(config, configuration.EnvImageStreamNamespace, gen.Images.ImageStreamNamespace)
 	ifMissingSet(config, configuration.EnvPrometheusVolumeCapacity, "1Gi")
@@ -141,24 +140,13 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 		return nil, fmt.Errorf("required config var not set: %s", configuration.EnvSarNamespace)
 	}
 
-	gen.Params = config
-	generated, err := gen.GenerateResources()
-	if err != nil {
-		return nil, err
-	}
-
+	// Generate the OpenShift Template
 	// Parse the template
-	res, err := util.LoadRawResourceFromYaml(generated)
+	gen.Env = config
+	res, err := gen.GenerateResources()
 	if err != nil {
 		return nil, err
 	}
 
-	templ := res.(*v1.Template)
-	processor, err := template.NewTemplateProcessor(scheme, syndesis.Namespace)
-	if err != nil {
-		return nil, err
-	}
-
-	return processor.Process(templ, config)
+	return res, nil
 }
-
