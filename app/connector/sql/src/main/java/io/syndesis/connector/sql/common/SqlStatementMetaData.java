@@ -38,9 +38,10 @@ public class SqlStatementMetaData {
     private String defaultedSqlStatement;
     private String autoIncrementColumnName;
 
-    public SqlStatementMetaData(String sqlStatement) {
+    public SqlStatementMetaData(String sqlStatement, String schema) {
         super();
         this.sqlStatement = sqlStatement;
+        this.schema = schema;
     }
 
     public String addTable(String tableName) throws SQLException {
@@ -48,7 +49,7 @@ public class SqlStatementMetaData {
         if (tablesInSchema.contains(upperCaseTableName)) {
             tableNames.add(upperCaseTableName);
         } else {
-            throw new SQLException("Table does not exist in schema " + schema);
+            throw new SQLException(String.format("Table '%s' does not exist in schema '%s'", upperCaseTableName, schema));
         }
         return tableName;
     }

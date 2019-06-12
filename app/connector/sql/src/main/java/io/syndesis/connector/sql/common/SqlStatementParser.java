@@ -49,16 +49,12 @@ public class SqlStatementParser {
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlStatementParser.class);
 
     public SqlStatementParser(Connection connection, String sql) throws SQLException {
-        super();
-        statementInfo = new SqlStatementMetaData(sql.trim());
-        this.connection = connection;
-        dbHelper = new DbMetaDataHelper(connection);
-        getSchema(null);
+        this(connection, null, sql);
     }
 
     public SqlStatementParser(Connection connection, String schema, String sql) throws SQLException {
         super();
-        statementInfo = new SqlStatementMetaData(sql.trim());
+        statementInfo = new SqlStatementMetaData(sql.trim(), schema);
         this.connection = connection;
         dbHelper = new DbMetaDataHelper(connection);
         this.schema = getSchema(schema);
@@ -296,7 +292,7 @@ public class SqlStatementParser {
         for (String word: sqlArrayUpperCase) {
             if (! statementInfo.getTablesInSchema().contains(word)) {
                 if (isTable && tables.isEmpty()) {
-                    throw new SQLException(String.format("Table '%s' does not exist", word));
+                    throw new SQLException(String.format("Table '%s' does not exist in schema '%s'", word, schema));
                 }
                 isTable = false;
             }
