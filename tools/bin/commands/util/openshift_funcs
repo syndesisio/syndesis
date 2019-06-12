@@ -197,6 +197,17 @@ EOT
         syndesis="${syndesis}${extra}"
     fi
 
+    local datavirt=$(hasflag --datavirt)
+    if [ -n "${datavirt}" ]; then
+        extra=$(cat <<EOT
+
+  addons:
+    komodo:
+EOT
+)
+        syndesis="${syndesis}${extra}"
+    fi
+
     echo "$syndesis" | cat | oc create -f -
     if [ $? -ne 0 ]; then
         echo "ERROR: Error while creating resource"
