@@ -30,6 +30,43 @@ export interface IConfigurationPageRouteState {
   connector: Connector;
 }
 
+interface IOAuthFlowProps {
+  connectorId: string;
+  connectorName: string;
+  onSuccess: () => void;
+}
+
+const OAuthFlow: React.FunctionComponent<IOAuthFlowProps> = ({
+  connectorId,
+  connectorName,
+  onSuccess,
+}) => {
+  const { t } = useTranslation(['connections', 'shared']);
+
+  const { connectOAuth, isConnecting } = useOAuthFlow(
+    connectorId,
+    connectorName,
+    onSuccess
+  );
+
+  return (
+    <ConnectorAuthorization
+      i18nTitle={t('connections:create:configure:configurationTitle', {
+        name: connectorName,
+      })}
+      i18nDescription={t(
+        'connections:create:configure:configurationDescription',
+        { name: connectorName }
+      )}
+      i18nConnectButton={t('connections:create:configure:configurationButton', {
+        name: connectorName,
+      })}
+      isConnecting={isConnecting}
+      onConnect={connectOAuth}
+    />
+  );
+};
+
 /**
  * A page to set up the data required for a connector. A connector can be oauth
  * enabled or not.
@@ -71,18 +108,6 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     resource: acquisitionMethod,
   } = useConnectorCredentials(params.connectorId);
 
-  const { connectOAuth, isConnecting } = useOAuthFlow(
-    connector.id!,
-    connector.name,
-    () => {
-      history.push(
-        resolvers.create.review({
-          connector,
-        })
-      );
-    }
-  );
-
   /**
    * the callback that's called by the configuration form for non oauth enabled
    * connectors.
@@ -93,6 +118,20 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     history.push(
       resolvers.create.review({
         configuredProperties,
+        connector,
+      })
+    );
+  };
+
+  /**
+   * gets called at the point when the OAuth flow successfully finishes, this is
+   * when the callback from the OAuth authorization server is processed, and the
+   * backend redirects to UI again, the same moment as when the OAuth popup is
+   * about to be closed
+   */
+  const onOAuthSuccess = () => {
+    history.push(
+      resolvers.create.review({
         connector,
       })
     );
@@ -124,21 +163,10 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                 >
                   {() =>
                     acquisitionMethod ? (
-                      <ConnectorAuthorization
-                        i18nTitle={t(
-                          'connections:create:configure:configurationTitle',
-                          { name: connector.name }
-                        )}
-                        i18nDescription={t(
-                          'connections:create:configure:configurationDescription',
-                          { name: connector.name }
-                        )}
-                        i18nConnectButton={t(
-                          'connections:create:configure:configurationButton',
-                          { name: connector.name }
-                        )}
-                        isConnecting={isConnecting}
-                        onConnect={connectOAuth}
+                      <OAuthFlow
+                        connectorId={connector.id!}
+                        connectorName={connector.name}
+                        onSuccess={onOAuthSuccess}
                       />
                     ) : (
                       <WithConnectorForm connector={connector} onSave={onSave}>
