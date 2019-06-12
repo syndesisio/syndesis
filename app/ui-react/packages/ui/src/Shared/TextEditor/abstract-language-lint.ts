@@ -17,7 +17,7 @@ export abstract class AbstractLanguageLint {
   public validator(text: string, options: any): any[] {
     this.errors = [];
     if (text.length === 0) {
-      const msg = 'lint-no-content';
+      const msg = 'linter-no-content';
       this.errors.push({
         from: CodeMirror.Pos(0, 0),
         message: msg,

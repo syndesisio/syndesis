@@ -11,6 +11,7 @@ import {
 } from '@syndesis/ui';
 import { key } from '@syndesis/utils';
 import * as React from 'react';
+import { useTranslation } from 'react-i18next';
 
 export interface IUseTemplaterProps {
   initialLanguage: TemplateType;
@@ -56,6 +57,7 @@ function createSpecification(symbols: TemplateSymbol[]): string {
 }
 
 export function useTemplater(props: IUseTemplaterProps) {
+  const { t } = useTranslation('integrations');
   const [isValid, setIsValid] = React.useState(false);
   const editor = React.useRef<ITextEditor>();
   const template = React.useRef(props.initialText || '');
@@ -64,21 +66,14 @@ export function useTemplater(props: IUseTemplaterProps) {
     TemplateStepLinters[language]
   );
 
-  const setText = (t: string) => {
+  const setText = (text: string) => {
     if (editor.current) {
-      editor.current.setValue(t);
-    }
-  };
-
-  const doLint = () => {
-    if (editor.current) {
-      (editor.current as any).performLint();
+      editor.current.setValue(text);
     }
   };
 
   const handleEditorDidMount = (e: ITextEditor) => {
     editor.current = e;
-    doLint();
   };
 
   const handleTemplateTypeChange = (newType: TemplateType) => {
@@ -86,9 +81,8 @@ export function useTemplater(props: IUseTemplaterProps) {
     linter.current = TemplateStepLinters[language];
   };
 
-  const handleEditorChange = (e: ITextEditor, data: any, t: string) => {
-    template.current = t;
-    doLint();
+  const handleEditorChange = (e: ITextEditor, data: any, text: string) => {
+    template.current = text;
   };
 
   const handleUpdateLinting = (
@@ -139,6 +133,11 @@ export function useTemplater(props: IUseTemplaterProps) {
     return spec;
   };
 
+  const formatAnnotation = (a: any) => {
+    a.message = t(`integrations:linter:${a.message}`, a.messageContext);
+    return a;
+  };
+
   const templater = (
     <>
       <TemplateStepTypeSelector
@@ -168,6 +167,7 @@ export function useTemplater(props: IUseTemplaterProps) {
         }
         initialValue={props.initialText}
         onChange={handleEditorChange}
+        formatAnnotation={formatAnnotation}
         onUpdateLinting={handleUpdateLinting}
         editorDidMount={handleEditorDidMount}
       />

@@ -163,15 +163,6 @@
     "templater-editor-placeholder": "Drop a file, paste in text, or start typing",
     "templater-editor-drag-enter": "Drop file here to upload",
     "templater-validation-errors": "Vaidation errors",
-    "templater-wrong-symbol-format": "'{{0}}' does not conform to the format {{1}} at line: {{2}}, column: {{3}}",
-    "templater-illegal-open-symbol": "Illegal open symbol at line: {{0}}, column: {{1}}",
-    "templater-too-many-open-symbols": "Too many open symbols at line: {{0}}, column: {{1}}",
-    "templater-illegal-close-symbol": "Illegal close symbol at line: {{0}}, column: {{1}}",
-    "templater-too-many-close-symbols": "Too many close symbols at line: {{0}}, column: {{1}}",
-    "templater-expected-open-symbol": "Expected open symbol at line: {{0}}, column: {{1}}",
-    "templater-expected-close-symbol": "Expected close symbol at line: {{0}}, column: {{1}}",
-    "templater-no-symbols": "The editor contains no data-mappable symbols",
-    "templater-no-content": "The editor has no content",
     "templater-file-upload-dnd": "Drag and drop your template file here",
     "templater-upload-invalid-file": "'{{0}}' is not a valid file. Only text files can be uploaded.",
     "templater-url-upload": "Use an URL",
@@ -188,5 +179,16 @@
     "Method": "Method",
     "OperationImplemented": "Operation implemented",
     "OperationName": "Operation name"
+  },
+  "linter": {
+    "linter-wrong-symbol-format": "'{{0}}' does not conform to the format {{1}} at line: {{2}}, column: {{3}}",
+    "linter-illegal-open-symbol": "Illegal open symbol at line: {{0}}, column: {{1}}",
+    "linter-too-many-open-symbols": "Too many open symbols at line: {{0}}, column: {{1}}",
+    "linter-illegal-close-symbol": "Illegal close symbol at line: {{0}}, column: {{1}}",
+    "linter-too-many-close-symbols": "Too many close symbols at line: {{0}}, column: {{1}}",
+    "linter-expected-open-symbol": "Expected open symbol at line: {{0}}, column: {{1}}",
+    "linter-expected-close-symbol": "Expected close symbol at line: {{0}}, column: {{1}}",
+    "linter-no-symbols": "The editor contains no data-mappable symbols",
+    "linter-no-content": "The editor has no content"
   }
 }

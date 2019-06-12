@@ -22,6 +22,7 @@ interface ITemplateStepTemplateEditorProps extends ITextEditorProps {
   textEditorDescription: React.ReactNode;
   initialValue: string;
   i18nFileUploadLimit: string;
+  formatAnnotation?: (a: any) => any;
   onUpdateLinting?: (
     unsortedAnnotations: any[],
     annotations: any[],
@@ -36,6 +37,7 @@ export const TemplateStepTemplateEditor: React.FunctionComponent<
   i18nFileUploadLimit,
   initialValue,
   mode,
+  formatAnnotation,
   onUpdateLinting,
   options = {},
   ...props
@@ -46,7 +48,8 @@ export const TemplateStepTemplateEditor: React.FunctionComponent<
     lineNumbers: true,
     lineWrapping: true,
     lint: {
-      lintOnChange: false,
+      formatAnnotation,
+      lintOnChange: true,
       onUpdateLinting,
       tooltips: 'gutter',
     },
