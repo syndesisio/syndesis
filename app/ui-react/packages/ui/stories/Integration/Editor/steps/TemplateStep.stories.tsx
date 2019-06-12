@@ -1,14 +1,13 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
+import { EditorPageCard } from '../../../../src/Integration/Editor/shared';
 import {
-  Container,
-  EditorPageCard,
   TemplateStepTemplateEditor,
   TemplateStepTypeSelector,
   TemplateType,
-} from '../../../../src';
-import { ITextEditor } from '../../../../src/Shared';
-
+} from '../../../../src/Integration/Editor/template';
+import { Container } from '../../../../src/Layout';
+import { ITextEditor } from '../../../../src/Shared/TextEditor';
 const stories = storiesOf('Integration/Editor/step/TemplateStep', module);
 
 stories.add('Normal', () => (
@@ -16,7 +15,7 @@ stories.add('Normal', () => (
     <Container>
       <TemplateStepStory
         initialText={'Some words or something {{body}}'}
-        initialTemplateType={TemplateType.Mustache}
+        initialTemplateType={'mustache'}
       />
     </Container>
   </>
