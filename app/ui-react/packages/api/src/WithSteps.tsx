@@ -22,9 +22,6 @@ import { toDataShapeKinds, toDataShapeKindType } from './helpers';
 
 export const ALL_STEPS: StepKind[] = [
   requiresInputDataShape({
-    id: undefined,
-    connection: undefined,
-    action: undefined,
     name: 'Data Mapper',
     description: 'Map fields from the input type to the output type.',
     stepKind: DATA_MAPPER,
@@ -34,9 +31,6 @@ export const ALL_STEPS: StepKind[] = [
   }),
   requiresOutputDataShape(
     {
-      id: undefined,
-      connection: undefined,
-      action: undefined,
       name: 'Basic Filter',
       description:
         'Continue the integration only if criteria you specify in simple input fields are met. Suitable for' +
@@ -49,9 +43,6 @@ export const ALL_STEPS: StepKind[] = [
     true
   ),
   requiresOutputDataShape({
-    id: undefined,
-    connection: undefined,
-    action: undefined,
     name: 'Template',
     stepKind: TEMPLATE,
     description:
@@ -61,9 +52,6 @@ export const ALL_STEPS: StepKind[] = [
     visible: [],
   }),
   noCollectionSupport({
-    id: undefined,
-    connection: undefined,
-    action: undefined,
     name: 'Advanced Filter',
     description:
       'Continue the integration only if criteria you define in scripting language expressions are met.',
@@ -84,9 +72,6 @@ $\{in.body.title\} // Evaluates true when body contains title.
     visible: [],
   }),
   {
-    id: undefined,
-    connection: undefined,
-    action: undefined,
     name: 'Log',
     stepKind: LOG,
     description: "Send a message to the integration's log.",
@@ -113,8 +98,6 @@ $\{in.body.title\} // Evaluates true when body contains title.
   notAllowedInSubFlow(
     requiresOutputDataShape(
       {
-        id: undefined,
-        connection: undefined,
         action: {
           actionType: 'step',
           descriptor: {
