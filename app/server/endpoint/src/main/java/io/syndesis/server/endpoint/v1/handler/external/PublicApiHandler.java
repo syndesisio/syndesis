@@ -121,8 +121,11 @@ public class PublicApiHandler {
     @Path("environments")
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getReleaseEnvironments() {
-        List<String> result = dataMgr.fetchAll(Integration.class).getItems().stream().filter(i -> !i.isDeleted())
-                .flatMap(i -> i.getContinuousDeliveryState().keySet().stream()).distinct().collect(Collectors.toList());
+        List<String> result = dataMgr.fetchAll(Integration.class).getItems().stream()
+                .filter(i -> !i.isDeleted())
+                .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
+                .distinct()
+                .collect(Collectors.toList());
         result.addAll(this.unusedEnvironments);
         return result;
     }
