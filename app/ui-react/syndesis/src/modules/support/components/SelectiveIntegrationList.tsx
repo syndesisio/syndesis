@@ -95,6 +95,7 @@ export const SelectiveIntegrationList: React.FunctionComponent<
                   (si: IntegrationOverview) => {
                     return (
                       <IntegrationsListItemBasic
+                        className="support-integration-list-item"
                         key={`${si.updatedAt}-${si.name.split(' ').join('-')}`}
                         additionalInfo={si.description || ''}
                         integrationName={si.name}
