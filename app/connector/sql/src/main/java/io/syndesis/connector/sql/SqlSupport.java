@@ -83,7 +83,7 @@ public final class SqlSupport {
 
             final DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
             final String catalog = (String) parameters.getOrDefault("catalog", null);
-            final String defaultSchema = dbHelper.getDefaultSchema(String.valueOf(parameters.get("user")));
+            final String defaultSchema = dbHelper.getDefaultSchema((String) parameters.getOrDefault("user", ""));
             final String schemaPattern = (String) parameters.getOrDefault("schema", defaultSchema);
             final String procedurePattern = (String) parameters.getOrDefault("procedure-pattern", null);
 

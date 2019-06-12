@@ -27,6 +27,7 @@ import java.util.Map;
 
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
+import io.syndesis.connector.sql.common.DbMetaDataHelper;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.common.SqlParam;
 import io.syndesis.connector.sql.common.SqlStatementMetaData;
@@ -112,8 +113,11 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
 
             final Map<String, Integer> tmpMap = new HashMap<>();
             try (Connection connection = dataSource.getConnection()) {
+                DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
+                final String defaultSchema = dbHelper.getDefaultSchema((String) options.getOrDefault("user", ""));
+                final String schemaPattern = (String) options.getOrDefault("schema", defaultSchema);
 
-                SqlStatementMetaData statementInfo = new SqlStatementParser(connection, null, sql).parse();
+                SqlStatementMetaData statementInfo = new SqlStatementParser(connection, schemaPattern, sql).parse();
                 for (SqlParam sqlParam: statementInfo.getInParams()) {
                     tmpMap.put(sqlParam.getName(), sqlParam.getJdbcType().getVendorTypeNumber());
                 }

@@ -17,11 +17,17 @@ package io.syndesis.connector.sql.db;
 
 import java.util.Locale;
 
+import org.apache.camel.util.ObjectHelper;
+
 public class DbOracle extends DbStandard {
 
     @Override
     public String getDefaultSchema(final String dbUser) {
-        return dbUser.toUpperCase(Locale.US);
+        if (ObjectHelper.isNotEmpty(dbUser)) {
+            return dbUser.toUpperCase(Locale.US);
+        } else {
+            return null;
+        }
     }
 
     @Override

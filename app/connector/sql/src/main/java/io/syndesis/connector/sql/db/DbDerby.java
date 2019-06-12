@@ -17,14 +17,16 @@ package io.syndesis.connector.sql.db;
 
 import java.util.Locale;
 
+import org.apache.camel.util.ObjectHelper;
+
 public class DbDerby extends DbStandard {
 
     @Override
     public String getDefaultSchema(String dbUser) {
-        if (dbUser != null) {
+        if (ObjectHelper.isNotEmpty(dbUser)) {
             return dbUser.toUpperCase(Locale.US);
         } else {
-            return "NULL";
+            return null;
         }
     }
 
