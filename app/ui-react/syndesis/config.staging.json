@@ -1,6 +1,6 @@
 {
   "commment": "This config should for running against a localy running Syndesis server on port 8080.",
-  "apiBase": "https://syndesis-staging-2.b6ff.rh-idev.openshiftapps.com",
+  "apiBase": "https://syndesis-staging.b6ff.rh-idev.openshiftapps.com",
   "apiEndpoint": "/api/v1",
   "mapperEndpoint": "/mapper/v1",
   "metricsPollingInterval": 5000,

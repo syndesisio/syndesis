@@ -46,12 +46,7 @@ export class IntegrationDetailInfo extends React.PureComponent<
               Published version {this.props.version}
             </div>
           )}
-          {this.props.currentState === 'Unpublished' && (
-            <>
-              <span className="pficon pficon-paused pf-u-mr-xs" />
-              <Label>Stopped</Label>
-            </>
-          )}
+          {this.props.currentState === 'Unpublished' && <Label>Stopped</Label>}
         </>
       </div>
     );

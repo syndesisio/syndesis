@@ -27,7 +27,9 @@ export const RecentUpdatesItem: React.FunctionComponent<IRecentUpdatesItem> = ({
     className={'recent-updates-item'}
     data-testid={`recent-updates-item-${toValidHtmlId(integrationName)}-row`}
   >
-    <Grid.Col xs={5}>{integrationName}</Grid.Col>
+    <Grid.Col className="recent-updates-item__title-container" xs={5}>
+      {integrationName}
+    </Grid.Col>
     <Grid.Col xs={3}>
       <IntegrationStatus
         currentState={integrationCurrentState}

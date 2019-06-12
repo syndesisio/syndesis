@@ -15,3 +15,20 @@
 .integration-list-item__config-required {
   text-align: left;
 }
+
+.integration-list-item .list-view-pf-body .list-group-item-heading,
+.support-integration-list-item .list-view-pf-body .list-group-item-heading {
+  white-space: nowrap;
+}
+
+.integration-list-item .list-view-pf-body .list-view-pf-description,
+.support-integration-list-item .list-view-pf-body .list-view-pf-description {
+  min-width: 0;
+}
+
+.support-integration-list-item .list-view-pf-additional-info-item {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}
