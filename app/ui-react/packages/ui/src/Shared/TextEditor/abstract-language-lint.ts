@@ -1,5 +1,4 @@
-import { CodeMirror } from '@syndesis/ui';
-import i18n from '../../../../../../i18n';
+import * as CodeMirror from 'codemirror';
 import { TemplateSymbol } from './template-symbol';
 
 export abstract class AbstractLanguageLint {
@@ -18,7 +17,7 @@ export abstract class AbstractLanguageLint {
   public validator(text: string, options: any): any[] {
     this.errors = [];
     if (text.length === 0) {
-      const msg = i18n.t('integrations:steps.templater-no-content');
+      const msg = 'linter-no-content';
       this.errors.push({
         from: CodeMirror.Pos(0, 0),
         message: msg,

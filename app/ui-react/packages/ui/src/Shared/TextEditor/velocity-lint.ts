@@ -1,12 +1,15 @@
-import { CodeMirror, TemplateType } from '@syndesis/ui';
-import { Velocity } from '@syndesis/utils';
-import i18n from '../../../../../../i18n';
+import * as CodeMirror from 'codemirror';
+import * as Velocity from 'velocityjs';
 import { AbstractLanguageLint } from './abstract-language-lint';
 import { TemplateSymbol } from './template-symbol';
 
+import 'codemirror/mode/velocity/velocity.js';
+
+export type LintVelocity = 'velocity';
+
 export class VelocityLint extends AbstractLanguageLint {
   constructor() {
-    super(TemplateType.Velocity);
+    super('velocity');
   }
 
   public parse(content: string): TemplateSymbol[] {
@@ -31,7 +34,7 @@ export class VelocityLint extends AbstractLanguageLint {
       }
 
       if (totalSymbols === 0) {
-        const msg = i18n.t('integrations:steps.templater-no-symbols');
+        const msg = 'linter-no-symbols';
         errors.push({
           from: CodeMirror.Pos(0, 0),
           message: msg,
