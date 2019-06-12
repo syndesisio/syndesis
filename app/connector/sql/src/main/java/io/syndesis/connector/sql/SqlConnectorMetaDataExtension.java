@@ -44,7 +44,7 @@ public class SqlConnectorMetaDataExtension extends AbstractMetaDataExtension {
         if (sqlStatement != null) {
             try (Connection connection = SqlSupport.createConnection(properties)) {
                 DbMetaDataHelper dbHelper = new DbMetaDataHelper(connection);
-                final String defaultSchema = dbHelper.getDefaultSchema(String.valueOf(properties.get("user")));
+                final String defaultSchema = dbHelper.getDefaultSchema((String) properties.getOrDefault("user", ""));
                 final String schemaPattern = (String) properties.getOrDefault("schema", defaultSchema);
                 final SqlStatementParser parser = new SqlStatementParser(connection, schemaPattern, sqlStatement);
                 final SqlStatementMetaData sqlStatementMetaData = parseStatement(parser);
