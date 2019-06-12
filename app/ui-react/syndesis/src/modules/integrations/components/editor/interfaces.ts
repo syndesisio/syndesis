@@ -97,7 +97,7 @@ export interface IConfigureStepRouteState extends IBaseRouteState {
 export interface IConfigureActionRouteParams extends IBaseFlowRouteParams {
   position: string;
   actionId: string;
-  step: string;
+  page: string;
 }
 
 /**
@@ -206,7 +206,7 @@ export const stepRoutes = {
   // if selected step kind is endpoint
   connection: include('connection/:connectionId', {
     selectAction: '',
-    configureAction: ':actionId/:step',
+    configureAction: ':actionId/:page',
     // if 'any' data shape
     describeData: 'describe-data/:position/:direction',
   }),
