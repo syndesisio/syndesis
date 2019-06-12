@@ -1,7 +1,7 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: ClusterServiceVersion
 metadata:
-  name: syndesisoperator.1.7.x
+  name: syndesisoperator.1.7.0
   namespace: placeholder
   annotations:
     capabilities: Basic Install
@@ -31,7 +31,14 @@ spec:
     ### Syndesis operator
     Syndesis is a flexible and customizable, open source platform that provides core integration capabilities as a service.
 
-    This operator installs as well as configures all syndesis components.
+    This operator installs as well as configures the following syndesis components:
+    - syndesis-server
+    - syndesis-meta
+    - syndesis-ui
+    - syndesis-db
+    - syndesis-prometheus
+    - syndesis-proxy
+    - syndesis-oauthproxy
 
     ### How to install
     When the operator is installed (you have created a subscription and the operator is running in the selected namespace) create a new CR of Kind Syndesis (click the Create New button). The CR spec contains all defaults (see below).
@@ -39,7 +46,7 @@ spec:
     ### CR Defaults
     The CR definition is pretty simple and an empy CR will trigger a base installation
   keywords: ['camel', 'integration', 'syndesis', 'fuse', 'online']
-  version: 1.7.x
+  version: 1.7.0
   maturity: alpha
   maintainers:
   - name: Syndesis team
