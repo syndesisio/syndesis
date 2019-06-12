@@ -1,3 +1,4 @@
+import { ConnectionBulletinBoard, ConnectionOverview } from '../dist';
 import {
   ConfigurationProperty,
   Connection,
@@ -55,6 +56,11 @@ export interface IConfigurationProperty extends ConfigurationProperty {
   required?: boolean;
   secret?: boolean;
   [name: string]: any;
+}
+
+export interface IConnectionOverview extends ConnectionOverview {
+  configRequired?: boolean;
+  isTechPreview?: boolean;
 }
 
 // Extended connection interface to add support for the 'iconFile' property

@@ -1,4 +1,4 @@
-import { ConnectionOverview } from '@syndesis/models';
+import { IConnectionOverview } from '@syndesis/models';
 import {
   getActionsWithFrom,
   getActionsWithTo,
@@ -8,7 +8,9 @@ import {
 } from './helpers';
 import { useApiResource } from './useApiResource';
 
-export const transformConnectionResponse = (connection: ConnectionOverview) => {
+export const transformConnectionResponse = (
+  connection: IConnectionOverview
+) => {
   return {
     ...connection,
     actionsWithFrom: getActionsWithFrom(
@@ -25,9 +27,9 @@ export const transformConnectionResponse = (connection: ConnectionOverview) => {
 
 export const useConnection = (
   connectionId: string,
-  initialValue?: ConnectionOverview
+  initialValue?: IConnectionOverview
 ) => {
-  return useApiResource<ConnectionOverview>({
+  return useApiResource<IConnectionOverview>({
     defaultValue: {
       name: '',
     },
