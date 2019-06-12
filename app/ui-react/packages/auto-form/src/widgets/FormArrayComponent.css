@@ -5,4 +5,5 @@
 
 .form-array-control__array-controls .fa {
   font-size: 20px;
+  white-space: nowrap ;
 }
