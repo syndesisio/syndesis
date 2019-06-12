@@ -1,18 +1,18 @@
-import { Connector } from '@syndesis/models';
+import { IConnector } from '@syndesis/models';
 import * as React from 'react';
 import { IFetchState } from './Fetch';
 import { SyndesisFetch } from './SyndesisFetch';
 
 export interface IWithConnectorProps {
   id: string;
-  initialValue?: Connector;
-  children(props: IFetchState<Connector>): any;
+  initialValue?: IConnector;
+  children(props: IFetchState<IConnector>): any;
 }
 
 export class WithConnector extends React.Component<IWithConnectorProps> {
   public render() {
     return (
-      <SyndesisFetch<Connector>
+      <SyndesisFetch<IConnector>
         url={`/connectors/${this.props.id}`}
         defaultValue={{
           actions: [],

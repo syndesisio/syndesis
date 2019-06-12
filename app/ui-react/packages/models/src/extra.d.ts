@@ -2,6 +2,7 @@ import { ConnectionBulletinBoard, ConnectionOverview } from '../dist';
 import {
   ConfigurationProperty,
   Connection,
+  Connector,
   IntegrationMetricsSummary,
   IntegrationOverview,
   Step,
@@ -60,6 +61,10 @@ export interface IConfigurationProperty extends ConfigurationProperty {
 
 export interface IConnectionOverview extends ConnectionOverview {
   configRequired?: boolean;
+  isTechPreview?: boolean;
+}
+
+export interface IConnector extends Connector {
   isTechPreview?: boolean;
 }
 
