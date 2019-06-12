@@ -81,11 +81,10 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                   const onUpdatedIntegration = async (
                     values: IChoiceFormConfiguration
                   ) => {
-                    // this absolutely has to be set before we go
-                    // creating flows that need to point to it
-                    if (typeof state.step.id === 'undefined') {
-                      state.step.id = key();
-                    }
+                    const updatedStep = {
+                      ...state.step,
+                      id: state.step.id || key(),
+                    };
                     const flowCollection = values.flowConditions.map(
                       flowCondition => {
                         // Create a flow for new conditions or grab the
@@ -100,7 +99,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                 FlowKind.CONDITIONAL,
                                 params.flowId,
                                 data,
-                                state.step
+                                updatedStep
                               )
                             : getFlow(
                                 state.updatedIntegration || state.integration,
@@ -112,7 +111,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                 FlowKind.CONDITIONAL,
                                 params.flowId,
                                 data,
-                                state.step,
+                                updatedStep,
                                 flowCondition.flowId
                               )!;
                         // update the description
@@ -158,7 +157,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                         ? addStep
                         : updateStep)(
                         state.updatedIntegration || state.integration,
-                        state.step,
+                        updatedStep,
                         params.flowId,
                         positionAsNumber,
                         configuredProperties
