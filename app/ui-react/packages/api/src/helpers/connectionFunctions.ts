@@ -5,9 +5,9 @@ import {
   ConfigurationProperty,
   Connection,
   ConnectionBulletinBoard,
-  ConnectionOverview,
-  Connector,
   IConnectionWithIconFile,
+  IConnectionOverview,
+  IConnector,
 } from '@syndesis/models';
 import { getMetadataValue } from './integrationFunctions';
 
@@ -28,15 +28,15 @@ export function getConnectionMetadataValue(
 }
 
 export function getConnectionConnector(
-  connection: ConnectionOverview
-): Connector {
+  connection: IConnectionOverview
+): IConnector {
   if (!connection.connector) {
     throw Error(`FATAL: Connection ${connection.id} doesn't have a connector`);
   }
   return connection.connector;
 }
 
-export function getConnectorActions(connector: Connector): Action[] {
+export function getConnectorActions(connector: IConnector): Action[] {
   return connector.actions;
 }
 
@@ -139,7 +139,7 @@ export function isConfigurationRequired(
  * returns a string value of 'true'
  * @param connector
  */
-export function isTechPreview(connector: Connector): boolean {
+export function isTechPreview(connector: IConnector): boolean {
   return (
     getMetadataValue<string>('tech-preview', connector.metadata) === 'true'
   );

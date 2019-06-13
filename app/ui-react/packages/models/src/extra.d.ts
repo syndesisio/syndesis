@@ -1,8 +1,12 @@
-import { ConnectionBulletinBoard, ConnectionOverview } from '../dist';
+import { Omit } from 'react-router';
+import {
+  Connector,
+  ConnectionBulletinBoard,
+  ConnectionOverview,
+} from '../dist';
 import {
   ConfigurationProperty,
   Connection,
-  Connector,
   IntegrationMetricsSummary,
   IntegrationOverview,
   Step,
@@ -59,13 +63,15 @@ export interface IConfigurationProperty extends ConfigurationProperty {
   [name: string]: any;
 }
 
-export interface IConnectionOverview extends ConnectionOverview {
-  configRequired?: boolean;
-  isTechPreview?: boolean;
+export interface IConnectionOverview
+  extends Omit<ConnectionOverview, 'connector'> {
+  connector?: IConnector;
+  configRequired: boolean;
+  isTechPreview: boolean;
 }
 
 export interface IConnector extends Connector {
-  isTechPreview?: boolean;
+  isTechPreview: boolean;
 }
 
 // Extended connection interface to add support for the 'iconFile' property

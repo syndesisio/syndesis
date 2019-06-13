@@ -31,6 +31,8 @@ export const useConnection = (
 ) => {
   return useApiResource<IConnectionOverview>({
     defaultValue: {
+      configRequired: false,
+      isTechPreview: false,
       name: '',
     },
     initialValue,

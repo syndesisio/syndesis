@@ -1,9 +1,9 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
 import {
   ConnectionBulletinBoard,
-  ConnectionOverview,
   Connector,
   DataShape,
+  IConnectionOverview,
   Integration,
   StepKind,
 } from '@syndesis/models';
@@ -111,7 +111,7 @@ export interface IConfigureActionRouteParams extends IBaseFlowRouteParams {
  * step when configuring a multi-page connection.
  */
 export interface IConfigureActionRouteState extends IBaseRouteState {
-  connection: ConnectionOverview;
+  connection: IConnectionOverview;
   updatedIntegration?: Integration;
   configuredProperties: { [key: string]: string };
 }
@@ -124,7 +124,7 @@ export interface IDescribeDataShapeRouteParams extends IBaseFlowRouteParams {
 
 export interface IDescribeDataShapeRouteState extends IBaseRouteState {
   step: StepKind;
-  connection: ConnectionOverview;
+  connection: IConnectionOverview;
   updatedIntegration?: Integration;
 }
 
@@ -144,7 +144,7 @@ export interface ISelectActionRouteParams extends IBaseFlowRouteParams {
  * to render the IVP.
  */
 export interface ISelectActionRouteState extends IBaseRouteState {
-  connection: ConnectionOverview;
+  connection: IConnectionOverview;
 }
 
 /**

@@ -1,18 +1,22 @@
-import { Connector } from '@syndesis/models';
+import { IConnector } from '@syndesis/models';
 import { isTechPreview } from './helpers';
 import { useApiResource } from './useApiResource';
 
-export const transformConnectorResponse = (connector: Connector) => {
+export const transformConnectorResponse = (connector: IConnector) => {
   return {
     ...connector,
     isTechPreview: isTechPreview(connector),
   };
 };
 
-export const useConnector = (connectorId: string, initialValue?: Connector) => {
-  return useApiResource<Connector>({
+export const useConnector = (
+  connectorId: string,
+  initialValue?: IConnector
+) => {
+  return useApiResource<IConnector>({
     defaultValue: {
       actions: [],
+      isTechPreview: false,
       name: '',
     },
     initialValue,

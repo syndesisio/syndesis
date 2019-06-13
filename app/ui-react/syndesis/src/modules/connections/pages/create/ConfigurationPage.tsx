@@ -1,6 +1,6 @@
 import { useConnector, useConnectorCredentials } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Connector } from '@syndesis/models';
+import { IConnector } from '@syndesis/models';
 import {
   ConnectionCreatorLayout,
   ConnectorAuthorization,
@@ -27,7 +27,7 @@ export interface IConfigurationPageRouteParams {
 }
 
 export interface IConfigurationPageRouteState {
-  connector: Connector;
+  connector: IConnector;
 }
 
 interface IOAuthFlowProps {

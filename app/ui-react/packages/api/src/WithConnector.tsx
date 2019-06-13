@@ -16,6 +16,7 @@ export class WithConnector extends React.Component<IWithConnectorProps> {
         url={`/connectors/${this.props.id}`}
         defaultValue={{
           actions: [],
+          isTechPreview: false,
           name: '',
         }}
         initialValue={this.props.initialValue}
