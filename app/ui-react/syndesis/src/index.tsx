@@ -3,6 +3,9 @@ import {
   ServerEventsContext,
   WithServerEvents,
 } from '@syndesis/api';
+// Don't move this line, otherwise we anger the pf4
+import { App, IAppRoute, IAppRouteWithChildrens, WithConfig } from './app';
+// tslint:disable-next-line:ordered-imports
 import { createBrowserHistory } from '@syndesis/history';
 import { UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
@@ -10,7 +13,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { I18nextProvider, Translation } from 'react-i18next';
 import { Router } from 'react-router-dom';
-import { App, IAppRoute, IAppRouteWithChildrens, WithConfig } from './app';
 import i18n from './i18n';
 import './index.css';
 import { ApiClientConnectorsModule } from './modules/apiClientConnectors';
