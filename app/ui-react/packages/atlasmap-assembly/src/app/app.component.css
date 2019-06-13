@@ -3,4 +3,5 @@
 .DataMapperUI {
   width: 100% !important;
   padding: 0 20px 30px;
+  overflow: auto;
 }
