@@ -5,6 +5,7 @@
   "umd:main": "dist/auto-form.umd.js",
   "typings": "dist/auto-form/src/index.d.ts",
   "source": "src/index.ts",
+  "style": "dist/auto-form.css",
   "files": [
     "dist"
   ],
@@ -76,7 +77,6 @@
     }
   },
   "dependencies": {
-    "@syndesis/ui": "*",
     "formik": "^1.5.4",
     "patternfly-react": "^2.32.2"
   }

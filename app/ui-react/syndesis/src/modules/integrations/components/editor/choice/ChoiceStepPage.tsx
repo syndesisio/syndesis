@@ -16,7 +16,7 @@ import {
   PageLoader,
   PageSection,
 } from '@syndesis/ui';
-import { WithLoader, WithRouteData } from '@syndesis/utils';
+import { key, WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { ApiError, PageTitle } from '../../../../../shared';
 import { IEditorSidebarProps } from '../EditorSidebar';
@@ -81,6 +81,10 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                   const onUpdatedIntegration = async (
                     values: IChoiceFormConfiguration
                   ) => {
+                    const updatedStep = {
+                      ...state.step,
+                      id: state.step.id || key(),
+                    };
                     const flowCollection = values.flowConditions.map(
                       flowCondition => {
                         // Create a flow for new conditions or grab the
@@ -95,7 +99,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                 FlowKind.CONDITIONAL,
                                 params.flowId,
                                 data,
-                                state.step
+                                updatedStep
                               )
                             : getFlow(
                                 state.updatedIntegration || state.integration,
@@ -107,7 +111,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                                 FlowKind.CONDITIONAL,
                                 params.flowId,
                                 data,
-                                state.step,
+                                updatedStep,
                                 flowCondition.flowId
                               )!;
                         // update the description
@@ -153,7 +157,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                         ? addStep
                         : updateStep)(
                         state.updatedIntegration || state.integration,
-                        state.step,
+                        updatedStep,
                         params.flowId,
                         positionAsNumber,
                         configuredProperties

@@ -107,7 +107,7 @@ export function massageRequired(property: IFormDefinitionProperty): any {
 export function getArrayRows(missing: number, definition: IFormDefinition) {
   const answer: any[] = [];
   for (let i = 0; i < missing; i++) {
-    answer.push(sanitizeValues({}, definition));
+    answer.push(sanitizeValues(definition, {}));
   }
   return answer;
 }

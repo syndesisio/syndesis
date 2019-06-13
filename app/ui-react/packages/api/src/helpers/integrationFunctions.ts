@@ -880,6 +880,9 @@ export function createConditionalFlow(
   step: StepKind,
   useId?: string
 ) {
+  if (typeof step.id === 'undefined') {
+    throw Error('Cannot create conditional flow for a step with no ID set');
+  }
   const flowId = useId || generateKey();
   return {
     connections: [],
