@@ -2,6 +2,8 @@
 # Some reusable shell functions:
 #
 
+__ARGS__=("$@")
+
 # Outputs the value of a command line option.
 # Usage: readopt <flag> <default value>
 # Example: kind=$(readopt --kind MyKind)
@@ -9,12 +11,12 @@ readopt() {
     local filter="$1"
     local default="$2"
     local next=false
-    for var in "${ARGS[@]}"; do
+    for var in "${__ARGS__[@]}"; do
         if $next; then
             local value="${var##-}"
             if [ "$value" != "$var" ]; then
-               # Next is already also option, so we haven't
-               # specified a value.
+               # Next is already also option, so assume it's being used like a flag
+               echo true
                return
             fi
             echo $var
@@ -29,23 +31,40 @@ readopt() {
             next=true
         fi
     done
+    if $next; then
+       # Ran out of options treat like a flag
+       echo true
+    fi
+
     echo $default
+}
+
+
+docker_is_available() {
+    if [[ "$(which docker)" == "" ]] ; then
+        echo "warn: docker command not installed"
+        echo
+        return 0
+    fi
+
+    if docker info > /dev/null 2> /dev/null ; then
+        return 1
+    else
+        echo "warn: the docker comamand is not conected to a server"
+        echo
+        return 0
+    fi
 }
 
 build_operator()
 {
     local strategy="$1"
+    local gopackage="$2"
     if [ "$strategy" == "auto" ] ; then
-
-        if [[ "$(which docker)" == "" ]] ; then
+        
+        if docker_is_available; then
             if [[ "$(which go)" == "" ]] ; then
                 echo 'error: you must have either docker or go installed to build this project.'
-                exit 1
-            elif [[ "$(pwd)" != "$GOPATH/src/${OPERATOR_GO_PACKAGE}" ]] ; then
-                echo 'error: cannot do local go build: project not checked out into the $GOPATH directory.'
-                echo '       either: 1) install docker'
-                echo "           or: 2) check out project into: $GOPATH"
-                echo ''
                 exit 1
             else
                 strategy="go"
@@ -54,16 +73,12 @@ build_operator()
             if [[ "$(which go)" == "" ]] ; then
                 echo 'warn: building with docker since you do not have go installed.'
                 strategy="docker"
-            elif [[ "$(pwd)" != "$GOPATH/src/${OPERATOR_GO_PACKAGE}" ]] ; then
-                echo 'warn: cannot do local go build: project not checked out into the $GOPATH directory.'
-                echo '      building with docker instead...'
-                echo ''
-                strategy="docker"
             else
                 strategy="go"
             fi
         fi
     fi
+
 
     case "$strategy" in
     "go")
@@ -73,19 +88,31 @@ build_operator()
         export GO111MODULE=on
 
         go mod vendor
-        go generate ./pkg/...
-        if [[ "$(which operator-sdk)" == "" ]] ; then
-            operator-sdk generate k8s
-            operator-sdk generate openapi
+        if [[ "$(which operator-sdk)" != "" ]] ; then
+            if [[ "$(pwd)" != "$GOPATH/src/${gopackage}" ]] ; then
+                echo                 
+                echo "warnning: operator-sdk only works on project's in the \$GOPATH"
+                echo "          can't use it to update the generated code"
+                echo "          please move this project under the \$GOPATH so that :'$(pwd)'"
+                echo "          is located at '$GOPATH/src/${gopackage}'"
+                echo 
+            else 
+                operator-sdk generate k8s
+                operator-sdk generate openapi
+            fi
         fi
+        go generate ./pkg/...
 
+        echo building executable
         go test ./cmd/... ./pkg/...
-        GOOS=linux GOARCH=amd64 \
-        go build -o ./build/_output/bin/operator \
+        echo building executable
+        GOOS=linux GOARCH=amd64 go build -o ./build/_output/bin/operator \
             -gcflags all=-trimpath=${GOPATH} -asmflags all=-trimpath=${GOPATH} -mod=vendor \
-            ${OPERATOR_GO_PACKAGE}/cmd/manager
+            ./cmd/manager
     ;;
     "docker")
+
+        local BUILDER_IMAGE_NAME="operator-builder"
         echo ======================================================
         echo Building executable with Docker
         echo ======================================================
@@ -108,6 +135,9 @@ build_operator()
 build_image()
 {
     local strategy="$1"
+    local OPERATOR_IMAGE_NAME="$2"
+    local S2I_STREAM_NAME="$3"
+    
     if [ "$strategy" == "auto" ] ; then
         strategy=docker
         if [ -n "$(which oc)" ] ; then
@@ -120,17 +150,17 @@ build_image()
         echo ======================================================
         echo Building image with S2I
         echo ======================================================
-        if [ -z "$(oc get bc -o name | grep ${S2I_IMAGE_NAME})" ]; then
-            echo "Creating BuildConfig ${S2I_IMAGE_NAME}"
-            oc new-build --strategy=docker --binary=true --name ${S2I_IMAGE_NAME}
+        if [ -z "$(oc get bc -o name | grep ${S2I_STREAM_NAME})" ]; then
+            echo "Creating BuildConfig ${S2I_STREAM_NAME}"
+            oc new-build --strategy=docker --binary=true --name ${S2I_STREAM_NAME}
         fi
-        local arch="$(mktemp -t ${S2I_IMAGE_NAME}-docker).tar"
+        local arch="$(mktemp -t ${S2I_STREAM_NAME}-docker).tar"
         echo $arch
         trap "rm $arch" EXIT
         tar cvf $arch build
         cd build
         tar uvf $arch Dockerfile
-        oc start-build --from-archive=$arch ${S2I_IMAGE_NAME}
+        oc start-build --from-archive=$arch ${S2I_STREAM_NAME}
     ;;
     "docker")
         echo ======================================================
