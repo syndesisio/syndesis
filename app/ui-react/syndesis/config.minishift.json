@@ -41,7 +41,7 @@
   },
   "datavirt": {
     "dvUrl": "/vdb-builder/v1/",
-    "enabled": 0
+    "enabled": 1
   },
   "features": {
     "logging": false
