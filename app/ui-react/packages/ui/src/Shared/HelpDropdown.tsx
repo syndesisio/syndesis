@@ -112,7 +112,10 @@ export class HelpDropdown extends React.Component<
         data-testid={'help-dropdown-about-dropdown-item'}
         key="action"
         component="a"
-        onClick={launchAboutModal}
+        onClick={ev => {
+          ev.preventDefault();
+          launchAboutModal();
+        }}
       >
         About
       </DropdownItem>,
