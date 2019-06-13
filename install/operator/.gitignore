@@ -14,3 +14,6 @@ dep-cache
 # Temporary Build Files
 tmp/_output
 tmp/_test
+
+build_local.sh
+deploy/operatorsource.yaml
