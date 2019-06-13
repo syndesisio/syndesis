@@ -1,5 +1,4 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
-import { getStep } from '@syndesis/api';
 import { IFormValue } from '@syndesis/auto-form';
 import { ConnectionOverview, Integration, StepKind } from '@syndesis/models';
 import { makeResolver, makeResolverNoParams } from '@syndesis/utils';
@@ -100,12 +99,12 @@ export const configureSelectActionMapper = ({
 };
 export const configureConfigureActionMapper = ({
   actionId,
-  configuredProperties,
   flowId,
   page,
   integration,
   updatedIntegration,
   position,
+  configuredProperties,
   ...rest
 }: IEditorConfigureAction) => {
   const { params, state } = configureSelectActionMapper({
@@ -114,8 +113,6 @@ export const configureConfigureActionMapper = ({
     integration,
     position,
   });
-  const positionAsNumber = parseInt(position, 10);
-  const stepObject = getStep(integration, flowId, positionAsNumber) || {};
   return {
     params: {
       ...params,
@@ -124,9 +121,8 @@ export const configureConfigureActionMapper = ({
     } as IConfigureActionRouteParams,
     state: {
       ...state,
+      configuredProperties,
       updatedIntegration,
-      configuredProperties:
-        configuredProperties || stepObject.configuredProperties || {},
     } as IConfigureActionRouteState,
   };
 };
