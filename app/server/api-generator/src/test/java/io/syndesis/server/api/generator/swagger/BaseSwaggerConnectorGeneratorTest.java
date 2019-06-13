@@ -163,7 +163,7 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
         assertThat(generated.getProperties().keySet()).contains("accessToken", "authorizationEndpoint", "tokenEndpoint", "clientId",
             "clientSecret");
         assertThat(generated.getProperties().get("authenticationType").getEnum())
-            .containsExactly(new ConfigurationProperty.PropertyValue.Builder().value("oauth2").label("OAuth 2.0").build());
+            .containsExactly(new ConfigurationProperty.PropertyValue.Builder().value("oauth2:oauth2").label("OAuth 2.0 - oauth2").build());
     }
 
     @Test
