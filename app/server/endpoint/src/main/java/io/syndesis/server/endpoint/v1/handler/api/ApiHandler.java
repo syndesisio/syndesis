@@ -15,26 +15,32 @@
  */
 package io.syndesis.server.endpoint.v1.handler.api;
 
+import java.io.InputStream;
+import java.util.Objects;
+
+import javax.ws.rs.Consumes;
+import javax.ws.rs.FormParam;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
+
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.springframework.stereotype.Component;
-
-import javax.ws.rs.Consumes;
-import javax.ws.rs.FormParam;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-import java.io.InputStream;
 
 @Path("/apis")
 @Api(value = "apis")
@@ -43,8 +49,38 @@ public class ApiHandler extends BaseHandler {
 
     private final APIGenerator apiGenerator;
 
-    public ApiHandler(final DataManager dataMgr, APIGenerator apiGenerator) {
+    private final IntegrationResourceManager resourceManager;
+
+    public static class APIFormData {
+
+        @FormParam("specification")
+        private InputStream specification;
+
+        public InputStream getSpecification() {
+            return specification;
+        }
+
+        public void setSpecification(final InputStream specification) {
+            this.specification = specification;
+        }
+    }
+
+    public static class APIUpdateFormData extends APIFormData {
+        @FormParam("integration")
+        private Integration integration;
+
+        public Integration getIntegration() {
+            return integration;
+        }
+
+        public void setIntegration(final Integration integration) {
+            this.integration = integration;
+        }
+    }
+
+    public ApiHandler(final DataManager dataMgr, final IntegrationResourceManager resourceManager, final APIGenerator apiGenerator) {
         super(dataMgr);
+        this.resourceManager = resourceManager;
         this.apiGenerator = apiGenerator;
     }
 
@@ -72,22 +108,38 @@ public class ApiHandler extends BaseHandler {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation("Validates the API and provides a summary of the operations")
     public APISummary info(@MultipartForm final APIFormData apiFormData) {
-        String spec = ApiGeneratorHelper.getSpec(apiFormData);
+        final String spec = ApiGeneratorHelper.getSpec(apiFormData);
         return apiGenerator.info(spec, APIValidationContext.PROVIDED_API);
     }
 
-    public static class APIFormData {
+    @PUT
+    @Path("/generator")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    @ApiOperation("Update the provided integration from a API specification. Does not store it in the database")
+    public Response updateIntegrationFromSpecification(@MultipartForm final APIUpdateFormData apiUpdateFormData) {
+        final DataManager dataManager = getDataManager();
+        final Integration existing = apiUpdateFormData.integration;
 
-        @FormParam("specification")
-        private InputStream specification;
+        final APIIntegration apiIntegration = ApiGeneratorHelper.generateIntegrationUpdateFrom(existing, apiUpdateFormData, dataManager, apiGenerator);
 
-        public void setSpecification(InputStream specification) {
-            this.specification = specification;
+        final Integration givenIntegration = apiIntegration.getIntegration();
+
+        final Integration updated = ApiGeneratorHelper.updateFlowsAndStartAndEndDataShapes(existing, givenIntegration);
+
+        final OpenApi existingApiSpecification = ApiGeneratorHelper.specificationFrom(resourceManager, existing).orElse(null);
+
+        if (Objects.equals(existing.getFlows(), updated.getFlows()) && Objects.equals(existingApiSpecification, apiIntegration.getSpec())) {
+            // no changes were made to the flows or to the specification
+            return Response.notModified().build();
         }
 
-        public InputStream getSpecification() {
-            return specification;
-        }
+        // store the OpenAPI resource, we keep the old one as it might
+        // be referenced from Integration's stored in IntegrationDeployent's
+        // this gives us a rollback mechanism
+        final OpenApi openApi = apiIntegration.getSpec();
+        dataManager.store(openApi, OpenApi.class);
+
+        return Response.accepted(updated).build();
     }
-
 }

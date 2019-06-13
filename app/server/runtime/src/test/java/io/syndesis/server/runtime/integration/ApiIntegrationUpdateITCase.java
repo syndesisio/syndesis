@@ -22,10 +22,15 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.model.openapi.OpenApi;
+import io.syndesis.common.util.Json;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.runtime.BaseITCase;
 
 import org.json.JSONException;
@@ -33,12 +38,17 @@ import org.junit.Before;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 import static io.syndesis.common.util.Resources.getResourceAsText;
 import static io.syndesis.server.runtime.integration.MultipartUtil.MULTIPART;
@@ -49,6 +59,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApiIntegrationUpdateITCase extends BaseITCase {
 
     private Integration existing;
+
+    @Autowired
+    protected IntegrationResourceManager resourceManager;
 
     @Before
     public void generateApiIntegration() {
@@ -104,6 +117,59 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
         final String givenJson = getResourceAsText("io/syndesis/server/runtime/updated-test-swagger.json");
         final String receivedJson = new String(specificationResponse.getBody().getByteArray(), StandardCharsets.UTF_8);
         JSONAssert.assertEquals(givenJson, receivedJson, JSONCompareMode.LENIENT);
+    }
+
+    @Test
+    public void shouldUpdateApiIntegrationViaApiGenerator() throws IOException, JSONException {
+        final MultiValueMap<Object, Object> update = specification("/io/syndesis/server/runtime/updated-test-swagger.json");
+        update.add("integration", integration(existing));
+
+        final ResponseEntity<Integration> updateResponse = put("/api/v1/apis/generator", update, Integration.class,
+            tokenRule.validToken(), HttpStatus.ACCEPTED, MULTIPART);
+
+        final Integration updated = updateResponse.getBody();
+
+        final String integrationId = existing.getId().get();
+
+        // not present in updated-test-swagger.json
+        assertThat(updated.findFlowById(integrationId + ":flows:fetch-task")).isNotPresent();
+
+        // new operation added in updated-test-swagger.json
+        assertThat(updated.findFlowById(integrationId + ":flows:count-tasks")).isPresent();
+
+        // modified in updated-test-swagger.json
+        assertThat(updated.findFlowById(integrationId + ":flows:create-task")).hasValueSatisfying(flow -> {
+            final List<Step> steps = flow.getSteps();
+            assertThat(steps).hasSize(3);
+            assertThat(flow.findStepById("log-step")).isPresent();
+
+            final Step firstStep = steps.get(0);
+            final DataShape outputDataShape = firstStep.outputDataShape().get();
+            final String outputSpecification = outputDataShape.getSpecification();
+            assertThat(outputSpecification).contains("debug", "task");
+        });
+
+        final List<ResourceIdentifier> resources = updated.getResources();
+        assertThat(resources).hasSize(1);
+        final ResourceIdentifier openApiResource = resources.get(0);
+        assertThat(openApiResource.getKind()).isEqualTo(Kind.OpenApi);
+
+        final OpenApi openApi = resourceManager.loadOpenApiDefinition(openApiResource.getId().get()).get();
+
+        final String givenJson = getResourceAsText("io/syndesis/server/runtime/updated-test-swagger.json");
+        JSONAssert.assertEquals(givenJson, new String(openApi.getDocument(), StandardCharsets.UTF_8), JSONCompareMode.LENIENT);
+    }
+
+    static HttpEntity<Resource> integration(final Integration integration) throws JsonProcessingException {
+        final byte[] bytes = Json.writer().writeValueAsBytes(integration);
+
+        final Resource resource = new ByteArrayResource(bytes);
+
+        final HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        final HttpEntity<Resource> entity = new HttpEntity<>(resource, headers);
+
+        return entity;
     }
 
     static Iterable<Flow> replace(final List<Flow> flows, final Flow replacement) {

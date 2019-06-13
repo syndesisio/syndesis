@@ -18,12 +18,19 @@ package io.syndesis.server.endpoint.v1.handler.api;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import io.syndesis.common.model.DataShape;
+import io.syndesis.common.model.Kind;
+import io.syndesis.common.model.ResourceIdentifier;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
@@ -56,6 +63,15 @@ public final class ApiGeneratorHelper {
         return apiGenerator.generateIntegration(spec, template);
     }
 
+    public static Optional<OpenApi> specificationFrom(IntegrationResourceManager resourceManager, final Integration integration) {
+        final Optional<ResourceIdentifier> specification = integration.getResources().stream().filter(r -> r.getKind() == Kind.OpenApi)
+            .max(ResourceIdentifier.LATEST_VERSION);
+
+        return specification
+            .flatMap(s -> s.getId()
+                .flatMap(resourceManager::loadOpenApiDefinition));
+    }
+
     public static APIIntegration generateIntegrationUpdateFrom(final Integration existing, final APIFormData apiFormData, final DataManager dataManager,
         final APIGenerator apiGenerator) {
         final APIIntegration newApiIntegration = generateIntegrationFrom(apiFormData, dataManager, apiGenerator);
@@ -66,6 +82,67 @@ public final class ApiGeneratorHelper {
             .flows(withSameIntegrationIdPrefix(existing, newIntegration.getFlows())).build();
 
         return new APIIntegration(updatedIntegration, newApiIntegration.getSpec());
+    }
+
+    public static Integration updateFlowsAndStartAndEndDataShapes(final Integration existing, final Integration given) {
+        // will contain updated flows
+        final List<Flow> updatedFlows = new ArrayList<>(given.getFlows().size());
+
+        for (final Flow givenFlow : given.getFlows()) {
+            final String flowId = givenFlow.getId().get();
+
+            final Optional<Flow> maybeExistingFlow = existing.findFlowById(flowId);
+            if (!maybeExistingFlow.isPresent()) {
+                // this is a flow generated from a new operation or it
+                // has it's operation id changed, either way we only
+                // need to add it, since we don't know what flow we need
+                // to update
+                updatedFlows.add(givenFlow);
+                continue;
+            }
+
+            final List<Step> givenSteps = givenFlow.getSteps();
+            if (givenSteps.size() != 2) {
+                throw new IllegalArgumentException("Expecting to get exactly two steps per flow");
+            }
+
+            // this is a freshly minted flow from the specification
+            // there should be only two steps (start and end) in the
+            // flow
+            final Step givenStart = givenSteps.get(0);
+            final Optional<DataShape> givenStartDataShape = givenStart.outputDataShape();
+
+            // generated flow has only a start and an end, start is at 0
+            // and the end is at 1
+            final Step givenEnd = givenSteps.get(1);
+            final Optional<DataShape> givenEndDataShape = givenEnd.inputDataShape();
+
+            final Flow existingFlow = maybeExistingFlow.get();
+            final List<Step> existingSteps = existingFlow.getSteps();
+
+            // readability
+            final int start = 0;
+            final int end = existingSteps.size() - 1;
+
+            // now we update the data shapes of the start and end steps
+            final Step existingStart = existingSteps.get(start);
+            final Step updatedStart = existingStart.updateOutputDataShape(givenStartDataShape);
+
+            final Step existingEnd = existingSteps.get(end);
+            final Step updatedEnd = existingEnd.updateInputDataShape(givenEndDataShape);
+
+            final List<Step> updatedSteps = new ArrayList<>(existingSteps);
+            updatedSteps.set(start, updatedStart);
+            updatedSteps.set(end, updatedEnd);
+
+            final Flow updatedFlow = existingFlow.builder().name(givenFlow.getName()).description(givenFlow.getDescription()).steps(updatedSteps).build();
+            updatedFlows.add(updatedFlow);
+        }
+
+        return existing.builder().flows(updatedFlows)
+            // we replace all resources counting that the only resource
+            // present is the OpenAPI specification
+            .resources(given.getResources()).build();
     }
 
     static String getSpec(final APIFormData apiFormData) {
