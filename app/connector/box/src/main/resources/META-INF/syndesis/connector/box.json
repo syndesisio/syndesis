@@ -61,7 +61,7 @@
         "outputDataShape": {
           "kind": "java",
           "name": "DownloadedFile",
-          "type": "java.io.OutputStream"
+          "type": "io.syndesis.connector.box.BoxFile"
         },
         "propertyDefinitionSteps": [
           {
@@ -71,10 +71,22 @@
               "fileId": {
                 "deprecated": false,
                 "displayName": "File ID",
-                "group": "consumer",
+                "group": "producer",
                 "javaType": "java.lang.String",
                 "kind": "parameter",
                 "labelHint": "File ID to download",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "encoding": {
+                "defaultValue": "UTF-8",
+                "deprecated": false,
+                "displayName": "File encoding",
+                "group": "producer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "Encoding of the file content",
                 "required": true,
                 "secret": false,
                 "type": "string"

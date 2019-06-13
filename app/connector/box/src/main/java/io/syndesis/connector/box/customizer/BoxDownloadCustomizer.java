@@ -16,19 +16,46 @@
 package io.syndesis.connector.box.customizer;
 
 import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
+import io.syndesis.connector.box.BoxFile;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BoxDownloadCustomizer implements ComponentProxyCustomizer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(BoxDownloadCustomizer.class);
+
+    private String encoding;
+
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        component.setBeforeProducer(exchange -> {
-            Message in = exchange.getIn();
-            in.setBody(new ByteArrayOutputStream());
-        });
+        encoding = (String) options.get("encoding");
+        component.setBeforeProducer(this::beforeProducer);
+        component.setAfterProducer(this::afterProducer);
+    }
+
+    private void beforeProducer(Exchange exchange) {
+        Message in = exchange.getIn();
+        in.setBody(new ByteArrayOutputStream());
+    }
+
+    private void afterProducer(Exchange exchange) {
+        BoxFile file = new BoxFile();
+        Message in = exchange.getIn();
+        file.setId(in.getHeader("CamelBox.fileId", String.class));
+        ByteArrayOutputStream output = in.getBody(ByteArrayOutputStream.class);
+        try {
+            file.setContent(new String(output.toByteArray(), encoding));
+        } catch (UnsupportedEncodingException e) {
+            LOG.error("Failed to convert file content to String. Invalid file encoding: {}", encoding);
+        }
+        file.setSize(output.size());
+        in.setBody(file);
     }
 }
