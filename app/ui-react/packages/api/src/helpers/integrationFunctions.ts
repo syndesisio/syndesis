@@ -693,13 +693,22 @@ export async function setFlow(
 export function reconcileConditionalFlows(
   integration: Integration,
   newFlows: Flow[],
-  stepId: string
+  stepId: string,
+  descriptor: ActionDescriptor
 ) {
   const flowsWithoutStepId = getFlowsWithoutLinkedStepId(
     integration.flows!,
     stepId
   );
-  return { ...integration, flows: [...flowsWithoutStepId, ...newFlows] };
+  const updatedFlows = newFlows.map(flow => {
+    const newStep = setDataShapeOnStep(
+      { ...flow.steps![0] },
+      descriptor.outputDataShape!,
+      false
+    );
+    return applyUpdatedStep(flow, newStep, 0);
+  });
+  return { ...integration, flows: [...flowsWithoutStepId, ...updatedFlows] };
 }
 
 export function getFlowsWithoutLinkedStepId(flows: Flow[], stepId: string) {
@@ -767,12 +776,26 @@ export function setStepInFlow(
   getSanitizedSteps: GetSanitizedSteps
 ) {
   const flow = getFlow(integration, flowId);
+  return setFlow(
+    integration,
+    applyUpdatedStep(flow!, step, position),
+    getSanitizedSteps
+  );
+}
+
+/**
+ * Returns a new flow object with the supplied step set at the given position
+ * @param flow
+ * @param step
+ * @param position
+ */
+export function applyUpdatedStep(flow: Flow, step: Step, position: number) {
   const steps = [...flow!.steps!];
   if (typeof step.id === 'undefined') {
     step.id = generateKey();
   }
   steps[position] = { ...step };
-  return setFlow(integration, { ...flow!, steps }, getSanitizedSteps);
+  return { ...flow!, steps };
 }
 
 /**
