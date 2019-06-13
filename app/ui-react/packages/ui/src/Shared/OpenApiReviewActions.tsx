@@ -109,15 +109,17 @@ export class OpenApiReviewActions extends React.Component<
                   </Label>
                 </Title>
               )}
-              {this.props.errorMessages
-                ? this.props.errorMessages.map(
-                    (errorMsg: string, index: number) => (
-                      <Text component={TextVariants.p} key={index}>
-                        {index + 1}. {errorMsg}
-                      </Text>
+              <Container className={'review-actions__errors'}>
+                {this.props.errorMessages
+                  ? this.props.errorMessages.map(
+                      (errorMsg: string, index: number) => (
+                        <Text component={TextVariants.p} key={index}>
+                          {index + 1}. {errorMsg}
+                        </Text>
+                      )
                     )
-                  )
-                : null}
+                  : null}
+              </Container>
 
               {/* warning messages */}
               {this.props.i18nWarningsHeading && this.props.warningMessages && (

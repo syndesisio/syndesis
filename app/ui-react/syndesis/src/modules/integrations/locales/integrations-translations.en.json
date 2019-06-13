@@ -120,6 +120,7 @@
       "sectionApiDefinition": "API DEFINITION",
       "sectionImported": "IMPORTED",
       "sectionWarnings": "WARNINGS",
+      "sectionErrors": "ERRORS",
       "title": "Review Actions"
     },
     "reviewOperations": {

@@ -1,5 +1,9 @@
 /* tslint:disable:object-literal-sort-keys no-empty-interface */
-import { getEmptyIntegration, isIntegrationApiProvider } from '@syndesis/api';
+import {
+  getEmptyIntegration,
+  getFlow,
+  isIntegrationApiProvider,
+} from '@syndesis/api';
 import { IIntegrationOverviewWithDraft } from '@syndesis/models';
 import {
   makeResolver,
@@ -27,18 +31,19 @@ import {
 } from './pages/detail/interfaces';
 import routes from './routes';
 
-export const configureIndexMapper = ({
-  flowId,
-  integration,
-}: IEditorIndex) => ({
-  params: {
-    flowId: flowId ? flowId : integration.flows![0].id!,
-    integrationId: integration.id!,
-  } as IBaseFlowRouteParams,
-  state: {
-    integration,
-  } as IBaseRouteState,
-});
+export const configureIndexMapper = ({ flowId, integration }: IEditorIndex) => {
+  flowId =
+    flowId && getFlow(integration, flowId) ? flowId : integration.flows![0].id!;
+  return {
+    params: {
+      flowId,
+      integrationId: integration.id!,
+    } as IBaseFlowRouteParams,
+    state: {
+      integration,
+    } as IBaseRouteState,
+  };
+};
 
 export const configureIndexOrApiProviderMapper = (
   indexRoute: string,
