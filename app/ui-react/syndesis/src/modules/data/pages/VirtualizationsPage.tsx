@@ -101,6 +101,19 @@ export class VirtualizationsPage extends React.Component {
               return (
                 <UIContext.Consumer>
                   {({ pushNotification }) => {
+                    if (config.datavirt.enabled === 0) {
+                      return (
+                        <SimplePageHeader
+                          i18nTitle={t(
+                            'virtualization.virtualizationsPageTitle'
+                          )}
+                          i18nDescription={t(
+                            'virtualization.virtualizationsDisabled'
+                          )}
+                        />
+                      )
+                    }
+
                     return (
                       <WithVirtualizations>
                         {({ data, hasData, error, read }) => {

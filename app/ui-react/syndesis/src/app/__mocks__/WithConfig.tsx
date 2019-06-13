@@ -24,6 +24,7 @@ export const WithConfig = ({ children }: mockIWithConfigProps) => {
       },
       datavirt: {
         dvUrl: '/vdb-builder/v1/',
+        enabled: 0
       },
       features: {
         logging: false,
