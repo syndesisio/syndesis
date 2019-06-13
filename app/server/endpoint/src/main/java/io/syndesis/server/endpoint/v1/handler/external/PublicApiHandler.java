@@ -20,9 +20,13 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Queue;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
@@ -95,6 +99,9 @@ public class PublicApiHandler {
     private final ConnectionHandler connectionHandler;
     private final MonitoringProvider monitoringProvider;
 
+    // cache of temporary environment names not assigned to any integration
+    private final Queue<String> unusedEnvironments;
+
     protected PublicApiHandler(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationHandler integrationHandler, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
         this.dataMgr = dataMgr;
         this.handler = handler;
@@ -103,6 +110,8 @@ public class PublicApiHandler {
         this.deploymentHandler = deploymentHandler;
         this.connectionHandler = connectionHandler;
         this.monitoringProvider = monitoringProvider;
+
+        this.unusedEnvironments = new ConcurrentLinkedQueue<>();
     }
 
     /**
@@ -112,11 +121,30 @@ public class PublicApiHandler {
     @Path("environments")
     @Produces(MediaType.APPLICATION_JSON)
     public List<String> getReleaseEnvironments() {
-        return dataMgr.fetchAll(Integration.class).getItems().stream()
+        List<String> result = dataMgr.fetchAll(Integration.class).getItems().stream()
                 .filter(i -> !i.isDeleted())
                 .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
                 .distinct()
                 .collect(Collectors.toList());
+        result.addAll(this.unusedEnvironments);
+        return result;
+    }
+
+    /**
+     * Add new unused environment.
+     */
+    @PUT
+    @Path("environments/{env}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public void addNewEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment) {
+        validateEnvironment("environment", environment);
+
+        // look for duplicate environment name
+        if (getReleaseEnvironments().contains(environment)) {
+            throw new ClientErrorException("Duplicate environment " + environment, Response.Status.BAD_REQUEST);
+        }
+
+        this.unusedEnvironments.add(environment);
     }
 
     /**
@@ -127,6 +155,11 @@ public class PublicApiHandler {
     public void deleteEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment) {
 
         validateEnvironment("environment", environment);
+
+        // check if this is an unused environment
+        if (this.unusedEnvironments.remove(environment)) {
+            return;
+        }
 
         // get and update list of integrations with this environment
         final List<Integration> integrations = dataMgr.fetchAll(Integration.class)
@@ -174,6 +207,12 @@ public class PublicApiHandler {
 
         // ignore request if names are the same
         if (environment.equals(newEnvironment)) {
+            return;
+        }
+
+        // renaming an unused environment?
+        if (this.unusedEnvironments.remove(environment)) {
+            this.unusedEnvironments.add(newEnvironment);
             return;
         }
 
@@ -230,6 +269,11 @@ public class PublicApiHandler {
 
         // update json db
         dataMgr.update(integration.builder().continuousDeliveryState(deliveryState).build());
+
+        // move environment name to unused if no other integration uses it
+        if (!getReleaseEnvironments().contains(environment)) {
+            this.unusedEnvironments.add(environment);
+        }
     }
 
     /**
@@ -276,7 +320,14 @@ public class PublicApiHandler {
 
         // delete tags not in the environments list?
         if (deleteOtherTags) {
-            deliveryState.keySet().retainAll(environments);
+            Set<String> keySet = deliveryState.keySet();
+
+            // move deleted environments to unused
+            Set<String> unused = new HashSet<>(keySet);
+            unused.removeAll(environments);
+            this.unusedEnvironments.addAll(unused);
+
+            keySet.retainAll(environments);
         }
 
         // update json db
