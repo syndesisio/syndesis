@@ -135,7 +135,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
       backHref={(p, s) => appResolvers.connection.selectAction({ ...p, ...s })}
       cancelHref={cancelHref}
       mode={mode}
-      nextStepHref={(p, s) =>
+      nextPageHref={(p, s) =>
         appResolvers.connection.configureAction({
           ...p,
           ...s,

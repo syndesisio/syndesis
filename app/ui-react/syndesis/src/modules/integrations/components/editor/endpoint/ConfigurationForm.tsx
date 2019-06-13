@@ -19,7 +19,7 @@ import i18n from '../../../../../i18n';
 import { IWithConfigurationFormProps } from './WithConfigurationForm';
 
 export interface IConfigurationFormProps
-  extends Pick<IWithConfigurationFormProps, 'configurationStep'>,
+  extends Pick<IWithConfigurationFormProps, 'configurationPage'>,
     Pick<IWithConfigurationFormProps, 'initialValue'>,
     Pick<IWithConfigurationFormProps, 'oldAction'>,
     Pick<IWithConfigurationFormProps, 'onUpdatedIntegration'>,
@@ -33,7 +33,7 @@ export const ConfigurationForm: React.FunctionComponent<
   IConfigurationFormProps
 > = ({
   action,
-  configurationStep,
+  configurationPage,
   descriptor,
   initialValue,
   oldAction,
@@ -45,9 +45,9 @@ export const ConfigurationForm: React.FunctionComponent<
   const [error, setError] = React.useState();
   try {
     const steps = getActionSteps(descriptor);
-    const step = getActionStep(steps, configurationStep);
+    const step = getActionStep(steps, configurationPage);
     const definition = getActionStepDefinition(step);
-    const moreConfigurationSteps = configurationStep < steps.length - 1;
+    const moreConfigurationSteps = configurationPage < steps.length - 1;
     const onSave = async (
       values: { [key: string]: string },
       actions: any

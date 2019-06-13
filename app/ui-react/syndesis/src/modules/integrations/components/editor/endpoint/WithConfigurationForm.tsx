@@ -22,7 +22,7 @@ export interface IOnUpdatedIntegrationProps {
    * true if the configuration is not complete because there are other steps,
    * false otherwise.
    * If true the form should be re-rendered with an incremented
-   * [configurationStep]{@link IWithConfigurationFormProps#configurationStep}.
+   * [configurationPage]{@link IWithConfigurationFormProps#configurationPage}.
    */
   moreConfigurationSteps: boolean;
   /**
@@ -48,7 +48,7 @@ export interface IWithConfigurationFormProps {
    * for actions whose configuration must be performed in multiple steps,
    * indicates the current step.
    */
-  configurationStep: number;
+  configurationPage: number;
   /**
    * the values to assign to the form once rendered. These can come either from
    * an existing integration or from the [onUpdatedIntegration]{@link IWithConfigurationFormProps#onUpdatedIntegration}
