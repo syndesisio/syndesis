@@ -1,26 +1,105 @@
-- apiVersion: authorization.openshift.io/v1
-  kind: RoleBinding
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
   metadata:
-    name: syndesis:editors
+    name: syndesis-editor
     labels:
       app: syndesis
       syndesis.io/app: syndesis
       syndesis.io/type: infrastructure
-  roleRef:
-    name: edit
+      syndesis.io/component: syndesis-server
+  rules:
+  - apiGroups:
+    - ""
+    resources:
+    - pods
+    - services
+    - endpoints
+    - persistentvolumeclaims
+    - configmaps
+    - secrets
+    - serviceaccounts
+    verbs: [ get, list, create, update, delete, deletecollection, watch ]
+  - apiGroups:
+    - ""
+    resources:
+    - pods/log
+    verbs: [ get ]
+  - apiGroups:
+    - ""
+    resources:
+    - replicationcontrollers
+    - replicationcontrollers/scale
+    - replicationcontrollers/status
+    verbs: [ get, list, create, update, delete, deletecollection, watch ]
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
+    - builds
+    - buildconfigs
+    - builds/details
+    - buildconfigs/webhooks
+    - buildconfigs/instantiatebinary
+    - builds/log
+    verbs: [ get, list, create, update, delete, deletecollection, watch ]
+  - apiGroups:
+    - ""
+    - apps.openshift.io
+    resources:
+    - deploymentconfigs
+    - deploymentconfigs/scale
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
+    - ""
+    - apps.openshift.io
+    resources:
+    - deploymentconfigrollbacks
+    - deploymentconfigs/instantiate
+    - deploymentconfigs/rollback
+    verbs: [ create ]
+  - apiGroups:
+    - ""
+    - apps.openshift.io
+    resources:
+    - deploymentconfigs/log
+    - deploymentconfigs/status
+    verbs: [ get, list, watch ]
+  - apiGroups:
+    - ""
+    - image.openshift.io
+    resources:
+    - imagestreams
+    - imagestreamimages
+    - imagestreammappings
+    - imagestreams/secrets
+    - imagestreamtags
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
+    - ""
+    - image.openshift.io
+    resources:
+    - imagestreams/status
+    - imagestreamimports
+    verbs: [ get, list, watch ]
+  - apiGroups:
+    - route.openshift.io
+    resources:
+    - routes
+    verbs: [ delete ]
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: syndesis-server-editor
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-server
   subjects:
   - kind: ServiceAccount
     name: syndesis-server
-- apiVersion: authorization.openshift.io/v1
-  kind: RoleBinding
-  metadata:
-    name: syndesis:viewers
-    labels:
-      app: syndesis
-      syndesis.io/app: syndesis
-      syndesis.io/type: infrastructure
   roleRef:
-    name: view
-  subjects:
-  - kind: ServiceAccount
-    name: syndesis-prometheus
+    kind: Role
+    name: syndesis-editor
+    apiGroup: rbac.authorization.k8s.io
