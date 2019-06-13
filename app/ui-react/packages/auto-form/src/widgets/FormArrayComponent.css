@@ -2,8 +2,10 @@
   text-align: right;
   margin-top: 4px;
 }
+.form-array-control__array-controls {
+  white-space: nowrap ;
+}
 
 .form-array-control__array-controls .fa {
   font-size: 20px;
-  white-space: nowrap ;
 }
