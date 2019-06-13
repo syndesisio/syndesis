@@ -58,6 +58,18 @@
             <updatePolicy>never</updatePolicy>
           </releases>
         </repository>
+        <repository>
+          <id>atlassian-public</id>
+          <name>Atlassian Repository</name>
+          <url>https://packages.atlassian.com/maven-external</url>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <releases>
+            <enabled>true</enabled>
+            <updatePolicy>never</updatePolicy>
+          </releases>
+        </repository>
       </repositories>
       <pluginRepositories>
         <pluginRepository>

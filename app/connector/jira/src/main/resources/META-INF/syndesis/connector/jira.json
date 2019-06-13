@@ -1,0 +1,651 @@
+{
+  "actions": [
+    {
+      "actionType": "connector",
+      "description": "Retrieve new issues added after the route was started.",
+      "descriptor": {
+        "configuredProperties": {
+          "type": "newIssues"
+        },
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "name": "Issue",
+          "type": "com.atlassian.jira.rest.client.api.domain.Issue"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Retrieve new issues after the route was started.",
+            "name": "Retrieve new issues",
+            "properties": {
+              "jql": {
+                "deprecated": false,
+                "displayName": "Jira Query Language",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "raw": true,
+                "labelHint": "This is used to query the Jira server, try to optimize the jql by using project, component, status, type, fields to reduce the amount of time to search the Jira server.",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "delay": {
+                "defaultValue": "5000",
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "consumer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Delay in milliseconds when querying Jira",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:jira-retrieve-new-issues",
+      "name": "Retrieve New Issues",
+      "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Retrieve new comments added after the route was started.",
+      "descriptor": {
+        "configuredProperties": {
+          "type": "newComments"
+        },
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "java",
+          "name": "Comment",
+          "type": "com.atlassian.jira.rest.client.api.domain.Comment"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Retrieve new comments after the route was started.",
+            "name": "Retrieve new comments",
+            "properties": {
+              "jql": {
+                "deprecated": false,
+                "displayName": "Jira Query Language",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "raw": true,
+                "labelHint": "This is used to query the Jira server, try to optimize the jql by using project, component, status, type, fields to reduce the amount of time to search the Jira server.",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "delay": {
+                "defaultValue": "5000",
+                "deprecated": false,
+                "displayName": "Delay",
+                "group": "consumer",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "label": "consumer",
+                "labelHint": "Delay in milliseconds when querying Jira",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:jira-retrieve-new-comments",
+      "name": "Retrieve New Comments",
+      "pattern": "From"
+    },
+    {
+      "actionType": "connector",
+      "description": "Add an issue to Jira",
+      "descriptor": {
+        "configuredProperties": {
+          "type": "addIssue"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.jira.customizer.AddIssueCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "Issue",
+          "type": "io.syndesis.connector.jira.JiraIssue"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Add an issue to Jira",
+            "name": "Add an issue to Jira",
+            "properties": {
+              "ProjectKey": {
+                "deprecated": false,
+                "displayName": "Project Key",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Short name of the Jira project",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueTypeId": {
+                "deprecated": false,
+                "displayName": "Issue type ID or name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "ID or name of the issue type",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "IssuePriorityId": {
+                "deprecated": false,
+                "displayName": "Priority ID or name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "ID or name of the priority",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueComponents": {
+                "deprecated": false,
+                "displayName": "Components",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "List of the components, separated by comma.",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueWatchersAdd": {
+                "deprecated": false,
+                "displayName": "Watchers",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "List of the users to watch the issue, separated by comma.",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueAssignee": {
+                "deprecated": false,
+                "displayName": "Assignee",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Name of the user to assign the issue to.",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueSummary": {
+                "deprecated": false,
+                "displayName": "Summary",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "The summary field of the issue",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "description": {
+                "deprecated": false,
+                "displayName": "Description",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:jira-add-issue",
+      "name": "Add Issue",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Add a comment to an issue",
+      "descriptor": {
+        "configuredProperties": {
+          "type": "addComment"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.jira.customizer.AddCommentCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "Comment",
+          "type": "io.syndesis.connector.jira.JiraComment"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Add a comment to an issue.",
+            "name": "Add a comment to an issue",
+            "properties": {
+              "IssueKey": {
+                "deprecated": false,
+                "displayName": "Issue Key",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueComment": {
+                "deprecated": false,
+                "displayName": "Comment",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:jira-add-comment",
+      "name": "Add Comment",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Attach a file to an issue",
+      "descriptor": {
+        "configuredProperties": {
+          "type": "attach"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.jira.customizer.AttachFileCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Attach a file to an issue",
+            "name": "Attach a file to an issue",
+            "properties": {
+              "IssueKey": {
+                "deprecated": false,
+                "displayName": "Issue Key",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:jira-attach-file",
+      "name": "Attach file",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Add/Remove watchers of an issue",
+      "descriptor": {
+        "configuredProperties": {
+          "type": "watchers"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.jira.customizer.WatchersCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "any"
+        },
+        "outputDataShape": {
+          "kind": "none"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Add/Remove watchers of an issue",
+            "name": "Add/Remove watchers of an issue",
+            "properties": {
+              "IssueKey": {
+                "deprecated": false,
+                "displayName": "Issue Key",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "addWatchers": {
+                "deprecated": false,
+                "displayName": "Add Watchers",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "The list of users to add to the watchers list, separated by comma.",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "removeWatchers": {
+                "deprecated": false,
+                "displayName": "Remove Watchers",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "The list of users to remove from the watchers list, separated by comma.",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:jira-add-remove-watchers",
+      "name": "Add/Remove Watchers",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Update an issue",
+      "descriptor": {
+        "configuredProperties": {
+          "type": "updateIssue"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.jira.customizer.UpdateIssueCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "Issue",
+          "type": "io.syndesis.connector.jira.JiraIssue"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Update fields of an existing issue",
+            "name": "Update an issue",
+            "properties": {
+              "IssueKey": {
+                "deprecated": false,
+                "displayName": "Issue Key",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueTypeId": {
+                "deprecated": false,
+                "displayName": "Issue type ID or name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "ID or name of the issue type",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "IssuePriorityId": {
+                "deprecated": false,
+                "displayName": "Priority ID or name",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "ID or name of the priority",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueComponents": {
+                "deprecated": false,
+                "displayName": "Components",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "List of the components, separated by comma.",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueAssignee": {
+                "deprecated": false,
+                "displayName": "Assignee",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "Name of the user to assign the issue to.",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueSummary": {
+                "deprecated": false,
+                "displayName": "Summary",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "labelHint": "The summary field of the issue",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "description": {
+                "deprecated": false,
+                "displayName": "Description",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:jira-update-issue",
+      "name": "Update Issue",
+      "pattern": "To"
+    },
+    {
+      "actionType": "connector",
+      "description": "Transition an issue",
+      "descriptor": {
+        "configuredProperties": {
+          "type": "transitionIssue"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.jira.customizer.TransitionIssueCustomizer"
+        ],
+        "inputDataShape": {
+          "kind": "java",
+          "name": "Issue",
+          "type": "io.syndesis.connector.jira.JiraIssue"
+        },
+        "outputDataShape": {
+          "kind": "any"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Transition an issue, change the status and resolution of the issue.",
+            "name": "Transition an issue",
+            "properties": {
+              "IssueKey": {
+                "deprecated": false,
+                "displayName": "Issue Key",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              },
+              "IssueTransitionId": {
+                "deprecated": false,
+                "displayName": "ID of the transition.",
+                "group": "common",
+                "javaType": "java.lang.Integer",
+                "kind": "path",
+                "required": false,
+                "secret": false,
+                "type": "integer"
+              },
+              "IssueComment": {
+                "deprecated": false,
+                "displayName": "Comment",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "path",
+                "required": false,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:jira-transition-issue",
+      "name": "Transition Issue",
+      "pattern": "To"
+    }
+  ],
+  "componentScheme": "jira",
+  "dependencies": [
+    {
+      "id": "@project.groupId@:@project.artifactId@:@project.version@",
+      "type": "MAVEN"
+    }
+  ],
+  "description": "Manage issues of a Jira server.",
+  "icon": "data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMjU2cHgiIGhlaWdodD0iMjU2cHgiIHZpZXdCb3g9IjAgMCAyNTYgMjU2IiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHByZXNlcnZlQXNwZWN0UmF0aW89InhNaWRZTWlkIj4KICAgIDxkZWZzPgogICAgICAgIDxsaW5lYXJHcmFkaWVudCB4MT0iOTguMDMwODY3NSUiIHkxPSIwLjE2MDU5OTU3MiUiIHgyPSI1OC44ODc3MDYyJSIgeTI9IjQwLjc2NTUyNDYlIiBpZD0ibGluZWFyR3JhZGllbnQtMSI+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMwMDUyQ0MiIG9mZnNldD0iMTglIj48L3N0b3A+CiAgICAgICAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMyNjg0RkYiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICAgICAgPGxpbmVhckdyYWRpZW50IHgxPSIxMDAuNjY1MjQ3JSIgeTE9IjAuNDU1MDMyMTIlIiB4Mj0iNTUuNDAxODA5NSUiIHkyPSI0NC43MjY5ODA3JSIgaWQ9ImxpbmVhckdyYWRpZW50LTIiPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjMDA1MkNDIiBvZmZzZXQ9IjE4JSI+PC9zdG9wPgogICAgICAgICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjMjY4NEZGIiBvZmZzZXQ9IjEwMCUiPjwvc3RvcD4KICAgICAgICA8L2xpbmVhckdyYWRpZW50PgogICAgPC9kZWZzPgogICAgPGc+CgkJCQk8cGF0aCBkPSJNMjQ0LjY1Nzc3OCwwIEwxMjEuNzA2NjY3LDAgQzEyMS43MDY2NjcsMTQuNzIwMTA0NiAxMjcuNTU0MjA1LDI4LjgzNzMxMiAxMzcuOTYyODkxLDM5LjI0NTk5NzcgQzE0OC4zNzE1NzcsNDkuNjU0NjgzNSAxNjIuNDg4Nzg0LDU1LjUwMjIyMjIgMTc3LjIwODg4OSw1NS41MDIyMjIyIEwxOTkuODU3Nzc4LDU1LjUwMjIyMjIgTDE5OS44NTc3NzgsNzcuMzY4ODg4OSBDMTk5Ljg3NzM5MSwxMDcuOTk0MTU1IDIyNC42OTkxNzgsMTMyLjgxNTk0MyAyNTUuMzI0NDQ0LDEzMi44MzU1NTYgTDI1NS4zMjQ0NDQsMTAuNjY2NjY2NyBDMjU1LjMyNDQ0NCw0Ljc3NTYyOTM0IDI1MC41NDg4MTUsMy42MDcyMjAwMWUtMTYgMjQ0LjY1Nzc3OCwwIFoiIGZpbGw9IiMyNjg0RkYiPjwvcGF0aD4KCQkJCTxwYXRoIGQ9Ik0xODMuODIyMjIyLDYxLjI2MjIyMjIgTDYwLjg3MTExMTEsNjEuMjYyMjIyMiBDNjAuODkwNzIzOCw5MS44ODc0ODg4IDg1LjcxMjUxMTIsMTE2LjcwOTI3NiAxMTYuMzM3Nzc4LDExNi43Mjg4ODkgTDEzOC45ODY2NjcsMTE2LjcyODg4OSBMMTM4Ljk4NjY2NywxMzguNjY2NjY3IEMxMzkuMDI1OTA1LDE2OS4yOTE5MjMgMTYzLjg2MzYwNywxOTQuMDk3ODAzIDE5NC40ODg4ODksMTk0LjA5Nzc3OCBMMTk0LjQ4ODg4OSw3MS45Mjg4ODg5IEMxOTQuNDg4ODg5LDY2LjAzNzg1MTYgMTg5LjcxMzI2LDYxLjI2MjIyMjIgMTgzLjgyMjIyMiw2MS4yNjIyMjIyIFoiIGZpbGw9InVybCgjbGluZWFyR3JhZGllbnQtMSkiPjwvcGF0aD4KCQkJCTxwYXRoIGQ9Ik0xMjIuOTUxMTExLDEyMi40ODg4ODkgTDAsMTIyLjQ4ODg4OSBDMy43NTM5MTM2MmUtMTUsMTUzLjE0MTkyIDI0Ljg0OTE5MTMsMTc3Ljk5MTExMSA1NS41MDIyMjIyLDE3Ny45OTExMTEgTDc4LjIyMjIyMjIsMTc3Ljk5MTExMSBMNzguMjIyMjIyMiwxOTkuODU3Nzc4IEM3OC4yNDE3NjcsMjMwLjQ1NTMyIDEwMy4wMjAyODUsMjU1LjI2NTY0NyAxMzMuNjE3Nzc4LDI1NS4zMjQ0NDQgTDEzMy42MTc3NzgsMTMzLjE1NTU1NiBDMTMzLjYxNzc3OCwxMjcuMjY0NTE4IDEyOC44NDIxNDgsMTIyLjQ4ODg4OSAxMjIuOTUxMTExLDEyMi40ODg4ODkgWiIgZmlsbD0idXJsKCNsaW5lYXJHcmFkaWVudC0yKSI+PC9wYXRoPgoJCTwvZz4KPC9zdmc+Cg==",
+  "id": "jira",
+  "metadata": {
+    "tech-preview": true
+  },
+  "name": "Jira",
+  "properties": {
+    "jiraUrl": {
+      "deprecated": false,
+      "displayName": "Jira URL",
+      "group": "common",
+      "javaType": "java.lang.String",
+      "kind": "path",
+      "labelHint": "URL of the Jira server to connect to. Example: https://my_server:8081",
+      "order": "1",
+      "required": true,
+      "secret": false,
+      "type": "string"
+    },
+    "password": {
+      "deprecated": false,
+      "displayName": "Password",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Password for connecting to the Jira server (Basic authentication only)",
+      "order": "3",
+      "raw": true,
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "username": {
+      "deprecated": false,
+      "displayName": "User name",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "User name for connecting to the Jira server (Basic authentication only)",
+      "order": "2",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "accessToken": {
+      "deprecated": false,
+      "displayName": "Access Token",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "Access Token generated by Jira server (OAuth authentication only)",
+      "order": "4",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "consumerKey": {
+      "deprecated": false,
+      "displayName": "Consumer Key",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The consumer key from Jira settings (OAuth authentication only)",
+      "order": "5",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    },
+    "privateKey": {
+      "deprecated": false,
+      "displayName": "Private Key",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The private key generated by the client to encrypt the conversation to the server (OAuth authentication only)",
+      "order": "6",
+      "raw": true,
+      "required": false,
+      "secret": true,
+      "type": "string"
+    },
+    "verificationCode": {
+      "deprecated": false,
+      "displayName": "Verification Code",
+      "group": "common,security",
+      "javaType": "java.lang.String",
+      "kind": "parameter",
+      "labelHint": "The verification code from Jira generated in the first step of the authorization proccess (OAuth authentication only)",
+      "order": "7",
+      "required": false,
+      "secret": false,
+      "type": "string"
+    }
+  },
+  "tags": [
+    "verifier"
+  ]
+}

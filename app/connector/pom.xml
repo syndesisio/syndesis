@@ -59,6 +59,7 @@
     <module>google-sheets</module>
     <module>http</module>
     <module>irc</module>
+    <module>jira</module>
     <module>kafka</module>
     <module>log</module>
     <module>mqtt</module>
