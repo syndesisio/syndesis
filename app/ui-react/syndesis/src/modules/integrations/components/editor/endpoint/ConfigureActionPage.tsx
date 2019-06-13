@@ -84,7 +84,17 @@ export class ConfigureActionPage extends React.Component<
                 params.flowId,
                 positionAsNumber
               );
-              const configuredProperties = state.configuredProperties;
+              /**
+               * configured properties will be set in the route state for
+               * configuration pages higher than 0. If it's not set, its value
+               * depends on the mode: for `adding` there is no initial value,
+               * for `editing` we can fetch it from the old step config object.
+               */
+              const configuredProperties =
+                state.configuredProperties ||
+                (this.props.mode === 'editing' && oldStepConfig
+                  ? oldStepConfig.configuredProperties
+                  : {});
               const onUpdatedIntegration = async ({
                 action,
                 moreConfigurationSteps,
@@ -110,7 +120,10 @@ export class ConfigureActionPage extends React.Component<
                       },
                       {
                         ...state,
-                        configuredProperties: values || {},
+                        configuredProperties: {
+                          ...values,
+                          ...configuredProperties,
+                        },
                         updatedIntegration,
                       }
                     )

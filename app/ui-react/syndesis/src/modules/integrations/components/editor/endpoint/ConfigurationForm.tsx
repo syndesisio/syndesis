@@ -98,7 +98,7 @@ export const ConfigurationForm: React.FunctionComponent<
         {({ fields, handleSubmit, isValid, isSubmitting, submitForm }) => (
           <>
             <IntegrationEditorForm
-              i18nFormTitle={`${action.name} - ${action.description}`}
+              i18nFormTitle={`${action.name} - ${step.description}`}
               i18nBackAction={'Choose Action'}
               i18nNext={'Next'}
               isValid={isValid}

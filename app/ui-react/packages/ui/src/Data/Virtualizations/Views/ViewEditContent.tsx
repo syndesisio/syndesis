@@ -111,11 +111,20 @@ export class ViewEditContent extends React.Component<
 
   public render() {
     const editorOptions = {
-      dragDrop: false,
+      autofocus: true,
+      extraKeys: { 'Ctrl-Space': 'autocomplete' },
       gutters: ['CodeMirror-lint-markers'],
+      // TODO: dynamically generate the table - column hints
+      // hintOptions: {
+      //   tables: {
+      //     countries: ['name', 'population', 'size'],
+      //     users: ['name', 'score', 'birthDate'],
+      //   },
+      // },
       lineNumbers: true,
       lineWrapping: true,
-      mode: 'text/x-sql',
+      matchBrackets: true,
+      mode: 'text/x-mysql',
       readOnly: false,
       showCursorWhenSelecting: true,
       styleActiveLine: true,

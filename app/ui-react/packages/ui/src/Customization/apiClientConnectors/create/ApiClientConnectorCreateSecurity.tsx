@@ -9,6 +9,10 @@ import {
 import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 
+export function isAuthTypeValid(authType?: string): boolean {
+  return ['apiKey', 'basic', 'none'].find(v => v === authType) !== undefined;
+}
+
 export interface IAuthenticationTypes {
   value?: string;
   label?: string;
@@ -66,12 +70,9 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
 > {
   constructor(props: any) {
     super(props);
-
     this.state = {
       selectedType: this.props.authenticationTypeDefault || 'none',
-      valid:
-        this.props.authenticationTypeDefault ===
-        ('apiKey' || 'basic' || 'none'),
+      valid: isAuthTypeValid(this.props.authenticationTypeDefault),
     };
 
     this.onSelectType = this.onSelectType.bind(this);
@@ -91,7 +92,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
        * Check if the security type is either Basic or None, in which case the form
        * should be valid.
        */
-      valid: newType === ('apiKey' || 'basic' || 'none'),
+      valid: isAuthTypeValid(newType),
     });
   }
 
@@ -105,7 +106,7 @@ export class ApiClientConnectorCreateSecurity extends React.Component<
 
   public render() {
     return (
-      <Card style={{ maxWidth: '600px' }}>
+      <Card style={{ maxWidth: '600px', margin: ' auto' }}>
         <Card.Heading>
           <Card.Title>{this.props.i18nTitle}</Card.Title>
         </Card.Heading>
