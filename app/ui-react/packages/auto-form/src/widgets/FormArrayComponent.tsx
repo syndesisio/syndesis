@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { FormBuilder } from '../FormBuilder';
 import { IFormArrayControlProps, IFormArrayDefinitionOptions } from '../models';
-import { getArrayRows } from '../utils';
+import { getNewArrayRow } from '../utils';
 import { toValidHtmlId } from './helpers';
 import { TextButton } from './TextButton';
 
@@ -122,9 +122,7 @@ export class FormArrayComponent extends React.Component<
             </FormBuilder>
           );
         })}
-        <TextButton
-          onClick={() => this.props.push(getArrayRows(1, definition))}
-        >
+        <TextButton onClick={() => this.props.push(getNewArrayRow(definition))}>
           {options.i18nAddElementText || '+ Add Another'}
         </TextButton>
       </>

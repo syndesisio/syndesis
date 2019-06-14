@@ -128,7 +128,12 @@ export const DataMapperPage: React.FunctionComponent<
                     ),
                   })}
                   content={
-                    <PageSection noPadding={true}>
+                    <PageSection
+                      noPadding={true}
+                      style={{
+                        overflow: 'hidden',
+                      }}
+                    >
                       <DataMapperAdapter
                         documentId={state.integration.id!}
                         inputDocuments={inputDocuments}

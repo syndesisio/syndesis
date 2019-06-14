@@ -3,16 +3,16 @@ import {
   ServerEventsContext,
   WithServerEvents,
 } from '@syndesis/api';
-import { createBrowserHistory } from '@syndesis/history';
-import { App, IAppRoute, IAppRouteWithChildrens } from './app';
+// Don't move this line, otherwise we anger the pf4
+import { App, IAppRoute, IAppRouteWithChildrens, WithConfig } from './app';
 // tslint:disable-next-line:ordered-imports
+import { createBrowserHistory } from '@syndesis/history';
 import { UnrecoverableError } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { I18nextProvider, Translation } from 'react-i18next';
 import { Router } from 'react-router-dom';
-import { WithConfig } from './app/WithConfig';
 import i18n from './i18n';
 import './index.css';
 import { ApiClientConnectorsModule } from './modules/apiClientConnectors';
@@ -24,6 +24,7 @@ import { IntegrationsModule } from './modules/integrations';
 import routes from './modules/routes';
 import { SettingsModule } from './modules/settings';
 import { SupportModule } from './modules/support';
+import { unregister } from './registerServiceWorker';
 
 ReactDOM.render(
   <Router history={createBrowserHistory()}>
@@ -130,3 +131,5 @@ ReactDOM.render(
   </Router>,
   document.getElementById('root') as HTMLElement
 );
+
+unregister();

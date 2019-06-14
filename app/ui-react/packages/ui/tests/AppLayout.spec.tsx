@@ -40,7 +40,7 @@ export default describe('ConnectionCard', () => {
             data-testid={'navlink'}
           />,
         ]}
-        logoHref={'#test'}
+        logoOnClick={() => false}
         showNavigation={false}
         onNavigationCollapse={() => true}
         onNavigationExpand={() => true}

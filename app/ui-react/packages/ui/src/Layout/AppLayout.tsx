@@ -24,7 +24,7 @@ export interface ILayoutBase {
   avatar?: string;
   pictograph: any;
   verticalNav: any[];
-  logoHref: string;
+  logoOnClick: () => void;
   logoutItem: {
     key: string;
     onClick: () => Promise<any>;
@@ -48,7 +48,7 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
   avatar,
   pictograph,
   verticalNav,
-  logoHref,
+  logoOnClick,
   showNavigation,
   logoutItem,
   onNavigationCollapse,
@@ -106,7 +106,7 @@ export const AppLayout: React.FunctionComponent<ILayoutBase> = ({
         header={
           <PageHeader
             logo={pictograph}
-            logoProps={{ href: logoHref }}
+            logoProps={{ onClick: logoOnClick }}
             toolbar={
               <Toolbar>
                 <ToolbarGroup

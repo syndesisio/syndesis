@@ -15,6 +15,7 @@ export interface IConfigFile {
   };
   datavirt: {
     dvUrl: string;
+    enabled: number;
   };
   features: {
     logging: boolean;

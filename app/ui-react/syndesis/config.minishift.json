@@ -40,7 +40,8 @@
     "debugDocumentParsing": false
   },
   "datavirt": {
-    "dvUrl": "/vdb-builder/v1/"
+    "dvUrl": "/vdb-builder/v1/",
+    "enabled": 1
   },
   "features": {
     "logging": false
