@@ -70,11 +70,11 @@ export class VirtualizationSqlClientPage extends React.Component<
                                   virtualization
                                 );
                                 const handleDelete = async (
-                                  virtualizationId: string
+                                  pVirtualizationId: string
                                 ) => {
                                   try {
                                     await deleteVirtualization(
-                                      virtualizationId
+                                      pVirtualizationId
                                     );
                                     pushNotification(
                                       t(
@@ -82,6 +82,11 @@ export class VirtualizationSqlClientPage extends React.Component<
                                         { name: virtualizationId }
                                       ),
                                       'success'
+                                    );
+                                    // On successful delete, redirect to virtualizations page
+                                    // TODO: Handle publish/unpublish on current page
+                                    history.push(
+                                      resolvers.data.virtualizations.list()
                                     );
                                   } catch (error) {
                                     const details = error.message
@@ -100,13 +105,13 @@ export class VirtualizationSqlClientPage extends React.Component<
                                   }
                                 };
                                 const handlePublish = async (
-                                  virtualizationId: string,
+                                  pVirtualizationId: string,
                                   hasViews: boolean
                                 ) => {
                                   if (hasViews) {
                                     try {
                                       await publishVirtualization(
-                                        virtualizationId
+                                        pVirtualizationId
                                       );
 
                                       pushNotification(
@@ -115,6 +120,11 @@ export class VirtualizationSqlClientPage extends React.Component<
                                           { name: virtualizationId }
                                         ),
                                         'success'
+                                      );
+                                      // On publish, redirect to virtualizations page
+                                      // TODO: Handle publish/unpublish on current page
+                                      history.push(
+                                        resolvers.data.virtualizations.list()
                                       );
                                     } catch (error) {
                                       const details = error.error
@@ -150,6 +160,10 @@ export class VirtualizationSqlClientPage extends React.Component<
                                         { name: serviceVdbName }
                                       ),
                                       'success'
+                                    );
+                                    // On successful delete, redirect to virtualizations page
+                                    history.push(
+                                      resolvers.data.virtualizations.list()
                                     );
                                   } catch (error) {
                                     const details = error.message
@@ -189,18 +203,7 @@ export class VirtualizationSqlClientPage extends React.Component<
                                       i18nDeleteModalTitle={t(
                                         'virtualization.deleteModalTitle'
                                       )}
-                                      i18nDraft={t('shared:Draft')}
-                                      i18nEdit={t('shared:Edit')}
-                                      i18nEditTip={t(
-                                        'virtualization.editDataVirtualizationTip'
-                                      )}
-                                      i18nError={t('shared:Error')}
-                                      /* TD-636: Commented out for TP
-                                i18nExport={t('shared:Export')} */
                                       i18nPublish={t('shared:Publish')}
-                                      i18nPublished={t(
-                                        'virtualization.publishedDataVirtualization'
-                                      )}
                                       i18nUnpublish={t('shared:Unpublish')}
                                       i18nUnpublishModalMessage={t(
                                         'virtualization.unpublishModalMessage',
@@ -213,35 +216,16 @@ export class VirtualizationSqlClientPage extends React.Component<
                                       )}
                                       onDelete={handleDelete}
                                       /* TD-636: Commented out for TP
-                                onExport={
-                                  this
-                                    .handleExportVirtualization
-                                } */
+                                         onExport={this.handleExportVirtualization} */
                                       onUnpublish={handleUnpublish}
                                       onPublish={handlePublish}
-                                      publishingLogUrl={
-                                        publishingDetails.logUrl
-                                      }
-                                      publishingCurrentStep={
-                                        publishingDetails.stepNumber
-                                      }
-                                      publishingTotalSteps={
-                                        publishingDetails.stepTotal
-                                      }
-                                      publishingStepText={
-                                        publishingDetails.stepText
-                                      }
-                                      i18nPublishInProgress={t(
-                                        'virtualization.publishInProgress'
-                                      )}
-                                      i18nPublishLogUrlText={t(
-                                        'shared:viewLogs'
-                                      )}
                                       serviceVdbName={
                                         virtualization.serviceVdbName
                                       }
-                                      virtualizationViewNames={
+                                      hasViews={
+                                        virtualization.serviceViewDefinitions &&
                                         virtualization.serviceViewDefinitions
+                                          .length > 0
                                       }
                                     />
                                     <ViewHeader

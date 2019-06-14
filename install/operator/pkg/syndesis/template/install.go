@@ -58,8 +58,8 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 	config := configuration.GetEnvVars(syndesis)
 	config[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
 	if params.DataVirtEnabled {
-		config["DATAVIRT_ENABLED"] = "1"
-	}
+        config["DATAVIRT_ENABLED"] = "1"
+    }
 
 	return processor.Process(templ, config)
 }

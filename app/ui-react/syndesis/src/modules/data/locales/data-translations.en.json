@@ -21,6 +21,7 @@
     "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",
     "virtualizationsPageTitle": "$t(shared:DataVirtualizations)",
     "virtualizationDetailPageTitle": "$t(shared:DataVirtualization)",
+    "virtualizationsDisabled": "Virtualizations are not enabled in your installation. Please refer to documentation for instructions on how to enable them.",
     "views": "Views",
     "relationship": "Relationship",
     "sqlClient": "SQL Client",

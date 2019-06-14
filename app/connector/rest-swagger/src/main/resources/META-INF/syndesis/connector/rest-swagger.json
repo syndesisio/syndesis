@@ -84,6 +84,10 @@
       "displayName": "Authentication type",
       "enum": [
         {
+          "label": "apiKey",
+          "value": "apiKey"
+        },
+        {
           "label": "basic",
           "value": "basic"
         },
@@ -94,10 +98,6 @@
         {
           "label": "oauth2",
           "value": "oauth2"
-        },
-        {
-          "label": "apiKey",
-          "value": "apiKey"
         }
       ],
       "javaType": "java.lang.String",

@@ -290,6 +290,11 @@
       <artifactId>spotbugs-annotations</artifactId>
     </dependency>
 
+    <dependency>
+      <groupId>org.apache.maven</groupId>
+      <artifactId>maven-artifact</artifactId>
+    </dependency>
+
     <!-- ===================================================================================== -->
 
     <!-- Atlasmap Data Mapper Services -->

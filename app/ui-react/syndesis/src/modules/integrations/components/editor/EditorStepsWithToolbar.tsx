@@ -1,4 +1,3 @@
-import { IConnectionOverview } from '@syndesis/models';
 import {
   ConnectionsListView,
   IActiveFilter,
@@ -9,25 +8,26 @@ import {
 import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import i18n from '../../../i18n';
-import resolvers from '../resolvers';
-import { Connections, IConnectionsProps } from './Connections';
+import i18n from '../../../../i18n';
+import resolvers from '../../../connections/resolvers';
+import { EditorSteps, IEditorStepsProps } from './EditorSteps';
+import { IUIStep } from './interfaces';
 
-function getFilteredAndSortedConnections(
-  connections: IConnectionOverview[],
+function getFilteredAndSortedEditorSteps(
+  steps: IUIStep[],
   activeFilters: IActiveFilter[],
   currentSortType: ISortType,
   isSortAscending: boolean
 ) {
-  let filteredAndSortedConnections = connections;
+  let filteredAndSortedEditorSteps = steps;
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
-    filteredAndSortedConnections = filteredAndSortedConnections.filter(
-      (c: IConnectionOverview) => c.name.toLowerCase().includes(valueToLower)
+    filteredAndSortedEditorSteps = filteredAndSortedEditorSteps.filter(
+      (e: IUIStep) => e.name.toLowerCase().includes(valueToLower)
     );
   });
 
-  filteredAndSortedConnections = filteredAndSortedConnections.sort(
+  filteredAndSortedEditorSteps = filteredAndSortedEditorSteps.sort(
     (miA, miB) => {
       const left = isSortAscending ? miA : miB;
       const right = isSortAscending ? miB : miA;
@@ -35,7 +35,7 @@ function getFilteredAndSortedConnections(
     }
   );
 
-  return filteredAndSortedConnections;
+  return filteredAndSortedEditorSteps;
 }
 
 const filterByName = {
@@ -55,19 +55,15 @@ const sortByName = {
 
 const sortTypes: ISortType[] = [sortByName];
 
-export interface IConnectionsWithToolbarProps
-  extends IConnectionsProps,
+export interface IEditorStepsWithToolbarProps
+  extends IEditorStepsProps,
     Pick<IConnectionsListViewProps, 'createConnectionButtonStyle'> {
   children?: any;
 }
 
-export class ConnectionsWithToolbar extends React.Component<
-  IConnectionsWithToolbarProps
+export class EditorStepsWithToolbar extends React.Component<
+  IEditorStepsWithToolbarProps
 > {
-  public static defaultProps = {
-    includeHidden: false,
-  };
-
   public render() {
     return (
       <Translation ns={['connections', 'shared']}>
@@ -77,8 +73,8 @@ export class ConnectionsWithToolbar extends React.Component<
             defaultSortType={sortByName}
           >
             {helpers => {
-              const filteredAndSortedConnections = getFilteredAndSortedConnections(
-                this.props.connections,
+              const filteredAndSortedEditorSteps = getFilteredAndSortedEditorSteps(
+                this.props.steps,
                 helpers.activeFilters,
                 helpers.currentSortType,
                 helpers.isSortAscending
@@ -92,21 +88,19 @@ export class ConnectionsWithToolbar extends React.Component<
                   linkToConnectionCreate={resolvers.create.selectConnector()}
                   filterTypes={filterTypes}
                   sortTypes={sortTypes}
-                  resultsCount={filteredAndSortedConnections.length}
+                  resultsCount={filteredAndSortedEditorSteps.length}
                   {...helpers}
                   i18nLinkCreateConnection={t('shared:linkCreateConnection')}
                   i18nResultsCount={t('shared:resultsCount', {
-                    count: filteredAndSortedConnections.length,
+                    count: filteredAndSortedEditorSteps.length,
                   })}
                 >
                   {this.props.children}
-                  <Connections
+                  <EditorSteps
                     error={this.props.error}
-                    includeConnectionMenu={this.props.includeConnectionMenu}
                     loading={this.props.loading}
-                    connections={filteredAndSortedConnections}
-                    getConnectionHref={this.props.getConnectionHref}
-                    getConnectionEditHref={this.props.getConnectionEditHref}
+                    steps={filteredAndSortedEditorSteps}
+                    getEditorStepHref={this.props.getEditorStepHref}
                   />
                 </ConnectionsListView>
               );

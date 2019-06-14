@@ -301,7 +301,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                       className="pf-c-brand"
                                     />
                                   }
-                                  logoHref={'/'}
+                                  logoOnClick={() => history.push('/')}
                                   showNavigation={showNavigation}
                                   onNavigationCollapse={onHideNavigation}
                                   onNavigationExpand={onShowNavigation}

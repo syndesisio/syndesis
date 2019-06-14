@@ -1,4 +1,4 @@
-import { ConnectionOverview } from '@syndesis/models';
+import { IConnectionOverview } from '@syndesis/models';
 import * as React from 'react';
 import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
@@ -7,14 +7,14 @@ import { transformConnectionResponse } from './useConnection';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
-export function getConnectionsForDisplay(connections: ConnectionOverview[]) {
+export function getConnectionsForDisplay(connections: IConnectionOverview[]) {
   return connections.filter(
     c => !c.metadata || !c.metadata['hide-from-connection-pages']
   );
 }
 
 export function getConnectionsWithFromAction(
-  connections: ConnectionOverview[]
+  connections: IConnectionOverview[]
 ) {
   return connections.filter(connection => {
     if (!connection.connector) {
@@ -27,7 +27,7 @@ export function getConnectionsWithFromAction(
   });
 }
 
-export function getConnectionsWithToAction(connections: ConnectionOverview[]) {
+export function getConnectionsWithToAction(connections: IConnectionOverview[]) {
   return connections.filter(connection => {
     if (!connection.connector) {
       // safety net
@@ -44,15 +44,15 @@ export function getConnectionsWithToAction(connections: ConnectionOverview[]) {
 }
 
 export interface IConnectionsFetchResponse {
-  readonly items: ConnectionOverview[];
+  readonly items: IConnectionOverview[];
   readonly totalCount: number;
 }
 
 export interface IConnectionsResponse {
-  readonly connectionsForDisplay: ConnectionOverview[];
-  readonly connectionsWithToAction: ConnectionOverview[];
-  readonly connectionsWithFromAction: ConnectionOverview[];
-  readonly dangerouslyUnfilteredConnections: ConnectionOverview[];
+  readonly connectionsForDisplay: IConnectionOverview[];
+  readonly connectionsWithToAction: IConnectionOverview[];
+  readonly connectionsWithFromAction: IConnectionOverview[];
+  readonly dangerouslyUnfilteredConnections: IConnectionOverview[];
   readonly totalCount: number;
 }
 

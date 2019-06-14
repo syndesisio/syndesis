@@ -46,14 +46,14 @@ const techPreviewPopoverHtml = (
 stories.add('no menu', () => (
   <MemoryRouter>
     <ConnectionCard
-      configurationRequired={false}
       description={text('description', 'Sample connection description')}
       href={text('#example') || ''}
-      i18nConfigurationRequired={'Configuration Required'}
+      i18nConfigRequired={'Configuration Required'}
       i18nTechPreview={'Technology Preview'}
       icon={<div />}
+      isConfigRequired={false}
+      isTechPreview={false}
       name={text('name', 'Sample connection')}
-      techPreview={false}
     />
   </MemoryRouter>
 ));
@@ -62,18 +62,17 @@ stories.add('with menu', () => (
   <MemoryRouter>
     <Container style={{ width: '50%' }}>
       <ConnectionCard
-        configurationRequired={false}
         description={text('description', 'Sample connection description')}
         href={text('#example') || ''}
         i18nCannotDelete={
           'Unable to delete this connection as it is being used by one or more integrations'
         }
-        i18nConfigurationRequired={'Configuration Required'}
+        i18nConfigRequired={'Configuration Required'}
         i18nTechPreview={'Technology Preview'}
         icon={<div />}
+        isConfigRequired={false}
         menuProps={menuProps}
         name={text('name', 'Sample connection')}
-        techPreview={false}
       />
     </Container>
   </MemoryRouter>
@@ -83,18 +82,18 @@ stories.add('tech preview and configuration required', () => (
   <MemoryRouter>
     <Container style={{ width: '50%' }}>
       <ConnectionCard
-        configurationRequired={true}
         description={text('description', 'Sample connection description')}
         href={text('#example') || ''}
         i18nCannotDelete={
           'Unable to delete this connection as it is being used by one or more integrations'
         }
-        i18nConfigurationRequired={'Configuration Required'}
+        i18nConfigRequired={'Configuration Required'}
         i18nTechPreview={'Technology Preview'}
+        isConfigRequired={true}
+        isTechPreview={true}
         icon={<div />}
         menuProps={menuProps}
         name={text('name', 'Sample connection')}
-        techPreview={true}
         techPreviewPopoverHtml={techPreviewPopoverHtml}
       />
     </Container>

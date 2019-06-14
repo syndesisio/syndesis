@@ -4,7 +4,7 @@ import {
   useConnectionHelpers,
   useConnectorVerifier,
 } from '@syndesis/api';
-import { Connection } from '@syndesis/models';
+import { IConnectionOverview } from '@syndesis/models';
 import {
   Breadcrumb,
   ConnectionDetailsForm,
@@ -27,7 +27,7 @@ import { parseValidationResult } from '../utils';
 export interface IConnectionDetailsOauthProps {
   connectorId: string;
   connectionName: string;
-  configuredProperties: Pick<Connection, 'configuredProperties'>;
+  configuredProperties: Pick<IConnectionOverview, 'configuredProperties'>;
 }
 const ConnectionDetailsOAuth: React.FunctionComponent<
   IConnectionDetailsOauthProps
@@ -75,7 +75,7 @@ export interface IConnectionDetailsRouteParams {
 }
 
 export interface IConnectionDetailsRouteState {
-  connection?: Connection;
+  connection?: IConnectionOverview;
 }
 
 export interface IConnectionDetailsPageProps {
@@ -102,7 +102,7 @@ export const ConnectionDetailsPage: React.FunctionComponent<
     state.connection
   );
 
-  const getUsedByMessage = (c: Connection): string => {
+  const getUsedByMessage = (c: IConnectionOverview): string => {
     // TODO: Schema is currently wrong as it has 'uses' as an OptionalInt. Remove cast when schema is fixed.
     const numUsedBy = c.uses as number;
 

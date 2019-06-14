@@ -27,6 +27,7 @@ import {
   ConnectorAction,
   DataShape,
   Extension,
+  IConnectionOverview,
   Step,
   StepKind,
 } from '@syndesis/models';
@@ -74,6 +75,8 @@ export function toUIStep(step: Step | StepKind): IUIStep {
           (step as StepKind).extension!.description ||
           '',
         inputDataShape,
+        isConfigRequired: false,
+        isTechPreview: false,
         metadata: {
           ...(step.extension!.metadata || {}),
           ...(step.metadata || {}),
@@ -91,10 +94,13 @@ export function toUIStep(step: Step | StepKind): IUIStep {
       return {
         ...step,
         description:
-          (step as ConnectionOverview).description ||
+          (step as IConnectionOverview).description ||
           step.connection!.description ||
           '',
         inputDataShape,
+        isConfigRequired: (step.connection as IConnectionOverview)
+          .isConfigRequired,
+        isTechPreview: (step.connection as IConnectionOverview).isTechPreview,
         metadata: {
           ...(step.connection!.metadata || {}),
           ...(step.metadata || {}),
@@ -120,6 +126,8 @@ export function toUIStep(step: Step | StepKind): IUIStep {
       return {
         ...(step as StepKind),
         inputDataShape,
+        isConfigRequired: false,
+        isTechPreview: false,
         metadata: step.metadata || {},
         name,
         outputDataShape,
@@ -282,7 +290,6 @@ export function mergeConnectionsSources(
     ...connections.map(connection =>
       toUIStep({
         connection,
-        name: connection.name,
         stepKind: ENDPOINT,
       } as StepKind)
     ),

@@ -80,7 +80,7 @@ stories.add(
                   key={2}
                 />,
               ]}
-              logoHref={'#test'}
+              logoOnClick={action('Logo clicked')}
             />
           </>
         </MemoryRouter>

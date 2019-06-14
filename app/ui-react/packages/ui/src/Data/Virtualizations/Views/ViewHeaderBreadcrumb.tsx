@@ -1,10 +1,5 @@
 import * as H from '@syndesis/history';
-import {
-  DropdownKebab,
-  MenuItem,
-  // OverlayTrigger,
-  // Tooltip,
-} from 'patternfly-react';
+import { DropdownKebab, MenuItem } from 'patternfly-react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -25,8 +20,6 @@ import {
   VirtualizationPublishState,
 } from '../models';
 
-import './ViewHeaderBreadcrumb.css';
-
 export interface IViewHeaderBreadcrumbProps {
   currentPublishedState: VirtualizationPublishState;
   dashboardHref: H.LocationDescriptor;
@@ -38,32 +31,20 @@ export interface IViewHeaderBreadcrumbProps {
   i18nDelete: string;
   i18nDeleteModalMessage: string;
   i18nDeleteModalTitle: string;
-  i18nDraft: string;
-  i18nError: string;
-  i18nEdit: string;
-  i18nEditTip?: string;
   /* TD-636: Commented out for TP
   i18nExport: string; */
   i18nPublish: string;
-  i18nPublished: string;
-  i18nPublishLogUrlText: string;
-  i18nPublishInProgress: string;
   i18nUnpublish: string;
   i18nUnpublishModalMessage: string;
   i18nUnpublishModalTitle: string;
-  icon?: string;
   onDelete: (virtualizationName: string) => void;
   /* TD-636: Commented out for TP
   onExport: (virtualizationName: string) => void; */
   onPublish: (virtualizationName: string, hasViews: boolean) => void;
   onUnpublish: (virtualizationName: string) => void;
-  publishingCurrentStep?: number;
-  publishingLogUrl?: string;
-  publishingTotalSteps?: number;
-  publishingStepText?: string;
   serviceVdbName: string;
   virtualizationName: string;
-  virtualizationViewNames: string[];
+  hasViews: boolean;
 }
 
 export interface IViewHeaderBreadcrumbState {
@@ -107,10 +88,7 @@ export class ViewHeaderBreadcrumb extends React.Component<
 
   public handlePublish() {
     if (this.props.virtualizationName) {
-      this.props.onPublish(
-        this.props.virtualizationName,
-        this.props.virtualizationViewNames.length > 0
-      );
+      this.props.onPublish(this.props.virtualizationName, this.props.hasViews);
     }
   }
 
@@ -181,7 +159,7 @@ export class ViewHeaderBreadcrumb extends React.Component<
           }
           showDialog={this.state.showConfirmationDialog}
           onCancel={this.handleCancel}
-          onConfirm={this.handleDelete}
+          onConfirm={isPublished ? this.handleUnpublish : this.handleDelete}
         />
         <Breadcrumb
           actions={

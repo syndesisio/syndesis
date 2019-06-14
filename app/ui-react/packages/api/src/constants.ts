@@ -1,5 +1,5 @@
 // Enum for the LeveledMessage level field
-import { Flow, Integration } from '@syndesis/models';
+import { Integration } from '@syndesis/models';
 
 export enum MessageLevel {
   INFO = 'INFO',
@@ -91,10 +91,6 @@ export enum FlowType {
 export enum FlowKind {
   CONDITIONAL = 'conditional',
   DEFAULT = 'default',
-}
-
-export interface ITypedFlow extends Flow {
-  type?: FlowType;
 }
 
 export const FLOW_KIND_METADATA_KEY = 'kind';

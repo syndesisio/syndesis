@@ -1,26 +1,38 @@
-import { ConnectionOverview } from '@syndesis/models';
-import { getActionsWithFrom, getActionsWithTo, isDerived } from './helpers';
+import { IConnectionOverview } from '@syndesis/models';
+import {
+  getActionsWithFrom,
+  getActionsWithTo,
+  isConfigRequired,
+  isDerived,
+} from './helpers';
 import { useApiResource } from './useApiResource';
+import { transformConnectorResponse } from './useConnector';
 
-export const transformConnectionResponse = (connection: ConnectionOverview) => {
+export const transformConnectionResponse = (
+  connection: IConnectionOverview
+) => {
+  const connector = connection.connector
+    ? transformConnectorResponse(connection.connector)
+    : undefined;
   return {
     ...connection,
-    actionsWithFrom: getActionsWithFrom(
-      connection.connector ? connection.connector.actions : []
-    ),
-    actionsWithTo: getActionsWithTo(
-      connection.connector ? connection.connector.actions : []
-    ),
+    actionsWithFrom: getActionsWithFrom(connector ? connector.actions : []),
+    actionsWithTo: getActionsWithTo(connector ? connector.actions : []),
+    connector,
     derived: isDerived(connection),
+    isConfigRequired: isConfigRequired(connection),
+    isTechPreview: connector ? connector.isTechPreview : false,
   };
 };
 
 export const useConnection = (
   connectionId: string,
-  initialValue?: ConnectionOverview
+  initialValue?: IConnectionOverview
 ) => {
-  return useApiResource<ConnectionOverview>({
+  return useApiResource<IConnectionOverview>({
     defaultValue: {
+      isConfigRequired: false,
+      isTechPreview: false,
       name: '',
     },
     initialValue,

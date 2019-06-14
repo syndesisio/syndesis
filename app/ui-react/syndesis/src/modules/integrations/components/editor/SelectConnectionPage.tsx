@@ -12,8 +12,8 @@ import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
-import { ConnectionsWithToolbar } from '../../../connections/components';
 import { IEditorSidebarProps } from './EditorSidebar';
+import { EditorStepsWithToolbar } from './EditorStepsWithToolbar';
 import {
   IPageWithEditorBreadcrumb,
   ISelectConnectionRouteParams,
@@ -55,7 +55,7 @@ export class SelectConnectionPage extends React.Component<
   public render() {
     return (
       <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {(params, state, { history }) => {
+        {(params, state) => {
           const { flowId, position } = params;
           const { integration = getEmptyIntegration() } = state;
           const positionAsNumber = parseInt(position, 10) || 0;
@@ -104,8 +104,9 @@ export class SelectConnectionPage extends React.Component<
                                     positionAsNumber,
                                     integrationSteps
                                   ) as IUIStep[];
+
                                   return (
-                                    <ConnectionsWithToolbar
+                                    <EditorStepsWithToolbar
                                       loading={
                                         !hasConnectionsData ||
                                         !hasExtensionsData
@@ -113,8 +114,7 @@ export class SelectConnectionPage extends React.Component<
                                       error={
                                         connectionsError || extensionsError
                                       }
-                                      includeConnectionMenu={false}
-                                      getConnectionHref={step =>
+                                      getEditorStepHref={step =>
                                         getStepHref(
                                           step,
                                           params,
@@ -122,7 +122,7 @@ export class SelectConnectionPage extends React.Component<
                                           this.props
                                         )
                                       }
-                                      connections={visibleSteps}
+                                      steps={visibleSteps}
                                       createConnectionButtonStyle={'default'}
                                     />
                                   );

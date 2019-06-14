@@ -4,10 +4,12 @@ import {
   ActionDescriptorStep,
   ConfigurationProperty,
   Connection,
-  ConnectionOverview,
-  Connector,
+  ConnectionBulletinBoard,
+  IConnectionOverview,
   IConnectionWithIconFile,
+  IConnector,
 } from '@syndesis/models';
+import { getMetadataValue } from './integrationFunctions';
 
 export function getActionsWithFrom(actions: Action[] = []) {
   return actions.filter(a => a.pattern === 'From');
@@ -26,15 +28,15 @@ export function getConnectionMetadataValue(
 }
 
 export function getConnectionConnector(
-  connection: ConnectionOverview
-): Connector {
+  connection: IConnectionOverview
+): IConnector {
   if (!connection.connector) {
     throw Error(`FATAL: Connection ${connection.id} doesn't have a connector`);
   }
   return connection.connector;
 }
 
-export function getConnectorActions(connector: Connector): Action[] {
+export function getConnectorActions(connector: IConnector): Action[] {
   return connector.actions;
 }
 
@@ -119,6 +121,28 @@ export function getConnectionIcon(
   // Legacy connections rely on the icon being in the UI's assets
   return `./../../icons/${connection.icon}.connection.png`;
 }
+
+/**
+ * Checks whether the ConnectionBulletinBoard provided
+ * @param board
+ */
+export function isConfigRequired(board: ConnectionBulletinBoard): boolean {
+  return (board.notices || board.warnings || board.errors)! > 0;
+}
+
+/**
+ * Checks whether or not the provided object is a technical preview.
+ * Accepts a Connector.
+ * Returns a boolean for whether or not the metadata `tech-preview` key
+ * returns a string value of 'true'
+ * @param connector
+ */
+export function isTechPreview(connector: IConnector): boolean {
+  return (
+    getMetadataValue<string>('tech-preview', connector.metadata) === 'true'
+  );
+}
+
 /**
  * Return bool if a connection is derived, meaning that its configuration comes
  * from an OAuth flow. This helper is to work around a bug in the swagger definition

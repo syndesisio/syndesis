@@ -8,16 +8,16 @@ export default describe('ConnectionCard', () => {
     <MemoryRouter>
       <ConnectionCard
         name={'Sample connection'}
-        configurationRequired={false}
         description={'Sample connection description'}
         icon={<div />}
         i18nCannotDelete={
           'Unable to delete this connection as it is being used by one or more integrations'
         }
-        i18nConfigurationRequired={'Configuration Required'}
+        i18nConfigRequired={'Configuration Required'}
         i18nTechPreview={'Technology Preview'}
+        isConfigRequired={false}
+        isTechPreview={false}
         href={'/test'}
-        techPreview={false}
         techPreviewPopoverHtml={
           <span>
             Some popover <strong>HTML</strong>.

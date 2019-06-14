@@ -2,6 +2,7 @@ import {
   createConditionalFlow,
   FlowKind,
   getFlow,
+  getStep,
   getSteps,
   reconcileConditionalFlows,
   WithConnection,
@@ -82,8 +83,8 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                     values: IChoiceFormConfiguration
                   ) => {
                     const updatedStep = {
-                      ...state.step,
-                      id: state.step.id || key(),
+                      ...step,
+                      id: step.id || key(),
                     };
                     const flowCollection = values.flowConditions.map(
                       flowCondition => {
@@ -152,23 +153,31 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                       configuredProperties.default = defaultFlow!.id!;
                       updatedFlows.push(defaultFlow);
                     }
-                    const updatedIntegration = reconcileConditionalFlows(
-                      await (this.props.mode === 'adding'
-                        ? addStep
-                        : updateStep)(
-                        state.updatedIntegration || state.integration,
-                        updatedStep,
-                        params.flowId,
-                        positionAsNumber,
-                        configuredProperties
-                      ),
+                    const updatedIntegration = await (this.props.mode ===
+                      'adding'
+                      ? addStep
+                      : updateStep)(
+                      state.updatedIntegration || state.integration,
+                      updatedStep,
+                      params.flowId,
+                      positionAsNumber,
+                      configuredProperties
+                    );
+                    const stepWithUpdatedDescriptor = getStep(
+                      updatedIntegration,
+                      params.flowId,
+                      positionAsNumber
+                    )!;
+                    const reconciledIntegration = reconcileConditionalFlows(
+                      updatedIntegration,
                       updatedFlows,
-                      state.step.id!
+                      stepWithUpdatedDescriptor.id!,
+                      stepWithUpdatedDescriptor.action!.descriptor!
                     );
                     history.push(
                       this.props.postConfigureHref(updatedIntegration, params, {
                         ...state,
-                        updatedIntegration,
+                        updatedIntegration: reconciledIntegration,
                       })
                     );
                   };
