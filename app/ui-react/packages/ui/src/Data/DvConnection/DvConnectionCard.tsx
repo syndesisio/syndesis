@@ -54,7 +54,7 @@ export class DvConnectionCard extends React.PureComponent<
             this.props.name
           )}-card`}
           matchHeight={true}
-          accented={this.state.isSelected}
+          accented={this.props.selected}
         >
           <Card.Body>
             <div className="dv-connection-card__status">

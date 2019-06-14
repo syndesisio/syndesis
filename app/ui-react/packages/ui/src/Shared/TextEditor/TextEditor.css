@@ -1,5 +1,6 @@
 @import url('~codemirror/addon/lint/lint.css');
 @import url('~codemirror/lib/codemirror.css');
+@import url('~codemirror/addon/hint/show-hint.css');
 
 .text-editor .cm-mustache {
   color: #b21eab;
