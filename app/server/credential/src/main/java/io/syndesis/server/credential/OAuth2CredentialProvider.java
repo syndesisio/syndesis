@@ -31,25 +31,44 @@ import org.springframework.social.oauth2.OAuth2Parameters;
 
 public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
 
+    private final Map<String, List<String>> additionalQueryParameters;
+
     private final Applicator<AccessGrant> applicator;
+
+    private boolean configured;
 
     private final OAuth2ConnectionFactory<S> connectionFactory;
 
     private final String id;
 
-    private final Map<String, List<String>> additionalQueryParameters;
+    public OAuth2CredentialProvider(final String id) {
+        this(id, null, null, Collections.emptyMap(), false);
+    }
 
     public OAuth2CredentialProvider(final String id, final OAuth2ConnectionFactory<S> connectionFactory, final Applicator<AccessGrant> applicator,
         final Map<String, String> additionalQueryParameters) {
+        this(id, connectionFactory, applicator, additionalQueryParameters, true);
+    }
+
+    private OAuth2CredentialProvider(final String id, final OAuth2ConnectionFactory<S> connectionFactory, final Applicator<AccessGrant> applicator,
+        final Map<String, String> additionalQueryParameters, final boolean configured) {
         this.id = id;
         this.connectionFactory = connectionFactory;
         this.applicator = applicator;
-        this.additionalQueryParameters = additionalQueryParameters.entrySet().stream().collect(Collectors.toMap(Entry::getKey, e -> Collections.singletonList(e.getValue())));
+        this.configured = configured;
+        this.additionalQueryParameters = additionalQueryParameters.entrySet().stream()
+            .collect(Collectors.toMap(Entry::getKey, e -> Collections.singletonList(e.getValue())));
     }
 
     @Override
     public AcquisitionMethod acquisitionMethod() {
-        return new AcquisitionMethod.Builder().label(labelFor(id)).icon(iconFor(id)).type(Type.OAUTH2).description(descriptionFor(id)).build();
+        return new AcquisitionMethod.Builder()
+            .label(labelFor(id))
+            .icon(iconFor(id))
+            .type(Type.OAUTH2)
+            .description(descriptionFor(id))
+            .configured(configured)
+            .build();
     }
 
     @Override

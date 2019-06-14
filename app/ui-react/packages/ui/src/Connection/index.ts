@@ -9,3 +9,4 @@ export * from './ConnectionSkeleton';
 export * from './ConnectionsListView';
 export * from './ConnectorAuthorization';
 export * from './ConnectorConfigurationForm';
+export * from './ConnectionSetupOAuthCard';

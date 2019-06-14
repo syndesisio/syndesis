@@ -20,8 +20,8 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.dao.manager.DataManager;
 
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.core.io.support.SpringFactoriesLoader;
@@ -49,25 +49,15 @@ final class CredentialProviderRegistry implements CredentialProviderLocator {
             throw new IllegalArgumentException("Unable to find connector with id: " + providerId);
         }
 
-        final SocialProperties socialProperties;
-        final String providerToUse;
+        final String providerToUse = determineProviderFrom(connector);
 
-        final Optional<String> authentication = connector.propertyTaggedWith(Credentials.AUTHENTICATION_TYPE_TAG);
-        if (authentication.isPresent()) {
-            providerToUse = authentication.get();
-
-            if ("oauth2".equalsIgnoreCase(authentication.get())) {
-                socialProperties = new OAuth2ConnectorProperties(connector);
-            } else {
-                socialProperties = new ConnectorSettings(connector);
-            }
-        } else {
-            socialProperties = new ConnectorSettings(connector);
-            providerToUse = providerId;
+        final CredentialProviderFactory credentialProviderFactory = credentialProviderFactories.get(providerToUse);
+        if (credentialProviderFactory == null) {
+            throw new IllegalArgumentException("Unable to locate credential provider factory with id: " + providerId);
         }
 
-        final CredentialProvider providerWithId = credentialProviderFactories.get(providerToUse)
-            .create(socialProperties);
+        final SocialProperties socialProperties = createSocialProperties(providerToUse, connector);
+        final CredentialProvider providerWithId = credentialProviderFactory.create(socialProperties);
 
         if (providerWithId == null) {
             throw new IllegalArgumentException("Unable to locate credential provider with id: " + providerId);
@@ -76,4 +66,21 @@ final class CredentialProviderRegistry implements CredentialProviderLocator {
         return providerWithId;
     }
 
+    private static SocialProperties createSocialProperties(final String provider, final Connector connector) {
+        try {
+            if ("oauth2".equals(provider)) {
+                return new OAuth2ConnectorProperties(connector);
+            }
+
+            return new ConnectorSettings(connector);
+        } catch (final IllegalArgumentException ignored) {
+            return UnconfiguredProperties.INSTANCE;
+        }
+    }
+
+    private static String determineProviderFrom(final Connector connector) {
+        final Optional<String> authentication = connector.propertyTaggedWith(Credentials.AUTHENTICATION_TYPE_TAG);
+
+        return authentication.orElse(connector.getId().get());
+    }
 }

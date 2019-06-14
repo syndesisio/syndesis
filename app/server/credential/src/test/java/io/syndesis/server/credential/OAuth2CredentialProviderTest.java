@@ -31,8 +31,13 @@ public class OAuth2CredentialProviderTest {
         final OAuth2CredentialProvider<?> oauth2 = new OAuth2CredentialProvider<>("provider2",
             mock(OAuth2ConnectionFactory.class), mock(Applicator.class), Collections.emptyMap());
 
-        final AcquisitionMethod method2 = new AcquisitionMethod.Builder().description("provider2")
-            .label("provider2").icon("provider2").type(Type.OAUTH2).build();
+        final AcquisitionMethod method2 = new AcquisitionMethod.Builder()
+            .description("provider2")
+            .label("provider2")
+            .icon("provider2")
+            .type(Type.OAUTH2)
+            .configured(true)
+            .build();
 
         assertThat(oauth2.acquisitionMethod()).isEqualTo(method2);
     }
