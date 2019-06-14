@@ -15,20 +15,38 @@
  */
 package io.syndesis.connector.sql.customizer;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.sql.DataSource;
+
 import io.syndesis.connector.sql.common.JSONBeanUtil;
+import io.syndesis.connector.sql.common.SqlStatementMetaData;
+import io.syndesis.connector.sql.common.SqlStatementParser;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.component.sql.SqlConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 public final class SqlStartConnectorCustomizer implements ComponentProxyCustomizer {
+
+    private boolean isInit;
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqlStartConnectorCustomizer.class);
+    private String autoIncrementColumnName;
+    private boolean isRetrieveGeneratedKeys;
+
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         component.setBeforeProducer(this::doBeforeProducer);
         component.setAfterProducer(this::doAfterProducer);
+        init(options);
     }
 
     private void doBeforeProducer(Exchange exchange) {
@@ -37,10 +55,38 @@ public final class SqlStartConnectorCustomizer implements ComponentProxyCustomiz
             final Properties properties = JSONBeanUtil.parsePropertiesFromJSONBean(body);
             exchange.getIn().setBody(properties);
         }
+        if (isRetrieveGeneratedKeys) {
+            exchange.getIn().setHeader(SqlConstants.SQL_RETRIEVE_GENERATED_KEYS, true);
+        }
     }
 
     private void doAfterProducer(Exchange exchange) {
         final Message in = exchange.getIn();
-        in.setBody(JSONBeanUtil.toJSONBeans(in));
+        List<String> list = null;
+        if (isRetrieveGeneratedKeys) {
+            list = JSONBeanUtil.toJSONBeansFromHeader(in, autoIncrementColumnName);
+        } else {
+            list = JSONBeanUtil.toJSONBeans(in);
+        }
+        if (list != null) {
+            in.setBody(list);
+        }
+    }
+
+    private void init(Map<String, Object> options) {
+        if (isInit) {
+            final String sql =  String.valueOf(options.get("query"));
+            final DataSource dataSource = (DataSource) options.get("dataSource");
+            try (Connection connection = dataSource.getConnection()) {
+                SqlStatementMetaData statementInfo = new SqlStatementParser(connection, null, sql).parse();
+                if (statementInfo.getAutoIncrementColumnName() != null) {
+                    isRetrieveGeneratedKeys = true;
+                    autoIncrementColumnName = statementInfo.getAutoIncrementColumnName();
+                }
+            } catch (SQLException e){
+                LOGGER.error(e.getMessage(),e);
+            }
+            isInit = true;
+        }
     }
 }
