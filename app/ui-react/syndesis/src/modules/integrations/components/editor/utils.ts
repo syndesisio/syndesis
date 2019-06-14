@@ -27,6 +27,7 @@ import {
   ConnectorAction,
   DataShape,
   Extension,
+  IConnectionOverview,
   Step,
   StepKind,
 } from '@syndesis/models';
@@ -91,9 +92,9 @@ export function toUIStep(step: Step | StepKind): IUIStep {
     case CONNECTOR:
       // this step is a Connection step
       return {
-        ...step,
+        ...(step as IConnectionOverview),
         description:
-          (step as ConnectionOverview).description ||
+          (step as IConnectionOverview).description ||
           step.connection!.description ||
           '',
         inputDataShape,

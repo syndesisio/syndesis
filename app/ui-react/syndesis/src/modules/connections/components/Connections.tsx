@@ -1,6 +1,6 @@
 import { WithConnectionHelpers } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { ConnectionOverview, IConnectionOverview } from '@syndesis/models';
+import { IConnectionOverview } from '@syndesis/models';
 import {
   ConnectionCard,
   ConnectionsGrid,
@@ -19,8 +19,8 @@ export interface IConnectionsProps {
   loading: boolean;
   connections: IConnectionOverview[];
 
-  getConnectionHref(connection: ConnectionOverview): H.LocationDescriptor;
-  getConnectionEditHref?(connection: ConnectionOverview): H.LocationDescriptor;
+  getConnectionHref(connection: IConnectionOverview): H.LocationDescriptor;
+  getConnectionEditHref?(connection: IConnectionOverview): H.LocationDescriptor;
 }
 
 export class Connections extends React.Component<IConnectionsProps> {

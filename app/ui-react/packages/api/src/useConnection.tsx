@@ -4,24 +4,24 @@ import {
   getActionsWithTo,
   isConfigurationRequired,
   isDerived,
-  isTechPreview,
 } from './helpers';
 import { useApiResource } from './useApiResource';
+import { transformConnectorResponse } from './useConnector';
 
 export const transformConnectionResponse = (
   connection: IConnectionOverview
 ) => {
+  const connector = connection.connector
+    ? transformConnectorResponse(connection.connector)
+    : undefined;
   return {
     ...connection,
-    actionsWithFrom: getActionsWithFrom(
-      connection.connector ? connection.connector.actions : []
-    ),
-    actionsWithTo: getActionsWithTo(
-      connection.connector ? connection.connector.actions : []
-    ),
+    actionsWithFrom: getActionsWithFrom(connector ? connector.actions : []),
+    actionsWithTo: getActionsWithTo(connector ? connector.actions : []),
     configRequired: isConfigurationRequired(connection),
+    connector,
     derived: isDerived(connection),
-    isTechPreview: isTechPreview(connection.connector!),
+    isTechPreview: connector ? connector.isTechPreview : false,
   };
 };
 
