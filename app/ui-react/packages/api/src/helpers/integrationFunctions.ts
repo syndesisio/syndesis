@@ -27,7 +27,6 @@ import {
   FLOW_KIND_METADATA_KEY,
   FlowKind,
   FlowType,
-  ITypedFlow,
   NEW_INTEGRATION,
   NEW_INTEGRATION_ID,
   PRIMARY_FLOW_ID_METADATA_KEY,
@@ -600,7 +599,7 @@ export function prepareIntegrationForSaving(integration: Integration) {
 export type GetSanitizedSteps = (steps: Step[]) => Promise<Step[]>;
 
 export async function sanitizeFlow(
-  flow: Flow | ITypedFlow,
+  flow: Flow,
   getSanitizedSteps: GetSanitizedSteps
 ): Promise<Flow> {
   flow.steps = await getSanitizedSteps(flow.steps || []);
@@ -614,7 +613,7 @@ export async function sanitizeFlow(
     ])
   ) as string[];
   // Ensure the type is set properly on the flow, if it's not set we assume it's a primary flow
-  (flow as ITypedFlow).type = (flow as ITypedFlow).type || FlowType.PRIMARY;
+  flow.type = flow.type || FlowType.PRIMARY;
   // for the api provider, if a flow has been modified we change the last
   // step of the flow to automatically set a return code of 200, unless
   // already modified by the user. Also, we update the flow metadata to
@@ -714,8 +713,8 @@ export function reconcileConditionalFlows(
 export function getFlowsWithoutLinkedStepId(flows: Flow[], stepId: string) {
   return flows.filter(
     flow =>
-      (flow as ITypedFlow).type === FlowType.PRIMARY ||
-      (flow as ITypedFlow).type === FlowType.API_PROVIDER ||
+      flow.type === FlowType.PRIMARY ||
+      flow.type === FlowType.API_PROVIDER ||
       getMetadataValue(STEP_ID_METADATA_KEY, flow.metadata) !== stepId
   );
 }
@@ -1517,7 +1516,7 @@ export function isIntegrationApiProvider(integration: IntegrationOverview) {
  * Returns true if the given flow is the primary flow for an integration
  * @param flow
  */
-export function isPrimaryFlow(flow: ITypedFlow) {
+export function isPrimaryFlow(flow: Flow) {
   return (
     typeof flow !== 'undefined' &&
     (typeof flow.type === 'undefined' ||
@@ -1530,7 +1529,7 @@ export function isPrimaryFlow(flow: ITypedFlow) {
  * Returns true if the given flow is an alternate flow, created by the conditional flow step
  * @param flow
  */
-export function isAlternateFlow(flow: ITypedFlow) {
+export function isAlternateFlow(flow: Flow) {
   if (typeof flow.type !== 'undefined') {
     return flow.type === FlowType.ALTERNATE;
   }
@@ -1547,7 +1546,7 @@ export function isAlternateFlow(flow: ITypedFlow) {
  * Returns true if the given flow is a conditional flow created from a conditional flow step
  * @param flow
  */
-export function isConditionalFlow(flow: ITypedFlow) {
+export function isConditionalFlow(flow: Flow) {
   return (
     isAlternateFlow(flow) &&
     getMetadataValue<string>('kind', flow.metadata) === FlowKind.CONDITIONAL
@@ -1558,7 +1557,7 @@ export function isConditionalFlow(flow: ITypedFlow) {
  * Returns true if the given flow is the default flow for a conditional flow step
  * @param flow
  */
-export function isDefaultFlow(flow: ITypedFlow) {
+export function isDefaultFlow(flow: Flow) {
   return (
     isAlternateFlow(flow) &&
     getMetadataValue<string>(FLOW_KIND_METADATA_KEY, flow.metadata) ===
@@ -1570,7 +1569,7 @@ export function isDefaultFlow(flow: ITypedFlow) {
  * Returns true if the given flow is an API provider flow
  * @param flow
  */
-export function isApiProviderFlow(flow: ITypedFlow) {
+export function isApiProviderFlow(flow: Flow) {
   const step = (flow.steps || [])[0];
   try {
     return step.connection!.connectorId === API_PROVIDER;
