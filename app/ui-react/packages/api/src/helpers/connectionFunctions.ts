@@ -126,9 +126,7 @@ export function getConnectionIcon(
  * Checks whether the ConnectionBulletinBoard provided
  * @param board
  */
-export function isConfigurationRequired(
-  board: ConnectionBulletinBoard
-): boolean {
+export function isConfigRequired(board: ConnectionBulletinBoard): boolean {
   return (board.notices || board.warnings || board.errors)! > 0;
 }
 

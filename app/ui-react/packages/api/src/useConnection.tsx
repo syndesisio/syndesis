@@ -2,7 +2,7 @@ import { IConnectionOverview } from '@syndesis/models';
 import {
   getActionsWithFrom,
   getActionsWithTo,
-  isConfigurationRequired,
+  isConfigRequired,
   isDerived,
 } from './helpers';
 import { useApiResource } from './useApiResource';
@@ -18,9 +18,9 @@ export const transformConnectionResponse = (
     ...connection,
     actionsWithFrom: getActionsWithFrom(connector ? connector.actions : []),
     actionsWithTo: getActionsWithTo(connector ? connector.actions : []),
-    configRequired: isConfigurationRequired(connection),
     connector,
     derived: isDerived(connection),
+    isConfigRequired: isConfigRequired(connection),
     isTechPreview: connector ? connector.isTechPreview : false,
   };
 };
@@ -31,7 +31,7 @@ export const useConnection = (
 ) => {
   return useApiResource<IConnectionOverview>({
     defaultValue: {
-      configRequired: false,
+      isConfigRequired: false,
       isTechPreview: false,
       name: '',
     },

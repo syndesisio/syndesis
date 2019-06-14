@@ -36,16 +36,16 @@ export interface IConnectionCardMenuProps {
 }
 
 export interface IConnectionProps {
-  configurationRequired?: boolean;
   description: string;
   href: H.LocationDescriptor;
   i18nCannotDelete?: string;
-  i18nConfigurationRequired?: string;
+  i18nConfigRequired?: string;
   i18nTechPreview?: string;
   icon: React.ReactNode;
+  isConfigRequired?: boolean;
+  isTechPreview?: boolean;
   menuProps?: IConnectionCardMenuProps;
   name: string;
-  techPreview?: boolean;
   techPreviewPopoverHtml?: React.ReactNode;
 }
 
@@ -131,7 +131,7 @@ export class ConnectionCard extends React.PureComponent<
           matchHeight={true}
           className={'connection-card'}
         >
-          {this.props.techPreview && (
+          {this.props.isTechPreview && (
             <div
               className="connection-card__tech-preview"
               data-testid={'connection-card-tech-preview-heading'}
@@ -242,7 +242,7 @@ export class ConnectionCard extends React.PureComponent<
                 </Text>
               </div>
             </Card.Body>
-            {this.props.configurationRequired && (
+            {this.props.isConfigRequired && (
               <Card.Footer
                 className={
                   'connection-card__footer--config-required alert alert-warning'
@@ -250,7 +250,7 @@ export class ConnectionCard extends React.PureComponent<
                 data-testid={'connection-card-config-required-footer'}
               >
                 <Icon type={'pf'} name={'warning-triangle-o'} size={'2x'} />
-                {this.props.i18nConfigurationRequired}
+                {this.props.i18nConfigRequired}
               </Card.Footer>
             )}
           </Link>

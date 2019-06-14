@@ -66,7 +66,7 @@ export interface IConfigurationProperty extends ConfigurationProperty {
 export interface IConnectionOverview
   extends Omit<ConnectionOverview, 'connector'> {
   connector?: IConnector;
-  configRequired: boolean;
+  isConfigRequired: boolean;
   isTechPreview: boolean;
 }
 

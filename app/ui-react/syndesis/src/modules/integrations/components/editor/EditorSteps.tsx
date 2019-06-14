@@ -45,14 +45,14 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                     <ConnectionsGridCell key={index}>
                       <ConnectionCard
                         name={s.name}
-                        configurationRequired={s.configRequired}
                         description={s.description || ''}
                         icon={<EntityIcon entity={s} alt={s.name} width={46} />}
                         href={this.props.getEditorStepHref(s)}
                         i18nCannotDelete={t('cannotDelete')}
-                        i18nConfigurationRequired={t('configurationRequired')}
+                        i18nConfigRequired={t('configurationRequired')}
                         i18nTechPreview={t('techPreview')}
-                        techPreview={s.isTechPreview}
+                        isConfigRequired={s.isConfigRequired}
+                        isTechPreview={s.isTechPreview}
                         techPreviewPopoverHtml={
                           <span
                             dangerouslySetInnerHTML={{

@@ -81,7 +81,6 @@ export class Connections extends React.Component<IConnectionsProps> {
                                 <ConnectionsGridCell key={index}>
                                   <ConnectionCard
                                     name={c.name}
-                                    configurationRequired={c.configRequired}
                                     description={c.description || ''}
                                     icon={
                                       <EntityIcon
@@ -92,10 +91,12 @@ export class Connections extends React.Component<IConnectionsProps> {
                                     }
                                     href={this.props.getConnectionHref(c)}
                                     i18nCannotDelete={t('cannotDelete')}
-                                    i18nConfigurationRequired={t(
+                                    i18nConfigRequired={t(
                                       'configurationRequired'
                                     )}
                                     i18nTechPreview={t('techPreview')}
+                                    isConfigRequired={c.isConfigRequired}
+                                    isTechPreview={c.isTechPreview}
                                     menuProps={
                                       this.props.includeConnectionMenu
                                         ? {
@@ -121,7 +122,6 @@ export class Connections extends React.Component<IConnectionsProps> {
                                           }
                                         : undefined
                                     }
-                                    techPreview={c.isTechPreview}
                                     techPreviewPopoverHtml={
                                       <span
                                         dangerouslySetInnerHTML={{

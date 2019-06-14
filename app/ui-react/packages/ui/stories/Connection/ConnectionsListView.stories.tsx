@@ -54,13 +54,13 @@ const connections = (
     <ConnectionsGridCell>
       <ConnectionCard
         name={text('name', 'Connection 3')}
-        configurationRequired={true}
         description={text('description', 'Config required and tech preview.')}
         href={'#example'}
-        i18nConfigurationRequired={'Configuration Required'}
+        i18nConfigRequired={'Configuration Required'}
         i18nTechPreview={'Technology Preview'}
         icon={<div />}
-        techPreview={true}
+        isConfigRequired={true}
+        isTechPreview={true}
         techPreviewPopoverHtml={techPreviewPopoverHtml}
       />
     </ConnectionsGridCell>
