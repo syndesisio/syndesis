@@ -42,7 +42,6 @@ export interface IChoiceStepPageProps extends IPageWithEditorBreadcrumb {
     p: IChoiceStepRouteParams,
     s: IChoiceStepRouteState
   ) => H.LocationDescriptor;
-  // tslint:disable-next-line:react-unused-props-and-state
   postConfigureHref: (
     integration: Integration,
     p: IChoiceStepRouteParams,
@@ -82,9 +81,24 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                   const onUpdatedIntegration = async (
                     values: IChoiceFormConfiguration
                   ) => {
+                    const {
+                      action,
+                      description,
+                      id,
+                      metadata,
+                      name,
+                      properties,
+                      stepKind,
+                    } = step;
+                    // Construct a new step object
                     const updatedStep = {
-                      ...step,
-                      id: step.id || key(),
+                      action,
+                      description,
+                      id: id || key(),
+                      metadata,
+                      name,
+                      properties,
+                      stepKind,
                     };
                     const flowCollection = values.flowConditions.map(
                       flowCondition => {
@@ -132,7 +146,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                             FlowKind.DEFAULT,
                             params.flowId,
                             data,
-                            state.step
+                            updatedStep
                           )
                         : getFlow(
                             state.updatedIntegration || state.integration,
@@ -175,10 +189,14 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                       stepWithUpdatedDescriptor.action!.descriptor!
                     );
                     history.push(
-                      this.props.postConfigureHref(updatedIntegration, params, {
-                        ...state,
-                        updatedIntegration: reconciledIntegration,
-                      })
+                      this.props.postConfigureHref(
+                        reconciledIntegration,
+                        params,
+                        {
+                          ...state,
+                          updatedIntegration: reconciledIntegration,
+                        }
+                      )
                     );
                   };
                   return (
