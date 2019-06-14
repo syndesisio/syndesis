@@ -1,11 +1,11 @@
 .integration-steps-horizontal-item {
-  height: 100px;
+  margin-bottom: 10px;
   width: 120px;
   display: inline-block;
   text-align: center;
   vertical-align: top;
   position: relative;
-  padding: 0 10px;
+  padding-right: 20px;
 }
 
 .integration-steps-horizontal-item * {
@@ -43,7 +43,7 @@
 .integration-steps-horizontal-item .step-arrow {
   position: absolute;
   top: 23px;
-  left: -8px;
+  right: 10px;
   -webkit-transform: translate(50%, -50%);
   transform: translate(50%, -50%);
   font-size: 2em;

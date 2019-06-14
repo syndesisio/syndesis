@@ -10,6 +10,7 @@ import { EntityIcon } from '../../../shared';
 import resolvers from '../../resolvers';
 import { IUIStep } from './editor/interfaces';
 import { toUIStepCollection } from './editor/utils';
+import './IntegrationDetailSteps.css';
 
 export interface IIntegrationDetailStepsProps {
   integration: Integration;
@@ -23,10 +24,10 @@ export class IntegrationDetailSteps extends React.Component<
     const steps = getSteps(this.props.integration, flowId);
 
     return (
-      <PageSection>
+      <PageSection className="integration-detail-steps">
         <IntegrationStepsHorizontalView>
           {toUIStepCollection(steps).map((s: IUIStep, idx: number) => {
-            const isFirst = idx === 0;
+            const isLast = idx === steps.length - 1;
             const stepUri =
               s.stepKind === ENDPOINT && !s.metadata[HIDE_FROM_CONNECTION_PAGES]
                 ? resolvers.connections.connection.details({
@@ -40,7 +41,7 @@ export class IntegrationDetailSteps extends React.Component<
                   title={s.title}
                   icon={<EntityIcon entity={s} alt={s.name} />}
                   href={stepUri}
-                  isFirst={isFirst}
+                  isLast={isLast}
                 />
               </React.Fragment>
             );
