@@ -1,5 +1,5 @@
 import { Popover } from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
 import { ControlLabel, FormControl, FormGroup } from 'patternfly-react';
 import * as React from 'react';
@@ -72,7 +72,7 @@ export class DescribeDataShapeForm extends React.Component<
                       aria-label={this.props.i18nSelectTypeHelp}
                       bodyContent={this.props.i18nSelectTypeHelp}
                     >
-                      <InfoCircleIcon className="pf-u-ml-xs" />
+                      <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
                     </Popover>
                     <FormControl
                       data-testid={'describe-data-shape-form-kind-input'}
@@ -97,7 +97,7 @@ export class DescribeDataShapeForm extends React.Component<
                           aria-label={this.props.i18nDefinitionHelp}
                           bodyContent={this.props.i18nDefinitionHelp}
                         >
-                          <InfoCircleIcon className="pf-u-ml-xs" />
+                          <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
                         </Popover>
                         <TextEditor
                           id={'describe-data-shape-form-definition-editor'}
@@ -123,7 +123,7 @@ export class DescribeDataShapeForm extends React.Component<
                           aria-label={this.props.i18nDataTypeNameHelp}
                           bodyContent={this.props.i18nDataTypeNameHelp}
                         >
-                          <InfoCircleIcon className="pf-u-ml-xs" />
+                          <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
                         </Popover>
                         <FormControl
                           data-testid={'describe-data-shape-form-name-input'}
@@ -142,7 +142,7 @@ export class DescribeDataShapeForm extends React.Component<
                           aria-label={this.props.i18nDataTypeDescriptionHelp}
                           bodyContent={this.props.i18nDataTypeDescriptionHelp}
                         >
-                          <InfoCircleIcon className="pf-u-ml-xs" />
+                          <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
                         </Popover>
                         <FormControl
                           type="text"

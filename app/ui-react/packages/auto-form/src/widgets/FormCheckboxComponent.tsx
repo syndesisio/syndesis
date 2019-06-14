@@ -1,5 +1,5 @@
 import { Popover } from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { Checkbox, ControlLabel, FormGroup } from 'patternfly-react';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
@@ -14,7 +14,6 @@ export const FormCheckboxComponent: React.FunctionComponent<
     {...props.property.formGroupAttributes}
     controlId={toValidHtmlId(props.field.name)}
     validationState={getValidationState(props)}
-    className="syn-auto-form-checkbox-group"
   >
     <Checkbox
       {...props.property.fieldAttributes}
@@ -34,7 +33,7 @@ export const FormCheckboxComponent: React.FunctionComponent<
         aria-label={props.property.labelHint}
         bodyContent={props.property.labelHint}
       >
-        <InfoCircleIcon className="pf-u-ml-xs" />
+        <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
       </Popover>
     )}
     <AutoFormHelpBlock

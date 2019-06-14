@@ -1,5 +1,5 @@
 import { Popover } from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import { ControlLabel, FormControl, FormGroup } from 'patternfly-react';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
@@ -47,7 +47,7 @@ export const FormSelectComponent: React.FunctionComponent<
           aria-label={props.property.labelHint}
           bodyContent={props.property.labelHint}
         >
-          <InfoCircleIcon className="pf-u-ml-xs" />
+          <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
         </Popover>
       )}
       <FormControl

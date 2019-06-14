@@ -1,5 +1,5 @@
 import { Popover } from '@patternfly/react-core';
-import { InfoCircleIcon } from '@patternfly/react-icons';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import {
   ControlLabel,
   DropdownButton,
@@ -124,7 +124,7 @@ export class FormDurationComponent extends React.Component<
             aria-label={this.props.property.labelHint}
             bodyContent={this.props.property.labelHint}
           >
-            <InfoCircleIcon className="pf-u-ml-xs" />
+            <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
           </Popover>
         )}
         <Form.InputGroup>
