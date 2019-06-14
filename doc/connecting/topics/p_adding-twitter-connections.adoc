@@ -34,8 +34,18 @@ text that you specify.
 * *Send* send a direct message to a twitter user.
 
 . Optionally, enter the configuration information that {prodname}
-prompts for. For example, the *Search* action prompts you to specify
-how often to search and keywords to search for.
+prompts for.
+
+For the *Search* action it will prompts you to specify
+how often to search and the query to search for. The query should be
+specified accordingly to https://developer.twitter.com/en/docs/tweets/search/guides/standard-operators[twitter search operators].
+
+Examples of a search query:
+
+* `syndesis OR fuse`
+* `(jboss fuse) AND camel`
+* `camel -knative`
+
 
 . Click *Done* to add the connection to the integration.
 
