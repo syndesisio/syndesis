@@ -133,9 +133,8 @@ public class PublicApiHandler {
     /**
      * Add new unused environment.
      */
-    @PUT
+    @POST
     @Path("environments/{env}")
-    @Produces(MediaType.APPLICATION_JSON)
     public void addNewEnvironment(@NotNull @PathParam("env") @ApiParam(required = true) String environment) {
         validateEnvironment("environment", environment);
 
