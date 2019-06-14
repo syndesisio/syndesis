@@ -72,7 +72,7 @@ export interface IDvConnectionsWithToolbarProps {
   children?: any;
 }
 export interface IDvConnectionsWithToolbarState {
-  selectedConnection: any;
+  selectedConnection: string;
 }
 
 export class DvConnectionsWithToolbar extends React.Component<
@@ -91,6 +91,9 @@ export class DvConnectionsWithToolbar extends React.Component<
 
   public handleConnectionSelectionChanged(name: string, selected: boolean) {
     this.props.onConnectionSelectionChanged(name, selected);
+    this.setState({
+      selectedConnection: selected ? name : '',
+    });
   }
 
   public render() {
@@ -138,6 +141,7 @@ export class DvConnectionsWithToolbar extends React.Component<
                         error={this.props.error}
                         loading={this.props.loading}
                         connections={filteredAndSortedConnections}
+                        initialSelection={this.state.selectedConnection}
                         onConnectionSelectionChanged={
                           this.handleConnectionSelectionChanged
                         }
