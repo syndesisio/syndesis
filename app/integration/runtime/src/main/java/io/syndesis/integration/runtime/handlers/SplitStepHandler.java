@@ -17,6 +17,7 @@ package io.syndesis.integration.runtime.handlers;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -26,7 +27,6 @@ import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
-import io.syndesis.common.util.IOStreams;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisServerException;
 import io.syndesis.common.util.json.JsonUtils;
@@ -34,6 +34,7 @@ import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import org.apache.camel.Exchange;
 import org.apache.camel.Expression;
+import org.apache.camel.TypeConverter;
 import org.apache.camel.builder.Builder;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.spi.Language;
@@ -41,6 +42,35 @@ import org.apache.camel.support.ExpressionAdapter;
 import org.apache.camel.util.ObjectHelper;
 
 public class SplitStepHandler implements IntegrationStepHandler {
+
+    /* Types that need conversion to String in order to perform a split operation */
+    private enum AutoConvertTypes {
+        INPUT_STREAM(InputStream.class),
+        REMOTE_FILE("org.apache.camel.component.file.remote.RemoteFile") // ftp connector
+        ;
+
+        private final Class<?> type;
+        private final String typeName;
+
+        AutoConvertTypes(Class<?> type) {
+            this.type = type;
+            this.typeName = type.getName();
+        }
+
+        AutoConvertTypes(String typeName) {
+            this.type = null;
+            this.typeName = typeName;
+        }
+
+        boolean isInstance(Object value) {
+            if (type != null) {
+                return type.isInstance(value);
+            }
+
+            return typeName.equals(value.getClass().getName());
+        }
+    }
+
     @Override
     public boolean canHandle(Step step) {
         return StepKind.split == step.getStepKind();
@@ -126,13 +156,8 @@ public class SplitStepHandler implements IntegrationStepHandler {
 
         @Override
         public Object evaluate(Exchange exchange) {
-            Object value = delegate.evaluate(exchange, Object.class);
-
             try {
-                if (value instanceof InputStream) {
-                    //not able to split input stream. now it is time to read content and convert to string
-                    value = IOStreams.readText((InputStream) value);
-                }
+                Object value = convert(delegate.evaluate(exchange, Object.class), exchange);
 
                 if (value instanceof String && JsonUtils.isJson(value.toString())) {
                     JsonNode json = Json.reader().readTree(value.toString());
@@ -140,11 +165,11 @@ public class SplitStepHandler implements IntegrationStepHandler {
                         return JsonUtils.arrayToJsonBeans(json);
                     }
                 }
+
+                return value;
             } catch (IOException e) {
                 throw SyndesisServerException.launderThrowable(e);
             }
-
-            return value;
         }
     }
 
@@ -164,21 +189,49 @@ public class SplitStepHandler implements IntegrationStepHandler {
 
         @Override
         public Object evaluate(Exchange exchange) {
-            Object value = delegate.evaluate(exchange, Object.class);
+            try {
+                Object value = convert(delegate.evaluate(exchange, Object.class), exchange);
 
-            if (value instanceof String && JsonUtils.isJson(value.toString())) {
-                try {
+                if (value instanceof String && JsonUtils.isJson(value.toString())) {
                     JsonNode json = Json.reader().readTree(value.toString());
                     JsonNode body = json.get("body");
                     if (body != null) {
                         return Json.writer().writeValueAsString(body);
                     }
-                } catch (IOException e) {
-                    throw SyndesisServerException.launderThrowable(e);
                 }
-            }
 
+                return value;
+            } catch (IOException e) {
+                throw SyndesisServerException.launderThrowable(e);
+            }
+        }
+    }
+
+    /**
+     * Helper tries to convert given value to a String representation that can be split. For instance a remote file object
+     * with Json array as content is converted to String and then split using the elements in that Json array.
+     *
+     * Some types are already supported by Camel's splitter such as List or Scanner. Do not touch these types and skip conversion.
+     * @param value the value to convert.
+     * @param exchange the current exchange.
+     * @return converted value or original value itself if conversion failed or is not applicable.
+     */
+    private static Object convert(Object value, Exchange exchange) {
+        if (Arrays.stream(AutoConvertTypes.values()).noneMatch(type -> type.isInstance(value))) {
             return value;
         }
+
+        TypeConverter converter = exchange.getContext().getTypeConverter();
+        String answer = converter.convertTo(String.class, exchange, value);
+        if (answer != null) {
+            return answer;
+        }
+
+        answer = converter.tryConvertTo(String.class, exchange, value);
+        if (answer != null) {
+            return answer;
+        }
+
+        return value;
     }
 }
