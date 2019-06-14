@@ -1,19 +1,20 @@
-import { Connector } from '@syndesis/models';
+import { IConnector } from '@syndesis/models';
 import * as React from 'react';
 import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
 import { SyndesisFetch } from './SyndesisFetch';
+import { transformConnectorResponse } from './useConnector';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
 
 export interface IConnectorsFetchResponse {
-  readonly items: Connector[];
+  readonly items: IConnector[];
   readonly totalCount: number;
 }
 
 export interface IConnectorsResponse {
-  readonly connectorsForDisplay: Connector[];
-  readonly dangerouslyUnfilteredConnections: Connector[];
+  readonly connectorsForDisplay: IConnector[];
+  readonly dangerouslyUnfilteredConnections: IConnector[];
   readonly totalCount: number;
 }
 
@@ -22,7 +23,7 @@ export interface IWithConnectorsProps {
   children(props: IFetchState<IConnectorsResponse>): any;
 }
 
-export function getConnectorsForDisplay(connectors: Connector[]) {
+export function getConnectorsForDisplay(connectors: IConnector[]) {
   return connectors.filter(
     c => !c.metadata || !c.metadata['hide-from-connection-pages']
   );
@@ -31,11 +32,13 @@ export function getConnectorsForDisplay(connectors: Connector[]) {
 export function transformConnectorsResponse(
   response: IFetchState<IConnectorsFetchResponse>
 ): IFetchState<IConnectorsResponse> {
+  const connectors = response.data.items.map(transformConnectorResponse);
+
   return {
     ...response,
     data: {
-      connectorsForDisplay: getConnectorsForDisplay(response.data.items),
-      dangerouslyUnfilteredConnections: response.data.items,
+      connectorsForDisplay: getConnectorsForDisplay(connectors),
+      dangerouslyUnfilteredConnections: connectors,
       totalCount: response.data.totalCount,
     },
   };

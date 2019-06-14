@@ -1,6 +1,6 @@
 import { WithConnectionHelpers } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { ConnectionOverview } from '@syndesis/models';
+import { IConnectionOverview } from '@syndesis/models';
 import {
   ConnectionCard,
   ConnectionsGrid,
@@ -17,10 +17,10 @@ export interface IConnectionsProps {
   error: boolean;
   includeConnectionMenu: boolean;
   loading: boolean;
-  connections: ConnectionOverview[];
+  connections: IConnectionOverview[];
 
-  getConnectionHref(connection: ConnectionOverview): H.LocationDescriptor;
-  getConnectionEditHref?(connection: ConnectionOverview): H.LocationDescriptor;
+  getConnectionHref(connection: IConnectionOverview): H.LocationDescriptor;
+  getConnectionEditHref?(connection: IConnectionOverview): H.LocationDescriptor;
 }
 
 export class Connections extends React.Component<IConnectionsProps> {
@@ -77,25 +77,10 @@ export class Connections extends React.Component<IConnectionsProps> {
                                 doDelete(c.id!, c.name); // must have an ID if deleting
                               };
 
-                              const configurationRequired =
-                                c.board &&
-                                (c.board!.notices ||
-                                  c.board!.warnings ||
-                                  c.board!.errors)! > 0;
-
-                              const isTechPreview =
-                                c.connector! && c.connector!.metadata!
-                                  ? c.connector!.metadata!['tech-preview'] ===
-                                    'true'
-                                  : false;
-
                               return (
                                 <ConnectionsGridCell key={index}>
                                   <ConnectionCard
                                     name={c.name}
-                                    configurationRequired={
-                                      configurationRequired
-                                    }
                                     description={c.description || ''}
                                     icon={
                                       <EntityIcon
@@ -106,10 +91,12 @@ export class Connections extends React.Component<IConnectionsProps> {
                                     }
                                     href={this.props.getConnectionHref(c)}
                                     i18nCannotDelete={t('cannotDelete')}
-                                    i18nConfigurationRequired={t(
+                                    i18nConfigRequired={t(
                                       'configurationRequired'
                                     )}
                                     i18nTechPreview={t('techPreview')}
+                                    isConfigRequired={c.isConfigRequired}
+                                    isTechPreview={c.isTechPreview}
                                     menuProps={
                                       this.props.includeConnectionMenu
                                         ? {
@@ -135,7 +122,6 @@ export class Connections extends React.Component<IConnectionsProps> {
                                           }
                                         : undefined
                                     }
-                                    techPreview={isTechPreview}
                                     techPreviewPopoverHtml={
                                       <span
                                         dangerouslySetInnerHTML={{

@@ -1,5 +1,5 @@
 import { WithConnectors } from '@syndesis/api';
-import { Connector } from '@syndesis/models';
+import { IConnector } from '@syndesis/models';
 import {
   ConnectionCard,
   ConnectionCreatorLayout,
@@ -21,7 +21,7 @@ import { ConnectionCreatorBreadcrumb } from '../../components/ConnectionCreatorB
 import resolvers from '../../resolvers';
 
 function getFilteredAndSortedConnectors(
-  connections: Connector[],
+  connections: IConnector[],
   activeFilters: IActiveFilter[],
   currentSortType: ISortType,
   isSortAscending: boolean
@@ -30,7 +30,7 @@ function getFilteredAndSortedConnectors(
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
     filteredAndSortedConnections = filteredAndSortedConnections.filter(
-      (c: Connector) => c.name.toLowerCase().includes(valueToLower)
+      (c: IConnector) => c.name.toLowerCase().includes(valueToLower)
     );
   });
 
@@ -122,21 +122,15 @@ export class ConnectorsPage extends React.Component {
                                 <PageSection>
                                   {filteredAndSortedConnectors.map(
                                     (connector, index) => {
-                                      const isTechPreview =
-                                        connector!.metadata! &&
-                                        connector!.metadata!['tech-preview'] ===
-                                          'true';
-
                                       return (
                                         <ConnectionsGridCell key={index}>
                                           <ConnectionCard
-                                            configurationRequired={false}
                                             name={connector.name}
                                             description={
                                               connector.description || ''
                                             }
                                             i18nCannotDelete={t('cannotDelete')}
-                                            i18nConfigurationRequired={t(
+                                            i18nConfigRequired={t(
                                               'configurationRequired'
                                             )}
                                             i18nTechPreview={t('techPreview')}
@@ -147,12 +141,15 @@ export class ConnectorsPage extends React.Component {
                                                 width={46}
                                               />
                                             }
+                                            isConfigRequired={false}
+                                            isTechPreview={
+                                              connector.isTechPreview
+                                            }
                                             href={resolvers.create.configureConnector(
                                               {
                                                 connector,
                                               }
                                             )}
-                                            techPreview={isTechPreview}
                                             techPreviewPopoverHtml={
                                               <span
                                                 dangerouslySetInnerHTML={{

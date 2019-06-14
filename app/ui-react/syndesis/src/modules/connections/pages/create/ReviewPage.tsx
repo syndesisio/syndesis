@@ -1,7 +1,7 @@
 import { useConnectionHelpers, useConnector } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
 import * as H from '@syndesis/history';
-import { Connector } from '@syndesis/models';
+import { IConnector } from '@syndesis/models';
 import {
   ConnectionCreatorLayout,
   ConnectorConfigurationForm,
@@ -29,7 +29,7 @@ export interface IReviewPageRouteParams {
 }
 
 export interface IReviewPageRouteState {
-  connector: Connector;
+  connector: IConnector;
   configuredProperties?: { [key: string]: string };
 }
 

@@ -5,7 +5,7 @@ import {
   WithActionDescriptor,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
-import { Action, ConnectionOverview } from '@syndesis/models';
+import { Action, IConnectionOverview } from '@syndesis/models';
 import { PageSectionLoader } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
@@ -37,7 +37,7 @@ export interface IWithConfigurationFormProps {
    * [actionId]{@link IWithConfigurationFormProps#actionId}. Used to retrieve
    * the form definition.
    */
-  connection: ConnectionOverview;
+  connection: IConnectionOverview;
   /**
    * the ID of the action that needs to be configured.
    */
