@@ -27,10 +27,8 @@ export class WithEnvironmentHelpersWrapped extends React.Component<
 
   public async createEnvironment(name: string) {
     const response = await callFetch({
-      body: name,
       headers: this.props.headers,
-      method: 'PUT' /* @todo this won't actually work */,
-      stringifyBody: false,
+      method: 'POST',
       url: `${this.props.apiUri}/public/environments/${name}`,
     });
     if (!response.ok) {
