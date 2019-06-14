@@ -35,7 +35,7 @@ const options = {
   },
 
   defaultNS: 'shared',
-  fallbackLng: process.env.NODE_ENV === 'production' ? 'en' : 'it',
+  fallbackLng: 'en',
   fallbackNS: ['shared'],
   keySeparator: '.',
   ns: [
