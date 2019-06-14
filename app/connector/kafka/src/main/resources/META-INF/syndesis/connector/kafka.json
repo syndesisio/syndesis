@@ -104,7 +104,7 @@
       "javaType": "java.lang.String",
       "kind": "property",
       "label": "common",
-      "labelHint": "Comma separated list of Kafka broker URIs in the form host:port.",
+      "labelHint": "Comma separated list of Kafka broker URIs in the form host:port. Note that SSL URIs are not supported at this time and will cause an OOM at connection verification (see also https://issues.apache.org/jira/browse/KAFKA-4090)",
       "order": "1",
       "required": true,
       "secret": false,
