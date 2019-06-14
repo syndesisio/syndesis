@@ -5,8 +5,8 @@ import {
   ConfigurationProperty,
   Connection,
   ConnectionBulletinBoard,
-  IConnectionWithIconFile,
   IConnectionOverview,
+  IConnectionWithIconFile,
   IConnector,
 } from '@syndesis/models';
 import { getMetadataValue } from './integrationFunctions';
