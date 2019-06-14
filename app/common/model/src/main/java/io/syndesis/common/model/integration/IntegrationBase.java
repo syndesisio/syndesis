@@ -45,6 +45,11 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 public interface IntegrationBase extends WithProperties, WithResourceId, WithVersion, WithModificationTimestamps, WithTags, WithName, WithSteps, ToJson, WithResources {
 
+    /**
+     * @deprecated fully deleted from the data manager in 7.4+.
+     *      Retained for filtering in existing installations.
+     */
+    @Deprecated
     @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     @Value.Default
     default boolean isDeleted() {

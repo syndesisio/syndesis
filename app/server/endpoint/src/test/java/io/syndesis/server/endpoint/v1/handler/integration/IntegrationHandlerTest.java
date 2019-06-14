@@ -15,17 +15,27 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
-
 import javax.validation.Validator;
 import javax.ws.rs.core.SecurityContext;
-
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
 import io.syndesis.common.model.filter.FilterOptions;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
@@ -35,18 +45,6 @@ import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.same;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class IntegrationHandlerTest {
 
@@ -111,38 +109,54 @@ public class IntegrationHandlerTest {
     }
 
     @Test
-    public void shouldDeleteIntegrationsUpdatingDeploymentsAndDeletingOpensShiftResources() {
-        final Integration integration = new Integration.Builder().id("to-delete").build();
+    public void shouldDeleteIntegrationsAndDeletingAssociatedResources() {
+        String id = "to-delete";
+        Integration integration = new Integration.Builder().id(id).build();
 
-        when(dataManager.fetch(Integration.class, "to-delete")).thenReturn(integration);
+        when(dataManager.fetch(Integration.class, id)).thenReturn(integration);
 
-        final Integration firstIntegration = new Integration.Builder().createFrom(integration).name("first to delete")
+        Integration integration1 = new Integration.Builder().createFrom(integration).name("first to delete")
             .build();
-        final IntegrationDeployment deployment1 = new IntegrationDeployment.Builder().spec(firstIntegration).version(1)
+        Integration integration2 = new Integration.Builder().createFrom(integration).name("second to delete")
+            .build();
+
+        String deploymentId1 = id + "-deploy1";
+        IntegrationDeployment deployment1 = new IntegrationDeployment.Builder().spec(integration1).version(1)
+            .id(deploymentId1)
             .targetState(IntegrationDeploymentState.Unpublished)
             .stepsDone(Collections.singletonMap("deploy", "something")).build();
-        final Integration secondIntegration = new Integration.Builder().createFrom(integration).name("second to delete")
-            .build();
-        final IntegrationDeployment deployment2 = new IntegrationDeployment.Builder().spec(secondIntegration).version(2)
+
+        String deploymentId2 = id + "-deploy2";
+        IntegrationDeployment deployment2 = new IntegrationDeployment.Builder().spec(integration2).version(2)
+            .id(deploymentId2)
             .currentState(IntegrationDeploymentState.Published).targetState(IntegrationDeploymentState.Published)
             .stepsDone(Collections.singletonMap("deploy", "something")).build();
-        when(dataManager.fetchAllByPropertyValue(IntegrationDeployment.class, "integrationId", "to-delete"))
+
+        // Integration bulletin boards identifiers
+        Set<String> ibbIds = new HashSet<>();
+        for (int i = 1; i <= 2; ++i) {
+            ibbIds.add(id + "-ibb" + i);
+        }
+
+        when(dataManager.fetchAllByPropertyValue(IntegrationDeployment.class, "integrationId", id))
             .thenReturn(Stream.of(deployment1, deployment2));
+        when(dataManager.fetchIdsByPropertyValue(IntegrationBulletinBoard.class, "targetResourceId", id))
+            .thenReturn(ibbIds);
+        when(dataManager.delete(IntegrationDeployment.class, deploymentId1)).thenReturn(true);
+        when(dataManager.delete(IntegrationDeployment.class, deploymentId2)).thenReturn(true);
+        for (String ibbId : ibbIds) {
+            when(dataManager.delete(IntegrationBulletinBoard.class, ibbId)).thenReturn(true);
+        }
+        when(dataManager.delete(Integration.class, id)).thenReturn(true);
 
-        final ArgumentCaptor<Integration> updated = ArgumentCaptor.forClass(Integration.class);
-        doNothing().when(dataManager).update(updated.capture());
+        handler.delete(id);
 
-        handler.delete("to-delete");
-
-        assertThat(updated.getValue()).isEqualToIgnoringGivenFields(
-            new Integration.Builder().createFrom(integration).isDeleted(true).build(), "updatedAt");
-
-        verify(dataManager).update(new IntegrationDeployment.Builder().spec(firstIntegration).version(1)
-            .currentState(IntegrationDeploymentState.Pending).targetState(IntegrationDeploymentState.Unpublished)
-            .build().deleted());
-        verify(dataManager).update(new IntegrationDeployment.Builder().spec(secondIntegration).version(2)
-            .currentState(IntegrationDeploymentState.Published).targetState(IntegrationDeploymentState.Unpublished)
-            .build().deleted().deleted());
+        verify(dataManager).delete(Integration.class, id);
+        verify(dataManager).delete(IntegrationDeployment.class, deploymentId1);
+        verify(dataManager).delete(IntegrationDeployment.class, deploymentId2);
+        for (String ibbId : ibbIds) {
+            verify(dataManager).delete(IntegrationBulletinBoard.class, ibbId);
+        }
         verify(openShiftService).delete("first to delete");
         verify(openShiftService).delete("second to delete");
     }

@@ -84,6 +84,11 @@ public interface IntegrationDeployment extends IntegrationDeploymentBase, WithId
         return builder().targetState(IntegrationDeploymentState.Unpublished).stepsDone(stepsDone).build();
     }
 
+    /**
+     * @deprecated fully deleted from the data manager in 7.4+
+     *      Retained for filtering in existing installations.
+     */
+    @Deprecated
     default IntegrationDeployment deleted() {
         final Integration integration = new Integration.Builder().createFrom(getSpec()).isDeleted(true).build();
         return builder().spec(integration).build();
