@@ -92,12 +92,14 @@ export function toUIStep(step: Step | StepKind): IUIStep {
     case CONNECTOR:
       // this step is a Connection step
       return {
-        ...(step as IConnectionOverview),
+        ...step,
+        configRequired: (step.connection as IConnectionOverview).configRequired,
         description:
           (step as IConnectionOverview).description ||
           step.connection!.description ||
           '',
         inputDataShape,
+        isTechPreview: (step.connection as IConnectionOverview).isTechPreview,
         metadata: {
           ...(step.connection!.metadata || {}),
           ...(step.metadata || {}),
@@ -287,7 +289,6 @@ export function mergeConnectionsSources(
     ...connections.map(connection =>
       toUIStep({
         connection,
-        name: connection.name,
         stepKind: ENDPOINT,
       } as StepKind)
     ),
