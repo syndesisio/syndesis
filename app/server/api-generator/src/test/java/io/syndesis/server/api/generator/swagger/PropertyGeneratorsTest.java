@@ -53,9 +53,9 @@ public class PropertyGeneratorsTest {
 
         assertThat(authenticationTypes)
             .contains(new ConfigurationProperty.Builder()
-                .addEnum(PropertyValue.Builder.of("oauth2", "OAuth 2.0"))
-                .addEnum(PropertyValue.Builder.of("basic", "HTTP Basic Authentication"))
-                .addEnum(PropertyValue.Builder.of("apiKey", "API Key"))
+                .addEnum(PropertyValue.Builder.of("oauth2:oauth-authorization-code", "OAuth 2.0 - oauth-authorization-code"))
+                .addEnum(PropertyValue.Builder.of("basic:basic-auth", "HTTP Basic Authentication - basic-auth"))
+                .addEnum(PropertyValue.Builder.of("apiKey:api-key", "API Key - api-key"))
                 .build());
     }
 

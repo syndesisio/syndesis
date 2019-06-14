@@ -23,6 +23,9 @@ import java.util.stream.Collectors;
 import io.swagger.models.auth.OAuth2Definition;
 import io.swagger.models.auth.SecuritySchemeDefinition;
 import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.ConfigurationProperty.PropertyValue;
+
+import org.apache.commons.lang3.StringUtils;
 
 @SuppressWarnings("ImmutableEnumChecker")
 enum SupportedAuthenticationTypes {
@@ -35,9 +38,9 @@ enum SupportedAuthenticationTypes {
 
     final String label;
 
-    private Predicate<SecuritySchemeDefinition> filter;
+    final transient ConfigurationProperty.PropertyValue propertyValue;
 
-    private final transient ConfigurationProperty.PropertyValue propertyValue;
+    private final Predicate<SecuritySchemeDefinition> filter;
 
     SupportedAuthenticationTypes(final String label) {
         this(label, SupportedAuthenticationTypes::any);
@@ -49,8 +52,25 @@ enum SupportedAuthenticationTypes {
         propertyValue = new ConfigurationProperty.PropertyValue.Builder().value(name()).label(label).build();
     }
 
-    static ConfigurationProperty.PropertyValue asPropertyValue(final SecuritySchemeDefinition def) {
-        return valueOf(def.getType()).propertyValue;
+    static ConfigurationProperty.PropertyValue asPropertyValue(final String name, final SecuritySchemeDefinition def) {
+        final PropertyValue template = valueOf(def.getType()).propertyValue;
+
+        final PropertyValue propertyValue = new ConfigurationProperty.PropertyValue.Builder()
+            .createFrom(template)
+            .label(template.getLabel() + " - " + name)
+            .value(template.getValue() + ":" + name)
+            .build();
+
+        final String description = def.getDescription();
+        if (StringUtils.isEmpty(description)) {
+            return propertyValue;
+        }
+
+        final String labelWithDescription = propertyValue.getLabel() + " (" + description + ")";
+        return new ConfigurationProperty.PropertyValue.Builder()
+            .createFrom(propertyValue)
+            .label(labelWithDescription)
+            .build();
     }
 
     static boolean supports(final SecuritySchemeDefinition def) {

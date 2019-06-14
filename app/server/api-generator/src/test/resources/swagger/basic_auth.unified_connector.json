@@ -22,7 +22,7 @@
   ],
   "componentScheme": "rest-swagger",
   "configuredProperties": {
-    "authenticationType": "basic",
+    "authenticationType": "basic:username_password",
     "basePath": "/api",
     "host": "http://sample.io",
     "specification": "{\"swagger\":\"2.0\",\"host\":\"sample.io\",\"basePath\":\"/api\",\"schemes\":[\"http\"],\"paths\":{\"/operation\":{\"get\":{\"operationId\":\"operation-0\",\"produces\":[\"application/json\"]}}}}"
@@ -57,14 +57,14 @@
   "properties": {
     "authenticationType": {
       "componentProperty": true,
-      "defaultValue": "basic",
+      "defaultValue": "basic:username_password",
       "deprecated": false,
       "description": "Type of authentication used to connect to the API",
       "displayName": "Authentication Type",
       "enum": [
         {
-          "label": "HTTP Basic Authentication",
-          "value": "basic"
+          "label": "HTTP Basic Authentication - username_password",
+          "value": "basic:username_password"
         }
       ],
       "group": "producer",

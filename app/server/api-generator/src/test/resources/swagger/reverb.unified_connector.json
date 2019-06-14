@@ -4683,7 +4683,7 @@
   ],
   "componentScheme": "rest-swagger",
   "configuredProperties": {
-    "authenticationType": "oauth2",
+    "authenticationType": "oauth2:oauth2",
     "basePath": "/api",
     "componentName": "connector-rest-swagger-http4",
     "host": "https://api.reverb.com",
@@ -4752,14 +4752,14 @@
     },
     "authenticationType": {
       "componentProperty": true,
-      "defaultValue": "oauth2",
+      "defaultValue": "oauth2:oauth2",
       "deprecated": false,
       "description": "Type of authentication used to connect to the API",
       "displayName": "Authentication Type",
       "enum": [
         {
-          "label": "OAuth 2.0",
-          "value": "oauth2"
+          "label": "OAuth 2.0 - oauth2",
+          "value": "oauth2:oauth2"
         }
       ],
       "group": "producer",

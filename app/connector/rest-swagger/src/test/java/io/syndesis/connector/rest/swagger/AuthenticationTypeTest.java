@@ -15,19 +15,15 @@
  */
 package io.syndesis.connector.rest.swagger;
 
-import java.util.Objects;
+import org.junit.Test;
 
-public enum AuthenticationType {
-    apiKey, basic, none, oauth2;
+import static org.assertj.core.api.Assertions.assertThat;
 
-    public static AuthenticationType fromString(final String value) {
-        Objects.requireNonNull(value, "authenticationType");
+public class AuthenticationTypeTest {
 
-        final int idx = value.indexOf(':');
-        if (idx > 0) {
-            return valueOf(value.substring(0, idx));
-        }
-
-        return valueOf(value);
+    @Test
+    public void shouldConvertFromStringValue() {
+        assertThat(AuthenticationType.fromString("apiKey")).isEqualByComparingTo(AuthenticationType.apiKey);
+        assertThat(AuthenticationType.fromString("apiKey:name")).isEqualByComparingTo(AuthenticationType.apiKey);
     }
 }

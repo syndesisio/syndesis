@@ -87,9 +87,9 @@ enum PropertyGenerators {
                         .of(new ConfigurationProperty.Builder().createFrom(template).defaultValue("none").addEnum(NO_SECURITY).build());
                 }
 
-                final ConfigurationProperty.PropertyValue[] enums = securityDefinitions.values().stream()
-                    .filter(SupportedAuthenticationTypes::supports)
-                    .map(SupportedAuthenticationTypes::asPropertyValue)
+                final ConfigurationProperty.PropertyValue[] enums = securityDefinitions.entrySet().stream()
+                    .filter(e -> SupportedAuthenticationTypes.supports(e.getValue()))
+                    .map(e -> SupportedAuthenticationTypes.asPropertyValue(e.getKey(), e.getValue()))
                     .toArray(l -> new ConfigurationProperty.PropertyValue[l]);
 
                 final ConfigurationProperty.Builder authenticationType = new ConfigurationProperty.Builder().createFrom(template)
