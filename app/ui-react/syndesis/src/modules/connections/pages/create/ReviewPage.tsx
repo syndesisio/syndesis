@@ -109,8 +109,8 @@ export const ReviewPage: React.FunctionComponent = () => {
                 i18nRequiredProperty={t('shared:requiredFieldMessage')}
                 definition={definition}
                 initialValue={{
-                  description: '',
-                  name: '',
+                  description: connector.description,
+                  name: connector.name,
                 }}
                 onSave={onSave}
               >
