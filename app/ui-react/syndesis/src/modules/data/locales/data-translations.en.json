@@ -7,7 +7,7 @@
     "deleteModalTitle": "Delete Virtualization",
     "deleteViewModalMessage": "Are you sure you want to delete the \"{{name}}\" view?",
     "editDataVirtualizationTip": "Edit the data virtualization",
-    "emptyStateInfoMessage": "There are no virtualizations available. Please click on the button below to create one.",
+    "emptyStateInfoMessage": "There are no virtualizations available. Click the button below to create one.",
     "emptyStateTitle": "$t(virtualization.createDataVirtualization)",
     "errorValidatingViewName": "Error validating the view name",
     "errorValidatingVirtualizationName": "Error validating the virtualization name",
@@ -21,7 +21,7 @@
     "virtualizationsPageDescription": "Syndesis creates and manages data virtualizations to expose as data source connections.",
     "virtualizationsPageTitle": "$t(shared:DataVirtualizations)",
     "virtualizationDetailPageTitle": "$t(shared:DataVirtualization)",
-    "virtualizationsDisabled": "Virtualizations are not enabled in your installation. Please refer to documentation for instructions on how to enable them.",
+    "virtualizationsDisabled": "Virtualizations are not enabled in your installation. Refer to documentation for instructions on how to enable them.",
     "views": "Views",
     "relationship": "Relationship",
     "sqlClient": "SQL Client",
@@ -35,10 +35,10 @@
     "importDataSourceTip": "Import views from a data source",
     "importDataSourceWizardStep1": "Select Connection",
     "importDataSourceWizardStep2": "Select Views",
-    "unpublishModalMessage": "This Virtualization has been published.  Please unpublish Virtualization \"{{name}}\" first.",
+    "unpublishModalMessage": "This Virtualization has been published. Unpublish Virtualization \"{{name}}\" first.",
     "unpublishModalTitle": "Unpublish Virtualization",
     "viewEmptyStateTitle": "Create Views",
-    "viewEmptyStateInfo": "There are no views available. Please click one of the buttons below to create views.",
+    "viewEmptyStateInfo": "There are no views available. Click one of the buttons below to create views.",
     "viewDdlDisplay": "DDL",
     "viewDescriptionDisplay": "Description",
     "viewDescriptionPlaceholder": "Enter view description...",
@@ -71,6 +71,6 @@
     "createViewSuccess": "Created view named: {{name}}.",
     "createViewFailed": "Create view failed. Details: {{details}}",
     "activeConnectionsEmptyStateTitle": "No Active Connections",
-    "activeConnectionsEmptyStateInfo": "There are no active connections available. Please retry."
+    "activeConnectionsEmptyStateInfo": "There are no active connections available. Try again."
   }
 }
