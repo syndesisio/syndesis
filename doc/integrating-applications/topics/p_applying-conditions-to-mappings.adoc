@@ -12,6 +12,7 @@ the target field with `99999`. To do this, you would specify
 an expression that tests the zip code source
 field to determine if it is empty, and if it is empty, 
 inserts `99999` into the zip code target field. 
+
 The data mapper supports expressions that are similar to a Microsoft 
 Excel expressions, but does not support all Microsoft Excel expression 
 syntax.  
@@ -40,49 +41,86 @@ image:shared/images/EditorSettings.png[Editor settings] and then
 While this is not a requirement for specifying a condition, it is
 helpful to see the data types.
 
-. If mapping preview fields are not already visible, display them 
-by clicking image:shared/images/EditorSettings.png[Editor settings] and then 
-*Show Mapping Preview*. 
-+
-Again, this is not a requirement, but it is helpful for checking
-whether the expression you specify achieves the result that you want. 
-
 . Create the mapping that you want to apply a condition to, or
 ensure that the currently selected mapping is the mapping that you 
-want to apply a condition to. 
+want to apply a condition to. For example, consider this mapping: 
++
+image:images/first-conditional-mapping.png[lastName and firstName map to customerName]
 
 . In the upper right, click
 image:images/add-condition-to-mapping.png[Add expression] to 
 display the conditional expression input field. 
 +
 In the expression field, the data mapper automatically displays 
-the names of the source fields in the current mapping. 
+the names of the source fields in the current mapping. For example: 
++
+image:images/first-conditional-mapping-expression.png[lastName + firstName]
++
+In the expression input field, the order of the source fields is the 
+order in which you selected them when you created the mapping. 
+This is important because the default mapping behavior is that the 
+data mapper concatenates the field values in this order to insert 
+the result in the target field. In this example, to create this 
+mapping, `lastName` was selected first and then `firstName` was selected. 
 
-. Specify a Microsoft Excel expression in the input field. 
+. Edit the expression input field to specify the conditional 
+expression that you want the data mapper to apply to the 
+mapping. 
 +
 As you specify the expression, you can: 
 +
-* Enter `@` to display a list of the fields in the 
-current mapping. Select the field that you want to 
+* Enter `@` and start to enter the name of a field.
+The data mapper displays a list of the fields that match 
+what you entered. Select the field that you want to 
 specify in the expression. 
-* Drag a field from the mapping canvas into the expression field. 
+
+* Drag a field from the mapping canvas into the expression input field. 
 
 +
-For example, suppose that you are mapping a source zip code
-field to a target zip code field and you specify this expression: 
+
+When you add a field name to the expression, the data mapper adds 
+that field to the mapping. For example, consider this conditional 
+expression: 
 
 +
-----
-if(ISEMPTY(zip), "99999")
-----
+image:images/second-conditional-mapping-expression.png[if(ISEMPTY(lastName), firstName, orderId + phone)]
 
 +
-If the source `zip` field is empty, the mapper inserts `99999` in 
-the target field. 
+During execution, if the data mapper determines that the `lastName`
+field is empty, it maps only the `firstName` field to the target
+`customerName` field. If both the `lastName` and `firstName` fields 
+are empty, the data mapper concatenates the values in the source 
+`orderId` and `phone` fields, and inserts the result in the 
+`customerName` field.
 
-. Optionally, apply transformations to the source or target fields. 
++
+For this example, after you complete entering the expression, 
+the data mapping is: 
 
-. Enter sample data in the source field(s) to ensure that the target field
-gets the correct value. 
++
+image:images/second-conditional-mapping.png[lastName, firstName, orderId, phone are mapped to customerName]
 
-. Adjust the conditional expression as needed. 
+
+. If mapping preview fields are not already visible, display them 
+by clicking image:shared/images/EditorSettings.png[Editor settings] and then 
+*Show Mapping Preview*. 
+
+. Enter sample data in the source preview input field(s) 
+to ensure that the target field or target fields
+get(s) the correct value. 
+
+. Optionally, apply transformations to one or more source or target fields
+that are in the mapping:
+.. In the *Mapping Details* panel, find the field that you want to apply 
+a transformation to. 
+.. Just below it, click *Add Transformation*. 
+.. Click the transformation that you want the data mapper to perform. 
+.. If needed, specify input parameters. 
+
++
+For example, in the same mapping presented in this procedure, in the 
+*Mapping Details* panel, you could apply the `Uppercase`
+ transformation to the `firstName` field. You can test this by entering 
+ data in the `firstName` field's preview input field. 
+ 
+. Edit the conditional expression as needed to obtain the desired result.  
