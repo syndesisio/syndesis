@@ -64,6 +64,7 @@ import io.syndesis.common.model.Schema;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithName;
 import io.syndesis.common.model.WithResourceId;
+import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.extension.Extension;
@@ -80,6 +81,7 @@ import io.syndesis.integration.api.IntegrationResourceManager;
 import io.syndesis.server.dao.file.FileDataManager;
 import io.syndesis.server.dao.file.IconDao;
 import io.syndesis.server.dao.manager.DataManager;
+import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.handler.extension.ExtensionActivator;
 import io.syndesis.server.endpoint.v1.handler.integration.IntegrationHandler;
 import io.syndesis.server.jsondb.CloseableJsonDB;
@@ -117,12 +119,14 @@ public class IntegrationSupportHandler {
     private final FileDataManager extensionDataManager;
     private final ExtensionActivator extensionActivator;
     private final IconDao iconDao;
+    private final EncryptionComponent encryptionComponent;
 
     public IntegrationSupportHandler(final Migrator migrator, final SqlJsonDB jsondb,
                                      final IntegrationProjectGenerator projectGenerator,
                                      final DataManager dataManager, final IntegrationResourceManager resourceManager,
                                      final IntegrationHandler integrationHandler,
                                      final FileDataManager extensionDataManager,
+                                     final EncryptionComponent encryptionComponent,
                                      final ExtensionActivator extensionActivator, final IconDao iconDao) {
         this.migrator = migrator;
         this.jsondb = jsondb;
@@ -132,6 +136,7 @@ public class IntegrationSupportHandler {
         this.resourceManager = resourceManager;
         this.integrationHandler = integrationHandler;
         this.extensionDataManager = extensionDataManager;
+        this.encryptionComponent = encryptionComponent;
         this.extensionActivator = extensionActivator;
         this.iconDao = iconDao;
     }
@@ -415,6 +420,11 @@ public class IntegrationSupportHandler {
             }
         }, RENAME_CONNECTION, renamedIds, result);
 
+        // remove hidden external secrets from imported connections
+        for (WithResourceId connection : result.get("connections")) {
+            removeHiddenExternalSecrets((Connection) connection);
+        }
+
         importIntegrations(sec, new JsonDbDao<Integration>(given) {
             @Override
             public Class<Integration> getType() {
@@ -437,6 +447,27 @@ public class IntegrationSupportHandler {
         }, result);
 
         return result;
+    }
+
+    // Strip un-ordered (hidden) secret properties in imported connections that can't be decoded in this instance
+    // this will remove any external auto-generated properties like OAuth refreshTokens
+    // NOTE that this doesn't remove ordered editable external secrets,
+    // since they need to be manually edited by user and are used to detect connections that need to be re-configured
+    private void removeHiddenExternalSecrets(Connection connection) {
+        final Map<String, ConfigurationProperty> properties = connection.getConnector().get().getProperties();
+        final Map<String, String> configuredProperties = connection.getConfiguredProperties();
+
+        final Map<String, String> updatedProperties = new HashMap<>(configuredProperties);
+        updatedProperties.entrySet().removeIf( e ->  {
+                final ConfigurationProperty prop = properties.get(e.getKey());
+                final String value = e.getValue();
+                return !prop.getOrder().isPresent() && value != null
+                        && prop.getSecret() && this.encryptionComponent.decrypt(value) == null;
+        });
+
+        if (updatedProperties.size() != configuredProperties.size()) {
+            this.dataManager.update(connection.builder().configuredProperties(updatedProperties).build());
+        }
     }
 
     private void importIntegrations(SecurityContext sec, JsonDbDao<Integration> export,
