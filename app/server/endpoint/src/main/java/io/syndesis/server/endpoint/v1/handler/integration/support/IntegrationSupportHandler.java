@@ -107,8 +107,6 @@ public class IntegrationSupportHandler {
 
     private static final BiFunction<Extension, String, Extension> RENAME_EXTENSION = (e, n) -> new Extension.Builder().createFrom(e).name(n).build();
     private static final BiFunction<Connection, String, Connection> RENAME_CONNECTION = (c, n) -> new Connection.Builder().createFrom(c).name(n).build();
-    public static final String PROPERTY_EXTENSION_ID = "extensionId";
-    public static final String PROPERTY_STATUS = "status";
 
     private final Migrator migrator;
     private final SqlJsonDB jsondb;
@@ -121,6 +119,7 @@ public class IntegrationSupportHandler {
     private final IconDao iconDao;
     private final EncryptionComponent encryptionComponent;
 
+    @SuppressWarnings("PMD.Rule:ExcessiveParameterList")
     public IntegrationSupportHandler(final Migrator migrator, final SqlJsonDB jsondb,
                                      final IntegrationProjectGenerator projectGenerator,
                                      final DataManager dataManager, final IntegrationResourceManager resourceManager,
@@ -381,8 +380,8 @@ public class IntegrationSupportHandler {
             boolean doImport = false;
 
             final Set<String> ids = dataManager.fetchIdsByPropertyValue(e.getType(),
-                    PROPERTY_EXTENSION_ID, i.getExtensionId(),
-                    PROPERTY_STATUS, Extension.Status.Installed.name());
+                    "extensionId", i.getExtensionId(),
+                    "status", Extension.Status.Installed.name());
             if (ids.isEmpty()) {
                 // new extension
                 doImport = true;
