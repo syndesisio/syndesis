@@ -162,10 +162,9 @@ export const IntegrationDetailHeader: React.FunctionComponent<
                 i18nLogUrlText={t('shared:viewLogs')}
               />
             </PageSection>
-            <PageSection variant={'light'}>
-              {bulletinBoards.map((message: LeveledMessage, index) => (
+            {bulletinBoards.map((message: LeveledMessage, index) => (
+              <PageSection variant={'light'} key={index}>
                 <IntegrationBulletinBoardAlert
-                  key={index}
                   level={toAlertLevel(message.level || 'INFO')}
                   message={
                     message.message
@@ -176,8 +175,8 @@ export const IntegrationDetailHeader: React.FunctionComponent<
                   i18nTextExpanded={t('shared:HideDetails')}
                   i18nTextCollapsed={t('shared:ShowDetails')}
                 />
-              ))}
-            </PageSection>
+              </PageSection>
+            ))}
             <PageSection variant={'light'} noPadding={true}>
               <IntegrationDetailNavBar integration={props.data.integration} />
             </PageSection>

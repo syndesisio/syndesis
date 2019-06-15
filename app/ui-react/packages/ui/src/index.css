@@ -118,6 +118,7 @@ body {
   display: inline-block;
   width: 455px;
   max-width: 100%;
+  background: #fff;
 }
 
 @media (max-width: 768px) {
