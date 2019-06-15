@@ -114,20 +114,41 @@ public class PublicApiHandler {
         this.unusedEnvironments = new ConcurrentLinkedQueue<>();
     }
 
+    @SuppressWarnings("unchecked")
+    public List<String> getReleaseEnvironments() {
+        return (List<String>) getReleaseEnvironments(false).getEntity();
+    }
+
     /**
      * List all available environments.
      */
     @GET
     @Path("environments")
     @Produces(MediaType.APPLICATION_JSON)
-    public List<String> getReleaseEnvironments() {
-        List<String> result = dataMgr.fetchAll(Integration.class).getItems().stream()
-                .filter(i -> !i.isDeleted())
-                .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
-                .distinct()
-                .collect(Collectors.toList());
-        result.addAll(this.unusedEnvironments);
-        return result;
+    public Response getReleaseEnvironments(@QueryParam("withUses") @ApiParam boolean withUses) {
+        final Response response;
+        if (!withUses) {
+            List<String> result = dataMgr.fetchAll(Integration.class).getItems().stream()
+                    .filter(i -> !i.isDeleted())
+                    .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
+                    .distinct()
+                    .collect(Collectors.toList());
+            result.addAll(this.unusedEnvironments);
+            response = Response.ok(result).build();
+        } else {
+            List<EnvironmentWithUses> result = dataMgr.fetchAll(Integration.class).getItems().stream()
+                    .filter(i -> !i.isDeleted())
+                    .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
+                    .collect(Collectors.toMap(e -> e, e -> 1L, (e , c) -> c + 1))
+                    .entrySet().stream()
+                    .map(e -> new EnvironmentWithUses(e.getKey(), e.getValue()))
+                    .collect(Collectors.toList());
+            for (String env : unusedEnvironments) {
+                result.add(new EnvironmentWithUses(env, 0L));
+            }
+            response = Response.ok(result).build();
+        }
+        return response;
     }
 
     /**
@@ -722,6 +743,28 @@ public class PublicApiHandler {
 
         public void setStateDetails(IntegrationDeploymentStateDetails stateDetails) {
             this.stateDetails = stateDetails;
+        }
+    }
+
+    /**
+     * Response for {@link #getReleaseEnvironments(boolean)}.
+     */
+    public static class EnvironmentWithUses {
+
+        private final String name;
+        private final Long uses;
+
+        public EnvironmentWithUses(String environment, Long uses) {
+            this.name = environment;
+            this.uses = uses;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public Long getUses() {
+            return uses;
         }
     }
 }
