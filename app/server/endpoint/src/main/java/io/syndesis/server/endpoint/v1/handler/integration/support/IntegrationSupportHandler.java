@@ -246,9 +246,7 @@ public class IntegrationSupportHandler {
             if (resourceIdentifier.getKind() == Kind.OpenApi) {
                 final Optional<OpenApi> openApiResource = resourceManager.loadOpenApiDefinition(resourceIdentifier.getId().get());
 
-                if (openApiResource.isPresent()) {
-                    addModelToExport(export, openApiResource.get());
-                }
+                openApiResource.ifPresent(openApi -> addModelToExport(export, openApi));
             }
         }
     }
@@ -420,8 +418,11 @@ public class IntegrationSupportHandler {
         }, RENAME_CONNECTION, renamedIds, result);
 
         // remove hidden external secrets from imported connections
-        for (WithResourceId connection : result.get("connections")) {
-            removeHiddenExternalSecrets((Connection) connection);
+        final List<WithResourceId> connections = result.get("connections");
+        if (connections != null && !connections.isEmpty()) {
+            for (WithResourceId connection : connections) {
+                removeHiddenExternalSecrets((Connection) connection);
+            }
         }
 
         importIntegrations(sec, new JsonDbDao<Integration>(given) {
@@ -453,7 +454,12 @@ public class IntegrationSupportHandler {
     // NOTE that this doesn't remove ordered editable external secrets,
     // since they need to be manually edited by user and are used to detect connections that need to be re-configured
     private void removeHiddenExternalSecrets(Connection connection) {
-        final Map<String, ConfigurationProperty> properties = connection.getConnector().get().getProperties();
+        final Optional<Connector> connector = connection.getConnector();
+        if (!connector.isPresent()) {
+            return;
+        }
+
+        final Map<String, ConfigurationProperty> properties = connector.get().getProperties();
         final Map<String, String> configuredProperties = connection.getConfiguredProperties();
 
         final Map<String, String> updatedProperties = new HashMap<>(configuredProperties);
@@ -542,7 +548,7 @@ public class IntegrationSupportHandler {
         final ListResult<T> deployments = dataManager.fetchAll(model);
         return deployments.getItems().stream()
                 .filter(filterFunc::apply)
-                .map(propertyFunc::apply)
+                .map(propertyFunc)
                 .collect(Collectors.toSet());
     }
 
@@ -574,7 +580,7 @@ public class IntegrationSupportHandler {
     }
 
     private <T extends WithId<T> & WithName> void importModels(JsonDbDao<T> export, BiFunction<T, String, T> renameFunc, Map<String, String> renames, Map<String, List<WithResourceId>> result, BiFunction<JsonDbDao<T>, T, Boolean> compareFunc) {
-        final Set<String> names = getAllPropertyValues(export.getType(), o -> o.getName());
+        final Set<String> names = getAllPropertyValues(export.getType(), WithName::getName);
         for (T item : export.fetchAll().getItems()) {
             String id = item.getId().get();
             if (compareFunc.apply(export, item)) {
