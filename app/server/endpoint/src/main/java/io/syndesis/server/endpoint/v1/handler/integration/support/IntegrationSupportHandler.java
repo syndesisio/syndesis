@@ -373,33 +373,7 @@ public class IntegrationSupportHandler {
         };
 
         final Map<String, String> replaceExtensions = new HashMap<>();
-        importModels(extensionDao, RENAME_EXTENSION, renamedIds, result, (e, i) -> {
-
-            boolean doImport = false;
-
-            final Set<String> ids = dataManager.fetchIdsByPropertyValue(e.getType(),
-                    "extensionId", i.getExtensionId(),
-                    "status", Extension.Status.Installed.name());
-            if (ids.isEmpty()) {
-                // new extension
-                doImport = true;
-            } else {
-                for (String id : ids) {
-                    final Extension extension = dataManager.fetch(e.getType(), id);
-                    final DefaultArtifactVersion existingVersion = new DefaultArtifactVersion(extension.getVersion());
-                    final DefaultArtifactVersion importedVersion = new DefaultArtifactVersion(i.getVersion());
-
-                    // only import newer version, otherwise replace it in imported integration later
-                    if (existingVersion.compareTo(importedVersion) < 0) {
-                        doImport = true;
-                    } else {
-                        replaceExtensions.put(i.getId().get(), id);
-                    }
-                }
-            }
-
-            return doImport;
-        });
+        importExtensions(extensionDao, replaceExtensions, renamedIds, result);
 
         // NOTE: connectors are imported without renaming and ignoring renamed ids
         // as a matter of fact, the lambda should never be called
@@ -447,6 +421,37 @@ public class IntegrationSupportHandler {
         }, result);
 
         return result;
+    }
+
+    private void importExtensions(JsonDbDao<Extension> extensionDao, Map<String, String> replaceExtensions,
+                                  Map<String, String> renamedIds, Map<String, List<WithResourceId>> result) {
+        importModels(extensionDao, RENAME_EXTENSION, renamedIds, result, (e, i) -> {
+
+            boolean doImport = false;
+
+            final Set<String> ids = dataManager.fetchIdsByPropertyValue(e.getType(),
+                    "extensionId", i.getExtensionId(),
+                    "status", Extension.Status.Installed.name());
+            if (ids.isEmpty()) {
+                // new extension
+                doImport = true;
+            } else {
+                for (String id : ids) {
+                    final Extension extension = dataManager.fetch(e.getType(), id);
+                    final DefaultArtifactVersion existingVersion = new DefaultArtifactVersion(extension.getVersion());
+                    final DefaultArtifactVersion importedVersion = new DefaultArtifactVersion(i.getVersion());
+
+                    // only import newer version, otherwise replace it in imported integration later
+                    if (existingVersion.compareTo(importedVersion) < 0) {
+                        doImport = true;
+                    } else {
+                        replaceExtensions.put(i.getId().get(), id);
+                    }
+                }
+            }
+
+            return doImport;
+        });
     }
 
     // Strip un-ordered (hidden) secret properties in imported connections that can't be decoded in this instance
