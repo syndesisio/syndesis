@@ -119,7 +119,7 @@ public class IntegrationSupportHandler {
     private final IconDao iconDao;
     private final EncryptionComponent encryptionComponent;
 
-    @SuppressWarnings("PMD.Rule:ExcessiveParameterList")
+    @SuppressWarnings("PMD.ExcessiveParameterList")
     public IntegrationSupportHandler(final Migrator migrator, final SqlJsonDB jsondb,
                                      final IntegrationProjectGenerator projectGenerator,
                                      final DataManager dataManager, final IntegrationResourceManager resourceManager,
