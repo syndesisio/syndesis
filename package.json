@@ -9,13 +9,13 @@
   "dependencies": {},
   "husky": {
     "hooks": {
-      "pre-commit": "npm-run-all precommit:*",
-      "pre-push": "npm-run-all prepush:*"
+      "pre-commit": "npm-run-all pre-commit:*",
+      "pre-push": "npm-run-all pre-push:*"
     }
   },
   "scripts": {
-    "precommit:ui-react": "cd app/ui-react; yarn precommit",
-    "prepush:ui-react": "syndesis -m ui-react --incremental"
+    "pre-commit:ui-react": "cd app/ui-react && yarn pre-commit",
+    "pre-push:ui-react": "syndesis -m ui-react --incremental"
   }
 }
 

@@ -35,8 +35,7 @@
     "build-storybook": "lerna run build-storybook -- --quiet",
     "build:flash": "yarn build",
     "gh-pages-update": "yarn run gh-pages --dotfiles --message \"[skip ci] Updates\" --dist doc",
-    "precommit": "npm-run-all -s lint:staged",
-    "prepush": "npm-run-all -p lint test build-storybook"
+    "pre-commit": "yarn lint:staged"
   },
   "devDependencies": {
     "gh-pages": "^2.0.1",
