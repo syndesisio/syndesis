@@ -42,13 +42,13 @@ The connection never overwrites data. The connection starts appending
 data after the range you specify, and then always appends data to the
 content that is in place. 
 
-.. In the *Major Dimension* field, accept *Rows*, which is the default, or
+.. In the *Major dimension* field, accept *Rows*, which is the default, or
 select *Columns*. *Rows* configures the action to use row objects to append 
 data. Each row object contains a value for each column that you want to append
 data to. *Columns* configures the action to use column objects to append data. 
 Each column object contains a value for each row that you want to append.  
 
-.. In the *Value Input Option* field, indicate how you want Google sheets
+.. In the *Value input option* field, indicate how you want Google sheets
 to interpret the data that it receives for appending to a sheet. 
 *Unspecified*, which is the default, enables Google Sheets to automatically 
 convert data that it recognizes. For example, if the input data is a date, then 
@@ -86,7 +86,7 @@ a source step to the target spreadsheet. For example,
 you might map fields from another spreadsheet or from a database. 
 +
 If you need to, you can edit the Google Sheets connection that appends
-sheet values and change the settings for *Range* or *Major Dimension*. 
+sheet values and change the settings for *Range* or *Major dimension*. 
 Changing these settings causes the data mapper to display different 
 target fields according to your changes. 
 
