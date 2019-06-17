@@ -74,6 +74,12 @@
     "addToIntegration": "Add to Integration",
     "confirmDeleteStepDialogBody": "Are you sure you want to delete this step from the integration?",
     "confirmDeleteStepDialogTitle": "Confirm Delete",
+    "selectStep": {
+      "title": "Choose a connection",
+      "startDescription": "Click the connection that starts the integration. If the connection you need is not available, click Create Connection.",
+      "finishDescription": "Click the connection that completes the integration. If the connection you need is not available, click Create Connection",
+      "middleDescription": "A step specifies an operation on the data in the integration. Click one to add it."
+    },
     "saveOrAddStep": "Save or Add Step",
     "save": {
       "title": "Save the integration",

@@ -1,16 +1,17 @@
 import {
+  ALL_STEPS,
   getEmptyIntegration,
+  getLastPosition,
   getSteps,
-  WithConnections,
-  WithExtensions,
-  WithSteps,
+  useConnections,
+  useExtensions,
 } from '@syndesis/api';
 import * as H from '@syndesis/history';
 import { StepKind } from '@syndesis/models';
 import { IntegrationEditorLayout } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
+import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { Translation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { PageTitle } from '../../../../shared';
 import { IEditorSidebarProps } from './EditorSidebar';
 import { EditorStepsWithToolbar } from './EditorStepsWithToolbar';
@@ -36,6 +37,7 @@ export interface ISelectConnectionPageProps
     s: ISelectConnectionRouteState
   ) => H.LocationDescriptor;
   sidebar: (props: IEditorSidebarProps) => React.ReactNode;
+  isAdding: boolean;
 }
 
 /**
@@ -49,98 +51,74 @@ export interface ISelectConnectionPageProps
  * **Warning:** this component will throw an exception if the route state is
  * undefined.
  */
-export class SelectConnectionPage extends React.Component<
+export const SelectConnectionPage: React.FunctionComponent<
   ISelectConnectionPageProps
-> {
-  public render() {
-    return (
-      <WithRouteData<ISelectConnectionRouteParams, ISelectConnectionRouteState>>
-        {(params, state) => {
-          const { flowId, position } = params;
-          const { integration = getEmptyIntegration() } = state;
-          const positionAsNumber = parseInt(position, 10) || 0;
-          const integrationSteps = getSteps(integration, flowId);
-          return (
-            <>
-              <PageTitle title={'Choose a connection'} />
-              <IntegrationEditorLayout
-                title={'Choose a connection'}
-                description={
-                  'Click the connection that completes the integration. If the connection you need is not available, click Create Connection.'
-                }
-                toolbar={this.props.getBreadcrumb(
-                  'Choose a connection',
-                  params,
-                  state
-                )}
-                sidebar={this.props.sidebar({
-                  activeIndex: positionAsNumber,
-                  steps: toUIStepCollection(integrationSteps),
-                })}
-                content={
-                  <Translation ns={['connections', 'shared']}>
-                    {t => (
-                      <WithConnections>
-                        {({
-                          data: connectionsData,
-                          hasData: hasConnectionsData,
-                          error: connectionsError,
-                        }) => (
-                          <WithExtensions>
-                            {({
-                              data: extensionsData,
-                              hasData: hasExtensionsData,
-                              error: extensionsError,
-                            }) => (
-                              <WithSteps>
-                                {({ items: steps }) => {
-                                  const stepKinds = mergeConnectionsSources(
-                                    connectionsData.dangerouslyUnfilteredConnections,
-                                    extensionsData.items,
-                                    steps
-                                  );
-                                  const visibleSteps = visibleStepsByPosition(
-                                    stepKinds as StepKind[],
-                                    positionAsNumber,
-                                    integrationSteps
-                                  ) as IUIStep[];
+> = props => {
+  const { getBreadcrumb, sidebar, cancelHref } = props;
+  const { t } = useTranslation(['integrations', 'shared']);
+  const { params, state } = useRouteData<
+    ISelectConnectionRouteParams,
+    ISelectConnectionRouteState
+  >();
+  const { flowId, position } = params;
+  const { integration = getEmptyIntegration() } = state;
+  const positionAsNumber = parseInt(position, 10) || 0;
+  const integrationSteps = getSteps(integration, flowId);
+  const lastPosition = getLastPosition(integration, flowId);
 
-                                  return (
-                                    <EditorStepsWithToolbar
-                                      loading={
-                                        !hasConnectionsData ||
-                                        !hasExtensionsData
-                                      }
-                                      error={
-                                        connectionsError || extensionsError
-                                      }
-                                      getEditorStepHref={step =>
-                                        getStepHref(
-                                          step,
-                                          params,
-                                          state,
-                                          this.props
-                                        )
-                                      }
-                                      steps={visibleSteps}
-                                      createConnectionButtonStyle={'default'}
-                                    />
-                                  );
-                                }}
-                              </WithSteps>
-                            )}
-                          </WithExtensions>
-                        )}
-                      </WithConnections>
-                    )}
-                  </Translation>
-                }
-                cancelHref={this.props.cancelHref(params, state)}
-              />
-            </>
-          );
-        }}
-      </WithRouteData>
-    );
-  }
-}
+  const {
+    resource: connectionsData,
+    hasData: hasConnectionsData,
+    error: connectionsError,
+  } = useConnections();
+  const {
+    resource: extensionsData,
+    hasData: hasExtensionsData,
+    error: extensionsError,
+  } = useExtensions();
+
+  const stepKinds = mergeConnectionsSources(
+    connectionsData.dangerouslyUnfilteredConnections,
+    extensionsData.items,
+    ALL_STEPS
+  );
+  const visibleSteps = visibleStepsByPosition(
+    stepKinds as StepKind[],
+    positionAsNumber,
+    integrationSteps
+  ) as IUIStep[];
+
+  const title = t('integrations:editor:selectStep:title');
+  let description =
+    positionAsNumber === 0
+      ? t('integrations:editor:selectStep:startDescription')
+      : (positionAsNumber === lastPosition && !props.isAdding) ||
+        (integrationSteps.length === 1 && positionAsNumber === 1)
+      ? t('integrations:editor:selectStep:finishDescription')
+      : t('integrations:editor:selectStep:middleDescription');
+
+  return (
+    <>
+      <PageTitle title={title} />
+      <IntegrationEditorLayout
+        title={title}
+        description={description}
+        toolbar={getBreadcrumb(title, params, state)}
+        sidebar={sidebar({
+          activeIndex: positionAsNumber,
+          steps: toUIStepCollection(integrationSteps),
+        })}
+        content={
+          <EditorStepsWithToolbar
+            loading={!hasConnectionsData || !hasExtensionsData}
+            error={connectionsError !== false || extensionsError !== false}
+            getEditorStepHref={step => getStepHref(step, params, state, props)}
+            steps={visibleSteps}
+            createConnectionButtonStyle={'default'}
+          />
+        }
+        cancelHref={cancelHref(params, state)}
+      />
+    </>
+  );
+};

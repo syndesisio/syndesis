@@ -1,15 +1,10 @@
-import { Extension } from '@syndesis/models';
 import * as React from 'react';
 import { IFetchState } from './Fetch';
 import { ServerEventsContext } from './ServerEventsContext';
 import { SyndesisFetch } from './SyndesisFetch';
+import { IExtensionsResponse } from './useExtensions';
 import { WithChangeListener } from './WithChangeListener';
 import { IChangeEvent } from './WithServerEvents';
-
-export interface IExtensionsResponse {
-  items: Extension[];
-  totalCount: number;
-}
 
 export interface IWithExtensionsProps {
   disableUpdates?: boolean;
