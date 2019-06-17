@@ -346,13 +346,12 @@ public class ExtensionsITCase extends BaseITCase {
                     .build())
                 .build());
 
-        await().atMost(60, TimeUnit.SECONDS).pollInterval(250, TimeUnit.MILLISECONDS).untilAsserted(() -> {
-            // Get extension details again, we need to use RAW here as Jackson will not be able
-            // to write the `uses` property (access = READ_ONLY)
-            final ResponseEntity<Map<String, Object>> got = get("/api/v1/extensions/" + id,
-                RAW, tokenRule.validToken(), HttpStatus.OK);
+        await().atMost(10, TimeUnit.SECONDS).pollInterval(250, TimeUnit.MILLISECONDS).untilAsserted(() -> {
+            // Get extension details again directly from the database
+            dataManager.clearCache();
+            final Extension fetched = dataManager.fetch(Extension.class, id);
 
-            assertThat(got.getBody().get("uses")).isEqualTo(1);
+            assertThat(fetched.getUses()).isEqualTo(1);
         });
 
         // Get extension list
