@@ -16,6 +16,7 @@ export * from './IntegrationFlowStepGeneric';
 export * from './IntegrationFlowStepWithOverview';
 export * from './IntegrationIcon';
 export * from './IntegrationSaveForm';
+export * from './IntegrationsEmptyState';
 export * from './IntegrationStatus';
 export * from './IntegrationStatusDetail';
 export * from './IntegrationStepsHorizontalItem';

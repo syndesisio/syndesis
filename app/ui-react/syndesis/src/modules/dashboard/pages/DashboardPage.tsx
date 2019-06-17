@@ -184,12 +184,25 @@ export default () => (
                       }
                       topIntegrations={
                         <TopIntegrationsCard
+                          i18nCreateIntegration={t(
+                            'shared:linkCreateIntegration'
+                          )}
+                          i18nCreateIntegrationTip={t(
+                            'integrations:integrationsEmptyState.createTip'
+                          )}
+                          i18nEmptyStateInfo={t(
+                            'integrations:integrationsEmptyState.info'
+                          )}
+                          i18nEmptyStateTitle={t(
+                            'integrations:integrationsEmptyState.title'
+                          )}
                           i18nTitle={t('titleTopIntegrations', {
                             count: 5,
                           })}
                           i18nLast30Days={t('lastNumberOfDays', {
                             numberOfDays: 30,
                           })}
+                          linkCreateIntegration={resolvers.integrations.create.start.selectStep()}
                         >
                           <Integrations
                             error={integrationsError}
