@@ -27,8 +27,6 @@ job_default: &job_defaults
 push_images: &push_images
   deploy:
     command: |
-      DOCKER_IMAGES_TO_PUSH="syndesis-meta syndesis-operator syndesis-s2i syndesis-server syndesis-ui syndesis-ui-legacy syndesis-upgrade"
-
       if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
         exit 0
       fi
@@ -37,9 +35,10 @@ push_images: &push_images
         curl -fsSL https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz | tar xz -C /usr/bin --strip-components 1
       fi
 
+      # Check, if docker images declared by jobs have actually been built
       IMAGES_TO_PUSH=""
-      for image in ${DOCKER_IMAGES_TO_PUSH}; do
-        if [ ! -z "$(docker images -q $image)" ]; then
+      for image in ${DOCKER_IMAGES}; do
+        if [ ! -z "$(docker images -q syndesis/$image)" ]; then
           IMAGES_TO_PUSH="$IMAGES_TO_PUSH $image"
         fi
       done
@@ -50,7 +49,7 @@ push_images: &push_images
 
       if [ "${CIRCLE_BRANCH}" == "master" ]; then
         docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        for image in ${DOCKER_IMAGES} ; do
+        for image in ${IMAGES_TO_PUSH} ; do
           docker push syndesis/${image}:latest | cat -
         done
       fi
