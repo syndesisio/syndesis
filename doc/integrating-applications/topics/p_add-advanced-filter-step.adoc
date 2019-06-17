@@ -13,6 +13,8 @@ define the exact filter that you need, then add an advanced filter step.
 .Prerequisites
 * The flow contains all connections that it needs to. 
 * You are creating or editing a flow. 
+* You are familiar with the Camel Simple Expression language, or
+you have been provided with a filter expression. 
 
 .Procedure
 

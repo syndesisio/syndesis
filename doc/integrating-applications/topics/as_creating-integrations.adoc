@@ -27,6 +27,7 @@ an integration:
 * xref:triggering-integrations-with-timers_{context}[]
 * xref:how-to-process-a-collection-in-a-flow_{context}[]
 * xref:about-adding-steps_{context}[]
+* xref:adding-conditional-execution-flows_{context}[]
 * xref:add-data-mapping-step_{context}[]
 * xref:add-basic-filter-step_{context}[]
 * xref:add-advanced-filter-step_{context}[]
@@ -44,6 +45,8 @@ include::as_trigger-integration-with-timer.adoc[leveloffset=+1]
 include::as_how-to-process-a-collection-in-a-flow.adoc[leveloffset=+1]
 
 include::c_about-adding-steps.adoc[leveloffset=+1]
+
+include::p_adding-conditional-execution-flows.adoc[leveloffset=+1]
 
 include::p_add-data-mapping-step.adoc[leveloffset=+1]
 

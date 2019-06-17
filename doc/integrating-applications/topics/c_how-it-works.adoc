@@ -42,8 +42,8 @@ document to {prodname}. This document specifies the operations
 that clients can call. For each operation, you specify and 
 configure the flow of connections and steps, such as data mapper
 or filter steps, that executes
-that operation. A simple integration has one flow while an 
-API provider integration has a flow for each operation. 
+that operation. A simple integration has one primary flow while an 
+API provider integration has a primary flow for each operation. 
 
 The {prodname} dashboard lets you monitor and manage integrations. You can
 see which integrations are running, and you can start, stop, and edit integrations.
