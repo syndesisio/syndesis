@@ -149,12 +149,15 @@ git_rebase_upstream() {
 has_changes() {
   local subtree_path="${1:-}"
   local ref="${2:-master}"
+  local hash="${CIRCLE_SHA1:$(git rev-parse HEAD)}"
+
+  exit 1
 
   local changed_paths="$(git diff ..${ref} --name-only | tr '\n' ' ') $(git status --porcelain=v1 | cut -c 4- | tr '\n' ' ')"
 
   # when on `master` on CircleCI, compute changed paths for the commit being built
-  if [ ! -z "$CIRCLE_SHA1" ] && [ "master" == "$CIRCLE_BRANCH" ]; then
-    changed_paths="$changed_paths $(git log $CIRCLE_SHA1^..$CIRCLE_SHA1 --name-only --pretty='format:' | tr '\n' ' ')"
+  if [ "master" == "${CIRCLE_BRANCH:-}" ]; then
+    changed_paths="$changed_paths $(git log $hash^..$hash --name-only --pretty='format:' | tr '\n' ' ')"
   fi
   if [[ " $changed_paths" == *" ${subtree_path}"* ]]; then
     echo "true"
