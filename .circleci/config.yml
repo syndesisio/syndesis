@@ -25,10 +25,10 @@ job_default: &job_defaults
     - image: openjdk:8-jdk
 
 push_images: &push_images
-  environment:
-    DOCKER_IMAGES_TO_PUSH: "syndesis-meta syndesis-operator syndesis-s2i syndesis-server syndesis-ui syndesis-ui-legacy syndesis-upgrade"
   deploy:
     command: |
+      DOCKER_IMAGES_TO_PUSH="syndesis-meta syndesis-operator syndesis-s2i syndesis-server syndesis-ui syndesis-ui-legacy syndesis-upgrade"
+
       if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
         exit 0
       fi
