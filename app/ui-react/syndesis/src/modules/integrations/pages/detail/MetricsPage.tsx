@@ -81,38 +81,57 @@ export class MetricsPage extends React.Component {
                                             getPodLogUrl={getPodLogUrl}
                                           />
                                           <IntegrationDetailMetrics
-                                            i18nUptime={t(
-                                              'integrations:metrics:uptime'
-                                            )}
+                                            i18nUptime={t('metrics.uptime')}
                                             i18nTotalMessages={t(
-                                              'integrations:metrics:totalMessages'
+                                              'metrics.totalMessages'
                                             )}
                                             i18nTotalErrors={t(
-                                              'integrations:metrics:totalErrors'
+                                              'metrics.totalErrors'
                                             )}
-                                            i18nSince={t(
-                                              'integrations:metrics:since'
-                                            )}
+                                            i18nSince={t('metrics.since')}
                                             i18nLastProcessed={t(
-                                              'integrations:metrics:lastProcessed'
+                                              'metrics.lastProcessed'
+                                            )}
+                                            i18nNoDataAvailable={t(
+                                              'metrics.NoDataAvailable'
                                             )}
                                             errors={metricsData.errors}
                                             lastProcessed={
-                                              typeof metricsData.lastProcessed !==
-                                              'undefined'
+                                              metricsData.lastProcessed !==
+                                              undefined
                                                 ? new Date(
-                                                    metricsData.lastProcessed
+                                                    parseInt(
+                                                      metricsData.lastProcessed,
+                                                      10
+                                                    )
                                                   ).toLocaleString()
-                                                : t('shared:NA')
+                                                : undefined
                                             }
                                             messages={metricsData.messages}
-                                            start={parseInt(
-                                              metricsData.start!,
-                                              10
-                                            )}
-                                            durationDifference={toDurationDifferenceString(
-                                              parseInt(metricsData.start!, 10)
-                                            )}
+                                            start={
+                                              typeof metricsData.start ===
+                                              'undefined'
+                                                ? undefined
+                                                : parseInt(
+                                                    metricsData.start!,
+                                                    10
+                                                  )
+                                            }
+                                            durationDifference={
+                                              metricsData.lastProcessed !==
+                                                undefined &&
+                                              metricsData.start !== undefined &&
+                                              metricsData.lastProcessed !==
+                                                metricsData.start
+                                                ? toDurationDifferenceString(
+                                                    parseInt(
+                                                      metricsData.start!,
+                                                      10
+                                                    ),
+                                                    t('metrics.NoDataAvailable')
+                                                  )
+                                                : undefined
+                                            }
                                           />
                                         </>
                                       );

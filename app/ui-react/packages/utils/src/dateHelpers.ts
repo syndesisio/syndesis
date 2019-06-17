@@ -31,8 +31,11 @@ export function toDurationString(
   timeDuration: number,
   unit: 'ms' | 'ns'
 ): string {
-  if (!timeDuration) {
+  if (timeDuration === undefined) {
     return 'NaN';
+  }
+  if (timeDuration === 0) {
+    return '0 ms';
   }
   if (unit === 'ns') {
     timeDuration = timeDuration / 1000000;

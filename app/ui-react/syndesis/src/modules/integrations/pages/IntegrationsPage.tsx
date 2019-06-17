@@ -143,13 +143,22 @@ export class IntegrationsPage extends React.Component {
                             i18nTitle={t('shared:Integrations')}
                             i18nDescription={t('integrationListDescription')}
                             i18nImport={t('shared:Import')}
-                            i18nManageCiCd={t('integrations:ManageCiCd')}
+                            i18nManageCiCd={t('ManageCiCd')}
                             i18nLinkCreateConnection={t(
                               'shared:linkCreateIntegration'
+                            )}
+                            i18nLinkCreateIntegrationTip={t(
+                              'integrationsEmptyState.createTip'
                             )}
                             i18nResultsCount={t('shared:resultsCount', {
                               count: filteredAndSortedIntegrations.length,
                             })}
+                            i18nEmptyStateInfo={t(
+                              'integrationsEmptyState.info'
+                            )}
+                            i18nEmptyStateTitle={t(
+                              'integrationsEmptyState.title'
+                            )}
                           >
                             <Integrations
                               error={error}

@@ -3,6 +3,14 @@
   padding-bottom: 10px;
 }
 
+.integration-detail-metrics__duration-difference {
+  font-size: smaller;
+}
+
+.integration-detail-metrics__last-processed {
+  font-size: smaller;
+}
+
 .integration-detail-metrics__uptime-header {
   display: flex;
   justify-content: space-between;
