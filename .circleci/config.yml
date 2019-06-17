@@ -30,6 +30,8 @@ job_default: &job_defaults
         - /\d+\.\d+\.x/
 
 push_images: &push_images
+  environment:
+    DOCKER_IMAGES_TO_PUSH: "syndesis-meta syndesis-operator syndesis-s2i syndesis-server syndesis-ui syndesis-ui-legacy syndesis-upgrade"
   deploy:
     command: |
       if [ "${CIRCLE_PROJECT_USERNAME}" != "syndesisio" ]; then
@@ -41,7 +43,7 @@ push_images: &push_images
       fi
 
       IMAGES_TO_PUSH=""
-      for image in ${IMAGES}; do
+      for image in ${DOCKER_IMAGES_TO_PUSH}; do
         if [ ! -z "$(docker images -q $image)" ]; then
           IMAGES_TO_PUSH="$IMAGES_TO_PUSH $image"
         fi
