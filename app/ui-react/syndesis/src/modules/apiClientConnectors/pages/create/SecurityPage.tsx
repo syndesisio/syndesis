@@ -1,5 +1,5 @@
 import * as H from '@syndesis/history';
-import { APISummary } from '@syndesis/models/src';
+import { APISummary } from '@syndesis/models';
 import {
   ApiClientConnectorCreateSecurity,
   ApiConnectorCreatorLayout,

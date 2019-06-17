@@ -290,6 +290,9 @@ export function mergeConnectionsSources(
     ...connections.map(connection =>
       toUIStep({
         connection,
+        // we copy over the name and description from the connection to be sure to show these instead of the connector's
+        description: connection.description,
+        name: connection.name,
         stepKind: ENDPOINT,
       } as StepKind)
     ),

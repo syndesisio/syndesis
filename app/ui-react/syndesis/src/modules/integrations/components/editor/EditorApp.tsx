@@ -110,6 +110,7 @@ export const EditorApp: React.FunctionComponent<IEditorApp> = ({
         <EditorSidebar {...props} isAdding={mode === 'adding'} />
       )}
       getBreadcrumb={getBreadcrumb}
+      isAdding={mode === 'adding'}
     />
   );
 

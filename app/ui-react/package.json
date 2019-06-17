@@ -17,6 +17,7 @@
   },
   "scripts": {
     "lint:staged": "lint-staged",
+    "lint:fix": "lerna run --parallel --no-bail lint -- --fix",
     "lint": "lerna run --parallel --no-bail lint",
     "test:angular": "lerna run test:ci",
     "test:jest": "CI=true lerna run test -- --coverage --color --runInBand",
