@@ -35,7 +35,7 @@ stories.add(
         >
           <AboutModalContent
             productName="Syndesis"
-            version={'1.7-SNAPSHOT'}
+            version={'1.8-SNAPSHOT'}
             commitId={'dd8b5445fd74f956147eb0a21870d0d5c3e0fb69'}
             buildId={'60dfad7e-fba5-49e9-b393-e806a135299e'}
             i18nBuildIdLabel={'Build ID:'}
