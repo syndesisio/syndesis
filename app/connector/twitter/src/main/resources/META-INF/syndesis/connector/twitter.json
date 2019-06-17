@@ -77,11 +77,11 @@
               "keywords": {
                 "componentProperty": false,
                 "deprecated": false,
-                "displayName": "Keywords",
+                "displayName": "Query",
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "Multiple search values can be separated with comma.",
+                "labelHint": "Twittter-format search expression, for example: \"My Product\" returns tweets that contain exactly My Product.",
                 "required": true,
                 "secret": false,
                 "tags": [],
