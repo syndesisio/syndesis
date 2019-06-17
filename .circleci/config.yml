@@ -39,7 +39,7 @@ push_images: &push_images
 
       IMAGES_TO_PUSH=""
       for image in ${DOCKER_IMAGES_TO_PUSH}; do
-        if [ ! -z "$(docker images -q syndesis/$image)" ]; then
+        if [ ! -z "$(docker images -q syndesis/$image)" ] || [ ! -z "$(docker images -q $image)" ]; then
           IMAGES_TO_PUSH="$IMAGES_TO_PUSH $image"
         fi
       done
