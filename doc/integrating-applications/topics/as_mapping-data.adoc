@@ -23,6 +23,7 @@ Details for mapping data fields are in the following topics:
 * xref:using-data-mapper-to-process-collections_{context}[]
 * xref:mapping-between-collections-and-non-collections_{context}[]
 * xref:transform-target-data_{context}[]
+* xref:applying-conditions-to-mappings_{context}[]
 * xref:view-mappings-in-a-step_{context}[]
 * xref:available-transformations_{context}[]
 * xref:troubleshooting-data-mapping_{context}[]
@@ -44,6 +45,8 @@ include::p_using-data-mapper-to-process-collections.adoc[leveloffset=+1]
 include::r_mapping-between-collections-and-non-collections.adoc[leveloffset=+1]
 
 include::p_transform-target-data.adoc[leveloffset=+1]
+
+include::p_applying-conditions-to-mappings.adoc[leveloffset=+1]
 
 include::p_view-mappings-in-a-step.adoc[leveloffset=+1]
 
