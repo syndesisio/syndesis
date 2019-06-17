@@ -240,7 +240,7 @@ spec:
               serviceAccountName: syndesis-operator
               containers:
                 - name: syndesis-operator
-                  image: syndesis/syndesis-operator:latest
+                  image: syndesis/syndesis-operator:1.7.1-20190617
                   imagePullPolicy: Always
                   ports:
                     - containerPort: 60000
