@@ -14,6 +14,7 @@
     "extensionImportPageTitle": "$t(extension.ImportExtension)",
     "extensionsPageDescription": "<p>Le estensioni forniscono funzionalità personalizzate da utilizzare nelle integrazioni. Scopri di più su <a href=$t(shared:links.userguide) target=\"_blank\">$t(shared:project.name) Aiuto</a></p>.",
     "extensionsPageTitle": "$t(shared:Extensions)",
+    "extensionUploadSuccessMessage": "\"{{extensionName}}\" è stato caricato con successo",
     "idMessage": "(ID: {{id}})",
     "importDndInstructions": "Trascina qui <strong>uno</strong> file o <strong>fai clic </strong> per selezionare un file utilizzando una finestra di dialogo di selezione file.",
     "ImportExtension": "$t(shared:Extension) di $t(shared:Import)",
