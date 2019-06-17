@@ -78,8 +78,8 @@ export const useConnections = (disableUpdates: boolean = false) => {
 
   useServerEvents({
     disableUpdates,
-    read,
     filter: (change: IChangeEvent) => change.kind.startsWith('connection'),
+    read,
   });
 
   return {

@@ -89,7 +89,7 @@ export const SelectConnectionPage: React.FunctionComponent<
   ) as IUIStep[];
 
   const title = t('integrations:editor:selectStep:title');
-  let description =
+  const description =
     positionAsNumber === 0
       ? t('integrations:editor:selectStep:startDescription')
       : (positionAsNumber === lastPosition && !props.isAdding) ||

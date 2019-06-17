@@ -19,8 +19,8 @@ export const useExtensions = (disableUpdates: boolean = false) => {
 
   useServerEvents({
     disableUpdates,
-    read,
     filter: (change: IChangeEvent) => change.kind.startsWith('extension'),
+    read,
   });
 
   return {
