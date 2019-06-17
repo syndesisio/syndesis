@@ -81,7 +81,7 @@
                 "group": "common",
                 "javaType": "java.lang.String",
                 "kind": "path",
-                "labelHint": "Return tweets that match this Twitter-format search expression.",
+                "labelHint": "Twittter-format search expression, for example: \"My Product\" returns tweets that contain exactly My Product.",
                 "required": true,
                 "secret": false,
                 "tags": [],
