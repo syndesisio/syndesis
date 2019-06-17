@@ -49,7 +49,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.test.context.support.DirtiesContextTestExecutionListener;
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -184,7 +183,7 @@ public class ODataSerializerTest extends AbstractODataTest {
         parameters.put(KEY_PREDICATE, keyPredicate);
 
         String componentId = "odata";
-        String actionId = "io.syndesis:" + Methods.READ.connectorId();
+        String actionId = "io.syndesis:" + Methods.READ.actionIdentifierRoot() + HYPHEN + FROM;
 
         SyndesisMetadata metadata = retrieval.fetch(context, componentId, actionId, parameters);
         assertNotNull(metadata);

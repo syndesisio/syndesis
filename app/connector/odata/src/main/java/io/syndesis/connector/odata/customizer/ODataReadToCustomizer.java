@@ -19,13 +19,14 @@ import java.io.IOException;
 import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.util.ObjectHelper;
 import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.connector.odata.ODataUtil;
 import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
-public class ODataDeleteCustomizer extends AbstractProducerCustomizer {
+public class ODataReadToCustomizer extends AbstractProducerCustomizer {
 
     private String resourcePath;
 
@@ -56,8 +57,26 @@ public class ODataDeleteCustomizer extends AbstractProducerCustomizer {
             //
             in.setHeader(OLINGO4_PROPERTY_PREFIX + RESOURCE_PATH,
                          resourcePath + ODataUtil.formatKeyPredicate(keyPredicate, true));
+        } else {
+            //
+            // Necessary to have a key predicate. Otherwise, read will try returning
+            // all results which could very be painful for the running integration.
+            //
+            throw new RuntimeCamelException("Key Predicate value was empty");
         }
 
         in.setBody(EMPTY_STRING);
+    }
+
+    @Override
+    protected void afterProducer(Exchange exchange) throws IOException {
+        //
+        // Due to the keyPredicate, exchange should contain a single entity so
+        // avoid inserting it into a singleton list as the datashape schema expects
+        // a single json object.
+        //
+        setSplit(true);
+
+        convertMessageToJson(exchange.getIn());
     }
 }

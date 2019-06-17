@@ -34,6 +34,11 @@ public class ODataCreateCustomizer extends AbstractProducerCustomizer {
 
     @Override
     protected void afterProducer(Exchange exchange) throws IOException {
+        //
+        // Exchange should contain a single entity so
+        // don't insert into list
+        //
+        setSplit(true);
         convertMessageToJson(exchange.getIn());
     }
 }
