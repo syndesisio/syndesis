@@ -4,13 +4,13 @@
       "actionType": "connector",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
       "description": "Stores new task in the database",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "operation-1"
@@ -38,7 +38,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-1",
+      "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-1",
       "name": "Create new task",
       "pattern": "To",
       "tags": [
@@ -50,13 +50,13 @@
       "actionType": "connector",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
       "description": "Deletes task by given identifier",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "operation-4"
@@ -78,7 +78,7 @@
           "kind": "none"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-4",
+      "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-4",
       "name": "Delete task",
       "pattern": "To",
       "tags": [
@@ -90,13 +90,13 @@
       "actionType": "connector",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
       "description": "Fetches task by given identifier",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "operation-2"
@@ -124,7 +124,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-2",
+      "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-2",
       "name": "Fetch task",
       "pattern": "To",
       "tags": [
@@ -136,13 +136,13 @@
       "actionType": "connector",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
       "description": "Fetches all tasks from the database",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "operation-0"
@@ -164,7 +164,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-0",
+      "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-0",
       "name": "List all tasks",
       "pattern": "To",
       "tags": [
@@ -176,13 +176,13 @@
       "actionType": "connector",
       "dependencies": [
         {
-          "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+          "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
           "type": "MAVEN"
         }
       ],
       "description": "Updates task by given identifier",
       "descriptor": {
-        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT",
+        "camelConnectorGAV": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT",
         "camelConnectorPrefix": "swagger-operation",
         "configuredProperties": {
           "operationId": "operation-3"
@@ -210,7 +210,7 @@
           "specification": "{\"$schema\":\"http://json-schema.org/schema#\",\"type\":\"object\",\"$id\":\"io:syndesis:wrapped\",\"properties\":{\"body\":{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"title\":\"Task ID\",\"description\":\"Unique task identifier\"},\"task\":{\"type\":\"string\",\"title\":\"The task\",\"description\":\"Task line\"},\"completed\":{\"type\":\"integer\",\"title\":\"Task completition status\",\"description\":\"0 - ongoing, 1 - completed\",\"minimum\":0,\"maximum\":1}}}}}"
         }
       },
-      "id": "io.syndesis.connector:connector-rest-swagger:1.7-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-3",
+      "id": "io.syndesis.connector:connector-rest-swagger:1.8-SNAPSHOT:i-Lc6Qsm-APqmk3FKvmOBz:operation-3",
       "name": "Update task",
       "pattern": "To",
       "tags": [
