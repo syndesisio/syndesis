@@ -20,7 +20,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -41,8 +40,6 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Functions;
 
-import rx.subjects.PublishSubject;
-
 public final class UsageUpdateHandler implements ResourceUpdateHandler {
 
     private static final Logger LOG = LoggerFactory.getLogger(UsageUpdateHandler.class);
@@ -51,14 +48,8 @@ public final class UsageUpdateHandler implements ResourceUpdateHandler {
 
     private final DataManager dataManager;
 
-    private final PublishSubject<ChangeEvent> pipe = PublishSubject.create();
-
     public UsageUpdateHandler(final DataManager dataManager) {
         this.dataManager = dataManager;
-
-        // try not to overload the backend database by updating usage only
-        // after a quiet period
-        pipe.throttleWithTimeout(3, TimeUnit.SECONDS).subscribe(this::processInternal);
     }
 
     @Override
@@ -75,7 +66,7 @@ public final class UsageUpdateHandler implements ResourceUpdateHandler {
     @Override
     public void process(final ChangeEvent event) {
         LOG.debug("Received event: {}", event);
-        pipe.onNext(event);
+        processInternal(event);
     }
 
     void processInternal(final ChangeEvent event) {
