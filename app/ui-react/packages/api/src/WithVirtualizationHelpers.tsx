@@ -120,15 +120,14 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
   ): Promise<void> {
     const vdbName = virtualization.serviceVdbName;
     const editorStateId = vdbName + '.' + viewName;
-    // Delete viewEditorState
+    // Delete viewEditorState and refresh views
     await this.deleteViewEditorState(editorStateId);
-    // Delete virtualization view
     const response = await callFetch({
       headers: {},
-      method: 'DELETE',
+      method: 'POST',
       url: `${
         this.props.dvApiUri
-      }workspace/vdbs/${vdbName}/Models/views/Views/${viewName}`,
+      }workspace/dataservices/refreshViews/${virtualization.keng__id}`,
     });
 
     if (!response.ok) {
