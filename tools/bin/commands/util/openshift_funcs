@@ -100,6 +100,100 @@ install_syndesis_crd() {
     fi
 }
 
+# Install maven mirror
+install_maven_mirror() {
+    local project=$(oc project --short=true)
+    recreate_project "nexus"
+
+    oc new-app sonatype/nexus >/dev/null 2>&1
+    oc expose svc/nexus >/dev/null 2>&1
+
+    oc set probe dc/nexus \
+        --liveness \
+        --failure-threshold 3 \
+        --initial-delay-seconds 30 \
+        -- echo ok >/dev/null 2>&1
+	oc set probe dc/nexus \
+        --readiness \
+        --failure-threshold 3 \
+        --initial-delay-seconds 30 \
+        --get-url=http://:8081/nexus/content/groups/public >/dev/null 2>&1
+    oc set volume dc/nexus --add \
+        --name 'nexus-volume-1' \
+        --type 'pvc' \
+        --mount-path '/sonatype-work/' \
+        --claim-name 'nexus-pv' \
+        --claim-size '2G' \
+        --overwrite >/dev/null 2>&1
+
+    wait_for_deployments 1 nexus
+
+    nexus_host=$(oc get routes nexus -o=jsonpath='{.spec.host}')
+
+    echo "Setting up jboss-ea and redhat-ga proxies..."
+
+    curl -X POST \
+        http://${nexus_host}/nexus/service/local/repositories \
+        -H 'authorization: Basic YWRtaW46YWRtaW4xMjM=' \
+        -H 'cache-control: no-cache' \
+        -H 'content-type: application/json' \
+        -d '{"data":{"repoType":"proxy","id":"jboss-ea","name":"JBoss Early Access","browseable":true,"indexable":true,
+        "notFoundCacheTTL":1440,"artifactMaxAge":-1,"metadataMaxAge":1440,"itemMaxAge":1440,"repoPolicy":"RELEASE",
+        "provider":"maven2","providerRole":"org.sonatype.nexus.proxy.repository.Repository","downloadRemoteIndexes":true,
+        "autoBlockActive":true,"fileTypeValidation":true,"exposed":true,"checksumPolicy":"WARN",
+        "remoteStorage":{"remoteStorageUrl":"https://repository.jboss.org/nexus/content/groups/ea/","authentication":null,
+        "connectionSettings":null}}}' \
+        >/dev/null 2>&1
+
+    curl -X POST \
+        http://${nexus_host}/nexus/service/local/repositories \
+        -H 'authorization: Basic YWRtaW46YWRtaW4xMjM=' \
+        -H 'cache-control: no-cache' \
+        -H 'content-type: application/json' \
+        -d '{"data":{"repoType":"proxy","id":"redhat-ga","name":"Red Hat General Availability Repository","browseable":true,"indexable":true,
+        "notFoundCacheTTL":1440,"artifactMaxAge":-1,"metadataMaxAge":1440,"itemMaxAge":1440,"repoPolicy":"RELEASE",
+        "provider":"maven2","providerRole":"org.sonatype.nexus.proxy.repository.Repository","downloadRemoteIndexes":true,
+        "autoBlockActive":true,"fileTypeValidation":true,"exposed":true,"checksumPolicy":"WARN",
+        "remoteStorage":{"remoteStorageUrl":"https://maven.repository.redhat.com/ga/","authentication":null,
+        "connectionSettings":null}}}' \
+        >/dev/null 2>&1
+
+    curl -X PUT \
+        http://${nexus_host}/nexus/service/local/repo_groups/public \
+        -H 'authorization: Basic YWRtaW46YWRtaW4xMjM=' \
+        -H 'cache-control: no-cache' \
+        -H 'content-type: application/json' \
+        -H 'postman-token: eaa6b07c-87ac-53c5-1ab6-aa585ae9ee3c' \
+        -d '{"data":{"id":"public","name":"Public Repositories","format":"maven2","exposed":true,"provider":"maven2",
+        "repositories":[{"id":"releases"},{"id":"snapshots"},{"id":"thirdparty"},{"id":"central"},{"id":"jboss-ea"},
+        {"id":"redhat-ga"}]}}' \
+        >/dev/null 2>&1
+
+    oc project "${project}"
+
+    echo "\nSet MAVEN_MIRROR_URL with:"
+    echo "export MAVEN_MIRROR_URL=\"http://${nexus_host}/nexus/content/groups/public/\"\n"
+}
+
+# Determine maven mirror url
+maven_mirror_url() {
+    local maven_mirror="${MAVEN_MIRROR_URL:-unknown}"
+    if [ "${maven_mirror}" == "unknown" ]; then
+        project=$(oc project --short=true)
+        if oc get project "nexus" >/dev/null 2>&1 ; then
+            oc project "nexus" >/dev/null 2>&1
+            nexus_host=$(oc get routes nexus -o=jsonpath='{.spec.host}')
+            oc project "${project}" >/dev/null 2>&1
+            echo "http://${nexus_host}/nexus/content/groups/public/"
+            return
+        fi
+        echo "ERROR: Could not automatically determine MAVEN_MIRROR_URL, please make sure you run "
+        echo "'syndesis install --maven-mirror' or set maven mirror manually."
+        return
+    fi
+    echo "${maven_mirror}"
+}
+
 # Deploy operator
 deploy_syndesis_operator() {
     local operator_installed=$(oc get dc -o name | grep syndesis-operator)

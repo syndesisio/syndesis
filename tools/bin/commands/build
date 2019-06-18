@@ -131,10 +131,10 @@ maven_args() {
     if [ $(hasflag --maven-mirror) ]; then
         local maven_mirror=$(readopt --maven-mirror)
         if [ -z "$maven_mirror" ]; then
-            args="$args -DmavenMirror=${MAVEN_MIRROR_URL:-http://nexus.myproject:8081/nexus/content/groups/public}"
-        else
-            args="$args -DmavenMirror=$maven_mirror"
+            maven_mirror=$(maven_mirror_url)
+            check_error $maven_mirror
         fi
+        args="$args -DmavenMirror=${maven_mirror}"
     fi
 
     if [ -z "$project" ]; then

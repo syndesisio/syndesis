@@ -42,7 +42,8 @@ minishift::usage() {
                               (version is optional)
     --camel-k-options "opts"  Options used when installing the camel-k operator.
                               Use quotes and start with a space before appending the options.
-    --datavirt                Install Data Virtualizations
+    --datavirt                Install Data Virtualizations.
+    --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
 EOT
 }
 
@@ -78,6 +79,10 @@ minishift::run() {
 
     # Ensure OC is in the path
     eval $(minishift oc-env)
+
+    if [ $(hasflag --maven-mirror) ]; then
+        install_maven_mirror
+    fi
 
     if [ $(hasflag --install) ]; then
 

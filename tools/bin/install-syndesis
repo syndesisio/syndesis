@@ -49,7 +49,8 @@ with options:
                               (version is optional)
    --camel-k-options "opts"   Options used when installing the camel-k operator.
                               Use quotes and start with a space before appending the options.
-   --datavirt                 Install Data Virtualizations
+   --datavirt                 Install Data Virtualizations.
+   --maven-mirror             Install Maven Mirror to be used with --maven-mirror when building.
 -w --watch                    Wait until the installation has completed
 -o --open                     Open Syndesis after installation (implies --watch)
    --help                     This help message
@@ -786,6 +787,10 @@ if [ $(hasflag --camel-k) ]; then
     fi
 fi
 set -e
+
+if [ $(hasflag --maven-mirror) ]; then
+    install_maven_mirror
+fi
 
 # Deploy operator and wait until its up
 echo "Deploying Syndesis operator"
