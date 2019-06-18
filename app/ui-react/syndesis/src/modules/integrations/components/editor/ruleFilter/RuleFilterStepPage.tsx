@@ -113,7 +113,10 @@ export class RuleFilterStepPage extends React.Component<
                         ),
                       })}
                       content={
-                        <WithFilterOptions dataShape={dataShape}>
+                        <WithFilterOptions
+                          dataShape={dataShape}
+                          includeNoSelectionOption={true}
+                        >
                           {({ data, error, hasData }) => (
                             <WithLoader
                               error={error}

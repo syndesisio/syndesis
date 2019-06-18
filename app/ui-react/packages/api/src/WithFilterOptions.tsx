@@ -5,6 +5,7 @@ import { SyndesisFetch } from './SyndesisFetch';
 
 export interface IWithFilterOptionsProps {
   dataShape: DataShape;
+  includeNoSelectionOption?: boolean;
   children(props: IFetchState<FilterOptions>): any;
 }
 
@@ -20,18 +21,22 @@ function getDefaultOps() {
     },
     {
       label: 'not equals',
-      operator: '==',
+      operator: '!=',
     },
     {
+      label: 'less than',
       operator: '<',
     },
     {
+      label: 'less than or equal',
       operator: '<=',
     },
     {
+      label: 'greater than',
       operator: '>',
     },
     {
+      label: 'greater than or equal',
       operator: '>=',
     },
     {
@@ -71,14 +76,21 @@ export interface IOp {
   value?: string;
 }
 
-function convertOps(ops: Op[]): Op[] {
+function convertOps(ops: Op[], includeNoSelectionOption: boolean): Op[] {
   const answer = [];
+
+  if (includeNoSelectionOption) {
+    const noSelection = { label: 'Select an operator...', value: '' } as IOp;
+    answer.push(noSelection);
+  }
+
   for (const op of ops) {
     // guard against blank label
     const label = op.label || (op as IOp).value || op.operator;
+    const value = op.label === 'not equals' ? '!=' : (op as IOp).value || op.operator;
     const newOp = {
       label,
-      value: (op as IOp).value || op.operator,
+      value
     } as IOp;
     answer.push(newOp);
   }
@@ -105,7 +117,7 @@ export class WithFilterOptions extends React.Component<
             ? response.data.ops!
             : getDefaultOps();
           const data = {
-            ops: convertOps(ops),
+            ops: convertOps(ops, this.props.includeNoSelectionOption || false),
             paths: response.data.paths || [],
           };
           return this.props.children({
