@@ -29,14 +29,15 @@ export const Breadcrumb: React.FunctionComponent<IBreadcrumbProps> = ({
   actions,
   children,
 }) => {
+  const childrenArray = React.Children.toArray(children);
+  const count = childrenArray.length;
   items =
     items ||
-    React.Children.toArray(children).map((c, idx) => (
+    childrenArray.map((c, idx) => (
       <BreadcrumbItem key={idx} isActive={idx === count - 1}>
         {c}
       </BreadcrumbItem>
     ));
-  const count = items.length;
   return (
     <AppBreadcrumb>
       <Level gutter={'md'}>
