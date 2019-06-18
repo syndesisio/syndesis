@@ -61,7 +61,8 @@ export const ReviewActionsPage: React.FunctionComponent<
     setNextDisabled(true);
     try {
       const integration = await getIntegration(
-        apiSummary!.configuredProperties!.specification
+        apiSummary!.configuredProperties!.specification,
+        state.integration
       );
       integration.id = state.integration.id;
       integration.name = '';
