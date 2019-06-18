@@ -1,3 +1,4 @@
+import deepmerge from 'deepmerge';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch, FetchMethod, IFetch } from './callFetch';
@@ -38,7 +39,6 @@ export function useApiResource<T>({
       ...props
     }: IFetch = { body, url, method }
   ) {
-    let r: T | null = null;
     setLoading(true);
     try {
       const response = await callFetch({
@@ -54,16 +54,20 @@ export function useApiResource<T>({
       if (!response.ok) {
         throw new Error(response.statusText);
       }
-      r = await transformResponse(response);
-      setResource(r);
+      let data: T = await transformResponse(response);
+      if (defaultValue) {
+        data = deepmerge(defaultValue, data);
+      }
+      setResource(data);
       setHasData(true);
+      setLoading(false);
+      return data;
     } catch (e) {
       setHasData(false);
-      setError(e);
-    } finally {
       setLoading(false);
+      setError(e);
     }
-    return r;
+    return null;
   }
 
   const read = React.useCallback(fetchResource, [
