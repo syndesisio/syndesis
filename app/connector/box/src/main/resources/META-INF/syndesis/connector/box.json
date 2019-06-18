@@ -97,7 +97,7 @@
       },
       "id": "io.syndesis:box-download-connector",
       "name": "Download",
-      "pattern": "To"
+      "pattern": "From"
     }
   ],
   "componentScheme": "box",
