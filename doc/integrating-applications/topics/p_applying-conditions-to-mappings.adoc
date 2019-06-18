@@ -13,6 +13,21 @@ an expression that tests the zip code source
 field to determine if it is empty, and if it is empty, 
 inserts `99999` into the zip code target field. 
 
+
+ifeval::["{location}" == "downstream"]
+[IMPORTANT]
+====
+Applying conditions to mappings is a Technology Preview feature only. Technology Preview features are 
+not supported with Red Hat production service level agreements (SLAs) and might not be 
+functionally complete. Red Hat does not recommend using them in production. 
+These features provide early access to upcoming product features, enabling 
+customers to test functionality and provide feedback during the development process. 
+For more information about the support scope of Red Hat Technology Preview features, 
+see link:https://access.redhat.com/support/offerings/techpreview/[]. 
+====
+endif::[]
+
+
 The data mapper supports expressions that are similar to a Microsoft 
 Excel expressions, but does not support all Microsoft Excel expression 
 syntax.  
