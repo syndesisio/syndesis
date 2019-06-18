@@ -6,5 +6,18 @@
   "ASSEMBLING": "Assemblaggio",
   "BUILDING": "Costruzione",
   "DEPLOYING": "La Diffusione",
-  "STARTING": "Di Partenza"
+  "STARTING": "Di Partenza",
+  "metrics": {
+    "lastProcessed": "Ultima Elaborazione",
+    "NoDataAvailable": "Nessun dato disponibile",
+    "since": "Da ",
+    "totalErrors": "Errori Totali",
+    "totalMessages": "Messaggi Totali",
+    "uptime": "Tempo"
+  },
+  "integrationsEmptyState": {
+    "createTip": "Fare clic per iniziare a creare un'integrazione",
+    "info": "Al momento non ci sono integrazioni. Fai clic sul pulsante qui sotto per crearne uno.",
+    "title": "$t(shared:linkCreateIntegration)"
+  }
 }
