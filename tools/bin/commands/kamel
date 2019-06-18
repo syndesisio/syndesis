@@ -1,0 +1,211 @@
+#!/bin/bash
+
+LOCAL_MAVEN_REPOSITORY=~/.m2/repository
+OPERATOR_MAVEN_REPOSITORY=/tmp/artifacts/m2
+
+kamel::description() {
+    echo "Tools for developing integrations using Camel K"
+}
+
+kamel::usage() {
+    cat <<EOT
+    --sync-runtime          Synchronize runtime snapshot libraries with the camel k operator.
+    --sync-lib              Synchronize snapshot libraries in the camel k operator (e.g. org/apache/camel/camel-activemq).
+
+    --configure             Configure the Camel K platform to be used by Syndesis
+
+    --activate              Activate usage of Camel K as runtime for integrations
+    --deactivate            Deactivate usage of Camel K as runtime for integrations, going back to s2i
+
+EOT
+}
+
+
+kamel::run() {
+    source "$(basedir)/commands/util/openshift_funcs"
+    source "$(basedir)/commands/util/camel_k_funcs"
+
+    # Require oc
+    command -v oc > /dev/null 2>&1 || { echo >&2 "ERROR: Command 'oc' not found. Please install it before proceeding.'"; exit 1; }
+
+    if [ $(hasflag --sync-runtime) ]; then
+        sync_runtime
+    elif [ $(hasflag --sync-lib) ]; then
+        sync_lib
+    elif [ $(hasflag --configure) ]; then
+            configure_camel_k
+    elif [ $(hasflag --activate) ]; then
+        activate_camel_k
+    elif [ $(hasflag --deactivate) ]; then
+        deactivate_camel_k
+    fi
+
+}
+
+sync_runtime() {
+    local operator_pod=$(get_camel_k_operator_pod)
+
+    for module in syndesis-parent common extension integration connector; do
+        # Cannot filter because of https://bugzilla.redhat.com/show_bug.cgi?id=1559693
+        sync_lib io/syndesis/$module $operator_pod
+    done
+}
+
+sync_lib() {
+    local libs=${1:-}
+    local operator_pod=${2:-}
+
+    local arg_modules=$(readopt --sync-lib);
+    if [ -n "${arg_modules}" ]; then
+        libs=${arg_modules//,/ }
+    fi
+
+    if [ -z "$operator_pod" ]; then
+        operator_pod=$(get_camel_k_operator_pod)
+    fi
+    if [ -z "$operator_pod" ]; then
+        echo "ERROR: Camel K Operator not found in current namespace."
+        echo "Please install Camel K"
+        exit 1
+    fi
+
+    for lib in $libs; do
+        clean_lib=$(echo $lib | tr "." "/" | sed 's#/*$##;s#^/*##')
+        parent_dir=$(echo $clean_lib | rev | cut -d'/' -f 2- | rev)
+
+        oc exec $operator_pod -- mkdir -p $OPERATOR_MAVEN_REPOSITORY/$parent_dir
+        oc rsync ~/.m2/repository/$clean_lib $operator_pod:$OPERATOR_MAVEN_REPOSITORY/$parent_dir
+    done
+}
+
+get_camel_k_operator_pod() {
+    oc get pod -l camel.apache.org/component=operator -o=jsonpath='{.items[0].metadata.name}' --ignore-not-found
+}
+
+configure_camel_k() {
+    local app_dir=$(appdir)
+
+    # Require yq
+    command -v yq > /dev/null 2>&1 || { echo >&2 "ERROR: Command line tool 'yq' is required. Please install it following instructions from https://mikefarah.github.io/yq/#install"; exit 1; }
+
+    # Configuring maven settings
+    oc apply -f - <<EOF
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  labels:
+    app: camel-k
+  name: camel-k-maven-settings
+data:
+ settings.xml: |-
+   <?xml version="1.0" encoding="UTF-8"?>
+   <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+      <localRepository></localRepository>
+      <profiles>
+        <profile>
+          <id>maven-settings</id>
+          <activation>
+            <activeByDefault>true</activeByDefault>
+          </activation>
+          <repositories>
+              <repository>
+                <id>central</id>
+                <name>Maven Central</name>
+                <url>https://repo.maven.apache.org/maven2/</url>
+              </repository>
+              <repository>
+                <id>jboss-ea</id>
+                <name>JBoss Early Access</name>
+                <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+              </repository>
+              <repository>
+                <id>redhat-ga</id>
+                <name>Red Hat General Availability Repository</name>
+                <url>https://maven.repository.redhat.com/ga/</url>
+              </repository>
+            </repositories>
+
+            <pluginRepositories>
+              <pluginRepository>
+                <id>central</id>
+                <name>Maven Central</name>
+                <url>https://repo.maven.apache.org/maven2/</url>
+              </pluginRepository>
+              <pluginRepository>
+                <id>jboss-ea</id>
+                <name>JBoss Early Access</name>
+                <url>https://repository.jboss.org/nexus/content/groups/ea/</url>
+              </pluginRepository>
+              <pluginRepository>
+                <id>redhat-ga</id>
+                <name>Red Hat General Availability Repository</name>
+                <url>https://maven.repository.redhat.com/ga/</url>
+              </pluginRepository>
+            </pluginRepositories>
+        </profile>
+     </profiles>
+   </settings>
+EOF
+
+    # Configuring integration platform
+    local pom=${app_dir}/pom.xml
+    local camel_version=$(grep -e "<camel.version>[^<]*</camel.version>" $pom | head -1 | cut -d'>' -f 2 | cut -d'<' -f 1)
+    echo "Using Camel version: $camel_version"
+
+    oc get integrationplatform camel-k -o yaml \
+        | yq w - spec.build.camelVersion $camel_version \
+        | yq w - spec.build.maven.settings.configMapKeyRef.key settings.xml \
+        | yq w - spec.build.maven.settings.configMapKeyRef.name camel-k-maven-settings \
+        | oc apply -f -
+
+    # Configuring catalog
+    local syndesis_version=$(grep -Pzo "(?s)<parent>.*?<version>\K[^<]*" $app_dir/integration/pom.xml)
+    echo "Using Syndesis version: $syndesis_version"
+
+    local catalog=$LOCAL_MAVEN_REPOSITORY/io/syndesis/integration/integration-runtime-camelk/$syndesis_version/integration-runtime-camelk-$syndesis_version-catalog.yaml
+    if [ ! -f "$catalog" ]; then
+        echo "ERROR: Catalog file does not exist $catalog"
+    fi
+    oc apply -f $catalog
+}
+
+activate_camel_k() {
+    set_integration_runtime camel-k
+}
+
+deactivate_camel_k() {
+    set_integration_runtime s2i
+}
+
+set_integration_runtime() {
+    local kind=$1
+    local tmp_dir=~/.syndesis-kamel-tool
+
+    # Require yq
+    command -v yq > /dev/null 2>&1 || { echo >&2 "ERROR: Command line tool 'yq' is required. Please install it following instructions from https://mikefarah.github.io/yq/#install"; exit 1; }
+
+    mkdir -p $tmp_dir
+
+    oc get configmap syndesis-server-config -o yaml \
+        > $tmp_dir/syndesis-server-config.yaml
+
+    cat $tmp_dir/syndesis-server-config.yaml \
+        | yq r - 'data[application.yml]' \
+        | yq w - controllers.integration $kind \
+        > $tmp_dir/application.yml
+
+    oc create cm syndesis-server-config-x --from-file=$tmp_dir/application.yml --dry-run -o yaml \
+        | yq d - apiVersion \
+        | yq d - kind \
+        | yq d - metadata \
+        > $tmp_dir/syndesis-server-config-patch.yaml
+
+    yq m -x $tmp_dir/syndesis-server-config.yaml $tmp_dir/syndesis-server-config-patch.yaml \
+        | oc apply -f -
+
+
+    rm -r $tmp_dir
+
+    # Restart syndesis-server
+    oc delete pod -l syndesis.io/component=syndesis-server
+}
