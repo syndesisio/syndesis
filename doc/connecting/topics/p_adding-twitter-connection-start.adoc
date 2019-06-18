@@ -49,8 +49,15 @@ such tweets, and returns those tweets to the integration.
 +
 * *Mention* does not require any configuration. 
 * *Retrieve* 
-** *Count* is the maximum number of direct messages to retrieve. 
-Direct messages from only the previous 30 days can be returned. 
+** *Count* has a default of 100 and you should not need to change 
+this value, which affects internal behavior. However, this value 
+should never be less than 50. 
++
+The *Retrieve* action always returns all previously unreturned 
+direct messages received in the last 30 days. If you do not select 
+*Ignore direct messages previously found*, then the *Retrieve* action 
+returns all messages that have been received in the last 30 days.
+
 ** *Delay* is the period of time between polls. Twitter enforces
 rate limits, so you should not poll too often. The default 
 interval is 5 seconds. 
