@@ -39,6 +39,68 @@ rules:
 - apiGroups:
   - ""
   resources:
+  - pods/log
+  verbs: [ get ]
+- apiGroups:
+  - ""
+  resources:
+  - replicationcontrollers
+  - replicationcontrollers/scale
+  - replicationcontrollers/status
+  verbs: [ get, list, create, update, delete, deletecollection, watch ]
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - builds
+  - buildconfigs
+  - builds/details
+  - buildconfigs/webhooks
+  - buildconfigs/instantiatebinary
+  - builds/log
+  verbs: [ get, list, create, update, delete, deletecollection, watch ]
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs
+  - deploymentconfigs/scale
+  verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigrollbacks
+  - deploymentconfigs/instantiate
+  - deploymentconfigs/rollback
+  verbs: [ create ]
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs/log
+  - deploymentconfigs/status
+  verbs: [ get, list, watch ]
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreams
+  - imagestreamimages
+  - imagestreammappings
+  - imagestreams/secrets
+  - imagestreamtags
+  verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreams/status
+  - imagestreamimports
+  verbs: [ get, list, watch ]
+- apiGroups:
+  - ""
+  resources:
   - events
   verbs: [ get, list ]
 - apiGroups:
@@ -48,25 +110,14 @@ rules:
   - rolebindings
   verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
+  - ""
   - template.openshift.io
   resources:
   - processedtemplates
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
-- apiGroups:
-  - image.openshift.io
-  resources:
-  - imagestreams
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
-- apiGroups:
-  - apps.openshift.io
-  resources:
-  - deploymentconfigs
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
-- apiGroups:
-  - build.openshift.io
-  resources:
-  - buildconfigs
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  - templateconfigs
+  - templateinstances
+  - templates
+  verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
 - apiGroups:
   - authorization.openshift.io
   resources:
@@ -97,14 +148,14 @@ rules:
   - grafanadashboards
   verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
-    - serving.knative.dev
+  - serving.knative.dev
   resources:
-    - services
+  - services
   verbs: [ get, list, watch]
 - apiGroups:
-    - eventing.knative.dev
+  - eventing.knative.dev
   resources:
-    - channels
+  - channels
   verbs: [ get, list, watch]
 ---
 kind: RoleBinding
@@ -124,36 +175,6 @@ roleRef:
   name: syndesis-operator
   apiGroup: rbac.authorization.k8s.io
 ---
-kind: RoleBinding
-apiVersion: authorization.openshift.io/v1
-metadata:
-  name: syndesis-operator:view
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-subjects:
-- kind: ServiceAccount
-  name: syndesis-operator
-roleRef:
-  name: view
----
-kind: RoleBinding
-apiVersion: authorization.openshift.io/v1
-metadata:
-  name: syndesis-operator:edit
-  labels:
-    app: syndesis
-    syndesis.io/app: syndesis
-    syndesis.io/type: operator
-    syndesis.io/component: syndesis-operator
-subjects:
-- kind: ServiceAccount
-  name: syndesis-operator
-roleRef:
-  name: edit
----
 apiVersion: image.openshift.io/v1
 kind: ImageStream
 metadata:
@@ -170,7 +191,7 @@ spec:
   - from:
       kind: DockerImage
       # Keep tag 'latest' here, its used as an anchor in the release script
-      name: docker.io/syndesis/syndesis-operator:latest
+      name: docker.io/syndesis/syndesis-operator:1.8.1-20190618
     importPolicy:
       scheduled: true
     # Keep 'latest' here (including single quotes), its used as a pattern anchor in the release script
