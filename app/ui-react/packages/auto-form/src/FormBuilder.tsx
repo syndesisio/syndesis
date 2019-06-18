@@ -9,6 +9,7 @@ import {
 } from './models';
 import { enrichAndOrderProperties, massageType, sanitizeValues } from './utils';
 import {
+  FormArrayComponent,
   FormCheckboxComponent,
   FormDurationComponent,
   FormHiddenComponent,
@@ -16,7 +17,6 @@ import {
   FormSelectComponent,
   FormTextAreaComponent,
 } from './widgets';
-import { FormArrayComponent } from './widgets/FormArrayComponent';
 
 export interface IFormBuilderProps<T> {
   definition: IFormDefinition;

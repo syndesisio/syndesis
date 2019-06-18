@@ -1,6 +1,11 @@
 @import url('~patternfly/dist/css/patternfly.css');
 @import url('~patternfly/dist/css/patternfly-additions.css');
 @import url('~patternfly-react/dist/css/patternfly-react.css');
+@import url('~@patternfly/patternfly/patternfly-variables.css');
+@import url('~@patternfly/patternfly/patternfly-shield-noninheritable.css');
+@import url('~@patternfly/patternfly/patternfly-common.css');
+@import url('~@patternfly/patternfly/utilities/Spacing/spacing.css');
+@import url('~@patternfly/patternfly/utilities/Display/display.css');
 
 html,
 body {

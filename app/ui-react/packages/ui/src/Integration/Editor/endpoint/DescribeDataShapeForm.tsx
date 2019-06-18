@@ -1,10 +1,7 @@
+import { Popover } from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import * as H from '@syndesis/history';
-import {
-  ControlLabel,
-  FieldLevelHelp,
-  FormControl,
-  FormGroup,
-} from 'patternfly-react';
+import { ControlLabel, FormControl, FormGroup } from 'patternfly-react';
 import * as React from 'react';
 import { ButtonLink, Container, PageSection } from '../../../Layout';
 import { TextEditor } from '../../../Shared';
@@ -71,9 +68,12 @@ export class DescribeDataShapeForm extends React.Component<
                 <form>
                   <FormGroup>
                     <ControlLabel>{this.props.i18nSelectType}</ControlLabel>
-                    <ControlLabel>
-                      <FieldLevelHelp content={this.props.i18nSelectTypeHelp} />
-                    </ControlLabel>
+                    <Popover
+                      aria-label={this.props.i18nSelectTypeHelp}
+                      bodyContent={this.props.i18nSelectTypeHelp}
+                    >
+                      <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+                    </Popover>
                     <FormControl
                       data-testid={'describe-data-shape-form-kind-input'}
                       componentClass="select"
@@ -93,9 +93,12 @@ export class DescribeDataShapeForm extends React.Component<
                     <>
                       <FormGroup>
                         <ControlLabel>{this.props.i18nDefinition}</ControlLabel>
-                        <FieldLevelHelp
-                          content={this.props.i18nDefinitionHelp}
-                        />
+                        <Popover
+                          aria-label={this.props.i18nDefinitionHelp}
+                          bodyContent={this.props.i18nDefinitionHelp}
+                        >
+                          <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+                        </Popover>
                         <TextEditor
                           id={'describe-data-shape-form-definition-editor'}
                           value={this.props.definition || ''}
@@ -112,16 +115,16 @@ export class DescribeDataShapeForm extends React.Component<
                           }}
                         />
                       </FormGroup>
-
                       <FormGroup>
                         <ControlLabel>
                           {this.props.i18nDataTypeName}
                         </ControlLabel>
-                        <ControlLabel>
-                          <FieldLevelHelp
-                            content={this.props.i18nDataTypeNameHelp}
-                          />
-                        </ControlLabel>
+                        <Popover
+                          aria-label={this.props.i18nDataTypeNameHelp}
+                          bodyContent={this.props.i18nDataTypeNameHelp}
+                        >
+                          <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+                        </Popover>
                         <FormControl
                           data-testid={'describe-data-shape-form-name-input'}
                           type="text"
@@ -135,11 +138,12 @@ export class DescribeDataShapeForm extends React.Component<
                         <ControlLabel>
                           {this.props.i18nDataTypeDescription}
                         </ControlLabel>
-                        <ControlLabel>
-                          <FieldLevelHelp
-                            content={this.props.i18nDataTypeDescriptionHelp}
-                          />
-                        </ControlLabel>
+                        <Popover
+                          aria-label={this.props.i18nDataTypeDescriptionHelp}
+                          bodyContent={this.props.i18nDataTypeDescriptionHelp}
+                        >
+                          <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+                        </Popover>
                         <FormControl
                           type="text"
                           data-testid={

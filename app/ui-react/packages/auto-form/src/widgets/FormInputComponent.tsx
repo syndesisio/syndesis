@@ -1,9 +1,6 @@
-import {
-  ControlLabel,
-  FieldLevelHelp,
-  FormControl,
-  FormGroup,
-} from 'patternfly-react';
+import { Popover } from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
+import { ControlLabel, FormControl, FormGroup } from 'patternfly-react';
 import * as React from 'react';
 import { IFormControlProps } from '../models';
 import { AutoFormHelpBlock } from './AutoFormHelpBlock';
@@ -30,9 +27,12 @@ export const FormInputComponent: React.FunctionComponent<
       </ControlLabel>
     )}
     {props.property.labelHint && (
-      <ControlLabel>
-        <FieldLevelHelp content={props.property.labelHint} />
-      </ControlLabel>
+      <Popover
+        aria-label={props.property.labelHint}
+        bodyContent={props.property.labelHint}
+      >
+        <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+      </Popover>
     )}
     <FormControl
       {...props.property.fieldAttributes}

@@ -1,7 +1,8 @@
+import { Popover } from '@patternfly/react-core';
+import { OutlinedQuestionCircleIcon } from '@patternfly/react-icons';
 import {
   ControlLabel,
   DropdownButton,
-  FieldLevelHelp,
   Form,
   FormGroup,
   MenuItem,
@@ -119,9 +120,12 @@ export class FormDurationComponent extends React.Component<
           {this.props.property.displayName}
         </ControlLabel>
         {this.props.property.labelHint && (
-          <ControlLabel>
-            <FieldLevelHelp content={this.props.property.labelHint} />
-          </ControlLabel>
+          <Popover
+            aria-label={this.props.property.labelHint}
+            bodyContent={this.props.property.labelHint}
+          >
+            <OutlinedQuestionCircleIcon className="pf-u-ml-xs" />
+          </Popover>
         )}
         <Form.InputGroup>
           <Form.FormControl

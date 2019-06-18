@@ -4,7 +4,7 @@ export function getValidationState({ form, field }: IFormControlProps) {
   return form.touched[field.name] && form.errors[field.name]
     ? 'error'
     : form.touched[field.name]
-    ? 'success'
+    ? null
     : null;
 }
 

@@ -1,4 +1,5 @@
 export * from './AutoFormHelpBlock';
+export * from './FormArrayComponent';
 export * from './FormInputComponent';
 export * from './FormSelectComponent';
 export * from './FormTextAreaComponent';
