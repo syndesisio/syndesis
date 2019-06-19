@@ -161,6 +161,8 @@
   "publishDeploymentModalTitle": "Start Deployment?",
   "ReplaceDraftFailedMessage": "Failed to replace the current draft: {{error}}",
   "NoErrors": "No errors",
+  "NoSteps": "No steps",
+  "ErrorsFound": "Errors Found",
   "LastRefresh": "Last refreshed at {{at}}",
   "steps": {
     "templater-specify-type": "Specify template type:",

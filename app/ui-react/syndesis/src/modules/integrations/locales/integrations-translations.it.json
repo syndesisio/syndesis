@@ -15,6 +15,8 @@
     "totalMessages": "Messaggi Totali",
     "uptime": "Tempo"
   },
+  "NoSteps": "Nessun passaggio",
+  "ErrorsFound": "Errori Trovati",
   "integrationsEmptyState": {
     "createTip": "Fare clic per iniziare a creare un'integrazione",
     "info": "Al momento non ci sono integrazioni. Fai clic sul pulsante qui sotto per crearne uno.",
