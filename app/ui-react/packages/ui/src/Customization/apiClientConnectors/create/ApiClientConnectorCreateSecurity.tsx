@@ -10,7 +10,10 @@ import * as React from 'react';
 import { ButtonLink } from '../../../Layout';
 
 export function isAuthTypeValid(authType?: string): boolean {
-  return ['apiKey', 'basic', 'none'].find(v => v === authType) !== undefined;
+  return authType
+    ? ['apiKey', 'basic', 'none'].find(v => authType.indexOf(v) === 0) !==
+        undefined
+    : false;
 }
 
 export interface IAuthenticationTypes {
