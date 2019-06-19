@@ -41,6 +41,7 @@ If you want to install to https://www.openshift.org/minishift/[Minishift] the <<
     --memory-meta <mem>   Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support        Allow test support endpoint for syndesis-server
     --datavirt            Install Data Virtualizations
+    --maven-mirror        Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
 
 You have to run `--setup --grant <user>` as a cluster-admin before you can
 install Fuse Online as a user.

@@ -42,8 +42,9 @@ Options for build:
         --camel-snapshot <version> Run a build with a specific Camel snapshot. If no argument is given the
                                    environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.
         --maven-mirror <url>       Use the maven mirror for the build, e.g. a maven repo proxy in OpenShift. If no
-                                   argument is given, the MAVEN_MIRROR_URL environment variable is used or
-                                   'http://nexus.myproject:8081/nexus/content/groups/public', if none is set.
+                                   argument is given, the MAVEN_MIRROR_URL environment variable is used. If none is set
+                                   and the mirror has been provisioned with --maven-mirror during installation,
+                                   the url is automatically detected.
                                    See also https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html
         --man                      Open HTML documentation in the Syndesis Developer Handbook
 ----
