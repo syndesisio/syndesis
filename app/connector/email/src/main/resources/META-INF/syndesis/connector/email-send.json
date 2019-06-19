@@ -129,10 +129,7 @@
       },
       "id": "io.syndesis:email-send-connector",
       "name": "Send Email",
-      "pattern": "To",
-      "tags": [
-        "dynamic"
-      ]
+      "pattern": "To"
     }
   ],
   "componentScheme": "email-send",

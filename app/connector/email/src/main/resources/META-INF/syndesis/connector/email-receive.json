@@ -88,10 +88,7 @@
       },
       "id": "io.syndesis:email-read-connector",
       "name": "Receive Email",
-      "pattern": "From",
-      "tags": [
-        "dynamic"
-      ]
+      "pattern": "From"
     }
   ],
   "componentScheme": "email-receive",

@@ -160,27 +160,6 @@ public interface EMailConstants extends StringConstants {
         }
     }
 
-    enum EMailFunction {
-        READ("read"),
-        SEND("send");
-
-        private final String id;
-        private final String connectorId;
-
-        EMailFunction(String id) {
-            this.id = id;
-            this.connectorId = "email-" + id + "-connector";
-        }
-
-        public String id() {
-            return id;
-        }
-
-        public String connectorId() {
-            return connectorId;
-        }
-    }
-
     enum Priority {
         INPUT_VALUES("inputValues"),
         CONSUMED_DATA("consumedData");
