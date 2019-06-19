@@ -323,11 +323,6 @@ export class VirtualizationViewsPage extends React.Component {
                                                                 }
                                                                 noPadding={true}
                                                               >
-                                                                <VirtualizationNavBar
-                                                                  virtualization={
-                                                                    virtualization
-                                                                  }
-                                                                />
                                                                 <ViewHeaderBreadcrumb
                                                                   currentPublishedState={
                                                                     publishingDetails.state
@@ -408,6 +403,11 @@ export class VirtualizationViewsPage extends React.Component {
                                                                   }
                                                                   i18nDescription={
                                                                     virtualization.tko__description
+                                                                  }
+                                                                />
+                                                                <VirtualizationNavBar
+                                                                  virtualization={
+                                                                    virtualization
                                                                   }
                                                                 />
                                                               </PageSection>
