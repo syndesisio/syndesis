@@ -339,19 +339,24 @@ public class PublicApiHandler {
         }
 
         // delete tags not in the environments list?
+        final Set<String> keySet = deliveryState.keySet();
+        final Set<String> unused = new HashSet<>(keySet);
         if (deleteOtherTags) {
-            Set<String> keySet = deliveryState.keySet();
-
-            // move deleted environments to unused
-            Set<String> unused = new HashSet<>(keySet);
             unused.removeAll(environments);
-            this.unusedEnvironments.addAll(unused);
-
             keySet.retainAll(environments);
         }
 
-        // update json db
+        // update json db before making changes to unusedEnvironments
         dataMgr.update(integration.builder().continuousDeliveryState(deliveryState).build());
+
+        // remove used tags from unused list
+        environments.forEach(this.unusedEnvironments::remove);
+
+        // move deleted unused tags to unused list
+        if (deleteOtherTags) {
+            unused.removeAll(getReleaseEnvironments());
+            this.unusedEnvironments.addAll(unused);
+        }
 
         LOG.debug("Tagged integration {} for environments {} at {}", integrationId, environments, lastTaggedAt);
 
