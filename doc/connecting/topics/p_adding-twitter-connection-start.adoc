@@ -14,8 +14,8 @@ Twitter account that the connection is authorized to access.
 Twitter account that the Twitter connection is authorized to access. 
 A Twitter direct message is a private message explicitly sent to a 
 user or group. 
-* A periodic poll finds one or more tweets that contain a keyword 
-that you specify. 
+* A periodic poll finds one or more tweets that 
+match Twitter search criteria that you specify. 
 
 .Prerequisites
 * You created a Twitter connection.
@@ -33,17 +33,17 @@ credentials defined in that connection.
 A Twitter connection that you add to an integration performs only
 the action that you choose:
 +
-*  *Mention* triggers execution of the integration when the connection 
-finds a tweet that contains the Twitter handle for the Twitter 
-account that the connection is authorized to access. The connection 
-returns the tweet to the integration.
+*  *Mention* monitors Twitter for tweets that contain the Twitter 
+handle for the Twitter account that the connection is authorized to access.
+Upon finding such a tweet, the connection returns it to {prodname}, which triggers
+execution of the integration. 
 * *Retrieve* periodically polls Twitter for direct messages sent 
 to the Twitter account that the Twitter connection is authorized 
-to access, triggers execution of the integration upon finding
-a direct message, and returns the direct message to the integration. 
-* *Search* periodically polls Twitter for tweets that contain a keyword 
-that you specify, triggers execution of the integration upon finding
-such tweets, and returns those tweets to the integration. 
+to access. Upon finding such messages, the connection returns them to {prodname}, 
+which triggers execution of the integration.
+* *Search*  periodically polls Twitter for tweets that match criteria 
+that you specify. Upon finding such tweets, the connection returns them 
+to {prodname}, which triggers execution of the integration. 
 
 . Configure the action that you selected: 
 +
@@ -70,9 +70,15 @@ rate limits, so you should not poll too often. The default
 interval is 5 seconds. 
 ** *Ignore tweets previously found* returns only new 
 tweets when selected. 
-** *Keywords* is a comma separated list of words that you want 
-the connection to monitor tweets for. The connection returns a tweet 
-that contains at least one keyword. 
+** *Query* is a Twitter-formatted search expression that specifies 
+the tweets that you want the connection to return. For example: 
++
+`"My Product”` obtains tweets that contain an instance of `My Product`.
++
+`My Product` obtains tweets that contain both `My` and `Product`, 
+but not necessarily `My Product`.  
++
+See link:https://developer.twitter.com/en/docs/tweets/search/guides/standard-operators[Twitter document for search operators].
 
 . Click *Done* to add the connection to the integration.
 
