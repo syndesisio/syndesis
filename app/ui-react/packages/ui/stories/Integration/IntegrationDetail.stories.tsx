@@ -223,18 +223,20 @@ storiesOf('Integration/Detail', module)
             <TabBarItem label={'Activity'} to={'#activity'} />
             <TabBarItem label={'Metrics'} to={'#metrics'} />
           </TabBar>
+          <IntegrationDetailMetrics
+            i18nLastProcessed={'Last Processed'}
+            i18nNoDataAvailable={'No data available'}
+            i18nSince={'Since '}
+            i18nTotalErrors={'Total Errors'}
+            i18nTotalMessages={'Total Messages'}
+            i18nUptime={'Uptime'}
+            errors={2}
+            lastProcessed={'2 May 2019 08:19:42 GMT'}
+            messages={26126}
+            start={2323342333}
+            durationDifference={'3:15:59'}
+          />
         </Container>
-        <IntegrationDetailMetrics
-          i18nLastProcessed={'Last Processed'}
-          i18nSince={'Since '}
-          i18nTotalErrors={'Total Errors'}
-          i18nTotalMessages={'Total Messages'}
-          i18nUptime={'Uptime'}
-          errors={2}
-          lastProcessed={'2 May 2019 08:19:42 GMT'}
-          messages={26126}
-          start={2323342333}
-        />
       </>
     </Router>
   ));

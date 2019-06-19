@@ -17,6 +17,7 @@ import './IntegrationDetailMetrics.css';
 
 export interface IIntegrationDetailMetricsProps {
   i18nLastProcessed: string;
+  i18nNoDataAvailable: string;
   i18nSince: string;
   i18nTotalErrors: string;
   i18nTotalMessages: string;
@@ -34,7 +35,7 @@ export class IntegrationDetailMetrics extends React.Component<
   public render() {
     const okMessagesCount = this.props.messages! - this.props.errors!;
     const startAsDate = new Date(this.props.start!);
-    const startAsHuman = startAsDate.toLocaleString();
+    const startAsHuman = this.props.i18nSince + startAsDate.toLocaleString();
 
     return (
       <PageSection className="integration-detail-metrics">
@@ -52,7 +53,7 @@ export class IntegrationDetailMetrics extends React.Component<
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification>
                       <Icon type="pf" name="error-circle-o" />
-                      {this.props.errors}
+                      {this.props.errors ? this.props.errors : 0}
                     </AggregateStatusNotification>
                   </AggregateStatusNotifications>
                 </CardBody>
@@ -68,8 +69,10 @@ export class IntegrationDetailMetrics extends React.Component<
                 <CardTitle>{this.props.i18nLastProcessed}</CardTitle>
                 <CardBody>
                   <AggregateStatusNotifications>
-                    <AggregateStatusNotification>
-                      {this.props.lastProcessed}
+                    <AggregateStatusNotification className="integration-detail-metrics__last-processed">
+                      {this.props.lastProcessed
+                        ? this.props.lastProcessed
+                        : this.props.i18nNoDataAvailable}
                     </AggregateStatusNotification>
                   </AggregateStatusNotifications>
                 </CardBody>
@@ -84,7 +87,7 @@ export class IntegrationDetailMetrics extends React.Component<
               >
                 <CardTitle>
                   <AggregateStatusCount>
-                    {this.props.messages}&nbsp;
+                    {this.props.messages ? this.props.messages : 0}&nbsp;
                   </AggregateStatusCount>
                   {this.props.i18nTotalMessages}
                 </CardTitle>
@@ -92,11 +95,15 @@ export class IntegrationDetailMetrics extends React.Component<
                   <AggregateStatusNotifications>
                     <AggregateStatusNotification>
                       <Icon type="pf" name="ok" />
-                      {okMessagesCount}&nbsp;
+                      {this.props.errors !== undefined &&
+                      this.props.messages !== undefined
+                        ? okMessagesCount
+                        : 0}
+                      &nbsp;
                     </AggregateStatusNotification>
                     <AggregateStatusNotification>
                       <Icon type="pf" name="error-circle-o" />
-                      {this.props.errors}
+                      {this.props.errors ? this.props.errors : 0}
                     </AggregateStatusNotification>
                   </AggregateStatusNotifications>
                 </CardBody>
@@ -111,15 +118,19 @@ export class IntegrationDetailMetrics extends React.Component<
               >
                 <Card.Title className="integration-detail-metrics__uptime-header">
                   <div>{this.props.i18nUptime}</div>
-                  <div className="integration-detail-metrics__uptime-uptime">
-                    {this.props.i18nSince}
-                    {startAsHuman}
-                  </div>
+                  {this.props.start !== undefined &&
+                    this.props.durationDifference !== undefined && (
+                      <div className="integration-detail-metrics__uptime-uptime">
+                        {startAsHuman}
+                      </div>
+                    )}
                 </Card.Title>
                 <Card.Body>
                   <AggregateStatusNotifications>
-                    <AggregateStatusNotification>
-                      {this.props.durationDifference}
+                    <AggregateStatusNotification className="integration-detail-metrics__duration-difference">
+                      {this.props.durationDifference !== undefined
+                        ? this.props.durationDifference
+                        : this.props.i18nNoDataAvailable}
                     </AggregateStatusNotification>
                   </AggregateStatusNotifications>
                 </Card.Body>
