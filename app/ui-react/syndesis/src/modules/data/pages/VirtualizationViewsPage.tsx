@@ -257,11 +257,6 @@ export class VirtualizationViewsPage extends React.Component {
                                                     ),
                                                     'success'
                                                   );
-                                                  // On successful delete, redirect to virtualizations page
-                                                  // TODO: Handle publish/unpublish on current page
-                                                  history.push(
-                                                    resolvers.data.virtualizations.list()
-                                                  );
                                                 } catch (error) {
                                                   const details = error.message
                                                     ? error.message
