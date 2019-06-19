@@ -521,7 +521,7 @@ table.CodeRay td.code>pre{padding:0}
 <div id="header">
 <h1>Syndesis Developer Handbook</h1>
 <div class="details">
-<span id="revnumber">version 1.1.3-11742-g8871a7337c,</span>
+<span id="revnumber">version 1.1.3-11744-gb1dfbbc5d3,</span>
 <span id="revdate">2019-06-19</span>
 </div>
 <div id="toc" class="toc2">
@@ -928,8 +928,9 @@ Options for build:
         --camel-snapshot &lt;version&gt; Run a build with a specific Camel snapshot. If no argument is given the
                                    environment variable CAMEL_SNAPSHOT_VERSION is used or an error thrown.
         --maven-mirror &lt;url&gt;       Use the maven mirror for the build, e.g. a maven repo proxy in OpenShift. If no
-                                   argument is given, the MAVEN_MIRROR_URL environment variable is used or
-                                   'http://nexus.myproject:8081/nexus/content/groups/public', if none is set.
+                                   argument is given, the MAVEN_MIRROR_URL environment variable is used. If none is set
+                                   and the mirror has been provisioned with --maven-mirror during installation,
+                                   the url is automatically detected.
                                    See also https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html
         --man                      Open HTML documentation in the Syndesis Developer Handbook</code></pre>
 </div>
@@ -1350,6 +1351,7 @@ You can download it directly from <a href="https://github.com/minishift/minishif
 --memory-meta &lt;mem&gt;       Memory limit to set for syndesis-meta. Specify as "512Mi"
 --test-support            Allow test support endpoint for syndesis-server
 --datavirt                Install Data Virtualizations
+--maven-mirror            Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
 --man                     Open HTML documentation in the Syndesis Developer Handbook</code></pre>
 </div>
 </div>
@@ -2084,6 +2086,7 @@ If you want to install to <a href="https://www.openshift.org/minishift/">Minishi
     --memory-meta &lt;mem&gt;   Memory limit to set for syndesis-meta. Specify as "512Mi"
     --test-support        Allow test support endpoint for syndesis-server
     --datavirt            Install Data Virtualizations
+    --maven-mirror        Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
 
 You have to run <code>--setup --grant &lt;user&gt;</code> as a cluster-admin before you can
 install Fuse Online as a user.</code></pre>
@@ -3408,8 +3411,8 @@ This should not be the first choice, since it changes the IP of the VM, and in g
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.3-11742-g8871a7337c<br>
-Last updated 2019-06-19 13:03:36 UTC
+Version 1.1.3-11744-gb1dfbbc5d3<br>
+Last updated 2019-06-19 13:17:29 UTC
 </div>
 </div>
 </body>
