@@ -27,12 +27,12 @@ public interface Op extends Serializable {
 
     Op EQUALS = new Op.Builder().label("equals").operator("==").build();
     Op EQUALS_IGNORE_CASE = new Op.Builder().label("equals (ignores case)").operator("=~").build();
-    Op NOT_EQUALS = new Op.Builder().label("not equals").operator("==").build();
+    Op NOT_EQUALS = new Op.Builder().label("not equals").operator("!=").build();
 
-    Op LESS_THAN = new Op.Builder().label("").operator("<").build();
-    Op LESS_THAN_OR_EQUALS = new Op.Builder().label("").operator("<=").build();
-    Op GREATER_THAN = new Op.Builder().label("").operator(">").build();
-    Op GREATER_THAN_OR_EQUALS = new Op.Builder().label("").operator(">=").build();
+    Op LESS_THAN = new Op.Builder().label("less than").operator("<").build();
+    Op LESS_THAN_OR_EQUALS = new Op.Builder().label("less than or equal to").operator("<=").build();
+    Op GREATER_THAN = new Op.Builder().label("greater than").operator(">").build();
+    Op GREATER_THAN_OR_EQUALS = new Op.Builder().label("greater than or equal to").operator(">=").build();
 
     Op CONTAINS = new Op.Builder().label("contains").operator("contains").build();
     Op CONTAINS_IGNORE_CASE = new Op.Builder().label("contains (ignore case)").operator("~~").build();
