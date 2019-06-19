@@ -158,6 +158,19 @@ install_maven_mirror() {
         "connectionSettings":null}}}' \
         >/dev/null 2>&1
 
+    curl -X POST \
+        http://${nexus_host}/nexus/service/local/repositories \
+        -H 'authorization: Basic YWRtaW46YWRtaW4xMjM=' \
+        -H 'cache-control: no-cache' \
+        -H 'content-type: application/json' \
+        -d '{"data":{"repoType":"proxy","id":"atlassian-public","name":"Atlassian Public","browseable":true,"indexable":true,
+        "notFoundCacheTTL":1440,"artifactMaxAge":-1,"metadataMaxAge":1440,"itemMaxAge":1440,"repoPolicy":"RELEASE",
+        "provider":"maven2","providerRole":"org.sonatype.nexus.proxy.repository.Repository","downloadRemoteIndexes":true,
+        "autoBlockActive":true,"fileTypeValidation":true,"exposed":true,"checksumPolicy":"WARN",
+        "remoteStorage":{"remoteStorageUrl":"https://packages.atlassian.com/maven-external","authentication":null,
+        "connectionSettings":null}}}' \
+        >/dev/null 2>&1
+
     curl -X PUT \
         http://${nexus_host}/nexus/service/local/repo_groups/public \
         -H 'authorization: Basic YWRtaW46YWRtaW4xMjM=' \
@@ -166,13 +179,13 @@ install_maven_mirror() {
         -H 'postman-token: eaa6b07c-87ac-53c5-1ab6-aa585ae9ee3c' \
         -d '{"data":{"id":"public","name":"Public Repositories","format":"maven2","exposed":true,"provider":"maven2",
         "repositories":[{"id":"releases"},{"id":"snapshots"},{"id":"thirdparty"},{"id":"central"},{"id":"jboss-ea"},
-        {"id":"redhat-ga"}]}}' \
+        {"id":"redhat-ga"},{"id":"atlassian-public"}]}}' \
         >/dev/null 2>&1
 
     oc project "${project}"
 
-    echo "\nSet MAVEN_MIRROR_URL with:"
-    echo "export MAVEN_MIRROR_URL=\"http://${nexus_host}/nexus/content/groups/public/\"\n"
+    echo "Optionally set MAVEN_MIRROR_URL with:"
+    echo "export MAVEN_MIRROR_URL=\"http://${nexus_host}/nexus/content/groups/public/\""
 }
 
 # Determine maven mirror url
