@@ -347,21 +347,117 @@ rules:
   - syndesis.io
   resources:
   - "*"
-  - "*/finalisers"
-  verbs:
-  - "*"
+  - "*/finalizers"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - services
+  - endpoints
+  - persistentvolumeclaims
+  - configmaps
+  - secrets
+  - serviceaccounts
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
+- apiGroups:
+  - ""
+  resources:
+  - pods/log
+  verbs: [ get ]
+- apiGroups:
+  - ""
+  resources:
+  - replicationcontrollers
+  - replicationcontrollers/scale
+  - replicationcontrollers/status
+  verbs: [ get, list, create, update, delete, deletecollection, watch ]
+- apiGroups:
+  - ""
+  - build.openshift.io
+  resources:
+  - builds
+  - buildconfigs
+  - builds/details
+  - buildconfigs/webhooks
+  - buildconfigs/instantiatebinary
+  - builds/log
+  verbs: [ get, list, create, update, delete, deletecollection, watch ]
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs
+  - deploymentconfigs/scale
+  verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigrollbacks
+  - deploymentconfigs/instantiate
+  - deploymentconfigs/rollback
+  verbs: [ create ]
+- apiGroups:
+  - ""
+  - apps.openshift.io
+  resources:
+  - deploymentconfigs/log
+  - deploymentconfigs/status
+  verbs: [ get, list, watch ]
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreams
+  - imagestreamimages
+  - imagestreammappings
+  - imagestreams/secrets
+  - imagestreamtags
+  verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+- apiGroups:
+  - ""
+  - image.openshift.io
+  resources:
+  - imagestreams/status
+  - imagestreamimports
+  verbs: [ get, list, watch ]
+- apiGroups:
+  - ""
+  resources:
+  - events
+  verbs: [ get, list ]
+- apiGroups:
+  - rbac.authorization.k8s.io
+  resources:
+  - roles
+  - rolebindings
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
+- apiGroups:
+  - ""
+  - template.openshift.io
+  resources:
+  - processedtemplates
+  - templateconfigs
+  - templateinstances
+  - templates
+  verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+- apiGroups:
+  - authorization.openshift.io
+  resources:
+  - rolebindings
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - route.openshift.io
   resources:
+  - routes
   - routes/custom-host
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - camel.apache.org
   resources:
   - "*"
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - monitoring.coreos.com
   resources:
@@ -369,24 +465,22 @@ rules:
   - prometheuses
   - servicemonitors
   - prometheusrules
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
   - integreatly.org
   resources:
   - grafanadashboards
-  verbs:
-  - "*"
+  verbs: [ get, list, create, update, delete, deletecollection, watch]
 - apiGroups:
-    - serving.knative.dev
+  - serving.knative.dev
   resources:
-    - services
-  verbs: [ get, list, watch ]
+  - services
+  verbs: [ get, list, watch]
 - apiGroups:
-    - eventing.knative.dev
+  - eventing.knative.dev
   resources:
-    - channels
-  verbs: [ get, list, watch ]
+  - channels
+  verbs: [ get, list, watch]
 ---
 EOT
         if [ $? -ne 0 ]; then
@@ -443,6 +537,7 @@ create_or_delete_openshift_resource() {
         fi
     else
         local url="https://raw.githubusercontent.com/syndesisio/syndesis/${tag:-master}/${resource}"
+
         if [ -z "$parameters" ]; then
             result=$(oc $what -f $url >$ERROR_FILE 2>&1)
         else
