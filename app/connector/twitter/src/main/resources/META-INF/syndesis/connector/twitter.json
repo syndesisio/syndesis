@@ -125,7 +125,7 @@
                 "group": "common",
                 "javaType": "long",
                 "kind": "parameter",
-                "labelHint": "Maximum number of direct messages to retrieve, limited to the last 30 days.",
+                "labelHint": "A number that affects internal behavior. You should not need to change it but if you do, never set it to less than 50.",
                 "required": false,
                 "secret": false,
                 "tags": [],
