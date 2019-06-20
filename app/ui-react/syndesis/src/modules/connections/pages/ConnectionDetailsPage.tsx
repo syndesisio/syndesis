@@ -28,18 +28,22 @@ export interface IConnectionDetailsOauthProps {
   connectorId: string;
   connectionName: string;
   configuredProperties: Pick<IConnectionOverview, 'configuredProperties'>;
+  onOAuthReconnect: () => void;
 }
 const ConnectionDetailsOAuth: React.FunctionComponent<
   IConnectionDetailsOauthProps
-> = ({ connectorId, connectionName, configuredProperties }) => {
+> = ({
+  connectorId,
+  connectionName,
+  configuredProperties,
+  onOAuthReconnect,
+}) => {
   const { t } = useTranslation(['connections', 'shared']);
   const { pushNotification } = React.useContext(UIContext);
   const { connectOAuth, isConnecting } = useOAuthFlow(
     connectorId,
     connectionName,
-    () => {
-      pushNotification(`Connection successful`, 'success');
-    }
+    onOAuthReconnect
   );
   const { loading: isVerifying, read: verify } = useConnectorVerifier();
 
@@ -174,6 +178,11 @@ export const ConnectionDetailsPage: React.FunctionComponent<
     await save({ configuredProperties });
     actions.setSubmitting(false);
     setIsWorking(false);
+  };
+
+  const onOAuthReconnect = async () => {
+    await save(connection);
+    pushNotification(`Connection successful`, 'success');
   };
 
   /**
@@ -314,6 +323,7 @@ export const ConnectionDetailsPage: React.FunctionComponent<
                     connectorId={connection.connector!.id!}
                     connectionName={connection.name}
                     configuredProperties={connection.configuredProperties || {}}
+                    onOAuthReconnect={onOAuthReconnect}
                   />
                 )}
               </>
