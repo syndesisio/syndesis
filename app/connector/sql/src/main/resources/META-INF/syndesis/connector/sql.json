@@ -58,7 +58,7 @@
         },
         "propertyDefinitionSteps": [
           {
-            "description": "Enter a SQL statement that returns results.",
+            "description": "Enter a SQL statement that returns results, such as SELECT.",
             "name": "SQL statement",
             "properties": {
               "query": {
