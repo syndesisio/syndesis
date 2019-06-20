@@ -5,6 +5,7 @@ import * as React from 'react';
 import { Container, PageSection } from '../../../src/Layout';
 import { GenericTable } from '../../Shared/GenericTable';
 import { EmptyViewsState } from '../Virtualizations/Views/EmptyViewsState';
+import './SqlClientContent.css';
 
 export interface ISqlClientContentProps {
   /**
@@ -94,25 +95,27 @@ export class SqlClientContent extends React.Component<ISqlClientContentProps> {
                         </small>
                       </Text>
                     </TextContent>
-                    <GenericTable
-                      columns={this.props.queryResultCols.map(col => ({
-                        cell: {
-                          formatters: [defaultCellFormat],
-                        },
-                        header: {
-                          formatters: [defaultHeaderFormat],
-                          label: col.label,
-                        },
-                        property: col.id,
-                      }))}
-                      rows={this.props.queryResultRows}
-                      rowKey={
-                        this.props.queryResultCols.length > 0
-                          ? this.props.queryResultCols[0].id
-                          : ''
-                      }
-                      {...this.props}
-                    />
+                    <div className="generic-table_content">
+                      <GenericTable
+                        columns={this.props.queryResultCols.map(col => ({
+                          cell: {
+                            formatters: [defaultCellFormat],
+                          },
+                          header: {
+                            formatters: [defaultHeaderFormat],
+                            label: col.label,
+                          },
+                          property: col.id,
+                        }))}
+                        rows={this.props.queryResultRows}
+                        rowKey={
+                          this.props.queryResultCols.length > 0
+                            ? this.props.queryResultCols[0].id
+                            : ''
+                        }
+                        {...this.props}
+                      />
+                    </div>
                   </>
                 ) : (
                   <EmptyState>
