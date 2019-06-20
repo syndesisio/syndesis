@@ -15,6 +15,10 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
+import static io.syndesis.server.endpoint.v1.handler.integration.IntegrationOverviewHelper.toCurrentIntegrationOverview;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Validator;
 import javax.ws.rs.GET;
@@ -26,15 +30,15 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.swagger.annotations.Api;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ListResult;
+import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
 import io.syndesis.common.model.filter.FilterOptions;
 import io.syndesis.common.model.filter.Op;
 import io.syndesis.common.model.integration.Integration;
@@ -56,11 +60,6 @@ import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
-
-import static io.syndesis.server.endpoint.v1.handler.integration.IntegrationOverviewHelper.toCurrentIntegrationOverview;
 
 @Path("/integrations")
 @Api(value = "integrations")
@@ -103,18 +102,20 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     public void delete(final String id) {
         final DataManager dataManager = getDataManager();
 
-        // Set all status to Undeployed and specs as deleted for all deployments
+        // Delete all deployments
         final Set<String> deploymentNames = dataManager.fetchAllByPropertyValue(IntegrationDeployment.class,
             "integrationId", id).map(deployment -> {
-                final IntegrationDeployment unpublishedAndDeleted = deployment.unpublishing().deleted();
-                dataManager.update(unpublishedAndDeleted);
-
-                return deployment.getSpec().getName();
+                String name = deployment.getSpec().getName();
+                String depId = deployment.getId().orElse(null);
+                if (depId != null) {
+                    dataManager.delete(IntegrationDeployment.class, depId);
+                }
+                return name;
             }).collect(Collectors.toSet());
 
-        final Integration existing = getIntegration(id);
-        final Integration updatedIntegration = new Integration.Builder().createFrom(existing)
-            .updatedAt(System.currentTimeMillis()).isDeleted(true).build();
+        // Delete all integration bulletin boards
+        dataManager.fetchIdsByPropertyValue(IntegrationBulletinBoard.class, "targetResourceId", id)
+            .forEach(ibbId -> dataManager.delete(IntegrationBulletinBoard.class, ibbId));
 
         // delete ALL versions
         for (final String name : deploymentNames) {
@@ -125,7 +126,7 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
             }
         }
 
-        Updater.super.update(id, updatedIntegration);
+        Deleter.super.delete(id);
     }
 
     @Override

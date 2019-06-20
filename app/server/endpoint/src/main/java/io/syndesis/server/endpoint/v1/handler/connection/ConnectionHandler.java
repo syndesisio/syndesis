@@ -164,6 +164,16 @@ public class ConnectionHandler
         return Creator.super.create(sec, connectionToCreate);
     }
 
+    @Override
+    public void delete(String id) {
+        final DataManager dataManager = getDataManager();
+
+        dataManager.fetchIdsByPropertyValue(ConnectionBulletinBoard.class, "targetResourceId", id)
+            .forEach(cbbId -> dataManager.delete(ConnectionBulletinBoard.class, cbbId));
+
+        Deleter.super.delete(id);
+    }
+
     Connection applyCredentialFlowStateTo(final Connection connection) {
         final Set<CredentialFlowState> flowStates = CredentialFlowState.Builder.restoreFrom(state::restoreFrom, request);
 
