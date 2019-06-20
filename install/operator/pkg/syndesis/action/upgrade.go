@@ -3,6 +3,7 @@ package action
 import (
 	"context"
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
@@ -48,7 +49,7 @@ func (a *upgradeAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 func (a *upgradeAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	if a.operatorVersion == "" {
-		operatorVersion, err := configuration.GetSyndesisVersionFromOperatorTemplate(a.scheme)
+		operatorVersion, err := syndesistemplate.GetSyndesisVersionFromOperatorTemplate(a.scheme)
 		if err != nil {
 			return err
 		}
@@ -211,27 +212,21 @@ func (a *upgradeAction) completeUpgrade(ctx context.Context, syndesis *v1alpha1.
 }
 
 func (a *upgradeAction) getUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis) ([]runtime.Object, error) {
-	rawResources, err := syndesistemplate.GetUpgradeResources(scheme, syndesis, syndesistemplate.UpgradeParams{
-		InstallParams: syndesistemplate.InstallParams{
-			OAuthClientSecret: "-",
-		},
-		UpgradeRegistry: configuration.Registry,
+	unstructured, err := syndesistemplate.GetUpgradeResources(scheme, syndesis, syndesistemplate.ResourceParams{
+		OAuthClientSecret: "-",
+		UpgradeRegistry:   *configuration.Registry,
 	})
-
 	if err != nil {
 		return nil, err
 	}
 
-	resources := make([]runtime.Object, 0)
-	for _, obj := range rawResources {
-		res, err := util.LoadResourceFromYaml(scheme, obj.Raw)
-		if err != nil {
-			return nil, err
-		}
-		resources = append(resources, res)
-	}
+	structured := []runtime.Object{}
+	structured, unstructured = util.SeperateStructuredAndUnstructured(a.scheme, unstructured)
 
-	return resources, nil
+	if len(unstructured) > 0 {
+		return nil, fmt.Errorf("Could not convert some objects to runtime.Object")
+	}
+	return structured, nil
 }
 
 func (a *upgradeAction) findUpgradePod(resources []runtime.Object) (*v1.Pod, error) {

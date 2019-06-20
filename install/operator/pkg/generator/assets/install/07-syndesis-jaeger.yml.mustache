@@ -1,0 +1,17 @@
+
+- apiVersion: io.jaegertracing/v1alpha1
+  kind: Jaeger
+  metadata:
+    labels:
+      app: jaeger
+    name: syndesis-jaeger
+    annotation:
+      optional: "true"
+  spec:
+    strategy: allInOne
+    all-in-one:
+      options:
+        memory:
+          max-traces: 100000
+      ingress:
+        enabled: false

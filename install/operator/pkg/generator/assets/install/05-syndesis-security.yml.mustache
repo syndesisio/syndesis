@@ -1,0 +1,26 @@
+- apiVersion: authorization.openshift.io/v1
+  kind: RoleBinding
+  metadata:
+    name: syndesis:editors
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+  roleRef:
+    name: edit
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-server
+- apiVersion: authorization.openshift.io/v1
+  kind: RoleBinding
+  metadata:
+    name: syndesis:viewers
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+  roleRef:
+    name: view
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-prometheus

@@ -1,3 +1,7 @@
+# To speed up docker based go builds, avoid sending
+# these files to docker
 vendor
-dep-cache
-tmp
+.DS_Store
+.dockerignore
+.gitignore
+.idea

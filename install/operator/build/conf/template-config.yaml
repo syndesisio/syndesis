@@ -1,0 +1,40 @@
+AllowLocalHost: false
+Debug: false
+EarlyAccess: false
+Images:
+  ImageStreamNamespace: ""
+  KomodoImagesPrefix: teiid
+  OAuthProxyImagePrefix: quay.io/openshift
+  PostgresExporterImagePrefix: wrouesnel
+  PrometheusImagePrefix: prom
+  Support:
+    OAuthProxy: oauth-proxy
+    OAuthProxyImage: origin-oauth-proxy
+    PostgresExporter: postgres_exporter
+    Postgresql: postgresql
+    Prometheus: prometheus
+  Syndesis:
+    Komodo: komodo-server
+    Rest: syndesis-server
+    S2i: syndesis-s2i
+    Ui: syndesis-ui
+    Upgrade: syndesis-upgrade
+    Verifier: syndesis-meta
+  SyndesisImagesPrefix: syndesis
+IncludeDint: true
+Name: fuse-ignite
+Ocp: false
+Oso: false
+Productized: false
+PrometheusRules: ""
+Registry: docker.io
+Tag: ""
+Tags:
+  Komodo: latest
+  OAuthProxy: v4.0.0
+  PostgresExporter: v0.4.7
+  Postgresql: "9.5"
+  Prometheus: v2.1.0
+  Syndesis: latest
+  Upgrade: latest
+WithDockerImages: false

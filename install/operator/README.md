@@ -21,32 +21,31 @@ A summary of the states:
 * **UpgradingLegacy**: The CR can go into this state only if the operator has detected that there's a legacy installation of Syndesis in the watched namespace and there's no Syndesis resource that can own it in the same namespace. The operator then creates a Syndesis resource using a configuration inferred from the legacy environment variables
 
 
-## Requirements
-
-This project can be built with **Go version 1.10+**.
-
-Other go binaries used:
-
-* [dep](https://github.com/golang/dep): for dependency management
-* [operator-sdk](https://github.com/operator-framework/operator-sdk): for building the operator image
-* [deepcopy-gen](https://github.com/kubernetes/gengo/tree/master/examples/deepcopy-gen) (optional): for updating deep-copy boilerplate when changing the model
-* [go-bindata](https://github.com/go-bindata/go-bindata) (optional): for updating embedded resources
-
 ## Building
 
-```
-dep ensure
-operator-sdk build syndesis/syndesis-operator
-```
+Just run:
 
-## Running
+````bash
+$ ./build.sh
+````
 
-```
-minishift addons enable admin-user
-minishift start
-oc login -u system:admin
-oc create -f deploy/syndesis-crd.yaml
-eval $(minishift docker-env)
-operator-sdk build syndesis/syndesis-operator
-oc create -f deploy/syndesis-operator.yaml
-```
+By default it tries to build the operator executable and container image using
+the following tools in this order:
+
+ 1. go and oc
+ 2. go and docker
+ 3. docker and oc
+ 4. just docker
+
+
+So at a minimum you should have one of those of tools installed.
+   
+    usage: ./build.sh [options]
+    
+    where options are:
+      --help                             display this help messages
+      --operator-build <auto|docker|go>  how to build the operator executable (default: auto)
+      --image-build <auto|docker|s2i>    how to build the image (default: auto)
+      --image-name <name>                docker image name (default: syndesis/syndesis-operator)
+      --s2i-stream-name <name>           s2i image stream name (default: syndesis-operator)
+

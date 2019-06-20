@@ -20,7 +20,6 @@ build::usage() {
 -f  --flash                    Skip checks and tests execution (fastest mode)
 -i  --image                    Build Docker via s2i images, too (for those modules creating images)
     --docker                   Use a plain Docker build for creating images. Used by CI for pushing to Docker Hub
-    --multi-stage              Multi-stage Dockerfile support for operator build (experimental)
 -p  --project <project>        Specifies the project / namespace to create images
 -g  --goals <g1>,<g2>, ..      Use custom Maven goals to execute for the build. Default goal is `install`
 -e  --ensure                   If building the operator , run 'dep ensure' before building. Otherwise ignored.
@@ -39,7 +38,6 @@ build::usage() {
                                argument is given, the MAVEN_MIRROR_URL environment variable is used or
                                'http://nexus.myproject:8081/nexus/content/groups/public', if none is set.
                                See also https://docs.openshift.com/container-platform/3.5/dev_guide/app_tutorials/maven_tutorial.html
-
 EOT
 
 }
@@ -47,9 +45,6 @@ EOT
 build::run() {
     # Maven helper funcs
     source "$(basedir)/commands/util/maven_funcs"
-
-    # For building the operator
-    source "$(basedir)/commands/util/operator_funcs"
 
     # For OpenShift based builds
     source "$(basedir)/commands/util/openshift_funcs"
@@ -165,27 +160,20 @@ maven_args() {
 
 do_operator() {
     local top_dir=$1
+    local tag=${2:-latest}
+    local OPERATOR_IMAGE="syndesis/syndesis-operator"
+
     echo "=============================================================================="
     echo "Building syndesis-operator"
     echo "=============================================================================="
 
-    local operator_dir="$top_dir/install/operator"
-
-    # New multi stage build for creating the operator image all in one step
-    if [ $(hasflag -i --image --docker) ] && [ $(hasflag --multi-stage) ]; then
-        if $(is_minishift_docker_daemon); then
-            echo "ERROR: Multistage build is not supported on Minishift as the Docker daemon in Minishift is too old"
-            exit 1
-        fi
-        create_multi_stage_operator_image "$operator_dir"
-        return
+    pushd "$top_dir/install/operator"
+    if [ $(hasflag -i --image --docker) ]; then
+        ./build.sh --image-build=docker --image-name="${OPERATOR_IMAGE}:$tag"
+    else
+        ./build.sh --image-build=s2i
     fi
-
-    build_operator "$operator_dir" "$(hasflag -l --local)" "$(hasflag -i --image --images)" "$(hasflag -f --flash --skip-tests)"
-
-    if [ "$(hasflag -i --image --docker)" ]; then
-        create_operator_image "$operator_dir" "$(hasflag --docker)"
-    fi
+    popd >/dev/null
 }
 
 do_camel_k() {

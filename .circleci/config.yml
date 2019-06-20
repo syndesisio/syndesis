@@ -357,6 +357,8 @@ jobs:
 
   operator:
     machine: true
+    docker:
+      - image: circleci/golang:1.12.5
     environment:
       DOCKER_IMAGES: syndesis-operator
       <<: *common_env

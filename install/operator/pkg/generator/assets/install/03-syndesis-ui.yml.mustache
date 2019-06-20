@@ -1,0 +1,147 @@
+- apiVersion: v1
+  kind: Service
+  metadata:
+    name: syndesis-ui
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-ui
+  spec:
+    ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 8080
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-ui
+- apiVersion: apps.openshift.io/v1
+  kind: DeploymentConfig
+  metadata:
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-ui
+    name: syndesis-ui
+  spec:
+    replicas: 1
+    selector:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/component: syndesis-ui
+    strategy:
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      resources:
+        limits:
+          memory: "256Mi"
+        requests:
+          memory: "20Mi"
+      type: Rolling
+    template:
+      metadata:
+        labels:
+          app: syndesis
+          syndesis.io/app: syndesis
+          syndesis.io/type: infrastructure
+          syndesis.io/component: syndesis-ui
+      spec:
+        serviceAccountName: syndesis-default
+        containers:
+        - name: syndesis-ui
+{{^WithDockerImages}}
+          image: ' '
+{{/WithDockerImages}}{{#WithDockerImages}}
+          image: '{{Env.SYNDESIS_REGISTRY}}/{{ Images.SyndesisImagesPrefix }}/{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}'
+{{/WithDockerImages}}
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+            initialDelaySeconds: 30
+          readinessProbe:
+            httpGet:
+              path: "/"
+              port: 8080
+            initialDelaySeconds: 1
+          ports:
+          - containerPort: 8080
+          volumeMounts:
+          - mountPath: /usr/share/nginx/html/config
+            name: config-volume
+          # Set to burstable with a low memory footprint to start (50 Mi)
+          resources:
+            limits:
+              memory: 255Mi
+            requests:
+              memory: 50Mi
+        volumes:
+        - configMap:
+            name: syndesis-ui-config
+          name: config-volume
+    triggers:
+{{^WithDockerImages}}
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - syndesis-ui
+        from:
+          kind: ImageStreamTag
+          name: '{{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}'
+          namespace: '{{Env.IMAGE_STREAM_NAMESPACE}}'
+      type: ImageChange
+{{/WithDockerImages}}
+    - type: ConfigChange
+- apiVersion: v1
+  kind: ConfigMap
+  metadata:
+    name: syndesis-ui-config
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-ui
+  data:
+    config.json: |
+      {
+        "apiBase": 'https://{{Env.ROUTE_HOSTNAME}}',
+        "apiEndpoint": "/api/v1",
+        "title": "Syndesis",
+        "consoleUrl": '{{Env.OPENSHIFT_CONSOLE_URL}}',
+        "project": '{{Env.OPENSHIFT_PROJECT}}',
+        "datamapper": {
+          "baseMappingServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/",
+          "baseJavaInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/java/",
+          "baseXMLInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/xml/",
+          "baseJSONInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/json/",
+          "disableMappingPreviewMode": false
+        },
+        "datavirt": { 
+          "dvUrl": "/vdb-builder/v1/"
+        },
+        "features" : {
+          "logging": false
+        },
+{{#Productized}}
+        "branding": {
+          "appName": "Fuse Online",
+          "favicon32": "/favicon-32x32.png",
+          "favicon16": "/favicon-16x16.png",
+          "touchIcon": "/apple-touch-icon.png",
+          "productBuild": true
+       }{{/Productized}}{{^Productized}}
+        "branding": {
+          "appName": "Syndesis",
+          "favicon32": "/favicon-32x32.png",
+          "favicon16": "/favicon-16x16.png",
+          "touchIcon": "/apple-touch-icon.png",
+          "productBuild": false
+       }{{/Productized}}
+      }
