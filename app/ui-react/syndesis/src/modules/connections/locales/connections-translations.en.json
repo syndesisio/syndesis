@@ -39,6 +39,7 @@
     "title": "{{name}} Configuration",
     "description": "This connection is configured using OAuth. Use the validate button to check if the connection is still authorized.",
     "validateButton": "Validate",
-    "reconnectButton": "Reconnect"
+    "reconnectButton": "Reconnect",
+    "settingsMissing": "OAuth settings needed to create this connection are missing. Provide the required parameters in the OAuth settings."
   }
 }

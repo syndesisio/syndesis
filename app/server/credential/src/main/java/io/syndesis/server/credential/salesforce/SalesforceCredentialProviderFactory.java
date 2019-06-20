@@ -20,6 +20,7 @@ import java.util.Collections;
 import io.syndesis.server.credential.CredentialProvider;
 import io.syndesis.server.credential.CredentialProviderFactory;
 import io.syndesis.server.credential.OAuth2CredentialProvider;
+import io.syndesis.server.credential.UnconfiguredProperties;
 import io.syndesis.server.credential.salesforce.SalesforceConfiguration.SalesforceApplicator;
 
 import org.springframework.boot.autoconfigure.social.SocialProperties;
@@ -39,7 +40,7 @@ public final class SalesforceCredentialProviderFactory implements CredentialProv
     }
 
     static SalesforceConnectionFactory
-    createConnectionFactory(final SocialProperties salesforceProperties) {
+        createConnectionFactory(final SocialProperties salesforceProperties) {
         final SalesforceConnectionFactory salesforce = new SalesforceConnectionFactory(salesforceProperties.getAppId(),
             salesforceProperties.getAppSecret());
 
@@ -52,6 +53,10 @@ public final class SalesforceCredentialProviderFactory implements CredentialProv
     }
 
     static CredentialProvider createCredentialProvider(final SocialProperties properties) {
+        if (properties instanceof UnconfiguredProperties) {
+            return new OAuth2CredentialProvider<>("salesforce");
+        }
+
         final SalesforceConnectionFactory connectionFactory = createConnectionFactory(properties);
 
         return new OAuth2CredentialProvider<>("salesforce", connectionFactory,

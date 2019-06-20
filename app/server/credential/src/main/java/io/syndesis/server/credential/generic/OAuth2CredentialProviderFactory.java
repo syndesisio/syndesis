@@ -20,6 +20,7 @@ import io.syndesis.server.credential.CredentialProviderFactory;
 import io.syndesis.server.credential.OAuth2Applicator;
 import io.syndesis.server.credential.OAuth2ConnectorProperties;
 import io.syndesis.server.credential.OAuth2CredentialProvider;
+import io.syndesis.server.credential.UnconfiguredProperties;
 
 import org.springframework.boot.autoconfigure.social.SocialProperties;
 import org.springframework.social.connect.support.OAuth2ConnectionFactory;
@@ -32,6 +33,10 @@ public class OAuth2CredentialProviderFactory implements CredentialProviderFactor
 
     @Override
     public CredentialProvider create(final SocialProperties properties) {
+        if (properties instanceof UnconfiguredProperties) {
+            return new OAuth2CredentialProvider<>("oauth2");
+        }
+
         final OAuth2ConnectorProperties oauth2Properties = (OAuth2ConnectorProperties) properties;
 
         final String appId = oauth2Properties.getAppId();

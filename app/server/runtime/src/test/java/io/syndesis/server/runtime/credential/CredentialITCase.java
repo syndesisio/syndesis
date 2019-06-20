@@ -24,6 +24,9 @@ import java.util.UUID;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.NewCookie;
 
+import io.syndesis.common.model.connection.ConfigurationProperty;
+import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.credential.AcquisitionMethod;
 import io.syndesis.server.credential.AcquisitionResponse;
 import io.syndesis.server.credential.AcquisitionResponse.State;
@@ -31,9 +34,6 @@ import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.Credentials;
 import io.syndesis.server.credential.OAuth2CredentialFlowState;
 import io.syndesis.server.credential.Type;
-import io.syndesis.common.model.connection.ConfigurationProperty;
-import io.syndesis.common.model.connection.Connection;
-import io.syndesis.common.model.connection.Connector;
 import io.syndesis.server.endpoint.v1.state.ClientSideState;
 import io.syndesis.server.runtime.BaseITCase;
 
@@ -91,14 +91,22 @@ public class CredentialITCase extends BaseITCase {
     @Before
     public void prepopulateDatabase() {
         final Connector provider = new Connector.Builder().id("test-provider")
-            .putProperty("clientId", new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_ID_TAG).build())
+            .putProperty("clientId", new ConfigurationProperty.Builder()
+                .addTag(Credentials.CLIENT_ID_TAG)
+                .build())
             .putProperty("clientSecret",
-                new ConfigurationProperty.Builder().addTag(Credentials.CLIENT_SECRET_TAG).build())
-            .putConfiguredProperty("clientId", "a-client-id").putConfiguredProperty("clientSecret", "a-client-secret")
+                new ConfigurationProperty.Builder()
+                    .addTag(Credentials.CLIENT_SECRET_TAG)
+                    .build())
+            .putConfiguredProperty("clientId", "a-client-id")
+            .putConfiguredProperty("clientSecret", "a-client-secret")
             .build();
         dataManager.create(provider);
 
-        dataManager.create(new Connection.Builder().id("test-connection").connector(provider).build());
+        dataManager.create(new Connection.Builder()
+            .id("test-connection")
+            .connector(provider)
+            .build());
     }
 
     @Test
@@ -204,8 +212,14 @@ public class CredentialITCase extends BaseITCase {
 
         final AcquisitionMethod acquisitionMethod = acquisitionMethodEntity.getBody();
 
-        final AcquisitionMethod salesforce = new AcquisitionMethod.Builder().type(Type.OAUTH2).label("test-provider")
-            .icon("test-provider").label("test-provider").description("test-provider").build();
+        final AcquisitionMethod salesforce = new AcquisitionMethod.Builder()
+            .type(Type.OAUTH2)
+            .label("test-provider")
+            .icon("test-provider")
+            .label("test-provider")
+            .description("test-provider")
+            .configured(true)
+            .build();
 
         assertThat(acquisitionMethod).isEqualTo(salesforce);
     }

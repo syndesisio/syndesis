@@ -31,21 +31,38 @@ public final class OAuth1CredentialProvider<A> extends BaseCredentialProvider {
 
     private final Applicator<OAuthToken> applicator;
 
+    private boolean configured;
+
     private final OAuth1ConnectionFactory<A> connectionFactory;
 
     private final String id;
 
+    public OAuth1CredentialProvider(final String id) {
+        this(id, null, null, false);
+    }
+
     public OAuth1CredentialProvider(final String id, final OAuth1ConnectionFactory<A> connectionFactory,
         final Applicator<OAuthToken> applicator) {
+        this(id, connectionFactory, applicator, true);
+    }
+
+    private OAuth1CredentialProvider(final String id, final OAuth1ConnectionFactory<A> connectionFactory,
+        final Applicator<OAuthToken> applicator, final boolean configured) {
         this.id = id;
         this.connectionFactory = connectionFactory;
         this.applicator = applicator;
+        this.configured = configured;
     }
 
     @Override
     public AcquisitionMethod acquisitionMethod() {
-        return new AcquisitionMethod.Builder().label(labelFor(id)).icon(iconFor(id)).type(Type.OAUTH1)
-            .description(descriptionFor(id)).build();
+        return new AcquisitionMethod.Builder()
+            .label(labelFor(id))
+            .icon(iconFor(id))
+            .type(Type.OAUTH1)
+            .description(descriptionFor(id))
+            .configured(configured)
+            .build();
     }
 
     @Override
