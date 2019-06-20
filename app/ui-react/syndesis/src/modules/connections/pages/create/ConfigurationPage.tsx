@@ -3,6 +3,7 @@ import * as H from '@syndesis/history';
 import { IConnector } from '@syndesis/models';
 import {
   ConnectionCreatorLayout,
+  ConnectionSetupOAuthCard,
   ConnectorAuthorization,
   ConnectorConfigurationForm,
   PageLoader,
@@ -13,6 +14,7 @@ import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
+import globalRoutes from '../../../routes';
 import {
   ConnectionCreatorBreadSteps,
   WithConnectorForm,
@@ -137,6 +139,13 @@ export const ConfigurationPage: React.FunctionComponent = () => {
     );
   };
 
+  const supportsOAuth =
+    acquisitionMethod &&
+    acquisitionMethod.type &&
+    acquisitionMethod.type.startsWith('OAUTH');
+  const configuredForOAuth =
+    acquisitionMethod && (acquisitionMethod.configured as boolean);
+
   return (
     <WithLeaveConfirmation
       i18nTitle={t('connections:create:unsavedChangesTitle')}
@@ -161,14 +170,39 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                   loaderChildren={<PageLoader />}
                   errorChildren={<ApiError />}
                 >
-                  {() =>
-                    acquisitionMethod && acquisitionMethod.type && acquisitionMethod.type.startsWith('OAUTH') ? (
-                      <OAuthFlow
-                        connectorId={connector.id!}
-                        connectorName={connector.name}
-                        onSuccess={onOAuthSuccess}
-                      />
-                    ) : (
+                  {() => {
+                    if (configuredForOAuth) {
+                      return (
+                        <OAuthFlow
+                          connectorId={connector.id!}
+                          connectorName={connector.name}
+                          onSuccess={onOAuthSuccess}
+                        />
+                      );
+                    }
+
+                    if (supportsOAuth) {
+                      return (
+                        <ConnectionSetupOAuthCard
+                          i18nTitle={t(
+                            'connections:create:configure:configurationTitle',
+                            {
+                              name: connector.name,
+                            }
+                          )}
+                          i18nDescription={t(
+                            'connections:oauth:settingsMissing'
+                          )}
+                          i18nOAuthSettingsButton={t('shared:Settings')}
+                          backHref={resolvers.create.selectConnector()}
+                          oauthSettingsHref={
+                            globalRoutes.settings.oauthApps.root
+                          }
+                        />
+                      );
+                    }
+
+                    return (
                       <WithConnectorForm connector={connector} onSave={onSave}>
                         {({
                           fields,
@@ -201,8 +235,8 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                           </ConnectorConfigurationForm>
                         )}
                       </WithConnectorForm>
-                    )
-                  }
+                    );
+                  }}
                 </WithLoader>
               </PageSection>
             }

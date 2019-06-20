@@ -22,6 +22,7 @@ import io.syndesis.common.model.ListResult;
 import io.syndesis.common.model.connection.ConfigurationProperty;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
+import io.syndesis.server.credential.AcquisitionMethod;
 import io.syndesis.server.credential.CredentialFlowState;
 import io.syndesis.server.credential.CredentialProvider;
 import io.syndesis.server.credential.CredentialProviderLocator;
@@ -104,14 +105,22 @@ public class SetupITCase extends BaseITCase {
         put("/api/v1/setup/oauth-apps/twitter", twitter);
 
         given().ignoreExceptions().await().atMost(10, SECONDS).pollInterval(1, SECONDS).until(() -> {
-            return locator.providerWithId("twitter") != null;
+            final CredentialProvider twitterProvider = locator.providerWithId("twitter");
+
+            final AcquisitionMethod acquisitionMethod = twitterProvider.acquisitionMethod();
+
+            return acquisitionMethod.configured();
         });
 
         delete("/api/v1/setup/oauth-apps/twitter");
 
         given().ignoreExceptions().await().atMost(10, SECONDS).pollInterval(1, SECONDS).until(() -> {
             try {
-                return locator.providerWithId("twitter") == null;
+                final CredentialProvider twitterProvider = locator.providerWithId("twitter");
+
+                final AcquisitionMethod acquisitionMethod = twitterProvider.acquisitionMethod();
+
+                return !acquisitionMethod.configured();
             } catch (final IllegalArgumentException e) {
                 return e.getMessage().startsWith("No property tagged with `oauth-client-id` on connector");
             }
