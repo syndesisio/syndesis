@@ -158,7 +158,12 @@ public class CredentialHandler {
 
     static void removeCredentialCookies(final HttpServletRequest request,
         final HttpServletResponse response) {
-        Arrays.stream(request.getCookies()).filter(c -> c.getName().startsWith(CredentialFlowState.CREDENTIAL_PREFIX))
+        final Cookie[] cookies = request.getCookies();
+        if (cookies == null) {
+            return;
+        }
+
+        Arrays.stream(cookies).filter(c -> c.getName().startsWith(CredentialFlowState.CREDENTIAL_PREFIX))
             .forEach(c -> {
                 final Cookie removal = new Cookie(c.getName(), "");
                 removal.setPath("/");
