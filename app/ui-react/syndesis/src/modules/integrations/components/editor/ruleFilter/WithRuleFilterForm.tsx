@@ -75,6 +75,7 @@ export const WithRuleFilterForm: React.FunctionComponent<
     rules: {
       arrayDefinition: {
         op: {
+          defaultValue: 'contains',
           description: t('integrations:editor:ruleForm:operatorDescription'),
           displayName: t('integrations:editor:ruleForm:operatorDisplay'),
           enum: filterOptions.ops,

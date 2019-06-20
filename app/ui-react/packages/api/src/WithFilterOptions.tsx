@@ -20,18 +20,22 @@ function getDefaultOps() {
     },
     {
       label: 'not equals',
-      operator: '==',
+      operator: '!=',
     },
     {
+      label: 'less than',
       operator: '<',
     },
     {
+      label: 'less than or equal to',
       operator: '<=',
     },
     {
+      label: 'greater than',
       operator: '>',
     },
     {
+      label: 'greater than or equal to',
       operator: '>=',
     },
     {
