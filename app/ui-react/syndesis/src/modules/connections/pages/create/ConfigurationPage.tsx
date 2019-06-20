@@ -162,7 +162,7 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                   errorChildren={<ApiError />}
                 >
                   {() =>
-                    acquisitionMethod ? (
+                    acquisitionMethod && acquisitionMethod.type && acquisitionMethod.type.startsWith('OAUTH') ? (
                       <OAuthFlow
                         connectorId={connector.id!}
                         connectorName={connector.name}
