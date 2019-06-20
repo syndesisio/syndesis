@@ -132,7 +132,9 @@ export default class ExtensionImportPage extends React.Component<
                           : await uploadExtension(files[0]);
 
                         pushNotification(
-                          `${uploaded.id} was uploaded`,
+                          i18n.t('extensions:extension.extensionUploadSuccessMessage', {
+                            extensionName: uploaded.name,
+                          }),
                           'success'
                         );
 
