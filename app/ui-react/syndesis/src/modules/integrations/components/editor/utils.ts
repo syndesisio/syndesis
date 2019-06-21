@@ -298,7 +298,7 @@ export function mergeConnectionsSources(
     ),
     ...extensions.reduce(
       (extentionsByAction, extension) => {
-        extension.actions.forEach(a => {
+        (extension.actions || []).forEach(a => {
           let properties = {};
           if (
             a.descriptor &&
