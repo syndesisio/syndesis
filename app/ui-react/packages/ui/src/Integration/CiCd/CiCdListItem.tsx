@@ -1,5 +1,4 @@
-import { Button } from 'patternfly-react';
-import { ListViewItem } from 'patternfly-react';
+import { Button, ListViewInfoItem, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../helpers';
 
@@ -37,8 +36,12 @@ export class CiCdListItem extends React.Component<ICiCdListItemProps> {
           this.props.name
         )}-list-item`}
         heading={this.props.name}
-        description={this.props.i18nUsesText}
-        additionalInfo={[]}
+        description={''}
+        additionalInfo={[
+          <ListViewInfoItem key={0}>
+            <i>{this.props.i18nUsesText}</i>
+          </ListViewInfoItem>,
+        ]}
         actions={
           <div>
             <Button

@@ -50,6 +50,7 @@
   "DeletingIntegrationFailedMessage": "Error deleting integration: {{error}}",
   "Running": "Running",
   "Stopped": "Stopped",
+  "UsedByNIntegrations": "Used by {{uses}} integrations",
   "detail": {
     "History": "History",
     "lastPublished": "Last published on ",

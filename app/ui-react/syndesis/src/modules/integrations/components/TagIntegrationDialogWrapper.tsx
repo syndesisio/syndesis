@@ -53,7 +53,7 @@ export class TagIntegrationDialogWrapper extends React.Component<
               <WithIntegrationTags
                 integrationId={this.props.targetIntegrationId}
               >
-                {({ data: tags, hasData: hasTags, error: tagError }) => (
+                {({ data: tags , hasData: hasTags, error: tagError }) => (
                   <WithEnvironments disableUpdates={true}>
                     {({
                       data: environments,
@@ -76,9 +76,9 @@ export class TagIntegrationDialogWrapper extends React.Component<
                             errorChildren={<ApiError />}
                           >
                             {() => {
-                              const mappedItems = environments.map(item => ({
-                                name: item,
-                                selected: typeof tags[item] !== 'undefined',
+                              const mappedItems = environments.map((item) => ({
+                                name: item as string,
+                                selected: typeof tags[item as string] !== 'undefined',
                               }));
                               return (
                                 <TagIntegrationDialogBody
