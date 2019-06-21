@@ -39,8 +39,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.olingo.client.api.ODataClient;
 import org.apache.olingo.client.api.communication.response.ODataRetrieveResponse;
 import org.apache.olingo.client.api.domain.ClientEntity;
-import org.apache.olingo.client.api.domain.ClientObjectFactory;
-import org.apache.olingo.client.api.domain.ClientPrimitiveValue;
 import org.apache.olingo.client.api.domain.ClientProperty;
 import org.apache.olingo.client.core.ODataClientFactory;
 import org.apache.olingo.commons.api.Constants;
@@ -308,8 +306,6 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
 
     @Test
     public void testPatchODataRouteWithNoKeyPredicate() throws Exception {
-        int initialResultCount = defaultTestServer.getResultCount();
-
         Step directStep = createDirectStep();
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
@@ -317,9 +313,7 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
 
 
         String resourcePath = defaultTestServer.resourcePath();
-        String keyPredicate = "1";
         String nameProperty = "Name";
-        String originalName = getPropertyFromEntity(keyPredicate, nameProperty);
 
         Step odataStep = createODataStep(odataConnector, resourcePath);
 
@@ -368,16 +362,6 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
         }
     }
 
-    private ClientProperty cloneUpdateProperty(ClientObjectFactory factory, ClientProperty original, String newValue) {
-        if (! original.hasPrimitiveValue()) {
-            // Only support primitives in this testing builder at the moment
-            throw new UnsupportedOperationException();
-        }
-
-        ClientPrimitiveValue primitiveValue = factory.newPrimitiveValueBuilder().buildString(newValue);
-        return factory.newPrimitiveProperty(original.getName(), primitiveValue);
-    }
-
     private void updateProperty(String serviceURI, String resourcePath, String keyPredicate, String property, String value) throws Exception {
         URI httpURI = URI.create(serviceURI + FORWARD_SLASH +
                                  resourcePath + OPEN_BRACKET +
@@ -423,13 +407,18 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
     public void testPatchODataRouteOnRefServer() throws Exception {
         Step directStep = createDirectStep();
 
+        //
+        // Ensure we are using our own individual RW URI so not to impinge
+        // on other tests seeing as we're modifying data
+        //
+        String refServiceURI = getRealRefServiceUrl(REF_SERVICE_URI);
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
-                                                            .property(SERVICE_URI, REF_SERVICE_URI));
+                                                            .property(SERVICE_URI, refServiceURI));
 
         String resourcePath = "People";
         String keyPredicate = "russellwhyte";
         String nameProperty = "MiddleName";
-        String originalName = queryProperty(REF_SERVICE_URI, resourcePath, keyPredicate, nameProperty);
+        String originalName = queryProperty(refServiceURI, resourcePath, keyPredicate, nameProperty);
 
         Step odataStep = createODataStep(odataConnector, resourcePath);
 
@@ -463,12 +452,16 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
             String expected = createResponseJson(HttpStatusCode.NO_CONTENT);
             JSONAssert.assertEquals(expected, status, JSONCompareMode.LENIENT);
 
-            String newName = queryProperty(REF_SERVICE_URI, resourcePath, keyPredicate, nameProperty);
+            String newName = queryProperty(refServiceURI, resourcePath, keyPredicate, nameProperty);
             assertEquals(newMiddleName, newName);
             assertNotEquals(originalName, newName);
         } finally {
+            //
             // Reset property back to original value
-            updateProperty(REF_SERVICE_URI, resourcePath, keyPredicate, nameProperty, originalName);
+            // Not strictly necessary as our own special service created but
+            // just in case it ever pops up again.
+            //
+            updateProperty(refServiceURI, resourcePath, keyPredicate, nameProperty, originalName);
         }
     }
 }
