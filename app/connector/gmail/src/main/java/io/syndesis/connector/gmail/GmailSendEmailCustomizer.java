@@ -30,9 +30,12 @@ import javax.mail.internet.MimeMessage;
 
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
+import org.apache.camel.RuntimeCamelException;
 import org.apache.camel.component.google.mail.internal.GmailUsersMessagesApiMethod;
 import org.apache.camel.component.google.mail.internal.GoogleMailApiCollection;
 import org.apache.camel.util.ObjectHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.api.client.util.Base64;
 import com.google.common.base.Splitter;
@@ -41,6 +44,8 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class GmailSendEmailCustomizer implements ComponentProxyCustomizer {
+
+    private static final Logger LOG = LoggerFactory.getLogger(GmailSendEmailCustomizer.class);
 
     private String to;
     private String subject;
@@ -96,6 +101,23 @@ public class GmailSendEmailCustomizer implements ComponentProxyCustomizer {
 
     private com.google.api.services.gmail.model.Message createMessage(String to, String from, String subject,
             String bodyText, String cc, String bcc) throws MessagingException, IOException {
+
+        if (ObjectHelper.isEmpty(to)) {
+            throw new RuntimeCamelException("Cannot create gmail message as no 'to' address is available");
+        }
+
+        if (ObjectHelper.isEmpty(from)) {
+            throw new RuntimeCamelException("Cannot create gmail message as no 'from' address is available");
+        }
+
+        if (ObjectHelper.isEmpty(subject)) {
+            LOG.warn("New gmail message wil have no 'subject'. This may not be want you wanted?");
+        }
+
+        if (ObjectHelper.isEmpty(bodyText)) {
+            LOG.warn("New gmail message wil have no 'body text'. This may not be want you wanted?");
+        }
+
         Properties props = new Properties();
         Session session = Session.getDefaultInstance(props, null);
 
