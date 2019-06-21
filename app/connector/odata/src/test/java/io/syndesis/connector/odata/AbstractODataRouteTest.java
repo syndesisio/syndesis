@@ -15,6 +15,16 @@
  */
 package io.syndesis.connector.odata;
 
+import java.io.IOException;
+import org.apache.http.HttpHost;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.protocol.BasicHttpContext;
+import org.apache.http.protocol.ExecutionContext;
+import org.apache.http.protocol.HttpContext;
 import org.apache.olingo.commons.api.http.HttpStatusCode;
 import org.junit.After;
 import org.junit.Before;
@@ -89,4 +99,25 @@ public abstract class AbstractODataRouteTest extends AbstractODataTest {
         CLOSE_BRACE;
     }
 
+    /*
+     * Taken with appreciation from camel-olingo4 code found at
+     * https://github.com/apache/camel/blob/master/components/camel-olingo4/camel-olingo4-component/src/test/java/org/apache/camel/component/olingo4/AbstractOlingo4TestSupport.java#L77
+     *
+     * Every request to the demo OData 4.0
+     * (http://services.odata.org/TripPinRESTierService) generates unique
+     * service URL with postfix like (S(tuivu3up5ygvjzo5fszvnwfv)) for each
+     * session This method makes request to the base URL and return URL with
+     * generated postfix
+     */
+    @SuppressWarnings("deprecation")
+    protected String getRealRefServiceUrl(String baseUrl) throws ClientProtocolException, IOException {
+        CloseableHttpClient httpclient = HttpClients.createDefault();
+        HttpGet httpGet = new HttpGet(baseUrl);
+        HttpContext httpContext = new BasicHttpContext();
+        httpclient.execute(httpGet, httpContext);
+        HttpUriRequest currentReq = (HttpUriRequest)httpContext.getAttribute(ExecutionContext.HTTP_REQUEST);
+        HttpHost currentHost = (HttpHost)httpContext.getAttribute(ExecutionContext.HTTP_TARGET_HOST);
+
+        return currentReq.getURI().isAbsolute() ? currentReq.getURI().toString() : (currentHost.toURI() + currentReq.getURI());
+    }
 }
