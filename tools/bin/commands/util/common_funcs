@@ -149,7 +149,7 @@ git_rebase_upstream() {
 has_changes() {
   local subtree_path="${1:-}"
   local ref="${2:-master}"
-  local hash="${CIRCLE_SHA1:$(git rev-parse HEAD)}"
+  local hash="${CIRCLE_SHA1:-$(git rev-parse HEAD)}"
 
   local changed_paths="$(git diff ..${ref} --name-only | tr '\n' ' ') $(git status --porcelain=v1 | cut -c 4- | tr '\n' ' ')"
 
