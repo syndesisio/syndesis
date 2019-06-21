@@ -242,7 +242,7 @@ export default class ExtensionImportPage extends React.Component<
                               this.state.extension.id &&
                               this.state.extension.extensionId ? (
                                 <ExtensionImportReview
-                                  actions={this.state.extension.actions.map(
+                                  actions={(this.state.extension.actions || []).map(
                                     (action: Action) =>
                                       ({
                                         description: action.description,
