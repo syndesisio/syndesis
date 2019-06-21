@@ -91,6 +91,36 @@ public class PropertyGeneratorsTest {
     }
 
     @Test
+    public void shouldDetermineSecurityDefinitionToUseFromTheConfiguredAuthenticationType() {
+        final BasicAuthDefinition securityDefinition = new BasicAuthDefinition();
+
+        final Swagger swagger = new Swagger()
+            .securityDefinition("username-password", securityDefinition);
+
+        final ConnectorSettings settings = new ConnectorSettings.Builder()
+            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "basic")
+            .build();
+
+        final Optional<BasicAuthDefinition> got = PropertyGenerators.securityDefinition(swagger, settings, BasicAuthDefinition.class);
+        assertThat(got).containsSame(securityDefinition);
+    }
+
+    @Test
+    public void shouldDetermineSecurityDefinitionToUseFromTheConfiguredAuthenticationTypeWithName() {
+        final BasicAuthDefinition securityDefinition = new BasicAuthDefinition();
+
+        final Swagger swagger = new Swagger()
+            .securityDefinition("username-password", securityDefinition);
+
+        final ConnectorSettings settings = new ConnectorSettings.Builder()
+            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "basic:name")
+            .build();
+
+        final Optional<BasicAuthDefinition> got = PropertyGenerators.securityDefinition(swagger, settings, BasicAuthDefinition.class);
+        assertThat(got).containsSame(securityDefinition);
+    }
+
+    @Test
     public void shouldReturnNullIfNoHostGivenAnywhere() {
         assertThat(determineHost(new Swagger())).isNull();
         assertThat(determineHost(new Swagger().scheme(Scheme.HTTP))).isNull();
