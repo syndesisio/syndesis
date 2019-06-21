@@ -1,4 +1,5 @@
 import { WithEnvironmentHelpers, WithEnvironments } from '@syndesis/api';
+import { IEnvironment } from '@syndesis/api/src';
 import {
   Breadcrumb,
   CiCdList,
@@ -20,7 +21,7 @@ import { ApiError, PageTitle } from '../../../../shared';
 import resolvers from '../../resolvers';
 
 function getFilteredAndSortedEnvironments(
-  environments: string[],
+  environments: IEnvironment[],
   activeFilters: IActiveFilter[],
   currentSortType: ISortType,
   isSortAscending: boolean
@@ -28,15 +29,17 @@ function getFilteredAndSortedEnvironments(
   let answer = environments;
   activeFilters.forEach((filter: IActiveFilter) => {
     const valueToLower = filter.value.toLowerCase();
-    answer = answer.filter(name => name.toLowerCase().includes(valueToLower));
+    answer = answer.filter(({ name }) =>
+      name.toLowerCase().includes(valueToLower)
+    );
   });
-  answer = answer.sort((a, b) => {
+  answer = answer.sort(({ name: a }, { name: b }) => {
     const left = isSortAscending ? a : b;
     const right = isSortAscending ? b : a;
     return left.localeCompare(right);
   });
-  return answer.map(name => ({
-    i18nUsesText: '',
+  return answer.map(({ name, uses }) => ({
+    i18nUsesText: i18n.t('integrations:UsedByNIntegrations', { uses }),
     name,
   }));
 }
@@ -77,7 +80,7 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
     return (
       <Translation ns={['integrations', 'shared']}>
         {t => (
-          <WithEnvironments>
+          <WithEnvironments withUses={true}>
             {({ data, hasData, error, read }) => (
               <WithListViewToolbarHelpers
                 defaultFilterType={filterByName}
@@ -85,7 +88,7 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
               >
                 {helpers => {
                   const filteredAndSortedEnvironments = getFilteredAndSortedEnvironments(
-                    data,
+                    data as IEnvironment[],
                     helpers.activeFilters,
                     helpers.currentSortType,
                     helpers.isSortAscending
