@@ -179,6 +179,7 @@ export function generateViewEditorState(
     vwName,
     PROJECTED_COLS_ALL,
     srcPaths,
+    false,
     vwDescription
   );
 }
@@ -206,7 +207,8 @@ export function generateViewEditorStates(
         serviceVdbName,
         viewInfo.viewName,
         PROJECTED_COLS_ALL,
-        srcPaths
+        srcPaths,
+        false
       )
     );
   }
@@ -220,6 +222,7 @@ export function generateViewEditorStates(
  * @param name the view name
  * @param projectedCols projected columns for the view
  * @param srcPaths paths for the sources used in the view
+ * @param userDefined specifies if the ddl has been altered from defaults
  * @param description the (optional) view description
  * @param viewDdl the (optional) view DDL
  */
@@ -228,6 +231,7 @@ function getViewEditorState(
   name: string,
   projectedCols: ProjectedColumn[],
   srcPaths: string[],
+  userDefined: boolean,
   description?: string,
   viewDdl?: string
 ) {
@@ -236,6 +240,7 @@ function getViewEditorState(
     compositions: [],
     ddl: viewDdl ? viewDdl : '',
     isComplete: true,
+    isUserDefined: userDefined,
     keng__description: description ? description : '',
     projectedColumns: projectedCols,
     sourcePaths: srcPaths,
