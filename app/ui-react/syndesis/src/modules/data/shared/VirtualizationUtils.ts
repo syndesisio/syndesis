@@ -401,7 +401,24 @@ export function getPublishingDetails(
  * @param viewDefinition the ViewDefinition
  */
 export function getPreviewSql(viewDefinition: ViewDefinition): string {
-  // TODO: This assumes a single source view.  Will need to expand capability later
+  if (viewDefinition.ddl) {
+    // Remove extra whitespaces, tabs and line feeds
+    const trimmedSql: string = viewDefinition.ddl
+      .replace(/\s+/g, ' ')
+      .replace(/^\s|\s$/g, '');
+    // Split the DDL string by the AS SELECT segment
+    const ddlFragments = trimmedSql.split('AS SELECT ');
+    // If the string array is > 1 prepend the remaining SQL statement to the SELECT
+    if (ddlFragments.length > 1) {
+      return 'SELECT ' + ddlFragments[1];
+    }
+    // TODO: More complex SQL may contain inner joins and SELECT statements, so we'll
+    // need to expand this to more complicated cases.
+  }
+
+  // If no DDL is found then we assume a simple single source view
+  // and use the select * from sourceTableName
+  // TODO:  address multiple source tables
   const sourcePath = viewDefinition.sourcePaths[0];
   if (sourcePath) {
     return 'SELECT * FROM ' + getPreviewTableName(sourcePath) + ';';
