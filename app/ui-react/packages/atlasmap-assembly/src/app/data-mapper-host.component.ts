@@ -149,6 +149,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     outputDoc.type = this.outputDocument.documentType;
     outputDoc.inspectionType = this.outputDocument.inspectionType;
     outputDoc.inspectionSource = this.outputDocument.inspectionSource;
+    outputDoc.inspectionResult = this.outputDocument.inspectionResult;
     outputDoc.id = this.outputDocument.id;
     outputDoc.name = this.outputDocument.name;
     outputDoc.description = this.outputDocument.description;
