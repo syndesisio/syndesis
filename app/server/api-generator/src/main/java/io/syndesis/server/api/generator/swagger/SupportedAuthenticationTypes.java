@@ -16,6 +16,7 @@
 package io.syndesis.server.api.generator.swagger;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -50,6 +51,16 @@ enum SupportedAuthenticationTypes {
         this.label = label;
         this.filter = filter;
         propertyValue = new ConfigurationProperty.PropertyValue.Builder().value(name()).label(label).build();
+    }
+
+    public static SupportedAuthenticationTypes fromConfiguredPropertyValue(final String value) {
+        final int idx = Objects.requireNonNull(value, "value").indexOf(':');
+
+        return SupportedAuthenticationTypes.valueOf(idx > 0 ? value.substring(0, idx) : value);
+    }
+
+    public static SupportedAuthenticationTypes fromSecurityDefinition(final String value) {
+        return valueOf(value);
     }
 
     static ConfigurationProperty.PropertyValue asPropertyValue(final String name, final SecuritySchemeDefinition def) {
