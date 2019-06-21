@@ -25,6 +25,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SupportedAuthenticationTypesTest {
 
     @Test
+    public void shouldDetermineValueFromConfiguredPropertyValue() {
+        assertThat(SupportedAuthenticationTypes.fromConfiguredPropertyValue("basic")).isEqualTo(SupportedAuthenticationTypes.basic);
+        assertThat(SupportedAuthenticationTypes.fromConfiguredPropertyValue("basic:name")).isEqualTo(SupportedAuthenticationTypes.basic);
+        assertThat(SupportedAuthenticationTypes.fromConfiguredPropertyValue("basic:")).isEqualTo(SupportedAuthenticationTypes.basic);
+    }
+
+    @Test
+    public void shouldDetermineValueFromSecurityDefinitionValue() {
+        assertThat(SupportedAuthenticationTypes.fromConfiguredPropertyValue("basic")).isEqualTo(SupportedAuthenticationTypes.basic);
+    }
+
+    @Test
     public void shouldGenerateLabelsWithDescription() {
         final BasicAuthDefinition withDescription = new BasicAuthDefinition();
         withDescription.setDescription("description");

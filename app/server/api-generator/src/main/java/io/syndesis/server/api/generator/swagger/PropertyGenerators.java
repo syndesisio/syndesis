@@ -252,6 +252,35 @@ enum PropertyGenerators {
         return createHostUri(schemeToUse, hostToUse, portToUse);
     }
 
+    static <T extends AbstractSecuritySchemeDefinition> Optional<T> securityDefinition(final Swagger swagger, final ConnectorSettings connectorSettings,
+        final Class<T> type) {
+        final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
+
+        if (securityDefinitions == null) {
+            return empty();
+        }
+
+        final Optional<T> maybeSecurityDefinition = securityDefinitions.values().stream()
+            .filter(type::isInstance)
+            .filter(SupportedAuthenticationTypes::supports)
+            .map(type::cast)
+            .findFirst();
+        if (!maybeSecurityDefinition.isPresent()) {
+            return empty();
+        }
+
+        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
+        final String configuredAuthenticationType = configuredProperties.get(authenticationType.name());
+
+        final T securityDefinition = maybeSecurityDefinition.get();
+        if (configuredAuthenticationType == null || SupportedAuthenticationTypes
+            .fromConfiguredPropertyValue(configuredAuthenticationType) == SupportedAuthenticationTypes.fromSecurityDefinition(securityDefinition.getType())) {
+            return maybeSecurityDefinition;
+        }
+
+        return empty();
+    }
+
     private static Optional<ConfigurationProperty> apiKeyProperty(final Swagger swagger, final ConfigurationProperty template,
         final ConnectorSettings connectorSettings,
         final Function<ApiKeyAuthDefinition, String> defaultValueExtractor) {
@@ -327,34 +356,6 @@ enum PropertyGenerators {
         final String name) {
         return securityDefinition(swagger, connectorSettings, OAuth2Definition.class).map(definition -> vendorExtension(definition, template, name))
             .orElse(empty());
-    }
-
-    private static <T extends AbstractSecuritySchemeDefinition> Optional<T> securityDefinition(final Swagger swagger, final ConnectorSettings connectorSettings,
-        final Class<T> type) {
-        final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
-
-        if (securityDefinitions == null) {
-            return empty();
-        }
-
-        final Optional<T> maybeSecurityDefinition = securityDefinitions.values().stream()
-            .filter(type::isInstance)
-            .filter(SupportedAuthenticationTypes::supports)
-            .map(type::cast)
-            .findFirst();
-        if (!maybeSecurityDefinition.isPresent()) {
-            return empty();
-        }
-
-        final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
-        final String configuredAuthenticationType = configuredProperties.get(authenticationType.name());
-
-        final T securityDefinition = maybeSecurityDefinition.get();
-        if (configuredAuthenticationType == null || configuredAuthenticationType.equals(securityDefinition.getType())) {
-            return maybeSecurityDefinition;
-        }
-
-        return empty();
     }
 
     private static Optional<ConfigurationProperty> vendorExtension(final SecuritySchemeDefinition definition,
