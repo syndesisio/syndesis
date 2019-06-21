@@ -38,6 +38,7 @@ You can download it directly from https://github.com/minishift/minishift/release
 --test-support            Allow test support endpoint for syndesis-server
 --datavirt                Install Data Virtualizations
 --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building to speed up builds.
+--deploy-latest           Deploy latest tags from dockerhub.
 --man                     Open HTML documentation in the Syndesis Developer Handbook
 ----
 

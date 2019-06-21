@@ -44,6 +44,7 @@ minishift::usage() {
                               Use quotes and start with a space before appending the options.
     --datavirt                Install Data Virtualizations.
     --maven-mirror            Install Maven Mirror to be used with --maven-mirror when building.
+    --deploy-latest           Deploy latest tags from dockerhub.
 EOT
 }
 
@@ -171,6 +172,10 @@ minishift::run() {
     if [ $(hasflag --open -o) ]; then
         open_url "$(minishift openshift service syndesis-oauthproxy --url)"
     fi
+
+    if [ $(hasflag --deploy-latest) ]; then
+        deploy_latest
+    fi
 }
 
 login_as_admin() {
@@ -241,4 +246,17 @@ start_minishift() {
             --cpus ${cpus:-$DEFAULT_CPUS} \
             --disk-size ${disksize:-$DEFAULT_DISK_SIZE} \
             --openshift-version ${openshift_version:-$DEFAULT_OPENSHIFT_VERSION}
+}
+
+deploy_latest() {
+    DOCKER_IMAGES="syndesis-meta syndesis-s2i syndesis-server syndesis-ui syndesis-ui-legacy"
+    eval $(minishift docker-env)
+    docker login -u $(oc whoami) -p $(oc whoami -t) $(minishift openshift registry) >/dev/null 2>&1
+    for image in ${DOCKER_IMAGES}; do
+      docker pull syndesis/${image}
+      docker tag syndesis/${image} $(minishift openshift registry)/syndesis/${image}
+      docker push $(minishift openshift registry)/syndesis/${image}
+    done
+    docker logout $(minishift openshift registry) >/dev/null 2>&1
+    eval $(minishift docker-env -u)
 }

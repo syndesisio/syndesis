@@ -30,7 +30,6 @@ build::usage() {
 -c  --clean                    Run clean builds (mvn clean)
     --incremental [ref]        Run an incremental build, i.e. skip building of a module if committed or uncomitted changes
                                against [ref] (default master) are not part of that module
-
     --resume <m1>              Resume build from maven module (mvn -rf m1)
     --batch-mode               Run mvn in batch mode
     --camel-snapshot <version> Run a build with a specific Camel snapshot. The the
