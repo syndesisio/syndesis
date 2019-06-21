@@ -356,7 +356,6 @@ jobs:
           - ~/.m2
 
   operator:
-    machine: true
     docker:
       - image: circleci/golang:1.12.5
     environment:
