@@ -362,6 +362,7 @@ jobs:
       DOCKER_IMAGES: syndesis-operator
       <<: *common_env
     steps:
+      - setup_remote_docker
       - checkout
       - run:
           name: Build Operator
