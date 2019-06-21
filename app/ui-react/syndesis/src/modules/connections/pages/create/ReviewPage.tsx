@@ -8,7 +8,7 @@ import {
   PageLoader,
   PageSection,
 } from '@syndesis/ui';
-import { useRouteData, WithLoader } from '@syndesis/utils';
+import { useRouteData, validateRequiredProperties, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
@@ -96,6 +96,12 @@ export const ReviewPage: React.FunctionComponent = () => {
             actions.setSubmitting(false);
           }
         };
+        const validator = (values: ISaveForm) =>
+          validateRequiredProperties(
+            definition,
+            (name: string) => `${name} is required`,
+            values
+          );
 
         return (
           <WithLoader
@@ -113,6 +119,8 @@ export const ReviewPage: React.FunctionComponent = () => {
                   name: connector.name,
                 }}
                 onSave={onSave}
+                validate={validator}
+                validateInitial={validator}
               >
                 {({
                   fields,
