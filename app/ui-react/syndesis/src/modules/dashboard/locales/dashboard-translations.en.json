@@ -6,7 +6,7 @@
   "linkToConnections": "View All Connections",
   "linkToIntegrations": "View All Integrations",
   "title": "System Metrics",
-  "description": "This description has not yet been actually defined, please send help.",
+  "description": "Messages is the total number of messages processed by integrations in this environment in the last 30 days, including any integrations that are no longer running or deleted.",
   "titleIntegrationBoard": "Integration Board",
   "titleIntegrationUpdates": "Recent Updates",
   "titleTopIntegrations": "Top {{count}} Integrations",
