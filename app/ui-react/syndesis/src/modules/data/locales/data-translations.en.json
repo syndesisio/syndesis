@@ -70,6 +70,9 @@
     "importViewsFailed": "Import data source failed for virtualization {{name}}. Details: {{details}}",
     "createViewSuccess": "Created view named: {{name}}.",
     "createViewFailed": "Create view failed. Details: {{details}}",
+    "saveViewSuccess": "Saved view : {{name}}.",
+    "saveViewFailed": "Save view {{name}} failed. Details: {{details}}",
+    "validateViewRequired": "Please re-validate view {{name}} and re-try",
     "activeConnectionsEmptyStateTitle": "No Active Connections",
     "activeConnectionsEmptyStateInfo": "There are no active connections available. Try again."
   }

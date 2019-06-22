@@ -95,6 +95,7 @@ export interface ProjectedColumn {
 
 export interface ViewDefinition {
   isComplete: boolean;
+  isUserDefined: boolean;
   viewName: string;
   keng__description: string;
   sourcePaths: string[];

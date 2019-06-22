@@ -61,7 +61,6 @@ export interface IViewEditContentProps {
 }
 
 interface IViewEditContentState {
-  ddlChanged: boolean;
   ddlValue: string;
   initialDdlValue: string;
   needsValidation: boolean;
@@ -78,7 +77,6 @@ export class ViewEditContent extends React.Component<
   constructor(props: IViewEditContentProps) {
     super(props);
     this.state = {
-      ddlChanged: false,
       ddlValue: this.props.viewDdl,
       initialDdlValue: this.props.viewDdl,
       needsValidation: false,
@@ -89,8 +87,7 @@ export class ViewEditContent extends React.Component<
   }
 
   public handleDdlValidation = () => (event: any) => {
-    const currentDdl = this.state.ddlValue;
-    this.props.onValidate(currentDdl);
+    this.props.onValidate(this.state.ddlValue);
     this.setState({
       needsValidation: false,
     });
@@ -98,7 +95,6 @@ export class ViewEditContent extends React.Component<
 
   public handleDdlChange(editor: ITextEditor, data: any, value: string) {
     this.setState({
-      ddlChanged: true,
       ddlValue: value,
       needsValidation: true,
     });
@@ -146,7 +142,7 @@ export class ViewEditContent extends React.Component<
             />
             <Button
               bsStyle="default"
-              disabled={this.props.isWorking}
+              disabled={this.props.isWorking || !this.state.needsValidation}
               onClick={this.handleDdlValidation()}
             >
               {this.props.isWorking ? (
@@ -170,7 +166,6 @@ export class ViewEditContent extends React.Component<
               disabled={
                 this.props.isWorking ||
                 !this.props.isValid ||
-                !this.state.ddlChanged ||
                 this.state.needsValidation
               }
               onClick={this.handleSave()}
