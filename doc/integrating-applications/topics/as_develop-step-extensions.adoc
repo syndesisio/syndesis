@@ -33,6 +33,15 @@ the following dependency to your Maven project:
 </dependency>
 ----
 
+Because Spring Boot is the integration runtime, to inject beans 
+into a Camel context, be sure to follow standard Spring Boot 
+practices. For example, 
+link:https://docs.spring.io/spring-boot/docs/1.5.11.RELEASE/reference/html/boot-features-developing-auto-configuration.html[create an auto configuration class] 
+and create beans there. However, the default behavior is that 
+extension code is not subject to package scanning. Consequently, 
+you must create and populate the `META-INF/spring.factories` file
+in a step extension.
+
 include::r_example-route-xml-fragment.adoc[leveloffset=+1]
 
 include::r_example-route-builder.adoc[leveloffset=+1]
