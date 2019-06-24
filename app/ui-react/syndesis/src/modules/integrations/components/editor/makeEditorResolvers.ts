@@ -131,6 +131,7 @@ export const configureDescribeDataShapeMapper = ({
   step,
   ...rest
 }: IEditorConfigureDataShape) => {
+  // TODO eventually this page can also be used for conditional flow step, at which point a connection object won't be available, this will need to be revisited
   const { params, state } = configureSelectActionMapper(rest);
   return {
     params: {
