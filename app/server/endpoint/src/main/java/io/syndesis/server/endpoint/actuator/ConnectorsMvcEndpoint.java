@@ -35,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @ConditionalOnProperty(value = "endpoints.connectors.enabled", havingValue = "true", matchIfMissing = true)
 public class ConnectorsMvcEndpoint extends EndpointMvcAdapter {
 
-    private static Logger LOG = LoggerFactory.getLogger(ConnectorsMvcEndpoint.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ConnectorsMvcEndpoint.class);
 
     private ConnectorsEndpoint delegate;
 
