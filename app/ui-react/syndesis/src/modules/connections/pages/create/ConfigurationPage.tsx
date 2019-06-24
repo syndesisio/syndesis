@@ -132,8 +132,13 @@ export const ConfigurationPage: React.FunctionComponent = () => {
    * about to be closed
    */
   const onOAuthSuccess = () => {
+    // any configuredProperties that have already been configured on the
+    // connector need to be passed to the connection for the connection
+    // validation to function
+    const configuredProperties = connector.configuredProperties;
     history.push(
       resolvers.create.review({
+        configuredProperties,
         connector,
       })
     );
