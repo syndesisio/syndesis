@@ -4,9 +4,9 @@ import (
 	"errors"
 	templatev1 "github.com/openshift/api/template/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift/template"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
+	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"k8s.io/apimachinery/pkg/runtime"
 )
 
@@ -14,31 +14,19 @@ const (
 	SyndesisUpgrateTemplateName = "syndesis-upgrade"
 )
 
-type UpgradeParams struct {
-	InstallParams
-	UpgradeRegistry *string
-}
-
-func GetUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params UpgradeParams) ([]runtime.RawExtension, error) {
-	resources, err := GetInstallResources(scheme, syndesis, params.InstallParams)
+func GetUpgradeResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, params ResourceParams) ([]unstructured.Unstructured, error) {
+	renderContext, err := GetRenderContext(syndesis, params)
 	if err != nil {
 		return nil, err
 	}
 
-	upgrateTempl, err := findUpgradeTemplate(scheme, resources)
-	if err != nil {
-		return nil, err
-	}
-	processor, err := template.NewTemplateProcessor(scheme, syndesis.Namespace)
+	// Render the files in the update directory
+	res, err := generator.RenderDir("./update/", renderContext)
 	if err != nil {
 		return nil, err
 	}
 
-	paramMap := configuration.GetEnvVars(syndesis)
-	paramMap[string(configuration.EnvOpenshiftOauthClientSecret)] = params.OAuthClientSecret
-	paramMap[string(configuration.EnvUpgradeRegistry)] = *params.UpgradeRegistry
-
-	return processor.Process(upgrateTempl, paramMap)
+	return res, nil
 }
 
 func findUpgradeTemplate(scheme *runtime.Scheme, list []runtime.RawExtension) (*templatev1.Template, error) {

@@ -2,6 +2,7 @@ package action
 
 import (
 	"context"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/template"
 
 	"k8s.io/client-go/kubernetes"
 
@@ -31,7 +32,7 @@ func (a checkUpdatesAction) CanExecute(syndesis *v1alpha1.Syndesis) bool {
 
 func (a checkUpdatesAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis) error {
 	if a.operatorVersion == "" {
-		operatorVersion, err := configuration.GetSyndesisVersionFromOperatorTemplate(a.scheme)
+		operatorVersion, err := template.GetSyndesisVersionFromOperatorTemplate(a.scheme)
 		if err != nil {
 			return err
 		}

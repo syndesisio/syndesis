@@ -1,19 +1,3 @@
-# Custom Entries
-
-bin
-.go
-.push-*
-.image-*
-.dockerfile-*
-vendor
-.vendor
-.cache
-
-syndesis-operator
-dep-cache
 # Temporary Build Files
-tmp/_output
-tmp/_test
-
-build_local.sh
+build/_output
 deploy/operatorsource.yaml

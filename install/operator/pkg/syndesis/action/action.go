@@ -28,6 +28,7 @@ type baseAction struct {
 	client client.Client
 	scheme *runtime.Scheme
 	api    kubernetes.Interface
+	mgr    manager.Manager
 }
 
 var actionLog = logf.Log.WithName("action")
@@ -55,6 +56,7 @@ func newBaseAction(mgr manager.Manager, api kubernetes.Interface, typeS string) 
 		mgr.GetClient(),
 		mgr.GetScheme(),
 		api,
+		mgr,
 	}
 }
 
