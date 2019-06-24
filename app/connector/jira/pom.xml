@@ -45,14 +45,6 @@
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
-                    <exclusion>
-                        <groupId>com.atlassian.jira</groupId>
-                        <artifactId>jira-rest-java-client-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.atlassian.jira</groupId>
-                        <artifactId>jira-rest-java-client-core</artifactId>
-                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -175,6 +167,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 
