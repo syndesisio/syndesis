@@ -20,7 +20,7 @@ readopt() {
                return
             fi
             echo $var
-            break;
+            return
         fi
         if [[ "$var" = "${filter}"* ]]; then
             local value="${var//${filter}=/}"

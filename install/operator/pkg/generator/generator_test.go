@@ -21,11 +21,11 @@ func TestGenerator(t *testing.T) {
 	err = json.Unmarshal(templateConfig, gen)
 	require.NoError(t, err)
 
-	resources, err := generator.RenderFSDir(generator.GetAssetsFS(true), "./install/", gen)
+	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./install/", gen)
 	require.NoError(t, err)
 	assert.True(t, len(resources) > 0)
 
-	resources, err = generator.RenderFSDir(generator.GetAssetsFS(true), "./upgrade/", gen)
+	resources, err = generator.RenderFSDir(generator.GetAssetsFS(), "./upgrade/", gen)
 	require.NoError(t, err)
 	assert.True(t, len(resources) > 0)
 }
