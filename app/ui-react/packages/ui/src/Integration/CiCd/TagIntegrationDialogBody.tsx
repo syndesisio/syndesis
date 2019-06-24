@@ -33,9 +33,10 @@ export class TagIntegrationDialogBody extends React.Component<
     this.handleChange = this.handleChange.bind(this);
   }
   public handleChange(name: string, selected: boolean) {
-    const items = this.props.initialItems.map(item =>
+    const items = this.state.items.map(item =>
       item.name === name ? { name, selected } : item
     );
+    this.setState({ items });
     this.props.onChange(items, this.props.initialItems);
   }
   public render() {
