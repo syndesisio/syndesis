@@ -1,0 +1,26 @@
+// This assembly is included in the following assemblies:
+// connecting/master.adoc
+
+[id='connecting-to-amazon-sqs_{context}']
+= Connecting to Amazon Simple Queue Service (SQS)
+:context: sqs
+
+An integration can retrieve data from an Amazon S3 bucket or copy data into
+an Amazon S3 bucket. To do this, you create an Amazon S3
+connection and then add that Amazon S3 connection to an integration flow.
+For details, see:
+
+* xref:prerequisites-for-creating-amazon-sqs-connections_{context}[]
+* xref:creating-amazon-sqs-connections_{context}[]
+* xref:adding-amazon-sqs-connection-retrieve_{context}[]
+* xref:adding-amazon-sqs-connection-send_{context}[]
+
+include::r_prerequisites-for-creating-amazon-sqs-connections.adoc[leveloffset=+1]
+
+include::p_creating-amazon-sqs-connections.adoc[leveloffset=+1]
+
+include::p_adding-amazon-sqs-connection-retrieve.adoc[leveloffset=+1]
+
+include::p_adding-amazon-sqs-connection-send.adoc[leveloffset=+1]
+
+:context: connectors
