@@ -188,6 +188,7 @@ export function toUIIntegrationStepCollection(
         const prev = getPreviousStepWithDataShape(steps, position);
         if (
           prev &&
+          prev.stepKind !== CHOICE && // TODO: suppress this until we can also use the describe data page for a step syndesisio/syndesis#5456
           prev.action &&
           prev.action.descriptor &&
           prev.action.descriptor.outputDataShape
