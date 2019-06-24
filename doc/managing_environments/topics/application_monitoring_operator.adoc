@@ -1,0 +1,26 @@
+[id='application-monitoring-operator']
+= Monitoring integrations with integr8ly
+
+== Prerequisites
+
+The installation of the integr8ly's application monitoring stack requires a user account with cluster admin role. OpenShift's link:https://docs.openshift.com/container-platform/3.11/admin_guide/manage_rbac.html#managing-role-bindings[documentation] explains how to manage role binding.
+
+On Minishift, run the following commands to add the `cluster-admin` role to the `developer` user account:
+
+....
+oc login -u system:admin
+oc adm policy add-cluster-role-to-user cluster-admin developer
+oc login -u developer
+....
+
+== Install the Application Monitoring Operator
+
+Follow this link:https://github.com/integr8ly/application-monitoring-operator/blob/master/README.md[documentation].
+
+
+== Configuring Syndesis
+
+Create the following resources to expose the integration apps for monitoring:
+
+* link:https://github.com/syndesisio/syndesis/tree/master/install/addons/syndesis-integrations-service.yml[install/addons/syndesis-integrations-service.yml]
+* link:https://github.com/syndesisio/syndesis/tree/master/install/addons/syndesis-integrations-service.yml[install/addons/syndesis-integrations-servicemonitor.yml]
