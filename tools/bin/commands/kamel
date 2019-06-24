@@ -159,7 +159,7 @@ EOF
         | oc apply -f -
 
     # Configuring catalog
-    local syndesis_version=$(grep -Pzo "(?s)<parent>.*?<version>\K[^<]*" $app_dir/integration/pom.xml)
+    local syndesis_version=$(grep -Pzo "(?s)<parent>.*?<version>\K[^<]*" $app_dir/integration/pom.xml | tr -d '\0')
     echo "Using Syndesis version: $syndesis_version"
 
     local catalog=$LOCAL_MAVEN_REPOSITORY/io/syndesis/integration/integration-runtime-camelk/$syndesis_version/integration-runtime-camelk-$syndesis_version-catalog.yaml
