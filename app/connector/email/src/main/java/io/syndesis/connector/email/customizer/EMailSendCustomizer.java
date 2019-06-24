@@ -17,6 +17,8 @@ package io.syndesis.connector.email.customizer;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.mail.MessagingException;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -28,6 +30,15 @@ import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class EMailSendCustomizer implements ComponentProxyCustomizer, EMailConstants {
+
+    private static final String TAG_START = "\\<\\w+((\\s+\\w+(\\s*\\=\\s*(?:\".*?\"|'.*?'|[^'\"\\>\\s]+))?)+\\s*|\\s*)\\>";
+    private static final String TAG_END = "\\</\\w+\\>";
+    private static final String TAG_SELF_CLOSING = "\\<\\w+((\\s+\\w+(\\s*\\=\\s*(?:\".*?\"|'.*?'|[^'\"\\>\\s]+))?)+\\s*|\\s*)/\\>";
+    private static final String HTML_ENTITY = "&[a-zA-Z][a-zA-Z0-9]+;";
+    private static final Pattern HTML_PATTERN = Pattern.compile(
+        "("+TAG_START+".*"+TAG_END+")|("+TAG_SELF_CLOSING+")|("+HTML_ENTITY+")",
+        Pattern.DOTALL
+    );
 
     private String from;
     private String to;
@@ -90,6 +101,31 @@ public class EMailSendCustomizer implements ComponentProxyCustomizer, EMailConst
         in.setHeader(MAIL_BCC, updateMail(bcc, mail.getBcc()));
         in.setHeader(MAIL_SUBJECT, updateMail(subject, mail.getSubject()));
 
-        in.setBody(updateMail(text, mail.getContent()));
+        Object content = updateMail(text, mail.getContent());
+        in.setBody(content);
+        setContentType(content, in);
+    }
+
+    private boolean isHtml(String content) {
+        if (ObjectHelper.isEmpty(content)) {
+            return false;
+        }
+
+        Matcher htmlMatch = HTML_PATTERN.matcher(content);
+        return htmlMatch.find();
+    }
+
+    private void setContentType(Object content, Message in) {
+        if (content instanceof String) {
+
+            if (isHtml(content.toString())) {
+                in.setHeader(Exchange.CONTENT_TYPE, TEXT_HTML);
+            } else {
+                in.setHeader(Exchange.CONTENT_TYPE, TEXT_PLAIN);
+            }
+
+        }
+
+        // Don't override the header if anything else
     }
 }
