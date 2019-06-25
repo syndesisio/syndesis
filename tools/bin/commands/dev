@@ -23,6 +23,7 @@ dev::usage() {
     --cleanup                 Removes 'Completed' pods
     --refresh                 Used in conjuction with --cookie, forces a refresh of the cookie.
                               Ex: curl -k --cookie $(syndesis dev --cookie --refresh)  "https://$(oc get route syndesis  --template={{.spec.host}})/api/v1/connections"
+    --update-manifest <name>  Updates the json manifest for the given connector
     --version                 Show running version of cluster
 EOT
 }
@@ -107,6 +108,33 @@ create_api_cookie() {
          "https://$openshift_ip_and_port/oauth/authorize/approve" 2>/dev/null
 }
 
+update_connector_manifest() {
+    local connector=$1
+    manifest_dir=$(appdir)/connector/$connector/target/classes/META-INF/syndesis/connector
+
+    syndesis_server_pod=$(oc get pod -l syndesis.io/component=syndesis-server -o=jsonpath='{.items[0].metadata.name}' --ignore-not-found)
+    if [ -z "$syndesis_server_pod" ]; then
+        echo "Syndesis server pod not found"
+        exit 1
+    fi
+
+    if [ -d "$manifest_dir" ]; then
+        files=$(ls $manifest_dir | grep ".json")
+        if [ -z "$files" ]; then
+            echo "No manifest files found in $manifest_dir"
+            exit 1
+        fi
+
+        for m in $files; do
+            oc cp $manifest_dir/$m $syndesis_server_pod:/tmp/
+            oc exec $syndesis_server_pod -- curl -X POST http://localhost:8181/connectors -H "Content-Type: application/json" -H "Syndesis-Xsrf-Token: awesome" -d @/tmp/$m
+            echo "Manifest $m updated"
+        done
+    else
+        echo "Cannot find manifest dir $manifest_dir"
+        exit 1
+    fi
+}
 
 dev::run() {
     source "$(basedir)/commands/util/openshift_funcs"
@@ -151,5 +179,13 @@ dev::run() {
         fi
         oc --as system:admin adm prune images --registry-url=http://$(oc --as system:admin -n default get route docker-registry -o jsonpath='{.spec.host}') --confirm
         echo done
+    elif [ $(hasflag --update-manifest) ]; then
+        local connector=$(readopt --update-manifest)
+        if [ -z "${connector}" ]; then
+            echo "Cannot get the name of the connector manifest to sync"
+            echo "Usage: syndesis dev --update-manifest <connector-name>"
+            exit 1
+        fi
+        update_connector_manifest $connector
     fi
 }
