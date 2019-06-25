@@ -75,7 +75,10 @@ export class IntegrationsListItem extends React.Component<
             className={'integration-list-item__additional-info'}
           >
             {this.props.isConfigurationRequired && (
-              <div className={'integration-list-item__config-required'}>
+              <div
+                className={'integration-list-item__config-required'}
+                data-testid={`integrations-list-item-config-required`}
+              >
                 <Icon
                   type={'pf'}
                   name={'warning-triangle-o'}

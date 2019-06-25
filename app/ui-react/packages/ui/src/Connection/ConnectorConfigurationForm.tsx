@@ -51,6 +51,7 @@ export class ConnectorConfigurationForm extends React.Component<
       <Container>
         <form
           className="required-pf"
+          data-testid={'connector-configuration-form'}
           role="form"
           onSubmit={this.props.handleSubmit}
           style={{
@@ -114,7 +115,11 @@ export class ConnectorConfigurationForm extends React.Component<
                   }
                 >
                   {this.props.isNextLoading ? (
-                    <Loader size={'xs'} inline={true} />
+                    <Loader
+                      size={'xs'}
+                      inline={true}
+                      data-testid={'connection-creator-layout-loading'}
+                    />
                   ) : null}
                   {this.props.isLastStep ? (
                     this.props.i18nSave

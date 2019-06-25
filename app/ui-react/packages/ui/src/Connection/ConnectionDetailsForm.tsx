@@ -95,6 +95,7 @@ export class ConnectionDetailsForm extends React.Component<
               <Card.Body>
                 <form
                   className="required-pf"
+                  data-testid={'connection-details-form'}
                   role="form"
                   onSubmit={this.props.handleSubmit}
                 >

@@ -155,10 +155,12 @@ export class ConnectionCard extends React.PureComponent<
             <div className="connection-card__dropdown">
               <Dropdown
                 id={`connection-${this.props.name}-menu`}
+                data-testid={'connection-card-dropdown'}
                 onSelect={this.onMenuSelect}
                 toggle={
                   <KebabToggle
                     id="connection-card-kebab"
+                    data-testid={'connection-card-kebab'}
                     onToggle={this.onToggle}
                   />
                 }
@@ -237,7 +239,10 @@ export class ConnectionCard extends React.PureComponent<
                 >
                   {this.props.name}
                 </Title>
-                <Text className="connection-card__description">
+                <Text
+                  className="connection-card__description"
+                  data-testid={'connection-card-description'}
+                >
                   {this.props.description}
                 </Text>
               </div>
