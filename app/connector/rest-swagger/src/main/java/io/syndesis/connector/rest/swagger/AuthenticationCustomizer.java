@@ -30,7 +30,8 @@ public class AuthenticationCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(final ComponentProxyComponent proxyComponent, final Map<String, Object> options) {
         consumeOption(options, "authenticationType", authenticationTypeObject -> {
-            final AuthenticationType authenticationType = AuthenticationType.valueOf(String.valueOf(authenticationTypeObject));
+            final String authenticationTypeAsString = String.valueOf(authenticationTypeObject);
+            final AuthenticationType authenticationType = AuthenticationType.fromString(authenticationTypeAsString);
             if (authenticationType == AuthenticationType.none) {
                 return;
             }
