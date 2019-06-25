@@ -186,7 +186,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                       updatedIntegration,
                       updatedFlows,
                       stepWithUpdatedDescriptor.id!,
-                      stepWithUpdatedDescriptor.action!.descriptor!
+                      stepWithUpdatedDescriptor.action!.descriptor!.inputDataShape!
                     );
                     history.push(
                       this.props.postConfigureHref(
