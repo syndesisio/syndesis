@@ -50,7 +50,7 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 
 	if releaseVersion := *configuration.ReleaseVersion; len(releaseVersion) > 0 {
 		var fileUrl bytes.Buffer
-		fileUrl.WriteString("https://raw.githubusercontent.com/lgarciaaco/fuse-online-install/")
+		fileUrl.WriteString("https://raw.githubusercontent.com/syndesisio/fuse-online-install/")
 		fileUrl.WriteString(releaseVersion)
 		fileUrl.WriteString("/resources/fuse-online-template.yml")
 
