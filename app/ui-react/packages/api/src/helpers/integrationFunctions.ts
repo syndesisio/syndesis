@@ -685,15 +685,14 @@ export async function setFlow(
  * Returns a new integration object containing the supplied conditional flows for the given step ID
  * @param integration
  * @param newFlows
- * @param configuredFlowIds
- * @param defaultFlowId
  * @param stepId
+ * @param updatedDataShape the input data shape of the conditional flow step to apply as an output data shape to flows
  */
 export function reconcileConditionalFlows(
   integration: Integration,
   newFlows: Flow[],
   stepId: string,
-  descriptor: ActionDescriptor
+  updatedDataShape: DataShape
 ) {
   const flowsWithoutStepId = getFlowsWithoutLinkedStepId(
     integration.flows!,
@@ -702,7 +701,7 @@ export function reconcileConditionalFlows(
   const updatedFlows = newFlows.map(flow => {
     const newStep = setDataShapeOnStep(
       { ...flow.steps![0] },
-      descriptor.outputDataShape!,
+      updatedDataShape,
       false
     );
     return applyUpdatedStep(flow, newStep, 0);
