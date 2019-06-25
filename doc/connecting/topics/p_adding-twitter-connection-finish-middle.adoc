@@ -6,8 +6,8 @@
 
 In the middle of a flow, or to finish a simple integration, you can 
 add a Twitter connection that sends a direct message to a Twitter 
-user or group. A direct message is a private message that goes to 
-only the specified user or group. 
+user. A direct message is a private message that goes to 
+only the specified user. 
 
 .Prerequisites
 * You created a Twitter connection.
@@ -32,7 +32,7 @@ a message that you map from a previous step has precedence over the
 message that you specify here. 
 
 . In the *User* field, enter the Twitter handle of the user who you want 
-to send a direct message to. 
+to send a direct message to. For example, both *Aslan* and *@Aslan* are correct.
 
 . Click *Done* to add the connection to the integration.
 
