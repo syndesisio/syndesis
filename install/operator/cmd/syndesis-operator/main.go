@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
-	"github.com/syndesisio/syndesis/install/operator/pkg/openshift"
-	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 	"os"
 	"runtime"
+
+	"github.com/syndesisio/syndesis/install/operator/pkg/openshift"
+	"github.com/syndesisio/syndesis/install/operator/pkg/syndesis/configuration"
 
 	"github.com/operator-framework/operator-sdk/pkg/k8sutil"
 	"github.com/operator-framework/operator-sdk/pkg/leader"
@@ -37,6 +38,7 @@ func main() {
 	configuration.TemplateLocation = pflag.StringP("template", "t", "/conf/syndesis-template.yml", "Path to template used for installation")
 	configuration.AddonsDirLocation = pflag.StringP("addons", "a", "", "Path to the addons directory used for installation")
 	configuration.Registry = pflag.StringP("registry", "r", "docker.io", "Registry to use for loading images like the upgrade pod")
+	configuration.ReleaseVersion = pflag.StringP("release-version", "v", "", "Alternatively, download resources based on the release version")
 
 	// The logger instantiated here can be changed to any logger
 	// implementing the logr.Logger interface. This logger will

@@ -3,7 +3,10 @@ package util
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
+	"net/http"
+	"os"
 	"strings"
 
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
@@ -116,4 +119,25 @@ func jsonIfYaml(source []byte, filename string) ([]byte, error) {
 		return yaml.ToJSON(source)
 	}
 	return source, nil
+}
+
+func DownloadFile(filepath string, url string) error {
+
+	// Get the data
+	resp, err := http.Get(url)
+	if err != nil {
+		return err
+	}
+	defer resp.Body.Close()
+
+	// Create the file
+	out, err := os.Create(filepath)
+	if err != nil {
+		return err
+	}
+	defer out.Close()
+
+	// Write the body to file
+	_, err = io.Copy(out, resp.Body)
+	return err
 }
