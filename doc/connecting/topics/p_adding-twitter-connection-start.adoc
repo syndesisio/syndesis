@@ -87,7 +87,7 @@ an instance of each one.
 |Obtains tweets that contain an instance of `My` and do not contain 
 an instance of `Product`. 
 
-|`@MyProduct`
+|`#MyProduct`
 |Obtains tweets that contain the `MyProduct` hashtag. 
 
 |===
