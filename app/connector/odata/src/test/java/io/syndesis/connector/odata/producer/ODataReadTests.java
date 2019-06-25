@@ -15,12 +15,16 @@
  */
 package io.syndesis.connector.odata.producer;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import java.util.Map;
+import org.apache.camel.Endpoint;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.direct.DirectEndpoint;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.olingo.commons.api.http.HttpStatusCode;
+import org.apache.camel.component.olingo4.Olingo4Endpoint;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,14 +47,15 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.odata.AbstractODataRouteTest;
 import io.syndesis.connector.odata.component.ODataComponentFactory;
-import io.syndesis.connector.odata.customizer.ODataDeleteCustomizer;
+import io.syndesis.connector.odata.consumer.AbstractODataReadRouteTest;
+import io.syndesis.connector.odata.customizer.ODataReadToCustomizer;
 import io.syndesis.connector.support.util.PropertyBuilder;
 
 @DirtiesContext
 @RunWith(SpringRunner.class)
 @SpringBootTest(
     classes = {
-        ODataDeleteTests.TestConfiguration.class
+        ODataReadTests.TestConfiguration.class
     },
     properties = {
         "spring.main.banner-mode = off",
@@ -63,9 +68,9 @@ import io.syndesis.connector.support.util.PropertyBuilder;
         DirtiesContextTestExecutionListener.class
     }
 )
-public class ODataDeleteTests extends AbstractODataRouteTest {
+public class ODataReadTests extends AbstractODataRouteTest {
 
-    public ODataDeleteTests() throws Exception {
+    public ODataReadTests() throws Exception {
         super();
     }
 
@@ -80,13 +85,14 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
     @Override
     protected ConnectorAction createConnectorAction() throws Exception {
         ConnectorAction odataAction = new ConnectorAction.Builder()
-            .description("Delete resource entities from the server")
-             .id("io.syndesis:odata-delete-connector")
-             .name("Delete")
+            .description("Read resource entities from the server subject to keyPredicates")
+             .id("io.syndesis:" + Methods.READ.actionIdentifierRoot() + HYPHEN + TO)
+             .name("Read")
              .descriptor(new ConnectorDescriptor.Builder()
                         .componentScheme("olingo4")
-                        .putConfiguredProperty(METHOD_NAME, Methods.DELETE.id())
-                        .addConnectorCustomizer(ODataDeleteCustomizer.class.getName())
+                        .putConfiguredProperty(METHOD_NAME, Methods.READ.id())
+                        .putConfiguredProperty(CONNECTOR_DIRECTION, TO)
+                        .addConnectorCustomizer(ODataReadToCustomizer.class.getName())
                         .connectorFactory(ODataComponentFactory.class.getName())
                         .inputDataShape(new DataShape.Builder()
                                         .kind(DataShapeKinds.JSON_SCHEMA)
@@ -113,10 +119,8 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
     }
 
     @Test
-    public void testDeleteODataRoute() throws Exception {
+    public void testReadODataRoute() throws Exception {
         int initialResultCount = defaultTestServer.getResultCount();
-
-        Step directStep = createDirectStep();
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                             .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
@@ -126,6 +130,7 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
         ObjectNode keyPredicateJson = OBJECT_MAPPER.createObjectNode();
         keyPredicateJson.put(KEY_PREDICATE, "1");
 
+        Step directStep = createDirectStep();
         Step odataStep = createODataStep(odataConnector, resourcePath);
         Step mockStep = createMockStep();
         Integration odataIntegration = createIntegration(directStep, odataStep, mockStep);
@@ -145,18 +150,23 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
 
         result.assertIsSatisfied();
 
-        String status = extractJsonFromExchgMsg(result, 0);
-        String expected = createResponseJson(HttpStatusCode.NO_CONTENT);
-        JSONAssert.assertEquals(expected, status, JSONCompareMode.LENIENT);
+        String entityJson = extractJsonFromExchgMsg(result, 0, String.class);
+        JSONAssert.assertEquals(testData(TEST_SERVER_DATA_1, AbstractODataReadRouteTest.class), entityJson, JSONCompareMode.LENIENT);
+        assertEquals(initialResultCount, defaultTestServer.getResultCount());
 
-        assertEquals(initialResultCount - 1, defaultTestServer.getResultCount());
+        //
+        // Check no consumer properties are created on the endpoint
+        // Not applicable & should be stopped by connectorDirection property
+        //
+        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_TO_ENDPOINT, Olingo4Endpoint.class);
+        assertNotNull(olingo4Endpoint);
+        Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
+        assertThat(consumerProperties).isEmpty();
     }
 
     @Test
-    public void testDeleteODataRouteKeyPredicateFilter() throws Exception {
+    public void testReadODataRouteKeyPredicateFilter() throws Exception {
         int initialResultCount = defaultTestServer.getResultCount();
-
-        Step directStep = createDirectStep();
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                             .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
@@ -167,6 +177,7 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
         ObjectNode keyPredicateJson = OBJECT_MAPPER.createObjectNode();
         keyPredicateJson.put(KEY_PREDICATE, "ID=2");
 
+        Step directStep = createDirectStep();
         Step odataStep = createODataStep(odataConnector, resourcePath);
         Step mockStep = createMockStep();
         Integration odataIntegration = createIntegration(directStep, odataStep, mockStep);
@@ -186,24 +197,21 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
 
         result.assertIsSatisfied();
 
-        String status = extractJsonFromExchgMsg(result, 0);
-        String expected = createResponseJson(HttpStatusCode.NO_CONTENT);
-        JSONAssert.assertEquals(expected, status, JSONCompareMode.LENIENT);
-
-        assertEquals(initialResultCount - 1, defaultTestServer.getResultCount());
+        String entityJson = extractJsonFromExchgMsg(result, 0, String.class);
+        JSONAssert.assertEquals(testData(TEST_SERVER_DATA_2, AbstractODataReadRouteTest.class), entityJson, JSONCompareMode.LENIENT);
+        assertEquals(initialResultCount, defaultTestServer.getResultCount());
     }
 
     @Test
-    public void testDeleteODataRouteAllData() throws Exception {
+    public void testReadODataRouteAllData() throws Exception {
         int initialResultCount = defaultTestServer.getResultCount();
-
-        Step directStep = createDirectStep();
 
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                             .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
 
         String resourcePath = defaultTestServer.resourcePath();
 
+        Step directStep = createDirectStep();
         Step odataStep = createODataStep(odataConnector, resourcePath);
         Step mockStep = createMockStep();
         Integration odataIntegration = createIntegration(directStep, odataStep, mockStep);
@@ -227,10 +235,58 @@ public class ODataDeleteTests extends AbstractODataRouteTest {
 
         result.assertIsSatisfied();
 
-        String status = extractJsonFromExchgMsg(result, 0);
-        String expected = createResponseJson(HttpStatusCode.NO_CONTENT);
-        JSONAssert.assertEquals(expected, status, JSONCompareMode.LENIENT);
+        for (int i = 0; i < initialResultCount; ++i) {
+            String entityJson = extractJsonFromExchgMsg(result, i, String.class);
+            String expectedData = null;
+            switch (i) {
+                case 0:
+                    expectedData = TEST_SERVER_DATA_1;
+                    break;
+                case 1:
+                    expectedData = TEST_SERVER_DATA_2;
+                    break;
+                case 2:
+                    expectedData = TEST_SERVER_DATA_3;
+                    break;
+            }
 
-        assertEquals(0, defaultTestServer.getResultCount());
+            assertNotNull(expectedData);
+            JSONAssert.assertEquals(testData(expectedData, AbstractODataReadRouteTest.class), entityJson, JSONCompareMode.LENIENT);
+            assertEquals(initialResultCount, defaultTestServer.getResultCount());
+        }
+    }
+
+    @Test
+    public void testReadODataRouteKeyPredicateWithSubPredicate() throws Exception {
+        Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
+                                                            .property(SERVICE_URI, REF_SERVICE_URI));
+
+        String resourcePath = "Airports";
+
+        ObjectNode keyPredicateJson = OBJECT_MAPPER.createObjectNode();
+        keyPredicateJson.put(KEY_PREDICATE, "('KLAX')/Location");
+
+        Step directStep = createDirectStep();
+        Step odataStep = createODataStep(odataConnector, resourcePath);
+        Step mockStep = createMockStep();
+        Integration odataIntegration = createIntegration(directStep, odataStep, mockStep);
+
+        RouteBuilder routes = newIntegrationRouteBuilder(odataIntegration);
+        context.addRoutes(routes);
+
+        MockEndpoint result = initMockEndpoint();
+        result.setExpectedMessageCount(1);
+
+        DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
+        ProducerTemplate template = context.createProducerTemplate();
+
+        context.start();
+        String inputJson = OBJECT_MAPPER.writeValueAsString(keyPredicateJson);
+        template.sendBody(directEndpoint, inputJson);
+
+        result.assertIsSatisfied();
+
+        String entityJson = extractJsonFromExchgMsg(result, 0, String.class);
+        JSONAssert.assertEquals(testData(REF_SERVER_PEOPLE_DATA_KLAX_LOC, AbstractODataReadRouteTest.class), entityJson, JSONCompareMode.LENIENT);
     }
 }

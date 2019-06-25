@@ -226,7 +226,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         //
         // Return singleton json object rather than list due to key predicate
         //
-        testResult(result, 0, REF_SERVER_PEOPLE_DATA_KLAX);
+        testResult(result, 0, REF_SERVER_AIRPORT_DATA_KLAX);
     }
 
     @Test
@@ -419,7 +419,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         result.assertIsSatisfied();
         testListResult(result, 0, TEST_SERVER_DATA_1, TEST_SERVER_DATA_2, TEST_SERVER_DATA_3);
 
-        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_ENDPOINT, Olingo4Endpoint.class);
+        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_FROM_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
         Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
         assertNotNull(consumerProperties);
@@ -464,7 +464,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         //
         // Check backup consumer options carried through to olingo4 component
         //
-        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_ENDPOINT, Olingo4Endpoint.class);
+        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_FROM_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
         Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
         assertNotNull(consumerProperties);
@@ -529,7 +529,7 @@ public class ODataReadRouteNoSplitResultsTest extends AbstractODataReadRouteTest
         //
         // Check backup consumer options carried through to olingo4 component
         //
-        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_ENDPOINT, Olingo4Endpoint.class);
+        Olingo4Endpoint olingo4Endpoint = context.getEndpoint(OLINGO4_READ_FROM_ENDPOINT, Olingo4Endpoint.class);
         assertNotNull(olingo4Endpoint);
         Map<String, Object> consumerProperties = olingo4Endpoint.getConsumerProperties();
         assertNotNull(consumerProperties);

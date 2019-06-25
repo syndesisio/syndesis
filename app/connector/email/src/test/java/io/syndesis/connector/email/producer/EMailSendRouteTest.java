@@ -16,8 +16,10 @@
 package io.syndesis.connector.email.producer;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import java.util.List;
 import java.util.Map;
+import org.apache.camel.Exchange;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.direct.DirectEndpoint;
@@ -41,6 +43,7 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.SuppressFBWarnings;
 import io.syndesis.connector.email.AbstractEmailServerTest;
+import io.syndesis.connector.email.EMailConstants;
 import io.syndesis.connector.email.RouteUtils;
 import io.syndesis.connector.email.component.EMailComponentFactory;
 import io.syndesis.connector.email.customizer.EMailSendCustomizer;
@@ -157,6 +160,13 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
         List<EMailMessageModel> emails = server.getEmails();
         assertEquals(1, emails.size());
         assertEquals(msgModel, emails.get(0));
+
+        Exchange exchange = result.getReceivedExchanges().get(0);
+        Map<String, Object> headers = exchange.getIn().getHeaders();
+        assertNotNull(headers);
+        Object contentType = headers.get(Exchange.CONTENT_TYPE);
+        assertNotNull(contentType);
+        assertEquals(EMailConstants.TEXT_PLAIN, contentType);
     }
 
     @Test
@@ -333,5 +343,55 @@ public class EMailSendRouteTest extends AbstractEmailServerTest implements Route
         expectedModel.setContent(inputValueText);
 
         assertEquals(expectedModel, emails.get(0));
+    }
+
+    @Test
+    public void testSmtpHtmlContentType() throws Exception {
+        server = smtpServer();
+
+        Step directStep = createDirectStep();
+
+        Connector mailConnector = RouteUtils.createEMailConnector(server,
+                                                       new PropertyBuilder<String>()
+                                                               .property(PROTOCOL, Protocol.SMTP.id())
+                                                               .property(HOST, server.getHost())
+                                                               .property(PORT, Integer.toString(server.getPort()))
+                                                               .property(USER, TEST_ADDRESS)
+                                                               .property(PASSWORD, TEST_PASSWORD));
+
+        Step mailStep = RouteUtils.createEMailStep(mailConnector, this::createConnectorAction);
+        Integration mailIntegration = RouteUtils.createIntegrationWithMock(directStep, mailStep);
+
+        RouteBuilder routes = RouteUtils.newIntegrationRouteBuilder(mailIntegration);
+        context.addRoutes(routes);
+
+        MockEndpoint result = RouteUtils.initMockEndpoint(context);
+        result.setExpectedMessageCount(1);
+
+        DirectEndpoint directEndpoint = context.getEndpoint("direct://start", DirectEndpoint.class);
+        ProducerTemplate template = context.createProducerTemplate();
+
+        context.start();
+
+        EMailMessageModel msgModel = new EMailMessageModel();
+        msgModel.setSubject("Test Email 1");
+        msgModel.setFrom(TEST_ADDRESS);
+        msgModel.setTo(TEST_ADDRESS);
+        msgModel.setContent("<p><b>Hello, I am sending emails to myself again!</b></p>\r\n");
+
+        template.sendBody(directEndpoint, msgModel);
+
+        result.assertIsSatisfied();
+
+        List<EMailMessageModel> emails = server.getEmails();
+        assertEquals(1, emails.size());
+        assertEquals(msgModel, emails.get(0));
+
+        Exchange exchange = result.getReceivedExchanges().get(0);
+        Map<String, Object> headers = exchange.getIn().getHeaders();
+        assertNotNull(headers);
+        Object contentType = headers.get(Exchange.CONTENT_TYPE);
+        assertNotNull(contentType);
+        assertEquals(EMailConstants.TEXT_HTML, contentType);
     }
 }

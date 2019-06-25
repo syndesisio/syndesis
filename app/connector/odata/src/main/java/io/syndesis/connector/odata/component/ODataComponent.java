@@ -48,7 +48,6 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
      * Note 2:
      * methodName not included as not required here but required later in the options map.
      */
-    private String resourcePath;
     private String serviceUri;
     private String basicUserName;
     private String basicPassword;
@@ -56,6 +55,7 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
     private String keyPredicate;
     private String queryParams;
     private boolean filterAlreadySeen;
+    private String connectorDirection = "from";
 
     // Consumer properties
     private long delay = -1;
@@ -66,14 +66,6 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
 
     ODataComponent(String componentId, String componentScheme) {
         super(componentId, componentScheme);
-    }
-
-    public String getResourcePath() {
-        return resourcePath;
-    }
-
-    public void setResourcePath(String resourcePath) {
-        this.resourcePath = resourcePath;
     }
 
     public String getServiceUri() {
@@ -173,10 +165,22 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
         this.splitResult = splitResult;
     }
 
-    private Map<String, Object> bundleOptions() {
+    public String getConnectorDirection() {
+        return connectorDirection;
+    }
+
+    public void setConnectorDirection(String connectorDirection) {
+        this.connectorDirection = connectorDirection;
+    }
+
+    private Map<String, Object> bundleOptions(Map<String, Object> options) {
         PropertyBuilder<Object> builder = new PropertyBuilder<Object>();
+
+        for (Map.Entry<String, Object> option : options.entrySet()) {
+            builder.propertyIfNotNull(option.getKey(), option.getValue());
+        }
+
         return builder
-            .propertyIfNotNull(RESOURCE_PATH, getResourcePath())
             .propertyIfNotNull(SERVICE_URI, getServiceUri())
             .propertyIfNotNull(BASIC_USER_NAME, getBasicUserName())
             .propertyIfNotNull(BASIC_PASSWORD, getBasicPassword())
@@ -195,12 +199,12 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
         Map<String, String> httpHeaders = new HashMap<>();
         configuration.setHttpHeaders(httpHeaders);
 
-        String methodName = ConnectorOptions.extractOption(options, METHOD_NAME);
-        if (ObjectHelper.isEmpty(methodName)) {
+        Methods method = ConnectorOptions.extractOptionAndMap(options, METHOD_NAME, Methods::getValueOf);
+        if (ObjectHelper.isEmpty(method)) {
             throw new IllegalStateException("No method specified for odata component");
         }
 
-        configuration.setMethodName(methodName.toString());
+        configuration.setMethodName(method.id());
 
         //
         // Ensure at least a blank map exists for this property
@@ -208,7 +212,7 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
         Map<String, String> endPointHttpHeaders = new HashMap<>();
         configuration.setEndpointHttpHeaders(endPointHttpHeaders);
 
-        Map<String, Object> resolvedOptions = bundleOptions();
+        Map<String, Object> resolvedOptions = bundleOptions(options);
         HttpClientBuilder httpClientBuilder = ODataUtil.createHttpClientBuilder(resolvedOptions);
         configuration.setHttpClientBuilder(httpClientBuilder);
 
@@ -219,9 +223,8 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
             configuration.setServiceUri(getServiceUri());
         }
 
-        configureResourcePath(configuration);
+        configureResourcePath(configuration, options);
 
-        Methods method = Methods.getValueOf(configuration.getMethodName());
         if (Methods.READ.equals(method)) {
             //
             // Modify the query parameters into the expected map
@@ -252,13 +255,13 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
     }
 
     @SuppressWarnings("PMD")
-    private void configureResourcePath(Olingo4AppEndpointConfiguration configuration) {
+    private void configureResourcePath(Olingo4AppEndpointConfiguration configuration, Map<String, Object> options) {
         //
         // keyPredicate is not supported properly in 2.21.0 but is handled
         // in 2.24.0 by setting it directly on the configuration. Can modify
         // this when component dependencies are upgraded.
         //
-        String resourcePath = getResourcePath();
+        String resourcePath = ConnectorOptions.extractOption(options, RESOURCE_PATH);
         if (getKeyPredicate() != null) {
             resourcePath = resourcePath + ODataUtil.formatKeyPredicate(getKeyPredicate(), true);
         }
@@ -273,8 +276,12 @@ public final class ODataComponent extends ComponentProxyComponent implements ODa
 
         Endpoint endpoint = super.createDelegateEndpoint(definition, scheme, options);
 
-        Methods method = Methods.getValueOf(options.get(METHOD_NAME));
-        if (Methods.READ.equals(method)) {
+        Methods method = ConnectorOptions.extractOptionAndMap(options, METHOD_NAME, Methods::getValueOf);
+
+        //
+        // Not applicable if READ is producer/to
+        //
+        if (Methods.READ.equals(method) && FROM.equals(getConnectorDirection())) {
             /**
              * Need to apply these consumer properties after the creation
              * of the delegate endpoint since the Olingo4Endpoint swallows

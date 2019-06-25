@@ -37,6 +37,8 @@ public interface ODataConstants extends Olingo4Constants, StringConstants {
 
     String QUERY_PARAMS = "queryParams";
 
+    String CONNECTOR_DIRECTION = "connectorDirection";
+
     String BASIC_PASSWORD = "basicPassword";
 
     String BASIC_USER_NAME = "basicUserName";
@@ -63,6 +65,10 @@ public interface ODataConstants extends Olingo4Constants, StringConstants {
 
     String RESULT_COUNT = "ResultCount";
 
+    String FROM = "from";
+
+    String TO = "to";
+
     enum Methods {
         READ,
         DELETE,
@@ -79,12 +85,27 @@ public interface ODataConstants extends Olingo4Constants, StringConstants {
             return Methods.READ;
         }
 
-        public String id() {
-            return name().toLowerCase(Locale.ENGLISH);
+        public static Methods methodForAction(String connectorId) {
+            if (connectorId == null) {
+                return null;
+            }
+
+            for (Methods method : Methods.values()) {
+                String identifier = method.actionIdentifierRoot();
+                if (connectorId.contains(identifier)) {
+                    return method;
+                }
+            }
+
+            return null;
         }
 
-        public String connectorId() {
+        public String actionIdentifierRoot() {
             return "odata" + HYPHEN + id() + HYPHEN + "connector";
+        }
+
+        public String id() {
+            return name().toLowerCase(Locale.ENGLISH);
         }
     }
 }

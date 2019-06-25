@@ -72,6 +72,11 @@
         <version>${olingoVersion}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.olingo</groupId>
+        <artifactId>odata-server-core</artifactId>
+        <version>${olingoVersion}</version>
+      </dependency>
+      <dependency>
         <groupId>org.apache.camel</groupId>
         <artifactId>camel-olingo4</artifactId>
         <version>${camel.version}</version>
@@ -152,6 +157,10 @@
     <dependency>
       <groupId>org.apache.olingo</groupId>
       <artifactId>odata-server-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.olingo</groupId>
+      <artifactId>odata-server-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.olingo</groupId>

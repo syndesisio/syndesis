@@ -68,7 +68,6 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.odata.AbstractODataRouteTest;
 import io.syndesis.connector.odata.component.ODataComponentFactory;
-import io.syndesis.connector.odata.consumer.ODataReadRouteSplitResultsTest;
 import io.syndesis.connector.odata.customizer.ODataPatchCustomizer;
 import io.syndesis.connector.support.util.PropertyBuilder;
 
@@ -76,7 +75,7 @@ import io.syndesis.connector.support.util.PropertyBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest(
     classes = {
-        ODataReadRouteSplitResultsTest.TestConfiguration.class
+        ODataUpdateTests.TestConfiguration.class
     },
     properties = {
         "spring.main.banner-mode = off",
@@ -311,10 +310,8 @@ public class ODataUpdateTests extends AbstractODataRouteTest {
         Connector odataConnector = createODataConnector(new PropertyBuilder<String>()
                                                             .property(SERVICE_URI, defaultTestServer.servicePlainUri()));
 
-
         String resourcePath = defaultTestServer.resourcePath();
         String nameProperty = "Name";
-
         Step odataStep = createODataStep(odataConnector, resourcePath);
 
         ObjectNode newProduct = OBJECT_MAPPER.createObjectNode();

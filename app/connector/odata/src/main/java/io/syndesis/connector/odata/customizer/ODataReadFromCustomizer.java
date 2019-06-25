@@ -21,7 +21,7 @@ import org.apache.camel.Exchange;
 import io.syndesis.connector.odata.component.ODataComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
-public class ODataReadCustomizer extends AbstractODataCustomizer {
+public class ODataReadFromCustomizer extends AbstractODataCustomizer {
 
     /*
      * The component subsumes the split & key predicate properties from the
