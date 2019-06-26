@@ -143,7 +143,7 @@ func assignPrometheusConfig(context Context) Context {
 }
 
 func AssetAsBytes(path string) ([]byte, error) {
-	file, err := assets.Open(path)
+	file, err := GetAssetsFS().Open(path)
 	if err != nil {
 		return nil, err
 	}
@@ -205,8 +205,11 @@ func RenderFSDir(assets http.FileSystem, directory string, context interface{}) 
 				u := unstructured.Unstructured{v}
 				//annotatedForDebugging(u, name, rawYaml)
 				response = append(response, u)
-			default:
+			case nil:
+				// It's ok if a template chooses not to generate any resources..
 
+			default:
+				return nil, fmt.Errorf("Unexptected yaml unmarshal type: %v", obj)
 			}
 		}
 	}
