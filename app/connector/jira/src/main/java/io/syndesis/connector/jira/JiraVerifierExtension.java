@@ -30,6 +30,7 @@ import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.apache.camel.component.jira.JiraConfiguration;
 import org.apache.camel.component.jira.oauth.JiraOAuthAuthenticationHandler;
 import org.apache.camel.component.jira.oauth.OAuthAsynchronousJiraRestClientFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,21 +64,29 @@ public class JiraVerifierExtension extends DefaultComponentVerifierExtension {
                 privateKey = privateKey.substring(4, privateKey.length() - 1);
             }
             parameters.put(PRIVATE_KEY, privateKey);
-            privateKey = null;
             JiraConfiguration conf = setProperties(new JiraConfiguration(), parameters);
             OAuthAsynchronousJiraRestClientFactory factory = new OAuthAsynchronousJiraRestClientFactory();
 
             final URI jiraServerUri = URI.create(conf.getJiraUrl());
-            if (conf.getUsername() != null) {
+            boolean useUserPasswd = StringUtils.isNotBlank(conf.getUsername()) && StringUtils.isNotBlank(conf.getPassword());
+            boolean useOAuth = StringUtils.isNotBlank(conf.getAccessToken()) && StringUtils.isNotBlank(conf.getVerificationCode())
+                && StringUtils.isNotBlank(conf.getConsumerKey()) && StringUtils.isNotBlank(conf.getPrivateKey());
+            if (useUserPasswd) {
                 client = factory.createWithBasicHttpAuthentication(jiraServerUri, conf.getUsername(), conf.getPassword());
-            } else {
+            } else if (useOAuth){
                 JiraOAuthAuthenticationHandler oAuthHandler = new JiraOAuthAuthenticationHandler(conf.getConsumerKey(), conf.getVerificationCode(),
                     conf.getPrivateKey(), conf.getAccessToken(), conf.getJiraUrl());
                 client = factory.create(jiraServerUri, oAuthHandler);
             }
-            // test the connection to the jira server
-            ServerInfo serverInfo = client.getMetadataClient().getServerInfo().claim();
-            LOG.info("Verify connectivity to jira server OK: {}, {}, {}", serverInfo.getServerTitle(), serverInfo.getVersion(), serverInfo.getBaseUri());
+            if (useOAuth || useUserPasswd) {
+                // test the connection to the jira server
+                ServerInfo serverInfo = client.getMetadataClient().getServerInfo().claim();
+                LOG.info("Verify connectivity to jira server OK: {}, {}, {}", serverInfo.getServerTitle(), serverInfo.getVersion(), serverInfo.getBaseUri());
+            } else {
+                ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION,
+                    "There are missing parameters. Set either the username/password or the OAuth parameters.");
+                builder.error(errorBuilder.build());
+            }
 
         } catch (RestClientException e) {
             ResultErrorBuilder errorBuilder = ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.AUTHENTICATION, e.getMessage())
