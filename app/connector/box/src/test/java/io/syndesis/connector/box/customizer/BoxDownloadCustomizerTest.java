@@ -46,12 +46,12 @@ public class BoxDownloadCustomizerTest extends CamelTestSupport {
         String encoding = StandardCharsets.ISO_8859_1.name();
         int size = content.getBytes(encoding).length;
         Map<String, Object> options = new HashMap<>();
+        options.put("fileId", id);
         options.put("encoding", encoding);
 
         customizer.customize(component, options);
 
         Exchange inbound = new DefaultExchange(createCamelContext());
-        inbound.getIn().setHeader("CamelBox.fileId", id);
         setBody(inbound, content, encoding);
         component.getAfterProducer().process(inbound);
 
