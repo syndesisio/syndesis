@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/build"
 	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
@@ -20,6 +21,14 @@ func TestGenerator(t *testing.T) {
 	gen := &generator.Context{}
 	err = json.Unmarshal(templateConfig, gen)
 	require.NoError(t, err)
+
+	gen.Syndesis = &v1alpha1.Syndesis{
+		Spec: v1alpha1.SyndesisSpec{
+			Addons: map[string]v1alpha1.Parameters{
+				"todo": []v1alpha1.Parameter{},
+			},
+		},
+	}
 
 	resources, err := generator.RenderFSDir(generator.GetAssetsFS(), "./install/", gen)
 	require.NoError(t, err)
