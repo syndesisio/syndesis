@@ -5,17 +5,8 @@
 = Adding a Twitter connection to trigger integration execution
 
 In a simple integration, the start connection can be a Twitter 
-connection that triggers execution of the integration when one of the following 
-occurs: 
-
-* There is a tweet that mentions the Twitter handle for the 
-Twitter account that the connection is authorized to access. 
-* A periodic poll finds one or more direct messages sent to the  
-Twitter account that the Twitter connection is authorized to access. 
-A Twitter direct message is a private message explicitly sent to a 
-user or group. 
-* A periodic poll finds one or more tweets that 
-match Twitter search criteria that you specify. 
+connection that triggers execution of the integration when 
+it finds certain tweets or direct messages.
 
 .Prerequisites
 * You created a Twitter connection.
@@ -50,8 +41,8 @@ to {prodname}, which triggers execution of the integration.
 * *Mention* does not require any configuration. 
 * *Retrieve* 
 ** *Count* has a default of 100 and you should not need to change 
-this value, which affects internal behavior. However, this value 
-should never be less than 50. 
+this value, which affects internal behavior. However, do not set 
+this value to less than 50 because doing so might decrease performance. 
 +
 The *Retrieve* action always returns all previously unreturned 
 direct messages received in the last 30 days. If you do not select 
@@ -71,14 +62,35 @@ interval is 5 seconds.
 ** *Ignore tweets previously found* returns only new 
 tweets when selected. 
 ** *Query* is a Twitter-formatted search expression that specifies 
-the tweets that you want the connection to return. For example: 
+the tweets that you want the connection to return. The following
+table provides examples of what you can enter. More details are in this 
+link:https://developer.twitter.com/en/docs/tweets/rules-and-filtering/overview/standard-operators.html[Twitter document for search operators].
 +
-`"My Product”` obtains tweets that contain an instance of `My Product`.
-+
-`My Product` obtains tweets that contain both `My` and `Product`, 
-but not necessarily `My Product`.  
-+
-See link:https://developer.twitter.com/en/docs/tweets/search/guides/standard-operators[Twitter document for search operators].
+[cols="1,1"]
+|===
+
+|*Query*
+|*Results*
+
+|`My Product` 
+|Obtains tweets that contain both `My` and `Product`, 
+but not necessarily `My Product`.
+
+|`"My Product”` 
+|Obtains tweets that contain an instance of `My Product`.
+
+|`My OR Product`
+|Obtains tweets that contain an instance of `My` or `Product` or 
+an instance of each one. 
+
+|`My -Product`
+|Obtains tweets that contain an instance of `My` and do not contain 
+an instance of `Product`. 
+
+|`#MyProduct`
+|Obtains tweets that contain the `MyProduct` hashtag. 
+
+|===
 
 . Click *Done* to add the connection to the integration.
 
