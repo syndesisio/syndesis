@@ -241,7 +241,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
             .build();
 
         Equivalencer equiv = new Equivalencer();
-        assertFalse(equiv.equivalent(null, sqlConnector, modSqlConnector));
+        assertFalse(equiv.equivalent(sqlConnector, modSqlConnector));
 
         Connection modSqlConnection = new Connection.Builder()
             .createFrom(sqlConnection)
@@ -291,9 +291,10 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
                     assertTrue(detail.isPresent());
                     String msg = detail.get();
                     assertEquals(
-                                 "PostgresDB:Connection > SQL Connector:Connector$name" + NEW_LINE +
-                                 TAB + "=> 'SQL Connec ... '" + NEW_LINE +
-                                 TAB + "=> 'SQL Connec ... _new'" + NEW_LINE,
+                                 "Reason: 'name' is different" + NEW_LINE +
+                                 TAB + "=> 'SQL Connector'" + NEW_LINE +
+                                 TAB + "=> 'SQL Connector_new'" + NEW_LINE +
+                                 "Context: Connection('PostgresDB') / Connector('SQL Connector')" + NEW_LINE,
                                  msg);
                     break;
                 case SYNDESIS012:
@@ -335,7 +336,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
             .build();
 
         Equivalencer equiv = new Equivalencer();
-        assertFalse(equiv.equivalent(null, sqlConnector, modSqlConnector));
+        assertFalse(equiv.equivalent(sqlConnector, modSqlConnector));
 
         Connection modSqlConnection = new Connection.Builder()
             .createFrom(sqlConnection)
@@ -355,7 +356,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
             .build();
 
         equiv = new Equivalencer();
-        assertFalse(equiv.equivalent(null, sqlIntegration, modSqlIntegration));
+        assertFalse(equiv.equivalent(sqlIntegration, modSqlIntegration));
 
         // Returns the changed sql connection
         when(dataManager.fetchAll(Connection.class)).thenReturn(
@@ -427,7 +428,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
             .build();
 
         Equivalencer equiv = new Equivalencer();
-        assertFalse(equiv.equivalent(null, sqlConnector, modSqlConnector));
+        assertFalse(equiv.equivalent(sqlConnector, modSqlConnector));
 
         Connection modSqlConnection = new Connection.Builder()
             .createFrom(sqlConnection)
@@ -435,7 +436,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
             .build();
 
         equiv = new Equivalencer();
-        assertFalse(equiv.equivalent(null, sqlConnection, modSqlConnection));
+        assertFalse(equiv.equivalent(sqlConnection, modSqlConnection));
 
         Step modStep = new Step.Builder()
             .createFrom(sqlIntegration.getFlows().get(0).getSteps().get(0))
@@ -448,7 +449,7 @@ public class IntegrationUpdateHandlerTest implements StringConstants {
             .build();
 
         equiv = new Equivalencer();
-        assertFalse(equiv.equivalent(null, sqlIntegration, modSqlIntegration));
+        assertFalse(equiv.equivalent(sqlIntegration, modSqlIntegration));
 
         // Returns the changed sql connection
         when(dataManager.fetchAll(Connection.class)).thenReturn(

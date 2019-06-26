@@ -107,8 +107,8 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             //
             dbConnection = includeConnector(dbConnection);
             Equivalencer equiv = new Equivalencer();
-            if (! equiv.equivalent(null, connection, dbConnection)) {
-                String message = equiv.message();
+            if (! equiv.equivalent(connection, dbConnection)) {
+                String message = equiv.failureMessage();
                 messages.add(
                      supplier.get()
                          .level(LeveledMessage.Level.WARN)
@@ -412,8 +412,8 @@ public class IntegrationUpdateHandler extends AbstractResourceUpdateHandler<Inte
             // **********************
 
             Equivalencer equiv = new Equivalencer();
-            if (! equiv.equivalent(null, integration, deployedInteg)) {
-                String message = equiv.message();
+            if (! equiv.equivalent(integration, deployedInteg)) {
+                String message = equiv.failureMessage();
                 messages.add(
                      supplier.get()
                          .code(LeveledMessage.Code.SYNDESIS012)

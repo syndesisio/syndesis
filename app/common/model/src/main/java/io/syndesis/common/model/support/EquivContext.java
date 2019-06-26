@@ -15,20 +15,19 @@
  */
 package io.syndesis.common.model.support;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.Optional;
 import org.apache.commons.lang3.StringUtils;
+import io.syndesis.common.util.StringConstants;
 
-class EquivContext {
+class EquivContext implements StringConstants {
+
+    private static final int TRUNCATE_LENGTH = 15;
 
     private final String name;
 
     private final String type;
 
-    private String fail;
-
-    private final List<EquivContext> children = new ArrayList<>();
+    private String failedProperty;
 
     private String a;
 
@@ -36,26 +35,33 @@ class EquivContext {
 
     public EquivContext(String name, Class<?> klazz) {
         this.name = name;
-        this.type = klazz.getSimpleName().replaceAll("Immutable", Equivalencer.EMPTY_STRING);
+        this.type = klazz.getSimpleName().replaceAll("Immutable", EMPTY_STRING);
     }
 
     public String id() {
         StringBuilder builder = new StringBuilder();
+        builder.append(type);
+
         if (name != null) {
-            builder.append(name);
+            builder
+                .append(OPEN_BRACKET)
+                .append(QUOTE_MARK)
+                .append(name)
+                .append(QUOTE_MARK)
+                .append(CLOSE_BRACKET);
         }
 
-        return builder.append(Equivalencer.COLON).append(type).toString();
+        return builder.toString();
     }
 
     public boolean hasFailed() {
-        return this.fail != null;
+        return this.failedProperty != null;
     }
 
     public String getFailed() {
-        return this.fail + Equivalencer.NEW_LINE +
-                        Equivalencer.TAB + "=> " + Equivalencer.QUOTE_MARK + this.a + Equivalencer.QUOTE_MARK + Equivalencer.NEW_LINE +
-                        Equivalencer.TAB + "=> " + Equivalencer.QUOTE_MARK + this.b + Equivalencer.QUOTE_MARK + Equivalencer.NEW_LINE;
+        return "'" + this.failedProperty + "' is different" + NEW_LINE +
+                        TAB + "=> " + QUOTE_MARK + this.a + QUOTE_MARK + NEW_LINE +
+                        TAB + "=> " + QUOTE_MARK + this.b + QUOTE_MARK + NEW_LINE;
     }
 
     private String truncate(String fullText, String diffText, int diffIndex) {
@@ -65,16 +71,16 @@ class EquivContext {
         // Adds a portion of the full text at the start of the value
         // then include '...'
         //
-        if (diffIndex > 0 && diffIndex <= 10) {
+        if (diffIndex > 0 && diffIndex <= TRUNCATE_LENGTH) {
             truncated.append(fullText.substring(0, diffIndex));
-        } else if (diffIndex > 10) {
+        } else if (diffIndex > TRUNCATE_LENGTH) {
             truncated
-                .append(fullText.substring(0, 10))
-                .append(Equivalencer.SPACE).append(Equivalencer.ELLIPSE).append(Equivalencer.SPACE);
+                .append(fullText.substring(0, TRUNCATE_LENGTH))
+                .append(SPACE).append(ELLIPSE).append(SPACE);
         }
 
         if (diffText.length() > 70) {
-            truncated.append(diffText.substring(0, 70)).append(Equivalencer.SPACE).append(Equivalencer.ELLIPSE);
+            truncated.append(diffText.substring(0, 70)).append(SPACE).append(ELLIPSE);
         } else {
             truncated.append(diffText);
         }
@@ -83,9 +89,9 @@ class EquivContext {
     }
 
     public void setFail(String property, Object a, Object b) {
-        this.fail = property;
-        String aStr = a.toString();
-        String bStr = b.toString();
+        this.failedProperty = property;
+        String aStr = toString(a);
+        String bStr = toString(b);
 
         int diffPos = StringUtils.indexOfDifference(aStr, bStr);
         if (diffPos < 0) {
@@ -101,13 +107,17 @@ class EquivContext {
         this.b = truncate(bStr, bDiff, diffPos);
     }
 
-    public List<EquivContext> children() {
-        return Collections.unmodifiableList(children);
-    }
+    private String toString(Object value) {
+        if (value instanceof Optional) {
+            Optional<?> ov = (Optional<?>) value;
+            Object v = ov.orElse(null);
+            if (v == null) {
+                return EMPTY_STRING;
+            } else {
+                return v.toString();
+            }
+        }
 
-    public EquivContext addChild(String name, Class<?> type) {
-        EquivContext child = new EquivContext(name, type);
-        children.add(child);
-        return child;
+        return value.toString();
     }
 }
