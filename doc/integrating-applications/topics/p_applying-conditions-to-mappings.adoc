@@ -80,7 +80,8 @@ mapping, `lastName` was selected first and then `firstName` was selected.
 
 . Edit the expression input field to specify the conditional 
 expression that you want the data mapper to apply to the 
-mapping. 
+mapping. Details about supported conditional expressions follow 
+this procedure.
 +
 As you specify the expression, you can: 
 +
@@ -103,10 +104,14 @@ image:images/second-conditional-mapping-expression.png[if(ISEMPTY(lastName), fir
 +
 During execution, if the data mapper determines that the `lastName`
 field is empty, it maps only the `firstName` field to the target
-`customerName` field. If both the `lastName` and `firstName` fields 
-are empty, the data mapper concatenates the values in the source 
-`orderId` and `phone` fields, and inserts the result in the 
-`customerName` field.
+`customerName` field.  If the `lastName` field contains a value, that is, 
+it is not empty, the data mapper concatenates the values in the 
+source `orderId` and `phone` fields, and inserts the result in 
+the `customerName` field. 
+(This example shows how the logic works, but it is probably not a 
+useful example because when there is a value in the `lastName` field, 
+you most likely want the data mapper to simply perform the 
+mapping and not map some other value into the target.)
 
 +
 For this example, after you complete entering the expression, 
@@ -115,6 +120,11 @@ the data mapping is:
 +
 image:images/second-conditional-mapping.png[lastName, firstName, orderId, phone are mapped to customerName]
 
++
+In the conditional expression, if you remove a field name that is in 
+the mapping that the expression applies to, the data mapper removes that 
+field from the mapping. In other words, every field name in the mapping
+must be in the conditional expression. 
 
 . If mapping preview fields are not already visible, display them 
 by clicking image:shared/images/EditorSettings.png[Editor settings] and then 
@@ -139,3 +149,107 @@ For example, in the same mapping presented in this procedure, in the
  data in the `firstName` field's preview input field. 
  
 . Edit the conditional expression as needed to obtain the desired result.  
+
+.Supported functions in conditional expressions
+
+* `ISEMPTY(_source-field-name1_ [+ _source-field-name2_])`
++
+The result of the `ISEMPTY()` function is a Boolean value. Specify at least
+one argument, which is the name of a source field in the mapping that 
+you want to apply the condition to. When the specified source field is empty, 
+the `ISEMPTY()` function returns true. 
++
+Optionally, add the + (concatenation) operator with an additional field, for
+example:
++
+`ISEMPTY(lastName + firstName)`
++
+This expression evaluates to true if both source fields, 
+`lastName` and `firstName`, are empty. 
++
+Often, the `ISEMPTY()` function is the first argument in an `IF()` function. 
+
+* `IF(_boolean-expression_, _then_, _else_)`
++
+When `_boolean-expression_` evaluates to true, the data mapper returns `_then_`. 
+When `_boolean-expression_` evaluates to false, the data mapper returns `_else_`. 
+All three arguments are required. The last argument can be null, 
+which means that nothing is mapped when 
+`_boolean-expression_` evaluates to false. 
++
+For example, consider the mapping that combines the `lastName` and `firstName` 
+source fields in the target `customerName` field. You can specify this 
+conditional expression: 
++
+`IF (ISEMPTY(lastName), firstName, lastName + ‘,’ + firstName )`
++
+During execution, the data mapper evaluates the `lastName` field. 
++
+** If the `lastName` field is empty, that is, `ISEMPTY(lastName)` 
+returns true, the data mapper inserts only the `firstName` value into the 
+target `customerName` field.  
+
+** If the `lastName` field contains a value, that is, `ISEMPTY(lastName)` 
+returns false, the data mapper maps the `lastName` value, followed by a comma, 
+followed by the `firstName` value into the target `customerName` field. 
++
+
+Now consider the behavior if the third argument in this expression is null: 
++
+`IF (ISEMPTY(lastName), firstName, null )`
++
+During execution, the data mapper evaluates the `lastName` field. 
++
+** As in the previous example, if the `lastName` field is empty, that is, 
+`ISEMPTY(lastName)` returns true, the data mapper inserts only the 
+`firstName` value into the target `customerName` field.  
+
+** However, when the third argument is null, if the `lastName` field contains 
+a value, that is, `ISEMPTY(lastName)` returns false, the data mapper does 
+not map anything into the target `customerName` field. 
+
+.Supported operators in conditional expressions
+
+
+[cols="1,2"]
+|===
+|*Operator*
+|*Description*
+
+|`+`
+|Add numeric values or concatenate string values. 
+
+|`-`
+|Subtract a numeric value from another numeric value. 
+
+|`*`
+|Multiply numeric values. 
+
+|`\`
+|Divide numeric values. 
+
+|`&&` +
+And
+|Return true if both the left and right operands are true. 
+Each operand must return a Boolean value.
+
+|`\|\|` +
+Or
+|Return true if the left operand is true, or if  the right operand is true, or if both operands are true. Each operand must return a Boolean value. 
+
+|`!`
+|Not
+
+|`>` +
+Greater than
+|Return true if the left numeric operand is greater than the right numeric operand.
+
+|< +
+Less than
+|Return true if the left numeric operand is less than the right numeric operand. 
+
+|`==` +
+Equal
+|Return true if the left operand and the right operand are the same. 
+
+|===
