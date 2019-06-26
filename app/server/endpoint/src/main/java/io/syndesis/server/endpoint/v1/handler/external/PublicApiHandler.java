@@ -139,7 +139,7 @@ public class PublicApiHandler {
             List<EnvironmentWithUses> result = dataMgr.fetchAll(Integration.class).getItems().stream()
                     .filter(i -> !i.isDeleted())
                     .flatMap(i -> i.getContinuousDeliveryState().keySet().stream())
-                    .collect(Collectors.toMap(e -> e, e -> 1L, (e , c) -> c + 1))
+                    .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
                     .entrySet().stream()
                     .map(e -> new EnvironmentWithUses(e.getKey(), e.getValue()))
                     .collect(Collectors.toList());
