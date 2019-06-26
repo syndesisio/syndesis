@@ -465,7 +465,7 @@ rules:
   resources:
   - routes
   - routes/custom-host
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
 - apiGroups:
   - camel.apache.org
   resources:
