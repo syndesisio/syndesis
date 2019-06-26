@@ -109,7 +109,7 @@ public class SetupITCase extends BaseITCase {
 
             final AcquisitionMethod acquisitionMethod = twitterProvider.acquisitionMethod();
 
-            return acquisitionMethod.configured();
+            return acquisitionMethod.isConfigured();
         });
 
         delete("/api/v1/setup/oauth-apps/twitter");
@@ -120,7 +120,7 @@ public class SetupITCase extends BaseITCase {
 
                 final AcquisitionMethod acquisitionMethod = twitterProvider.acquisitionMethod();
 
-                return !acquisitionMethod.configured();
+                return !acquisitionMethod.isConfigured();
             } catch (final IllegalArgumentException e) {
                 return e.getMessage().startsWith("No property tagged with `oauth-client-id` on connector");
             }

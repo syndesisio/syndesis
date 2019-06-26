@@ -218,7 +218,7 @@ public class CredentialITCase extends BaseITCase {
             .icon("test-provider")
             .label("test-provider")
             .description("test-provider")
-            .configured(true)
+            .isConfigured(true)
             .build();
 
         assertThat(acquisitionMethod).isEqualTo(salesforce);

@@ -2134,9 +2134,6 @@
         "actionsSummary": {
           "$ref": "#/definitions/ActionsSummary"
         },
-        "icon": {
-          "type": "string"
-        },
         "description": {
           "type": "string"
         },
@@ -2145,6 +2142,9 @@
           "items": {
             "$ref": "#/definitions/Violation"
           }
+        },
+        "icon": {
+          "type": "string"
         },
         "warnings": {
           "type": "array",
@@ -2172,8 +2172,8 @@
     "AcquisitionMethod": {
       "type": "object",
       "properties": {
-        "icon": {
-          "type": "string"
+        "configured": {
+          "type": "boolean"
         },
         "type": {
           "type": "string",
@@ -2183,6 +2183,9 @@
           "type": "string"
         },
         "label": {
+          "type": "string"
+        },
+        "icon": {
           "type": "string"
         }
       }
@@ -2229,17 +2232,17 @@
     "ActionDescriptor": {
       "type": "object",
       "properties": {
-        "inputDataShape": {
-          "$ref": "#/definitions/DataShape"
-        },
-        "outputDataShape": {
-          "$ref": "#/definitions/DataShape"
-        },
         "propertyDefinitionSteps": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ActionDescriptorStep"
           }
+        },
+        "inputDataShape": {
+          "$ref": "#/definitions/DataShape"
+        },
+        "outputDataShape": {
+          "$ref": "#/definitions/DataShape"
         }
       }
     },
@@ -2270,33 +2273,30 @@
     "ActionsSummary": {
       "type": "object",
       "properties": {
-        "totalActions": {
-          "type": "integer",
-          "format": "int32"
-        },
         "actionCountByTags": {
           "type": "object",
           "additionalProperties": {
             "type": "integer",
             "format": "int32"
           }
+        },
+        "totalActions": {
+          "type": "integer",
+          "format": "int32"
         }
       }
     },
     "ConfigurationProperty": {
       "type": "object",
       "properties": {
-        "componentProperty": {
-          "type": "boolean"
-        },
         "connectorValue": {
           "type": "string"
         },
-        "relation": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/PropertyRelation"
-          }
+        "componentProperty": {
+          "type": "boolean"
+        },
+        "placeholder": {
+          "type": "string"
         },
         "required": {
           "type": "boolean"
@@ -2310,11 +2310,14 @@
         "labelHint": {
           "type": "string"
         },
-        "placeholder": {
-          "type": "string"
-        },
         "controlHint": {
           "type": "string"
+        },
+        "relation": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PropertyRelation"
+          }
         },
         "javaType": {
           "type": "string"
@@ -2334,16 +2337,13 @@
         "description": {
           "type": "string"
         },
+        "label": {
+          "type": "string"
+        },
         "deprecated": {
           "type": "boolean"
         },
         "group": {
-          "type": "string"
-        },
-        "label": {
-          "type": "string"
-        },
-        "generator": {
           "type": "string"
         },
         "kind": {
@@ -2354,6 +2354,9 @@
           "items": {
             "$ref": "#/definitions/PropertyValue"
           }
+        },
+        "generator": {
+          "type": "string"
         },
         "tags": {
           "type": "array",
@@ -2390,9 +2393,6 @@
         "derived": {
           "type": "boolean"
         },
-        "icon": {
-          "type": "string"
-        },
         "options": {
           "type": "object",
           "additionalProperties": {
@@ -2408,6 +2408,9 @@
         },
         "organization": {
           "$ref": "#/definitions/Organization"
+        },
+        "icon": {
+          "type": "string"
         },
         "userId": {
           "type": "string"
@@ -2447,11 +2450,11 @@
         "id": {
           "type": "string"
         },
-        "notices": {
-          "$ref": "#/definitions/OptionalInt"
-        },
         "targetResourceId": {
           "type": "string"
+        },
+        "notices": {
+          "$ref": "#/definitions/OptionalInt"
         },
         "errors": {
           "$ref": "#/definitions/OptionalInt"
@@ -2507,9 +2510,6 @@
         "derived": {
           "type": "boolean"
         },
-        "icon": {
-          "type": "string"
-        },
         "options": {
           "type": "object",
           "additionalProperties": {
@@ -2525,6 +2525,9 @@
         },
         "organization": {
           "$ref": "#/definitions/Organization"
+        },
+        "icon": {
+          "type": "string"
         },
         "userId": {
           "type": "string"
@@ -2562,11 +2565,8 @@
       "type": "object",
       "required": ["actions", "name"],
       "properties": {
-        "connectorGroupId": {
-          "type": "string"
-        },
-        "componentScheme": {
-          "type": "string"
+        "actionsSummary": {
+          "$ref": "#/definitions/ActionsSummary"
         },
         "connectorFactory": {
           "type": "string"
@@ -2577,21 +2577,24 @@
             "type": "string"
           }
         },
-        "actionsSummary": {
-          "$ref": "#/definitions/ActionsSummary"
-        },
         "connectorGroup": {
           "$ref": "#/definitions/ConnectorGroup"
         },
-        "icon": {
+        "connectorGroupId": {
           "type": "string"
         },
         "description": {
           "type": "string"
         },
+        "icon": {
+          "type": "string"
+        },
         "uses": {
           "readOnly": true,
           "$ref": "#/definitions/OptionalInt"
+        },
+        "componentScheme": {
+          "type": "string"
         },
         "id": {
           "type": "string"
@@ -2689,13 +2692,7 @@
     "ConnectorDescriptor": {
       "type": "object",
       "properties": {
-        "connectorId": {
-          "type": "string"
-        },
         "camelConnectorGAV": {
-          "type": "string"
-        },
-        "componentScheme": {
           "type": "string"
         },
         "connectorFactory": {
@@ -2707,20 +2704,26 @@
             "type": "string"
           }
         },
+        "connectorId": {
+          "type": "string"
+        },
         "camelConnectorPrefix": {
           "type": "string"
         },
-        "inputDataShape": {
-          "$ref": "#/definitions/DataShape"
-        },
-        "outputDataShape": {
-          "$ref": "#/definitions/DataShape"
+        "componentScheme": {
+          "type": "string"
         },
         "propertyDefinitionSteps": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ActionDescriptorStep"
           }
+        },
+        "inputDataShape": {
+          "$ref": "#/definitions/DataShape"
+        },
+        "outputDataShape": {
+          "$ref": "#/definitions/DataShape"
         },
         "configuredProperties": {
           "type": "object",
@@ -2746,22 +2749,22 @@
       "type": "object",
       "required": ["name"],
       "properties": {
+        "connectorGroup": {
+          "$ref": "#/definitions/ConnectorGroup"
+        },
         "connectorProperties": {
           "type": "object",
           "additionalProperties": {
             "$ref": "#/definitions/ConfigurationProperty"
           }
         },
-        "componentScheme": {
+        "description": {
           "type": "string"
-        },
-        "connectorGroup": {
-          "$ref": "#/definitions/ConnectorGroup"
         },
         "icon": {
           "type": "string"
         },
-        "description": {
+        "componentScheme": {
           "type": "string"
         },
         "id": {
@@ -2788,12 +2791,12 @@
       "type": "object",
       "required": ["name"],
       "properties": {
-        "releaseTag": {
-          "type": "string"
-        },
         "lastTaggedAt": {
           "type": "string",
           "format": "date-time"
+        },
+        "releaseTag": {
+          "type": "string"
         },
         "lastExportedAt": {
           "type": "string",
@@ -2821,15 +2824,15 @@
         "collectionClassName": {
           "type": "string"
         },
+        "specification": {
+          "type": "string"
+        },
         "exemplar": {
           "type": "array",
           "items": {
             "type": "string",
             "format": "byte"
           }
-        },
-        "specification": {
-          "type": "string"
         },
         "name": {
           "type": "string"
@@ -3011,14 +3014,14 @@
       "type": "object",
       "required": ["name"],
       "properties": {
+        "scheduler": {
+          "$ref": "#/definitions/Scheduler"
+        },
         "connections": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/Connection"
           }
-        },
-        "scheduler": {
-          "$ref": "#/definitions/Scheduler"
         },
         "type": {
           "type": "string",
@@ -3173,10 +3176,13 @@
         "id": {
           "type": "string"
         },
-        "continuousDeliveryState": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/ContinuousDeliveryEnvironment"
+        "deleted": {
+          "type": "boolean"
+        },
+        "flows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Flow"
           }
         },
         "connections": {
@@ -3185,14 +3191,11 @@
             "$ref": "#/definitions/Connection"
           }
         },
-        "flows": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Flow"
+        "continuousDeliveryState": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ContinuousDeliveryEnvironment"
           }
-        },
-        "deleted": {
-          "type": "boolean"
         },
         "description": {
           "type": "string"
@@ -3248,11 +3251,11 @@
     "IntegrationBulletinBoard": {
       "type": "object",
       "properties": {
-        "notices": {
-          "$ref": "#/definitions/OptionalInt"
-        },
         "targetResourceId": {
           "type": "string"
+        },
+        "notices": {
+          "$ref": "#/definitions/OptionalInt"
         },
         "errors": {
           "$ref": "#/definitions/OptionalInt"
@@ -3288,11 +3291,18 @@
     "IntegrationDeployment": {
       "type": "object",
       "properties": {
+        "spec": {
+          "$ref": "#/definitions/Integration"
+        },
         "integrationId": {
           "type": "string"
         },
-        "spec": {
-          "$ref": "#/definitions/Integration"
+        "targetState": {
+          "type": "string",
+          "enum": ["Published", "Unpublished", "Error", "Pending"]
+        },
+        "statusMessage": {
+          "type": "string"
         },
         "stepsDone": {
           "type": "object",
@@ -3303,13 +3313,6 @@
         "currentState": {
           "type": "string",
           "enum": ["Published", "Unpublished", "Error", "Pending"]
-        },
-        "targetState": {
-          "type": "string",
-          "enum": ["Published", "Unpublished", "Error", "Pending"]
-        },
-        "statusMessage": {
-          "type": "string"
         },
         "error": {
           "$ref": "#/definitions/IntegrationDeploymentError"
@@ -3372,6 +3375,13 @@
     "IntegrationDeploymentOverview": {
       "type": "object",
       "properties": {
+        "targetState": {
+          "type": "string",
+          "enum": ["Published", "Unpublished", "Error", "Pending"]
+        },
+        "statusMessage": {
+          "type": "string"
+        },
         "stepsDone": {
           "type": "object",
           "additionalProperties": {
@@ -3381,13 +3391,6 @@
         "currentState": {
           "type": "string",
           "enum": ["Published", "Unpublished", "Error", "Pending"]
-        },
-        "targetState": {
-          "type": "string",
-          "enum": ["Published", "Unpublished", "Error", "Pending"]
-        },
-        "statusMessage": {
-          "type": "string"
         },
         "error": {
           "$ref": "#/definitions/IntegrationDeploymentError"
@@ -3415,6 +3418,13 @@
     "IntegrationMetricsSummary": {
       "type": "object",
       "properties": {
+        "topIntegrations": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
         "lastProcessed": {
           "type": "string",
           "format": "date-time"
@@ -3426,13 +3436,6 @@
           "type": "array",
           "items": {
             "$ref": "#/definitions/IntegrationDeploymentMetrics"
-          }
-        },
-        "topIntegrations": {
-          "type": "object",
-          "additionalProperties": {
-            "type": "integer",
-            "format": "int64"
           }
         },
         "errors": {
@@ -3456,22 +3459,13 @@
       "type": "object",
       "required": ["name"],
       "properties": {
-        "currentState": {
-          "type": "string",
-          "enum": ["Published", "Unpublished", "Error", "Pending"]
-        },
         "targetState": {
           "type": "string",
           "enum": ["Published", "Unpublished", "Error", "Pending"]
         },
-        "deployments": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/IntegrationDeploymentOverview"
-          }
-        },
-        "draft": {
-          "type": "boolean"
+        "currentState": {
+          "type": "string",
+          "enum": ["Published", "Unpublished", "Error", "Pending"]
         },
         "deploymentVersion": {
           "type": "integer",
@@ -3480,16 +3474,28 @@
         "board": {
           "$ref": "#/definitions/IntegrationBulletinBoard"
         },
+        "draft": {
+          "type": "boolean"
+        },
+        "deployments": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/IntegrationDeploymentOverview"
+          }
+        },
         "url": {
           "type": "string"
         },
         "id": {
           "type": "string"
         },
-        "continuousDeliveryState": {
-          "type": "object",
-          "additionalProperties": {
-            "$ref": "#/definitions/ContinuousDeliveryEnvironment"
+        "deleted": {
+          "type": "boolean"
+        },
+        "flows": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Flow"
           }
         },
         "connections": {
@@ -3498,14 +3504,11 @@
             "$ref": "#/definitions/Connection"
           }
         },
-        "flows": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/Flow"
+        "continuousDeliveryState": {
+          "type": "object",
+          "additionalProperties": {
+            "$ref": "#/definitions/ContinuousDeliveryEnvironment"
           }
-        },
-        "deleted": {
-          "type": "boolean"
         },
         "description": {
           "type": "string"
@@ -3936,14 +3939,14 @@
     "PropertyRelation": {
       "type": "object",
       "properties": {
-        "action": {
-          "type": "string"
-        },
         "when": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/When"
           }
+        },
+        "action": {
+          "type": "string"
         }
       }
     },
@@ -3961,19 +3964,19 @@
     "Quota": {
       "type": "object",
       "properties": {
-        "maxDeploymentsPerUser": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "maxIntegrationsPerUser": {
-          "type": "integer",
-          "format": "int32"
-        },
         "usedIntegrationsPerUser": {
           "type": "integer",
           "format": "int32"
         },
         "usedDeploymentsPerUser": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxDeploymentsPerUser": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "maxIntegrationsPerUser": {
           "type": "integer",
           "format": "int32"
         }
@@ -4134,17 +4137,17 @@
           "type": "string",
           "enum": ["STEP", "BEAN", "ENDPOINT"]
         },
-        "inputDataShape": {
-          "$ref": "#/definitions/DataShape"
-        },
-        "outputDataShape": {
-          "$ref": "#/definitions/DataShape"
-        },
         "propertyDefinitionSteps": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/ActionDescriptorStep"
           }
+        },
+        "inputDataShape": {
+          "$ref": "#/definitions/DataShape"
+        },
+        "outputDataShape": {
+          "$ref": "#/definitions/DataShape"
         }
       }
     },
@@ -4166,10 +4169,13 @@
         "organizationId": {
           "type": "string"
         },
-        "roleId": {
+        "firstName": {
           "type": "string"
         },
-        "firstName": {
+        "lastName": {
+          "type": "string"
+        },
+        "roleId": {
           "type": "string"
         },
         "integrations": {
@@ -4177,9 +4183,6 @@
           "items": {
             "$ref": "#/definitions/Integration"
           }
-        },
-        "lastName": {
-          "type": "string"
         },
         "fullName": {
           "type": "string"
