@@ -245,6 +245,7 @@
                     <location>io.syndesis.server.endpoint.v1.handler.tags</location>
                     <location>io.syndesis.server.endpoint.v1.handler.tests</location>
                     <location>io.syndesis.server.endpoint.v1.handler.user</location>
+                    <location>io.syndesis.server.endpoint.v1.handler.resource</location>
                   </locations>
                   <info>
                     <title>Syndesis API</title>
