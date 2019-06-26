@@ -1,4 +1,4 @@
-{{#Syndesis.Spec.Addons.Todo}}
+{{if mapHasKey .Syndesis.Spec.Addons "todo" }}
 - apiVersion: v1
   kind: Service
   metadata:
@@ -26,7 +26,7 @@
       syndesis.io/component: todo
     name: todo
   spec:
-    host: todo-{{Env.ROUTE_HOSTNAME}}
+    host: todo-{{.Env.ROUTE_HOSTNAME}}
     path: /
     port:
       targetPort: 8080
@@ -123,7 +123,7 @@
               - name: TODO_DB_USER
                 value: sampledb
               - name: TODO_DB_PASS
-                value: {{Env.POSTGRESQL_SAMPLEDB_PASSWORD}}
+                value: {{.Env.POSTGRESQL_SAMPLEDB_PASSWORD}}
             imagePullPolicy: Always
             name: todo
             image: ' '
@@ -153,4 +153,4 @@
             kind: ImageStreamTag
             name: todo:latest
         type: ImageChange
-{{/Syndesis.Spec.Addons.Todo}}
+{{end}}
