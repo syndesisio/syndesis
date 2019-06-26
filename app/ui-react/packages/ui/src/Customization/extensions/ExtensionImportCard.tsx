@@ -60,32 +60,30 @@ export interface IExtensionImportCardProps {
   onDndUploadRejected(fileName: string): string;
 }
 
-export class ExtensionImportCard extends React.Component<
+export const ExtensionImportCard: React.FunctionComponent<
   IExtensionImportCardProps
-> {
-  public render() {
-    return (
-      <Card>
-        <Card.Body>
-          {this.props.i18nAlertMessage ? (
-            <Alert type={'error'}>
-              <span>{this.props.i18nAlertMessage}</span>
-            </Alert>
-          ) : null}
-          <DndFileChooser
-            disableDropzone={this.props.dndDisabled}
-            fileExtensions={'.jar'}
-            i18nHelpMessage={this.props.i18nDndHelpMessage}
-            i18nInstructions={this.props.i18nDndInstructions}
-            i18nNoFileSelectedMessage={this.props.i18nDndNoFileSelectedMessage}
-            i18nSelectedFileLabel={this.props.i18nDndSelectedFileLabel}
-            i18nUploadFailedMessage={this.props.i18nDndUploadFailedMessage}
-            i18nUploadSuccessMessage={this.props.i18nDndUploadSuccessMessage}
-            onUploadAccepted={this.props.onDndUploadAccepted}
-            onUploadRejected={this.props.onDndUploadRejected}
-          />
-        </Card.Body>
-      </Card>
-    );
-  }
-}
+> = props => {
+  return (
+    <Card>
+      <Card.Body>
+        {props.i18nAlertMessage ? (
+          <Alert type={'error'}>
+            <span>{props.i18nAlertMessage}</span>
+          </Alert>
+        ) : null}
+        <DndFileChooser
+          disableDropzone={props.dndDisabled}
+          fileExtensions={'.jar'}
+          i18nHelpMessage={props.i18nDndHelpMessage}
+          i18nInstructions={props.i18nDndInstructions}
+          i18nNoFileSelectedMessage={props.i18nDndNoFileSelectedMessage}
+          i18nSelectedFileLabel={props.i18nDndSelectedFileLabel}
+          i18nUploadFailedMessage={props.i18nDndUploadFailedMessage}
+          i18nUploadSuccessMessage={props.i18nDndUploadSuccessMessage}
+          onUploadAccepted={props.onDndUploadAccepted}
+          onUploadRejected={props.onDndUploadRejected}
+        />
+      </Card.Body>
+    </Card>
+  );
+};

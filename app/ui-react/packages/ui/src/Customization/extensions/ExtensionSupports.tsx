@@ -16,31 +16,27 @@ export interface IExtensionSupportsProps {
 }
 
 /**
- * A component that displays the support section of the extension details page.
+ * A function component that displays the support section of the extension details page.
  */
-export class ExtensionSupports extends React.Component<
+export const ExtensionSupports: React.FunctionComponent<
   IExtensionSupportsProps
-> {
-  public render() {
-    return (
-      <div className="extension-group">
-        {this.props.extensionActions.length !== 0 ? (
-          <TextList component={TextListVariants.dl}>
-            {this.props.extensionActions.map(
-              (action: IAction, index: number) => (
-                <React.Fragment key={index}>
-                  <TextListItem component={TextListItemVariants.dt}>
-                    {action.name}
-                  </TextListItem>
-                  <TextListItem component={TextListItemVariants.dd}>
-                    {action.description}
-                  </TextListItem>
-                </React.Fragment>
-              )
-            )}
-          </TextList>
-        ) : null}
-      </div>
-    );
-  }
-}
+> = props => {
+  return (
+    <div className="extension-group">
+      {props.extensionActions.length !== 0 ? (
+        <TextList component={TextListVariants.dl}>
+          {props.extensionActions.map((action: IAction, index: number) => (
+            <React.Fragment key={index}>
+              <TextListItem component={TextListItemVariants.dt}>
+                {action.name}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dd}>
+                {action.description}
+              </TextListItem>
+            </React.Fragment>
+          ))}
+        </TextList>
+      ) : null}
+    </div>
+  );
+};
