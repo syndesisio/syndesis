@@ -34,8 +34,6 @@ public interface AcquisitionMethod {
         // subclass
     }
 
-    boolean configured();
-
     String getDescription();
 
     String getIcon();
@@ -43,4 +41,6 @@ public interface AcquisitionMethod {
     String getLabel();
 
     Type getType();
+
+    boolean isConfigured();
 }
