@@ -15,7 +15,7 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
-import static io.syndesis.server.endpoint.v1.handler.integration.IntegrationOverviewHelper.toCurrentIntegrationOverview;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -30,9 +30,12 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriInfo;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import io.fabric8.kubernetes.client.KubernetesClientException;
 import io.swagger.annotations.Api;
 import io.syndesis.common.model.DataShape;
@@ -50,6 +53,7 @@ import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.util.PaginationFilter;
 import io.syndesis.server.endpoint.util.ReflectiveSorter;
 import io.syndesis.server.endpoint.v1.handler.BaseHandler;
+import io.syndesis.server.endpoint.v1.handler.external.PublicApiHandler;
 import io.syndesis.server.endpoint.v1.operations.Creator;
 import io.syndesis.server.endpoint.v1.operations.Deleter;
 import io.syndesis.server.endpoint.v1.operations.Getter;
@@ -60,6 +64,8 @@ import io.syndesis.server.endpoint.v1.operations.Updater;
 import io.syndesis.server.endpoint.v1.operations.Validating;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
+
+import static io.syndesis.server.endpoint.v1.handler.integration.IntegrationOverviewHelper.toCurrentIntegrationOverview;
 
 @Path("/integrations")
 @Api(value = "integrations")
@@ -76,9 +82,12 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
 
     private final Validator validator;
 
+    // initialized using setter injection
+    private PublicApiHandler publicApiHandler;
+
     public IntegrationHandler(final DataManager dataMgr, final OpenShiftService openShiftService,
-        final Validator validator, final Inspectors inspectors, final EncryptionComponent encryptionSupport,
-        final APIGenerator apiGenerator) {
+                              final Validator validator, final Inspectors inspectors,
+                              final EncryptionComponent encryptionSupport, final APIGenerator apiGenerator) {
         super(dataMgr);
         this.openShiftService = openShiftService;
         this.validator = validator;
@@ -101,6 +110,9 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
     @Override
     public void delete(final String id) {
         final DataManager dataManager = getDataManager();
+
+        // Delete environment associations by setting an empty list
+        this.publicApiHandler.putTagsForRelease(id, Collections.emptyList());
 
         // Delete all deployments
         final Set<String> deploymentNames = dataManager.fetchAllByPropertyValue(IntegrationDeployment.class,
@@ -216,4 +228,8 @@ public class IntegrationHandler extends BaseHandler implements Lister<Integratio
         getDataManager().update(updatedIntegration);
     }
 
+    @Autowired
+    public void setPublicApiHandler(PublicApiHandler publicApiHandler) {
+        this.publicApiHandler = publicApiHandler;
+    }
 }
