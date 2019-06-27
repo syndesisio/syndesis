@@ -80,7 +80,7 @@ export class ConfigureActionPage extends React.Component<
               const pageAsNumber = parseInt(params.page, 10);
               const positionAsNumber = parseInt(params.position, 10);
               const oldStepConfig = getStep(
-                state.integration,
+                state.updatedIntegration || state.integration,
                 params.flowId,
                 positionAsNumber
               );
@@ -100,6 +100,10 @@ export class ConfigureActionPage extends React.Component<
                 moreConfigurationSteps,
                 values,
               }: IOnUpdatedIntegrationProps) => {
+                const updatedConfiguredProperties = {
+                  ...configuredProperties,
+                  ...values,
+                };
                 const updatedIntegration = await (this.props.mode ===
                   'adding' && pageAsNumber === 0
                   ? addConnection
@@ -109,7 +113,7 @@ export class ConfigureActionPage extends React.Component<
                   action,
                   params.flowId,
                   positionAsNumber,
-                  values
+                  updatedConfiguredProperties,
                 );
                 if (moreConfigurationSteps) {
                   history.push(
@@ -120,10 +124,7 @@ export class ConfigureActionPage extends React.Component<
                       },
                       {
                         ...state,
-                        configuredProperties: {
-                          ...values,
-                          ...configuredProperties,
-                        },
+                        configuredProperties: updatedConfiguredProperties,
                         updatedIntegration,
                       }
                     )
