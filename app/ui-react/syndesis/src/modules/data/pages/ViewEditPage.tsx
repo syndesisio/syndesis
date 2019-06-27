@@ -89,7 +89,7 @@ export class ViewEditPage extends React.Component<{}, IViewEditPageState> {
                 {({ pushNotification }) => {
                   return (
                     <WithVirtualizationHelpers>
-                      {({ deleteViewEditorState, refreshVirtualizationViews, validateViewDefinition }) => {
+                      {({ refreshVirtualizationViews, validateViewDefinition }) => {
                         // Save the View with new DDL and description
                         const handleSaveView = async (ddlValue: string) => {
                           const vwDesc = this.state.viewDescription === '[unchanged]' ? viewDefinition.keng__description : this.state.viewDescription;
