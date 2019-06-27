@@ -13,7 +13,9 @@ stories.add('render', () => {
     <ViewEditContent
       viewDdl={viewDdl}
       i18nCancelLabel={'Cancel'}
+      i18nDescription={'Edit, validate and save the View Definition'}
       i18nSaveLabel={'Save'}
+      i18nTitle={'View Definition'}
       i18nValidateLabel={'Validate'}
       isValid={true}
       isWorking={false}
