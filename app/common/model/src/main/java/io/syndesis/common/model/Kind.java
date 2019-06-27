@@ -109,12 +109,20 @@ public enum Kind {
         return kind;
     }
 
-    public static Kind from(String x) {
+    public static Kind from(final String x) {
         Kind kind = NAME_MAP.get(x);
         if( kind == null ) {
             throw new IllegalArgumentException("No matching Kind found.");
         }
         return kind;
+    }
+
+    /**
+     * A method required by the JAX-RS implementation (RESTEasy) to map
+     * model names to enum values.
+     */
+    public static Kind fromString(String given) {
+        return from(given);
     }
 
     public String getModelName() {
