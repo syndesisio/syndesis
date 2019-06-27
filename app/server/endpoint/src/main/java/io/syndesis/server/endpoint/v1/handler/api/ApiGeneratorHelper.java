@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
@@ -78,8 +79,9 @@ public final class ApiGeneratorHelper {
 
         final Integration newIntegration = newApiIntegration.getIntegration();
 
-        final Integration updatedIntegration = newIntegration.builder().id(existing.getId())
-            .flows(withSameIntegrationIdPrefix(existing, newIntegration.getFlows())).build();
+        final Integration updatedIntegration = newIntegration.builder()
+            .id(existing.getId())
+            .build();
 
         return new APIIntegration(updatedIntegration, newApiIntegration.getSpec());
     }
@@ -89,9 +91,14 @@ public final class ApiGeneratorHelper {
         final List<Flow> updatedFlows = new ArrayList<>(given.getFlows().size());
 
         for (final Flow givenFlow : given.getFlows()) {
-            final String flowId = givenFlow.getId().get();
+            final Optional<String> maybeOperationId = givenFlow.getMetadata(OpenApi.OPERATION_ID);
+            if (!maybeOperationId.isPresent()) {
+                continue;
+            }
 
-            final Optional<Flow> maybeExistingFlow = existing.findFlowById(flowId);
+            final String operationId = maybeOperationId.get();
+
+            final Optional<Flow> maybeExistingFlow = existing.findFlowBy(operationIdEquals(operationId));
             if (!maybeExistingFlow.isPresent()) {
                 // this is a flow generated from a new operation or it
                 // has it's operation id changed, either way we only
@@ -135,7 +142,11 @@ public final class ApiGeneratorHelper {
             updatedSteps.set(start, updatedStart);
             updatedSteps.set(end, updatedEnd);
 
-            final Flow updatedFlow = existingFlow.builder().name(givenFlow.getName()).description(givenFlow.getDescription()).steps(updatedSteps).build();
+            final Flow updatedFlow = existingFlow.builder()
+                .name(givenFlow.getName())
+                .description(givenFlow.getDescription())
+                .steps(updatedSteps)
+                .build();
             updatedFlows.add(updatedFlow);
         }
 
@@ -143,6 +154,10 @@ public final class ApiGeneratorHelper {
             // we replace all resources counting that the only resource
             // present is the OpenAPI specification
             .resources(given.getResources()).build();
+    }
+
+    private static Predicate<Flow> operationIdEquals(String operationId) {
+        return f -> f.getMetadata(OpenApi.OPERATION_ID).map(id -> id.equals(operationId)).orElse(false);
     }
 
     static String getSpec(final APIFormData apiFormData) {
@@ -153,16 +168,4 @@ public final class ApiGeneratorHelper {
         }
     }
 
-    static Iterable<Flow> withSameIntegrationIdPrefix(final Integration existing, final List<Flow> flows) {
-        final List<Flow> ret = new ArrayList<>(flows.size());
-
-        final String flowIdPrefix = existing.getId().get();
-        for (final Flow flow : flows) {
-            final String flowId = flow.getId().get();
-            final Flow updatedFlow = flow.withId(flowId.replaceFirst("[^:]+", flowIdPrefix));
-            ret.add(updatedFlow);
-        }
-
-        return ret;
-    }
 }
