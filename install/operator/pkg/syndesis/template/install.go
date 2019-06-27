@@ -1,7 +1,7 @@
 package template
 
 import (
-	"bytes"
+	"fmt"
 
 	v1 "github.com/openshift/api/template/v1"
 	"github.com/syndesisio/syndesis/install/operator/pkg/apis/syndesis/v1alpha1"
@@ -49,13 +49,10 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 	var templateLocation string
 
 	if releaseVersion := *configuration.ReleaseVersion; len(releaseVersion) > 0 {
-		var fileUrl bytes.Buffer
-		fileUrl.WriteString("https://raw.githubusercontent.com/syndesisio/fuse-online-install/")
-		fileUrl.WriteString(releaseVersion)
-		fileUrl.WriteString("/resources/fuse-online-template.yml")
+		fileUrl := fmt.Sprintf("https://raw.githubusercontent.com/syndesisio/fuse-online-install/%s/resources/fuse-online-template.yml", releaseVersion)
 
-		log.V(0).Info("Downloading template from", "template", fileUrl.String())
-		if err := util.DownloadFile("/tmp/fuse-online-template.yml", fileUrl.String()); err != nil {
+		log.V(0).Info("Downloading template from", "template", fileUrl)
+		if err := util.DownloadFile("/tmp/fuse-online-template.yml", fileUrl); err != nil {
 			return nil, err
 		}
 
