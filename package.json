@@ -15,7 +15,7 @@
   },
   "scripts": {
     "pre-commit:ui-react": "cd app/ui-react && yarn pre-commit",
-    "pre-push:ui-react": "syndesis -m ui-react --incremental"
+    "pre-push:ui-react": "./tools/bin/syndesis -m ui-react --incremental"
   }
 }
 
