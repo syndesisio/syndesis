@@ -65,9 +65,9 @@ import static java.util.Optional.ofNullable;
 public class SwaggerAPIGenerator implements APIGenerator {
 
     private static final String DEFAULT_RETURN_CODE_METADATA_KEY = "default-return-code";
-    private static final String HTTP_RESPONSE_CODE_METADATA_KEY = "httpResponseCode";
-
     private static final String EXCERPT_METADATA_KEY = "excerpt";
+
+    private static final String HTTP_RESPONSE_CODE_METADATA_KEY = "httpResponseCode";
 
     private final DataShapeGenerator dataShapeGenerator;
 
@@ -85,10 +85,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
             .flatMap(i -> ofNullable(i.getTitle()))
             .orElse(null);
 
-        final String integrationId = KeyGenerator.createKey();
-
-        Integration.Builder integration = new Integration.Builder()
-            .id(integrationId)
+        final Integration.Builder integration = new Integration.Builder()
             .addTag("api-provider")
             .createdAt(System.currentTimeMillis())
             .name(name);
@@ -169,9 +166,12 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     defaultCode = defaultResponse.get().getKey();
                 }
 
+                final String flowId = KeyGenerator.createKey();
+
                 final Flow flow = new Flow.Builder()
-                    .id(String.format("%s:flows:%s", integrationId, operationId))
+                    .id(flowId)
                     .type(Flow.FlowType.API_PROVIDER)
+                    .putMetadata(OpenApi.OPERATION_ID, operationId)
                     .putMetadata(EXCERPT_METADATA_KEY, "501 Not Implemented")
                     .putMetadata(DEFAULT_RETURN_CODE_METADATA_KEY, defaultCode)
                     .addStep(startStep)
@@ -180,7 +180,7 @@ public class SwaggerAPIGenerator implements APIGenerator {
                     .description(operationDescription)
                     .build();
 
-                integration = integration.addFlow(flow);
+                integration.addFlow(flow);
             }
 
         }

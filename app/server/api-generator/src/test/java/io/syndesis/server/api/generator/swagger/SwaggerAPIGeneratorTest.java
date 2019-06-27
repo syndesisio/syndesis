@@ -25,6 +25,7 @@ import io.syndesis.common.model.api.APISummary;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.connection.Connector;
 import io.syndesis.common.model.integration.Flow;
+import io.syndesis.common.model.openapi.OpenApi;
 import io.syndesis.server.api.generator.APIIntegration;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.ProvidedApiTemplate;
@@ -81,9 +82,9 @@ public class SwaggerAPIGeneratorTest {
 
         final List<Flow> flows = apiIntegration.getIntegration().getFlows();
 
-        assertThat(flows).filteredOn(idEndsWith("-1")).first().hasFieldOrPropertyWithValue("name", "Receiving GET request on /hi");
-        assertThat(flows).filteredOn(idEndsWith("-2")).first().hasFieldOrPropertyWithValue("name", "post operation");
-        assertThat(flows).filteredOn(idEndsWith("-3")).first().hasFieldOrPropertyWithValue("name", "Receiving PUT request on /hi");
+        assertThat(flows).filteredOn(operationIdEquals("operation-1")).first().hasFieldOrPropertyWithValue("name", "Receiving GET request on /hi");
+        assertThat(flows).filteredOn(operationIdEquals("operation-2")).first().hasFieldOrPropertyWithValue("name", "post operation");
+        assertThat(flows).filteredOn(operationIdEquals("operation-3")).first().hasFieldOrPropertyWithValue("name", "Receiving PUT request on /hi");
     }
 
     private static Connection dummyConnection() {
@@ -101,7 +102,7 @@ public class SwaggerAPIGeneratorTest {
         return new Connection.Builder().connector(connector).build();
     }
 
-    private static Predicate<Flow> idEndsWith(final String end) {
-        return f -> f.getId().map(id -> id.endsWith(end)).orElse(false);
+    private static Predicate<Flow> operationIdEquals(final String operationId) {
+        return f -> f.getMetadata(OpenApi.OPERATION_ID).map(id -> id.equals(operationId)).orElse(false);
     }
 }

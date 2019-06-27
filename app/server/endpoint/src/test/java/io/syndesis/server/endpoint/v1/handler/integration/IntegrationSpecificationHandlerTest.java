@@ -78,9 +78,25 @@ public class IntegrationSpecificationHandlerTest {
 
     @Test
     public void shouldPerformUpdatesBasedOnNewSpecification() {
-        final Integration existing = new Integration.Builder().id("integration-1").addFlow(new Flow.Builder().id("integration-1:flows:flow1").build()).build();
-        final Integration given = new Integration.Builder().id("integration-2").addFlow(new Flow.Builder().id("integration-2:flows:flow2").build()).build();
-        final Integration expected = new Integration.Builder().id("integration-1").addFlow(new Flow.Builder().id("integration-1:flows:flow2").build()).build();
+        final Integration existing = new Integration.Builder().id("integration-1")
+            .addFlow(new Flow.Builder()
+                .putMetadata(OpenApi.OPERATION_ID, "flow1")
+                .build())
+            .build();
+
+        final Integration given = new Integration.Builder()
+            .id("integration-2")
+            .addFlow(new Flow.Builder()
+                .putMetadata(OpenApi.OPERATION_ID, "flow2")
+                .build())
+            .build();
+
+        final Integration expected = new Integration.Builder()
+            .id("integration-1")
+            .addFlow(new Flow.Builder()
+                .putMetadata(OpenApi.OPERATION_ID, "flow2")
+                .build())
+            .build();
 
         final OpenApi updatedSpecification = new OpenApi.Builder().build();
         final APIIntegration updatedApiIntegration = new APIIntegration(given, updatedSpecification);
@@ -166,7 +182,7 @@ public class IntegrationSpecificationHandlerTest {
         final Integration integration = new Integration.Builder()
             .id("integration-1")
             .addFlow(new Flow.Builder()
-                .id("integration-1:flows:flow1")
+                .putMetadata(OpenApi.OPERATION_ID, "flow1")
                 .addSteps(step, step)
                 .build())
             .build();
