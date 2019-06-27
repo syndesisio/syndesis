@@ -53,6 +53,7 @@ import javax.ws.rs.core.StreamingOutput;
 import org.jboss.resteasy.annotations.providers.multipart.MultipartForm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
@@ -92,21 +93,23 @@ public class PublicApiHandler {
     private static final Pattern UNSAFE_CHARS = Pattern.compile("[<>\"#%{}|\\\\^~\\[\\]`;/?:@=&]");
 
     private final DataManager dataMgr;
-    private final IntegrationSupportHandler handler;
     private final EncryptionComponent encryptionComponent;
-    private final IntegrationHandler integrationHandler;
     private final IntegrationDeploymentHandler deploymentHandler;
     private final ConnectionHandler connectionHandler;
     private final MonitoringProvider monitoringProvider;
 
+    // initialized using setter injection to avoid circular dependency
+    private IntegrationSupportHandler handler;
+    private IntegrationHandler integrationHandler;
+
     // cache of temporary environment names not assigned to any integration
     private final Queue<String> unusedEnvironments;
 
-    protected PublicApiHandler(DataManager dataMgr, IntegrationSupportHandler handler, EncryptionComponent encryptionComponent, IntegrationHandler integrationHandler, IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler, MonitoringProvider monitoringProvider) {
+    protected PublicApiHandler(DataManager dataMgr, EncryptionComponent encryptionComponent,
+                               IntegrationDeploymentHandler deploymentHandler, ConnectionHandler connectionHandler,
+                               MonitoringProvider monitoringProvider) {
         this.dataMgr = dataMgr;
-        this.handler = handler;
         this.encryptionComponent = encryptionComponent;
-        this.integrationHandler = integrationHandler;
         this.deploymentHandler = deploymentHandler;
         this.connectionHandler = connectionHandler;
         this.monitoringProvider = monitoringProvider;
@@ -672,6 +675,16 @@ public class PublicApiHandler {
         map.put(environment, operator.apply(map.getOrDefault(environment,
                 ContinuousDeliveryEnvironment.Builder.createFrom(environment, taggedAt)).builder()).build());
         dataMgr.update(integration.builder().continuousDeliveryState(map).build());
+    }
+
+    @Autowired
+    public void setIntegrationHandler(IntegrationHandler integrationHandler) {
+        this.integrationHandler = integrationHandler;
+    }
+
+    @Autowired
+    public void setIntegrationSupportHandler(IntegrationSupportHandler handler) {
+        this.handler = handler;
     }
 
     /**

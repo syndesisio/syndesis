@@ -18,10 +18,12 @@ package io.syndesis.server.endpoint.v1.handler.integration;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-
 import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.junit.Test;
+import org.mockito.ArgumentMatchers;
 
 import io.syndesis.common.model.Kind;
 import io.syndesis.common.model.ResourceIdentifier;
@@ -40,9 +42,7 @@ import io.syndesis.server.api.generator.ProvidedApiTemplate;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
 import io.syndesis.server.endpoint.v1.handler.api.ApiHandler.APIFormData;
-
-import org.junit.Test;
-import org.mockito.ArgumentMatchers;
+import io.syndesis.server.endpoint.v1.handler.external.PublicApiHandler;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -63,8 +63,10 @@ public class IntegrationSpecificationHandlerTest {
     IntegrationResourceManager resourceManager = mock(IntegrationResourceManager.class);
 
     public IntegrationSpecificationHandlerTest() {
-        handler = new IntegrationSpecificationHandler(
-            new IntegrationHandler(dataManager, null, null, null, encryptionSupport, apiGenerator), resourceManager);
+        final IntegrationHandler integrationHandler = new IntegrationHandler(dataManager, null, null, null,
+                encryptionSupport, apiGenerator);
+        integrationHandler.setPublicApiHandler(mock(PublicApiHandler.class));
+        handler = new IntegrationSpecificationHandler(integrationHandler, resourceManager);
     }
 
     @Test
