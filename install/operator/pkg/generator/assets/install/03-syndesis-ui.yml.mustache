@@ -111,11 +111,11 @@
   data:
     config.json: |
       {
-        "apiBase": 'https://{{Env.ROUTE_HOSTNAME}}',
+        "apiBase": "https://{{Env.ROUTE_HOSTNAME}}",
         "apiEndpoint": "/api/v1",
         "title": "Syndesis",
-        "consoleUrl": '{{Env.OPENSHIFT_CONSOLE_URL}}',
-        "project": '{{Env.OPENSHIFT_PROJECT}}',
+        "consoleUrl": "{{Env.OPENSHIFT_CONSOLE_URL}}",
+        "project": "{{Env.OPENSHIFT_PROJECT}}",
         "datamapper": {
           "baseMappingServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/",
           "baseJavaInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/java/",
@@ -123,7 +123,7 @@
           "baseJSONInspectionServiceUrl": "https://{{Env.ROUTE_HOSTNAME}}/api/v1/atlas/json/",
           "disableMappingPreviewMode": false
         },
-        "datavirt": { 
+        "datavirt": {
           "dvUrl": "/vdb-builder/v1/"
         },
         "features" : {
