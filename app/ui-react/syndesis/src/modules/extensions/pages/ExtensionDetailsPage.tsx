@@ -94,7 +94,7 @@ export const ExtensionDetailsPage: React.FunctionComponent = () => {
       error={error !== false}
       loading={!hasData}
       loaderChildren={<PageLoader />}
-      errorChildren={<ApiError />}
+      errorChildren={<ApiError error={error as Error} />}
     >
       {() => (
         <>

@@ -36,14 +36,14 @@ export const SupportPage: React.FunctionComponent = () => {
           {({ downloadSupportData }) => {
             return (
               <WithIntegrations>
-                {({ data, error, loading }) => {
+                {({ data, error, errorMessage, loading }) => {
                   return (
                     <>
                       <WithLoader
                         error={error}
                         loading={loading}
                         loaderChildren={<PageLoader />}
-                        errorChildren={<ApiError />}
+                        errorChildren={<ApiError error={errorMessage!} />}
                       >
                         {() => {
                           const handleIntegrationChecked = (

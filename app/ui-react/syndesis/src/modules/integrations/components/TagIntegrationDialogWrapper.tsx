@@ -53,7 +53,12 @@ export class TagIntegrationDialogWrapper extends React.Component<
               <WithIntegrationTags
                 integrationId={this.props.targetIntegrationId}
               >
-                {({ data: tags , hasData: hasTags, error: tagError }) => (
+                {({
+                  data: tags,
+                  hasData: hasTags,
+                  error: tagError,
+                  errorMessage: tagErrorMessage,
+                }) => (
                   <WithEnvironments disableUpdates={true}>
                     {({
                       data: environments,
@@ -73,12 +78,15 @@ export class TagIntegrationDialogWrapper extends React.Component<
                                 <CiCdListSkeleton />
                               </CiCdList>
                             }
-                            errorChildren={<ApiError />}
+                            errorChildren={
+                              <ApiError error={tagErrorMessage!} />
+                            }
                           >
                             {() => {
-                              const mappedItems = environments.map((item) => ({
+                              const mappedItems = environments.map(item => ({
                                 name: item as string,
-                                selected: typeof tags[item as string] !== 'undefined',
+                                selected:
+                                  typeof tags[item as string] !== 'undefined',
                               }));
                               return (
                                 <TagIntegrationDialogBody

@@ -165,7 +165,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                         }
                       >
                         <WithApiVersion>
-                          {({ data, error, loading }) => {
+                          {({ data, error, errorMessage, loading }) => {
                             const {
                               'commit-id': commitId,
                               'build-id': buildId,
@@ -175,7 +175,9 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                               <WithLoader
                                 error={error}
                                 loading={loading}
-                                errorChildren={<ApiError />}
+                                errorChildren={
+                                  <ApiError error={errorMessage!} />
+                                }
                                 loaderChildren={<Loader />}
                               >
                                 {() => (

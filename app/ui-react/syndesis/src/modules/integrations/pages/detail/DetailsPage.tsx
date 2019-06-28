@@ -47,12 +47,12 @@ export class DetailsPage extends React.Component {
                       integrationId={integrationId}
                       initialValue={integration}
                     >
-                      {({ data, hasData, error }) => (
+                      {({ data, hasData, error, errorMessage }) => (
                         <WithLoader
                           error={error}
                           loading={!hasData}
                           loaderChildren={<PageLoader />}
-                          errorChildren={<ApiError />}
+                          errorChildren={<ApiError error={errorMessage!} />}
                         >
                           {() => (
                             <WithIntegrationActions
