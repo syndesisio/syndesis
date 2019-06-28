@@ -111,12 +111,12 @@ export class VirtualizationsPage extends React.Component {
                             'virtualization.virtualizationsDisabled'
                           )}
                         />
-                      )
+                      );
                     }
 
                     return (
                       <WithVirtualizations>
-                        {({ data, hasData, error, read }) => {
+                        {({ data, hasData, error, errorMessage, read }) => {
                           return (
                             <WithVirtualizationHelpers>
                               {({
@@ -257,7 +257,11 @@ export class VirtualizationsPage extends React.Component {
                                                   }}
                                                 />
                                               }
-                                              errorChildren={<ApiError />}
+                                              errorChildren={
+                                                <ApiError
+                                                  error={errorMessage!}
+                                                />
+                                              }
                                             >
                                               {() => (
                                                 <VirtualizationList
@@ -279,7 +283,7 @@ export class VirtualizationsPage extends React.Component {
                                                   i18nEmptyStateTitle={t(
                                                     'virtualization.emptyStateTitle'
                                                   )}
-                                                  /* TD-636: Commented out for TP 
+                                                  /* TD-636: Commented out for TP
                                                   i18nImport={t('shared:Import')}
                                                   i18nImportTip={t(
                                                     'virtualization.importVirtualizationTip'
@@ -299,7 +303,7 @@ export class VirtualizationsPage extends React.Component {
                                                     }
                                                   )}
                                                   linkCreateHRef={resolvers.virtualizations.create()}
-                                                  /* TD-636: Commented out for TP 
+                                                  /* TD-636: Commented out for TP
                                                   onImport={this.handleImportVirt} */
                                                   hasListData={data.length > 0}
                                                 >
@@ -363,7 +367,7 @@ export class VirtualizationsPage extends React.Component {
                                                           i18nError={t(
                                                             'shared:Error'
                                                           )}
-                                                          /* TD-636: Commented out for TP 
+                                                          /* TD-636: Commented out for TP
                                                             i18nExport={t('shared:Export')} */
                                                           i18nPublish={t(
                                                             'shared:Publish'
@@ -387,7 +391,7 @@ export class VirtualizationsPage extends React.Component {
                                                           onDelete={
                                                             handleDelete
                                                           }
-                                                          /* TD-636: Commented out for TP 
+                                                          /* TD-636: Commented out for TP
                                                             onExport={
                                                               this
                                                                 .handleExportVirtualization

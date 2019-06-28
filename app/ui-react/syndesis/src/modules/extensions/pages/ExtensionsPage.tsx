@@ -149,7 +149,7 @@ export const ExtensionsPage: React.FunctionComponent = () => {
                     }}
                   />
                 }
-                errorChildren={<ApiError />}
+                errorChildren={<ApiError error={extensionsError as Error} />}
               >
                 {() =>
                   filteredAndSorted

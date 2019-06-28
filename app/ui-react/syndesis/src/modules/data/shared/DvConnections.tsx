@@ -12,6 +12,7 @@ import { getDvConnectionStatus } from './VirtualizationUtils';
 
 export interface IDvConnectionsProps {
   error: boolean;
+  errorMessage?: string;
   loading: boolean;
   connections: Connection[];
   initialSelection: string; // Name of initially selected connection
@@ -59,7 +60,7 @@ export class DvConnections extends React.Component<
               ))}
             </>
           }
-          errorChildren={<ApiError />}
+          errorChildren={<ApiError error={this.props.errorMessage!} />}
         >
           {() =>
             this.props.connections.map((c, index) => (

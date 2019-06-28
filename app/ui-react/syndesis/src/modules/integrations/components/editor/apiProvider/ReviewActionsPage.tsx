@@ -102,7 +102,7 @@ export const ReviewActionsPage: React.FunctionComponent<
                   loading={loading}
                   loaderChildren={<PageLoader />}
                   error={error !== false}
-                  errorChildren={<ApiError />}
+                  errorChildren={<ApiError error={error as Error} />}
                 >
                   {() => (
                     <>

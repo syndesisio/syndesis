@@ -111,7 +111,7 @@ export const SelectConnectionPage: React.FunctionComponent<
         content={
           <EditorStepsWithToolbar
             loading={!hasConnectionsData || !hasExtensionsData}
-            error={connectionsError !== false || extensionsError !== false}
+            error={connectionsError || extensionsError}
             getEditorStepHref={step => getStepHref(step, params, state, props)}
             steps={visibleSteps}
             createConnectionButtonStyle={'default'}

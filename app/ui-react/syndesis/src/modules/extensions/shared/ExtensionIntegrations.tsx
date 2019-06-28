@@ -41,7 +41,7 @@ export const ExtensionIntegrations: React.FunctionComponent<
       error={error !== false}
       loading={!hasData}
       loaderChildren={<Loader />}
-      errorChildren={<ApiError />}
+      errorChildren={<ApiError error={error as Error} />}
     >
       {() => (
         <Translation ns={['extensions', 'shared']}>
