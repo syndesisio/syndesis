@@ -43,19 +43,24 @@ export class SelectSourcesPage extends React.Component<
       sourceName: getNodeName(nodePath),
       sourcePath: nodePath,
     } as SchemaNodeInfo;
+
     this.setState({
-      selectedSchemaNodes: [srcInfo],
+      selectedSchemaNodes: [...this.state.selectedSchemaNodes, srcInfo],
     });
   }
 
   public handleNodeDeselected(connectionName: string, nodePath: string) {
+    const tempArray = this.state.selectedSchemaNodes;
+    const index = this.getIndex(nodePath, tempArray, 'sourcePath');
+    tempArray.splice(index, 1);
     this.setState({
-      selectedSchemaNodes: [],
+      selectedSchemaNodes: tempArray,
     });
   }
 
   public render() {
-    const schemaNodeInfo: SchemaNodeInfo = this.state.selectedSchemaNodes[0];
+    const schemaNodeInfo: SchemaNodeInfo[] = this.state.selectedSchemaNodes;
+
     return (
       <WithRouteData<ISelectSourcesRouteParams, ISelectSourcesRouteState>>
         {({ virtualizationId }, { virtualization }, { history }) => (
@@ -83,5 +88,14 @@ export class SelectSourcesPage extends React.Component<
         )}
       </WithRouteData>
     );
+  }
+
+  private getIndex(value: string, arr: SchemaNodeInfo[], prop: string) {
+    for (let i = 0; i < arr.length; i++) {
+      if (arr[i][prop] === value) {
+        return i;
+      }
+    }
+    return -1; // to handle the case where the value doesn't exist
   }
 }

@@ -125,9 +125,9 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
     const response = await callFetch({
       headers: {},
       method: 'POST',
-      url: `${
-        this.props.dvApiUri
-      }workspace/dataservices/refreshViews/${virtualization.keng__id}`,
+      url: `${this.props.dvApiUri}workspace/dataservices/refreshViews/${
+        virtualization.keng__id
+      }`,
     });
 
     if (!response.ok) {
@@ -366,6 +366,7 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
     viewEditorStates: ViewEditorState[]
   ): Promise<void> {
     // Updates the view editor states
+    alert(viewEditorStates[0].viewDefinition.sourcePaths[0]);
     await this.updateViewEditorStates(viewEditorStates);
     const response = await callFetch({
       headers: {},

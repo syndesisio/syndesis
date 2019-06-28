@@ -34,7 +34,7 @@ export interface ISelectNameRouteParams {
  */
 export interface ISelectNameRouteState {
   virtualization: RestDataService;
-  schemaNodeInfo: SchemaNodeInfo;
+  schemaNodeInfo: SchemaNodeInfo[];
 }
 
 export class SelectNamePage extends React.Component {
