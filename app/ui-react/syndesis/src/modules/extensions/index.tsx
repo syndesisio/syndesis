@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { Route, Switch } from 'react-router';
-import ExtensionDetailsPage from './pages/ExtensionDetailsPage';
-import ExtensionImportPage from './pages/ExtensionImportPage';
-import ExtensionsPage from './pages/ExtensionsPage';
+import { ExtensionDetailsPage } from './pages/ExtensionDetailsPage';
+import { ExtensionImportPage } from './pages/ExtensionImportPage';
+import { ExtensionsPage } from './pages/ExtensionsPage';
 import routes from './routes';
 
 export class ExtensionsModule extends React.Component {

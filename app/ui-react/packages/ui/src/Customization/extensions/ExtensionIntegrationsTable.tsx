@@ -17,10 +17,10 @@ export interface IExtensionIntegrationsTableProps {
   data: IExtensionIntegration[];
 }
 
-export class ExtensionIntegrationsTable extends React.Component<
+export const ExtensionIntegrationsTable: React.FunctionComponent<
   IExtensionIntegrationsTableProps
-> {
-  public getColumns() {
+> = props => {
+  const getColumns = () => {
     const headerFormat = (value: string) => (
       <Table.Heading>{value}</Table.Heading>
     );
@@ -30,7 +30,7 @@ export class ExtensionIntegrationsTable extends React.Component<
       { rowData }: { rowData: any }
     ) => {
       // rowData is an Integration type so 'name' property is what makes the integration unique
-      const onClick = () => this.onIntegrationSelected(rowData.id);
+      const onClick = () => onIntegrationSelected(rowData.id);
       return (
         <Table.Cell>
           <a
@@ -56,7 +56,7 @@ export class ExtensionIntegrationsTable extends React.Component<
         },
         header: {
           formatters: [headerFormat],
-          label: this.props.i18nName,
+          label: props.i18nName,
         },
         property: 'name', // must match the name of the IntegrationOverview.name property
       },
@@ -66,33 +66,31 @@ export class ExtensionIntegrationsTable extends React.Component<
         },
         header: {
           formatters: [headerFormat],
-          label: this.props.i18nDescription,
+          label: props.i18nDescription,
         },
         property: 'description', // must match the name of the IntegrationOverview.description property
       },
     ];
-  }
+  };
 
-  public onIntegrationSelected(integrationId: string) {
-    this.props.onSelectIntegration(integrationId);
-  }
+  const onIntegrationSelected = (integrationId: string) => {
+    props.onSelectIntegration(integrationId);
+  };
 
-  public render() {
-    return (
-      <div className="extension-group">
-        <Text>{this.props.i18nUsageMessage}</Text>
-        {this.props.data.length !== 0 ? (
-          <Table.PfProvider
-            striped={true}
-            bordered={true}
-            hover={true}
-            columns={this.getColumns()}
-          >
-            <Table.Header />
-            <Table.Body rows={this.props.data} rowKey="name" />
-          </Table.PfProvider>
-        ) : null}
-      </div>
-    );
-  }
-}
+  return (
+    <div className="extension-group">
+      <Text>{props.i18nUsageMessage}</Text>
+      {props.data.length !== 0 ? (
+        <Table.PfProvider
+          striped={true}
+          bordered={true}
+          hover={true}
+          columns={getColumns()}
+        >
+          <Table.Header />
+          <Table.Body rows={props.data} rowKey="name" />
+        </Table.PfProvider>
+      ) : null}
+    </div>
+  );
+};

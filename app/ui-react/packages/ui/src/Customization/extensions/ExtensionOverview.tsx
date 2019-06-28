@@ -50,41 +50,37 @@ export interface IExtensionOverviewProps {
 }
 
 /**
- * A component that displays the overview section of the extension details page.
+ * A function component that displays the overview section of the extension details page.
  */
-export class ExtensionOverview extends React.Component<
+export const ExtensionOverview: React.FunctionComponent<
   IExtensionOverviewProps
-> {
-  public render() {
-    return (
-      <TextList component={TextListVariants.dl}>
-        <TextListItem component={TextListItemVariants.dt}>
-          {this.props.i18nName}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dd}>
-          {this.props.extensionName}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dt}>
-          {this.props.i18nDescription}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dd}>
-          {this.props.extensionDescription
-            ? this.props.extensionDescription
-            : null}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dt}>
-          {this.props.i18nType}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dd}>
-          {this.props.i18nTypeMessage}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dt}>
-          {this.props.i18nLastUpdate}
-        </TextListItem>
-        <TextListItem component={TextListItemVariants.dd}>
-          {this.props.i18nLastUpdateDate ? this.props.i18nLastUpdateDate : null}
-        </TextListItem>
-      </TextList>
-    );
-  }
-}
+> = props => {
+  return (
+    <TextList component={TextListVariants.dl}>
+      <TextListItem component={TextListItemVariants.dt}>
+        {props.i18nName}
+      </TextListItem>
+      <TextListItem component={TextListItemVariants.dd}>
+        {props.extensionName}
+      </TextListItem>
+      <TextListItem component={TextListItemVariants.dt}>
+        {props.i18nDescription}
+      </TextListItem>
+      <TextListItem component={TextListItemVariants.dd}>
+        {props.extensionDescription ? props.extensionDescription : null}
+      </TextListItem>
+      <TextListItem component={TextListItemVariants.dt}>
+        {props.i18nType}
+      </TextListItem>
+      <TextListItem component={TextListItemVariants.dd}>
+        {props.i18nTypeMessage}
+      </TextListItem>
+      <TextListItem component={TextListItemVariants.dt}>
+        {props.i18nLastUpdate}
+      </TextListItem>
+      <TextListItem component={TextListItemVariants.dd}>
+        {props.i18nLastUpdateDate ? props.i18nLastUpdateDate : null}
+      </TextListItem>
+    </TextList>
+  );
+};

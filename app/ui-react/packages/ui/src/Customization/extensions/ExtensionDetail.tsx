@@ -117,152 +117,125 @@ export interface IExtensionDetailProps {
   supportsSection: JSX.Element;
 }
 
-export interface IExtensionDetailState {
-  showDeleteDialog: boolean;
-}
+export const ExtensionDetail: React.FunctionComponent<
+  IExtensionDetailProps
+> = props => {
+  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
 
-export class ExtensionDetail extends React.Component<
-  IExtensionDetailProps,
-  IExtensionDetailState
-> {
-  public constructor(props: IExtensionDetailProps) {
-    super(props);
+  const doCancel = () => {
+    setShowDeleteDialog(false);
+  };
 
-    this.state = {
-      showDeleteDialog: false, // initial visibility of delete dialog
-    };
-
-    this.doCancel = this.doCancel.bind(this);
-    this.doDelete = this.doDelete.bind(this);
-    this.showDeleteDialog = this.showDeleteDialog.bind(this);
-  }
-
-  public doCancel() {
-    this.setState({
-      showDeleteDialog: false, // hide dialog
-    });
-  }
-
-  public doDelete() {
-    this.setState({
-      showDeleteDialog: false, // hide dialog
-    });
+  const doDelete = () => {
+    setShowDeleteDialog(false);
 
     // TODO: disable components while delete is processing
-    this.props.onDelete();
-  }
+    props.onDelete();
+  };
 
-  public getDeleteTooltip() {
+  const getDeleteTooltip = (): JSX.Element => {
     return (
       <Tooltip id="deleteTip">
-        {this.props.i18nDeleteTip
-          ? this.props.i18nDeleteTip
-          : this.props.i18nDelete}
+        {props.i18nDeleteTip ? props.i18nDeleteTip : props.i18nDelete}
       </Tooltip>
     );
-  }
+  };
 
-  public getUpdateTooltip() {
+  const getUpdateTooltip = (): JSX.Element => {
     return (
       <Tooltip id="updateTip">
-        {this.props.i18nUpdateTip
-          ? this.props.i18nUpdateTip
-          : this.props.i18nUpdate}
+        {props.i18nUpdateTip ? props.i18nUpdateTip : props.i18nUpdate}
       </Tooltip>
     );
-  }
+  };
 
-  public showDeleteDialog() {
-    this.setState({
-      showDeleteDialog: true,
-    });
-  }
+  const showConfirmationDialog = () => {
+    setShowDeleteDialog(true);
+  };
 
-  public render() {
-    return (
-      <>
-        <ConfirmationDialog
-          buttonStyle={ConfirmationButtonStyle.DANGER}
-          i18nCancelButtonText={this.props.i18nCancelText}
-          i18nConfirmButtonText={this.props.i18nDelete}
-          i18nConfirmationMessage={this.props.i18nDeleteModalMessage}
-          i18nTitle={this.props.i18nDeleteModalTitle}
-          icon={ConfirmationIconType.DANGER}
-          showDialog={this.state.showDeleteDialog}
-          onCancel={this.doCancel}
-          onConfirm={this.doDelete}
-        />
-        <PageSection variant={'light'}>
-          <Level gutter={'sm'}>
+  return (
+    <>
+      <ConfirmationDialog
+        buttonStyle={ConfirmationButtonStyle.DANGER}
+        i18nCancelButtonText={props.i18nCancelText}
+        i18nConfirmButtonText={props.i18nDelete}
+        i18nConfirmationMessage={props.i18nDeleteModalMessage}
+        i18nTitle={props.i18nDeleteModalTitle}
+        icon={ConfirmationIconType.DANGER}
+        showDialog={showDeleteDialog}
+        onCancel={doCancel}
+        onConfirm={doDelete}
+      />
+      <PageSection variant={'light'}>
+        <Level gutter={'sm'}>
+          <TextContent>
+            <Title
+              size="xl"
+              headingLevel={TitleLevel.h1}
+              className="extension-detail__extensionTitle"
+            >
+              {props.extensionName}
+            </Title>
+            <Text className="extension-detail__extensionId">
+              {props.i18nIdMessage}
+            </Text>
+          </TextContent>
+          <LevelItem className="extension-detail__titleButtons">
+            <OverlayTrigger overlay={getUpdateTooltip()} placement="top">
+              <ButtonLink
+                data-testid={'extension-detail-update-button'}
+                href={props.linkUpdateExtension}
+                as={'primary'}
+              >
+                {props.i18nUpdate}
+              </ButtonLink>
+            </OverlayTrigger>
+            <OverlayTrigger overlay={getDeleteTooltip()} placement="top">
+              <Button
+                bsStyle="default"
+                disabled={props.extensionUses !== 0}
+                onClick={showConfirmationDialog}
+              >
+                {props.i18nDelete}
+              </Button>
+            </OverlayTrigger>
+          </LevelItem>
+        </Level>
+      </PageSection>
+      <PageSection>
+        <Card>
+          <CardBody>
             <TextContent>
               <Title
-                size="xl"
-                headingLevel={TitleLevel.h1}
-                className="extension-detail__extensionTitle"
+                headingLevel="h5"
+                size="md"
+                className="customization-details__heading"
               >
-                {this.props.extensionName}
+                {props.i18nOverviewSectionTitle}
               </Title>
-              <Text className="extension-detail__extensionId">
-                {this.props.i18nIdMessage}
-              </Text>
+              <Container>{props.overviewSection}</Container>
+
+              <Title
+                headingLevel="h5"
+                size="md"
+                className="customization-details__heading"
+              >
+                {props.i18nSupportsSectionTitle}
+              </Title>
+              <Container>{props.supportsSection}</Container>
+
+              <Title
+                headingLevel="h5"
+                size="md"
+                className="customization-details__heading"
+              >
+                {props.i18nUsageSectionTitle}
+              </Title>
+              <Container>{props.integrationsSection}</Container>
             </TextContent>
-            <LevelItem className="extension-detail__titleButtons">
-              <OverlayTrigger overlay={this.getUpdateTooltip()} placement="top">
-                <ButtonLink
-                  data-testid={'extension-detail-update-button'}
-                  href={this.props.linkUpdateExtension}
-                  as={'primary'}
-                >
-                  {this.props.i18nUpdate}
-                </ButtonLink>
-              </OverlayTrigger>
-              <OverlayTrigger overlay={this.getDeleteTooltip()} placement="top">
-                <Button
-                  bsStyle="default"
-                  disabled={this.props.extensionUses !== 0}
-                  onClick={this.showDeleteDialog}
-                >
-                  {this.props.i18nDelete}
-                </Button>
-              </OverlayTrigger>
-            </LevelItem>
-          </Level>
-        </PageSection>
-        <PageSection>
-          <Card>
-            <CardBody>
-              <TextContent>
-                <Title
-                  headingLevel="h5"
-                  size="md"
-                  className="customization-details__heading"
-                >
-                  {this.props.i18nOverviewSectionTitle}
-                </Title>
-                <Container>{this.props.overviewSection}</Container>
-
-                <Title
-                  headingLevel="h5"
-                  size="md"
-                  className="customization-details__heading"
-                >
-                  {this.props.i18nSupportsSectionTitle}
-                </Title>
-                <Container>{this.props.supportsSection}</Container>
-
-                <Title
-                  headingLevel="h5"
-                  size="md"
-                  className="customization-details__heading"
-                >
-                  {this.props.i18nUsageSectionTitle}
-                </Title>
-                <Container>{this.props.integrationsSection}</Container>
-              </TextContent>
-            </CardBody>
-          </Card>
-        </PageSection>
-      </>
-    );
-  }
-}
+          </CardBody>
+        </Card>
+      </PageSection>
+    </>
+  );
+};
