@@ -1,3 +1,4 @@
+import { Text, TextContent, Title, TitleLevel } from '@patternfly/react-core';
 import { Alert, Button, Card } from 'patternfly-react';
 import * as React from 'react';
 import { Loader, PageSection } from '../../../Layout';
@@ -18,9 +19,19 @@ export interface IViewEditContentProps {
   i18nCancelLabel: string;
 
   /**
+   * The localized text for the content description.
+   */
+  i18nDescription: string;
+
+  /**
    * The localized text for the save button.
    */
   i18nSaveLabel: string;
+
+  /**
+   * The localized text for the content title.
+   */
+  i18nTitle: string;
 
   /**
    * The localized text for the validate button.
@@ -127,54 +138,66 @@ export class ViewEditContent extends React.Component<
       tabSize: 2,
     };
     return (
-      <PageSection>
-        <Card>
-          <Card.Body>
-            {this.props.validationResults.map((e, idx) => (
-              <Alert key={idx} type={e.type}>
-                {e.message}
-              </Alert>
-            ))}
-            <TextEditor
-              value={this.state.initialDdlValue}
-              options={editorOptions}
-              onChange={this.handleDdlChange}
-            />
-            <Button
-              bsStyle="default"
-              disabled={this.props.isWorking || !this.state.needsValidation}
-              onClick={this.handleDdlValidation()}
-            >
-              {this.props.isWorking ? (
-                <Loader size={'sm'} inline={true} />
-              ) : null}
-              {this.props.i18nValidateLabel}
-            </Button>
-          </Card.Body>
-          <Card.Footer>
-            <Button
-              bsStyle="default"
-              className="view-edit-content__editButton"
-              disabled={this.props.isWorking}
-              onClick={this.props.onCancel}
-            >
-              {this.props.i18nCancelLabel}
-            </Button>
-            <Button
-              bsStyle="primary"
-              className="view-edit-content__editButton"
-              disabled={
-                this.props.isWorking ||
-                !this.props.isValid ||
-                this.state.needsValidation
-              }
-              onClick={this.handleSave()}
-            >
-              {this.props.i18nSaveLabel}
-            </Button>
-          </Card.Footer>
-        </Card>
-      </PageSection>
+      <>
+        <PageSection variant={'light'}>
+          <TextContent>
+            <Title size="2xl" headingLevel={TitleLevel.h1}>
+              {this.props.i18nTitle}
+            </Title>
+            {this.props.i18nDescription && (
+              <Text>{this.props.i18nDescription}</Text>
+            )}
+          </TextContent>
+        </PageSection>
+        <PageSection>
+          <Card>
+            <Card.Body>
+              {this.props.validationResults.map((e, idx) => (
+                <Alert key={idx} type={e.type}>
+                  {e.message}
+                </Alert>
+              ))}
+              <TextEditor
+                value={this.state.initialDdlValue}
+                options={editorOptions}
+                onChange={this.handleDdlChange}
+              />
+              <Button
+                bsStyle="default"
+                disabled={this.props.isWorking || !this.state.needsValidation}
+                onClick={this.handleDdlValidation()}
+              >
+                {this.props.isWorking ? (
+                  <Loader size={'sm'} inline={true} />
+                ) : null}
+                {this.props.i18nValidateLabel}
+              </Button>
+            </Card.Body>
+            <Card.Footer>
+              <Button
+                bsStyle="default"
+                className="view-edit-content__editButton"
+                disabled={this.props.isWorking}
+                onClick={this.props.onCancel}
+              >
+                {this.props.i18nCancelLabel}
+              </Button>
+              <Button
+                bsStyle="primary"
+                className="view-edit-content__editButton"
+                disabled={
+                  this.props.isWorking ||
+                  !this.props.isValid ||
+                  this.state.needsValidation
+                }
+                onClick={this.handleSave()}
+              >
+                {this.props.i18nSaveLabel}
+              </Button>
+            </Card.Footer>
+          </Card>
+        </PageSection>
+      </>
     );
   }
 }
