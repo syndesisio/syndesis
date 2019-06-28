@@ -57,7 +57,7 @@ export class ConnectionSchemaContent extends React.Component<
   public render() {
     return (
       <WithVirtualizationConnectionSchema>
-        {({ data, hasData, error }) => {
+        {({ data, hasData, error, errorMessage }) => {
           // Root nodes of the response contain the connection names
           const connNames = getConnectionNames(data);
           return (
@@ -84,7 +84,7 @@ export class ConnectionSchemaContent extends React.Component<
                         }}
                       />
                     }
-                    errorChildren={<ApiError />}
+                    errorChildren={<ApiError error={errorMessage!} />}
                   >
                     {() =>
                       connNames.map((cName: string, index: number) => {

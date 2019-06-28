@@ -66,6 +66,7 @@ const sortTypes: ISortType[] = [sortByName];
 
 export interface IDvConnectionsWithToolbarProps {
   error: boolean;
+  errorMessage?: string;
   loading: boolean;
   dvSourceStatuses: VirtualizationSourceStatus[];
   onConnectionSelectionChanged: (name: string, selected: boolean) => void;
@@ -139,6 +140,7 @@ export class DvConnectionsWithToolbar extends React.Component<
                       {this.props.children}
                       <DvConnections
                         error={this.props.error}
+                        errorMessage={this.props.errorMessage}
                         loading={this.props.loading}
                         connections={filteredAndSortedConnections}
                         initialSelection={this.state.selectedConnection}

@@ -40,7 +40,7 @@ export default class ExtensionIntegrations extends React.Component<
             error={error}
             loading={!hasData}
             loaderChildren={<Loader />}
-            errorChildren={<ApiError />}
+            errorChildren={<ApiError error={error as Error} />}
           >
             {() => (
               <Translation ns={['extensions', 'shared']}>

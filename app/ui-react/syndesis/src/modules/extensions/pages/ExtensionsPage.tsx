@@ -149,7 +149,7 @@ export default class ExtensionsPage extends React.Component {
                                     }}
                                   />
                                 }
-                                errorChildren={<ApiError />}
+                                errorChildren={<ApiError error={error as Error} />}
                               >
                                 {() =>
                                   filteredAndSorted

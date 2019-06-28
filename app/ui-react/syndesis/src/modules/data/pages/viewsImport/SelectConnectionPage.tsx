@@ -54,9 +54,10 @@ export class SelectConnectionPage extends React.Component<
             header={<ViewsImportSteps step={1} />}
             content={
               <WithVirtualizationConnectionStatuses>
-                {({ data, hasData, error }) => (
+                {({ data, hasData, error, errorMessage }) => (
                   <DvConnectionsWithToolbar
                     error={error}
+                    errorMessage={errorMessage}
                     loading={!hasData}
                     dvSourceStatuses={data}
                     onConnectionSelectionChanged={

@@ -88,12 +88,12 @@ export const WithConfigurationForm: React.FunctionComponent<
       actionId={action.id!}
       configuredProperties={props.initialValue || {}}
     >
-      {({ data, hasData, error }) => (
+      {({ data, hasData, error, errorMessage }) => (
         <WithLoader
           error={error}
           loading={!hasData}
           loaderChildren={<PageSectionLoader />}
-          errorChildren={<ApiError />}
+          errorChildren={<ApiError error={errorMessage!} />}
         >
           {() => (
             <ConfigurationForm action={action} descriptor={data} {...props}>

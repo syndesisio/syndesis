@@ -173,7 +173,11 @@ export const ConfigurationPage: React.FunctionComponent = () => {
                   error={(errorConnector || errorCredentials) !== false}
                   loading={!hasData || loadingCredentials}
                   loaderChildren={<PageLoader />}
-                  errorChildren={<ApiError />}
+                  errorChildren={
+                    <ApiError
+                      error={(errorConnector || errorCredentials) as Error}
+                    />
+                  }
                 >
                   {() => {
                     if (configuredForOAuth) {

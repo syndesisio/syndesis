@@ -84,7 +84,7 @@ export default class ExtensionDetailsPage extends React.Component {
                         error={error}
                         loading={!hasData}
                         loaderChildren={<PageLoader />}
-                        errorChildren={<ApiError />}
+                        errorChildren={<ApiError error={error as Error} />}
                       >
                         {() => (
                           <Translation ns={['extensions', 'shared']}>

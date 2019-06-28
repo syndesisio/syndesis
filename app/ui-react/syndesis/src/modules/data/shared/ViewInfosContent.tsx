@@ -104,7 +104,7 @@ export class ViewInfosContent extends React.Component<IViewInfosContentProps> {
       <WithVirtualizationConnectionSchema
         connectionId={this.props.connectionName}
       >
-        {({ data, hasData, error }) => (
+        {({ data, hasData, error, errorMessage }) => (
           <WithListViewToolbarHelpers
             defaultFilterType={filterByName}
             defaultSortType={sortByName}
@@ -153,7 +153,7 @@ export class ViewInfosContent extends React.Component<IViewInfosContentProps> {
                             }}
                           />
                         }
-                        errorChildren={<ApiError />}
+                        errorChildren={<ApiError error={errorMessage!} />}
                       >
                         {() =>
                           filteredAndSorted.map(

@@ -102,6 +102,7 @@ export class ConnectionsWithToolbar extends React.Component<
                   {this.props.children}
                   <Connections
                     error={this.props.error}
+                    errorMessage={this.props.errorMessage}
                     includeConnectionMenu={this.props.includeConnectionMenu}
                     loading={this.props.loading}
                     connections={filteredAndSortedConnections}

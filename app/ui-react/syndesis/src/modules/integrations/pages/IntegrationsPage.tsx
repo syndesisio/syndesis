@@ -112,7 +112,7 @@ export class IntegrationsPage extends React.Component {
       <WithConnections debounceWait={500}>
         {({ data: connectionsData }) => (
           <WithMonitoredIntegrations>
-            {({ data: integrationsData, hasData, error }) => (
+            {({ data: integrationsData, hasData, error, errorMessage }) => (
               <Translation ns={['integrations', 'shared']}>
                 {t => (
                   <WithListViewToolbarHelpers
@@ -162,6 +162,7 @@ export class IntegrationsPage extends React.Component {
                           >
                             <Integrations
                               error={error}
+                              errorMessage={errorMessage}
                               loading={!hasData}
                               integrations={filteredAndSortedIntegrations}
                             />
