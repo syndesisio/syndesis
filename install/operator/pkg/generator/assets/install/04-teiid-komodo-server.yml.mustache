@@ -69,6 +69,8 @@
             value: {{Env.POSTGRESQL_USER}}
           - name: POSTGRESQL_DATABASE
             value: {{Env.POSTGRESQL_DATABASE}}
+          - name: CONTROLLERS_EXPOSE_VIA3SCALE
+            value: '{{Env.CONTROLLERS_EXPOSE_VIA3SCALE}}'
 {{#Debug}}
           - name: JAVA_DEBUG
             value: "true"

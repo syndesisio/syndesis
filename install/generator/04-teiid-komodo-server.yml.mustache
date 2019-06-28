@@ -62,13 +62,15 @@
           - name: GC_MAX_METASPACE_SIZE
             value: "512"
           - name: BUILD_IMAGE_STREAM
-            value: {{ Images.Syndesis.S2i }}:latest
+            value: {{ Images.Syndesis.S2i }}:{{ Tags.Syndesis }}
           - name: POSTGRESQL_PASSWORD
             value: ${POSTGRESQL_PASSWORD}
           - name: POSTGRESQL_USER
             value: ${POSTGRESQL_USER}
           - name: POSTGRESQL_DATABASE
             value: ${POSTGRESQL_DATABASE}
+          - name: CONTROLLERS_EXPOSE_VIA3SCALE
+            value: '{{CONTROLLERS_EXPOSE_VIA3SCALE}}'            
 {{#Debug}}
           - name: JAVA_DEBUG
             value: "true"
