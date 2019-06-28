@@ -16,7 +16,6 @@
 package io.syndesis.connector.odata.producer;
 
 import static org.junit.Assert.assertEquals;
-import java.util.List;
 import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.direct.DirectEndpoint;
@@ -43,7 +42,6 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.odata.AbstractODataRouteTest;
 import io.syndesis.connector.odata.component.ODataComponentFactory;
-import io.syndesis.connector.odata.consumer.ODataReadRouteSplitResultsTest;
 import io.syndesis.connector.odata.customizer.ODataCreateCustomizer;
 import io.syndesis.connector.support.util.PropertyBuilder;
 
@@ -51,7 +49,7 @@ import io.syndesis.connector.support.util.PropertyBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest(
     classes = {
-        ODataReadRouteSplitResultsTest.TestConfiguration.class
+        ODataCreateTests.TestConfiguration.class
     },
     properties = {
         "spring.main.banner-mode = off",
@@ -149,9 +147,8 @@ public class ODataCreateTests extends AbstractODataRouteTest {
 
         result.assertIsSatisfied();
 
-        @SuppressWarnings( "unchecked" )
-        List<String> entityJson = extractJsonFromExchgMsg(result, 0, List.class);
-        JSONAssert.assertEquals(inputJson, entityJson.get(0), JSONCompareMode.LENIENT);
+        String entityJson = extractJsonFromExchgMsg(result, 0, String.class);
+        JSONAssert.assertEquals(inputJson, entityJson, JSONCompareMode.LENIENT);
 
         assertEquals(initialResultCount + 1, defaultTestServer.getResultCount());
     }

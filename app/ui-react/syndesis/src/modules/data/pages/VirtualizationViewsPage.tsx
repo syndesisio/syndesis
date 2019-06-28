@@ -235,7 +235,13 @@ export class VirtualizationViewsPage extends React.Component {
                                         virtualization.serviceVdbName + '*'
                                       }
                                     >
-                                      {({ data, hasData, error, read }) => {
+                                      {({
+                                        data,
+                                        hasData,
+                                        error,
+                                        errorMessage,
+                                        read,
+                                      }) => {
                                         return (
                                           <WithVirtualizationHelpers>
                                             {({ deleteView }) => {
@@ -312,7 +318,11 @@ export class VirtualizationViewsPage extends React.Component {
                                                             />
                                                           }
                                                           errorChildren={
-                                                            <ApiError />
+                                                            <ApiError
+                                                              error={
+                                                                errorMessage!
+                                                              }
+                                                            />
                                                           }
                                                         >
                                                           {() => (

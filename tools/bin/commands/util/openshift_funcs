@@ -218,9 +218,6 @@ deploy_syndesis_operator() {
 
     local result=$(create_openshift_resource "install/operator/deploy/syndesis-operator.yml")
     check_error $result
-    if [ $(hasflag --local) ]; then
-        patch_for_using_template_from_configmap
-    fi
 }
 
 # Create syndesis resource
@@ -465,7 +462,7 @@ rules:
   resources:
   - routes
   - routes/custom-host
-  verbs: [ get, list, create, update, delete, deletecollection, watch]
+  verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
 - apiGroups:
   - camel.apache.org
   resources:
@@ -694,56 +691,4 @@ compare_oc_version() {
     done
 
     echo "OK"
-}
-
-
-patch_for_using_template_from_configmap() {
-  # we need to include the `syndesis-template.yml` akka `syndesis.yml` in
-  # the operator image, this adds a ConfigMap that we mount into the
-  # operator container
-  oc delete configmap syndesis-template >/dev/null 2>&1
-  oc create configmap syndesis-template --from-file=template=$(appdir "install")/syndesis.yml
-  local patch=$(cat <<EOT
-  {
-    "spec": {
-      "template": {
-        "spec": {
-          "containers": [
-            {
-              "name": "syndesis-operator",
-              "command": [
-                "syndesis-operator",
-                "--template",
-                "/conf/syndesis-template.yml"
-              ],
-              "volumeMounts": [
-                {
-                  "mountPath": "/conf",
-                  "name": "syndesis-template-config"
-                }
-              ]
-            }
-          ],
-          "volumes": [
-            {
-              "configMap": {
-                "name": "syndesis-template",
-                "items": [
-                  {
-                    "key": "template",
-                    "path": "syndesis-template.yml"
-                  }
-                ]
-              },
-              "name": "syndesis-template-config"
-            }
-          ]
-        }
-      }
-    }
-  }
-EOT
-)
-  oc patch deploymentconfig syndesis-operator -p "$patch"
-
 }

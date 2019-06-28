@@ -31,10 +31,12 @@ public class BoxDownloadCustomizer implements ComponentProxyCustomizer {
 
     private static final Logger LOG = LoggerFactory.getLogger(BoxDownloadCustomizer.class);
 
+    private String fileId;
     private String encoding;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        fileId = (String) options.get("fileId");
         encoding = (String) options.get("encoding");
         component.setBeforeProducer(this::beforeProducer);
         component.setAfterProducer(this::afterProducer);
@@ -48,7 +50,7 @@ public class BoxDownloadCustomizer implements ComponentProxyCustomizer {
     private void afterProducer(Exchange exchange) {
         BoxFile file = new BoxFile();
         Message in = exchange.getIn();
-        file.setId(in.getHeader("CamelBox.fileId", String.class));
+        file.setId(fileId);
         ByteArrayOutputStream output = in.getBody(ByteArrayOutputStream.class);
         try {
             file.setContent(new String(output.toByteArray(), encoding));

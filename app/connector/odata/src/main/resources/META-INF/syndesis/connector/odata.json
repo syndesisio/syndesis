@@ -5,10 +5,11 @@
       "description": "Read a resource from the server",
       "descriptor": {
         "configuredProperties": {
-          "methodName": "read"
+          "methodName": "read",
+          "connectorDirection": "from"
         },
         "connectorCustomizers": [
-          "io.syndesis.connector.odata.customizer.ODataReadCustomizer"
+          "io.syndesis.connector.odata.customizer.ODataReadFromCustomizer"
         ],
         "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
         "inputDataShape": {
@@ -151,9 +152,55 @@
           }
         ]
       },
-      "id": "io.syndesis:odata-read-connector",
+      "id": "io.syndesis:odata-read-connector-from",
       "name": "Read",
       "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
+    },
+    {
+      "actionType": "connector",
+      "description": "Read a resource from the server",
+      "descriptor": {
+        "configuredProperties": {
+          "methodName": "read",
+          "connectorDirection": "to"
+        },
+        "connectorCustomizers": [
+          "io.syndesis.connector.odata.customizer.ODataReadToCustomizer"
+        ],
+        "connectorFactory": "io.syndesis.connector.odata.component.ODataComponentFactory",
+        "inputDataShape": {
+          "kind": "json-schema"
+        },
+        "outputDataShape": {
+          "kind": "json-instance"
+        },
+        "propertyDefinitionSteps": [
+          {
+            "description": "Provide the resource information from which to probe the service",
+            "name": "Resource Path",
+            "properties": {
+              "resourcePath": {
+                "deprecated": false,
+                "displayName": "Resource Collection",
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "parameter",
+                "labelHint": "The resource collection to be queried, eg. an <i><b>EntitySetName</b></i> or <i><b>EntityFunctionImportCall</b></i>",
+                "order": "1",
+                "required": true,
+                "secret": false,
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "id": "io.syndesis:odata-read-connector-to",
+      "name": "Read",
+      "pattern": "To",
       "tags": [
         "dynamic"
       ]

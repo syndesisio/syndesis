@@ -1,16 +1,13 @@
 import { WithApiVersion, WithUserHelpers } from '@syndesis/api';
 import {
-  AppLayout,
-  ButtonLink,
-  INotification,
-  INotificationType,
-  Notifications,
-  PfVerticalNavItem,
-} from '@syndesis/ui';
-import {
   AboutModal,
   AboutModalContent,
+  AppLayout,
+  INotification,
+  INotificationType,
   Loader,
+  Notifications,
+  PfVerticalNavItem,
   toValidHtmlId,
 } from '@syndesis/ui';
 import { WithLoader, WithRouter } from '@syndesis/utils';
@@ -18,7 +15,6 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Translation } from 'react-i18next';
 import { Route, Switch } from 'react-router-dom';
-import { Workbox } from 'workbox-window';
 import resolvers from '../modules/resolvers';
 import { ApiError, PageNotFound, WithErrorBoundary } from '../shared';
 import favicon from '../shared/images/favicon.ico';
@@ -76,6 +72,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
     );
   };
 
+  /* disable listening to the web worker to avoid installing it
   React.useEffect(() => {
     let refreshNotificationDisplayed = false;
     // tslint:disable
@@ -117,6 +114,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
       wb.register();
     }
   }, []); // eslint-disable-line
+  */
 
   const updateHref = (id: string, assetUrl: string) => {
     const element =
@@ -167,7 +165,7 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                         }
                       >
                         <WithApiVersion>
-                          {({ data, error, loading }) => {
+                          {({ data, error, errorMessage, loading }) => {
                             const {
                               'commit-id': commitId,
                               'build-id': buildId,
@@ -177,7 +175,9 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                               <WithLoader
                                 error={error}
                                 loading={loading}
-                                errorChildren={<ApiError />}
+                                errorChildren={
+                                  <ApiError error={errorMessage!} />
+                                }
                                 loaderChildren={<Loader />}
                               >
                                 {() => (
@@ -249,11 +249,11 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                       'mailto:fuse-online-tech-preview@redhat.com';
                                   }}
                                   logoutItem={{
+                                    children: t('Logout'),
+                                    className: 'pf-c-dropdown__menu-item',
+                                    id: 'ui-logout-link',
                                     key: 'logoutMenuItem',
                                     onClick: doLogout,
-                                    id: 'ui-logout-link',
-                                    className: 'pf-c-dropdown__menu-item',
-                                    children: t('Logout'),
                                   }}
                                   username={user.username || 'developer'}
                                   verticalNav={routes.map((route, index) =>

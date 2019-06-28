@@ -17,6 +17,7 @@ package io.syndesis.connector.rest.swagger;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
@@ -147,6 +148,40 @@ public class AuthenticationCustomizerTest {
         assertThat(options).doesNotContainKeys("authenticationType", "accessToken", "refreshToken", "authorizationEndpoint");
 
         assertAuthorizationHeaderSetTo(component, "Bearer new-access-token");
+    }
+
+    @Test
+    public void shouldSupportAllAuthenticatioValues() {
+        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final CamelContext context = mock(CamelContext.class);
+        component.setCamelContext(context);
+
+        final AuthenticationCustomizer customizer = new AuthenticationCustomizer();
+
+        Stream.of(AuthenticationType.values()).forEach(authenticationType -> {
+            final Map<String, Object> options = new HashMap<>();
+            options.put("authenticationType", authenticationType.name());
+
+            customizer.customize(component, options);
+            // no IllegalStateException thrown
+        });
+    }
+
+    @Test
+    public void shouldSupportNamedAuthenticatioValues() {
+        final ComponentProxyComponent component = new SwaggerProxyComponent("test", "test");
+        final CamelContext context = mock(CamelContext.class);
+        component.setCamelContext(context);
+
+        final AuthenticationCustomizer customizer = new AuthenticationCustomizer();
+
+        Stream.of(AuthenticationType.values()).forEach(authenticationType -> {
+            final Map<String, Object> options = new HashMap<>();
+            options.put("authenticationType", authenticationType.name() + ":name");
+
+            customizer.customize(component, options);
+            // no IllegalStateException thrown
+        });
     }
 
     private static void assertAuthorizationHeaderSetTo(final ComponentProxyComponent component, final String value) throws Exception {

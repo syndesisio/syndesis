@@ -16,11 +16,6 @@ const puppeteer = require('puppeteer');
   //code to wait for user to enter username and password, and click `login`
 
   await browser.waitForTarget(target => target.url() === `${url}/`);
-
-  await page.waitForNavigation({
-    waitUntil: 'load',
-  });
-
   const cookies = await page.cookies();
   console.log(cookies.map(c => `${c.name}=${c.value}`).join(';'));
 

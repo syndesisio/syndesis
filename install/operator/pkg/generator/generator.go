@@ -6,18 +6,13 @@ import (
 	"errors"
 	"fmt"
 	"github.com/hoisie/mustache"
-	"github.com/shurcooL/httpfs/filter"
-	"github.com/syndesisio/syndesis/install/operator/pkg/build"
 	"github.com/syndesisio/syndesis/install/operator/pkg/util"
 	"io/ioutil"
 	"k8s.io/apimachinery/pkg/apis/meta/v1/unstructured"
 	"net/http"
-	"os"
-	"path/filepath"
 	"regexp"
 	"sort"
 	"strings"
-	"time"
 )
 
 type supportImages struct {
@@ -148,7 +143,7 @@ func assignPrometheusConfig(context Context) Context {
 }
 
 func AssetAsBytes(path string) ([]byte, error) {
-	file, err := assets.Open(path)
+	file, err := GetAssetsFS().Open(path)
 	if err != nil {
 		return nil, err
 	}
@@ -160,35 +155,8 @@ func AssetAsBytes(path string) ([]byte, error) {
 	return prometheusRules, nil
 }
 
-type zeroTimeFileInfo struct {
-	os.FileInfo
-}
-
-func (*zeroTimeFileInfo) ModTime() time.Time {
-	return time.Time{}
-}
-
-func GetAssetsFS(devMode bool) http.FileSystem {
-	if devMode {
-		assetsDir := filepath.Join(build.GO_MOD_DIRECTORY, "pkg", "generator", "assets")
-		return util.NewFileInfoMappingFS(filter.Keep(http.Dir(assetsDir), func(path string, fi os.FileInfo) bool {
-			if fi.Name() == ".DS_Store" {
-				return false
-			}
-			if fi.Name() == "assets_generate.go" {
-				return false
-			}
-			return true
-		}), func(fi os.FileInfo) (os.FileInfo, error) {
-			return &zeroTimeFileInfo{fi}, nil
-		})
-	} else {
-		return assets
-	}
-}
-
 func RenderDir(directory string, context interface{}) ([]unstructured.Unstructured, error) {
-	return RenderFSDir(GetAssetsFS(true), directory, context)
+	return RenderFSDir(GetAssetsFS(), directory, context)
 }
 
 func RenderFSDir(assets http.FileSystem, directory string, context interface{}) ([]unstructured.Unstructured, error) {
@@ -237,8 +205,11 @@ func RenderFSDir(assets http.FileSystem, directory string, context interface{}) 
 				u := unstructured.Unstructured{v}
 				//annotatedForDebugging(u, name, rawYaml)
 				response = append(response, u)
-			default:
+			case nil:
+				// It's ok if a template chooses not to generate any resources..
 
+			default:
+				return nil, fmt.Errorf("Unexptected yaml unmarshal type: %v", obj)
 			}
 		}
 	}

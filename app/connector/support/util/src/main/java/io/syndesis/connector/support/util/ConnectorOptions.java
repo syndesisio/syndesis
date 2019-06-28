@@ -46,7 +46,7 @@ public final class ConnectorOptions {
      * @param key
      * @return Mapped object converted from value belonging to the given key in the options map
      */
-    public static <T> T extractOptionAndMap(Map<String, Object> options, String key,
+    public static <T> T extractOptionAndMap(Map<String, ?> options, String key,
                                                                     Function<? super String, ? extends T> mappingFn) {
         return Optional.ofNullable(options.get(key))
                         .map(Object::toString)

@@ -81,7 +81,7 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
       <Translation ns={['integrations', 'shared']}>
         {t => (
           <WithEnvironments withUses={true}>
-            {({ data, hasData, error, read }) => (
+            {({ data, hasData, error, errorMessage, read }) => (
               <WithListViewToolbarHelpers
                 defaultFilterType={filterByName}
                 defaultSortType={sortByName}
@@ -194,7 +194,9 @@ export class ManageCiCdPage extends React.Component<{}, IManageCiCdPageState> {
                                 loaderChildren={
                                   <CiCdList children={<CiCdListSkeleton />} />
                                 }
-                                errorChildren={<ApiError />}
+                                errorChildren={
+                                  <ApiError error={errorMessage!} />
+                                }
                               >
                                 {() => (
                                   <>

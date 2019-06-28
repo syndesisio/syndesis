@@ -85,7 +85,7 @@
     - route.openshift.io
     resources:
     - routes
-    verbs: [ delete ]
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
 
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding

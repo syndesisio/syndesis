@@ -21,10 +21,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import org.immutables.value.Value;
 
 import io.syndesis.common.model.ToJson;
 import io.syndesis.common.model.WithId;
@@ -39,6 +38,9 @@ import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
+
+import org.immutables.value.Value;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -160,4 +162,11 @@ public interface IntegrationBase extends WithProperties, WithResourceId, WithVer
             .filter(flow -> id.equals(flow.getId().get()))
             .findFirst();
     }
+
+    default Optional<Flow> findFlowBy(final Predicate<Flow> p) {
+        return getFlows().stream()
+            .filter(p)
+            .findFirst();
+    }
+
 }

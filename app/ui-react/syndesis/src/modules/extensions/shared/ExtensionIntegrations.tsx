@@ -1,4 +1,4 @@
-import { WithExtensionIntegrations } from '@syndesis/api';
+import { useExtensionIntegrations } from '@syndesis/api';
 import {
   ExtensionIntegrationsTable,
   IExtensionIntegration,
@@ -17,12 +17,12 @@ export interface IExtensionIntegrationsProps {
 }
 
 /**
- * A component that lists the integrations that uses a specific extension.
+ * A function component that lists the integrations that uses a specific extension.
  */
-export default class ExtensionIntegrations extends React.Component<
+export const ExtensionIntegrations: React.FunctionComponent<
   IExtensionIntegrationsProps
-> {
-  public getUsageMessage(uses: number): string {
+> = props => {
+  const getUsageMessage = (uses: number): string => {
     if (uses === 1) {
       return i18n.t('extensions:usedByOne');
     }
@@ -30,34 +30,32 @@ export default class ExtensionIntegrations extends React.Component<
     return i18n.t('extensions:usedByMulti', {
       count: uses,
     });
-  }
+  };
 
-  public render() {
-    return (
-      <WithExtensionIntegrations extensionId={this.props.extensionId}>
-        {({ data, hasData, error }) => (
-          <WithLoader
-            error={error}
-            loading={!hasData}
-            loaderChildren={<Loader />}
-            errorChildren={<ApiError />}
-          >
-            {() => (
-              <Translation ns={['extensions', 'shared']}>
-                {t => (
-                  <ExtensionIntegrationsTable
-                    i18nDescription={t('shared:Description')}
-                    i18nName={t('shared:Name')}
-                    i18nUsageMessage={this.getUsageMessage(this.props.uses)}
-                    onSelectIntegration={this.props.onSelectIntegration}
-                    data={data as IExtensionIntegration[]}
-                  />
-                )}
-              </Translation>
-            )}
-          </WithLoader>
-        )}
-      </WithExtensionIntegrations>
-    );
-  }
-}
+  const { resource: integrations, hasData, error } = useExtensionIntegrations(
+    props.extensionId
+  );
+
+  return (
+    <WithLoader
+      error={error !== false}
+      loading={!hasData}
+      loaderChildren={<Loader />}
+      errorChildren={<ApiError error={error as Error} />}
+    >
+      {() => (
+        <Translation ns={['extensions', 'shared']}>
+          {t => (
+            <ExtensionIntegrationsTable
+              i18nDescription={t('shared:Description')}
+              i18nName={t('shared:Name')}
+              i18nUsageMessage={getUsageMessage(props.uses)}
+              onSelectIntegration={props.onSelectIntegration}
+              data={integrations as IExtensionIntegration[]}
+            />
+          )}
+        </Translation>
+      )}
+    </WithLoader>
+  );
+};

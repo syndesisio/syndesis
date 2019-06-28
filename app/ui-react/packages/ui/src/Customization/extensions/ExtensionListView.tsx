@@ -22,66 +22,58 @@ export interface IExtensionListViewProps extends IListViewToolbarProps {
   linkImportExtension: H.LocationDescriptor;
 }
 
-export class ExtensionListView extends React.Component<
+export const ExtensionListView: React.FunctionComponent<
   IExtensionListViewProps
-> {
-  public getImportTooltip() {
+> = props => {
+  const getImportTooltip = (): JSX.Element => {
     return (
       <Tooltip id="importTip">
-        {this.props.i18nLinkImportExtensionTip
-          ? this.props.i18nLinkImportExtensionTip
-          : this.props.i18nLinkImportExtension}
+        {props.i18nLinkImportExtensionTip
+          ? props.i18nLinkImportExtensionTip
+          : props.i18nLinkImportExtension}
       </Tooltip>
     );
-  }
+  };
 
-  public render() {
-    return (
-      <PageSection>
-        <ListViewToolbar {...this.props}>
-          <div className="form-group">
-            <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
+  return (
+    <PageSection>
+      <ListViewToolbar {...props}>
+        <div className="form-group">
+          <OverlayTrigger overlay={getImportTooltip()} placement="top">
+            <ButtonLink
+              data-testid={'extension-list-view-import-button'}
+              href={props.linkImportExtension}
+              as={'primary'}
+            >
+              {props.i18nLinkImportExtension}
+            </ButtonLink>
+          </OverlayTrigger>
+        </div>
+      </ListViewToolbar>
+      {props.i18nTitle !== '' && <Title size="lg">{props.i18nTitle}</Title>}
+      {props.i18nDescription !== '' && (
+        <Text dangerouslySetInnerHTML={{ __html: props.i18nDescription }} />
+      )}
+      {props.children ? (
+        <ListView>{props.children}</ListView>
+      ) : (
+        <EmptyState>
+          <EmptyState.Icon />
+          <EmptyState.Title>{props.i18nEmptyStateTitle}</EmptyState.Title>
+          <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
+          <EmptyState.Action>
+            <OverlayTrigger overlay={getImportTooltip()} placement="top">
               <ButtonLink
-                data-testid={'extension-list-view-import-button'}
-                href={this.props.linkImportExtension}
+                data-testid={'extension-list-view-empty-state-import-button'}
+                href={props.linkImportExtension}
                 as={'primary'}
               >
-                {this.props.i18nLinkImportExtension}
+                {props.i18nLinkImportExtension}
               </ButtonLink>
             </OverlayTrigger>
-          </div>
-        </ListViewToolbar>
-        {this.props.i18nTitle !== '' && (
-          <Title size="lg">{this.props.i18nTitle}</Title>
-        )}
-        {this.props.i18nDescription !== '' && (
-          <Text
-            dangerouslySetInnerHTML={{ __html: this.props.i18nDescription }}
-          />
-        )}
-        {this.props.children ? (
-          <ListView>{this.props.children}</ListView>
-        ) : (
-          <EmptyState>
-            <EmptyState.Icon />
-            <EmptyState.Title>
-              {this.props.i18nEmptyStateTitle}
-            </EmptyState.Title>
-            <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
-            <EmptyState.Action>
-              <OverlayTrigger overlay={this.getImportTooltip()} placement="top">
-                <ButtonLink
-                  data-testid={'extension-list-view-empty-state-import-button'}
-                  href={this.props.linkImportExtension}
-                  as={'primary'}
-                >
-                  {this.props.i18nLinkImportExtension}
-                </ButtonLink>
-              </OverlayTrigger>
-            </EmptyState.Action>
-          </EmptyState>
-        )}
-      </PageSection>
-    );
-  }
-}
+          </EmptyState.Action>
+        </EmptyState>
+      )}
+    </PageSection>
+  );
+};

@@ -53,7 +53,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
   public render() {
     return (
       <WithConnection id={'flow'}>
-        {({ data, error, hasData }) => (
+        {({ data, error, errorMessage, hasData }) => (
           <WithIntegrationHelpers>
             {({ addStep, updateStep }) => (
               <WithRouteData<IChoiceStepRouteParams, IChoiceStepRouteState>>
@@ -187,6 +187,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                       updatedFlows,
                       stepWithUpdatedDescriptor.id!,
                       stepWithUpdatedDescriptor.action!.descriptor!
+                        .inputDataShape!
                     );
                     history.push(
                       this.props.postConfigureHref(
@@ -229,7 +230,7 @@ export class ChoiceStepPage extends React.Component<IChoiceStepPageProps> {
                             loaderChildren={<PageLoader />}
                             errorChildren={
                               <PageSection>
-                                <ApiError />
+                                <ApiError error={errorMessage!} />
                               </PageSection>
                             }
                           >

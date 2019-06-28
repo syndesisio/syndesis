@@ -12,7 +12,7 @@ import { ApiError, EntityIcon } from '../../../../shared';
 import { IUIStep } from './interfaces';
 
 export interface IEditorStepsProps {
-  error: boolean;
+  error: boolean | Error;
   loading: boolean;
   steps: IUIStep[];
 
@@ -26,7 +26,7 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
         {t => (
           <ConnectionsGrid>
             <WithLoader
-              error={this.props.error}
+              error={this.props.error !== false}
               loading={this.props.loading}
               loaderChildren={
                 <>
@@ -37,7 +37,7 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                   ))}
                 </>
               }
-              errorChildren={<ApiError />}
+              errorChildren={<ApiError error={this.props.error as Error} />}
             >
               {() => {
                 return this.props.steps.map((s, index) => {

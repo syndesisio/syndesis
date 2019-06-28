@@ -109,30 +109,25 @@ export interface IExtensionImportReviewProps {
 }
 
 /**
- * A component that displays the extension import review information.
+ * A function component that displays the extension import review information.
  */
-export class ExtensionImportReview extends React.Component<
+export const ExtensionImportReview: React.FunctionComponent<
   IExtensionImportReviewProps
-> {
-  public constructor(props: IExtensionImportReviewProps) {
-    super(props);
-    this.handleImport = this.handleImport.bind(this);
-  }
-
-  public getActions(): JSX.Element {
-    if (!this.props.actions) {
+> = props => {
+  const getActions = (): JSX.Element => {
+    if (!props.actions) {
       return <Grid.Col />;
     }
 
     return (
       <TextContent>
         <TextList className="extension-import-review__actions-list">
-          {this.props.actions
-            ? this.props.actions.map((action, index) => (
+          {props.actions
+            ? props.actions.map((action, index) => (
                 <TextListItem
                   key={index}
                   dangerouslySetInnerHTML={{
-                    __html: this.props.i18nActionText(
+                    __html: props.i18nActionText(
                       action.name,
                       action.description
                     ),
@@ -143,103 +138,99 @@ export class ExtensionImportReview extends React.Component<
         </TextList>
       </TextContent>
     );
-  }
+  };
 
-  public handleImport() {
-    return this.props.onImport(this.props.extensionUid);
-  }
+  const handleImport = () => {
+    return props.onImport(props.extensionUid);
+  };
 
-  public render() {
-    return (
-      <Card className="extension-import-review">
-        <CardBody>
-          <Stack gutter="md">
-            <Title
-              headingLevel="h1"
-              size="xl"
-              className="extension-import-review__title"
-            >
-              {this.props.i18nTitle}
-            </Title>
-            <TextContent>
-              <TextList component={TextListVariants.dl}>
-                <TextListItem
-                  component={TextListItemVariants.dt}
-                  className="extension-import-review__propertyLabel"
-                >
-                  {this.props.i18nIdLabel}
-                </TextListItem>
-                <TextListItem
-                  component={TextListItemVariants.dd}
-                  className="extension-import-review__propertyValue"
-                >
-                  {this.props.extensionId}
-                </TextListItem>
-                <TextListItem
-                  component={TextListItemVariants.dt}
-                  className="extension-import-review__propertyLabel"
-                >
-                  {this.props.i18nNameLabel}
-                </TextListItem>
-                <TextListItem
-                  component={TextListItemVariants.dd}
-                  className="extension-import-review__propertyValue"
-                >
-                  {this.props.extensionName}
-                </TextListItem>
-                <TextListItem
-                  component={TextListItemVariants.dt}
-                  className="extension-import-review__propertyLabel"
-                >
-                  {this.props.i18nDescriptionLabel}
-                </TextListItem>
-                <TextListItem
-                  component={TextListItemVariants.dd}
-                  className="extension-import-review__propertyValue"
-                >
-                  {this.props.extensionDescription
-                    ? this.props.extensionDescription
-                    : null}
-                </TextListItem>
-                <TextListItem
-                  component={TextListItemVariants.dt}
-                  className="extension-import-review__propertyLabel"
-                >
-                  {this.props.i18nTypeLabel}
-                </TextListItem>
-                <TextListItem
-                  component={TextListItemVariants.dd}
-                  className="extension-import-review__propertyValue"
-                >
-                  {this.props.i18nExtensionTypeMessage}
-                </TextListItem>
-                <TextListItem
-                  component={TextListItemVariants.dt}
-                  className="extension-import-review__propertyLabel"
-                >
-                  {this.props.i18nActionsLabel}
-                </TextListItem>
-                <TextListItem component={TextListItemVariants.dd}>
-                  {this.getActions()}
-                </TextListItem>
-              </TextList>
-            </TextContent>
-            <div className="extension-import-review__buttonBar">
-              <Button bsStyle="primary" onClick={this.handleImport}>
-                {this.props.i18nImport}
-              </Button>
-              <ButtonLink
-                data-testid={'extension-import-review-cancel-button'}
-                className="extension-import-review__cancelButton"
-                href={this.props.cancelLink}
-                as={'default'}
+  return (
+    <Card className="extension-import-review">
+      <CardBody>
+        <Stack gutter="md">
+          <Title
+            headingLevel="h1"
+            size="xl"
+            className="extension-import-review__title"
+          >
+            {props.i18nTitle}
+          </Title>
+          <TextContent>
+            <TextList component={TextListVariants.dl}>
+              <TextListItem
+                component={TextListItemVariants.dt}
+                className="extension-import-review__propertyLabel"
               >
-                {this.props.i18nCancel}
-              </ButtonLink>
-            </div>
-          </Stack>
-        </CardBody>
-      </Card>
-    );
-  }
-}
+                {props.i18nIdLabel}
+              </TextListItem>
+              <TextListItem
+                component={TextListItemVariants.dd}
+                className="extension-import-review__propertyValue"
+              >
+                {props.extensionId}
+              </TextListItem>
+              <TextListItem
+                component={TextListItemVariants.dt}
+                className="extension-import-review__propertyLabel"
+              >
+                {props.i18nNameLabel}
+              </TextListItem>
+              <TextListItem
+                component={TextListItemVariants.dd}
+                className="extension-import-review__propertyValue"
+              >
+                {props.extensionName}
+              </TextListItem>
+              <TextListItem
+                component={TextListItemVariants.dt}
+                className="extension-import-review__propertyLabel"
+              >
+                {props.i18nDescriptionLabel}
+              </TextListItem>
+              <TextListItem
+                component={TextListItemVariants.dd}
+                className="extension-import-review__propertyValue"
+              >
+                {props.extensionDescription ? props.extensionDescription : null}
+              </TextListItem>
+              <TextListItem
+                component={TextListItemVariants.dt}
+                className="extension-import-review__propertyLabel"
+              >
+                {props.i18nTypeLabel}
+              </TextListItem>
+              <TextListItem
+                component={TextListItemVariants.dd}
+                className="extension-import-review__propertyValue"
+              >
+                {props.i18nExtensionTypeMessage}
+              </TextListItem>
+              <TextListItem
+                component={TextListItemVariants.dt}
+                className="extension-import-review__propertyLabel"
+              >
+                {props.i18nActionsLabel}
+              </TextListItem>
+              <TextListItem component={TextListItemVariants.dd}>
+                {getActions()}
+              </TextListItem>
+            </TextList>
+          </TextContent>
+          <div className="extension-import-review__buttonBar">
+            <Button bsStyle="primary" onClick={handleImport}>
+              {props.i18nImport}
+            </Button>
+            <ButtonLink
+              data-testid={'extension-import-review-cancel-button'}
+              className="extension-import-review__cancelButton"
+              href={props.cancelLink}
+              as={'default'}
+            >
+              {props.i18nCancel}
+            </ButtonLink>
+          </div>
+        </Stack>
+      </CardBody>
+    </Card>
+  );
+};

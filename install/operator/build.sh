@@ -32,7 +32,6 @@ fi
 #
 # TODO Could we avoid copying these files by moving them under the build directory
 #
-cp -R "../addons/" "build/conf/addons/"
 cp "../../app/integration/project-generator/src/main/resources/io/syndesis/integration/project/generator/templates/prometheus-config.yml" "./pkg/generator/assets"
 
 build_operator $OPERATOR_BUILD_MODE $OPERATOR_GO_PACKAGE

@@ -41,6 +41,13 @@ export class SelectNamePage extends React.Component {
   public selectedViews: ViewInfo[] = []; // Maintains list of selected views
 
   public render() {
+    const validateDescription = (desc: string ): string => {
+      if (desc.includes('\'')) {
+        return i18n.t('data:virtualization.viewDescriptionValidationError');
+      }
+      return '';
+    };
+
     return (
       <Translation ns={['data', 'shared']}>
         {t => (
@@ -61,7 +68,7 @@ export class SelectNamePage extends React.Component {
                          */
                         const doValidateName = async (
                           proposedName: string
-                        ): Promise<true | string> => {
+                        ): Promise<string> => {
                           // make sure name has a value
                           if (proposedName === '') {
                             return t('shared:requiredFieldMessage') as string;
@@ -74,7 +81,7 @@ export class SelectNamePage extends React.Component {
                           );
 
                           if (!response.isError) {
-                            return true;
+                            return '';
                           }
                           return (
                             t('virtualization.errorValidatingViewName') +
@@ -82,8 +89,11 @@ export class SelectNamePage extends React.Component {
                           );
                         };
                         const onSave = async (value: any) => {
-                          const validation = await doValidateName(value.name);
-                          if (validation === true) {
+                          let validationMsg = validateDescription(value.description);
+                          if(validationMsg.length===0) {
+                            validationMsg = await doValidateName(value.name);
+                          }
+                          if (validationMsg.length===0) {
                             // ViewEditorState for the source
                             const viewEditorState = generateViewEditorState(
                               virtualization.serviceVdbName,
@@ -119,7 +129,7 @@ export class SelectNamePage extends React.Component {
                               })
                             );
                           } else {
-                            pushNotification(validation, 'error');
+                            pushNotification(validationMsg, 'error');
                           }
                         };
                         const definition: IFormDefinition = {

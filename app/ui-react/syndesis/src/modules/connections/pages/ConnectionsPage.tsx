@@ -12,7 +12,7 @@ export class ConnectionsPage extends React.Component {
       <Translation ns={['connections', 'shared']}>
         {t => (
           <WithConnections>
-            {({ data, hasData, error }) => (
+            {({ data, hasData, error, errorMessage }) => (
               <>
                 <PageTitle title={'Connections'} />
                 <SimplePageHeader
@@ -21,6 +21,7 @@ export class ConnectionsPage extends React.Component {
                 />
                 <ConnectionsWithToolbar
                   error={error}
+                  errorMessage={errorMessage}
                   includeConnectionMenu={true}
                   loading={!hasData}
                   connections={data.connectionsForDisplay}

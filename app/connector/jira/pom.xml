@@ -45,14 +45,6 @@
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
-                    <exclusion>
-                        <groupId>com.atlassian.jira</groupId>
-                        <artifactId>jira-rest-java-client-api</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>com.atlassian.jira</groupId>
-                        <artifactId>jira-rest-java-client-core</artifactId>
-                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
@@ -130,6 +122,10 @@
             <artifactId>jira-rest-java-client-core</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
         <!-- atlassian-util-concurrent is a dependency of jira-rest-java-client-api but dependency:analyze show as warning when scope=compile -->
         <dependency>
             <groupId>io.atlassian.util.concurrent</groupId>
@@ -175,6 +171,7 @@
                     </execution>
                 </executions>
             </plugin>
+
         </plugins>
     </build>
 

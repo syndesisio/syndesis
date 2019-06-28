@@ -30,6 +30,8 @@ import org.immutables.value.Value;
 @SuppressWarnings("immutables")
 public interface OpenApi extends WithId<OpenApi>, WithName, WithVersion, WithMetadata, Serializable {
 
+    String OPERATION_ID = "openapi-operationid";
+
     @Override
     default Kind getKind() {
         return Kind.OpenApi;

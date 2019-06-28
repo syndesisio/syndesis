@@ -16,12 +16,26 @@
 package io.syndesis.connector.odata.customizer;
 
 import java.io.IOException;
+import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.util.ObjectHelper;
 import com.fasterxml.jackson.databind.JsonNode;
+import io.syndesis.connector.odata.ODataUtil;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 public class ODataDeleteCustomizer extends AbstractProducerCustomizer {
+
+    private String resourcePath;
+
+    @Override
+    public void customize(ComponentProxyComponent component, Map<String, Object> options) {
+        resourcePath = ConnectorOptions.extractOption(options, RESOURCE_PATH);
+
+        component.setBeforeProducer(this::beforeProducer);
+        component.setAfterProducer(this::afterProducer);
+    }
 
     @Override
     protected void beforeProducer(Exchange exchange) throws IOException {
@@ -33,7 +47,15 @@ public class ODataDeleteCustomizer extends AbstractProducerCustomizer {
 
         if (! ObjectHelper.isEmpty(keyPredicateNode)) {
             String keyPredicate = keyPredicateNode.asText();
-            in.setHeader(OLINGO4_PROPERTY_PREFIX + KEY_PREDICATE, keyPredicate);
+
+            //
+            // Change the resource path instead as there is a bug in using the
+            // keyPredicate header (adds brackets around regardless of a subpredicate
+            // being present). When that's fixed we can revert back to using keyPredicate
+            // header instead.
+            //
+            in.setHeader(OLINGO4_PROPERTY_PREFIX + RESOURCE_PATH,
+                         resourcePath + ODataUtil.formatKeyPredicate(keyPredicate, true));
         }
 
         in.setBody(EMPTY_STRING);

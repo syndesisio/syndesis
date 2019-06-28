@@ -113,7 +113,7 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
               <WithOAuthAppHelpers>
                 {({ updateOAuthApp, deleteOAuthApp }) => (
                   <WithOAuthApps disableUpdates={true}>
-                    {({ data, hasData, error, read }) => (
+                    {({ data, hasData, error, errorMessage, read }) => (
                       <WithListViewToolbarHelpers
                         defaultFilterType={filterByName}
                         defaultSortType={sortByName}
@@ -184,7 +184,9 @@ export class OAuthAppsPage extends React.Component<{}, IOAuthAppsPageState> {
                                   error={error}
                                   loading={!hasData}
                                   loaderChildren={<IntegrationsListSkeleton />}
-                                  errorChildren={<ApiError />}
+                                  errorChildren={
+                                    <ApiError error={errorMessage!} />
+                                  }
                                 >
                                   {() => (
                                     <OAuthAppList>

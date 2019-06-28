@@ -47,6 +47,7 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.connector.odata.consumer.AbstractODataReadRouteTest;
 import io.syndesis.connector.odata.server.ODataTestServer;
 import io.syndesis.connector.odata.server.ODataTestServer.Options;
 import io.syndesis.connector.support.util.PropertyBuilder;
@@ -58,7 +59,9 @@ public abstract class AbstractODataTest implements ODataConstants {
 
     protected static final int MOCK_TIMEOUT_MILLISECONDS = 60000;
 
-    protected static final String OLINGO4_READ_ENDPOINT = "olingo4-olingo4-0-0://read";
+    protected static final String OLINGO4_READ_FROM_ENDPOINT = "olingo4-olingo4-0-0://read";
+
+    protected static final String OLINGO4_READ_TO_ENDPOINT = "olingo4-olingo4-0-1://read";
 
     @Autowired
     protected ApplicationContext applicationContext;
@@ -198,10 +201,14 @@ public abstract class AbstractODataTest implements ODataConstants {
         };
     }
 
-    protected String testData(String fileName) throws IOException {
-        InputStream in = this.getClass().getResourceAsStream(fileName);
+    protected String testData(String fileName, Class<?> tgtClass) throws IOException {
+        InputStream in = tgtClass.getResourceAsStream(fileName);
         String expected = streamToString(in);
         return expected;
+    }
+
+    protected String testData(String fileName) throws IOException {
+        return testData(fileName, getClass());
     }
 
     protected Step createMockStep() {

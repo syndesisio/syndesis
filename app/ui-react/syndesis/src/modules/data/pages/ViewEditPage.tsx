@@ -8,7 +8,6 @@ import {
   Breadcrumb,
   IViewEditValidationResult,
   ViewEditContent,
-  ViewEditHeader,
 } from '@syndesis/ui';
 import { WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
@@ -29,7 +28,6 @@ export interface IViewEditRouteState {
 export interface IViewEditPageState {
   isWorking: boolean;
   validationResults: IViewEditValidationResult[];
-  viewDescription: string | '[unchanged]';
   viewValid: boolean;
 }
 
@@ -40,26 +38,11 @@ export class ViewEditPage extends React.Component<{}, IViewEditPageState> {
     this.state = {
       isWorking: false,
       validationResults: [],
-      viewDescription: '[unchanged]',
       viewValid: true,
     };
-    this.handleDescriptionChange = this.handleDescriptionChange.bind(this);
-    this.handleNameChange = this.handleNameChange.bind(this);
     this.handleValidationStarted = this.handleValidationStarted.bind(this);
     this.handleValidationComplete = this.handleValidationComplete.bind(this);
   }
-
-  public handleDescriptionChange = async (descr: string): Promise<boolean> => {
-    this.setState({
-      ...this.state,
-      viewDescription: descr,
-    });
-    return true;
-  };
-
-  public handleNameChange = async (name: string): Promise<boolean> => {
-    return true;
-  };
 
   public handleValidationStarted = async (): Promise<void> => {
     this.setState({
@@ -89,17 +72,16 @@ export class ViewEditPage extends React.Component<{}, IViewEditPageState> {
                 {({ pushNotification }) => {
                   return (
                     <WithVirtualizationHelpers>
-                      {({ deleteViewEditorState, refreshVirtualizationViews, validateViewDefinition }) => {
+                      {({ refreshVirtualizationViews, validateViewDefinition }) => {
                         // Save the View with new DDL and description
                         const handleSaveView = async (ddlValue: string) => {
-                          const vwDesc = this.state.viewDescription === '[unchanged]' ? viewDefinition.keng__description : this.state.viewDescription;
                           // View Definition
                           const viewDefn: ViewDefinition = {
                             compositions: viewDefinition.compositions,
                             ddl: ddlValue,
                             isComplete: viewDefinition.isComplete,
                             isUserDefined: true,
-                            keng__description: vwDesc,
+                            keng__description: viewDefinition.keng__description,
                             projectedColumns: viewDefinition.projectedColumns,
                             sourcePaths: viewDefinition.sourcePaths,
                             viewName: viewDefinition.viewName,
@@ -204,31 +186,12 @@ export class ViewEditPage extends React.Component<{}, IViewEditPageState> {
                               </Link>
                               <span>{viewDefinition.viewName}</span>
                             </Breadcrumb>
-                            <ViewEditHeader
-                              allowEditing={true}
-                              viewDescription={
-                                viewDefinition.keng__description
-                              }
-                              viewName={viewDefinition.viewName}
-                              i18nDescriptionLabel={t(
-                                'data:virtualization.viewDescriptionDisplay'
-                              )}
-                              i18nDescriptionPlaceholder={t(
-                                'data:virtualization.viewDescriptionPlaceholder'
-                              )}
-                              i18nNamePlaceholder={t(
-                                'data:virtualization.viewNamePlaceholder'
-                              )}
-                              isWorking={false}
-                              onChangeDescription={
-                                this.handleDescriptionChange
-                              }
-                              onChangeName={this.handleNameChange}
-                            />
                             <ViewEditContent
                               viewDdl={initialView}
                               i18nCancelLabel={t('shared:Cancel')}
                               i18nSaveLabel={t('shared:Save')}
+                              i18nTitle={t('virtualization.viewEditorTitle')}
+                              i18nDescription={t('virtualization.viewEditorDescription')}
                               i18nValidateLabel={t('shared:Validate')}
                               isValid={this.state.viewValid}
                               isWorking={this.state.isWorking}

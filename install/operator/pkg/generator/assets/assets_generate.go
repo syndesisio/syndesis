@@ -5,12 +5,12 @@ package main
 
 import (
 	"github.com/shurcooL/vfsgen"
-	"github.com/syndesisio/syndesis/install/operator/pkg/generator"
+	"github.com/syndesisio/syndesis/install/operator/pkg/generator/dev"
 	"log"
 )
 
 func main() {
-	err := vfsgen.Generate(generator.GetAssetsFS(true), vfsgen.Options{
+	err := vfsgen.Generate(dev.GetAssetsFS(), vfsgen.Options{
 		PackageName: "generator",
 	})
 	if err != nil {

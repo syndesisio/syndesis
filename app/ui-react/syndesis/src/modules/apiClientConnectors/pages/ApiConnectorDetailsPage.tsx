@@ -96,7 +96,7 @@ export default class ApiConnectorDetailsPage extends React.Component<
                               initialValue={apiConnector}
                               key={location.key}
                             >
-                              {({ data, hasData, error }) => {
+                              {({ data, hasData, error, errorMessage }) => {
                                 const handleSubmit = async (
                                   values: IConnectorValues,
                                   actions: any
@@ -156,7 +156,9 @@ export default class ApiConnectorDetailsPage extends React.Component<
                                     error={error}
                                     loading={!hasData}
                                     loaderChildren={<PageLoader />}
-                                    errorChildren={<ApiError />}
+                                    errorChildren={
+                                      <ApiError error={errorMessage!} />
+                                    }
                                   >
                                     {() => {
                                       return (

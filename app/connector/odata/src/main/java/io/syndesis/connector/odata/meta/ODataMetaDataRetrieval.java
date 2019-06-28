@@ -55,31 +55,37 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
     @SuppressWarnings({"PMD"})
     @Override
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
-            ODataMetadata odataMetadata = (ODataMetadata) metadata.getPayload();
-            Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
+        ODataMetadata odataMetadata = (ODataMetadata) metadata.getPayload();
+        Map<String, List<PropertyPair>> enrichedProperties = new HashMap<>();
 
-            if (odataMetadata.hasEntityNames()) {
-                List<PropertyPair> resourcesResult = new ArrayList<>();
-                odataMetadata.getEntityNames().stream().forEach(
-                    t -> resourcesResult.add(new PropertyPair(t, t))
-                );
-                enrichedProperties.put(RESOURCE_PATH, resourcesResult);
-            }
+        if (odataMetadata.hasEntityNames()) {
+            List<PropertyPair> resourcesResult = new ArrayList<>();
+            odataMetadata.getEntityNames().stream().forEach(
+                t -> resourcesResult.add(new PropertyPair(t, t))
+            );
+            enrichedProperties.put(RESOURCE_PATH, resourcesResult);
+        }
 
-            //
-            // Do things differently depending on which action is being sought
-            //
-            if (actionId.endsWith(Methods.READ.connectorId())) {
-                return genReadDataShape(odataMetadata, properties, enrichedProperties);
-            } else if(actionId.endsWith(Methods.CREATE.connectorId())) {
+        //
+        // Do things differently depending on which action is being sought
+        //
+        Methods method = Methods.methodForAction(actionId);
+        switch (method) {
+            case READ:
+                if (actionId.endsWith(FROM)) {
+                    return genReadFromDataShape(odataMetadata, properties, enrichedProperties);
+                } else {
+                    return genReadToShape(odataMetadata, enrichedProperties);
+                }
+            case CREATE:
                 return genCreateDataShape(odataMetadata, enrichedProperties);
-            } else if (actionId.endsWith(Methods.DELETE.connectorId())) {
+            case DELETE:
                 return genDeleteDataShape(enrichedProperties, actionId);
-            } else if (actionId.endsWith(Methods.PATCH.connectorId())) {
+            case PATCH:
                 return genPatchDataShape(odataMetadata, enrichedProperties, actionId);
-            }
+        }
 
-            return SyndesisMetadata.of(enrichedProperties);
+        return SyndesisMetadata.of(enrichedProperties);
     }
 
     private SyndesisMetadata createSyndesisMetadata(
@@ -179,7 +185,7 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
      * - In has NO shape
      * - Out has the json entity schema
      */
-    private SyndesisMetadata genReadDataShape(ODataMetadata odataMetadata,
+    private SyndesisMetadata genReadFromDataShape(ODataMetadata odataMetadata,
                                               Map<String, Object> basicProperties,
                                               Map<String, List<PropertyPair>> enrichedProperties) {
         ObjectSchema entitySchema = createEntitySchema();
@@ -210,6 +216,35 @@ public class ODataMetaDataRetrieval extends ComponentMetadataRetrieval implement
                 applyEntitySchemaSpecification(collectionSchema, outDataShapeBuilder);
             }
         }
+        return createSyndesisMetadata(enrichedProperties, inDataShapeBuilder, outDataShapeBuilder);
+    }
+
+    /*
+     * Producer-version of READ
+     */
+    private SyndesisMetadata genReadToShape(ODataMetadata odataMetadata, Map<String, List<PropertyPair>> enrichedProperties) {
+        //
+        // Need to add a KEY_PREDICATE to the json schema to allow identification
+        // of the entity to be patched.
+        //
+        ObjectSchema entityInSchema = createEntitySchema();
+        entityInSchema.putProperty(KEY_PREDICATE, factory.stringSchema());
+
+        DataShape.Builder inDataShapeBuilder = new DataShape.Builder()
+            .kind(DataShapeKinds.JSON_SCHEMA)
+            .type(entityInSchema.getTitle())
+            .name("Entity Properties")
+            .specification(serializeSpecification(entityInSchema));
+
+        ObjectSchema entityOutSchema = createEntitySchema();
+        populateEntitySchema(odataMetadata, entityOutSchema);
+
+        DataShape.Builder outDataShapeBuilder = new DataShape.Builder()
+            .kind(DataShapeKinds.JSON_SCHEMA)
+            .type(entityOutSchema.getTitle());
+
+        applyEntitySchemaSpecification(entityOutSchema,  outDataShapeBuilder);
+
         return createSyndesisMetadata(enrichedProperties, inDataShapeBuilder, outDataShapeBuilder);
     }
 

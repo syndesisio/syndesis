@@ -43,7 +43,6 @@ import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.connector.odata.AbstractODataRouteTest;
 import io.syndesis.connector.odata.component.ODataComponentFactory;
-import io.syndesis.connector.odata.consumer.ODataReadRouteSplitResultsTest;
 import io.syndesis.connector.odata.customizer.ODataDeleteCustomizer;
 import io.syndesis.connector.support.util.PropertyBuilder;
 
@@ -51,7 +50,7 @@ import io.syndesis.connector.support.util.PropertyBuilder;
 @RunWith(SpringRunner.class)
 @SpringBootTest(
     classes = {
-        ODataReadRouteSplitResultsTest.TestConfiguration.class
+        ODataDeleteTests.TestConfiguration.class
     },
     properties = {
         "spring.main.banner-mode = off",
