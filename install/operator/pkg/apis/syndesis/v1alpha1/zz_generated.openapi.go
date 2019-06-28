@@ -68,11 +68,10 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisSpec(ref common.ReferenceCallback
 			SchemaProps: spec.SchemaProps{
 				Description: "SyndesisSpec defines the desired state of Syndesis",
 				Properties: map[string]spec.Schema{
-					"routeHostName": {
+					"routeHostname": {
 						SchemaProps: spec.SchemaProps{
-							Description: "INSERT ADDITIONAL SPEC FIELDS - desired state of cluster Important: Run \"operator-sdk generate k8s\" to regenerate code after modifying this file Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html",
-							Type:        []string{"string"},
-							Format:      "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"demoData": {
@@ -127,6 +126,23 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisSpec(ref common.ReferenceCallback
 							Format: "",
 						},
 					},
+					"addons": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"object"},
+							AdditionalProperties: &spec.SchemaOrBool{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Type: []string{"array"},
+										Items: &spec.SchemaOrArray{
+											Schema: &spec.Schema{
+												SchemaProps: spec.SchemaProps{},
+											},
+										},
+									},
+								},
+							},
+						},
+					},
 				},
 			},
 		},
@@ -143,9 +159,8 @@ func schema_pkg_apis_syndesis_v1alpha1_SyndesisStatus(ref common.ReferenceCallba
 				Properties: map[string]spec.Schema{
 					"phase": {
 						SchemaProps: spec.SchemaProps{
-							Description: "INSERT ADDITIONAL STATUS FIELD - define observed state of cluster Important: Run \"operator-sdk generate k8s\" to regenerate code after modifying this file Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html",
-							Type:        []string{"string"},
-							Format:      "",
+							Type:   []string{"string"},
+							Format: "",
 						},
 					},
 					"upgradeAttempts": {

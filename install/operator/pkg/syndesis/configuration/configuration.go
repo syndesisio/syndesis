@@ -42,14 +42,14 @@ const (
 	EnvClientStateAuthenticationKey   SyndesisEnvVar = "CLIENT_STATE_AUTHENTICATION_KEY"
 	EnvClientStateEncryptionKey       SyndesisEnvVar = "CLIENT_STATE_ENCRYPTION_KEY"
 	EnvImageStreamNamespace           SyndesisEnvVar = "IMAGE_STREAM_NAMESPACE"
-	EnvControllersIntegrationEnabled SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
-	EnvSyndesisRegistry              SyndesisEnvVar = "SYNDESIS_REGISTRY"
-	EnvDemoDataEnabled               SyndesisEnvVar = "DEMO_DATA_ENABLED"
-	EnvMaxIntegrationsPerUser        SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
-	EnvIntegrationStateCheckInterval SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
-	EnvSarNamespace                  SyndesisEnvVar = "SAR_PROJECT"
-	EnvKomodoMemoryLimit             SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
-	EnvDatavirtEnabled               SyndesisEnvVar = "DATAVIRT_ENABLED"
+	EnvControllersIntegrationEnabled  SyndesisEnvVar = "CONTROLLERS_INTEGRATION_ENABLED"
+	EnvSyndesisRegistry               SyndesisEnvVar = "SYNDESIS_REGISTRY"
+	EnvDemoDataEnabled                SyndesisEnvVar = "DEMO_DATA_ENABLED"
+	EnvMaxIntegrationsPerUser         SyndesisEnvVar = "MAX_INTEGRATIONS_PER_USER"
+	EnvIntegrationStateCheckInterval  SyndesisEnvVar = "INTEGRATION_STATE_CHECK_INTERVAL"
+	EnvSarNamespace                   SyndesisEnvVar = "SAR_PROJECT"
+	EnvKomodoMemoryLimit              SyndesisEnvVar = "KOMODO_MEMORY_LIMIT"
+	EnvDatavirtEnabled                SyndesisEnvVar = "DATAVIRT_ENABLED"
 
 	EnvUpgradeRegistry       SyndesisEnvVar = "UPGRADE_REGISTRY"
 	EnvUpgradeVolumeCapacity SyndesisEnvVar = "UPGRADE_VOLUME_CAPACITY"
@@ -149,7 +149,7 @@ func SetConfigurationFromEnvVars(config map[string]string, syndesis *v1alpha1.Sy
 
 // Common
 func envRouteHostname(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
-	if routeHost := syndesis.Spec.RouteHostName; routeHost != "" {
+	if routeHost := syndesis.Spec.RouteHostname; routeHost != "" {
 		return &SyndesisEnvVarConfig{
 			Var:   EnvRouteHostname,
 			Value: routeHost,
@@ -159,7 +159,7 @@ func envRouteHostname(syndesis *v1alpha1.Syndesis) *SyndesisEnvVarConfig {
 }
 func routeHostnameFromEnv(config map[string]string, syndesis *v1alpha1.Syndesis) {
 	if v, ok := getString(config, EnvRouteHostname); ok {
-		syndesis.Spec.RouteHostName = v
+		syndesis.Spec.RouteHostname = v
 	}
 }
 

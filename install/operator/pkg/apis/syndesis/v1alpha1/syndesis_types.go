@@ -11,7 +11,7 @@ import (
 // SyndesisSpec defines the desired state of Syndesis
 // +k8s:openapi-gen=true
 type SyndesisSpec struct {
-	RouteHostName        string          `json:"routeHostname,omitempty"`
+	RouteHostname        string          `json:"routeHostname,omitempty"`
 	DemoData             *bool           `json:"demoData,omitempty"`
 	DeployIntegrations   *bool           `json:"deployIntegrations,omitempty"`
 	TestSupport          *bool           `json:"testSupport,omitempty"`
@@ -138,7 +138,7 @@ const (
 
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
 
-// Syndesis is the Schema for the syndesises API
+// Syndesis is the Schema for the syndeses API
 // +k8s:openapi-gen=true
 // +kubebuilder:subresource:status
 // +k8s:deepcopy-gen:interfaces=k8s.io/apimachinery/pkg/runtime.Object
