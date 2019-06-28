@@ -146,7 +146,10 @@ Restores the `syndesis-ui` POD to the original state.
 
 Runs the app in the development mode. API calls will be proxied to the provided `BACKEND` URL.
 
-The proxy will require the session cookies to be able to properly work. The right cookies will be retrieved through an automated instance of Chromium, that will wait for the user to login. Once properly logged in - a condition recognized by the browser navigating back to the provided `BACKEND` url - the session cookies will be extracted and the Chromium instance will be closed. 
+The proxy will require the session cookies to be able to properly work. The right cookies will be retrieved through an automated instance of Chromium, that will wait for the user to login. Once properly logged in - a condition recognized by the browser navigating back to the provided `BACKEND` url - the session cookies will be extracted and the Chromium instance will be closed.
+
+It's also possibile to enable the _chaos mode_ setting the `CHAOS` env variable. In _chaos mode_ API requests have a 50% chance to fail with an error 500.   
+This mode is useful to test the resilience of the app.  
 
 **IMPORTANT**
 

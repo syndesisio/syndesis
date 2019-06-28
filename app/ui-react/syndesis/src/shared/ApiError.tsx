@@ -16,6 +16,7 @@ export const ApiError: React.SFC<IApiErrorProps> = props => (
         i18nHelp={t('error.help')}
         i18nRefreshLabel={t('error.refreshButton')}
         i18nReportIssue={t('error.reportIssueButton')}
+        i18nShowErrorInfoLabel={t('error.showErrorInfoButton')}
         error={
           typeof props.error === 'string' ? new Error(props.error) : props.error
         }

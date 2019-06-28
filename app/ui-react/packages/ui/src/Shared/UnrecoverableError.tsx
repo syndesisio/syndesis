@@ -1,4 +1,3 @@
-import { Text } from '@patternfly/react-core';
 import { EmptyState } from 'patternfly-react';
 import { useState } from 'react';
 import * as React from 'react';
@@ -46,12 +45,16 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
         </EmptyState.Action>
         <EmptyState.Action secondary={true}>
           {error && (
-            <ButtonLink
-              data-testid={'unrecoverable-error-show-error-button'}
-              onClick={toggleErrorInfo}
-            >
-              {i18nShowErrorInfoLabel}
-            </ButtonLink>
+            <>
+              <ButtonLink
+                data-testid={'unrecoverable-error-show-error-button'}
+                onClick={toggleErrorInfo}
+                style={{ marginBottom: 0 }}
+              >
+                {i18nShowErrorInfoLabel}
+              </ButtonLink>
+              &nbsp;
+            </>
           )}
           <a
             data-testid={'unrecoverable-error-report-issue-link'}
@@ -64,11 +67,19 @@ export const UnrecoverableError: React.FC<IUnrecoverableErrorProps> = ({
           </a>
         </EmptyState.Action>
         {showErrorInfo && error && (
-          <EmptyState.Help style={{ textAlign: 'left' }}>
-            <Text>
-              {error.name}: {error.message}
-            </Text>
-            {errorInfo && <pre>{errorInfo.componentStack}</pre>}
+          <EmptyState.Help
+            style={{
+              background: 'rgba(255, 255, 255, 0.8)',
+              border: '1px solid #dedede',
+              marginTop: 10,
+              padding: 10,
+              textAlign: 'left',
+            }}
+          >
+            {error.name}: {error.message}
+            {errorInfo && (
+              <pre style={{ marginTop: 10 }}>{errorInfo.componentStack}</pre>
+            )}
           </EmptyState.Help>
         )}
       </EmptyState>
