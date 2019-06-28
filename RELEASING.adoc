@@ -1,0 +1,127 @@
+= Syndesis Release
+
+== Preparations
+
+* Check CircleCI success on https://circleci.com/gh/syndesisio/syndesis/tree/master[latest master].
+  When this is in failed state there is a chance that the release build will hit the same error.
+
+* Login to https://ci.fabric8.io/[Jenkins].
+  In case you are not registered yet create a new account and open an issue https://github.com/syndesisio/syndesis/issues[@github]
+  asking for permissions to edit and start jobs.
+
+== Release with Jenkins job
+
+=== Major release
+
+Run the https://ci.fabric8.io/view/syndesis/job/syndesis-release/[Major release build] with version parameter (e.g. 1.7.0)
+
+Pushes to master should be avoided while the build is running. This is because those changes will not be included in the
+release and have to be backported to the release branch manually after the release.
+
+The release build runs for ~2h
+
+Actions performed in the release build:
+
+* Run full build (all tests, all checks enabled) on a clean local Maven repository
+* Create staging repository on https://oss.sonatype.org/[Maven central nexus]
+* Push all https://search.maven.org/search?q=g:io.syndesis[Syndesis artifacts] to Maven staging repository
+* Release staging repository
+* Push https://hub.docker.com/u/syndesis[Syndesis images] to DockerHub
+
+=== Minor release
+
+Run the https://ci.fabric8.io/view/syndesis/[Minor release (bugfix) build] with version parameter (e.g. 1.7.1).
+
+You should see a build job that is suitable for your minor release
+(e.g. https://ci.fabric8.io/view/syndesis/job/syndesis-release-1.7.x/[syndesis-release-1.7.x])
+
+The build performs the very same steps on the respective bugfix branch instead of master.
+
+== Release from local build
+
+When there is a problem with the Jenkins release build or you need to perform something special you can also run the
+release from a local machine.
+
+How to: https://doc.syndesis.io/#syndesis-release
+
+== After the release (major release only)
+
+=== Create bugfix branch
+
+When doing a major release we need to create a new bugfix branch for this major release.
+
+Clone Syndesis upstream repo to a local folder:
+
+  > git clone git@github.com:syndesisio/syndesis.git syndesis-upstream
+  > cd syndesis-upstream
+
+For instance when working on a major release 1.7.0
+
+  > git checkout -b 1.7.x
+  > git push -u origin 1.7.x
+
+=== Create bugfix release job
+
+On Jenkins we need a new job for further bugfix releases on that major version. You can copy an existing bugfix release
+job and adjust the version numbers in the job configuration.
+
+For instance if you are doing a release `1.7.0` copy the job
+https://ci.fabric8.io/view/syndesis/job/syndesis-release-1.6.x/[syndesis-release-1.6.x] and replace `1.6.x` with `1.7.x`
+everywhere.
+
+The new job should point to the new bugfix branch `1.7.x` and should be named `syndesis-release-1.7.x` then.
+Update master with new SNAPSHOT version
+
+Once we have the new bugfix branch in place we can upgrade master to a new SNAPSHOT version.
+
+You should do this in your forked Syndesis repo and open a PR to upstream master.
+
+Make sure your fork is up to date with latest master and no changes are pending in your local codebase.
+
+  > git pull upstream master
+  > git checkout -b pr/version-1-8-SNAPSHOT
+
+Search for all occurrences of 1.7-SNAPSHOT and replace with 1.8-SNAPSHOT.
+
+  > git commit -m ’chore: upgrade version to 1.8-SNAPSHOT’
+  > git push -u origin pr/version-1-8-SNAPSHOT
+
+Now you can open a new PR to upstream master. Wait for the Circle CI checks to be done and merge to master.
+
+=== Add labels on github
+
+We have some special labels for backport bot and PRs dedicated to a bugfix branch.
+Create those https://github.com/syndesisio/syndesis/labels[labels] for the new major release.
+
+In particular we need
+
+* pr/1.7.x
+* backport 1.7.x
+
+== Write release mail to ipaas-dev
+
+We have a new release! So let the people know about it!
+
+== Verify release
+
+* Make sure release build is successful
+* Check availability of latest https://search.maven.org/search?q=g:io.syndesis[Syndesis artifacts] on Maven central
+(Synchronization can take ~2-4h)
+* Check Syndesis https://hub.docker.com/u/syndesis[images on DockerHub]
+
+== When something goes wrong
+
+When the release build fails for some reason we probably need to revert some things manually. Especially when the release
+was partially done (e.g. some artifacts already have been uploaded to Maven central staging)
+
+In particular we may need to
+
+* clean up Maven staging repositories
+* clean up DockerHub
+
+You can check the Maven staging repository state for the group id io.syndesis on https://oss.sonatype.org[Maven central nexus].
+
+A user login is required and permission to access the io.syndesis staging repositories. Both can be done by opening a
+new https://issues.sonatype.org/projects/OSSRH/summary[issue at OSSRH].
+
+Also read the https://central.sonatype.org/pages/ossrh-guide.html[OSSRH guide] to get used to the process.
