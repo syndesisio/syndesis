@@ -99,6 +99,7 @@
             - '--skip-auth-regex=/icons[^/]*'
             - '--skip-auth-regex=/static[^/]*'
             - '--skip-auth-regex=/precache-manifest.*.js'
+            - '--skip-auth-regex=/config.json'
             - --skip-auth-preflight
             - --openshift-ca=/etc/pki/tls/certs/ca-bundle.crt
             - --openshift-ca=/var/run/secrets/kubernetes.io/serviceaccount/ca.crt
