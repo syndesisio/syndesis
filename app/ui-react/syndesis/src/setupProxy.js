@@ -4,8 +4,8 @@ const path = require('path');
 
 module.exports = function(app) {
   if (process.env.BACKEND) {
-    app.use(
-      proxy('/api/v1', {
+    ['/api/v1', '/vdb-builder/v1'].forEach(url => 
+      app.use( proxy(url, { 
         target: process.env.BACKEND,
         secure: false,
         changeOrigin: true,
@@ -16,7 +16,7 @@ module.exports = function(app) {
           Cookie: process.env.BACKEND_COOKIE || '',
         },
       })
-    );
+    ));
     app.use('/logout', (req, res) => {
       res.clearCookie('_oauth_proxy', {
         domain: req.headers.referrer,
