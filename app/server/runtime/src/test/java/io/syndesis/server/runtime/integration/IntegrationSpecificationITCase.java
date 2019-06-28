@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 
 import io.swagger.util.Json;
 import io.syndesis.common.model.integration.Integration;
+import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.runtime.BaseITCase;
 
 import org.json.JSONException;
@@ -50,9 +51,12 @@ public class IntegrationSpecificationITCase extends BaseITCase {
             MULTIPART);
 
         final Integration integration = integrationResponse.getBody();
-        dataManager.create(integration);
+        final String integrationId = KeyGenerator.createKey();
+        dataManager.create(integration.builder()
+            .id(integrationId)
+            .build());
 
-        final ResponseEntity<ByteArrayResource> specificationResponse = get("/api/v1/integrations/" + integration.getId().get() + "/specification",
+        final ResponseEntity<ByteArrayResource> specificationResponse = get("/api/v1/integrations/" + integrationId + "/specification",
             ByteArrayResource.class);
 
         assertThat(specificationResponse.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("application/vnd.oai.openapi+json"));
@@ -75,9 +79,12 @@ public class IntegrationSpecificationITCase extends BaseITCase {
             MULTIPART);
 
         final Integration integration = integrationResponse.getBody();
-        dataManager.create(integration);
+        final String integrationId = KeyGenerator.createKey();
+        dataManager.create(integration.builder()
+            .id(integrationId)
+            .build());
 
-        final ResponseEntity<ByteArrayResource> specificationResponse = get("/api/v1/integrations/" + integration.getId().get() + "/specification",
+        final ResponseEntity<ByteArrayResource> specificationResponse = get("/api/v1/integrations/" + integrationId + "/specification",
             ByteArrayResource.class);
 
         assertThat(specificationResponse.getHeaders().getContentType()).isEqualTo(MediaType.valueOf("application/vnd.oai.openapi"));

@@ -17,7 +17,6 @@ package io.syndesis.server.endpoint.v1.handler.api;
 
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.Optional;
 
 import io.syndesis.common.model.DataShape;
@@ -27,6 +26,7 @@ import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.Step;
+import io.syndesis.common.model.openapi.OpenApi;
 
 import org.junit.Test;
 
@@ -42,9 +42,9 @@ public class ApiGeneratorHelperTest {
                 .build())
             .build();
 
-        final Flow flow1 = new Flow.Builder().id("flow1").addSteps(step, step).build();
-        final Flow flow2 = new Flow.Builder().id("flow2").addSteps(step, step).build();
-        final Flow flow3 = new Flow.Builder().id("flow3").addSteps(step, step).build();
+        final Flow flow1 = new Flow.Builder().putMetadata(OpenApi.OPERATION_ID, "flow1").addSteps(step, step).build();
+        final Flow flow2 = new Flow.Builder().putMetadata(OpenApi.OPERATION_ID, "flow2").addSteps(step, step).build();
+        final Flow flow3 = new Flow.Builder().putMetadata(OpenApi.OPERATION_ID, "flow3").addSteps(step, step).build();
 
         final Integration existing = new Integration.Builder().addFlows(flow1, flow3).build();
         final Integration given = new Integration.Builder().addFlows(flow1, flow2, flow3).build();
@@ -62,7 +62,7 @@ public class ApiGeneratorHelperTest {
                 .build())
             .build();
 
-        final Flow flow = new Flow.Builder().id("flow1").addSteps(step, step).build();
+        final Flow flow = new Flow.Builder().putMetadata(OpenApi.OPERATION_ID, "flow1").addSteps(step, step).build();
 
         final Integration existing = new Integration.Builder().build();
         final Integration given = new Integration.Builder().addFlow(flow).build();
@@ -80,8 +80,8 @@ public class ApiGeneratorHelperTest {
                 .build())
             .build();
 
-        final Flow existingFlow1 = new Flow.Builder().id("flow1").addSteps(step, step).build();
-        final Flow existingFlow2 = new Flow.Builder().id("flow2").addSteps(step, step).build();
+        final Flow existingFlow1 = new Flow.Builder().putMetadata(OpenApi.OPERATION_ID, "flow1").addSteps(step, step).build();
+        final Flow existingFlow2 = new Flow.Builder().putMetadata(OpenApi.OPERATION_ID, "flow2").addSteps(step, step).build();
 
         final Integration existing = new Integration.Builder().addFlows(existingFlow1, existingFlow2).build();
         final Integration given = new Integration.Builder().addFlow(existingFlow2).build();
@@ -110,18 +110,6 @@ public class ApiGeneratorHelperTest {
     }
 
     @Test
-    public void shouldMaintainSameIntegrationPrefixForFlowIds() {
-        final Integration existing = new Integration.Builder().id("existing").build();
-
-        final List<Flow> flows = Arrays.asList(new Flow.Builder().id("generated:flows:operation-1").build(),
-            new Flow.Builder().id("generated:flows:operation-2").build());
-
-        final Iterable<Flow> sameIntegrationPrefixFlows = ApiGeneratorHelper.withSameIntegrationIdPrefix(existing, flows);
-
-        assertThat(sameIntegrationPrefixFlows).allMatch(f -> f.getId().get().startsWith("existing:flows:operation-"));
-    }
-
-    @Test
     public void shouldUpdateFlowNameAndDescription() {
         final Step step = new Step.Builder()
             .action(new ConnectorAction.Builder()
@@ -129,8 +117,9 @@ public class ApiGeneratorHelperTest {
                 .build())
             .build();
 
-        final Flow flow = new Flow.Builder().id("flow1").name("name").description("description").addSteps(step, step).build();
-        final Flow flowUpdated = new Flow.Builder().id("flow1").name("updated name").description("updated description").addSteps(step, step).build();
+        final Flow flow = new Flow.Builder().putMetadata(OpenApi.OPERATION_ID, "flow1").name("name").description("description").addSteps(step, step).build();
+        final Flow flowUpdated = new Flow.Builder().putMetadata(OpenApi.OPERATION_ID, "flow1").name("updated name").description("updated description")
+            .addSteps(step, step).build();
 
         final Integration existing = new Integration.Builder().addFlow(flow).build();
         final Integration given = new Integration.Builder().addFlow(flowUpdated).build();
@@ -177,7 +166,7 @@ public class ApiGeneratorHelperTest {
                 .build())
             .build();
 
-        final Flow existingFlow = new Flow.Builder().id("flow1").addSteps(startStep, stepWithShapes, endStep).build();
+        final Flow existingFlow = new Flow.Builder().putMetadata(OpenApi.OPERATION_ID, "flow1").addSteps(startStep, stepWithShapes, endStep).build();
         final Integration existing = new Integration.Builder().addFlow(existingFlow).build();
 
         final DataShape givenStartShape = new DataShape.Builder()
@@ -193,7 +182,7 @@ public class ApiGeneratorHelperTest {
         final Step givenStartStep = startStep.updateOutputDataShape(Optional.of(givenStartShape));
         final Step givenEndStep = endStep.updateInputDataShape(Optional.of(givenEndShape));
         final Flow givenFlow = new Flow.Builder()
-            .id("flow1")
+            .putMetadata(OpenApi.OPERATION_ID, "flow1")
             .steps(Arrays.asList(
                 givenStartStep,
                 givenEndStep))
@@ -203,7 +192,7 @@ public class ApiGeneratorHelperTest {
         final Integration updated = ApiGeneratorHelper.updateFlowsAndStartAndEndDataShapes(existing, given);
 
         final Flow expectedFlow = new Flow.Builder()
-            .id("flow1")
+            .putMetadata(OpenApi.OPERATION_ID, "flow1")
             .steps(Arrays.asList(
                 givenStartStep,
                 stepWithShapes,
@@ -224,7 +213,7 @@ public class ApiGeneratorHelperTest {
                 .build())
             .build();
 
-        final Flow flow = new Flow.Builder().id("flow1").addSteps(step, step).build();
+        final Flow flow = new Flow.Builder().putMetadata(OpenApi.OPERATION_ID, "flow1").addSteps(step, step).build();
 
         final Integration existing = new Integration.Builder().addFlow(flow).build();
         final Integration given = new Integration.Builder().addFlow(flow).build();
