@@ -188,7 +188,8 @@
     "authenticationType": "oauth2",
     "authorizationUrl": "https://accounts.google.com/o/oauth2/v2/auth",
     "googleScopes": "https://mail.google.com/",
-    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token"
+    "tokenUrl": "https://www.googleapis.com/oauth2/v4/token",
+    "userId": "me"
   },
   "dependencies": [
     {
