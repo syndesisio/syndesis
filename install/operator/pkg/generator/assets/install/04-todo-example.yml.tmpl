@@ -1,4 +1,4 @@
-{{if mapHasKey .Syndesis.Spec.Addons "todo" }}
+{{if eq (or .Syndesis.Spec.Addons.todo.enabled "true") "true"}}
 - apiVersion: v1
   kind: Service
   metadata:

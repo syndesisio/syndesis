@@ -22,9 +22,9 @@ type SyndesisSpec struct {
 	OpenShiftConsoleUrl  string          `json:"openShiftConsoleUrl,omitempty"`
 	SarNamespace         string          `json:"sarNamespace,omitempty"`
 	Addons               AddonsSpec      `json:"addons,omitempty"`
-    // INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
-    // Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
-    // Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
+	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
+	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
+	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
 }
 
 // SyndesisStatus defines the observed state of Syndesis
@@ -38,9 +38,9 @@ type SyndesisStatus struct {
 	Description        string               `json:"description,omitempty"`
 	Version            string               `json:"version,omitempty"`
 	TargetVersion      string               `json:"targetVersion,omitempty"`
-    // INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
-    // Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
-    // Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
+	// INSERT ADDITIONAL STATUS FIELD - define observed state of cluster
+	// Important: Run "operator-sdk generate k8s" to regenerate code after modifying this file
+	// Add custom validation using kubebuilder tags: https://book.kubebuilder.io/beyond_basics/generating_crd.html
 }
 
 // =============================================================================
@@ -105,9 +105,7 @@ type ServerFeatures struct {
 
 type AddonsSpec map[string]Parameters
 
-type Parameters []Parameter
-
-type Parameter map[string]string
+type Parameters map[string]string
 
 // =============================================================================
 
