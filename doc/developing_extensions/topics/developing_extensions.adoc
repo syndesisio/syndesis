@@ -29,7 +29,7 @@ extension.jar
   |
   +-dependency2.jar
 ----
-<1> extension definition.
+<1> extension definition.P
 <2> extension classes.
 <3> additional dependencies.
 
@@ -597,6 +597,119 @@ public class LogAction  {
 ----
 <1> property setter
 <2> property getter
+
+
+=== Using Spring Boot
+
+Action can be developed using Spring Boot in a way very similar to what shown in the section above about developing step extension using the RouteBuilder as Spring Boot is used as facility to register a RouteBuilder to the camle contexts.
+
+To implement the same example as the one used to show how to use xml fragments, you can write something like:
+
+[source,java]
+----
+import io.syndesis.extension.api.annotations.Action;
+import io.syndesis.extension.api.annotations.ConfigurationProperty;
+import org.apache.camel.builder.RouteBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class ActionsConfiguration {
+
+    @Action( // <1>
+        id = "log-body-with-prefix",
+        name = "Log body with prefix",
+        description = "A simple body log with a prefix",
+        entrypoint = "direct:log")
+    @ConfigurationProperty( // <2>
+        name = "prefix",
+        description = "The Log body prefix message",
+        displayName = "Log Prefix",
+        type = "string")
+    @Bean // <4>
+    public RouteBuilder logBodyWithprefix() {
+        return new RouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                from("direct::start") // <3>
+                    .choice()
+                        .when(simple("${header.prefix} != ''"))
+                            .log("${header.prefix} ${body}")
+                        .otherwise()
+                            .log("Output ${body}")
+                    .endChoice();
+            }
+        };
+    }
+}
+----
+<1> the action definition
+<2> the property definition
+<3> the action implementation
+<4> register the RouteBuilder as a bean
+
+As we are using java and Syndesis annotations we can leverage the extension-maven-plugin to automatically generate the action definition which will look like:
+
+[source,json]
+----
+{
+  "id": "log-body-with-prefix",
+  "name": "Log body with prefix",
+  "description": "A simple body log with a prefix",
+  "descriptor": {
+    "kind": "ENDPOINT", <1>
+    "entrypoint": "direct:log", <2>
+    "inputDataShape": {
+      "kind": "none"
+    },
+    "outputDataShape": {
+      "kind": "none"
+    },
+    "propertyDefinitionSteps": [ {
+      "description": "extension-properties",
+      "name": "extension-properties",
+      "properties": { <43
+        "prefix": {
+          "componentProperty": false,
+          "deprecated": false,
+          "description": "The Log body prefix message",
+          "displayName": "Log Prefix",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "required": false,
+          "secret": false,
+          "type": "string",
+          "raw": false
+        }
+      }
+    } ]
+  },
+  "actionType": "step"
+}
+----
+<1> the type of action is set to `ENDPOINT` as the runtime should invoke a Camel endpoint to execute this action/step
+<2> the Camel endpoint to invoke which is the `from` of our route
+<3> the properties this step/action exposes to the user, each value set by the user is set to a message header with the same name as the property
+
+[IMPORTANT]
+====
+To make your configuration class discoverable by Spring Boot you need to list them in a file named `META-INF/spring.factories` like:
+
+[source]
+----
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+    com.company.ActionsConfiguration
+----
+
+[NOTE]
+====
+As we are using Spring Boot, every bean you eventually register in your configuration classes will be available to the Camel context.
+
+====
+
+For additional info see https://docs.spring.io/spring-boot/docs/1.5.11.RELEASE/reference/html/boot-features-developing-auto-configuration.html[Spring Boot Reference]
+
+====
 
 === Using Step API
 
