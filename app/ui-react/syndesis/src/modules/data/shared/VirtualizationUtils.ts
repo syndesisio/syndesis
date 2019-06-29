@@ -164,16 +164,11 @@ export function generateSchemaNodeInfos(
  */
 export function generateViewEditorState(
   serviceVdbName: string,
-  schemaNodeInfo: SchemaNodeInfo,
+  schemaNodeInfo: SchemaNodeInfo[],
   vwName: string,
   vwDescription?: string
 ): ViewEditorState {
-  const srcPaths: string[] = [
-    'connection=' +
-      schemaNodeInfo.connectionName +
-      '/' +
-      schemaNodeInfo.sourcePath,
-  ];
+  const srcPaths: string[] = loadPaths(schemaNodeInfo);
   return getViewEditorState(
     serviceVdbName,
     vwName,
@@ -182,6 +177,19 @@ export function generateViewEditorState(
     false,
     vwDescription
   );
+}
+
+function loadPaths(schemaNodeInfo: SchemaNodeInfo[]): string[] {
+  const srcPaths: string[] = [];
+
+  let index = 0;
+  schemaNodeInfo.map(
+    item =>
+      (srcPaths[index++] =
+        'connection=' + item.connectionName + '/' + item.sourcePath)
+  );
+
+  return srcPaths;
 }
 
 /**
