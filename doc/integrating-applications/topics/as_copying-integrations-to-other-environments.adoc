@@ -12,7 +12,7 @@ The environments can all be on a single OpenShift cluster,
 or they can be spread out across multiple OpenShift clusters.
 
 The procedures described here instruct you to export 
-and import integrations in the {prodname} web interface. 
+and import integrations in the {prodname} console. 
 
 ifeval::["{location}"=="downstream"]
 If you are running {prodname} 
