@@ -140,6 +140,7 @@ func GetRenderContext(syndesis *v1alpha1.Syndesis, params ResourceParams) (*gene
 		return nil, fmt.Errorf("required config var not set: %s", configuration.EnvSarNamespace)
 	}
 
+	renderContext.Syndesis = syndesis.DeepCopy()
 	renderContext.Env = config
 	return renderContext, nil
 }

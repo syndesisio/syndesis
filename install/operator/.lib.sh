@@ -98,7 +98,7 @@ build_operator()
                 echo 
             else 
                 operator-sdk generate k8s
-                operator-sdk generate openapi
+                # operator-sdk generate openapi
             fi
         fi
         go generate ./pkg/...
