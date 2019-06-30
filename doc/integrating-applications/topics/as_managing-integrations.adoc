@@ -7,8 +7,13 @@
 = Managing integrations
 :context: manage
 
-Each {prodname} environment is hosted on OpenShift Online or
-OpenShift Container Platform (OCP). A common set up is to have
+
+ifeval::["{location}" == "downstream"]
+Each {prodname} environment is hosted on OpenShift Online, OpenShift Dedicated or
+OpenShift Container Platform (OCP). 
+endif::[]
+
+A common set up is to have
 a {prodname} development environment, a {prodname} test environment, 
 and a {prodname} deployment environment. 
 
