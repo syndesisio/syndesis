@@ -17,6 +17,7 @@ package io.syndesis.server.credential;
 
 import org.immutables.value.Value;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 /**
@@ -42,5 +43,6 @@ public interface AcquisitionMethod {
 
     Type getType();
 
-    boolean isConfigured();
+    @JsonProperty("configured")
+    boolean configured();
 }

@@ -61,7 +61,7 @@ public final class OAuth1CredentialProvider<A> extends BaseCredentialProvider {
             .icon(iconFor(id))
             .type(Type.OAUTH1)
             .description(descriptionFor(id))
-            .isConfigured(configured)
+            .configured(configured)
             .build();
     }
 
