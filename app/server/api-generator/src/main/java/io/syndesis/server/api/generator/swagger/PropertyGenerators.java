@@ -256,28 +256,53 @@ enum PropertyGenerators {
         final Class<T> type) {
         final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
 
-        if (securityDefinitions == null) {
+        if (securityDefinitions == null || securityDefinitions.isEmpty()) {
             return empty();
         }
 
-        final Optional<T> maybeSecurityDefinition = securityDefinitions.values().stream()
-            .filter(type::isInstance)
-            .filter(SupportedAuthenticationTypes::supports)
-            .map(type::cast)
-            .findFirst();
-        if (!maybeSecurityDefinition.isPresent()) {
+        final Map<String, SecuritySchemeDefinition> supportedSecurityDefinitions = securityDefinitions.entrySet().stream()
+            .filter(e -> type.isInstance(e.getValue()))
+            .filter(e -> SupportedAuthenticationTypes.supports(e.getValue()))
+            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+        if (supportedSecurityDefinitions.isEmpty()) {
+            // no supported security definitions of selected type defined
             return empty();
         }
 
         final Map<String, String> configuredProperties = connectorSettings.getConfiguredProperties();
         final String configuredAuthenticationType = configuredProperties.get(authenticationType.name());
 
-        final T securityDefinition = maybeSecurityDefinition.get();
-        if (configuredAuthenticationType == null || SupportedAuthenticationTypes
-            .fromConfiguredPropertyValue(configuredAuthenticationType) == SupportedAuthenticationTypes.fromSecurityDefinition(securityDefinition.getType())) {
-            return maybeSecurityDefinition;
+        if (supportedSecurityDefinitions.size() == 1 && configuredAuthenticationType == null) {
+            // we have only one, so we provide that one as the user hasn't
+            // expressed any preference
+            @SuppressWarnings("unchecked")
+            final T onlySecurityDefinitionPresent = (T) supportedSecurityDefinitions.values().iterator().next();
+
+            return Optional.of(onlySecurityDefinitionPresent);
         }
 
+        if (configuredAuthenticationType == null) {
+            // we don't have a way to choose, no preference was given and there
+            // are zero or more than one security definitions present
+            return empty();
+        }
+
+        for (final Map.Entry<String, SecuritySchemeDefinition> securityDefinition : supportedSecurityDefinitions.entrySet()) {
+            // we have more than one supported security definition and the
+            // configured authentication type matches that definition
+            final int idx = configuredAuthenticationType.indexOf(':');
+
+            if (idx > 0 && securityDefinition.getKey().equals(configuredAuthenticationType.substring(idx + 1))) {
+                @SuppressWarnings("unchecked")
+                final T choosenSecurityDefinition = (T) securityDefinition.getValue();
+
+                return Optional.of(choosenSecurityDefinition);
+            }
+        }
+
+        // more than one security definition of the requested type is present
+        // and the configured authentication type doesn't match either of those
         return empty();
     }
 

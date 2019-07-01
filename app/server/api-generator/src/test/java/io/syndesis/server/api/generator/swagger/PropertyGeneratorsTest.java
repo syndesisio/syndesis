@@ -98,7 +98,7 @@ public class PropertyGeneratorsTest {
             .securityDefinition("username-password", securityDefinition);
 
         final ConnectorSettings settings = new ConnectorSettings.Builder()
-            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "basic")
+            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "basic:username-password")
             .build();
 
         final Optional<BasicAuthDefinition> got = PropertyGenerators.securityDefinition(swagger, settings, BasicAuthDefinition.class);
@@ -113,7 +113,7 @@ public class PropertyGeneratorsTest {
             .securityDefinition("username-password", securityDefinition);
 
         final ConnectorSettings settings = new ConnectorSettings.Builder()
-            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "basic:name")
+            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "basic:username-password")
             .build();
 
         final Optional<BasicAuthDefinition> got = PropertyGenerators.securityDefinition(swagger, settings, BasicAuthDefinition.class);
@@ -141,7 +141,9 @@ public class PropertyGeneratorsTest {
                 new OAuth2Definition().accessCode("https://api.example.com/token", "https://api.example.com/authz"));
 
         final ConfigurationProperty template = new ConfigurationProperty.Builder().build();
-        final ConnectorSettings settings = new ConnectorSettings.Builder().build();
+        final ConnectorSettings settings = new ConnectorSettings.Builder()
+            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "oauth2:oauth-authorization-code")
+            .build();
         final Optional<ConfigurationProperty> authorizationEndpoint = PropertyGenerators.authorizationEndpoint
             .propertyGenerator()
             .generate(swagger, template, settings);
