@@ -54,11 +54,14 @@ settings on the file’s host. To open the schema for editing,
 . Indicate the API's security requirements. {prodname} reads the 
 OpenAPI definition to determine the information needed to 
 configure the connector to meet the API’s security requirements. 
-The prompts that {prodname} displays can be any of the following: 
+{prodname} can display any of the following: 
 
 .. *No Security*
-.. *HTTP Basic Authorization* -- Enter the user name and password you
-want to use to access the API.
+.. *HTTP Basic Authorization* If the API service uses 
+HTTP basic authorization, you just need 
+to select this checkbox. Later, when you use this 
+connector to create a connection, {prodname} prompts you to 
+enter a username and password.
 .. *OAuth 2.0* -- {prodname} prompts you to enter:
 ... *Authorization URL* is the location for registering {prodname} as
 a client of the API. Registration authorizes {prodname} to access the API.

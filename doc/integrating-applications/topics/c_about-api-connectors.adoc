@@ -10,8 +10,8 @@ a REST API client connection. You can then create a new integration and
 add the REST API client connection, or you can edit an existing integration 
 to add the REST API client connection. 
 
-{prodname} connectors support OAuth 2.0 and HTTP Basic
-Authorization. If access to the REST API requires Transport Layer Security (TLS)
+{prodname} connectors support OAuth 2.0, HTTP basic
+authorization, and API keys. If access to the REST API requires Transport Layer Security (TLS)
 then the API needs to use a valid certificate that is issued by
 a recognized Certificate Authority (CA).
 
