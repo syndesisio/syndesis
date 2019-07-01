@@ -15,12 +15,6 @@
  */
 package io.syndesis.server.endpoint.v1.handler.integration;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.same;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import java.security.Principal;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,9 +24,11 @@ import java.util.Set;
 import java.util.stream.Stream;
 import javax.validation.Validator;
 import javax.ws.rs.core.SecurityContext;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.model.bulletin.IntegrationBulletinBoard;
@@ -43,8 +39,16 @@ import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.server.api.generator.APIGenerator;
 import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.EncryptionComponent;
+import io.syndesis.server.endpoint.v1.handler.external.PublicApiHandler;
 import io.syndesis.server.inspector.Inspectors;
 import io.syndesis.server.openshift.OpenShiftService;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.same;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class IntegrationHandlerTest {
 
@@ -83,7 +87,8 @@ public class IntegrationHandlerTest {
         when(apiGenerator.updateFlowExcerpts(any(Integration.class))).then(ctx -> ctx.getArguments()[0]);
         encryptionSupport = mock(EncryptionComponent.class);
         handler = new IntegrationHandler(dataManager, openShiftService, validator, inspectors, encryptionSupport,
-            apiGenerator);
+                apiGenerator);
+        handler.setPublicApiHandler(mock(PublicApiHandler.class));
     }
 
     @Test

@@ -138,8 +138,10 @@ public class PublicApiHandlerTest {
         doAnswer(invocation -> deploymentBuilder.targetState(targetState = IntegrationDeploymentState.Published).build())
                 .when(deploymentHandler).update(any(), any());
 
-        handler = new PublicApiHandler(dataManager, supportHandler,
-                encryptionComponent, integrationHandler, deploymentHandler, connectionHandler, monitoringProvider);
+        handler = new PublicApiHandler(dataManager, encryptionComponent, deploymentHandler, connectionHandler,
+                monitoringProvider);
+        handler.setIntegrationHandler(integrationHandler);
+        handler.setIntegrationSupportHandler(supportHandler);
     }
 
 
