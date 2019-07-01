@@ -35,12 +35,12 @@ export default class ExtensionIntegrations extends React.Component<
   public render() {
     return (
       <WithExtensionIntegrations extensionId={this.props.extensionId}>
-        {({ data, hasData, error }) => (
+        {({ data, hasData, error, errorMessage }) => (
           <WithLoader
             error={error}
             loading={!hasData}
             loaderChildren={<Loader />}
-            errorChildren={<ApiError error={error as Error} />}
+            errorChildren={<ApiError error={errorMessage!} />}
           >
             {() => (
               <Translation ns={['extensions', 'shared']}>

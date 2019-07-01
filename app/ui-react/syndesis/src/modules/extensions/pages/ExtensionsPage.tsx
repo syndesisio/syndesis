@@ -86,7 +86,7 @@ export default class ExtensionsPage extends React.Component {
           };
           return (
             <WithExtensions>
-              {({ data, hasData, error }) => (
+              {({ data, hasData, error, errorMessage }) => (
                 <WithListViewToolbarHelpers
                   defaultFilterType={filterByName}
                   defaultSortType={sortByName}
@@ -149,7 +149,7 @@ export default class ExtensionsPage extends React.Component {
                                     }}
                                   />
                                 }
-                                errorChildren={<ApiError error={error as Error} />}
+                                errorChildren={<ApiError error={errorMessage!} />}
                               >
                                 {() =>
                                   filteredAndSorted
