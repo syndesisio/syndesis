@@ -61,7 +61,7 @@ build_operator()
     local strategy="$1"
     local gopackage="$2"
     if [ "$strategy" == "auto" ] ; then
-        
+
         if docker_is_available; then
             if [[ "$(which go)" == "" ]] ; then
                 echo 'error: you must have either docker or go installed to build this project.'
@@ -90,13 +90,13 @@ build_operator()
         go mod vendor
         if [[ "$(which operator-sdk)" != "" ]] ; then
             if [[ "$(pwd)" != "$GOPATH/src/${gopackage}" ]] ; then
-                echo                 
+                echo
                 echo "warnning: operator-sdk only works on project's in the \$GOPATH"
                 echo "          can't use it to update the generated code"
                 echo "          please move this project under the \$GOPATH so that :'$(pwd)'"
                 echo "          is located at '$GOPATH/src/${gopackage}'"
-                echo 
-            else 
+                echo
+            else
                 operator-sdk generate k8s
                 # operator-sdk generate openapi
             fi
@@ -137,7 +137,7 @@ build_image()
     local strategy="$1"
     local OPERATOR_IMAGE_NAME="$2"
     local S2I_STREAM_NAME="$3"
-    
+
     if [ "$strategy" == "auto" ] ; then
         strategy=docker
         if [ -n "$(which oc)" ] ; then
@@ -154,7 +154,7 @@ build_image()
             echo "Creating BuildConfig ${S2I_STREAM_NAME}"
             oc new-build --strategy=docker --binary=true --name ${S2I_STREAM_NAME}
         fi
-        local arch="$(mktemp -t ${S2I_STREAM_NAME}-docker).tar"
+        local arch="$(mktemp -t ${S2I_STREAM_NAME}-dockerXXX).tar"
         echo $arch
         trap "rm $arch" EXIT
         tar cvf $arch build
@@ -176,4 +176,3 @@ build_image()
         exit 1
     esac
 }
-

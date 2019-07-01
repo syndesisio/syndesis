@@ -39,7 +39,7 @@ func TestSpecificConfig(t *testing.T) {
 				Limit:              &limit,
 				StateCheckInterval: &stateCheckInterval,
 			},
-			RouteHostName:      "myhost",
+			RouteHostname:      "myhost",
 			Registry:           "registry",
 			DeployIntegrations: &deploy,
 			Components: v1alpha1.ComponentsSpec{

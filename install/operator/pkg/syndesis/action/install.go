@@ -72,9 +72,9 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 	syndesis = syndesis.DeepCopy()
 
 	// Detect if the route should be auto-generated
-	autoGenerateRoute := syndesis.Spec.RouteHostName == ""
+	autoGenerateRoute := syndesis.Spec.RouteHostname == ""
 	if autoGenerateRoute {
-		syndesis.Spec.RouteHostName = "dummy"
+		syndesis.Spec.RouteHostname = "dummy"
 	}
 
 	params := syndesistemplate.ResourceParams{
@@ -99,7 +99,7 @@ func (a *installAction) Execute(ctx context.Context, syndesis *v1alpha1.Syndesis
 
 	if autoGenerateRoute {
 		// Set the right hostname after generating the route
-		syndesis.Spec.RouteHostName = syndesisRoute.Spec.Host
+		syndesis.Spec.RouteHostname = syndesisRoute.Spec.Host
 
 		// Hack to remove the auto-generated annotation
 		// In OpenShift 3.9, the route gets low priority for being displayed as main route for the app if the openshift.io/host.generated=true annotation is present
