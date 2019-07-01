@@ -104,7 +104,7 @@
 
           <execution>
             <id>yarn-lint</id>
-            <phase>compile</phase>
+            <phase>verify</phase>
             <goals>
               <goal>yarn</goal>
             </goals>
@@ -116,10 +116,10 @@
 
           <execution>
             <id>yarn-build</id>
+            <phase>compile</phase>
             <goals>
               <goal>yarn</goal>
             </goals>
-            <phase>compile</phase>
             <configuration>
               <arguments>build</arguments>
                <yarnInheritsProxyConfigFromMaven>false</yarnInheritsProxyConfigFromMaven>

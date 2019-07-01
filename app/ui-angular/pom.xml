@@ -124,7 +124,7 @@
           </execution>
           <execution>
             <id>yarn ng lint</id>
-            <phase>compile</phase>
+            <phase>verify</phase>
             <goals>
               <goal>yarn</goal>
             </goals>
@@ -135,7 +135,7 @@
           </execution>
           <execution>
             <id>yarn ng test</id>
-            <phase>compile</phase>
+            <phase>test</phase>
             <goals>
               <goal>yarn</goal>
             </goals>
@@ -147,7 +147,7 @@
           </execution>
           <execution>
             <id>yarn cleanup</id>
-            <phase>compile</phase>
+            <phase>generate-sources</phase>
             <goals>
               <goal>yarn</goal>
             </goals>
@@ -218,7 +218,7 @@
                 <id>set https proxy</id>
                 <phase>generate-sources</phase>
                 <goals>
-                  <goal>npm</goal>
+                  <goal>yarn</goal>
                 </goals>
                 <configuration>
                   <arguments>config set https-proxy http://${proxy-user}:${proxy-password}@${proxy-server}:${proxy-port}</arguments>
@@ -228,7 +228,7 @@
                 <id>set http proxy</id>
                 <phase>generate-sources</phase>
                 <goals>
-                  <goal>npm</goal>
+                  <goal>yarn</goal>
                 </goals>
                 <configuration>
                   <arguments>config set proxy http://${proxy-user}:${proxy-password}@${proxy-server}:${proxy-port}</arguments>
@@ -238,7 +238,7 @@
                 <id>set maxconn</id>
                 <phase>generate-sources</phase>
                 <goals>
-                  <goal>npm</goal>
+                  <goal>yarn</goal>
                 </goals>
                 <configuration>
                   <arguments>config set maxsockets 30</arguments>
@@ -262,16 +262,6 @@
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
             <executions>
-              <execution>
-                <id>set registry</id>
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>npm</goal>
-                </goals>
-                <configuration>
-                  <arguments>config set registry ${custom-registry}</arguments>
-                </configuration>
-              </execution>
               <execution>
                 <id>yarn set registry</id>
                 <phase>generate-sources</phase>
