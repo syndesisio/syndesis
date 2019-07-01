@@ -19,12 +19,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import io.swagger.models.Info;
 import io.swagger.models.Operation;
 import io.swagger.models.Path;
 import io.swagger.models.Swagger;
+import io.swagger.models.auth.ApiKeyAuthDefinition;
+import io.swagger.models.auth.In;
 import io.swagger.models.parameters.Parameter;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.action.ActionsSummary;
@@ -132,11 +135,12 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     public void shouldCreateSecurityConfigurationFromConcurSwagger() throws IOException {
         final String specification = resource("/swagger/concur.swagger.json");
 
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
-            .name("Concur List API")//
-            .description("Invokes Concur List API")//
-            .icon("fa-globe")//
-            .putConfiguredProperty("specification", specification)//
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
+            .name("Concur List API")
+            .description("Invokes Concur List API")
+            .icon("fa-globe")
+            .putConfiguredProperty("specification", specification)
+            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "oauth2:concur_oauth2")
             .build();
 
         final Connector generated = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
@@ -151,18 +155,19 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     public void shouldCreateSecurityConfigurationFromReverbSwagger() throws IOException {
         final String specification = resource("/swagger/reverb.swagger.yaml");
 
-        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()//
-            .name("Reverb API")//
-            .description("Invokes Reverb API")//
-            .icon("fa-music")//
-            .putConfiguredProperty("specification", specification)//
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
+            .name("Reverb API")
+            .description("Invokes Reverb API")
+            .icon("fa-music")
+            .putConfiguredProperty("specification", specification)
+            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "oauth2:oauth2")
             .build();
 
         final Connector generated = generator.generate(SWAGGER_TEMPLATE, connectorSettings);
 
         assertThat(generated.getProperties().keySet()).contains("accessToken", "authorizationEndpoint", "tokenEndpoint", "clientId",
             "clientSecret");
-        assertThat(generated.getProperties().get("authenticationType").getEnum())
+        assertThat(generated.getProperties().get(PropertyGenerators.authenticationType.name()).getEnum())
             .containsExactly(new ConfigurationProperty.PropertyValue.Builder().value("oauth2:oauth2").label("OAuth 2.0 - oauth2").build());
     }
 
@@ -192,6 +197,29 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
 
         info.title("title");
         assertThat(generator.determineConnectorName(SWAGGER_TEMPLATE, createSettingsFrom(swagger))).isEqualTo("title");
+    }
+
+    @Test
+    public void shouldGeneratePropertiesForChoosenAuthenticationType() {
+        final Swagger swagger = new Swagger()
+            .securityDefinition("one", new ApiKeyAuthDefinition("query", In.QUERY))
+            .securityDefinition("two", new ApiKeyAuthDefinition("query", In.HEADER));
+        final String specification = OpenApiHelper.serialize(swagger);
+
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
+            .putConfiguredProperty("specification", specification)
+            .putConfiguredProperty(PropertyGenerators.authenticationType.name(), "apiKey:two")
+            .build();
+
+        final APISummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
+
+        assertThat(summary.getConfiguredProperties())
+            .containsEntry("specification", specification)
+            .containsEntry(PropertyGenerators.authenticationType.name(), "apiKey:two");
+
+        final Map<String, ConfigurationProperty> properties = summary.getProperties();
+        assertThat(properties.keySet()).containsOnly("authenticationParameterName", "authenticationParameterPlacement",
+            "authenticationParameterValue", PropertyGenerators.authenticationType.name(), "basePath", "host", "specification");
     }
 
     @Test
@@ -246,6 +274,22 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
     }
 
     @Test
+    public void shouldNotProvideAuthenticationPropertiesWithMultipleSecurityDefinitionsMatching() {
+        final Swagger swagger = new Swagger()
+            .securityDefinition("one", new ApiKeyAuthDefinition("query", In.QUERY))
+            .securityDefinition("two", new ApiKeyAuthDefinition("query", In.HEADER));
+        final String specification = OpenApiHelper.serialize(swagger);
+
+        final ConnectorSettings connectorSettings = new ConnectorSettings.Builder()
+            .putConfiguredProperty("specification", specification)
+            .build();
+
+        final APISummary summary = generator.info(SWAGGER_TEMPLATE, connectorSettings);
+
+        assertThat(summary.getProperties().keySet()).containsOnly(PropertyGenerators.authenticationType.name(), "basePath", "host", "specification");
+    }
+
+    @Test
     public void shouldParseSpecificationWithSecurityRequirements() throws JSONException {
         final SwaggerModelInfo info = BaseSwaggerConnectorGenerator.parseSpecification(new ConnectorSettings.Builder()
             .putConfiguredProperty("specification", "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured\":[]}]}}}}")
@@ -286,7 +330,8 @@ public class BaseSwaggerConnectorGeneratorTest extends AbstractSwaggerConnectorT
         assertThat(summary).isEqualToIgnoringGivenFields(expected, "icon", "description", "properties", "warnings", "configuredProperties");
         assertThat(summary.getIcon()).matches(s -> s.isPresent() && s.get().startsWith("data:image"));
         assertThat(summary.getDescription()).startsWith("This is a sample server Petstore server");
-        assertThat(summary.getProperties().keySet()).contains("host", "basePath", "authenticationType", "specification");
+        assertThat(summary.getProperties().keySet()).containsOnly("authenticationParameterName", "authenticationParameterPlacement",
+            "authenticationParameterValue", PropertyGenerators.authenticationType.name(), "basePath", "host", "specification");
         assertThat(summary.getConfiguredProperties().keySet()).containsOnly("specification");
         assertThat(reformatJson(summary.getConfiguredProperties().get("specification"))).isEqualTo(reformatJson(specification));
     }

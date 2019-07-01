@@ -121,6 +121,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
 
         // No matter if the validation fails, try to process the swagger
         final Connector connector = basicConnector(connectorTemplate, connectorSettings);
+
         final Map<String, Path> paths = model.getPaths();
 
         final AtomicInteger total = new AtomicInteger(0);
@@ -149,6 +150,7 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
             .actionsSummary(actionsSummary)
             .errors(swaggerInfo.getErrors())
             .warnings(swaggerInfo.getWarnings())
+            .putAllConfiguredProperties(connectorSettings.getConfiguredProperties())
             .putConfiguredProperty("specification", swaggerInfo.getResolvedSpecification())
             .build();
     }
@@ -383,4 +385,5 @@ abstract class BaseSwaggerConnectorGenerator extends ConnectorGenerator {
     private static String randomUUID() {
         return UUID.randomUUID().toString();
     }
+
 }
