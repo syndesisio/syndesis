@@ -17,6 +17,7 @@ import { WithIntegrationActions } from './WithIntegrationActions';
 
 export interface IIntegrationsProps {
   error: boolean;
+  errorMessage?: string;
   loading: boolean;
   integrations: IntegrationWithMonitoring[];
 }
@@ -33,7 +34,7 @@ export class Integrations extends React.Component<IIntegrationsProps> {
                   error={this.props.error}
                   loading={this.props.loading}
                   loaderChildren={<IntegrationsListSkeleton />}
-                  errorChildren={<ApiError />}
+                  errorChildren={<ApiError error={this.props.errorMessage!} />}
                 >
                   {() =>
                     this.props.integrations.map(

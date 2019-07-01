@@ -68,7 +68,7 @@ export class ConnectorsPage extends React.Component {
       <Translation ns={['connections', 'shared']}>
         {t => (
           <WithConnectors>
-            {({ data, hasData, error }) => (
+            {({ data, hasData, error, errorMessage }) => (
               <>
                 <PageTitle title={t('connections:create:connector:title')} />
                 <ConnectionCreatorBreadcrumb
@@ -89,7 +89,7 @@ export class ConnectorsPage extends React.Component {
                           ))}
                         </PageSection>
                       }
-                      errorChildren={<ApiError />}
+                      errorChildren={<ApiError error={errorMessage!} />}
                     >
                       {() => (
                         <WithListViewToolbarHelpers

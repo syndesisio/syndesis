@@ -105,6 +105,7 @@ export default () => (
       data: integrationsData,
       hasData: hasIntegrations,
       error: integrationsError,
+      errorMessage: integrationsErrorMessage,
     }) => (
       <WithIntegrationsMetrics>
         {({ data: metricsData }) => (
@@ -113,6 +114,7 @@ export default () => (
               data: connectionsData,
               hasData: hasConnections,
               error: connectionsError,
+              errorMessage: connectionsErrorMessage,
             }) => {
               const integrationStatesCount = getIntegrationsCountsByState(
                 integrationsData.items
@@ -240,7 +242,9 @@ export default () => (
                             error={integrationsError}
                             loading={!hasIntegrations}
                             loaderChildren={<RecentUpdatesSkeleton />}
-                            errorChildren={<ApiError />}
+                            errorChildren={
+                              <ApiError error={integrationsErrorMessage!} />
+                            }
                           >
                             {() =>
                               recentlyUpdatedIntegrations.map(i => (
@@ -263,6 +267,7 @@ export default () => (
                       connections={
                         <Connections
                           error={connectionsError}
+                          errorMessage={connectionsErrorMessage}
                           includeConnectionMenu={false}
                           loading={!hasConnections}
                           connections={dashboardConnections}

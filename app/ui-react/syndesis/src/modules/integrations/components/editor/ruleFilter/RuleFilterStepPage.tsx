@@ -114,14 +114,14 @@ export class RuleFilterStepPage extends React.Component<
                       })}
                       content={
                         <WithFilterOptions dataShape={dataShape}>
-                          {({ data, error, hasData }) => (
+                          {({ data, error, errorMessage, hasData }) => (
                             <WithLoader
                               error={error}
                               loading={!hasData}
                               loaderChildren={<PageLoader />}
                               errorChildren={
                                 <PageSection>
-                                  <ApiError />
+                                  <ApiError error={errorMessage!} />
                                 </PageSection>
                               }
                             >

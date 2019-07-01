@@ -15,6 +15,7 @@ import { ApiError, EntityIcon } from '../../../shared';
 
 export interface IConnectionsProps {
   error: boolean;
+  errorMessage?: string;
   includeConnectionMenu: boolean;
   loading: boolean;
   connections: IConnectionOverview[];
@@ -69,7 +70,9 @@ export class Connections extends React.Component<IConnectionsProps> {
                               ))}
                             </>
                           }
-                          errorChildren={<ApiError />}
+                          errorChildren={
+                            <ApiError error={this.props.errorMessage!} />
+                          }
                         >
                           {() =>
                             this.props.connections.map((c, index) => {
