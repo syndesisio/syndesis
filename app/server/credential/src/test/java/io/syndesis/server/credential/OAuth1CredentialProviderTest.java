@@ -34,7 +34,7 @@ public class OAuth1CredentialProviderTest {
             .label("provider1")
             .icon("provider1")
             .type(Type.OAUTH1)
-            .isConfigured(true)
+            .configured(true)
             .build();
 
         assertThat(oauth1.acquisitionMethod()).isEqualTo(method1);

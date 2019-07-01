@@ -67,7 +67,7 @@ public final class OAuth2CredentialProvider<S> extends BaseCredentialProvider {
             .icon(iconFor(id))
             .type(Type.OAUTH2)
             .description(descriptionFor(id))
-            .isConfigured(configured)
+            .configured(configured)
             .build();
     }
 
