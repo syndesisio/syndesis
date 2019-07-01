@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.Kind;
@@ -71,7 +72,7 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
             MULTIPART);
 
         final Integration integration = integrationResponse.getBody();
-        final Flow createTaskFlow = integration.findFlowById(integration.getId().get() + ":flows:create-task").get();
+        final Flow createTaskFlow = integration.findFlowBy(operationIdEquals("create-task")).get();
         final List<Step> createTaskFlowSteps = createTaskFlow.getSteps();
         final Step startStep = createTaskFlowSteps.get(0);
         final Step logStep = new Step.Builder().id("log-step").stepKind(StepKind.log).build();
@@ -91,13 +92,13 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
         final Integration updated = dataManager.fetch(Integration.class, integrationId);
 
         // not present in updated-test-swagger.json
-        assertThat(updated.findFlowById(integrationId + ":flows:fetch-task")).isNotPresent();
+        assertThat(updated.findFlowBy(operationIdEquals("fetch-task"))).isNotPresent();
 
         // new operation added in updated-test-swagger.json
-        assertThat(updated.findFlowById(integrationId + ":flows:count-tasks")).isPresent();
+        assertThat(updated.findFlowBy(operationIdEquals("count-tasks"))).isPresent();
 
         // modified in updated-test-swagger.json
-        assertThat(updated.findFlowById(integrationId + ":flows:create-task")).hasValueSatisfying(flow -> {
+        assertThat(updated.findFlowBy(operationIdEquals("create-task"))).hasValueSatisfying(flow -> {
             final List<Step> steps = flow.getSteps();
             assertThat(steps).hasSize(3);
             assertThat(flow.findStepById("log-step")).isPresent();
@@ -129,16 +130,16 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
 
         final Integration updated = updateResponse.getBody();
 
-        final String integrationId = existing.getId().get();
+        existing.getId().get();
 
         // not present in updated-test-swagger.json
-        assertThat(updated.findFlowById(integrationId + ":flows:fetch-task")).isNotPresent();
+        assertThat(updated.findFlowBy(operationIdEquals("fetch-task"))).isNotPresent();
 
         // new operation added in updated-test-swagger.json
-        assertThat(updated.findFlowById(integrationId + ":flows:count-tasks")).isPresent();
+        assertThat(updated.findFlowBy(operationIdEquals("count-tasks"))).isPresent();
 
         // modified in updated-test-swagger.json
-        assertThat(updated.findFlowById(integrationId + ":flows:create-task")).hasValueSatisfying(flow -> {
+        assertThat(updated.findFlowBy(operationIdEquals("create-task"))).hasValueSatisfying(flow -> {
             final List<Step> steps = flow.getSteps();
             assertThat(steps).hasSize(3);
             assertThat(flow.findStepById("log-step")).isPresent();
@@ -185,6 +186,10 @@ public class ApiIntegrationUpdateITCase extends BaseITCase {
         }
 
         return ret;
+    }
+
+    private static Predicate<Flow> operationIdEquals(final String operationId) {
+        return f -> f.getMetadata(OpenApi.OPERATION_ID).map(operationId::equals).orElse(false);
     }
 
 }
