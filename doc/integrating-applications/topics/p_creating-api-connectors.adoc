@@ -57,12 +57,12 @@ configure the connector to meet the API’s security requirements.
 {prodname} can display any of the following: 
 
 .. *No Security*
-.. *HTTP Basic Authorization* If the API service uses 
-HTTP basic authorization, you just need 
-to select this checkbox. Later, when you use this 
+.. *HTTP Basic Authorization* — If the API service uses 
+HTTP basic authorization, 
+select this checkbox. Later, when you use this 
 connector to create a connection, {prodname} prompts you to 
-enter a username and password.
-.. *OAuth 2.0* -- {prodname} prompts you to enter:
+enter a user name and password.
+.. *OAuth 2.0*  — {prodname} prompts you to enter:
 ... *Authorization URL* is the location for registering {prodname} as
 a client of the API. Registration authorizes {prodname} to access the API.
 See link:{LinkFuseOnlineConnectorGuide}#register-with-rest-api_rest[{NameOfFuseOnlineConnectorGuide}, Registering {prodname} as a REST API client]. 
@@ -72,8 +72,14 @@ you must contact the service provider to obtain this URL.
 ... *Access Token URL* is required for OAuth authorization. Again, the
 OpenAPI document or other documentation for the API should provide
 this URL. If it does not then you must contact the service provider.
-.. *API Key* — If the API service requires an API key, you just need 
-to select this checkbox. Later, when you use this 
+.. *API Key* — If the API service requires an API key, {prodname} 
+prompts for any information that it needs to create the connector. 
+Prompts are based on the OpenAPI definition. For example, 
+you might need to indicate if the API key is in message headers 
+or in query parameters. If the OpenAPI definition specifies 
+API key security, as well as another security type, select the
+checkbox to indicate that you want to use API key security in 
+connections based on this connector. Later, when you use this 
 connector to create a connection, {prodname} prompts you to 
 enter the value of an API key. 
 
