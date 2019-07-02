@@ -1,10 +1,10 @@
-import { Integration } from '@syndesis/models';
+import { IntegrationOverview } from '@syndesis/models';
 import * as React from 'react';
 import { ApiContext } from './ApiContext';
 import { callFetch } from './callFetch';
 
 export function useApiProviderSpecification(
-  specificationOrIntegration: string | Integration
+  specificationOrIntegration: string | IntegrationOverview
 ) {
   const apiContext = React.useContext(ApiContext);
   const [loading, setLoading] = React.useState(false);
@@ -17,12 +17,14 @@ export function useApiProviderSpecification(
     const fetchSpecification = async () => {
       setLoading(true);
       try {
+        const integration = specificationOrIntegration as IntegrationOverview;
+        const openApiResourceId = integration.resources!.find(
+          r => r.kind === 'open-api'
+        )!.id;
         const response = await callFetch({
           headers: apiContext.headers,
           method: 'GET',
-          url: `${apiContext.apiUri}/integrations/${
-            (specificationOrIntegration as Integration).id
-          }/specification`,
+          url: `${apiContext.apiUri}/resources/open-api/${openApiResourceId}`,
         });
         const integrationSpecification = await response.json();
         if (integrationSpecification.errorCode) {

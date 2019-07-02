@@ -1503,6 +1503,12 @@ export function getMetadataValue<T>(
   return typeof metadata !== 'undefined' ? metadata[mapKey] : defaultValue;
 }
 
+export function isIntegrationEmpty(integration: IntegrationOverview) {
+  return (
+    integration.flows!.length === 1 && integration.flows![0].steps!.length === 0
+  );
+}
+
 /**
  * Returns true if the given integration is an API provider integration
  * @param integration
