@@ -15,6 +15,19 @@
  */
 package io.syndesis.server.openshift;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.function.BiConsumer;
+
 import io.fabric8.kubernetes.api.model.ConfigMap;
 import io.fabric8.kubernetes.api.model.Doneable;
 import io.fabric8.kubernetes.api.model.EnvVar;
@@ -42,19 +55,6 @@ import io.syndesis.common.util.Names;
 import io.syndesis.common.util.SyndesisServerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collections;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
-import java.util.function.BiConsumer;
 
 @SuppressWarnings({"PMD.BooleanGetMethodName", "PMD.LocalHomeNamingConvention", "PMD.GodClass"})
 public class OpenShiftServiceImpl implements OpenShiftService {
@@ -268,6 +268,10 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                             .withName("metrics")
                             .withContainerPort(9779)
                         .endPort()
+                        .addNewPort()
+                            .withName("management")
+                            .withContainerPort(8081)
+                        .endPort()
                         .addNewVolumeMount()
                             .withName("secret-volume")
                             .withMountPath("/deployments/config")
@@ -277,7 +281,7 @@ public class OpenShiftServiceImpl implements OpenShiftService {
                             .withInitialDelaySeconds(config.getIntegrationLivenessProbeInitialDelaySeconds())
                             .withNewHttpGet()
                                 .withPath("/health")
-                                .withNewPort(8080)
+                                .withNewPort(8081)
                             .endHttpGet()
                             .build())
                         .endContainer()
