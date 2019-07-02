@@ -81,6 +81,7 @@
 
           <execution>
             <id>install-node-and-yarn</id>
+            <phase>initialize</phase>
             <goals>
               <goal>install-node-and-yarn</goal>
             </goals>
@@ -92,6 +93,7 @@
 
           <execution>
             <id>yarn-install</id>
+            <phase>compile</phase>
             <goals>
               <goal>yarn</goal>
             </goals>
@@ -102,21 +104,25 @@
 
           <execution>
             <id>yarn-lint</id>
+            <phase>verify</phase>
             <goals>
               <goal>yarn</goal>
             </goals>
             <configuration>
               <arguments>lint</arguments>
+              <yarnInheritsProxyConfigFromMaven>false</yarnInheritsProxyConfigFromMaven>
             </configuration>
           </execution>
 
           <execution>
             <id>yarn-build</id>
+            <phase>compile</phase>
             <goals>
               <goal>yarn</goal>
             </goals>
             <configuration>
               <arguments>build</arguments>
+               <yarnInheritsProxyConfigFromMaven>false</yarnInheritsProxyConfigFromMaven>
             </configuration>
           </execution>
 
@@ -125,9 +131,11 @@
             <goals>
               <goal>yarn</goal>
             </goals>
+            <phase>test</phase>
             <configuration>
               <arguments>test</arguments>
               <skip>${skipTests}</skip>
+              <yarnInheritsProxyConfigFromMaven>false</yarnInheritsProxyConfigFromMaven>
             </configuration>
           </execution>
         </executions>
@@ -179,7 +187,7 @@
             <executions>
               <execution>
                 <id>set https proxy</id>
-                <phase>initialize</phase>
+                <phase>generate-sources</phase>
                 <goals>
                   <goal>yarn</goal>
                 </goals>
@@ -189,7 +197,7 @@
               </execution>
               <execution>
                 <id>set http proxy</id>
-                <phase>initialize</phase>
+                <phase>generate-sources</phase>
                 <goals>
                   <goal>yarn</goal>
                 </goals>
@@ -199,7 +207,7 @@
               </execution>
               <execution>
                 <id>set maxconn</id>
-                <phase>initialize</phase>
+                <phase>generate-sources</phase>
                 <goals>
                   <goal>yarn</goal>
                 </goals>
@@ -226,18 +234,8 @@
             <artifactId>frontend-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>set registry</id>
-                <phase>initialize</phase>
-                <goals>
-                  <goal>npm</goal>
-                </goals>
-                <configuration>
-                  <arguments>config set registry ${custom-registry}</arguments>
-                </configuration>
-              </execution>
-              <execution>
                 <id>yarn set registry</id>
-                <phase>initialize</phase>
+                <phase>generate-sources</phase>
                 <goals>
                   <goal>yarn</goal>
                 </goals>
@@ -260,7 +258,7 @@
             <executions>
               <execution>
                 <id>yarn set no-strict ssl</id>
-                <phase>initialize</phase>
+                <phase>generate-sources</phase>
                 <goals>
                   <goal>yarn</goal>
                 </goals>
@@ -283,27 +281,57 @@
       <build>
         <plugins>
           <plugin>
+            <groupId>com.googlecode.maven-download-plugin</groupId>
+            <artifactId>download-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>download-node-sass</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <url>${sass-binary-site}/v${node-sass-version}/${os.type}-x64-64_binding.node</url>
+                  <outputFileName>binding.node</outputFileName>
+                  <outputDirectory>${project.build.directory}/${os.type}-x64-64</outputDirectory>
+                </configuration>
+              </execution>
+              <execution>
+                <id>download-iltorb</id>
+                <phase>initialize</phase>
+                <goals>
+                  <goal>wget</goal>
+                </goals>
+                <configuration>
+                  <url>${iltorb-binary-site}/v${iltorb-version}/iltorb-v${iltorb-version}-node-v64-${os.type}-x64.tar.gz</url>
+                  <outputFileName>45aa7d-iltorb-v${iltorb-version}-node-v64-${os.type}-x64.tar.gz</outputFileName>
+                  <outputDirectory>${user.home}/.npm/_prebuilds/</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
             <groupId>com.github.eirslett</groupId>
             <artifactId>frontend-maven-plugin</artifactId>
             <executions>
               <execution>
-                <id>yarn set sass binary url</id>
-                <phase>initialize</phase>
+                <id>yarn unset sass binary url</id>
+                <phase>generate-sources</phase>
                 <goals>
-                  <goal>npm</goal>
+                  <goal>yarn</goal>
                 </goals>
                 <configuration>
-                  <arguments>config set sass-binary-site ${sass-binary-site}</arguments>
+                  <arguments>config delete sass-binary-site</arguments>
                 </configuration>
               </execution>
               <execution>
-                <id>install node-sass</id>
-                <phase>initialize</phase>
+                <id>yarn set sass binary dir</id>
+                <phase>generate-sources</phase>
                 <goals>
-                  <goal>npm</goal>
+                  <goal>yarn</goal>
                 </goals>
                 <configuration>
-                  <arguments>install --global-style node-sass@4.9.0 ${npm-verbose} --max-sockets=30 --fetch-retry-mintimeout=60000 --fetch-retries=10</arguments>
+                  <arguments>config set sass-binary-path ${project.build.directory}/linux-x64-64/binding.node</arguments>
                 </configuration>
               </execution>
             </executions>
@@ -520,6 +548,33 @@
           </plugin>
         </plugins>
       </build>
+    </profile>
+    <profile>
+      <id>macosx</id>
+      <activation>
+        <os><family>mac</family></os>
+      </activation>
+      <properties>
+        <os.type>darwin</os.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>linux</id>
+      <activation>
+        <os><name>Linux</name></os>
+      </activation>
+      <properties>
+        <os.type>linux</os.type>
+      </properties>
+    </profile>
+    <profile>
+      <id>windows</id>
+      <activation>
+        <os><name>Windows</name></os>
+      </activation>
+      <properties>
+        <os.type>win32</os.type>
+      </properties>
     </profile>
   </profiles>
 
