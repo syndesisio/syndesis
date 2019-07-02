@@ -60,6 +60,15 @@ For instance when working on a major release 1.7.0
   > git checkout -b 1.7.x
   > git push -u origin 1.7.x
 
+=== Add GitHub branch protection
+
+We don't allow commiting directly to the bugfix branch so https://help.github.com/en/articles/configuring-protected-branches[branch protection rule] needs to be added in the GitHub repository https://github.com/syndesisio/syndesis/settings/branches[settings]. The rule should be defined as:
+
+ * **Require status checks to pass before merging**, with the following required checks:
+   - pure-bot/pr-review
+   - pure-bot/wip
+   - syndesis 
+
 === Create bugfix release job
 
 On Jenkins we need a new job for further bugfix releases on that major version. You can copy an existing bugfix release
