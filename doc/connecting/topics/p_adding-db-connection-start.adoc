@@ -2,7 +2,7 @@
 // as_connecting-to-databases.adoc
 
 [id='adding-db-connection-start_{context}']
-= Starting an integration by accessing a database
+= Obtaining database records to trigger integration execution 
 
 To trigger execution of an integration based on the result of invoking a SQL
 statement or a SQL stored procedure, choose a database connection as the 
