@@ -366,7 +366,6 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
     viewEditorStates: ViewEditorState[]
   ): Promise<void> {
     // Updates the view editor states
-    alert(viewEditorStates[0].viewDefinition.sourcePaths[0]);
     await this.updateViewEditorStates(viewEditorStates);
     const response = await callFetch({
       headers: {},
