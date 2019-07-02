@@ -91,7 +91,7 @@ export const ConnectionDetailsPage: React.FunctionComponent<
 > = ({ edit }) => {
   const { t } = useTranslation(['connections', 'shared']);
   const { pushNotification } = React.useContext(UIContext);
-  const { params, state, history } = useRouteData<
+  const { params, state, history, location } = useRouteData<
     IConnectionDetailsRouteParams,
     IConnectionDetailsRouteState
   >();
@@ -264,6 +264,7 @@ export const ConnectionDetailsPage: React.FunctionComponent<
             initialValue={connection.configuredProperties}
             disabled={!edit}
             onSave={saveConnector}
+            key={location.key}
           >
             {({
               fields,
