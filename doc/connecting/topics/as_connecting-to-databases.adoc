@@ -13,8 +13,9 @@ databases:
 * MySQL
 * PostgreSQL
 
-You create a connection to the database that you want to access in an integration
-and then you add that connection to an integration following. 
+Create a connection to the database that you want to access in an integration.
+Then create an integration and add that database connection to the 
+integration.
 
 To connect to other types of databases, you must upload a JDBC driver for
 that database. 
@@ -23,12 +24,15 @@ See the following topics for details:
 
 * xref:create-database-connection_{context}[]
 * xref:adding-db-connection-start_{context}[]
+* xref:about-parameter-placeholders-and-values_{context}[]
 * xref:adding-db-connection-finish-middle_{context}[]
 * xref:connecting-to-proprietary-databases_{context}[]
 
 include::p_create-database-connection.adoc[leveloffset=+1]
 
 include::p_adding-db-connection-start.adoc[leveloffset=+1]
+
+include::c_about-parameter-placeholders-and-values.adoc[leveloffset=+1]
 
 include::p_adding-db-connection-finish-middle.adoc[leveloffset=+1]
 
