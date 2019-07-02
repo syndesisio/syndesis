@@ -15,58 +15,57 @@ export interface IEmptyViewsStateProps {
   i18nCreateView: string;
 }
 
-export class EmptyViewsState extends React.Component<IEmptyViewsStateProps> {
-  public render() {
-    return (
-      <EmptyState>
-        <EmptyState.Icon />
-        <EmptyState.Title>{this.props.i18nEmptyStateTitle}</EmptyState.Title>
-        <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
-        <EmptyState.Action>
-          <OverlayTrigger
-            overlay={this.getImportViewsTooltip()}
-            placement="top"
-          >
-            <ButtonLink
-              data-testid={'empty-views-state-import-views-button'}
-              href={this.props.linkImportViewsHRef}
-              as={'default'}
-              className={'empty-views-import'}
-            >
-              {this.props.i18nImportViews}
-            </ButtonLink>
-          </OverlayTrigger>
-          <OverlayTrigger overlay={this.getCreateViewTooltip()} placement="top">
-            <ButtonLink
-              data-testid={'empty-views-state-create-view-button'}
-              href={this.props.linkCreateViewHRef}
-              as={'primary'}
-            >
-              {this.props.i18nCreateView}
-            </ButtonLink>
-          </OverlayTrigger>
-        </EmptyState.Action>
-      </EmptyState>
-    );
-  }
+export const EmptyViewsState: React.FunctionComponent<
+  IEmptyViewsStateProps
+> = props => {
 
-  private getCreateViewTooltip() {
+  const getCreateViewTooltip = (): JSX.Element => {
     return (
-      <Tooltip id="createTip">
-        {this.props.i18nCreateViewTip
-          ? this.props.i18nCreateViewTip
-          : this.props.i18nCreateView}
+      <Tooltip id="editTip">
+        {props.i18nCreateViewTip ? props.i18nCreateViewTip : props.i18nCreateView}
       </Tooltip>
     );
   }
 
-  private getImportViewsTooltip() {
+  const getImportViewsTooltip = (): JSX.Element => {
     return (
       <Tooltip id="importViewsTip">
-        {this.props.i18nImportViewsTip
-          ? this.props.i18nImportViewsTip
-          : this.props.i18nImportViews}
+        {props.i18nImportViewsTip
+          ? props.i18nImportViewsTip
+          : props.i18nImportViews}
       </Tooltip>
     );
   }
+
+  return (
+    <EmptyState>
+      <EmptyState.Icon />
+      <EmptyState.Title>{props.i18nEmptyStateTitle}</EmptyState.Title>
+      <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
+      <EmptyState.Action>
+        <OverlayTrigger
+          overlay={getImportViewsTooltip()}
+          placement="top"
+        >
+          <ButtonLink
+            data-testid={'empty-views-state-import-views-button'}
+            href={props.linkImportViewsHRef}
+            as={'default'}
+            className={'empty-views-import'}
+          >
+            {props.i18nImportViews}
+          </ButtonLink>
+        </OverlayTrigger>
+        <OverlayTrigger overlay={getCreateViewTooltip()} placement="top">
+          <ButtonLink
+            data-testid={'empty-views-state-create-view-button'}
+            href={props.linkCreateViewHRef}
+            as={'primary'}
+          >
+            {props.i18nCreateView}
+          </ButtonLink>
+        </OverlayTrigger>
+      </EmptyState.Action>
+    </EmptyState>
+  );
 }

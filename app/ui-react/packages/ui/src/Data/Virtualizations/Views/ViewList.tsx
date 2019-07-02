@@ -21,81 +21,78 @@ export interface IViewsListProps extends IListViewToolbarProps {
   i18nNameFilterPlaceholder: string;
 }
 
-export class ViewList extends React.Component<IViewsListProps> {
-  public constructor(props: IViewsListProps) {
-    super(props);
-  }
+export const ViewList: React.FunctionComponent<
+  IViewsListProps
+> = props => {
 
-  public render() {
-    return (
-      <>
-        <PageSection noPadding={true} variant={'light'}>
-          <ListViewToolbar {...this.props}>
-            <div className="form-group">
-              <OverlayTrigger
-                overlay={this.getImportViewsTooltip()}
-                placement="top"
-              >
-                <ButtonLink
-                  data-testid={'view-list-import-views-button'}
-                  href={this.props.linkImportViewsHRef}
-                  as={'default'}
-                >
-                  {this.props.i18nImportViews}
-                </ButtonLink>
-              </OverlayTrigger>
-              <OverlayTrigger
-                overlay={this.getCreateViewTooltip()}
-                placement="top"
-              >
-                <ButtonLink
-                  data-testid={'view-list-create-view-button'}
-                  href={this.props.linkCreateViewHRef}
-                  as={'primary'}
-                >
-                  {this.props.i18nCreateView}
-                </ButtonLink>
-              </OverlayTrigger>
-            </div>
-          </ListViewToolbar>
-        </PageSection>
-        <PageSection noPadding={true} variant={'light'}>
-          {this.props.hasListData ? (
-            <ListView>{this.props.children}</ListView>
-          ) : (
-            <EmptyViewsState
-              i18nEmptyStateTitle={this.props.i18nEmptyStateTitle}
-              i18nEmptyStateInfo={this.props.i18nEmptyStateInfo}
-              i18nCreateView={this.props.i18nCreateView}
-              i18nCreateViewTip={this.props.i18nCreateViewTip}
-              i18nImportViews={this.props.i18nImportViews}
-              i18nImportViewsTip={this.props.i18nImportViewsTip}
-              linkCreateViewHRef={this.props.linkCreateViewHRef}
-              linkImportViewsHRef={this.props.linkImportViewsHRef}
-            />
-          )}
-        </PageSection>
-      </>
-    );
-  }
-
-  private getCreateViewTooltip() {
+  const getCreateViewTooltip = (): JSX.Element => {
     return (
       <Tooltip id="createTip">
-        {this.props.i18nCreateViewTip
-          ? this.props.i18nCreateViewTip
-          : this.props.i18nCreateView}
+        {props.i18nCreateViewTip
+          ? props.i18nCreateViewTip
+          : props.i18nCreateView}
       </Tooltip>
     );
   }
 
-  private getImportViewsTooltip() {
+  const getImportViewsTooltip = (): JSX.Element => {
     return (
       <Tooltip id="importViewsTip">
-        {this.props.i18nImportViewsTip
-          ? this.props.i18nImportViewsTip
-          : this.props.i18nImportViews}
+        {props.i18nImportViewsTip
+          ? props.i18nImportViewsTip
+          : props.i18nImportViews}
       </Tooltip>
     );
   }
+
+  return (
+    <>
+      <PageSection noPadding={true} variant={'light'}>
+        <ListViewToolbar {...props}>
+          <div className="form-group">
+            <OverlayTrigger
+              overlay={getImportViewsTooltip()}
+              placement="top"
+            >
+              <ButtonLink
+                data-testid={'view-list-import-views-button'}
+                href={props.linkImportViewsHRef}
+                as={'default'}
+              >
+                {props.i18nImportViews}
+              </ButtonLink>
+            </OverlayTrigger>
+            <OverlayTrigger
+              overlay={getCreateViewTooltip()}
+              placement="top"
+            >
+              <ButtonLink
+                data-testid={'view-list-create-view-button'}
+                href={props.linkCreateViewHRef}
+                as={'primary'}
+              >
+                {props.i18nCreateView}
+              </ButtonLink>
+            </OverlayTrigger>
+          </div>
+        </ListViewToolbar>
+      </PageSection>
+      <PageSection noPadding={true} variant={'light'}>
+        {props.hasListData ? (
+          <ListView>{props.children}</ListView>
+        ) : (
+            <EmptyViewsState
+              i18nEmptyStateTitle={props.i18nEmptyStateTitle}
+              i18nEmptyStateInfo={props.i18nEmptyStateInfo}
+              i18nCreateView={props.i18nCreateView}
+              i18nCreateViewTip={props.i18nCreateViewTip}
+              i18nImportViews={props.i18nImportViews}
+              i18nImportViewsTip={props.i18nImportViewsTip}
+              linkCreateViewHRef={props.linkCreateViewHRef}
+              linkImportViewsHRef={props.linkImportViewsHRef}
+            />
+          )}
+      </PageSection>
+    </>
+  );
 }

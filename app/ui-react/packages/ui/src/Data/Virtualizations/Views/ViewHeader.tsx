@@ -7,19 +7,19 @@ export interface IViewHeaderProps {
   i18nDescription: string;
 }
 
-export class ViewHeader extends React.Component<IViewHeaderProps> {
-  public render() {
-    return (
-      <PageSection variant={'light'}>
-        <TextContent>
-          <Title size="2xl" headingLevel={TitleLevel.h1}>
-            {this.props.i18nTitle}
-          </Title>
-          {this.props.i18nDescription && (
-            <Text>{this.props.i18nDescription}</Text>
-          )}
-        </TextContent>
-      </PageSection>
-    );
-  }
+export const ViewHeader: React.FunctionComponent<
+  IViewHeaderProps
+> = props => {
+  return (
+    <PageSection variant={'light'}>
+      <TextContent>
+        <Title size="2xl" headingLevel={TitleLevel.h1}>
+          {props.i18nTitle}
+        </Title>
+        {props.i18nDescription && (
+          <Text>{props.i18nDescription}</Text>
+        )}
+      </TextContent>
+    </PageSection>
+  );
 }

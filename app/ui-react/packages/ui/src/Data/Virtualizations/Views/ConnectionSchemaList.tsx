@@ -8,27 +8,22 @@ export interface IConnectionSchemaListProps {
   i18nEmptyStateTitle: string;
 }
 
-export class ConnectionSchemaList extends React.Component<
+export const ConnectionSchemaList: React.FunctionComponent<
   IConnectionSchemaListProps
-> {
-  public constructor(props: IConnectionSchemaListProps) {
-    super(props);
-  }
+> = props => {
 
-  public render() {
-    return (
-      <PageSection noPadding={true}>
-        {this.props.hasListData ? (
-          <ListView>{this.props.children}</ListView>
-        ) : (
+  return (
+    <PageSection noPadding={true}>
+      {props.hasListData ? (
+        <ListView>{props.children}</ListView>
+      ) : (
           <EmptyState>
             <EmptyState.Title>
-              {this.props.i18nEmptyStateTitle}
+              {props.i18nEmptyStateTitle}
             </EmptyState.Title>
-            <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
+            <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
           </EmptyState>
         )}
-      </PageSection>
-    );
-  }
+    </PageSection>
+  );
 }

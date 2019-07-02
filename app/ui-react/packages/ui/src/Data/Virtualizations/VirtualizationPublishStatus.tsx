@@ -25,52 +25,52 @@ export interface IVirtualizationPublishStatusProps {
   i18nError: string;
 }
 
-export class VirtualizationPublishStatus extends React.Component<
+export const VirtualizationPublishStatus: React.FunctionComponent<
   IVirtualizationPublishStatusProps
-> {
-  public render() {
-    const labelType =
-      this.props.currentState === FAILED
-        ? 'danger'
-        : this.props.currentState === RUNNING
+> = props => {
+
+  const labelType =
+    props.currentState === FAILED
+      ? 'danger'
+      : props.currentState === RUNNING
         ? 'primary'
         : 'default';
-    let label = '';
-    let inProgressMsg = '';
-    switch (this.props.currentState) {
-      case RUNNING:
-        label = this.props.i18nPublished;
-        break;
-      case FAILED:
-        label = this.props.i18nError;
-        break;
-      case NOTFOUND:
-        label = this.props.i18nUnpublished;
-        break;
-      case SUBMITTED:
-        inProgressMsg = this.props.i18nPublishInProgress;
-        break;
-      case CANCELLED:
-      case DELETE_SUBMITTED:
-      case DELETE_REQUEUE:
-      case DELETE_DONE:
-        inProgressMsg = this.props.i18nUnpublishInProgress;
-        break;
-      case CONFIGURING:
-      case BUILDING:
-      case DEPLOYING:
-        label = DEPLOYING;
-        break;
-    }
+  let label = '';
+  let inProgressMsg = '';
+  switch (props.currentState) {
+    case RUNNING:
+      label = props.i18nPublished;
+      break;
+    case FAILED:
+      label = props.i18nError;
+      break;
+    case NOTFOUND:
+      label = props.i18nUnpublished;
+      break;
+    case SUBMITTED:
+      inProgressMsg = props.i18nPublishInProgress;
+      break;
+    case CANCELLED:
+    case DELETE_SUBMITTED:
+    case DELETE_REQUEUE:
+    case DELETE_DONE:
+      inProgressMsg = props.i18nUnpublishInProgress;
+      break;
+    case CONFIGURING:
+    case BUILDING:
+    case DEPLOYING:
+      label = DEPLOYING;
+      break;
+  }
 
-    return (
-      <>
-        {inProgressMsg.length > 0 ? (
-          <>
-            <Spinner loading={true} inline={true} />
-            {inProgressMsg}&nbsp;&nbsp;
+  return (
+    <>
+      {inProgressMsg.length > 0 ? (
+        <>
+          <Spinner loading={true} inline={true} />
+          {inProgressMsg}&nbsp;&nbsp;
           </>
-        ) : (
+      ) : (
           <Label
             className={'virtualization-publish-status-label'}
             type={labelType}
@@ -78,7 +78,6 @@ export class VirtualizationPublishStatus extends React.Component<
             {label}
           </Label>
         )}
-      </>
-    );
-  }
+    </>
+  );
 }

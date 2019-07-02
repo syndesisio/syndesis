@@ -31,130 +31,106 @@ export interface IViewListItemProps {
   onDelete: (viewName: string) => void;
 }
 
-export interface IViewListItemState {
-  showDeleteDialog: boolean;
-}
+export const ViewListItem: React.FunctionComponent<
+  IViewListItemProps
+> = props => {
+  const [showDeleteDialog, setShowDeleteDialog] = React.useState(false);
 
-export class ViewListItem extends React.Component<
-  IViewListItemProps,
-  IViewListItemState
-> {
-  public constructor(props: IViewListItemProps) {
-    super(props);
-    this.state = {
-      showDeleteDialog: false, // initial visibility of delete dialog
-    };
-    this.handleCancel = this.handleCancel.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    this.showDeleteDialog = this.showDeleteDialog.bind(this);
+  const doCancel = () => {
+    setShowDeleteDialog(false);
   }
 
-  public render() {
-    return (
-      <>
-        <ConfirmationDialog
-          buttonStyle={ConfirmationButtonStyle.DANGER}
-          i18nCancelButtonText={this.props.i18nCancelText}
-          i18nConfirmButtonText={this.props.i18nDelete}
-          i18nConfirmationMessage={this.props.i18nDeleteModalMessage}
-          i18nTitle={this.props.i18nDeleteModalTitle}
-          icon={ConfirmationIconType.DANGER}
-          showDialog={this.state.showDeleteDialog}
-          onCancel={this.handleCancel}
-          onConfirm={this.handleDelete}
-        />
-        <ListViewItem
-          data-testid={`view-list-item-${toValidHtmlId(
-            this.props.viewName
-          )}-list-item`}
-          actions={
-            <div className="form-group">
-              <OverlayTrigger overlay={this.getEditTooltip()} placement="top">
-                <ButtonLink
-                  data-testid={'view-list-item-edit-button'}
-                  href={this.props.viewEditPageLink}
-                  as={'default'}
-                >
-                  {this.props.i18nEdit}
-                </ButtonLink>
-              </OverlayTrigger>
-              <DropdownKebab
-                id={`view-${this.props.viewName}-action-menu`}
-                pullRight={true}
-              >
-                <OverlayTrigger
-                  overlay={this.getDeleteTooltip()}
-                  placement="left"
-                >
-                  <MenuItem onClick={this.showDeleteDialog}>
-                    {this.props.i18nDelete}
-                  </MenuItem>
-                </OverlayTrigger>
-              </DropdownKebab>
-            </div>
-          }
-          heading={this.props.viewName}
-          description={
-            this.props.viewDescription ? this.props.viewDescription : ''
-          }
-          hideCloseIcon={true}
-          leftContent={
-            this.props.viewIcon ? (
-              <div className="blank-slate-pf-icon">
-                <img
-                  src={this.props.viewIcon}
-                  alt={this.props.viewName}
-                  width={46}
-                />
-              </div>
-            ) : (
-              <ListViewIcon name={'table'} />
-            )
-          }
-          stacked={false}
-        />
-      </>
-    );
-  }
-
-  private getDeleteTooltip() {
-    return (
-      <Tooltip id="deleteTip">
-        {this.props.i18nDeleteTip
-          ? this.props.i18nDeleteTip
-          : this.props.i18nDelete}
-      </Tooltip>
-    );
-  }
-
-  private getEditTooltip() {
-    return (
-      <Tooltip id="editTip">
-        {this.props.i18nEditTip ? this.props.i18nEditTip : this.props.i18nEdit}
-      </Tooltip>
-    );
-  }
-
-  private handleCancel() {
-    this.setState({
-      showDeleteDialog: false, // hide dialog
-    });
-  }
-
-  private showDeleteDialog() {
-    this.setState({
-      showDeleteDialog: true,
-    });
-  }
-
-  private handleDelete() {
-    this.setState({
-      showDeleteDialog: false, // hide dialog
-    });
+  const doDelete = () => {
+    setShowDeleteDialog(false);
 
     // TODO: disable components while delete is processing
-    if (this.props.viewName) {
-      this.props.onDelete(this.props.viewName);
-    }
+    props.onDelete(props.viewName);
   }
+
+  const getDeleteTooltip = (): JSX.Element => {
+    return (
+      <Tooltip id="deleteTip">
+        {props.i18nDeleteTip ? props.i18nDeleteTip : props.i18nDelete}
+      </Tooltip>
+    );
+  }
+
+  const getEditTooltip = (): JSX.Element => {
+    return (
+      <Tooltip id="editTip">
+        {props.i18nEditTip ? props.i18nEditTip : props.i18nEdit}
+      </Tooltip>
+    );
+  }
+
+  const showConfirmationDialog = () => {
+    setShowDeleteDialog(true);
+  }
+
+  return (
+    <>
+      <ConfirmationDialog
+        buttonStyle={ConfirmationButtonStyle.DANGER}
+        i18nCancelButtonText={props.i18nCancelText}
+        i18nConfirmButtonText={props.i18nDelete}
+        i18nConfirmationMessage={props.i18nDeleteModalMessage}
+        i18nTitle={props.i18nDeleteModalTitle}
+        icon={ConfirmationIconType.DANGER}
+        showDialog={showDeleteDialog}
+        onCancel={doCancel}
+        onConfirm={doDelete}
+      />
+      <ListViewItem
+        data-testid={`view-list-item-${toValidHtmlId(
+          props.viewName
+        )}-list-item`}
+        actions={
+          <div className="form-group">
+            <OverlayTrigger overlay={getEditTooltip()} placement="top">
+              <ButtonLink
+                data-testid={'view-list-item-edit-button'}
+                href={props.viewEditPageLink}
+                as={'default'}
+              >
+                {props.i18nEdit}
+              </ButtonLink>
+            </OverlayTrigger>
+            <DropdownKebab
+              id={`view-${props.viewName}-action-menu`}
+              pullRight={true}
+            >
+              <OverlayTrigger
+                overlay={getDeleteTooltip()}
+                placement="left"
+              >
+                <MenuItem onClick={showConfirmationDialog}>
+                  {props.i18nDelete}
+                </MenuItem>
+              </OverlayTrigger>
+            </DropdownKebab>
+          </div>
+        }
+        heading={props.viewName}
+        description={
+          props.viewDescription ? props.viewDescription : ''
+        }
+        hideCloseIcon={true}
+        leftContent={
+          props.viewIcon ? (
+            <div className="blank-slate-pf-icon">
+              <img
+                src={props.viewIcon}
+                alt={props.viewName}
+                width={46}
+              />
+            </div>
+          ) : (
+              <ListViewIcon name={'table'} />
+            )
+        }
+        stacked={false}
+      />
+    </>
+  );
+
 }
