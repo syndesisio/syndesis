@@ -8,7 +8,7 @@ import {
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers } from '@syndesis/utils';
 import * as React from 'react';
-import { Translation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
 import resolvers from '../../resolvers';
 import { DvConnections } from './DvConnections';
@@ -72,90 +72,72 @@ export interface IDvConnectionsWithToolbarProps {
   onConnectionSelectionChanged: (name: string, selected: boolean) => void;
   children?: any;
 }
-export interface IDvConnectionsWithToolbarState {
-  selectedConnection: string;
-}
 
-export class DvConnectionsWithToolbar extends React.Component<
-  IDvConnectionsWithToolbarProps,
-  IDvConnectionsWithToolbarState
-> {
-  public constructor(props: IDvConnectionsWithToolbarProps) {
-    super(props);
-    this.state = {
-      selectedConnection: '', // initial selected connection empty
-    };
-    this.handleConnectionSelectionChanged = this.handleConnectionSelectionChanged.bind(
-      this
-    );
+export const DvConnectionsWithToolbar: React.FunctionComponent<
+  IDvConnectionsWithToolbarProps
+> = props => {
+
+  const { t } = useTranslation(['data', 'shared']);
+  const [selectedConnection, setSelectedConnection] = React.useState('');
+
+  const handleConnectionSelectionChanged = (name: string, selected: boolean) => {
+    props.onConnectionSelectionChanged(name, selected);
+    setSelectedConnection(selected ? name : '');
   }
 
-  public handleConnectionSelectionChanged(name: string, selected: boolean) {
-    this.props.onConnectionSelectionChanged(name, selected);
-    this.setState({
-      selectedConnection: selected ? name : '',
-    });
-  }
+  return (
+    <WithConnections>
+      {({ data, hasData, error }) => (
+        <WithListViewToolbarHelpers
+          defaultFilterType={filterByName}
+          defaultSortType={sortByName}
+        >
+          {helpers => {
+            const filteredAndSortedConnections = getFilteredAndSortedConnections(
+              data.connectionsForDisplay,
+              props.dvSourceStatuses,
+              selectedConnection,
+              helpers.activeFilters,
+              helpers.currentSortType,
+              helpers.isSortAscending
+            );
 
-  public render() {
-    return (
-      <Translation ns={['data', 'shared']}>
-        {t => (
-          <WithConnections>
-            {({ data, hasData, error }) => (
-              <WithListViewToolbarHelpers
-                defaultFilterType={filterByName}
-                defaultSortType={sortByName}
+            return (
+              <DvConnectionsListView
+                i18nEmptyStateInfo={t(
+                  'virtualization.activeConnectionsEmptyStateInfo'
+                )}
+                i18nEmptyStateTitle={t(
+                  'virtualization.activeConnectionsEmptyStateTitle'
+                )}
+                linkToConnectionCreate={resolvers.connections.create.selectConnector()}
+                filterTypes={filterTypes}
+                sortTypes={sortTypes}
+                resultsCount={filteredAndSortedConnections.length}
+                {...helpers}
+                i18nLinkCreateConnection={t(
+                  'shared:linkCreateConnection'
+                )}
+                i18nResultsCount={t('shared:resultsCount', {
+                  count: filteredAndSortedConnections.length,
+                })}
               >
-                {helpers => {
-                  const filteredAndSortedConnections = getFilteredAndSortedConnections(
-                    data.connectionsForDisplay,
-                    this.props.dvSourceStatuses,
-                    this.state.selectedConnection,
-                    helpers.activeFilters,
-                    helpers.currentSortType,
-                    helpers.isSortAscending
-                  );
-
-                  return (
-                    <DvConnectionsListView
-                      i18nEmptyStateInfo={t(
-                        'virtualization.activeConnectionsEmptyStateInfo'
-                      )}
-                      i18nEmptyStateTitle={t(
-                        'virtualization.activeConnectionsEmptyStateTitle'
-                      )}
-                      linkToConnectionCreate={resolvers.connections.create.selectConnector()}
-                      filterTypes={filterTypes}
-                      sortTypes={sortTypes}
-                      resultsCount={filteredAndSortedConnections.length}
-                      {...helpers}
-                      i18nLinkCreateConnection={t(
-                        'shared:linkCreateConnection'
-                      )}
-                      i18nResultsCount={t('shared:resultsCount', {
-                        count: filteredAndSortedConnections.length,
-                      })}
-                    >
-                      {this.props.children}
-                      <DvConnections
-                        error={this.props.error}
-                        errorMessage={this.props.errorMessage}
-                        loading={this.props.loading}
-                        connections={filteredAndSortedConnections}
-                        initialSelection={this.state.selectedConnection}
-                        onConnectionSelectionChanged={
-                          this.handleConnectionSelectionChanged
-                        }
-                      />
-                    </DvConnectionsListView>
-                  );
-                }}
-              </WithListViewToolbarHelpers>
-            )}
-          </WithConnections>
-        )}
-      </Translation>
-    );
-  }
+                {props.children}
+                <DvConnections
+                  error={props.error}
+                  errorMessage={props.errorMessage}
+                  loading={props.loading}
+                  connections={filteredAndSortedConnections}
+                  initialSelection={selectedConnection}
+                  onConnectionSelectionChanged={
+                    handleConnectionSelectionChanged
+                  }
+                />
+              </DvConnectionsListView>
+            );
+          }}
+        </WithListViewToolbarHelpers>
+      )}
+    </WithConnections>
+  );
 }

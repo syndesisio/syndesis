@@ -1,7 +1,7 @@
 import { RestDataService } from '@syndesis/models';
 import { Container, TabBar, TabBarItem } from '@syndesis/ui';
 import * as React from 'react';
-import { Translation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import resolvers from '../resolvers';
 
 /**
@@ -22,50 +22,47 @@ export interface IVirtualizationNavBarProps {
  * 4. a link to the page that dispays metrics
  *
  */
-export class VirtualizationNavBar extends React.Component<
+export const VirtualizationNavBar: React.FunctionComponent<
   IVirtualizationNavBarProps
-> {
-  public render() {
-    const virtualization = this.props.virtualization;
-    return (
-      <Translation ns={['data', 'shared']}>
-        {t => (
-          <Container
-            style={{
-              background: '#fff',
-            }}
-          >
-            <TabBar>
-              <TabBarItem
-                label={t('data:virtualization.views')}
-                to={resolvers.virtualizations.views.root({
-                  virtualization,
-                })}
-              />
-              {/* TD-636: Commented out for TP
+> = props => {
+
+  const { t } = useTranslation(['data', 'shared']);
+  const virtualization = props.virtualization;
+
+  return (
+    <Container
+      style={{
+        background: '#fff',
+      }}
+    >
+      <TabBar>
+        <TabBarItem
+          label={t('data:virtualization.views')}
+          to={resolvers.virtualizations.views.root({
+            virtualization,
+          })}
+        />
+        {/* TD-636: Commented out for TP
               <TabBarItem
                 label={t('data:virtualization.relationship')}
                 to={resolvers.virtualizations.relationship({
                   virtualization,
                 })}
               /> */}
-              <TabBarItem
-                label={t('data:virtualization.sqlClient')}
-                to={resolvers.virtualizations.sqlClient({
-                  virtualization,
-                })}
-              />
-              {/* TD-636: Commented out for TP
+        <TabBarItem
+          label={t('data:virtualization.sqlClient')}
+          to={resolvers.virtualizations.sqlClient({
+            virtualization,
+          })}
+        />
+        {/* TD-636: Commented out for TP
               <TabBarItem
                 label={t('data:virtualization.metrics')}
                 to={resolvers.virtualizations.metrics({
                   virtualization,
                 })}
               /> */}
-            </TabBar>
-          </Container>
-        )}
-      </Translation>
-    );
-  }
+      </TabBar>
+    </Container>
+  );
 }

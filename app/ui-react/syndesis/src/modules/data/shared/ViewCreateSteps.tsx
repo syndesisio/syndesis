@@ -9,81 +9,62 @@ export interface IViewCreateStepsProps {
   step: number;
 }
 
-export interface IViewCreateStepsState {
-  /**
-   * Indicates if the user clicked on a step. Used to show
-   * sub-steps when browsing from a mobile device.
-   */
-  active: boolean;
-}
-
 /**
  * A component to display the PatternFly Wizard Steps specific to the create view wizard
  * @see [step]{@link IViewsCreateStepsProps#step}
  * @see [subStep]{@link IViewsCreateStepsProps#subStep}
  */
-export class ViewCreateSteps extends React.Component<
-  IViewCreateStepsProps,
-  IViewCreateStepsState
-> {
-  public state = {
-    active: false,
-  };
+export const ViewCreateSteps: React.FunctionComponent<
+  IViewCreateStepsProps
+> = props => {
 
-  constructor(props: IViewCreateStepsProps) {
-    super(props);
-    this.toggleActive = this.toggleActive.bind(this);
+  const [active, setActive] = React.useState(false);
+
+  const toggleActive = async () => {
+    setActive(!active);
   }
 
-  public toggleActive() {
-    this.setState({
-      active: !this.state.active,
-    });
-  }
-
-  public render() {
-    return (
-      <WizardSteps
-        active={this.state.active}
-        mainSteps={
-          <>
-            <WizardStep
-              isActive={this.props.step === 1}
-              isDisabled={this.props.step < 1}
-              onClick={this.toggleActive}
-              step={1}
-              title={i18n.t('data:virtualization.createViewWizardStep1')}
-            />
-            <WizardStep
-              isActive={this.props.step === 2}
-              isDisabled={this.props.step < 2}
-              onClick={this.toggleActive}
-              step={2}
-              title={i18n.t('data:virtualization.createViewWizardStep2')}
-            />
-          </>
-        }
-        altSteps={
-          <>
-            <WizardStep
-              isActive={this.props.step === 1}
-              isDisabled={this.props.step < 1}
-              isAlt={true}
-              onClick={this.toggleActive}
-              step={1}
-              title={i18n.t('data:virtualization.createViewWizardStep1')}
-            />
-            <WizardStep
-              isActive={this.props.step === 2}
-              isDisabled={this.props.step < 2}
-              isAlt={true}
-              onClick={this.toggleActive}
-              step={2}
-              title={i18n.t('data:virtualization.createViewWizardStep2')}
-            />
-          </>
-        }
-      />
-    );
-  }
+  return (
+    <WizardSteps
+      active={active}
+      mainSteps={
+        <>
+          <WizardStep
+            isActive={props.step === 1}
+            isDisabled={props.step < 1}
+            onClick={toggleActive}
+            step={1}
+            title={i18n.t('data:virtualization.createViewWizardStep1')}
+          />
+          <WizardStep
+            isActive={props.step === 2}
+            isDisabled={props.step < 2}
+            onClick={toggleActive}
+            step={2}
+            title={i18n.t('data:virtualization.createViewWizardStep2')}
+          />
+        </>
+      }
+      altSteps={
+        <>
+          <WizardStep
+            isActive={props.step === 1}
+            isDisabled={props.step < 1}
+            isAlt={true}
+            onClick={toggleActive}
+            step={1}
+            title={i18n.t('data:virtualization.createViewWizardStep1')}
+          />
+          <WizardStep
+            isActive={props.step === 2}
+            isDisabled={props.step < 2}
+            isAlt={true}
+            onClick={toggleActive}
+            step={2}
+            title={i18n.t('data:virtualization.createViewWizardStep2')}
+          />
+        </>
+      }
+    />
+  );
 }

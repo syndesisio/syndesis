@@ -1,4 +1,4 @@
-import { WithVirtualizationHelpers } from '@syndesis/api';
+import { useVirtualizationHelpers } from '@syndesis/api';
 import {
   RestDataService,
   ViewDefinition,
@@ -9,9 +9,10 @@ import {
   IViewEditValidationResult,
   ViewEditContent,
 } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
+import { useRouteData } from '@syndesis/utils';
+import { useContext } from 'react';
 import * as React from 'react';
-import { Translation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { UIContext } from '../../../app';
 import resolvers from '../../resolvers';
@@ -25,194 +26,165 @@ export interface IViewEditRouteState {
   viewDefinition: ViewDefinition;
 }
 
-export interface IViewEditPageState {
-  isWorking: boolean;
-  validationResults: IViewEditValidationResult[];
-  viewValid: boolean;
-}
+export const ViewEditPage: React.FunctionComponent = () => {
 
-export class ViewEditPage extends React.Component<{}, IViewEditPageState> {
+  const [isWorking, setIsWorking] = React.useState(false);
+  const [viewValid, setViewValid] = React.useState(true);
+  const [validationResults, setValidationResults] = React.useState<IViewEditValidationResult[]>([]);
+  const { pushNotification } = useContext(UIContext);
+  const { t } = useTranslation(['data', 'shared']);
+  const { state, history } = useRouteData<null, IViewEditRouteState>();
+  const { refreshVirtualizationViews, validateViewDefinition } = useVirtualizationHelpers();
 
-  public constructor(props: {}) {
-    super(props);
-    this.state = {
-      isWorking: false,
-      validationResults: [],
-      viewValid: true,
-    };
-    this.handleValidationStarted = this.handleValidationStarted.bind(this);
-    this.handleValidationComplete = this.handleValidationComplete.bind(this);
-  }
-
-  public handleValidationStarted = async (): Promise<void> => {
-    this.setState({
-      ...this.state,
-      isWorking: true,
-    });
+  const handleValidationStarted = async (): Promise<void> => {
+    setIsWorking(true);
   };
 
-  public handleValidationComplete = async (
+  const handleValidationComplete = async (
     validation: IViewEditValidationResult
   ): Promise<void> => {
-    this.setState({
-      ...this.state,
-      isWorking: false,
-      validationResults: [validation],
-      viewValid: validation.type === 'success',
-    });
+    setIsWorking(false);
+    setValidationResults([validation]);
+    setViewValid(validation.type === 'success');
   };
 
-  public render() {
-    return (
-      <WithRouteData<null, IViewEditRouteState>>
-        {(_, { virtualization, viewDefinition }, { history }) => (
-          <Translation ns={['data', 'shared']}>
-            {t => (
-              <UIContext.Consumer>
-                {({ pushNotification }) => {
-                  return (
-                    <WithVirtualizationHelpers>
-                      {({ refreshVirtualizationViews, validateViewDefinition }) => {
-                        // Save the View with new DDL and description
-                        const handleSaveView = async (ddlValue: string) => {
-                          // View Definition
-                          const viewDefn: ViewDefinition = {
-                            compositions: viewDefinition.compositions,
-                            ddl: ddlValue,
-                            isComplete: viewDefinition.isComplete,
-                            isUserDefined: true,
-                            keng__description: viewDefinition.keng__description,
-                            projectedColumns: viewDefinition.projectedColumns,
-                            sourcePaths: viewDefinition.sourcePaths,
-                            viewName: viewDefinition.viewName,
-                          };
-
-                          const viewEditorState: ViewEditorState = {
-                            id:
-                              virtualization.serviceVdbName +
-                              '.' +
-                              viewDefinition.viewName,
-                            viewDefinition: viewDefn,
-                          };
-                          try {
-                            await refreshVirtualizationViews(
-                              virtualization.keng__id,
-                              [viewEditorState]
-                            );
-                            pushNotification(
-                              t(
-                                'virtualization.saveViewSuccess',
-                                { name: viewDefinition.viewName }
-                              ),
-                              'success'
-                            );
-                            // redirect to views page on success
-                            history.push(
-                              resolvers.data.virtualizations.views.root({
-                                virtualization,
-                              })
-                            );
-                          } catch (error) {
-                            const details = error.message
-                              ? error.message
-                              : '';
-                            pushNotification(
-                              t('virtualization.saveViewFailed', {
-                                details,
-                                name: viewDefinition.viewName,
-                              }),
-                              'error'
-                            );
-                          }
-                        };
-                        // Validate the View using the new DDL
-                        const handleValidateView = async (ddlValue: string) => {
-                          this.handleValidationStarted();
-
-                          // View Definition
-                          const viewDefn: ViewDefinition = {
-                            compositions: viewDefinition.compositions,
-                            ddl: ddlValue,
-                            isComplete: viewDefinition.isComplete,
-                            isUserDefined: viewDefinition.isUserDefined,
-                            keng__description: viewDefinition.keng__description,
-                            projectedColumns: viewDefinition.projectedColumns,
-                            sourcePaths: viewDefinition.sourcePaths,
-                            viewName: viewDefinition.viewName,
-                          };
-
-                          const validationResponse = await validateViewDefinition(
-                            viewDefn
-                          );
-                          if (validationResponse.status === 'SUCCESS') {
-                            const validationResult = {
-                              message: 'Validation successful',
-                              type: 'success',
-                            } as IViewEditValidationResult;
-                            this.handleValidationComplete(validationResult);
-                          } else {
-                            const validationResult = {
-                              message: validationResponse.message,
-                              type: 'error',
-                            } as IViewEditValidationResult;
-                            this.handleValidationComplete(validationResult);
-                          }
-                        };
-                        const handleCancel = () => {
-                          history.push(
-                            resolvers.data.virtualizations.views.root({
-                              virtualization,
-                            })
-                          );
-                        };
-                        const initialView = viewDefinition.ddl ? viewDefinition.ddl : '';
-                        return (
-                          <>
-                            <Breadcrumb>
-                              <Link to={resolvers.dashboard.root()}>
-                                {t('shared:Home')}
-                              </Link>
-                              <Link to={resolvers.data.root()}>
-                                {t('shared:DataVirtualizations')}
-                              </Link>
-                              <Link
-                                to={resolvers.data.virtualizations.views.root(
-                                  {
-                                    virtualization,
-                                  }
-                                )}
-                              >
-                                {virtualization.keng__id}
-                              </Link>
-                              <span>{viewDefinition.viewName}</span>
-                            </Breadcrumb>
-                            <ViewEditContent
-                              viewDdl={initialView}
-                              i18nCancelLabel={t('shared:Cancel')}
-                              i18nSaveLabel={t('shared:Save')}
-                              i18nTitle={t('virtualization.viewEditorTitle')}
-                              i18nDescription={t('virtualization.viewEditorDescription')}
-                              i18nValidateLabel={t('shared:Validate')}
-                              isValid={this.state.viewValid}
-                              isWorking={this.state.isWorking}
-                              onCancel={handleCancel}
-                              onValidate={handleValidateView}
-                              onSave={handleSaveView}
-                              validationResults={
-                                this.state.validationResults
-                              }
-                            />
-                          </>
-                        );
-                      }}
-                    </WithVirtualizationHelpers>
-                  );
-                }}
-              </UIContext.Consumer>
-            )}
-          </Translation>
-        )}
-      </WithRouteData>
+  // tslint:disable-next-line: no-shadowed-variable
+  const handleSelectVirtualization = (virtualization: RestDataService) => {
+    // redirect to virtualization views page
+    history.push(
+      resolvers.data.virtualizations.views.root({
+        virtualization,
+      })
     );
-  }
+  };
+
+  // Save the View with new DDL and description
+  const handleSaveView = async (ddlValue: string) => {
+    // View Definition
+    const viewDefn: ViewDefinition = {
+      compositions: state.viewDefinition.compositions,
+      ddl: ddlValue,
+      isComplete: state.viewDefinition.isComplete,
+      isUserDefined: true,
+      keng__description: state.viewDefinition.keng__description,
+      projectedColumns: state.viewDefinition.projectedColumns,
+      sourcePaths: state.viewDefinition.sourcePaths,
+      viewName: state.viewDefinition.viewName,
+    };
+
+    const viewEditorState: ViewEditorState = {
+      id:
+        state.virtualization.serviceVdbName +
+        '.' +
+        state.viewDefinition.viewName,
+      viewDefinition: viewDefn,
+    };
+    try {
+      await refreshVirtualizationViews(
+        state.virtualization.keng__id,
+        [viewEditorState]
+      );
+      pushNotification(
+        t(
+          'virtualization.saveViewSuccess',
+          { name: state.viewDefinition.viewName }
+        ),
+        'success'
+      );
+      // redirect to views page on success
+      handleSelectVirtualization(state.virtualization);
+    } catch (error) {
+      const details = error.message
+        ? error.message
+        : '';
+      pushNotification(
+        t('virtualization.saveViewFailed', {
+          details,
+          name: state.viewDefinition.viewName,
+        }),
+        'error'
+      );
+    }
+  };
+
+  // Validate the View using the new DDL
+  const handleValidateView = async (ddlValue: string) => {
+    handleValidationStarted();
+
+    // View Definition
+    const viewDefn: ViewDefinition = {
+      compositions: state.viewDefinition.compositions,
+      ddl: ddlValue,
+      isComplete: state.viewDefinition.isComplete,
+      isUserDefined: state.viewDefinition.isUserDefined,
+      keng__description: state.viewDefinition.keng__description,
+      projectedColumns: state.viewDefinition.projectedColumns,
+      sourcePaths: state.viewDefinition.sourcePaths,
+      viewName: state.viewDefinition.viewName,
+    };
+
+    const validationResponse = await validateViewDefinition(
+      viewDefn
+    );
+    if (validationResponse.status === 'SUCCESS') {
+      const validationResult = {
+        message: 'Validation successful',
+        type: 'success',
+      } as IViewEditValidationResult;
+      handleValidationComplete(validationResult);
+    } else {
+      const validationResult = {
+        message: validationResponse.message,
+        type: 'error',
+      } as IViewEditValidationResult;
+      handleValidationComplete(validationResult);
+    }
+  };
+
+  const handleCancel = () => {
+    // redirect to views page
+    handleSelectVirtualization(state.virtualization);
+  };
+
+  const initialView = state.viewDefinition.ddl ? state.viewDefinition.ddl : '';
+  const virtualization = state.virtualization;
+
+  return (
+    <>
+      <Breadcrumb>
+        <Link to={resolvers.dashboard.root()}>
+          {t('shared:Home')}
+        </Link>
+        <Link to={resolvers.data.root()}>
+          {t('shared:DataVirtualizations')}
+        </Link>
+        <Link
+          to={resolvers.data.virtualizations.views.root(
+            {
+              virtualization,
+            }
+          )}
+        >
+          {state.virtualization.keng__id}
+        </Link>
+        <span>{state.viewDefinition.viewName}</span>
+      </Breadcrumb>
+      <ViewEditContent
+        viewDdl={initialView}
+        i18nCancelLabel={t('shared:Cancel')}
+        i18nSaveLabel={t('shared:Save')}
+        i18nTitle={t('virtualization.viewEditorTitle')}
+        i18nDescription={t('virtualization.viewEditorDescription')}
+        i18nValidateLabel={t('shared:Validate')}
+        isValid={viewValid}
+        isWorking={isWorking}
+        onCancel={handleCancel}
+        onValidate={handleValidateView}
+        onSave={handleSaveView}
+        validationResults={
+          validationResults
+        }
+      />
+    </>
+  );
 }
