@@ -659,19 +659,6 @@
         "oauth-access-token-url"
       ],
       "type": "hidden"
-    },
-    "userId": {
-      "deprecated": false,
-      "displayName": "User ID",
-      "group": "common",
-      "javaType": "java.lang.String",
-      "kind": "parameter",
-      "labelHint": "Google calendar account name that is associated with this registration.",
-      "order": "6",
-      "raw": true,
-      "required": true,
-      "secret": false,
-      "type": "string"
     }
   },
   "tags": [
