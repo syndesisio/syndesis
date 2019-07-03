@@ -23,8 +23,6 @@ source field data into.
 to contain some of the data from the source field, hover over the field and 
 press *CTRL-Mouse1* (*CMD-Mouse1* on MacOS) to select it.
 +
-The data mapper automatically changes the field action to *Separate*.
-+
 When you are done selecting target fields, you should see lines from the 
 source field to each of the target fields. 
 
