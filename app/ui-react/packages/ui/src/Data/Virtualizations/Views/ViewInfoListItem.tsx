@@ -1,3 +1,5 @@
+// tslint:disable react-unused-props-and-state
+// remove the above line after this goes GA https://github.com/Microsoft/tslint-microsoft-contrib/pull/824
 import { Label, ListViewInfoItem, ListViewItem } from 'patternfly-react';
 import * as React from 'react';
 import { toValidHtmlId } from '../../../helpers';
@@ -19,69 +21,54 @@ export interface IViewInfoListItemState {
   itemSelected: boolean;
 }
 
-export class ViewInfoListItem extends React.Component<
-  IViewInfoListItemProps,
-  IViewInfoListItemState
-> {
-  public constructor(props: IViewInfoListItemProps) {
-    super(props);
-    this.state = {
-      itemSelected: props.selected, // initial item selection
-    };
-    this.handleCheckboxToggle = this.handleCheckboxToggle.bind(this);
-  }
+export const ViewInfoListItem: React.FunctionComponent<
+  IViewInfoListItemProps
+> = props => {
 
-  public temp() {
-    const tDescription = this.props.description;
-    const tConnectionName = this.props.connectionName;
-    return tDescription + tConnectionName;
-  }
+  const [itemSelected, setItemSelected] = React.useState(props.selected);
 
-  public getNodePathStr() {
+  const getNodePathStr = () => {
     let path = '';
-    for (const segment of this.props.nodePath) {
+    for (const segment of props.nodePath) {
       path += '/' + segment;
     }
     return path;
   }
 
-  public handleCheckboxToggle = (viewName: string) => (event: any) => {
-    this.setState({
-      itemSelected: !this.state.itemSelected,
-    });
-    this.props.onSelectionChanged(viewName, !this.state.itemSelected);
+  const doToggleCheckbox = (viewName: string) => (event: any) => {
+    setItemSelected(!itemSelected);
+
+    props.onSelectionChanged(viewName, !itemSelected);
   };
 
-  public render() {
-    return (
-      <ListViewItem
-        data-testid={`view-info-list-item-${toValidHtmlId(
-          this.props.name
-        )}-list-item`}
-        className={'view-info-list-item'}
-        heading={this.props.name}
-        description={this.getNodePathStr()}
-        checkboxInput={
-          <input
-            data-testid={'view-info-list-item-selected-input'}
-            type="checkbox"
-            value=""
-            defaultChecked={this.props.selected}
-            onChange={this.handleCheckboxToggle(this.props.name)}
-          />
-        }
-        additionalInfo={[
-          <ListViewInfoItem key={1}>
-            {this.props.isUpdateView === true ? (
-              <Label type="warning">{this.props.i18nUpdate}</Label>
-            ) : (
+  return (
+    <ListViewItem
+      data-testid={`view-info-list-item-${toValidHtmlId(
+        props.name
+      )}-list-item`}
+      className={'view-info-list-item'}
+      heading={props.name}
+      description={getNodePathStr()}
+      checkboxInput={
+        <input
+          data-testid={'view-info-list-item-selected-input'}
+          type="checkbox"
+          value=""
+          defaultChecked={props.selected}
+          onChange={doToggleCheckbox(props.name)}
+        />
+      }
+      additionalInfo={[
+        <ListViewInfoItem key={1}>
+          {props.isUpdateView === true ? (
+            <Label type="warning">{props.i18nUpdate}</Label>
+          ) : (
               ''
             )}
-          </ListViewInfoItem>,
-        ]}
-        hideCloseIcon={true}
-        stacked={false}
-      />
-    );
-  }
+        </ListViewInfoItem>,
+      ]}
+      hideCloseIcon={true}
+      stacked={false}
+    />
+  );
 }

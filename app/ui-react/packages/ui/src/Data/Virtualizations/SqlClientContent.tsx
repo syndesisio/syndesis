@@ -69,80 +69,82 @@ const defaultHeaderFormat = (value: any) => <Table.Cell>{value}</Table.Cell>;
  * - GenericTable - for display of the query results
  * - EmptyStates - displayed when no views available or no results available.
  */
-export class SqlClientContent extends React.Component<ISqlClientContentProps> {
-  public render() {
-    return (
-      <PageSection>
-        {this.props.viewNames.length > 0 ? (
-          <Grid.Row>
-            <Grid.Col md={4}>
-              <Container>{this.props.formContent}</Container>
-            </Grid.Col>
-            <Grid.Col md={8}>
-              <>
-                {this.props.queryResultCols.length > 0 ? (
-                  <>
-                    <TextContent>
-                      <Text>{this.props.i18nResultsTitle}</Text>
-                    </TextContent>
-                    <TextContent>
-                      <Text>
-                        <small>
-                          <i>
-                            {this.props.i18nResultsRowCountMsg}
-                            {this.props.queryResultRows.length}
-                          </i>
-                        </small>
-                      </Text>
-                    </TextContent>
-                    <div className="generic-table_content">
-                      <GenericTable
-                        columns={this.props.queryResultCols.map(col => ({
-                          cell: {
-                            formatters: [defaultCellFormat],
-                          },
-                          header: {
-                            formatters: [defaultHeaderFormat],
-                            label: col.label,
-                          },
-                          property: col.id,
-                        }))}
-                        rows={this.props.queryResultRows}
-                        rowKey={
-                          this.props.queryResultCols.length > 0
-                            ? this.props.queryResultCols[0].id
-                            : ''
-                        }
-                        {...this.props}
-                      />
-                    </div>
-                  </>
-                ) : (
+export const SqlClientContent: React.FunctionComponent<
+  ISqlClientContentProps
+> = props => {
+
+  return (
+    <PageSection>
+      {props.viewNames.length > 0 ? (
+        <Grid.Row>
+          <Grid.Col md={4}>
+            <Container>{props.formContent}</Container>
+          </Grid.Col>
+          <Grid.Col md={8}>
+            <>
+              {props.queryResultCols.length > 0 ? (
+                <>
+                  <TextContent>
+                    <Text>{props.i18nResultsTitle}</Text>
+                  </TextContent>
+                  <TextContent>
+                    <Text>
+                      <small>
+                        <i>
+                          {props.i18nResultsRowCountMsg}
+                          {props.queryResultRows.length}
+                        </i>
+                      </small>
+                    </Text>
+                  </TextContent>
+                  <div className="generic-table_content">
+                    <GenericTable
+                      columns={props.queryResultCols.map(col => ({
+                        cell: {
+                          formatters: [defaultCellFormat],
+                        },
+                        header: {
+                          formatters: [defaultHeaderFormat],
+                          label: col.label,
+                        },
+                        property: col.id,
+                      }))}
+                      rows={props.queryResultRows}
+                      rowKey={
+                        props.queryResultCols.length > 0
+                          ? props.queryResultCols[0].id
+                          : ''
+                      }
+                      {...props}
+                    />
+                  </div>
+                </>
+              ) : (
                   <EmptyState>
                     <EmptyState.Title>
-                      {this.props.i18nEmptyResultsTitle}
+                      {props.i18nEmptyResultsTitle}
                     </EmptyState.Title>
                     <EmptyState.Info>
-                      {this.props.i18nEmptyResultsMsg}
+                      {props.i18nEmptyResultsMsg}
                     </EmptyState.Info>
                   </EmptyState>
                 )}
-              </>
-            </Grid.Col>
-          </Grid.Row>
-        ) : (
+            </>
+          </Grid.Col>
+        </Grid.Row>
+      ) : (
           <EmptyViewsState
-            i18nEmptyStateTitle={this.props.i18nEmptyStateTitle}
-            i18nEmptyStateInfo={this.props.i18nEmptyStateInfo}
-            i18nCreateView={this.props.i18nCreateView}
-            i18nCreateViewTip={this.props.i18nCreateViewTip}
-            i18nImportViews={this.props.i18nImportViews}
-            i18nImportViewsTip={this.props.i18nImportViewsTip}
-            linkCreateViewHRef={this.props.linkCreateViewHRef}
-            linkImportViewsHRef={this.props.linkImportViewsHRef}
+            i18nEmptyStateTitle={props.i18nEmptyStateTitle}
+            i18nEmptyStateInfo={props.i18nEmptyStateInfo}
+            i18nCreateView={props.i18nCreateView}
+            i18nCreateViewTip={props.i18nCreateViewTip}
+            i18nImportViews={props.i18nImportViews}
+            i18nImportViewsTip={props.i18nImportViewsTip}
+            linkCreateViewHRef={props.linkCreateViewHRef}
+            linkImportViewsHRef={props.linkImportViewsHRef}
           />
         )}
-      </PageSection>
-    );
-  }
+    </PageSection>
+  );
+
 }

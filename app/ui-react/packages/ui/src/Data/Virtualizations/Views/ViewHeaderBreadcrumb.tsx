@@ -51,163 +51,129 @@ export interface IViewHeaderBreadcrumbState {
   showConfirmationDialog: boolean;
 }
 
-export class ViewHeaderBreadcrumb extends React.Component<
-  IViewHeaderBreadcrumbProps,
-  IViewHeaderBreadcrumbState
-> {
-  public constructor(props: IViewHeaderBreadcrumbProps) {
-    super(props);
-    this.state = {
-      showConfirmationDialog: false, // initial visibility of confirmation dialog
-    };
-    this.handleCancel = this.handleCancel.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
-    /* TD-636: Commented out for TP
-    this.handleExport = this.handleExport.bind(this); */
-    this.handleUnpublish = this.handleUnpublish.bind(this);
-    this.handlePublish = this.handlePublish.bind(this);
-    this.showConfirmationDialog = this.showConfirmationDialog.bind(this);
+export const ViewHeaderBreadcrumb: React.FunctionComponent<
+  IViewHeaderBreadcrumbProps
+> = props => {
+
+  const [showConfirmationDialog, setShowConfirmationDialog] = React.useState(false);
+
+  const doCancel = () => {
+    setShowConfirmationDialog(false);
   }
 
-  public handleCancel() {
-    this.setState({
-      showConfirmationDialog: false, // hide dialog
-    });
-  }
-
-  public handleDelete() {
-    this.setState({
-      showConfirmationDialog: false, // hide dialog
-    });
+  const doDelete = () => {
+    setShowConfirmationDialog(false);
 
     // TODO: disable components while delete is processing
-    if (this.props.virtualizationName) {
-      this.props.onDelete(this.props.virtualizationName);
+    props.onDelete(props.virtualizationName);
+  }
+
+  const doPublish = () => {
+    if (props.virtualizationName) {
+      props.onPublish(props.virtualizationName, props.hasViews);
     }
   }
 
-  public handlePublish() {
-    if (this.props.virtualizationName) {
-      this.props.onPublish(this.props.virtualizationName, this.props.hasViews);
+  const doUnpublish = () => {
+    setShowConfirmationDialog(false);
+
+    if (props.serviceVdbName) {
+      props.onUnpublish(props.serviceVdbName);
     }
   }
 
-  public handleUnpublish() {
-    this.setState({
-      showConfirmationDialog: false, // hide dialog
-    });
-
-    if (this.props.serviceVdbName) {
-      this.props.onUnpublish(this.props.serviceVdbName);
-    }
+  const showConfirmDialog = () => {
+    setShowConfirmationDialog(true);
   }
 
-  public showConfirmationDialog() {
-    this.setState({
-      showConfirmationDialog: true,
-    });
-  }
+  const isPublished =
+    props.currentPublishedState === RUNNING ? true : false;
 
-  public handleAcceptConfirmation() {
-    const isPublished =
-      this.props.currentPublishedState === RUNNING ? true : false;
-    if (isPublished) {
-      this.handleUnpublish();
-    } else {
-      this.handleDelete();
-    }
-  }
+  const publishInProgress =
+    props.currentPublishedState === BUILDING ||
+      props.currentPublishedState === CONFIGURING ||
+      props.currentPublishedState === DEPLOYING ||
+      props.currentPublishedState === SUBMITTED
+      ? true
+      : false;
 
-  public render() {
-    // Determine published state
-    const isPublished =
-      this.props.currentPublishedState === RUNNING ? true : false;
-    const publishInProgress =
-      this.props.currentPublishedState === BUILDING ||
-      this.props.currentPublishedState === CONFIGURING ||
-      this.props.currentPublishedState === DEPLOYING ||
-      this.props.currentPublishedState === SUBMITTED
-        ? true
-        : false;
-
-    return (
-      <>
-        <ConfirmationDialog
-          buttonStyle={
-            isPublished
-              ? ConfirmationButtonStyle.WARNING
-              : ConfirmationButtonStyle.DANGER
-          }
-          i18nCancelButtonText={this.props.i18nCancelText}
-          i18nConfirmButtonText={
-            isPublished ? this.props.i18nUnpublish : this.props.i18nDelete
-          }
-          i18nConfirmationMessage={
-            isPublished
-              ? this.props.i18nUnpublishModalMessage
-              : this.props.i18nDeleteModalMessage
-          }
-          i18nTitle={
-            isPublished
-              ? this.props.i18nUnpublishModalTitle
-              : this.props.i18nDeleteModalTitle
-          }
-          icon={
-            isPublished
-              ? ConfirmationIconType.WARNING
-              : ConfirmationIconType.DANGER
-          }
-          showDialog={this.state.showConfirmationDialog}
-          onCancel={this.handleCancel}
-          onConfirm={isPublished ? this.handleUnpublish : this.handleDelete}
-        />
-        <Breadcrumb
-          actions={
-            <>
-              <ButtonLink
-                data-testid={'virtualization-detail-breadcrumb-publish-button'}
-                className="btn btn-primary"
-                onClick={
-                  isPublished || publishInProgress
-                    ? this.handleUnpublish
-                    : this.handlePublish
-                }
-              >
-                {isPublished || publishInProgress
-                  ? this.props.i18nUnpublish
-                  : this.props.i18nPublish}
-              </ButtonLink>
-              <DropdownKebab
-                id={`virtualization-${
-                  this.props.virtualizationName
+  return (
+    <>
+      <ConfirmationDialog
+        buttonStyle={
+          isPublished
+            ? ConfirmationButtonStyle.WARNING
+            : ConfirmationButtonStyle.DANGER
+        }
+        i18nCancelButtonText={props.i18nCancelText}
+        i18nConfirmButtonText={
+          isPublished ? props.i18nUnpublish : props.i18nDelete
+        }
+        i18nConfirmationMessage={
+          isPublished
+            ? props.i18nUnpublishModalMessage
+            : props.i18nDeleteModalMessage
+        }
+        i18nTitle={
+          isPublished
+            ? props.i18nUnpublishModalTitle
+            : props.i18nDeleteModalTitle
+        }
+        icon={
+          isPublished
+            ? ConfirmationIconType.WARNING
+            : ConfirmationIconType.DANGER
+        }
+        showDialog={showConfirmationDialog}
+        onCancel={doCancel}
+        onConfirm={isPublished ? doUnpublish : doDelete}
+      />
+      <Breadcrumb
+        actions={
+          <>
+            <ButtonLink
+              data-testid={'virtualization-detail-breadcrumb-publish-button'}
+              className="btn btn-primary"
+              onClick={
+                isPublished || publishInProgress
+                  ? doUnpublish
+                  : doPublish
+              }
+            >
+              {isPublished || publishInProgress
+                ? props.i18nUnpublish
+                : props.i18nPublish}
+            </ButtonLink>
+            <DropdownKebab
+              id={`virtualization-${
+                props.virtualizationName
                 }-action-menu`}
-                pullRight={true}
-              >
-                <MenuItem onClick={this.showConfirmationDialog}>
-                  {this.props.i18nDelete}
-                </MenuItem>
-              </DropdownKebab>
-            </>
-          }
+              pullRight={true}
+            >
+              <MenuItem onClick={showConfirmDialog}>
+                {props.i18nDelete}
+              </MenuItem>
+            </DropdownKebab>
+          </>
+        }
+      >
+        <Link
+          data-testid={'virtualization-views-page-home-link'}
+          to={props.dashboardHref}
         >
-          <Link
-            data-testid={'virtualization-views-page-home-link'}
-            to={this.props.dashboardHref}
-          >
-            {this.props.dashboardString}
-          </Link>
-          <Link
-            data-testid={'virtualization-views-page-virtualizations-link'}
-            to={this.props.dataHref}
-          >
-            {this.props.dataString}
-          </Link>
-          <span>
-            {this.props.virtualizationName + ' '}
-            {this.props.i18nViews}
-          </span>
-        </Breadcrumb>
-      </>
-    );
-  }
+          {props.dashboardString}
+        </Link>
+        <Link
+          data-testid={'virtualization-views-page-virtualizations-link'}
+          to={props.dataHref}
+        >
+          {props.dataString}
+        </Link>
+        <span>
+          {props.virtualizationName + ' '}
+          {props.i18nViews}
+        </span>
+      </Breadcrumb>
+    </>
+  );
 }

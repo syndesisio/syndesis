@@ -9,25 +9,26 @@ export interface IViewInfoListProps extends IListViewToolbarProps {
   i18nNameFilterPlaceholder: string;
 }
 
-export class ViewInfoList extends React.Component<IViewInfoListProps> {
-  public render() {
-    return (
-      <>
-        <ListViewToolbar {...this.props}>
-          <div />
-        </ListViewToolbar>
-        {this.props.children ? (
-          <ListView>{this.props.children}</ListView>
-        ) : (
+export const ViewInfoList: React.FunctionComponent<
+  IViewInfoListProps
+> = props => {
+
+  return (
+    <>
+      <ListViewToolbar {...props}>
+        <div />
+      </ListViewToolbar>
+      {props.children ? (
+        <ListView>{props.children}</ListView>
+      ) : (
           <EmptyState>
             <EmptyState.Icon />
             <EmptyState.Title>
-              {this.props.i18nEmptyStateTitle}
+              {props.i18nEmptyStateTitle}
             </EmptyState.Title>
-            <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
+            <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
           </EmptyState>
         )}
-      </>
-    );
-  }
+    </>
+  );
 }

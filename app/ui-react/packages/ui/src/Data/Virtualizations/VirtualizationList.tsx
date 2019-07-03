@@ -27,106 +27,101 @@ export interface IVirtualizationListProps extends IListViewToolbarProps {
   onImport: (name: string) => void; */
 }
 
-export class VirtualizationList extends React.Component<
+export const VirtualizationList: React.FunctionComponent<
   IVirtualizationListProps
-> {
-  public constructor(props: IVirtualizationListProps) {
-    super(props);
-    /* TD-636: Commented out for TP {this.handleImport = this.handleImport.bind(this);} */
-  }
+> = props => {
 
-  public getCreateVirtualizationTooltip() {
+  const getCreateVirtualizationTooltip = (): JSX.Element => {
     return (
       <Tooltip id="createTip">
-        {this.props.i18nLinkCreateVirtualizationTip
-          ? this.props.i18nLinkCreateVirtualizationTip
-          : this.props.i18nLinkCreateVirtualization}
+        {props.i18nLinkCreateVirtualizationTip
+          ? props.i18nLinkCreateVirtualizationTip
+          : props.i18nLinkCreateVirtualization}
       </Tooltip>
     );
-  }
+  };
 
   /* TD-636: Commented out for TP 
-    public getImportVirtualizationTooltip() {
+    const getImportVirtualizationTooltip = (): JSX.Element => {
     return (
       <Tooltip id="importTip">
-        {this.props.i18nImportTip
-          ? this.props.i18nImportTip
-          : this.props.i18nImport}
+        {props.i18nImportTip
+          ? props.i18nImportTip
+          : props.i18nImport}
       </Tooltip>
     ); 
-  }
+  };
 
   public handleImport() {
-    this.props.onImport('');
+    props.onImport('');
   } */
 
-  public render() {
-    return (
-      <>
-        <PageSection noPadding={true} variant={'light'}>
-          <ListViewToolbar {...this.props}>
-            <div className="form-group">
-              {/* TD-636: Commented out for TP 
+  return (
+    <>
+      <PageSection noPadding={true} variant={'light'}>
+        <ListViewToolbar {...props}>
+          <div className="form-group">
+            {/* TD-636: Commented out for TP 
               <OverlayTrigger
-                overlay={this.getImportVirtualizationTooltip()}
+                overlay={getImportVirtualizationTooltip()}
                 placement="top"
               >
                <Button
                   data-testid={'virtualization-list-import-button'}
                   bsStyle="default"
-                  to={this.props.i18nImport}
-                  onClick={this.handleImport}
+                  to={props.i18nImport}
+                  onClick={handleImport}
                 >
-                  {this.props.i18nImport}
+                  {props.i18nImport}
                 </Button> 
               </OverlayTrigger> */}
-              <OverlayTrigger
-                overlay={this.getCreateVirtualizationTooltip()}
-                placement="top"
+            <OverlayTrigger
+              overlay={getCreateVirtualizationTooltip()}
+              placement="top"
+            >
+              <ButtonLink
+                data-testid={
+                  'virtualization-list-create-virtualization-button'
+                }
+                href={props.linkCreateHRef}
+                as={'primary'}
               >
-                <ButtonLink
-                  data-testid={
-                    'virtualization-list-create-virtualization-button'
-                  }
-                  href={this.props.linkCreateHRef}
-                  as={'primary'}
-                >
-                  {this.props.i18nLinkCreateVirtualization}
-                </ButtonLink>
-              </OverlayTrigger>
-            </div>
-          </ListViewToolbar>
-        </PageSection>
-        <PageSection noPadding={true} variant={'light'}>
-          {this.props.hasListData ? (
-            <ListView>{this.props.children}</ListView>
-          ) : (
+                {props.i18nLinkCreateVirtualization}
+              </ButtonLink>
+            </OverlayTrigger>
+          </div>
+        </ListViewToolbar>
+      </PageSection>
+      <PageSection noPadding={true} variant={'light'}>
+        {props.hasListData ? (
+          <ListView>{props.children}</ListView>
+        ) : (
             <EmptyState>
               <EmptyState.Icon />
               <EmptyState.Title>
-                {this.props.i18nEmptyStateTitle}
+                {props.i18nEmptyStateTitle}
               </EmptyState.Title>
-              <EmptyState.Info>{this.props.i18nEmptyStateInfo}</EmptyState.Info>
+              <EmptyState.Info>{props.i18nEmptyStateInfo}</EmptyState.Info>
               <EmptyState.Action>
                 <OverlayTrigger
-                  overlay={this.getCreateVirtualizationTooltip()}
+                  overlay={getCreateVirtualizationTooltip()}
                   placement="top"
                 >
                   <ButtonLink
                     data-testid={
                       'virtualization-list-empty-state-create-button'
                     }
-                    href={this.props.linkCreateHRef}
+                    href={props.linkCreateHRef}
                     as={'primary'}
                   >
-                    {this.props.i18nLinkCreateVirtualization}
+                    {props.i18nLinkCreateVirtualization}
                   </ButtonLink>
                 </OverlayTrigger>
               </EmptyState.Action>
             </EmptyState>
           )}
-        </PageSection>
-      </>
-    );
-  }
+      </PageSection>
+    </>
+  );
+
 }
