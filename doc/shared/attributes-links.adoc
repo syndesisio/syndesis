@@ -64,6 +64,10 @@
 :LinkFuseOnlineConnectorGuide: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/connecting_fuse_online_to_applications_and_services/
 :NameOfFuseOnlineConnectorGuide: Connecting Fuse Online to Applications and Services
 
+:LinkFuseOnlineOnOCP: https://access.redhat.com/documentation/en-us/{productpkg}/{version}/html-single/installing_and_operating_fuse_online_on_openshift_container_platform/
+:NameOfFuseOnlineOnOCPGuide: Installing and Operating Fuse Online on OpenShift Container Platform
+
+
 //REVISIT Don't forget to add the guides from the tooling repo, FIS guide!
 
 // Developer Studio titles

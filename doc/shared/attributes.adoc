@@ -107,7 +107,7 @@
 
 :trade: ™
 
-:version: 7.3
+:version: 7.4
 
 // RCM: version.wildfly-camel
 :wildflyCamelVersion: 5.2.0.fuse-720023-redhat-00001

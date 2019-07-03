@@ -22,11 +22,30 @@ available connectors.
 . Click the connector for the API that you want to create a connection for.
 . Respond to prompts for additional information. The
 definition of the API determines what {prodname} prompts for.
-For example, for an API that uses
-HTTP Basic Authorization, {prodname} prompts for the user name and
-password to use to access the API. For an API that uses OAuth,
-{prodname} displays a button for you to click so that {prodname}
-can verify its registration credentials for connecting to the API.
++
+Typically, an API service has security requirements and {prodname} 
+prompts for security input according to the particular security 
+type that the OpenAPI document defines. The security type can be 
+one of the following:
++
+[cols="1,2"]
+|===
+|*Security type*
+|*{prodname} displays*
+
+|HTTP Basic Authorization
+|Input fields for user name and password.
+
+|OAuth 2.0
+|A button for you to click so that {prodname} can verify its 
+registration credentials for connecting to the API. These
+credentials were provided when the connector was created. 
+
+|API Key
+|Input field for an API key, which you must obtain from the API service. 
+
+|===
+
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 . In the *Description* field, optionally enter any information that
