@@ -38,7 +38,7 @@ export default {
           })
         ),
         selectName: makeResolver<{
-          schemaNodeInfo: SchemaNodeInfo;
+          schemaNodeInfo: SchemaNodeInfo[];
           virtualization: RestDataService;
         }>(
           routes.virtualizations.virtualization.views.createView.selectName,

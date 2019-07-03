@@ -125,9 +125,9 @@ export class WithVirtualizationHelpersWrapped extends React.Component<
     const response = await callFetch({
       headers: {},
       method: 'POST',
-      url: `${
-        this.props.dvApiUri
-      }workspace/dataservices/refreshViews/${virtualization.keng__id}`,
+      url: `${this.props.dvApiUri}workspace/dataservices/refreshViews/${
+        virtualization.keng__id
+      }`,
     });
 
     if (!response.ok) {
