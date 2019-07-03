@@ -22,7 +22,6 @@ import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
 import io.fabric8.kubernetes.api.model.EnvVarBuilder;
 import io.fabric8.kubernetes.api.model.IntOrString;
 import io.fabric8.kubernetes.api.model.ProbeBuilder;
@@ -38,7 +37,7 @@ import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.RouteBuilder;
 import io.fabric8.openshift.client.NamespacedOpenShiftClient;
 import io.fabric8.openshift.client.server.mock.OpenShiftMockServer;
-
+import okhttp3.mockwebserver.RecordedRequest;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Rule;
@@ -48,10 +47,7 @@ import org.slf4j.bridge.SLF4JBridgeHandler;
 
 import static io.fabric8.kubernetes.client.utils.Serialization.asJson;
 import static io.syndesis.server.openshift.OpenShiftServiceImpl.openshiftName;
-
 import static org.assertj.core.api.Assertions.assertThat;
-
-import okhttp3.mockwebserver.RecordedRequest;
 
 public class OpenShiftServiceImplTest {
     @Rule
@@ -377,6 +373,10 @@ public class OpenShiftServiceImplTest {
                                 .withName("metrics")
                                 .withContainerPort(9779)
                             .endPort()
+                            .addNewPort()
+                                .withName("management")
+                                .withContainerPort(8081)
+                            .endPort()
                             .addNewVolumeMount()
                                 .withName("secret-volume")
                                 .withMountPath("/deployments/config")
@@ -386,7 +386,7 @@ public class OpenShiftServiceImplTest {
                                 .withInitialDelaySeconds(config.getIntegrationLivenessProbeInitialDelaySeconds())
                                 .withNewHttpGet()
                                     .withPath("/health")
-                                    .withNewPort(8080)
+                                    .withNewPort(8081)
                                 .endHttpGet()
                                 .build())
                         .endContainer()

@@ -2,7 +2,8 @@
 logging.level.io.syndesis = DEBUG
 logging.level.org.apache.camel.spring.boot.RoutesCollector = DEBUG
 
-# disable all management endpoints except health
+# disable all management endpoints except health and use separate management port
+management.port=8081
 endpoints.enabled = false
 endpoints.health.enabled = true
 management.health.defaults.enabled=false
