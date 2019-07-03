@@ -1,0 +1,97 @@
+// This module is included in the following assembly:
+// as_developing-extensions.adoc
+
+[id='about-properties-in-extension-definitions_{context}']
+= Descriptions of user interface properties in extension definition JSON file
+
+For connector extensions and step extensions, specify user interface
+properties in the extension definiton JSON file. 
+After you add an extension to {prodname}, the settings of these 
+properties determine the {prodname} console display when you use the 
+extension to create a connection, configure an action, 
+or configure a step. 
+
+You must specify properties for each element that you want to appear
+in the extension's user interface in the {prodname} console. 
+For each element, specify some or all of these properties in any order.
+
+The following table describes the properties. 
+
+[options="header"]
+[cols="3,1,2"]
+|===
+|Property name
+|Type
+|Description
+
+|`type`
+| 
+|Controls the kind of form control that should be displayed in the UI. 
+The corresponding table shows how the field is mapped:
+Type Value	HTML Form Control
+boolean, checkbox	input of type "checkbox"
+int, integer, long, number	input of type "number"
+hidden	input of type "hidden"
+select	input of type "select"
+duration	a custom duration control is used
+textarea	a textarea element is used
+text, string, any unknown value	an input of type "text" is used.
+
+|`required`
+|Boolean
+|Controls whether or not the `required` attribute is set on the control, if true then the user will need to supply a value for the form to successfully validate.
+
+|`secret`
+|Boolean
+|If specified the form control will be overridden to be an input of type `password`.
+
+|`labelHint` or "labelTooltip" - 
+|string
+|if set, a `?` icon will be displayed next to the label and the value will be shown in a popover when the user clicks on the`?` icon
+
+|`controlHint` or "controlTooltip" - 
+|string: 
+|If set the value will be used to set the "title" property of the form control, resulting in a tooltip that will appear when the user hovers the mouse over the control.
+
+|`description`
+|string
+|If set, the value will be shown underneath the control, generally used to display a short useful message about the field to the user.
+
+|`placeholder`
+|string
+|If set, the value will be used in the form control's `placeholder` property.
+
+|`enum`
+|array
+|If set, the "type" will be overridden to be a "select" control. The array should contain a list of objects that contain a "label" and "value" attributes. The "label" attribute is used for each select item's label, and the "value" will be set for each select items' value.
+
+|`dataList` 
+|array
+|Used for "text" fields, will be used to add a "datalist" element to the form control that provides typeahead support for the user. The array should contain just strings values.
+
+|`multiple` 
+|Boolean
+|If set to "true" for a "select" field (or a field with "enum" set) a multi-select control will be used instead of a select drop-down.
+
+|`max`
+|number 
+|If set for a "number" field, controls the highest value accepted by the form control.
+
+|`min`
+|number
+|If set for a "number" field, controls the lowest value accepted by the form control.
+
+|`rows`
+|number
+|If set for a "textarea" field, controls the number of rows initially displayed for the textarea control.
+
+|`cols`
+|number
+|If set for a "textarea" field, controls the number of columns initially displayed for the textarea control.
+
+|`order`
+|number
+|Influences order of controls in the resulting form. The arragement of controls will be lower values first. 
+Without specification of the `order` property, {prodname} displays elements in the order in which the `.json` file defines them. 
+
+|===
