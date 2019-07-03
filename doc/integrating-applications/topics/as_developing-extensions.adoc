@@ -33,6 +33,7 @@ developing extensions in an IDE that you choose.
 * xref:description-kinds-extensions_{context}[]
 * xref:overview-extension-content-structure_{context}[]
 * xref:about-extension-definitions_{context}[]
+* xref:about-properties-in-extension-definitions_{context}[]
 * xref:using-maven-to-generate-extension-definitions_{context}[]
 * xref:how-to-specify-data-shapes_{context}[]
 * xref:develop-step-extensions_{context}[]
@@ -47,6 +48,8 @@ include::c_description-kinds-extensions.adoc[leveloffset=+1]
 include::c_overview-extension-content-structure.adoc[leveloffset=+1]
 
 include::c_about-extension-definitions.adoc[leveloffset=+1]
+
+include::c_about-properties-in-extension-definitions.adoc[leveloffset=+1]
 
 include::p_using-maven-to-generate-extension-definitions.adoc[leveloffset=+1]
 
