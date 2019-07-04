@@ -43,7 +43,7 @@ function createSpecification(symbols: TemplateSymbol[]): string {
     type: 'object',
   };
   if (symbols.length === 0) {
-    return spec;
+    return JSON.stringify(spec);
   }
   const properties: any = {};
   for (const symbol of symbols) {
@@ -66,6 +66,10 @@ export function useTemplater(props: IUseTemplaterProps) {
     TemplateStepLinters[language]
   );
 
+  React.useEffect(() => {
+    linter.current = TemplateStepLinters[language];
+  }, [language]);
+
   const setText = (text: string) => {
     if (editor.current) {
       editor.current.setValue(text);
@@ -78,7 +82,6 @@ export function useTemplater(props: IUseTemplaterProps) {
 
   const handleTemplateTypeChange = (newType: TemplateType) => {
     setLanguage(newType);
-    linter.current = TemplateStepLinters[language];
   };
 
   const handleEditorChange = (e: ITextEditor, data: any, text: string) => {
