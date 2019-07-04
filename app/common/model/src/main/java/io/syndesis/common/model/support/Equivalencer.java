@@ -15,9 +15,11 @@
  */
 package io.syndesis.common.model.support;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-
 import io.syndesis.common.model.action.Action;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
@@ -34,38 +36,44 @@ import io.syndesis.common.util.StringConstants;
 @SuppressWarnings("PMD.GodClass")
 public class Equivalencer implements StringConstants {
 
-    private static final String ONE_NULL = "one-null";
-
-    private static final String ANOTHER_NULL = "another-null";
-
     static final Object NULL = "null";
 
-    private static final Object NOT_NULL = "not-null";
-
-    private EquivContext topLevel;
+    private Deque<EquivContext> failureContext;
 
     @SuppressWarnings("PMD.CompareObjectsWithEquals")
     private boolean isSameRef(Object one, Object another) {
         return one == another;
     }
 
-    private EquivContext identifier(EquivContext parent, String id, Class<?> klazz) {
-        if (parent == null) {
-            topLevel = new EquivContext(id, klazz);
-            return topLevel;
-        } else {
-            return parent.addChild(id, klazz);
+    private boolean push(String id, Class<?> klazz) {
+        if (failureContext == null) {
+            failureContext = new ArrayDeque<EquivContext>();
         }
+
+        EquivContext ctx = new EquivContext(id, klazz);
+        failureContext.push(ctx);
+        return false;
+    }
+
+    private boolean push(String id, Class<?> klazz, String failingProperty, Object a, Object b) {
+        if (failureContext == null) {
+            failureContext = new ArrayDeque<EquivContext>();
+        }
+
+        EquivContext ctx = new EquivContext(id, klazz);
+        ctx.setFail(failingProperty, a, b);
+        failureContext.push(ctx);
+        return false;
     }
 
     private EquivPair pair(Object a, Object b, String name) {
         return EquivPair.create(a, b, name);
     }
 
-    private boolean compare(EquivContext context, EquivPair... pairs) {
+    private boolean compare(String objectName, Class<?> objectKind, EquivPair... pairs) {
         for (EquivPair pair : pairs) {
             if (! pair.isEqual()) {
-                context.setFail(pair.name(), pair.a, pair.b);
+                push(objectName, objectKind, pair.name(), pair.a, pair.b);
                 return false;
             }
         }
@@ -73,44 +81,105 @@ public class Equivalencer implements StringConstants {
         return true;
     }
 
-    private String layer(EquivContext context) {
-        if (isSameRef(context, topLevel)) {
-            return context.id();
-        }
-
-        return SPACE + CLOSE_ANGLE_BRACKET + SPACE + context.id();
-    }
-
-    private String message(EquivContext context) {
-        StringBuilder msgBuilder = new StringBuilder();
-
-        if (context.hasFailed()) {
-            msgBuilder
-                .append(layer(context))
-                .append(DOLLAR_SIGN)
-                .append(context.getFailed());
-        } else {
-            for (EquivContext child : context.children()) {
-                String msg = message(child);
-                if (msg.isEmpty()) {
-                    continue;
-                }
-
-                msgBuilder
-                    .append(layer(context))
-                    .append(msg);
-            }
-        }
-
-        return msgBuilder.toString();
-    }
-
-    public String message() {
-        if (topLevel == null) {
+    public String failureMessage() {
+        if (failureContext == null) {
             return EMPTY_STRING;
         }
 
-        return message(topLevel);
+        String msg = "Reason: ";
+        StringBuilder builder = new StringBuilder(msg);
+        StringBuilder context = new StringBuilder();
+
+        Iterator<EquivContext> iterator = failureContext.iterator();
+        while(iterator.hasNext()) {
+            EquivContext ctx = iterator.next();
+            if (ctx.hasFailed()) {
+                context.append(ctx.id());
+                builder.append(ctx.getFailed());
+                builder.append("Context: ").append(context.toString());
+            } else {
+                context.append(ctx.id()).append(SPACE).append(FORWARD_SLASH).append(SPACE);
+            }
+        }
+
+        return builder.append(NEW_LINE).toString();
+    }
+
+    private <T> boolean equivalent(List<T> oneList, List<T> anotherList, Class<T> contentClass) {
+        List<T> thisList = null;
+        List<T> otherList = null;
+        if (oneList.size() >= anotherList.size()) {
+            thisList = oneList;
+            otherList = anotherList;
+        } else {
+            thisList = anotherList;
+            otherList = oneList;
+        }
+
+        for (int i = 0; i < thisList.size(); ++i) {
+            T oneItem = thisList.get(i);
+            T otherItem = null;
+
+            if (otherList.size() > i) {
+                otherItem = otherList.get(i);
+            }
+
+            if (! equivalent(oneItem, otherItem, contentClass)) {
+                // Don't need to put context here
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    @SuppressWarnings("PMD.NPathComplexity")
+    private <T> boolean equivalent(T one, T another, Class<T> tgtClass) {
+        if (tgtClass.equals(Step.class)) {
+            return equivalent((Step) one, (Step) another);
+        }
+
+        if (tgtClass.equals(Extension.class)) {
+            return equivalent((Extension) one, (Extension) another);
+        }
+
+        if (tgtClass.equals(Integration.class)) {
+            return equivalent((Integration) one, (Integration) another);
+        }
+
+        if (tgtClass.equals(Flow.class)) {
+            return equivalent((Flow) one, (Flow) another);
+        }
+
+        if (tgtClass.equals(Connection.class)) {
+            return equivalent((Connection) one, (Connection) another);
+        }
+
+        if (tgtClass.equals(Connector.class)) {
+            return equivalent((Connector) one, (Connector) another);
+        }
+
+        if (tgtClass.equals(Action.class)) {
+            return equivalent((Action) one, (Action) another);
+        }
+
+        if (tgtClass.equals(StepAction.class)) {
+            return equivalent((StepAction) one, (StepAction) another);
+        }
+
+        if (tgtClass.equals(ConnectorAction.class)) {
+            return equivalent((ConnectorAction) one, (ConnectorAction) another);
+        }
+
+        if (tgtClass.equals(StepDescriptor.class)) {
+            return equivalent((StepDescriptor) one, (StepDescriptor) another);
+        }
+
+        if (tgtClass.equals(ConnectorAction.class)) {
+            return equivalent((ConnectorAction) one, (ConnectorAction) another);
+        }
+
+        return false;
     }
 
     /**
@@ -138,56 +207,32 @@ public class Equivalencer implements StringConstants {
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
     @SuppressWarnings("PMD.NPathComplexity")
-    public boolean equivalent(EquivContext parentContext, Step one, Step another) {
+    public boolean equivalent(Step one, Step another) {
         if (isSameRef(one, another)) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, another.getName(), another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            return push(another.getName(), another.getClass(), another.getName(), NULL, another.getName());
         }
 
-        EquivContext context = identifier(parentContext, one.getName(), one.getClass());
         if (another == null) {
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(one.getName(), one.getClass(), one.getName(), one.getName(), NULL);
         }
 
-        Connection myConnection = one.getConnection().orElse(null);
-        Connection anotherConnection = another.getConnection().orElse(null);
-        if (myConnection == null) {
-            if (anotherConnection != null) {
-                context.setFail("connection", NULL, NOT_NULL);
-                return false;
-            }
-        } else if (! equivalent(context, myConnection, anotherConnection)) {
-            return false;
+        if (! equivalent(one.getConnection().orElse(null), another.getConnection().orElse(null))) {
+            return push(one.getName(), one.getClass());
         }
 
-        Extension myExtension = one.getExtension().orElse(null);
-        Extension anotherExtension = another.getExtension().orElse(null);
-        if (myExtension == null) {
-            if (anotherExtension != null) {
-                return false;
-            }
-        } else if (! equivalent(context, myExtension, anotherExtension)) {
-            return false;
+        if (! equivalent(one.getExtension().orElse(null), another.getExtension().orElse(null))) {
+            return push(one.getName(), one.getClass());
         }
 
-        Action myAction = one.getAction().orElse(null);
-        Action anotherAction = another.getAction().orElse(null);
-        if (myAction == null) {
-            if (anotherAction != null) {
-                context.setFail("action", NULL, NOT_NULL);
-                return false;
-            }
-        } else if (! equivalent(context, myAction, anotherAction)) {
-            return false;
+        if (! equivalent(one.getAction().orElse(null), another.getAction().orElse(null))) {
+            return push(one.getName(), one.getClass());
         }
 
-        return compare(context,
+        return compare(one.getName(), one.getClass(),
                        pair(one.getStepKind(), another.getStepKind(), "step-kind"),
                        pair(one.getName(), another.getName(), "name"),
                        pair(one.getId(), another.getId(), "id"),
@@ -221,38 +266,24 @@ public class Equivalencer implements StringConstants {
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
     @SuppressWarnings("PMD.NPathComplexity")
-    public boolean equivalent(EquivContext parentContext, Extension one, Extension another) {
+    public boolean equivalent(Extension one, Extension another) {
         if (isSameRef(one, another)) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, another.getName(), another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            return push(another.getName(), another.getClass(), another.getName(), NULL, another.getName());
         }
 
-        EquivContext context = identifier(parentContext, one.getName(), one.getClass());
         if (another == null) {
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(one.getName(), one.getClass(), one.getName(), one.getName(), NULL);
         }
 
-        List<Action> myActions = one.getActions();
-        if (myActions == null) {
-            if (another.getActions() != null) {
-                return false;
-            }
-        } else {
-            for (Action myAction : myActions) {
-                Action anotherAction = another.findActionById(myAction.getId().get()).orElse(null);
-                if (! equivalent(context, myAction, anotherAction)) {
-                    return false;
-                }
-            }
+        if (! equivalent(one.getActions(), another.getActions(), Action.class)) {
+            return push(one.getName(), one.getClass());
         }
 
-        return compare(context,
+        return compare(one.getName(), one.getClass(),
                        pair(one.getExtensionId(), another.getExtensionId(), "extension-id"),
                        pair(one.getSchemaVersion(), another.getSchemaVersion(), "schema-version"),
                        pair(one.getStatus(), another.getStatus(), "status"),
@@ -295,54 +326,28 @@ public class Equivalencer implements StringConstants {
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
     @SuppressWarnings("PMD.NPathComplexity")
-    public boolean equivalent(EquivContext parentContext, Integration one, Integration another) {
+    public boolean equivalent(Integration one, Integration another) {
         if (isSameRef(one, another)) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, another.getName(), another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            return push(another.getName(), another.getClass(), another.getName(), NULL, another.getName());
         }
 
-        EquivContext context = identifier(parentContext, one.getName(), one.getClass());
         if (another == null) {
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(one.getName(), one.getClass(), one.getName(), one.getName(), NULL);
         }
 
-        List<Connection> myConnections = one.getConnections();
-        if (myConnections == null) {
-            if (another.getConnections() != null) {
-                context.setFail("connections", NULL, NOT_NULL);
-                return false;
-            }
-        } else {
-            for (Connection myConnection : myConnections) {
-                Connection anotherConnection = another.findConnectionById(myConnection.getId().get()).orElse(null);
-                if (! equivalent(context, myConnection, anotherConnection)) {
-                    return false;
-                }
-            }
+        if (! equivalent(one.getConnections(), another.getConnections(), Connection.class)) {
+            return push(one.getName(), one.getClass());
         }
 
-        List<Flow> myFlows = one.getFlows();
-        if (myFlows == null) {
-            if (another.getFlows() != null) {
-                context.setFail("flows", NULL, NOT_NULL);
-                return false;
-            }
-        } else {
-            for (Flow myFlow : myFlows) {
-                Flow anotherFlow = another.findFlowById(myFlow.getId().get()).orElse(null);
-                if (! equivalent(context, myFlow, anotherFlow)) {
-                    return false;
-                }
-            }
+        if (! equivalent(one.getFlows(), another.getFlows(), Flow.class)) {
+            return push(one.getName(), one.getClass());
         }
 
-        return compare(context,
+        return compare(one.getName(), one.getClass(),
                        pair(one.getKind(), another.getKind(), "id"),
                        pair(one.isDeleted(), another.isDeleted(), "is-deleted"),
                        pair(one.getResources(), another.getResources(), "resources"),
@@ -376,39 +381,24 @@ public class Equivalencer implements StringConstants {
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
     @SuppressWarnings("PMD.NPathComplexity")
-    public boolean equivalent(EquivContext parentContext, Flow one, Flow another) {
+    public boolean equivalent(Flow one, Flow another) {
         if (isSameRef(one, another)) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, another.getName(), another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            return push(another.getName(), another.getClass(), another.getName(), NULL, another.getName());
         }
 
-        EquivContext context = identifier(parentContext, one.getName(), one.getClass());
         if (another == null) {
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(one.getName(), one.getClass(), one.getName(), one.getName(), NULL);
         }
 
-        List<Step> mySteps = one.getSteps();
-        if (mySteps == null) {
-            if (another.getSteps() != null) {
-                context.setFail("steps", NULL, NOT_NULL);
-                return false;
-            }
-        } else {
-            for (Step myStep : mySteps) {
-                Step anotherStep = another.findStepById(myStep.getId().get()).orElse(null);
-                if (! equivalent(context, myStep, anotherStep)) {
-                    return false;
-                }
-            }
+        if (! equivalent(one.getSteps(), another.getSteps(), Step.class)) {
+            return push(one.getName(), one.getClass());
         }
 
-        return compare(context,
+        return compare(one.getName(), one.getClass(),
                        pair(one.getId(), another.getId(), "id"),
                        pair(one.getDescription(), another.getDescription(), "description"),
                        pair(one.getTags(), another.getTags(), "tags"),
@@ -439,36 +429,24 @@ public class Equivalencer implements StringConstants {
      * @param another a {@link Connection} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
-    public boolean equivalent(EquivContext parentContext, Connection one, Connection another) {
+    public boolean equivalent(Connection one, Connection another) {
         if (isSameRef(one, another)) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, another.getName(), another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            return push(another.getName(), another.getClass(), another.getName(), NULL, another.getName());
         }
 
-        EquivContext context = identifier(parentContext, one.getName(), one.getClass());
         if (another == null) {
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(one.getName(), one.getClass(), one.getName(), one.getName(), NULL);
         }
 
-        Connector myConnector = one.getConnector().orElse(null);
-        Connector anotherConnector = another.getConnector().orElse(null);
-
-        if (myConnector == null) {
-            if (anotherConnector != null) {
-                context.setFail("connector", NULL, NOT_NULL);
-                return false;
-            }
-        } else if (! equivalent(context, myConnector, anotherConnector)) {
-            return false;
+        if (! equivalent(one.getConnector().orElse(null), another.getConnector().orElse(null))) {
+            return push(one.getName(), one.getClass());
         }
 
-        return compare(context,
+        return compare(one.getName(), one.getClass(),
                        pair(one.getId(), another.getId(), "id"),
                        pair(one.getOrganization(), another.getOrganization(), "organization"),
                        pair(one.getOrganizationId(), another.getOrganizationId(), "organization-id"),
@@ -510,39 +488,24 @@ public class Equivalencer implements StringConstants {
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
     @SuppressWarnings("PMD.NPathComplexity")
-    public boolean equivalent(EquivContext parentContext, Connector one, Connector another) {
+    public boolean equivalent(Connector one, Connector another) {
         if (isSameRef(one, another)) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, another.getName(), another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            return push(another.getName(), another.getClass(), another.getName(), NULL, another.getName());
         }
 
-        EquivContext context = identifier(parentContext, one.getName(), one.getClass());
         if (another == null) {
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(one.getName(), one.getClass(), one.getName(), one.getName(), NULL);
         }
 
-        List<ConnectorAction> myActions = one.getActions();
-        if (myActions == null) {
-            if (another.getActions() != null) {
-                context.setFail("actions", NULL, NOT_NULL);
-                return false;
-            }
-        } else {
-            for (ConnectorAction myAction : myActions) {
-                ConnectorAction anotherAction = another.findActionById(myAction.getId().get()).orElse(null);
-                if (! equivalent(context, myAction, anotherAction)) {
-                    return false;
-                }
-            }
+        if (! equivalent(one.getActions(), another.getActions(), ConnectorAction.class)) {
+            return push(one.getName(), one.getClass());
         }
 
-        return compare(context,
+        return compare(one.getName(), one.getClass(),
                        pair(one.getConnectorGroup(), another.getConnectorGroup(), "connector-group"),
                        pair(one.getConnectorGroupId(), another.getConnectorGroupId(), "connector-group-id"),
                        pair(one.getDescription(), another.getDescription(), "description"),
@@ -584,39 +547,36 @@ public class Equivalencer implements StringConstants {
      * @param another a {@link Action} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
-    public boolean equivalent(EquivContext parentContext, Action one, Action another) {
+    public boolean equivalent(Action one, Action another) {
         if (isSameRef(one, another)) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, another.getName(), another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            return push(another.getName(), another.getClass(), another.getName(), NULL, another.getName());
         }
 
         if (another == null) {
-            EquivContext context = identifier(parentContext, one.getName(), one.getClass());
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(one.getName(), one.getClass(), one.getName(), one.getName(), NULL);
         }
 
         if (! one.getClass().equals(another.getClass())) {
-            EquivContext context = identifier(parentContext, one.getName(), one.getClass());
-            context.setFail("action-classes", one.getClass(), another.getClass());
-            return false;
+            return push(one.getName(), one.getClass(), "action-classes", one.getClass(), another.getClass());
         }
 
         //
         // Passthrough so no context of its own required
         //
         if (one instanceof StepAction) {
-            return equivalent(parentContext, (StepAction) one, (StepAction) another);
-        } else if (another instanceof ConnectorAction) {
-            return equivalent(parentContext, (ConnectorAction) one, (ConnectorAction) another);
+            if (! equivalent((StepAction) one, (StepAction) another)) {
+                return push(one.getName(), one.getClass());
+            }
+        } else if (another instanceof ConnectorAction &&
+            !equivalent((ConnectorAction) one, (ConnectorAction) another)) {
+                return push(one.getName(), one.getClass());
         }
 
-        return false;
+        return true;
     }
 
     /**
@@ -643,35 +603,24 @@ public class Equivalencer implements StringConstants {
      * @param another a {@link StepAction} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
-    public boolean equivalent(EquivContext parentContext, StepAction one, StepAction another) {
+    public boolean equivalent(StepAction one, StepAction another) {
         if (isSameRef(one, another)) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, another.getName(), another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            return push(another.getName(), another.getClass(), another.getName(), NULL, another.getName());
         }
 
-        EquivContext context = identifier(parentContext, one.getName(), one.getClass());
         if (another == null) {
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(one.getName(), one.getClass(), one.getName(), one.getName(), NULL);
         }
 
-        StepDescriptor myDescriptor = one.getDescriptor();
-        StepDescriptor anotherDescriptor = another.getDescriptor();
-        if (myDescriptor == null) {
-            if (anotherDescriptor != null) {
-                context.setFail("descriptor", NULL, NOT_NULL);
-                return false;
-            }
-        } else if (! equivalent(context, myDescriptor, anotherDescriptor)) {
-            return false;
+        if (! equivalent(one.getDescriptor(), another.getDescriptor())) {
+            return push(one.getName(), one.getClass());
         }
 
-        return compare(context,
+        return compare(one.getName(), one.getClass(),
                        pair(one.getActionType(), another.getActionType(), "action-type"),
                        pair(one.getDescription(), another.getDescription(), "description"),
                        pair(one.getPattern(), another.getPattern(), "pattern"),
@@ -705,35 +654,24 @@ public class Equivalencer implements StringConstants {
      * @param another a {@link ConnectorAction} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
-    public boolean equivalent(EquivContext parentContext, ConnectorAction one, ConnectorAction another) {
+    public boolean equivalent(ConnectorAction one, ConnectorAction another) {
         if (isSameRef(one, another)) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, another.getName(), another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            return push(another.getName(), another.getClass(), another.getName(), NULL, another.getName());
         }
 
-        EquivContext context = identifier(parentContext, one.getName(), one.getClass());
         if (another == null) {
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(one.getName(), one.getClass(), one.getName(), one.getName(), NULL);
         }
 
-        ConnectorDescriptor myDescriptor = one.getDescriptor();
-        ConnectorDescriptor anotherDescriptor = another.getDescriptor();
-        if (myDescriptor == null) {
-            if (anotherDescriptor != null) {
-                context.setFail("descriptor", NULL, NOT_NULL);
-                return false;
-            }
-        } else if (! equivalent(context, myDescriptor, anotherDescriptor)) {
-            return false;
+        if (! equivalent(one.getDescriptor(), another.getDescriptor())) {
+            return push(one.getName(), one.getClass());
         }
 
-        return compare(context,
+        return compare(one.getName(), one.getClass(),
                        pair(one.getActionType(), another.getActionType(), "action-type"),
                        pair(one.getDescription(), another.getDescription(), "description"),
                        pair(one.getPattern(), another.getPattern(), "pattern"),
@@ -767,24 +705,20 @@ public class Equivalencer implements StringConstants {
      * @param another a {@link StepDescriptor} to compare with
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
-    public boolean equivalent(EquivContext parentContext, StepDescriptor one, StepDescriptor another) {
+    public boolean equivalent(StepDescriptor one, StepDescriptor another) {
         if (isSameRef(one, another)) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, null, another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            return push(another.getEntrypoint(), another.getClass(), another.getEntrypoint(), NULL, another.getEntrypoint());
         }
 
-        EquivContext context = identifier(parentContext, null, one.getClass());
         if (another == null) {
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(one.getEntrypoint(), one.getClass(), one.getEntrypoint(), one.getEntrypoint(), NULL);
         }
 
-        return compare(context,
+        return compare(one.getEntrypoint(), one.getClass(),
                        pair(one.getKind(), another.getKind(), "kind"),
                        pair(one.getEntrypoint(), another.getEntrypoint(), "entry-point"),
                        pair(one.getResource(), another.getResource(), "resource"),
@@ -819,24 +753,22 @@ public class Equivalencer implements StringConstants {
      * @return true if this is equivalent to {code}another{code}, false otherwise
      */
     @SuppressWarnings("PMD.CompareObjectsWithEquals")
-    public boolean equivalent(EquivContext parentContext, ConnectorDescriptor one, ConnectorDescriptor another) {
+    public boolean equivalent(ConnectorDescriptor one, ConnectorDescriptor another) {
         if (one == another) {
             return true;
         }
 
         if (one == null) {
-            EquivContext context = identifier(parentContext, null, another.getClass());
-            context.setFail(ONE_NULL, NULL, NOT_NULL);
-            return false;
+            String identifier = another.getConnectorId() + "-Descriptor";
+            return push(identifier, another.getClass(), identifier, NULL, identifier);
         }
 
-        EquivContext context = identifier(parentContext, null, one.getClass());
+        String identifier = one.getConnectorId() + "-Descriptor";
         if (another == null) {
-            context.setFail(ANOTHER_NULL, NOT_NULL, NULL);
-            return false;
+            return push(identifier, one.getClass(), identifier, identifier, NULL);
         }
 
-        return compare(context,
+        return compare(identifier, one.getClass(),
                        pair(one.getConnectorId(), another.getConnectorId(), "connector-id"),
                        pair(one.getCamelConnectorGAV(), another.getCamelConnectorGAV(), "camel-connector-gav"),
                        pair(one.getCamelConnectorPrefix(), another.getCamelConnectorPrefix(), "camel-connector-prefix"),
