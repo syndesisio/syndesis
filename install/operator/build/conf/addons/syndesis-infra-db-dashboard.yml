@@ -1,13 +1,13 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
-  name: syndesis-db
+  name: syndesis-infra-db-dashboard
   labels:
     app: syndesis
     syndesis.io/app: syndesis
     syndesis.io/type: infrastructure
 spec:
-  name: syndesis-db.json
+  name: syndesis-infra-db-dashboard.json
   json: |
     {
       "annotations": {
@@ -30,15 +30,26 @@ spec:
       "editable": true,
       "gnetId": 3300,
       "graphTooltip": 1,
-      "iteration": 1550144280707,
-      "links": [],
+      "id": 22,
+      "iteration": 1562604453672,
+      "links": [
+        {
+          "icon": "external link",
+          "includeVars": true,
+          "tags": [
+            "syndesis",
+            "infra"
+          ],
+          "type": "dashboards"
+        }
+      ],
       "panels": [
         {
           "content": "<h1><b><font color=#e68a00><center>$version</center></font></b></h1>",
           "description": "",
           "gridPos": {
             "h": 2,
-            "w": 2,
+            "w": 3,
             "x": 0,
             "y": 0
           },
@@ -71,7 +82,7 @@ spec:
           "gridPos": {
             "h": 2,
             "w": 3,
-            "x": 2,
+            "x": 3,
             "y": 0
           },
           "id": 86,
@@ -155,7 +166,7 @@ spec:
           "gridPos": {
             "h": 2,
             "w": 4,
-            "x": 5,
+            "x": 6,
             "y": 0
           },
           "id": 67,
@@ -238,7 +249,7 @@ spec:
           "gridPos": {
             "h": 2,
             "w": 4,
-            "x": 9,
+            "x": 10,
             "y": 0
           },
           "id": 68,
@@ -321,7 +332,7 @@ spec:
           "gridPos": {
             "h": 2,
             "w": 4,
-            "x": 13,
+            "x": 14,
             "y": 0
           },
           "id": 69,
@@ -404,7 +415,7 @@ spec:
           "gridPos": {
             "h": 2,
             "w": 3,
-            "x": 17,
+            "x": 18,
             "y": 0
           },
           "id": 70,
@@ -486,8 +497,8 @@ spec:
           },
           "gridPos": {
             "h": 2,
-            "w": 2,
-            "x": 20,
+            "w": 3,
+            "x": 21,
             "y": 0
           },
           "id": 85,
@@ -2815,12 +2826,92 @@ spec:
           }
         }
       ],
-      "refresh": "1m",
+      "refresh": "30s",
       "schemaVersion": 16,
       "style": "dark",
-      "tags": [],
+      "tags": [
+        "syndesis",
+        "infra"
+      ],
       "templating": {
         "list": [
+          {
+            "current": {
+              "text": "syndesis-db",
+              "value": "syndesis-db"
+            },
+            "hide": 2,
+            "label": null,
+            "name": "job",
+            "options": [
+              {
+                "selected": true,
+                "text": "syndesis-db",
+                "value": "syndesis-db"
+              }
+            ],
+            "query": "syndesis-db",
+            "skipUrlSync": false,
+            "type": "constant"
+          },
+          {
+            "allValue": ".*",
+            "current": {
+              "text": "myproject",
+              "value": "myproject"
+            },
+            "datasource": "Prometheus",
+            "definition": "label_values(up{job=\"syndesis-db\"}, namespace)",
+            "hide": 0,
+            "includeAll": false,
+            "label": "Namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [],
+            "query": "label_values(up{job=\"syndesis-db\"}, namespace)",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
+          {
+            "allValue": "(syndesis|sampledb)",
+            "current": {
+              "tags": [],
+              "text": "All",
+              "value": "$__all"
+            },
+            "hide": 0,
+            "includeAll": true,
+            "label": "Database",
+            "multi": false,
+            "name": "db",
+            "options": [
+              {
+                "selected": false,
+                "text": "All",
+                "value": "$__all"
+              },
+              {
+                "selected": false,
+                "text": "sampledb",
+                "value": "sampledb"
+              },
+              {
+                "selected": true,
+                "text": "syndesis",
+                "value": "syndesis"
+              }
+            ],
+            "query": "sampledb,syndesis",
+            "skipUrlSync": false,
+            "type": "custom"
+          },
           {
             "auto": true,
             "auto_count": 200,
@@ -2880,41 +2971,11 @@ spec:
             "type": "interval"
           },
           {
-            "allValue": "(syndesis|sampledb)",
-            "current": {
-              "tags": [],
-              "text": "All",
-              "value": "$__all"
-            },
-            "hide": 0,
-            "includeAll": true,
-            "label": "Database",
-            "multi": false,
-            "name": "db",
-            "options": [
-              {
-                "selected": true,
-                "text": "All",
-                "value": "$__all"
-              },
-              {
-                "selected": false,
-                "text": "sampledb",
-                "value": "sampledb"
-              },
-              {
-                "selected": false,
-                "text": "syndesis",
-                "value": "syndesis"
-              }
-            ],
-            "query": "sampledb,syndesis",
-            "skipUrlSync": false,
-            "type": "custom"
-          },
-          {
             "allValue": null,
-            "current": {},
+            "current": {
+              "text": "9.5.14",
+              "value": "9.5.14"
+            },
             "datasource": "Prometheus",
             "definition": "",
             "hide": 2,
@@ -2933,52 +2994,11 @@ spec:
             "tagsQuery": "",
             "type": "query",
             "useTags": false
-          },
-          {
-            "current": {
-              "text": "syndesis-db",
-              "value": "syndesis-db"
-            },
-            "hide": 2,
-            "label": null,
-            "name": "job",
-            "options": [
-              {
-                "selected": true,
-                "text": "syndesis-db",
-                "value": "syndesis-db"
-              }
-            ],
-            "query": "syndesis-db",
-            "skipUrlSync": false,
-            "type": "constant"
-          },
-          {
-            "allValue": ".*",
-            "current": {},
-            "datasource": "Prometheus",
-            "definition": "label_values(pg_up{service=\"$job\"}, namespace)",
-            "hide": 0,
-            "includeAll": false,
-            "label": "Namespace",
-            "multi": false,
-            "name": "namespace",
-            "options": [],
-            "query": "label_values(pg_up{service=\"$job\"}, namespace)",
-            "refresh": 1,
-            "regex": "",
-            "skipUrlSync": false,
-            "sort": 1,
-            "tagValuesQuery": "",
-            "tags": [],
-            "tagsQuery": "",
-            "type": "query",
-            "useTags": false
           }
         ]
       },
       "time": {
-        "from": "now-6h",
+        "from": "now-3h",
         "to": "now"
       },
       "timepicker": {
@@ -3008,7 +3028,7 @@ spec:
         ]
       },
       "timezone": "browser",
-      "title": "Fuse Online - Infrastructure - DB",
+      "title": "Syndesis - Infra - DB",
       "uid": "AzfHN99lqp",
-      "version": 1
+      "version": 6
     }

@@ -1,13 +1,13 @@
 apiVersion: integreatly.org/v1alpha1
 kind: GrafanaDashboard
 metadata:
-  name: syndesis-jvm
+  name: syndesis-infra-jvm-dashboard
   labels:
     app: syndesis
     syndesis.io/app: syndesis
     syndesis.io/type: infrastructure
 spec:
-  name: syndesis-jvm.json
+  name: syndesis-infra-jvm-dashboard.json
   json: |
     {
       "annotations": {
@@ -41,8 +41,19 @@ spec:
       "editable": true,
       "gnetId": 4701,
       "graphTooltip": 1,
-      "iteration": 1549550445181,
-      "links": [],
+      "id": 21,
+      "iteration": 1562604534523,
+      "links": [
+        {
+          "icon": "external link",
+          "includeVars": true,
+          "tags": [
+            "syndesis",
+            "infra"
+          ],
+          "type": "dashboards"
+        }
+      ],
       "panels": [
         {
           "collapsed": false,
@@ -1754,7 +1765,7 @@ spec:
             "x": 8,
             "y": 28
           },
-          "id": 134,
+          "id": 138,
           "legend": {
             "alignAsTable": false,
             "avg": false,
@@ -1776,7 +1787,7 @@ spec:
           "points": false,
           "renderer": "flot",
           "repeat": null,
-          "repeatIteration": 1549028060072,
+          "repeatIteration": 1562604534523,
           "repeatPanelId": 3,
           "scopedVars": {
             "jvm_memory_pool_heap": {
@@ -1895,7 +1906,7 @@ spec:
             "x": 16,
             "y": 28
           },
-          "id": 135,
+          "id": 139,
           "legend": {
             "alignAsTable": false,
             "avg": false,
@@ -1917,7 +1928,7 @@ spec:
           "points": false,
           "renderer": "flot",
           "repeat": null,
-          "repeatIteration": 1549028060072,
+          "repeatIteration": 1562604534523,
           "repeatPanelId": 3,
           "scopedVars": {
             "jvm_memory_pool_heap": {
@@ -2189,7 +2200,7 @@ spec:
             "x": 8,
             "y": 36
           },
-          "id": 136,
+          "id": 140,
           "legend": {
             "alignAsTable": false,
             "avg": false,
@@ -2211,7 +2222,7 @@ spec:
           "points": false,
           "renderer": "flot",
           "repeat": null,
-          "repeatIteration": 1549028060072,
+          "repeatIteration": 1562604534523,
           "repeatPanelId": 78,
           "scopedVars": {
             "jvm_memory_pool_nonheap": {
@@ -2330,7 +2341,7 @@ spec:
             "x": 16,
             "y": 36
           },
-          "id": 137,
+          "id": 141,
           "legend": {
             "alignAsTable": false,
             "avg": false,
@@ -2352,7 +2363,7 @@ spec:
           "points": false,
           "renderer": "flot",
           "repeat": null,
-          "repeatIteration": 1549028060072,
+          "repeatIteration": 1562604534523,
           "repeatPanelId": 78,
           "scopedVars": {
             "jvm_memory_pool_nonheap": {
@@ -3521,12 +3532,40 @@ spec:
           }
         }
       ],
-      "refresh": "1m",
+      "refresh": "30s",
       "schemaVersion": 16,
       "style": "dark",
-      "tags": [],
+      "tags": [
+        "syndesis",
+        "infra"
+      ],
       "templating": {
         "list": [
+          {
+            "allValue": null,
+            "current": {
+              "text": "myproject",
+              "value": "myproject"
+            },
+            "datasource": "Prometheus",
+            "definition": "label_values(up{service=\"$job\"}, namespace)",
+            "hide": 0,
+            "includeAll": false,
+            "label": "Namespace",
+            "multi": false,
+            "name": "namespace",
+            "options": [],
+            "query": "label_values(up{service=\"$job\"}, namespace)",
+            "refresh": 1,
+            "regex": "",
+            "skipUrlSync": false,
+            "sort": 1,
+            "tagValuesQuery": "",
+            "tags": [],
+            "tagsQuery": "",
+            "type": "query",
+            "useTags": false
+          },
           {
             "allValue": null,
             "current": {
@@ -3554,28 +3593,6 @@ spec:
             "query": "syndesis-meta, syndesis-server",
             "skipUrlSync": false,
             "type": "custom"
-          },
-          {
-            "allValue": null,
-            "current": {},
-            "datasource": "Prometheus",
-            "definition": "label_values(up{service=\"$job\"}, namespace)",
-            "hide": 0,
-            "includeAll": false,
-            "label": "Namespace",
-            "multi": false,
-            "name": "namespace",
-            "options": [],
-            "query": "label_values(up{service=\"$job\"}, namespace)",
-            "refresh": 1,
-            "regex": "",
-            "skipUrlSync": false,
-            "sort": 1,
-            "tagValuesQuery": "",
-            "tags": [],
-            "tagsQuery": "",
-            "type": "query",
-            "useTags": false
           },
           {
             "allFormat": "glob",
@@ -3634,7 +3651,7 @@ spec:
         ]
       },
       "time": {
-        "from": "now-6h",
+        "from": "now-3h",
         "to": "now"
       },
       "timepicker": {
@@ -3664,7 +3681,7 @@ spec:
         ]
       },
       "timezone": "browser",
-      "title": "Fuse Online - Infrastructure - JVMs",
+      "title": "Syndesis - Infra - JVM",
       "uid": "n94xx7lma",
-      "version": 11
+      "version": 5
     }
