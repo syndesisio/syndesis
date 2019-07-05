@@ -2102,6 +2102,8 @@ objects:
             value: ${POSTGRESQL_USER}
           - name: POSTGRESQL_DATABASE
             value: ${POSTGRESQL_DATABASE}
+          - name: CONTROLLERS_EXPOSE_VIA3SCALE
+            value: ''            
           image: ' '
 
           imagePullPolicy: IfNotPresent
@@ -2342,26 +2344,63 @@ objects:
   - apiGroups:
     - ""
     resources:
-    - pods/log
-    verbs: [ get ]
+    - replicationcontrollers
+    - replicationcontrollers/scale
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
+    - extensions
+    resources:
+    - daemonsets
+    - deployments
+    - deployments/rollback
+    - deployments/scale
+    - ingresses
+    - networkpolicies
+    - replicasets
+    - replicasets/scale
+    - replicationcontrollers/scale
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
   - apiGroups:
     - ""
     resources:
-    - replicationcontrollers
-    - replicationcontrollers/scale
+    - bindings
+    - events
+    - limitranges
+    - namespaces/status
+    - pods/log
+    - pods/status
     - replicationcontrollers/status
-    verbs: [ get, list, create, update, delete, deletecollection, watch ]
+    - resourcequotas
+    - resourcequotas/status
+    verbs: [ get, list, watch ]
   - apiGroups:
     - ""
     - build.openshift.io
     resources:
-    - builds
     - buildconfigs
-    - builds/details
     - buildconfigs/webhooks
+    - builds
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
+    - buildconfigs/instantiate
     - buildconfigs/instantiatebinary
+    - builds/clone
+    verbs: [ create ]
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
+    - builds/details
+    verbs: [ update ]
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
     - builds/log
-    verbs: [ get, list, create, update, delete, deletecollection, watch ]
+    verbs: [ get, list, watch ]
   - apiGroups:
     - ""
     - apps.openshift.io
@@ -2398,8 +2437,13 @@ objects:
     - ""
     - image.openshift.io
     resources:
-    - imagestreams/status
     - imagestreamimports
+    verbs: [ create ]
+  - apiGroups:
+    - ""
+    - image.openshift.io
+    resources:
+    - imagestreams/status
     verbs: [ get, list, watch ]
   - apiGroups:
     - route.openshift.io
