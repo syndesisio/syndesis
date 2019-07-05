@@ -95,7 +95,12 @@ export function getStepIcon(
   if (typeof kind !== 'undefined') {
     const stepKind = step as Step;
     if (kind === ENDPOINT) {
-      return getConnectionIcon(apiUri, stepKind.connection!);
+      if (stepKind.connection) {
+        return getConnectionIcon(apiUri, stepKind.connection!);
+      }
+
+      // ENDPOINT kind is also used as placeholder for start and finish steps
+      return UNKNOWN_ICON;
     }
     // The step is an extension
     if ((step as Step).stepKind === EXTENSION) {

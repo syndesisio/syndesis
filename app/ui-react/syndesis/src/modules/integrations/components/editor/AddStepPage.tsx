@@ -160,6 +160,14 @@ export const AddStepPage: React.FunctionComponent<
                     getFirstPosition(state.integration, params.flowId) ||
                   position === getLastPosition(state.integration, params.flowId)
                 ) {
+                  setIsDeleting(true);
+                  const newInt = await removeStep(
+                    state.integration,
+                    params.flowId,
+                    position!
+                  );
+                  state.integration = newInt;
+                  setIsDeleting(false);
                   history.push(getDeleteEdgeStepHref(position!, params, state));
                 } else {
                   /**

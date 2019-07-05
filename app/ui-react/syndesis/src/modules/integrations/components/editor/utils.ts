@@ -55,6 +55,19 @@ export function getStepKind(step: Step): IUIStep['uiStepKind'] {
   return step.stepKind;
 }
 
+export function isPlaceholderEndpointStep(steps: IUIStep[], idx: number) {
+  return (
+    (idx === 0 || idx === steps.length - 1) && isPlaceholderEndpoint(steps[idx])
+  );
+}
+
+function isPlaceholderEndpoint(step: Step): boolean {
+  return (
+    step.stepKind === 'endpoint' &&
+    (!(step as IConnectionOverview) || !step.connection)
+  );
+}
+
 export function toUIStep(step: Step | StepKind): IUIStep {
   const uiStepKind = getStepKind(step);
   const inputDataShape =
@@ -89,6 +102,20 @@ export function toUIStep(step: Step | StepKind): IUIStep {
       };
     case API_PROVIDER:
     case ENDPOINT:
+      // eslint-disable-next-line
+      if (isPlaceholderEndpoint(step)) {
+        return {
+          ...step,
+          description: '',
+          isConfigRequired: false,
+          isTechPreview: false,
+          metadata: {},
+          name: step.name || '',
+          properties: {},
+          title: '',
+          uiStepKind,
+        };
+      } // else fallthrough
     case CONNECTOR:
       // this step is a Connection step
       return {
@@ -260,6 +287,10 @@ export const getStepHref = (
     case API_PROVIDER:
       return hrefs.apiProviderHref(step as StepKind, params, state);
     case ENDPOINT:
+      if (isPlaceholderEndpoint(step)) {
+        return hrefs.stepHref(step as StepKind, params, state);
+      }
+    // eslint-disable-next-line
     case CONNECTOR:
       return hrefs.connectionHref(
         typeof (step as IUIStep).uiStepKind !== 'undefined'

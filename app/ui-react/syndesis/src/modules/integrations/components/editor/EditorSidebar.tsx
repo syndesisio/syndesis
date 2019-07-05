@@ -7,7 +7,11 @@ import {
 import * as React from 'react';
 import { EntityIcon } from '../../../../shared';
 import { IUIStep } from './interfaces';
-import { getDataShapeText, toUIStepCollection } from './utils';
+import {
+  getDataShapeText,
+  isPlaceholderEndpointStep,
+  toUIStepCollection,
+} from './utils';
 
 function makeActiveStep(
   position: number,
@@ -18,6 +22,7 @@ function makeActiveStep(
 ) {
   return activeStep ? (
     <IntegrationFlowStepWithOverview
+      key={position - 1}
       icon={
         <EntityIcon
           alt={activeStep.name}
@@ -41,6 +46,7 @@ function makeActiveStep(
     />
   ) : (
     <IntegrationFlowStepGeneric
+      key={position - 1}
       icon={<i className={'fa fa-plus'} />}
       i18nTitle={`${position}. ${title}`}
       i18nTooltip={tooltip}
@@ -48,6 +54,24 @@ function makeActiveStep(
       showDetails={expanded}
       description={tooltip}
     />
+  );
+}
+
+function getPlaceholderActiveStepComponent(
+  idx: number,
+  expanded: boolean,
+  activeStep?: IUIStep
+) {
+  if (idx === 0) {
+    return makeActiveStep(1, expanded, 'Start', 'Choose a step', activeStep);
+  }
+
+  return makeActiveStep(
+    idx + 1,
+    expanded,
+    'Finish',
+    'Choose a step',
+    activeStep
   );
 }
 
@@ -69,13 +93,7 @@ export const EditorSidebar: React.FunctionComponent<
         if (UISteps.length === 0) {
           return (
             <>
-              {makeActiveStep(
-                1,
-                expanded,
-                'Start',
-                'Choose a step',
-                activeStep
-              )}
+              {getPlaceholderActiveStepComponent(0, expanded, activeStep)}
               <IntegrationFlowStepGeneric
                 icon={<i className={'fa fa-plus'} />}
                 i18nTitle={'2. Finish'}
@@ -109,19 +127,21 @@ export const EditorSidebar: React.FunctionComponent<
                   startStep.outputDataShape
                 )}
               />
-              {makeActiveStep(
-                2,
-                expanded,
-                'Finish',
-                'Choose a step',
-                activeStep
-              )}
+              {getPlaceholderActiveStepComponent(1, expanded, activeStep)}
             </>
           );
         } else {
           return (
             <>
               {UISteps.map((s, idx) => {
+                if (isPlaceholderEndpointStep(UISteps, idx)) {
+                  return getPlaceholderActiveStepComponent(
+                    idx,
+                    expanded,
+                    activeStep
+                  );
+                }
+
                 const isActive = idx === activeIndex;
                 const hasAddStep = isAdding && activeIndex === idx + 1;
                 const isAfterActiveAddStep = activeIndex - 1 < idx;
