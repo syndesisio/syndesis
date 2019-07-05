@@ -13,7 +13,7 @@ import { key } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
 
-export interface IUseTemplaterProps {
+export interface IUseTemplateProps {
   initialLanguage: TemplateType;
   initialText: string;
   onUploadBrowse: () => void;
@@ -56,11 +56,11 @@ function createSpecification(symbols: TemplateSymbol[]): string {
   return JSON.stringify(spec);
 }
 
-export function useTemplater(props: IUseTemplaterProps) {
+export function useTemplate(props: IUseTemplateProps) {
   const { t } = useTranslation('integrations');
   const [isValid, setIsValid] = React.useState(false);
   const editor = React.useRef<ITextEditor>();
-  const template = React.useRef(props.initialText || '');
+  const templateContent = React.useRef(props.initialText || '');
   const [language, setLanguage] = React.useState(props.initialLanguage);
   const linter = React.useRef<AbstractLanguageLint>(
     TemplateStepLinters[language]
@@ -82,7 +82,7 @@ export function useTemplater(props: IUseTemplaterProps) {
   };
 
   const handleEditorChange = (e: ITextEditor, data: any, text: string) => {
-    template.current = text;
+    templateContent.current = text;
   };
 
   const handleUpdateLinting = (
@@ -97,7 +97,7 @@ export function useTemplater(props: IUseTemplaterProps) {
       action: buildAction(),
       values: {
         language,
-        template: template.current,
+        template: templateContent.current,
       },
     });
   };
@@ -106,7 +106,7 @@ export function useTemplater(props: IUseTemplaterProps) {
     let spec = {};
     try {
       const symbols = extractTemplateSymbols(
-        template.current,
+        templateContent.current,
         linter.current.parse
       );
       const inputShapeSpecification = createSpecification(symbols);
@@ -125,7 +125,7 @@ export function useTemplater(props: IUseTemplaterProps) {
           } as any /* todo: type hack */,
         } as ActionDescriptor,
         id: key(),
-        name: 'Templater',
+        name: 'Template',
       };
     } catch (err) {
       // ignore
@@ -138,7 +138,7 @@ export function useTemplater(props: IUseTemplaterProps) {
     return a;
   };
 
-  const templater = (
+  const template = (
     <>
       <TemplateStepTypeSelector
         i18nSpecifyTemplateType={'Specify template type:'}
@@ -157,7 +157,7 @@ export function useTemplater(props: IUseTemplaterProps) {
             editor below to add a template. If you already have a template file,
             {/* eslint-disable-next-line */ ' '}
             <a
-              data-testid={'with-templater-show-error-link'}
+              data-testid={'with-template-show-error-link'}
               onClick={props.onUploadBrowse}
             >
               browse to upload
@@ -177,6 +177,6 @@ export function useTemplater(props: IUseTemplaterProps) {
     isValid,
     setText,
     submitForm,
-    templater,
+    template,
   };
 }

@@ -25,7 +25,7 @@ import {
   ITemplateStepRouteState,
 } from '../interfaces';
 import { toUIStep, toUIStepCollection } from '../utils';
-import { useTemplater } from './useTemplater';
+import { useTemplate } from './useTemplate';
 
 export interface ITemplateStepPageProps extends IPageWithEditorBreadcrumb {
   mode: 'adding' | 'editing';
@@ -81,7 +81,7 @@ export const TemplateStepPage: React.FunctionComponent<
     [props, addStep, updateStep, params, state, history, positionAsNumber]
   );
 
-  const { templater, isValid, submitForm, setText } = useTemplater({
+  const { template, isValid, submitForm, setText } = useTemplate({
     initialLanguage: language as TemplateType,
     initialText: configuredProperties.template || '',
     onUpdatedIntegration,
@@ -162,7 +162,7 @@ export const TemplateStepPage: React.FunctionComponent<
               isValid={isValid}
               submitForm={submitForm}
             >
-              {templater}
+              {template}
             </EditorPageCard>
           </PageSection>
         }
