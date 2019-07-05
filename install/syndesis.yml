@@ -2348,6 +2348,17 @@ objects:
     - replicationcontrollers/scale
     verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
   - apiGroups:
+    - apps
+    resources:
+    - daemonsets
+    - deployments
+    - deployments/scale
+    - replicasets
+    - replicasets/scale
+    - statefulsets
+    - statefulsets/scale
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
     - extensions
     resources:
     - daemonsets
@@ -2525,14 +2536,6 @@ objects:
     - list
     - watch
   - apiGroups:
-    - ""
-    resources:
-    - namespaces
-    verbs:
-    - get
-    - list
-    - watch
-  - apiGroups:
     - apps
     resources:
     - daemonsets
@@ -2623,7 +2626,6 @@ objects:
     - list
     - watch
   - apiGroups:
-    - ""
     - route.openshift.io
     resources:
     - routes
