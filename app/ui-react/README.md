@@ -637,6 +637,53 @@ We now have a page that is resilient to page refreshes, can be shared with other
 
 ### Testing
 
+
+
+#### Unit testing
+
+Unit tests exist in both the [`packages/ui`](packages/ui) and [`syndesis`](syndesis) directories.
+
+When you run `$ yarn test`, these will run automatically along with all other unit tests.
+
+Alternatively, you can run `$ yarn test --coverage --color --runInBand` from the `./syndesis` or `./packages/ui` directories.
+
+To run for just one package, run `$ yarn test` from within the package directory.
+
+We use [react-testing-library] and [Jest] for unit tests. Test coverage is provided by [Istanbul], which comes built into Jest. Coverage reporting is enabled with the `--coverage` flag.
+
+You can find the configuration settings for Jest in `./packages/ui/package.json` under the `jest` prop, or under `./syndesis/package.json`.
+
+
+#### E2E testing
+
+To run all E2E tests, run the following from the [`./syndesis`](syndesis) dir: `$ yarn e2e`
+
+To run E2E tests directly in the terminal (and record results): `$ yarn e2e:terminal`
+
+Cypress will check the `baseUrl` you have configured, which should be your app server. If it cannot load it, it will not validate and will not run. The `baseUrl` is defined in [`./syndesis/cypress.json`](syndesis/cypress.json).
+
+E2E tests are written using [Cypress] and live in the [`./syndesis/cypress/integration`](syndesis/cypress/integration) directory. Fixtures are fixed sets of data loaded from files, and they can be found in [`./syndesis/cypress/fixtures`](syndesis/cypress/fixtures).
+
+You can find the configuration settings for Cypress under [`./syndesis/cypress.json`](syndesis/cypress.json).
+
+
+#### Integration testing
+
+Given that true integration tests would require extensive mocking of the app, we instead have a BE recorder/replayer that will resemble integration tests as closely as possible, using [Cypress].
+
+The `syndesis` dev server interacts with a given API via a proxy set up by CRA, records the responses, and allows you to replay those responses for later use (i.e. in tests). Recordings are stored in [`./syndesis/tapes/[value of the syndesis-mock-session request header]full/api/path/xxx.json5`](syndesis/tapes).
+
+To run the backend server:
+```
+$ BACKEND=https://syndesis-staging.b6ff.rh-idev.openshiftapps.com yarn start:proxy
+```
+
+To record a session: `$ yarn record`
+
+To replay a session: `$ yarn replay` or `$ yarn replay <session-name>`
+
+For more information, please see [this](https://github.com/syndesisio/syndesis-react/pull/106) PR.
+
 #### Adding test identifiers
 
 UI components that have user interaction should define a `data-testid` attribute. Here are a few components that might need a test identifier: `a`, `button`, `Button`, `ButtonLink`, `Card`, `DropdownItem`, `FormControl`, `Grid.Row`, `input`, `Label`, `li`, `Link`, `ListViewItem`, `PfNavLink`, `PfVerticalNavItem`, and `Title`.
@@ -652,14 +699,6 @@ When a test identifier needs to contain some user-defined text, like for a card,
 ```
 
 The above code produces this test ID an integration with the name of "My Integration": `integrations-list-item-my-integration-list-item`.
-
-#### Unit testing
-
-TODO talk about jest, react-testing-library, point out to useful resources.
-
-#### Integration testing
-
-TODO talk about Cypress, the backend, the mock recorder/replayer, how to write an integration test
 
 ## License
 

@@ -129,7 +129,6 @@ storiesOf('Integration/Detail', module)
               key={idx}
               name={s.name}
               icon={<div />}
-              isFirst={idx === 0}
             />
           ))}
         />

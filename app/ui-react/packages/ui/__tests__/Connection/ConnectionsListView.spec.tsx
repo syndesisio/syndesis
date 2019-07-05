@@ -1,7 +1,7 @@
 import { render } from 'react-testing-library';
 import * as React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { ConnectionsListView } from '../src/Connection';
+import { ConnectionsListView } from '../../src/Connection';
 
 it('renders the heading', () => {
   const noop = () => false;
