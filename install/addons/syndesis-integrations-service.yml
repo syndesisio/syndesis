@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: syndesis-integrations
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/component: integration
+    syndesis.io/type: infrastructure
+spec:
+  type: ClusterIP
+  clusterIP: None
+  ports:
+    - name: metrics
+      port: 9779
+  selector:
+    syndesis.io/app: syndesis
+    syndesis.io/component: integration
