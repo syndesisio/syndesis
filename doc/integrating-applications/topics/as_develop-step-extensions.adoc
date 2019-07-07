@@ -3,7 +3,7 @@
 
 :context: extensions
 [id='develop-step-extensions_{context}']
-= Alternatives for developing step extensions 
+= Examples of developing step extensions 
 :context: step-alternatives
 
 A step extension implements one or more custom steps. 
@@ -14,6 +14,7 @@ step extensions:
 
 * xref:example-route-xml-fragment_{context}[]
 * xref:example-route-builder_{context}[]
+* xref:example-route-builder-spring-boot_{context}[]
 * xref:example-camel-bean_{context}[]
 * xref:example-step-api_{context}[]
 
@@ -45,6 +46,8 @@ in a step extension.
 include::r_example-route-xml-fragment.adoc[leveloffset=+1]
 
 include::r_example-route-builder.adoc[leveloffset=+1]
+
+include::r_example-route-builder-spring-boot.adoc[leveloffset=+1]
 
 include::r_example-camel-bean.adoc[leveloffset=+1]
 
