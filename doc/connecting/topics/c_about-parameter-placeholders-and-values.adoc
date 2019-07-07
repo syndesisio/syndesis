@@ -5,15 +5,15 @@
 = About parameter placeholders and values in SQL statements that update data
 
 A database connection that is in the middle of a flow, or 
-that finishes a simple integration can execute a SQL statement 
+that finishes a simple integration, can execute a SQL statement 
 that updates data. When you add a database connection to an integration, 
 you can specify placeholder parameters in the SQL statement to be 
 executed. During execution, the connection can perform a batch update 
-from a collection of parameter values. 
+when the input parameter values are in a collection. 
 
 .Specifying parameters in SQL statements
 
-When you are creating or editing an integration and you add a 
+When you create or edit an integration and you add a 
 connection that updates a database, you can specify placeholder 
 parameters in the SQL statement that the connection executes at 
 runtime or there can be placeholders in the stored procedure 
