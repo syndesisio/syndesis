@@ -219,7 +219,7 @@ that you specify in the form control’s `enum` property.
 |Description
 
 |`type`
-| 
+|string 
 |Controls the kind of form control that {prodname} displays. See 
 the previous table for details. 
 
