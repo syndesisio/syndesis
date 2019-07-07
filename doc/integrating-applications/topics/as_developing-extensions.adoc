@@ -8,8 +8,9 @@
 
 If {prodname} does not provide a feature that is needed to create an
 integration, then an expert developer 
-can code an extension that provides the needed behavior.  The
-https://github.com/syndesisio/syndesis-extensions[Syndesis extensions repository]
+can code an extension that provides the needed behavior.  The Syndesis 
+extension repository, 
+https://github.com/syndesisio/syndesis-extensions[], 
 contains examples of extensions. 
 
 A business integrator shares requirements with a developer who codes the 
@@ -33,7 +34,7 @@ developing extensions in an IDE that you choose.
 * xref:description-kinds-extensions_{context}[]
 * xref:overview-extension-content-structure_{context}[]
 * xref:about-extension-definitions_{context}[]
-* xref:about-properties-in-extension-definitions_{context}[]
+* xref:descriptions-of-user-interface-properties-in-extension-definitions_{context}[]
 * xref:using-maven-to-generate-extension-definitions_{context}[]
 * xref:how-to-specify-data-shapes_{context}[]
 * xref:develop-step-extensions_{context}[]
@@ -49,7 +50,7 @@ include::c_overview-extension-content-structure.adoc[leveloffset=+1]
 
 include::c_about-extension-definitions.adoc[leveloffset=+1]
 
-include::c_about-properties-in-extension-definitions.adoc[leveloffset=+1]
+include::r_descriptions-of-user-interface-properties-in-extension-definitions.adoc[leveloffset=+1]
 
 include::p_using-maven-to-generate-extension-definitions.adoc[leveloffset=+1]
 

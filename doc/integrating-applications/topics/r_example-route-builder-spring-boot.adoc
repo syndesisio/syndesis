@@ -1,12 +1,14 @@
 // This module is included in the following assembly:
 // as_develop-step-extensions.adoc
 
-[id='example-route-builder_{context}']
-= Example of developing a Camel route with `RouteBuilder`
+[id='example-route-builder-spring-boot_{context}']
+= Example of developing a Camel route with `RouteBuilder` and Spring Boot
 
 You can implement a custom step by developing an action as a Camel
-route with the support of the `RouteBuilder` class. Such a route
-has an input such as `direct`. Syndesis invokes this route in the same
+route with the support of the `RouteBuilder` class as well as Spring Boot. 
+In this example, Spring Boot is the facility for registering a 
+`RouteBuilder` object in a Camel context. 
+Syndesis invokes this route in the same
 way that it invokes any other Camel route. 
 
 To implement the example that creates a step that logs the body of a 
@@ -14,39 +16,47 @@ message with an optional prefix, you can write something like this:
 
 [source,java]
 ----
-import org.apache.camel.builder.RouteBuilder;
 
 import io.syndesis.extension.api.annotations.Action;
 import io.syndesis.extension.api.annotations.ConfigurationProperty;
+import org.apache.camel.builder.RouteBuilder;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Action( // <1>
-    id = "log-body-with-prefix",
-    name = "Log body with prefix",
-    description = "A simple body log with a prefix",
-    entrypoint = "direct:log")
-public class LogAction extends RouteBuilder {
+@Configuration
+public class ActionsConfiguration {
+
+    @Action( // <1>
+        id = "log-body-with-prefix",
+        name = "Log body with prefix",
+        description = "A simple body log with a prefix",
+        entrypoint = "direct:log")
     @ConfigurationProperty( // <2>
         name = "prefix",
         description = "The Log body prefix message",
         displayName = "Log Prefix",
         type = "string")
-    private String prefix;
-
-    @Override
-    public void configure() throws Exception {
-        from("direct::start") // <3>
-            .choice()
-                .when(simple("${header.prefix} != ''"))
-                    .log("${header.prefix} ${body}")
-                .otherwise()
-                    .log("Output ${body}")
-            .endChoice();
+    @Bean // <3>
+    public RouteBuilder logBodyWithprefix() {
+        return new RouteBuilder() {
+            @Override
+            public void configure() throws Exception {
+                from("direct::start") // <4>
+                    .choice()
+                        .when(simple("${header.prefix} != ''"))
+                            .log("${header.prefix} ${body}")
+                        .otherwise()
+                            .log("Output ${body}")
+                    .endChoice();
+             }
+        };
     }
 }
 ----
 <1> The `@Action` annotation indicates the action definition.
 <2> The `@ConfigurationProperty` annotation indicates the property definition.
-<3> This is the action implementation. 
+<3> Register the `RouteBuilder` object as a bean. 
+<4> This is the action implementation. 
 
 This Java code uses Syndesis annotations, which means that the
 `extension-maven-plugin` can automatically generate the action definition.
@@ -62,7 +72,6 @@ like this:
   "descriptor": {
     "kind": "ENDPOINT", <1>
     "entrypoint": "direct:log", <2>
-    "resource": "class:io.syndesis.extension.log.LogAction", <3>
     "inputDataShape": {
       "kind": "none"
     },
@@ -72,7 +81,7 @@ like this:
     "propertyDefinitionSteps": [ {
       "description": "extension-properties",
       "name": "extension-properties",
-      "properties": { <4>
+      "properties": { <3>
         "prefix": {
           "componentProperty": false,
           "deprecated": false,
@@ -93,10 +102,22 @@ like this:
 ----
 <1> The type of action is `ENDPOINT`. The runtime invokes a Camel endpoint to execute the action that this step implements.
 <2> This is the Camel endpoint to invoke. It is the `from` specification in the route.
-<3> This is the class that implements `RoutesBuilder`.
-<4> These are the properties that the action defined in this custom step
+<3> These are the properties that the action defined in this custom step
 exposes to the integrator who will be adding this step to an integration. In 
 {prodname}, each value that the integrator specifies in the user interface
 gets mapped to a message header that has the same name as the property. 
 In this example, the integrator will see one input field, with the
 *Log Prefix* display name. 
+
+[IMPORTANT]
+====
+To make configuration classes discoverable by Spring Boot, you 
+must list them in a file named `META-INF/spring.factories`, for example: 
+
+`org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.company.ActionsConfiguration`
+====
+
+With Spring Boot, every bean that you eventually register in your 
+configuration classes is available to the Camel context. For details, see 
+the Spring Boot documentation for 
+link:https://docs.spring.io/spring-boot/docs/1.5.11.RELEASE/reference/html/boot-features-developing-auto-configuration.html[Creating your own auto-configuration].

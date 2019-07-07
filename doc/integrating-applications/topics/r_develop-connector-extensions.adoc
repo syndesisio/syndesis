@@ -26,28 +26,32 @@ structures:
 
 * `componentScheme`
 +
-Defines the Camel component that the connector uses. For example, `telegram`. 
+Defines the Camel component that the connector uses. 
+You can set `componentScheme` for the connector or for actions. 
+Actions have precedence. 
 
 * `connectorCustomizers`
 +
 Specifies a list of classes that implement the 
-https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyCustomizer.java[ComponentProxyCustomizer] 
+link:https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyCustomizer.java[ComponentProxyCustomizer] 
 class. Each class customizes the behavior of a connector. For example,
 a class might manipulate
 properties before they are applied to the underlying component/endpoint, 
 or a class might add pre/post endpoint logic. For each class, specify 
 the full class name of the implementation, for example, `com.mycomponent.MyCustomizer`. 
+You can set `connectorCustomizers` on actions as well as connectors. 
+According to what is set, 
+{prodname} applies customizers to the connector first and then to 
+actions. 
 
 * `connectorFactory`
 +
 Defines the class that implements the
-https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyFactory.java[ComponentProxyFactory] 
+link:https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyFactory.java[ComponentProxyFactory] 
 class, which creates and/or configures the underlying component/endpoint.  
 Specify the full class name of the implementation. 
-
-You can set the above data structures at the action level or at the
-global level. Settings at the action level 
-have precedence over the same items defined at global level.
+You can set `connectorFactory` for the connector or for actions. 
+Actions have precedence. 
 
 .Customizer example
 
@@ -92,7 +96,7 @@ public class DataSourceCustomizer implements ComponentProxyCustomizer, CamelCont
     }
 }
 ----
-<1> &nbsp;By implementing `CamelContextAware`, Syndesis injects the Camel context and then invoking the customize method. 
+<1> &nbsp;By implementing `CamelContextAware`, Syndesis injects the Camel context and then invokes the customize method. 
 <2> &nbsp;Processes options and then removes them from the options map.
 
 .Example of injecting properties
@@ -168,7 +172,7 @@ public class DataSourceCustomizer implements ComponentProxyCustomizer, CamelCont
 <1> &nbsp;By implementing `CamelContextAware`, Syndesis injects the Camel context 
 and then invokes the customize method. This sample code overrides the 
 `setCamelContext()` and `getCamelContext()` methods, and sets the user name. 
-<2> &nbsp;Starting here, the sample code processes the injected options and 
+<2> &nbsp;The sample code processes the injected options and 
 automatically removes them from the options map.
 
 .Using a customizer to configure before/after logic
@@ -206,9 +210,12 @@ public class AWSS3DeleteObjectCustomizer implements ComponentProxyCustomizer {
 
 .Customizing behavior of `ComponentProxyComponent`
 
+The 
+link:https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyFactory.java[ComponentProxyFactory] 
+class creates and/or configures the underlying component/endpoint. 
 To customize the behavior of the 
 https://github.com/syndesisio/syndesis/blob/master/app/integration/component-proxy/src/main/java/io/syndesis/integration/component/proxy/ComponentProxyComponent.java[ComponentProxyComponent] 
-class, you can override any of the following methods:
+object that `ComponentProxyFactory` creates, you can override any of the following methods:
 
 * `createDelegateComponent()`
 +
