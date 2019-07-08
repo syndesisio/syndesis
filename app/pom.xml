@@ -117,7 +117,7 @@
     <powermock.version>2.0.0</powermock.version>
     <testcontainers.version>1.10.6</testcontainers.version>
 
-    <spring-security.version>4.2.12.RELEASE</spring-security.version>
+    <spring-security.version>4.2.13.RELEASE</spring-security.version>
     <resteasy.version>3.6.1.Final</resteasy.version>
     <resteasy-spring-boot-starter.version>1.0.1.Final</resteasy-spring-boot-starter.version>
 
