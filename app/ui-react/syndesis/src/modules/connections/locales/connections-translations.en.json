@@ -15,8 +15,6 @@
   "errorValidatingDetails": "Unexpected server error validating the connection details.",
   "errorValidatingName": "Unexpected server error validating connection name.",
   "namePlaceholder": "Must enter a connection name...",
-  "techPreview": "Technology Preview",
-  "techPreviewPopoverHtml": "<a href='https://access.redhat.com/support/offerings/techpreview' rel='nofollow' target='_blank' role='link'>Technology Previews</a> provide early access to features that are not yet supported. Feedback about these features is welcome. Send a message to <a href='mailto:fuse-online-tech-preview@redhat.com'>fuse-online-tech-preview@redhat.com</a>.",
   "usedByOne": "Used by 1 integration",
   "usedByMulti": "Used by integrations {{count}} times",
   "create": {

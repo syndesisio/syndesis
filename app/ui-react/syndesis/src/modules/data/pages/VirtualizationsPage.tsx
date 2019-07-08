@@ -229,11 +229,11 @@ export class VirtualizationsPage extends React.Component {
                                         'virtualization.virtualizationsPageDescription'
                                       )}
                                       isTechPreview={true}
-                                      i18nTechPreview={t('virtualization.techPreview')}
+                                      i18nTechPreview={t('shared:techPreview')}
                                       techPreviewPopoverHtml={
                                         <span
                                           dangerouslySetInnerHTML={{
-                                            __html: t('virtualization.techPreviewPopoverHtml'),
+                                            __html: t('shared:techPreviewPopoverHtml'),
                                           }}
                                         />
                                       }

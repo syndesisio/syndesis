@@ -133,7 +133,7 @@ export class ConnectorsPage extends React.Component {
                                             i18nConfigRequired={t(
                                               'configurationRequired'
                                             )}
-                                            i18nTechPreview={t('techPreview')}
+                                            i18nTechPreview={t('shared:techPreview')}
                                             icon={
                                               <EntityIcon
                                                 entity={connector}
@@ -154,7 +154,7 @@ export class ConnectorsPage extends React.Component {
                                               <span
                                                 dangerouslySetInnerHTML={{
                                                   __html: t(
-                                                    'techPreviewPopoverHtml'
+                                                    'shared:techPreviewPopoverHtml'
                                                   ),
                                                 }}
                                               />
