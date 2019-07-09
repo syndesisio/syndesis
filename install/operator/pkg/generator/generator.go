@@ -34,6 +34,7 @@ type syndesisImages struct {
 	Verifier string
 	S2i      string
 	Upgrade  string
+	Komodo   string
 }
 
 type images struct {
@@ -44,6 +45,7 @@ type images struct {
 	OAuthProxyImagePrefix       string
 	PrometheusImagePrefix       string
 	PostgresExporterImagePrefix string
+	KomodoImagesPrefix          string
 }
 
 type tags struct {
@@ -53,6 +55,7 @@ type tags struct {
 	Prometheus       string
 	Upgrade          string
 	PostgresExporter string
+	Komodo           string
 }
 
 type Context struct {
@@ -70,6 +73,7 @@ type Context struct {
 	PrometheusRules  string
 	Env              map[string]string
 	Syndesis         *v1alpha1.Syndesis
+	IncludeDint      bool
 }
 
 // TODO: Could be added from a local configuration file
@@ -81,6 +85,7 @@ func CreateSyndesisContext() Context {
 			OAuthProxyImagePrefix:       "quay.io/openshift",
 			PrometheusImagePrefix:       "prom",
 			PostgresExporterImagePrefix: "wrouesnel",
+			KomodoImagesPrefix:          "teiid",
 			Support: supportImages{
 				Postgresql:       "postgresql",
 				OAuthProxy:       "oauth-proxy",
@@ -94,6 +99,7 @@ func CreateSyndesisContext() Context {
 				Verifier: "syndesis-meta",
 				S2i:      "syndesis-s2i",
 				Upgrade:  "syndesis-upgrade",
+				Komodo:   "komodo-server",
 			},
 		},
 		Tags: tags{
@@ -114,6 +120,7 @@ func CreateProductContext() Context {
 			OAuthProxyImagePrefix:       "openshift",
 			PrometheusImagePrefix:       "prom",
 			PostgresExporterImagePrefix: "wrouesnel",
+			KomodoImagesPrefix:          "dv",
 			Support: supportImages{
 				Postgresql:       "postgresql",
 				OAuthProxy:       "oauth-proxy",
@@ -126,6 +133,7 @@ func CreateProductContext() Context {
 				Verifier: "fuse-ignite-meta",
 				S2i:      "fuse-ignite-s2i",
 				Upgrade:  "fuse-ignite-upgrade",
+				Komodo:   "fuse-komodo-server",
 			},
 		},
 		Tags: tags{
