@@ -6,7 +6,7 @@
 
 If an access token has an expiration date, then {prodname} integrations 
 that use that token to connect to an application stop running successfully 
-when the taken expires. To obtain a new access token, you must 
+when the token expires. To obtain a new access token, you must 
 either reconnect to the application or re-register with the application. 
 
 If you need to, you can change this default behavior so that
