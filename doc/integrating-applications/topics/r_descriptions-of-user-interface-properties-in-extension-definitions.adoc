@@ -2,10 +2,11 @@
 // as_developing-extensions.adoc
 
 [id='descriptions-of-user-interface-properties-in-extension-definitions_{context}']
-= Descriptions of user interface properties in extension definition JSON file
+= Descriptions of user interface properties 
 
 In connector extensions and step extensions, specify user interface
-properties in the extension definition JSON file. The settings of these 
+properties in the extension definition JSON file or in Java class files.
+The settings of these 
 properties define the HTML form controls that {prodname} displays when a
 {prodname} user creates a connection, configures a connection action, 
 or configures a step that is provided by the extension. 
@@ -116,7 +117,49 @@ looks like this:
                      ...,
                      }
  } } ]
-----         
+----    
+
+.About user interface properties in Java files
+
+To define user interface form controls in Java files, import 
+`io.syndesis.extension.api.annotations.ConfigurationProperty` in each class 
+file that defines user configuration of a connection, action, or step. 
+For each form control that you want the {prodname} console to display, 
+specify the `@ConfigurationProperty` annotation, followed by a list of 
+properties. For information about the properties that you can specify, 
+see the user interface property reference table at the end of this section.  
+
+The following code shows property definitions for one form control. 
+This code is in the example of developing a Camel route with `RouteBuilder`: 
+
+----
+public class LogAction extends RouteBuilder {
+    @ConfigurationProperty( 
+        name = "prefix",
+        description = "The Log body prefix message",
+        displayName = "Log Prefix",
+        type = "string")
+----
+
+The following code shows property definitions for two controls.
+This code is from the example of using the Syndesis Step API: 
+
+----
+@Action(id = "split", name = "Split", description = "Split your exchange")
+public class SplitAction implements Step {
+
+    @ConfigurationProperty(
+        name = "language",
+        displayName = "Language",
+        description = "The language used for the expression")
+    private String language;
+
+    @ConfigurationProperty(
+        name = "expression",
+        displayName = "Expression",
+        description = "The expression used to split the exchange
+     private String language;
+----     
          
 .Descriptions of control form input types
 
@@ -197,7 +240,13 @@ that you specify in the form control’s `enum` property.
 
 |===
 
-.User interface property reference
+.Descriptions of control form user interface properties
+
+In a connector or step extension, for each HTML form control that 
+appears in the {prodname} console, you can specify one or more of the 
+properties described in the following table. 
+For details about HTML form input types, see 
+link:https://www.w3schools.com/html/html_form_input_types.asp[https://www.w3schools.com/html/html_form_input_types.asp].
 
 [options="header"]
 [cols="1,1,2"]
