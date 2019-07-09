@@ -1,0 +1,107 @@
+[id='monitoring-operator-installation']
+= Monitoring Syndesis
+
+Monitoring of Syndesis is provided by Prometheus. Visualization of metrics collected by Prometheus is provided by Grafana. Both applications are installed by Kubernetes operators.
+
+The following guide explains how to set up and deploy the monitoring stack for Syndesis.
+
+== Installing the monitoring stack
+
+The simplest way of deploying Prometheus and Grafana is with the Application Monitoring operator. Follow the installation instructions defined in the operator's link:https://github.com/integr8ly/application-monitoring-operator/blob/master/README.md[documentation].
+
+== Installing the Syndesis infrastructure monitoring configuration
+
+If the Syndesis installer has not applied the infrastructure monitoring configuration resources to the cluster, they can be installed manually as follows:
+
+----
+BASEURL=https://raw.githubusercontent.com/syndesisio/syndesis/1.7.x/install/addons
+
+for ADDON in syndesis-db-dashboard.yml \
+  syndesis-db-prometheus-rule.yml \
+  syndesis-db-servicemonitor.yml \
+  syndesis-jvm-dashboard.yml \
+  syndesis-meta-servicemonitor.yml \
+  syndesis-rest-api-dashboard.yml \
+  syndesis-rest-api-prometheus-rule.yml \
+  syndesis-server-servicemonitor.yml
+do
+  oc create -f ${BASEURL}/${ADDON}
+done
+----
+
+== Installing the Syndesis integrations monitoring configuration
+
+If the Syndesis installer has not applied the integrations monitoring configuration resources to the cluster, they can be installed manually as follows:
+
+----
+BASEURL=https://raw.githubusercontent.com/syndesisio/syndesis/1.7.x/install/addons
+
+for ADDON in syndesis-integration-dashboard.yml \
+  syndesis-integrations-service.yml \
+  syndesis-integrations-servicemonitor.yml
+do
+  oc create -f ${BASEURL}/${ADDON}
+done
+----
+
+== Application metrics
+
+=== Syndesis Server
+
+The syndesis-server application has been instrumented with link:https://micrometer.io/[Micrometer] and exposes all the JVM metrics Micrometer automatically exposes by default. Additionally, syndesis-server also exposes metrics about the REST API endpoints, such as request rate, error rate, and latency.
+
+=== Syndesis Meta
+
+Similarly to syndesis-server, syndesis-meta has also been instrumented with link:https://micrometer.io/[Micrometer] and exposes all the JVM metrics Micrometer automatically exposes by default. It also exposes metrics about its REST API endpoints.
+
+=== Syndesis DB
+
+The Postgres metrics are exported using a link:https://github.com/wrouesnel/postgres_exporter[third-party Prometheus exporter]. Check the project for more details.
+
+=== Integrations
+
+The integration metrics are exported using the official link:https://github.com/prometheus/jmx_exporter[JMX exporter], which exposes several JVM metrics by default. Additionally, integration metrics also expose Camel specific metrics, such as message rate and error rate.
+
+== Accessing Grafana dashboards
+
+To access Grafana, browse the list of routes in the OpenShift console for the project where the application monitoring operator is installed. There will be an entry named 'grafana-route', click the hostname URL to view the Grafana console.
+
+There are 3 infrastructure dashboards which can be accessed by clicking on the dashboard selector at the top of the screen.
+
+[%header,cols=2*]
+|===
+|Name
+|Description
+
+|Syndesis - Infrastructure - DB
+|Displays metrics related to the Syndesis Postgres instance.
+
+|Syndesis - Infrastructure - JVM
+|Displays metrics about the running JVM for the syndesis-meta or syndesis-server applications. The application to monitor can be chosen from the 'Application' drop down list at the top of the dashboard.
+
+|Syndesis - Infrastructure - REST APIs
+|Displays metrics relating to the Syndesis infrastructure API endpoints such as request throughput and latency. The application to monitor can be chosen from the 'Application' drop down list at the top of the dashboard.
+|===
+
+There is one integration dashboard which can be accessed by clicking on the dashboard selector at the top of the screen.
+
+[%header,cols=2*]
+|===
+|Name
+|Description
+
+|Syndesis - Integration - Camel
+|Displays the standard metrics exposed by Apache Camel integration applications.
+|===
+
+== Accessing Prometheus
+
+To access Prometheus, browse the list of routes in the OpenShift console for the project where the application monitoring operator is installed. There will be an entry named 'prometheus-route', click the hostname URL to view the Prometheus console.
+
+Clicking the 'Alerts' menu item will list the alert rules configured for the Syndesis infrastructure components.
+
+== Accessing Alertmanager
+
+To access Prometheus Alertmanager, browse the list of routes in the OpenShift console for the project where the application monitoring operator is installed. There will be an entry named 'alertmanager-route', click the hostname URL to view the Alertmanager console.
+
+If the Syndesis infrastructure is healthy, the default view will be empty. If any of the infrastructure components become unhealthy, any active alerts that have been fired will be listed, together with the option to silence them.
