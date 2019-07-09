@@ -50,13 +50,13 @@ export class EditorSteps extends React.Component<IEditorStepsProps> {
                         href={this.props.getEditorStepHref(s)}
                         i18nCannotDelete={t('cannotDelete')}
                         i18nConfigRequired={t('configurationRequired')}
-                        i18nTechPreview={t('techPreview')}
+                        i18nTechPreview={t('shared:techPreview')}
                         isConfigRequired={s.isConfigRequired}
                         isTechPreview={s.isTechPreview}
                         techPreviewPopoverHtml={
                           <span
                             dangerouslySetInnerHTML={{
-                              __html: t('techPreviewPopoverHtml'),
+                              __html: t('shared:techPreviewPopoverHtml'),
                             }}
                           />
                         }

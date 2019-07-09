@@ -1,0 +1,27 @@
+.simple-page-header__title_tech-preview {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.simple-page-header__title_tech-preview > * {
+  margin-bottom: 4px;
+}
+
+.simple-page-header__title_tech-preview + .simple-page-header__description {
+  margin-top: -4px;
+}
+
+.simple-page-header__title_tech-preview .simple-page-header__title-text {
+  margin-right: 16px;
+}
+
+.simple-page-header__tech-preview-text {
+  font-size: 14px;
+  border: 1px solid black;
+  padding: 3px 4px;
+}
+
+.simple-page-header__tech-preview-icon {
+  margin-left: 4px;
+}
