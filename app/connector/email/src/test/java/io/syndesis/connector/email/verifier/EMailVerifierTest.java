@@ -17,6 +17,7 @@ package io.syndesis.connector.email.verifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.entry;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeThat;
 import java.util.HashMap;
 import java.util.List;
@@ -67,6 +68,123 @@ public class EMailVerifierTest extends AbstractEmailServerTest {
         assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
         assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.PARAMETERS);
         assertThat(responses).allMatch(response -> response.getStatus() == Verifier.Status.OK);
+    }
+
+    @Test
+    public void testFailureTimeoutForVerifyWithImapsServer() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PROTOCOL, "imap");
+        // No secure type set
+        parameters.put(HOST, imapsServer().getHost());
+        parameters.put(PORT, imapsServer().getPort());
+        parameters.put(USER, TEST_ADDRESS);
+        parameters.put(PASSWORD, TEST_PASSWORD);
+
+        /*
+         * With no secure type, the connection to the mail store will fail & timeout
+         * However, we want it to fail fast & return fast.
+         *
+         * Add a timeout property to cut the default timeout (10secs) to a more
+         * test-friendly time of 2secs.
+         */
+        long timeout = 2000L;
+        parameters.put(CONNECTION_TIMEOUT, Long.toString(timeout));
+        Verifier verifier = new ReceiveEMailVerifier();
+
+        /*
+         * Time to operation to ensure the timeout is working correctly.
+         */
+        long startTime = System.currentTimeMillis();
+        List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
+        long stopTime = System.currentTimeMillis();
+
+        // Time should be roughly equal to the timeout set
+        assertTrue((stopTime - startTime) <= (timeout + 1000L)); // extra second for processing time
+
+        assertThat(responses).hasSize(2);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.PARAMETERS);
+
+        assertThat(responses.get(0).getStatus()).isEqualTo(Verifier.Status.OK);
+        assertThat(responses.get(1).getStatus()).isEqualTo(Verifier.Status.ERROR);
+    }
+
+    @Test
+    public void testFailureTimeoutForVerifyWithPop3sServer() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PROTOCOL, "pop3");
+        // No secure type set
+        parameters.put(HOST, pop3sServer().getHost());
+        parameters.put(PORT, pop3sServer().getPort());
+        parameters.put(USER, TEST_ADDRESS);
+        parameters.put(PASSWORD, TEST_PASSWORD);
+
+        /*
+         * With no secure type, the connection to the mail store will fail & timeout
+         * However, we want it to fail fast & return fast.
+         *
+         * Add a timeout property to cut the default timeout (10secs) to a more
+         * test-friendly time of 2secs.
+         */
+        long timeout = 2000L;
+        parameters.put(CONNECTION_TIMEOUT, Long.toString(timeout));
+        Verifier verifier = new ReceiveEMailVerifier();
+
+        /*
+         * Time to operation to ensure the timeout is working correctly.
+         */
+        long startTime = System.currentTimeMillis();
+        List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
+        long stopTime = System.currentTimeMillis();
+
+        // Time should be roughly equal to the timeout set
+        assertTrue((stopTime - startTime) <= (timeout + 5000L)); // pop3 connect is quite slow so few extra seconds for processing time
+
+        assertThat(responses).hasSize(2);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.PARAMETERS);
+
+        assertThat(responses.get(0).getStatus()).isEqualTo(Verifier.Status.OK);
+        assertThat(responses.get(1).getStatus()).isEqualTo(Verifier.Status.ERROR);
+    }
+
+    @Test
+    public void testFailureTimeoutForVerifyWithSmtpsServer() throws Exception {
+        Map<String, Object> parameters = new HashMap<>();
+        parameters.put(PROTOCOL, "smtp");
+        // No secure type set
+        parameters.put(HOST, smtpsServer().getHost());
+        parameters.put(PORT, smtpsServer().getPort());
+        parameters.put(USER, TEST_ADDRESS);
+        parameters.put(PASSWORD, TEST_PASSWORD);
+
+        /*
+         * With no secure type, the connection to the mail store will fail & timeout
+         * However, we want it to fail fast & return fast.
+         *
+         * Add a timeout property to cut the default timeout (10secs) to a more
+         * test-friendly time of 2secs.
+         */
+        long timeout = 2000L;
+        parameters.put(CONNECTION_TIMEOUT, Long.toString(timeout));
+        Verifier verifier = new SendEMailVerifier();
+
+        /*
+         * Time to operation to ensure the timeout is working correctly.
+         */
+        long startTime = System.currentTimeMillis();
+        List<VerifierResponse> responses = verifier.verify(context, "email", parameters);
+        long stopTime = System.currentTimeMillis();
+
+        // Time should be roughly equal to the timeout set
+        assertTrue((stopTime - startTime) <= (timeout + 3000L)); // pop3 connect is quite slow so few extra seconds for processing time
+
+        assertThat(responses).hasSize(2);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.CONNECTIVITY);
+        assertThat(responses).anyMatch(response -> response.getScope() == Verifier.Scope.PARAMETERS);
+
+        assertThat(responses.get(0).getStatus()).isEqualTo(Verifier.Status.OK);
+        assertThat(responses.get(1).getStatus()).isEqualTo(Verifier.Status.ERROR);
     }
 
     @Test

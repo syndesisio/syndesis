@@ -33,6 +33,8 @@ import io.syndesis.connector.support.util.ConnectorOptions;
 
 public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExtension implements EMailConstants {
 
+    protected static final long DEFAULT_CONNECTION_TIMEOUT = 5000L;
+
     public AbstractEMailVerifier(String defaultScheme) {
         super(defaultScheme);
     }
@@ -69,6 +71,31 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
             default:
                 // Nothing required
         }
+    }
+
+    private void setJavaMailProperty(MailConfiguration configuration, String key, String value) {
+        configuration.getAdditionalJavaMailProperties().setProperty(key, value);
+    }
+
+    /**
+     * Sets the connection timeout property, eg. mail.imap.connectiontimeout, to 'value' seconds.
+     * This is necessary for situations where requests to initiate mail connections have themselves a
+     * default timeout, eg. http requests, and therefore this timeout needs to be shortened.
+     *
+     * @param parameters
+     * @param configuration
+     * @param value
+     */
+    protected void setConnectionTimeoutProperty(Map<String, Object> parameters,
+                                                MailConfiguration configuration, String timeoutValue) {
+        Protocol protocol = ConnectorOptions.extractOptionAndMap(parameters, PROTOCOL, Protocol::getValueOf);
+        Protocol plainProtocol = protocol.toPlainProtocol();
+        Protocol secureProtocol = protocol.toSecureProtocol();
+
+        setJavaMailProperty(configuration, "mail." + plainProtocol.id() + ".connectiontimeout", timeoutValue);
+        setJavaMailProperty(configuration, "mail." + plainProtocol.id() + ".timeout", timeoutValue);
+        setJavaMailProperty(configuration, "mail." + secureProtocol.id() + ".connectiontimeout", timeoutValue);
+        setJavaMailProperty(configuration, "mail." + secureProtocol.id() + ".timeout", timeoutValue);
     }
 
     @SuppressWarnings("PMD")
