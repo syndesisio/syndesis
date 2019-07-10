@@ -17,11 +17,17 @@ package io.syndesis.server.api.generator.swagger.util;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import io.swagger.models.Operation;
+import io.swagger.models.Swagger;
+import io.swagger.models.auth.ApiKeyAuthDefinition;
+import io.swagger.models.auth.In;
 import io.syndesis.common.model.Violation;
+import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.APIValidationContext;
 import io.syndesis.server.api.generator.swagger.AbstractSwaggerConnectorTest;
 import io.syndesis.server.api.generator.swagger.SwaggerModelInfo;
@@ -31,13 +37,46 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import static io.syndesis.server.api.generator.swagger.TestHelper.resource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.entry;
 
 public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
+
+    @Test
+    public void convertingToJsonShouldNotLooseSecurityDefinitions() throws JsonProcessingException, IOException {
+        final String definition = "{\"swagger\":\"2.0\",\"securityDefinitions\": {\n" +
+            "        \"api-key-header\": {\n" +
+            "            \"type\": \"apiKey\",\n" +
+            "            \"name\": \"API-KEY\",\n" +
+            "            \"in\": \"header\"\n" +
+            "        },\n" +
+            "        \"api-key-parameter\": {\n" +
+            "            \"type\": \"apiKey\",\n" +
+            "            \"name\": \"api_key\",\n" +
+            "            \"in\": \"query\"\n" +
+            "        }\n" +
+            "    }}";
+
+        final JsonNode node = SwaggerHelper.convertToJson(definition);
+
+        final JsonNode securityDefinitions = node.get("securityDefinitions");
+
+        assertThat(securityDefinitions.get("api-key-header")).isEqualTo(newNode()
+            .put("type", "apiKey")
+            .put("name", "API-KEY")
+            .put("in", "header"));
+
+        assertThat(securityDefinitions.get("api-key-parameter")).isEqualTo(newNode()
+            .put("type", "apiKey")
+            .put("name", "api_key")
+            .put("in", "query"));
+    }
 
     @Test
     public void convertingToJsonShouldNotLooseSecurityRequirements() throws JsonProcessingException, IOException {
@@ -46,6 +85,47 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
         assertThat(node.get("paths").get("/api").get("get").get("security"))
             .hasOnlyOneElementSatisfying(securityRequirement -> assertThat(securityRequirement.get("secured"))
                 .hasOnlyOneElementSatisfying(scope -> assertThat(scope.asText()).isEqualTo("scope")));
+    }
+
+    @Test
+    public void minimizingShouldNotLooseMultipleKeySecurityRequirements() throws JsonProcessingException, IOException {
+        final String definition = "{\"swagger\":\"2.0\",\"paths\":{\"/api\":{\"get\":{\"security\":[{\"secured1\":[]},{\"secured2\":[]}]}}}}";
+
+        final Swagger swagger = OpenApiHelper.parse(definition);
+
+        final String minimizedString = SwaggerHelper.minimalSwaggerUsedByComponent(swagger);
+
+        final Swagger minimized = OpenApiHelper.parse(minimizedString);
+
+        final Operation getApi = minimized.getPath("/api").getGet();
+        assertThat(getApi.getSecurity()).containsExactly(Collections.singletonMap("secured1", Collections.emptyList()),
+            Collections.singletonMap("secured2", Collections.emptyList()));
+    }
+
+    @Test
+    public void minimizingShouldNotLooseSecurityDefinitions() throws JsonProcessingException, IOException {
+        final String definition = "{\"swagger\":\"2.0\",\"securityDefinitions\": {\n" +
+            "        \"api-key-header\": {\n" +
+            "            \"type\": \"apiKey\",\n" +
+            "            \"name\": \"API-KEY\",\n" +
+            "            \"in\": \"header\"\n" +
+            "        },\n" +
+            "        \"api-key-parameter\": {\n" +
+            "            \"type\": \"apiKey\",\n" +
+            "            \"name\": \"api_key\",\n" +
+            "            \"in\": \"query\"\n" +
+            "        }\n" +
+            "    }}";
+
+        final Swagger swagger = OpenApiHelper.parse(definition);
+
+        final String minimizedString = SwaggerHelper.minimalSwaggerUsedByComponent(swagger);
+
+        final Swagger minimized = OpenApiHelper.parse(minimizedString);
+
+        assertThat(minimized.getSecurityDefinitions()).containsExactly(
+            entry("api-key-header", new ApiKeyAuthDefinition("API-KEY", In.HEADER)),
+            entry("api-key-parameter", new ApiKeyAuthDefinition("api_key", In.QUERY)));
     }
 
     @Test
@@ -152,5 +232,13 @@ public class SwaggerHelperTest extends AbstractSwaggerConnectorTest {
 
         assertThat(info.getErrors()).isEmpty();
         assertThat(info.getWarnings()).hasSize(2);
+    }
+
+    ArrayNode newArray() {
+        return OpenApiHelper.mapper().createArrayNode();
+    }
+
+    ObjectNode newNode() {
+        return OpenApiHelper.mapper().createObjectNode();
     }
 }
