@@ -228,6 +228,15 @@ export class VirtualizationsPage extends React.Component {
                                       i18nDescription={t(
                                         'virtualization.virtualizationsPageDescription'
                                       )}
+                                      isTechPreview={true}
+                                      i18nTechPreview={t('shared:techPreview')}
+                                      techPreviewPopoverHtml={
+                                        <span
+                                          dangerouslySetInnerHTML={{
+                                            __html: t('shared:techPreviewPopoverHtml'),
+                                          }}
+                                        />
+                                      }
                                     />
                                     <WithListViewToolbarHelpers
                                       defaultFilterType={filterByName}

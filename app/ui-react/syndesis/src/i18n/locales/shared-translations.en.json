@@ -111,7 +111,9 @@
       "syndesis009": "A connection has been deleted from this integration",
       "syndesis010": "Multiple extensions installed",
       "syndesis011": "A connection associated with this integration has been modified. To incorporate the changes, please edit the integration.",
-      "syndesis012": "The published integration has become obsolete and its recommended it should be republished."
+      "syndesis012": "The published integration has become obsolete and its recommended it should be republished.",
+      "techPreview": "Technology Preview",
+      "techPreviewPopoverHtml": "<a href='https://access.redhat.com/support/offerings/techpreview' rel='nofollow' target='_blank' role='link'>Technology Previews</a> provide early access to features that are not yet supported. Feedback about these features is welcome. Send a message to <a href='mailto:fuse-online-tech-preview@redhat.com'>fuse-online-tech-preview@redhat.com</a>."
     }
   }
 }

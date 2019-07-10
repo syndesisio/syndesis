@@ -97,7 +97,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                                     i18nConfigRequired={t(
                                       'configurationRequired'
                                     )}
-                                    i18nTechPreview={t('techPreview')}
+                                    i18nTechPreview={t('shared:techPreview')}
                                     isConfigRequired={c.isConfigRequired}
                                     isTechPreview={c.isTechPreview}
                                     menuProps={
@@ -128,7 +128,7 @@ export class Connections extends React.Component<IConnectionsProps> {
                                     techPreviewPopoverHtml={
                                       <span
                                         dangerouslySetInnerHTML={{
-                                          __html: t('techPreviewPopoverHtml'),
+                                          __html: t('shared:techPreviewPopoverHtml'),
                                         }}
                                       />
                                     }
