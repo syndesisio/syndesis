@@ -3,6 +3,7 @@ export * from './ViewsImportSteps';
 export * from './ViewCreateSteps';
 export * from './ViewInfosContent';
 export * from './DvConnections';
+export * from './VirtualizationHandlers';
 export * from './VirtualizationUtils';
 export * from './DvConnectionsWithToolbar';
 export * from './WithVirtualizationSqlClientForm';

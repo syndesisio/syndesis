@@ -1,4 +1,4 @@
-import { useVirtualizationHelpers, WithVirtualizations } from '@syndesis/api';
+import { WithVirtualizations } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
 import {
   IActiveFilter,
@@ -12,12 +12,12 @@ import {
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { useContext } from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppContext, UIContext } from '../../../app';
+import { AppContext } from '../../../app';
 import i18n from '../../../i18n';
 import { ApiError } from '../../../shared';
 import resolvers from '../resolvers';
+import { VirtualizationHandlers } from '../shared/VirtualizationHandlers';
 import {
   getOdataUrl,
   getPublishingDetails,
@@ -80,9 +80,8 @@ export function getVirtualizationsHref(baseUrl: string): string {
 export const VirtualizationsPage: React.FunctionComponent = () => {
 
   const appContext = React.useContext(AppContext);
-  const { pushNotification } = useContext(UIContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { deleteVirtualization, publishVirtualization, unpublishServiceVdb } = useVirtualizationHelpers();
+  const { handleDeleteVirtualization, handlePublishVirtualization, handleUnpublishServiceVdb } = VirtualizationHandlers();
 
   // TODO: implement handleImportVirt
   // const handleImportVirt = (virtualizationName: string) => {
@@ -95,73 +94,6 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
     alert('Export virtualization ');
   } */
 
-  const handlePublish = async (
-    virtualizationName: string,
-    hasViews: boolean
-  ) => {
-    if (hasViews) {
-      try {
-        await publishVirtualization(
-          virtualizationName
-        );
-
-        pushNotification(
-          t(
-            'virtualization.publishVirtualizationSuccess',
-            { name: virtualizationName }
-          ),
-          'success'
-        );
-      } catch (error) {
-        const details = error.error
-          ? error.error
-          : '';
-        pushNotification(
-          t(
-            'virtualization.publishVirtualizationFailed',
-            { name: virtualizationName, details }
-          ),
-          'error'
-        );
-      }
-    } else {
-      pushNotification(
-        t(
-          'virtualization.publishVirtualizationNoViews',
-          { name: virtualizationName }
-        ),
-        'error'
-      );
-    }
-  };
-  
-  const handleUnpublish = async (
-    serviceVdbName: string
-  ) => {
-    try {
-      await unpublishServiceVdb(serviceVdbName);
-
-      pushNotification(
-        t(
-          'virtualization.unpublishVirtualizationSuccess',
-          { name: serviceVdbName }
-        ),
-        'success'
-      );
-    } catch (error) {
-      const details = error.message
-        ? error.message
-        : '';
-      pushNotification(
-        t('virtualization.unpublishFailed', {
-          details,
-          name: serviceVdbName,
-        }),
-        'error'
-      );
-    }
-  };
-
   return appContext.config.datavirt.enabled === 0 ? (
     <SimplePageHeader
       i18nTitle={t('virtualization.virtualizationsPageTitle')}
@@ -170,25 +102,8 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
   ) : (
     <WithVirtualizations>
       {({ data, hasData, error, errorMessage, read }) => {
-        const handleDelete = async (virtualizationName: string) => {
-          try {
-            await deleteVirtualization(virtualizationName).then(read);
-            pushNotification(
-              t('virtualization.deleteVirtualizationSuccess', {
-                name: virtualizationName,
-              }),
-              'success'
-            );
-          } catch (error) {
-            const details = error.message ? error.message : '';
-            pushNotification(
-              t('virtualization.deleteVirtualizationFailed', {
-                details,
-                name: virtualizationName,
-              }),
-              'error'
-            );
-          }
+        const doDelete = async (virtualizationName: string) => {
+          await handleDeleteVirtualization(virtualizationName).then(read);
         };
         return (
           <>
@@ -333,14 +248,14 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
                                   i18nUnpublishModalTitle={t(
                                     'virtualization.unpublishModalTitle'
                                   )}
-                                  onDelete={handleDelete}
+                                  onDelete={doDelete}
                                   /* TD-636: Commented out for TP
                                       onExport={
                                         this
                                           .handleExportVirtualization
                                       } */
-                                  onUnpublish={handleUnpublish}
-                                  onPublish={handlePublish}
+                                  onUnpublish={handleUnpublishServiceVdb}
+                                  onPublish={handlePublishVirtualization}
                                   currentPublishedState={
                                     publishingDetails.state
                                   }
