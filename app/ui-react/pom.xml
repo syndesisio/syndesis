@@ -286,7 +286,7 @@
             <executions>
               <execution>
                 <id>download-node-sass</id>
-                <phase>initialize</phase>
+                <phase>generate-sources</phase>
                 <goals>
                   <goal>wget</goal>
                 </goals>
@@ -298,7 +298,7 @@
               </execution>
               <execution>
                 <id>download-iltorb</id>
-                <phase>initialize</phase>
+                <phase>generate-sources</phase>
                 <goals>
                   <goal>wget</goal>
                 </goals>
