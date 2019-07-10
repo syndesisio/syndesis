@@ -168,7 +168,7 @@
   "configuredProperties": {
     "authenticationType": "basic:username_password",
     "host": "https://hostname",
-    "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"operationId\":\"operation-0\",\"produces\":[\"application/json\"]},\"post\":{\"operationId\":\"operation-1\",\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"]}},\"/{id}\":{\"get\":{\"operationId\":\"operation-2\",\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]},\"put\":{\"operationId\":\"operation-3\",\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]},\"delete\":{\"operationId\":\"operation-4\",\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]}}}}"
+    "specification": "{\"swagger\":\"2.0\",\"host\":\"hostname\",\"basePath\":\"/api\",\"schemes\":[\"http\",\"https\"],\"paths\":{\"/\":{\"get\":{\"operationId\":\"operation-0\",\"produces\":[\"application/json\"]},\"post\":{\"operationId\":\"operation-1\",\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"]}},\"/{id}\":{\"get\":{\"operationId\":\"operation-2\",\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]},\"put\":{\"operationId\":\"operation-3\",\"consumes\":[\"application/json\"],\"produces\":[\"application/json\"],\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]},\"delete\":{\"operationId\":\"operation-4\",\"parameters\":[{\"name\":\"id\",\"in\":\"path\"}]}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
   },
   "connectorCustomizers": [
     "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",

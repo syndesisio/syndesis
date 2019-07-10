@@ -40,7 +40,6 @@ import io.swagger.models.properties.RefProperty;
 import io.swagger.parser.util.RemoteUrl;
 import io.swagger.parser.util.SwaggerDeserializationResult;
 import io.syndesis.common.model.Violation;
-import io.syndesis.common.util.Json;
 import io.syndesis.common.util.Resources;
 import io.syndesis.common.util.openapi.OpenApiHelper;
 import io.syndesis.server.api.generator.APIValidationContext;
@@ -86,7 +85,7 @@ public final class SwaggerHelper {
 
     static {
         try {
-            final JsonNode swagger20Schema = Json.reader().readTree(Resources.getResourceAsText(SWAGGER_2_0_SCHEMA_FILE));
+            final JsonNode swagger20Schema = OpenApiHelper.mapper().readTree(Resources.getResourceAsText(SWAGGER_2_0_SCHEMA_FILE));
             final LoadingConfiguration loadingConfiguration = LoadingConfiguration.newBuilder()
                 .preloadSchema(SWAGGER_IO_V2_SCHEMA_URI, swagger20Schema)
                 .freeze();
@@ -114,48 +113,50 @@ public final class SwaggerHelper {
      * data stored in the configured properties.
      */
     public static String minimalSwaggerUsedByComponent(final Swagger swagger) {
-        final ObjectNode json = Json.convertValue(swagger, ObjectNode.class);
+        final ObjectNode json = OpenApiHelper.mapper().convertValue(swagger, ObjectNode.class);
         json.remove(Arrays.asList("info", "tags", "definitions", "externalDocs"));
 
-        json.remove("securityDefinitions");
+        final JsonNode paths = json.get("paths");
 
-        json.get("paths").forEach(path -> {
-            path.forEach(operation -> {
-                final ObjectNode operationNode = (ObjectNode) operation;
-                operationNode.remove(Arrays.asList("tags", "summary", "description"));
-                final ArrayNode parameters = (ArrayNode) operation.get("parameters");
+        if (paths != null) {
+            paths.forEach(path -> {
+                path.forEach(operation -> {
+                    final ObjectNode operationNode = (ObjectNode) operation;
+                    operationNode.remove(Arrays.asList("tags", "summary", "description"));
+                    final ArrayNode parameters = (ArrayNode) operation.get("parameters");
 
-                if (parameters != null) {
-                    final List<JsonNode> parametersList = new ArrayList<>(
-                        StreamSupport.stream(parameters.spliterator(), false).collect(Collectors.toList()));
+                    if (parameters != null) {
+                        final List<JsonNode> parametersList = new ArrayList<>(
+                            StreamSupport.stream(parameters.spliterator(), false).collect(Collectors.toList()));
 
-                    for (final ListIterator<JsonNode> i = parametersList.listIterator(); i.hasNext();) {
-                        final ObjectNode param = (ObjectNode) i.next();
-                        param.remove(Arrays.asList("description", "type", "required", "format"));
+                        for (final ListIterator<JsonNode> i = parametersList.listIterator(); i.hasNext();) {
+                            final ObjectNode param = (ObjectNode) i.next();
+                            param.remove(Arrays.asList("description", "type", "required", "format"));
 
-                        if (!"path".equals(param.get("in").textValue()) && !"query".equals(param.get("in").textValue())) {
-                            i.remove();
+                            if (!"path".equals(param.get("in").textValue()) && !"query".equals(param.get("in").textValue())) {
+                                i.remove();
+                            }
+                        }
+
+                        if (parameters.size() == 0) {
+                            operationNode.remove("parameters");
+                        }
+
+                        if (parametersList.isEmpty()) {
+                            operationNode.remove("parameters");
+                        } else {
+                            parameters.removeAll();
+                            parameters.addAll(parametersList);
                         }
                     }
 
-                    if (parameters.size() == 0) {
-                        operationNode.remove("parameters");
-                    }
-
-                    if (parametersList.isEmpty()) {
-                        operationNode.remove("parameters");
-                    } else {
-                        parameters.removeAll();
-                        parameters.addAll(parametersList);
-                    }
-                }
-
-                operationNode.remove("responses");
+                    operationNode.remove("responses");
+                });
             });
-        });
+        }
 
         try {
-            return Json.writer().writeValueAsString(json);
+            return OpenApiHelper.mapper().writeValueAsString(json);
         } catch (final JsonProcessingException e) {
             throw new IllegalStateException("Unable to serialize minified OpenAPI document", e);
         }
@@ -287,7 +288,7 @@ public final class SwaggerHelper {
 
         final JsonNode node = convertToJson(specificationToUse);
 
-        return Json.writer().writeValueAsString(node);
+        return OpenApiHelper.mapper().writeValueAsString(node);
     }
 
     private static boolean append(final List<Violation> violations, final ProcessingMessage message, final Optional<String> requiredLevel) {

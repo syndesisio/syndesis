@@ -25,7 +25,7 @@
     "authenticationType": "basic:username_password",
     "basePath": "/api",
     "host": "http://sample.io",
-    "specification": "{\"swagger\":\"2.0\",\"host\":\"sample.io\",\"basePath\":\"/api\",\"schemes\":[\"http\"],\"paths\":{\"/operation\":{\"get\":{\"operationId\":\"operation-0\",\"produces\":[\"application/json\"]}}}}"
+    "specification": "{\"swagger\":\"2.0\",\"host\":\"sample.io\",\"basePath\":\"/api\",\"schemes\":[\"http\"],\"paths\":{\"/operation\":{\"get\":{\"operationId\":\"operation-0\",\"produces\":[\"application/json\"]}}},\"securityDefinitions\":{\"username_password\":{\"type\":\"basic\"}}}"
   },
   "connectorCustomizers": [
     "io.syndesis.connector.rest.swagger.SpecificationResourceCustomizer",
