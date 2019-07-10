@@ -43,7 +43,7 @@ function createSpecification(symbols: TemplateSymbol[]): string {
     type: 'object',
   };
   if (symbols.length === 0) {
-    return spec;
+    return JSON.stringify(spec);
   }
   const properties: any = {};
   for (const symbol of symbols) {
@@ -78,7 +78,7 @@ export function useTemplater(props: IUseTemplaterProps) {
 
   const handleTemplateTypeChange = (newType: TemplateType) => {
     setLanguage(newType);
-    linter.current = TemplateStepLinters[language];
+    linter.current = TemplateStepLinters[newType];
   };
 
   const handleEditorChange = (e: ITextEditor, data: any, text: string) => {
