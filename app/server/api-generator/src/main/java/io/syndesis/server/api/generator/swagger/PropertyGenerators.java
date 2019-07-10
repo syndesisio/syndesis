@@ -83,8 +83,7 @@ enum PropertyGenerators {
             return (swagger, template, settings) -> {
                 final Map<String, SecuritySchemeDefinition> securityDefinitions = swagger.getSecurityDefinitions();
                 if (securityDefinitions == null || securityDefinitions.isEmpty()) {
-                    return Optional
-                        .of(new ConfigurationProperty.Builder().createFrom(template).defaultValue("none").addEnum(NO_SECURITY).build());
+                    return Optional.of(NO_SECURITY.apply(template));
                 }
 
                 final ConfigurationProperty.PropertyValue[] enums = securityDefinitions.entrySet().stream()
@@ -92,7 +91,12 @@ enum PropertyGenerators {
                     .map(e -> SupportedAuthenticationTypes.asPropertyValue(e.getKey(), e.getValue()))
                     .toArray(l -> new ConfigurationProperty.PropertyValue[l]);
 
-                final ConfigurationProperty.Builder authenticationType = new ConfigurationProperty.Builder().createFrom(template)
+                if (enums.length == 0) {
+                    return Optional.of(NO_SECURITY.apply(template));
+                }
+
+                final ConfigurationProperty.Builder authenticationType = new ConfigurationProperty.Builder()
+                    .createFrom(template)
                     .addEnum(enums);
 
                 if (enums.length == 1) {
@@ -189,8 +193,11 @@ enum PropertyGenerators {
         }
     };
 
-    private static final ConfigurationProperty.PropertyValue NO_SECURITY = new ConfigurationProperty.PropertyValue.Builder().value("none")
-        .label("No Security").build();
+    private static final Function<ConfigurationProperty, ConfigurationProperty> NO_SECURITY = template -> new ConfigurationProperty.Builder()
+        .createFrom(template)
+        .defaultValue("none")
+        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("none", "No Security"))
+        .build();
 
     @FunctionalInterface
     interface PropertyGenerator {
