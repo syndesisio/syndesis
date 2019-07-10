@@ -1,18 +1,17 @@
-import { useVirtualizationHelpers, WithViewEditorStates } from '@syndesis/api';
+import { WithViewEditorStates } from '@syndesis/api';
 import { RestDataService, ViewEditorState } from '@syndesis/models';
 import { PageSection, ViewHeader, ViewHeaderBreadcrumb } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
-import { useContext } from 'react';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
-import { AppContext, UIContext } from '../../../app';
+import { AppContext } from '../../../app';
 import resolvers from '../../resolvers';
 import {
   VirtualizationNavBar,
   WithVirtualizationSqlClientForm,
 } from '../shared';
-import { getPreviewVdbName } from '../shared/VirtualizationUtils';
-import { getPublishingDetails } from '../shared/VirtualizationUtils';
+import { VirtualizationHandlers } from '../shared/VirtualizationHandlers';
+import { getPreviewVdbName, getPublishingDetails } from '../shared/VirtualizationUtils';
 
 /**
  * @param virtualizationId - the ID of the virtualization shown by this page.
@@ -36,13 +35,12 @@ export interface IVirtualizationSqlClientPageRouteState {
 export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
 
   const { t } = useTranslation(['data', 'shared']);
-  const { params, state, history } = useRouteData<
+  const { state, history } = useRouteData<
     IVirtualizationSqlClientPageRouteParams,
     IVirtualizationSqlClientPageRouteState
   >();
   const appContext = React.useContext(AppContext);
-  const { pushNotification } = useContext(UIContext);
-  const { deleteVirtualization, publishVirtualization, unpublishServiceVdb} = useVirtualizationHelpers();
+  const { handleDeleteVirtualization, handlePublishVirtualization, handleUnpublishServiceVdb } = VirtualizationHandlers();
   
   const virtualization = state.virtualization;
   const publishingDetails = getPublishingDetails(
@@ -50,114 +48,36 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     state.virtualization
   );
 
-  const handleDelete = async (
+  const doDelete = async (
     pVirtualizationId: string
   ) => {
-    try {
-      await deleteVirtualization(
-        pVirtualizationId
-      );
-      pushNotification(
-        t(
-          'virtualization.deleteVirtualizationSuccess',
-          { name: params.virtualizationId }
-        ),
-        'success'
-      );
-      // On successful delete, redirect to virtualizations page
-      // TODO: Handle publish/unpublish on current page
+    const success = await handleDeleteVirtualization(pVirtualizationId);
+    if(success) {
       history.push(
         resolvers.data.virtualizations.list()
-      );
-    } catch (error) {
-      const details = error.message
-        ? error.message
-        : '';
-      pushNotification(
-        t(
-          'virtualization.deleteVirtualizationFailed',
-          {
-            details,
-            name: params.virtualizationId,
-          }
-        ),
-        'error'
       );
     }
   };
 
-  const handlePublish = async (
+  const doPublish = async (
     pVirtualizationId: string,
     hasViews: boolean
   ) => {
-    if (hasViews) {
-      try {
-        await publishVirtualization(
-          pVirtualizationId
-        );
-
-        pushNotification(
-          t(
-            'virtualization.publishVirtualizationSuccess',
-            { name: params.virtualizationId }
-          ),
-          'success'
-        );
-        // On publish, redirect to virtualizations page
-        // TODO: Handle publish/unpublish on current page
-        history.push(
-          resolvers.data.virtualizations.list()
-        );
-      } catch (error) {
-        const details = error.error
-          ? error.error
-          : '';
-        pushNotification(
-          t(
-            'virtualization.publishVirtualizationFailed',
-            { name: params.virtualizationId, details }
-          ),
-          'error'
-        );
-      }
-    } else {
-      pushNotification(
-        t(
-          'virtualization.publishVirtualizationNoViews',
-          { name: params.virtualizationId }
-        ),
-        'error'
-      );
-    }
-  };
-  
-  const handleUnpublish = async (
-    serviceVdbName: string
-  ) => {
-    try {
-      await unpublishServiceVdb(serviceVdbName);
-
-      pushNotification(
-        t(
-          'virtualization.unpublishVirtualizationSuccess',
-          { name: serviceVdbName }
-        ),
-        'success'
-      );
-      // On successful delete, redirect to virtualizations page
+    const success = await handlePublishVirtualization(pVirtualizationId,hasViews);
+    if(success) {
       history.push(
         resolvers.data.virtualizations.list()
       );
-    } catch (error) {
-      const details = error.message
-        ? error.message
-        : '';
-      pushNotification(
-        t('virtualization.unpublishFailed', {
-          details,
-          name: serviceVdbName,
-        }),
-        'error'
+    }
+  }
+  
+  const doUnpublish = async (
+    serviceVdbName: string
+  ) => {
+    const success = await handleUnpublishServiceVdb(serviceVdbName);
+    if(success) {
+      history.push(
+        resolvers.data.virtualizations.list()
       );
     }
   };
@@ -198,11 +118,11 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
         i18nUnpublishModalTitle={t(
           'virtualization.unpublishModalTitle'
         )}
-        onDelete={handleDelete}
+        onDelete={doDelete}
         /* TD-636: Commented out for TP
            onExport={this.handleExportVirtualization} */
-        onUnpublish={handleUnpublish}
-        onPublish={handlePublish}
+        onUnpublish={doUnpublish}
+        onPublish={doPublish}
         serviceVdbName={
           state.virtualization.serviceVdbName
         }
