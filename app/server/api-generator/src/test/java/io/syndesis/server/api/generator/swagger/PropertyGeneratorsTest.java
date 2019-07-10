@@ -66,6 +66,25 @@ public class PropertyGeneratorsTest {
     }
 
     @Test
+    public void shouldDefaultToNoSecurityIfNoSupportedSecurityDefinitionsFound() {
+        final Swagger swagger = new Swagger()
+            .securityDefinition("oauth-username-password", new OAuth2Definition().password("https://api.example.com/token"))
+            .securityDefinition("oauth-implicit", new OAuth2Definition().implicit("https://api.example.com/authz"));
+
+        final ConfigurationProperty template = new ConfigurationProperty.Builder().build();
+        final ConnectorSettings settings = new ConnectorSettings.Builder().build();
+        final Optional<ConfigurationProperty> authenticationTypes = PropertyGenerators.authenticationType
+            .propertyGenerator()
+            .generate(swagger, template, settings);
+
+        assertThat(authenticationTypes)
+            .contains(new ConfigurationProperty.Builder()
+                .defaultValue("none")
+                .addEnum(ConfigurationProperty.PropertyValue.Builder.of("none", "No Security"))
+                .build());
+    }
+
+    @Test
     public void shouldDetermineFromHostsContainingPorts() {
         assertThat(determineHost(new Swagger().host("54.152.43.92:8080").scheme(Scheme.HTTPS))).isEqualTo("https://54.152.43.92:8080");
     }
