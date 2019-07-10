@@ -100,14 +100,17 @@ If you do not upload an icon, {prodname} generates one.
 You can upload an icon at a later time. When {prodname} displays
 the flow of an integration, it displays a connector's icon
 to represent connections that are created from that connector.
-+
-To override a value obtained from
+
+. To override a value obtained from
 the OpenAPI file, edit the field value that you want to change.
++
+[IMPORTANT]
 After {prodname} creates a connector,
-you cannot change it. To effect a change, you need to upload an updated
+*you cannot change it*. To effect a change, you need to upload an updated
 OpenAPI document so that {prodname} can create a new connector
 or you can upload the same schema and then edit it in Apicurito. 
 You then continue the process for creating a new API client connector. 
+
 . When you are satisfied with the connector details, click *Create API Connector*.
 {prodname} displays the new connector with the other connectors. 
 
