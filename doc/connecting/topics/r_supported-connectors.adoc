@@ -12,14 +12,14 @@
 |Name
 |Description
 
-|link:{LinkFuseOnlineConnectorGuide}#connecting-to-s3_connectors[Amazon S3]
-|Retrieve data from an Amazon S3 bucket or copy data into a bucket.
-
 | link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-sns_connectors[Amazon Simple Notification Service (SNS)]
-|Send messages to Amazon SNS.
+|Send messages to an Amazon SNS topic.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-amazon-sqs_connectors[Amazon Simple Queue Service (SQS)]
-|Retrieve messages from or send messages to Amazon SQS. 
+|Retrieve messages from or send messages to an Amazon SQS queue. 
+
+|link:{LinkFuseOnlineConnectorGuide}#connecting-to-s3_connectors[Amazon Simple Storage Service (S3)]
+|Retrieve data from an Amazon S3 bucket or copy data into a bucket.
 
 |link:{LinkFuseOnlineConnectorGuide}#connecting-to-amq_connectors[AMQ]
 |Obtain messages from a Red Hat AMQ (ApacheMQ) broker or publish messages to

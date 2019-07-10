@@ -4,11 +4,16 @@
 [id='creating-amazon-sqs-connections_{context}']
 = Creating Amazon SQS connections
 
-You must create an Amazon S3 connection before you can add an
-Amazon S3 connection to an integration.
+You must create an Amazon SQS connection before you can add an
+Amazon SQS connection to an integration.
 
-.Prerequisite
-See link:{LinkFuseOnlineConnectorGuide}#prerequisites-for-creating-s3-connection_s3[Prerequisites for creating Amazon S3 connections].
+.Prerequisites
+
+* AWS access key. See link:{LinkFuseOnlineConnectorGuide}#obtaining-aws-credentials_aws[Obtaining AWS credentials].
+
+* You must know the region in which the SQS queue is located. 
+This is the queue that you want the SQS connection that 
+you are creating to send messages to or retrieve messages from. 
 
 .Procedure
 
@@ -16,26 +21,24 @@ See link:{LinkFuseOnlineConnectorGuide}#prerequisites-for-creating-s3-connection
 display any available connections.
 . In the upper right, click *Create Connection* to display
 {prodname} connectors.
-. Click the *Amazon S3* connector.
-. In the *Access Key* field, enter the Amazon S3 access key ID,
-provided by AWS, for the
-AWS account that created the bucket that you want
-this connection to access. If the bucket you want the connection to
+. Click the *Amazon SQS* connector.
+. In the *Access Key* field, enter an Amazon access key ID that is 
+part of a user access key in the AWS account that manages 
+the queue that you want the connection to access.
++
+If the queue that you want the connection to
 access does not already exist then when {prodname} tries to start running the 
 integration, it uses the AWS account associated with this access key to 
-create the bucket. However, if the bucket already exists in some other 
-AWS account, then the connection cannot create the bucket and the integration cannot start. 
-. In the *Bucket Name or Amazon Resource Name* field, enter the name of
-the bucket that you want this connection to access or enter the bucket's ARN.
-If the bucket does not already exist 
-in either the AWS account being used or in any other AWS account, 
-then the connection creates it. 
-. In the *Region* field, select the AWS region in which the bucket resides.
-If the connection creates the bucket, then it creates it in the
+create the queue. However, if the queue already exists in some other 
+AWS account, then the connection cannot create the queue and the 
+integration cannot start. 
+
+. In the *Secret Key* field, enter the Amazon secret access key for the 
+Amazon access key ID that you specified.
+
+. In the *Region* field, select the AWS region in which the queue resides.
+If the connection creates the queue, then it creates it in the
 selected region.
-. In the *Secret Key* field, enter the Amazon S3 secret access key,
-provided by AWS, for the account that created, or will create, 
-the bucket that you want this connection to access.
 . Click *Validate*. {prodname} immediately tries to validate the
 connection and displays a message that indicates whether or not
 validation is successful. If validation fails, revise the configuration
@@ -43,12 +46,12 @@ details as needed and try again.
 . When validation is successful, click *Next*.
 . In the *Connection Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
-For example, enter `Obtain S3 Data`.
+For example, enter `SQS South`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
-enter `*Sample S3 connection
-that obtains data from the northeast bucket.*`
+enter `*Sample SQS connection
+that sends messages to our southern region queue.*`
 . In the upper right, click *Create* to see that the connection you
 created is now available. If you entered the example name, you would
-see that *Obtain S3 Data* appears as a connection that you can 
+see that *SQS South* appears as a connection that you can 
 choose to add to an integration.

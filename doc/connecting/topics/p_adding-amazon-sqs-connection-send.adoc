@@ -2,76 +2,47 @@
 // as_connecting-to-amazon-sqs.adoc
 
 [id='adding-amazon-sqs-connection-send_{context}']
-= Sending messages to Amazon SQS 
+= Sending messages to an Amazon SQS queue
 
-To finish an integration by copying data to Amazon S3, 
-add an Amazon S3 connection as a simple integration's finish connection. 
+In the middle of a flow, or to finish a simple integration, 
+you can send messages to an Amazon SQS queue. 
 
-.Prerequisite
-You created an Amazon S3 connection.
+.Prerequisites
+* You created an Amazon SQS connection that is configured to access 
+the queue that you want to send messages to. 
+* You know the name of the SQS queue that you want the connection to
+send messages to. 
+* {prodname} is prompting you to add a step, or to choose the finish 
+connection for a simple integration. 
 
 .Procedure
 
-. Start creating the integration.
-. Add and configure the start connection.
-. On the *Choose a Finish Connection* page, click the Amazon S3 connection that
-you want to use to finish the integration. 
-
+. Click the Amazon SQS connection that you want to use to send messages. 
 . Click the action that you want the connection to perform:
 +
-* *Copy Object* adds one or more objects to the bucket. 
+* *Send Object* sends one message to the queue. 
+* *Send Batch Object* sends a batch of messages to the queue. 
+
+. In the *Message group ID strategy* field, for a first-in, first-out (FIFO)
+queue, accept `ConstantMessageGroupIdStrategy` or click in the field and 
+select one of the following:  
 +
-To add one file to the bucket, you can enter its name in the *File Name* field.
-+
-To add multiple files to the bucket, do not specify a file name.
-In this case, the action adds all objects that it 
-obtains from the previous integration step(s). 
-+
-If you used the poll action
-to obtain multiple files and you specify a file name then the *Copy Object*
-action adds only the last file that was received from the poll action. 
+* `ExchangeIdMessageGroupIdStrategy`
+* `PropertyValueMessageGroupIdStrategy`
 
-* *Delete Object* deletes an object from the bucket. In the
-*File Name* field, specify the name of the object that you want to delete.
-If the specified file is not in the bucket, the integration continues 
-with no error. 
+. In the *Message deduplication ID strategy* field, for a FIFO queue, 
+accept `NullMessageDeduplicationIdStrategy` or click in the field 
+to select `ExchangeIdMessageDeduplicationIdStrategy`.
 
-. After you configure the chosen action, click *Next* to specify 
-the action's input type. 
+. In the *Queue Name or Amazon Resource Name* field, enter the 
+name of the queue to send messages to. If the queue does not exist, 
+the connection creates it. 
 
-. In the *Select Type* field, if the data type does not need to be known, 
-accept *Type specification not required* 
-and then, at the bottom, click *Done*. You do not need to follow the rest of these
-instructions. 
-+
-Otherwise, select one of the following as the schema type:
-+
-* *JSON schema* is a document that describes the structure of JSON data.
-The document's media type is `application/schema+json`. 
-* *JSON instance* is a document that contains JSON data. The document's 
-media type is `application/json`. 
-* *XML schema* is a document that describes the structure of XML data.
-The document's file extension is `.xsd`.
-* *XML instance* is a document that contains XML data. The
-document's file extension is `.xml`. 
+. In the *Delay* field, accept the default, which is 0 for no delay. 
+Or, to add a delay, specify a number. The integration waits this number 
+of seconds before sending messages.  
+ 
+. Click *Next*. 
 
-. In the *Definition* input box, paste a definition that conforms to the
-schema type you selected. 
-For example, if you select *JSON schema* then you would paste the content of
-a JSON schema file, which has a media type of `application/schema+json`.
-
-. In the *Data Type Name* field, enter a name that you choose for the
-data type. For example, suppose you are specifying a JSON schema for
-vendors. You can specify `*Vendor*` as the data type name. 
-+
-You will see this data type name when you are creating 
-or editing an integration that uses the connection
-for which you are specifying this type. {prodname} displays the type name
-in the integration visualization panel and in the data mapper. 
-
-. In the *Data Type Description* field, provide information that helps you
-distinguish this type. This description appears in the data mapper when 
-you hover over the step that processes this type. 
-. Click *Done*. 
-
-The connection appears at the end of the integration flow. 
+.Result
+The connection appears in the integration flow where you added it. 

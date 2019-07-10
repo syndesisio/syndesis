@@ -5,9 +5,9 @@
 = Connecting to Amazon Simple Queue Service (SQS)
 :context: sqs
 
-An integration can retrieve data from an Amazon S3 bucket or copy data into
-an Amazon S3 bucket. To do this, you create an Amazon S3
-connection and then add that Amazon S3 connection to an integration flow.
+An integration can retrieve messages from an Amazon SQS queue or 
+send messages to an Amazon SQS queue. To do this, create an Amazon SQS
+connection and then add that connection to an integration flow.
 For details, see:
 
 * xref:creating-amazon-sqs-connections_{context}[]

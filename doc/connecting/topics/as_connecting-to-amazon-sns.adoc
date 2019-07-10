@@ -6,7 +6,7 @@
 :context: sns
 
 An integration can send a message to an AWS Simple Notification Service 
-topic. To do this, you create an AWS SNS
+topic. To do this, create an AWS SNS
 connection and then add that connection to an integration flow or
 as the finish connection for a simple integration. 
 For details, see:
@@ -17,6 +17,5 @@ For details, see:
 include::p_creating-amazon-sns-connections.adoc[leveloffset=+1]
 
 include::p_adding-amazon-sns-connection-send.adoc[leveloffset=+1]
-
 
 :context: aws
