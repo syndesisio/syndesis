@@ -13,12 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.syndesis.common.model;
 
-/**
- * This class is used to track the current model schema version.
- */
-public class Schema {
-    // changing this will reset all the DB data.
-    public static final int VERSION = 31;
-}
+internal.jsondb.executeNative('CREATE INDEX IF NOT EXISTS jsondb_activity_idx ON jsondb (path DESC)');
+
+console.log('Migrated to schema 31 completed');

@@ -27,13 +27,14 @@ import org.skife.jdbi.v2.DBI;
 import io.syndesis.common.util.KeyGenerator;
 import io.syndesis.server.jsondb.CloseableJsonDB;
 import io.syndesis.server.jsondb.JsonDBException;
+import io.syndesis.server.jsondb.NativeJsonDB;
 
 /**
  * Used to create in memory version impl of JsonDB
  */
 public class MemorySqlJsonDB {
 
-    private static class ClosableSqlJsonDB extends SqlJsonDB implements CloseableJsonDB {
+    private static class ClosableSqlJsonDB extends SqlJsonDB implements NativeJsonDB {
 
         private final Connection keepsDBOpen;
         private final AtomicBoolean closed = new AtomicBoolean();
@@ -52,6 +53,11 @@ public class MemorySqlJsonDB {
                     throw new IOException(e);
                 }
             }
+        }
+
+        @Override
+        public DBI database() {
+            return dbi;
         }
     }
 

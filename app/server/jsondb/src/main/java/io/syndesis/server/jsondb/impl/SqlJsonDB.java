@@ -85,7 +85,7 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
         PostgreSQL, SQLite, H2, CockroachDB
     }
 
-    private final DBI dbi;
+    protected final DBI dbi;
     private final EventBus bus;
     private final Collection<Index> indexes;
     private final Set<String> indexPaths = new HashSet<>();
@@ -129,8 +129,9 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
     public void createTables() {
         withTransaction(dbi -> {
             if(databaseKind == DatabaseKind.PostgreSQL) {
-                dbi.update("CREATE TABLE jsondb (path VARCHAR COLLATE \"C\" PRIMARY KEY, value VARCHAR, ovalue VARCHAR, idx VARCHAR COLLATE \"C\")");
-                dbi.update("CREATE INDEX jsondb_idx ON jsondb (idx, value) WHERE idx IS NOT NULL");
+                dbi.update("CREATE TABLE IF NOT EXISTS jsondb (path VARCHAR COLLATE \"C\" PRIMARY KEY, value VARCHAR, ovalue VARCHAR, idx VARCHAR COLLATE \"C\")");
+                dbi.update("CREATE INDEX IF NOT EXISTS jsondb_idx ON jsondb (idx, value) WHERE idx IS NOT NULL");
+                dbi.update("CREATE INDEX IF NOT EXISTS jsondb_activity_idx ON jsondb (path DESC)");
             } else {
                 dbi.update("CREATE TABLE jsondb (path VARCHAR PRIMARY KEY, value VARCHAR, ovalue VARCHAR, idx VARCHAR)");
             }
@@ -312,6 +313,10 @@ public class SqlJsonDB implements JsonDB, WithGlobalTransaction {
             bus.broadcast("jsondb-deleted", prefix(trimSuffix(path, "/"), "/"));
         }
         return rc[0];
+    }
+
+    public void executeNative(final String sql, final Object... parameters) {
+        withTransaction(handle -> handle.execute(sql, parameters));
     }
 
     @Override

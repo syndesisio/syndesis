@@ -161,12 +161,18 @@ public class ActivityTrackingController implements BackendController, Closeable 
      */
     int deleteKeepingRetention(String path) {
         return dbi.inTransaction((conn, status) -> {
-            final String sql = "DELETE FROM jsondb "
-                + "WHERE path LIKE ? AND path NOT IN ("
-                +     "SELECT path FROM jsondb WHERE path LIKE ? ORDER BY path DESC FETCH FIRST (?) ROWS ONLY"
+            final String skipLocked = databaseKind == SqlJsonDB.DatabaseKind.PostgreSQL ? "FOR KEY SHARE SKIP LOCKED " : "";
+
+            final String sql = "DELETE FROM jsondb WHERE path IN ("
+                + "SELECT path "
+                + "FROM jsondb "
+                + "WHERE path LIKE ? "
+                + "ORDER BY path DESC "
+                + skipLocked
+                + "OFFSET ? ROWS"
                 + ")";
 
-                return conn.update(sql, path, path, retention);
+            return conn.update(sql, path, retention);
         });
     }
 
