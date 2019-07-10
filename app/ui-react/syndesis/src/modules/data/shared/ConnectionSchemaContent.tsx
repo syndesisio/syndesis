@@ -8,7 +8,7 @@ import {
 } from '@syndesis/ui';
 import { WithLoader } from '@syndesis/utils';
 import * as React from 'react';
-import { Translation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 import { ApiError } from '../../../shared';
 import { generateSchemaNodeInfos } from './VirtualizationUtils';
 
@@ -32,93 +32,83 @@ export interface IConnectionSchemaContentProps {
   onNodeDeselected: (connectionName: string, nodePath: string) => void;
 }
 
-export class ConnectionSchemaContent extends React.Component<
+export const ConnectionSchemaContent: React.FunctionComponent<
   IConnectionSchemaContentProps
-> {
-  public constructor(props: IConnectionSchemaContentProps) {
-    super(props);
-    this.handleSourceSelectionChange = this.handleSourceSelectionChange.bind(
-      this
-    );
-  }
+> = props => {
 
-  public handleSourceSelectionChange(
+  const { t } = useTranslation(['data', 'shared']);
+
+  const handleSourceSelectionChange = async (
     connectionName: string,
     nodePath: string,
     selected: boolean
-  ) {
+  ) => {
     if (selected) {
-      this.props.onNodeSelected(connectionName, nodePath);
+      props.onNodeSelected(connectionName, nodePath);
     } else {
-      this.props.onNodeDeselected(connectionName, nodePath);
+      props.onNodeDeselected(connectionName, nodePath);
     }
   }
 
-  public render() {
-    return (
-      <WithVirtualizationConnectionSchema>
-        {({ data, hasData, error, errorMessage }) => {
-          // Root nodes of the response contain the connection names
-          const connNames = getConnectionNames(data);
-          return (
-            <Translation ns={['data', 'shared']}>
-              {t => (
-                <ConnectionSchemaList
-                  i18nEmptyStateInfo={t(
-                    'virtualization.activeConnectionsEmptyStateInfo'
-                  )}
-                  i18nEmptyStateTitle={t(
-                    'virtualization.activeConnectionsEmptyStateTitle'
-                  )}
-                  hasListData={connNames.length > 0}
-                >
-                  <WithLoader
-                    error={error}
-                    loading={!hasData}
-                    loaderChildren={
-                      <ConnectionSchemaListSkeleton
-                        width={800}
-                        style={{
-                          backgroundColor: '#FFF',
-                          marginTop: 30,
-                        }}
-                      />
-                    }
-                    errorChildren={<ApiError error={errorMessage!} />}
-                  >
-                    {() =>
-                      connNames.map((cName: string, index: number) => {
-                        // get schema nodes for the connection
-                        const srcInfos = getSchemaNodeInfos(data, cName);
-                        return (
-                          <ConnectionSchemaListItem
-                            key={index}
-                            connectionName={cName}
-                            connectionDescription={''}
-                            // tslint:disable-next-line: no-shadowed-variable
-                            children={srcInfos.map((info, index) => (
-                              <SchemaNodeListItem
-                                key={index}
-                                name={info.sourceName}
-                                connectionName={info.connectionName}
-                                schemaPath={info.sourcePath}
-                                selected={false}
-                                onSelectionChanged={
-                                  this.handleSourceSelectionChange
-                                }
-                              />
-                            ))}
-                          />
-                        );
-                      })
-                    }
-                  </WithLoader>
-                </ConnectionSchemaList>
-              )}
-            </Translation>
-          );
-        }}
-      </WithVirtualizationConnectionSchema>
-    );
-  }
+  return (
+    <WithVirtualizationConnectionSchema>
+      {({ data, hasData, error, errorMessage }) => {
+        // Root nodes of the response contain the connection names
+        const connNames = getConnectionNames(data);
+        return (
+          <ConnectionSchemaList
+            i18nEmptyStateInfo={t(
+              'virtualization.activeConnectionsEmptyStateInfo'
+            )}
+            i18nEmptyStateTitle={t(
+              'virtualization.activeConnectionsEmptyStateTitle'
+            )}
+            hasListData={connNames.length > 0}
+          >
+            <WithLoader
+              error={error}
+              loading={!hasData}
+              loaderChildren={
+                <ConnectionSchemaListSkeleton
+                  width={800}
+                  style={{
+                    backgroundColor: '#FFF',
+                    marginTop: 30,
+                  }}
+                />
+              }
+              errorChildren={<ApiError error={errorMessage!} />}
+            >
+              {() =>
+                connNames.map((cName: string, index: number) => {
+                  // get schema nodes for the connection
+                  const srcInfos = getSchemaNodeInfos(data, cName);
+                  return (
+                    <ConnectionSchemaListItem
+                      key={index}
+                      connectionName={cName}
+                      connectionDescription={''}
+                      // tslint:disable-next-line: no-shadowed-variable
+                      children={srcInfos.map((info, index) => (
+                        <SchemaNodeListItem
+                          key={index}
+                          name={info.sourceName}
+                          connectionName={info.connectionName}
+                          schemaPath={info.sourcePath}
+                          selected={false}
+                          onSelectionChanged={
+                            handleSourceSelectionChange
+                          }
+                        />
+                      ))}
+                    />
+                  );
+                })
+              }
+            </WithLoader>
+          </ConnectionSchemaList>
+        );
+      }}
+    </WithVirtualizationConnectionSchema>
+  );
 }

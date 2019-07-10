@@ -19,38 +19,24 @@ export interface IDvConnectionsProps {
   onConnectionSelectionChanged: (name: string, selected: boolean) => void;
 }
 
-export interface IDvConnectionsState {
-  selectedConnection: string;
-}
+export const DvConnections: React.FunctionComponent<
+  IDvConnectionsProps
+> = props => {
 
-export class DvConnections extends React.Component<
-  IDvConnectionsProps,
-  IDvConnectionsState
-> {
-  public constructor(props: IDvConnectionsProps) {
-    super(props);
-    this.state = {
-      selectedConnection: this.props.initialSelection, // initial selection
-    };
-    this.handleConnSourceSelectionChanged = this.handleConnSourceSelectionChanged.bind(
-      this
-    );
-  }
+  const [selectedConnection, setSelectedConnection] = React.useState(props.initialSelection);
 
-  public handleConnSourceSelectionChanged(name: string, isSelected: boolean) {
+  const handleConnSourceSelectionChanged = (name: string, isSelected: boolean) => {
     const newSelection = isSelected ? name : '';
-    this.setState({
-      selectedConnection: newSelection,
-    });
-    this.props.onConnectionSelectionChanged(name, isSelected);
+    setSelectedConnection(newSelection);
+    
+    props.onConnectionSelectionChanged(name, isSelected);
   }
 
-  public render() {
     return (
       <DvConnectionsGrid>
         <WithLoader
-          error={this.props.error}
-          loading={this.props.loading}
+          error={props.error}
+          loading={props.loading}
           loaderChildren={
             <>
               {new Array(5).fill(0).map((_, index) => (
@@ -60,18 +46,18 @@ export class DvConnections extends React.Component<
               ))}
             </>
           }
-          errorChildren={<ApiError error={this.props.errorMessage!} />}
+          errorChildren={<ApiError error={props.errorMessage!} />}
         >
           {() =>
-            this.props.connections.map((c, index) => (
+            props.connections.map((c, index) => (
               <DvConnectionsGridCell key={index}>
                 <DvConnectionCard
                   name={c.name}
                   description={c.description || ''}
                   dvStatus={getDvConnectionStatus(c)}
                   icon={<EntityIcon entity={c} alt={c.name} width={46} />}
-                  selected={this.state.selectedConnection === c.name}
-                  onSelectionChanged={this.handleConnSourceSelectionChanged}
+                  selected={selectedConnection === c.name}
+                  onSelectionChanged={handleConnSourceSelectionChanged}
                 />
               </DvConnectionsGridCell>
             ))
@@ -79,5 +65,4 @@ export class DvConnections extends React.Component<
         </WithLoader>
       </DvConnectionsGrid>
     );
-  }
 }

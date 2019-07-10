@@ -1,14 +1,15 @@
 import {
   IDvNameValidationResult,
+  useVirtualizationHelpers,
   WithViewEditorStates,
-  WithVirtualizationHelpers,
 } from '@syndesis/api';
 import { AutoForm, IFormDefinition } from '@syndesis/auto-form';
-import { RestDataService, SchemaNodeInfo, ViewInfo } from '@syndesis/models';
+import { RestDataService, SchemaNodeInfo } from '@syndesis/models';
 import { ViewConfigurationForm, ViewCreateLayout } from '@syndesis/ui';
-import { WithRouteData } from '@syndesis/utils';
+import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
-import { Translation } from 'react-i18next';
+import { useContext } from 'react';
+import { useTranslation } from 'react-i18next';
 import { UIContext } from '../../../../app';
 import i18n from '../../../../i18n';
 import { PageTitle } from '../../../../shared';
@@ -37,194 +38,180 @@ export interface ISelectNameRouteState {
   schemaNodeInfo: SchemaNodeInfo[];
 }
 
-export class SelectNamePage extends React.Component {
-  public selectedViews: ViewInfo[] = []; // Maintains list of selected views
+export const SelectNamePage: React.FunctionComponent = () => {
 
-  public render() {
-    const validateDescription = (desc: string ): string => {
-      if (desc.includes('\'')) {
-        return i18n.t('data:virtualization.viewDescriptionValidationError');
-      }
-      return '';
-    };
+  const { t } = useTranslation(['data', 'shared']);
+  const { state, history } = useRouteData<
+    ISelectNameRouteParams,
+    ISelectNameRouteState
+  >();
+  const { pushNotification } = useContext(UIContext);
+  const { refreshVirtualizationViews, validateViewName } = useVirtualizationHelpers();
 
-    return (
-      <Translation ns={['data', 'shared']}>
-        {t => (
-          <UIContext.Consumer>
-            {({ pushNotification }) => {
-              return (
-                <WithRouteData<ISelectNameRouteParams, ISelectNameRouteState>>
-                  {(
-                    { virtualizationId },
-                    { virtualization, schemaNodeInfo },
-                    { history }
-                  ) => (
-                    <WithVirtualizationHelpers>
-                      {({ refreshVirtualizationViews, validateViewName }) => {
-                        /**
-                         * Backend name validation only occurs when attempting to create
-                         * @param proposedName the name to validate
-                         */
-                        const doValidateName = async (
-                          proposedName: string
-                        ): Promise<string> => {
-                          // make sure name has a value
-                          if (proposedName === '') {
-                            return t('shared:requiredFieldMessage') as string;
-                          }
+  const validateDescription = (desc: string): string => {
+    if (desc.includes('\'')) {
+      return i18n.t('data:virtualization.viewDescriptionValidationError');
+    }
+    return '';
+  };
 
-                          const response: IDvNameValidationResult = await validateViewName(
-                            virtualization.serviceVdbName,
-                            'views',
-                            proposedName
-                          );
+  const virtualization = state.virtualization;
 
-                          if (!response.isError) {
-                            return '';
-                          }
-                          return (
-                            t('virtualization.errorValidatingViewName') +
-                            (response.error ? ' : ' + response.error : '')
-                          );
-                        };
-                        const onSave = async (value: any) => {
-                          let validationMsg = validateDescription(value.description);
-                          if(validationMsg.length===0) {
-                            validationMsg = await doValidateName(value.name);
-                          }
-                          if (validationMsg.length===0) {
-                            // ViewEditorState for the source
-                            const viewEditorState = generateViewEditorState(
-                              virtualization.serviceVdbName,
-                              schemaNodeInfo,
-                              value.name,
-                              value.description
-                            );
-                            try {
-                              await refreshVirtualizationViews(
-                                virtualization.keng__id,
-                                [viewEditorState]
-                              );
-                              pushNotification(
-                                t('virtualization.createViewSuccess', {
-                                  name: viewEditorState.viewDefinition.viewName,
-                                }),
-                                'success'
-                              );
-                            } catch (error) {
-                              const details = error.message
-                                ? error.message
-                                : '';
-                              pushNotification(
-                                t('virtualization.createViewFailed', {
-                                  details,
-                                }),
-                                'error'
-                              );
-                            }
-                            history.push(
-                              resolvers.data.virtualizations.views.root({
-                                virtualization,
-                              })
-                            );
-                          } else {
-                            pushNotification(validationMsg, 'error');
-                          }
-                        };
-                        const definition: IFormDefinition = {
-                          name: {
-                            defaultValue: '',
-                            displayName: i18n.t(
-                              'data:virtualization.viewNameDisplay'
-                            ),
-                            required: true,
-                            type: 'string',
-                          },
-                          /* tslint:disable-next-line:object-literal-sort-keys */
-                          description: {
-                            defaultValue: '',
-                            displayName: i18n.t(
-                              'data:virtualization.viewDescriptionDisplay'
-                            ),
-                            type: 'textarea',
-                          },
-                        };
-                        return (
-                          <WithViewEditorStates
-                            idPattern={virtualization.serviceVdbName + '*'}
-                          >
-                            {({ data, hasData, error }) => {
-                              return (
-                                <AutoForm<ISaveForm>
-                                  i18nRequiredProperty={t(
-                                    'shared:requiredFieldMessage'
-                                  )}
-                                  definition={definition}
-                                  initialValue={{
-                                    description: '',
-                                    name: '',
-                                  }}
-                                  onSave={(properties, actions) => {
-                                    onSave(properties).finally(() => {
-                                      actions.setSubmitting(false);
-                                    });
-                                  }}
-                                >
-                                  {({
-                                    fields,
-                                    handleSubmit,
-                                    isSubmitting,
-                                    isValid,
-                                    submitForm,
-                                  }) => (
-                                    <ViewCreateLayout
-                                      header={<ViewCreateSteps step={2} />}
-                                      content={
-                                        <>
-                                          <PageTitle
-                                            title={i18n.t(
-                                              'data:virtualization.createViewWizardSelectNameTitle'
-                                            )}
-                                          />
-                                          <ViewConfigurationForm
-                                            i18nFormTitle={i18n.t(
-                                              'data:virtualization.createViewWizardSelectNameTitle'
-                                            )}
-                                            handleSubmit={handleSubmit}
-                                          >
-                                            {fields}
-                                          </ViewConfigurationForm>
-                                        </>
-                                      }
-                                      cancelHref={resolvers.data.virtualizations.views.root(
-                                        {
-                                          virtualization,
-                                        }
-                                      )}
-                                      backHref={resolvers.data.virtualizations.views.createView.selectSources(
-                                        { virtualization }
-                                      )}
-                                      onNext={submitForm}
-                                      isNextDisabled={!isValid}
-                                      isNextLoading={isSubmitting}
-                                      isLastStep={true}
-                                    />
-                                  )}
-                                </AutoForm>
-                              );
-                            }}
-                          </WithViewEditorStates>
-                        );
-                      }}
-                    </WithVirtualizationHelpers>
-                  )}
-                </WithRouteData>
-              );
-            }}
-          </UIContext.Consumer>
-        )}
-      </Translation>
+  /**
+   * Backend name validation only occurs when attempting to create
+   * @param proposedName the name to validate
+   */
+  const doValidateName = async (
+    proposedName: string
+  ): Promise<string> => {
+    // make sure name has a value
+    if (proposedName === '') {
+      return t('shared:requiredFieldMessage') as string;
+    }
+
+    const response: IDvNameValidationResult = await validateViewName(
+      virtualization.serviceVdbName,
+      'views',
+      proposedName
     );
-  }
+
+    if (!response.isError) {
+      return '';
+    }
+    return (
+      t('virtualization.errorValidatingViewName') +
+      (response.error ? ' : ' + response.error : '')
+    );
+  };
+
+  const onSave = async (value: any) => {
+    let validationMsg = validateDescription(value.description);
+    if (validationMsg.length === 0) {
+      validationMsg = await doValidateName(value.name);
+    }
+    if (validationMsg.length === 0) {
+      // ViewEditorState for the source
+      const viewEditorState = generateViewEditorState(
+        state.virtualization.serviceVdbName,
+        state.schemaNodeInfo,
+        value.name,
+        value.description
+      );
+      try {
+        await refreshVirtualizationViews(
+          state.virtualization.keng__id,
+          [viewEditorState]
+        );
+        pushNotification(
+          t('virtualization.createViewSuccess', {
+            name: viewEditorState.viewDefinition.viewName,
+          }),
+          'success'
+        );
+      } catch (error) {
+        const details = error.message
+          ? error.message
+          : '';
+        pushNotification(
+          t('virtualization.createViewFailed', {
+            details,
+          }),
+          'error'
+        );
+      }
+      history.push(
+        resolvers.data.virtualizations.views.root({
+          virtualization,
+        })
+      );
+    } else {
+      pushNotification(validationMsg, 'error');
+    }
+  };
+  
+  const definition: IFormDefinition = {
+    name: {
+      defaultValue: '',
+      displayName: i18n.t(
+        'data:virtualization.viewNameDisplay'
+      ),
+      required: true,
+      type: 'string',
+    },
+    /* tslint:disable-next-line:object-literal-sort-keys */
+    description: {
+      defaultValue: '',
+      displayName: i18n.t(
+        'data:virtualization.viewDescriptionDisplay'
+      ),
+      type: 'textarea',
+    },
+  };
+
+  return (
+    <WithViewEditorStates
+      idPattern={virtualization.serviceVdbName + '*'}
+    >
+      {({ data, hasData, error }) => {
+        return (
+          <AutoForm<ISaveForm>
+            i18nRequiredProperty={t(
+              'shared:requiredFieldMessage'
+            )}
+            definition={definition}
+            initialValue={{
+              description: '',
+              name: '',
+            }}
+            onSave={(properties, actions) => {
+              onSave(properties).finally(() => {
+                actions.setSubmitting(false);
+              });
+            }}
+          >
+            {({
+              fields,
+              handleSubmit,
+              isSubmitting,
+              isValid,
+              submitForm,
+            }) => (
+                <ViewCreateLayout
+                  header={<ViewCreateSteps step={2} />}
+                  content={
+                    <>
+                      <PageTitle
+                        title={i18n.t(
+                          'data:virtualization.createViewWizardSelectNameTitle'
+                        )}
+                      />
+                      <ViewConfigurationForm
+                        i18nFormTitle={i18n.t(
+                          'data:virtualization.createViewWizardSelectNameTitle'
+                        )}
+                        handleSubmit={handleSubmit}
+                      >
+                        {fields}
+                      </ViewConfigurationForm>
+                    </>
+                  }
+                  cancelHref={resolvers.data.virtualizations.views.root(
+                    {
+                      virtualization,
+                    }
+                  )}
+                  backHref={resolvers.data.virtualizations.views.createView.selectSources(
+                    { virtualization }
+                  )}
+                  onNext={submitForm}
+                  isNextDisabled={!isValid}
+                  isNextLoading={isSubmitting}
+                  isLastStep={true}
+                />
+              )}
+          </AutoForm>
+        );
+      }}
+    </WithViewEditorStates>
+  );
 }
