@@ -28,8 +28,6 @@ you want to combine into the target field. For each of the other fields
 that you want to combine into the target field, hover over that field, and press 
 *CTRL-Mouse1* (*CMD-Mouse1* on MacOS).
 +
-The data mapper automatically changes the field action from *Map* to *Combine*. 
-+
 When you are done you should see a line from each of the source fields to
 the target field. 
 
