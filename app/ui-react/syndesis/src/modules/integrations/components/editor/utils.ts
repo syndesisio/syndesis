@@ -127,7 +127,7 @@ export function toUIStep(step: Step | StepKind): IUIStep {
         ...(step as StepKind),
         inputDataShape,
         isConfigRequired: false,
-        isTechPreview: false,
+        isTechPreview: (step as any).isTechPreview || false,
         metadata: step.metadata || {},
         name,
         outputDataShape,

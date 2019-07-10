@@ -20,7 +20,11 @@ import {
 } from './constants';
 import { toDataShapeKinds, toDataShapeKindType } from './helpers';
 
-export const ALL_STEPS: StepKind[] = [
+export interface IStepKind extends StepKind {
+  isTechPreview: boolean;
+}
+
+export const ALL_STEPS: IStepKind[] = [
   requiresInputDataShape({
     name: 'Data Mapper',
     description: 'Map fields from the input type to the output type.',
@@ -28,6 +32,7 @@ export const ALL_STEPS: StepKind[] = [
     properties: {},
     configuredProperties: undefined,
     visible: [],
+    isTechPreview: false,
   }),
   requiresOutputDataShape(
     {
@@ -39,6 +44,7 @@ export const ALL_STEPS: StepKind[] = [
       properties: undefined,
       configuredProperties: undefined,
       visible: [],
+      isTechPreview: false,
     },
     true
   ),
@@ -50,6 +56,7 @@ export const ALL_STEPS: StepKind[] = [
     configuredProperties: undefined,
     properties: undefined,
     visible: [],
+    isTechPreview: false,
   }),
   noCollectionSupport({
     name: 'Advanced Filter',
@@ -70,6 +77,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
     },
     configuredProperties: undefined,
     visible: [],
+    isTechPreview: false,
   }),
   {
     name: 'Log',
@@ -94,6 +102,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
       },
     },
     visible: [],
+    isTechPreview: false,
   },
   notAllowedInSubFlow(
     requiresOutputDataShape(
@@ -112,6 +121,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
         properties: {},
         configuredProperties: undefined,
         visible: [],
+        isTechPreview: true,
       },
       true
     )
@@ -126,6 +136,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
     properties: {},
     configuredProperties: undefined,
     visible: [],
+    isTechPreview: false,
   }),
   requiresConsistentSplitAggregate({
     id: undefined,
@@ -137,6 +148,7 @@ $\{in.body.title\} // Evaluates true when body contains title.
     properties: {},
     configuredProperties: undefined,
     visible: [],
+    isTechPreview: false,
   }),
 ];
 
@@ -174,7 +186,7 @@ function stepsHaveInputDataShape(steps: Step[]): boolean {
   );
 }
 
-function notAllowedInSubFlow(obj: StepKind) {
+function notAllowedInSubFlow(obj: IStepKind) {
   obj.visible!.push(
     (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
       return (
@@ -199,10 +211,10 @@ function notAllowedInSubFlow(obj: StepKind) {
 // currently no steps fit this criteria but that could change
 // @ts-ignore
 function requiresInputOutputDataShapes(
-  obj: StepKind,
+  obj: IStepKind,
   anyPrevious = true,
   anySubsequent = true
-): StepKind {
+): IStepKind {
   obj.visible!.push(
     (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
       if (!anyPrevious) {
@@ -263,7 +275,7 @@ function hasPrecedingCollection(previousSteps: Step[]) {
   );
 }
 
-function noCollectionSupport(obj: StepKind) {
+function noCollectionSupport(obj: IStepKind) {
   obj.visible!.push(
     (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
       return !hasPrecedingCollection(previousSteps);
@@ -273,9 +285,9 @@ function noCollectionSupport(obj: StepKind) {
 }
 
 function requiresOutputDataShape(
-  obj: StepKind,
+  obj: IStepKind,
   noCollectionSupportP = false
-): StepKind {
+): IStepKind {
   if (noCollectionSupportP) {
     obj.visible!.push(
       (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
@@ -296,9 +308,9 @@ function requiresOutputDataShape(
 }
 
 function requiresInputDataShape(
-  obj: StepKind,
+  obj: IStepKind,
   noCollectionSupportP = false
-): StepKind {
+): IStepKind {
   if (noCollectionSupportP) {
     obj.visible!.push(
       (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
@@ -318,7 +330,7 @@ function requiresInputDataShape(
   return obj;
 }
 
-function requiresConsistentSplitAggregate(obj: StepKind): StepKind {
+function requiresConsistentSplitAggregate(obj: IStepKind): IStepKind {
   obj.visible!.push(
     (position: number, previousSteps: Step[], subsequentSteps: Step[]) => {
       const countPreviousSplit = previousSteps.filter(s => s.stepKind === SPLIT)
@@ -366,7 +378,7 @@ function noShape() {
 }
 
 export interface IStepsResponse {
-  items: StepKind[];
+  items: IStepKind[];
 }
 
 export interface IWithStepsProps {
