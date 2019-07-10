@@ -160,7 +160,7 @@ export const ReviewActionsPage: React.FunctionComponent<
                         </ButtonLink>
                         <ButtonLink
                           onClick={onNext}
-                          disabled={nextDisabled}
+                          disabled={nextDisabled || apiSummary!.errors}
                           as={'primary'}
                           style={{ marginLeft: '10px' }}
                         >
