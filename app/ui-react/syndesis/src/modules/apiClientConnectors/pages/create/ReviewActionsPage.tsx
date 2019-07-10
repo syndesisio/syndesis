@@ -11,7 +11,7 @@ import { useRouteData, WithLoader } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
 import { UIContext } from '../../../../app';
-import { PageTitle } from '../../../../shared';
+import { ApiError, PageTitle } from '../../../../shared';
 import { WithLeaveConfirmation } from '../../../../shared/WithLeaveConfirmation';
 import {
   ApiConnectorCreatorBreadcrumb,
@@ -64,7 +64,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                       loading={loading}
                       loaderChildren={<PageLoader />}
                       error={error !== false}
-                      errorChildren={<></>}
+                      errorChildren={<ApiError error={error as Error} />}
                     >
                       {() => (
                         <>
@@ -96,6 +96,16 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                                   )
                                 : undefined
                             }
+                            i18nErrorsHeading={t(
+                              'apiClientConnectors:review:sectionErrors'
+                            )}
+                            errorMessages={
+                              apiSummary!.errors
+                                ? apiSummary!.errors.map(
+                                    (e: any) => `${e.property}: ${e.message}`
+                                  )
+                                : undefined
+                            }
                           />
                           <div>
                             <ButtonLink href={resolvers.create.upload()}>
@@ -115,6 +125,7 @@ export const ReviewActionsPage: React.FunctionComponent = () => {
                             &nbsp;
                             <ButtonLink
                               as={'primary'}
+                              disabled={apiSummary!.errors}
                               href={resolvers.create.security({
                                 specification: apiSummary!,
                               })}
