@@ -454,7 +454,7 @@ objects:
           ports:
           - containerPort: 8080
           volumeMounts:
-          - mountPath: /usr/share/nginx/html/config
+          - mountPath: /opt/app-root/src/config
             name: config-volume
           # Set to burstable with a low memory footprint to start (50 Mi)
           resources:
@@ -1354,7 +1354,6 @@ objects:
       # See the License for the specific language governing permissions and
       # limitations under the License.
       #
-
       startDelaySecs: 5
       ssl: false
       blacklistObjectNames: ["java.lang:*"]
@@ -1466,7 +1465,6 @@ objects:
               context: $1
               type: context
           type: GAUGE
-
       # Route level
         - pattern: 'org.apache.camel<context=([^,]+), type=routes, name=([^,]+)><>ExchangesCompleted'
           name: org.apache.camel.ExchangesCompleted
@@ -1564,7 +1562,6 @@ objects:
               route: $2
               type: routes
           type: GAUGE
-
       # Processor level
         - pattern: 'org.apache.camel<context=([^,]+), type=processors, name=([^,]+)><>ExchangesCompleted'
           name: org.apache.camel.ExchangesCompleted
@@ -1662,7 +1659,6 @@ objects:
               processor: $2
               type: processors
           type: COUNTER
-
       # Consumers
         - pattern: 'org.apache.camel<context=([^,]+), type=consumers, name=([^,]+)><>InflightExchanges'
           name: org.apache.camel.InflightExchanges
@@ -1672,7 +1668,6 @@ objects:
               consumer: $2
               type: consumers
           type: GAUGE
-
       # Services
         - pattern: 'org.apache.camel<context=([^,]+), type=services, name=([^,]+)><>MaxDuration'
           name: org.apache.camel.MaxDuration
@@ -1893,7 +1888,6 @@ objects:
               type: $2
               service: $3
               port: $4
-
 - apiVersion: v1
   kind: ConfigMap
   metadata:

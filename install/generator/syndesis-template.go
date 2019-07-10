@@ -11,11 +11,13 @@ package main
 
 import (
 	//"flag"
+	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
-	"regexp"
+	"os"
 	"sort"
 	"strings"
 
@@ -160,8 +162,6 @@ var productContext = Context{
 var context = syndesisContext
 var prometheusRulesFile = ""
 
-var prometheusRulesIdentEx = regexp.MustCompile(`(.+)`)
-
 func init() {
 	flags := installCommand.PersistentFlags()
 
@@ -200,10 +200,7 @@ func install(cmd *cobra.Command, args []string) {
 		return files[i].Name() < files[j].Name()
 	})
 
-	prometheusRules, err := ioutil.ReadFile(prometheusRulesFile)
-	check(err)
-
-	context.PrometheusRules = prometheusRulesIdentEx.ReplaceAllString(string(prometheusRules), "      $1")
+	context.PrometheusRules = readPrometheusRules()
 
 	for _, f := range files {
 		if strings.HasSuffix(f.Name(), ".yml.mustache") {
@@ -219,4 +216,32 @@ func check(e error) {
 	if e != nil {
 		panic(e)
 	}
+}
+
+func readPrometheusRules() string {
+	file, err := os.Open(prometheusRulesFile)
+	check(err)
+	defer file.Close()
+
+	scanner := bufio.NewScanner(bufio.NewReader(file))
+	var rules bytes.Buffer
+	first := true
+	for scanner.Scan() {
+		line := scanner.Text()
+		if len(line) == 0 {
+			continue
+		}
+
+		if !first {
+			rules.WriteString("\n")
+		}
+		first = false
+
+		rules.WriteString("      ")
+		rules.WriteString(line)
+	}
+
+	check(scanner.Err())
+
+	return rules.String()
 }
