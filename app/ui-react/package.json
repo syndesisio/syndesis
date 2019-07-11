@@ -20,6 +20,8 @@
     "lint:fix": "lerna run --parallel --no-bail lint -- --fix",
     "lint": "lerna run --parallel --no-bail lint",
     "test:angular": "lerna run test:ci",
+    "test:e2e": "lerna run --scope @syndesis/syndesis e2e",
+    "test:e2e:terminal": "lerna run --scope @syndesis/syndesis e2e:terminal",
     "test:jest": "CI=true lerna run test -- --coverage --color --runInBand",
     "test": "npm-run-all -s test:*",
     "build": "lerna run build",
