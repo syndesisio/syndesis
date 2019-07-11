@@ -148,7 +148,7 @@
     - imageChangeParams:
         automatic: true
         containerNames:
-        - syndesis-oauthproxy
+        - {{ProductName}}-oauthproxy
         from:
           kind: ImageStreamTag
           name: {{ Images.Support.OAuthProxy }}:{{ Tags.OAuthProxy }}

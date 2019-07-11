@@ -91,7 +91,7 @@
     - imageChangeParams:
         automatic: true
         containerNames:
-        - syndesis-ui
+        - {{ProductName}}-ui
         from:
           kind: ImageStreamTag
           name: {{ Images.Syndesis.Ui }}:{{ Tags.Syndesis }}
