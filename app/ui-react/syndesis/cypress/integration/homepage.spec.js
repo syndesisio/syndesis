@@ -1,17 +1,34 @@
 describe('The Home Page', () => {
-  it('successfully loads', () => {
+  it('loads metrics cards successfully', () => {
     cy.visit('/');
 
-    cy.get('[data-testid=total-integrations]').should(
+    /**
+     * We won't be counting the exact number for now, until we get data stubs or fixtures set up.
+     */
+    cy.get('[data-testid=dashboard-page-total-integrations]').should(
       'contain',
-      '16 Integrations'
+      'Integrations'
     );
 
-    cy.get('[data-testid=total-connections]').should(
+    cy.get('[data-testid=dashboard-page-total-connections]').should(
       'contain',
-      '18 Connections'
+      'Connections'
     );
 
-    cy.get('[data-testid=total-messages]').should('contain', '0 Messages');
+    cy.get('[data-testid=dashboard-page-total-messages]').should(
+      'contain',
+      'Messages'
+    );
+
+    cy.get('[data-testid=dashboard-page-metrics-uptime]').should(
+      'contain',
+      'Uptime'
+    );
   });
+
+  it('loads top 5 integrations', () => {});
+  it('loads integration board', () => {});
+  it('loads recent updates', () => {});
+  it('loads connections', () => {});
+  it('', () => {});
 });

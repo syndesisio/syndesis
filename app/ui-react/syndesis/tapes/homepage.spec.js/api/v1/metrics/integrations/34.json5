@@ -1,0 +1,74 @@
+{
+    meta: {
+        createdAt: '2019-07-16T10:09:25.155Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/api/v1/metrics/integrations',
+        method: 'GET',
+        headers: {
+            'syndesis-mock-request': '11',
+            'syndesis-mock-session': 'homepage.spec.js',
+            referrerpolicy: 'no-referrer',
+            'x-forwarded-user': 'user',
+        },
+        body: '',
+    },
+    res: {
+        status: 200,
+        headers: {
+            'cache-control': [
+                'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
+            ],
+            'content-length': [
+                '217',
+            ],
+            'content-type': [
+                'application/json',
+            ],
+            date: [
+                'Tue, 16 Jul 2019 10:09:27 GMT',
+            ],
+            'gap-auth': [
+                'kahboom@cluster.local',
+            ],
+            'gap-upstream-address': [
+                'syndesis-server',
+            ],
+            'strict-transport-security': [
+                'max-age=31536000 ; includeSubDomains',
+            ],
+            'syndesis-xsrf-token': [
+                'awesome',
+            ],
+            'x-application-context': [
+                'application',
+            ],
+            'x-content-type-options': [
+                'nosniff',
+            ],
+            'x-frame-options': [
+                'DENY',
+            ],
+            'x-xss-protection': [
+                '1; mode=block',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: {
+            metricsProvider: 'prometheus',
+            messages: 70697,
+            errors: 0,
+            start: 1563267182000,
+            lastProcessed: 1563271759098,
+            topIntegrations: {
+                'i-LhAf3La7EsSXfqlcEr9z': 25545,
+                'i-Ljr56ftZs0MNYw8HXsUz': 0,
+                'i-LhLWXKEfpUMS4XH9rq9z': 0,
+            },
+        },
+    },
+}

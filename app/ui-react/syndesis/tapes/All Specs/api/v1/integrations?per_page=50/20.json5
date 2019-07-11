@@ -1,0 +1,33 @@
+{
+    meta: {
+        createdAt: '2019-07-16T10:08:08.849Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/api/v1/integrations?per_page=50',
+        method: 'GET',
+        headers: {
+            'syndesis-mock-request': '4',
+            'syndesis-mock-session': 'All Specs',
+            referrerpolicy: 'no-referrer',
+            'x-forwarded-user': 'user',
+        },
+        body: '',
+    },
+    res: {
+        status: 504,
+        headers: {
+            'cache-control': [
+                'no-cache',
+            ],
+            connection: [
+                'close',
+            ],
+            'content-type': [
+                'text/html',
+            ],
+        },
+        body: "<html><body><h1>504 Gateway Time-out</h1>\nThe server didn't respond in time.\n</body></html>\n",
+    },
+}

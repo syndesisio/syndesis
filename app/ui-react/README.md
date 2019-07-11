@@ -649,27 +649,27 @@ Alternatively, you can run `$ yarn test --coverage --color --runInBand` from the
 
 To run for just one package, run `$ yarn test` from within the package directory.
 
-We use [react-testing-library] and [Jest] for unit tests. Test coverage is provided by [Istanbul], which comes built into Jest. Coverage reporting is enabled with the `--coverage` flag.
+We use [react-testing-library](https://github.com/testing-library/react-testing-library) and [Jest](https://jestjs.io/) for unit tests. Test coverage is provided by [Istanbul](https://github.com/gotwarlost/istanbul), which comes built into Jest. Coverage reporting is enabled with the `--coverage` flag.
 
 You can find the configuration settings for Jest in `./packages/ui/package.json` under the `jest` prop, or under `./syndesis/package.json`.
 
 
 #### E2E testing
 
-To run all E2E tests, run the following from the [`./syndesis`](syndesis) dir: `$ yarn e2e`
+To run all E2E tests: `$ yarn e2e`
 
 To run E2E tests directly in the terminal (and record results): `$ yarn e2e:terminal`
 
 Cypress will check the `baseUrl` you have configured, which should be your app server. If it cannot load it, it will not validate and will not run. The `baseUrl` is defined in [`./syndesis/cypress.json`](syndesis/cypress.json).
 
-E2E tests are written using [Cypress] and live in the [`./syndesis/cypress/integration`](syndesis/cypress/integration) directory. Fixtures are fixed sets of data loaded from files, and they can be found in [`./syndesis/cypress/fixtures`](syndesis/cypress/fixtures).
+E2E tests are written using [Cypress](https://www.cypress.io/) and live in the [`./syndesis/cypress/integration`](syndesis/cypress/integration) directory. Fixtures are fixed sets of data loaded from files, and they can be found in [`./syndesis/cypress/fixtures`](syndesis/cypress/fixtures).
 
 You can find the configuration settings for Cypress under [`./syndesis/cypress.json`](syndesis/cypress.json).
 
 
 #### Integration testing
 
-Given that true integration tests would require extensive mocking of the app, we instead have a BE recorder/replayer that will resemble integration tests as closely as possible, using [Cypress].
+Given that true integration tests would require extensive mocking of the app, we instead have a BE recorder/replayer that will resemble integration tests as closely as possible, using Cypress.
 
 The `syndesis` dev server interacts with a given API via a proxy set up by CRA, records the responses, and allows you to replay those responses for later use (i.e. in tests). Recordings are stored in [`./syndesis/tapes/[value of the syndesis-mock-session request header]full/api/path/xxx.json5`](syndesis/tapes).
 
@@ -693,9 +693,9 @@ Test identifiers that do not contain any user-defined text should be a hardcoded
 When a test identifier needs to contain some user-defined text, like for a card, list item, or row, the `toValidHtmlId` utility function, found in the `@syndesis/ui/helpers.ts` file, should be used to format the user-defined text. This function ensures the identifier only contains valid characters. Here is an example:
 
 ```tsx
-        data-testid={`integrations-list-item-${toValidHtmlId(
-          this.props.integrationName
-        )}-list-item`}
+data-testid={`integrations-list-item-${toValidHtmlId(
+  this.props.integrationName
+)}-list-item`}
 ```
 
 The above code produces this test ID an integration with the name of "My Integration": `integrations-list-item-my-integration-list-item`.
