@@ -82,13 +82,14 @@ The backend is started once you see the a line containing this in the output:
 Started Application in 28.9 seconds (JVM running for 29.615)
 ```
 
-After that UI can be started by running:
+After that UI can be started by running (in two separate terminal sessions):
 
 ```
-$ (cd app/ui && yarn start:local)
+$ (cd app/ui-react && watch:packages)
+$ (cd app/ui-react && BACKEND=http://localhost:8080 yarn watch:app:proxy)
 ```
 
-You can now access a running instance at https://localhost:4200[https://localhost:4200].
+You can now access a running instance at https://localhost:3000[https://localhost:3000].
 
 === Day-to-Day
 

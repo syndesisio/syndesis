@@ -28,6 +28,7 @@ module.exports = function(app) {
       headers: {
         'X-Forwarded-Origin': 'for=127.0.0.1;host=localhost:3000;proto=https',
         'X-Forwarded-Access-Token': 'supersecret',
+        'X-Forwarded-User': 'user',
         Cookie: process.env.BACKEND_COOKIE || '',
       },
     });
