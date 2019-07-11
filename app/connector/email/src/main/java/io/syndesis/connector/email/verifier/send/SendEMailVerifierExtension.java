@@ -24,7 +24,9 @@ import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.apache.camel.component.mail.JavaMailSender;
 import org.apache.camel.component.mail.MailConfiguration;
+import org.apache.camel.util.ObjectHelper;
 import io.syndesis.connector.email.verifier.AbstractEMailVerifier;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class SendEMailVerifierExtension extends AbstractEMailVerifier {
 
@@ -65,6 +67,14 @@ public class SendEMailVerifierExtension extends AbstractEMailVerifier {
 
         try {
             MailConfiguration configuration = createConfiguration(parameters);
+
+            String timeoutVal = ConnectorOptions.extractOption(parameters, CONNECTION_TIMEOUT);
+            if (ObjectHelper.isEmpty(timeoutVal)) {
+                timeoutVal = Long.toString(DEFAULT_CONNECTION_TIMEOUT);
+            }
+
+            setConnectionTimeoutProperty(parameters, configuration, timeoutVal);
+
             JavaMailSender sender = createJavaMailSender(configuration);
             Session session = sender.getSession();
 

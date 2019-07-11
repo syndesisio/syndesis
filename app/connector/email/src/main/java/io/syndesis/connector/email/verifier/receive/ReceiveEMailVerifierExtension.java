@@ -34,7 +34,6 @@ public class ReceiveEMailVerifierExtension extends AbstractEMailVerifier {
         super(defaultScheme, context);
     }
 
-
     // *********************************
     // Parameters validation
     // *********************************
@@ -72,6 +71,14 @@ public class ReceiveEMailVerifierExtension extends AbstractEMailVerifier {
 
         try {
             MailConfiguration configuration = createConfiguration(parameters);
+
+            String timeoutVal = ConnectorOptions.extractOption(parameters, CONNECTION_TIMEOUT);
+            if (ObjectHelper.isEmpty(timeoutVal)) {
+                timeoutVal = Long.toString(DEFAULT_CONNECTION_TIMEOUT);
+            }
+
+            setConnectionTimeoutProperty(parameters, configuration, timeoutVal);
+
             JavaMailSender sender = createJavaMailSender(configuration);
             Session session = sender.getSession();
 

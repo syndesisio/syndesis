@@ -64,6 +64,8 @@ public interface EMailConstants extends StringConstants {
 
     String PRIORITY = "priority";
 
+    String CONNECTION_TIMEOUT = "mail.connection.timeout";
+
     /**
      * Content types of email
      */
@@ -103,11 +105,29 @@ public interface EMailConstants extends StringConstants {
         }
 
         public Protocol toSecureProtocol() {
-            if (isSecure()) {
-                return this;
+            switch (this) {
+                case IMAP:
+                    return IMAPS;
+                case POP3:
+                    return POP3S;
+                case SMTP:
+                    return SMTPS;
+                default:
+                    return this;
             }
+        }
 
-            return getValueOf(id() + "s");
+        public Protocol toPlainProtocol() {
+            switch (this) {
+                case IMAPS:
+                    return IMAP;
+                case POP3S:
+                    return POP3;
+                case SMTPS:
+                    return SMTP;
+                default:
+                    return this;
+            }
         }
 
         public String id() {
