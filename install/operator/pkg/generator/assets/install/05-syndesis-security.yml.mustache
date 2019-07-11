@@ -22,26 +22,74 @@
   - apiGroups:
     - ""
     resources:
-    - pods/log
-    verbs: [ get ]
+    - replicationcontrollers
+    - replicationcontrollers/scale
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
+    - apps
+    resources:
+    - daemonsets
+    - deployments
+    - deployments/scale
+    - replicasets
+    - replicasets/scale
+    - statefulsets
+    - statefulsets/scale
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
+    - extensions
+    resources:
+    - daemonsets
+    - deployments
+    - deployments/rollback
+    - deployments/scale
+    - ingresses
+    - networkpolicies
+    - replicasets
+    - replicasets/scale
+    - replicationcontrollers/scale
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
   - apiGroups:
     - ""
     resources:
-    - replicationcontrollers
-    - replicationcontrollers/scale
+    - bindings
+    - events
+    - limitranges
+    - namespaces/status
+    - pods/log
+    - pods/status
     - replicationcontrollers/status
-    verbs: [ get, list, create, update, delete, deletecollection, watch ]
+    - resourcequotas
+    - resourcequotas/status
+    verbs: [ get, list, watch ]
   - apiGroups:
     - ""
     - build.openshift.io
     resources:
-    - builds
     - buildconfigs
-    - builds/details
     - buildconfigs/webhooks
+    - builds
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
+    - buildconfigs/instantiate
     - buildconfigs/instantiatebinary
+    - builds/clone
+    verbs: [ create ]
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
+    - builds/details
+    verbs: [ update ]
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
     - builds/log
-    verbs: [ get, list, create, update, delete, deletecollection, watch ]
+    verbs: [ get, list, watch ]
   - apiGroups:
     - ""
     - apps.openshift.io
@@ -78,15 +126,35 @@
     - ""
     - image.openshift.io
     resources:
-    - imagestreams/status
     - imagestreamimports
+    verbs: [ create ]
+  - apiGroups:
+    - ""
+    - image.openshift.io
+    resources:
+    - imagestreams/status
     verbs: [ get, list, watch ]
   - apiGroups:
     - route.openshift.io
     resources:
     - routes
-    - routes/custom-host
     verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
+    - ""
+    - template.openshift.io
+    resources:
+    - processedtemplates
+    - templateconfigs
+    - templateinstances
+    - templates
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
+    - buildlogs
+    verbs: [ get, list, create, update, delete, deletecollection, watch, patch ]
+
 - apiVersion: rbac.authorization.k8s.io/v1
   kind: RoleBinding
   metadata:
@@ -102,4 +170,182 @@
   roleRef:
     kind: Role
     name: syndesis-editor
+    apiGroup: rbac.authorization.k8s.io
+
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: Role
+  metadata:
+    name: syndesis-viewer
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+  rules:
+  - apiGroups:
+    - ""
+    resources:
+    - configmaps
+    - endpoints
+    - persistentvolumeclaims
+    - pods
+    - replicationcontrollers
+    - replicationcontrollers/scale
+    - serviceaccounts
+    - services
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    resources:
+    - bindings
+    - events
+    - limitranges
+    - namespaces/status
+    - pods/log
+    - pods/status
+    - replicationcontrollers/status
+    - resourcequotas
+    - resourcequotas/status
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - apps
+    resources:
+    - daemonsets
+    - deployments
+    - deployments/scale
+    - replicasets
+    - replicasets/scale
+    - statefulsets
+    - statefulsets/scale
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - extensions
+    resources:
+    - daemonsets
+    - deployments
+    - deployments/scale
+    - ingresses
+    - networkpolicies
+    - replicasets
+    - replicasets/scale
+    - replicationcontrollers/scale
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
+    - buildconfigs
+    - buildconfigs/webhooks
+    - builds
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
+    - builds/log
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    - apps.openshift.io
+    resources:
+    - deploymentconfigs
+    - deploymentconfigs/scale
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    - apps.openshift.io
+    resources:
+    - deploymentconfigs/log
+    - deploymentconfigs/status
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    - image.openshift.io
+    resources:
+    - imagestreamimages
+    - imagestreammappings
+    - imagestreams
+    - imagestreamtags
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    - image.openshift.io
+    resources:
+    - imagestreams/status
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - route.openshift.io
+    resources:
+    - routes
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    - template.openshift.io
+    resources:
+    - processedtemplates
+    - templateconfigs
+    - templateinstances
+    - templates
+    verbs:
+    - get
+    - list
+    - watch
+  - apiGroups:
+    - ""
+    - build.openshift.io
+    resources:
+    - buildlogs
+    verbs:
+    - get
+    - list
+    - watch
+
+- apiVersion: rbac.authorization.k8s.io/v1
+  kind: RoleBinding
+  metadata:
+    name: syndesis-prometheus-viewer
+    labels:
+      app: syndesis
+      syndesis.io/app: syndesis
+      syndesis.io/type: infrastructure
+      syndesis.io/component: syndesis-prometheus
+  subjects:
+  - kind: ServiceAccount
+    name: syndesis-prometheus
+  roleRef:
+    kind: Role
+    name: syndesis-viewer
     apiGroup: rbac.authorization.k8s.io
