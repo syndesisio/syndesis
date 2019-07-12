@@ -189,8 +189,6 @@ public class IntegrationRouteBuilder extends RouteBuilder {
 
                 if (StepKind.aggregate.equals(step.getStepKind())) {
                     if (!splitStack.isEmpty()) {
-                        parent = handler.handle(step, parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
-
                         String splitStepId = splitStack.pop();
                         while (!getStepId(splitStepId).equals(parent.getId())) {
                             if (parent instanceof ExpressionNode) {
@@ -206,6 +204,7 @@ public class IntegrationRouteBuilder extends RouteBuilder {
                             parent = parent.endParent();
                         }
 
+                        parent = handler.handle(step, parent, this, flowIndex, String.valueOf(stepIndex)).orElse(parent);
                         parent = captureOutMessage(parent, stepId);
                     }
                 } else {
