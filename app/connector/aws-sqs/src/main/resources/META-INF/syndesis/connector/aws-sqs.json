@@ -103,7 +103,10 @@
       },
       "id": "io.syndesis:aws-sqs-send-object-connector",
       "name": "Send Object",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -223,7 +226,10 @@
       },
       "id": "io.syndesis:aws-sqs-send-batch-connector",
       "name": "Send Batch Object",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     },
     {
       "actionType": "connector",
@@ -321,7 +327,10 @@
       },
       "id": "io.syndesis:aws-sqs-polling-queue-connector",
       "name": "Poll an Amazon SQS queue",
-      "pattern": "From"
+      "pattern": "From",
+      "tags": [
+        "dynamic"
+      ]
     }
   ],
   "configuredProperties": {},
