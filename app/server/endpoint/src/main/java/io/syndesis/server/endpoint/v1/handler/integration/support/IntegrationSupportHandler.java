@@ -51,6 +51,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import io.swagger.annotations.Api;
@@ -113,17 +114,18 @@ public class IntegrationSupportHandler {
     private final IntegrationProjectGenerator projectGenerator;
     private final DataManager dataManager;
     private final IntegrationResourceManager resourceManager;
-    private final IntegrationHandler integrationHandler;
     private final FileDataManager extensionDataManager;
     private final ExtensionActivator extensionActivator;
     private final IconDao iconDao;
     private final EncryptionComponent encryptionComponent;
 
+    //Autowired with a setter to resolve circular dependency issue
+    private IntegrationHandler integrationHandler;
+
     @SuppressWarnings("PMD.ExcessiveParameterList")
     public IntegrationSupportHandler(final Migrator migrator, final SqlJsonDB jsondb,
                                      final IntegrationProjectGenerator projectGenerator,
                                      final DataManager dataManager, final IntegrationResourceManager resourceManager,
-                                     final IntegrationHandler integrationHandler,
                                      final FileDataManager extensionDataManager,
                                      final EncryptionComponent encryptionComponent,
                                      final ExtensionActivator extensionActivator, final IconDao iconDao) {
@@ -133,11 +135,15 @@ public class IntegrationSupportHandler {
         this.projectGenerator = projectGenerator;
         this.dataManager = dataManager;
         this.resourceManager = resourceManager;
-        this.integrationHandler = integrationHandler;
         this.extensionDataManager = extensionDataManager;
         this.encryptionComponent = encryptionComponent;
         this.extensionActivator = extensionActivator;
         this.iconDao = iconDao;
+    }
+
+    @Autowired
+    public void setIntegrationHandler(IntegrationHandler integrationHandler) {
+        this.integrationHandler = integrationHandler;
     }
 
     public DataManager getDataManager() {
