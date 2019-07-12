@@ -242,7 +242,7 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
       {...attrs}
       valid={valid}
       saving={saving}
-      value={v}
+      value={currentValue}
       errorMsg={errorMsg}
       asTextarea={isTextArea}
       onChange={handleChange}
@@ -256,7 +256,7 @@ export const InlineTextEdit: React.FunctionComponent<IInlineTextEditProps> = ({
   return (
     <InlineEdit
       className={className}
-      value={currentValue}
+      value={value}
       isEditing={isEditing}
       renderValue={renderValue}
       renderEdit={renderEdit}
