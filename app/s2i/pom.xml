@@ -112,6 +112,7 @@
                   <directory>src/main/resources</directory>
                   <includes>
                     <include>settings.xml</include>
+                    <include>clean_diff_dependencies.sh</include>
                   </includes>
                   <filtering>true</filtering>
                 </resource>
