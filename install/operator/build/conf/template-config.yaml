@@ -1,3 +1,4 @@
+ProductName: syndesis
 AllowLocalHost: false
 Debug: false
 EarlyAccess: false

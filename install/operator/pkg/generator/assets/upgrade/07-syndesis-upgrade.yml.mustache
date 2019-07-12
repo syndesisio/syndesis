@@ -15,7 +15,7 @@
 - apiVersion: v1
   kind: Pod
   metadata:
-    name: syndesis-upgrade-{{ Tags.Upgrade }}
+    name: {{ProductName}}-upgrade-{{ Tags.Upgrade }}
   spec:
     serviceAccountName: syndesis-operator
     containers:

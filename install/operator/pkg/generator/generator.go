@@ -59,6 +59,7 @@ type tags struct {
 }
 
 type Context struct {
+	ProductName      string
 	AllowLocalHost   bool
 	WithDockerImages bool
 	Productized      bool
