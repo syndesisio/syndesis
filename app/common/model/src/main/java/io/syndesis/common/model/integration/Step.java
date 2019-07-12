@@ -24,6 +24,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
+import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.model.Dependency;
 import io.syndesis.common.model.Dependency.Type;
 import io.syndesis.common.model.Kind;
@@ -32,6 +33,7 @@ import io.syndesis.common.model.WithDependencies;
 import io.syndesis.common.model.WithId;
 import io.syndesis.common.model.WithMetadata;
 import io.syndesis.common.model.action.Action;
+import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.connection.Connection;
 import io.syndesis.common.model.extension.Extension;
 import org.immutables.value.Value;
@@ -100,6 +102,25 @@ public interface Step extends WithId<Step>, WithConfiguredProperties, WithDepend
     default boolean hasOutputDataShape() {
         Optional<DataShape> maybeShape = outputDataShape();
         return maybeShape.isPresent() && maybeShape.get().getKind() != DataShapeKinds.NONE;
+    }
+
+    /**
+     * Evaluates if step output shape is a Json schema that is marked to be a unified specification.
+     * @return boolean flag marking that output shape is of unified json nature
+     */
+    default boolean hasUnifiedJsonSchemaOutputShape() {
+        Optional<StepAction> stepAction = getActionAs(StepAction.class);
+        if (stepAction.isPresent()) {
+            Optional<DataShape> outputShape = stepAction.get().getOutputDataShape();
+            if (outputShape.isPresent() && outputShape.get().getKind() == DataShapeKinds.JSON_SCHEMA) {
+                return outputShape.get().getMetadata()
+                        .entrySet()
+                        .stream()
+                        .anyMatch(entry -> entry.getKey().equals(DataShapeMetaData.UNIFIED));
+            }
+        }
+
+        return false;
     }
 
     @JsonIgnore

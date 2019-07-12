@@ -530,6 +530,48 @@ public class AggregateMetadataHandlerTest {
         Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
     }
 
+    @Test
+    public void shouldAutoConvertAndExtractJsonUnifiedSchemaVariants() throws IOException {
+        DynamicActionMetadata metadata = new DynamicActionMetadata.Builder()
+                .inputShape(new DataShape.Builder()
+                        .kind(DataShapeKinds.JSON_SCHEMA)
+                        .specification(getSpecification("person-list-unified-response-schema.json"))
+                        .putMetadata(DataShapeMetaData.UNIFIED, "true")
+                        .description("person-list-schema")
+                        .collectionType("List")
+                        .type(Person.class.getName())
+                        .collectionClassName(List.class.getName())
+                        .addVariant(dummyShape(DataShapeKinds.JAVA))
+                        .build())
+                .outputShape(new DataShape.Builder()
+                        .kind(DataShapeKinds.JSON_SCHEMA)
+                        .specification(getSpecification("person-unified-response-schema.json"))
+                        .putMetadata(DataShapeMetaData.UNIFIED, "true")
+                        .description("person-schema")
+                        .type(Person.class.getName())
+                        .addVariant(dummyShape(DataShapeKinds.JAVA))
+                        .build())
+                .build();
+
+        DynamicActionMetadata enrichedMetadata = metadataHandler.handle(metadata);
+
+        Assert.assertNotNull(enrichedMetadata.inputShape());
+        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.inputShape().getKind());
+        Assert.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-unified-response-schema.json")), enrichedMetadata.inputShape().getSpecification());
+        Assert.assertEquals(DataShapeMetaData.VARIANT_ELEMENT, enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assert.assertEquals("true", enrichedMetadata.inputShape().getMetadata().get(DataShapeMetaData.UNIFIED));
+        Assert.assertEquals(1, enrichedMetadata.inputShape().getVariants().size());
+        Assert.assertEquals("dummy", enrichedMetadata.inputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+
+        Assert.assertNotNull(enrichedMetadata.outputShape());
+        Assert.assertEquals(DataShapeKinds.JSON_SCHEMA, enrichedMetadata.outputShape().getKind());
+        Assert.assertEquals(StringUtils.trimAllWhitespace(getSpecification("person-list-unified-response-schema.json")), enrichedMetadata.outputShape().getSpecification());
+        Assert.assertEquals(DataShapeMetaData.VARIANT_COLLECTION, enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.VARIANT));
+        Assert.assertEquals("true", enrichedMetadata.outputShape().getMetadata().get(DataShapeMetaData.UNIFIED));
+        Assert.assertEquals(1, enrichedMetadata.outputShape().getVariants().size());
+        Assert.assertEquals("dummy", enrichedMetadata.outputShape().getVariants().get(0).getMetadata().get(DataShapeMetaData.VARIANT));
+    }
+
     private DataShape dummyShape(DataShapeKinds kind) {
         return new DataShape.Builder()
                 .kind(kind)
