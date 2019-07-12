@@ -40,39 +40,39 @@ import com.amazonaws.services.sqs.model.QueueAttributeName;
 
 public class AWSSQSMetaDataExtension extends AbstractMetaDataExtension {
 
-	AWSSQSMetaDataExtension(CamelContext context) {
-		super(context);
-	}
+    AWSSQSMetaDataExtension(CamelContext context) {
+        super(context);
+    }
 
-	@Override
-	public Optional<MetaData> meta(Map<String, Object> parameters) {
-		final String accessKey = (String) parameters.get("accessKey");
-		final String secretKey = (String) parameters.get("secretKey");
-		final String region = (String) parameters.get("region");
-		AmazonSQSClientBuilder clientBuilder;
-		AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
-		AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
-		clientBuilder = AmazonSQSClientBuilder.standard().withCredentials(credentialsProvider);
-		clientBuilder = clientBuilder.withRegion(Regions.valueOf(region));
-		AmazonSQS sqsClient = clientBuilder.build();
-		List<String> attributeNames = new ArrayList<String>();
-	    attributeNames.add("All");
-		try {
-			ListQueuesResult result = sqsClient.listQueues();
-			Set<String> setQueue = new HashSet<String>();
-			if (result.getQueueUrls() != null) {
-				for (String entry : result.getQueueUrls()) {
-					GetQueueAttributesRequest req = new GetQueueAttributesRequest();
-					req.setQueueUrl(entry);
-					req.setAttributeNames(attributeNames);
-					GetQueueAttributesResult c = sqsClient.getQueueAttributes(req);
-					setQueue.add(c.getAttributes().get(QueueAttributeName.QueueArn.name()));
-				}
-			}
-			return Optional.of(MetaDataBuilder.on(getCamelContext()).withAttribute(MetaData.CONTENT_TYPE, "text/plain")
-					.withAttribute(MetaData.JAVA_TYPE, String.class).withPayload(setQueue).build());
-		} catch (Exception e) {
-			throw new IllegalStateException("Get information about existing queues with has failed.", e);
-		}
-	}
+    @Override
+    public Optional<MetaData> meta(Map<String, Object> parameters) {
+        final String accessKey = (String)parameters.get("accessKey");
+        final String secretKey = (String)parameters.get("secretKey");
+        final String region = (String)parameters.get("region");
+        AmazonSQSClientBuilder clientBuilder;
+        AWSCredentials credentials = new BasicAWSCredentials(accessKey, secretKey);
+        AWSCredentialsProvider credentialsProvider = new AWSStaticCredentialsProvider(credentials);
+        clientBuilder = AmazonSQSClientBuilder.standard().withCredentials(credentialsProvider);
+        clientBuilder = clientBuilder.withRegion(Regions.valueOf(region));
+        AmazonSQS sqsClient = clientBuilder.build();
+        List<String> attributeNames = new ArrayList<String>();
+        attributeNames.add("All");
+        try {
+            ListQueuesResult result = sqsClient.listQueues();
+            Set<String> setQueue = new HashSet<String>();
+            if (result.getQueueUrls() != null) {
+                for (String entry : result.getQueueUrls()) {
+                    GetQueueAttributesRequest req = new GetQueueAttributesRequest();
+                    req.setQueueUrl(entry);
+                    req.setAttributeNames(attributeNames);
+                    GetQueueAttributesResult c = sqsClient.getQueueAttributes(req);
+                    setQueue.add(c.getAttributes().get(QueueAttributeName.QueueArn.name()));
+                }
+            }
+            return Optional.of(MetaDataBuilder.on(getCamelContext()).withAttribute(MetaData.CONTENT_TYPE, "text/plain").withAttribute(MetaData.JAVA_TYPE, String.class)
+                .withPayload(setQueue).build());
+        } catch (Exception e) {
+            throw new IllegalStateException("Get information about existing queues with has failed.", e);
+        }
+    }
 }

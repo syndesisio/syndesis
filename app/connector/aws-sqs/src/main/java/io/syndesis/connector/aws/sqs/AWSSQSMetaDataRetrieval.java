@@ -22,25 +22,20 @@ public class AWSSQSMetaDataRetrieval extends ComponentMetadataRetrieval {
     protected MetaDataExtension resolveMetaDataExtension(CamelContext context, Class<? extends MetaDataExtension> metaDataExtensionClass, String componentId, String actionId) {
         return new AWSSQSMetaDataExtension(context);
     }
-    
-	@Override
+
+    @Override
     @SuppressWarnings("unchecked")
-	protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId,
-			Map<String, Object> properties, MetaData metadata) {
+    protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaData metadata) {
         try {
-            Set<String> queues = (Set<String>) metadata.getPayload();
+            Set<String> queues = (Set<String>)metadata.getPayload();
 
             List<PropertyPair> channelsResult = new ArrayList<>();
-            queues.stream().forEach(
-                t -> channelsResult.add(new PropertyPair(t, t))
-            );
+            queues.stream().forEach(t -> channelsResult.add(new PropertyPair(t, t)));
 
-            return SyndesisMetadata.of(
-                Collections.singletonMap("queueNameOrArn", channelsResult)
-            );
-        } catch ( Exception e) {
+            return SyndesisMetadata.of(Collections.singletonMap("queueNameOrArn", channelsResult));
+        } catch (Exception e) {
             return SyndesisMetadata.EMPTY;
         }
-	}
+    }
 
 }
