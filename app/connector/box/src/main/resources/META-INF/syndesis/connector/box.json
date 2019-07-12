@@ -10,6 +10,9 @@
           "inBody": "content",
           "methodName": "upload"
         },
+        "connectorCustomizers": [
+          "io.syndesis.connector.box.customizer.BoxUploadCustomizer"
+        ],
         "inputDataShape": {
           "kind": "any"
         },
