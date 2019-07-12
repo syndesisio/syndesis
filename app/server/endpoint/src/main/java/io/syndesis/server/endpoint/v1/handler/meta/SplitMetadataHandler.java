@@ -72,7 +72,7 @@ class SplitMetadataHandler implements StepMetadataHandler {
                                             .decompress()
                                             .build();
 
-                if (isUnifiedJsonSchemaShape(dataShape)) {
+                if (StepMetadataHelper.isUnifiedJsonSchemaShape(dataShape)) {
                     dataShape = new DataShape.Builder()
                                         .createFrom(dataShape)
                                         .specification(extractUnifiedJsonBodySpec(dataShape.getSpecification()))
@@ -156,22 +156,6 @@ class SplitMetadataHandler implements StepMetadataHandler {
         }
 
         return DynamicActionMetadata.NOTHING;
-    }
-
-    /**
-     * Checks if given shape is a unified Json schema shape.
-     * @param dataShape
-     * @return
-     */
-    private boolean isUnifiedJsonSchemaShape(DataShape dataShape) {
-        if (dataShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
-            return dataShape.getMetadata()
-                    .entrySet()
-                    .stream()
-                    .anyMatch(entry -> entry.getKey().equals(DataShapeMetaData.UNIFIED));
-        }
-
-        return false;
     }
 
     /**

@@ -21,10 +21,6 @@ import java.util.Arrays;
 import java.util.Optional;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import io.syndesis.common.model.DataShape;
-import io.syndesis.common.model.DataShapeKinds;
-import io.syndesis.common.model.DataShapeMetaData;
-import io.syndesis.common.model.action.StepAction;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
 import io.syndesis.common.util.Json;
@@ -85,7 +81,8 @@ public class SplitStepHandler implements IntegrationStepHandler {
         String languageName = step.getConfiguredProperties().get("language");
         String expressionDefinition = step.getConfiguredProperties().get("expression");
 
-        if (hasUnifiedJsonSchemaOutputShape(step)) {
+        if (step.hasUnifiedJsonSchemaOutputShape()) {
+            // we have to split the nested unified body property by default.
             splitExpression = new SplitExpression(new UnifiedJsonBodyExpression(Builder.body()));
         } else if (ObjectHelper.isNotEmpty(expressionDefinition)) {
             if (ObjectHelper.isEmpty(languageName)) {
@@ -112,29 +109,6 @@ public class SplitStepHandler implements IntegrationStepHandler {
         route = route.split(splitExpression).aggregationStrategy(aggregation.getStrategy(step.getConfiguredProperties()));
 
         return Optional.of(route);
-    }
-
-    /**
-     * Evaluates if step output shape is a Json schema that is marked to be a unified specification. This means
-     * that we have to split the nested unified body property by default. See 'UnifiedJsonDataShapeGenerator'
-     * for details.
-     *
-     * @param step
-     * @return
-     */
-    private boolean hasUnifiedJsonSchemaOutputShape(Step step) {
-        Optional<StepAction> stepAction = step.getActionAs(StepAction.class);
-        if (stepAction.isPresent()) {
-            Optional<DataShape> outputShape = stepAction.get().getOutputDataShape();
-            if (outputShape.isPresent() && outputShape.get().getKind() == DataShapeKinds.JSON_SCHEMA) {
-                return outputShape.get().getMetadata()
-                        .entrySet()
-                        .stream()
-                        .anyMatch(entry -> entry.getKey().equals(DataShapeMetaData.UNIFIED));
-            }
-        }
-
-        return false;
     }
 
     /**
