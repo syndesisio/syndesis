@@ -345,7 +345,7 @@ export const useIntegrationHelpers = () => {
           action,
           configuredProperties,
           connection,
-          id: originalStep ? originalStep.id : key(),
+          id: originalStep && originalStep.id ? originalStep.id : key(),
           metadata: {
             ...(originalStep ? originalStep.metadata : {}),
             ...{ configured: true },
