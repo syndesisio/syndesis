@@ -1,4 +1,4 @@
-import { WithViewEditorStates } from '@syndesis/api';
+import { useViewEditorStates } from '@syndesis/api';
 import { RestDataService, ViewEditorState } from '@syndesis/models';
 import { PageSection, ViewHeader, ViewHeaderBreadcrumb } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
@@ -33,7 +33,6 @@ export interface IVirtualizationSqlClientPageRouteState {
  * Page displays virtualization views and allows user run test queries against the views.
  */
 export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
-
   const { t } = useTranslation(['data', 'shared']);
   const { state, history } = useRouteData<
     IVirtualizationSqlClientPageRouteParams,
@@ -41,8 +40,10 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   >();
   const appContext = React.useContext(AppContext);
   const { handleDeleteVirtualization, handlePublishVirtualization, handleUnpublishServiceVdb } = VirtualizationHandlers();
-  
   const virtualization = state.virtualization;
+  const { resource: editorStates } = useViewEditorStates(
+    virtualization.serviceVdbName + '*'
+  );
   const publishingDetails = getPublishingDetails(
     appContext.config.consoleUrl,
     state.virtualization
@@ -85,12 +86,8 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   return (
     <>
       <ViewHeaderBreadcrumb
-        currentPublishedState={
-          publishingDetails.state
-        }
-        virtualizationName={
-          state.virtualization.keng__id
-        }
+        currentPublishedState={publishingDetails.state}
+        virtualizationName={state.virtualization.keng__id}
         dashboardHref={resolvers.dashboard.root()}
         dashboardString={t('shared:Home')}
         dataHref={resolvers.data.root()}
@@ -98,80 +95,46 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
         i18nViews={t('virtualization.views')}
         i18nCancelText={t('shared:Cancel')}
         i18nDelete={t('shared:Delete')}
-        i18nDeleteModalMessage={t(
-          'virtualization.deleteModalMessage',
-          {
-            name: state.virtualization.keng__id,
-          }
-        )}
-        i18nDeleteModalTitle={t(
-          'virtualization.deleteModalTitle'
-        )}
+        i18nDeleteModalMessage={t('virtualization.deleteModalMessage', {
+          name: state.virtualization.keng__id,
+        })}
+        i18nDeleteModalTitle={t('virtualization.deleteModalTitle')}
         i18nPublish={t('shared:Publish')}
         i18nUnpublish={t('shared:Unpublish')}
-        i18nUnpublishModalMessage={t(
-          'virtualization.unpublishModalMessage',
-          {
-            name: state.virtualization.keng__id,
-          }
-        )}
-        i18nUnpublishModalTitle={t(
-          'virtualization.unpublishModalTitle'
-        )}
+        i18nUnpublishModalMessage={t('virtualization.unpublishModalMessage', {
+          name: state.virtualization.keng__id,
+        })}
+        i18nUnpublishModalTitle={t('virtualization.unpublishModalTitle')}
         onDelete={doDelete}
         /* TD-636: Commented out for TP
            onExport={this.handleExportVirtualization} */
         onUnpublish={doUnpublish}
         onPublish={doPublish}
-        serviceVdbName={
-          state.virtualization.serviceVdbName
-        }
+        serviceVdbName={state.virtualization.serviceVdbName}
         hasViews={
           state.virtualization.serviceViewDefinitions &&
-          state.virtualization.serviceViewDefinitions
-            .length > 0
+          state.virtualization.serviceViewDefinitions.length > 0
         }
       />
       <ViewHeader
         i18nTitle={state.virtualization.keng__id}
-        i18nDescription={
-          state.virtualization.tko__description
-        }
+        i18nDescription={state.virtualization.tko__description}
       />
-      <PageSection
-        variant={'light'}
-        noPadding={true}
-      >
-        <VirtualizationNavBar
-          virtualization={state.virtualization}
-        />
+      <PageSection variant={'light'} noPadding={true}>
+        <VirtualizationNavBar virtualization={state.virtualization} />
       </PageSection>
-      <WithViewEditorStates
-        idPattern={
-          state.virtualization.serviceVdbName + '*'
-        }
-      >
-        {({ data, hasData, error }) => (
-          <WithVirtualizationSqlClientForm
-            views={data.map(
-              (editorState: ViewEditorState) =>
-                editorState.viewDefinition
-            )}
-            targetVdb={getPreviewVdbName()}
-            linkCreateView={resolvers.data.virtualizations.create()}
-            linkImportViews={resolvers.data.virtualizations.views.importSource.selectConnection(
-              { virtualization }
-            )}
-          >
-            {({
-              form,
-              submitForm,
-              isSubmitting,
-            }) => <></>}
-          </WithVirtualizationSqlClientForm>
+      <WithVirtualizationSqlClientForm
+        views={editorStates.map(
+          (editorState: ViewEditorState) => editorState.viewDefinition
         )}
-      </WithViewEditorStates>
+        targetVdb={getPreviewVdbName()}
+        linkCreateView={resolvers.data.virtualizations.create()}
+        linkImportViews={resolvers.data.virtualizations.views.importSource.selectConnection(
+          { virtualization }
+        )}
+      >
+        {() => <></>}
+      </WithVirtualizationSqlClientForm>
     </>
   );
-
-}
+};

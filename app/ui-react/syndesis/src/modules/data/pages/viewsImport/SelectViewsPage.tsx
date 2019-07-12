@@ -1,4 +1,4 @@
-import {   useVirtualizationHelpers, WithViewEditorStates } from '@syndesis/api';
+import { useViewEditorStates, useVirtualizationHelpers } from '@syndesis/api';
 import { RestDataService, ViewEditorState, ViewInfo } from '@syndesis/models';
 import { ViewsImportLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
@@ -27,7 +27,6 @@ export interface ISelectViewsRouteState {
 }
 
 export const SelectViewsPage: React.FunctionComponent = () => {
-
   const { state, history } = useRouteData<
     ISelectViewsRouteParams,
     ISelectViewsRouteState
@@ -39,39 +38,40 @@ export const SelectViewsPage: React.FunctionComponent = () => {
   const { t } = useTranslation(['data', 'shared']);
   const { refreshVirtualizationViews } = useVirtualizationHelpers();
 
-  const getExistingViewNames = (editorStates: ViewEditorState[]) => {
+  const getExistingViewNames = (viewEditorStates: ViewEditorState[]) => {
     const viewNames: string[] = [];
-    for (const editorState of editorStates) {
+    for (const editorState of viewEditorStates) {
       viewNames.push(editorState.viewDefinition.viewName);
     }
     return viewNames;
-  }
+  };
 
   const handleAddView = async (view: ViewInfo) => {
     const currentViews = selectedViews;
     currentViews.push(view);
     setSelectedViews(currentViews);
     setHasSelectedViews(currentViews.length > 0);
-  }
+  };
 
   const handleRemoveView = async (viewName: string) => {
     const currentViews = selectedViews;
-    const index = currentViews.findIndex(
-      view => view.viewName === viewName
-    );
+    const index = currentViews.findIndex(view => view.viewName === viewName);
 
     if (index !== -1) {
       currentViews.splice(index, 1);
     }
     setSelectedViews(currentViews);
     setHasSelectedViews(currentViews.length > 0);
-  }
+  };
 
   const setInProgress = async (isWorking: boolean) => {
     setSaveInProgress(isWorking);
-  }
+  };
 
   const virtualization = state.virtualization;
+  const { resource: editorStates } = useViewEditorStates(
+    virtualization.serviceVdbName + '*'
+  );
 
   const handleCreateViews = async () => {
     setInProgress(true);
@@ -109,37 +109,26 @@ export const SelectViewsPage: React.FunctionComponent = () => {
   };
 
   return (
-    <WithViewEditorStates
-      idPattern={virtualization.serviceVdbName + '*'}
-    >
-      {({ data, hasData, error }) => (
-        <ViewsImportLayout
-          header={<ViewsImportSteps step={2} />}
-          content={
-            <ViewInfosContent
-              connectionName={state.connectionId}
-              existingViewNames={getExistingViewNames(
-                data
-              )}
-              onViewSelected={handleAddView}
-              onViewDeselected={handleRemoveView}
-            />
-          }
-          cancelHref={resolvers.data.virtualizations.views.root(
-            {
-              virtualization,
-            }
-          )}
-          backHref={resolvers.data.virtualizations.views.importSource.selectConnection(
-            { virtualization }
-          )}
-          onCreateViews={handleCreateViews}
-          isNextDisabled={!hasSelectedViews}
-          isNextLoading={saveInProgress}
-          isLastStep={true}
+    <ViewsImportLayout
+      header={<ViewsImportSteps step={2} />}
+      content={
+        <ViewInfosContent
+          connectionName={state.connectionId}
+          existingViewNames={getExistingViewNames(editorStates)}
+          onViewSelected={handleAddView}
+          onViewDeselected={handleRemoveView}
         />
+      }
+      cancelHref={resolvers.data.virtualizations.views.root({
+        virtualization,
+      })}
+      backHref={resolvers.data.virtualizations.views.importSource.selectConnection(
+        { virtualization }
       )}
-    </WithViewEditorStates>
+      onCreateViews={handleCreateViews}
+      isNextDisabled={!hasSelectedViews}
+      isNextLoading={saveInProgress}
+      isLastStep={true}
+    />
   );
-
-}
+};
