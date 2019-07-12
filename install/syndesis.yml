@@ -2103,7 +2103,7 @@ objects:
           - name: POSTGRESQL_DATABASE
             value: ${POSTGRESQL_DATABASE}
           - name: CONTROLLERS_EXPOSE_VIA3SCALE
-            value: ''            
+            value: ${CONTROLLERS_EXPOSE_VIA3SCALE}
           image: ' '
 
           imagePullPolicy: IfNotPresent
