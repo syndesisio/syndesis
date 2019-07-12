@@ -24,6 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.json.JsonUtils;
@@ -32,7 +33,6 @@ import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.common.SqlParam;
 import io.syndesis.connector.sql.common.SqlStatementMetaData;
 import io.syndesis.connector.sql.common.SqlStatementParser;
-import io.syndesis.connector.sql.common.StatementType;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -108,6 +108,11 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
 
     private void initJdbcMap(Map<String, Object> options) {
         if (jdbcTypeMap == null) {
+            batch = Optional.ofNullable(options.get("batch"))
+                    .map(Object::toString)
+                    .map(Boolean::valueOf)
+                    .orElse(false);
+
             final String sql =  String.valueOf(options.get("query"));
             final DataSource dataSource = (DataSource) options.get("dataSource");
 
@@ -126,8 +131,8 @@ public final class SqlConnectorCustomizer implements ComponentProxyCustomizer {
                     autoIncrementColumnName = statementInfo.getAutoIncrementColumnName();
                 }
 
-                batch = statementInfo.hasInputParams() && statementInfo.getStatementType() != StatementType.SELECT;
-                options.put("batch", batch);
+                statementInfo.setBatch(batch);
+                batch = statementInfo.isVerifiedBatchUpdateMode();
             } catch (SQLException e){
                 LOGGER.error(e.getMessage(),e);
             }
