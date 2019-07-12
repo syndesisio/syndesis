@@ -37,6 +37,7 @@
     <maven.repo.local></maven.repo.local>
     <license.dir>${project.basedir}/src/main/resources/licenses</license.dir>
     <license.output.dir>${project.build.directory}/licenses</license.output.dir>
+    <image.generator.stable.version>1.7.9</image.generator.stable.version>
   </properties>
 
   <dependencies>
@@ -71,6 +72,18 @@
               <type>jar</type>
               <outputDirectory>${project.build.directory}</outputDirectory>
               <destFileName>rest-builder-image-generator.jar</destFileName>
+            </artifactItem>
+            <!--
+              We use a previous stable version in order to perform a caching of all dependencies
+              that are not going to change in your local development
+            -->
+            <artifactItem>
+              <groupId>io.syndesis.server</groupId>
+              <artifactId>server-builder-image-generator</artifactId>
+              <version>${image.generator.stable.version}</version>
+              <type>jar</type>
+              <outputDirectory>${project.build.directory}</outputDirectory>
+              <destFileName>rest-builder-image-generator-${image.generator.stable.version}.jar</destFileName>
             </artifactItem>
           </artifactItems>
         </configuration>
@@ -127,6 +140,25 @@
                 ${basedir}/target/generated-sources/docker
                 ${maven.repo.local}
               </commandlineArgs>
+            </configuration>
+          </execution>
+          <execution>
+            <!--
+              Generate a sample project with previous version dependencies.
+              It serves as a base caching strategy to import all unchanged dependencies
+            -->
+            <id>rest-builder-image-generator-${image.generator.stable.version}</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>java</executable>
+              <arguments>
+                <argument>-jar</argument>
+                <argument>${project.build.directory}/rest-builder-image-generator-${image.generator.stable.version}.jar</argument>
+                <argument>--to=${basedir}/target/generated-sources/docker/m2/project-cache</argument>
+              </arguments>
             </configuration>
           </execution>
           <execution>
