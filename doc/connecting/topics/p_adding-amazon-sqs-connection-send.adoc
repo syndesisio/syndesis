@@ -30,9 +30,25 @@ select one of the following:
 * `ExchangeIdMessageGroupIdStrategy`
 * `PropertyValueMessageGroupIdStrategy`
 
++
+FIFO queues are designed to ensure that the order in which messages 
+are sent and received is strictly preserved and that each message 
+is processed exactly once. A FIFO queue name has `.fifo` as a suffix. 
+
 . In the *Message deduplication ID strategy* field, for a FIFO queue, 
 accept `NullMessageDeduplicationIdStrategy` or click in the field 
-to select `ExchangeIdMessageDeduplicationIdStrategy`.
+to select `ExchangeIdMessageDeduplicationIdStrategy`. 
++
+The setting of this parameter has no effect on simple queues. For a FIFO queue, 
+the connection uses the selected strategy to ensure that it does not return 
+duplicate messages to the integration. 
++
+** `NullMessageDeduplicationIdStrategy` uses the message body as the 
+deduplication element. In other words, the connection compares message 
+bodies to identify duplicate messages. 
+** `ExchangeIdMessageDeduplicationIdStrategy` uses the message's exchange 
+ID as the deduplication element. In other words, the connection compares 
+exchange IDs to identify duplicate messages. 
 
 . In the *Queue Name or Amazon Resource Name* field, enter the 
 name of the queue to send messages to. If the queue does not exist, 
@@ -40,7 +56,10 @@ the connection creates it.
 
 . In the *Delay* field, accept the default, which is 0 for no delay. 
 Or, to add a delay, specify a number. The integration waits this number 
-of seconds before sending messages.  
+of seconds before sending messages. This is useful when the message 
+consumers might not be immediately ready for the messages that the 
+connection is sending. 
+
  
 . Click *Next*. 
 
