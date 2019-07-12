@@ -22,23 +22,36 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import javax.script.SimpleBindings;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonNode;
 import io.syndesis.common.model.integration.Step;
 import io.syndesis.common.model.integration.StepKind;
+import io.syndesis.common.util.Json;
+import io.syndesis.common.util.json.JsonUtils;
 import io.syndesis.integration.runtime.IntegrationRouteBuilder;
 import io.syndesis.integration.runtime.IntegrationStepHandler;
 import org.apache.camel.Exchange;
+import org.apache.camel.Message;
+import org.apache.camel.Processor;
 import org.apache.camel.model.ProcessorDefinition;
 import org.apache.camel.processor.aggregate.AggregationStrategy;
 import org.apache.camel.processor.aggregate.GroupedBodyAggregationStrategy;
 import org.apache.camel.processor.aggregate.UseLatestAggregationStrategy;
 import org.apache.camel.processor.aggregate.UseOriginalAggregationStrategy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AggregateStepHandler implements IntegrationStepHandler {
+
+    private static final Logger LOG = LoggerFactory.getLogger(AggregateStepHandler.class);
+
     @Override
     public boolean canHandle(Step step) {
         return StepKind.aggregate == step.getStepKind();
@@ -46,6 +59,10 @@ public class AggregateStepHandler implements IntegrationStepHandler {
 
     @Override
     public Optional<ProcessorDefinition<?>> handle(Step step, ProcessorDefinition<?> route, IntegrationRouteBuilder builder, String flowIndex, String stepIndex) {
+        if (step.hasUnifiedJsonSchemaOutputShape()) {
+            route.process(new UnifiedJsonAggregationPostProcessor());
+        }
+
         return Optional.of(route);
     }
 
@@ -142,6 +159,37 @@ public class AggregateStepHandler implements IntegrationStepHandler {
         public void setLanguage(String language) {
             this.language = language;
             this.engine = new ScriptEngineManager().getEngineByName(this.language);
+        }
+    }
+
+    /**
+     * Special unified json aggregation post processor takes care of multiple unified json body elements and aggregates
+     * those to a single unified body element.
+     */
+    private static class UnifiedJsonAggregationPostProcessor implements Processor {
+        @Override
+        public void process(Exchange exchange) throws Exception {
+            final Message message = exchange.hasOut() ? exchange.getOut() : exchange.getIn();
+
+            if (message != null && message.getBody() instanceof List) {
+                try {
+                    List<String> unifiedBodies = new ArrayList<>();
+                    List<?> jsonBeans = message.getBody(List.class);
+                    for (Object unifiedJsonBean : jsonBeans) {
+                        JsonNode unifiedJson = Json.reader().readTree(String.valueOf(unifiedJsonBean));
+                        if (unifiedJson.isObject()) {
+                            JsonNode body = unifiedJson.get("body");
+                            if (body != null) {
+                                unifiedBodies.add(Json.writer().writeValueAsString(body));
+                            }
+                        }
+                    }
+
+                    message.setBody("{\"body\":" + JsonUtils.jsonBeansToArray(unifiedBodies) + "}");
+                } catch (JsonParseException e) {
+                    LOG.warn("Unable to aggregate unified json array type", e);
+                }
+            }
         }
     }
 }

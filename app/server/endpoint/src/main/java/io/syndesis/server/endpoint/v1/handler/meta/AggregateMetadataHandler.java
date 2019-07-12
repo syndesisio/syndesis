@@ -115,8 +115,15 @@ class AggregateMetadataHandler implements StepMetadataHandler {
             }
         }
 
-        DataShape collectionShape = dataShape.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION).orElse(dataShape);
+        if (StepMetadataHelper.isUnifiedJsonSchemaShape(dataShape)) {
+            return new DataShape.Builder()
+                            .createFrom(dataShape)
+                            .specification(adaptUnifiedJsonBodySpecToSingleElement(dataShape.getSpecification()))
+                            .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT)
+                            .build();
+        }
 
+        DataShape collectionShape = dataShape.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION).orElse(dataShape);
         String specification = collectionShape.getSpecification();
         if (StringUtils.hasText(specification)) {
             if (collectionShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
@@ -172,6 +179,14 @@ class AggregateMetadataHandler implements StepMetadataHandler {
             }
         }
 
+        if (StepMetadataHelper.isUnifiedJsonSchemaShape(dataShape)) {
+            return new DataShape.Builder()
+                    .createFrom(dataShape)
+                    .specification(adaptUnifiedJsonBodySpecToCollection(dataShape.getSpecification()))
+                    .putMetadata(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_COLLECTION)
+                    .build();
+        }
+
         DataShape singleElementShape = dataShape.findVariantByMeta(DataShapeMetaData.VARIANT, DataShapeMetaData.VARIANT_ELEMENT).orElse(dataShape);
         String specification = singleElementShape.getSpecification();
         if (StringUtils.hasText(specification)) {
@@ -210,5 +225,55 @@ class AggregateMetadataHandler implements StepMetadataHandler {
         }
 
         return dataShape;
+    }
+
+    /**
+     * Converts unified Json body specification. Unified Json schema specifications hold
+     * the actual body specification in a property. This method converts this body specification
+     * from array to single element if necessary.
+     *
+     * @param specification
+     * @return
+     * @throws IOException
+     */
+    private String adaptUnifiedJsonBodySpecToSingleElement(String specification) throws IOException {
+        JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
+        if (schema.isObjectSchema()) {
+            JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");
+            if (bodySchema != null && bodySchema.isArraySchema()) {
+                ArraySchema.Items items = bodySchema.asArraySchema().getItems();
+                if (items.isSingleItems()) {
+                    schema.asObjectSchema().getProperties().put("body", items.asSingleItems().getSchema());
+                    return Json.writer().writeValueAsString(schema);
+                }
+            }
+        }
+
+        return specification;
+    }
+
+    /**
+     * Converts unified Json body specification. Unified Json schema specifications hold
+     * the actual body specification in a property. This method converts this body specification
+     * from single element to collection if necessary.
+     *
+     * @param specification
+     * @return
+     * @throws IOException
+     */
+    private String adaptUnifiedJsonBodySpecToCollection(String specification) throws IOException {
+        JsonSchema schema = Json.reader().forType(JsonSchema.class).readValue(specification);
+        if (schema.isObjectSchema()) {
+            JsonSchema bodySchema = schema.asObjectSchema().getProperties().get("body");
+            if (bodySchema != null && bodySchema.isObjectSchema()) {
+                ArraySchema arraySchema = new ArraySchema();
+                arraySchema.set$schema(JSON_SCHEMA_ORG_SCHEMA);
+                arraySchema.setItemsSchema(bodySchema);
+                schema.asObjectSchema().getProperties().put("body", arraySchema);
+                return Json.writer().writeValueAsString(schema);
+            }
+        }
+
+        return specification;
     }
 }

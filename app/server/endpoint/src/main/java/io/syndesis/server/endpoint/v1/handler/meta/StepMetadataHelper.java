@@ -103,4 +103,20 @@ final class StepMetadataHelper {
             return variants;
         }
     }
+
+    /**
+     * Checks if given shape is a unified Json schema shape.
+     * @param dataShape
+     * @return
+     */
+    static boolean isUnifiedJsonSchemaShape(DataShape dataShape) {
+        if (dataShape.getKind() == DataShapeKinds.JSON_SCHEMA) {
+            return dataShape.getMetadata()
+                    .entrySet()
+                    .stream()
+                    .anyMatch(entry -> entry.getKey().equals(DataShapeMetaData.UNIFIED));
+        }
+
+        return false;
+    }
 }
