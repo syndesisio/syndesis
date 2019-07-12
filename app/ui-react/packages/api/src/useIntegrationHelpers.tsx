@@ -16,6 +16,7 @@ import { callFetch } from './callFetch';
 import { PUBLISHED, UNPUBLISHED } from './constants';
 import {
   createStep,
+  getStep,
   insertStepIntoFlowBefore,
   prepareIntegrationForSaving,
   removeStepFromFlow,
@@ -333,6 +334,7 @@ export const useIntegrationHelpers = () => {
     configuredProperties: any
   ): Promise<Integration> => {
     return produce(integration, async () => {
+      const originalStep = getStep(integration, flowId, position);
       const actionDescriptor = await getActionDescriptor(
         connection.id!,
         action.id!,
@@ -343,8 +345,11 @@ export const useIntegrationHelpers = () => {
           action,
           configuredProperties,
           connection,
-          id: key(),
-          metadata: { configured: true } as any,
+          id: originalStep ? originalStep.id : key(),
+          metadata: {
+            ...(originalStep ? originalStep.metadata : {}),
+            ...{ configured: true },
+          } as any,
           stepKind: 'endpoint',
         },
         actionDescriptor!
