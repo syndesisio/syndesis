@@ -1,0 +1,40 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: syndesis
+    syndesis.io/app: syndesis
+    syndesis.io/type: infrastructure
+    prometheus: application-monitoring
+    role: alert-rules
+    monitoring-key: middleware
+    application-monitoring: "true"
+  name: syndesis-infra-meta-alerting-rules
+spec:
+  groups:
+    - name: syndesis-infra-meta-alerting-rules
+      rules:
+        # Alert for any syndesis-meta API endpoint which has a high rate of HTTP 5XX responses
+        - alert: FuseOnlineRestApiHighEndpointErrorRate
+          annotations:
+            message: >-
+              Fuse Online service {{$labels.service}} in pod {{$labels.pod}}, namespace {{$labels.namespace}}, has an error rate (response code >= 500) of {{$value}} errors per second on endpoint '{{$labels.method}} {{$labels.uri}}'.
+            sop_url: https://github.com/syndesisio/syndesis/blob/master/doc/managing_environments/topics/alerting_sop.adoc#fuseonlinerestapihighendpointerrorrate
+          expr: >
+            (sum(rate(http_server_requests_seconds_count{status=~"5..", job=~"syndesis-meta"}[5m])) by (job,pod,namespace,method,uri,service)) /
+            (sum(rate(http_server_requests_seconds_count{job=~"syndesis-meta"}[5m])) by (job,pod,namespace,method,uri,service)) > 0.1
+          for: 5m
+          labels:
+            severity: warning
+
+        # Alert for any syndesis-meta API endpoint where 90% of requests have a latency of > 1s
+        - alert: FuseOnlineRestApiHighEndpointLatency
+          annotations:
+            message: >-
+              Fuse Online service {{$labels.service}} in pod {{$labels.pod}}, namespace {{$labels.namespace}}, has high latency for endpoint '{{$labels.method}} {{$labels.uri}}'.
+            sop_url: https://github.com/syndesisio/syndesis/blob/master/doc/managing_environments/topics/alerting_sop.adoc#fuseonlinerestapihighendpointlatency
+          expr: >
+            histogram_quantile(0.9, rate(http_server_requests_seconds_bucket{job=~"syndesis-meta"}[5m])) > 1.0
+          for: 5m
+          labels:
+            severity: warning

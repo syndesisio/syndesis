@@ -9,10 +9,10 @@ metadata:
     role: alert-rules
     monitoring-key: middleware
     application-monitoring: "true"
-  name: syndesis-db-rules
+  name: syndesis-infra-db-alerting-rules
 spec:
   groups:
-    - name: syndesis-db.rules
+    - name: syndesis-infra-db-alerting-rules
       rules:
         # Alert for any syndesis-db instance that is down
         - alert: FuseOnlineDatabaseInstanceDown

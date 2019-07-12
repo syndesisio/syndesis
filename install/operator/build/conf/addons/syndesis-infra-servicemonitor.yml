@@ -1,7 +1,7 @@
 apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
-  name: syndesis-infrastructure
+  name: syndesis-infra
   labels:
     app: syndesis
     syndesis.io/app: syndesis
@@ -12,6 +12,8 @@ spec:
   endpoints:
   - targetPort: metrics
   selector:
+    matchLabels:
+      syndesis.io/app: syndesis
     matchExpressions:
       - key: syndesis.io/component
         operator: In
