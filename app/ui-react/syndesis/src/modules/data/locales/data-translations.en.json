@@ -6,6 +6,7 @@
     "deleteModalMessage": "This will permanently delete Virtualization \"{{name}}\".  Proceed with the delete?",
     "deleteModalTitle": "Delete Virtualization",
     "deleteViewModalMessage": "Are you sure you want to delete the \"{{name}}\" view?",
+    "descriptionPlaceholder": "Enter a description...",
     "editDataVirtualizationTip": "Edit the data virtualization",
     "emptyStateInfoMessage": "There are no virtualizations available. Click the button below to create one.",
     "emptyStateTitle": "$t(virtualization.createDataVirtualization)",

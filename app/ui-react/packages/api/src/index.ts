@@ -26,6 +26,7 @@ export * from './useViewEditorStates';
 export * from './useVirtualizationHelpers';
 export * from './useVirtualizationConnectionSchema';
 export * from './useVirtualizationConnectionStatuses';
+export * from './useVirtualization';
 export * from './useVirtualizations';
 export * from './WithActionDescriptor';
 export * from './WithActivities';
