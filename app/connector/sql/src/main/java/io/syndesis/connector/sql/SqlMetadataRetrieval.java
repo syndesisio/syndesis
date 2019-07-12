@@ -35,7 +35,6 @@ import io.syndesis.common.model.DataShapeMetaData;
 import io.syndesis.common.util.Json;
 import io.syndesis.connector.sql.common.SqlParam;
 import io.syndesis.connector.sql.common.SqlStatementMetaData;
-import io.syndesis.connector.sql.common.StatementType;
 import io.syndesis.connector.sql.common.stored.ColumnMode;
 import io.syndesis.connector.sql.common.stored.StoredProcedureColumn;
 import io.syndesis.connector.sql.common.stored.StoredProcedureMetadata;
@@ -86,16 +85,12 @@ public final class SqlMetadataRetrieval extends ComponentMetadataRetrieval {
         if (sqlStatementMetaData != null) {
             enrichedProperties.put(QUERY, Collections.singletonList(new PropertyPair(sqlStatementMetaData.getSqlStatement(), QUERY)));
 
-
             // build the input and output schemas
             final JsonSchema specIn;
             final ObjectSchema builderIn = new ObjectSchema();
             builderIn.setTitle("SQL_PARAM_IN");
 
-            boolean batch = sqlStatementMetaData.hasInputParams() &&
-                            sqlStatementMetaData.getStatementType() != StatementType.SELECT;
-
-            if (batch) {
+            if (sqlStatementMetaData.isVerifiedBatchUpdateMode()) {
                 ArraySchema arraySpec = new ArraySchema();
                 arraySpec.set$schema(JSON_SCHEMA_ORG_SCHEMA);
                 arraySpec.setItemsSchema(builderIn);

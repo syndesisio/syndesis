@@ -23,9 +23,12 @@ import java.util.Locale;
 import java.util.Set;
 
 import lombok.Data;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Data
 public class SqlStatementMetaData {
+    private static final Logger LOGGER = LoggerFactory.getLogger(SqlStatementMetaData.class);
 
     private Enum<StatementType> statementType;
     private List<SqlParam> inParams = new ArrayList<>();
@@ -37,6 +40,7 @@ public class SqlStatementMetaData {
     private String schema;
     private String defaultedSqlStatement;
     private String autoIncrementColumnName;
+    private boolean batch;
 
     public SqlStatementMetaData(String sqlStatement, String schema) {
         super();
@@ -94,6 +98,22 @@ public class SqlStatementMetaData {
             }
         }
         return defaultedSqlStatement;
+    }
+
+    public boolean isVerifiedBatchUpdateMode() {
+        if (batch) {
+            if (!hasInputParams()) {
+                LOGGER.warn("Batch update mode set but no input params specified - automatically using non batch update mode");
+                return false;
+            }
+
+            if (statementType == StatementType.SELECT) {
+                LOGGER.warn("Batch update mode not supported on SELECT statement - automatically using non batch update mode");
+                return false;
+            }
+        }
+
+        return batch;
     }
 
 }

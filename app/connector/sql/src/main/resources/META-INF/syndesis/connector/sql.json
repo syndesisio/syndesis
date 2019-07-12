@@ -27,6 +27,30 @@
                 "kind": "path",
                 "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
                 "placeholder": "for example ':#MYPARAMNAME'",
+                "order": 1,
+                "required": true,
+                "secret": false,
+                "type": "string"
+              },
+              "batch": {
+                "defaultValue": false,
+                "deprecated": false,
+                "displayName": "Batch update",
+                "enum": [
+                  {
+                    "label": "No",
+                    "value": "false"
+                  },
+                  {
+                    "label": "Yes",
+                    "value": "true"
+                  }
+                ],
+                "group": "common",
+                "javaType": "java.lang.String",
+                "kind": "property",
+                "labelHint": "Use prepared statements for INSERT, UPDATE, DELETE in order to update multiple rows with batch update.",
+                "order": 2,
                 "required": true,
                 "secret": false,
                 "type": "string"

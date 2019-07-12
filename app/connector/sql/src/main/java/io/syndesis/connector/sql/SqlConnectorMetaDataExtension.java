@@ -38,6 +38,10 @@ public class SqlConnectorMetaDataExtension extends AbstractMetaDataExtension {
     @Override
     public Optional<MetaData> meta(final Map<String, Object> properties) {
         final String sqlStatement = (String) properties.get("query");
+        final boolean batch = Optional.ofNullable(properties.get("batch"))
+                                        .map(Object::toString)
+                                        .map(Boolean::valueOf)
+                                        .orElse(false);
 
         MetaData metaData = EMPTY_METADATA;
 
@@ -48,6 +52,8 @@ public class SqlConnectorMetaDataExtension extends AbstractMetaDataExtension {
                 final String schemaPattern = (String) properties.getOrDefault("schema", defaultSchema);
                 final SqlStatementParser parser = new SqlStatementParser(connection, schemaPattern, sqlStatement);
                 final SqlStatementMetaData sqlStatementMetaData = parseStatement(parser);
+
+                sqlStatementMetaData.setBatch(batch);
 
                 metaData = new DefaultMetaData(null, null, sqlStatementMetaData);
             } catch (final SQLException e) {
