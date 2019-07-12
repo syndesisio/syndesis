@@ -228,19 +228,19 @@ export const UI: React.FunctionComponent<IAppUIProps> = ({ routes }) => {
                                   }}
                                   onSelectSampleIntegrationTutorials={() => {
                                     window.open(
-                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/fuse_online_sample_integration_tutorials/',
+                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.4/html-single/fuse_online_sample_integration_tutorials/',
                                       '_blank'
                                     );
                                   }}
                                   onSelectUserGuide={() => {
                                     window.open(
-                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/integrating_applications_with_fuse_online',
+                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.4/html-single/integrating_applications_with_fuse_online',
                                       '_blank'
                                     );
                                   }}
                                   onSelectConnectorsGuide={() => {
                                     window.open(
-                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.3/html-single/connecting_fuse_online_to_applications_and_services/',
+                                      'https://access.redhat.com/documentation/en-us/red_hat_fuse/7.4/html-single/connecting_fuse_online_to_applications_and_services/',
                                       '_blank'
                                     );
                                   }}
