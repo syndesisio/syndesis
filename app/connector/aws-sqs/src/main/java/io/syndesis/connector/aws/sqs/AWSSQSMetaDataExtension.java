@@ -15,7 +15,9 @@
  */
 package io.syndesis.connector.aws.sqs;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -31,7 +33,10 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.GetQueueAttributesRequest;
+import com.amazonaws.services.sqs.model.GetQueueAttributesResult;
 import com.amazonaws.services.sqs.model.ListQueuesResult;
+import com.amazonaws.services.sqs.model.QueueAttributeName;
 
 public class AWSSQSMetaDataExtension extends AbstractMetaDataExtension {
 
@@ -50,18 +55,24 @@ public class AWSSQSMetaDataExtension extends AbstractMetaDataExtension {
 		clientBuilder = AmazonSQSClientBuilder.standard().withCredentials(credentialsProvider);
 		clientBuilder = clientBuilder.withRegion(Regions.valueOf(region));
 		AmazonSQS sqsClient = clientBuilder.build();
+		List<String> attributeNames = new ArrayList<String>();
+	    attributeNames.add("All");
 		try {
 			ListQueuesResult result = sqsClient.listQueues();
 			Set<String> setQueue = new HashSet<String>();
 			if (result.getQueueUrls() != null) {
 				for (String entry : result.getQueueUrls()) {
-					setQueue.add(entry);
+					GetQueueAttributesRequest req = new GetQueueAttributesRequest();
+					req.setQueueUrl(entry);
+					req.setAttributeNames(attributeNames);
+					GetQueueAttributesResult c = sqsClient.getQueueAttributes(req);
+					setQueue.add(c.getAttributes().get(QueueAttributeName.QueueArn.name()));
 				}
 			}
 			return Optional.of(MetaDataBuilder.on(getCamelContext()).withAttribute(MetaData.CONTENT_TYPE, "text/plain")
 					.withAttribute(MetaData.JAVA_TYPE, String.class).withPayload(setQueue).build());
 		} catch (Exception e) {
-			throw new IllegalStateException("Get information about channels existing queues with has failed.", e);
+			throw new IllegalStateException("Get information about existing queues with has failed.", e);
 		}
 	}
 }
