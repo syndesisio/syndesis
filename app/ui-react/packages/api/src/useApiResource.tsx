@@ -1,5 +1,6 @@
 import deepmerge from 'deepmerge';
 import * as React from 'react';
+import equal from 'react-fast-compare';
 import { ApiContext } from './ApiContext';
 import { callFetch, FetchMethod, IFetch } from './callFetch';
 export interface IUseApiResource<T> {
@@ -28,6 +29,8 @@ export function useApiResource<T>({
     initialValue || defaultValue
   );
 
+  const previousInitialValue = React.useRef(initialValue);
+  const previousDefaultValue = React.useRef(defaultValue);
   const previousUrl = React.useRef<string>();
 
   async function fetchResource(
@@ -82,11 +85,35 @@ export function useApiResource<T>({
   ]);
 
   React.useEffect(() => {
+    if (
+      !equal(previousInitialValue.current, initialValue) ||
+      !equal(previousDefaultValue.current, defaultValue)
+    ) {
+      previousInitialValue.current = initialValue;
+      previousDefaultValue.current = defaultValue;
+      setHasData(!!initialValue);
+      setResource(initialValue || defaultValue);
+      if (previousUrl.current === url && readOnMount) {
+        previousUrl.current = undefined;
+      }
+    }
+
     if (previousUrl.current !== url && readOnMount) {
       read();
       previousUrl.current = url;
     }
-  }, [url, previousUrl, read, readOnMount]);
+  }, [
+    defaultValue,
+    initialValue,
+    previousDefaultValue,
+    previousInitialValue,
+    previousUrl,
+    read,
+    readOnMount,
+    setHasData,
+    setResource,
+    url,
+  ]);
 
   return { resource, loading, error, hasData, read };
 }
