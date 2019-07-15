@@ -23,10 +23,13 @@ COPY m2 /tmp/artifacts/m2/
 # WARNING: We better execute the cleanup here to safely remove any dependency not needed by the base project
 # If by any chance this script remove needed dependencies, the mvn build after this will put them in again!
 COPY clean_diff_dependencies.sh /tmp/clean_diff_dependencies.sh
-RUN mvn -f /tmp/artifacts/m2/project-cache/pom.xml -s /tmp/settings.xml dependency:list -Dmaven.repo.local=/tmp/artifacts/m2 -Dsort=true > /tmp/project-cache-dependency-log \
-    && mvn -f /tmp/artifacts/m2/project/pom.xml -s /tmp/settings.xml dependency:list -Dmaven.repo.local=/tmp/artifacts/m2 -Dsort=true > /tmp/project-dependency-log \
+RUN mvn -f /tmp/artifacts/m2/project-cache/pom.xml -s /tmp/settings.xml dependency:list \
+        -Dmaven.repo.local=/tmp/artifacts/m2 -Dsort=true > /tmp/project-cache-dependency-log \
+    && mvn -f /tmp/artifacts/m2/project/pom.xml -s /tmp/settings.xml dependency:list \
+        -Dmaven.repo.local=/tmp/artifacts/m2 -Dsort=true > /tmp/project-dependency-log \
     && chmod +x /tmp/clean_diff_dependencies.sh \
-    && /tmp/clean_diff_dependencies.sh /tmp/project-cache-dependency-log /tmp/project-dependency-log /tmp/artifacts/m2
+    && /tmp/clean_diff_dependencies.sh /tmp/project-cache-dependency-log \
+        /tmp/project-dependency-log /tmp/artifacts/m2
 
 # Build the sample project which is has been generated with the servers'
 # rest-builder-image-generator.jar (see syndesis-server)
@@ -46,3 +49,5 @@ RUN cd /tmp/artifacts/m2/project \
 # Copy licenses
 RUN mkdir -p /opt/ipaas/
 COPY lic* /opt/ipaas/
+
+USER 1000
