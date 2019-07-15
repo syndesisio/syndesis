@@ -10,8 +10,8 @@ import {
   VirtualizationViewsPage,
 } from './pages';
 import routes from './routes';
-import ViewCreateApp from './ViewCreateApp';
-import ViewsImportApp from './ViewsImportApp';
+import { ViewCreateApp } from './ViewCreateApp';
+import { ViewsImportApp } from './ViewsImportApp';
 
 export class DataModule extends React.Component {
   public render() {

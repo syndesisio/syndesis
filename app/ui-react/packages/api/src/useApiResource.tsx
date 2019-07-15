@@ -4,6 +4,7 @@ import equal from 'react-fast-compare';
 import { ApiContext } from './ApiContext';
 import { callFetch, FetchMethod, IFetch } from './callFetch';
 export interface IUseApiResource<T> {
+  useDvApiUrl?: boolean;
   url: string;
   defaultValue: T;
   body?: any;
@@ -13,6 +14,7 @@ export interface IUseApiResource<T> {
   readOnMount?: boolean;
 }
 export function useApiResource<T>({
+  useDvApiUrl = false,
   body,
   url,
   defaultValue,
@@ -52,7 +54,9 @@ export function useApiResource<T>({
           ...(fHeaders || {}),
         },
         method: fMethod,
-        url: `${apiContext.apiUri}${fUrl}`,
+        url: useDvApiUrl
+          ? `${apiContext.dvApiUri}${fUrl}`
+          : `${apiContext.apiUri}${fUrl}`,
       });
       if (!response.ok) {
         throw new Error(response.statusText);

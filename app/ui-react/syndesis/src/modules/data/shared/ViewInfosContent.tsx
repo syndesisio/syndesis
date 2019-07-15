@@ -1,4 +1,4 @@
-import { WithVirtualizationConnectionSchema } from '@syndesis/api';
+import { useVirtualizationConnectionSchema } from '@syndesis/api';
 import { SchemaNode, ViewInfo } from '@syndesis/models';
 import {
   IActiveFilter,
@@ -81,7 +81,6 @@ const sortTypes: ISortType[] = [sortByName];
 export const ViewInfosContent: React.FunctionComponent<
   IViewInfosContentProps
 > = props => {
-
   const { t } = useTranslation(['data', 'shared']);
 
   let displayedViews: ViewInfo[] = [];
@@ -97,84 +96,76 @@ export const ViewInfosContent: React.FunctionComponent<
     } else {
       props.onViewDeselected(name);
     }
-  }
+  };
+
+  const {
+    resource: schema,
+    hasData: hasSchema,
+    error,
+  } = useVirtualizationConnectionSchema(props.connectionName);
 
   return (
-    <WithVirtualizationConnectionSchema
-      connectionId={props.connectionName}
+    <WithListViewToolbarHelpers
+      defaultFilterType={filterByName}
+      defaultSortType={sortByName}
     >
-      {({ data, hasData, error, errorMessage }) => (
-        <WithListViewToolbarHelpers
-          defaultFilterType={filterByName}
-          defaultSortType={sortByName}
-        >
-          {helpers => {
-            const filteredAndSorted = getFilteredAndSortedViewInfos(
-              data,
-              helpers.activeFilters,
-              helpers.currentSortType,
-              helpers.isSortAscending,
-              selectedViewNames,
-              props.existingViewNames
-            );
-            displayedViews = filteredAndSorted;
+      {helpers => {
+        const filteredAndSorted = getFilteredAndSortedViewInfos(
+          schema,
+          helpers.activeFilters,
+          helpers.currentSortType,
+          helpers.isSortAscending,
+          selectedViewNames,
+          props.existingViewNames
+        );
+        displayedViews = filteredAndSorted;
 
-            return (
-              <ViewInfoList
-                filterTypes={filterTypes}
-                sortTypes={sortTypes}
-                resultsCount={filteredAndSorted.length}
-                {...helpers}
-                i18nEmptyStateInfo={t(
-                  'virtualization.emptyStateInfoMessage'
-                )}
-                i18nEmptyStateTitle={t('virtualization.emptyStateTitle')}
-                i18nName={t('shared:Name')}
-                i18nNameFilterPlaceholder={t(
-                  'shared:nameFilterPlaceholder'
-                )}
-                i18nResultsCount={t('shared:resultsCount', {
-                  count: filteredAndSorted.length,
-                })}
-              >
-                <WithLoader
-                  error={error}
-                  loading={!hasData}
-                  loaderChildren={
-                    <ViewInfoListSkeleton
-                      width={800}
-                      style={{
-                        backgroundColor: '#FFF',
-                        marginTop: 30,
-                      }}
-                    />
-                  }
-                  errorChildren={<ApiError error={errorMessage!} />}
-                >
-                  {() =>
-                    filteredAndSorted.map(
-                      (viewInfo: ViewInfo, index: number) => (
-                        <ViewInfoListItem
-                          key={index}
-                          connectionName={viewInfo.connectionName}
-                          name={viewInfo.viewName}
-                          nodePath={viewInfo.nodePath}
-                          selected={viewInfo.selected}
-                          i18nUpdate={t('shared:Update')}
-                          isUpdateView={viewInfo.isUpdate}
-                          onSelectionChanged={
-                            handleViewSelectionChange
-                          }
-                        />
-                      )
-                    )
-                  }
-                </WithLoader>
-              </ViewInfoList>
-            );
-          }}
-        </WithListViewToolbarHelpers>
-      )}
-    </WithVirtualizationConnectionSchema>
+        return (
+          <ViewInfoList
+            filterTypes={filterTypes}
+            sortTypes={sortTypes}
+            resultsCount={filteredAndSorted.length}
+            {...helpers}
+            i18nEmptyStateInfo={t('virtualization.emptyStateInfoMessage')}
+            i18nEmptyStateTitle={t('virtualization.emptyStateTitle')}
+            i18nName={t('shared:Name')}
+            i18nNameFilterPlaceholder={t('shared:nameFilterPlaceholder')}
+            i18nResultsCount={t('shared:resultsCount', {
+              count: filteredAndSorted.length,
+            })}
+          >
+            <WithLoader
+              error={error !== false}
+              loading={!hasSchema}
+              loaderChildren={
+                <ViewInfoListSkeleton
+                  width={800}
+                  style={{
+                    backgroundColor: '#FFF',
+                    marginTop: 30,
+                  }}
+                />
+              }
+              errorChildren={<ApiError error={error as Error} />}
+            >
+              {() =>
+                filteredAndSorted.map((viewInfo: ViewInfo, index: number) => (
+                  <ViewInfoListItem
+                    key={index}
+                    connectionName={viewInfo.connectionName}
+                    name={viewInfo.viewName}
+                    nodePath={viewInfo.nodePath}
+                    selected={viewInfo.selected}
+                    i18nUpdate={t('shared:Update')}
+                    isUpdateView={viewInfo.isUpdate}
+                    onSelectionChanged={handleViewSelectionChange}
+                  />
+                ))
+              }
+            </WithLoader>
+          </ViewInfoList>
+        );
+      }}
+    </WithListViewToolbarHelpers>
   );
-}
+};

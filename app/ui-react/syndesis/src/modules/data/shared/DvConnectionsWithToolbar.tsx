@@ -1,4 +1,4 @@
-import { WithConnections } from '@syndesis/api';
+import { useConnections } from '@syndesis/api';
 import { Connection, VirtualizationSourceStatus } from '@syndesis/models';
 import {
   DvConnectionsListView,
@@ -76,68 +76,64 @@ export interface IDvConnectionsWithToolbarProps {
 export const DvConnectionsWithToolbar: React.FunctionComponent<
   IDvConnectionsWithToolbarProps
 > = props => {
-
   const { t } = useTranslation(['data', 'shared']);
   const [selectedConnection, setSelectedConnection] = React.useState('');
 
-  const handleConnectionSelectionChanged = (name: string, selected: boolean) => {
+  const handleConnectionSelectionChanged = (
+    name: string,
+    selected: boolean
+  ) => {
     props.onConnectionSelectionChanged(name, selected);
     setSelectedConnection(selected ? name : '');
-  }
+  };
+
+  const { resource: connectionsData } = useConnections();
 
   return (
-    <WithConnections>
-      {({ data, hasData, error }) => (
-        <WithListViewToolbarHelpers
-          defaultFilterType={filterByName}
-          defaultSortType={sortByName}
-        >
-          {helpers => {
-            const filteredAndSortedConnections = getFilteredAndSortedConnections(
-              data.connectionsForDisplay,
-              props.dvSourceStatuses,
-              selectedConnection,
-              helpers.activeFilters,
-              helpers.currentSortType,
-              helpers.isSortAscending
-            );
+    <WithListViewToolbarHelpers
+      defaultFilterType={filterByName}
+      defaultSortType={sortByName}
+    >
+      {helpers => {
+        const filteredAndSortedConnections = getFilteredAndSortedConnections(
+          connectionsData.connectionsForDisplay,
+          props.dvSourceStatuses,
+          selectedConnection,
+          helpers.activeFilters,
+          helpers.currentSortType,
+          helpers.isSortAscending
+        );
 
-            return (
-              <DvConnectionsListView
-                i18nEmptyStateInfo={t(
-                  'virtualization.activeConnectionsEmptyStateInfo'
-                )}
-                i18nEmptyStateTitle={t(
-                  'virtualization.activeConnectionsEmptyStateTitle'
-                )}
-                linkToConnectionCreate={resolvers.connections.create.selectConnector()}
-                filterTypes={filterTypes}
-                sortTypes={sortTypes}
-                resultsCount={filteredAndSortedConnections.length}
-                {...helpers}
-                i18nLinkCreateConnection={t(
-                  'shared:linkCreateConnection'
-                )}
-                i18nResultsCount={t('shared:resultsCount', {
-                  count: filteredAndSortedConnections.length,
-                })}
-              >
-                {props.children}
-                <DvConnections
-                  error={props.error}
-                  errorMessage={props.errorMessage}
-                  loading={props.loading}
-                  connections={filteredAndSortedConnections}
-                  initialSelection={selectedConnection}
-                  onConnectionSelectionChanged={
-                    handleConnectionSelectionChanged
-                  }
-                />
-              </DvConnectionsListView>
-            );
-          }}
-        </WithListViewToolbarHelpers>
-      )}
-    </WithConnections>
+        return (
+          <DvConnectionsListView
+            i18nEmptyStateInfo={t(
+              'virtualization.activeConnectionsEmptyStateInfo'
+            )}
+            i18nEmptyStateTitle={t(
+              'virtualization.activeConnectionsEmptyStateTitle'
+            )}
+            linkToConnectionCreate={resolvers.connections.create.selectConnector()}
+            filterTypes={filterTypes}
+            sortTypes={sortTypes}
+            resultsCount={filteredAndSortedConnections.length}
+            {...helpers}
+            i18nLinkCreateConnection={t('shared:linkCreateConnection')}
+            i18nResultsCount={t('shared:resultsCount', {
+              count: filteredAndSortedConnections.length,
+            })}
+          >
+            {props.children}
+            <DvConnections
+              error={props.error}
+              errorMessage={props.errorMessage}
+              loading={props.loading}
+              connections={filteredAndSortedConnections}
+              initialSelection={selectedConnection}
+              onConnectionSelectionChanged={handleConnectionSelectionChanged}
+            />
+          </DvConnectionsListView>
+        );
+      }}
+    </WithListViewToolbarHelpers>
   );
-}
+};

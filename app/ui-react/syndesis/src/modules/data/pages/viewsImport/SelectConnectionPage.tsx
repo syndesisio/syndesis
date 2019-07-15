@@ -1,4 +1,4 @@
-import { WithVirtualizationConnectionStatuses } from '@syndesis/api';
+import { useVirtualizationConnectionStatuses } from '@syndesis/api';
 import { RestDataService } from '@syndesis/models';
 import { ViewsImportLayout } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
@@ -21,51 +21,54 @@ export interface ISelectConnectionRouteState {
 }
 
 export const SelectConnectionPage: React.FunctionComponent = () => {
-
   const { state } = useRouteData<
     ISelectConnectionRouteParams,
     ISelectConnectionRouteState
   >();
   const [selectedConnection, setSelectedConnection] = React.useState('');
 
-  const handleConnectionSelectionChanged = async (name: string, selected: boolean) => {
+  const handleConnectionSelectionChanged = async (
+    name: string,
+    selected: boolean
+  ) => {
     const selConn = selected ? name : '';
     setSelectedConnection(selConn);
-  }
+  };
 
   const connectionId = selectedConnection;
   const virtualization = state.virtualization;
+  const {
+    resource: connectionStatuses,
+    hasData: hasConnectionStatuses,
+    error: connectionStatusesError,
+  } = useVirtualizationConnectionStatuses();
+
   return (
     <ViewsImportLayout
       header={<ViewsImportSteps step={1} />}
       content={
-        <WithVirtualizationConnectionStatuses>
-          {({ data, hasData, error, errorMessage }) => (
-            <DvConnectionsWithToolbar
-              error={error}
-              errorMessage={errorMessage}
-              loading={!hasData}
-              dvSourceStatuses={data}
-              onConnectionSelectionChanged={
-                handleConnectionSelectionChanged
-              }
-            />
-          )}
-        </WithVirtualizationConnectionStatuses>
+        <DvConnectionsWithToolbar
+          error={connectionStatusesError !== false}
+          errorMessage={
+            connectionStatusesError === false
+              ? undefined
+              : (connectionStatusesError as Error).message
+          }
+          loading={!hasConnectionStatuses}
+          dvSourceStatuses={connectionStatuses}
+          onConnectionSelectionChanged={handleConnectionSelectionChanged}
+        />
       }
       cancelHref={resolvers.data.virtualizations.views.root({
         virtualization,
       })}
-      nextHref={resolvers.data.virtualizations.views.importSource.selectViews(
-        {
-          connectionId,
-          virtualization,
-        }
-      )}
+      nextHref={resolvers.data.virtualizations.views.importSource.selectViews({
+        connectionId,
+        virtualization,
+      })}
       isNextDisabled={selectedConnection.length < 1}
       isNextLoading={false}
       isLastStep={false}
     />
   );
-
-}
+};

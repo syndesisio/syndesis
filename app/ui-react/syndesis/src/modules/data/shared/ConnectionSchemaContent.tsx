@@ -1,4 +1,4 @@
-import { WithVirtualizationConnectionSchema } from '@syndesis/api';
+import { useVirtualizationConnectionSchema } from '@syndesis/api';
 import { SchemaNode, SchemaNodeInfo } from '@syndesis/models';
 import {
   ConnectionSchemaList,
@@ -35,7 +35,6 @@ export interface IConnectionSchemaContentProps {
 export const ConnectionSchemaContent: React.FunctionComponent<
   IConnectionSchemaContentProps
 > = props => {
-
   const { t } = useTranslation(['data', 'shared']);
 
   const handleSourceSelectionChange = async (
@@ -48,67 +47,62 @@ export const ConnectionSchemaContent: React.FunctionComponent<
     } else {
       props.onNodeDeselected(connectionName, nodePath);
     }
-  }
+  };
+
+  const {
+    resource: schema,
+    hasData: hasSchema,
+    error,
+  } = useVirtualizationConnectionSchema();
+
+  // Root nodes of the response contain the connection names
+  const connNames = getConnectionNames(schema);
 
   return (
-    <WithVirtualizationConnectionSchema>
-      {({ data, hasData, error, errorMessage }) => {
-        // Root nodes of the response contain the connection names
-        const connNames = getConnectionNames(data);
-        return (
-          <ConnectionSchemaList
-            i18nEmptyStateInfo={t(
-              'virtualization.activeConnectionsEmptyStateInfo'
-            )}
-            i18nEmptyStateTitle={t(
-              'virtualization.activeConnectionsEmptyStateTitle'
-            )}
-            hasListData={connNames.length > 0}
-          >
-            <WithLoader
-              error={error}
-              loading={!hasData}
-              loaderChildren={
-                <ConnectionSchemaListSkeleton
-                  width={800}
-                  style={{
-                    backgroundColor: '#FFF',
-                    marginTop: 30,
-                  }}
-                />
-              }
-              errorChildren={<ApiError error={errorMessage!} />}
-            >
-              {() =>
-                connNames.map((cName: string, index: number) => {
-                  // get schema nodes for the connection
-                  const srcInfos = getSchemaNodeInfos(data, cName);
-                  return (
-                    <ConnectionSchemaListItem
-                      key={index}
-                      connectionName={cName}
-                      connectionDescription={''}
-                      // tslint:disable-next-line: no-shadowed-variable
-                      children={srcInfos.map((info, index) => (
-                        <SchemaNodeListItem
-                          key={index}
-                          name={info.sourceName}
-                          connectionName={info.connectionName}
-                          schemaPath={info.sourcePath}
-                          selected={false}
-                          onSelectionChanged={
-                            handleSourceSelectionChange
-                          }
-                        />
-                      ))}
-                    />
-                  );
-                })
-              }
-            </WithLoader>
-          </ConnectionSchemaList>
-        );
-      }}
-    </WithVirtualizationConnectionSchema>
+    <ConnectionSchemaList
+      i18nEmptyStateInfo={t('virtualization.activeConnectionsEmptyStateInfo')}
+      i18nEmptyStateTitle={t('virtualization.activeConnectionsEmptyStateTitle')}
+      hasListData={connNames.length > 0}
+    >
+      <WithLoader
+        error={error !== false}
+        loading={!hasSchema}
+        loaderChildren={
+          <ConnectionSchemaListSkeleton
+            width={800}
+            style={{
+              backgroundColor: '#FFF',
+              marginTop: 30,
+            }}
+          />
+        }
+        errorChildren={<ApiError error={error as Error} />}
+      >
+        {() =>
+          connNames.map((cName: string, index: number) => {
+            // get schema nodes for the connection
+            const srcInfos = getSchemaNodeInfos(schema, cName);
+            return (
+              <ConnectionSchemaListItem
+                key={index}
+                connectionName={cName}
+                connectionDescription={''}
+                // tslint:disable-next-line: no-shadowed-variable
+                children={srcInfos.map((info, index) => (
+                  <SchemaNodeListItem
+                    key={index}
+                    name={info.sourceName}
+                    connectionName={info.connectionName}
+                    schemaPath={info.sourcePath}
+                    selected={false}
+                    onSelectionChanged={handleSourceSelectionChange}
+                  />
+                ))}
+              />
+            );
+          })
+        }
+      </WithLoader>
+    </ConnectionSchemaList>
   );
-}
+};
