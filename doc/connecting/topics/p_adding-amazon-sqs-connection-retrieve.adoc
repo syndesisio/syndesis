@@ -43,15 +43,27 @@ This is the only required field.
 .. Indicate whether you want to  
 *Obtain messages and then delete them from the queue*. Obtaining 
 messages and then deleting them from the queue is the default behavior.  
+Unselect this option when you want to delete only those messages that do 
+not pass a filter that is a subsequent step in the integration. 
 
 .. Indicate whether you want to  
 *Obtain messages and delete the message if it does not make it through a Camel filter*. 
-This option is selected by default. It indicates whether 
-to delete a message from the queue when that message does not pass 
-a filter and so does not get delivered to the integration. 
-
+This option is selected by default. To delete a message from the queue 
+when that message does not pass a filter that is a subsequent step in 
+the integration, keep this option selected and ensure that 
+*Obtain messages and then delete from the queue* is unselected. 
+ 
 . Click *Next*. 
 
 .Result
 
 The connection appears at the beginning of the integration flow. 
+
+.Next steps
+If you selected *Obtain messages and delete the message if it does not make it through a Camel filter* 
+then you need to add a filter step after this SQS connection. The filter 
+step does not need to be immediately after the SQS connection. Add all 
+connections to the integration, and then add the filter step. 
+If there are messages that do not pass the filter, {prodname} uses the 
+same connection, the SQS start connection, to delete the messages 
+from the queue. connection.
