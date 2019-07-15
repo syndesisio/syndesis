@@ -25,10 +25,21 @@ connection for a simple integration.
 
 . In the *Message group ID strategy* field, for a first-in, first-out (FIFO)
 queue, accept `ConstantMessageGroupIdStrategy` or click in the field and 
-select one of the following:  
+select a different strategy. 
 +
-* `ExchangeIdMessageGroupIdStrategy`
-* `PropertyValueMessageGroupIdStrategy`
+The setting of this parameter has no effect on simple queues. 
+The message group ID identifies the group that a message belongs to. 
+Messages that belong to the same message group are always processed 
+one by one, in a strict order relative to the message group. The 
+message group ID strategy determines how the connection assigns 
+a group ID to a message. The options are: 
++
+* `ConstantMessageGroupIdStrategy` -- The connection uses a constant
+to group messages. 
+* `ExchangeIdMessageGroupIdStrategy` -- The connection uses the 
+exchange ID, which is in each message, to group messages. 
+* `PropertyValueMessageGroupIdStrategy` -- The connection uses the 
+value of an internal property to group messages. 
 
 +
 FIFO queues are designed to ensure that the order in which messages 
@@ -40,8 +51,8 @@ accept `NullMessageDeduplicationIdStrategy` or click in the field
 to select `ExchangeIdMessageDeduplicationIdStrategy`. 
 +
 The setting of this parameter has no effect on simple queues. For a FIFO queue, 
-the connection uses the selected strategy to ensure that it does not return 
-duplicate messages to the integration. 
+the connection uses the selected strategy to ensure that it does not send 
+duplicate messages to the queue. 
 +
 ** `NullMessageDeduplicationIdStrategy` uses the message body as the 
 deduplication element. In other words, the connection compares message 
@@ -65,3 +76,7 @@ connection is sending.
 
 .Result
 The connection appears in the integration flow where you added it. 
+
+.Additional resources
+* link:https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/using-messagededuplicationid-property.html[Using the Amazon Message Deduplication ID]
+* link:https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/using-messagegroupid-property.html[Using the Amazon SQS Message Group ID] 
