@@ -1,0 +1,69 @@
+// This module is included in the following assemblies:
+// as_connecting-to-amazon-sqs.adoc
+
+[id='adding-amazon-sqs-connection-retrieve_{context}']
+= Obtaining messages from Amazon SQS to trigger integration execution
+
+To start an integration by obtaining messages from an Amazon SQS queue, 
+add an Amazon SQS connection as a simple integration's start connection.
+
+.Prerequisites
+* You created an Amazon SQS connection that is configured to access 
+the queue that you want to obtain messages from. 
+* You know the name of the SQS queue that you want the connection to 
+obtain messages from. 
+
+.Procedure
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a Start Connection* page, click the Amazon SQS connection that
+you want to use to start the integration.
+. On the *Choose an Action* page, click *Poll an Amazon SQS Queue* 
+to periodically retrieve messages from an SQS queue. To configure this action:
+.. In the *Delay* field, accept the default of 500 milliseconds as the time
+that elapses between polls. Or, to specify a different polling interval,
+enter a number and select its time unit. 
+.. In the *Maximum Objects to Retrieve* field, enter the largest number 
+of messages
+that one poll operation can obtain. The default is 10.
++
+To have no limit on the number of messages that can be obtained, specify
+`0` or a negative integer. When *Maximum Objects to Retrieve* is unlimited,
+the poll action obtains all messages in the SQS queue.
++
+If the SQS queue contains more than the specified maximum number of messages,
+then the action obtains the messages that were most recently
+added to the queue. 
+.. In the *Queue Name or Amazon Resource Name* field, specify 
+the name of the SQS queue to retrieve messages from, or the queue's ARN.  
+If a queue with this name does not exist, the connection creates it. 
+This is the only required field. 
+
+.. Indicate whether you want to  
+*Obtain messages and then delete them from the queue*. Obtaining 
+messages and then deleting them from the queue is the default behavior.  
+Unselect this option when you want to delete only those messages that do 
+not pass a filter that is a subsequent step in the integration. 
+
+.. Indicate whether you want to  
+*Obtain messages and delete the message if it does not make it through a Camel filter*. 
+This option is selected by default. To delete a message from the queue 
+when that message does not pass a filter that is a subsequent step in 
+the integration, keep this option selected and ensure that 
+*Obtain messages and then delete from the queue* is unselected. 
+ 
+. Click *Next*. 
+
+.Result
+
+The connection appears at the beginning of the integration flow. 
+
+.Next steps
+If you selected *Obtain messages and delete the message if it does not make it through a Camel filter* 
+then you need to add a filter step after this SQS connection. The filter 
+step does not need to be immediately after the SQS connection. Add all 
+connections to the integration, and then add the filter step. 
+If there are messages that do not pass the filter, {prodname} uses the 
+same connection, the SQS start connection, to delete the messages 
+from the queue. connection.

@@ -1,0 +1,36 @@
+// This module is included in the following assemblies:
+// as_connecting-to-amazon-sns.adoc
+
+[id='adding-amazon-sns-connection-send_{context}']
+= Sending messages to Amazon SNS 
+
+To send a message to an Amazon SNS topic, add an Amazon SNS connection 
+to the middle of a flow or as the finish connection in a simple 
+integration. 
+
+.Prerequisites
+
+* You created an Amazon SNS connection.
+* {prodname} is prompting you to add a step, or to add the 
+finish connection to a simple integration. 
+
+.Procedure
+
+. Click the Amazon SNS connection that
+you want to use to send a message. 
+
+. Click the *Send Object* action. 
+
+. In the *Topic Name or Amazon Resource Name* field, enter the name of
+the SNS topic to send a message to or enter the topics's Amazon Resource Name (ARN).
++
+If the SNS topic does not already exist 
+in either the AWS account that the connection is authorized to access, 
+or in any other AWS account, the connection creates the topic in the 
+AWS account that the connection is configured to access. 
+
+. Click *Next* to add the connection to the integration. 
+
+.Result
+
+The connection appears in the integration flow where you added it. 
