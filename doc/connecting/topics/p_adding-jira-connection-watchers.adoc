@@ -2,10 +2,11 @@
 // as_connecting-to-jira.adoc
 
 [id='adding-jira-connection-watchers_{context}']
-= Adding watchers to a Jira issue
+= Adding and removing Jira issue watchers
 
 In the middle of a flow, or to finish a simple integration, 
-you can connect to a Jira server to add an issue. 
+you can connect to a Jira server to add watchers to an 
+issue and/or remove watchers from issue. 
 
 .Prerequisites
 * You created a Jira connection.
@@ -20,10 +21,16 @@ want to add a Jira connection. Skip this step if you are adding
 a simple integration's finish connection.  
 . Click the Jira connection that you want the integration to use. 
 . On the *Choose an Action* page, select *Add Issue*.
-. Configure the action:
-.. In the * * field, specify 
+. In the *Issue Key* field, enter the Jira identifier of the issue
+that you want to add watchers to or remove watchers from. 
+Examples of issue keys: `GATEWAY-1234`, `Enterprise-239`. 
+. Optionally, in the *Add Watchers* field, enter a comma-separated list of 
+Jira user names. These people receive notifications when this issue is updated. 
+. Optionally, in the *Remove Watchers* field, enter a comma-separated list of 
+Jira user names that are already watching this issue. The connection
+removes these users from the list of watchers. 
 . Click *Next*. 
 
 .Result
 The connection appears in the integration flow 
-in the location where you added it. 
+in the location you added it. 

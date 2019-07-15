@@ -7,9 +7,25 @@
 :context: jira
 
 In an integration, you can connect to a Jira server to 
-obtain, create, or update issues. The following topics provide the details:
+obtain, create, or update issues. 
 
-* xref:register-with-jira_{context}[]
+ifeval::["{location}" == "downstream"]
+[IMPORTANT]
+====
+Connecting to Jira is a Technology Preview feature only. Technology Preview features are 
+not supported with Red Hat production service level agreements (SLAs) and might not be 
+functionally complete. Red Hat does not recommend using them in production. 
+These features provide early access to upcoming product features, enabling 
+customers to test functionality and provide feedback during the development process. 
+For more information about the support scope of Red Hat Technology Preview features, 
+see link:https://access.redhat.com/support/offerings/techpreview/[]. 
+====
+endif::[]
+
+The following topics provide the details about creating integrations 
+that connect to a Jira server:
+
+* xref:registering-with-jira_{context}[]
 * xref:creating-jira-connections_{context}[]
 * xref:adding-jira-connection-start_{context}[]
 * xref:adding-jira-connection-add-issue_{context}[]

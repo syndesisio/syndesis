@@ -5,7 +5,10 @@
 = Transitioning a Jira issue to a new status
 
 In the middle of a flow, or to finish a simple integration, 
-you can connect to a Jira server to add an issue. 
+you can connect to a Jira server to transition an issue to a new
+status, or to a new workflow stage. A Jira administrator defines
+what it means for an issue to transition as well as the values for 
+transition IDs. 
 
 .Prerequisites
 * You created a Jira connection.
@@ -18,12 +21,19 @@ a simple integration's finish connection.
 . On the *Add to Integration* page, click the plus sign where you 
 want to add a Jira connection. Skip this step if you are adding 
 a simple integration's finish connection.  
-. Click the Jira connection that you want the integration to use. 
-. On the *Choose an Action* page, select *Add Issue*.
-. Configure the action:
-.. In the * * field, specify 
+. Click the Jira connection that you want the integration to use to 
+connect to the Jira server. 
+. On the *Choose an Action* page, select *Transition Issue*.
+. Optionally, in the *Comment* field, enter a comment that you want to 
+add to the issue. 
+. In the *Issue Key* field, enter the Jira identifier for the issue
+that is transitioning.  
+Examples of issue keys: `GATEWAY-1234`, `Enterprise-239`. 
+. In the *ID of the transition* field, enter a value that a Jira 
+administrator has defined as transition ID. For example, i set of 
+transition IDs might be `New`, `InProgress`, `Test`, `Closed`. 
 . Click *Next*. 
 
 .Result
 The connection appears in the integration flow 
-in the location where you added it. 
+in the location you added it. 
