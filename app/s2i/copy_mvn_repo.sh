@@ -12,6 +12,19 @@ fi
 
 mkdir -p "${target_dir}/m2"
 cd ${local_repo}
+
+if [[ ! -d "${target_dir}/m2.cache" ]]; then
+    mkdir -p "${target_dir}/m2.cache"
+fi
+
+if [[ ! "$(ls -A ${target_dir}/m2.cache)" ]]; then
+     echo "Going to cache locally Syndesis ${version} dependencies. Clean target directory to refresh the cache."
+     find ./io/syndesis | grep -F -- "/${version}/" | grep -v -- "-sources\." | grep -v -- "-tests\." | xargs tar -c | tar -vx -C "${target_dir}/m2.cache"
+else
+    echo "Found cached Syndesis dependencies, using them to skip remote dependencies download."
+fi
+
+echo "Installing Syndesis ${version} dependencies to target directory."
 find ./io/syndesis | grep -F -- "/${version}/" | grep -v -- "-sources\." | grep -v -- "-tests\." | xargs tar -c | tar -vx -C "${target_dir}/m2"
 
 if [ -z "$CAMEL_SNAPSHOT_VERSION" ]; then
