@@ -15,3 +15,9 @@
 .dv-connection-card__status {
   margin-bottom: 10px;
 }
+
+.dv-connection-card .card-pf.card-pf-accented {
+  border-width: 2px;
+  border-style: solid;
+  border-color: #39a5dc;
+}
