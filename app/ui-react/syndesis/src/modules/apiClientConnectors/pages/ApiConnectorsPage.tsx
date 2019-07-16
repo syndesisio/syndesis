@@ -7,6 +7,7 @@ import {
   IActiveFilter,
   IFilterType,
   ISortType,
+  PageSection,
   SimplePageHeader,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
@@ -106,31 +107,11 @@ export default class ApiConnectorsPage extends React.Component {
                                 'apiConnectorsPageDescription'
                               )}
                             />
-                            <ApiConnectorListView
-                              filterTypes={filterTypes}
-                              sortTypes={sortTypes}
-                              linkCreateApiConnector={routes.create.upload}
-                              resultsCount={filteredAndSorted.length}
-                              {...helpers}
-                              i18nTitle={''}
-                              i18nDescription={''}
-                              i18nEmptyStateInfo={t('emptyStateInfo')}
-                              i18nEmptyStateTitle={t('CreateApiConnector')}
-                              i18nLinkCreateApiConnector={t(
-                                'CreateApiConnector'
-                              )}
-                              i18nLinkCreateApiConnectorTip={t(
-                                'createApiConnectorTip'
-                              )}
-                              i18nName={t('shared:Name')}
-                              i18nResultsCount={t('shared:resultsCount', {
-                                count: filteredAndSorted.length,
-                              })}
-                            >
-                              <WithLoader
-                                error={error}
-                                loading={!hasData}
-                                loaderChildren={
+                            <WithLoader
+                              error={error}
+                              loading={!hasData}
+                              loaderChildren={
+                                <PageSection>
                                   <ApiConnectorListSkeleton
                                     width={800}
                                     style={{
@@ -138,87 +119,113 @@ export default class ApiConnectorsPage extends React.Component {
                                       marginTop: 30,
                                     }}
                                   />
-                                }
-                                errorChildren={
-                                  <ApiError error={errorMessage!} />
-                                }
-                              >
-                                {() => (
-                                  <WithApiConnectorHelpers>
-                                    {({ deleteApiConnector }) => {
-                                      const handleDelete = async (
-                                        apiConnectorId: string
-                                      ) => {
-                                        try {
-                                          await deleteApiConnector(
-                                            apiConnectorId
-                                          );
-                                        } catch {
-                                          pushNotification(
-                                            t('errorDeletingApiConnector', {
-                                              connectorId: apiConnectorId,
-                                            }),
-                                            'error'
-                                          );
-                                        }
-                                      };
+                                </PageSection>
+                              }
+                              errorChildren={<ApiError error={errorMessage!} />}
+                            >
+                              {() => (
+                                <ApiConnectorListView
+                                  filterTypes={filterTypes}
+                                  sortTypes={sortTypes}
+                                  linkCreateApiConnector={routes.create.upload}
+                                  resultsCount={filteredAndSorted.length}
+                                  {...helpers}
+                                  i18nTitle={''}
+                                  i18nDescription={''}
+                                  i18nEmptyStateInfo={t('emptyStateInfo')}
+                                  i18nEmptyStateTitle={t('CreateApiConnector')}
+                                  i18nLinkCreateApiConnector={t(
+                                    'CreateApiConnector'
+                                  )}
+                                  i18nLinkCreateApiConnectorTip={t(
+                                    'createApiConnectorTip'
+                                  )}
+                                  i18nName={t('shared:Name')}
+                                  i18nResultsCount={t('shared:resultsCount', {
+                                    count: filteredAndSorted.length,
+                                  })}
+                                >
+                                  {filteredAndSorted.length > 0 ? (
+                                    <WithApiConnectorHelpers>
+                                      {({ deleteApiConnector }) => {
+                                        const handleDelete = async (
+                                          apiConnectorId: string
+                                        ) => {
+                                          try {
+                                            await deleteApiConnector(
+                                              apiConnectorId
+                                            );
+                                          } catch {
+                                            pushNotification(
+                                              t('errorDeletingApiConnector', {
+                                                connectorId: apiConnectorId,
+                                              }),
+                                              'error'
+                                            );
+                                          }
+                                        };
 
-                                      return filteredAndSorted
-                                        .filter((api: Connector) =>
-                                          this.filterUndefinedId(api)
-                                        )
-                                        .map(
-                                          (
-                                            apiConnector: Connector,
-                                            index: number
-                                          ) => (
-                                            <ApiConnectorListItem
-                                              key={index}
-                                              apiConnectorId={
-                                                apiConnector.id as string
-                                              }
-                                              apiConnectorDescription={
-                                                apiConnector.description
-                                              }
-                                              apiConnectorIcon={
-                                                apiConnector.icon
-                                              }
-                                              apiConnectorName={
-                                                apiConnector.name
-                                              }
-                                              detailsPageLink={resolvers.apiConnector.details(
-                                                { apiConnector }
-                                              )}
-                                              i18nCancelLabel={t(
-                                                'shared:Cancel'
-                                              )}
-                                              i18nDelete={t('shared:Delete')}
-                                              i18nDeleteModalMessage={t(
-                                                'deleteModalMessage',
-                                                { name: apiConnector.name }
-                                              )}
-                                              i18nDeleteModalTitle={t(
-                                                'deleteModalTitle'
-                                              )}
-                                              i18nDetails={t('shared:Details')}
-                                              i18nDetailsTip={t(
-                                                'detailsApiConnectorTip'
-                                              )}
-                                              i18nUsedByMessage={this.getUsedByMessage(
-                                                apiConnector
-                                              )}
-                                              onDelete={handleDelete}
-                                              usedBy={
-                                                apiConnector.uses as number
-                                              }
-                                            />
+                                        return filteredAndSorted
+                                          .filter((api: Connector) =>
+                                            this.filterUndefinedId(api)
                                           )
-                                        );
-                                    }}
-                                  </WithApiConnectorHelpers>
-                                )}
-                              </WithLoader>
-                            </ApiConnectorListView>
+                                          .map(
+                                            (
+                                              apiConnector: Connector,
+                                              index: number
+                                            ) => (
+                                              <ApiConnectorListItem
+                                                key={index}
+                                                apiConnectorId={
+                                                  apiConnector.id as string
+                                                }
+                                                apiConnectorDescription={
+                                                  apiConnector.description
+                                                }
+                                                apiConnectorIcon={
+                                                  apiConnector.icon
+                                                }
+                                                apiConnectorName={
+                                                  apiConnector.name
+                                                }
+                                                detailsPageLink={resolvers.apiConnector.details(
+                                                  { apiConnector }
+                                                )}
+                                                i18nCancelLabel={t(
+                                                  'shared:Cancel'
+                                                )}
+                                                i18nDelete={t('shared:Delete')}
+                                                i18nDeleteModalMessage={t(
+                                                  'deleteModalMessage',
+                                                  { name: apiConnector.name }
+                                                )}
+                                                i18nDeleteModalTitle={t(
+                                                  'deleteModalTitle'
+                                                )}
+                                                i18nDetails={t(
+                                                  'shared:Details'
+                                                )}
+                                                i18nDetailsTip={t(
+                                                  'detailsApiConnectorTip'
+                                                )}
+                                                i18nUsedByMessage={this.getUsedByMessage(
+                                                  apiConnector
+                                                )}
+                                                onDelete={handleDelete}
+                                                usedBy={
+                                                  apiConnector.uses as number
+                                                }
+                                              />
+                                            )
+                                          );
+                                      }}
+                                    </WithApiConnectorHelpers>
+                                  ) : (
+                                    undefined
+                                  )}
+                                </ApiConnectorListView>
+                              )}
+                            </WithLoader>
                           </>
                         )}
                       </Translation>

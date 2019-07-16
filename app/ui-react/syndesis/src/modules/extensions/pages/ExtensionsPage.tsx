@@ -7,6 +7,7 @@ import {
   IActiveFilter,
   IFilterType,
   ISortType,
+  PageSection,
   SimplePageHeader,
 } from '@syndesis/ui';
 import { WithListViewToolbarHelpers, WithLoader } from '@syndesis/utils';
@@ -119,28 +120,11 @@ export const ExtensionsPage: React.FunctionComponent = () => {
               i18nTitle={t('extension.extensionsPageTitle')}
               i18nDescription={t('extension.extensionsPageDescription')}
             />
-            <ExtensionListView
-              filterTypes={filterTypes}
-              sortTypes={sortTypes}
-              linkImportExtension={resolvers.import()}
-              resultsCount={filteredAndSorted.length}
-              {...helpers}
-              i18nTitle={''}
-              i18nDescription={''}
-              i18nEmptyStateInfo={t('extension.emptyStateInfoMessage')}
-              i18nEmptyStateTitle={t('extension.emptyStateTitle')}
-              i18nLinkImportExtension={t('extension.ImportExtension')}
-              i18nLinkImportExtensionTip={t('extension.importExtensionTip')}
-              i18nName={t('shared:Name')}
-              i18nNameFilterPlaceholder={t('shared:nameFilterPlaceholder')}
-              i18nResultsCount={t('shared:resultsCount', {
-                count: filteredAndSorted.length,
-              })}
-            >
-              <WithLoader
-                error={extensionsError !== false}
-                loading={!hasExtensionsData}
-                loaderChildren={
+            <WithLoader
+              error={extensionsError !== false}
+              loading={!hasExtensionsData}
+              loaderChildren={
+                <PageSection>
                   <ExtensionListSkeleton
                     width={800}
                     style={{
@@ -148,57 +132,80 @@ export const ExtensionsPage: React.FunctionComponent = () => {
                       marginTop: 30,
                     }}
                   />
-                }
-                errorChildren={<ApiError error={extensionsError as Error} />}
-              >
-                {() =>
-                  filteredAndSorted
-                    .filter((extension: Extension) =>
-                      filterUndefinedId(extension)
-                    )
-                    .map((extension: Extension, index: number) => (
-                      <ExtensionListItem
-                        key={index}
-                        detailsPageLink={resolvers.extension.details({
-                          extension,
-                        })}
-                        extensionDescription={extension.description}
-                        extensionIcon={
-                          <EntityIcon
-                            entity={extension}
-                            alt={extension.name}
-                            width={46}
+                </PageSection>
+              }
+              errorChildren={<ApiError error={extensionsError as Error} />}
+            >
+              {() => (
+                <ExtensionListView
+                  filterTypes={filterTypes}
+                  sortTypes={sortTypes}
+                  linkImportExtension={resolvers.import()}
+                  resultsCount={filteredAndSorted.length}
+                  {...helpers}
+                  i18nTitle={''}
+                  i18nDescription={''}
+                  i18nEmptyStateInfo={t('extension.emptyStateInfoMessage')}
+                  i18nEmptyStateTitle={t('extension.emptyStateTitle')}
+                  i18nLinkImportExtension={t('extension.ImportExtension')}
+                  i18nLinkImportExtensionTip={t('extension.importExtensionTip')}
+                  i18nName={t('shared:Name')}
+                  i18nNameFilterPlaceholder={t('shared:nameFilterPlaceholder')}
+                  i18nResultsCount={t('shared:resultsCount', {
+                    count: filteredAndSorted.length,
+                  })}
+                >
+                  {filteredAndSorted.length > 0
+                    ? filteredAndSorted
+                        .filter((extension: Extension) =>
+                          filterUndefinedId(extension)
+                        )
+                        .map((extension: Extension, index: number) => (
+                          <ExtensionListItem
+                            key={index}
+                            detailsPageLink={resolvers.extension.details({
+                              extension,
+                            })}
+                            extensionDescription={extension.description}
+                            extensionIcon={
+                              <EntityIcon
+                                entity={extension}
+                                alt={extension.name}
+                                width={46}
+                              />
+                            }
+                            extensionId={extension.id!}
+                            extensionName={extension.name}
+                            i18nCancelText={t('shared:Cancel')}
+                            i18nDelete={t('shared:Delete')}
+                            i18nDeleteModalMessage={t(
+                              'extension.deleteModalMessage',
+                              { name: extension.name }
+                            )}
+                            i18nDeleteModalTitle={t(
+                              'extension.deleteModalTitle'
+                            )}
+                            i18nDeleteTip={t('extension.deleteExtensionTip')}
+                            i18nDetails={t('shared:Details')}
+                            i18nDetailsTip={t('extension.detailsExtensionTip')}
+                            i18nExtensionType={getExtensionTypeName(extension)}
+                            i18nUpdate={t('shared:Update')}
+                            i18nUpdateTip={t('extension.updateExtensionTip')}
+                            i18nUsedByMessage={getUsedByMessage(extension)}
+                            linkUpdateExtension={resolvers.extension.update({
+                              extension,
+                            })}
+                            onDelete={handleDelete}
+                            usedBy={
+                              // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
+                              extension.uses as number
+                            }
                           />
-                        }
-                        extensionId={extension.id!}
-                        extensionName={extension.name}
-                        i18nCancelText={t('shared:Cancel')}
-                        i18nDelete={t('shared:Delete')}
-                        i18nDeleteModalMessage={t(
-                          'extension.deleteModalMessage',
-                          { name: extension.name }
-                        )}
-                        i18nDeleteModalTitle={t('extension.deleteModalTitle')}
-                        i18nDeleteTip={t('extension.deleteExtensionTip')}
-                        i18nDetails={t('shared:Details')}
-                        i18nDetailsTip={t('extension.detailsExtensionTip')}
-                        i18nExtensionType={getExtensionTypeName(extension)}
-                        i18nUpdate={t('shared:Update')}
-                        i18nUpdateTip={t('extension.updateExtensionTip')}
-                        i18nUsedByMessage={getUsedByMessage(extension)}
-                        linkUpdateExtension={resolvers.extension.update({
-                          extension,
-                        })}
-                        onDelete={handleDelete}
-                        usedBy={
-                          // TODO: Schema is currently wrong as it has 'uses` as an OptionalInt. Remove cast when schema is fixed.
-                          extension.uses as number
-                        }
-                      />
-                    ))
-                }
-              </WithLoader>
-            </ExtensionListView>
+                        ))
+                    : undefined}
+                </ExtensionListView>
+              )}
+            </WithLoader>
           </>
         );
       }}
