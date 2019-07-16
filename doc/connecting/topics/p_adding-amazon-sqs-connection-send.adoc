@@ -1,0 +1,82 @@
+// This module is included in the following assemblies:
+// as_connecting-to-amazon-sqs.adoc
+
+[id='adding-amazon-sqs-connection-send_{context}']
+= Sending messages to an Amazon SQS queue
+
+In the middle of a flow, or to finish a simple integration, 
+you can send messages to an Amazon SQS queue. 
+
+.Prerequisites
+* You created an Amazon SQS connection that is configured to access 
+the queue that you want to send messages to. 
+* You know the name of the SQS queue that you want the connection to
+send messages to. 
+* {prodname} is prompting you to add a step, or to choose the finish 
+connection for a simple integration. 
+
+.Procedure
+
+. Click the Amazon SQS connection that you want to use to send messages. 
+. Click the action that you want the connection to perform:
++
+* *Send Object* sends one message to the queue. 
+* *Send Batch Object* sends a batch of messages to the queue. 
+
+. In the *Message group ID strategy* field, for a first-in, first-out (FIFO)
+queue, accept `ConstantMessageGroupIdStrategy` or click in the field and 
+select a different strategy. 
++
+The setting of this parameter has no effect on simple queues. 
+The message group ID identifies the group that a message belongs to. 
+Messages that belong to the same message group are always processed 
+one by one, in a strict order relative to the message group. The 
+message group ID strategy determines how the connection assigns 
+a group ID to a message. The options are: 
++
+* `ConstantMessageGroupIdStrategy` -- The connection uses a constant
+to group messages. 
+* `ExchangeIdMessageGroupIdStrategy` -- The connection uses the 
+exchange ID, which is in each message, to group messages. 
+* `PropertyValueMessageGroupIdStrategy` -- The connection uses the 
+value of an internal property to group messages. 
+
++
+FIFO queues are designed to ensure that the order in which messages 
+are sent and received is strictly preserved and that each message 
+is processed exactly once. A FIFO queue name has `.fifo` as a suffix. 
+
+. In the *Message deduplication ID strategy* field, for a FIFO queue, 
+accept `NullMessageDeduplicationIdStrategy` or click in the field 
+to select `ExchangeIdMessageDeduplicationIdStrategy`. 
++
+The setting of this parameter has no effect on simple queues. For a FIFO queue, 
+the connection uses the selected strategy to ensure that it does not send 
+duplicate messages to the queue. 
++
+** `NullMessageDeduplicationIdStrategy` uses the message body as the 
+deduplication element. In other words, the connection compares message 
+bodies to identify duplicate messages. 
+** `ExchangeIdMessageDeduplicationIdStrategy` uses the message's exchange 
+ID as the deduplication element. In other words, the connection compares 
+exchange IDs to identify duplicate messages. 
+
+. In the *Queue Name or Amazon Resource Name* field, enter the 
+name of the queue to send messages to. If the queue does not exist, 
+the connection creates it. 
+
+. In the *Delay* field, accept the default, which is 0 for no delay. 
+Or, to add a delay, specify a number. The integration waits this number 
+of seconds before sending messages. This is useful when the message 
+consumers might not be immediately ready for the messages that the 
+connection is sending. 
+
+ 
+. Click *Next*. 
+
+.Result
+The connection appears in the integration flow where you added it. 
+
+.Additional resources
+* link:https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/using-messagededuplicationid-property.html[Using the Amazon Message Deduplication ID]
+* link:https://docs.aws.amazon.com/AWSSimpleQueueService/latest/SQSDeveloperGuide/using-messagegroupid-property.html[Using the Amazon SQS Message Group ID] 
