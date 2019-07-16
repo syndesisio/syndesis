@@ -105,31 +105,6 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
     c.initCfg.disableNavbar = true;
     //
     c.initCfg.disableMappingPreviewMode = false;
-    c.initCfg.discardNonMockSources = false;
-    c.initCfg.addMockJSONMappings = false;
-    c.initCfg.addMockJavaSingleSource = false;
-    c.initCfg.addMockJavaSources = false;
-    c.initCfg.addMockXMLInstanceSources = false;
-    c.initCfg.addMockXMLSchemaSources = false;
-    c.initCfg.addMockJSONSources = false;
-    c.initCfg.addMockJavaTarget = false;
-    c.initCfg.addMockXMLInstanceTarget = false;
-    c.initCfg.addMockXMLSchemaTarget = false;
-    c.initCfg.addMockJSONTarget = false;
-    c.initCfg.debugDocumentServiceCalls = false;
-    c.initCfg.debugMappingServiceCalls = false;
-    c.initCfg.debugClassPathServiceCalls = false;
-    c.initCfg.debugValidationServiceCalls = false;
-    c.initCfg.debugFieldActionServiceCalls = false;
-    c.initCfg.debugDocumentParsing = false;
-
-    // enable debug logging options as needed
-    c.initCfg.debugDocumentServiceCalls = true;
-    c.initCfg.debugDocumentParsing = false;
-    c.initCfg.debugMappingServiceCalls = false;
-    c.initCfg.debugClassPathServiceCalls = false;
-    c.initCfg.debugValidationServiceCalls = false;
-    c.initCfg.debugFieldActionServiceCalls = false;
 
     this.inputDocuments.forEach(d => {
       const inputDoc: DocumentInitializationModel = new DocumentInitializationModel();
@@ -174,7 +149,7 @@ export class DataMapperHostComponent implements OnInit, OnDestroy, OnChanges {
 
     this.saveMappingSubscription = c.mappingService.mappingUpdated$.subscribe(
       () => {
-        const json = c.mappingService.serializeMappingsToJSON();
+        const json = MappingSerializer.serializeMappings(c);
         this.modifiedMappings = JSON.stringify(json);
         this.outputMappings.emit(this.modifiedMappings);
       }
