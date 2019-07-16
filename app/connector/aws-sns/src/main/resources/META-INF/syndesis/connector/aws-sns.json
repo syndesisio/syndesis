@@ -39,7 +39,10 @@
       },
       "id": "io.syndesis:aws-sns-send-object-connector",
       "name": "Send Object",
-      "pattern": "To"
+      "pattern": "To",
+      "tags": [
+        "dynamic"
+      ]
     }
   ],
   "configuredProperties": {},

@@ -64,6 +64,16 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-model</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.syndesis.common</groupId>
+      <artifactId>common-util</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>io.syndesis.integration</groupId>
       <artifactId>integration-component-proxy</artifactId>
     </dependency>
