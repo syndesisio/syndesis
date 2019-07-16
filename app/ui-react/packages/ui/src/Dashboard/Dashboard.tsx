@@ -20,6 +20,7 @@ export interface IIntegrationsPageProps {
   integrationBoard: JSX.Element;
   integrationUpdates: JSX.Element;
   connections: JSX.Element;
+  noIntegrations?: boolean;
   i18nConnections: string;
   i18nLinkCreateConnection: string;
   i18nLinkCreateIntegration: string;
@@ -75,15 +76,26 @@ export class Dashboard extends React.PureComponent<IIntegrationsPageProps> {
             </Grid.Row>
 
             <Grid.Row className={'dashboard__integrations'}>
-              <Grid.Col sm={12} md={7}>
-                {this.props.topIntegrations}
-              </Grid.Col>
-              <Grid.Col sm={12} md={5}>
-                {this.props.integrationBoard}
-              </Grid.Col>
-              <Grid.Col sm={12} md={5}>
-                {this.props.integrationUpdates}
-              </Grid.Col>
+              {/* TODO last minute empty state hack with minimal changes, this needs a revisit */
+              this.props.noIntegrations ? (
+                <>
+                  <Grid.Col sm={12} md={12}>
+                    {this.props.topIntegrations}
+                  </Grid.Col>
+                </>
+              ) : (
+                <>
+                  <Grid.Col sm={12} md={7}>
+                    {this.props.topIntegrations}
+                  </Grid.Col>
+                  <Grid.Col sm={12} md={5}>
+                    {this.props.integrationBoard}
+                  </Grid.Col>
+                  <Grid.Col sm={12} md={5}>
+                    {this.props.integrationUpdates}
+                  </Grid.Col>
+                </>
+              )}
             </Grid.Row>
 
             <Grid.Row className={'dashboard__connections__actions'}>

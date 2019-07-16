@@ -160,12 +160,16 @@ export class IntegrationsPage extends React.Component {
                               'integrationsEmptyState.title'
                             )}
                           >
-                            <Integrations
-                              error={error}
-                              errorMessage={errorMessage}
-                              loading={!hasData}
-                              integrations={filteredAndSortedIntegrations}
-                            />
+                            {filteredAndSortedIntegrations.length > 0 ? (
+                              <Integrations
+                                error={error}
+                                errorMessage={errorMessage}
+                                loading={!hasData}
+                                integrations={filteredAndSortedIntegrations}
+                              />
+                            ) : (
+                              undefined
+                            )}
                           </IntegrationsListView>
                         </>
                       );
