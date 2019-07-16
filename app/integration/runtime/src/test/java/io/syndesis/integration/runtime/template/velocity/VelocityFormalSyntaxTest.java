@@ -15,6 +15,9 @@
  */
 package io.syndesis.integration.runtime.template.velocity;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import java.util.Arrays;
+import org.apache.camel.builder.RouteBuilder;
 import org.junit.Test;
 
 /**
@@ -34,4 +37,44 @@ public class VelocityFormalSyntaxTest extends AbstractVelocityTemplateStepHandle
 
         testTemplateStepNoSpacesInSymbolAllowed(symbols);
      }
+
+    @Test
+    public void testTemplateStepNoClosingTag() throws Exception {
+        Symbol[] symbols = {
+            new Symbol("name", "string")
+        };
+
+        String template = EMPTY_STRING +
+            "Hello ${name, how are you?";
+
+        assertThatThrownBy(() -> {
+            IntegrationWithRouteBuilder irb = generateRoute(template, Arrays.asList(symbols));
+            RouteBuilder routes = irb.routeBuilder();
+
+            // Set up the camel context
+            context.addRoutes(routes);
+        })
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("due to an incomplete symbol");
+    }
+
+    @Test
+    public void testTemplateStepNoClosingEndTag() throws Exception {
+        Symbol[] symbols = {
+            new Symbol("name", "string")
+        };
+
+        String template = EMPTY_STRING +
+            "Hello this is your name: ${name";
+
+        assertThatThrownBy(() -> {
+            IntegrationWithRouteBuilder irb = generateRoute(template, Arrays.asList(symbols));
+            final RouteBuilder routes = irb.routeBuilder();
+
+            // Set up the camel context
+            context.addRoutes(routes);
+        })
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("invalid due to an incomplete symbol");
+    }
 }

@@ -31,11 +31,18 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
 
     private static final String DOUBLE_CLOSE_BRACE_PATTERN = "\\}\\}";
 
-    private static final Pattern SYMBOL_PATTERN = Pattern.compile("(" + DOUBLE_OPEN_BRACE_PATTERN + "(?:\\/|#|\\^|>)?)(.*?)(" + DOUBLE_CLOSE_BRACE_PATTERN + ")");
+    private static final Pattern LITERAL_PATTERN = Pattern.compile(
+      "(?<leading>.*?)" + // Leading text / punctuation
+      "(?<otag>" + DOUBLE_OPEN_BRACE_PATTERN + "(?:\\/|#|\\^|>)?)" + // {{ + any syntax for open section etc...
+      "(?<symbol>.*?)" + // Actual symbol name
+      "(?<ctag>" + DOUBLE_CLOSE_BRACE_PATTERN + ")"
+    );
 
-    private static final Pattern SYMBOL_OPEN_SECTION_PATTERN = Pattern.compile(DOUBLE_OPEN_BRACE_PATTERN + "(#|\\^)(.*?)" + DOUBLE_CLOSE_BRACE_PATTERN);
+    private static final Pattern SYMBOL_OPEN_SECTION_PATTERN = Pattern.compile(
+      DOUBLE_OPEN_BRACE_PATTERN + "(#|\\^)");
 
-    private static final Pattern SYMBOL_CLOSE_SECTION_PATTERN = Pattern.compile(DOUBLE_OPEN_BRACE_PATTERN + "\\/(.*?)" + DOUBLE_CLOSE_BRACE_PATTERN);
+    private static final Pattern SYMBOL_CLOSE_SECTION_PATTERN = Pattern.compile(
+      DOUBLE_OPEN_BRACE_PATTERN + "\\/");
 
     private boolean inSectionSymbol;
 
@@ -43,13 +50,13 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
         super(new SymbolSyntax(OPEN_BRACE + OPEN_BRACE, CLOSE_BRACE + CLOSE_BRACE));
     }
 
-    private boolean isOpeningSectionSymbol(String symbol) {
-        Matcher m = SYMBOL_OPEN_SECTION_PATTERN.matcher(symbol);
+    private boolean isOpeningSectionSymbol(String literal) {
+        Matcher m = SYMBOL_OPEN_SECTION_PATTERN.matcher(literal);
         return m.matches();
     }
 
-    private boolean isClosingSectionSymbol(String symbol) {
-        Matcher m = SYMBOL_CLOSE_SECTION_PATTERN.matcher(symbol);
+    private boolean isClosingSectionSymbol(String literal) {
+        Matcher m = SYMBOL_CLOSE_SECTION_PATTERN.matcher(literal);
         return m.matches();
     }
 
@@ -61,16 +68,23 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
     }
 
     @Override
-    protected void parseSymbol(String symbol) throws TemplateProcessingException {
+    protected void parseSymbol(String literal) throws TemplateProcessingException {
         //
         // Scanner does not delineate between two symbols
         // with no whitespace between so match and loop
         //
-        Matcher m = SYMBOL_PATTERN.matcher(symbol);
+        Matcher m = LITERAL_PATTERN.matcher(literal);
         while (m.find()) {
-            String aSymbol = m.group();
+            String leading = m.group("leading");
+            String otag = m.group("otag");
+            String symbol = m.group("symbol");
+            String ctag = m.group("ctag");
 
-            if (isClosingSectionSymbol(aSymbol)) {
+            append(leading);
+
+            checkValidTags(otag, symbol, ctag);
+
+            if (isClosingSectionSymbol(otag)) { // check that the otag denotes a closing section
                 inSectionSymbol = false;
             }
 
@@ -79,18 +93,16 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
                 // Any symbol within another symbol, eg. section symbol,
                 // should not have a prefix.
                 //
-                append(aSymbol);
+                append(otag).append(symbol).append(ctag);
             } else {
-                String replacement = m.group(1) + ensurePrefix(m.group(2)) + m.group(3);
+                String replacement = otag + ensurePrefix(symbol) + ctag;
 
-                // Allows for appending text that comes after
-                // the found symbol by using appendTail (see below)
                 StringBuffer buf = new StringBuffer();
                 m.appendReplacement(buf, Matcher.quoteReplacement(replacement));
                 append(buf.toString());
             }
 
-            if (isOpeningSectionSymbol(aSymbol)) {
+            if (isOpeningSectionSymbol(otag)) {
                 inSectionSymbol = true;
             }
         }
@@ -103,7 +115,7 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
         //
         StringBuffer buf = new StringBuffer();
         m.appendTail(buf);
-        if (! buf.toString().equals(symbol)) {
+        if (! buf.toString().equals(literal)) {
             append(buf.toString());
         }
     }
@@ -112,7 +124,6 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
     @Override
     public String preProcess(String template) throws TemplateProcessingException {
         String newTemplate = super.preProcess(template);
-
         //
         // Invalid template is inSectionSymbol has not been terminated
         //
@@ -138,8 +149,8 @@ class MustacheTemplatePreProcessor extends AbstractTemplatePreProcessor {
     }
 
     @Override
-    public boolean isMySymbol(String symbol) {
-        Matcher m = SYMBOL_PATTERN.matcher(symbol);
+    public boolean isMySymbol(String literal) {
+        Matcher m = LITERAL_PATTERN.matcher(literal);
         return m.lookingAt();
     }
 

@@ -15,9 +15,11 @@
  */
 package io.syndesis.integration.runtime.template.velocity;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.Test;
 import io.syndesis.common.model.integration.step.template.TemplateStepConstants;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
+import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 import io.syndesis.integration.runtime.handlers.AbstractTemplateStepHandlerTest;
 
 public abstract class AbstractVelocityTemplateStepHandlerTest extends AbstractTemplateStepHandlerTest
@@ -56,4 +58,19 @@ public abstract class AbstractVelocityTemplateStepHandlerTest extends AbstractTe
         testTemplateStepBasic(symbols);
      }
 
+    @Test
+    public void testInvalidTemplate() throws Exception {
+        SymbolSyntax mustacheSyntax = TemplateStepLanguage.MUSTACHE.getDefaultSymbolSyntax();
+        Symbol[] symbols = {
+            new Symbol("time", "string", mustacheSyntax),
+            new Symbol("name", "string", mustacheSyntax),
+            new Symbol("text", "string", mustacheSyntax)
+        };
+
+        assertThatThrownBy(() -> {
+            testTemplateStepBasic(symbols);
+        })
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("invalid");
+    }
 }

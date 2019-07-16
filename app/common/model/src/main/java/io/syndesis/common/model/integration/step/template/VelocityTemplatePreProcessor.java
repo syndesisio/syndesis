@@ -23,18 +23,14 @@ import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.S
 
 class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
 
-    /*
-     * group 1
-     * (\\$(?:!)?(?:\\{)?) -> $ (required) ! (optional-nogroup) { (optional-nogroup)
-     *
-     * group 2
-     * ([\\w|_|\\.]+(?:\\|'[\\S ]+')?) -> A-Za-z-0-9|_|. identifier followed by alternate value |'john doe'
-     * (see https://velocity.apache.org/engine/devel/user-guide.html#alternate-values)
-     *
-     * group 3
-     * (\\})? -> } (optional)
-     */
-    private static final Pattern SYMBOL_PATTERN = Pattern.compile("(\\$(?:!)?(?:\\{)?)([\\w_\\.]+(?:\\|'[\\S ]+?')?)(\\})?");
+    private static final Pattern LITERAL_PATTERN = Pattern.compile(
+      "(?<leading>.*?)" + // Leading text / punctuation
+      "(?<otag>\\$(?:!)?(?:\\{)?)" + // ${ + any syntax for open section etc...
+      "(?<symbol>[\\w\\.\\s]+(?:\\|'[\\S ]+?')?)" + // Actual symbol name
+      "(?<ctag>\\})?" // Optional closing tag is no brace at start
+    );
+
+    private static final Pattern SYMBOL_PATTERN = Pattern.compile("[a-zA-Z][a-zA-Z0-9\\-_\\.]+(?:\\|'[\\S ]+?')?");
 
     private static final String SET_LITERAL = "#set(";
 
@@ -51,8 +47,8 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
     }
 
     @Override
-    public boolean isMySymbol(String symbol) {
-        Matcher m = SYMBOL_PATTERN.matcher(symbol);
+    public boolean isMySymbol(String literal) {
+        Matcher m = LITERAL_PATTERN.matcher(literal);
         return m.lookingAt();
     }
 
@@ -66,18 +62,18 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
 
     @SuppressWarnings("PMD.UseStringBufferForStringAppends")
     @Override
-    protected void parseSymbol(String symbol) throws TemplateProcessingException {
+    protected void parseSymbol(String literal) throws TemplateProcessingException {
         if (vSymbolDeclaration) {
-            vOnlySymbols.add(symbol);
+            vOnlySymbols.add(literal);
             // found the declaration so turn off the flag
             vSymbolDeclaration = false;
-            append(symbol);
+            append(literal);
             return;
         }
 
-        if (vOnlySymbols.contains(symbol)) {
+        if (vOnlySymbols.contains(literal)) {
             // Ignore these symbols since they are velocity only
-            append(symbol);
+            append(literal);
             return;
         }
 
@@ -85,23 +81,26 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
         // Scanner does not delineate between two symbols
         // with no whitespace between so match and loop
         //
-        Matcher m = SYMBOL_PATTERN.matcher(symbol);
-        while (m.find()) {;
-            String aSymbol = m.group();
-            SymbolSyntax formalSyntax = getSymbolSyntaxes().get(0);
-            if (aSymbol.startsWith(formalSyntax.open()) && ! aSymbol.endsWith(formalSyntax.close())) {
-                // Not a valid symbol since it starts with a '${' but doesn't end with a '}'
-                throw new TemplateProcessingException("The symbol '" + aSymbol + "' is invalid");
-            }
+        Matcher m = LITERAL_PATTERN.matcher(literal);
+        while (m.find()) {
+            String leading = labelledGroup(m, "leading");
+            String otag = labelledGroup(m, "otag");
+            String symbol = labelledGroup(m, "symbol");
+            String ctag = labelledGroup(m, "ctag");
 
-            String ref = m.group(1);
-            String replacement = ref + ensurePrefix(m.group(2));
-            if (m.group(3) != null) {
+            append(leading);
+
+            checkValidTags(otag, symbol, ctag);
+
+            checkValidSymbol(symbol, SYMBOL_PATTERN);
+
+            String replacement = otag + ensurePrefix(symbol);
+            if (ctag != null) {
                 //
-                // If formal var definition, ie. ${xyz} then group 3
-                // will be the final '{'.
+                // If formal var definition, ie. ${xyz} then ctag
+                // will be the final '}'.
                 //
-                replacement = replacement + m.group(3);
+                replacement = replacement + ctag;
             }
 
             // Allows for appending text that comes after
@@ -119,7 +118,7 @@ class VelocityTemplatePreProcessor extends AbstractTemplatePreProcessor {
         //
         StringBuffer buf = new StringBuffer();
         m.appendTail(buf);
-        if (! buf.toString().equals(symbol)) {
+        if (! buf.toString().equals(literal)) {
             append(buf.toString());
         }
     }

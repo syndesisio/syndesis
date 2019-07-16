@@ -15,10 +15,9 @@
  */
 package io.syndesis.common.model.integration.step.template;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.After;
 import org.junit.Test;
 import io.syndesis.common.util.StringConstants;
@@ -65,6 +64,32 @@ public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
         assertEquals("${body.name}${body.description}", newTemplate);
     }
 
+    @Test
+    public void testValidSymbolFormat() throws Exception {
+        String template = "${name@_}";
+        String newTemplate = processor.preProcess(template);
+        assertFalse(template.equals(newTemplate));
+        assertEquals("${body.name@_}", newTemplate);
+    }
+
+    /**
+     * Freemarker does not allow numbers at the start of its symbols
+     * @throws Exception
+     */
+    @Test
+    public void testTemplateSymbolBeginningWithNumber() throws Exception {
+        String template = EMPTY_STRING +
+            "At ${1the time}, ${the name}" + NEW_LINE +
+            "submitted the following message:" + NEW_LINE +
+            "${the text}";
+
+        assertThatThrownBy(() -> {
+            processor.preProcess(template);
+        })
+            .isInstanceOf(TemplateProcessingException.class)
+            .hasMessageContaining("not valid syntactically");
+    }
+
     /**
      * Freemarker does not allow spaces in its symbols
      * @throws Exception
@@ -75,11 +100,11 @@ public class TestFreeMarkerTemplatePreProcessor implements StringConstants {
             "At ${the time}, ${the name}" + NEW_LINE +
             "submitted the following message:" + NEW_LINE +
             "${the text}";
-        try {
+
+        assertThatThrownBy(() -> {
             processor.preProcess(template);
-            fail("Should not allow spaces in template");
-        } catch (TemplateProcessingException ex) {
-            assertTrue(ex.getMessage().contains("invalid"));
-        }
+        })
+            .isInstanceOf(TemplateProcessingException.class)
+            .hasMessageContaining("not valid syntactically");
     }
 }
