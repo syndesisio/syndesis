@@ -18,7 +18,10 @@ package io.syndesis.common.model.integration.step.template;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
 
 abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor {
@@ -34,16 +37,42 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
        this.symbolSyntax = Arrays.asList(symbolSyntax);
     }
 
-    protected void append(String token) {
-        sb.append(token);
+    protected StringBuilder append(String token) {
+        if (token == null) {
+            return sb;
+        }
+
+        return sb.append(token);
     }
 
     protected String ensurePrefix(String symbolName) {
         return symbolName.startsWith(BODY_PREFIX) ? symbolName : BODY_PREFIX + symbolName;
     }
 
+    protected String labelledGroup(Matcher m, String label) {
+        Optional<String> optional = Optional.ofNullable(m.group(label));
+        return optional.orElse(EMPTY_STRING);
+    }
+
+    protected void checkValidTags(String otag, String symbol, String ctag) throws TemplateProcessingException {
+        List<SymbolSyntax> syntaxes = getSymbolSyntaxes();
+        for (SymbolSyntax syntax : syntaxes) {
+            if (otag.equals(syntax.open()) && ! ctag.equals(syntax.close())) {
+                // Not a valid symbol since formal velocity syntax must start with a '${' & end with a '}'
+                throw new TemplateProcessingException("The symbol '" + symbol + "' is invalid");
+            }
+        }
+    }
+
+    protected void checkValidSymbol(String symbol, Pattern validPattern) throws TemplateProcessingException {
+        Matcher m = validPattern.matcher(symbol);
+        if (! m.matches()) {
+            throw new TemplateProcessingException("The symbol '" + symbol + "' is not valid syntactically");
+        }
+    }
+
     @Override
-    public abstract boolean isMySymbol(String symbol);
+    public abstract boolean isMySymbol(String literal);
 
     private boolean isSymbol(String symbol) throws TemplateProcessingException {
         if (isMySymbol(symbol)) {
@@ -180,6 +209,13 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
                     if (lineScanner.hasNextLine()) {
                         append(NEW_LINE);
                     }
+
+                    if (onlyPartial != null) {
+                        //
+                        // We have a partial token left over so cannot be a valid template
+                        //
+                        throw new TemplateProcessingException("the template is invalid due to an incomplete symbol");
+                    }
                 } finally {
                     scanner.close();
                 }
@@ -194,6 +230,7 @@ abstract class AbstractTemplatePreProcessor implements TemplateStepPreProcessor 
 
     @Override
     public void reset() {
+        onlyPartial = null;
         sb = new StringBuilder();
     }
 

@@ -15,8 +15,8 @@
  */
 package io.syndesis.integration.runtime.handlers;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -30,6 +30,9 @@ import org.apache.camel.ProducerTemplate;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
 import org.apache.camel.impl.DefaultCamelContext;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -56,6 +59,19 @@ public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSup
     private DirectEndpoint directEndpoint = new DirectEndpoint();
 
     private static ObjectMapper mapper = new ObjectMapper();
+
+    protected CamelContext context;
+
+    @Before
+    public void setup() throws Exception {
+        context = new DefaultCamelContext();
+    }
+
+    @After
+    public void tearDown() throws Exception {
+        context.stop();
+        context = null;
+    }
 
     private String createSpec(Collection<Symbol> symbols) throws JsonProcessingException {
         final ObjectNode schema = JsonNodeFactory.instance.objectNode();
@@ -166,9 +182,33 @@ public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSup
         assertTrue(dependencies.contains(getDependency()));
     }
 
-    protected void testTemplateStepBasic(Symbol[] symbols) throws Exception {
-        CamelContext context = new DefaultCamelContext();
+    protected void testTemplate(Symbol[] symbols, String template, List<String> testMessages,
+                              List<String> expectedMessages) throws JsonProcessingException, Exception, InterruptedException {
+        IntegrationWithRouteBuilder irb = generateRoute(template, Arrays.asList(symbols));
+        Integration integration = irb.integration();
+        checkDynamicDependency(integration);
 
+        RouteBuilder routes = irb.routeBuilder();
+
+        // Set up the camel context
+        context.addRoutes(routes);
+        dumpRoutes(context);
+
+        context.start();
+
+        // Dump routes as XML for troubleshooting
+        dumpRoutes(context);
+
+        MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
+        result.setExpectedMessageCount(1);
+        result.expectedBodiesReceived(expectedMessages);
+
+        sendData(context, testMessages);
+
+        result.assertIsSatisfied();
+    }
+
+    protected void testTemplateStepBasic(Symbol[] symbols) throws Exception {
         List<String> testMessages = new ArrayList<>();
         testMessages.add(
             data(
@@ -201,56 +241,86 @@ public abstract class AbstractTemplateStepHandlerTest extends IntegrationTestSup
                                                          .replace(symbols[2].toString(), "Hello, Pleased to meet you!");
         expectedMessages.add(toJson(expectedMessage));
 
-        try {
-            IntegrationWithRouteBuilder irb = generateRoute(template, Arrays.asList(symbols));
-            final Integration integration = irb.integration();
-            checkDynamicDependency(integration);
-
-            final RouteBuilder routes = irb.routeBuilder();
-
-            // Set up the camel context
-            context.addRoutes(routes);
-            dumpRoutes(context);
-
-            context.start();
-
-            // Dump routes as XML for troubleshooting
-            dumpRoutes(context);
-
-            MockEndpoint result = context.getEndpoint("mock:result", MockEndpoint.class);
-            result.setExpectedMessageCount(2);
-            result.expectedBodiesReceived(expectedMessages);
-
-            sendData(context, testMessages);
-
-            result.assertIsSatisfied();
-
-        } finally {
-            context.stop();
-        }
+        testTemplate(symbols, template, testMessages, expectedMessages);
      }
 
     protected void testTemplateStepNoSpacesInSymbolAllowed(Symbol[] symbols) throws Exception {
-        CamelContext context = new DefaultCamelContext();
-
         String template = EMPTY_STRING +
             "At " + symbols[0] + ", " + symbols[1] + NEW_LINE +
             "stated submitted the following message:" + NEW_LINE +
             symbols[2];
 
-        try {
+        assertThatThrownBy(() -> {
             IntegrationWithRouteBuilder irb = generateRoute(template, Arrays.asList(symbols));
             final RouteBuilder routes = irb.routeBuilder();
 
             // Set up the camel context
             context.addRoutes(routes);
-            fail("Should not allow spaces in symbols");
-        } catch (Exception ex) {
-            assertTrue(ex.getMessage().contains("invalid"));
-        } finally {
-            context.stop();
-        }
+        })
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("not valid syntactically");
      }
+
+    @Test
+    public void testTemplateStepBrackets() throws Exception {
+        Symbol[] symbols = {
+            new Symbol("time", "string"),
+            new Symbol("name", "string"),
+            new Symbol("text", "string")
+        };
+
+        String template = EMPTY_STRING +
+            "At " + OPEN_BRACKET + symbols[0] + CLOSE_BRACKET + ", " +
+            OPEN_BRACKET + symbols[1] + CLOSE_BRACKET + NEW_LINE +
+            "submitted the following message:" + NEW_LINE +
+            symbols[2];
+
+        List<String> testMessages = new ArrayList<>();
+        testMessages.add(
+            data(
+                dataPair(symbols[0].id, "10:00"),
+                dataPair(symbols[1].id, "Bob"),
+                dataPair(symbols[2].id, "Greetings, How are you?")
+            )
+        );
+
+        List<String> expectedMessages = new ArrayList<>();
+        String expectedMessage = template.replace(symbols[0].toString(), "10:00")
+                                                            .replace(symbols[1].toString(), "Bob")
+                                                            .replace(symbols[2].toString(), "Greetings, How are you?");
+        expectedMessages.add(toJson(expectedMessage));
+
+        testTemplate(symbols, template, testMessages, expectedMessages);
+    }
+
+    @Test
+    public void testTemplateStepContiguousSymbols() throws Exception {
+        Symbol[] symbols = {
+            new Symbol("time", "string"),
+            new Symbol("name", "string"),
+            new Symbol("text", "string")
+        };
+
+        String template = EMPTY_STRING +
+            "Time:" + symbols[0] + "/ Name:" + symbols[1] + "/ Text:" + symbols[2];
+
+        List<String> testMessages = new ArrayList<>();
+        testMessages.add(
+            data(
+                dataPair(symbols[0].id, "10:00"),
+                dataPair(symbols[1].id, "Bob"),
+                dataPair(symbols[2].id, "Greetings, How are you?")
+            )
+        );
+
+        List<String> expectedMessages = new ArrayList<>();
+        String expectedMessage = template.replace(symbols[0].toString(), "10:00")
+                                                            .replace(symbols[1].toString(), "Bob")
+                                                            .replace(symbols[2].toString(), "Greetings, How are you?");
+        expectedMessages.add(toJson(expectedMessage));
+
+        testTemplate(symbols, template, testMessages, expectedMessages);
+    }
 
     // ***************************
     //

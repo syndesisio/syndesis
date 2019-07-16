@@ -15,15 +15,12 @@
  */
 package io.syndesis.integration.runtime.template;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import org.apache.camel.CamelContext;
 import org.apache.camel.builder.RouteBuilder;
 import org.apache.camel.component.mock.MockEndpoint;
-import org.apache.camel.impl.DefaultCamelContext;
 import org.junit.Test;
 import io.syndesis.common.model.integration.step.template.TemplateStepConstants;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
@@ -39,7 +36,6 @@ public class MustacheTemplateStepHandlerTest extends AbstractTemplateStepHandler
 
     @Test
     public void testTemplateStepBasicWithPrefix() throws Exception {
-
         Symbol[] symbols = {
             new Symbol("body.time", "string"),
             new Symbol("body.name", "string"),
@@ -51,7 +47,6 @@ public class MustacheTemplateStepHandlerTest extends AbstractTemplateStepHandler
 
     @Test
     public void testTemplateStepBasicWithoutPrefix() throws Exception {
-
         Symbol[] symbols = {
             new Symbol("time", "string"),
             new Symbol("name", "string"),
@@ -63,8 +58,6 @@ public class MustacheTemplateStepHandlerTest extends AbstractTemplateStepHandler
 
     @Test
     public void testTemplateStepDanglingSection() throws Exception {
-        CamelContext context = new DefaultCamelContext();
-
         Symbol[] symbols = {
             new Symbol("id", "string"),
             new Symbol("course", "array", "{{#", getSymbolSyntax().close()),
@@ -77,24 +70,19 @@ public class MustacheTemplateStepHandlerTest extends AbstractTemplateStepHandler
             "\t* {{name}}" + NEW_LINE +
             symbols[2];
 
-        try {
+        assertThatThrownBy(() -> {
             IntegrationWithRouteBuilder irb = generateRoute(template, Arrays.asList(symbols));
-            final RouteBuilder routes = irb.routeBuilder();
+            RouteBuilder routes = irb.routeBuilder();
 
             // Set up the camel context
             context.addRoutes(routes);
-            fail("Should not allow dangling section");
-        } catch (Exception ex) {
-            assertTrue(ex.getMessage().contains("invalid"));
-        } finally {
-            context.stop();
-        }
+        })
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("invalid");
      }
 
     @Test
     public void testTemplateStepIterate() throws Exception {
-        CamelContext context = new DefaultCamelContext();
-
         List<String> testMessages = new ArrayList<>();
         testMessages.add(
             data(
@@ -207,11 +195,10 @@ public class MustacheTemplateStepHandlerTest extends AbstractTemplateStepHandler
             new Symbol("text", "string", velocitySyntax)
         };
 
-        try {
+        assertThatThrownBy(() -> {
             testTemplateStepBasic(symbols);
-            fail("Should throw exception since wrong language");
-        } catch (Exception ex) {
-            assertTrue(ex.getMessage().contains("invalid"));
-        }
+        })
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("invalid");
     }
 }

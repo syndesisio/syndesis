@@ -15,10 +15,9 @@
  */
 package io.syndesis.common.model.integration.step.template;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 import org.junit.After;
 import org.junit.Test;
 import io.syndesis.common.util.StringConstants;
@@ -94,12 +93,11 @@ public class TestMustacheTemplatePreProcessor implements StringConstants {
             "\t* {{name}}" + NEW_LINE +
             "{{text}}";
 
-        try {
+        assertThatThrownBy(() -> {
             processor.preProcess(template);
-            fail("Should throw an exception due to dangling section");
-        } catch (TemplateProcessingException ex) {
-            assertTrue(ex.getMessage().contains("invalid"));
-        }
+        })
+            .isInstanceOf(TemplateProcessingException.class)
+            .hasMessageContaining("section has not been closed");
     }
 
     /**
@@ -127,18 +125,30 @@ public class TestMustacheTemplatePreProcessor implements StringConstants {
     }
 
     @Test
-    public void testInvalidTemplate() throws Exception {
+    public void testInvalidTemplateWrongSyntax() throws Exception {
         // Using velocity syntax instead
         String template = EMPTY_STRING +
             "At ${time}, ${name}" + NEW_LINE +
             "submitted the following message:" + NEW_LINE +
             "${text}";
 
-        try {
+        assertThatThrownBy(() -> {
             processor.preProcess(template);
-            fail("Should throw exception since wrong language");
-        } catch (TemplateProcessingException ex) {
-            assertTrue(ex.getMessage().contains("invalid"));
-        }
+        })
+            .isInstanceOf(TemplateProcessingException.class)
+            .hasMessageContaining("wrong language");
+    }
+
+    @Test
+    public void testInvalidTemplateNoEndTag() throws Exception {
+        // Using velocity syntax instead
+        String template = EMPTY_STRING +
+            "At {{time}";
+
+        assertThatThrownBy(() -> {
+            processor.preProcess(template);
+        })
+            .isInstanceOf(TemplateProcessingException.class)
+            .hasMessageContaining("incomplete symbol");
     }
 }

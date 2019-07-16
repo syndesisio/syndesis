@@ -15,8 +15,7 @@
  */
 package io.syndesis.integration.runtime.template;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import org.junit.Test;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage;
 import io.syndesis.common.model.integration.step.template.TemplateStepLanguage.SymbolSyntax;
@@ -31,7 +30,6 @@ public class FreeMarkerTemplateStepHandlerTest extends AbstractTemplateStepHandl
 
     @Test
     public void testTemplateStepBasicWithPrefix() throws Exception {
-
         Symbol[] symbols = {
             new Symbol("body.time", "string"),
             new Symbol("body.name", "string"),
@@ -43,7 +41,6 @@ public class FreeMarkerTemplateStepHandlerTest extends AbstractTemplateStepHandl
 
     @Test
     public void testTemplateStepBasicWithoutPrefix() throws Exception {
-
         Symbol[] symbols = {
             new Symbol("time", "string"),
             new Symbol("name", "string"),
@@ -73,11 +70,10 @@ public class FreeMarkerTemplateStepHandlerTest extends AbstractTemplateStepHandl
             new Symbol("text", "string", mustacheSyntax)
         };
 
-        try {
+        assertThatThrownBy(() -> {
             testTemplateStepBasic(symbols);
-            fail("Should throw exception since wrong language");
-        } catch (Exception ex) {
-            assertTrue(ex.getMessage().contains("invalid"));
-        }
+        })
+            .isInstanceOf(IllegalStateException.class)
+            .hasMessageContaining("invalid");
     }
 }
