@@ -124,6 +124,11 @@ export interface QueryResults {
   rows: RowData[];
 }
 
+export interface TableColumns {
+  name: string;
+  columnNames: string[];
+}
+
 export interface ViewDefinitionStatus {
   status: string;
   message: string;

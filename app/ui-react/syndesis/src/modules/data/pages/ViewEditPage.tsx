@@ -1,4 +1,5 @@
 import { useVirtualizationHelpers } from '@syndesis/api';
+import { TableColumns } from '@syndesis/models';
 import {
   RestDataService,
   ViewDefinition,
@@ -149,6 +150,18 @@ export const ViewEditPage: React.FunctionComponent = () => {
   const initialView = state.viewDefinition.ddl ? state.viewDefinition.ddl : '';
   const virtualization = state.virtualization;
 
+  const getSourceTableInfos = (): TableColumns[] => {
+    // TODO: replace this hardcoded data with server call (or table-column info on the virtualization)
+    const sourceTables = [
+      { 'columnNames': ['name', 'population', 'size'], // column names
+        'name': 'countries' },                         // table name
+      { 'columnNames': ['name','score', 'birthDate'],  
+        'name': 'users' 
+      }
+    ];
+    return sourceTables;
+  };
+
   return (
     <>
       <Breadcrumb>
@@ -178,6 +191,7 @@ export const ViewEditPage: React.FunctionComponent = () => {
         i18nValidateLabel={t('shared:Validate')}
         isValid={viewValid}
         isWorking={isWorking}
+        sourceTableInfos={getSourceTableInfos()}
         onCancel={handleCancel}
         onValidate={handleValidateView}
         onSave={handleSaveView}

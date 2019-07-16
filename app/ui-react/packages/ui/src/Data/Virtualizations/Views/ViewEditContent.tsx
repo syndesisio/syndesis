@@ -10,6 +10,11 @@ export interface IViewEditValidationResult {
   type: 'error' | 'success';
 }
 
+interface ITableInfo {
+  name: string;
+  columnNames: string[];
+}
+
 export interface IViewEditContentProps {
   viewDdl: string;
 
@@ -52,6 +57,11 @@ export interface IViewEditContentProps {
    * View validationResults
    */
   validationResults: IViewEditValidationResult[];
+
+  /**
+   * Source table-columns for code completion
+   */
+  sourceTableInfos: ITableInfo[];
 
   /**
    * The callback for when the save button is clicked
@@ -116,18 +126,30 @@ export class ViewEditContent extends React.Component<
     this.props.onSave(currentDdl);
   };
 
+  /**
+   * reformats the tableInfo into the format expected by hintOptions
+   * Example - 
+   *   tables: {
+   *     countries: ['name', 'population', 'size'],
+   *     users: ['name', 'score', 'birthDate'],
+   *   }
+   * @param tableInfos the table infos
+   */
+  public getHintOptions(tableInfos: ITableInfo[]) {
+    const result = {tables: {}};
+
+    for (const tableInfo of tableInfos) {
+      result.tables[tableInfo.name] = tableInfo.columnNames;
+    }
+    return result;
+  }
+
   public render() {
     const editorOptions = {
       autofocus: true,
       extraKeys: { 'Ctrl-Space': 'autocomplete' },
       gutters: ['CodeMirror-lint-markers'],
-      // TODO: dynamically generate the table - column hints
-      // hintOptions: {
-      //   tables: {
-      //     countries: ['name', 'population', 'size'],
-      //     users: ['name', 'score', 'birthDate'],
-      //   },
-      // },
+      hintOptions: this.getHintOptions(this.props.sourceTableInfos),
       lineNumbers: true,
       lineWrapping: true,
       matchBrackets: true,
