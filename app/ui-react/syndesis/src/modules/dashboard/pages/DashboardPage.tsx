@@ -140,6 +140,10 @@ export default () => (
                       linkToIntegrationCreation={resolvers.integrations.create.start.selectStep()}
                       linkToConnections={resolvers.connections.connections()}
                       linkToConnectionCreation={resolvers.connections.create.selectConnector()}
+                      noIntegrations={
+                        integrationsData.totalCount ===
+                        0 /* TODO makes the UI component hide the board and recent updates, needs a revisit */
+                      }
                       integrationsOverview={
                         <div data-testid={'dashboard-page-total-integrations'}>
                           <AggregatedMetricCard
@@ -206,11 +210,16 @@ export default () => (
                           })}
                           linkCreateIntegration={resolvers.integrations.create.start.selectStep()}
                         >
-                          <Integrations
-                            error={integrationsError}
-                            loading={!hasIntegrations}
-                            integrations={topIntegrations}
-                          />
+                          {/* TODO attempting to introduce minimal change here, this forces the empty state to show up */
+                          integrationsData.totalCount > 0 ? (
+                            <Integrations
+                              error={integrationsError}
+                              loading={!hasIntegrations}
+                              integrations={topIntegrations}
+                            />
+                          ) : (
+                            undefined
+                          )}
                         </TopIntegrationsCard>
                       }
                       integrationBoard={
