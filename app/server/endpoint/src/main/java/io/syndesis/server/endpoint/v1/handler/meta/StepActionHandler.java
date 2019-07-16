@@ -24,6 +24,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -75,7 +76,14 @@ public class StepActionHandler extends BaseHandler {
             if (metadataHandler.isPresent()) {
                 StepMetadataHandler handler = metadataHandler.get();
 
-                final DynamicActionMetadata metadata = handler.createMetadata(step, steps.subList(0, i), steps.subList(i + 1, steps.size()));
+                List<Step> previousSteps;
+                if (i == 0) {
+                    previousSteps = Collections.singletonList(step);
+                } else {
+                    previousSteps = enriched.subList(0, i);
+                }
+
+                final DynamicActionMetadata metadata = handler.createMetadata(step, previousSteps, steps.subList(i + 1, steps.size()));
                 final DynamicActionMetadata enrichedMetadata = handler.handle(metadata);
                 if (enrichedMetadata.equals(DynamicActionMetadata.NOTHING)) {
                     enriched.add(step);

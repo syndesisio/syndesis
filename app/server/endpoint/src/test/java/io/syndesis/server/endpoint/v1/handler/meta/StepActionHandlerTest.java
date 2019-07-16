@@ -449,6 +449,84 @@ public class StepActionHandlerTest {
         assertThat(enriched.get(1).getStepKind()).isEqualTo(StepKind.log);
     }
 
+    @Test
+    public void shouldPropagateShapeChangesToAllPrecedingSteps() {
+        DataShape oldElementShape = new DataShape.Builder()
+                .kind(DataShapeKinds.JAVA)
+                .specification("person-old-spec")
+                .description("person")
+                .type(Person.class.getName())
+                .putMetadata("variant", "element")
+                .build();
+
+        List<Step> steps = Arrays.asList(new Step.Builder()
+                        .stepKind(StepKind.endpoint)
+                        .action(new ConnectorAction.Builder()
+                                .descriptor(new ConnectorDescriptor.Builder()
+                                        .inputDataShape(StepMetadataHelper.NO_SHAPE)
+                                        .outputDataShape(new DataShape.Builder()
+                                                .createFrom(collectionShape)
+                                                .addVariant(elementShape)
+                                                .addVariant(dummyShape())
+                                                .build())
+                                        .build())
+                                .build())
+                        .build(),
+                new Step.Builder()
+                        .stepKind(StepKind.split)
+                        .action(new StepAction.Builder()
+                                .descriptor(new StepDescriptor.Builder()
+                                        .inputDataShape(StepMetadataHelper.NO_SHAPE)
+                                        .outputDataShape(new DataShape.Builder()
+                                                .createFrom(oldElementShape)
+                                                .build())
+                                        .build())
+                                .build())
+                        .build(),
+                new Step.Builder()
+                        .stepKind(StepKind.choice)
+                        .action(new StepAction.Builder()
+                                .descriptor(new StepDescriptor.Builder()
+                                        .inputDataShape(new DataShape.Builder()
+                                                .createFrom(oldElementShape)
+                                                .build())
+                                        .outputDataShape(StepMetadataHelper.ANY_SHAPE)
+                                        .build())
+                                .build())
+                        .build());
+
+        final Response response = handler.enrichStepMetadata(steps);
+
+        @SuppressWarnings("unchecked")
+        final List<Step> enriched = (List<Step>) response.getEntity();
+
+        assertThat(enriched).hasSize(3);
+        assertThat(enriched.get(0).getStepKind()).isEqualTo(StepKind.endpoint);
+        assertThat(enriched.get(0).getAction()).isPresent();
+        assertThat(enriched.get(0).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(enriched.get(0).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(collectionShape)
+                .addVariant(elementShape)
+                .addVariant(dummyShape())
+                .build());
+        assertThat(enriched.get(1).getStepKind()).isEqualTo(StepKind.split);
+        assertThat(enriched.get(1).getAction()).isPresent();
+        assertThat(enriched.get(1).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).contains(StepMetadataHelper.NO_SHAPE);
+        assertThat(enriched.get(1).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(elementShape)
+                .addVariant(dummyShape())
+                .addVariant(collectionShape)
+                .build());
+        assertThat(enriched.get(2).getStepKind()).isEqualTo(StepKind.choice);
+        assertThat(enriched.get(2).getAction()).isPresent();
+        assertThat(enriched.get(2).getAction().orElseThrow(AssertionError::new).getDescriptor().getInputDataShape()).get().isEqualToComparingFieldByField(new DataShape.Builder()
+                .createFrom(elementShape)
+                .addVariant(dummyShape())
+                .addVariant(collectionShape)
+                .build());
+        assertThat(enriched.get(2).getAction().orElseThrow(AssertionError::new).getDescriptor().getOutputDataShape()).contains(StepMetadataHelper.ANY_SHAPE);
+    }
+
     private DataShape dummyShape() {
         return new DataShape.Builder()
                 .kind(DataShapeKinds.JAVA)
