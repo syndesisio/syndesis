@@ -85,6 +85,17 @@ export class ConfigureActionPage extends React.Component<
                 positionAsNumber
               );
               /**
+               * It's possible for this to be mismatched if we come into
+               * this controller after deleting a start or end connection,
+               * in this case we should just discard all information from
+               * the old step.
+               */
+              const useOldStepConfig =
+                oldStepConfig &&
+                oldStepConfig!.connection &&
+                oldStepConfig!.connection!.connectorId ===
+                  state.connection.connectorId;
+              /**
                * configured properties will be set in the route state for
                * configuration pages higher than 0. If it's not set, its value
                * depends on the mode: for `adding` there is no initial value,
@@ -92,8 +103,8 @@ export class ConfigureActionPage extends React.Component<
                */
               const configuredProperties =
                 state.configuredProperties ||
-                (this.props.mode === 'editing' && oldStepConfig
-                  ? oldStepConfig.configuredProperties
+                (this.props.mode === 'editing' && useOldStepConfig
+                  ? oldStepConfig!.configuredProperties
                   : {});
               const onUpdatedIntegration = async ({
                 action,
@@ -113,7 +124,7 @@ export class ConfigureActionPage extends React.Component<
                   action,
                   params.flowId,
                   positionAsNumber,
-                  updatedConfiguredProperties,
+                  updatedConfiguredProperties
                 );
                 if (moreConfigurationSteps) {
                   history.push(
@@ -230,7 +241,7 @@ export class ConfigureActionPage extends React.Component<
                         connection={state.connection}
                         actionId={params.actionId}
                         oldAction={
-                          oldStepConfig && oldStepConfig.action
+                          useOldStepConfig && oldStepConfig!.action
                             ? oldStepConfig!.action!
                             : undefined
                         }
