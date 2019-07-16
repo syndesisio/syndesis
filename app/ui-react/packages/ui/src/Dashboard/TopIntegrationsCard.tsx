@@ -20,7 +20,7 @@ export class TopIntegrationsCard extends React.Component<
 > {
   public render() {
     return (
-      <Card className={'top-integrations'}>
+      <Card className={'top-integrations'} data-testid={'dashboard-top-integrations'}>
         <CardHeader className={'top-integrations__heading'}>
           <Title size={'md'}>{this.props.i18nTitle}</Title>
           <div className={'top-integrations__heading-daterange'}>

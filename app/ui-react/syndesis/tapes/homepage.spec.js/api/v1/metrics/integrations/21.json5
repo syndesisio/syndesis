@@ -1,0 +1,43 @@
+{
+    meta: {
+        createdAt: '2019-07-17T08:08:00.515Z',
+        host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
+        resHumanReadable: true,
+    },
+    req: {
+        url: '/api/v1/metrics/integrations',
+        method: 'GET',
+        headers: {
+            'syndesis-mock-request': '13',
+            'syndesis-mock-session': 'homepage.spec.js',
+            referrerpolicy: 'no-referrer',
+            'x-forwarded-user': 'user',
+        },
+        body: '',
+    },
+    res: {
+        status: 302,
+        headers: {
+            'content-type': [
+                'text/html; charset=utf-8',
+            ],
+            location: [
+                'https://api.rh-idev.openshift.com/oauth/authorize?approval_prompt=force&client_id=system%3Aserviceaccount%3Asyndesis-staging%3Asyndesis-oauth-client&redirect_uri=https%3A%2F%2Fsyndesis-staging.b6ff.rh-idev.openshiftapps.com%2Foauth%2Fcallback&response_type=code&scope=user%3Ainfo+user%3Acheck-access&state=b22d5b2e56dfe6e431cc93e8908fda7f%3A%2Fapi%2Fv1%2Fmetrics%2Fintegrations',
+            ],
+            'set-cookie': [
+                '_oauth_proxy_csrf=b22d5b2e56dfe6e431cc93e8908fda7f; Path=/; Domain=syndesis-staging.b6ff.rh-idev.openshiftapps.com; Expires=Wed, 24 Jul 2019 08:08:38 GMT; HttpOnly; Secure',
+                '20193db1ad48e42e7489dd29548270ca=586f6e266da2831d70534a026a8dedd5; path=/; HttpOnly; Secure',
+            ],
+            date: [
+                'Wed, 17 Jul 2019 08:08:38 GMT',
+            ],
+            'content-length': [
+                '420',
+            ],
+            connection: [
+                'close',
+            ],
+        },
+        body: '<a href="https://api.rh-idev.openshift.com/oauth/authorize?approval_prompt=force&amp;client_id=system%3Aserviceaccount%3Asyndesis-staging%3Asyndesis-oauth-client&amp;redirect_uri=https%3A%2F%2Fsyndesis-staging.b6ff.rh-idev.openshiftapps.com%2Foauth%2Fcallback&amp;response_type=code&amp;scope=user%3Ainfo+user%3Acheck-access&amp;state=b22d5b2e56dfe6e431cc93e8908fda7f%3A%2Fapi%2Fv1%2Fmetrics%2Fintegrations">Found</a>.\n\n',
+    },
+}

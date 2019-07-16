@@ -1,6 +1,6 @@
 {
     meta: {
-        createdAt: '2019-07-16T10:08:08.847Z',
+        createdAt: '2019-07-16T15:45:55.217Z',
         host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
         resHumanReadable: true,
     },
@@ -8,8 +8,8 @@
         url: '/api/v1/metrics/integrations',
         method: 'GET',
         headers: {
-            'syndesis-mock-request': '2',
-            'syndesis-mock-session': 'All Specs',
+            'syndesis-mock-request': '34',
+            'syndesis-mock-session': 'homepage.spec.js',
             referrerpolicy: 'no-referrer',
             'x-forwarded-user': 'user',
         },
@@ -22,13 +22,13 @@
                 'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
             ],
             'content-length': [
-                '244',
+                '190',
             ],
             'content-type': [
                 'application/json',
             ],
             date: [
-                'Tue, 16 Jul 2019 10:08:10 GMT',
+                'Tue, 16 Jul 2019 15:45:56 GMT',
             ],
             'gap-auth': [
                 'kahboom@cluster.local',
@@ -60,15 +60,13 @@
         },
         body: {
             metricsProvider: 'prometheus',
-            messages: 70695,
+            messages: 71201,
             errors: 0,
             start: 1563267182000,
-            lastProcessed: 1563271679089,
+            lastProcessed: 1563291919823,
             topIntegrations: {
-                'i-LhAf3La7EsSXfqlcEr9z': 25543,
+                'i-LhAf3La7EsSXfqlcEr9z': 26049,
                 'i-Ljr56ftZs0MNYw8HXsUz': 0,
-                'i-LhLWXKEfpUMS4XH9rq9z': 0,
-                'i-LhBSmGn6AjytuGiCOTEz': 0,
             },
         },
     },

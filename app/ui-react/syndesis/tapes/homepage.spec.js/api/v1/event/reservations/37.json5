@@ -1,34 +1,40 @@
 {
     meta: {
-        createdAt: '2019-07-16T10:08:08.845Z',
+        createdAt: '2019-07-16T15:45:40.844Z',
         host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
         resHumanReadable: true,
     },
     req: {
-        url: '/api/v1/monitoring/integrations',
-        method: 'GET',
+        url: '/api/v1/event/reservations',
+        method: 'POST',
         headers: {
-            'syndesis-mock-request': '3',
-            'syndesis-mock-session': 'All Specs',
+            'syndesis-mock-request': '31',
+            'syndesis-mock-session': 'homepage.spec.js',
             referrerpolicy: 'no-referrer',
             'x-forwarded-user': 'user',
         },
-        body: '',
+        body: 'IiI=',
     },
     res: {
         status: 200,
         headers: {
+            'access-control-allow-credentials': [
+                'true',
+            ],
+            'access-control-allow-origin': [
+                'http://localhost:3000',
+            ],
             'cache-control': [
                 'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
             ],
             'content-length': [
-                '2',
+                '62',
             ],
             'content-type': [
                 'application/json',
             ],
             date: [
-                'Tue, 16 Jul 2019 10:08:09 GMT',
+                'Tue, 16 Jul 2019 15:45:41 GMT',
             ],
             'gap-auth': [
                 'kahboom@cluster.local',
@@ -41,6 +47,9 @@
             ],
             'syndesis-xsrf-token': [
                 'awesome',
+            ],
+            vary: [
+                'Origin',
             ],
             'x-application-context': [
                 'application',
@@ -58,6 +67,9 @@
                 'close',
             ],
         },
-        body: [],
+        body: {
+            event: 'uuid',
+            data: '61a87f84-76a7-401d-97d7-66d4352815a1',
+        },
     },
 }
