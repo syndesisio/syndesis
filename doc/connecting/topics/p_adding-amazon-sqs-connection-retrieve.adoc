@@ -31,10 +31,7 @@ that one poll operation can obtain. The default is 10.
 To have no limit on the number of messages that can be obtained, specify
 `0` or a negative integer. When *Maximum Objects to Retrieve* is unlimited,
 the poll action obtains all messages in the SQS queue.
-+
-If the SQS queue contains more than the specified maximum number of messages,
-then the action obtains the messages that were most recently
-added to the queue. 
+
 .. In the *Queue Name or Amazon Resource Name* field, specify 
 the name of the SQS queue to retrieve messages from, or the queue's ARN.  
 If a queue with this name does not exist, the connection creates it. 
@@ -43,15 +40,18 @@ This is the only required field.
 .. Indicate whether you want to  
 *Obtain messages and then delete them from the queue*. Obtaining 
 messages and then deleting them from the queue is the default behavior.  
-Unselect this option when you want to delete only those messages that do 
-not pass a filter that is a subsequent step in the integration. 
+Unselect this option only if you want the connection to retrieve 
+messages and also leave  them on the queue, which means that 
+the messages will be retrieved again. 
 
 .. Indicate whether you want to  
-*Obtain messages and delete the message if it does not make it through a Camel filter*. 
-This option is selected by default. To delete a message from the queue 
-when that message does not pass a filter that is a subsequent step in 
-the integration, keep this option selected and ensure that 
-*Obtain messages and then delete from the queue* is unselected. 
+*Obtain messages and delete the message if it does make it through a Camel filter*. 
+This option is selected by default. Leave it selected when you want to pass 
+a retrieved message through a filter to determine whether to delete it 
+from the queue. You do not need to unselect 
+*Obtain messages and then delete from the queue*. {prodname} ensures the 
+correct behavior when you select 
+*Obtain messages and delete the message if it does make it through a Camel filter*. 
  
 . Click *Next*. 
 
@@ -60,10 +60,10 @@ the integration, keep this option selected and ensure that
 The connection appears at the beginning of the integration flow. 
 
 .Next steps
-If you selected *Obtain messages and delete the message if it does not make it through a Camel filter* 
+If you selected *Obtain messages and delete the message if it does make it through a Camel filter* 
 then you need to add a filter step after this SQS connection. The filter 
 step does not need to be immediately after the SQS connection. Add all 
 connections to the integration, and then add the filter step. 
-If there are messages that do not pass the filter, {prodname} uses the 
-same connection, the SQS start connection, to delete the messages 
-from the queue. connection.
+During execution, if there are messages that pass the filter, {prodname} uses the 
+same connection, the SQS start connection, to delete those messages 
+from the queue. 
