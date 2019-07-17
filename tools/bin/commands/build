@@ -31,8 +31,8 @@ build::usage() {
                                against [ref] (default master) are not part of that module
     --resume <m1>              Resume build from maven module (mvn -rf m1)
     --batch-mode               Run mvn in batch mode
-    --camel-snapshot <version> Run a build with a specific Camel snapshot. The the
-                               environment variable CAMEL_SNAPSHOT_VERSION is used and you need to set it or an error thrown.
+    --camel-snapshot <version> Run a build with a specific Camel snapshot. The 
+                               environment variable CAMEL_SNAPSHOT_VERSION is used and you need to set it or an error will be thrown.
     --maven-mirror <url>       Use the maven mirror for the build, e.g. a maven repo proxy in OpenShift. If no
                                argument is given, the MAVEN_MIRROR_URL environment variable is used or
                                'http://nexus.myproject:8081/nexus/content/groups/public', if none is set.
