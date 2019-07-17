@@ -34,15 +34,24 @@ The database table that contains the data must already exist.
 `DELETE` statement to
 operate on one or more records.
 
+** In the *Batch update* field, accept *No*, which is the default, 
+or select *Yes*. 
++
+The setting of *Batch update* affects connection behavior when the 
+input to this action is a collection, and the SQL statement inserts, 
+deletes, or updates records. The default behavior (*Batch update* is *No*) 
+is that the connection accepts only individual objects and executes the 
+SQL statement once for each object. When *Batch update* is *Yes*, 
+the connection accepts a collection as the input to the action. 
+The connection executes the SQL statement once and uses all collection 
+items as input to a batch update operation.  
+
 +
 If you selected *Invoke stored procedure*, in the
 *Procedure name* field, select or enter the name of the stored procedure to
 invoke to operate on the data of interest. The stored procedure you specify must
 already exist. The database administrator should have created any stored
-procedures you need to use in an integration.
-
-* See the information below about specifying placeholder parameters 
-in queries.  
+procedures you need to use in an integration.  
 
 . Click *Done*.
 
@@ -53,3 +62,6 @@ confirming that the query or stored procedure target data exists. If
 verification is successful then {prodname} adds the connection to
 the flow. If verification fails then {prodname} displays a message
 about the problem. Update your input as needed and try again.
+
+.Additional resource
+link:{LinkFuseOnlineConnectorGuide}about-parameter-placeholders-and-values_db[About parameter placeholders and values in SQL statements that update data].
