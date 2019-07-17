@@ -39,6 +39,7 @@ func main() {
 	configuration.AddonsDirLocation = pflag.StringP("addons", "a", "", "Path to the addons directory used for installation")
 	configuration.Registry = pflag.StringP("registry", "r", "docker.io", "Registry to use for loading images like the upgrade pod")
 	configuration.ReleaseVersion = pflag.StringP("release-version", "v", "", "Alternatively, download resources based on the release version")
+	configuration.UpstreamOrg = pflag.StringP("upstream-org", "u", "syndesisio", "If Release Version is set, optionally set the github org where the template file is hosted")
 
 	// The logger instantiated here can be changed to any logger
 	// implementing the logr.Logger interface. This logger will
