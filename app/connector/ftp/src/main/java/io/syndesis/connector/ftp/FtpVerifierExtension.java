@@ -17,7 +17,6 @@ package io.syndesis.connector.ftp;
 
 import java.io.IOException;
 import java.util.Map;
-
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
@@ -25,6 +24,7 @@ import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class FtpVerifierExtension extends DefaultComponentVerifierExtension {
 
@@ -58,12 +58,14 @@ public class FtpVerifierExtension extends DefaultComponentVerifierExtension {
     @SuppressWarnings("PMD.NPathComplexity")
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
-        final String host = (String) parameters.get("host");
-        final int port = Integer.parseInt((String) parameters.get("port"));
-        final String userName = (parameters.get("username") == null) ? "anonymous"
-                : (String) parameters.get("username");
-        final String password = (parameters.get("password") == null) || "anonymous".equals(userName) ? ""
-                : (String) parameters.get("password");
+        final String host = ConnectorOptions.extractOption(parameters, "host");
+        final int port = ConnectorOptions.extractOptionAndMap(parameters, "port", Integer::parseInt);
+        final String userName = ConnectorOptions.extractOption(parameters, "username", "anonymous");
+
+        String password = "";
+        if (! "anonymous".equals(userName)) {
+            password = ConnectorOptions.extractOption(parameters, "password", password);
+        }
 
         int reply;
         FTPClient ftp = new FTPClient();

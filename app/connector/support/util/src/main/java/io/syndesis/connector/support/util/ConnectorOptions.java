@@ -23,6 +23,22 @@ public final class ConnectorOptions {
 
     /**
      * Gets the value mapped to the given key & converts to {@link String} if present,
+     * or defaultValue otherwise.
+     *
+     * @param options
+     * @param key
+     * @param defaultValue
+     * @return {@link String} object belonging to the given key in the options map
+     */
+    public static String extractOption(Map<String, Object> options, String key, String defaultValue) {
+        return Optional.ofNullable(options.get(key))
+                        .map(Object::toString)
+                        .filter(v -> v.length() > 0)
+                        .orElse(defaultValue);
+    }
+
+    /**
+     * Gets the value mapped to the given key & converts to {@link String} if present,
      * or null otherwise.
      *
      * @param options
@@ -30,9 +46,7 @@ public final class ConnectorOptions {
      * @return {@link String} object belonging to the given key in the options map
      */
     public static String extractOption(Map<String, Object> options, String key) {
-        return Optional.ofNullable(options.get(key))
-                        .map(Object::toString)
-                        .orElse(null);
+        return extractOption(options, key, null);
     }
 
     /**
