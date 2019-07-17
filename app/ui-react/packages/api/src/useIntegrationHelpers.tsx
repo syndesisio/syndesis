@@ -73,7 +73,7 @@ export const useIntegrationHelpers = () => {
           action,
           configuredProperties,
           connection,
-          id: key(),
+          id: key(), // let's explicitly set the ID here
           metadata: { configured: true } as any,
           stepKind: 'endpoint',
         },
@@ -113,6 +113,7 @@ export const useIntegrationHelpers = () => {
         ...createStep(),
         ...stepKind,
         configuredProperties,
+        id: key(), // let's explicitly set the ID here
         metadata: { configured: true } as any,
       };
 
