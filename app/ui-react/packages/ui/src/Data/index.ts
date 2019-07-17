@@ -6,6 +6,7 @@ export * from './DvConnection/DvConnectionsGrid';
 export * from './DvConnection/DvConnectionsGridCell';
 export * from './DvConnection/DvConnectionSkeleton';
 export * from './DvConnection/DvConnectionsListView';
+export * from './DvConnection/DvConnectionsToolbarSkeleton';
 export * from './Virtualizations/Views/EmptyViewsState';
 export * from './Virtualizations/Views/SchemaNodeListItem';
 export * from './Virtualizations/Views/ViewEditContent';
