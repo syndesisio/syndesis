@@ -24,16 +24,35 @@ a simple integration's finish connection.
 . Click the Jira connection that you want the integration to use to 
 connect to the Jira server. 
 . On the *Choose an Action* page, select *Transition Issue*.
++
+You do not need to specify any values to configure the transition issue
+action. Instead, you can map values from previous integration steps 
+to the fields in the this connection. 
+
 . Optionally, in the *Comment* field, enter a comment that you want to 
 add to the issue. 
-. In the *Issue Key* field, enter the Jira identifier for the issue
+. Optionally, in the *Issue Key* field, enter the Jira identifier for the issue
 that is transitioning.  
-Examples of issue keys: `GATEWAY-1234`, `Enterprise-239`. 
-. In the *ID of the transition* field, enter a value that a Jira 
-administrator has defined as transition ID. For example, i set of 
-transition IDs might be `New`, `InProgress`, `Test`, `Closed`. 
+Examples of issue keys: `GATE-1234`, `Ent-239`. 
+. Optionally, in the *ID of the transition* field, enter an integer that 
+a Jira administrator has associated with a particular transition, 
+such as when a Jira moves from being new to being worked on, or 
+when it moves from being worked on to being tested. 
+
+A Jira administrator can view transition IDs in a project’s workflow display. 
+If you do not have administration permissions, obtain the allowed 
+transition IDs from a Jira administrator.
+
 . Click *Next*. 
 
 .Result
 The connection appears in the integration flow 
 in the location you added it. 
+
+.Next steps
+If you did not specify a value in each *Transition Issue* field, 
+ensure that the integration has a step that obtains the value for 
+each field. After the integration has all required connections, add 
+a data mapper step before the Jira connection that transitions an issue. 
+In the data mapper step, map fields from previous steps to the 
+fields in the Jira connection that transitions an issue. 

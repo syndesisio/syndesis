@@ -7,7 +7,11 @@
 :context: jira
 
 In an integration, you can connect to a Jira server to 
-obtain, create, or update issues. 
+obtain, create, or update issues. Jira is a tool for 
+planning, tracking, and managing software development projects. 
+Each Jira environment allows customization of the workflow, which 
+has an effect on the details for connecting to Jira in an integration. 
+Consulting with your Jira administrator should clarify the details. 
 
 ifeval::["{location}" == "downstream"]
 [IMPORTANT]
@@ -22,7 +26,7 @@ see link:https://access.redhat.com/support/offerings/techpreview/[].
 ====
 endif::[]
 
-The following topics provide the details about creating integrations 
+The following topics provide information and procedures for creating integrations 
 that connect to a Jira server:
 
 * xref:registering-with-jira_{context}[]
