@@ -5,7 +5,9 @@
 = Attaching a file to a Jira issue
 
 In the middle of a flow, or to finish a simple integration, 
-you can connect to a Jira server to attach a file to an issue. 
+you can connect to a Jira server to attach one or more files to an issue. 
+In the integration, there must be a previous step that obtains the 
+file(s) that you want to attach.
 
 .Prerequisites
 * You created a Jira connection.
@@ -23,9 +25,18 @@ to connect to the Jira server.
 . On the *Choose an Action* page, select *Attach File*.
 . In the *Issue Key* field, enter the Jira identifier of the issue
 that you want to attach a file to. 
-Examples of issue keys: `GATEWAY-1234`, `Enterprise-239`. 
+Examples of issue keys: `GATE-1234`, `Ent-239`. 
 . Click *Next*. 
 
 .Result
 The connection appears in the integration flow 
 in the location you added it. 
+
+.Next step
+
+If the integration does not already have a connection that obtains the 
+file(s) that you want to attach to a Jira issue, add that connection 
+to the integration. For example, suppose you add an FTP connection 
+and download one or more files from an FTP server. When the integration 
+executes, the Jira connection attaches those files to the Jira issue 
+that you specified when you configured the attach file action. 

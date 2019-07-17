@@ -39,6 +39,12 @@ that you can enter.
 .. In the *Issue type ID or name* field, enter a value that describes 
 the type of the issue. For example, this is often something like `Story`, `Epic`, 
 `Chore`, or `Bug`.
++
+In Jira, a user with administrator permissions can see a list of valid 
+issue types by selecting *Project settings* > *Issue types*. 
+A user without these permissions can click in an issue’s type field 
+and a list of allowable values should display. 
+
 .. Optionally, in the *Watchers* field, enter a comma-separated list of 
 Jira user names. These people receive notifications when this issue is updated. 
 .. In the *Project Key* field, enter the short name of a Jira project that a Jira 

@@ -36,11 +36,14 @@ invocations.
 . In the *Jira Query Language* field, enter a Jira query. For example: 
 +
 ----
-project = "Gateway Online" AND assignee = jkim AND (status = Open OR status = New OR status = Reopened)
+project = GATE AND assignee = jkim AND (status = Open OR status = New OR status = Reopened)
 ----
 +
 This query finds issues in the *Gateway Online* project, that are 
 assigned to *jkim* and that are unresolved. 
+Every Jira project has a short name and a long name. In this example, 
+the short name of the *Gateway Online* project is *GATE*. In queries, 
+specify a project's short name. 
 +
 The more specific the query is, the less time it takes to search the 
 Jira server. When a query does not have any results, the connection does 
