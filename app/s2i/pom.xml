@@ -113,23 +113,6 @@
         <artifactId>exec-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>copy-local-repo</id>
-            <phase>package</phase>
-            <goals>
-              <goal>exec</goal>
-            </goals>
-            <configuration>
-              <executable>bash</executable>
-              <commandlineArgs>
-                ${basedir}/copy_mvn_repo.sh
-                ${project.basedir}
-                ${project.version}
-                ${basedir}/target/generated-sources/docker
-                ${maven.repo.local}
-              </commandlineArgs>
-            </configuration>
-          </execution>
-          <execution>
             <!-- Generate a sample project with an integration which contains
                  all defined connectors (as declared in deployment.json)
                  This project is build later when the Dockerfile is created.
@@ -146,6 +129,23 @@
                 <argument>${project.build.directory}/rest-builder-image-generator.jar</argument>
                 <argument>--to=${basedir}/target/generated-sources/docker/m2/project</argument>
               </arguments>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-local-repo</id>
+            <phase>package</phase>
+            <goals>
+              <goal>exec</goal>
+            </goals>
+            <configuration>
+              <executable>bash</executable>
+              <commandlineArgs>
+                ${basedir}/copy_mvn_repo.sh
+                ${project.basedir}
+                ${project.version}
+                ${basedir}/target/generated-sources/docker
+                ${maven.repo.local}
+              </commandlineArgs>
             </configuration>
           </execution>
         </executions>
