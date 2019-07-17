@@ -21,6 +21,9 @@ var Registry *string
 // Release version to download resources from
 var ReleaseVersion *string
 
+// Github organization used to download the fuse-online template, useful for testing scenarios
+var UpstreamOrg *string
+
 const (
 	EnvRouteHostname SyndesisEnvVar = "ROUTE_HOSTNAME"
 	//EnvOpenshiftMaster 					SyndesisEnvVar = "OPENSHIFT_MASTER"

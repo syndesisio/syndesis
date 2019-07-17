@@ -49,7 +49,8 @@ func GetInstallResources(scheme *runtime.Scheme, syndesis *v1alpha1.Syndesis, pa
 	var templateLocation string
 
 	if releaseVersion := *configuration.ReleaseVersion; len(releaseVersion) > 0 {
-		fileUrl := fmt.Sprintf("https://raw.githubusercontent.com/syndesisio/fuse-online-install/%s/resources/fuse-online-template.yml", releaseVersion)
+		upstreamOrg := *configuration.UpstreamOrg
+		fileUrl := fmt.Sprintf("https://raw.githubusercontent.com/%s/fuse-online-install/%s/resources/fuse-online-template-oh.yml", upstreamOrg, releaseVersion)
 
 		log.V(0).Info("Downloading template from", "template", fileUrl)
 		if err := util.DownloadFile("/tmp/fuse-online-template.yml", fileUrl); err != nil {
