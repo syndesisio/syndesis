@@ -313,10 +313,10 @@
   dependencies:
     tslib "^1.9.0"
 
-"@atlasmap/atlasmap-data-mapper@^1.40.2":
-  version "1.40.2"
-  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap-data-mapper/-/atlasmap-data-mapper-1.40.2.tgz#783ba3b1af9169a03b205a6ede87b404b4e7071f"
-  integrity sha512-tE7RKLmR8syNbpigLN459nc//8WyNzAVs68otgn2daCKbQ1yYszA1uBhi+RP5CtPWZsplTn0/8G/s0TjTsO8kw==
+"@atlasmap/atlasmap-data-mapper@^1.41.1":
+  version "1.41.1"
+  resolved "https://registry.yarnpkg.com/@atlasmap/atlasmap-data-mapper/-/atlasmap-data-mapper-1.41.1.tgz#b14da8a7f098faee404dcf5a2277c82c735a52b7"
+  integrity sha512-UVUB1TUPkUd8aqMd42BiMuS2grAO2flL6YbMyIWtWQnNF5ZEUNcURzP3dc1Di0c83pDJSEQgnWoVlhwnfjepdQ==
   dependencies:
     tslib "^1.9.0"
 
@@ -14027,6 +14027,13 @@ ngx-clipboard@11.1.9:
   integrity sha512-xF54Ibt/04g2B5SnYylNz7ESP1/thuC7odo+0bKkgbCC873NaqP1VTVx/umh/cnezlXKu8zuWNzzg05tvfgaJg==
   dependencies:
     ngx-window-token "^1.0.2"
+    tslib "^1.9.0"
+
+ngx-logger@3.3.13:
+  version "3.3.13"
+  resolved "https://registry.yarnpkg.com/ngx-logger/-/ngx-logger-3.3.13.tgz#d5705c114d4b4d29a1495dc4bd02e65ecdab6b3b"
+  integrity sha512-FKoLpcu3SSeufLlfZ4hlKjXgMGXxNTEfYt/mO0ZnBZw8ashmnfFT8g/3K25ZmDt620GUURt7AYLfl36DxBNSrw==
+  dependencies:
     tslib "^1.9.0"
 
 ngx-window-token@^1.0.2:
