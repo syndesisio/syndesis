@@ -1,0 +1,60 @@
+// This module is included in the following assemblies:
+// as_connecting-to-jira.adoc
+
+[id='adding-jira-connection-add-issue_{context}']
+= Adding an issue to a Jira server
+
+In the middle of a flow, or to finish a simple integration, 
+you can connect to a Jira server to add an issue. 
+
+.Prerequisites
+* You created a Jira connection.
+* You are creating or editing a flow and {prodname} is prompting you
+to add to the integration. Or, {prodname} is prompting you to choose
+a simple integration's finish connection. 
+
+.Procedure
+
+. On the *Add to Integration* page, click the plus sign where you 
+want to add a Jira connection. Skip this step if you are adding 
+a simple integration's finish connection.  
+. Click the Jira connection that you want the integration to use
+to connect to a Jira server. 
+. On the *Choose an Action* page, select *Add Issue*.
+. Configure the action. The required fields are *Issue type ID or name* 
+and *Project key*. For the optional fields, you can enter values now, or, 
+after you add this connection 
+to an integration, you can add a data mapper step before this connection.
+In the data mapper step, map fields from previous steps to the optional 
+fields in this connection. 
+.. Optionally, in the *Assignee* field, enter the Jira user name 
+for the person that you want to assign this issue to. 
+.. Optionally, in the *Components* field, enter the name of one or 
+more components. Separate multiple names with commas. A Jira 
+administrator defines the components that you can specify. 
+.. Optionally, in the *Priority ID or name*  field, enter a priority
+for the new issue. A Jira administrator defines the priority values
+that you can enter. 
+.. Optionally, in the *Summary* field, enter a brief statement about the issue. 
+.. In the *Issue type ID or name* field, enter a value that describes 
+the type of the issue. For example, this is often something like `Story`, `Epic`, 
+`Chore`, or `Bug`.
++
+In Jira, a user with administrator permissions can see a list of valid 
+issue types by selecting *Project settings* > *Issue types*. 
+A user without these permissions can click in an issue’s type field 
+and a list of allowable values should display. 
+
+.. Optionally, in the *Watchers* field, enter a comma-separated list of 
+Jira user names. These people receive notifications when this issue is updated. 
+.. In the *Project Key* field, enter the short name of a Jira project that a Jira 
+administrator has defined. The connection creates the new issue in this
+project. For example, a project key is something like `GATEWAY`.
+.. Optionally, in the *Description* field, enter any information about this
+issue that it is helpful to capture. 
+
+. Click *Next*. 
+
+.Result
+The connection appears in the integration flow 
+in the location you added it. 

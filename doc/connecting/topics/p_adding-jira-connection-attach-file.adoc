@@ -1,0 +1,42 @@
+// This module is included in the following assemblies:
+// as_connecting-to-jira.adoc
+
+[id='adding-jira-connection-attach-file_{context}']
+= Attaching a file to a Jira issue
+
+In the middle of a flow, or to finish a simple integration, 
+you can connect to a Jira server to attach one or more files to an issue. 
+In the integration, there must be a previous step that obtains the 
+file(s) that you want to attach.
+
+.Prerequisites
+* You created a Jira connection.
+* You are creating or editing a flow and {prodname} is prompting you
+to add to the integration. Or, {prodname} is prompting you to choose
+a simple integration's finish connection. 
+
+.Procedure
+
+. On the *Add to Integration* page, click the plus sign where you 
+want to add a Jira connection. Skip this step if you are adding 
+a simple integration's finish connection.  
+. Click the Jira connection that you want the integration to use
+to connect to the Jira server. 
+. On the *Choose an Action* page, select *Attach File*.
+. In the *Issue Key* field, enter the Jira identifier of the issue
+that you want to attach a file to. 
+Examples of issue keys: `GATE-1234`, `Ent-239`. 
+. Click *Next*. 
+
+.Result
+The connection appears in the integration flow 
+in the location you added it. 
+
+.Next step
+
+If the integration does not already have a connection that obtains the 
+file(s) that you want to attach to a Jira issue, add that connection 
+to the integration. For example, suppose you add an FTP connection 
+and download one or more files from an FTP server. When the integration 
+executes, the Jira connection attaches those files to the Jira issue 
+that you specified when you configured the attach file action. 
