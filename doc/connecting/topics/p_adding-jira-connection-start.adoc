@@ -1,0 +1,54 @@
+// This module is included in the following assemblies:
+// as_connecting-to-jira.adoc
+
+[id='adding-jira-connection-start_{context}']
+= Obtaining Jira issues or comments to trigger integration execution
+
+To trigger integration execution upon obtaining issues or comments from 
+a Jira server, add a Jira connection as a simple integration's start 
+connection. 
+
+.Prerequisites
+* You created a Jira connection. 
+
+.Procedure
+
+. In the {prodname} panel on the left, click *Integrations*.
+. Click *Create Integration*.
+. On the *Choose a connection* page, click the Jira connection that
+you want to use to start the integration. 
+. On the *Choose an action* page, select an action:
+* *Retrieve New Comments* uses a query that you specify to search the 
+Jira server. For each issue that the query returns, the connection 
+checks whether a comment has been added since the previous invocation 
+of the query. The connection returns any new comments. 
+* *Retrieve New Issues* uses a query that you specify to search the 
+Jira server. For each issue that the query returns, the connection 
+checks its creation date. If the issue was created since the previous
+invocation of the query, the connection returns the issue to the 
+integration. The first time that the connection executes this query, 
+it returns all issues that it finds.  
+
+. In the *Delay* field, accept the default of 5000 milliseconds (5 seconds)
+or enter the number of milliseconds that you want to elapse between query 
+invocations. 
+
+. In the *Jira Query Language* field, enter a Jira query. For example: 
++
+----
+project = GATE AND assignee = jkim AND (status = Open OR status = New OR status = Reopened)
+----
++
+This query finds issues in the *Gateway Online* project, that are 
+assigned to *jkim* and that are unresolved. 
+Every Jira project has a short name and a long name. In this example, 
+the short name of the *Gateway Online* project is *GATE*. In queries, 
+specify a project's short name. 
++
+The more specific the query is, the less time it takes to search the 
+Jira server. When a query does not have any results, the connection does 
+not trigger integration execution. 
+. Click *Next*. 
+
+.Result
+The connection appears at the beginning of the integration flow. 
