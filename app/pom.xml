@@ -191,7 +191,7 @@
     <profile>
       <id>system-tests</id>
       <modules>
-        <module>test</module>
+        <module>test/system-test</module>
       </modules>
     </profile>
 

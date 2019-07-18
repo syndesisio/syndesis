@@ -30,7 +30,7 @@ system-test::run() {
     if [ -n "${server:-}" ]; then
         local token=$(readopt --token)
         if [ -z "${token:-}" ]; then
-            echo "--server provided for sytem tests but no --token for credentials"
+            echo "--server provided for system tests but no --token for credentials"
             exit 1
         fi
         local log
@@ -330,6 +330,6 @@ test_build() {
     oc project $project
     local maven_args=$(maven_args $project)
     check_error $maven_args
-    maven_args="-Psystem-tests,image,flash -Dfabric8.mode=openshift $maven_args"
-    call_maven "$maven_args"
+    maven_args="-Pimage,flash -Dfabric8.mode=openshift $maven_args"
+    call_maven "$maven_args" ":system-test"
 }
