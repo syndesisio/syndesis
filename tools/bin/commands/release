@@ -55,7 +55,6 @@ get_release_version() {
 
 release::run() {
     source "$(basedir)/commands/util/maven_funcs"
-    source "$(basedir)/commands/util/operator_funcs"
 
     # Main application directory
     local topdir=$(appdir ".")
@@ -112,14 +111,8 @@ release::run() {
     # Create the image for the upgrade
     create_upgrade_docker_image "$topdir" "$release_version"
 
-    # Ensure that all dependencies are up-to-date
-    dep_ensure "$topdir/install/operator"
-
-    # Create the operator image, which use the freshly created template
-    build_operator "$topdir/install/operator" "" "true"
-
     # Create the operator image
-    create_operator_image "$topdir/install/operator" "true" "$release_version"
+    "$topdir/install/operator/build.sh" --operator-build docker --image-build docker --image-name "syndesis/syndesis-operator:$release_version"
 
     # For a test run, we are done
     if [ $(hasflag --dry-run -n) ]; then
