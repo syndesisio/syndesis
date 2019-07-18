@@ -353,14 +353,9 @@ export function getPodLogUrl(
   namespace?: string,
   publishPodName?: string
 ): string {
-  return namespace && publishPodName
-    ? consoleUrl +
-        '/project/' +
-        namespace +
-        '/browse/pods/' +
-        publishPodName +
-        '?tab=logs'
-    : '';
+  return namespace && publishPodName ?
+    `${consoleUrl}/project/${namespace}/browse/pods/${publishPodName}?tab=logs` :
+    '';
 }
 
 /**

@@ -18,7 +18,6 @@ import {
   ConfirmationButtonStyle,
   ConfirmationDialog,
   ConfirmationIconType,
-  ProgressWithLink,
 } from '../../Shared';
 import {
   BUILDING,
@@ -27,7 +26,7 @@ import {
   RUNNING,
   VirtualizationPublishState,
 } from './models';
-import { VirtualizationPublishStatus } from './VirtualizationPublishStatus';
+import { PublishStatusWithProgress } from './PublishStatusWithProgress';
 
 import './VirtualizationListItem.css';
 
@@ -162,41 +161,19 @@ export const VirtualizationListItem: React.FunctionComponent<
         )}-list-item`}
         actions={
           <div className="form-group">
-            {publishInProgress ? (
-              <div
-                data-testid={'virtualization-list-item-progress'}
-                className={'virtualization-list-item-progress'}
-              >
-                <ProgressWithLink
-                  logUrl={props.publishingLogUrl}
-                  value={
-                    props.publishingStepText
-                      ? props.publishingStepText
-                      : ''
-                  }
-                  currentStep={
-                    props.publishingCurrentStep
-                      ? props.publishingCurrentStep
-                      : 0
-                  }
-                  totalSteps={
-                    props.publishingTotalSteps
-                      ? props.publishingTotalSteps
-                      : 4
-                  }
-                  i18nLogUrlText={props.i18nPublishLogUrlText}
-                />
-              </div>
-            ) : (
-                <VirtualizationPublishStatus
-                  currentState={props.currentPublishedState}
-                  i18nPublished={props.i18nPublished}
-                  i18nUnpublished={props.i18nDraft}
-                  i18nPublishInProgress={props.i18nPublishInProgress}
-                  i18nUnpublishInProgress={props.i18nUnpublishInProgress}
-                  i18nError={props.i18nError}
-                />
-              )}
+            <PublishStatusWithProgress 
+              publishedState={props.currentPublishedState}
+              i18nError={props.i18nError}
+              i18nPublished={props.i18nPublished}
+              i18nUnpublished={props.i18nDraft}
+              i18nPublishInProgress={props.i18nPublishInProgress}
+              i18nUnpublishInProgress={props.i18nUnpublishInProgress}
+              i18nPublishLogUrlText={props.i18nPublishLogUrlText}
+              publishingCurrentStep={props.publishingCurrentStep}
+              publishingLogUrl={props.publishingLogUrl}
+              publishingTotalSteps={props.publishingTotalSteps}
+              publishingStepText={props.publishingStepText}
+            />
             <OverlayTrigger overlay={getEditTooltip()} placement="top">
               <ButtonLink
                 data-testid={'virtualization-list-item-edit-button'}

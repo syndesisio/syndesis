@@ -1,6 +1,6 @@
-import { useViewEditorStates } from '@syndesis/api';
+import { useViewEditorStates, useVirtualization, useVirtualizationHelpers } from '@syndesis/api';
 import { RestDataService, ViewEditorState } from '@syndesis/models';
-import { PageSection, ViewHeader, ViewHeaderBreadcrumb } from '@syndesis/ui';
+import { PageSection, ViewHeaderBreadcrumb, VirtualizationDetailsHeader } from '@syndesis/ui';
 import { useRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { useTranslation } from 'react-i18next';
@@ -11,7 +11,7 @@ import {
   WithVirtualizationSqlClientForm,
 } from '../shared';
 import { VirtualizationHandlers } from '../shared/VirtualizationHandlers';
-import { getPreviewVdbName, getPublishingDetails } from '../shared/VirtualizationUtils';
+import { getOdataUrl, getPreviewVdbName, getPublishingDetails } from '../shared/VirtualizationUtils';
 
 /**
  * @param virtualizationId - the ID of the virtualization shown by this page.
@@ -34,19 +34,21 @@ export interface IVirtualizationSqlClientPageRouteState {
  */
 export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
   const { t } = useTranslation(['data', 'shared']);
-  const { state, history } = useRouteData<
+  const { params, history } = useRouteData<
     IVirtualizationSqlClientPageRouteParams,
     IVirtualizationSqlClientPageRouteState
   >();
   const appContext = React.useContext(AppContext);
+  const { updateVirtualizationDescription } = useVirtualizationHelpers();
   const { handleDeleteVirtualization, handlePublishVirtualization, handleUnpublishServiceVdb } = VirtualizationHandlers();
-  const virtualization = state.virtualization;
+  const { resource: virtualization } = useVirtualization(params.virtualizationId);
+
   const { resource: editorStates } = useViewEditorStates(
     virtualization.serviceVdbName + '*'
   );
   const publishingDetails = getPublishingDetails(
     appContext.config.consoleUrl,
-    state.virtualization
+    virtualization
   );
 
   const doDelete = async (
@@ -83,11 +85,21 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
     }
   };
 
+  const doSetDescription = async (newDescription: string) => {
+    await updateVirtualizationDescription(
+      appContext.user.username || 'developer',
+      params.virtualizationId,
+      newDescription
+    );
+    virtualization.tko__description = newDescription;
+    return true;
+  };
+
   return (
     <>
       <ViewHeaderBreadcrumb
         currentPublishedState={publishingDetails.state}
-        virtualizationName={state.virtualization.keng__id}
+        virtualizationName={virtualization.keng__id}
         dashboardHref={resolvers.dashboard.root()}
         dashboardString={t('shared:Home')}
         dataHref={resolvers.data.root()}
@@ -96,13 +108,13 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
         i18nCancelText={t('shared:Cancel')}
         i18nDelete={t('shared:Delete')}
         i18nDeleteModalMessage={t('virtualization.deleteModalMessage', {
-          name: state.virtualization.keng__id,
+          name: virtualization.keng__id,
         })}
         i18nDeleteModalTitle={t('virtualization.deleteModalTitle')}
         i18nPublish={t('shared:Publish')}
         i18nUnpublish={t('shared:Unpublish')}
         i18nUnpublishModalMessage={t('virtualization.unpublishModalMessage', {
-          name: state.virtualization.keng__id,
+          name: virtualization.keng__id,
         })}
         i18nUnpublishModalTitle={t('virtualization.unpublishModalTitle')}
         onDelete={doDelete}
@@ -110,18 +122,39 @@ export const VirtualizationSqlClientPage: React.FunctionComponent = () => {
            onExport={this.handleExportVirtualization} */
         onUnpublish={doUnpublish}
         onPublish={doPublish}
-        serviceVdbName={state.virtualization.serviceVdbName}
+        serviceVdbName={virtualization.serviceVdbName}
         hasViews={
-          state.virtualization.serviceViewDefinitions &&
-          state.virtualization.serviceViewDefinitions.length > 0
+          virtualization.serviceViewDefinitions &&
+          virtualization.serviceViewDefinitions.length > 0
         }
       />
-      <ViewHeader
-        i18nTitle={state.virtualization.keng__id}
-        i18nDescription={state.virtualization.tko__description}
+      <VirtualizationDetailsHeader
+        i18nDescriptionPlaceholder={t('virtualization.descriptionPlaceholder')}
+        i18nDraft={t('shared:Draft')}
+        i18nError={t('shared:Error')}
+        i18nPublished={t(
+          'virtualization.publishedDataVirtualization'
+        )}
+        i18nPublishInProgress={t(
+          'virtualization.publishInProgress'
+        )}
+        i18nUnpublishInProgress={t(
+          'virtualization.unpublishInProgress'
+        )}
+        i18nPublishLogUrlText={t('shared:viewLogs')}
+        odataUrl={getOdataUrl(virtualization)}
+        publishedState={publishingDetails.state}
+        publishingCurrentStep={publishingDetails.stepNumber}
+        publishingLogUrl={publishingDetails.logUrl}
+        publishingTotalSteps={publishingDetails.stepTotal}
+        publishingStepText={publishingDetails.stepText}
+        virtualizationDescription={virtualization.tko__description}
+        virtualizationName={virtualization.keng__id}
+        isWorking={false}
+        onChangeDescription={doSetDescription}
       />
       <PageSection variant={'light'} noPadding={true}>
-        <VirtualizationNavBar virtualization={state.virtualization} />
+        <VirtualizationNavBar virtualization={virtualization} />
       </PageSection>
       <WithVirtualizationSqlClientForm
         views={editorStates.map(

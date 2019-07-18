@@ -50,6 +50,38 @@ export const useVirtualizationHelpers = () => {
   }
 
   /**
+   * Updates a virtualization.  Currently this will just update the description
+   * @param username the username (used to define the workspace path)
+   * @param virtName the name of the virtualization
+   * @param virtDesc the description of the virtualization
+   */
+  const updateVirtualizationDescription = async (
+    username: string,
+    virtName: string,
+    virtDesc: string
+  ): Promise<void> => {
+    
+    const updatedVirtualization = {
+      keng__dataPath: `${WORKSPACE_ROOT}${username}/${virtName}`,
+      keng__id: `${virtName}`,
+      serviceVdbName: `${virtName}`.toLowerCase() + 'vdb',
+      tko__description: virtDesc,
+    } as RestDataService;
+
+    const response = await callFetch({
+      body: updatedVirtualization,
+      headers: {},
+      method: 'PUT',
+      url: `${apiContext.dvApiUri}workspace/dataservices/${virtName}`,
+    });
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+
+    return Promise.resolve();
+  }
+
+  /**
    * Deletes the specified virtualization view.
    * @param virtualization the virtualization
    * @param viewName the name of the view being deleted
@@ -329,6 +361,7 @@ export const useVirtualizationHelpers = () => {
     queryVirtualization,
     refreshVirtualizationViews,
     unpublishServiceVdb,
+    updateVirtualizationDescription,
     validateViewDefinition,
     validateViewName,
     validateVirtualizationName,
