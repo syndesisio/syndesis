@@ -135,7 +135,7 @@
     - imageChangeParams:
         automatic: true
         containerNames:
-        - syndesis-meta
+        - {{ProductName}}-meta
         from:
           kind: ImageStreamTag
           name: {{ Images.Syndesis.Verifier }}:{{ Tags.Syndesis }}

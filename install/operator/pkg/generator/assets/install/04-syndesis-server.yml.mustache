@@ -159,7 +159,7 @@
     - imageChangeParams:
         automatic: true
         containerNames:
-        - syndesis-server
+        - {{ProductName}}-server
         from:
           kind: ImageStreamTag
           name: '{{ Images.Syndesis.Rest }}:{{ Tags.Syndesis }}'

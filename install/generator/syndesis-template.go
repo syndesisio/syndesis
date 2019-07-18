@@ -79,6 +79,7 @@ type tags struct {
 
 type Context struct {
 	Name             string
+    ProductName      string
 	AllowLocalHost   bool
 	WithDockerImages bool
 	Productized      bool
@@ -182,6 +183,8 @@ func init() {
 }
 
 func install(cmd *cobra.Command, args []string) {
+
+    context.ProductName = context.Name
 
 	if context.Oso || context.Ocp {
 		context.Productized = true
