@@ -1,6 +1,6 @@
 {
     meta: {
-        createdAt: '2019-07-20T21:47:54.220Z',
+        createdAt: '2019-07-22T08:29:21.039Z',
         host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
         resHumanReadable: true,
     },
@@ -9,7 +9,7 @@
         method: 'POST',
         headers: {
             'syndesis-mock-request': '6',
-            'syndesis-mock-session': 'homepage.spec.js',
+            'syndesis-mock-session': 'create-connection.spec.js',
             referrerpolicy: 'no-referrer',
             'x-forwarded-user': 'user',
         },
@@ -34,7 +34,7 @@
                 'application/json',
             ],
             date: [
-                'Sat, 20 Jul 2019 21:48:09 GMT',
+                'Mon, 22 Jul 2019 08:29:21 GMT',
             ],
             'gap-auth': [
                 'kahboom@cluster.local',
@@ -69,7 +69,7 @@
         },
         body: {
             event: 'uuid',
-            data: '4c284b71-ba5c-407d-8bf8-b6ad003fb02b',
+            data: '6d9b545e-2930-4949-8ef9-ed62f8d09564',
         },
     },
 }

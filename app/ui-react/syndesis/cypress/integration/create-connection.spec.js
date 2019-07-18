@@ -9,18 +9,24 @@ describe('Create a Connection', () => {
    */
 
   it('loads the Create Connection page successfully', () => {
-    cy.visit('/');
+    cy.get('[data-testid=dashboard-create-connection-button]').click();
+    cy.location('pathname').should(
+      'contain',
+      '/connections/create/connection-basics'
+    );
+
+    cy.get('.pf-c-page__sidebar-body').should('be.hidden');
   });
 
   /**
    * Alternative Path
    */
 
-  it('', () => {});
+  it.skip('', () => {});
 
   /**
    * Exception Path
    */
 
-  it('', () => {});
+  it.skip('', () => {});
 });

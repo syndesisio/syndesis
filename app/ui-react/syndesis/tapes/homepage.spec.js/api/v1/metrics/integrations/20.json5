@@ -1,40 +1,34 @@
 {
     meta: {
-        createdAt: '2019-07-20T21:47:54.220Z',
+        createdAt: '2019-07-20T21:47:59.220Z',
         host: 'https://syndesis-staging.b6ff.rh-idev.openshiftapps.com',
         resHumanReadable: true,
     },
     req: {
-        url: '/api/v1/event/reservations',
-        method: 'POST',
+        url: '/api/v1/metrics/integrations',
+        method: 'GET',
         headers: {
-            'syndesis-mock-request': '6',
+            'syndesis-mock-request': '7',
             'syndesis-mock-session': 'homepage.spec.js',
             referrerpolicy: 'no-referrer',
             'x-forwarded-user': 'user',
         },
-        body: 'IiI=',
+        body: '',
     },
     res: {
         status: 200,
         headers: {
-            'access-control-allow-credentials': [
-                'true',
-            ],
-            'access-control-allow-origin': [
-                'http://localhost:3000',
-            ],
             'cache-control': [
                 'no-cache, no-store, max-age=0, must-revalidate, proxy-revalidate, s-maxage=0',
             ],
             'content-length': [
-                '62',
+                '189',
             ],
             'content-type': [
                 'application/json',
             ],
             date: [
-                'Sat, 20 Jul 2019 21:48:09 GMT',
+                'Sat, 20 Jul 2019 21:48:00 GMT',
             ],
             'gap-auth': [
                 'kahboom@cluster.local',
@@ -47,9 +41,6 @@
             ],
             'syndesis-xsrf-token': [
                 'awesome',
-            ],
-            vary: [
-                'Origin',
             ],
             'x-application-context': [
                 'application',
@@ -68,8 +59,15 @@
             ],
         },
         body: {
-            event: 'uuid',
-            data: '4c284b71-ba5c-407d-8bf8-b6ad003fb02b',
+            metricsProvider: 'prometheus',
+            messages: 79180,
+            errors: 0,
+            start: 1563603472000,
+            lastProcessed: 1563659243908,
+            topIntegrations: {
+                'i-Lk9bYTC-OrgXelAq8Iyz': 1,
+                'i-LkA5R8F-OrgXelAq8J2z': 1744,
+            },
         },
     },
 }
