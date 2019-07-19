@@ -15,14 +15,15 @@ continues only if that content is present.
 
 .Procedure
 
-. In the visualization panel on the left, click the plus sign, which
+. In the integration visualization, click the plus sign, which
 displays the steps that you can add to the integration. 
 . Click *Basic Filter*.
 
-. In the first field (*The data you want to evaluate*), start to enter 
+. In the field for *The data you want to evaluate*, start to enter 
 `*text*` and when `text`
-appears below the field, click it. This indicates that the content to
-filter for is in the Twitter `text` field, which contains the text of the tweet.
+appears below the field, click it. 
+The Twitter `text` field, which contain a tweet, 
+is the data that you want the filter to evaluate.
 
 . Accept *contains* as the condition to be met for the integration to
 continue.
@@ -30,4 +31,4 @@ continue.
 that you choose for the value to check for.
 A tweet that mentions you must contain the text you enter here for
 the integration to continue operating on this data.
-. Click *Done* to complete the basic filter step.
+. Click *Done* to add the basic filter step to the integration.

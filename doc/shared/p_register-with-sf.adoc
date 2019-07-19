@@ -37,8 +37,11 @@ endif::[]
 
  
 .Prerequisite
-You are logged in to {prodname}. The URL for accessing {prodname} is in the 
+You are logged in to {prodname}. 
+ifeval::["{location}" == "downstream"]
+The URL for accessing {prodname} is in the 
 email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
+endif::[]
 
 .Procedure
 . In {prodname}:
@@ -48,8 +51,8 @@ click
 image:images/CopyCallback.png[Copy Callback URL] to 
 copy the callback URL for your {prodname} environment to the clipboard. 
 You will need this URL toward the end of this procedure. 
-.. To the right of the *Salesforce* entry,
-click *Register* to display the *Client ID* and *Client Secret* fields.
+.. Click the *Salesforce* entry 
+to display the *Client ID* and *Client Secret* fields.
 . In another browser tab, log in to your Salesforce account and
 follow the steps below to create a connected app.
 These instructions assume that you are
@@ -83,4 +86,5 @@ consumer key into the {prodname} Salesforce *Client ID* field.
 . Return to your {prodname} *Settings* page and paste the
 Salesforce-provided consumer secret into the {prodname} Salesforce
 *Client Secret* field.
-. Click *Save* and then click *Ok*.
+. Click *Save*.
+. Click the *Salesforce* entry to collapse it. 

@@ -24,11 +24,10 @@ https://github.com/syndesisio/fuse-online-sample-extension/releases.
                     
 . Download the extension’s `.jar` file.     
                             
-. In {prodname}, in the left panel, click *Customizations*. 
-. At the top, click *Extensions*. 
+. In {prodname}, in the left panel, click *Customizations* > *Extensions*. 
 . Click *Import Extension*. 
-. Click *Choose File* and select the downloaded `.jar` file that contains the 
-extension. 
+. Click in the dotted-line box and select the downloaded `.jar` file that 
+contains the extension. 
 {prodname} validates the file, extracts and displays the extension's 
 ID, name, description, and type, and lists *Damage Reporter* as the custom step
 that the extension defines.

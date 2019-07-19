@@ -14,5 +14,6 @@ and identifies any items that were damaged when they were received.
 
 .Procedure
 
-. In {prodname}, in the visualization panel on the left, click the plus sign.
-. On the *Choose a Step* page, click *Damage Reporter*.
+. In {prodname}, in the integration visualization, click the plus sign.
+. Click *Damage Reporter*.
+. Click *Next* to add the Damage Reporter step to the integration. 
