@@ -38,7 +38,7 @@ Examples of issue keys: `GATE-1234`, `Ent-239`.
 a Jira administrator has associated with a particular transition, 
 such as when a Jira moves from being new to being worked on, or 
 when it moves from being worked on to being tested. 
-
++
 A Jira administrator can view transition IDs in a project’s workflow display. 
 If you do not have administration permissions, obtain the allowed 
 transition IDs from a Jira administrator.
