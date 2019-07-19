@@ -994,6 +994,32 @@
       <artifactId>micrometer-spring-legacy</artifactId>
     </dependency>
 
+    <!-- === Graphql ================================================================== -->
+
+    <dependency>
+      <groupId>com.graphql-java</groupId>
+      <artifactId>graphql-java</artifactId>
+      <version>${graphql-java.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.graphql-java</groupId>
+      <artifactId>graphql-spring-boot-starter</artifactId>
+      <version>${graphql-spring-boot.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.graphql-java</groupId>
+      <artifactId>graphiql-spring-boot-starter</artifactId>
+      <version>${graphql-spring-boot.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.graphql-java</groupId>
+      <artifactId>graphql-java-tools</artifactId>
+      <version>${graphql-java-tools.version}</version>
+      <scope>runtime</scope>
+    </dependency>
+
   </dependencies>
 
   <profiles>

@@ -33,19 +33,24 @@ public class PaginationOptionsFromQueryParams implements PaginationOptions {
      * @param uri The request context.
      */
     public PaginationOptionsFromQueryParams(UriInfo uri) {
-        MultivaluedMap<String, String> queryParams = uri.getQueryParameters();
-        String pageQuery = queryParams.getFirst("page");
-        if (pageQuery == null || pageQuery.isEmpty()) {
+        if( uri == null ) {
             page = 1;
-        } else {
-            page = Integer.parseInt(pageQuery);
-        }
-
-        String perPageQuery = queryParams.getFirst("per_page");
-        if (perPageQuery == null || perPageQuery.isEmpty()) {
             perPage = 20;
         } else {
-            perPage = Integer.parseInt(perPageQuery);
+            MultivaluedMap<String, String> queryParams = uri.getQueryParameters();
+            String pageQuery = queryParams.getFirst("page");
+            if (pageQuery == null || pageQuery.isEmpty()) {
+                page = 1;
+            } else {
+                page = Integer.parseInt(pageQuery);
+            }
+
+            String perPageQuery = queryParams.getFirst("per_page");
+            if (perPageQuery == null || perPageQuery.isEmpty()) {
+                perPage = 20;
+            } else {
+                perPage = Integer.parseInt(perPageQuery);
+            }
         }
     }
 

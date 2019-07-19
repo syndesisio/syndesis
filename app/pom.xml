@@ -127,6 +127,10 @@
     <postgresql.version>9.1-901-1.jdbc4</postgresql.version>
     <logback.version>1.2.3</logback.version>
     <micrometer.version>1.1.2</micrometer.version>
+
+    <graphql-java.version>6.0</graphql-java.version>
+    <graphql-spring-boot.version>3.9.2</graphql-spring-boot.version>
+    <graphql-java-tools.version>4.3.0</graphql-java-tools.version>
   </properties>
 
   <modules>
@@ -542,22 +546,28 @@
         <plugins>
           <plugin>
             <artifactId>maven-compiler-plugin</artifactId>
-            <configuration>
-              <compilerId>javac-with-errorprone</compilerId>
-              <forceJavacCompilerUse>true</forceJavacCompilerUse>
-              <compilerArgs>
-                <arg>-Xlint:all</arg>
-                <arg>-Xlint:-deprecation</arg>
-                <arg>-Xlint:-processing</arg>
-                <arg>-Xlint:-serial</arg>
-                <arg>-Werror</arg>
-                <arg>-XepDisableWarningsInGeneratedCode</arg>
-                <arg>-XepExcludedPaths:.*/generated-sources/.*</arg>
-                <arg>-implicit:none</arg>
-                <!-- temporary disable until https://github.com/google/error-prone/issues/780 is resolved -->
-                <arg>-Xep:ParameterName:OFF</arg>
-              </compilerArgs>
-            </configuration>
+            <executions>
+              <execution>
+                <id>default-compile</id>
+                <phase>compile</phase>
+	            <configuration>
+	              <compilerId>javac-with-errorprone</compilerId>
+	              <forceJavacCompilerUse>true</forceJavacCompilerUse>
+	              <compilerArgs>
+	                <arg>-Xlint:all</arg>
+	                <arg>-Xlint:-deprecation</arg>
+	                <arg>-Xlint:-processing</arg>
+	                <arg>-Xlint:-serial</arg>
+	                <arg>-Werror</arg>
+	                <arg>-XepDisableWarningsInGeneratedCode</arg>
+	                <arg>-XepExcludedPaths:.*/generated-sources/.*</arg>
+	                <arg>-implicit:none</arg>
+	                <!-- temporary disable until https://github.com/google/error-prone/issues/780 is resolved -->
+	                <arg>-Xep:ParameterName:OFF</arg>
+	              </compilerArgs>
+	            </configuration>
+              </execution>
+            </executions>
             <dependencies>
               <dependency>
                 <groupId>org.codehaus.plexus</groupId>
@@ -627,6 +637,7 @@
               <include>**/pom.xml</include>
             </includes>
             <excludes>
+
               <exclude>**/node_modules/**</exclude>
               <exclude>.editorconfig</exclude>
               <exclude>license.txt</exclude>
@@ -664,6 +675,7 @@
               <!-- excludes as it is copied from upstream camel component and nneds to be moved back to caml -->
               <exclude>connector/servicenow/src/main/java/io/syndesis/connector/servicenow/ServiceNowMetaDataExtension.java</exclude>
               <exclude>integration/runtime-camelk/src/main/resources/META-INF/catalog/**</exclude>
+              <exclude>**/*.graphqls</exclude>
             </excludes>
           </configuration>
           <dependencies>
@@ -726,6 +738,7 @@
               <ignoredResourcePattern>draftv4/schema</ignoredResourcePattern>
               <ignoredResourcePattern>git.properties</ignoredResourcePattern>
               <ignoredResourcePattern>mockito-extensions/org\.mockito\.plugins\.MockMaker</ignoredResourcePattern>
+              <ignoredResourcePattern>LICENSE.md</ignoredResourcePattern>
             </ignoredResourcePatterns>
             <exceptions>
               <exception>

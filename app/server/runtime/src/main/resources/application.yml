@@ -26,6 +26,8 @@ features:
     enabled: true
   knative:
     enabled: false
+  graphql:
+    enabled: true
 
 server:
   compression:
