@@ -151,7 +151,7 @@
                 "required": false,
                 "secret": false,
                 "tags": [],
-                "type": "string"
+                "type": "select"
               },
               "template": {
                 "componentProperty": false,
@@ -207,7 +207,7 @@
                 "required": true,
                 "secret": false,
                 "tags": [],
-                "type": "string"
+                "type": "select"
               },
               "schedulerExpression": {
                 "defaultValue": 60000,

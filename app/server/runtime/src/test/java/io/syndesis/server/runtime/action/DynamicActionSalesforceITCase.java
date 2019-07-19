@@ -60,7 +60,7 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
         .displayName("Identifier field name")//
         .group("common")//
         .required(Boolean.TRUE)//
-        .type("string")//
+        .type("select")//
         .javaType("java.lang.String")//
         .componentProperty(Boolean.FALSE)//
         .description("Unique field to hold the identifier value")//
@@ -71,7 +71,7 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
         .displayName("Salesforce object type")//
         .group("common")//
         .required(Boolean.TRUE)//
-        .type("string")//
+        .type("select")//
         .javaType("java.lang.String")//
         .componentProperty(Boolean.FALSE)//
         .description("Salesforce object type to create")//
@@ -96,7 +96,8 @@ public class DynamicActionSalesforceITCase extends BaseITCase {
 
     private final ConfigurationProperty contactSalesforceObjectName = new ConfigurationProperty.Builder()
         .createFrom(_DEFAULT_SALESFORCE_OBJECT_NAME)
-        .defaultValue("Contact").build();
+        .addEnum(ConfigurationProperty.PropertyValue.Builder.of("Contact", "Contact"))
+        .build();
 
     private final ConfigurationProperty suggestedSalesforceIdNames = new ConfigurationProperty.Builder()
         .createFrom(_DEFAULT_SALESFORCE_IDENTIFIER)

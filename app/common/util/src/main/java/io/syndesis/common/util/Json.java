@@ -93,6 +93,14 @@ public final class Json {
         }
     }
 
+    public static String toPrettyString(Object value) {
+        try {
+            return writer().withDefaultPrettyPrinter().writeValueAsString(value);
+        } catch (JsonProcessingException e) {
+            throw new SyndesisServerException(e);
+        }
+    }
+
     // Helper method to help construct json style object maps with concise syntax
     public static Map<String, Object> map(Object... values) {
         if (values.length % 2 != 0) {

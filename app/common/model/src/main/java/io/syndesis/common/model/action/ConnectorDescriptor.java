@@ -52,41 +52,60 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
             return this;
         }
 
-        public Builder replaceConfigurationProperty(
-            final String propertyName,
-            final Consumer<ConfigurationProperty.Builder> configurationPropertyConfigurator) {
+        public ConfigurationProperty findProperty(
+                final String propertyName) {
+
+            PotentialStep potentialStep = findStepForProperty(propertyName);
+            if (potentialStep!=null) {
+                return potentialStep.step.getProperties().get(propertyName);
+            } else {
+                return null;
+            }
+        }
+
+        /* But what if steps have the same property name? It may return the wrong step */
+        private PotentialStep findStepForProperty(
+                final String propertyName) {
 
             final ConnectorDescriptor definition = build();
             final List<ActionDescriptorStep> steps = definition.getPropertyDefinitionSteps();
 
-            int stepIdx;
-            ActionDescriptorStep step = null;
-            for (stepIdx = 0; stepIdx < steps.size(); stepIdx++) {
+            for (int stepIdx = 0; stepIdx < steps.size(); stepIdx++) {
                 final ActionDescriptorStep potentialStep = steps.get(stepIdx);
 
                 final Map<String, ConfigurationProperty> properties = potentialStep.getProperties();
                 if (properties.containsKey(propertyName)) {
-                    step = potentialStep;
-                    break;
+                    return new PotentialStep(stepIdx, potentialStep);
                 }
             }
 
-            if (step == null) {
+            return null;
+        }
+
+        public Builder replaceConfigurationProperty(
+            final String propertyName,
+            final Consumer<ConfigurationProperty.Builder> configurationPropertyConfigurator) {
+
+            PotentialStep potentialStep = findStepForProperty(propertyName);
+
+            if (potentialStep == null) {
                 // found no property to replace, lets just ignore it
                 return this;
             }
 
-            final ConfigurationProperty configurationProperty = step.getProperties().get(propertyName);
+            final ConfigurationProperty configurationProperty = potentialStep.step.getProperties().get(propertyName);
             final ConfigurationProperty.Builder configurationPropertyModifier = new ConfigurationProperty.Builder().createFrom(configurationProperty);
 
             configurationPropertyConfigurator.accept(configurationPropertyModifier);
 
             final ActionDescriptorStep.Builder stepModifier = new ActionDescriptorStep.Builder()
-                .createFrom(step)
+                .createFrom(potentialStep.step)
                 .putProperty(propertyName, configurationPropertyModifier.build());
 
+            final ConnectorDescriptor definition = build();
+            final List<ActionDescriptorStep> steps = definition.getPropertyDefinitionSteps();
             final List<ActionDescriptorStep> modifiedSteps = new ArrayList<>(steps);
-            modifiedSteps.set(stepIdx, stepModifier.build());
+            modifiedSteps.set(potentialStep.stepIdx, stepModifier.build());
 
             return propertyDefinitionSteps(modifiedSteps);
         }
@@ -118,5 +137,17 @@ public interface ConnectorDescriptor extends ActionDescriptor, WithConfiguredPro
 
     default ConnectorDescriptor.Builder builder() {
         return new Builder().createFrom(this);
+    }
+
+    class PotentialStep {
+
+        int stepIdx;
+        ActionDescriptorStep step;
+
+        public PotentialStep(int stepIdx, ActionDescriptorStep step) {
+            super();
+            this.stepIdx = stepIdx;
+            this.step = step;
+        }
     }
 }
