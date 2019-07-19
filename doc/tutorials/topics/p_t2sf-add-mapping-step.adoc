@@ -15,9 +15,9 @@ Salesforce contact fields.
 
 .Procedure
 
-. In {prodname}, in the visualization panel on the left, click the plus sign that is between the filter
+. In {prodname}, in the integration visualization, click the plus sign that is between the filter
 step and the finish connection.
-. On the *Choose a Step* page, click *Data Mapper* and wait a few moments. When the data fields
+. Click *Data Mapper* and wait a few moments. When the data fields
 appear, the *Sources* panel on the left displays the Twitter fields
 and the *Target* panel on the right displays the Salesforce fields.
 . Map the Twitter `name` field to the Salesforce
@@ -34,16 +34,14 @@ target *FirstName* field.
 The data mapper displays another line from the Twitter
 *name* field, but this time it goes to the Salesforce *LastName* field.
 The blue lines indicate the current focus.
-+
-In the *Mapping Details* panel, you can see that the data mapper
-automatically changed the action from *Map* to *Separate*. 
 
 +
 [NOTE]
 ====
 If you accidentally map the wrong fields then delete the incorrect mapping by 
 selecting one of its fields to make it the current
-mapping. Then click the trash can icon in the top right of the data mapper. 
+mapping. Then click the trash can icon in the top right of the data mapper's 
+*Mapping Details* panel. 
 ====
 
 . Map the Twitter `screenName` field to the Salesforce

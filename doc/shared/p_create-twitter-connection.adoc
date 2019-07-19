@@ -16,8 +16,11 @@ After you create a Twitter connection, you can use it in any number of
 integrations.
 
 .Prerequisites
-* You are logged in to {prodname}. The URL for accessing {prodname} is in the 
+* You are logged in to {prodname}. 
+ifeval::["{location}" == "downstream"]
+The URL for accessing {prodname} is in the 
 email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
+endif::[]
 * {prodname} is open in a web browser. 
 * You registered your {prodname} environment as an application
 that can access Twitter.
@@ -46,14 +49,14 @@ create a Twitter connection by entering values in these fields,
 it is not recommended. 
 
 . Click *Authorize app* to return to {prodname}.
-. In the *Connection Name* field, enter your choice of a name that
+. In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, enter `*Twitter Connect 1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample Twitter connection
 that uses my Twitter login credentials.*`
-. In the upper right, click *Create* to see that the connection you
+. Click *Save* to see that the connection you
 created is now available. If you entered the example name, you would
 see that *Twitter Connect 1* appears as a connection that you can 
 choose to add to an integration.

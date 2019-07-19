@@ -16,9 +16,9 @@ is provided with {prodname}.
 .Procedure
 
 . In {prodname}, in the upper right, click *Publish* to give it a name.
-. In the *Integration Name* field, enter a name for the
+. In the *Name* field, enter a name for the
 integration. For example, `*Salesforce to Database Sample Integration*`.
-. In the upper right corner, click *Publish*.
+. Click *Save and publish*.
 
 +
 {prodname} starts to deploy the integration and then displays the list of 

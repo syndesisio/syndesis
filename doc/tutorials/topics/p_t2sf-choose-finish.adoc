@@ -15,13 +15,14 @@ integration, after you add the start connection, you add the finish connection
 
 .Procedure
 
-. On the *Choose a Finish Connection* page, click the Salesforce
+. On the *Choose a connection* page, click the Salesforce
 connection that you created. If you gave it the example name, you
 would click *SF Connect 1*.
 This integration finishes by using the credentials
 defined in this connection to connect to Salesforce.
-. On the *Choose an Action* page, click *New record*.
-. On the *New record* page, click in the *Object name* field
+. On the *Choose an action* page, to the right of the *New record* entry, 
+click *Select*. 
+. On the *Configure the action* page, click in the *Object name* field
 and select *Contact* as the
 Salesforce record to create.
 . Click  *Next* to add the finish

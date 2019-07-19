@@ -25,7 +25,7 @@ and extending {prodname} by leading you through the procedures for:
 {prodname} provides the extension file and the OpenAPI document.
 
 ifeval::["{location}" == "downstream"]
-.Prerequisite
+.Prerequisites
 
 * You must be logged in to {prodname}.
 If you are not already logged in, see 

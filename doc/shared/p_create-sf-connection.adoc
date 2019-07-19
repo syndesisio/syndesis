@@ -18,8 +18,11 @@ After you create a Salesforce connection, you can use it in multiple
 integrations.
 
 .Prerequisites
-* You are logged in to {prodname}. The URL for accessing {prodname} is in the 
+* You are logged in to {prodname}. 
+ifeval::["{location}" == "downstream"]
+The URL for accessing {prodname} is in the 
 email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
+endif::[]
 * {prodname} is open in a web browser. 
 * You must have already registered your {prodname} environment as an
 application that can access Salesforce. 
@@ -71,14 +74,14 @@ callback URL is specified according to the instructions in
 link:{LinkFuseOnlineConnectorGuide}#register-with-salesforce_salesforce[Registering with Salesforce].
 ====
 . Click *Allow* to return to {prodname}.
-. In the *Connection Name* field, enter your choice of a name that
+. In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, enter `*SF Connect 1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample Salesforce connection
 that uses my Salesforce login credentials.*`
-. In the upper right, click *Create* to see that the connection you
+. Click *Save* to see that the connection you
 created is now available. If you entered the example name, you would
 see that *SF Connect 1* appears as a connection that you can 
 choose to add to an integration.
