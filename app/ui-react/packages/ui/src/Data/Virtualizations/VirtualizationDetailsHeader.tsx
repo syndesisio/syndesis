@@ -3,16 +3,14 @@ import {
   TextList,
   TextListItem,
   TextListItemVariants,
-  TextListVariants
+  TextListVariants,
 } from '@patternfly/react-core';
 import { Icon } from 'patternfly-react';
 import * as React from 'react';
-import { PublishStatusWithProgress } from '../';
 import { PageSection } from '../../Layout';
 import { InlineTextEdit } from '../../Shared';
-import {
-  VirtualizationPublishState,
-} from './models';
+import { VirtualizationPublishState } from './models';
+import { PublishStatusWithProgress } from './PublishStatusWithProgress';
 import './VirtualizationDetailsHeader.css';
 
 export interface IVirtualizationDetailsHeaderProps {
@@ -40,9 +38,8 @@ export interface IVirtualizationDetailsHeaderProps {
  * Line 2: description label and value
  */
 export const VirtualizationDetailsHeader: React.FunctionComponent<
-IVirtualizationDetailsHeaderProps
+  IVirtualizationDetailsHeaderProps
 > = props => {
-
   return (
     <PageSection variant={'light'}>
       <TextContent>
@@ -87,13 +84,11 @@ IVirtualizationDetailsHeaderProps
       </TextContent>
       <InlineTextEdit
         value={props.virtualizationDescription || ''}
-        allowEditing={
-          !props.isWorking
-        }
+        allowEditing={!props.isWorking}
         i18nPlaceholder={props.i18nDescriptionPlaceholder}
         isTextArea={true}
         onChange={props.onChangeDescription}
       />
     </PageSection>
   );
-}
+};

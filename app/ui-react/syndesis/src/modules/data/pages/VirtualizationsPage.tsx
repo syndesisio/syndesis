@@ -79,12 +79,20 @@ export function getVirtualizationsHref(baseUrl: string): string {
 export const VirtualizationsPage: React.FunctionComponent = () => {
   const appContext = React.useContext(AppContext);
   const { t } = useTranslation(['data', 'shared']);
-  const { 
-    handleDeleteVirtualization, 
-    handlePublishVirtualization, 
-    handleUnpublishServiceVdb 
+  const {
+    handleDeleteVirtualization,
+    handlePublishVirtualization,
+    handleUnpublishServiceVdb,
   } = VirtualizationHandlers();
-  const { resource: data, hasData, error } = useVirtualizations();
+  const [disableUpdates, setDisableUpdates] = React.useState(false);
+  const { resource: data, hasData, error } = useVirtualizations(disableUpdates);
+
+  // unmount: turn off polling
+  React.useEffect(() => {
+    return () => {
+      setDisableUpdates(true);
+    };
+  }, []);
 
   // TODO: implement handleImportVirt
   // const handleImportVirt = (virtualizationName: string) => {
