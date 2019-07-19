@@ -15,10 +15,10 @@ the first task is to choose the start connection.
 
 . In {prodname}, on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click your
+. On the *Choose a connection* page, click your
 Salesforce connection. If you specified the example name,
 you would click *SF Connect 1*.
-. On the *Choose an Action* page, click *On create*.
+. On the *Choose an action* page, to the right of *On create*, click *Select*.
 . In the *Object name* field, select *Lead*.
 . Click *Next* to add the start connection to the integration.
 

@@ -20,8 +20,8 @@ and click *Enter* to display the icon. For example:
 
 . Save the `todo_icon.png` image.
 
-. In {prodname}, in the *API Client Connectors* tab, click the entry for
-the *Todo App API* to display its details.
+. In {prodname}, on the *API Client Connectors* page, on the entry for
+the *Todo App API*, click *Details*.
 
 . On the *Connector Details* page, below the *Base URL* field, click *Edit*. 
 
