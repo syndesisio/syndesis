@@ -19,7 +19,7 @@ import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
-
+import io.syndesis.connector.support.util.ConnectorOptions;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -33,8 +33,8 @@ public class IrcVerifierExtension extends DefaultComponentVerifierExtension {
 
     @Override
     public Result verify(Scope scope, Map<String, Object> parameters) {
-        final String hostname = (String) parameters.get("hostname");
-        final int port = Integer.parseInt((String) parameters.get("port"));
+        final String hostname = ConnectorOptions.extractOption(parameters, "hostname");
+        final int port = ConnectorOptions.extractOptionAndMap(parameters, "port", Integer::parseInt, 7000);
         final Socket s = new Socket();
         try {
             s.connect(new InetSocketAddress(hostname,port), 5000);

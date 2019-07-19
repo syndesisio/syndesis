@@ -20,6 +20,7 @@ import java.util.Map;
 
 import com.google.common.base.Splitter;
 import io.syndesis.connector.jira.JiraIssue;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -42,30 +43,38 @@ public class AddIssueCustomizer implements ComponentProxyCustomizer {
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         jiraIssue = new JiraIssue();
-        if (options.get(ISSUE_PROJECT_KEY) != null) {
-            jiraIssue.setProjectKey(options.get(ISSUE_PROJECT_KEY).toString());
+        String issueProjectKey = ConnectorOptions.extractOption(options, ISSUE_PROJECT_KEY);
+        if (issueProjectKey != null) {
+            jiraIssue.setProjectKey(issueProjectKey);
         }
-        if (options.get(ISSUE_SUMMARY) != null) {
-            jiraIssue.setSummary(options.get(ISSUE_SUMMARY).toString());
+        String issueSummary = ConnectorOptions.extractOption(options, ISSUE_SUMMARY);
+        if (issueSummary != null) {
+            jiraIssue.setSummary(issueSummary);
         }
-        if (options.get(ISSUE_ASSIGNEE) != null) {
-            jiraIssue.setAssignee(options.get(ISSUE_ASSIGNEE).toString());
+        String issueAssignee = ConnectorOptions.extractOption(options, ISSUE_ASSIGNEE);
+        if (issueAssignee != null) {
+            jiraIssue.setAssignee(issueAssignee);
         }
-        if (options.get("description") != null) {
-            jiraIssue.setDescription(options.get("description").toString());
+        String description = ConnectorOptions.extractOption(options, "description");
+        if (description != null) {
+            jiraIssue.setDescription(description);
         }
-        if (options.get(ISSUE_WATCHERS_ADD) != null) {
-            String watc = options.get(ISSUE_WATCHERS_ADD).toString();
-            List<String> watchers = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(watc);
-            jiraIssue.setWatchers(watchers);
+
+        List<String> addWatchers = ConnectorOptions.extractOptionAndMap(options, ISSUE_WATCHERS_ADD,
+            (String watchers) -> Splitter.on(",").omitEmptyStrings().trimResults().splitToList(watchers), null);
+        if (addWatchers != null) {
+            jiraIssue.setWatchers(addWatchers);
         }
-        if (options.get(ISSUE_COMPONENTS) != null) {
-            String comps = options.get(ISSUE_COMPONENTS).toString();
-            List<String> components = Splitter.on(",").omitEmptyStrings().trimResults().splitToList(comps);
-            jiraIssue.setComponents(components);
+
+        List<String> issueComponents = ConnectorOptions.extractOptionAndMap(options, ISSUE_COMPONENTS,
+            (String comps) -> Splitter.on(",").omitEmptyStrings().trimResults().splitToList(comps), null);
+        if (issueComponents != null) {
+            jiraIssue.setComponents(issueComponents);
         }
-        if (options.get(ISSUE_TYPE_ID) != null) {
-            String issueTypeName = options.get(ISSUE_TYPE_ID).toString();
+
+        String issueTypeId = ConnectorOptions.extractOption(options, ISSUE_TYPE_ID);
+        if (issueTypeId != null) {
+            String issueTypeName = issueTypeId;
             try {
                 int issueType = Integer.parseInt(issueTypeName);
                 jiraIssue.setIssueTypeId((long) issueType);
@@ -74,8 +83,10 @@ public class AddIssueCustomizer implements ComponentProxyCustomizer {
                 jiraIssue.setIssueTypeName(issueTypeName);
             }
         }
-        if (options.get(ISSUE_PRIORITY_ID) != null) {
-            String issuePriorityName = options.get(ISSUE_PRIORITY_ID).toString();
+
+        String issuePriorityId = ConnectorOptions.extractOption(options, ISSUE_PRIORITY_ID);
+        if (issuePriorityId != null) {
+            String issuePriorityName = issuePriorityId;
             try {
                 int prio = Integer.parseInt(issuePriorityName);
                 jiraIssue.setPriorityId((long) prio);

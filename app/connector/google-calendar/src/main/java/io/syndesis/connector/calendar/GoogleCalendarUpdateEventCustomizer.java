@@ -15,26 +15,25 @@
  */
 package io.syndesis.connector.calendar;
 
+import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesList;
+import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesString;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-
-import com.google.api.client.util.DateTime;
-import com.google.api.services.calendar.model.Event;
-import com.google.api.services.calendar.model.EventDateTime;
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.calendar.internal.CalendarEventsApiMethod;
 import org.apache.camel.component.google.calendar.internal.GoogleCalendarApiCollection;
 import org.apache.camel.util.ObjectHelper;
-
-import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesList;
-import static io.syndesis.connector.calendar.utils.GoogleCalendarUtils.getAttendeesString;
+import com.google.api.client.util.DateTime;
+import com.google.api.services.calendar.model.Event;
+import com.google.api.services.calendar.model.EventDateTime;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustomizer {
 
@@ -57,16 +56,16 @@ public class GoogleCalendarUpdateEventCustomizer implements ComponentProxyCustom
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        description = (String)options.get("description");
-        summary = (String)options.get("summary");
-        calendarId = (String)options.get("calendarId");
-        eventId = (String)options.get("eventId");
-        attendees = (String)options.get("attendees");
-        startDate = (String)options.get("startDate");
-        endDate = (String)options.get("endDate");
-        startTime = (String)options.get("startTime");
-        endTime = (String)options.get("endTime");
-        location = (String)options.get("location");
+        description = ConnectorOptions.extractOption(options, "description");
+        summary = ConnectorOptions.extractOption(options, "summary");
+        calendarId = ConnectorOptions.extractOption(options, "calendarId");
+        eventId = ConnectorOptions.extractOption(options, "eventId");
+        attendees = ConnectorOptions.extractOption(options, "attendees");
+        startDate = ConnectorOptions.extractOption(options, "startDate");
+        endDate = ConnectorOptions.extractOption(options, "endDate");
+        startTime = ConnectorOptions.extractOption(options, "startTime");
+        endTime = ConnectorOptions.extractOption(options, "endTime");
+        location = ConnectorOptions.extractOption(options, "location");
         options.put("apiName", GoogleCalendarApiCollection.getCollection().getApiName(CalendarEventsApiMethod.class).getName());
         options.put("methodName", "update");
     }

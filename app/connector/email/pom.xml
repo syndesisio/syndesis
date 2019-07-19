@@ -57,7 +57,6 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-util</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.syndesis.common</groupId>

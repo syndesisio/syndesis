@@ -42,6 +42,7 @@ import com.google.api.services.sheets.v4.model.Request;
 import io.syndesis.connector.sheets.model.CellCoordinate;
 import io.syndesis.connector.sheets.model.GoogleChart;
 import io.syndesis.connector.sheets.model.RangeCoordinate;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -65,9 +66,9 @@ public class GoogleSheetsAddChartCustomizer implements ComponentProxyCustomizer 
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        spreadsheetId = (String) options.get("spreadsheetId");
-        title = (String) options.get("title");
-        subtitle = (String) options.get("subtitle");
+        spreadsheetId = ConnectorOptions.extractOption(options, "spreadsheetId");
+        title = ConnectorOptions.extractOption(options, "title");
+        subtitle = ConnectorOptions.extractOption(options, "subtitle");
 
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName());

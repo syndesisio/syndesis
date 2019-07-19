@@ -39,7 +39,6 @@
     <dependency>
       <groupId>io.syndesis.connector</groupId>
       <artifactId>connector-support-util</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.apache.camel</groupId>

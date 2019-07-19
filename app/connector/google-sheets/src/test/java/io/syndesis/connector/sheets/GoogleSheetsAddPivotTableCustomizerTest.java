@@ -19,11 +19,6 @@ package io.syndesis.connector.sheets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
-import com.google.api.services.sheets.v4.model.PivotTable;
-import com.google.api.services.sheets.v4.model.UpdateCellsRequest;
-import io.syndesis.connector.sheets.model.GooglePivotTable;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
@@ -33,6 +28,11 @@ import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
+import com.google.api.services.sheets.v4.model.PivotTable;
+import com.google.api.services.sheets.v4.model.UpdateCellsRequest;
+import io.syndesis.connector.sheets.model.GooglePivotTable;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 /**
  * @author Christoph Deppisch
@@ -56,8 +56,8 @@ public class GoogleSheetsAddPivotTableCustomizerTest extends AbstractGoogleSheet
         Exchange inbound = new DefaultExchange(createCamelContext());
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("batchUpdate", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("batchUpdate", ConnectorOptions.extractOption(options, "methodName"));
 
         Assert.assertNotNull(inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
         Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));

@@ -27,7 +27,7 @@ import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import io.syndesis.connector.support.util.ConnectorOptions;
 import java.util.Map;
 import java.util.Properties;
 
@@ -66,7 +66,7 @@ public class KafkaVerifierExtension extends DefaultComponentVerifierExtension {
     }
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
-        final String brokers = (String) parameters.get("brokers");
+        final String brokers = ConnectorOptions.extractOption(parameters, "brokers");
 
         LOG.debug("Validating Kafka connection to {}", brokers);
         if (ObjectHelper.isNotEmpty(brokers)) {

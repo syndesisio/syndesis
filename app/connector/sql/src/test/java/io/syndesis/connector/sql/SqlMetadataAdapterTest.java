@@ -15,6 +15,8 @@
  */
 package io.syndesis.connector.sql;
 
+import static org.assertj.core.api.Assertions.fail;
+import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -26,12 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
-
-import com.fasterxml.jackson.databind.ObjectWriter;
-import io.syndesis.connector.sql.common.DbEnum;
-import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
-import io.syndesis.common.util.Json;
-import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.MetaDataExtension.MetaData;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -41,9 +37,11 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONCompareMode;
-
-import static org.assertj.core.api.Assertions.fail;
-import static org.skyscreamer.jsonassert.JSONAssert.assertEquals;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import io.syndesis.common.util.Json;
+import io.syndesis.connector.sql.common.DbEnum;
+import io.syndesis.connector.sql.stored.SqlStoredConnectorMetaDataExtension;
+import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
 
 public class SqlMetadataAdapterTest {
     private static final String DERBY_DEMO_ADD2_SQL =
@@ -69,9 +67,9 @@ public class SqlMetadataAdapterTest {
     public static void setUpBeforeClass() throws IOException {
         try (InputStream is = SqlMetadataAdapterTest.class.getClassLoader().getResourceAsStream("test-options.properties")) {
             props.load(is);
-            String user     = String.valueOf(props.get("sql-connector.user"));
-            String password = String.valueOf(props.get("sql-connector.password"));
-            String url      = String.valueOf(props.get("sql-connector.url"));
+            String user     = props.getProperty("sql-connector.user");
+            String password = props.getProperty("sql-connector.password");
+            String url      = props.getProperty("sql-connector.url");
 
             conn = DriverManager.getConnection(url,user,password);
             String dbProductName = conn.getMetaData().getDatabaseProductName();

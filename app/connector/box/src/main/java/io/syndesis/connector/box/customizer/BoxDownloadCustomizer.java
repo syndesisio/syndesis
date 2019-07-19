@@ -20,6 +20,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import io.syndesis.connector.box.BoxFile;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -36,8 +37,8 @@ public class BoxDownloadCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        fileId = (String) options.get("fileId");
-        encoding = (String) options.get("encoding");
+        fileId = ConnectorOptions.extractOption(options, "fileId");
+        encoding = ConnectorOptions.extractOption(options, "encoding");
         component.setBeforeProducer(this::beforeProducer);
         component.setAfterProducer(this::afterProducer);
     }

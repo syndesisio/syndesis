@@ -18,7 +18,7 @@ package io.syndesis.connector.rest.swagger;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
-
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 import org.junit.Test;
@@ -40,6 +40,6 @@ public class SpecificationResourceCustomizerTest {
 
         assertThat(options).containsKey("specificationUri");
         assertThat(options).doesNotContainKey("specification");
-        assertThat(new File((String) options.get("specificationUri"))).hasContent("the specification is here");
+        assertThat(new File(ConnectorOptions.extractOption(options, "specificationUri"))).hasContent("the specification is here");
     }
 }

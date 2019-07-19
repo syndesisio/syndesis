@@ -29,6 +29,7 @@ import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.apache.qpid.jms.JmsConnectionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 /**
  * Component verifier for AMQP Connector.
@@ -69,12 +70,13 @@ public class AMQPVerifierExtension extends DefaultComponentVerifierExtension {
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
-        final String connectionUri = (String) parameters.get("connectionUri");
-        final String username = (String) parameters.get("username");
-        final String password = (String) parameters.get("password");
-        final boolean skipCertificateCheck = "true".equals(parameters.get("skipCertificateCheck"));
-        final String brokerCertificate = (String) parameters.get("brokerCertificate");
-        final String clientCertificate = (String) parameters.get("clientCertificate");
+        final String connectionUri = ConnectorOptions.extractOption(parameters, "connectionUri");
+        final String username = ConnectorOptions.extractOption(parameters, "username");
+        final String password = ConnectorOptions.extractOption(parameters, "password");
+        final boolean skipCertificateCheck = ConnectorOptions.extractOptionAndMap(parameters,
+            "skipCertificateCheck", Boolean::parseBoolean, false);
+        final String brokerCertificate = ConnectorOptions.extractOption(parameters, "brokerCertificate");
+        final String clientCertificate = ConnectorOptions.extractOption(parameters, "clientCertificate");
 
         LOG.debug("Validating AMQP connection to {}", connectionUri);
         final AMQPUtil.ConnectionParameters connectionParameters = new AMQPUtil.ConnectionParameters(connectionUri,

@@ -22,9 +22,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import com.google.api.services.sheets.v4.model.ValueRange;
-import io.syndesis.connector.sheets.model.RangeCoordinate;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
@@ -35,6 +32,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+import com.google.api.services.sheets.v4.model.ValueRange;
+import io.syndesis.connector.sheets.model.RangeCoordinate;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class GoogleSheetsRetrieveValuesCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
@@ -57,8 +57,8 @@ public class GoogleSheetsRetrieveValuesCustomizerTest extends AbstractGoogleShee
         Exchange inbound = new DefaultExchange(createCamelContext());
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("get", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
 
         Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "spreadsheetId"));
         Assert.assertEquals("A1", inbound.getIn().getHeader(GoogleSheetsConstants.PROPERTY_PREFIX + "range"));
@@ -101,8 +101,8 @@ public class GoogleSheetsRetrieveValuesCustomizerTest extends AbstractGoogleShee
         inbound.getIn().setBody(valueRange);
         getComponent().getAfterProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("get", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
 
         @SuppressWarnings("unchecked")
         List<String> model = inbound.getIn().getBody(List.class);
@@ -139,8 +139,8 @@ public class GoogleSheetsRetrieveValuesCustomizerTest extends AbstractGoogleShee
         inbound.getIn().setBody(valueRange);
         getComponent().getAfterProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("get", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
 
         @SuppressWarnings("unchecked")
         List<String> model = inbound.getIn().getBody(List.class);

@@ -20,7 +20,7 @@ import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.MetaDataBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import io.syndesis.connector.support.util.ConnectorOptions;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -40,7 +40,7 @@ public class KnativeMetaDataExtension extends AbstractMetaDataExtension {
     @SuppressWarnings("PMD.AvoidThrowingRawExceptionTypes")
     public Optional<MetaData> meta(Map<String, Object> parameters) {
 
-        String type = (String) parameters.get("type");
+        String type = ConnectorOptions.extractOption(parameters, "type");
         if (type == null) {
             type = TYPE_CHANNEL;
         }

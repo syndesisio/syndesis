@@ -16,14 +16,13 @@
 package io.syndesis.connector.box;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Stream;
-
-import io.syndesis.integration.component.proxy.ComponentDefinition;
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import org.apache.camel.Component;
 import org.apache.camel.component.box.BoxComponent;
 import org.apache.camel.component.box.BoxConfiguration;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.integration.component.proxy.ComponentDefinition;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 public class BoxConnector extends ComponentProxyComponent {
 
@@ -55,11 +54,9 @@ public class BoxConnector extends ComponentProxyComponent {
     @Override
     protected Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) throws Exception {
         Map<String, String> endpointOptions = super.buildEndpointOptions(remaining, options);
-        Stream.of("parentFolderId", "fileId").forEach(key ->
-                Optional.ofNullable(options.get(key))
-                        .map(String.class::cast)
-                        .ifPresent(value -> endpointOptions.put(key, value))
-        );
+        Stream.of("parentFolderId", "fileId").forEach(key -> {
+                ConnectorOptions.extractOptionAndConsume(options, key, (String value) -> endpointOptions.put(key, value));
+        });
         return endpointOptions;
     }
 

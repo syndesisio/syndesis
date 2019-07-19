@@ -20,14 +20,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.mail.Address;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.RuntimeCamelException;
@@ -36,10 +34,9 @@ import org.apache.camel.component.google.mail.internal.GoogleMailApiCollection;
 import org.apache.camel.util.ObjectHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import com.google.api.client.util.Base64;
 import com.google.common.base.Splitter;
-
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
@@ -61,12 +58,12 @@ public class GmailSendEmailCustomizer implements ComponentProxyCustomizer {
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        to = (String) options.get("to");
-        subject = (String) options.get("subject");
-        text = (String) options.get("text");
+        to = ConnectorOptions.extractOption(options, "to");
+        subject = ConnectorOptions.extractOption(options, "subject");
+        text = ConnectorOptions.extractOption(options, "text");
         userId = "me";
-        cc = (String) options.get("cc");
-        bcc = (String) options.get("bcc");
+        cc = ConnectorOptions.extractOption(options, "cc");
+        bcc = ConnectorOptions.extractOption(options, "bcc");
         options.put("apiName",
                 GoogleMailApiCollection.getCollection().getApiName(GmailUsersMessagesApiMethod.class).getName());
         options.put("methodName", "send");

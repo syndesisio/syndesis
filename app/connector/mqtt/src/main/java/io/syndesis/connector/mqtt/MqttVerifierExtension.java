@@ -26,6 +26,7 @@ import org.apache.camel.util.ObjectHelper;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
 
@@ -56,9 +57,9 @@ public class MqttVerifierExtension extends DefaultComponentVerifierExtension {
     }
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
-        String brokerUrl = (String) parameters.get("brokerUrl");
-        String username = (String) parameters.get("userName");
-        String password = (String) parameters.get("password");
+        String brokerUrl = ConnectorOptions.extractOption(parameters, "brokerUrl");
+        String username = ConnectorOptions.extractOption(parameters, "userName");
+        String password = ConnectorOptions.extractOption(parameters, "password");
 
         if (ObjectHelper.isNotEmpty(brokerUrl)) {
             try {

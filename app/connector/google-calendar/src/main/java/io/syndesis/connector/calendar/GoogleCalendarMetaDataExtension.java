@@ -25,6 +25,7 @@ import com.google.api.services.calendar.Calendar;
 import com.google.api.services.calendar.model.CalendarList;
 import com.google.api.services.calendar.model.CalendarListEntry;
 import com.google.common.base.Splitter;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.MetaDataBuilder;
@@ -40,16 +41,15 @@ public class GoogleCalendarMetaDataExtension extends AbstractMetaDataExtension {
         super(context);
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
 
-        String clientId = (String) parameters.get("clientId");
-        String clientSecret = (String) parameters.get("clientSecret");
+        String clientId = ConnectorOptions.extractOption(parameters, "clientId");
+        String clientSecret = ConnectorOptions.extractOption(parameters, "clientSecret");
         String googleScopes = "https://www.googleapis.com/auth/calendar";
-        String applicationName = (String) parameters.get("applicationName");
-        String accessToken = (String) parameters.get("accessToken");
-        String refreshToken = (String) parameters.get("refreshToken");
+        String applicationName = ConnectorOptions.extractOption(parameters, "applicationName");
+        String accessToken = ConnectorOptions.extractOption(parameters, "accessToken");
+        String refreshToken = ConnectorOptions.extractOption(parameters, "refreshToken");
 
         if (clientId != null) {
             try {

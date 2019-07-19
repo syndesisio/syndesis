@@ -22,8 +22,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import io.syndesis.connector.sheets.model.RangeCoordinate;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
@@ -36,6 +34,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.skyscreamer.jsonassert.JSONCompareMode;
+import io.syndesis.connector.sheets.model.RangeCoordinate;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 @RunWith(Parameterized.class)
 public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
@@ -94,8 +94,8 @@ public class GoogleSheetsGetValuesSplitResultsCustomizerTest extends AbstractGoo
         inbound.getIn().setBody(values);
         getComponent().getBeforeConsumer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("get", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("get", ConnectorOptions.extractOption(options, "methodName"));
 
         String model = inbound.getIn().getBody(String.class);
         JSONAssert.assertEquals(String.format(expectedValueModel, getSpreadsheetId()), model, JSONCompareMode.STRICT);

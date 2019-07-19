@@ -16,14 +16,14 @@
 
 package io.syndesis.connector.kudu;
 
-import io.syndesis.connector.kudu.meta.KuduMetaData;
+import java.util.Map;
+import java.util.Optional;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.metadata.AbstractMetaDataExtension;
 import org.apache.camel.component.extension.metadata.DefaultMetaData;
 import org.apache.camel.util.ObjectHelper;
-
-import java.util.Map;
-import java.util.Optional;
+import io.syndesis.connector.kudu.meta.KuduMetaData;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class KuduMetaDataExtension extends AbstractMetaDataExtension {
     private static final MetaData EMPTY_METADATA = new DefaultMetaData(null, null, null);
@@ -34,9 +34,7 @@ public class KuduMetaDataExtension extends AbstractMetaDataExtension {
 
     @Override
     public Optional<MetaData> meta(final Map<String, Object> properties) {
-        final String tableName = Optional.ofNullable(properties.get("tableName"))
-                .map(Object::toString)
-                .orElse("");
+        final String tableName = ConnectorOptions.extractOption(properties, "tableName", "");
 
         MetaData metaData = EMPTY_METADATA;
 
@@ -44,14 +42,10 @@ public class KuduMetaDataExtension extends AbstractMetaDataExtension {
             KuduMetaData kuduInsertMetaData = new KuduMetaData();
             kuduInsertMetaData.setTableName(tableName);
 
-            final String host = Optional.ofNullable(properties.get("host"))
-                    .map(Object::toString)
-                    .orElse("localhost");
+            final String host = ConnectorOptions.extractOption(properties, "host", "localhost");
             kuduInsertMetaData.setHost(host);
 
-            final String port = Optional.ofNullable(properties.get("port"))
-                    .map(Object::toString)
-                    .orElse("7051");
+            final String port = ConnectorOptions.extractOption(properties, "port", "7051");
             kuduInsertMetaData.setPort(port);
 
             metaData = new DefaultMetaData(null, null, kuduInsertMetaData);

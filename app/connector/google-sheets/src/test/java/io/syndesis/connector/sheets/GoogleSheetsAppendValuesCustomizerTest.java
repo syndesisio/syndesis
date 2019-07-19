@@ -20,9 +20,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.api.services.sheets.v4.model.ValueRange;
-import io.syndesis.connector.sheets.model.RangeCoordinate;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsConstants;
@@ -32,6 +29,9 @@ import org.apache.camel.impl.DefaultExchange;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import com.google.api.services.sheets.v4.model.ValueRange;
+import io.syndesis.connector.sheets.model.RangeCoordinate;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheetsCustomizerTestSupport {
 
@@ -54,8 +54,8 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
         Exchange inbound = new DefaultExchange(createCamelContext());
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("append", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("append", ConnectorOptions.extractOption(options, "methodName"));
 
         Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
         Assert.assertEquals("A1", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
@@ -84,8 +84,8 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
 
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("append", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("append", ConnectorOptions.extractOption(options, "methodName"));
 
         Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
         Assert.assertEquals("A1:B1", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));
@@ -117,8 +117,8 @@ public class GoogleSheetsAppendValuesCustomizerTest extends AbstractGoogleSheets
 
         getComponent().getBeforeProducer().process(inbound);
 
-        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), options.get("apiName"));
-        Assert.assertEquals("append", options.get("methodName"));
+        Assert.assertEquals(GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName(), ConnectorOptions.extractOption(options, "apiName"));
+        Assert.assertEquals("append", ConnectorOptions.extractOption(options, "methodName"));
 
         Assert.assertEquals(getSpreadsheetId(), inbound.getIn().getHeader(GoogleSheetsStreamConstants.SPREADSHEET_ID));
         Assert.assertEquals("A1:A2", inbound.getIn().getHeader(GoogleSheetsStreamConstants.RANGE));

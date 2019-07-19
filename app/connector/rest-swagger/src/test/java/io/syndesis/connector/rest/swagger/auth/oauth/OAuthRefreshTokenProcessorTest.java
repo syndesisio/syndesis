@@ -15,15 +15,13 @@
  */
 package io.syndesis.connector.rest.swagger.auth.oauth;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
-
-import io.syndesis.connector.rest.swagger.Configuration;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
-
 import org.apache.camel.Exchange;
 import org.apache.camel.http.common.HttpOperationFailedException;
 import org.apache.camel.impl.DefaultCamelContext;
@@ -37,10 +35,8 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicStatusLine;
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import io.syndesis.connector.rest.swagger.Configuration;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class OAuthRefreshTokenProcessorTest {
     private final long currentTime = 1000000000;
@@ -59,7 +55,7 @@ public class OAuthRefreshTokenProcessorTest {
             "{\"access_token\": \"new-access-token\", \"refresh_token\": \"new-refresh-token\", \"expires_in\": 3600}");
         processor.state.update("access-token", currentTime, null);
         processor.isFirstTime.set(Boolean.FALSE);
-        processor.expiresInOverride = Optional.of(1800L);
+        processor.expiresInOverride = 1800L;
 
         processor.process(exchange);
 

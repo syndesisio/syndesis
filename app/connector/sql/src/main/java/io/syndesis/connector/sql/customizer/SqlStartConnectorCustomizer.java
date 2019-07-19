@@ -26,6 +26,7 @@ import javax.sql.DataSource;
 import io.syndesis.connector.sql.common.JSONBeanUtil;
 import io.syndesis.connector.sql.common.SqlStatementMetaData;
 import io.syndesis.connector.sql.common.SqlStatementParser;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -75,8 +76,8 @@ public final class SqlStartConnectorCustomizer implements ComponentProxyCustomiz
 
     private void init(Map<String, Object> options) {
         if (isInit) {
-            final String sql =  String.valueOf(options.get("query"));
-            final DataSource dataSource = (DataSource) options.get("dataSource");
+            final String sql =  ConnectorOptions.extractOption(options, "query");
+            final DataSource dataSource = ConnectorOptions.extractOptionAsType(options, "dataSource", DataSource.class);
             try (Connection connection = dataSource.getConnection()) {
                 SqlStatementMetaData statementInfo = new SqlStatementParser(connection, null, sql).parse();
                 if (statementInfo.getAutoIncrementColumnName() != null) {

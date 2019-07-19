@@ -21,13 +21,12 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Base64;
 import java.util.Map;
-import java.util.Optional;
-
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.services.sheets.v4.Sheets;
 import org.apache.camel.component.google.sheets.BatchGoogleSheetsClientFactory;
 import org.apache.camel.component.google.sheets.GoogleSheetsClientFactory;
 import org.apache.camel.util.ObjectHelper;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.services.sheets.v4.Sheets;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 /**
  * @author Christoph Deppisch
@@ -79,20 +78,12 @@ public final class GoogleSheetsConnectorHelper {
      * @return
      */
     public static Sheets makeClient(GoogleSheetsClientFactory clientFactory, Map<String, Object> properties) {
-        final String clientId = Optional.ofNullable(properties.get("clientId"))
-                                        .map(Object::toString)
-                                        .orElse(null);
-
-        final String clientSecret = Optional.ofNullable(properties.get("clientSecret"))
-                                        .map(Object::toString)
-                                        .orElse(null);
-
-        final String applicationName = Optional.ofNullable(properties.get("applicationName"))
-                                        .map(Object::toString)
-                                        .orElse(null);
+        final String clientId = ConnectorOptions.extractOption(properties, "clientId");
+        final String clientSecret = ConnectorOptions.extractOption(properties, "clientSecret");
+        final String applicationName = ConnectorOptions.extractOption(properties, "applicationName");
 
         return clientFactory.makeClient(clientId, clientSecret, applicationName,
-                                properties.getOrDefault("refreshToken", "").toString(),
-                                properties.getOrDefault("accessToken", "").toString());
+                                ConnectorOptions.extractOption(properties, "refreshToken", ""),
+                                ConnectorOptions.extractOption(properties, "accessToken", ""));
     }
 }

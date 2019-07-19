@@ -15,26 +15,25 @@
  */
 package io.syndesis.connector.sheets;
 
-import java.util.Arrays;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.google.api.services.sheets.v4.model.ValueRange;
-import io.syndesis.common.util.Json;
-import io.syndesis.connector.sheets.model.CellCoordinate;
-import io.syndesis.connector.sheets.model.RangeCoordinate;
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.google.sheets.internal.GoogleSheetsApiCollection;
 import org.apache.camel.component.google.sheets.internal.SheetsSpreadsheetsValuesApiMethod;
 import org.apache.camel.component.google.sheets.stream.GoogleSheetsStreamConstants;
 import org.apache.camel.util.ObjectHelper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.api.services.sheets.v4.model.ValueRange;
+import io.syndesis.common.util.Json;
+import io.syndesis.connector.sheets.model.CellCoordinate;
+import io.syndesis.connector.sheets.model.RangeCoordinate;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer {
 
@@ -53,20 +52,14 @@ public class GoogleSheetsGetValuesCustomizer implements ComponentProxyCustomizer
     }
 
     private void setApiMethod(Map<String, Object> options) {
-        spreadsheetId = (String) options.get("spreadsheetId");
-        range = (String) options.get("range");
-        majorDimension = (String) Optional.ofNullable(options.get("majorDimension"))
-                                          .orElse(RangeCoordinate.DIMENSION_ROWS);
-        columnNames = Optional.ofNullable(options.get("columnNames"))
-                                .map(Object::toString)
-                                .map(names -> names.split(","))
-                                .orElse(new String[]{});
+        spreadsheetId = ConnectorOptions.extractOption(options, "spreadsheetId");
+        range = ConnectorOptions.extractOption(options, "range");
+        majorDimension = ConnectorOptions.extractOption(options, "majorDimension", RangeCoordinate.DIMENSION_ROWS);
+        columnNames = ConnectorOptions.extractOptionAndMap(options, "columnNames",
+            names -> names.split(","), new String[]{});
         Arrays.parallelSetAll(columnNames, (i) -> columnNames[i].trim());
 
-        splitResults = Optional.ofNullable(options.get("splitResults"))
-                                                .map(Object::toString)
-                                                .map(Boolean::valueOf)
-                                                .orElse(false);
+        splitResults = ConnectorOptions.extractOptionAndMap(options, "splitResults", Boolean::valueOf, false);
 
         options.put("apiName",
                 GoogleSheetsApiCollection.getCollection().getApiName(SheetsSpreadsheetsValuesApiMethod.class).getName());

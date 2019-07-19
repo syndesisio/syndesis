@@ -28,6 +28,7 @@ import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -94,7 +95,7 @@ public final class SalesforceMetadataRetrieval extends ComponentMetadataRetrieva
 
         if (isPresentAndNonNull(properties, SalesforceEndpointConfig.SOBJECT_NAME)) {
             try {
-                final String objectName = (String) properties.get(SalesforceEndpointConfig.SOBJECT_NAME);
+                final String objectName = ConnectorOptions.extractOption(properties, SalesforceEndpointConfig.SOBJECT_NAME);
                 final ObjectSchema inputOutputSchema = inputOutputSchemaFor(schemasToConsider, objectName);
                 final String specification = Json.writer().writeValueAsString(inputOutputSchema);
 
@@ -185,7 +186,7 @@ public final class SalesforceMetadataRetrieval extends ComponentMetadataRetrieva
     }
 
     static boolean isPresentAndNonNull(final Map<String, Object> properties, final String property) {
-        return isPresent(properties, property) && properties.get(property) != null;
+        return ConnectorOptions.extractOption(properties, property) != null;
     }
 
     static PropertyPair nameAndTitlePropertyPairOf(final ObjectSchema schema) {

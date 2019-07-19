@@ -26,6 +26,7 @@ import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class SftpVerifierExtension extends DefaultComponentVerifierExtension {
 
@@ -60,10 +61,10 @@ public class SftpVerifierExtension extends DefaultComponentVerifierExtension {
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
-        final String host = (String) parameters.get("host");
-        final int port = Integer.parseInt((String) parameters.get("port"));
-        final String userName = (String) parameters.get("username");
-        final String password = (parameters.get("password") == null) ? "" : (String) parameters.get("password");
+        final String host = ConnectorOptions.extractOption(parameters, "host");
+        final Integer port = ConnectorOptions.extractOptionAndMap(parameters, "port", Integer::parseInt, 22);
+        final String userName = ConnectorOptions.extractOption(parameters, "username");
+        final String password = ConnectorOptions.extractOption(parameters, "password", "");
 
         JSch jsch = new JSch();
         Session session = null;

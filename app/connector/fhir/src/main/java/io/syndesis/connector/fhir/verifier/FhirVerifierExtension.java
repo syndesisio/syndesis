@@ -21,6 +21,7 @@ import ca.uhn.fhir.context.FhirVersionEnum;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
 import ca.uhn.fhir.rest.client.interceptor.BasicAuthInterceptor;
 import ca.uhn.fhir.rest.client.interceptor.BearerTokenAuthInterceptor;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.CamelContext;
 import org.apache.camel.component.extension.verifier.DefaultComponentVerifierExtension;
 import org.apache.camel.component.extension.verifier.ResultBuilder;
@@ -64,11 +65,11 @@ public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
     }
 
     private void verifyFhirVersion(ResultBuilder builder, Map<String, Object> parameters) {
-        final String fhirVersion = (String) parameters.get("fhirVersion");
         try {
-            FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
+            final FhirVersionEnum fhirVersionEnum = ConnectorOptions.extractOptionAndMap(
+                parameters, "fhirVersion", FhirVersionEnum::valueOf);
             parameters.put("fhirVersion", fhirVersionEnum);
-        } catch (IllegalArgumentException e) {
+        } catch (Exception e) {
             builder.error(
                 ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.ILLEGAL_PARAMETER_VALUE, "Invalid FHIR version")
                     .parameterKey("fhirVersion")
@@ -80,11 +81,12 @@ public class FhirVerifierExtension extends DefaultComponentVerifierExtension {
         if (!builder.build().getErrors().isEmpty()) {
             return;
         }
-        final String serverUrl = (String) parameters.get("serverUrl");
-        final FhirVersionEnum fhirVersion = (FhirVersionEnum) parameters.get("fhirVersion");
-        final String username = (String) parameters.get("username");
-        final String password = (String) parameters.get("password");
-        final String accessToken = (String) parameters.get("accessToken");
+        final String serverUrl = ConnectorOptions.extractOption(parameters, "serverUrl");
+        final FhirVersionEnum fhirVersion = ConnectorOptions.extractOptionAsType(
+            parameters, "fhirVersion", FhirVersionEnum.class);
+        final String username = ConnectorOptions.extractOption(parameters, "username");
+        final String password = ConnectorOptions.extractOption(parameters, "password");
+        final String accessToken = ConnectorOptions.extractOption(parameters, "accessToken");
 
         LOG.debug("Validating FHIR connection to {} with FHIR version {}", serverUrl, fhirVersion);
 

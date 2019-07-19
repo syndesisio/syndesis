@@ -52,9 +52,9 @@ public final class SqlConnectionRule extends ExternalResource {
             throw new AssertionError("Unable to read application.properties", e);
         }
 
-        final String user = String.valueOf(properties.get("sql-connector.user"));
-        final String password = String.valueOf(properties.get("sql-connector.password"));
-        final String url = String.valueOf(properties.get("sql-connector.url"));
+        final String user = properties.getProperty("sql-connector.user");
+        final String password = properties.getProperty("sql-connector.password");
+        final String url = properties.getProperty("sql-connector.url");
 
         try {
             connection = DriverManager.getConnection(url, user, password);

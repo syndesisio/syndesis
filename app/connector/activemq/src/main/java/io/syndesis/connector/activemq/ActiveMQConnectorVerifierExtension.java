@@ -28,6 +28,7 @@ import org.apache.camel.component.extension.verifier.ResultErrorBuilder;
 import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifierExtension {
     private static final Logger LOG = LoggerFactory.getLogger(ActiveMQConnectorVerifierExtension.class);
@@ -64,12 +65,13 @@ public class ActiveMQConnectorVerifierExtension extends DefaultComponentVerifier
     }
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
-        final String brokerUrl = (String) parameters.get("brokerUrl");
-        final String username = (String) parameters.get("username");
-        final String password = (String) parameters.get("password");
-        final boolean skipCertificateCheck = "true".equals(parameters.get("skipCertificateCheck"));
-        final String brokerCertificate = (String) parameters.get("brokerCertificate");
-        final String clientCertificate = (String) parameters.get("clientCertificate");
+        final String brokerUrl = ConnectorOptions.extractOption(parameters, "brokerUrl");
+        final String username = ConnectorOptions.extractOption(parameters, "username");
+        final String password = ConnectorOptions.extractOption(parameters, "password");
+        final boolean skipCertificateCheck = ConnectorOptions.extractOptionAndMap(parameters,
+            "skipCertificateCheck", Boolean::parseBoolean, false);
+        final String brokerCertificate = ConnectorOptions.extractOption(parameters, "brokerCertificate");
+        final String clientCertificate = ConnectorOptions.extractOption(parameters, "clientCertificate");
 
         LOG.debug("Validating AMQ connection to {}", brokerUrl);
 

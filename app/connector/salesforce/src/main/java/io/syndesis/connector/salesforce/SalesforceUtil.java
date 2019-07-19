@@ -16,8 +16,8 @@
 package io.syndesis.connector.salesforce;
 
 import java.util.Map;
-
 import org.apache.camel.component.salesforce.SalesforceEndpointConfig;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public final class SalesforceUtil {
     private static final String TOPIC_PREFIX = "syndesis_";
@@ -29,13 +29,13 @@ public final class SalesforceUtil {
     public static String topicNameFor(final Map<String, String> options) {
         final String sObjectName = options.get(SalesforceEndpointConfig.SOBJECT_NAME);
         final String topicSuffix;
-        if (Boolean.valueOf(options.get("notifyForOperationCreate"))) {
+        if (ConnectorOptions.extractOptionAndMap(options, "notifyForOperationCreate", Boolean::valueOf, false)) {
             topicSuffix = "_c";
-        } else if (Boolean.valueOf(options.get("notifyForOperationUpdate"))) {
+        } else if (ConnectorOptions.extractOptionAndMap(options, "notifyForOperationUpdate", Boolean::valueOf, false)) {
             topicSuffix = "_up";
-        } else if (Boolean.valueOf(options.get("notifyForOperationDelete"))) {
+        } else if (ConnectorOptions.extractOptionAndMap(options, "notifyForOperationDelete", Boolean::valueOf, false)) {
             topicSuffix = "_d";
-        } else if (Boolean.valueOf(options.get("notifyForOperationUndelete"))) {
+        } else if (ConnectorOptions.extractOptionAndMap(options, "notifyForOperationUndelete", Boolean::valueOf, false)) {
             topicSuffix = "_un";
         } else {
             topicSuffix = "_a";

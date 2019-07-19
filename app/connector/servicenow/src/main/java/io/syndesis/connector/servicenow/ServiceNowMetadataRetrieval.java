@@ -27,6 +27,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.syndesis.common.model.DataShape;
 import io.syndesis.common.model.DataShapeKinds;
 import io.syndesis.common.util.Json;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.connector.support.verifier.api.ComponentMetadataRetrieval;
 import io.syndesis.connector.support.verifier.api.PropertyPair;
 import io.syndesis.connector.support.verifier.api.SyndesisMetadata;
@@ -47,7 +48,7 @@ public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieva
 
     @Override
     public SyndesisMetadata fetch(CamelContext context, String componentId, String actionId, Map<String, Object> properties) {
-        final Object table = properties.get("table");
+        final Object table = ConnectorOptions.extractOption(properties, "table");
 
         if (table == null) {
             Map<String, Object> props = new HashMap<>(properties);
@@ -93,8 +94,8 @@ public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieva
     @Override
     protected SyndesisMetadata adapt(CamelContext context, String componentId, String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
         if (metadata.getPayload() != null) {
-            final String objectType = (String)properties.get("objectType");
-            final String metaType = (String)properties.get("metaType");
+            final String objectType = ConnectorOptions.extractOption(properties, "objectType");
+            final String metaType = ConnectorOptions.extractOption(properties, "metaType");
 
             if (ServiceNowConstants.RESOURCE_TABLE.equalsIgnoreCase(objectType) && "definition".equals(metaType)) {
                 return adaptTableDefinitionMetadata(actionId, properties, metadata);
@@ -112,7 +113,7 @@ public final class ServiceNowMetadataRetrieval extends ComponentMetadataRetrieva
 
     private SyndesisMetadata adaptTableDefinitionMetadata(String actionId, Map<String, Object> properties, MetaDataExtension.MetaData metadata) {
         try {
-            final Object table = properties.get("table");
+            final Object table = ConnectorOptions.extractOption(properties, "table");
             final ObjectNode schema = (ObjectNode) metadata.getPayload();
 
             DataShape.Builder shapeBuilder = new DataShape.Builder().kind(DataShapeKinds.JSON_SCHEMA)

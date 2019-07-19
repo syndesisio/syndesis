@@ -17,6 +17,7 @@ package io.syndesis.connector.fhir.customizer;
 
 import ca.uhn.fhir.context.FhirContext;
 import io.syndesis.connector.fhir.FhirResourceId;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 import org.apache.camel.Exchange;
@@ -36,9 +37,9 @@ public abstract class FhirReadDeleteBaseCustomizer implements ComponentProxyCust
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         fhirContext = FhirCustomizerHelper.newFhirContext(options);
 
-        resourceType = (String) options.get("resourceType");
-        id = (String) options.get("id");
-        version = (String) options.get("version");
+        resourceType = ConnectorOptions.extractOption(options, "resourceType");
+        id = ConnectorOptions.extractOption(options, "id");
+        version = ConnectorOptions.extractOption(options, "version");
 
         options.put("apiName", FhirCustomizerHelper.getFhirApiName(getApiMethodClass()));
         options.put("methodName", "resourceById");

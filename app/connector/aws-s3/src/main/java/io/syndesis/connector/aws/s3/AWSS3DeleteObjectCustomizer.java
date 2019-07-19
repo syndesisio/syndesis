@@ -22,7 +22,7 @@ import org.apache.camel.Exchange;
 import org.apache.camel.Message;
 import org.apache.camel.component.aws.s3.S3Constants;
 import org.apache.camel.component.aws.s3.S3Operations;
-
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
@@ -32,7 +32,7 @@ public class AWSS3DeleteObjectCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        filenameKey = (String) options.get("fileName");
+        filenameKey = ConnectorOptions.extractOption(options, "fileName");
 
         component.setBeforeProducer(this::beforeProducer);
     }

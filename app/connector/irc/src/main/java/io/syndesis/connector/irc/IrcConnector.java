@@ -16,7 +16,7 @@
 package io.syndesis.connector.irc;
 
 import java.util.Map;
-
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 
 public class IrcConnector extends ComponentProxyComponent {
@@ -27,8 +27,9 @@ public class IrcConnector extends ComponentProxyComponent {
     @Override
     protected Map<String, String> buildEndpointOptions(String remaining, Map<String, Object> options) throws Exception {
         Map<String, String> endpointOptions = super.buildEndpointOptions(remaining, options);
-        if (options.get("channels") != null) {
-            endpointOptions.put("channels", (String)options.get("channels"));
+        String channels = ConnectorOptions.extractOption(options, "channels");
+        if (channels != null) {
+            endpointOptions.put("channels", channels);
         }
         return endpointOptions;
     }

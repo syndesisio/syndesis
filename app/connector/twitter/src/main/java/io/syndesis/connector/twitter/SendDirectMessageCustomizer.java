@@ -16,17 +16,17 @@
 package io.syndesis.connector.twitter;
 
 import java.util.Map;
-
+import org.apache.camel.Message;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
-import org.apache.camel.Message;
 
 public class SendDirectMessageCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         component.setBeforeProducer(exchange -> {
-            Object defaultMessage = options.get("message");
+            String defaultMessage = ConnectorOptions.extractOption(options, "message");
             final Message in = exchange.getIn();
             final DirectMessageText message = in.getBody(DirectMessageText.class);
             // only set the default message if there is no message in the body

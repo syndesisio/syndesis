@@ -71,6 +71,10 @@
       <artifactId>jackson-module-jsonSchema</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.syndesis.connector</groupId>
+      <artifactId>connector-support-util</artifactId>
+    </dependency>
+    <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>connector-support-verifier</artifactId>
       <optional>true</optional>

@@ -33,6 +33,7 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNS;
 import com.amazonaws.services.sns.AmazonSNSClientBuilder;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class AWSSNSVerifierExtension extends DefaultComponentVerifierExtension {
 
@@ -53,7 +54,7 @@ public class AWSSNSVerifierExtension extends DefaultComponentVerifierExtension {
 
         // Validate using the catalog
 
-        if (ObjectHelper.isEmpty(parameters.get("secretKey")) || ObjectHelper.isEmpty(parameters.get("accessKey"))) {
+        if (ObjectHelper.isEmpty(ConnectorOptions.extractOption(parameters, "secretKey")) || ObjectHelper.isEmpty(ConnectorOptions.extractOption(parameters, "accessKey"))) {
             builder.error(ResultErrorBuilder.withCodeAndDescription(VerificationError.StandardCode.GENERIC,
                     "You must specify a secretKey and an accessKey").parameterKey("secretKey").parameterKey("accessKey").build());
         }

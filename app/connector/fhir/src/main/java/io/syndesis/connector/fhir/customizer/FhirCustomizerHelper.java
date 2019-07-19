@@ -17,6 +17,7 @@ package io.syndesis.connector.fhir.customizer;
 
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.context.FhirVersionEnum;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.camel.component.fhir.internal.FhirApiCollection;
 import org.apache.camel.util.component.ApiMethod;
 
@@ -29,8 +30,8 @@ public final class FhirCustomizerHelper {
     }
 
     public static FhirContext newFhirContext(Map<String, Object> options) {
-        String fhirVersion = (String) options.get("fhirVersion");
-        FhirVersionEnum fhirVersionEnum = FhirVersionEnum.valueOf(fhirVersion);
+        FhirVersionEnum fhirVersionEnum = ConnectorOptions.extractOptionAndMap(
+            options, "fhirVersion", FhirVersionEnum::valueOf, null);
         return new FhirContext(fhirVersionEnum);
     }
 

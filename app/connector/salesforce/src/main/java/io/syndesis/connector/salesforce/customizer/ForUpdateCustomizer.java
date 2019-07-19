@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import io.syndesis.common.util.Json;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
@@ -36,7 +37,7 @@ public class ForUpdateCustomizer implements ComponentProxyCustomizer {
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        idPropertyName = (String) options.getOrDefault(SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, "Id");
+        idPropertyName = ConnectorOptions.extractOption(options, SalesforceEndpointConfig.SOBJECT_EXT_ID_NAME, "Id");
 
         component.setBeforeProducer(this::beforeProducer);
     }

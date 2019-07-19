@@ -16,6 +16,7 @@
 package io.syndesis.connector.fhir.customizer;
 
 import io.syndesis.connector.fhir.FhirResourceQuery;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import io.syndesis.integration.component.proxy.ComponentProxyComponent;
 import org.apache.camel.Exchange;
 import org.apache.camel.Message;
@@ -41,7 +42,7 @@ public class FhirSearchCustomizer  extends FhirReadCustomizer {
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
         super.customize(component, options);
 
-        query = (String) options.get("query");
+        query = ConnectorOptions.extractOption(options, "query");
 
         options.put("methodName", "searchByUrl?inBody=url");
     }

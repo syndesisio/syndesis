@@ -59,7 +59,7 @@ public class FtpVerifierExtension extends DefaultComponentVerifierExtension {
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
         final String host = ConnectorOptions.extractOption(parameters, "host");
-        final int port = ConnectorOptions.extractOptionAndMap(parameters, "port", Integer::parseInt);
+        final Integer port = ConnectorOptions.extractOptionAndMap(parameters, "port", Integer::parseInt, 21);
         final String userName = ConnectorOptions.extractOption(parameters, "username", "anonymous");
 
         String password = "";

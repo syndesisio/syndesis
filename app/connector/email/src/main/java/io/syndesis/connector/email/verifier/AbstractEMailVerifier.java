@@ -48,12 +48,14 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
     }
 
     protected void secureProtocol(Map<String, Object> parameters) {
-        Protocol protocol = ConnectorOptions.extractOptionAndMap(parameters, PROTOCOL, Protocol::getValueOf);
+        Protocol protocol = ConnectorOptions.extractOptionAndMap(parameters,
+            PROTOCOL, Protocol::getValueOf, null);
         if (ObjectHelper.isEmpty(protocol)) {
             return;
         }
 
-        SecureType secureType = ConnectorOptions.extractOptionAndMap(parameters, SECURE_TYPE, SecureType::secureTypeFromId);
+        SecureType secureType = ConnectorOptions.extractOptionAndMap(parameters,
+            SECURE_TYPE, SecureType::secureTypeFromId, null);
         if (ObjectHelper.isEmpty(secureType) || protocol.isSecure()) {
             return;
         }
@@ -88,7 +90,8 @@ public abstract class AbstractEMailVerifier extends DefaultComponentVerifierExte
      */
     protected void setConnectionTimeoutProperty(Map<String, Object> parameters,
                                                 MailConfiguration configuration, String timeoutValue) {
-        Protocol protocol = ConnectorOptions.extractOptionAndMap(parameters, PROTOCOL, Protocol::getValueOf);
+        Protocol protocol = ConnectorOptions.extractOptionAndMap(parameters,
+            PROTOCOL, Protocol::getValueOf, null);
         Protocol plainProtocol = protocol.toPlainProtocol();
         Protocol secureProtocol = protocol.toSecureProtocol();
 

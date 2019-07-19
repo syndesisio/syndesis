@@ -27,6 +27,7 @@ import org.apache.camel.component.extension.verifier.ResultErrorHelper;
 import com.dropbox.core.DbxException;
 import com.dropbox.core.DbxRequestConfig;
 import com.dropbox.core.v2.DbxClientV2;
+import io.syndesis.connector.support.util.ConnectorOptions;
 
 public class DropBoxVerifierExtension extends DefaultComponentVerifierExtension {
 
@@ -57,8 +58,8 @@ public class DropBoxVerifierExtension extends DefaultComponentVerifierExtension 
 
     private void verifyCredentials(ResultBuilder builder, Map<String, Object> parameters) {
 
-        String token = (String) parameters.get("accessToken");
-        String clientId = (String) parameters.get("clientIdentifier");
+        String token = ConnectorOptions.extractOption(parameters, "accessToken");
+        String clientId = ConnectorOptions.extractOption(parameters, "clientIdentifier");
 
         try {
             // Create Dropbox client

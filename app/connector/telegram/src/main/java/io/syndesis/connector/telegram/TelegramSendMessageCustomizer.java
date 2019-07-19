@@ -15,21 +15,20 @@
  */
 package io.syndesis.connector.telegram;
 
-import io.syndesis.integration.component.proxy.ComponentProxyComponent;
-import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
+import java.util.Map;
 import org.apache.camel.Exchange;
 import org.apache.camel.component.telegram.model.OutgoingTextMessage;
-
-import java.util.Map;
-import java.util.Optional;
+import io.syndesis.connector.support.util.ConnectorOptions;
+import io.syndesis.integration.component.proxy.ComponentProxyComponent;
+import io.syndesis.integration.component.proxy.ComponentProxyCustomizer;
 
 public class TelegramSendMessageCustomizer implements ComponentProxyCustomizer {
 
-    private Optional<String> configuredChatId;
+    private String configuredChatId;
 
     @Override
     public void customize(ComponentProxyComponent component, Map<String, Object> options) {
-        this.configuredChatId = Optional.ofNullable(options.get("chatId")).map(String.class::cast);
+        this.configuredChatId = ConnectorOptions.extractOption(options, "chatId");
         component.setBeforeProducer(this::beforeProducer);
     }
 
@@ -37,9 +36,9 @@ public class TelegramSendMessageCustomizer implements ComponentProxyCustomizer {
         OutgoingTextMessage message = exchange.getIn().getBody(OutgoingTextMessage.class);
 
         // Chat ID priority (in Syndesis) should be: chatId field in the message, chatId at action level, TelegramChatId header
-        if (message != null && message.getChatId() == null && this.configuredChatId.isPresent()) {
+        if (message != null && message.getChatId() == null && this.configuredChatId != null) {
             // Overriding Camel default priority giving action configuration higher priority than header
-            message.setChatId(this.configuredChatId.get());
+            message.setChatId(this.configuredChatId);
         }
     }
 }

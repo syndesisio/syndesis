@@ -19,6 +19,7 @@ package io.syndesis.connector.kudu.common;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.syndesis.common.util.SyndesisServerException;
+import io.syndesis.connector.support.util.ConnectorOptions;
 import org.apache.kudu.client.KuduClient;
 import org.apache.camel.util.ObjectHelper;
 import java.util.HashMap;
@@ -32,13 +33,15 @@ public final class KuduSupport {
 
     public static KuduClient createConnection(Map<String, Object> options) {
 
-        if(ObjectHelper.isNotEmpty(options.get("host")) && ObjectHelper.isNotEmpty(options.get("port"))) {
+        String host = ConnectorOptions.extractOption(options, "host");
+        String port = ConnectorOptions.extractOption(options, "port");
+        if(ObjectHelper.isNotEmpty(host) && ObjectHelper.isNotEmpty(port)) {
 
-            Long socketTimeout = options.containsKey("socketTimeout") ? (Long) options.get("socketTimeout") : 3000;
-            Long operationTimeout = options.containsKey("operationTimeout") ? (Long) options.get("socketTimeout") : 10000;
-            Long adminOperationTimeout = options.containsKey("operationTimeout") ? (Long) options.get("socketTimeout") : 10000;
+            Long socketTimeout = ConnectorOptions.extractOptionAndMap(options, "socketTimeout", Long::valueOf, 3000L);
+            Long operationTimeout = ConnectorOptions.extractOptionAndMap(options, "operationTimeout", Long::valueOf, 10000L);
+            Long adminOperationTimeout = ConnectorOptions.extractOptionAndMap(options, "operationTimeout", Long::valueOf, 10000L);
 
-            return new KuduClient.KuduClientBuilder((String)options.get("host") + ":" + (String)options.get("port"))
+            return new KuduClient.KuduClientBuilder(host + ":" + port)
                     .defaultSocketReadTimeoutMs(socketTimeout)
                     .defaultOperationTimeoutMs(operationTimeout)
                     .defaultAdminOperationTimeoutMs(adminOperationTimeout)

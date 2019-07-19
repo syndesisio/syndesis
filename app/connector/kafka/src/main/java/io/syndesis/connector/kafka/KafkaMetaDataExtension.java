@@ -24,7 +24,7 @@ import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.ListTopicsResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import io.syndesis.connector.support.util.ConnectorOptions;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -42,8 +42,8 @@ public class KafkaMetaDataExtension extends AbstractMetaDataExtension {
     @Override
     public Optional<MetaData> meta(Map<String, Object> parameters) {
 
-        final String brokers = (String) parameters.get("brokers");
-        final String topic = (String) parameters.get("topic");
+        final String brokers = ConnectorOptions.extractOption(parameters, "brokers");
+        final String topic = ConnectorOptions.extractOption(parameters, "topic");
 
         if( topic == null) {
             LOG.debug("Retrieving Kafka topics for connection to {}", brokers);
