@@ -190,17 +190,30 @@ public class ConnectionActionHandler {
         final Map<String, List<DynamicActionMetadata.ActionPropertySuggestion>> actionPropertySuggestions = dynamicMetadata.properties();
 
         final ConnectorDescriptor.Builder enriched = new ConnectorDescriptor.Builder().createFrom(descriptor);
-        // Setting enum values and the defaultValue as suggested by the metadata
-        for (final Entry<String, List<DynamicActionMetadata.ActionPropertySuggestion>> suggestions : actionPropertySuggestions.entrySet()) {
-            if (suggestions.getValue().size() > 1) {
-                enriched.replaceConfigurationProperty(suggestions.getKey(),
-                        builder -> builder.addAllEnum(suggestions.getValue()
-                                                                .stream()
-                                                                .map(ConfigurationProperty.PropertyValue.Builder::from)::iterator));
-            }
 
-            if (suggestions.getValue().size() == 1) {
-                enriched.replaceConfigurationProperty(suggestions.getKey(), builder -> builder.defaultValue(suggestions.getValue().get(0).value()));
+        // Setting enum or dataList as needed by UI widget
+        for (final Entry<String, List<DynamicActionMetadata.ActionPropertySuggestion>> suggestions : actionPropertySuggestions.entrySet()) {
+            if (! suggestions.getValue().isEmpty()) {
+
+                ConfigurationProperty property= enriched.findProperty(suggestions.getKey());
+                if (property != null) {
+                    if ("select".equalsIgnoreCase(property.getType())) {
+                        enriched.replaceConfigurationProperty(suggestions.getKey(),
+                                builder -> builder.addAllEnum(suggestions.getValue()
+                                                    .stream()
+                                                    .map(ConfigurationProperty.PropertyValue.Builder::from)::iterator));
+                    }
+                    else if ("string".equalsIgnoreCase(property.getType())
+                       || "text".equalsIgnoreCase(property.getType()) ) {
+                        enriched.replaceConfigurationProperty(suggestions.getKey(),
+                                builder -> builder.addAllDataList(suggestions.getValue()
+                                                    .stream()
+                                                    .map(ConfigurationProperty.PropertyValue.Builder::value)::iterator));
+                    } else if (suggestions.getValue().size() == 1) {
+                        //for types 'hidden', 'boolean', 'int', etc.
+                        enriched.replaceConfigurationProperty(suggestions.getKey(), builder -> builder.defaultValue(suggestions.getValue().get(0).value()));
+                    }
+                }
             }
         }
 

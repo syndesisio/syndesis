@@ -54,6 +54,10 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
             public static PropertyValue of(final String value, final String label) {
                 return new Builder().label(label).value(value).build();
             }
+
+            public static String value(final ActionPropertySuggestion suggestion) {
+                return suggestion.value();
+            }
         }
 
         String getLabel();
@@ -85,6 +89,8 @@ public interface ConfigurationProperty extends WithTags, Ordered, Serializable {
     String getDisplayName();
 
     List<PropertyValue> getEnum();
+
+    List<String> getDataList();
 
     String getGenerator();
 
