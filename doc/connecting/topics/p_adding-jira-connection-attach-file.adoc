@@ -22,21 +22,22 @@ want to add a Jira connection. Skip this step if you are adding
 a simple integration's finish connection.  
 . Click the Jira connection that you want the integration to use
 to connect to the Jira server. 
-. On the *Choose an Action* page, select *Attach File*.
+. On the *Choose an action* page, select *Attach File*.
 . In the *Issue Key* field, enter the Jira identifier of the issue
 that you want to attach a file to. 
 Examples of issue keys: `GATE-1234`, `Ent-239`. 
 . Click *Next*. 
 
 .Result
-The connection appears in the integration flow 
-in the location you added it. 
+The connection appears in the integration visualization
+where you added it. 
 
 .Next step
 
-If the integration does not already have a connection that obtains the 
+If the integration does not already have an earlier connection that obtains the 
 file(s) that you want to attach to a Jira issue, add that connection 
-to the integration. For example, suppose you add an FTP connection 
+to the integration. Make sure that it is before the Jira connection 
+that attaches a file. For example, suppose you add an FTP connection 
 and download one or more files from an FTP server. When the integration 
-executes, the Jira connection attaches those files to the Jira issue 
+executes, the subsequent Jira connection attaches those files to the Jira issue 
 that you specified when you configured the attach file action. 

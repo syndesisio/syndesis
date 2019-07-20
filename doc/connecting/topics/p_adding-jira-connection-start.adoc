@@ -51,4 +51,5 @@ not trigger integration execution.
 . Click *Next*. 
 
 .Result
-The connection appears at the beginning of the integration flow. 
+The connection starts a simple integration and {prodname} prompts you 
+to choose the integration's finish connection. 

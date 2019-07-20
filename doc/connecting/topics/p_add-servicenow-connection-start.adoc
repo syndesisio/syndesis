@@ -9,7 +9,7 @@ add a ServiceNow connection to a simple integration as its start connection.
 
 .Prerequisites
 * You created a ServiceNow connection. 
-* You must know the name of the table that you want to retrieve
+* You know the name of the table that you want to retrieve
 records from. 
 * You should have already defined a ServiceNow query that obtains
 only the records that you want.
@@ -20,9 +20,9 @@ https://docs.servicenow.com/bundle/jakarta-platform-user-interface/page/use/usin
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the ServiceNow connection that
+. On the *Choose a connection* page, click the ServiceNow connection that
 you want to use to start the integration.
-. On the *Choose an Action* page, click *Retrieve Record* to
+. On the *Choose an action* page, select *Retrieve Record* to
 obtain records from a ServiceNow table that you select. 
 . Configure the *Retrieve Record* action: 
 
@@ -41,11 +41,12 @@ and pagination is not supported.
 .. In the *Period* field, indicate how often you want to obtain records.
 The default is every minute. In other words, by default, {prodname} executes this
 integration every 60 seconds. 
-.. Click *Done*. 
+.. Click *Next*. 
 
 .Results
 
-* {prodname} generates a JSON schema that defines the structure of the
+{prodname} generates a JSON schema that defines the structure of the
 obtained records. This enables you to add a data mapping step before the next
 connection in the integration if data mapping is needed. 
-* {prodname} prompts you to choose a finish connection. 
+
+{prodname} prompts you to choose a finish connection. 

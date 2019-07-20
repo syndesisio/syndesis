@@ -24,19 +24,18 @@ as the previous scan.
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the Kudu connection that
+. On the *Choose a connection* page, click the Kudu connection that
 you want to use to start the integration. 
-. On the *Choose an Action* page, click the *Scan a Kudu table* action.
+. On the *Choose an action* page, select the *Scan a Kudu table* action.
 . In the *Table* field, enter the name of the table that you want to
 obtain records from. 
 . In the *Period* field, accept the default of one minute, or enter
 the interval at which you want the connection to scan the table and
 return the records that are in the table. 
-. Click *Done*. 
+. Click *Next*. 
 
 .Result
-The connection appears in the integration flow as the 
-integration's start connection. 
+The connection is the simple integration's start connection. 
 
 .Next steps
 Add the integration's finish connection and any other connections

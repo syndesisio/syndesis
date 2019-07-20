@@ -12,13 +12,13 @@ you can send messages to an Amazon SQS queue.
 the queue that you want to send messages to. 
 * You know the name of the SQS queue that you want the connection to
 send messages to. 
-* {prodname} is prompting you to add a step, or to choose the finish 
+* {prodname} is prompting you to add to the integration by choosing a step, or to choose the finish 
 connection for a simple integration. 
 
 .Procedure
 
 . Click the Amazon SQS connection that you want to use to send messages. 
-. Click the action that you want the connection to perform:
+. Select the action that you want the connection to perform:
 +
 * *Send Object* sends one message to the queue. 
 * *Send Batch Object* sends a batch of messages to the queue. 
@@ -71,7 +71,6 @@ of seconds before sending messages. This is useful when the message
 consumers might not be immediately ready for the messages that the 
 connection is sending. 
 
- 
 . Click *Next*. 
 
 .Result

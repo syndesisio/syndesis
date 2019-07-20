@@ -11,7 +11,7 @@ integration.
 .Prerequisites
 
 * You created an Amazon SNS connection.
-* {prodname} is prompting you to add a step, or to add the 
+* {prodname} is prompting you to add to the integration by choosing a step, or to add the 
 finish connection to a simple integration. 
 
 .Procedure

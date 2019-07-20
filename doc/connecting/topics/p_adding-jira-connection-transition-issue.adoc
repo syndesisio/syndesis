@@ -23,7 +23,7 @@ want to add a Jira connection. Skip this step if you are adding
 a simple integration's finish connection.  
 . Click the Jira connection that you want the integration to use to 
 connect to the Jira server. 
-. On the *Choose an Action* page, select *Transition Issue*.
+. On the *Choose an action* page, select *Transition Issue*.
 +
 You do not need to specify any values to configure the transition issue
 action. Instead, you can map values from previous integration steps 
@@ -46,8 +46,8 @@ transition IDs from a Jira administrator.
 . Click *Next*. 
 
 .Result
-The connection appears in the integration flow 
-in the location you added it. 
+The connection appears in the integration visualization
+where you added it. 
 
 .Next steps
 If you did not specify a value in each *Transition Issue* field, 
