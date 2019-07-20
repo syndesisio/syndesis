@@ -17,10 +17,11 @@ obtain messages from.
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the Amazon SQS connection that
+. On the *Choose a connection* page, click the Amazon SQS connection that
 you want to use to start the integration.
-. On the *Choose an Action* page, click *Poll an Amazon SQS Queue* 
-to periodically retrieve messages from an SQS queue. To configure this action:
+. On the *Choose an action* page, select *Poll an Amazon SQS Queue* 
+to periodically retrieve messages from an SQS queue. 
+. Configure this action:
 .. In the *Delay* field, accept the default of 500 milliseconds as the time
 that elapses between polls. Or, to specify a different polling interval,
 enter a number and select its time unit. 

@@ -20,7 +20,7 @@ want to add a Jira connection. Skip this step if you are adding
 a simple integration's finish connection.  
 . Click the Jira connection that you want the integration to use
 to connect to a Jira server. 
-. On the *Choose an Action* page, select *Add Issue*.
+. On the *Choose an action* page, select *Add Issue*.
 . Configure the action. The required fields are *Issue type ID or name* 
 and *Project key*. For the optional fields, you can enter values now, or, 
 after you add this connection 
@@ -56,5 +56,5 @@ issue that it is helpful to capture.
 . Click *Next*. 
 
 .Result
-The connection appears in the integration flow 
-in the location you added it. 
+The connection appears in the integration visualization
+where you added it. 

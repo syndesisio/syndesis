@@ -11,8 +11,9 @@ or as a simple integration's finish connection.
 
 .Prerequisites
 
+* You created a ServiceNow connection. 
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration by choosing a step. Or, {prodname} is prompting you to choose a finish connection. 
 * You know the name of the ServiceNow import set that you want to 
 add records to. Your ServiceNow administrator can
 help you identify the appropriate import set. If the import set 
@@ -26,14 +27,15 @@ of records.
 . Click the ServiceNow connection that you
 want to add to the integration. 
 
-. Click the *Add Record* action. 
+. Select the *Add Record* action. 
 . Click in the *Import Set* field and select the import set that
 you want to add records to. 
 . Click *Next*. 
 
 .Results
-* {prodname} adds the connection to the flow. 
-* Typically, a data mapper step is needed before this connection.
+{prodname} adds the connection to the flow. 
+
+Typically, a data mapper step is needed before this connection.
 In the integration visualization panel, 
 {prodname} displays 
 image:shared/images/WarningIcon.png[Data Type Mismatch] on the
