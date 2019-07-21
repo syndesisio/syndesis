@@ -15,18 +15,18 @@ the first task is to choose the start connection.
 
 . In {prodname}, on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click your
+. On the *Choose a connection* page, click your
 AMQ connection. If you specified the example name,
 you would click *Red Hat AMQ Broker 1*.
-. On the *Choose an Action* page, click the *Subscribe for messages* action
+. On the *Choose an action* page, select the *Subscribe for messages* action
 to receive messages from the queue you specify.
-. In the *Destination Name* field, enter `*inventoryReceived*` for
+. In the *Destination name* field, enter `*inventoryReceived*` for
 the name of the queue to obtain data from.
-. Click in the *Destination Type* field and select *Queue*.
+. Click in the *Destination type* field and select *Queue*.
 . Leave the other fields blank.
 . Click *Next*. {prodname} prompts you to specify the output data type. 
 This is not needed for this sample integration. 
-. Click *Done* to add the start connection to the integration.
+. Click *Next* to add the start connection to the integration.
 
 .Next step
 When the integration is running, after connecting to Red Hat AMQ, the integration watches for

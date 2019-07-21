@@ -22,8 +22,11 @@ connection uses the same registration, it can use different user
 credentials. 
 
 .Prerequisite
-You are logged in to {prodname}. The URL for accessing {prodname} is in the 
+You are logged in to {prodname}. 
+ifeval::["{location}" == "downstream"]
+The URL for accessing {prodname} is in the 
 email message that welcomed you to the Red Hat Fuse Online Evaluation program. 
+endif::[]
 
 .Procedure
 
@@ -33,8 +36,8 @@ email message that welcomed you to the Red Hat Fuse Online Evaluation program.
 image:images/CopyCallback.png[Copy Callback URL] to 
 copy the callback URL for your installation of {prodname} to the clipboard. 
 You will need this URL later in this procedure. 
-.. To the right of the *Twitter* entry,
-click *Register* to display the *Consumer API Key* and *ConsumerAPI Secret Key* fields.
+.. Click the *Twitter* entry 
+to display the *Consumer API Key* and *Consumer API Secret Key* fields.
 . In another browser tab, go to your
 https://developer.twitter.com/apps[Twitter developer account], sign in if you
 need to, and do the following: 
@@ -52,7 +55,9 @@ of the URL.
 .. In the *Callback URLs* field, paste the URL again. It should be
 something like this: 
 `\https://app-proj912876.7b63.{prodnameinurl}.openshiftapps.com/api/v1/credentials/callback`.
-.. A 100-character description of how you plan to use this app is required. 
++
+You can skip the next few fields.
+.. *Tell us how this app will be used* requires a 100-character description. 
 For convenience, you can copy and paste: 
 `This is a demo application so that I can evaluate how to integrate Twitter 
 with my enterprise applications.`
@@ -68,4 +73,5 @@ consumer API key into the {prodname} Twitter *Consumer API Key* field.
 . Return to your {prodname} *Settings* page and paste the Twitter
 consumer API secret key into the {prodname} Twitter
 *Consumer API Secret Key* field.
-. Click *Save* and then click *Ok*.
+. Click *Save*.
+. Click the *Twitter* entry to collapse it. 
