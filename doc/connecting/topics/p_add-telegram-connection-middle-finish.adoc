@@ -13,10 +13,12 @@ integration's finish connection.
 
 * You created a Telegram connection. 
 * You are creating or editing a flow and {prodname} is prompting you
-to add to the integration by choosing a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the Telegram connection that you want to add to the flow. 
 . Select the *Send a Text Message* action. 
 . In the *Chat Id* field, enter the ID for the Telegram chat that you are sending

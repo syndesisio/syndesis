@@ -92,7 +92,8 @@ an instance of `Product`.
 
 |===
 
-. Click *Done* to add the connection to the integration.
+. Click *Next* to add the connection to the integration.
 
 .Result
-The connection appears at the beginning of the integration flow.
+The integration now has a start connection and {prodname} is
+prompting you to choose the finish connection. 

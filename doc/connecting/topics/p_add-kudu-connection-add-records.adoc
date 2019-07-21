@@ -13,12 +13,14 @@ finish connection.
 .Prerequisites
 * You created a Kudu connection.
 * You are creating or editing an integration and {prodname} is
-prompting you to add to the integration by choosing a step. Or, {prodname} is 
+prompting you to add to the integration. Or, {prodname} is 
 prompting you to choose a finish connection.  
 * The table that you want to add records to exists. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the Kudu connection that you want to use. Note that when 
 a Kudu connection inserts data, the connection does not return anything.  
 

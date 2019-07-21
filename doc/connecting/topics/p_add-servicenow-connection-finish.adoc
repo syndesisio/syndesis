@@ -13,7 +13,7 @@ or as a simple integration's finish connection.
 
 * You created a ServiceNow connection. 
 * You are creating or editing a flow and {prodname} is prompting you
-to add to the integration by choosing a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 * You know the name of the ServiceNow import set that you want to 
 add records to. Your ServiceNow administrator can
 help you identify the appropriate import set. If the import set 
@@ -23,7 +23,9 @@ link:{LinkFuseOnlineConnectorGuide}#create-servicenow-import-set_servicenow[Crea
 of records.
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the ServiceNow connection that you
 want to add to the integration. 
 

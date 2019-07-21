@@ -15,11 +15,13 @@ simple integration's finish connection.
 * You created a connection to the FHIR server that you want to
 add resources to. 
 * You are creating or editing a flow and {prodname} is prompting you
-to add to the integration by choosing a step. Or, {prodname} is prompting you to choose a 
+to add to the integration. Or, {prodname} is prompting you to choose a 
 finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the FHIR connection that you want to use
 to create and add new resources to a FHIR server. 
 . On the *Choose an action* page, select *Transaction*. 

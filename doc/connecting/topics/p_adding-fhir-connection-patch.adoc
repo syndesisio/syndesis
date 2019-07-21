@@ -13,10 +13,12 @@ or as a simple integration's finish connection.
 * You created a connection to the FHIR server that has the 
 resource that you want to update.
 * You are creating or editing a flow and {prodname} is prompting you
-to add to the integration by choosing a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the FHIR connection that you want to use
 to update the resource. 
 . On the *Choose an action* page, select *Patch*. 

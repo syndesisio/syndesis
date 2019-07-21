@@ -14,10 +14,13 @@ or as a simple integration's finish connection.
 authorized to access the Google Calendar to which you want to add an 
 event.
 * You are creating or editing a flow and {prodname} is prompting you
-to add to the integraty by choosing a step. 
+to add to the integration. 
 Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click a Google Calendar connection that is authorized to access
 the calendar that you want to add an event to. 
 . On the *Choose an action* page, select the *Create Event* action.

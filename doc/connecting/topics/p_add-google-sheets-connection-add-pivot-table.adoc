@@ -27,10 +27,13 @@ the Google spreadsheet that you want to add a pivot table to.
 * You have access to the ID for the spreadsheet that contains the source
 data for the pivot table. 
 * You are creating or editing a flow and {prodname} is prompting you
-to add to the integration by choosing a step.  Or, {prodname} is prompting you to choose the finish
+to add to the integration.  Or, {prodname} is prompting you to choose the finish
 connection for a simple integration. 
 
 .Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click a Google Sheets connection that is authorized to access
 the spreadsheet that you want to add the pivot table to.
 . On the *Choose an action* page, select *Add pivot tables*.

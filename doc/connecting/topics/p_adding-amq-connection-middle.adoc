@@ -10,10 +10,12 @@ add a Red Hat AMQ connection to the middle of a flow.
 .Prerequisites
 * You created a connection to the Red Hat AMQ broker that you want to publish messages to.
 * You are creating or editing a flow and {prodname} is prompting you
-to add to the integration by choosing a step. Or, {prodname} is prompting you to choose a finish connection.  
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection.  
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the Red Hat AMQ connection that you
 want in the middle of the flow.
 

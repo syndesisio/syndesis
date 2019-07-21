@@ -12,11 +12,13 @@ the middle of a flow or as a simple integration's finish connection.
 * You created a connection to the AMQP broker that you want to publish 
 messages to.
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a 
+to add to the integration. Or, {prodname} is prompting you to choose a 
 simple integration's finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the AMQP connection that you want to use to publish messages. 
 
 . On the *Choose an action* page, select one of the following actions:

@@ -13,10 +13,12 @@ finish connection.
 * You created an IRC connection. 
 * You have an IRC nickname for receiving and sending messages. 
 * You are creating or editing a flow and {prodname} is prompting you to 
-add to the integration by choosing a step. Or, {prodname} is prompting you to choose a finish connection. 
+add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the IRC connection that you want to add to the flow. 
 . Select *IRC Send Message to Channel* to send a message to one or 
 more channels. 

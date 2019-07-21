@@ -55,14 +55,14 @@ connection and displays a message that indicates whether or not
 validation is successful. If validation fails, revise the configuration
 details as needed and try again.
 . When validation is successful, click *Next*.
-. In the *Connection Name* field, enter your choice of a name that
+. In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, enter `Obtain S3 Data`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample S3 connection
 that obtains data from a northeast bucket.*`
-. In the upper right, click *Create* to see that the connection you
+. Click *Save* to see that the connection you
 created is now available. If you entered the example name, you would
 see that *Obtain S3 Data* appears as a connection that you can 
 choose to add to an integration.
