@@ -35,9 +35,9 @@ If validation is not successful, correct the input values and try again.
 If validation is successful, you can create a SAP Concur connection,
 which you can add to an integration. 
 
+. Click the *SAP Concur* entry to collapse it. 
+
 .Next steps
-To create a SAP Concur connection, click the *create a connection* link
-in the success message. Or, to create a connection later, click *Ok* to 
-contract the SAP Concur entry in the *Settings* page. 
+Create a SAP Concur connection.
 
  

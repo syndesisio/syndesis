@@ -10,10 +10,12 @@ add a Dropbox connection to the middle of the flow.
 .Prerequisites
 * You created a Dropbox connection.
 * You are creating or editing a flow and {prodname} is prompting you
-to add to the integration by choosing a step.
+to add to the integration.
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the Dropbox connection that you 
 want the integration to use. 
 

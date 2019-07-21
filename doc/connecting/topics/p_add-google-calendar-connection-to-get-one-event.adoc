@@ -27,10 +27,11 @@ authorized to access the Google Calendar that has the event that
 that you want to get.
 
 * You are creating or editing a flow and {prodname} is prompting you 
-to add to the integration by choosing a step. 
+to add to the integration. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. 
 . Click a Google Calendar connection that is authorized to access
 the calendar that you want to connect to.   
 . On the *Choose an action* page, select *Get a Specific Event*. 

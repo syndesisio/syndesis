@@ -15,9 +15,12 @@ Google spreadsheet in which you want to append data.
 * You have access to the ID for the spreadsheet in which
 you want to append data. 
 * You are creating or editing a flow and {prodname} is prompting you
-to add to the integration by choosing a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click a Google Sheets connection that is authorized to access
 the spreadsheet in which you want to append data.
 . On the *Choose an action* page, select *Append values to a sheet*.

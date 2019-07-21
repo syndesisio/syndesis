@@ -30,10 +30,12 @@ xref:adding-fhir-connection-update_fhir[*Update* action] for the connection to p
 * You created a connection to the FHIR server that you want to add 
 a resource to. 
 * You are creating or editing a flow and {prodname} is prompting you
-to add to the integration by choosing a step. Or, {prodname} is prompting you to add a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to add a finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the FHIR connection to the server that you want to add a resource to.  
 . On the *Choose an action* page, select *Create*. 
 . Click in the *Resource Type* field to display a list

@@ -28,12 +28,12 @@ hostname or the IP address of the Kudu master host.
 port that Kudu is listening on. The default is `7051`. 
 
 . Click *Next*.
-. In the *Connection Name* field, enter your choice of a name that
+. In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, you might enter `Kudu North`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. 
-. In the upper right, click *Create* to see that the connection you 
+. Click *Save* to see that the connection you 
 created is now available. If you
 entered the example name, you would 
 see that *Kudu North* appears as a connection that you can 

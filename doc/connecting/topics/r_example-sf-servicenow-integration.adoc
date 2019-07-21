@@ -13,7 +13,7 @@ cases from Salesforce and adds them as incidents to ServiceNow.
 cases from Salesforce and updates a corresponding
 incident in ServiceNow. 
 
-.Prerequisite (in ServiceNow)
+.Prerequisites (in ServiceNow)
 For both integrations, a prerequisite is for a ServiceNow
 administrator to create an inbound web service. 
 This implicitly creates a ServiceNow import set, which is required for 

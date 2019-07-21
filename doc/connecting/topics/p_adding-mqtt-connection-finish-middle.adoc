@@ -12,21 +12,24 @@ as the integration's finish connection.
 .Prerequisites
 * You created an MQTT connection.
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a finish connection.  
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection.  
 
 .Procedure
 
+. On the *Add to Integration* page, click the plus sign where you 
+want to add an MQTT connection. Skip this step if you are adding 
+a simple integration's finish connection. 
 . Click the MQTT connection that you want to use
 to publish a message. 
 
-. On the *Choose an Action* page, click *Publish*. 
+. On the *Choose an action* page, select *Publish*. 
 . In the *MQTT queue/topic name* field, specify the name of the queue or
 topic to publish the message to. 
 . Click *Next* to specify the action's input type. 
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
-and then, at the bottom, click *Done*. You do not need to follow the rest of these
+and click *Next*. You do not need to follow the rest of these
 instructions. 
 +
 Otherwise, select one of the following as the schema type:
@@ -46,8 +49,8 @@ For example, if you select *JSON schema* then you would paste the content of
 a JSON schema file, which has a media type of `application/schema+json`.
 
 . In the *Data Type Name* field, enter a name that you choose for the
-data type. For example, suppose you are specifying a JSON schema for
-vendors. You can specify `*Vendor*` as the data type name. 
+data type. For example, if you are specifying a JSON schema for
+vendors then you might specify `*Vendor*` as the data type name. 
 +
 You will see this data type name when you are creating 
 or editing an integration that uses the connection
@@ -57,8 +60,8 @@ in the integration visualization panel and in the data mapper.
 . In the *Data Type Description* field, provide information that helps you
 distinguish this type. This description appears in the data mapper when 
 you hover over the step that processes this type. 
-. Click *Done*. 
+. Click *Next*. 
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears in the integration visualization
+where you added it. 
