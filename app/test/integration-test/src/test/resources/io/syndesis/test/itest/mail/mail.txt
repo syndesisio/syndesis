@@ -1,0 +1,6 @@
+Welcome ${first_name},
+
+have a great start here at ${company}!
+
+Regards,
+People Team

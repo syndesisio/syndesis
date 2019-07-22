@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>io.syndesis.integrations</groupId>
+  <artifactId>project</artifactId>
+  <version>0.1-SNAPSHOT</version>
+  <name>Syndesis Integrations :: {{name}}</name>
+  {{#description}}<description>{{description}}</description>{{/description}}
+  <packaging>jar</packaging>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <java.version>1.8</java.version>
+    <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
+    <log4j2.version>2.11.2</log4j2.version>
+    <validation-api.version>2.0.1.Final</validation-api.version>
+    <camel.version>@camel.version@</camel.version>
+    <camel-k-runtime.version>@camel-k-runtime.version@</camel-k-runtime.version>
+    <syndesis.version>@syndesis.version@</syndesis.version>
+  </properties>
+  {{^mavenRepositories.empty}}
+
+  <repositories>
+    {{#mavenRepositories}}
+    <repository>
+      <id>{{key}}</id>
+      <name>{{key}}</name>
+      <url>{{value}}</url>
+    </repository>
+    {{/mavenRepositories}}
+  </repositories>
+
+  <pluginRepositories>
+    {{#mavenRepositories}}
+    <pluginRepository>
+      <id>{{key}}</id>
+      <name>{{key}}</name>
+      <url>{{value}}</url>
+    </pluginRepository>
+    {{/mavenRepositories}}
+  </pluginRepositories>
+  {{/mavenRepositories.empty}}
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-bom</artifactId>
+        <version>${syndesis.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>io.syndesis.integration</groupId>
+        <artifactId>integration-bom-camel-k</artifactId>
+        <version>${syndesis.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.camel.k</groupId>
+        <artifactId>camel-k-runtime-jvm</artifactId>
+        <version>${camel-k-runtime.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel.k</groupId>
+        <artifactId>camel-k-runtime-servlet</artifactId>
+        <version>${camel-k-runtime.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.camel.k</groupId>
+        <artifactId>camel-k-runtime-health</artifactId>
+        <version>${camel-k-runtime.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <dependencies>
+    <!-- atlasmap runtime -->
+    <dependency>
+      <groupId>io.atlasmap</groupId>
+      <artifactId>camel-atlasmap</artifactId>
+    </dependency>
+
+    <!-- dependencies used in this integration -->
+    {{#dependencies}}
+      <dependency>
+          <groupId>{{groupId}}</groupId>
+          <artifactId>{{artifactId}}</artifactId>
+      </dependency>
+    {{/dependencies}}
+
+    <!-- integration runtime -->
+    <dependency>
+      <groupId>io.syndesis.integration</groupId>
+      <artifactId>integration-runtime</artifactId>
+    </dependency>
+
+    <!-- camel-k as runtime -->
+    <dependency>
+      <groupId>org.apache.camel.k</groupId>
+      <artifactId>camel-k-runtime-jvm</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.camel.k</groupId>
+      <artifactId>camel-k-runtime-health</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+      <version>${validation-api.version}</version>
+    </dependency>
+
+    <!-- logging -->
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-api</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+      <version>${log4j2.version}</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <defaultGoal>exec:java</defaultGoal>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>${exec-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>org.apache.camel.k.jvm.Application</mainClass>
+          <classpathScope>runtime</classpathScope>
+          <systemProperties>
+            <systemProperty>
+              <key>camel.k.conf</key>
+              <value>${project.basedir}/src/main/resources/application.properties</value>
+            </systemProperty>
+            <systemProperty>
+              <key>camel.k.routes</key>
+              <value>file:${project.basedir}/src/main/resources/syndesis/integration/integration.syndesis</value>
+            </systemProperty>
+          </systemProperties>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+
+</project>

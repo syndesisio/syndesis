@@ -1,0 +1,1870 @@
+{
+  "connections": {
+    ":5": {
+      "configuredProperties": {
+        "password": "»ENC:9ba6020f822bd710c9715335e03747bed6de9409563d16729c4fdecca6eaf602ba787a6c0498c75ff936827c5f2d9585",
+        "schema": "sampledb",
+        "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
+        "user": "sampledb"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Invoke SQL to obtain, store, update, or delete data.",
+            "descriptor": {
+              "componentScheme": "sql",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "json-schema"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                  "name": "SQL statement",
+                  "properties": {
+                    "query": {
+                      "deprecated": false,
+                      "displayName": "SQL statement",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                      "placeholder": "for example ':#MYPARAMNAME'",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-connector",
+            "name": "Invoke SQL",
+            "pattern": "To",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke SQL to obtain, store, update, or delete data.",
+            "descriptor": {
+              "componentScheme": "sql",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Enter a SQL statement that starts with SELECT.",
+                  "name": "SQL statement",
+                  "properties": {
+                    "query": {
+                      "deprecated": false,
+                      "displayName": "SQL statement",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "SQL SELECT statement to be executed.",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "schedulerExpression": {
+                      "defaultValue": "60000",
+                      "deprecated": false,
+                      "displayName": "Period",
+                      "group": "consumer",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "order": 2,
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-start-connector",
+            "name": "Periodic SQL invocation",
+            "pattern": "From",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke a stored procedure.",
+            "descriptor": {
+              "componentScheme": "sql-stored",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "json-schema"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Select the stored procedure.",
+                  "name": "Procedure name",
+                  "properties": {
+                    "procedureName": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Procedure name",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "Name of the stored procedure.",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "template": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Template",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Stored procedure template to perform.",
+                      "required": false,
+                      "secret": false,
+                      "type": "hidden"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-stored-connector",
+            "name": "Invoke stored procedure",
+            "pattern": "To",
+            "tags": [
+              "dynamic"
+            ]
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke a stored procedure.",
+            "descriptor": {
+              "componentScheme": "sql-stored",
+              "connectorCustomizers": [
+                "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+              ],
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "json-schema"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "Select the stored procedure.",
+                  "name": "Procedure name",
+                  "properties": {
+                    "procedureName": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Procedure name",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Name of the stored procedure.",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "schedulerExpression": {
+                      "defaultValue": "60000",
+                      "deprecated": false,
+                      "displayName": "Period",
+                      "group": "consumer",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    },
+                    "template": {
+                      "componentProperty": false,
+                      "deprecated": false,
+                      "displayName": "Template",
+                      "group": "producer",
+                      "javaType": "java.lang.String",
+                      "kind": "path",
+                      "labelHint": "Stored Procedure template to perform.",
+                      "required": true,
+                      "secret": false,
+                      "type": "hidden"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "sql-stored-start-connector",
+            "name": "Periodic stored procedure invocation",
+            "pattern": "From",
+            "tags": [
+              "dynamic"
+            ]
+          }
+        ],
+        "connectorCustomizers": [
+          "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+        ],
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          },
+          {
+            "id": "jdbc-driver",
+            "type": "EXTENSION_TAG"
+          }
+        ],
+        "description": "Subscribe for and publish messages.",
+        "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjcuMiAzMDAiPjxzdHlsZT48L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBkPSJNMjE3LjcgMTk0LjVjNS45IDMuNiA5LjUgNy43IDkuNSAxMi43djYzLjRjMCAyMS42LTY3LjkgMjkuNS0xMTMuNiAyOS41QzY3LjkgMzAwIDAgMjkyLjEgMCAyNzAuNXYtNjMuNGMwLTQuOSAzLjUtOS4xIDkuNS0xMi43LTUuOS0zLjYtOS41LTcuNy05LjUtMTIuN3YtNjMuNGMwLTUgMy42LTkuMiA5LjctMTIuOC02LjEtMy42LTkuOC03LjktOS44LTEyLjlWMjkuNUMtLjEgNy45IDY3LjggMCAxMTMuNSAwYzQ1LjcgMCAxMTMuNiA3LjkgMTEzLjYgMjkuNXY2My40YzAgNS0zLjYgOS4yLTkuNyAxMi44IDYuMSAzLjYgOS44IDcuOSA5LjggMTIuOVYxODJjMCA0LjctMy41IDguOS05LjUgMTIuNXoiIGZpbGw9IiMwMDk0NDQiLz48cGF0aCBkPSJNMjE3LjYgMTk0LjdjNS45IDMuNi04Ni4xIDI3LjItMjA4LjMgMEMzLjQgMTkxLjEtLjIgMTg3LS4yIDE4MnYtNjMuNGMwLTUgOS43LTEyLjggOS43LTEyLjhzMTA5LjYgMjAgMjA3LjctLjFjOS43IDEuOCA5LjggNy45IDkuOCAxMi45VjE4MmMuMSA0LjktMy40IDkuMS05LjQgMTIuN3oiIGZpbGw9IiM0ZmU4OWMiLz48cGF0aCBkPSJNOS41IDEwNS41Yy02LTMuNi05LjUtNy43LTkuNS0xMi43VjI5LjVDMCA3LjkgNjcuOSAwIDExMy42IDBjNDUuNyAwIDExMy42IDcuOSAxMTMuNiAyOS41djYzLjRjMCA0LjktMy41IDkuMS05LjUgMTIuNy0xMDMuMyAyNC41LTIxNC4yIDMuNS0yMDguMi0uMXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNzguMSAyMjIuNmMxMi4xIDEgMjQuNyAxLjUgMzcuNiAxLjUgMzUuNSAwIDY4LjctNCA4OC45LTEwLjcgMS42LS41IDMuNC4zIDMuOSAyIC41IDEuNi0uMyAzLjQtMiAzLjktMjAuOCA2LjktNTQuOCAxMS05MC45IDExLTEzIDAtMjUuOS0uNS0zOC4xLTEuNi0xLjctLjEtMy0xLjctMi44LTMuNC4yLTEuNSAxLjctMi44IDMuNC0yLjd6bS0yNS4yLTJjLTEyLjMtMi0yMi45LTQuNy0zMC41LTcuNi0xLjEtLjQtMi4zLjEtMi43IDEuMi0uNCAxLjEuMSAyLjMgMS4yIDIuNyA4IDMuMSAxOC42IDUuOCAzMS40IDcuOWguM2MxIDAgMS45LS43IDItMS43LjItMS4yLS42LTIuMy0xLjctMi41em0xNjQuOC0yNi4xYzUuOSAzLjYgOS41IDcuNyA5LjUgMTIuN3Y2My40YzAgMjEuNi02Ny45IDI5LjUtMTEzLjYgMjkuNUM2Ny45IDMwMCAwIDI5Mi4xIDAgMjcwLjV2LTYzLjRjMC00LjkgMy41LTkuMSA5LjUtMTIuNy01LjktMy42LTkuNS03LjctOS41LTEyLjd2LTYzLjRjMC01IDMuNi05LjIgOS43LTEyLjgtNi4xLTMuNi05LjgtNy45LTkuOC0xMi45VjI5LjVDLS4xIDcuOSA2Ny44IDAgMTEzLjUgMGM0NS43IDAgMTEzLjYgNy45IDExMy42IDI5LjV2NjMuNGMwIDUtMy42IDkuMi05LjcgMTIuOCA2LjEgMy42IDkuOCA3LjkgOS44IDEyLjlWMTgyYzAgNC43LTMuNSA4LjktOS41IDEyLjV6TTE5LjMgMTAxLjNjMy43IDEuNSA4LjIgMyAxMy43IDQuNCAxNy43IDQuNiA0NC42IDguMyA4MC41IDguMyAzNiAwIDYzLTMuNyA4MC42LTguNCA1LjQtMS40IDEwLTIuOSAxMy43LTQuNCA3LjItMyAxMS02IDExLTguNFYyOS41YzAtNy40LTM2LjItMjEuMi0xMDUuMy0yMS4yUzguMiAyMi4xIDguMiAyOS41djYzLjRjMCAyLjMgMy44IDUuMyAxMS4xIDguNHptMTg5IDk3LjZjLTIzLjUgOC45LTY0LjEgMTIuNC05NC43IDEyLjQtMzAuNiAwLTcxLjMtMy41LTk0LjctMTIuNC03IDMtMTAuNiA1LjktMTAuNiA4LjJ2NjMuNGMwIDcuNCAzNi4yIDIxLjIgMTA1LjMgMjEuMnMxMDUuMy0xMy44IDEwNS4zLTIxLjJ2LTYzLjRjMC0yLjMtMy42LTUuMi0xMC42LTguMnptMTAuNi04MC40YzAtMi40LTMuOC01LjQtMTEuMS04LjQtMjMuNSA4LjgtNjMuOSAxMi4zLTk0LjMgMTIuM3MtNzAuNy0zLjUtOTQuMi0xMi4yYy03LjIgMy0xMSA2LTExIDguNFYxODJjMCAyLjMgMy42IDUuMyAxMC42IDguMiAzLjYgMS41IDguMSAzIDEzLjUgNC40IDE3LjcgNC43IDQ0LjggOC41IDgxLjIgOC41czYzLjUtMy44IDgxLjItOC41YzUuNC0xLjQgOS45LTIuOSAxMy41LTQuNCA3LTMgMTAuNi01LjkgMTAuNi04LjJ2LTYzLjV6bS0xNC4zIDYuM2MtMjAuMiA2LjctNTMuNCAxMC43LTg4LjkgMTAuNy0xMi45IDAtMjUuNi0uNS0zNy42LTEuNS0xLjctLjEtMy4yIDEuMS0zLjQgMi44LS4xIDEuNyAxLjEgMy4yIDIuOCAzLjQgMTIuMiAxIDI1IDEuNiAzOC4xIDEuNiAzNi4xIDAgNzAuMS00LjEgOTAuOS0xMSAxLjYtLjUgMi41LTIuMyAyLTMuOS0uNS0xLjgtMi4yLTIuNy0zLjktMi4xem0tMTUxLjcgNy4xYy0xMi4zLTItMjIuOS00LjctMzAuNS03LjYtMS4xLS40LTIuMy4xLTIuNyAxLjItLjQgMS4xLjEgMi4zIDEuMiAyLjcgOCAzLjEgMTguNiA1LjggMzEuNCA3LjloLjNjMSAwIDEuOS0uNyAyLTEuNy4yLTEuMi0uNi0yLjMtMS43LTIuNXptMjQuNi04MC43YzEyLjIgMSAyNSAxLjYgMzguMSAxLjYgMzYuMSAwIDcwLjEtNC4xIDkwLjktMTEgMS42LS41IDIuNS0yLjMgMi0zLjlzLTIuMy0yLjUtMy45LTJjLTIwLjIgNi43LTUzLjQgMTAuNy04OC45IDEwLjctMTMtLjEtMjUuNi0uNi0zNy43LTEuNi0xLjctLjEtMy4yIDEuMS0zLjQgMi44LS4xIDEuNyAxLjIgMy4yIDIuOSAzLjR6bS0yNS00LjFjMSAwIDEuOS0uNyAyLTEuNy4yLTEuMS0uNi0yLjItMS43LTIuNC0xMi4zLTItMjIuOS00LjctMzAuNS03LjYtMS4xLS40LTIuMy4xLTIuNyAxLjItLjQgMS4xLjEgMi4zIDEuMiAyLjcgOCAzLjEgMTguNiA1LjggMzEuNCA3LjkgMC0uMS4xLS4xLjMtLjF6Ii8+PC9nPjwvc3ZnPg==",
+        "id": "sql",
+        "name": "Database",
+        "properties": {
+          "password": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Password",
+            "group": "security",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common,security",
+            "labelHint": "Password for the database connection.",
+            "order": 3,
+            "required": true,
+            "secret": true,
+            "type": "string"
+          },
+          "schema": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Schema",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "label": "common",
+            "labelHint": "Database schema.",
+            "order": 4,
+            "required": false,
+            "secret": false,
+            "type": "string"
+          },
+          "url": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Connection URL",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "labelHint": "JDBC URL of the database.",
+            "order": 1,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          },
+          "user": {
+            "componentProperty": true,
+            "deprecated": false,
+            "displayName": "Username",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "property",
+            "labelHint": "Username for the database connection.",
+            "order": 2,
+            "required": true,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "tags": [
+          "verifier"
+        ],
+        "version": 66
+      },
+      "connectorId": "sql",
+      "description": "Connection to SampleDB",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjcuMiAzMDAiPjxzdHlsZT48L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBkPSJNMjE3LjcgMTk0LjVjNS45IDMuNiA5LjUgNy43IDkuNSAxMi43djYzLjRjMCAyMS42LTY3LjkgMjkuNS0xMTMuNiAyOS41QzY3LjkgMzAwIDAgMjkyLjEgMCAyNzAuNXYtNjMuNGMwLTQuOSAzLjUtOS4xIDkuNS0xMi43LTUuOS0zLjYtOS41LTcuNy05LjUtMTIuN3YtNjMuNGMwLTUgMy42LTkuMiA5LjctMTIuOC02LjEtMy42LTkuOC03LjktOS44LTEyLjlWMjkuNUMtLjEgNy45IDY3LjggMCAxMTMuNSAwYzQ1LjcgMCAxMTMuNiA3LjkgMTEzLjYgMjkuNXY2My40YzAgNS0zLjYgOS4yLTkuNyAxMi44IDYuMSAzLjYgOS44IDcuOSA5LjggMTIuOVYxODJjMCA0LjctMy41IDguOS05LjUgMTIuNXoiIGZpbGw9IiMwMDk0NDQiLz48cGF0aCBkPSJNMjE3LjYgMTk0LjdjNS45IDMuNi04Ni4xIDI3LjItMjA4LjMgMEMzLjQgMTkxLjEtLjIgMTg3LS4yIDE4MnYtNjMuNGMwLTUgOS43LTEyLjggOS43LTEyLjhzMTA5LjYgMjAgMjA3LjctLjFjOS43IDEuOCA5LjggNy45IDkuOCAxMi45VjE4MmMuMSA0LjktMy40IDkuMS05LjQgMTIuN3oiIGZpbGw9IiM0ZmU4OWMiLz48cGF0aCBkPSJNOS41IDEwNS41Yy02LTMuNi05LjUtNy43LTkuNS0xMi43VjI5LjVDMCA3LjkgNjcuOSAwIDExMy42IDBjNDUuNyAwIDExMy42IDcuOSAxMTMuNiAyOS41djYzLjRjMCA0LjktMy41IDkuMS05LjUgMTIuNy0xMDMuMyAyNC41LTIxNC4yIDMuNS0yMDguMi0uMXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNzguMSAyMjIuNmMxMi4xIDEgMjQuNyAxLjUgMzcuNiAxLjUgMzUuNSAwIDY4LjctNCA4OC45LTEwLjcgMS42LS41IDMuNC4zIDMuOSAyIC41IDEuNi0uMyAzLjQtMiAzLjktMjAuOCA2LjktNTQuOCAxMS05MC45IDExLTEzIDAtMjUuOS0uNS0zOC4xLTEuNi0xLjctLjEtMy0xLjctMi44LTMuNC4yLTEuNSAxLjctMi44IDMuNC0yLjd6bS0yNS4yLTJjLTEyLjMtMi0yMi45LTQuNy0zMC41LTcuNi0xLjEtLjQtMi4zLjEtMi43IDEuMi0uNCAxLjEuMSAyLjMgMS4yIDIuNyA4IDMuMSAxOC42IDUuOCAzMS40IDcuOWguM2MxIDAgMS45LS43IDItMS43LjItMS4yLS42LTIuMy0xLjctMi41em0xNjQuOC0yNi4xYzUuOSAzLjYgOS41IDcuNyA5LjUgMTIuN3Y2My40YzAgMjEuNi02Ny45IDI5LjUtMTEzLjYgMjkuNUM2Ny45IDMwMCAwIDI5Mi4xIDAgMjcwLjV2LTYzLjRjMC00LjkgMy41LTkuMSA5LjUtMTIuNy01LjktMy42LTkuNS03LjctOS41LTEyLjd2LTYzLjRjMC01IDMuNi05LjIgOS43LTEyLjgtNi4xLTMuNi05LjgtNy45LTkuOC0xMi45VjI5LjVDLS4xIDcuOSA2Ny44IDAgMTEzLjUgMGM0NS43IDAgMTEzLjYgNy45IDExMy42IDI5LjV2NjMuNGMwIDUtMy42IDkuMi05LjcgMTIuOCA2LjEgMy42IDkuOCA3LjkgOS44IDEyLjlWMTgyYzAgNC43LTMuNSA4LjktOS41IDEyLjV6TTE5LjMgMTAxLjNjMy43IDEuNSA4LjIgMyAxMy43IDQuNCAxNy43IDQuNiA0NC42IDguMyA4MC41IDguMyAzNiAwIDYzLTMuNyA4MC42LTguNCA1LjQtMS40IDEwLTIuOSAxMy43LTQuNCA3LjItMyAxMS02IDExLTguNFYyOS41YzAtNy40LTM2LjItMjEuMi0xMDUuMy0yMS4yUzguMiAyMi4xIDguMiAyOS41djYzLjRjMCAyLjMgMy44IDUuMyAxMS4xIDguNHptMTg5IDk3LjZjLTIzLjUgOC45LTY0LjEgMTIuNC05NC43IDEyLjQtMzAuNiAwLTcxLjMtMy41LTk0LjctMTIuNC03IDMtMTAuNiA1LjktMTAuNiA4LjJ2NjMuNGMwIDcuNCAzNi4yIDIxLjIgMTA1LjMgMjEuMnMxMDUuMy0xMy44IDEwNS4zLTIxLjJ2LTYzLjRjMC0yLjMtMy42LTUuMi0xMC42LTguMnptMTAuNi04MC40YzAtMi40LTMuOC01LjQtMTEuMS04LjQtMjMuNSA4LjgtNjMuOSAxMi4zLTk0LjMgMTIuM3MtNzAuNy0zLjUtOTQuMi0xMi4yYy03LjIgMy0xMSA2LTExIDguNFYxODJjMCAyLjMgMy42IDUuMyAxMC42IDguMiAzLjYgMS41IDguMSAzIDEzLjUgNC40IDE3LjcgNC43IDQ0LjggOC41IDgxLjIgOC41czYzLjUtMy44IDgxLjItOC41YzUuNC0xLjQgOS45LTIuOSAxMy41LTQuNCA3LTMgMTAuNi01LjkgMTAuNi04LjJ2LTYzLjV6bS0xNC4zIDYuM2MtMjAuMiA2LjctNTMuNCAxMC43LTg4LjkgMTAuNy0xMi45IDAtMjUuNi0uNS0zNy42LTEuNS0xLjctLjEtMy4yIDEuMS0zLjQgMi44LS4xIDEuNyAxLjEgMy4yIDIuOCAzLjQgMTIuMiAxIDI1IDEuNiAzOC4xIDEuNiAzNi4xIDAgNzAuMS00LjEgOTAuOS0xMSAxLjYtLjUgMi41LTIuMyAyLTMuOS0uNS0xLjgtMi4yLTIuNy0zLjktMi4xem0tMTUxLjcgNy4xYy0xMi4zLTItMjIuOS00LjctMzAuNS03LjYtMS4xLS40LTIuMy4xLTIuNyAxLjItLjQgMS4xLjEgMi4zIDEuMiAyLjcgOCAzLjEgMTguNiA1LjggMzEuNCA3LjloLjNjMSAwIDEuOS0uNyAyLTEuNy4yLTEuMi0uNi0yLjMtMS43LTIuNXptMjQuNi04MC43YzEyLjIgMSAyNSAxLjYgMzguMSAxLjYgMzYuMSAwIDcwLjEtNC4xIDkwLjktMTEgMS42LS41IDIuNS0yLjMgMi0zLjlzLTIuMy0yLjUtMy45LTJjLTIwLjIgNi43LTUzLjQgMTAuNy04OC45IDEwLjctMTMtLjEtMjUuNi0uNi0zNy43LTEuNi0xLjctLjEtMy4yIDEuMS0zLjQgMi44LS4xIDEuNyAxLjIgMy4yIDIuOSAzLjR6bS0yNS00LjFjMSAwIDEuOS0uNyAyLTEuNy4yLTEuMS0uNi0yLjItMS43LTIuNC0xMi4zLTItMjIuOS00LjctMzAuNS03LjYtMS4xLS40LTIuMy4xLTIuNyAxLjItLjQgMS4xLjEgMi4zIDEuMiAyLjcgOCAzLjEgMTguNiA1LjggMzEuNCA3LjkgMC0uMS4xLS4xLjMtLjF6Ii8+PC9nPjwvc3ZnPg==",
+      "id": "5",
+      "isDerived": false,
+      "name": "PostgresDB",
+      "tags": [
+        "sampledb"
+      ],
+      "uses": 0
+    },
+    ":i-LaLP76LY6PgTmnD_vPFz": {
+      "configuredProperties": {
+        "baseUrl": "http://todo-syndesis.192.168.64.15.nip.io/api"
+      },
+      "connector": {
+        "actions": [
+          {
+            "actionType": "connector",
+            "description": "Invoke an http endpoint URL",
+            "descriptor": {
+              "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+              "inputDataShape": {
+                "kind": "any"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "properties",
+                  "name": "properties",
+                  "properties": {
+                    "httpMethod": {
+                      "defaultValue": "GET",
+                      "deprecated": false,
+                      "displayName": "Http Method",
+                      "enum": [
+                        {
+                          "label": "GET",
+                          "value": "GET"
+                        },
+                        {
+                          "label": "PUT",
+                          "value": "PUT"
+                        },
+                        {
+                          "label": "POST",
+                          "value": "POST"
+                        },
+                        {
+                          "label": "DELETE",
+                          "value": "DELETE"
+                        },
+                        {
+                          "label": "HEAD",
+                          "value": "HEAD"
+                        },
+                        {
+                          "label": "OPTIONS",
+                          "value": "OPTIONS"
+                        },
+                        {
+                          "label": "TRACE",
+                          "value": "TRACE"
+                        },
+                        {
+                          "label": "PATCH",
+                          "value": "PATCH"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "The specific http method to execute.",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "path": {
+                      "deprecated": false,
+                      "displayName": "URL Path",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis.connector:connector-http:http4-invoke-url",
+            "name": "Invoke URL",
+            "pattern": "To"
+          },
+          {
+            "actionType": "connector",
+            "description": "Periodically invoke an http endpoint URL",
+            "descriptor": {
+              "connectorCustomizers": [
+                "io.syndesis.connector.http.HttpConnectorCustomizer"
+              ],
+              "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+              "inputDataShape": {
+                "kind": "none"
+              },
+              "outputDataShape": {
+                "kind": "any"
+              },
+              "propertyDefinitionSteps": [
+                {
+                  "description": "properties",
+                  "name": "properties",
+                  "properties": {
+                    "httpMethod": {
+                      "defaultValue": "GET",
+                      "deprecated": false,
+                      "displayName": "Http Method",
+                      "enum": [
+                        {
+                          "label": "GET",
+                          "value": "GET"
+                        },
+                        {
+                          "label": "PUT",
+                          "value": "PUT"
+                        },
+                        {
+                          "label": "POST",
+                          "value": "POST"
+                        },
+                        {
+                          "label": "DELETE",
+                          "value": "DELETE"
+                        },
+                        {
+                          "label": "HEAD",
+                          "value": "HEAD"
+                        },
+                        {
+                          "label": "OPTIONS",
+                          "value": "OPTIONS"
+                        },
+                        {
+                          "label": "TRACE",
+                          "value": "TRACE"
+                        },
+                        {
+                          "label": "PATCH",
+                          "value": "PATCH"
+                        }
+                      ],
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "The specific http method to execute.",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "path": {
+                      "deprecated": false,
+                      "displayName": "URL Path",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Endpoint Path",
+                      "placeholder": "eg '/path/to/endpoint'",
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "schedulerExpression": {
+                      "defaultValue": "1800000",
+                      "deprecated": false,
+                      "displayName": "Period",
+                      "group": "consumer",
+                      "javaType": "long",
+                      "kind": "parameter",
+                      "labelHint": "Delay between scheduling (executing).",
+                      "required": false,
+                      "secret": false,
+                      "type": "duration"
+                    }
+                  }
+                }
+              ]
+            },
+            "id": "io.syndesis.connector:connector-http:http4-periodic-invoke-url",
+            "name": "Periodic invoke URL",
+            "pattern": "From"
+          }
+        ],
+        "componentScheme": "http4",
+        "configuredProperties": {
+          "headerFilterStrategy": "syndesisHeaderStrategy"
+        },
+        "dependencies": [
+          {
+            "id": "io.syndesis.connector:connector-http:1.7-SNAPSHOT",
+            "type": "MAVEN"
+          }
+        ],
+        "description": "Invoke various HTTP methods.",
+        "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjMiPjxzdHlsZT4uc3Qye2ZpbGw6IzAwYWVlZn08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjcgMjUuMXMtMjEuNyAyMS0yOC45IDMyLTEwLjMgOS40LTE0LjIgN2MtMy45LTIuNC0xMC4xLTYuNi0xMC4xLTYuNnMtNi45LTMuNyAzLjItMTEuMWMxMC40LTcuNiA0Ni4yLTI3LjQgNTAtMjEuM3pNMTM2LjMgMjMuOXY1Mi4zcy43IDYuOC02LjQgNS43LTI4LjMtNS4xLTM0LjYtNy43Yy02LjMtMi43LTMuNC01LjctMi4xLTcuNyAxLjItMiAyMC4zLTMwLjcgNDMuMS00Mi42ek00Ni4zIDY3LjFzMi44LTQuNSA3LjMtMi4yIDE2LjcgOS4yIDE2LjcgOS4yIDUuNCAyLjMgMi41IDhjLTIuOCA1LjctMTAuNiAzMS4zLTExIDQxLjJzLTYuNyAxMS4yLTEwLjQgMTEuMkgzMC4xcy05LjcgMS4yLTcuNy03LjkgNS44LTM1LjQgMjMuOS01OS41ek04Mi4yIDg2LjdzMS4zLTUuOCA3LjQtMy42YzYgMi4yIDI0LjYgOC4yIDM4IDguOSAxMC45LjYgOC43IDEwIDguNyAxMHYyNC40czEuNiA4LTYuNiA3LjktNDcuNSAwLTQ3LjUgMC0xMi4yIDIuMi05LjgtOS4xIDYtMjkuOCA5LjgtMzguNXpNMTY1LjUgMjUuMXMyMS43IDIxIDI4LjkgMzIgMTAuMyA5LjQgMTQuMiA3YzMuOS0yLjQgMTAuMS02LjYgMTAuMS02LjZzNi45LTMuNy0zLjItMTEuMWMtMTAuNC03LjYtNDYuMS0yNy40LTUwLTIxLjN6TTE0NC45IDIzLjl2NTIuM3MtLjcgNi44IDYuNCA1LjdjNy4xLTEgMjguMy01LjEgMzQuNi03LjcgNi4zLTIuNyAzLjQtNS43IDIuMS03LjctMS4yLTItMjAuMy0zMC43LTQzLjEtNDIuNnpNMjM0LjkgNjcuMXMtMi44LTQuNS03LjMtMi4yLTE2LjcgOS4yLTE2LjcgOS4yLTUuNCAyLjMtMi41IDhjMi44IDUuNyAxMC42IDMxLjMgMTEgNDEuMnM2LjcgMTEuMiAxMC40IDExLjJoMjEuM3M5LjcgMS4yIDcuNy03LjljLTEuOC05LjItNS43LTM1LjQtMjMuOS01OS41ek0xOTkgODYuN3MtMS4zLTUuOC03LjQtMy42LTI0LjYgOC4yLTM4IDguOWMtMTAuOS42LTguNyAxMC04LjcgMTB2MjQuNHMtMS42IDggNi42IDcuOWM4LjItLjEgNDcuNSAwIDQ3LjUgMHMxMi4yIDIuMiA5LjgtOS4xYy0yLjMtMTEuMi01LjktMjkuOC05LjgtMzguNXpNMTE1LjggMjU1LjhzLTIxLjctMjEtMjguOS0zMi0xMC4zLTkuNC0xNC4yLTdjLTMuOSAyLjQtMTAuMSA2LjYtMTAuMSA2LjZzLTYuOSAzLjcgMy4yIDExLjFjMTAuNCA3LjYgNDYuMSAyNy41IDUwIDIxLjN6TTEzNi4zIDI1N3YtNTIuM3MuNy02LjgtNi40LTUuN2MtNy4xIDEtMjguMyA1LjEtMzQuNiA3LjctNi4zIDIuNy0zLjQgNS43LTIuMSA3LjdzMjAuMyAzMC43IDQzLjEgNDIuNnpNNDYuNCAyMTMuOHMyLjggNC41IDcuMyAyLjIgMTYuNy05LjIgMTYuNy05LjIgNS40LTIuMyAyLjUtOGMtMi44LTUuNy0xMC42LTMxLjMtMTEtNDEuMi0uNC05LjgtNi43LTExLjItMTAuNC0xMS4ySDMwLjJzLTkuNy0xLjItNy43IDcuOSA1LjcgMzUuNCAyMy45IDU5LjV6TTgyLjMgMTk0LjJzMS4zIDUuOCA3LjQgMy42YzYtMi4yIDI0LjYtOC4yIDM4LTguOSAxMC45LS42IDguNy0xMCA4LjctMTB2LTI0LjRzMS42LTgtNi42LTcuOS00Ny41IDAtNDcuNSAwLTEyLjItMi4yLTkuOCA5LjEgNS45IDI5LjggOS44IDM4LjV6Ii8+PHBhdGggZD0iTTI5Ni43IDIxNi4zbC0xMjIuMi00Ny42IDYwLjcgMTE1LjYgMTUtMzUuOCAzOC4yIDMzLjEgMTEuNi0xMy4xLTM3LjgtMzMuN3oiLz48cGF0aCBkPSJNMTY1LjUgMjU1LjhzMjAuNi0xOS45IDI4LjMtMzEuMWwtNS41LTEwLjZjLS4xLjEtLjEuMi0uMi4zLTEuMyAyLTIwLjMgMzAuNy00My4xIDQyLjZ2LTUyLjNzLS43LTYuOCA2LjQtNS43YzYuNSAxIDI0LjcgNC40IDMyLjYgN2wtNi43LTEyLjdjLTcuNS0yLjEtMTYuMy00LTIzLjYtNC40LTEwLjktLjYtOC43LTEwLTguNy0xMHYtMjQuNHMtMS42LTggNi42LTcuOWM4LjIuMSA0Ny41IDAgNDcuNSAwczEyLjItMi4yIDkuOCA5LjFjLS45IDQuNC0yIDEwLTMuMyAxNS42bDEwLjUgNC4xYzEuOC02LjkgMy4yLTEzLjYgMy40LTE3LjYuNC05LjggNi43LTExLjIgMTAuNC0xMS4yaDIxLjNzOS43LTEuMiA3LjcgNy45Yy0xLjMgNS45LTMuMyAxOC45LTkuNSAzMy45bDEyLjEgNC43YzctMTYuMSAxMC45LTMzLjggMTAuOS01Mi4zQzI3Mi40IDY4IDIxMy4zIDguOSAxNDAuNyA4LjkgNjggOC45IDguOSA2OCA4LjkgMTQwLjdjMCA3Mi42IDU5LjEgMTMxLjcgMTMxLjcgMTMxLjcgMjQuOSAwIDQ4LjMtNyA2OC4yLTE5LjFsLTUuOC0xMWMtMTQuNSA4LjQtMzQuNiAxOC0zNy41IDEzLjV6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0MC43IDI3Mi40QzY4IDI3Mi40IDguOSAyMTMuMyA4LjkgMTQwLjcgOC45IDY4IDY4IDguOSAxNDAuNyA4LjljNzIuNiAwIDEzMS43IDU5LjEgMTMxLjcgMTMxLjcgMCAxOC42LTMuOSAzNi4zLTEwLjkgNTIuM2w4LjMgMy4zYzcuNC0xNy4xIDExLjUtMzUuOSAxMS41LTU1LjZDMjgxLjMgNjMuMSAyMTguMiAwIDE0MC43IDAgNjMuMSAwIDAgNjMuMSAwIDE0MC43czYzLjEgMTQwLjcgMTQwLjcgMTQwLjdjMjYuNCAwIDUxLjItNy4zIDcyLjMtMjAuMWwtNC4yLTcuOWMtMTkuOSAxMi00My4yIDE5LTY4LjEgMTl6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41IDI1NS44YzIuOSA0LjUgMjMtNS4xIDM3LjUtMTMuNWwtOS4yLTE3LjZjLTcuNiAxMS4yLTI4LjMgMzEuMS0yOC4zIDMxLjF6TTE1MS40IDE5OC45Yy03LjEtMS02LjQgNS43LTYuNCA1LjdWMjU3YzIyLjgtMTEuOSA0MS45LTQwLjUgNDMuMS00Mi42LjEtLjEuMS0uMi4yLS4zbC00LjMtOC4yYy04LTIuNi0yNi4xLTYtMzIuNi03ek0yNTguOSAxNTQuNGMxLjktOS4xLTcuNy03LjktNy43LTcuOWgtMjEuM2MtMy43IDAtMTAgMS4zLTEwLjQgMTEuMi0uMiA0LTEuNiAxMC43LTMuNCAxNy42bDMzLjMgMTNjNi4yLTE1IDguMy0yOCA5LjUtMzMuOXpNMTY3LjkgMTYyLjdjMS43LTEuOSA0LjItMyA2LjctMyAxLjEgMCAyLjIuMiAzLjIuNmwyNy44IDEwLjljMS4yLTUuNiAyLjQtMTEuMiAzLjMtMTUuNiAyLjQtMTEuMy05LjgtOS4xLTkuOC05LjFzLTM5LjMuMS00Ny41IDBjLTguMi0uMS02LjYgNy45LTYuNiA3Ljl2MjQuNHMtMi4yIDkuNCA4LjcgMTBjNy4zLjQgMTYuMSAyLjQgMjMuNiA0LjRsLTEwLjctMjAuNGMtMS43LTMuMy0xLjItNy4zIDEuMy0xMC4xeiIvPjwvZz48L3N2Zz4=",
+        "id": "http4",
+        "name": "HTTP",
+        "properties": {
+          "baseUrl": {
+            "deprecated": false,
+            "displayName": "Base URL",
+            "group": "common",
+            "javaType": "java.lang.String",
+            "kind": "parameter",
+            "labelHint": "Base Http Endpoint URL",
+            "placeholder": "eg 'www.redhat.com'",
+            "required": true,
+            "secret": false,
+            "type": "string"
+          }
+        },
+        "tags": [
+          "verifier"
+        ],
+        "version": 66
+      },
+      "connectorId": "http4",
+      "createdDate": 1553006625238,
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjMiPjxzdHlsZT4uc3Qye2ZpbGw6IzAwYWVlZn08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjcgMjUuMXMtMjEuNyAyMS0yOC45IDMyLTEwLjMgOS40LTE0LjIgN2MtMy45LTIuNC0xMC4xLTYuNi0xMC4xLTYuNnMtNi45LTMuNyAzLjItMTEuMWMxMC40LTcuNiA0Ni4yLTI3LjQgNTAtMjEuM3pNMTM2LjMgMjMuOXY1Mi4zcy43IDYuOC02LjQgNS43LTI4LjMtNS4xLTM0LjYtNy43Yy02LjMtMi43LTMuNC01LjctMi4xLTcuNyAxLjItMiAyMC4zLTMwLjcgNDMuMS00Mi42ek00Ni4zIDY3LjFzMi44LTQuNSA3LjMtMi4yIDE2LjcgOS4yIDE2LjcgOS4yIDUuNCAyLjMgMi41IDhjLTIuOCA1LjctMTAuNiAzMS4zLTExIDQxLjJzLTYuNyAxMS4yLTEwLjQgMTEuMkgzMC4xcy05LjcgMS4yLTcuNy03LjkgNS44LTM1LjQgMjMuOS01OS41ek04Mi4yIDg2LjdzMS4zLTUuOCA3LjQtMy42YzYgMi4yIDI0LjYgOC4yIDM4IDguOSAxMC45LjYgOC43IDEwIDguNyAxMHYyNC40czEuNiA4LTYuNiA3LjktNDcuNSAwLTQ3LjUgMC0xMi4yIDIuMi05LjgtOS4xIDYtMjkuOCA5LjgtMzguNXpNMTY1LjUgMjUuMXMyMS43IDIxIDI4LjkgMzIgMTAuMyA5LjQgMTQuMiA3YzMuOS0yLjQgMTAuMS02LjYgMTAuMS02LjZzNi45LTMuNy0zLjItMTEuMWMtMTAuNC03LjYtNDYuMS0yNy40LTUwLTIxLjN6TTE0NC45IDIzLjl2NTIuM3MtLjcgNi44IDYuNCA1LjdjNy4xLTEgMjguMy01LjEgMzQuNi03LjcgNi4zLTIuNyAzLjQtNS43IDIuMS03LjctMS4yLTItMjAuMy0zMC43LTQzLjEtNDIuNnpNMjM0LjkgNjcuMXMtMi44LTQuNS03LjMtMi4yLTE2LjcgOS4yLTE2LjcgOS4yLTUuNCAyLjMtMi41IDhjMi44IDUuNyAxMC42IDMxLjMgMTEgNDEuMnM2LjcgMTEuMiAxMC40IDExLjJoMjEuM3M5LjcgMS4yIDcuNy03LjljLTEuOC05LjItNS43LTM1LjQtMjMuOS01OS41ek0xOTkgODYuN3MtMS4zLTUuOC03LjQtMy42LTI0LjYgOC4yLTM4IDguOWMtMTAuOS42LTguNyAxMC04LjcgMTB2MjQuNHMtMS42IDggNi42IDcuOWM4LjItLjEgNDcuNSAwIDQ3LjUgMHMxMi4yIDIuMiA5LjgtOS4xYy0yLjMtMTEuMi01LjktMjkuOC05LjgtMzguNXpNMTE1LjggMjU1LjhzLTIxLjctMjEtMjguOS0zMi0xMC4zLTkuNC0xNC4yLTdjLTMuOSAyLjQtMTAuMSA2LjYtMTAuMSA2LjZzLTYuOSAzLjcgMy4yIDExLjFjMTAuNCA3LjYgNDYuMSAyNy41IDUwIDIxLjN6TTEzNi4zIDI1N3YtNTIuM3MuNy02LjgtNi40LTUuN2MtNy4xIDEtMjguMyA1LjEtMzQuNiA3LjctNi4zIDIuNy0zLjQgNS43LTIuMSA3LjdzMjAuMyAzMC43IDQzLjEgNDIuNnpNNDYuNCAyMTMuOHMyLjggNC41IDcuMyAyLjIgMTYuNy05LjIgMTYuNy05LjIgNS40LTIuMyAyLjUtOGMtMi44LTUuNy0xMC42LTMxLjMtMTEtNDEuMi0uNC05LjgtNi43LTExLjItMTAuNC0xMS4ySDMwLjJzLTkuNy0xLjItNy43IDcuOSA1LjcgMzUuNCAyMy45IDU5LjV6TTgyLjMgMTk0LjJzMS4zIDUuOCA3LjQgMy42YzYtMi4yIDI0LjYtOC4yIDM4LTguOSAxMC45LS42IDguNy0xMCA4LjctMTB2LTI0LjRzMS42LTgtNi42LTcuOS00Ny41IDAtNDcuNSAwLTEyLjItMi4yLTkuOCA5LjEgNS45IDI5LjggOS44IDM4LjV6Ii8+PHBhdGggZD0iTTI5Ni43IDIxNi4zbC0xMjIuMi00Ny42IDYwLjcgMTE1LjYgMTUtMzUuOCAzOC4yIDMzLjEgMTEuNi0xMy4xLTM3LjgtMzMuN3oiLz48cGF0aCBkPSJNMTY1LjUgMjU1LjhzMjAuNi0xOS45IDI4LjMtMzEuMWwtNS41LTEwLjZjLS4xLjEtLjEuMi0uMi4zLTEuMyAyLTIwLjMgMzAuNy00My4xIDQyLjZ2LTUyLjNzLS43LTYuOCA2LjQtNS43YzYuNSAxIDI0LjcgNC40IDMyLjYgN2wtNi43LTEyLjdjLTcuNS0yLjEtMTYuMy00LTIzLjYtNC40LTEwLjktLjYtOC43LTEwLTguNy0xMHYtMjQuNHMtMS42LTggNi42LTcuOWM4LjIuMSA0Ny41IDAgNDcuNSAwczEyLjItMi4yIDkuOCA5LjFjLS45IDQuNC0yIDEwLTMuMyAxNS42bDEwLjUgNC4xYzEuOC02LjkgMy4yLTEzLjYgMy40LTE3LjYuNC05LjggNi43LTExLjIgMTAuNC0xMS4yaDIxLjNzOS43LTEuMiA3LjcgNy45Yy0xLjMgNS45LTMuMyAxOC45LTkuNSAzMy45bDEyLjEgNC43YzctMTYuMSAxMC45LTMzLjggMTAuOS01Mi4zQzI3Mi40IDY4IDIxMy4zIDguOSAxNDAuNyA4LjkgNjggOC45IDguOSA2OCA4LjkgMTQwLjdjMCA3Mi42IDU5LjEgMTMxLjcgMTMxLjcgMTMxLjcgMjQuOSAwIDQ4LjMtNyA2OC4yLTE5LjFsLTUuOC0xMWMtMTQuNSA4LjQtMzQuNiAxOC0zNy41IDEzLjV6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0MC43IDI3Mi40QzY4IDI3Mi40IDguOSAyMTMuMyA4LjkgMTQwLjcgOC45IDY4IDY4IDguOSAxNDAuNyA4LjljNzIuNiAwIDEzMS43IDU5LjEgMTMxLjcgMTMxLjcgMCAxOC42LTMuOSAzNi4zLTEwLjkgNTIuM2w4LjMgMy4zYzcuNC0xNy4xIDExLjUtMzUuOSAxMS41LTU1LjZDMjgxLjMgNjMuMSAyMTguMiAwIDE0MC43IDAgNjMuMSAwIDAgNjMuMSAwIDE0MC43czYzLjEgMTQwLjcgMTQwLjcgMTQwLjdjMjYuNCAwIDUxLjItNy4zIDcyLjMtMjAuMWwtNC4yLTcuOWMtMTkuOSAxMi00My4yIDE5LTY4LjEgMTl6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41IDI1NS44YzIuOSA0LjUgMjMtNS4xIDM3LjUtMTMuNWwtOS4yLTE3LjZjLTcuNiAxMS4yLTI4LjMgMzEuMS0yOC4zIDMxLjF6TTE1MS40IDE5OC45Yy03LjEtMS02LjQgNS43LTYuNCA1LjdWMjU3YzIyLjgtMTEuOSA0MS45LTQwLjUgNDMuMS00Mi42LjEtLjEuMS0uMi4yLS4zbC00LjMtOC4yYy04LTIuNi0yNi4xLTYtMzIuNi03ek0yNTguOSAxNTQuNGMxLjktOS4xLTcuNy03LjktNy43LTcuOWgtMjEuM2MtMy43IDAtMTAgMS4zLTEwLjQgMTEuMi0uMiA0LTEuNiAxMC43LTMuNCAxNy42bDMzLjMgMTNjNi4yLTE1IDguMy0yOCA5LjUtMzMuOXpNMTY3LjkgMTYyLjdjMS43LTEuOSA0LjItMyA2LjctMyAxLjEgMCAyLjIuMiAzLjIuNmwyNy44IDEwLjljMS4yLTUuNiAyLjQtMTEuMiAzLjMtMTUuNiAyLjQtMTEuMy05LjgtOS4xLTkuOC05LjFzLTM5LjMuMS00Ny41IDBjLTguMi0uMS02LjYgNy45LTYuNiA3Ljl2MjQuNHMtMi4yIDkuNCA4LjcgMTBjNy4zLjQgMTYuMSAyLjQgMjMuNiA0LjRsLTEwLjctMjAuNGMtMS43LTMuMy0xLjItNy4zIDEuMy0xMC4xeiIvPjwvZz48L3N2Zz4=",
+      "id": "i-LaLP76LY6PgTmnD_vPFz",
+      "isDerived": false,
+      "lastUpdated": 1553006625238,
+      "name": "TodoHttpApi",
+      "userId": "developer",
+      "uses": 0
+    }
+  },
+  "connectors": {
+    ":http4": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Invoke an http endpoint URL",
+          "descriptor": {
+            "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+            "inputDataShape": {
+              "kind": "any"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "properties",
+                "name": "properties",
+                "properties": {
+                  "httpMethod": {
+                    "defaultValue": "GET",
+                    "deprecated": false,
+                    "displayName": "Http Method",
+                    "enum": [
+                      {
+                        "label": "GET",
+                        "value": "GET"
+                      },
+                      {
+                        "label": "PUT",
+                        "value": "PUT"
+                      },
+                      {
+                        "label": "POST",
+                        "value": "POST"
+                      },
+                      {
+                        "label": "DELETE",
+                        "value": "DELETE"
+                      },
+                      {
+                        "label": "HEAD",
+                        "value": "HEAD"
+                      },
+                      {
+                        "label": "OPTIONS",
+                        "value": "OPTIONS"
+                      },
+                      {
+                        "label": "TRACE",
+                        "value": "TRACE"
+                      },
+                      {
+                        "label": "PATCH",
+                        "value": "PATCH"
+                      }
+                    ],
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "The specific http method to execute.",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "path": {
+                    "deprecated": false,
+                    "displayName": "URL Path",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis.connector:connector-http:http4-invoke-url",
+          "name": "Invoke URL",
+          "pattern": "To"
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke an http endpoint URL",
+          "descriptor": {
+            "connectorCustomizers": [
+              "io.syndesis.connector.http.HttpConnectorCustomizer"
+            ],
+            "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "any"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "properties",
+                "name": "properties",
+                "properties": {
+                  "httpMethod": {
+                    "defaultValue": "GET",
+                    "deprecated": false,
+                    "displayName": "Http Method",
+                    "enum": [
+                      {
+                        "label": "GET",
+                        "value": "GET"
+                      },
+                      {
+                        "label": "PUT",
+                        "value": "PUT"
+                      },
+                      {
+                        "label": "POST",
+                        "value": "POST"
+                      },
+                      {
+                        "label": "DELETE",
+                        "value": "DELETE"
+                      },
+                      {
+                        "label": "HEAD",
+                        "value": "HEAD"
+                      },
+                      {
+                        "label": "OPTIONS",
+                        "value": "OPTIONS"
+                      },
+                      {
+                        "label": "TRACE",
+                        "value": "TRACE"
+                      },
+                      {
+                        "label": "PATCH",
+                        "value": "PATCH"
+                      }
+                    ],
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "The specific http method to execute.",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "path": {
+                    "deprecated": false,
+                    "displayName": "URL Path",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "parameter",
+                    "labelHint": "Endpoint Path",
+                    "placeholder": "eg '/path/to/endpoint'",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "schedulerExpression": {
+                    "defaultValue": "1800000",
+                    "deprecated": false,
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "io.syndesis.connector:connector-http:http4-periodic-invoke-url",
+          "name": "Periodic invoke URL",
+          "pattern": "From"
+        }
+      ],
+      "componentScheme": "http4",
+      "configuredProperties": {
+        "headerFilterStrategy": "syndesisHeaderStrategy"
+      },
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-http:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        }
+      ],
+      "description": "Invoke various HTTP methods.",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjMiPjxzdHlsZT4uc3Qye2ZpbGw6IzAwYWVlZn08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjcgMjUuMXMtMjEuNyAyMS0yOC45IDMyLTEwLjMgOS40LTE0LjIgN2MtMy45LTIuNC0xMC4xLTYuNi0xMC4xLTYuNnMtNi45LTMuNyAzLjItMTEuMWMxMC40LTcuNiA0Ni4yLTI3LjQgNTAtMjEuM3pNMTM2LjMgMjMuOXY1Mi4zcy43IDYuOC02LjQgNS43LTI4LjMtNS4xLTM0LjYtNy43Yy02LjMtMi43LTMuNC01LjctMi4xLTcuNyAxLjItMiAyMC4zLTMwLjcgNDMuMS00Mi42ek00Ni4zIDY3LjFzMi44LTQuNSA3LjMtMi4yIDE2LjcgOS4yIDE2LjcgOS4yIDUuNCAyLjMgMi41IDhjLTIuOCA1LjctMTAuNiAzMS4zLTExIDQxLjJzLTYuNyAxMS4yLTEwLjQgMTEuMkgzMC4xcy05LjcgMS4yLTcuNy03LjkgNS44LTM1LjQgMjMuOS01OS41ek04Mi4yIDg2LjdzMS4zLTUuOCA3LjQtMy42YzYgMi4yIDI0LjYgOC4yIDM4IDguOSAxMC45LjYgOC43IDEwIDguNyAxMHYyNC40czEuNiA4LTYuNiA3LjktNDcuNSAwLTQ3LjUgMC0xMi4yIDIuMi05LjgtOS4xIDYtMjkuOCA5LjgtMzguNXpNMTY1LjUgMjUuMXMyMS43IDIxIDI4LjkgMzIgMTAuMyA5LjQgMTQuMiA3YzMuOS0yLjQgMTAuMS02LjYgMTAuMS02LjZzNi45LTMuNy0zLjItMTEuMWMtMTAuNC03LjYtNDYuMS0yNy40LTUwLTIxLjN6TTE0NC45IDIzLjl2NTIuM3MtLjcgNi44IDYuNCA1LjdjNy4xLTEgMjguMy01LjEgMzQuNi03LjcgNi4zLTIuNyAzLjQtNS43IDIuMS03LjctMS4yLTItMjAuMy0zMC43LTQzLjEtNDIuNnpNMjM0LjkgNjcuMXMtMi44LTQuNS03LjMtMi4yLTE2LjcgOS4yLTE2LjcgOS4yLTUuNCAyLjMtMi41IDhjMi44IDUuNyAxMC42IDMxLjMgMTEgNDEuMnM2LjcgMTEuMiAxMC40IDExLjJoMjEuM3M5LjcgMS4yIDcuNy03LjljLTEuOC05LjItNS43LTM1LjQtMjMuOS01OS41ek0xOTkgODYuN3MtMS4zLTUuOC03LjQtMy42LTI0LjYgOC4yLTM4IDguOWMtMTAuOS42LTguNyAxMC04LjcgMTB2MjQuNHMtMS42IDggNi42IDcuOWM4LjItLjEgNDcuNSAwIDQ3LjUgMHMxMi4yIDIuMiA5LjgtOS4xYy0yLjMtMTEuMi01LjktMjkuOC05LjgtMzguNXpNMTE1LjggMjU1LjhzLTIxLjctMjEtMjguOS0zMi0xMC4zLTkuNC0xNC4yLTdjLTMuOSAyLjQtMTAuMSA2LjYtMTAuMSA2LjZzLTYuOSAzLjcgMy4yIDExLjFjMTAuNCA3LjYgNDYuMSAyNy41IDUwIDIxLjN6TTEzNi4zIDI1N3YtNTIuM3MuNy02LjgtNi40LTUuN2MtNy4xIDEtMjguMyA1LjEtMzQuNiA3LjctNi4zIDIuNy0zLjQgNS43LTIuMSA3LjdzMjAuMyAzMC43IDQzLjEgNDIuNnpNNDYuNCAyMTMuOHMyLjggNC41IDcuMyAyLjIgMTYuNy05LjIgMTYuNy05LjIgNS40LTIuMyAyLjUtOGMtMi44LTUuNy0xMC42LTMxLjMtMTEtNDEuMi0uNC05LjgtNi43LTExLjItMTAuNC0xMS4ySDMwLjJzLTkuNy0xLjItNy43IDcuOSA1LjcgMzUuNCAyMy45IDU5LjV6TTgyLjMgMTk0LjJzMS4zIDUuOCA3LjQgMy42YzYtMi4yIDI0LjYtOC4yIDM4LTguOSAxMC45LS42IDguNy0xMCA4LjctMTB2LTI0LjRzMS42LTgtNi42LTcuOS00Ny41IDAtNDcuNSAwLTEyLjItMi4yLTkuOCA5LjEgNS45IDI5LjggOS44IDM4LjV6Ii8+PHBhdGggZD0iTTI5Ni43IDIxNi4zbC0xMjIuMi00Ny42IDYwLjcgMTE1LjYgMTUtMzUuOCAzOC4yIDMzLjEgMTEuNi0xMy4xLTM3LjgtMzMuN3oiLz48cGF0aCBkPSJNMTY1LjUgMjU1LjhzMjAuNi0xOS45IDI4LjMtMzEuMWwtNS41LTEwLjZjLS4xLjEtLjEuMi0uMi4zLTEuMyAyLTIwLjMgMzAuNy00My4xIDQyLjZ2LTUyLjNzLS43LTYuOCA2LjQtNS43YzYuNSAxIDI0LjcgNC40IDMyLjYgN2wtNi43LTEyLjdjLTcuNS0yLjEtMTYuMy00LTIzLjYtNC40LTEwLjktLjYtOC43LTEwLTguNy0xMHYtMjQuNHMtMS42LTggNi42LTcuOWM4LjIuMSA0Ny41IDAgNDcuNSAwczEyLjItMi4yIDkuOCA5LjFjLS45IDQuNC0yIDEwLTMuMyAxNS42bDEwLjUgNC4xYzEuOC02LjkgMy4yLTEzLjYgMy40LTE3LjYuNC05LjggNi43LTExLjIgMTAuNC0xMS4yaDIxLjNzOS43LTEuMiA3LjcgNy45Yy0xLjMgNS45LTMuMyAxOC45LTkuNSAzMy45bDEyLjEgNC43YzctMTYuMSAxMC45LTMzLjggMTAuOS01Mi4zQzI3Mi40IDY4IDIxMy4zIDguOSAxNDAuNyA4LjkgNjggOC45IDguOSA2OCA4LjkgMTQwLjdjMCA3Mi42IDU5LjEgMTMxLjcgMTMxLjcgMTMxLjcgMjQuOSAwIDQ4LjMtNyA2OC4yLTE5LjFsLTUuOC0xMWMtMTQuNSA4LjQtMzQuNiAxOC0zNy41IDEzLjV6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0MC43IDI3Mi40QzY4IDI3Mi40IDguOSAyMTMuMyA4LjkgMTQwLjcgOC45IDY4IDY4IDguOSAxNDAuNyA4LjljNzIuNiAwIDEzMS43IDU5LjEgMTMxLjcgMTMxLjcgMCAxOC42LTMuOSAzNi4zLTEwLjkgNTIuM2w4LjMgMy4zYzcuNC0xNy4xIDExLjUtMzUuOSAxMS41LTU1LjZDMjgxLjMgNjMuMSAyMTguMiAwIDE0MC43IDAgNjMuMSAwIDAgNjMuMSAwIDE0MC43czYzLjEgMTQwLjcgMTQwLjcgMTQwLjdjMjYuNCAwIDUxLjItNy4zIDcyLjMtMjAuMWwtNC4yLTcuOWMtMTkuOSAxMi00My4yIDE5LTY4LjEgMTl6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41IDI1NS44YzIuOSA0LjUgMjMtNS4xIDM3LjUtMTMuNWwtOS4yLTE3LjZjLTcuNiAxMS4yLTI4LjMgMzEuMS0yOC4zIDMxLjF6TTE1MS40IDE5OC45Yy03LjEtMS02LjQgNS43LTYuNCA1LjdWMjU3YzIyLjgtMTEuOSA0MS45LTQwLjUgNDMuMS00Mi42LjEtLjEuMS0uMi4yLS4zbC00LjMtOC4yYy04LTIuNi0yNi4xLTYtMzIuNi03ek0yNTguOSAxNTQuNGMxLjktOS4xLTcuNy03LjktNy43LTcuOWgtMjEuM2MtMy43IDAtMTAgMS4zLTEwLjQgMTEuMi0uMiA0LTEuNiAxMC43LTMuNCAxNy42bDMzLjMgMTNjNi4yLTE1IDguMy0yOCA5LjUtMzMuOXpNMTY3LjkgMTYyLjdjMS43LTEuOSA0LjItMyA2LjctMyAxLjEgMCAyLjIuMiAzLjIuNmwyNy44IDEwLjljMS4yLTUuNiAyLjQtMTEuMiAzLjMtMTUuNiAyLjQtMTEuMy05LjgtOS4xLTkuOC05LjFzLTM5LjMuMS00Ny41IDBjLTguMi0uMS02LjYgNy45LTYuNiA3Ljl2MjQuNHMtMi4yIDkuNCA4LjcgMTBjNy4zLjQgMTYuMSAyLjQgMjMuNiA0LjRsLTEwLjctMjAuNGMtMS43LTMuMy0xLjItNy4zIDEuMy0xMC4xeiIvPjwvZz48L3N2Zz4=",
+      "id": "http4",
+      "name": "HTTP",
+      "properties": {
+        "baseUrl": {
+          "deprecated": false,
+          "displayName": "Base URL",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "parameter",
+          "labelHint": "Base Http Endpoint URL",
+          "placeholder": "eg 'www.redhat.com'",
+          "required": true,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "tags": [
+        "verifier"
+      ],
+      "version": 66
+    },
+    ":sql": {
+      "actions": [
+        {
+          "actionType": "connector",
+          "description": "Invoke SQL to obtain, store, update, or delete data.",
+          "descriptor": {
+            "componentScheme": "sql",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "json-schema"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                "name": "SQL statement",
+                "properties": {
+                  "query": {
+                    "deprecated": false,
+                    "displayName": "SQL statement",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                    "placeholder": "for example ':#MYPARAMNAME'",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-connector",
+          "name": "Invoke SQL",
+          "pattern": "To",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke SQL to obtain, store, update, or delete data.",
+          "descriptor": {
+            "componentScheme": "sql",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Enter a SQL statement that starts with SELECT.",
+                "name": "SQL statement",
+                "properties": {
+                  "query": {
+                    "deprecated": false,
+                    "displayName": "SQL statement",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "SQL SELECT statement to be executed.",
+                    "order": 1,
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "schedulerExpression": {
+                    "defaultValue": "60000",
+                    "deprecated": false,
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "order": 2,
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-start-connector",
+          "name": "Periodic SQL invocation",
+          "pattern": "From",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke a stored procedure.",
+          "descriptor": {
+            "componentScheme": "sql-stored",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "json-schema"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Select the stored procedure.",
+                "name": "Procedure name",
+                "properties": {
+                  "procedureName": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "displayName": "Procedure name",
+                    "group": "common",
+                    "javaType": "java.lang.String",
+                    "kind": "property",
+                    "labelHint": "Name of the stored procedure.",
+                    "required": false,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "template": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Template",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Stored procedure template to perform.",
+                    "required": false,
+                    "secret": false,
+                    "type": "hidden"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-stored-connector",
+          "name": "Invoke stored procedure",
+          "pattern": "To",
+          "tags": [
+            "dynamic"
+          ]
+        },
+        {
+          "actionType": "connector",
+          "description": "Periodically invoke a stored procedure.",
+          "descriptor": {
+            "componentScheme": "sql-stored",
+            "connectorCustomizers": [
+              "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+            ],
+            "inputDataShape": {
+              "kind": "none"
+            },
+            "outputDataShape": {
+              "kind": "json-schema"
+            },
+            "propertyDefinitionSteps": [
+              {
+                "description": "Select the stored procedure.",
+                "name": "Procedure name",
+                "properties": {
+                  "procedureName": {
+                    "componentProperty": true,
+                    "deprecated": false,
+                    "displayName": "Procedure name",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Name of the stored procedure.",
+                    "required": true,
+                    "secret": false,
+                    "type": "string"
+                  },
+                  "schedulerExpression": {
+                    "defaultValue": "60000",
+                    "deprecated": false,
+                    "displayName": "Period",
+                    "group": "consumer",
+                    "javaType": "long",
+                    "kind": "parameter",
+                    "labelHint": "Delay between scheduling (executing).",
+                    "required": false,
+                    "secret": false,
+                    "type": "duration"
+                  },
+                  "template": {
+                    "componentProperty": false,
+                    "deprecated": false,
+                    "displayName": "Template",
+                    "group": "producer",
+                    "javaType": "java.lang.String",
+                    "kind": "path",
+                    "labelHint": "Stored Procedure template to perform.",
+                    "required": true,
+                    "secret": false,
+                    "type": "hidden"
+                  }
+                }
+              }
+            ]
+          },
+          "id": "sql-stored-start-connector",
+          "name": "Periodic stored procedure invocation",
+          "pattern": "From",
+          "tags": [
+            "dynamic"
+          ]
+        }
+      ],
+      "connectorCustomizers": [
+        "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+      ],
+      "dependencies": [
+        {
+          "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+          "type": "MAVEN"
+        },
+        {
+          "id": "jdbc-driver",
+          "type": "EXTENSION_TAG"
+        }
+      ],
+      "description": "Subscribe for and publish messages.",
+      "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjcuMiAzMDAiPjxzdHlsZT48L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBkPSJNMjE3LjcgMTk0LjVjNS45IDMuNiA5LjUgNy43IDkuNSAxMi43djYzLjRjMCAyMS42LTY3LjkgMjkuNS0xMTMuNiAyOS41QzY3LjkgMzAwIDAgMjkyLjEgMCAyNzAuNXYtNjMuNGMwLTQuOSAzLjUtOS4xIDkuNS0xMi43LTUuOS0zLjYtOS41LTcuNy05LjUtMTIuN3YtNjMuNGMwLTUgMy42LTkuMiA5LjctMTIuOC02LjEtMy42LTkuOC03LjktOS44LTEyLjlWMjkuNUMtLjEgNy45IDY3LjggMCAxMTMuNSAwYzQ1LjcgMCAxMTMuNiA3LjkgMTEzLjYgMjkuNXY2My40YzAgNS0zLjYgOS4yLTkuNyAxMi44IDYuMSAzLjYgOS44IDcuOSA5LjggMTIuOVYxODJjMCA0LjctMy41IDguOS05LjUgMTIuNXoiIGZpbGw9IiMwMDk0NDQiLz48cGF0aCBkPSJNMjE3LjYgMTk0LjdjNS45IDMuNi04Ni4xIDI3LjItMjA4LjMgMEMzLjQgMTkxLjEtLjIgMTg3LS4yIDE4MnYtNjMuNGMwLTUgOS43LTEyLjggOS43LTEyLjhzMTA5LjYgMjAgMjA3LjctLjFjOS43IDEuOCA5LjggNy45IDkuOCAxMi45VjE4MmMuMSA0LjktMy40IDkuMS05LjQgMTIuN3oiIGZpbGw9IiM0ZmU4OWMiLz48cGF0aCBkPSJNOS41IDEwNS41Yy02LTMuNi05LjUtNy43LTkuNS0xMi43VjI5LjVDMCA3LjkgNjcuOSAwIDExMy42IDBjNDUuNyAwIDExMy42IDcuOSAxMTMuNiAyOS41djYzLjRjMCA0LjktMy41IDkuMS05LjUgMTIuNy0xMDMuMyAyNC41LTIxNC4yIDMuNS0yMDguMi0uMXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNzguMSAyMjIuNmMxMi4xIDEgMjQuNyAxLjUgMzcuNiAxLjUgMzUuNSAwIDY4LjctNCA4OC45LTEwLjcgMS42LS41IDMuNC4zIDMuOSAyIC41IDEuNi0uMyAzLjQtMiAzLjktMjAuOCA2LjktNTQuOCAxMS05MC45IDExLTEzIDAtMjUuOS0uNS0zOC4xLTEuNi0xLjctLjEtMy0xLjctMi44LTMuNC4yLTEuNSAxLjctMi44IDMuNC0yLjd6bS0yNS4yLTJjLTEyLjMtMi0yMi45LTQuNy0zMC41LTcuNi0xLjEtLjQtMi4zLjEtMi43IDEuMi0uNCAxLjEuMSAyLjMgMS4yIDIuNyA4IDMuMSAxOC42IDUuOCAzMS40IDcuOWguM2MxIDAgMS45LS43IDItMS43LjItMS4yLS42LTIuMy0xLjctMi41em0xNjQuOC0yNi4xYzUuOSAzLjYgOS41IDcuNyA5LjUgMTIuN3Y2My40YzAgMjEuNi02Ny45IDI5LjUtMTEzLjYgMjkuNUM2Ny45IDMwMCAwIDI5Mi4xIDAgMjcwLjV2LTYzLjRjMC00LjkgMy41LTkuMSA5LjUtMTIuNy01LjktMy42LTkuNS03LjctOS41LTEyLjd2LTYzLjRjMC01IDMuNi05LjIgOS43LTEyLjgtNi4xLTMuNi05LjgtNy45LTkuOC0xMi45VjI5LjVDLS4xIDcuOSA2Ny44IDAgMTEzLjUgMGM0NS43IDAgMTEzLjYgNy45IDExMy42IDI5LjV2NjMuNGMwIDUtMy42IDkuMi05LjcgMTIuOCA2LjEgMy42IDkuOCA3LjkgOS44IDEyLjlWMTgyYzAgNC43LTMuNSA4LjktOS41IDEyLjV6TTE5LjMgMTAxLjNjMy43IDEuNSA4LjIgMyAxMy43IDQuNCAxNy43IDQuNiA0NC42IDguMyA4MC41IDguMyAzNiAwIDYzLTMuNyA4MC42LTguNCA1LjQtMS40IDEwLTIuOSAxMy43LTQuNCA3LjItMyAxMS02IDExLTguNFYyOS41YzAtNy40LTM2LjItMjEuMi0xMDUuMy0yMS4yUzguMiAyMi4xIDguMiAyOS41djYzLjRjMCAyLjMgMy44IDUuMyAxMS4xIDguNHptMTg5IDk3LjZjLTIzLjUgOC45LTY0LjEgMTIuNC05NC43IDEyLjQtMzAuNiAwLTcxLjMtMy41LTk0LjctMTIuNC03IDMtMTAuNiA1LjktMTAuNiA4LjJ2NjMuNGMwIDcuNCAzNi4yIDIxLjIgMTA1LjMgMjEuMnMxMDUuMy0xMy44IDEwNS4zLTIxLjJ2LTYzLjRjMC0yLjMtMy42LTUuMi0xMC42LTguMnptMTAuNi04MC40YzAtMi40LTMuOC01LjQtMTEuMS04LjQtMjMuNSA4LjgtNjMuOSAxMi4zLTk0LjMgMTIuM3MtNzAuNy0zLjUtOTQuMi0xMi4yYy03LjIgMy0xMSA2LTExIDguNFYxODJjMCAyLjMgMy42IDUuMyAxMC42IDguMiAzLjYgMS41IDguMSAzIDEzLjUgNC40IDE3LjcgNC43IDQ0LjggOC41IDgxLjIgOC41czYzLjUtMy44IDgxLjItOC41YzUuNC0xLjQgOS45LTIuOSAxMy41LTQuNCA3LTMgMTAuNi01LjkgMTAuNi04LjJ2LTYzLjV6bS0xNC4zIDYuM2MtMjAuMiA2LjctNTMuNCAxMC43LTg4LjkgMTAuNy0xMi45IDAtMjUuNi0uNS0zNy42LTEuNS0xLjctLjEtMy4yIDEuMS0zLjQgMi44LS4xIDEuNyAxLjEgMy4yIDIuOCAzLjQgMTIuMiAxIDI1IDEuNiAzOC4xIDEuNiAzNi4xIDAgNzAuMS00LjEgOTAuOS0xMSAxLjYtLjUgMi41LTIuMyAyLTMuOS0uNS0xLjgtMi4yLTIuNy0zLjktMi4xem0tMTUxLjcgNy4xYy0xMi4zLTItMjIuOS00LjctMzAuNS03LjYtMS4xLS40LTIuMy4xLTIuNyAxLjItLjQgMS4xLjEgMi4zIDEuMiAyLjcgOCAzLjEgMTguNiA1LjggMzEuNCA3LjloLjNjMSAwIDEuOS0uNyAyLTEuNy4yLTEuMi0uNi0yLjMtMS43LTIuNXptMjQuNi04MC43YzEyLjIgMSAyNSAxLjYgMzguMSAxLjYgMzYuMSAwIDcwLjEtNC4xIDkwLjktMTEgMS42LS41IDIuNS0yLjMgMi0zLjlzLTIuMy0yLjUtMy45LTJjLTIwLjIgNi43LTUzLjQgMTAuNy04OC45IDEwLjctMTMtLjEtMjUuNi0uNi0zNy43LTEuNi0xLjctLjEtMy4yIDEuMS0zLjQgMi44LS4xIDEuNyAxLjIgMy4yIDIuOSAzLjR6bS0yNS00LjFjMSAwIDEuOS0uNyAyLTEuNy4yLTEuMS0uNi0yLjItMS43LTIuNC0xMi4zLTItMjIuOS00LjctMzAuNS03LjYtMS4xLS40LTIuMy4xLTIuNyAxLjItLjQgMS4xLjEgMi4zIDEuMiAyLjcgOCAzLjEgMTguNiA1LjggMzEuNCA3LjkgMC0uMS4xLS4xLjMtLjF6Ii8+PC9nPjwvc3ZnPg==",
+      "id": "sql",
+      "name": "Database",
+      "properties": {
+        "password": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Password",
+          "group": "security",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common,security",
+          "labelHint": "Password for the database connection.",
+          "order": 3,
+          "required": true,
+          "secret": true,
+          "type": "string"
+        },
+        "schema": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Schema",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "label": "common",
+          "labelHint": "Database schema.",
+          "order": 4,
+          "required": false,
+          "secret": false,
+          "type": "string"
+        },
+        "url": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Connection URL",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "labelHint": "JDBC URL of the database.",
+          "order": 1,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        },
+        "user": {
+          "componentProperty": true,
+          "deprecated": false,
+          "displayName": "Username",
+          "group": "common",
+          "javaType": "java.lang.String",
+          "kind": "property",
+          "labelHint": "Username for the database connection.",
+          "order": 2,
+          "required": true,
+          "secret": false,
+          "type": "string"
+        }
+      },
+      "tags": [
+        "verifier"
+      ],
+      "version": 66
+    }
+  },
+  "integrations": {
+    ":i-LbXQlb3Hh21eI9LGneSz": {
+      "createdAt": 1554282125764,
+      "flows": [
+        {
+          "id": "-LbXQ-nuPn-7k414Cjhc",
+          "steps": [
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Periodically invoke SQL to obtain, store, update, or delete data.",
+                "descriptor": {
+                  "componentScheme": "sql",
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+                  ],
+                  "inputDataShape": {
+                    "kind": "none",
+                    "type": "SQL_PARAM_IN"
+                  },
+                  "outputDataShape": {
+                    "description": "Result of SQL [select * from contact]",
+                    "kind": "json-schema",
+                    "metadata": {
+                      "variant": "collection"
+                    },
+                    "name": "SQL Result",
+                    "specification": "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_OUT\",\"properties\":{\"first_name\":{\"type\":\"string\",\"required\":true},\"last_name\":{\"type\":\"string\",\"required\":true},\"company\":{\"type\":\"string\",\"required\":true},\"lead_source\":{\"type\":\"string\",\"required\":true},\"create_date\":{\"type\":\"string\",\"required\":true,\"format\":\"date-time\"}}}}",
+                    "type": "SQL_PARAM_OUT"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "description": "Enter a SQL statement that starts with SELECT.",
+                      "name": "SQL statement",
+                      "properties": {
+                        "query": {
+                          "defaultValue": "select * from contact",
+                          "deprecated": false,
+                          "displayName": "SQL statement",
+                          "enum": [
+                            {
+                              "label": "query",
+                              "value": "select * from contact"
+                            }
+                          ],
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "path",
+                          "labelHint": "SQL SELECT statement to be executed.",
+                          "order": 1,
+                          "required": true,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "schedulerExpression": {
+                          "defaultValue": "60000",
+                          "deprecated": false,
+                          "displayName": "Period",
+                          "group": "consumer",
+                          "javaType": "long",
+                          "kind": "parameter",
+                          "labelHint": "Delay between scheduling (executing).",
+                          "order": 2,
+                          "required": false,
+                          "secret": false,
+                          "type": "duration"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "sql-start-connector",
+                "name": "Periodic SQL invocation",
+                "pattern": "From",
+                "tags": [
+                  "dynamic"
+                ]
+              },
+              "configuredProperties": {
+                "query": "select * from contact",
+                "schedulerExpression": "60000"
+              },
+              "connection": {
+                "configuredProperties": {
+                  "password": "»ENC:9ba6020f822bd710c9715335e03747bed6de9409563d16729c4fdecca6eaf602ba787a6c0498c75ff936827c5f2d9585",
+                  "schema": "sampledb",
+                  "url": "jdbc:postgresql://syndesis-db:5432/sampledb",
+                  "user": "sampledb"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Invoke SQL to obtain, store, update, or delete data.",
+                      "descriptor": {
+                        "componentScheme": "sql",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Enter a SQL statement that starts with INSERT, SELECT, UPDATE or DELETE.",
+                            "name": "SQL statement",
+                            "properties": {
+                              "query": {
+                                "deprecated": false,
+                                "displayName": "SQL statement",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "SQL statement to be executed. Can contain input parameters prefixed by ':#'.",
+                                "placeholder": "for example ':#MYPARAMNAME'",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-connector",
+                      "name": "Invoke SQL",
+                      "pattern": "To",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke SQL to obtain, store, update, or delete data.",
+                      "descriptor": {
+                        "componentScheme": "sql",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStartConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Enter a SQL statement that starts with SELECT.",
+                            "name": "SQL statement",
+                            "properties": {
+                              "query": {
+                                "deprecated": false,
+                                "displayName": "SQL statement",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "SQL SELECT statement to be executed.",
+                                "order": 1,
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "schedulerExpression": {
+                                "defaultValue": "60000",
+                                "deprecated": false,
+                                "displayName": "Period",
+                                "group": "consumer",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "order": 2,
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-start-connector",
+                      "name": "Periodic SQL invocation",
+                      "pattern": "From",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke a stored procedure.",
+                      "descriptor": {
+                        "componentScheme": "sql-stored",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStoredConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Select the stored procedure.",
+                            "name": "Procedure name",
+                            "properties": {
+                              "procedureName": {
+                                "componentProperty": true,
+                                "deprecated": false,
+                                "displayName": "Procedure name",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "property",
+                                "labelHint": "Name of the stored procedure.",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "template": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Template",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Stored procedure template to perform.",
+                                "required": false,
+                                "secret": false,
+                                "type": "hidden"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-stored-connector",
+                      "name": "Invoke stored procedure",
+                      "pattern": "To",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke a stored procedure.",
+                      "descriptor": {
+                        "componentScheme": "sql-stored",
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.sql.customizer.SqlStartStoredConnectorCustomizer"
+                        ],
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "json-schema"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "Select the stored procedure.",
+                            "name": "Procedure name",
+                            "properties": {
+                              "procedureName": {
+                                "componentProperty": true,
+                                "deprecated": false,
+                                "displayName": "Procedure name",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Name of the stored procedure.",
+                                "required": true,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "schedulerExpression": {
+                                "defaultValue": "60000",
+                                "deprecated": false,
+                                "displayName": "Period",
+                                "group": "consumer",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              },
+                              "template": {
+                                "componentProperty": false,
+                                "deprecated": false,
+                                "displayName": "Template",
+                                "group": "producer",
+                                "javaType": "java.lang.String",
+                                "kind": "path",
+                                "labelHint": "Stored Procedure template to perform.",
+                                "required": true,
+                                "secret": false,
+                                "type": "hidden"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "sql-stored-start-connector",
+                      "name": "Periodic stored procedure invocation",
+                      "pattern": "From",
+                      "tags": [
+                        "dynamic"
+                      ]
+                    }
+                  ],
+                  "connectorCustomizers": [
+                    "io.syndesis.connector.sql.customizer.DataSourceCustomizer"
+                  ],
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-sql:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    },
+                    {
+                      "id": "jdbc-driver",
+                      "type": "EXTENSION_TAG"
+                    }
+                  ],
+                  "description": "Subscribe for and publish messages.",
+                  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjcuMiAzMDAiPjxzdHlsZT48L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBkPSJNMjE3LjcgMTk0LjVjNS45IDMuNiA5LjUgNy43IDkuNSAxMi43djYzLjRjMCAyMS42LTY3LjkgMjkuNS0xMTMuNiAyOS41QzY3LjkgMzAwIDAgMjkyLjEgMCAyNzAuNXYtNjMuNGMwLTQuOSAzLjUtOS4xIDkuNS0xMi43LTUuOS0zLjYtOS41LTcuNy05LjUtMTIuN3YtNjMuNGMwLTUgMy42LTkuMiA5LjctMTIuOC02LjEtMy42LTkuOC03LjktOS44LTEyLjlWMjkuNUMtLjEgNy45IDY3LjggMCAxMTMuNSAwYzQ1LjcgMCAxMTMuNiA3LjkgMTEzLjYgMjkuNXY2My40YzAgNS0zLjYgOS4yLTkuNyAxMi44IDYuMSAzLjYgOS44IDcuOSA5LjggMTIuOVYxODJjMCA0LjctMy41IDguOS05LjUgMTIuNXoiIGZpbGw9IiMwMDk0NDQiLz48cGF0aCBkPSJNMjE3LjYgMTk0LjdjNS45IDMuNi04Ni4xIDI3LjItMjA4LjMgMEMzLjQgMTkxLjEtLjIgMTg3LS4yIDE4MnYtNjMuNGMwLTUgOS43LTEyLjggOS43LTEyLjhzMTA5LjYgMjAgMjA3LjctLjFjOS43IDEuOCA5LjggNy45IDkuOCAxMi45VjE4MmMuMSA0LjktMy40IDkuMS05LjQgMTIuN3oiIGZpbGw9IiM0ZmU4OWMiLz48cGF0aCBkPSJNOS41IDEwNS41Yy02LTMuNi05LjUtNy43LTkuNS0xMi43VjI5LjVDMCA3LjkgNjcuOSAwIDExMy42IDBjNDUuNyAwIDExMy42IDcuOSAxMTMuNiAyOS41djYzLjRjMCA0LjktMy41IDkuMS05LjUgMTIuNy0xMDMuMyAyNC41LTIxNC4yIDMuNS0yMDguMi0uMXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNzguMSAyMjIuNmMxMi4xIDEgMjQuNyAxLjUgMzcuNiAxLjUgMzUuNSAwIDY4LjctNCA4OC45LTEwLjcgMS42LS41IDMuNC4zIDMuOSAyIC41IDEuNi0uMyAzLjQtMiAzLjktMjAuOCA2LjktNTQuOCAxMS05MC45IDExLTEzIDAtMjUuOS0uNS0zOC4xLTEuNi0xLjctLjEtMy0xLjctMi44LTMuNC4yLTEuNSAxLjctMi44IDMuNC0yLjd6bS0yNS4yLTJjLTEyLjMtMi0yMi45LTQuNy0zMC41LTcuNi0xLjEtLjQtMi4zLjEtMi43IDEuMi0uNCAxLjEuMSAyLjMgMS4yIDIuNyA4IDMuMSAxOC42IDUuOCAzMS40IDcuOWguM2MxIDAgMS45LS43IDItMS43LjItMS4yLS42LTIuMy0xLjctMi41em0xNjQuOC0yNi4xYzUuOSAzLjYgOS41IDcuNyA5LjUgMTIuN3Y2My40YzAgMjEuNi02Ny45IDI5LjUtMTEzLjYgMjkuNUM2Ny45IDMwMCAwIDI5Mi4xIDAgMjcwLjV2LTYzLjRjMC00LjkgMy41LTkuMSA5LjUtMTIuNy01LjktMy42LTkuNS03LjctOS41LTEyLjd2LTYzLjRjMC01IDMuNi05LjIgOS43LTEyLjgtNi4xLTMuNi05LjgtNy45LTkuOC0xMi45VjI5LjVDLS4xIDcuOSA2Ny44IDAgMTEzLjUgMGM0NS43IDAgMTEzLjYgNy45IDExMy42IDI5LjV2NjMuNGMwIDUtMy42IDkuMi05LjcgMTIuOCA2LjEgMy42IDkuOCA3LjkgOS44IDEyLjlWMTgyYzAgNC43LTMuNSA4LjktOS41IDEyLjV6TTE5LjMgMTAxLjNjMy43IDEuNSA4LjIgMyAxMy43IDQuNCAxNy43IDQuNiA0NC42IDguMyA4MC41IDguMyAzNiAwIDYzLTMuNyA4MC42LTguNCA1LjQtMS40IDEwLTIuOSAxMy43LTQuNCA3LjItMyAxMS02IDExLTguNFYyOS41YzAtNy40LTM2LjItMjEuMi0xMDUuMy0yMS4yUzguMiAyMi4xIDguMiAyOS41djYzLjRjMCAyLjMgMy44IDUuMyAxMS4xIDguNHptMTg5IDk3LjZjLTIzLjUgOC45LTY0LjEgMTIuNC05NC43IDEyLjQtMzAuNiAwLTcxLjMtMy41LTk0LjctMTIuNC03IDMtMTAuNiA1LjktMTAuNiA4LjJ2NjMuNGMwIDcuNCAzNi4yIDIxLjIgMTA1LjMgMjEuMnMxMDUuMy0xMy44IDEwNS4zLTIxLjJ2LTYzLjRjMC0yLjMtMy42LTUuMi0xMC42LTguMnptMTAuNi04MC40YzAtMi40LTMuOC01LjQtMTEuMS04LjQtMjMuNSA4LjgtNjMuOSAxMi4zLTk0LjMgMTIuM3MtNzAuNy0zLjUtOTQuMi0xMi4yYy03LjIgMy0xMSA2LTExIDguNFYxODJjMCAyLjMgMy42IDUuMyAxMC42IDguMiAzLjYgMS41IDguMSAzIDEzLjUgNC40IDE3LjcgNC43IDQ0LjggOC41IDgxLjIgOC41czYzLjUtMy44IDgxLjItOC41YzUuNC0xLjQgOS45LTIuOSAxMy41LTQuNCA3LTMgMTAuNi01LjkgMTAuNi04LjJ2LTYzLjV6bS0xNC4zIDYuM2MtMjAuMiA2LjctNTMuNCAxMC43LTg4LjkgMTAuNy0xMi45IDAtMjUuNi0uNS0zNy42LTEuNS0xLjctLjEtMy4yIDEuMS0zLjQgMi44LS4xIDEuNyAxLjEgMy4yIDIuOCAzLjQgMTIuMiAxIDI1IDEuNiAzOC4xIDEuNiAzNi4xIDAgNzAuMS00LjEgOTAuOS0xMSAxLjYtLjUgMi41LTIuMyAyLTMuOS0uNS0xLjgtMi4yLTIuNy0zLjktMi4xem0tMTUxLjcgNy4xYy0xMi4zLTItMjIuOS00LjctMzAuNS03LjYtMS4xLS40LTIuMy4xLTIuNyAxLjItLjQgMS4xLjEgMi4zIDEuMiAyLjcgOCAzLjEgMTguNiA1LjggMzEuNCA3LjloLjNjMSAwIDEuOS0uNyAyLTEuNy4yLTEuMi0uNi0yLjMtMS43LTIuNXptMjQuNi04MC43YzEyLjIgMSAyNSAxLjYgMzguMSAxLjYgMzYuMSAwIDcwLjEtNC4xIDkwLjktMTEgMS42LS41IDIuNS0yLjMgMi0zLjlzLTIuMy0yLjUtMy45LTJjLTIwLjIgNi43LTUzLjQgMTAuNy04OC45IDEwLjctMTMtLjEtMjUuNi0uNi0zNy43LTEuNi0xLjctLjEtMy4yIDEuMS0zLjQgMi44LS4xIDEuNyAxLjIgMy4yIDIuOSAzLjR6bS0yNS00LjFjMSAwIDEuOS0uNyAyLTEuNy4yLTEuMS0uNi0yLjItMS43LTIuNC0xMi4zLTItMjIuOS00LjctMzAuNS03LjYtMS4xLS40LTIuMy4xLTIuNyAxLjItLjQgMS4xLjEgMi4zIDEuMiAyLjcgOCAzLjEgMTguNiA1LjggMzEuNCA3LjkgMC0uMS4xLS4xLjMtLjF6Ii8+PC9nPjwvc3ZnPg==",
+                  "id": "sql",
+                  "name": "Database",
+                  "properties": {
+                    "password": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Password",
+                      "group": "security",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common,security",
+                      "labelHint": "Password for the database connection.",
+                      "order": 3,
+                      "required": true,
+                      "secret": true,
+                      "type": "string"
+                    },
+                    "schema": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Schema",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "label": "common",
+                      "labelHint": "Database schema.",
+                      "order": 4,
+                      "required": false,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "url": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Connection URL",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "JDBC URL of the database.",
+                      "order": 1,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    },
+                    "user": {
+                      "componentProperty": true,
+                      "deprecated": false,
+                      "displayName": "Username",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "property",
+                      "labelHint": "Username for the database connection.",
+                      "order": 2,
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "tags": [
+                    "verifier"
+                  ],
+                  "version": 66
+                },
+                "connectorId": "sql",
+                "description": "Connection to SampleDB",
+                "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyMjcuMiAzMDAiPjxzdHlsZT48L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBkPSJNMjE3LjcgMTk0LjVjNS45IDMuNiA5LjUgNy43IDkuNSAxMi43djYzLjRjMCAyMS42LTY3LjkgMjkuNS0xMTMuNiAyOS41QzY3LjkgMzAwIDAgMjkyLjEgMCAyNzAuNXYtNjMuNGMwLTQuOSAzLjUtOS4xIDkuNS0xMi43LTUuOS0zLjYtOS41LTcuNy05LjUtMTIuN3YtNjMuNGMwLTUgMy42LTkuMiA5LjctMTIuOC02LjEtMy42LTkuOC03LjktOS44LTEyLjlWMjkuNUMtLjEgNy45IDY3LjggMCAxMTMuNSAwYzQ1LjcgMCAxMTMuNiA3LjkgMTEzLjYgMjkuNXY2My40YzAgNS0zLjYgOS4yLTkuNyAxMi44IDYuMSAzLjYgOS44IDcuOSA5LjggMTIuOVYxODJjMCA0LjctMy41IDguOS05LjUgMTIuNXoiIGZpbGw9IiMwMDk0NDQiLz48cGF0aCBkPSJNMjE3LjYgMTk0LjdjNS45IDMuNi04Ni4xIDI3LjItMjA4LjMgMEMzLjQgMTkxLjEtLjIgMTg3LS4yIDE4MnYtNjMuNGMwLTUgOS43LTEyLjggOS43LTEyLjhzMTA5LjYgMjAgMjA3LjctLjFjOS43IDEuOCA5LjggNy45IDkuOCAxMi45VjE4MmMuMSA0LjktMy40IDkuMS05LjQgMTIuN3oiIGZpbGw9IiM0ZmU4OWMiLz48cGF0aCBkPSJNOS41IDEwNS41Yy02LTMuNi05LjUtNy43LTkuNS0xMi43VjI5LjVDMCA3LjkgNjcuOSAwIDExMy42IDBjNDUuNyAwIDExMy42IDcuOSAxMTMuNiAyOS41djYzLjRjMCA0LjktMy41IDkuMS05LjUgMTIuNy0xMDMuMyAyNC41LTIxNC4yIDMuNS0yMDguMi0uMXoiIGZpbGw9IiNmZmYiLz48cGF0aCBkPSJNNzguMSAyMjIuNmMxMi4xIDEgMjQuNyAxLjUgMzcuNiAxLjUgMzUuNSAwIDY4LjctNCA4OC45LTEwLjcgMS42LS41IDMuNC4zIDMuOSAyIC41IDEuNi0uMyAzLjQtMiAzLjktMjAuOCA2LjktNTQuOCAxMS05MC45IDExLTEzIDAtMjUuOS0uNS0zOC4xLTEuNi0xLjctLjEtMy0xLjctMi44LTMuNC4yLTEuNSAxLjctMi44IDMuNC0yLjd6bS0yNS4yLTJjLTEyLjMtMi0yMi45LTQuNy0zMC41LTcuNi0xLjEtLjQtMi4zLjEtMi43IDEuMi0uNCAxLjEuMSAyLjMgMS4yIDIuNyA4IDMuMSAxOC42IDUuOCAzMS40IDcuOWguM2MxIDAgMS45LS43IDItMS43LjItMS4yLS42LTIuMy0xLjctMi41em0xNjQuOC0yNi4xYzUuOSAzLjYgOS41IDcuNyA5LjUgMTIuN3Y2My40YzAgMjEuNi02Ny45IDI5LjUtMTEzLjYgMjkuNUM2Ny45IDMwMCAwIDI5Mi4xIDAgMjcwLjV2LTYzLjRjMC00LjkgMy41LTkuMSA5LjUtMTIuNy01LjktMy42LTkuNS03LjctOS41LTEyLjd2LTYzLjRjMC01IDMuNi05LjIgOS43LTEyLjgtNi4xLTMuNi05LjgtNy45LTkuOC0xMi45VjI5LjVDLS4xIDcuOSA2Ny44IDAgMTEzLjUgMGM0NS43IDAgMTEzLjYgNy45IDExMy42IDI5LjV2NjMuNGMwIDUtMy42IDkuMi05LjcgMTIuOCA2LjEgMy42IDkuOCA3LjkgOS44IDEyLjlWMTgyYzAgNC43LTMuNSA4LjktOS41IDEyLjV6TTE5LjMgMTAxLjNjMy43IDEuNSA4LjIgMyAxMy43IDQuNCAxNy43IDQuNiA0NC42IDguMyA4MC41IDguMyAzNiAwIDYzLTMuNyA4MC42LTguNCA1LjQtMS40IDEwLTIuOSAxMy43LTQuNCA3LjItMyAxMS02IDExLTguNFYyOS41YzAtNy40LTM2LjItMjEuMi0xMDUuMy0yMS4yUzguMiAyMi4xIDguMiAyOS41djYzLjRjMCAyLjMgMy44IDUuMyAxMS4xIDguNHptMTg5IDk3LjZjLTIzLjUgOC45LTY0LjEgMTIuNC05NC43IDEyLjQtMzAuNiAwLTcxLjMtMy41LTk0LjctMTIuNC03IDMtMTAuNiA1LjktMTAuNiA4LjJ2NjMuNGMwIDcuNCAzNi4yIDIxLjIgMTA1LjMgMjEuMnMxMDUuMy0xMy44IDEwNS4zLTIxLjJ2LTYzLjRjMC0yLjMtMy42LTUuMi0xMC42LTguMnptMTAuNi04MC40YzAtMi40LTMuOC01LjQtMTEuMS04LjQtMjMuNSA4LjgtNjMuOSAxMi4zLTk0LjMgMTIuM3MtNzAuNy0zLjUtOTQuMi0xMi4yYy03LjIgMy0xMSA2LTExIDguNFYxODJjMCAyLjMgMy42IDUuMyAxMC42IDguMiAzLjYgMS41IDguMSAzIDEzLjUgNC40IDE3LjcgNC43IDQ0LjggOC41IDgxLjIgOC41czYzLjUtMy44IDgxLjItOC41YzUuNC0xLjQgOS45LTIuOSAxMy41LTQuNCA3LTMgMTAuNi01LjkgMTAuNi04LjJ2LTYzLjV6bS0xNC4zIDYuM2MtMjAuMiA2LjctNTMuNCAxMC43LTg4LjkgMTAuNy0xMi45IDAtMjUuNi0uNS0zNy42LTEuNS0xLjctLjEtMy4yIDEuMS0zLjQgMi44LS4xIDEuNyAxLjEgMy4yIDIuOCAzLjQgMTIuMiAxIDI1IDEuNiAzOC4xIDEuNiAzNi4xIDAgNzAuMS00LjEgOTAuOS0xMSAxLjYtLjUgMi41LTIuMyAyLTMuOS0uNS0xLjgtMi4yLTIuNy0zLjktMi4xem0tMTUxLjcgNy4xYy0xMi4zLTItMjIuOS00LjctMzAuNS03LjYtMS4xLS40LTIuMy4xLTIuNyAxLjItLjQgMS4xLjEgMi4zIDEuMiAyLjcgOCAzLjEgMTguNiA1LjggMzEuNCA3LjloLjNjMSAwIDEuOS0uNyAyLTEuNy4yLTEuMi0uNi0yLjMtMS43LTIuNXptMjQuNi04MC43YzEyLjIgMSAyNSAxLjYgMzguMSAxLjYgMzYuMSAwIDcwLjEtNC4xIDkwLjktMTEgMS42LS41IDIuNS0yLjMgMi0zLjlzLTIuMy0yLjUtMy45LTJjLTIwLjIgNi43LTUzLjQgMTAuNy04OC45IDEwLjctMTMtLjEtMjUuNi0uNi0zNy43LTEuNi0xLjctLjEtMy4yIDEuMS0zLjQgMi44LS4xIDEuNyAxLjIgMy4yIDIuOSAzLjR6bS0yNS00LjFjMSAwIDEuOS0uNyAyLTEuNy4yLTEuMS0uNi0yLjItMS43LTIuNC0xMi4zLTItMjIuOS00LjctMzAuNS03LjYtMS4xLS40LTIuMy4xLTIuNyAxLjItLjQgMS4xLjEgMi4zIDEuMiAyLjcgOCAzLjEgMTguNiA1LjggMzEuNCA3LjkgMC0uMS4xLS4xLjMtLjF6Ii8+PC9nPjwvc3ZnPg==",
+                "id": "5",
+                "isDerived": false,
+                "name": "PostgresDB",
+                "tags": [
+                  "sampledb"
+                ],
+                "uses": 0
+              },
+              "id": "-LbXQ04RPn-7k414Cjhc",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "none",
+                    "type": "SQL_PARAM_IN"
+                  },
+                  "outputDataShape": {
+                    "description": "Result of SQL [select * from contact]",
+                    "kind": "json-schema",
+                    "metadata": {
+                      "variant": "element"
+                    },
+                    "name": "SQL Result",
+                    "specification": "{\"type\":\"object\",\"$schema\":\"http://json-schema.org/schema#\",\"title\":\"SQL_PARAM_OUT\",\"properties\":{\"first_name\":{\"type\":\"string\",\"required\":true},\"last_name\":{\"type\":\"string\",\"required\":true},\"company\":{\"type\":\"string\",\"required\":true},\"lead_source\":{\"type\":\"string\",\"required\":true},\"create_date\":{\"type\":\"string\",\"required\":true,\"format\":\"date-time\"}}}",
+                    "type": "SQL_PARAM_OUT",
+                    "variants": [
+                      {
+                        "description": "Result of SQL [select * from contact]",
+                        "kind": "json-schema",
+                        "metadata": {
+                          "variant": "collection"
+                        },
+                        "name": "SQL Result",
+                        "specification": "{\"type\":\"array\",\"$schema\":\"http://json-schema.org/schema#\",\"items\":{\"type\":\"object\",\"title\":\"SQL_PARAM_OUT\",\"properties\":{\"first_name\":{\"type\":\"string\",\"required\":true},\"last_name\":{\"type\":\"string\",\"required\":true},\"company\":{\"type\":\"string\",\"required\":true},\"lead_source\":{\"type\":\"string\",\"required\":true},\"create_date\":{\"type\":\"string\",\"required\":true,\"format\":\"date-time\"}}}}",
+                        "type": "SQL_PARAM_OUT"
+                      }
+                    ]
+                  }
+                }
+              },
+              "id": "-LbXQRzvPn-7k414Cjhe",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Split",
+              "stepKind": "split"
+            },
+            {
+              "action": {
+                "actionType": "step",
+                "descriptor": {
+                  "inputDataShape": {
+                    "kind": "any",
+                    "name": "All preceding outputs"
+                  },
+                  "outputDataShape": {
+                    "description": "A user specified data type",
+                    "kind": "json-instance",
+                    "name": "Data Mapper (Contact)",
+                    "specification": "{\"contact\": \"First Last, Company\"}"
+                  }
+                }
+              },
+              "configuredProperties": {
+                "atlasmapping": "{\"AtlasMapping\":{\"jsonType\":\"io.atlasmap.v2.AtlasMapping\",\"dataSource\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LbXQRzvPn-7k414Cjhe\",\"uri\":\"atlas:json:-LbXQRzvPn-7k414Cjhe\",\"dataSourceType\":\"SOURCE\"},{\"jsonType\":\"io.atlasmap.json.v2.JsonDataSource\",\"id\":\"-LbXQ4N8Pn-7k414Cjhc\",\"uri\":\"atlas:json:-LbXQ4N8Pn-7k414Cjhc\",\"dataSourceType\":\"TARGET\",\"template\":null}],\"mappings\":{\"mapping\":[{\"jsonType\":\"io.atlasmap.v2.Mapping\",\"mappingType\":\"COMBINE\",\"id\":\"mapping.753190\",\"inputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"first_name\",\"path\":\"/first_name\",\"fieldType\":\"STRING\",\"docId\":\"-LbXQRzvPn-7k414Cjhe\",\"userCreated\":false,\"index\":0},{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"last_name\",\"path\":\"/last_name\",\"fieldType\":\"STRING\",\"docId\":\"-LbXQRzvPn-7k414Cjhe\",\"userCreated\":false,\"index\":1},{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"company\",\"path\":\"/company\",\"fieldType\":\"STRING\",\"docId\":\"-LbXQRzvPn-7k414Cjhe\",\"userCreated\":false,\"index\":2}],\"outputField\":[{\"jsonType\":\"io.atlasmap.json.v2.JsonField\",\"name\":\"contact\",\"path\":\"/contact\",\"fieldType\":\"STRING\",\"docId\":\"-LbXQ4N8Pn-7k414Cjhc\",\"userCreated\":false}],\"delimiter\":\"Space\"}]},\"name\":\"UI.773451\",\"lookupTables\":{\"lookupTable\":[]},\"constants\":{\"constant\":[]},\"properties\":{\"property\":[]}}}"
+              },
+              "id": "-LbXQSedPn-7k414Cjhf",
+              "metadata": {
+                "configured": "true"
+              },
+              "name": "Data Mapper",
+              "stepKind": "mapper"
+            },
+            {
+              "action": {
+                "actionType": "connector",
+                "description": "Invoke an http endpoint URL",
+                "descriptor": {
+                  "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+                  "inputDataShape": {
+                    "description": "A user specified data type",
+                    "kind": "json-instance",
+                    "metadata": {
+                      "userDefined": "true"
+                    },
+                    "name": "Contact",
+                    "specification": "{\"contact\": \"First Last, Company\"}"
+                  },
+                  "outputDataShape": {
+                    "kind": "any"
+                  },
+                  "propertyDefinitionSteps": [
+                    {
+                      "description": "properties",
+                      "name": "properties",
+                      "properties": {
+                        "httpMethod": {
+                          "defaultValue": "GET",
+                          "deprecated": false,
+                          "displayName": "Http Method",
+                          "enum": [
+                            {
+                              "label": "GET",
+                              "value": "GET"
+                            },
+                            {
+                              "label": "PUT",
+                              "value": "PUT"
+                            },
+                            {
+                              "label": "POST",
+                              "value": "POST"
+                            },
+                            {
+                              "label": "DELETE",
+                              "value": "DELETE"
+                            },
+                            {
+                              "label": "HEAD",
+                              "value": "HEAD"
+                            },
+                            {
+                              "label": "OPTIONS",
+                              "value": "OPTIONS"
+                            },
+                            {
+                              "label": "TRACE",
+                              "value": "TRACE"
+                            },
+                            {
+                              "label": "PATCH",
+                              "value": "PATCH"
+                            }
+                          ],
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "labelHint": "The specific http method to execute.",
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        },
+                        "path": {
+                          "deprecated": false,
+                          "displayName": "URL Path",
+                          "group": "common",
+                          "javaType": "java.lang.String",
+                          "kind": "parameter",
+                          "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                          "required": false,
+                          "secret": false,
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                },
+                "id": "io.syndesis.connector:connector-http:http4-invoke-url",
+                "name": "Invoke URL",
+                "pattern": "To"
+              },
+              "configuredProperties": {
+                "httpMethod": "PUT",
+                "path": "/todo"
+              },
+              "connection": {
+                "configuredProperties": {
+                  "baseUrl": "http://todo-syndesis.192.168.64.15.nip.io/api"
+                },
+                "connector": {
+                  "actions": [
+                    {
+                      "actionType": "connector",
+                      "description": "Invoke an http endpoint URL",
+                      "descriptor": {
+                        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+                        "inputDataShape": {
+                          "kind": "any"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "properties",
+                            "name": "properties",
+                            "properties": {
+                              "httpMethod": {
+                                "defaultValue": "GET",
+                                "deprecated": false,
+                                "displayName": "Http Method",
+                                "enum": [
+                                  {
+                                    "label": "GET",
+                                    "value": "GET"
+                                  },
+                                  {
+                                    "label": "PUT",
+                                    "value": "PUT"
+                                  },
+                                  {
+                                    "label": "POST",
+                                    "value": "POST"
+                                  },
+                                  {
+                                    "label": "DELETE",
+                                    "value": "DELETE"
+                                  },
+                                  {
+                                    "label": "HEAD",
+                                    "value": "HEAD"
+                                  },
+                                  {
+                                    "label": "OPTIONS",
+                                    "value": "OPTIONS"
+                                  },
+                                  {
+                                    "label": "TRACE",
+                                    "value": "TRACE"
+                                  },
+                                  {
+                                    "label": "PATCH",
+                                    "value": "PATCH"
+                                  }
+                                ],
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "The specific http method to execute.",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "path": {
+                                "deprecated": false,
+                                "displayName": "URL Path",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "Endpoint Path (eg '/path/to/endpoint')",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis.connector:connector-http:http4-invoke-url",
+                      "name": "Invoke URL",
+                      "pattern": "To"
+                    },
+                    {
+                      "actionType": "connector",
+                      "description": "Periodically invoke an http endpoint URL",
+                      "descriptor": {
+                        "connectorCustomizers": [
+                          "io.syndesis.connector.http.HttpConnectorCustomizer"
+                        ],
+                        "connectorFactory": "io.syndesis.connector.http.HttpConnectorFactories$Http4",
+                        "inputDataShape": {
+                          "kind": "none"
+                        },
+                        "outputDataShape": {
+                          "kind": "any"
+                        },
+                        "propertyDefinitionSteps": [
+                          {
+                            "description": "properties",
+                            "name": "properties",
+                            "properties": {
+                              "httpMethod": {
+                                "defaultValue": "GET",
+                                "deprecated": false,
+                                "displayName": "Http Method",
+                                "enum": [
+                                  {
+                                    "label": "GET",
+                                    "value": "GET"
+                                  },
+                                  {
+                                    "label": "PUT",
+                                    "value": "PUT"
+                                  },
+                                  {
+                                    "label": "POST",
+                                    "value": "POST"
+                                  },
+                                  {
+                                    "label": "DELETE",
+                                    "value": "DELETE"
+                                  },
+                                  {
+                                    "label": "HEAD",
+                                    "value": "HEAD"
+                                  },
+                                  {
+                                    "label": "OPTIONS",
+                                    "value": "OPTIONS"
+                                  },
+                                  {
+                                    "label": "TRACE",
+                                    "value": "TRACE"
+                                  },
+                                  {
+                                    "label": "PATCH",
+                                    "value": "PATCH"
+                                  }
+                                ],
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "The specific http method to execute.",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "path": {
+                                "deprecated": false,
+                                "displayName": "URL Path",
+                                "group": "common",
+                                "javaType": "java.lang.String",
+                                "kind": "parameter",
+                                "labelHint": "Endpoint Path",
+                                "placeholder": "eg '/path/to/endpoint'",
+                                "required": false,
+                                "secret": false,
+                                "type": "string"
+                              },
+                              "schedulerExpression": {
+                                "defaultValue": "1800000",
+                                "deprecated": false,
+                                "displayName": "Period",
+                                "group": "consumer",
+                                "javaType": "long",
+                                "kind": "parameter",
+                                "labelHint": "Delay between scheduling (executing).",
+                                "required": false,
+                                "secret": false,
+                                "type": "duration"
+                              }
+                            }
+                          }
+                        ]
+                      },
+                      "id": "io.syndesis.connector:connector-http:http4-periodic-invoke-url",
+                      "name": "Periodic invoke URL",
+                      "pattern": "From"
+                    }
+                  ],
+                  "componentScheme": "http4",
+                  "configuredProperties": {
+                    "headerFilterStrategy": "syndesisHeaderStrategy"
+                  },
+                  "dependencies": [
+                    {
+                      "id": "io.syndesis.connector:connector-http:1.7-SNAPSHOT",
+                      "type": "MAVEN"
+                    }
+                  ],
+                  "description": "Invoke various HTTP methods.",
+                  "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjMiPjxzdHlsZT4uc3Qye2ZpbGw6IzAwYWVlZn08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjcgMjUuMXMtMjEuNyAyMS0yOC45IDMyLTEwLjMgOS40LTE0LjIgN2MtMy45LTIuNC0xMC4xLTYuNi0xMC4xLTYuNnMtNi45LTMuNyAzLjItMTEuMWMxMC40LTcuNiA0Ni4yLTI3LjQgNTAtMjEuM3pNMTM2LjMgMjMuOXY1Mi4zcy43IDYuOC02LjQgNS43LTI4LjMtNS4xLTM0LjYtNy43Yy02LjMtMi43LTMuNC01LjctMi4xLTcuNyAxLjItMiAyMC4zLTMwLjcgNDMuMS00Mi42ek00Ni4zIDY3LjFzMi44LTQuNSA3LjMtMi4yIDE2LjcgOS4yIDE2LjcgOS4yIDUuNCAyLjMgMi41IDhjLTIuOCA1LjctMTAuNiAzMS4zLTExIDQxLjJzLTYuNyAxMS4yLTEwLjQgMTEuMkgzMC4xcy05LjcgMS4yLTcuNy03LjkgNS44LTM1LjQgMjMuOS01OS41ek04Mi4yIDg2LjdzMS4zLTUuOCA3LjQtMy42YzYgMi4yIDI0LjYgOC4yIDM4IDguOSAxMC45LjYgOC43IDEwIDguNyAxMHYyNC40czEuNiA4LTYuNiA3LjktNDcuNSAwLTQ3LjUgMC0xMi4yIDIuMi05LjgtOS4xIDYtMjkuOCA5LjgtMzguNXpNMTY1LjUgMjUuMXMyMS43IDIxIDI4LjkgMzIgMTAuMyA5LjQgMTQuMiA3YzMuOS0yLjQgMTAuMS02LjYgMTAuMS02LjZzNi45LTMuNy0zLjItMTEuMWMtMTAuNC03LjYtNDYuMS0yNy40LTUwLTIxLjN6TTE0NC45IDIzLjl2NTIuM3MtLjcgNi44IDYuNCA1LjdjNy4xLTEgMjguMy01LjEgMzQuNi03LjcgNi4zLTIuNyAzLjQtNS43IDIuMS03LjctMS4yLTItMjAuMy0zMC43LTQzLjEtNDIuNnpNMjM0LjkgNjcuMXMtMi44LTQuNS03LjMtMi4yLTE2LjcgOS4yLTE2LjcgOS4yLTUuNCAyLjMtMi41IDhjMi44IDUuNyAxMC42IDMxLjMgMTEgNDEuMnM2LjcgMTEuMiAxMC40IDExLjJoMjEuM3M5LjcgMS4yIDcuNy03LjljLTEuOC05LjItNS43LTM1LjQtMjMuOS01OS41ek0xOTkgODYuN3MtMS4zLTUuOC03LjQtMy42LTI0LjYgOC4yLTM4IDguOWMtMTAuOS42LTguNyAxMC04LjcgMTB2MjQuNHMtMS42IDggNi42IDcuOWM4LjItLjEgNDcuNSAwIDQ3LjUgMHMxMi4yIDIuMiA5LjgtOS4xYy0yLjMtMTEuMi01LjktMjkuOC05LjgtMzguNXpNMTE1LjggMjU1LjhzLTIxLjctMjEtMjguOS0zMi0xMC4zLTkuNC0xNC4yLTdjLTMuOSAyLjQtMTAuMSA2LjYtMTAuMSA2LjZzLTYuOSAzLjcgMy4yIDExLjFjMTAuNCA3LjYgNDYuMSAyNy41IDUwIDIxLjN6TTEzNi4zIDI1N3YtNTIuM3MuNy02LjgtNi40LTUuN2MtNy4xIDEtMjguMyA1LjEtMzQuNiA3LjctNi4zIDIuNy0zLjQgNS43LTIuMSA3LjdzMjAuMyAzMC43IDQzLjEgNDIuNnpNNDYuNCAyMTMuOHMyLjggNC41IDcuMyAyLjIgMTYuNy05LjIgMTYuNy05LjIgNS40LTIuMyAyLjUtOGMtMi44LTUuNy0xMC42LTMxLjMtMTEtNDEuMi0uNC05LjgtNi43LTExLjItMTAuNC0xMS4ySDMwLjJzLTkuNy0xLjItNy43IDcuOSA1LjcgMzUuNCAyMy45IDU5LjV6TTgyLjMgMTk0LjJzMS4zIDUuOCA3LjQgMy42YzYtMi4yIDI0LjYtOC4yIDM4LTguOSAxMC45LS42IDguNy0xMCA4LjctMTB2LTI0LjRzMS42LTgtNi42LTcuOS00Ny41IDAtNDcuNSAwLTEyLjItMi4yLTkuOCA5LjEgNS45IDI5LjggOS44IDM4LjV6Ii8+PHBhdGggZD0iTTI5Ni43IDIxNi4zbC0xMjIuMi00Ny42IDYwLjcgMTE1LjYgMTUtMzUuOCAzOC4yIDMzLjEgMTEuNi0xMy4xLTM3LjgtMzMuN3oiLz48cGF0aCBkPSJNMTY1LjUgMjU1LjhzMjAuNi0xOS45IDI4LjMtMzEuMWwtNS41LTEwLjZjLS4xLjEtLjEuMi0uMi4zLTEuMyAyLTIwLjMgMzAuNy00My4xIDQyLjZ2LTUyLjNzLS43LTYuOCA2LjQtNS43YzYuNSAxIDI0LjcgNC40IDMyLjYgN2wtNi43LTEyLjdjLTcuNS0yLjEtMTYuMy00LTIzLjYtNC40LTEwLjktLjYtOC43LTEwLTguNy0xMHYtMjQuNHMtMS42LTggNi42LTcuOWM4LjIuMSA0Ny41IDAgNDcuNSAwczEyLjItMi4yIDkuOCA5LjFjLS45IDQuNC0yIDEwLTMuMyAxNS42bDEwLjUgNC4xYzEuOC02LjkgMy4yLTEzLjYgMy40LTE3LjYuNC05LjggNi43LTExLjIgMTAuNC0xMS4yaDIxLjNzOS43LTEuMiA3LjcgNy45Yy0xLjMgNS45LTMuMyAxOC45LTkuNSAzMy45bDEyLjEgNC43YzctMTYuMSAxMC45LTMzLjggMTAuOS01Mi4zQzI3Mi40IDY4IDIxMy4zIDguOSAxNDAuNyA4LjkgNjggOC45IDguOSA2OCA4LjkgMTQwLjdjMCA3Mi42IDU5LjEgMTMxLjcgMTMxLjcgMTMxLjcgMjQuOSAwIDQ4LjMtNyA2OC4yLTE5LjFsLTUuOC0xMWMtMTQuNSA4LjQtMzQuNiAxOC0zNy41IDEzLjV6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0MC43IDI3Mi40QzY4IDI3Mi40IDguOSAyMTMuMyA4LjkgMTQwLjcgOC45IDY4IDY4IDguOSAxNDAuNyA4LjljNzIuNiAwIDEzMS43IDU5LjEgMTMxLjcgMTMxLjcgMCAxOC42LTMuOSAzNi4zLTEwLjkgNTIuM2w4LjMgMy4zYzcuNC0xNy4xIDExLjUtMzUuOSAxMS41LTU1LjZDMjgxLjMgNjMuMSAyMTguMiAwIDE0MC43IDAgNjMuMSAwIDAgNjMuMSAwIDE0MC43czYzLjEgMTQwLjcgMTQwLjcgMTQwLjdjMjYuNCAwIDUxLjItNy4zIDcyLjMtMjAuMWwtNC4yLTcuOWMtMTkuOSAxMi00My4yIDE5LTY4LjEgMTl6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41IDI1NS44YzIuOSA0LjUgMjMtNS4xIDM3LjUtMTMuNWwtOS4yLTE3LjZjLTcuNiAxMS4yLTI4LjMgMzEuMS0yOC4zIDMxLjF6TTE1MS40IDE5OC45Yy03LjEtMS02LjQgNS43LTYuNCA1LjdWMjU3YzIyLjgtMTEuOSA0MS45LTQwLjUgNDMuMS00Mi42LjEtLjEuMS0uMi4yLS4zbC00LjMtOC4yYy04LTIuNi0yNi4xLTYtMzIuNi03ek0yNTguOSAxNTQuNGMxLjktOS4xLTcuNy03LjktNy43LTcuOWgtMjEuM2MtMy43IDAtMTAgMS4zLTEwLjQgMTEuMi0uMiA0LTEuNiAxMC43LTMuNCAxNy42bDMzLjMgMTNjNi4yLTE1IDguMy0yOCA5LjUtMzMuOXpNMTY3LjkgMTYyLjdjMS43LTEuOSA0LjItMyA2LjctMyAxLjEgMCAyLjIuMiAzLjIuNmwyNy44IDEwLjljMS4yLTUuNiAyLjQtMTEuMiAzLjMtMTUuNiAyLjQtMTEuMy05LjgtOS4xLTkuOC05LjFzLTM5LjMuMS00Ny41IDBjLTguMi0uMS02LjYgNy45LTYuNiA3Ljl2MjQuNHMtMi4yIDkuNCA4LjcgMTBjNy4zLjQgMTYuMSAyLjQgMjMuNiA0LjRsLTEwLjctMjAuNGMtMS43LTMuMy0xLjItNy4zIDEuMy0xMC4xeiIvPjwvZz48L3N2Zz4=",
+                  "id": "http4",
+                  "name": "HTTP",
+                  "properties": {
+                    "baseUrl": {
+                      "deprecated": false,
+                      "displayName": "Base URL",
+                      "group": "common",
+                      "javaType": "java.lang.String",
+                      "kind": "parameter",
+                      "labelHint": "Base Http Endpoint URL",
+                      "placeholder": "eg 'www.redhat.com'",
+                      "required": true,
+                      "secret": false,
+                      "type": "string"
+                    }
+                  },
+                  "tags": [
+                    "verifier"
+                  ],
+                  "version": 66
+                },
+                "connectorId": "http4",
+                "createdDate": 1553006625238,
+                "icon": "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMDAgMjg0LjMiPjxzdHlsZT4uc3Qye2ZpbGw6IzAwYWVlZn08L3N0eWxlPjxnIGlkPSJMYXllcl8xIj48cGF0aCBjbGFzcz0ic3QyIiBkPSJNMTE1LjcgMjUuMXMtMjEuNyAyMS0yOC45IDMyLTEwLjMgOS40LTE0LjIgN2MtMy45LTIuNC0xMC4xLTYuNi0xMC4xLTYuNnMtNi45LTMuNyAzLjItMTEuMWMxMC40LTcuNiA0Ni4yLTI3LjQgNTAtMjEuM3pNMTM2LjMgMjMuOXY1Mi4zcy43IDYuOC02LjQgNS43LTI4LjMtNS4xLTM0LjYtNy43Yy02LjMtMi43LTMuNC01LjctMi4xLTcuNyAxLjItMiAyMC4zLTMwLjcgNDMuMS00Mi42ek00Ni4zIDY3LjFzMi44LTQuNSA3LjMtMi4yIDE2LjcgOS4yIDE2LjcgOS4yIDUuNCAyLjMgMi41IDhjLTIuOCA1LjctMTAuNiAzMS4zLTExIDQxLjJzLTYuNyAxMS4yLTEwLjQgMTEuMkgzMC4xcy05LjcgMS4yLTcuNy03LjkgNS44LTM1LjQgMjMuOS01OS41ek04Mi4yIDg2LjdzMS4zLTUuOCA3LjQtMy42YzYgMi4yIDI0LjYgOC4yIDM4IDguOSAxMC45LjYgOC43IDEwIDguNyAxMHYyNC40czEuNiA4LTYuNiA3LjktNDcuNSAwLTQ3LjUgMC0xMi4yIDIuMi05LjgtOS4xIDYtMjkuOCA5LjgtMzguNXpNMTY1LjUgMjUuMXMyMS43IDIxIDI4LjkgMzIgMTAuMyA5LjQgMTQuMiA3YzMuOS0yLjQgMTAuMS02LjYgMTAuMS02LjZzNi45LTMuNy0zLjItMTEuMWMtMTAuNC03LjYtNDYuMS0yNy40LTUwLTIxLjN6TTE0NC45IDIzLjl2NTIuM3MtLjcgNi44IDYuNCA1LjdjNy4xLTEgMjguMy01LjEgMzQuNi03LjcgNi4zLTIuNyAzLjQtNS43IDIuMS03LjctMS4yLTItMjAuMy0zMC43LTQzLjEtNDIuNnpNMjM0LjkgNjcuMXMtMi44LTQuNS03LjMtMi4yLTE2LjcgOS4yLTE2LjcgOS4yLTUuNCAyLjMtMi41IDhjMi44IDUuNyAxMC42IDMxLjMgMTEgNDEuMnM2LjcgMTEuMiAxMC40IDExLjJoMjEuM3M5LjcgMS4yIDcuNy03LjljLTEuOC05LjItNS43LTM1LjQtMjMuOS01OS41ek0xOTkgODYuN3MtMS4zLTUuOC03LjQtMy42LTI0LjYgOC4yLTM4IDguOWMtMTAuOS42LTguNyAxMC04LjcgMTB2MjQuNHMtMS42IDggNi42IDcuOWM4LjItLjEgNDcuNSAwIDQ3LjUgMHMxMi4yIDIuMiA5LjgtOS4xYy0yLjMtMTEuMi01LjktMjkuOC05LjgtMzguNXpNMTE1LjggMjU1LjhzLTIxLjctMjEtMjguOS0zMi0xMC4zLTkuNC0xNC4yLTdjLTMuOSAyLjQtMTAuMSA2LjYtMTAuMSA2LjZzLTYuOSAzLjcgMy4yIDExLjFjMTAuNCA3LjYgNDYuMSAyNy41IDUwIDIxLjN6TTEzNi4zIDI1N3YtNTIuM3MuNy02LjgtNi40LTUuN2MtNy4xIDEtMjguMyA1LjEtMzQuNiA3LjctNi4zIDIuNy0zLjQgNS43LTIuMSA3LjdzMjAuMyAzMC43IDQzLjEgNDIuNnpNNDYuNCAyMTMuOHMyLjggNC41IDcuMyAyLjIgMTYuNy05LjIgMTYuNy05LjIgNS40LTIuMyAyLjUtOGMtMi44LTUuNy0xMC42LTMxLjMtMTEtNDEuMi0uNC05LjgtNi43LTExLjItMTAuNC0xMS4ySDMwLjJzLTkuNy0xLjItNy43IDcuOSA1LjcgMzUuNCAyMy45IDU5LjV6TTgyLjMgMTk0LjJzMS4zIDUuOCA3LjQgMy42YzYtMi4yIDI0LjYtOC4yIDM4LTguOSAxMC45LS42IDguNy0xMCA4LjctMTB2LTI0LjRzMS42LTgtNi42LTcuOS00Ny41IDAtNDcuNSAwLTEyLjItMi4yLTkuOCA5LjEgNS45IDI5LjggOS44IDM4LjV6Ii8+PHBhdGggZD0iTTI5Ni43IDIxNi4zbC0xMjIuMi00Ny42IDYwLjcgMTE1LjYgMTUtMzUuOCAzOC4yIDMzLjEgMTEuNi0xMy4xLTM3LjgtMzMuN3oiLz48cGF0aCBkPSJNMTY1LjUgMjU1LjhzMjAuNi0xOS45IDI4LjMtMzEuMWwtNS41LTEwLjZjLS4xLjEtLjEuMi0uMi4zLTEuMyAyLTIwLjMgMzAuNy00My4xIDQyLjZ2LTUyLjNzLS43LTYuOCA2LjQtNS43YzYuNSAxIDI0LjcgNC40IDMyLjYgN2wtNi43LTEyLjdjLTcuNS0yLjEtMTYuMy00LTIzLjYtNC40LTEwLjktLjYtOC43LTEwLTguNy0xMHYtMjQuNHMtMS42LTggNi42LTcuOWM4LjIuMSA0Ny41IDAgNDcuNSAwczEyLjItMi4yIDkuOCA5LjFjLS45IDQuNC0yIDEwLTMuMyAxNS42bDEwLjUgNC4xYzEuOC02LjkgMy4yLTEzLjYgMy40LTE3LjYuNC05LjggNi43LTExLjIgMTAuNC0xMS4yaDIxLjNzOS43LTEuMiA3LjcgNy45Yy0xLjMgNS45LTMuMyAxOC45LTkuNSAzMy45bDEyLjEgNC43YzctMTYuMSAxMC45LTMzLjggMTAuOS01Mi4zQzI3Mi40IDY4IDIxMy4zIDguOSAxNDAuNyA4LjkgNjggOC45IDguOSA2OCA4LjkgMTQwLjdjMCA3Mi42IDU5LjEgMTMxLjcgMTMxLjcgMTMxLjcgMjQuOSAwIDQ4LjMtNyA2OC4yLTE5LjFsLTUuOC0xMWMtMTQuNSA4LjQtMzQuNiAxOC0zNy41IDEzLjV6IiBmaWxsPSJub25lIi8+PHBhdGggZD0iTTE0MC43IDI3Mi40QzY4IDI3Mi40IDguOSAyMTMuMyA4LjkgMTQwLjcgOC45IDY4IDY4IDguOSAxNDAuNyA4LjljNzIuNiAwIDEzMS43IDU5LjEgMTMxLjcgMTMxLjcgMCAxOC42LTMuOSAzNi4zLTEwLjkgNTIuM2w4LjMgMy4zYzcuNC0xNy4xIDExLjUtMzUuOSAxMS41LTU1LjZDMjgxLjMgNjMuMSAyMTguMiAwIDE0MC43IDAgNjMuMSAwIDAgNjMuMSAwIDE0MC43czYzLjEgMTQwLjcgMTQwLjcgMTQwLjdjMjYuNCAwIDUxLjItNy4zIDcyLjMtMjAuMWwtNC4yLTcuOWMtMTkuOSAxMi00My4yIDE5LTY4LjEgMTl6Ii8+PHBhdGggY2xhc3M9InN0MiIgZD0iTTE2NS41IDI1NS44YzIuOSA0LjUgMjMtNS4xIDM3LjUtMTMuNWwtOS4yLTE3LjZjLTcuNiAxMS4yLTI4LjMgMzEuMS0yOC4zIDMxLjF6TTE1MS40IDE5OC45Yy03LjEtMS02LjQgNS43LTYuNCA1LjdWMjU3YzIyLjgtMTEuOSA0MS45LTQwLjUgNDMuMS00Mi42LjEtLjEuMS0uMi4yLS4zbC00LjMtOC4yYy04LTIuNi0yNi4xLTYtMzIuNi03ek0yNTguOSAxNTQuNGMxLjktOS4xLTcuNy03LjktNy43LTcuOWgtMjEuM2MtMy43IDAtMTAgMS4zLTEwLjQgMTEuMi0uMiA0LTEuNiAxMC43LTMuNCAxNy42bDMzLjMgMTNjNi4yLTE1IDguMy0yOCA5LjUtMzMuOXpNMTY3LjkgMTYyLjdjMS43LTEuOSA0LjItMyA2LjctMyAxLjEgMCAyLjIuMiAzLjIuNmwyNy44IDEwLjljMS4yLTUuNiAyLjQtMTEuMiAzLjMtMTUuNiAyLjQtMTEuMy05LjgtOS4xLTkuOC05LjFzLTM5LjMuMS00Ny41IDBjLTguMi0uMS02LjYgNy45LTYuNiA3Ljl2MjQuNHMtMi4yIDkuNCA4LjcgMTBjNy4zLjQgMTYuMSAyLjQgMjMuNiA0LjRsLTEwLjctMjAuNGMtMS43LTMuMy0xLjItNy4zIDEuMy0xMC4xeiIvPjwvZz48L3N2Zz4=",
+                "id": "i-LaLP76LY6PgTmnD_vPFz",
+                "isDerived": false,
+                "lastUpdated": 1553006625238,
+                "name": "TodoHttpApi",
+                "userId": "developer",
+                "uses": 0
+              },
+              "id": "-LbXQ4N8Pn-7k414Cjhc",
+              "metadata": {
+                "configured": "true"
+              },
+              "stepKind": "endpoint"
+            }
+          ]
+        }
+      ],
+      "id": "i-LbXQlb3Hh21eI9LGneSz",
+      "name": "DBToHttp",
+      "tags": [
+        "http4",
+        "sql"
+      ],
+      "updatedAt": 0,
+      "version": 1
+    }
+  }
+}

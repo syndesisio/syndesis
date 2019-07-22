@@ -32,11 +32,39 @@
 
   <name>Test</name>
 
-  <properties>
-    <citrus.version>2.7.8</citrus.version>
-  </properties>
+  <dependencyManagement>
+    <dependencies>
+      <!-- Redefine Activemq deps -->
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-client</artifactId>
+        <version>${activemq.version}</version>
+        <exclusions>
+          <!-- avoid conflict with AMQP connector's JMS 2.0 dependency -->
+          <exclusion>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jms_1.1_spec</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>commons-net</groupId>
+        <artifactId>commons-net</artifactId>
+        <version>3.6</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>${commons.compress.version}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
 
   <modules>
+    <module>test-support</module>
+    <module>integration-test</module>
     <module>system-test</module>
   </modules>
 

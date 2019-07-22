@@ -115,7 +115,8 @@
     <json-schema-validator.version>2.2.8</json-schema-validator.version>
     <junit.version>4.12</junit.version>
     <powermock.version>2.0.0</powermock.version>
-    <testcontainers.version>1.10.6</testcontainers.version>
+    <testcontainers.version>1.10.7</testcontainers.version>
+    <citrus.version>2.7.8</citrus.version>
 
     <spring-security.version>4.2.13.RELEASE</spring-security.version>
     <resteasy.version>3.6.1.Final</resteasy.version>
@@ -140,6 +141,7 @@
     <module>ui-angular</module>
     <module>ui-react</module>
     <module>../doc</module>
+    <module>test</module>
   </modules>
 
   <profiles>
@@ -185,14 +187,6 @@
       <properties>
         <basepom.check.skip-all>false</basepom.check.skip-all>
       </properties>
-    </profile>
-
-    <!-- System tests enabled -->
-    <profile>
-      <id>system-tests</id>
-      <modules>
-        <module>test/system-test</module>
-      </modules>
     </profile>
 
     <!-- Build Docker images directly -->
@@ -1532,6 +1526,14 @@
         <version>${project.version}</version>
       </dependency>
 
+      <!-- ::::::::::: test :::::::::::: -->
+
+      <dependency>
+        <groupId>io.syndesis.test</groupId>
+        <artifactId>test-support</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <!-- ============================================== -->
 
       <dependency>
@@ -2103,29 +2105,6 @@
         <scope>test</scope>
       </dependency>
 
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>testcontainers</artifactId>
-        <version>${testcontainers.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>jdbc</artifactId>
-        <version>${testcontainers.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>postgresql</artifactId>
-        <version>${testcontainers.version}</version>
-      </dependency>
-
-      <dependency>
-        <groupId>org.testcontainers</groupId>
-        <artifactId>mariadb</artifactId>
-        <version>${testcontainers.version}</version>
-      </dependency>
       <!-- ========================================== -->
 
       <!-- === Atlasmap -->
@@ -2339,6 +2318,12 @@
 
       <dependency>
         <groupId>org.arquillian.cube</groupId>
+        <artifactId>arquillian-cube-requirement-spi</artifactId>
+        <version>${arquillian.cube.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.arquillian.cube</groupId>
         <artifactId>arquillian-cube-kubernetes</artifactId>
         <version>${arquillian.cube.version}</version>
       </dependency>
@@ -2347,6 +2332,123 @@
         <groupId>org.arquillian.cube</groupId>
         <artifactId>arquillian-cube-openshift</artifactId>
         <version>${arquillian.cube.version}</version>
+      </dependency>
+
+      <!-- Testcontainers -->
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>testcontainers</artifactId>
+        <version>${testcontainers.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.annotation</groupId>
+            <artifactId>javax.annotation-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>jdbc</artifactId>
+        <version>${testcontainers.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>postgresql</artifactId>
+        <version>${testcontainers.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.testcontainers</groupId>
+        <artifactId>mariadb</artifactId>
+        <version>${testcontainers.version}</version>
+      </dependency>
+
+      <!-- Citrus -->
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-core</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-java-dsl</artifactId>
+        <version>${citrus.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-jms</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.jms</groupId>
+            <artifactId>com.springsource.javax.jms</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.stream</groupId>
+            <artifactId>stax-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-http</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-ftp</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>com.consol.citrus</groupId>
+        <artifactId>citrus-mail</artifactId>
+        <version>${citrus.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
     </dependencies>
 
