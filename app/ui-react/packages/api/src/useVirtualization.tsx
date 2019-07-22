@@ -2,7 +2,10 @@ import { RestDataService } from '@syndesis/models';
 import { useApiResource } from './useApiResource';
 import { usePolling } from './usePolling';
 
-export const useVirtualization = (virtualizationName: string, disableUpdates: boolean = false) => {
+export const useVirtualization = (
+  virtualizationName: string,
+  disableUpdates: boolean = false
+) => {
   const { read, ...rest } = useApiResource<RestDataService>({
     defaultValue: {
       connections: 0,
@@ -18,15 +21,14 @@ export const useVirtualization = (virtualizationName: string, disableUpdates: bo
       serviceVdbVersion: '1',
       serviceViewDefinitions: [],
       serviceViewModel: '',
-      tko__description: ''
-    
+      tko__description: '',
     },
     url: `workspace/dataservices/${virtualizationName}`,
     useDvApiUrl: true,
   });
 
   if (!disableUpdates) {
-    usePolling({ polling: 5000, read });
+    usePolling({ callback: read, delay: 5000 });
   }
 
   return {

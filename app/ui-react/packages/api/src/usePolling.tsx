@@ -1,37 +1,29 @@
-import * as React from 'react';
+import { useEffect, useRef } from 'react';
 
 export interface IUsePollingProps {
-  polling: number;
-  read: () => void;
+  delay: number;
+  callback: () => void;
 }
 
-export function usePolling({ polling, read }: IUsePollingProps) {
-  const [pollingTimer, setPollingTimer] = React.useState();
+export function usePolling({ delay, callback }: IUsePollingProps) {
+  const savedCallback = useRef<() => void>(callback);
 
-  const poller = () => {
-    read();
-  };
+  // Remember the latest callback.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
 
-  const stopPolling = () => {
-    if (pollingTimer) {
-      clearInterval(pollingTimer);
-      setPollingTimer(undefined);
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
     }
-  };
 
-  const startPolling = () => {
-    if (!pollingTimer && polling > 0) {
-      setPollingTimer(setInterval(poller, polling));
+    if (delay !== null) {
+      const id = setInterval(tick, delay);
+      return () => clearInterval(id);
     }
-  };
 
-  React.useEffect(() => {
-    // mount
-    startPolling();
-
-    // unmount
-    return () => {
-      stopPolling();
-    };
-  });
+    return undefined;
+  }, [delay]);
 }
