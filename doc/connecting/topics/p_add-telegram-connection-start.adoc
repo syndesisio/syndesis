@@ -17,7 +17,7 @@ choose how you want to start the integration.
 .Procedure
 
 . Click the Telegram connection that you want to use to start the integration. 
-. Click the *Read Messages* action to receive all messages that are sent
+. Select the *Read Messages* action to receive all messages that are sent
 to the chat bot. 
 +
 The connection configuration identifies the chat bot that you want to 

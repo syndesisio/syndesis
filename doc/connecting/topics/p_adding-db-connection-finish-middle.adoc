@@ -12,12 +12,14 @@ integration's finish connection.
 .Prerequisites
 * You created a database connection.
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the database connection for the database that you want to access.
-. On the *Choose an Action* page, click one of the following:
+. On the *Choose an action* page, select one of the following:
 +
 * *Invoke SQL* operates on data by executing the
 SQL statement you specify.
@@ -53,7 +55,7 @@ invoke to operate on the data of interest. The stored procedure you specify must
 already exist. The database administrator should have created any stored
 procedures you need to use in an integration.  
 
-. Click *Done*.
+. Click *Next*.
 
 .Result
 {prodname} tries to validate the connection, which includes

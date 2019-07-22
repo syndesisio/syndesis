@@ -23,9 +23,9 @@ the spreadsheet that you want to obtain properties from.
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the Google Sheets
+. On the *Choose a connection* page, click the Google Sheets
 connection that you want to use to start the integration.
-. On the *Choose an Action* page, click the *Get spreadsheet properties* action.
+. On the *Choose an action* page, select the *Get spreadsheet properties* action.
 . To configure the *Get spreadsheet properties* action:
 .. In the *SpreadsheetId* field, enter the ID of a Google spreadsheet that is
 accessible from the Google account that this Google Sheets connection
@@ -37,6 +37,9 @@ The ID is the part of the URL between `d/` and `/edit`.
 .. In the *Delay* field, accept the default of 30 seconds or
 specify how often you want the connection to obtain properties.
 
-. Click *Done* to add this Google Sheets connection as the integration's
-start connection. In the integration visualization panel, the connection 
-appears as the first step in the integration's flow.
+. Click *Next* to add this Google Sheets connection as the integration's
+start connection. 
+
+.Result 
+The integration now has a start connection and {prodname} is 
+prompting you to choose the integration's finish connection. 

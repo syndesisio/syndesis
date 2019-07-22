@@ -20,7 +20,7 @@ want to add a Jira connection. Skip this step if you are adding
 a simple integration's finish connection.  
 . Click the Jira connection that you want the integration to use
 to connect to a Jira server. 
-. On the *Choose an Action* page, select *Add Comment*.
+. On the *Choose an action* page, select *Add Comment*.
 . In the *Comment* field, enter the comment that you want to 
 add to the issue or plan to add a data mapper step before this 
 connection. In that data mapper step, map the comment from a 
@@ -30,8 +30,8 @@ Examples of issue keys: `GATE-1234`, `Ent-239`.
 . Click *Next*. 
 
 .Result
-The connection appears in the integration flow 
-in the location you added it. 
+The connection appears in the integration visualization
+where you added it. 
 
 .Next steps
 To map the comment from a previous integration step to this connection, 

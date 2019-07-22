@@ -15,11 +15,11 @@ to choose the start connection.
 
 .Procedure
  
-. On the *Choose a Start Connection* page, click the AMQP connection that
+. On the *Choose a connection* page, click the AMQP connection that
 you want to use to start the integration. 
-. On the *Choose an Action* page, click the *Subscribe for messages* action
+. On the *Choose an action* page, select the *Subscribe for messages* action
 to receive messages from the queue or topic that you specify. 
-. To configure the action:
+. Configure the action:
 .. In the *Destination Name* field, enter the name of the queue or topic 
 to receive data from. 
 .. For the *Destination Type*, accept *Queue* or select *Topic*. 
@@ -44,10 +44,10 @@ the basis of the content of the message body.
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
-and then, at the bottom, click *Done*. You do not need to follow the rest of these
+and click *Next*. You do not need to follow the rest of these
 instructions. 
 +
-Otherwise, select one of the following as the schema type:
+Otherwise, click in the *Select Type* field and select one of the following as the schema type:
 +
 * *JSON schema* is a document that describes the structure of JSON data.
 The document's media type is `application/schema+json`. 
@@ -70,12 +70,12 @@ vendors then you might specify `*Vendor*` as the data type name.
 You will see this data type name when you are creating 
 or editing an integration that uses the connection
 for which you are specifying this type. {prodname} displays the type name
-in the integration visualization panel and in the data mapper. 
+in the integration visualization and in the data mapper. 
 
 . In the *Data Type Description* field, provide information that helps you
 distinguish this type. This description appears in the data mapper when 
 you hover over the step that processes this type. 
-. Click *Done*. 
+. Click *Next*. 
 
 .Result
 The connection appears at the beginning of the integration flow. 

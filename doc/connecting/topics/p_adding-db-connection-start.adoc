@@ -15,9 +15,9 @@ You created a database connection.
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the
+. On the *Choose a connection* page, click the
 database connection that you want to use to start an integration.
-. On the *Choose an Action* page, click one of the following:
+. On the *Choose an action* page, select one of the following:
 +
 * *Periodic SQL invocation* obtains data by periodically invoking the
 SQL statement that you specify.
@@ -39,7 +39,7 @@ milliseconds, seconds,
 minutes, hours, or days. For example, if you specify `5 minutes` then
 the connection invokes the specified statement or stored procedure every
 five minutes.
-. Click *Done*.
+. Click *Next*.
 
 .Result
 {prodname} tries to validate the connection, which includes

@@ -17,7 +17,7 @@ choose how you want to start the integration.
 .Procedure
 
 . Click the Slack connection that you want to use to start the integration. 
-. Click the *Read Messages* action.  
+. Select the *Read Messages* action.  
 . In the *Channel* field, specify the Slack channel from which you want to
 obtain messages. 
 . In the *Delay* field, accept the default of 500 milliseconds as the time 
@@ -41,4 +41,4 @@ When a Slack connection returns more than one message, the integration
 processes the messages as a batch. In other words, {prodname} executes 
 the integration once for the batch.
 
-. Click *Done* to add the connection to the integration. 
+. Click *Next* to add the connection to the integration. 

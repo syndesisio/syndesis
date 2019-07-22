@@ -15,12 +15,15 @@ Google spreadsheet that you want to update.
 * You have access to the spreadsheet ID for the spreadsheet that you want
 to update.  
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click a Google Sheets connection that is authorized to access
 the spreadsheet that you want to update.
-. On the *Choose an Action* page, click *Update sheet values*.
+. On the *Choose an action* page, select *Update sheet values*.
 . To configure the *Update sheet values* action:
 +
 .. In the *SpreadsheetId* field, do one of the following: 
@@ -58,13 +61,13 @@ which defaults to *User entered*.
 * *Raw* causes Google Sheets to insert the input data as is.
 * *User entered* enables automatic conversion of recognizable data. 
 
-.. Click *Done* to add the connection to the flow.
-The connection appears in the integration visualization flow in the
+.. Click *Next* to add the connection to the flow.
+The connection appears in the integration visualization in the
 location where you added it.
 . If you want to add any other connections to the flow, add 
 them now and then return to these instructions. 
 . After the flow has all desired connections, 
-in the integration visualization flow, click the plus sign that is
+in the integration visualization, click the plus sign that is
 just before the Google Sheets connection that updates sheet values.
 . Click the *Data Mapper* card to add a data mapping step to 
 the flow. 

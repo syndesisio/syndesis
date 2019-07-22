@@ -5,7 +5,7 @@
 = Obtaining a particular event from a Google Calendar
 
 In an integration, you can obtain a particular Google Calendar event
-in the middle of a follows. Obtaining a particular event is 
+in the middle of a flow. Obtaining a particular event is 
 useful, for example, when you want to:
 
 * Update the event in a subsequent Google Calendar connection.
@@ -22,18 +22,19 @@ expected to change in a future release.
 ====
 
 .Prerequisites
-* A Google Calendar connection is available and this connection
-is authorized to access the Google Calendar that has the event that
+* You created a Google Calendar connection that is 
+authorized to access the Google Calendar that has the event that
 that you want to get.
 
 * You are creating or editing a flow and {prodname} is prompting you 
-to choose a step. 
+to add to the integration. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. 
 . Click a Google Calendar connection that is authorized to access
 the calendar that you want to connect to.   
-. On the *Choose an Action* page, click *Get a Specific Event*. 
+. On the *Choose an action* page, select *Get a Specific Event*. 
 . Specify the name of the calendar that has the event that you want.
 . Specify the ID of the event to get. To obtain the event ID, do one of the 
 following:
@@ -51,6 +52,14 @@ image:shared/images/ThreeVerticalDotsKebab.png[Options] and select
 follows *`eid=`*. For example, an event ID looks something like this: 
 `p1pva2a4t504gbsha12di9ch6k_20181107T150000Z*`.
 
-. Click *Done* to add the connection to the flow. 
-The connection appears in the flow in the location 
+. Click *Next* to add the connection to the flow. 
+
+.Result
+The connection appears in the flow 
 where you added it. 
+
+.Next step
+If you want to map any values from a previous step to the 
+fields in this connection, add a data mapper step. First, add 
+all needed connections to the flow. Then add a data mapper 
+step immediately before this connection. 

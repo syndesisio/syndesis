@@ -26,8 +26,8 @@ REST API that you want to connect to.
 image:shared/images/CopyCallback.png[Copy Callback URL] to 
 copy the callback URL for your {prodname} environment to the clipboard. 
 You will need this URL later in this procedure. 
-.. Look for the name of the API you want to connect to and click its
-*Register* button to display its client ID and client secret fields.
+.. Look for the name of the API you want to connect to and click it
+to display its client ID and client secret fields.
 
 . In another browser window, you must register {prodname} as an OAuth
 client of the API you want to connect to. The exact steps for doing this

@@ -14,9 +14,9 @@ You created a Dropbox connection.
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the Dropbox connection that
+. On the *Choose a connection* page, click the Dropbox connection that
 you want to use to start the integration. 
-. On the *Choose an Action* page, click the *Download* action
+. On the *Choose an action* page, select the *Download* action
 to obtain one or more files from the Dropbox account that this connection
 accesses. 
 . To configure the action, in the *Folder or file name path to download* field,
@@ -27,10 +27,10 @@ file.
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
-and then, at the bottom, click *Done*. You do not need to follow the rest of these
+and click *Next*. You do not need to follow the rest of these
 instructions. 
 +
-Otherwise, select one of the following as the schema type:
+Otherwise, click in the *Select Type* field and select one of the following as the schema type:
 +
 * *JSON schema* is a document that describes the structure of JSON data.
 The document's media type is `application/schema+json`. 
@@ -47,18 +47,19 @@ For example, if you select *JSON schema* then you would paste the content of
 a JSON schema file, which has a media type of `application/schema+json`.
 
 . In the *Data Type Name* field, enter a name that you choose for the
-data type. For example, suppose you are specifying a JSON schema for
-vendors. You can specify `*Vendor*` as the data type name. 
+data type. For example, if you are specifying a JSON schema for
+vendors then you might specify `*Vendor*` as the data type name. 
 +
 You will see this data type name when you are creating 
 or editing an integration that uses the connection
 for which you are specifying this type. {prodname} displays the type name
-in the integration visualization panel and in the data mapper. 
+in the integration visualization and in the data mapper. 
 
 . In the *Data Type Description* field, provide information that helps you
 distinguish this type. This description appears in the data mapper when 
 you hover over the step that processes this type. 
-. Click *Done*. 
+. Click *Next*. 
 
 .Result
-The connection appears at the beginning of the integration flow. 
+The connection starts the simple integration and {prodname} prompts
+you to choose the finish connection. 

@@ -11,11 +11,13 @@ integration.
 .Prerequisites
 
 * You created an Amazon SNS connection.
-* {prodname} is prompting you to add a step, or to add the 
+* {prodname} is prompting you to add to the integration, or to add the 
 finish connection to a simple integration. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the Amazon SNS connection that
 you want to use to send a message. 
 

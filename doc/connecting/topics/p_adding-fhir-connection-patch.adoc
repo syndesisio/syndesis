@@ -13,13 +13,15 @@ or as a simple integration's finish connection.
 * You created a connection to the FHIR server that has the 
 resource that you want to update.
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the FHIR connection that you want to use
 to update the resource. 
-. On the *Choose an Action* page, click *Patch*. 
+. On the *Choose an action* page, select *Patch*. 
 . Click in the *Resource Type* field to display a list
 of FHIR resource types. Select or enter the type of the 
 resource whose fields you want to update. 
@@ -66,13 +68,13 @@ configure the *Patch* action. For example, if you want to copy the
 value of a resource field to another field. For other updates, 
 you can leave the *JSON Patch* field blank and instead map values 
 that define each update.  
-. Click *Done* to add this connection to the flow. 
+. Click *Next* to add this connection to the flow. 
 . If you did not specify a JSON patch and/or a resource ID, then 
 add a data mapper step:
 
-.. In the flow visualization panel, click the plus sign that is
+.. In the flow visualization, click the plus sign that is
 before the FHIR connection that you just added. 
-.. On the *Choose a Step* page, click *Data Mapper*. 
+.. Click *Data Mapper*. 
 +
 The *Target* panel displays a numbered folder for each field 
 that you want to update. When you configured the *Patch* action, 
@@ -109,7 +111,7 @@ This is the new value that you want the field to contain.
 .. Click *Done* to add the data mapper step to the flow. 
 
 .Result
-The connection appears in the integration flow 
+The connection appears in the integration visualization
 where you added it. During execution, 
 the connection updates the specified resource field(s)
 and returns a *MethodOutcome* resource that includes 

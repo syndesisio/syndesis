@@ -40,14 +40,14 @@ enter the email address of the Google account that you want this connection to
 access from {prodname} and click *Next*. 
 . In response to *openshiftapps.com wants to access your Google Account*, 
 click *Allow* to return to {prodname}.
-. In the {prodname} *Connection Name* field, enter your choice of a name that
+. In the {prodname} *CName* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, enter `*Gmail Connect 1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample Gmail connection
 that uses jkim Gmail account credentials.*`
-. In the upper right, click *Create* to see that the connection you
+. Click *Save* to see that the connection you
 created is now available. If you entered the example name, you would
 see that *Gmail Connect 1* appears as a connection that you can 
 choose to add to an integration.

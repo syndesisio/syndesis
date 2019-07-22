@@ -13,26 +13,28 @@ finish connection.
 
 * You created a Slack connection.
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the Slack connection that you want to add to the flow. 
 . Select the action that you want the connection to perform.
 +
-* Click *Username* to send a message to one user. To configure this action,
+* Select *Username* to send a message to one user. To configure this action,
 in the *User name* field, specify the Slack name of the user to send the message
 to. 
-* Click *Channel* to publish a message on a channel. To configure
+* Select *Channel* to publish a message on a channel. To configure
 this action, in the *Channel* field, specify the channel to publish 
 the message to. 
 
-. Click *Done* to add the connection to the flow. 
+. Click *Next* to add the connection to the flow. 
 . Optionally, add additional connections to the flow. Whether 
 additional connections are needed depends on what you want the flow
 to do. The important point is to add all connections before you 
 continue. 
-. Add a data mapping step just before the Slack connection that you added
+. Add a data mapper step just before the Slack connection that you added
 in this procedure. In the mapping step, map a string
 from a data mapping source to the Slack *message* field. This string 
 should contain the message that you want to send to the Slack

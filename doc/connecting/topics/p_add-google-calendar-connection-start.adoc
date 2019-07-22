@@ -25,9 +25,9 @@ the integration five times.
 
 . In the {prodname} panel on the left, click *Integrations*.
 . Click *Create Integration*.
-. On the *Choose a Start Connection* page, click the Google Calendar 
+. On the *Choose a connection* page, click the Google Calendar 
 connection that you want to use to start the integration. 
-. On the *Choose an Action* page, click the *Get Events* action. 
+. On the *Choose an action* page, select the *Get Events* action. 
 . To configure the *Get Events* action:
 .. In the *Delay* field, accept the default of 30 seconds or 
 specify how often you want the integration to check the calendar. 
@@ -65,6 +65,8 @@ For example,
 suppose that you specify `Standup meeting` in the query field. A poll would
 return only those events that have `Standup meeting` in an event
 field. 
-. Click *Done* to add this Google Calendar connection as the integration's 
-start connection. The connection appears as the
-first step in the integration. 
+. Click *Next* to add this Google Calendar connection as the integration's 
+start connection. 
+
+.Result
+The connection appears as the first step in the simple integration. 

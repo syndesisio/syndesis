@@ -36,13 +36,13 @@ to choose the start connection.
 
 * If this Google Sheets connection is in the middle of a flow, 
 then the integration already has a start connection and a finish 
-connection, and {prodname} is prompting you to add a step. 
+connection, and {prodname} is prompting you to add to the integration by choosing a step. 
 
 .Procedure
 
 . Click the Google Sheets connection that you want to use.
-. On the *Choose an Action* page, for a start connection, click the 
-*Get sheet values* action or for a middle connection, click the 
+. On the *Choose an action* page, for a start connection, select the 
+*Get sheet values* action or for a middle connection, select the 
 *Retrieve sheet values* action. 
 . To configure the action:
 .. In the *SpreadsheetId* field, enter the ID of a Google spreadsheet that is

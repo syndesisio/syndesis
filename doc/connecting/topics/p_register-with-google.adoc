@@ -131,7 +131,7 @@ the entry for each Google application:
 .. In the *Client Secret* field, paste the Google client secret that you
 just copied.
 .. Click *Save*. You should get a *Registration Successful!* notification.
-.. Click *Ok* to collapse the entry.
+.. Collapse the entry.
 
 .Results
 For each Google application API that you enabled, you can create a 

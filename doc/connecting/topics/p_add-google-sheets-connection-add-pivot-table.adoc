@@ -27,13 +27,16 @@ the Google spreadsheet that you want to add a pivot table to.
 * You have access to the ID for the spreadsheet that contains the source
 data for the pivot table. 
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step.  Or, {prodname} is prompting you to choose the finish
+to add to the integration.  Or, {prodname} is prompting you to choose the finish
 connection for a simple integration. 
 
 .Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click a Google Sheets connection that is authorized to access
 the spreadsheet that you want to add the pivot table to.
-. On the *Choose an Action* page, click *Add pivot tables*.
+. On the *Choose an action* page, select *Add pivot tables*.
 . To configure the *Add pivot tables* action, in the 
 *SpreadsheetId* field, do one of the following: 
 +
@@ -43,12 +46,12 @@ before this connection, you will map the spreadsheet ID from
 a previous connection to this connection. The previous connection must 
 access the spreadsheet that you want to add a pivot table to in this connection.
 
-. Click *Done* to add the connection to the flow.
-The connection appears in the integration visualization flow in the
-location where you added it.
+. Click *Next* to add the connection to the flow.
+The connection appears in the integration visualization 
+where you added it.
 . If you want to add any other connections to this flow, add them 
 now. Then return to these instructions. 
-. In the integration visualization flow, click the plus sign that is
+. In the integration visualization, click the plus sign that is
 just before the connection that adds a pivot table to a sheet.
 . Click *Data Mapper*.
 +

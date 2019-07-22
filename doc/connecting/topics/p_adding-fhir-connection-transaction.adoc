@@ -15,14 +15,16 @@ simple integration's finish connection.
 * You created a connection to the FHIR server that you want to
 add resources to. 
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a 
+to add to the integration. Or, {prodname} is prompting you to choose a 
 finish connection. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the FHIR connection that you want to use
 to create and add new resources to a FHIR server. 
-. On the *Choose an Action* page, click *Transaction*. 
+. On the *Choose an action* page, select *Transaction*. 
 . In the *Included Resource Types* field, select the  
 resource types that this connection creates. 
 Use the *Ctrl* key to select multiple resource types. 
@@ -32,17 +34,17 @@ The connection creates one resource of each type that you select.
 . To populate fields in the new resources, add 
 a data mapper step before this connection: 
 
-.. In the flow visualization on the left, click the plus sign 
+.. In the flow visualization, click the plus sign 
 that is before the connection that you just added. 
 .. Click *Data Mapper*. 
 .. In the data mapper, map source fields to the target 
 resource fields. The new resources contain only the 
 target fields that you map to.
-.. Click *Done* to add the data mapper step to the flow. 
+.. Click *Next* to add the data mapper step to the flow. 
   
 .Result
-The connection appears in the integration flow 
-in the location where you added it. During execution, the connection 
+The connection appears in the integration visualization 
+where you added it. During execution, the connection 
 adds all resources to the FHIR server or, if there is an error, 
 the connection does not add any resources to the FHIR server. A successful 
 action returns a transaction resource, which contains the resource ID

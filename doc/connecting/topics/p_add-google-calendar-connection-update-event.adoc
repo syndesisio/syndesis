@@ -20,18 +20,21 @@ insert a data mapper step between the two Google Calendar connections.
 ====
 
 .Prerequisites
-* A Google Calendar connection is available and this connection
+* You created a Google Calendar connection that 
 is authorized to access the Google Calendar that has the event that
 you want to update.
 * In the flow, there is an earlier connection to Google Calendar 
 and that connection obtains the event that you want to update. 
 * You are creating or editing a flow and {prodname} is prompting you 
-to choose a step. Or, {prodname} is prompting you to choose a finish connection.  
+to add to the integration. Or, {prodname} is prompting you to choose a finish connection.  
 
 .Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click a Google Calendar connection that is authorized to access
 the calendar that has the event that you want to update.   
-. On the *Choose an Action* page, click *Update Event*. 
+. On the *Choose an action* page, select *Update Event*. 
 . To configure the *Update Event* action: 
 +
 .. Enter the title of the event that you want to update.
@@ -39,10 +42,10 @@ the calendar that has the event that you want to update.
 Do not enter content in an event field when you want the content 
 in that field to remain unchanged. 
 
-. Click *Done* to add the connection to the flow. 
-The connection appears in the integration visualization flow in the 
-location where you added it. 
-. In the integration visualization flow, click the plus sign that is 
+. Click *Next* to add the connection to the flow. 
+The connection appears in the integration visualization  
+where you added it. 
+. In the integration visualization, click the plus sign that is 
 just before the connection that you just added. 
 . Click *Data Mapper*. 
 . In the data mapper, for each event field that remains the same in the 

@@ -25,7 +25,7 @@ display any available connections.
 . In the upper right, click *Create Connection* to display
 connectors.  
 . Click the *Red Hat AMQ* connector.
-. Configure the connection by entering: 
+. Configure the connection: 
 +
 .. In the *Broker URL* field, enter the location that you want to send data
 to or obtain data from, for example, `tcp://localhost:61616`. 
@@ -50,14 +50,14 @@ connection and displays a message that indicates whether
 validation is successful. If validation fails, revise the configuration
 details as needed and try again.
 . If validation is successful, click *Next*.
-. In the *Connection Name* field, enter your choice of a name that
+. In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, you might enter `Red Hat AMQ 1`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample Red Hat AMQ connection
 that uses a provided broker.*`
-. In the upper right, click *Create* to see that the connection you 
+. Click *Save* to see that the connection you 
 created is now available. If you
 entered the example name, you would 
 see that *Red Hat AMQ 1* appears as a connection that you can 

@@ -10,16 +10,20 @@ To do this, add a Google Calendar connection to the middle of a flow
 or as a simple integration's finish connection. 
 
 .Prerequisites
-* A Google Calendar connection is available and this connection
-is authorized to access the Google Calendar to which you want to add an 
+* You created a Google Calendar connection that is 
+authorized to access the Google Calendar to which you want to add an 
 event.
 * You are creating or editing a flow and {prodname} is prompting you
-to choose a step. Or, {prodname} is prompting you to choose a finish connection. 
+to add to the integration. 
+Or, {prodname} is prompting you to choose a finish connection. 
 
 .Procedure
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click a Google Calendar connection that is authorized to access
 the calendar that you want to add an event to. 
-. On the *Choose an Action* page, click the *Create Event* action.
+. On the *Choose an action* page, select the *Create Event* action.
 
 . Configure the *Create Event* action: 
 +
@@ -29,5 +33,13 @@ the calendar that you want to add an event to.
 might want to map values from an event that you obtained in 
 a previous Google Calendar connection. 
 
-. Click *Done* to add the connection to the flow. 
-The connection appears in the integration flow in the location where you added it. 
+. Click *Next* to add the connection to the flow. 
+
+.Result
+The connection appears in the integration flow where you added it. 
+
+.Next step
+If you want to map any values to the fields in this Google Calendar 
+connection, add a data mapper step to the flow. First, add all 
+needed connections to the flow. Then add a data mapper immediately 
+before this Google Calendar connection.

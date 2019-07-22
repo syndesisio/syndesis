@@ -42,15 +42,15 @@ when you created the Dropbox app.
 . Click *Validate*. {prodname} displays a message that indicates whether
 it can validate this connection. If validation fails, try again and 
 be sure to enter the correct values. 
-. When validation is successful, in the upper right, click *Next*.
-. In the *Connection Name* field, enter your choice of a name that
+. When validation is successful, click *Next*.
+. In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, enter `*Dropbox Connect 1*`.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection. For example,
 enter `*Sample Dropbox connection
 that can access all content in our company Dropbox account.*`
-. In the upper right, click *Create* to see that the connection you
+. Click *Save* to see that the connection you
 created is now available. If you entered the example name, you would
 see that *Dropbox Connect 1* appears as a connection that you can 
 choose to add to an integration.

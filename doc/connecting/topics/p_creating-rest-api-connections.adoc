@@ -46,10 +46,10 @@ credentials were provided when the connector was created.
 
 |===
 
-. In the *Connection Name* field, enter your choice of a name that
+. In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 . In the *Description* field, optionally enter any information that
 is helpful to know about this connection.
-. In the upper right, click *Create* to see that you can now
+. Click *Save* to see that you can now
 choose the connection you
 created and add to an integration.

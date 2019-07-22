@@ -13,16 +13,18 @@ finish connection.
 .Prerequisites
 * You created a Kudu connection.
 * You are creating or editing an integration and {prodname} is
-prompting you to choose a step. Or, {prodname} is 
+prompting you to add to the integration. Or, {prodname} is 
 prompting you to choose a finish connection.  
 * The table that you want to add records to exists. 
 
 .Procedure
-
+. On the *Add to Integration* page, click the plus sign where you 
+want to add the connection. Skip this step if {prodname} is
+prompting you to choose the finish connection. 
 . Click the Kudu connection that you want to use. Note that when 
 a Kudu connection inserts data, the connection does not return anything.  
 
-. On the *Choose an Action* page, click *Insert data into a Kudu table*. 
+. On the *Choose an action* page, select *Insert data into a Kudu table*. 
 . To configure the action, in the *Table* field, specify the name of the 
 table to add records to.
 +
@@ -32,11 +34,10 @@ a Kudu table that you are adding records to might have
 a unique key. If you try to add a record that contains a key value that
 is already in the table, the Kudu connection does not add that record. 
 
-. Click *Done*. 
+. Click *Next*. 
 
 .Result
-The connection appears in the integration flow in the location where
-you added it. 
+The connection appears in the integration visualization where you added it. 
 
 .Next steps
 Consider whether you need to split a collection of records  
