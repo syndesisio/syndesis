@@ -19,7 +19,7 @@ export class WithIntegrationMetrics extends React.Component<
         url={`/metrics/integrations/${this.props.integrationId}`}
         defaultValue={{
           errors: 0, // int64
-          lastProcessed: `${Date.now()}`, // date-time
+          lastProcessed: undefined, // date-time
           messages: 0, // int64
           metricsProvider: 'null',
           start: `${Date.now()}`, // date-time

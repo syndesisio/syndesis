@@ -107,7 +107,7 @@ export class MetricsPage extends React.Component {
                                                       10
                                                     )
                                                   ).toLocaleString()
-                                                : undefined
+                                                : t('metrics.NoDataAvailable')
                                             }
                                             messages={metricsData.messages}
                                             start={
