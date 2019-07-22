@@ -55,7 +55,7 @@ follows *`eid=`*. For example, an event ID looks something like this:
 . Click *Next* to add the connection to the flow. 
 
 .Result
-The connection appears in the flow in the location 
+The connection appears in the flow 
 where you added it. 
 
 .Next step

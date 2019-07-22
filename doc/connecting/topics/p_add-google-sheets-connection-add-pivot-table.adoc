@@ -47,7 +47,7 @@ a previous connection to this connection. The previous connection must
 access the spreadsheet that you want to add a pivot table to in this connection.
 
 . Click *Next* to add the connection to the flow.
-The connection appears in the integration visualization flow 
+The connection appears in the integration visualization 
 where you added it.
 . If you want to add any other connections to this flow, add them 
 now. Then return to these instructions. 

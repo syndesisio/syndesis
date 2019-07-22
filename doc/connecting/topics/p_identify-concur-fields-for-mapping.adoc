@@ -15,9 +15,11 @@ Suppose that an integration starts by executing a SQL stored procedure
 that obtains new project codes. The integration finishes by adding
 new project codes to SAP Concur. 
 The following procedure provides an example of a data mapper step before
-the SAP Concur connection. The integration visualization flow is on the 
-left and {prodname} is prompting you to choose a step. 
+the SAP Concur connection. The integration visualization displays  
+and {prodname} is prompting you to add to the integration.  
 
+. In the integration visualization, click the plus sign that is 
+before the SAP Concur finish connection. 
 . Click *Data Mapper*. When the data fields
 appear, the *Sources* panel on the left displays the fields that are
 available from the database connection. In this example, the

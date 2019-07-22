@@ -58,7 +58,7 @@ them now and then return to these instructions.
 . After the flow has all desired connections, you might want to 
 use a data mapper step to update spreadsheet properties:
 
-.. In the integration visualization flow, click the plus sign that is
+.. In the integration visualization, click the plus sign that is
 just before the Google Sheets connection that updates properties.
 .. Click *Data Mapper* to add a data mapping step to 
 the flow. 

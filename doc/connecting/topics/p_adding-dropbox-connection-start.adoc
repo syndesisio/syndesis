@@ -27,7 +27,7 @@ file.
 
 . In the *Select Type* field, if the data type does not need to be known, 
 accept *Type specification not required* 
-and click *Done*. You do not need to follow the rest of these
+and click *Next*. You do not need to follow the rest of these
 instructions. 
 +
 Otherwise, click in the *Select Type* field and select one of the following as the schema type:
@@ -53,7 +53,7 @@ vendors then you might specify `*Vendor*` as the data type name.
 You will see this data type name when you are creating 
 or editing an integration that uses the connection
 for which you are specifying this type. {prodname} displays the type name
-in the integration visualization panel and in the data mapper. 
+in the integration visualization and in the data mapper. 
 
 . In the *Data Type Description* field, provide information that helps you
 distinguish this type. This description appears in the data mapper when 

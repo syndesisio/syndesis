@@ -38,7 +38,7 @@ you want to add records to.
 {prodname} adds the connection to the flow. 
 
 Typically, a data mapper step is needed before this connection.
-In the integration visualization panel, 
+In the integration visualization, 
 {prodname} displays 
 image:shared/images/WarningIcon.png[Data Type Mismatch] on the
 connection. In most integrations, you need to map a source field 

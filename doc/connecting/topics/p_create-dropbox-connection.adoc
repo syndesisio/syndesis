@@ -42,7 +42,7 @@ when you created the Dropbox app.
 . Click *Validate*. {prodname} displays a message that indicates whether
 it can validate this connection. If validation fails, try again and 
 be sure to enter the correct values. 
-. When validation is successful, in the upper right, click *Next*.
+. When validation is successful, click *Next*.
 . In the *Name* field, enter your choice of a name that
 helps you distinguish this connection from any other connections.
 For example, enter `*Dropbox Connect 1*`.

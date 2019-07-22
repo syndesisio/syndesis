@@ -62,12 +62,12 @@ which defaults to *User entered*.
 * *User entered* enables automatic conversion of recognizable data. 
 
 .. Click *Next* to add the connection to the flow.
-The connection appears in the integration visualization flow in the
+The connection appears in the integration visualization in the
 location where you added it.
 . If you want to add any other connections to the flow, add 
 them now and then return to these instructions. 
 . After the flow has all desired connections, 
-in the integration visualization flow, click the plus sign that is
+in the integration visualization, click the plus sign that is
 just before the Google Sheets connection that updates sheet values.
 . Click the *Data Mapper* card to add a data mapping step to 
 the flow. 

@@ -34,5 +34,5 @@ and expand *v3.0*.
 . Click *Next* to add the connection to the flow.
 
 .Result
-The connection appears in the integration flow 
-in the location where you added it. 
+The connection appears in the integration visualization
+where you added it. 
