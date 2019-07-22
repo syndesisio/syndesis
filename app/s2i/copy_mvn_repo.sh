@@ -27,14 +27,14 @@ if [[ ! "$(ls -A ${target_dir}/m2.cache)" ]]; then
       -DoutputDirectory=${target_dir}/m2.cache -Dmdep.copyPom=true -Dmdep.useRepositoryLayout=true
 
     echo "Going to cache locally Syndesis ${version} dependencies."
-    xargs -a $syndesis_dependencies tar -c | tar -vx -C "${target_dir}/m2.cache" > /dev/null
+    cat $syndesis_dependencies | xargs tar -c | tar -vx -C "${target_dir}/m2.cache" > /dev/null
 else
     echo "Using cached base project dependencies. Clean target directory if you need to refresh the cache though it will \
       take longer to build your S2I Docker image."
 fi
 
 echo "Installing Syndesis ${version} dependencies to target directory..."
-xargs -a $syndesis_dependencies tar -c | tar -vx -C "${target_dir}/m2" > /dev/null
+cat $syndesis_dependencies | xargs tar -c | tar -vx -C "${target_dir}/m2" > /dev/null
 
 if [ -z "$CAMEL_SNAPSHOT_VERSION" ]; then
    echo "This installation won't use a camel snapshot version"
