@@ -41,5 +41,5 @@ specify how often you want the connection to obtain properties.
 start connection. 
 
 .Result 
-In the integration visualization, the connection 
-appears as the first step in the integration's flow.
+The integration now has a start connection and {prodname} is 
+prompting you to choose the integration's finish connection. 

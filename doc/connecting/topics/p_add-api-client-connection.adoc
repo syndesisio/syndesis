@@ -35,6 +35,6 @@ describes the API that you are connecting to.
 . Click *Next*.
 
 .Result
-The connection appears in the flow 
-in the location where you added it. 
+The connection appears in the integration visualization 
+where you added it. 
  
