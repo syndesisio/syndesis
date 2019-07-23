@@ -24,7 +24,7 @@ an integration:
 * xref:preparing-to-create-an-integration_{context}[]
 * xref:alternatives-for-triggering-integration-execution_{context}[]
 * xref:procedure-for-creating-an-integration_{context}[]
-* xref:triggering-integrations-with-timers_{context}[]
+* xref:add-timer-connection_{context}[]
 * xref:how-to-process-a-collection-in-a-flow_{context}[]
 * xref:about-adding-steps_{context}[]
 * xref:adding-conditional-execution-flows_{context}[]
@@ -40,7 +40,7 @@ include::r_alternatives-for-triggering-integration-execution.adoc[leveloffset=+1
 
 include::p_procedure-for-creating-an-integration.adoc[leveloffset=+1]
 
-include::as_trigger-integration-with-timer.adoc[leveloffset=+1]
+include::p_add-timer-connection.adoc[leveloffset=+1]
 
 include::as_how-to-process-a-collection-in-a-flow.adoc[leveloffset=+1]
 

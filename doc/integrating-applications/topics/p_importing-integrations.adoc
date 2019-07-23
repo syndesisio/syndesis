@@ -9,8 +9,8 @@ exported from another {prodname} environment.
 Exporting an integration downloads the zip file that you upload
 to import the integration.
 
-.Prerequisite
-You have a zip file that contains an integration that was exported in another
+.Prerequisites
+* You have a zip file that contains an integration that was exported from another
 {prodname} environment. 
 
 .Procedure
@@ -19,21 +19,21 @@ You have a zip file that contains an integration that was exported in another
 . In the upper right, click *Import*.
 . Drag and drop one or more exported integration zip files,
 or navigate to a zip file that contains an exported integration and select it.
-. After {prodname} imports the file(s), click *Done*. {prodname} displays
-information about imported integrations.
-. In the left panel, click *Connections*.
 +
-If an imported integration uses a connection that requires configuration,
-then there is a *Configuration Required* message at the bottom of the
-connection's card.
-
+{prodname} imports the file(s) and display a message when importing
+is successful. 
+. In the left panel, click *Integrations*.
+. In the list of integrations, on the entry for the integration 
+that you just imported, click *View*. 
+. In the integration summary, if there is a notification that
+configuration is required, in the upper right, click *Edit integration*. 
 . For each connection that requires configuration:
 
-.. Click it to display its details.
+.. Click its *Configure* button to display its details.
 .. Enter or change connection details as needed. It is possible that every
 field on this page is correct and that only security configuration is required.
-.. If you updated any fields, click *Save*.
-.. In the left panel, click *Settings*.
+.. Click *Next*.
+. In the left panel, click *Settings*.
 +
 The *Settings* page displays entries for applications that use the OAuth
 protocol. 

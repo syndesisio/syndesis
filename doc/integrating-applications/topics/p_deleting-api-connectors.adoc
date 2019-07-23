@@ -12,7 +12,8 @@ connector.
 
 .Procedure
 
-. In the left panel, click *Customizations*. 
-. In the *API Client Connectors* tab, to the right of the name of the 
+. In the left panel, click *Customizations* > *API Client Connectors*.
+. To the right of the name of the 
 connector that you want to delete, click *Delete*. 
-. Read the confirmation popup to be sure that you want to click *Delete*. 
+. In the confirmation popup, if you sure that you want to delete the 
+connector, click *Delete*. 

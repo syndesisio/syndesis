@@ -33,7 +33,7 @@ integration then it must already have its start and finish connections.
 
 .Procedure
 
-. In the visualization panel on the left, click the
+. In the flow visualization, click the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign]
 where you want to add a template step.
 . Click *Template*. The
@@ -63,10 +63,10 @@ Input to a template step must be in the form of a JSON object. Consequently,
 you must add
 a data mapping step before a template step.
 . To add a data mapper step before the template step:
-.. In the left panel, click the
+.. In the flow visualization, click the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is
 immediately before the template step that you just added.
-.. On the *Choose a Step* page, click *Data Mapper*.
+.. Click *Data Mapper*.
 .. In the data mapper, map a source field to each template placeholder field.
 +
 For example, using the example templates that are after this procedure, 
@@ -82,10 +82,10 @@ flow.
 Output from a template step is always a JSON object. Consequently, you must
 add a data mapper step after a template step.
 . To add a data mapper step after the template step:
-.. In the left panel, click the
+.. In the flow visualization, click the
 image:images/PlusSignToAddStepOrConnection.png[Plus Sign] that is
 immediately after the template step that you just added.
-.. On the *Choose a Step* page, click *Data Mapper*.
+.. Click *Data Mapper*.
 .. In the data mapper, map the template's *message* field, which
 always contains the result of inserting source fields into the
 template, to a target field. For example, suppose that a Gmail connection is

@@ -2,7 +2,7 @@
 // as_creating-integrations.adoc
 
 [id='add-data-mapping-step_{context}']
-= Adding a data mapping step
+= Adding a data mapper step
 
 Almost all integrations require data mapping. A data mapper step 
 maps data fields from the previous
@@ -19,7 +19,7 @@ You are creating or editing a flow.
 
 .Procedure
 
-. In the left panel, where you want to add a data mapper step,
+. In the flow visualization, where you want to add a data mapper step,
 click the image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 . Click *Data Mapper* to display source
 and target fields in the data mapper canvas. 

@@ -17,19 +17,17 @@ continue execution by operating only on tweets that contain "Red Hat".
 
 .Procedure
 
-. In the left panel, where you want to add a filter step to
-the flow, click the
+. In the flow visualization, where you want to add a filter step, click the
 image:images/PlusSignToAddStepOrConnection.png[title='plus sign'].
 
 . Click *Basic Filter*. 
 
 . On the *Configure Basic Filter Step* page, in
-the *Continue only if incoming data match* field, select one of the
-following options:
+the *Continue only if incoming data match* field:
 +
 * Accept the default that all defined rules must be satisfied.
-* Indicate that only
-one rule must be satisfied by selecting *ANY of the following*.
+* Or, select *ANY of the following* to indicate that only
+one rule must be satisfied.
 
 . Define the filter rule:
 

@@ -42,7 +42,7 @@ more components. Separate multiple names with commas. A Jira
 administrator defines the components that you can specify. 
 .. In the *Issue Key* field, enter the Jira identifier for the issue
 that you want the connection to update. 
-Examples of issue keys: `GATEWAY-1234`, `Enterprise-239`. 
+Examples of issue keys: `GATE-1234`, `Ent-239`. 
 .. Optionally, in the *Priority ID or name* field, enter a priority
 for the new issue. A Jira administrator defines the priority values
 that you can enter. 

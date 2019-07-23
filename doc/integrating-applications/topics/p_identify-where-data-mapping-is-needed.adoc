@@ -13,13 +13,11 @@ requires data mapping.
 
 .Procedure
 
-. In the flow visualization panel on the left, look for any
+. In the flow visualization, look for any
 image:shared/images/WarningIcon.png[Warning] icons.
 
-. Click the icon to see the message. A *Data Type Mismatch* notification
-indicates that you need to add a data mapper step before that connection. 
+. Click the icon to see the *Data Type Mismatch* notification. 
 
-. In the flow visualization panel, click the plus sign that appears 
-before the connection that has the data type mismatch notification. 
-
-. In the page that prompts you to choose a step, click *Data Mapper*. 
+. In the message, click *Add a data mapping step*, which displays
+the data mapper. 
+ 
