@@ -84,15 +84,7 @@ export const VirtualizationsPage: React.FunctionComponent = () => {
     handlePublishVirtualization,
     handleUnpublishServiceVdb,
   } = VirtualizationHandlers();
-  const [disableUpdates, setDisableUpdates] = React.useState(false);
-  const { resource: data, hasData, error } = useVirtualizations(disableUpdates);
-
-  // unmount: turn off polling
-  React.useEffect(() => {
-    return () => {
-      setDisableUpdates(true);
-    };
-  }, []);
+  const { resource: data, hasData, error } = useVirtualizations();
 
   // TODO: implement handleImportVirt
   // const handleImportVirt = (virtualizationName: string) => {

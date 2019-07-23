@@ -10,7 +10,7 @@ export const useVirtualizations = (disableUpdates: boolean = false) => {
   });
 
   if (!disableUpdates) {
-    usePolling({ polling: 5000, read });
+    usePolling({ callback: read, delay: 5000 });
   }
 
   return {
