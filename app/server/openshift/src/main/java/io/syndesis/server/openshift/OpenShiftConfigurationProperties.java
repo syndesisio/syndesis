@@ -57,6 +57,8 @@ public class OpenShiftConfigurationProperties {
 
     private int integrationLivenessProbeInitialDelaySeconds;
 
+    private String managementUrlFor3scale;
+
     public void setDebug(final boolean debug) {
         this.debug = debug;
     }
@@ -191,5 +193,13 @@ public class OpenShiftConfigurationProperties {
 
     public void setIntegrationLivenessProbeInitialDelaySeconds(int integrationLivenessProbeInitialDelaySeconds) {
         this.integrationLivenessProbeInitialDelaySeconds = integrationLivenessProbeInitialDelaySeconds;
+    }
+
+    public String getManagementUrlFor3scale() {
+        return managementUrlFor3scale;
+    }
+
+    public void setManagementUrlFor3scale(String managementUrlFor3scale) {
+        this.managementUrlFor3scale = managementUrlFor3scale;
     }
 }

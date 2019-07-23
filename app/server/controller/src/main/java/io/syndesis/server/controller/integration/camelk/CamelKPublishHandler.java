@@ -60,6 +60,7 @@ import io.syndesis.server.controller.integration.camelk.customizer.CamelKIntegra
 import io.syndesis.server.dao.IntegrationDao;
 import io.syndesis.server.dao.IntegrationDeploymentDao;
 import io.syndesis.server.openshift.Exposure;
+import io.syndesis.server.openshift.ExposureHelper;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -75,6 +76,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
     private final IntegrationProjectGenerator projectGenerator;
     private final List<CamelKIntegrationCustomizer> customizers;
     private final ControllersConfigurationProperties configuration;
+    private final ExposureHelper exposureHelper;
 
     public CamelKPublishHandler(
         OpenShiftService openShiftService,
@@ -84,12 +86,14 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
         IntegrationPublishValidator validator,
         IntegrationResourceManager resourceManager,
         List<CamelKIntegrationCustomizer> customizers,
-        ControllersConfigurationProperties configuration) {
+        ControllersConfigurationProperties configuration,
+        ExposureHelper exposureHelper) {
         super(openShiftService, iDao, idDao, validator);
         this.projectGenerator = projectGenerator;
         this.resourceManager = resourceManager;
         this.customizers = customizers;
         this.configuration = configuration;
+        this.exposureHelper = exposureHelper;
     }
 
     @Override
@@ -204,7 +208,7 @@ public class CamelKPublishHandler extends BaseCamelKHandler implements StateChan
     protected io.syndesis.server.controller.integration.camelk.crd.Integration applyCustomizers(IntegrationDeployment integrationDeployment, io.syndesis.server.controller.integration.camelk.crd.Integration integration) {
         io.syndesis.server.controller.integration.camelk.crd.Integration result = integration;
         if (this.customizers != null && !this.customizers.isEmpty()) {
-            EnumSet<Exposure> exposures = CamelKSupport.determineExposure(configuration, integrationDeployment);
+            EnumSet<Exposure> exposures = CamelKSupport.determineExposure(exposureHelper, integrationDeployment);
 
             for (CamelKIntegrationCustomizer customizer : this.customizers) {
                 result = customizer.customize(integrationDeployment, integration, exposures);

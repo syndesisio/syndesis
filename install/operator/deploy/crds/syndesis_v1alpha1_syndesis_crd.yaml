@@ -139,8 +139,9 @@ spec:
                   properties:
                     features:
                       properties:
-                        exposeVia3Scale:
-                          type: boolean
+                        managementUrlFor3scale:
+                          type: string
+                          description: 'Allows to configure URL to 3scale in OpenShift.'
                       type: object
                     resources:
                       properties:

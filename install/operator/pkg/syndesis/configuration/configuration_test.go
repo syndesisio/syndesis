@@ -17,10 +17,10 @@ func TestStandardConfig(t *testing.T) {
 	}
 
 	config := GetEnvVars(&syndesis)
-	assert.Len(t, config, 4)
+
+	assert.Len(t, config, 3)
 	assert.Contains(t, config, string(EnvOpenshiftProject))
 	assert.Contains(t, config, string(EnvSarNamespace))
-	assert.Contains(t, config, string(EnvExposeVia3Scale))
 	assert.Contains(t, config, string(EnvDatavirtEnabled))
 }
 
@@ -67,7 +67,9 @@ func TestSpecificConfig(t *testing.T) {
 							},
 						},
 					},
-					Features: v1alpha1.ServerFeatures{},
+					Features: v1alpha1.ServerFeatures{
+						ManagementUrlFor3scale: "http://3scale",
+					},
 				},
 				Meta: v1alpha1.MetaConfiguration{
 					Resources: v1alpha1.ResourcesWithVolume{
@@ -114,7 +116,7 @@ func TestSpecificConfig(t *testing.T) {
 	assert.Equal(t, "2Gi", config[string(EnvPostgresqlVolumeCapacity)])
 
 	assert.Equal(t, "3Gi", config[string(EnvServerMemoryLimit)])
-	assert.Equal(t, "false", config[string(EnvExposeVia3Scale)])
+	assert.Equal(t, "http://3scale", config[string(EnvManagementUrlFor3scale)])
 
 	assert.Equal(t, "4Gi", config[string(EnvMetaMemoryLimit)])
 	assert.Equal(t, "5Gi", config[string(EnvMetaVolumeCapacity)])

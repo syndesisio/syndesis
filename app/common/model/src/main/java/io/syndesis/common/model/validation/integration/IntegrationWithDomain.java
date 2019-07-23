@@ -51,4 +51,8 @@ public class IntegrationWithDomain extends TargetWithDomain<Integration> impleme
         return getTarget().getName();
     }
 
+    @Override
+    public Optional<String> getExposure() {
+        return getTarget().getExposure();
+    }
 }

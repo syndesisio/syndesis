@@ -171,7 +171,6 @@ func SetupRenderContext(renderContext *generator.Context, syndesis *v1alpha1.Syn
 	ifMissingSet(config, configuration.EnvMaxIntegrationsPerUser, maxIntegrations)
 	ifMissingSet(config, configuration.EnvIntegrationStateCheckInterval, "60")
 	ifMissingSet(config, configuration.EnvUpgradeVolumeCapacity, "1Gi")
-	ifMissingSet(config, configuration.EnvExposeVia3Scale, "false")
 	if config[string(configuration.EnvOpenshiftProject)] == "" {
 		return fmt.Errorf("required config var not set: %s", configuration.EnvOpenshiftProject)
 	}

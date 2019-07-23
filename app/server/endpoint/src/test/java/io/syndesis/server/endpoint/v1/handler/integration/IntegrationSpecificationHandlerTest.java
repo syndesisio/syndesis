@@ -64,7 +64,7 @@ public class IntegrationSpecificationHandlerTest {
 
     public IntegrationSpecificationHandlerTest() {
         final IntegrationHandler integrationHandler = new IntegrationHandler(dataManager, null, null, null,
-                encryptionSupport, apiGenerator);
+                encryptionSupport, apiGenerator, null);
         integrationHandler.setPublicApiHandler(mock(PublicApiHandler.class));
         handler = new IntegrationSpecificationHandler(integrationHandler, resourceManager);
     }

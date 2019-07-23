@@ -17,7 +17,7 @@ import {
 import { WithLoader, WithRouteData } from '@syndesis/utils';
 import * as React from 'react';
 import { Translation } from 'react-i18next';
-import { AppContext } from '../../../../app';
+import {AppContext, UIContext} from '../../../../app';
 import { ApiError, PageTitle } from '../../../../shared';
 import {
   IntegrationDetailApiProviderSteps,
@@ -25,6 +25,7 @@ import {
   IntegrationDetailSteps,
   WithIntegrationActions,
 } from '../../components';
+import { IntegrationExposeVia } from '../../components/IntegrationExposeVia';
 import { WithDeploymentActions } from '../../components/WithDeploymentActions';
 import resolvers from '../../resolvers';
 import { IDetailsRouteParams, IDetailsRouteState } from './interfaces';
@@ -36,9 +37,10 @@ import { IDetailsRouteParams, IDetailsRouteState } from './interfaces';
  * or an integration object set via the state.
  *
  */
+
 export const DetailsPage: React.FunctionComponent = () => {
   const { getPodLogUrl } = React.useContext(AppContext);
-  const { setAttributes } = useIntegrationHelpers();
+  const { setAttributes, deployIntegration } = useIntegrationHelpers();
   const handleDescriptionChange = async (id: string, description: string) => {
     try {
       await setAttributes(id, {
@@ -106,6 +108,51 @@ export const DetailsPage: React.FunctionComponent = () => {
                               <IntegrationExposedURL
                                 url={data.integration.url}
                               />
+                              <UIContext.Consumer>
+                                {({ pushNotification }) => {
+                                  const handleChange = async (exposure: string) => {
+                                    try {
+                                      await setAttributes(data.integration.id!, {
+                                        exposure,
+                                      });
+                                    } catch (err) {
+                                      return false;
+                                    }
+
+                                    if (data.integration.currentState !== 'Unpublished') {
+                                      try {
+                                        await deployIntegration(
+                                          data.integration.id!,
+                                          data.integration.version!,
+                                          false
+                                        );
+                                      } catch (err) {
+                                        pushNotification(
+                                          t(
+                                            'integrations:PublishingIntegrationFailedMessage',
+                                            {
+                                              error:
+                                                err.errorMessage ||
+                                                err.message ||
+                                                err,
+                                            }
+                                          ),
+                                          'warning'
+                                        );
+                                        return false;
+                                      }
+                                    }
+
+                                    return true;
+                                  };
+
+                                  return (
+                                    <IntegrationExposeVia
+                                      integration={data.integration} onChange={handleChange}
+                                    />
+                                  );
+                                }}
+                              </UIContext.Consumer>
                               <IntegrationDetailDescription
                                 description={
                                   <InlineTextEdit

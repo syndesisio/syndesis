@@ -13,6 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package io.syndesis.server.endpoint.v1.handler.integration.support;
 
 import java.io.IOException;

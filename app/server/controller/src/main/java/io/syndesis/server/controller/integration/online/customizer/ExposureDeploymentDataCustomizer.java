@@ -18,10 +18,9 @@ package io.syndesis.server.controller.integration.online.customizer;
 import java.util.EnumSet;
 
 import io.syndesis.common.model.integration.IntegrationDeployment;
-import io.syndesis.common.util.Optionals;
-import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.openshift.DeploymentData;
 import io.syndesis.server.openshift.Exposure;
+import io.syndesis.server.openshift.ExposureHelper;
 import org.springframework.stereotype.Component;
 
 /**
@@ -30,10 +29,10 @@ import org.springframework.stereotype.Component;
 @Component
 public final class ExposureDeploymentDataCustomizer implements DeploymentDataCustomizer {
 
-    private final boolean exposeVia3scale;
+    private final ExposureHelper exposureHelper;
 
-    public ExposureDeploymentDataCustomizer(ControllersConfigurationProperties properties) {
-        exposeVia3scale = properties.isExposeVia3scale();
+    public ExposureDeploymentDataCustomizer(ExposureHelper exposureHelper) {
+        this.exposureHelper = exposureHelper;
     }
 
     @Override
@@ -45,26 +44,10 @@ public final class ExposureDeploymentDataCustomizer implements DeploymentDataCus
     }
 
     EnumSet<Exposure> determineExposure(final IntegrationDeployment integrationDeployment) {
-        if (needsExposure(integrationDeployment)) {
-            if (exposeVia3scale && isNotWebhook(integrationDeployment)) {
-                return EnumSet.of(Exposure.SERVICE, Exposure._3SCALE);
-            }
-
-            return EnumSet.of(Exposure.ROUTE, Exposure.SERVICE);
+        if (integrationDeployment.getSpec().isExposable()) {
+            return exposureHelper.determineExposure(integrationDeployment.getSpec().getExposure());
         }
 
         return EnumSet.noneOf(Exposure.class);
-    }
-
-    static boolean isNotWebhook(IntegrationDeployment integrationDeployment) {
-        return !integrationDeployment.getSpec().getUsedConnectorIds().contains("webhook");
-    }
-
-    static boolean needsExposure(final IntegrationDeployment integrationDeployment) {
-        return integrationDeployment.getSpec()
-            .getFlows().stream().flatMap(f -> f.getSteps().stream())
-            .flatMap(step -> Optionals.asStream(step.getAction()))
-            .flatMap(action -> action.getTags().stream())
-            .anyMatch("expose"::equals);
     }
 }

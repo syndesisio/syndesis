@@ -118,6 +118,5 @@ API calls specify URLs that start with this base URL.
 +
 If you are using {prodname} on OpenShift Container 
 Platform, if the external URL is not on the integration’s summary page, 
-then an administrator has set the `CONTROLLERS_EXPOSE_VIA3SCALE` environment 
-variable to true. To test this API provider integration, ask a 3scale 
-administrator for guidance. 
+then an administrator has set the `OPENSHIFT_MANAGEMENT_URL_FOR3SCALE` environment
+variable. To test this API provider integration, open up 3scale dashboard.

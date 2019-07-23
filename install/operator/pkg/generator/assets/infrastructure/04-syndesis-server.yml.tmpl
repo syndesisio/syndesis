@@ -83,8 +83,8 @@
             value: "1"
           - name: INTEGRATION_STATE_CHECK_INTERVAL
             value: '{{.Env.INTEGRATION_STATE_CHECK_INTERVAL}}'
-          - name: CONTROLLERS_EXPOSE_VIA3SCALE
-            value: '{{.Env.CONTROLLERS_EXPOSE_VIA3SCALE}}'
+          - name: OPENSHIFT_MANAGEMENT_URL_FOR3SCALE
+            value: '{{.Env.OPENSHIFT_MANAGEMENT_URL_FOR3SCALE}}'
 {{- if (eq (or .Syndesis.Spec.Addons.jaeger.enabled "false") "true") }}
           - name: JAEGER_ENDPOINT
             value: "http://syndesis-jaeger-collector:14268/api/traces"

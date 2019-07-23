@@ -18,6 +18,7 @@ package io.syndesis.common.model.integration;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.syndesis.common.model.Kind;
@@ -59,6 +60,10 @@ public interface IntegrationOverview extends WithId<IntegrationOverview>, Integr
     }
 
     Optional<String> getUrl();
+
+    Optional<String> getManagementUrl();
+
+    Set<String> getExposureMeans();
 
     // ******************
     // Builder

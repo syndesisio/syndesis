@@ -21,9 +21,10 @@ import io.syndesis.common.model.integration.Flow;
 import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.Step;
-import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.openshift.Exposure;
 
+import io.syndesis.server.openshift.ExposureHelper;
+import io.syndesis.server.openshift.OpenShiftConfigurationProperties;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,43 +41,45 @@ public class ExposureDeploymentDataCustomizerTest {
 
     @Test
     public void shouldDetermineExposureNeed() {
-        assertThat(ExposureDeploymentDataCustomizer.needsExposure(simpleIntegration)).isFalse();
+        assertThat(simpleIntegration.getSpec().isExposable()).isFalse();
 
-        assertThat(ExposureDeploymentDataCustomizer.needsExposure(exposedIntegration)).isTrue();
+        assertThat(exposedIntegration.getSpec().isExposable()).isTrue();
     }
 
     @Test
     public void shouldDetermineWhenExposureIsNotNeeded() {
         final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(
-            new ControllersConfigurationProperties());
+            new ExposureHelper(new OpenShiftConfigurationProperties()));
 
         assertThat(customizer.determineExposure(simpleIntegration)).isEmpty();
     }
 
     @Test
     public void shouldDetermineExposureWhen3scaleIsNotEnabled() {
+        OpenShiftConfigurationProperties properties = new OpenShiftConfigurationProperties();
+
         final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(
-            new ControllersConfigurationProperties());
+            new ExposureHelper(properties));
 
         assertThat(customizer.determineExposure(exposedIntegration)).containsOnly(Exposure.SERVICE, Exposure.ROUTE);
     }
 
     @Test
     public void shouldDetermineExposureWhen3scaleIsEnabled() {
-        final ControllersConfigurationProperties properties = new ControllersConfigurationProperties();
-        properties.setExposeVia3scale(true);
+        final OpenShiftConfigurationProperties properties = new OpenShiftConfigurationProperties();
+        properties.setManagementUrlFor3scale("https://3scale");
 
-        final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(properties);
+        final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(new ExposureHelper(properties));
 
         assertThat(customizer.determineExposure(exposedIntegration)).containsOnly(Exposure.SERVICE, Exposure._3SCALE);
     }
 
     @Test
-    public void shouldNotExposeWebHooksVia3scaleWhen3scaleIsEnabled() {
-        final ControllersConfigurationProperties properties = new ControllersConfigurationProperties();
-        properties.setExposeVia3scale(true);
+    public void shouldExposeWebHooksVia3scaleWhen3scaleIsEnabled() {
+        final OpenShiftConfigurationProperties properties = new OpenShiftConfigurationProperties();
+        properties.setManagementUrlFor3scale("https://3scale");
 
-        final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(properties);
+        final ExposureDeploymentDataCustomizer customizer = new ExposureDeploymentDataCustomizer(new ExposureHelper(properties));
 
         final IntegrationDeployment webHookIntegration = new IntegrationDeployment.Builder()
             .spec(new Integration.Builder()
@@ -86,6 +89,6 @@ public class ExposureDeploymentDataCustomizerTest {
                 .build())
             .build();
 
-        assertThat(customizer.determineExposure(webHookIntegration)).containsOnly(Exposure.SERVICE, Exposure.ROUTE);
+        assertThat(customizer.determineExposure(webHookIntegration)).containsOnly(Exposure.SERVICE, Exposure._3SCALE);
     }
 }

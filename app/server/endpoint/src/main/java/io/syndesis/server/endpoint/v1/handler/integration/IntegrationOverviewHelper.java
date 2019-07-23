@@ -36,16 +36,22 @@ import io.syndesis.server.dao.manager.DataManager;
 import io.syndesis.server.dao.manager.operators.IdPrefixFilter;
 import io.syndesis.server.dao.manager.operators.ReverseFilter;
 import io.syndesis.server.endpoint.v1.util.DataManagerSupport;
+import io.syndesis.server.openshift.ExposureHelper;
+import org.springframework.stereotype.Component;
 
-final class IntegrationOverviewHelper {
+@Component
+class IntegrationOverviewHelper {
 
-    private IntegrationOverviewHelper() {
-        // helper class
+    private final DataManager dataManager;
+    private final ExposureHelper exposureHelper;
+
+    IntegrationOverviewHelper(DataManager dataManager, ExposureHelper exposureHelper) {
+        this.dataManager = dataManager;
+        this.exposureHelper = exposureHelper;
     }
 
     @SuppressWarnings("PMD.NPathComplexity")
-    static IntegrationOverview toCurrentIntegrationOverview(final Integration integration,
-        final DataManager dataManager) {
+    IntegrationOverview toCurrentIntegrationOverview(final Integration integration) {
         final String id = integration.getId().get();
         final IntegrationOverview.Builder builder = new IntegrationOverview.Builder().createFrom(integration);
 
@@ -103,6 +109,10 @@ final class IntegrationOverviewHelper {
                   .filter(deployment -> deployment.getCurrentState() == IntegrationDeploymentState.Published)
                   .findFirst();
 
+        if (integration.isExposable()) {
+            builder.exposureMeans(exposureHelper.getExposureMeans());
+        }
+
         IntegrationDeployment exposedDeployment = null;
         if (maybePublished.isPresent()) {
             IntegrationDeployment published = maybePublished.get();
@@ -120,8 +130,10 @@ final class IntegrationOverviewHelper {
             builder.currentState(exposedDeployment.getCurrentState());
 
             if (exposedDeployment.getId().isPresent()) {
+                builder.managementUrl(exposureHelper.getManagementUrl(integration.getExposure()));
+
                 final IntegrationEndpoint endpoint = dataManager.fetch(IntegrationEndpoint.class,
-                                                                    exposedDeployment.getId().get());
+                    exposedDeployment.getId().get());
                 if (endpoint != null) {
                     builder.url(endpoint.getUrl());
                 }
@@ -135,7 +147,7 @@ final class IntegrationOverviewHelper {
         return builder.build();
     }
 
-    private static boolean computeDraft(final Integration current, final Integration deployed) {
+    private boolean computeDraft(final Integration current, final Integration deployed) {
         final List<Flow> currentFlows = current.getFlows();
         final List<Flow> deployedFlows = deployed.getFlows();
 

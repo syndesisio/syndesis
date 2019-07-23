@@ -37,6 +37,7 @@ import io.syndesis.common.model.WithVersion;
 import io.syndesis.common.model.action.ConnectorAction;
 import io.syndesis.common.model.action.ConnectorDescriptor;
 import io.syndesis.common.model.connection.Connection;
+import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.json.OptionalStringTrimmingConverter;
 
 import org.immutables.value.Value;
@@ -90,6 +91,17 @@ public interface IntegrationBase extends WithProperties, WithResourceId, WithVer
     @Value.Default
     default Map<String, ContinuousDeliveryEnvironment> getContinuousDeliveryState() {
         return Collections.emptyMap();
+    }
+
+    @JsonDeserialize(converter = OptionalStringTrimmingConverter.class)
+    Optional<String> getExposure();
+
+    @JsonIgnore
+    default boolean isExposable() {
+        return getFlows().stream().flatMap(f -> f.getSteps().stream())
+            .flatMap(step -> Optionals.asStream(step.getAction()))
+            .flatMap(action -> action.getTags().stream())
+            .anyMatch("expose"::equals);
     }
 
     @JsonIgnore

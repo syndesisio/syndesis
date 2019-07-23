@@ -40,15 +40,15 @@ import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinition;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionBuilder;
 import io.fabric8.kubernetes.api.model.apiextensions.CustomResourceDefinitionStatusBuilder;
+import io.syndesis.common.model.integration.Integration;
 import io.syndesis.common.model.integration.IntegrationDeployment;
 import io.syndesis.common.model.integration.IntegrationDeploymentState;
 import io.syndesis.common.util.Names;
-import io.syndesis.common.util.Optionals;
 import io.syndesis.common.util.SyndesisServerException;
-import io.syndesis.server.controller.ControllersConfigurationProperties;
 import io.syndesis.server.controller.integration.camelk.crd.DoneableIntegration;
 import io.syndesis.server.controller.integration.camelk.crd.IntegrationList;
 import io.syndesis.server.openshift.Exposure;
+import io.syndesis.server.openshift.ExposureHelper;
 import io.syndesis.server.openshift.OpenShiftService;
 import org.apache.commons.io.IOUtils;
 
@@ -232,28 +232,15 @@ public final class CamelKSupport {
         return Names.sanitize("i-" + integrationName);
     }
 
-    public static boolean isWebhookPresent(io.syndesis.common.model.integration.Integration integration) {
-        return integration.getUsedConnectorIds().contains("webhook");
-    }
-
-    public static EnumSet<Exposure> determineExposure(ControllersConfigurationProperties properties, IntegrationDeployment integrationDeployment) {
-        boolean needsExposure = integrationDeployment.getSpec()
-            .getFlows().stream()
-            .flatMap(f -> f.getSteps().stream())
-            .flatMap(step -> Optionals.asStream(step.getAction()))
-            .flatMap(action -> action.getTags().stream())
-            .anyMatch("expose"::equals);
-
-        boolean webHook = CamelKSupport.isWebhookPresent(integrationDeployment.getSpec());
-
-        if (needsExposure) {
-            if (properties.isExposeVia3scale() && !webHook) {
-                return EnumSet.of(Exposure.SERVICE, Exposure._3SCALE);
-            }
-
-            return EnumSet.of(Exposure.ROUTE, Exposure.SERVICE);
+    public static EnumSet<Exposure> determineExposure(ExposureHelper exposureHelper, IntegrationDeployment integrationDeployment) {
+        if (integrationDeployment.getSpec().isExposable()) {
+            return exposureHelper.determineExposure(integrationDeployment.getSpec().getExposure());
         }
 
         return EnumSet.noneOf(Exposure.class);
+    }
+
+    public static boolean isWebhookPresent(Integration spec) {
+        return spec.getUsedConnectorIds().contains("webhook");
     }
 }
